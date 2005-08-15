@@ -3,7 +3,7 @@
       id="org.eclipse.gmf.runtime"
       label="%featureName"
       version="1.0.0"
-      provider-name="%featureProvider"
+      provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
    <description url="http://www.example.com/description">
@@ -48,7 +48,9 @@ http://www.eclipse.org/legal/epl-v10.html
          version="0.0.0"
          unpack="false"/>
     
+    <!-- TODO: Removed the option to produce a source build of runtime feature -->
+    <!-- as it is thought the SDK build can be used and always includes source.-->
     <!-- Reference to generated feature, as declared in build.properties file. -->
-	<includes id="org.eclipse.gmf.runtime.source" version="0.0.0"/>         
+	<!-- <includes id="org.eclipse.gmf.runtime.source" version="0.0.0"/>       -->
 
 </feature>
