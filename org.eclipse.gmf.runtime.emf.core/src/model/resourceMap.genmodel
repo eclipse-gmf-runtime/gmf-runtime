@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.gmf.runtime.emf.core/src"
+    modelPluginID="org.eclipse.gmf.runtime.emf.core" runtimeJar="true" modelName="ResourceMap"
+    nonNLSMarkers="true" testsDirectory="/org.eclipse.gmf.tests.runtime.emf.core/src" booleanFlagsField="eFlags"
+    booleanFlagsReservedBits="8" importerID="org.eclipse.emf.importer.ecore">
+  <foreignModel>resourceMap.ecore</foreignModel>
+  <genPackages prefix="ResourceMap" basePackage="org.eclipse.gmf.runtime.emf.core.internal"
+      disposableProviderFactory="true" ecorePackage="resourceMap.ecore#/">
+    <genClasses ecoreClass="resourceMap.ecore#//ResourceMap">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ResourceMap/rootMap"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference resourceMap.ecore#//ResourceMap/parentEntries"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference resourceMap.ecore#//ResourceMap/childEntries"/>
+      <genOperations ecoreOperation="resourceMap.ecore#//ResourceMap/getParentEntry">
+        <genParameters ecoreParameter="resourceMap.ecore#//ResourceMap/getParentEntry/parent"/>
+        <genParameters ecoreParameter="resourceMap.ecore#//ResourceMap/getParentEntry/slot"/>
+      </genOperations>
+      <genOperations ecoreOperation="resourceMap.ecore#//ResourceMap/getResourceEntry">
+        <genParameters ecoreParameter="resourceMap.ecore#//ResourceMap/getResourceEntry/child"/>
+      </genOperations>
+      <genOperations ecoreOperation="resourceMap.ecore#//ResourceMap/getParentMap">
+        <genParameters ecoreParameter="resourceMap.ecore#//ResourceMap/getParentMap/child"/>
+      </genOperations>
+      <genOperations ecoreOperation="resourceMap.ecore#//ResourceMap/getChildEntry">
+        <genParameters ecoreParameter="resourceMap.ecore#//ResourceMap/getChildEntry/child"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="resourceMap.ecore#//ResourceEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute resourceMap.ecore#//ResourceEntry/resource"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute resourceMap.ecore#//ResourceEntry/childPosition"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ResourceEntry/childObject"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ResourceEntry/parentEntry"/>
+    </genClasses>
+    <genClasses ecoreClass="resourceMap.ecore#//ParentEntry">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ParentEntry/parentObject"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ParentEntry/childSlot"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference resourceMap.ecore#//ParentEntry/resourceEntries"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ParentEntry/resourceMap"/>
+      <genOperations ecoreOperation="resourceMap.ecore#//ParentEntry/getResourceEntry">
+        <genParameters ecoreParameter="resourceMap.ecore#//ParentEntry/getResourceEntry/child"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="resourceMap.ecore#//ChildEntry">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ChildEntry/childObject"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference resourceMap.ecore#//ChildEntry/parentMap"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

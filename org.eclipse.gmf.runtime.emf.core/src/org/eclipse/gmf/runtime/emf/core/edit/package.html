@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+MSL editing support, defining an operation and notification protocol in a custom
+{@link org.eclipse.emf.edit.domain.EditingDomain} implementation.
+
+<h2>Package Specification</h2>
+<p>
+The MSL operation and notification protocol:
+<ul>
+  <li>{@link org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain}
+       - for executing read and write operations as
+         {@link org.eclipse.gmf.runtime.emf.core.edit.MRunnable}s and for registering
+         {@link org.eclipse.gmf.runtime.emf.core.edit.MListener}s to receive notifications
+         of model changes</li>
+  <li>{@link org.eclipse.gmf.runtime.emf.core.edit.MFilter}
+       - for filtering <code>MListener</code> notifications</li>
+  <li>{@link org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval}
+       - for interacting with the MSL's command stack</li>
+</ul>
+</p>
+<p>
+The {@link org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener} provides a more
+friendly callback listener protocol that demultiplexes the batch events provided
+by the {@link org.eclipse.gmf.runtime.emf.core.edit.MListener} class as
+individual notifications categorized by kind.  The
+{@link org.eclipse.gmf.runtime.emf.core.edit.DemuxingMListener} class implements
+this demultiplexing logic, delegating to an <code>IDemuxedMListener</code>.
+For clients that can extend it, the
+{@link org.eclipse.gmf.runtime.emf.core.edit.DemuxedMListener} class provides the
+convenience of redefining only the interesting callbacks.</p>
+</p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+MSL resource API.  This package provides the MSL extension of
+the EMF {@link org.eclipse.emf.ecore.resource.Resource} interface and the
+resource factory responsible for creating MSL resources.
+
+<h2>Package Specification</h2>
+<p>
+The {@link org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource} interface
+is the abstract specification of an MSL resource, which is an XMI resource
+that can be persisted in multiple files.  A "logical resource" is an in-memory
+view of any number of discrete, interconnected "physical" XMI resources
+comprising a single model tree (or forest, in the case of a logical resource
+with multiple roots).
+</p><p>
+Within the logical view of a model, one or more elements
+may be "separated" from its containing element in the physical view.  The
+physical URI of a separate element is different from the physical URI of its
+container.  However, for the purposes of referencing such elements from within
+the logical resource or from another logical resource, these elements are both
+addressed by the logical URI.  A logical resource has a single "root" resource
+in the physical implementation, which serves to anchor the graph of separate
+resources.  This root resource's URI defines the logical URI.
+</p><p>
+Providers of EMF metamodels can define policies that control how elements in
+their metamodel may be separated from their containers.  An implementation of
+the {@link org.eclipse.gmf.runtime.emf.core.resources.ILogicalResourcePolicy} is
+registered on the
+<tt><a href="../../../../../../../../../extension-points/com_ibm_xtools_emf_msl_core_resourcePolicies.html">org.eclipse.gmf.runtime.emf.core.resourcePolicies</a></tt>
+extension point.  The policy defines call-back methods to:
+</p>
+<ul>
+  <li>determine which elements in a resource are allowed to be separated</li>
+  <li>suggest a URI for a new physical resource (to support auto-naming of files)</li>
+  <li>perform edit-validation operations such as prompting to check out
+      physical resources in a version-control system</li>
+  <li>transform the model in some way when an element is separated or absorbed</li>
+</ul>
+<p>
+The logical resource supports full and incremental loading of its physical units,
+using special load options.  In the incremental loading case, units may be
+loaded either explicitly by the client application or automatically.  Automatic
+resolution will read unloaded elements from their physical resources as they
+are traversed by accessing a containment reference or by resolution of reference
+proxies.  To support the automatic loading of containment references, the
+<tt>resourcePolicies</tt> extension point also allows a metamodel provider to
+register an {@link org.eclipse.emf.ecore.EFactory} that creates elements using
+special containment lists that load objects from separate units (such as the
+{@link org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentLoadingEList}).
+</p><p>
+This package also defines the
+{@link org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory} class that
+creates MSL resources.  It is not intended to be used by client code, but to
+be referenced on the EMF <tt>org.eclipse.emf.ecore.extension_parser</tt>
+extension point to associate the client application's file extension with the
+resource factory.
+</p>
+
+@see org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource
+@see org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentLoadingEList
+@see org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentWithInverseLoadingEList
+@see org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory
+
+@canBeSeenBy %partners
+
+</body>
+</html>

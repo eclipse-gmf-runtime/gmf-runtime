@@ -1,0 +1,17 @@
+# Debugging options for the org.eclipse.gmf.runtime.draw2d.ui plug-in
+
+# Turn on general debugging for the org.eclipse.gmf.runtime.draw2d.ui plug-in
+org.eclipse.gmf.runtime.draw2d.ui.figures/debug=true
+
+# Trace when exceptions are caught
+org.eclipse.gmf.runtime.draw2d.ui.figures/debug/exceptions/catching=false
+# Trace when exceptions are thrown
+org.eclipse.gmf.runtime.draw2d.ui.figures/debug/exceptions/throwing=false
+
+# Trace when methods are entered
+org.eclipse.gmf.runtime.draw2d.ui.figures/debug/methods/entering=false
+# Trace when methods are exited
+org.eclipse.gmf.runtime.draw2d.ui.figures/debug/methods/exiting=false
+
+# Trace dnd
+org.eclipse.gmf.runtime.draw2d.ui.figures/debug/dnd/tracing=false

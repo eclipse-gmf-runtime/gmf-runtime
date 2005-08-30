@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.emf.core">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.emf.core" id="Pathmaps" name="Path Maps"/>
+      </appInfo>
+      <documentation>
+         Extension point for the definition of path map variables.  Path map variables allow for portability of URIs, in similar fashion to path Eclipse&apos;s core path variables.  The actual location indicated by a URI depends on the run-time binding of the path variable.  Thus, different environments can work with the same resource URIs even though the resources are stored in different physical locations.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="pathmap"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="pathmap">
+      <annotation>
+         <documentation>
+            Specifies a path map variable to be registered with the MSL.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The variable name.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="plugin" type="string">
+            <annotation>
+               <documentation>
+                  The plugin containing the path, if different from the plug-in defining the extension.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The path, relative to the plug-in location (as indicated by the &lt;tt&gt;plugin&lt;/tt&gt; attribute if specified, or the current plug-in if not).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         6.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+This example illustrates the definition of a path map to locate libraries
+in the org.eclipse.uml2.  Using this path map, URIs such as &quot;pathmap://UML2_LIBRARIES/Ecore.library.uml2&quot; can be used to reference UML2 library resources.
+&lt;/p&gt;
+&lt;pre&gt;
+   &lt;extension
+         id=&quot;UML2Libraries&quot;
+         name=&quot;UML2 Libraries&quot;
+         point=&quot;org.eclipse.gmf.runtime.emf.core.Pathmaps&quot;&gt;
+      &lt;pathmap
+            name=&quot;UML2_LIBRARIES&quot;
+            plugin=&quot;org.eclipse.uml2.resources&quot;
+            path=&quot;libraries&quot;&gt;
+      &lt;/pathmap&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         There is no API associated with this extension point.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         (c) Copyright 2003, 2005 IBM Corporation. All Rights Reserved.
+      </documentation>
+   </annotation>
+
+</schema>

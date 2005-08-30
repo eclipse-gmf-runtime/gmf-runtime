@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004,2005.  All Rights Reserved.               |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Internal implementation of the MSL cross-reference index.  This package should
+not be used by clients of the MSL.
+
+<h2>Package Specification</h2>
+<p>
+The cross-reference index is implemented on two levels:
+<ul>
+<li>the {@link org.eclipse.gmf.runtime.emf.core.internal.index.MSLResourceIndexer}
+    maintains cross-references at the EMF
+    {@link org.eclipse.emf.ecore.resource.Resource} level: which resources
+    have elements referencing elements in which other resources</li>
+<li>the {@link org.eclipse.gmf.runtime.emf.core.internal.index.MSLObjectIndexer}
+    maintains cross-references at the EMF
+    {@link org.eclipse.emf.ecore.EObject} level: which model elements
+    reference which other model elements (in any resource)</li>
+</ul>
+</p>
+
+@canBeSeenBy org.eclipse.gmf.runtime.emf.core.*
+
+</body>
+</html>

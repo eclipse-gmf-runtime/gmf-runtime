@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+    	<extension
+         id="propertiesProviders"
+         name="%ext.propertiesProviders"
+         point="org.eclipse.gmf.runtime.common.ui.services.properties.propertiesProviders">
+      <PropertiesProvider
+            verifyPluginLoaded="false"
+            class="org.eclipse.gmf.runtime.emf.ui.properties.providers.GenericEMFPropertiesProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+      </PropertiesProvider>
+      </extension>
+      
+</plugin>

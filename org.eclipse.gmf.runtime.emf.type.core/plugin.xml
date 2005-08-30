@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension-point id="elementTypes" name="%extPoint.elementTypes" schema="schema/elementTypes.exsd"/>
+   <extension
+         point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+         <elementTypeFactory
+               factory="org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultElementTypeFactory"
+               kind = "org.eclipse.gmf.runtime.emf.type.core.IElementType">
+         </elementTypeFactory>
+   </extension>
+   
+</plugin>

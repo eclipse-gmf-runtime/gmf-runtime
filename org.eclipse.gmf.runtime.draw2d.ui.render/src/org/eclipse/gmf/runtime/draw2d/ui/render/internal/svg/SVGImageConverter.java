@@ -1,0 +1,190 @@
+/****************************************************************************
+  Licensed Materials - Property of IBM
+  (C) Copyright IBM Corp. 2002, 2004. All Rights Reserved.
+ 
+  US Government Users Restricted Rights - Use, duplication or disclosure
+  restricted by GSA ADP Schedule Contract with IBM Corp.
+*****************************************************************************/
+package org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.ImageTranscoder;
+import org.eclipse.swt.graphics.Image;
+
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
+
+
+/**
+ * @author sshaw
+ *
+ * Class for conversion of SVG to different Image formats
+ */
+class SVGImageConverter {
+	/**
+	 * Consructor to create a new instance of SVGtoBufferedImageConverter
+	 */
+	public SVGImageConverter() {
+		// empty constructor
+	}
+
+	/**
+	 * renderSVGToAWTImage
+	 * Given a filename, will render the SVG file into an SWT Image
+	 * 
+	 * @param strFileName String file path of svg file
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return BufferedImage AWT image containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public BufferedImage renderSVGToAWTImage(String strFileName, RenderInfo info)
+		throws Exception {
+		InputStream in = new FileInputStream(strFileName);
+		return renderSVGToAWTImage(in, info);
+	}
+
+	/**
+	 * renderSVGToAWTImage
+	 * Given a buffer, will render the SVG file into an SWT Image
+	 * 
+	 * @param buffer byte[] array containing an cached SVG image file.
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return BufferedImage AWT iimage containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public BufferedImage renderSVGToAWTImage(byte[] buffer, RenderInfo info)
+		throws Exception {
+		InputStream in = new ByteArrayInputStream(buffer);
+		return renderSVGToAWTImage(in, info);
+	}
+	
+	/**
+	 * setUpTranscoders
+	 * sets up the transcoders with the hints based on the RenderInfo structure.
+	 * 
+	 * @param in
+	 * @param transcoder
+	 * @param info
+	 */
+	private void setUpTranscoders(InputStream in, Transcoder transcoder, RenderInfo info)
+		throws Exception {
+		if (info.getWidth() > 0)
+			transcoder.addTranscodingHint(
+				ImageTranscoder.KEY_WIDTH,
+				new Float(info.getWidth()));
+		if (info.getHeight() > 0)
+			transcoder.addTranscodingHint(
+				ImageTranscoder.KEY_HEIGHT,
+				new Float(info.getHeight()));
+		
+		transcoder.addTranscodingHint(
+				SWTImageTranscoder.KEY_MAINTAIN_ASPECT_RATIO,
+				new Boolean(info.shouldMaintainAspectRatio()));
+	
+		transcoder.addTranscodingHint(
+				SWTImageTranscoder.KEY_ANTI_ALIASING,
+				new Boolean(info.shouldAntiAlias()));
+				
+		if (info.getFillColor() != null) {
+			transcoder.addTranscodingHint(
+				SWTImageTranscoder.KEY_FILL_COLOR,
+				new Color(info.getFillColor().getRed(), 
+						  info.getFillColor().getGreen(),
+						  info.getFillColor().getBlue()));
+		}
+		
+		if (info.getOutlineColor() != null) {
+					transcoder.addTranscodingHint(
+						SWTImageTranscoder.KEY_OUTLINE_COLOR,
+						new Color(info.getOutlineColor().getRed(), 
+								  info.getOutlineColor().getGreen(),
+								  info.getOutlineColor().getBlue()));
+		}
+		
+		TranscoderInput input = null;
+		TranscoderOutput output = null;
+
+		input = new TranscoderInput(in);
+		output = new ImageTranscoderOutput(); 
+		transcoder.transcode(input, output);
+	}
+	
+	/**
+	 * renderSVG
+	 * Given an InputStream, will render the SVG file into an SWT Image
+	 * 
+	 * @param in InputSteam which contains the SVG file data
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return BufferedImage AWT iimage containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public BufferedImage renderSVGToAWTImage(InputStream in, RenderInfo info)
+		throws Exception {
+		ImageTranscoderEx transcoder = new ImageTranscoderEx();
+
+		setUpTranscoders(in, transcoder, info);
+
+		return transcoder.getBufferedImage();
+	}
+	
+	/**
+	 * renderSVGtoSWTImage
+	 * Given a filename, will render the SVG file into an SWT Image
+	 * 
+	 * @param strFileName String file path of svg file
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return Image SWT image containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public Image renderSVGtoSWTImage(String strFileName, RenderInfo info)
+		throws Exception {
+		InputStream in = new FileInputStream(strFileName);
+		return renderSVGtoSWTImage(in, info);
+	}
+
+	/**
+	 * renderSVGtoSWTImage
+	 * Given a buffer, will render the SVG file into an SWT Image
+	 * 
+	 * @param buffer byte[] array containing an cached SVG image file.
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return Image SWT image containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public Image renderSVGtoSWTImage(byte[] buffer, RenderInfo info)
+		throws Exception {
+		InputStream in = new ByteArrayInputStream(buffer);
+		return renderSVGtoSWTImage(in, info);
+	}
+
+	/**
+	 * renderSVGtoSWTImage
+	 * Given an InputStream, will render the SVG file into an SWT Image
+	 * 
+	 * @param in InputSteam which contains the SVG file data
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return Image SWT image containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public Image renderSVGtoSWTImage(InputStream in, RenderInfo info)
+		throws Exception {
+		SWTImageTranscoder transcoder = new SWTImageTranscoder();
+
+		setUpTranscoders(in, transcoder, info);
+
+		return transcoder.getSWTImage();
+	}
+}

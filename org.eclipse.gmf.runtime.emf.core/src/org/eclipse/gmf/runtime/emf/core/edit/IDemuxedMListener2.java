@@ -1,0 +1,87 @@
+/*
+ *+------------------------------------------------------------------------+
+ *| Licensed Materials - Property of IBM                                   |
+ *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+ *|                                                                        |
+ *| US Government Users Restricted Rights - Use, duplication or disclosure |
+ *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+ *+------------------------------------------------------------------------+
+ */
+
+package org.eclipse.gmf.runtime.emf.core.edit;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+
+import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
+
+
+/**
+ * An optional extension to the {@link IDemuxedListener} interface for listeners
+ * interested in separation and absorption events in logical resources.
+ *
+ * @author Christian W. Damus (cdamus)
+ * @author Vishy Ramaswamy
+ */
+public interface IDemuxedMListener2
+	extends IDemuxedMListener {
+	
+	/**
+	 * Notifies me of an event indicating that an element in a logical resource
+	 * has been separated into a subordinate (physical) resource.
+	 * 
+	 * @param notification the raw notification
+	 * @param resource the logical resource that was separated
+	 * @param eObject an object in the <code>resource</code>, which is now
+	 *     separated into a subordinate resource with the specified <code>uri</code>
+	 * @param newResource the new subordinate resource (within the logical
+	 *     <code>resource</code>) that stores the <code>eObject</code>
+	 */
+	public void handleElementSeparatedEvent(Notification notification,
+		ILogicalResource resource, EObject eObject, Resource newResource);
+	
+	/**
+	 * Notifies me of an event indicating that an element in a logical resource
+	 * has been absorbed from a subordinate (physical) resource.
+	 * 
+	 * @param notification the raw notification
+	 * @param resource the logical resource into which the object was absorbed
+	 * @param eObject an object in the <code>resource</code>, which was
+	 *     absorbed from a subordinate resource with the specified <code>uri</code>
+	 * @param oldResource the subordinate resource (within the logical
+	 *     <code>resource</code>) that formerly stored the <code>eObject</code>
+	 */
+	public void handleElementAbsorbedEvent(Notification notification,
+			ILogicalResource resource, EObject eObject, Resource oldResource);
+	
+	/**
+	 * Notifies me of an event indicating that an element in a logical resource
+	 * has been loaded from a subordinate (physical) resource.
+	 * 
+	 * @param notification the raw notification
+	 * @param resource the logical resource into which the object was loaded
+	 * @param eObject an object in the <code>resource</code>, which is
+	 *     newly loaded from a previously unloaded physical resource
+	 */
+	public void handleElementLoadedEvent(Notification notification,
+			ILogicalResource resource, EObject eObject);
+	
+	/**
+	 * Notifies me of an event indicating that a root has been added to the resource
+	 * 
+	 * @param notification the raw notification
+	 * @param resource the resource into which the root object was added
+	 * @param eObject the root object that was added
+	 */
+	public void handleRootAddedEvent(Notification notification, Resource resource, EObject eObject);
+
+	/**
+	 * Notifies me of an event indicating that a root has been removed from the resource
+	 * 
+	 * @param notification the raw notification
+	 * @param resource the resource from which the root object was removed
+	 * @param eObject the root object that was removed
+	 */
+	public void handleRootRemovedEvent(Notification notification, Resource resource, EObject eObject);
+}

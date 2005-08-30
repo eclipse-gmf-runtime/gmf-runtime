@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004,2005.  All Rights Reserved.               |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+The commands that implement the MSL undo/redo command stack.  These are used
+internally by the MSL to implement undo/redo support in EMF models, and by
+clients to inject undo/redo logic associated with model changes into the
+MSL's command stack to coordinate related changes in some other non-EMF
+data store.
+
+<h2>Package Specification</h2>
+<p>
+The core types in this API are:
+<ul>
+<li>{@link org.eclipse.gmf.runtime.emf.core.internal.commands.MCommand}:
+     abstract specification of an MSL command, extending the EMF
+     {@link org.eclipse.emf.common.command.Command} interface</li>
+<li>{@link org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack}:
+     the undo/redo stack of <code>MCommand</code>s</li>
+<li>{@link org.eclipse.gmf.runtime.emf.core.internal.commands.MSLAbstractCommand}:
+     abstract partial implementation of the <code>MCommand</code> interface</li>
+<li>{@link org.eclipse.gmf.runtime.emf.core.internal.commands.MSLCompoundCommand}:
+     implements composition of <code>MCommand</code>s into single undoable
+     units</li>
+</ul>
+</p>
+
+<p>
+The {@link org.eclipse.gmf.runtime.emf.core.internal.commands.MSLCommandGenerator}
+is not a part of this package's API; it is used internally by the MSL to
+populate the command stack in response to notifications from EMF.
+</p>
+
+@canBeSeenBy org.eclipse.gmf.runtime.emf.core.*
+
+</body>
+</html>

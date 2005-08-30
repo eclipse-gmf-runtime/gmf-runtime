@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004,2005.  All Rights Reserved.               |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Adaptation layer for EMF notifications.  This package is responsible for
+adapting EMF notifications in MSL-managed models to the MSL notification API
+and for keeping the MSL up-to-date with changes in its models.
+
+<h2>Package Specification</h2>
+<p>
+This package defines the EMF listener classes that funnel EMF
+{@link org.eclipse.emf.common.notify.Notification}s from
+{@link org.eclipse.emf.ecore.EObject}s,
+{@link org.eclipse.emf.ecore.resource.Resource}s, and
+{@link org.eclipse.emf.ecore.resource.ResourceSet}s to
+{@link org.eclipse.gmf.runtime.emf.core.edit.MListener}s.
+</p>
+<p>
+Clients of the MSL do not need to interact directly with this package.
+The {@link org.eclipse.gmf.runtime.emf.core.edit.MListener} class is used for
+receiving notifications from the MSL.
+</p>
+
+@see org.eclipse.gmf.runtime.emf.core.edit.MListener
+
+@canBeSeenBy org.eclipse.gmf.runtime.emf.core.*
+
+</body>
+</html>

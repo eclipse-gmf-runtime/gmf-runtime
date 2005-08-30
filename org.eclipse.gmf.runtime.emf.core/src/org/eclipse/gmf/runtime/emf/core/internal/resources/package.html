@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004,2005.  All Rights Reserved.               |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+MSL resource implementation.  This package provides the MSL implementation of
+the EMF {@link org.eclipse.emf.ecore.resource.Resource} interface, and the
+resource factory responsible for creating MSL resources.
+
+<h2>Package Specification</h2>
+<p>
+The {@link org.eclipse.gmf.runtime.emf.core.internal.resources.MResource} interface
+is the abstract specification of an MSL resource, which extensions of the
+MSL can implement to customize certain key MSL behaviours such as creating,
+destroying, iterating, and managing the IDs of model elements.
+</p>
+<p>
+Custom <code>MResource</code>s are typically created by custom implementations
+of the {@link org.eclipse.gmf.runtime.emf.core.internal.resources.MResourceFactory}
+interface, which must also implement the EMF
+{@link org.eclipse.emf.ecore.resource.Resource.Factory Resource.Factory} interface.
+<code>MResourceFactory</code> also defines an API for customization proxy resolution.
+</p>
+<p>
+If required, custom <code>MResource</code>s should consider extending
+the {@link org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResource} class
+to inherit support for decomposition of resources into multiple "physical" parts.
+This is typically useful only if the resource is to be persisted in files
+in a version-control system.
+</p>
+<p>
+Other classes in this package are responsible for the MSL's customization of
+EMF's XMI persistence capabilities and the handling of dangling references
+and other problems in serialization and deserialization.
+</p>
+
+@see org.eclipse.gmf.runtime.emf.core.util.EObjectUtil
+@see org.eclipse.gmf.runtime.emf.core.util.ResourceUtil
+@see org.eclipse.gmf.runtime.emf.core.util.ProxyUtil
+
+@canBeSeenBy org.eclipse.gmf.runtime.emf.core.*
+
+</body>
+</html>

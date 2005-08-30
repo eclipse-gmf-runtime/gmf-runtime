@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004, 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Contains the factory class and supporting classes.  The factory class may have dependencies into all the
+different supported files formats hence it is separated into it's own package namespace.  The factory class should 
+be the central location where specific variants of the <code>RenderedImage</code> implementors are created.  This
+allows clients to make generic calls to the factory with a file buffer and have it return a valid instance or not.
+Clients therefore don't have to assume any knowledge of a specific image file type.
+<p></p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

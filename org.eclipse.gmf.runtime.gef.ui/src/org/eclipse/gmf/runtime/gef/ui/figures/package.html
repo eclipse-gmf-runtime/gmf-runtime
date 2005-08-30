@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2003, 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Provides a set of classes that extend from the org.eclipse.draw2d 
+hierarchies for rendering, geometric manipulation and layout of figures
+on the drawing surface.
+
+<p>These classes can be used when constructing your figures for display.  These figures
+will typically have a GEF dependency which is why they cannot be placed in the pure draw2D.ui
+plug-in.  The dependency is usually caused by the <code>org.eclipse.gef.handles.HandleBounds</code>
+interface which needs to be installed on top level figures in order to accurately calculate
+the bounding box that the handle feedback needs to attach to. </p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

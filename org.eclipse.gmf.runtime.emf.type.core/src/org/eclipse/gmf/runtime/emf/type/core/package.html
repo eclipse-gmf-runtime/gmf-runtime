@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>This package contains the classes that define primary classes in the Element Type framework.</P>
+
+<P>{@link org.eclipse.gmf.runtime.emf.type.core.IElementType}s are used to 
+represent application types for the purpose of displaying and
+editing model elements in the Rational Modeling Platform. These types are contributed by
+extension point. A registry of such types,
+({@link org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry}) is 
+maintained, and can be used to find:
+<UL>
+<LI>The element type that best matches a given EObject, and</LI>
+<LI>The element types that
+can be contained in a given feature of a given EObject</LI> 
+</UL>
+
+<P>There are two kinds of element types, {@link org.eclipse.gmf.runtime.emf.type.core.IMetamodelType} and and
+specializations of metmodel types, {@link org.eclipse.gmf.runtime.emf.type.core.ISpecializationType}.</P>  
+
+<P>Each metamodel type defines the base icon, name
+and editing behaviour for all elements with its EClass.  Only one metamodel type can be registered for each EClass in a given metamodel. The
+registry logs an error when an attempt is made to register a new metamodel type that
+has the same EClass as a type that has already been registered. The second type
+is rejected from the registry.</P>
+
+<P>Specializations of metamodel types 
+can define a new icon and name for their type, but can only contribute 
+behaviour 'before' or 'after' the base editing behaviour. They cannot replace the base
+editing behaviour.</P>
+
+<P> Custom element types (which must be subtypes of metamodel or
+specialization types) can be contributed to the registry using
+a {@link org.eclipse.gmf.runtime.emf.type.core.IElementTypeFactory}.  Custom element types
+have arbitrary parameters specified by name and value pairs in XML.</P> 
+
+<P> The {@link org.eclipse.gmf.runtime.emf.type.core.NullElementType} can be specialized when
+an element type does not directly correspond to an EClass.  Such specializations 
+will not have any default editing behaviour. Instead, they will only have the 'before'
+ and 'after' behaviour contributed by their edit helper advice.  As well, the
+ ElementTypeRegistry will not find these specializations when asking for types
+ and advice that match an existing EObject.  They will only be found when asking for
+ types and advice that match the specialization types themselves.</P>
+
+@see org.eclipse.gmf.runtime.emf.type.core.commands
+@see org.eclipse.gmf.runtime.emf.type.core.edithelper
+@see org.eclipse.gmf.runtime.emf.type.core.requests
+
+@see <p><a href="../../../../../../extension-points/com_ibm_xtools_emf_type_elementTypes.html"><tt>org.eclipse.gmf.runtime.emf.type.core.elementTypes</tt></a> extension point</p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

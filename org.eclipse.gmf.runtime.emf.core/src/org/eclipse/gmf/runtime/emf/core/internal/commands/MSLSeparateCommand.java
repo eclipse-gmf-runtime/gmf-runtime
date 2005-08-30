@@ -1,0 +1,110 @@
+/*
+ *+------------------------------------------------------------------------+
+ *| Licensed Materials - Property of IBM                                   |
+ *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+ *|                                                                        |
+ *| US Government Users Restricted Rights - Use, duplication or disclosure |
+ *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+ *+------------------------------------------------------------------------+
+ */
+
+package org.eclipse.gmf.runtime.emf.core.internal.commands;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
+import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
+import org.eclipse.gmf.runtime.emf.core.resources.CannotAbsorbException;
+import org.eclipse.gmf.runtime.emf.core.resources.CannotSeparateException;
+import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
+
+
+/**
+ * Command that undoes/redoes separation of an element into another resource.
+ *
+ * @author Christian W. Damus (cdamus)
+ */
+public class MSLSeparateCommand
+	extends MSLBasicCommand {
+
+	private EObject child;
+	private ILogicalResource res;
+	private Resource subres;
+	
+	/**
+	 * Initializes me.
+	 * 
+	 * @param domain the editing domain in which I occurred
+	 * @param owner the container element that notified
+	 * @param feature the containment feature
+	 * @param position the index in the containment feature of the separated
+	 *     object (or -1 if not a list feature)
+	 * @param resource the new physical resource of the child element
+	 */
+	public MSLSeparateCommand(MSLEditingDomain domain, EObject owner,
+			EStructuralFeature feature, int position, Resource resource) {
+		super(domain, owner, feature);
+		
+		if (position < 0) {
+			// must be a scalar feature
+			this.child = (EObject) owner.eGet(feature);
+		} else {
+			// no need to worry about proxies in a containment feature
+			this.child = (EObject) ((EList) owner.eGet(feature)).get(position);
+		}
+		
+		this.res = (ILogicalResource) child.eResource();
+		this.subres = resource;
+	}
+
+	public void dispose() {
+		super.dispose();
+		
+		child = null;
+		res = null;
+		subres = null;
+	}
+	
+	public Type getType() {
+		return MCommand.SEPARATE;
+	}
+
+	public void undo() {
+		try {
+			res.absorb(child);
+		} catch (CannotAbsorbException e) {
+			RuntimeException re = new MSLRuntimeException(
+				ResourceManager.getI18NString(
+					"absorption.failed_EXC_"), //$NON-NLS-1$
+					e);
+	
+			Trace.throwing(MSLPlugin.getDefault(),
+				MSLDebugOptions.EXCEPTIONS_THROWING, getClass(), "undo", e); //$NON-NLS-1$
+	
+			throw re;
+		}
+	}
+
+	public void redo() {
+		try {
+			res.separate(child, subres.getURI());
+		} catch (CannotSeparateException e) {
+			RuntimeException re = new MSLRuntimeException(
+				ResourceManager.getI18NString(
+					"separation.failed_EXC_"), //$NON-NLS-1$
+					e);
+
+			Trace.throwing(MSLPlugin.getDefault(),
+				MSLDebugOptions.EXCEPTIONS_THROWING, getClass(), "redo", e); //$NON-NLS-1$
+
+			throw re;
+		}
+	}
+}

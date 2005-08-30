@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Modeling Services Layer (MSL) exceptions.  This package defines a few exceptions that may
+be thrown by the MSL API.
+
+<h2>Package Specification</h2>
+<p>
+The exceptions in this package may be thrown by the MSL API as runtime exceptions or
+as checked exceptions nested with {@link java.lang.reflect.InvocationTargetException}s:
+<ul>
+<li>{@link org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException} may be thrown to
+    signal improper usage of the MSL API</li>
+<li>{@link org.eclipse.gmf.runtime.emf.core.exceptions.MSLCheckedException} may be chained by
+    an <code>InvocationTargetException</code> when an operation cannot be completed for
+    some foreseeable reason out of the client's control</li>
+<li>{@link org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException} is a specialization
+    of <code>MSLCheckedException</code> indicating that an
+    {@link org.eclipse.gmf.runtime.emf.core.ResourceSetModifyOperation operation} is rolled back due
+    to a live validation failure.</li>
+</ul>
+
+@see org.eclipse.gmf.runtime.emf.core
+
+</body>
+</html>

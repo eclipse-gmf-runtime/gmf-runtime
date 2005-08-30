@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="resourcemap"
+    nsURI="http://www.ibm.com/RMP-MSL/7.0.0/ResourceMap" nsPrefix="resmap">
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceMap">
+    <eOperations name="getParentEntry" eType="#//ParentEntry">
+      <eParameters name="parent" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      <eParameters name="slot" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
+    </eOperations>
+    <eOperations name="getResourceEntry" eType="#//ResourceEntry">
+      <eParameters name="child" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eOperations>
+    <eOperations name="getParentMap" eType="#//ResourceMap">
+      <eParameters name="child" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eOperations>
+    <eOperations name="getChildEntry" eType="#//ChildEntry">
+      <eParameters name="child" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootMap" eType="#//ResourceMap"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentEntries" ordered="false"
+        upperBound="-1" eType="#//ParentEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childEntries" ordered="false"
+        upperBound="-1" eType="#//ChildEntry" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceEntry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resource" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EResource"
+        transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="childPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childObject" lowerBound="1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentEntry" eType="#//ParentEntry"
+        changeable="false" volatile="true" transient="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParentEntry">
+    <eOperations name="getResourceEntry" eType="#//ResourceEntry">
+      <eParameters name="child" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentObject" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childSlot" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceEntries" lowerBound="1"
+        upperBound="-1" eType="#//ResourceEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceMap" eType="#//ResourceMap"
+        changeable="false" volatile="true" transient="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ChildEntry">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childObject" lowerBound="1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentMap" lowerBound="1"
+        eType="#//ResourceMap"/>
+  </eClassifiers>
+</ecore:EPackage>

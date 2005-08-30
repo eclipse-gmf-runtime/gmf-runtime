@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension id="iconProviders" 
+         name="%ext.iconProviders" 
+         point="org.eclipse.gmf.runtime.common.ui.services.iconProviders">
+      <IconProvider 
+            class="org.eclipse.gmf.runtime.emf.type.ui.internal.providers.ElementTypeIconProvider">
+         <Priority name="Lowest"/>
+      </IconProvider>
+   </extension>
+   
+</plugin>

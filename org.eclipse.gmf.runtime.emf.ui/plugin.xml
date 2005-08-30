@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension-point id="modelingAssistantProviders" name="%ext.modelingAssistantProviders" schema="schema/modelingAssistantProviders.exsd"/>
+      
+   <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+          name="%Validation_Preference_Page_Name"
+          category="xtools.modeling"
+          class="org.eclipse.gmf.runtime.emf.ui.preferences.ValidationPreferencePage"
+          id="org.eclipse.gmf.runtime.emf.ui.validation">
+     </page>
+   </extension>   
+   
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.gmf.runtime.emf.ui.preferences.PreferenceInitializer" />
+   </extension>
+
+   <extension
+         id="modelingNewWizards"
+         name="%ext.modelingNewWizards"
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%createWizardCategory"
+            id="org.eclipse.gmf.runtime.emf.ui.modeling">
+      </category>
+  </extension>
+</plugin>

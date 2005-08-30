@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004,2005.  All Rights Reserved.               |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Definition of the MSL meta-model support service provider API.  MSL clients can
+customize various aspects of the MSL behaviour by providing a meta-model
+support implementation.
+
+<h2>Package Specification</h2>
+<p>
+The meta-model service provider API consists of:
+<ul>
+<li>{@link org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupport}:
+    specification of a meta-model.  A meta-model provides information about
+    structural relationships between metaclasses ({@link org.eclipse.emf.ecore.EClass}es),
+    semantic procedures (similar to database triggers), etc.</li>
+<li>{@link org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupportProvider}:
+    interface for objects that map {@link org.eclipse.emf.ecore.EPackage}s to
+    <code>IMetamodelSupport</code>s.  Providers are registered on the
+    <tt>org.eclipse.gmf.runtime.emf.core.MetaModelProviders</tt> extension point</li>
+</ul>
+</p>
+
+@see org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil#getMetaModel
+
+@canBeSeenBy %partners
+
+</body>
+</html>
