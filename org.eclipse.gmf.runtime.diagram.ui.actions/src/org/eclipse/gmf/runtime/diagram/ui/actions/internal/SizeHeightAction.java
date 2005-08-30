@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This action is used to change the size of the selected shapes

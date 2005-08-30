@@ -16,8 +16,8 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
 
 /**
  * @author choang

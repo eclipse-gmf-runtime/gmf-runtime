@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.figures.ScalableImageFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.WrapperNodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw

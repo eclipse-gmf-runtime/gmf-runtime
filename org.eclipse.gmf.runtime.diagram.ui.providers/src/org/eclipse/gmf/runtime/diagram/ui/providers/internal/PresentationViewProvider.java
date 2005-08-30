@@ -21,8 +21,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.NoteAttachment
 import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.NoteViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.TextViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Supports the creation of <b>presentation</b> view elements.  

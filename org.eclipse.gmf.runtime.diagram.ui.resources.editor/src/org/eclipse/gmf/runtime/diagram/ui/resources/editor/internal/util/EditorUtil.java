@@ -40,7 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts.FileResourceEditorInput;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

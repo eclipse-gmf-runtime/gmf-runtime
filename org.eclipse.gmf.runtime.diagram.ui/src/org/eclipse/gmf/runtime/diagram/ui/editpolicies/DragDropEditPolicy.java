@@ -31,7 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Abstract Implementation for all EditPolicies that deal with the

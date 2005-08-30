@@ -22,7 +22,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Command that sets the view's mutability. if a view is Mutability state is used

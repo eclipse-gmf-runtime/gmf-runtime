@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * a command to create the both of the View and Semantic of the connector, but

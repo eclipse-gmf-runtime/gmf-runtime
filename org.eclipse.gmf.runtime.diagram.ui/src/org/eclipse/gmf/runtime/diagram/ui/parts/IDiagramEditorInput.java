@@ -11,7 +11,7 @@ package org.eclipse.gmf.runtime.diagram.ui.parts;
 
 import org.eclipse.ui.IEditorInput;
 
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Diagram Editor Input interface.

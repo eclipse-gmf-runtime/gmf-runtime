@@ -17,8 +17,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.Routing;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This class overrides the default GraphicalNodeEditPolicy to allow for a

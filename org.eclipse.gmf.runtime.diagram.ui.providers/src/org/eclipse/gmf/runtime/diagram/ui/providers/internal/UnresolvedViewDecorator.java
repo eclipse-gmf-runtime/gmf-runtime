@@ -21,10 +21,10 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.LineStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

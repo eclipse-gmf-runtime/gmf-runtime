@@ -27,9 +27,9 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

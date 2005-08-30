@@ -22,10 +22,10 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DuplicateEObjectsCommand;
-import com.ibm.xtools.notation.Bounds;
-import com.ibm.xtools.notation.LayoutConstraint;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This command duplicates a list of notational views and adds each duplicate to

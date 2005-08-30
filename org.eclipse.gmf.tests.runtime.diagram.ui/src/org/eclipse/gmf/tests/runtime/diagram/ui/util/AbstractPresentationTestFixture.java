@@ -42,9 +42,9 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

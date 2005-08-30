@@ -49,7 +49,7 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManag
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Colors section to represent line and font properties of a shape or connector

@@ -35,7 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFac
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Generic Creation Tool - creates a semantic model element and a view for it

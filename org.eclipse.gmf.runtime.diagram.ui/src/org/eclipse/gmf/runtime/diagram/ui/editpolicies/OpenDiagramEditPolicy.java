@@ -19,8 +19,8 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.OpenDiagramCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Edit Policy which opens the diagram corresponding to the host's semantic model.

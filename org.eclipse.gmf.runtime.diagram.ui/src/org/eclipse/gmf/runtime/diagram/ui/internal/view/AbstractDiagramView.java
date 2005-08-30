@@ -20,10 +20,10 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.internal.view.IDiagramView;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * To change the template for this generated type comment go to

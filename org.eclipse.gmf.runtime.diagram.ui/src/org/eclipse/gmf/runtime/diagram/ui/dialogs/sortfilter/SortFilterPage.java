@@ -61,13 +61,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilter
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
-import com.ibm.xtools.notation.Filtering;
-import com.ibm.xtools.notation.FilteringStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Sorting;
-import com.ibm.xtools.notation.SortingDirection;
-import com.ibm.xtools.notation.SortingStyle;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Filtering;
+import org.eclipse.gmf.runtime.notation.FilteringStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Sorting;
+import org.eclipse.gmf.runtime.notation.SortingDirection;
+import org.eclipse.gmf.runtime.notation.SortingStyle;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * SortFilterPage extends <code>PropertyPage</code> by adding a Table and 

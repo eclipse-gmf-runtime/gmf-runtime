@@ -18,10 +18,10 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import com.ibm.xtools.notation.Alignment;
-import com.ibm.xtools.notation.Guide;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Alignment;
+import org.eclipse.gmf.runtime.notation.Guide;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This command is used to change a guide's attached part

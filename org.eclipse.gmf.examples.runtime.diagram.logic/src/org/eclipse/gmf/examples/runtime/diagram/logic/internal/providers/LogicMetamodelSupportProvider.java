@@ -12,7 +12,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.GetMetamodelSupportOperation;
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupport;
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupportProvider;
-import com.ibm.xtools.notation.msl.internal.semproc.NotationSemProc;
+import org.eclipse.gmf.runtime.notation.providers.internal.semproc.NotationSemProc;
 
 /**
  * This metamodel support provider exists so that notation semantic procedures will

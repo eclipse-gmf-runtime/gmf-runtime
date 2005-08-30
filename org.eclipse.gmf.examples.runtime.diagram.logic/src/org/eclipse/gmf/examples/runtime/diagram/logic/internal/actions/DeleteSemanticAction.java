@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
  *  a LED semantic element is destroyed.
  *  
  *  @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicMetamodelSupportProvider.LogicMetamodelSupport
- *  @see com.ibm.xtools.notation.msl.internal.semproc.NotationSemProc
+ *  @see org.eclipse.gmf.runtime.notation.providers.internal.semproc.NotationSemProc
  */
 public class DeleteSemanticAction
 	extends PresentationAction

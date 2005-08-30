@@ -54,8 +54,8 @@ import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersPlu
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.properties.actions.PropertyPageViewAction;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Class that implements the <code>IGlobalActionHandler</code> interface.

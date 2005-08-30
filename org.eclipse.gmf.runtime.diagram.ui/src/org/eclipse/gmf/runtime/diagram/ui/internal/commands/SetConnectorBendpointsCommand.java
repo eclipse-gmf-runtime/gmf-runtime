@@ -24,10 +24,10 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.RelativeBendpoints;
-import com.ibm.xtools.notation.View;
-import com.ibm.xtools.notation.datatype.RelativeBendpoint;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 
 /**
  * @author melaasar

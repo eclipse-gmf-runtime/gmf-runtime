@@ -54,9 +54,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragD
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ShapeCompartmentDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.View;
 /**
  * A generic (sub) shape container that holds instances of <code>ShapeNodeEditPart</code>s and
  * manages the display of <code>ConnectionNodeEditPart</code>s anchored to these shape editpart 

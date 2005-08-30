@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw

@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A section filter which allow to remap type to notational element. For example

@@ -66,11 +66,11 @@ import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Routing;
-import com.ibm.xtools.notation.RoutingStyle;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.RoutingStyle;
+import org.eclipse.gmf.runtime.notation.View;
 
 /*
  * @canBeSeenBy %partners

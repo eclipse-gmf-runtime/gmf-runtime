@@ -9,8 +9,8 @@
  */
 package org.eclipse.gmf.runtime.diagram.core.internal.view;
 
-import com.ibm.xtools.notation.Anchor;
-import com.ibm.xtools.notation.Bendpoints;
+import org.eclipse.gmf.runtime.notation.Anchor;
+import org.eclipse.gmf.runtime.notation.Bendpoints;
 
 /**
  * @deprecated View Facades are deprectaed and will be removed soon; use the 

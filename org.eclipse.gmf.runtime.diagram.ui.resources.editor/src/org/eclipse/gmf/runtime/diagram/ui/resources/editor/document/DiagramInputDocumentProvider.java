@@ -24,7 +24,7 @@ import org.osgi.framework.Bundle;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

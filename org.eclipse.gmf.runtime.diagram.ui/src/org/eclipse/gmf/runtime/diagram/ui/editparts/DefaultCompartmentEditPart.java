@@ -10,7 +10,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An editpart to show a default compartment view.

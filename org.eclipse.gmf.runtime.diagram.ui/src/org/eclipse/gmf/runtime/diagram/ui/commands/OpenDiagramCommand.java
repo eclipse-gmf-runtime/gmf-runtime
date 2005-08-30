@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Command to open a diagram.

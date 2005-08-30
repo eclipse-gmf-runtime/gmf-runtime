@@ -37,7 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatus
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.utils.DiagramIOUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

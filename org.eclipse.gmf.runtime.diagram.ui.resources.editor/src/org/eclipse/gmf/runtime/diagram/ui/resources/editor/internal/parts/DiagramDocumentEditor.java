@@ -76,7 +76,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.Edit
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteType;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

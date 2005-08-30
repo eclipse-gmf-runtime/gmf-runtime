@@ -31,11 +31,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
-import com.ibm.xtools.notation.JumpLinkStatus;
-import com.ibm.xtools.notation.JumpLinkType;
-import com.ibm.xtools.notation.Routing;
-import com.ibm.xtools.notation.Smoothness;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
+import org.eclipse.gmf.runtime.notation.JumpLinkType;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.Smoothness;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author dlander, nbalaba

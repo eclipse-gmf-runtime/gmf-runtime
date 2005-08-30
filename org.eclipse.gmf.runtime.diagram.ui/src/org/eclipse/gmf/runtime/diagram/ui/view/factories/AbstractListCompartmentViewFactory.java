@@ -15,8 +15,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 
 import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.AbstractResizableCompartmentViewFactory;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is the bas factory class for all  List compartment views, it will 

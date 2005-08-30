@@ -10,7 +10,7 @@ package org.eclipse.gmf.runtime.diagram.core.internal.commands;
 
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 /**
  * This is an abstract class that contains common behaviour for all
  * the ZOrder Commands.

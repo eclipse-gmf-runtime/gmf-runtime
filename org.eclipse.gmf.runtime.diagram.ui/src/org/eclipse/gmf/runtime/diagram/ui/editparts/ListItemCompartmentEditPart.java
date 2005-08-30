@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ListItemComponentEditPoli
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.TextNonResizableEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar

@@ -29,10 +29,10 @@ import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is the bas factory class for all Diagram views, it will 

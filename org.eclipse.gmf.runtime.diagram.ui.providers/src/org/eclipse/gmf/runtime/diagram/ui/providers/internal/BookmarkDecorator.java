@@ -46,9 +46,9 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

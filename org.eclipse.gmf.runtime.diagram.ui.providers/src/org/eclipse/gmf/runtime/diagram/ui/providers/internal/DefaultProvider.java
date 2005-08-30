@@ -51,7 +51,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Provider that creates a command for the DirectedGraph layout in GEF.

@@ -18,7 +18,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

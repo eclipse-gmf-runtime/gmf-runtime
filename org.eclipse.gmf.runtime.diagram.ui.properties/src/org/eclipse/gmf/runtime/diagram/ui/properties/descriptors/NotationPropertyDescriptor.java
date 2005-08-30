@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EMFCompositeSourcePropertyDescriptor;
 import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EObjectContainmentListPropertyValue;
-import com.ibm.xtools.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * A property descriptor for notation elements (graphical edit parts, views and

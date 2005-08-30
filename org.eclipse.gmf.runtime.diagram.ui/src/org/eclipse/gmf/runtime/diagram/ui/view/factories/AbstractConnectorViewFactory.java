@@ -26,13 +26,13 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.Bendpoints;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.RelativeBendpoints;
-import com.ibm.xtools.notation.Routing;
-import com.ibm.xtools.notation.View;
-import com.ibm.xtools.notation.datatype.RelativeBendpoint;
+import org.eclipse.gmf.runtime.notation.Bendpoints;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 
 /**
  * This is the bas factory class for all connector views, it will 
@@ -50,7 +50,7 @@ abstract public class AbstractConnectorViewFactory
 	extends AbstractViewFactory implements ConnectorFactory {
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.factories.ViewFactory#createView(org.eclipse.core.runtime.IAdaptable, com.ibm.xtools.notation.View, java.lang.String, int, boolean, java.lang.String)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.factories.ViewFactory#createView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, java.lang.String)
 	 */
 	public View createView(final IAdaptable semanticAdapter,
 			final View containerView, final String semanticHint,
@@ -139,7 +139,7 @@ abstract public class AbstractConnectorViewFactory
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.AbstractViewFactory#initializeFromPreferences(com.ibm.xtools.notation.View)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.AbstractViewFactory#initializeFromPreferences(org.eclipse.gmf.runtime.notation.View)
 	 */
 	protected void initializeFromPreferences(View view) {
 		super.initializeFromPreferences(view);

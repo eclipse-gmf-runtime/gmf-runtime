@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An abstract base class that represents a boolean-based action 

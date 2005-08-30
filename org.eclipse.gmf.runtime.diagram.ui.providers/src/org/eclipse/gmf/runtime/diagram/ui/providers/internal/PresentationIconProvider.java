@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

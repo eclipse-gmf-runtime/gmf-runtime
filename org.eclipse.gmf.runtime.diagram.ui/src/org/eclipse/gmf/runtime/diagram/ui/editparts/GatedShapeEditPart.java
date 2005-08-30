@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is a shape which contains gates. The shape responsible for setting the

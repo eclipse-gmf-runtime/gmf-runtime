@@ -265,18 +265,18 @@ className&lt;(plugin id)&gt;?
                <documentation>
                   A fully qualified name of a view class from a list of different kinds of views createable by the view service that the provider can accept in this context. This field is an enumeration consisting of one of the following possible values:
 
-com.ibm.xtools.notation.Node
-com.ibm.xtools.notation.Diagram
-com.ibm.xtools.notation.Edge
+org.eclipse.gmf.runtime.notation.Node
+org.eclipse.gmf.runtime.notation.Diagram
+org.eclipse.gmf.runtime.notation.Edge
                </documentation>
             </annotation>
             <simpleType>
                <restriction base="string">
-                  <enumeration value="com.ibm.xtools.notation.Node">
+                  <enumeration value="org.eclipse.gmf.runtime.notation.Node">
                   </enumeration>
-                  <enumeration value="com.ibm.xtools.notation.Diagram">
+                  <enumeration value="org.eclipse.gmf.runtime.notation.Diagram">
                   </enumeration>
-                  <enumeration value="com.ibm.xtools.notation.Edge">
+                  <enumeration value="org.eclipse.gmf.runtime.notation.Edge">
                   </enumeration>
                </restriction>
             </simpleType>

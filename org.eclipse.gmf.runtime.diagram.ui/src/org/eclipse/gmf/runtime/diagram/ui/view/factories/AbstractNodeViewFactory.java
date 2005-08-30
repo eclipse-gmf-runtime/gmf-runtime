@@ -19,10 +19,10 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.AbstractViewFa
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.LayoutConstraint;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is the base factory class for all Node views, it will 

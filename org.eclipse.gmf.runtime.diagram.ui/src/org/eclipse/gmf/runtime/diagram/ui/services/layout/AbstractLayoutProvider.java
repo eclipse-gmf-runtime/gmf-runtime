@@ -26,8 +26,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IEditPartLayoutProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

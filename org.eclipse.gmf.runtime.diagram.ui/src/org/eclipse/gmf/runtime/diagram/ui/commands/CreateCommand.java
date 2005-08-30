@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A view creation command that creates a <code>View</code>.

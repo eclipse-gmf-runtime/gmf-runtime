@@ -11,8 +11,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Node;
 
 
 /**

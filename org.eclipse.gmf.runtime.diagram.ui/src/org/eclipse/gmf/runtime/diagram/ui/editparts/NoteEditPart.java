@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragD
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NonSemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Note shape which provides textual annotations for diagram elements.  Notes are 

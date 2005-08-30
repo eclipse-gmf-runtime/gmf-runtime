@@ -45,7 +45,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
-import com.ibm.xtools.notation.Filtering;
+import org.eclipse.gmf.runtime.notation.Filtering;
 
 
 /**

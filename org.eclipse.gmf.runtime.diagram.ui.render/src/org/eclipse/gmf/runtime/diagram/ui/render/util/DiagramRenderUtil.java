@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.render.util;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Provides miscellaneous utilities for this plug-in.

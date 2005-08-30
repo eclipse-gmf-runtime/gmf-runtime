@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette;
 
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

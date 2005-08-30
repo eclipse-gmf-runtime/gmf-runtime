@@ -34,11 +34,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOpe
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartProviderConfiguration;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.Ratio;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.Ratio;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A service that supports the creation of editpart elements.  Default editparts will be created

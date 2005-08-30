@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author qili

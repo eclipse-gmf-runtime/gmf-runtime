@@ -40,7 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorR
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MResourceOption;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 public class DiagramIOUtil {
 	

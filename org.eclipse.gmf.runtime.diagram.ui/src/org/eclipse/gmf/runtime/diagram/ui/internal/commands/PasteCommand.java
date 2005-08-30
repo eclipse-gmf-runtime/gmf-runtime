@@ -23,9 +23,9 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.Location;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Location;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Paste Command for the views

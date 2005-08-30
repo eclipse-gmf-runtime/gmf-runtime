@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.core.internal.view.factories;
 import org.eclipse.core.runtime.IAdaptable;
 
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

@@ -11,7 +11,7 @@ package org.eclipse.gmf.runtime.diagram.core.internal.view;
 
 import java.util.List;
 
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * A facade inteface for the diagram views

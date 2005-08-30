@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.view.factories;
 import java.util.List;
 
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractNodeViewFactory;
-import com.ibm.xtools.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 
 /**
  * The AbstractResizableCompartmentView Factory class 

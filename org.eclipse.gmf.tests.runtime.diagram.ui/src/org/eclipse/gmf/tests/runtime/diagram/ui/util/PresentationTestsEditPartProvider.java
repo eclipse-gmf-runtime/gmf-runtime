@@ -11,7 +11,7 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**
@@ -21,7 +21,7 @@ public class PresentationTestsEditPartProvider
 	extends AbstractEditPartProvider {
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider#getDiagramEditPartClass(com.ibm.xtools.notation.View)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider#getDiagramEditPartClass(org.eclipse.gmf.runtime.notation.View)
 	 */
 	protected Class getDiagramEditPartClass(View view) {
 		if (view.getType().equals(PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND))

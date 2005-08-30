@@ -25,8 +25,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TextEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.CreateRootEditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * 

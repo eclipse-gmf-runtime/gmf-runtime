@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 
 import org.eclipse.core.resources.IFile;
 
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

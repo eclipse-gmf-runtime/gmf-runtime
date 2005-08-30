@@ -16,7 +16,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Node;
 
 /**
  * This is the action handler for the diagram menu.   Adds actions to 

@@ -286,7 +286,7 @@ The following is an example plugin.xml entry for a decorator service provider ex
          &lt;Priority
                name=&quot;Lowest&quot;&gt;
          &lt;/Priority&gt;
-         &lt;object class=&quot;com.ibm.xtools.notation.Node(com.ibm.xtools.notation)&quot; 
+         &lt;object class=&quot;org.eclipse.gmf.runtime.notation.Node(org.eclipse.gmf.runtime.notation)&quot; 
               id=&quot;NODE&quot;&gt;
               &lt;method
                   name=&quot;getType()&quot;

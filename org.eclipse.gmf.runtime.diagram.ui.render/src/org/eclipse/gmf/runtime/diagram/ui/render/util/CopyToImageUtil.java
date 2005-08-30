@@ -49,7 +49,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Utility class to render a diagram to an image file.

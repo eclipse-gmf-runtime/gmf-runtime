@@ -14,8 +14,8 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import com.ibm.xtools.notation.Guide;
-import com.ibm.xtools.notation.GuideStyle;
+import org.eclipse.gmf.runtime.notation.Guide;
+import org.eclipse.gmf.runtime.notation.GuideStyle;
 
 /**
  * This command is used to delete guidelines

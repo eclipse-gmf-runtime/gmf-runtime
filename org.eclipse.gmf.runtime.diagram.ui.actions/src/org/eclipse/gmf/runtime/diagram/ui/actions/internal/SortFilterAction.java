@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterCompartmentItemsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterContentRequest;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Action to sort/filter list compartment items.

@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConstrainedToolbarLayoutE
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /*
  * @canBeSeenBy %partners

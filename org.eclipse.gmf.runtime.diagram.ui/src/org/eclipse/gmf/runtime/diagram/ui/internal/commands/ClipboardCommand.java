@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Abstract parent for all concrete clipboard commands used for IViews

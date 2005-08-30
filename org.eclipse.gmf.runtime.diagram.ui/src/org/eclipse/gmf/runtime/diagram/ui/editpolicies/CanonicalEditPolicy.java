@@ -57,9 +57,9 @@ import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

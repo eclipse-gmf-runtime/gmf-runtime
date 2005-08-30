@@ -18,7 +18,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * The editor input to use for the IDEEditor 

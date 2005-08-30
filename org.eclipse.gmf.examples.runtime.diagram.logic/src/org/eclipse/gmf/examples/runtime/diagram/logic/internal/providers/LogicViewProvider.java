@@ -29,7 +29,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.O
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.WireViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.XORGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author qili

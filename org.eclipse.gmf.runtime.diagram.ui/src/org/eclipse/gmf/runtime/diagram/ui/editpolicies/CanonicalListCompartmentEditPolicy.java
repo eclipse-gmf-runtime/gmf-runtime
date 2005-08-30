@@ -14,9 +14,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
-import com.ibm.xtools.notation.DrawerStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.DrawerStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A specialized implementation of <code>CanonicalShapeEditPolicy</code> This

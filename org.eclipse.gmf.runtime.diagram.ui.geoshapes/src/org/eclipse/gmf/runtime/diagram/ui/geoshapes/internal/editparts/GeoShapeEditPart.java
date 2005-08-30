@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeC
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NonSemanticEditPolicy;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is a base class for all Geometric Shapes

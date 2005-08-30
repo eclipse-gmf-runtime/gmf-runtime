@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import com.ibm.xtools.notation.Routing;
+import org.eclipse.gmf.runtime.notation.Routing;
 
 /**
  * Connector router action

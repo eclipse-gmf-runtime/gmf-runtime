@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * abstract command that creates a diagram by calling the view service

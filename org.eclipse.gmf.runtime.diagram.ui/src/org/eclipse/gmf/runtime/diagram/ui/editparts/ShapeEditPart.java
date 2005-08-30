@@ -31,8 +31,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ShapeResizableEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /*
  * @canBeSeenBy %partners

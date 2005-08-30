@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The class which controls the behavior of a gate. It determines the

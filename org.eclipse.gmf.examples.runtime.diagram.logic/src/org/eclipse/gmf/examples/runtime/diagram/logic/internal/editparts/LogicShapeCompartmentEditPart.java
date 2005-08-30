@@ -13,7 +13,7 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.gef.ui.tools.DelegatingDragEditPartsTracker;
 
 /**

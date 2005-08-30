@@ -35,7 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /*
  * @canBeSeenBy %level1

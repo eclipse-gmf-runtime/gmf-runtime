@@ -16,8 +16,8 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.tests.runtime.diagram.ui.framework.DiagramTestCase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestsViewProvider;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

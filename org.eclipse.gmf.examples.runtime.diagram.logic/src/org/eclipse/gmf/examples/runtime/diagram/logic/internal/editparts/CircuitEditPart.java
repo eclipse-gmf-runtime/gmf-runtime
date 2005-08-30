@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 /**
  * Holds a circuit, which is a container capable of 
  * holding other LogicEditParts.

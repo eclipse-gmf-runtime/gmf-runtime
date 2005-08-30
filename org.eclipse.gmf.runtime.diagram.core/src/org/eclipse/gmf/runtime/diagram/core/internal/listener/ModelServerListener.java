@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
 import org.eclipse.gmf.runtime.emf.core.edit.MUniversalListener;
-import com.ibm.xtools.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * Base class that registers with the model server and will forward  events

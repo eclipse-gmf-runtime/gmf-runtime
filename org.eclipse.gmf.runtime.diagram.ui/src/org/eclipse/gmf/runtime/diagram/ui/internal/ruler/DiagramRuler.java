@@ -14,8 +14,8 @@ import java.util.List;
 import org.eclipse.gef.rulers.RulerProvider;
 
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
-import com.ibm.xtools.notation.Guide;
-import com.ibm.xtools.notation.GuideStyle;
+import org.eclipse.gmf.runtime.notation.Guide;
+import org.eclipse.gmf.runtime.notation.GuideStyle;
 
 
 /**

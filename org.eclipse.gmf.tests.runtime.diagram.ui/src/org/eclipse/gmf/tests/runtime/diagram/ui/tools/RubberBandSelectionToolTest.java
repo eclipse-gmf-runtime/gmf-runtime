@@ -40,8 +40,8 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramTestEditor;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestsViewProvider;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

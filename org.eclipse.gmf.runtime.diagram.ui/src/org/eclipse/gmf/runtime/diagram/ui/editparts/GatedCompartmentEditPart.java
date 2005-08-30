@@ -17,7 +17,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Compartment that allows gates to be added.

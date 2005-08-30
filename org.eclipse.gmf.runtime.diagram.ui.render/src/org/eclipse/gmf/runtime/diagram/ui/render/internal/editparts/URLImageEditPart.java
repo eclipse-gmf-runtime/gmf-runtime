@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.gmf.runtime.common.ui.util.FileUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

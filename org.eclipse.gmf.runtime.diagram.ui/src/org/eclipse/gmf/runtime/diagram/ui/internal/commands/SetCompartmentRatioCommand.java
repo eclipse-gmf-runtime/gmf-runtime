@@ -14,10 +14,10 @@ import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.Ratio;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.Ratio;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

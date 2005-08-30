@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories.GeoShapeViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories.LineViewFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author jschofie

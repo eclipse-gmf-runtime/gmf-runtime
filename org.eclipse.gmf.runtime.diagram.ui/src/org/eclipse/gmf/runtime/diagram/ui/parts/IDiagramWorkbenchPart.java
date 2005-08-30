@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.parts;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author melaasar

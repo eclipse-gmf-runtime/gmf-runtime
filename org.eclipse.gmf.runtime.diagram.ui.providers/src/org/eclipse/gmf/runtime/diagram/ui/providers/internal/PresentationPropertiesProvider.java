@@ -24,8 +24,8 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesService;
 import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertySource;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
 import org.eclipse.gmf.runtime.emf.ui.properties.providers.GenericEMFPropertiesProvider;
-import com.ibm.xtools.notation.Style;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Style;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author Tauseef A. Israr Created: Nov 15, 2002

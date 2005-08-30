@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**
@@ -50,7 +50,7 @@ abstract public class AbstractViewFactory implements ViewFactory {
 	private PreferencesHint preferencesHint;
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.factories.ViewFactory#createView(org.eclipse.core.runtime.IAdaptable, com.ibm.xtools.notation.View, java.lang.String, int, boolean, java.lang.String)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.factories.ViewFactory#createView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, java.lang.String)
 	 */
 	abstract public View createView(final IAdaptable semanticAdapter,
 			final View containerView, final String semanticHint,

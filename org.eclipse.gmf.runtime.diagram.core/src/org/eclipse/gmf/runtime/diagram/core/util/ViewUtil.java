@@ -31,13 +31,13 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.LayoutConstraint;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Style;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * provides different utility functions for the notation view

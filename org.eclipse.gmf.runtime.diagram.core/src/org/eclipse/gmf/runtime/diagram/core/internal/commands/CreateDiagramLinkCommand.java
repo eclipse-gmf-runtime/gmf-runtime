@@ -13,8 +13,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 /**
  * Command to set the semantic reference for the provided model view to the given 
  * notational diagram.

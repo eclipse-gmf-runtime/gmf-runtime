@@ -28,8 +28,8 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Node;
 
 
 /**

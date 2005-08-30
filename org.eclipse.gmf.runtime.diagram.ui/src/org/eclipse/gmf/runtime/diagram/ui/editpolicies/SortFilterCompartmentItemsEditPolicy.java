@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterCompartmen
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterContentRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * EditPolicy which provides sorting/filtering for ListCompartmentItems.

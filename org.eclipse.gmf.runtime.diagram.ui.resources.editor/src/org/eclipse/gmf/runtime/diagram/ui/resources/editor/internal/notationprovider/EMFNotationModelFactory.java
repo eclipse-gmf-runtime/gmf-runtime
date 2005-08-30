@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugO
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author qili

@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import com.ibm.xtools.notation.Routing;
+import org.eclipse.gmf.runtime.notation.Routing;
 
 /**
  * Connectors preferences page for diagram connector preferences.

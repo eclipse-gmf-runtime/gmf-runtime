@@ -65,7 +65,7 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Print Preview Action to display the Print Preview dialog. There are no static

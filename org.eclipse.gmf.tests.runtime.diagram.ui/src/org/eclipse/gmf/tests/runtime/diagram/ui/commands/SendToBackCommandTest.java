@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

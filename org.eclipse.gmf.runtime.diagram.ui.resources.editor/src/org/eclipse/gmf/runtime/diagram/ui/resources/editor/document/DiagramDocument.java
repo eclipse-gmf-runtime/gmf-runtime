@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
 import org.eclipse.gmf.runtime.emf.core.edit.MListener;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

@@ -22,7 +22,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GateEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A Connection Point can sit on a border of a logic shape or on the

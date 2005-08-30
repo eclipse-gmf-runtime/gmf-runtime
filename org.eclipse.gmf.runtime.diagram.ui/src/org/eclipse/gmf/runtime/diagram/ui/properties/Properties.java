@@ -10,7 +10,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.properties;
 
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import com.ibm.xtools.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /*
  * @canBeSeenBy %partners

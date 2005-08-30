@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
-import com.ibm.xtools.notation.Style;
+import org.eclipse.gmf.runtime.notation.Style;
 
 /**
  * A facade inteface for the View interface

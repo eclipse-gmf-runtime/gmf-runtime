@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
 import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.LineMode;
-import com.ibm.xtools.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Edge;
 
 /**
  * This EditPolicy defines the behavior of Bendpoints on a Connection.

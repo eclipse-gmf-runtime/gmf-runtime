@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.AWTClipboardHelper;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.l10n.ResourceManager;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw

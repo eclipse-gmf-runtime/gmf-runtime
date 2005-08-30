@@ -17,10 +17,10 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNode;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesProvider;
-import com.ibm.xtools.notation.Bounds;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw

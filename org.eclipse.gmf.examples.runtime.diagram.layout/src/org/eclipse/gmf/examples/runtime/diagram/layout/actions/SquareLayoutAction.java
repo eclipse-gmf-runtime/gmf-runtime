@@ -24,8 +24,8 @@ import org.eclipse.gmf.examples.runtime.diagram.layout.provider.SquareLayoutProv
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.emf.core.ResourceSetModifyOperation;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

@@ -26,13 +26,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.CanonicalConnect
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.CanonicalStyle;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.DrawerStyle;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Style;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.CanonicalStyle;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.DrawerStyle;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A specialized implementation of <code>CanonicalShapeEditPolicy</code>. This

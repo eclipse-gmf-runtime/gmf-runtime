@@ -42,9 +42,9 @@ import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Style;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The basic implementation of a view facade object
@@ -583,7 +583,7 @@ public abstract class AbstractView implements IView, IContainerView, Properties 
 	 * sets the view element
 	 * @param view
 	 */
-	final void setView(com.ibm.xtools.notation.View view){
+	final void setView(org.eclipse.gmf.runtime.notation.View view){
 		Assert.isNotNull(view);
 		this.view = view;
 	}

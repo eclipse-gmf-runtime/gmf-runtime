@@ -24,7 +24,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts.Editor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.Util;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

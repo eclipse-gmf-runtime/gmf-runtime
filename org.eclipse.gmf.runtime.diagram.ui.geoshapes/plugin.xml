@@ -13,7 +13,7 @@
          <Priority
                name="Medium">
          </Priority>
-         <object class="com.ibm.xtools.notation.View(com.ibm.xtools.notation)" id="GeoShape">
+         <object class="org.eclipse.gmf.runtime.notation.View(org.eclipse.gmf.runtime.notation)" id="GeoShape">
         	 <method name="getType()" value="oval,triangle,rectangle,shadowRectangle,rectangle3D,roundRectangle,hexagon,octagon,pentagon,diamond,cylinder,line"/>
 	     </object>
          <object
@@ -34,11 +34,11 @@
                name="Lowest">
          </Priority>
          <context
-               viewClass="com.ibm.xtools.notation.Node"
+               viewClass="org.eclipse.gmf.runtime.notation.Node"
                semanticHints="oval, triangle, rectangle, shadowRectangle, rectangle3D, roundRectangle, hexagon, octagon, pentagon, diamond, cylinder, polygon">
          </context>
          <context
-               viewClass="com.ibm.xtools.notation.Edge"
+               viewClass="org.eclipse.gmf.runtime.notation.Edge"
                semanticHints="line">
          </context>
       </viewProvider>
@@ -51,10 +51,10 @@
          <Priority
                name="Lowest">
          </Priority>
-         <object class="com.ibm.xtools.notation.Node" id="GeoShapeLine">
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="GeoShapeLine">
         	 <method name="getType()" value="oval,triangle,rectangle,shadowRectangle,rectangle3D,roundRectangle,hexagon,octagon,pentagon,diamond,cylinder"/>
 	     </object>
-	     <object class="com.ibm.xtools.notation.Edge" id="GeoShape">
+	     <object class="org.eclipse.gmf.runtime.notation.Edge" id="GeoShape">
         	 <method name="getType()" value="line"/>
 	     </object>
          <context

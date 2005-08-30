@@ -72,7 +72,7 @@ Require-Bundle: org.eclipse.ui.views,
  org.eclipse.gmf.runtime.common.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui.action;visibility:=reexport,
  org.eclipse.wst.common.ui.properties;visibility:=reexport,
- com.ibm.xtools.notation;visibility:=reexport,
+ org.eclipse.gmf.runtime.notation;visibility:=reexport,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
  org.eclipse.gmf.runtime.diagram.core;visibility:=reexport

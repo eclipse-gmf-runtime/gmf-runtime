@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import com.ibm.xtools.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * A label provider object used by the notation property descriptors.

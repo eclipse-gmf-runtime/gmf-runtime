@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Node;
 
 /**
  * Knows how to create a view and element (if applicable) request given an

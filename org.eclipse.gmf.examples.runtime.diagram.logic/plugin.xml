@@ -28,11 +28,11 @@
       <viewProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicViewProvider">
          <Priority name="Lowest">
          </Priority>
-         <context viewClass="com.ibm.xtools.notation.Diagram" semanticHints="">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="">
          </context>
-         <context viewClass="com.ibm.xtools.notation.Node" semanticHints="FlowContainer, circuit, LED, LogicCompartment, LogicFlowCompartment, OrGate, AndGate, XORGate">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="FlowContainer, circuit, LED, LogicCompartment, LogicFlowCompartment, OrGate, AndGate, XORGate">
          </context>
-         <context viewClass="com.ibm.xtools.notation.Edge" semanticHints="wire">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints="wire">
          </context>
       </viewProvider>
   </extension>
@@ -41,7 +41,7 @@
       <editpartProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicEditPartProvider">
          <Priority name="Lowest">
          </Priority>
-         <object class="com.ibm.xtools.notation.View" id="LogicElement">
+         <object class="org.eclipse.gmf.runtime.notation.View" id="LogicElement">
            	<method name="getType()" value="logic, LED, wire, LogicFlow, circuit, LogicCompartment, LogicFlowCompartment, OrGate, AndGate, XORGate, FlowContainer">
             </method>
          </object>

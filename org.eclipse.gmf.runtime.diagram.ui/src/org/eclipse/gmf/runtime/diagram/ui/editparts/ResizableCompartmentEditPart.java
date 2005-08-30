@@ -22,11 +22,11 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.DrawerStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Ratio;
-import com.ibm.xtools.notation.TitleStyle;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.DrawerStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Ratio;
+import org.eclipse.gmf.runtime.notation.TitleStyle;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An editpart for controlling generic resizable compartment views

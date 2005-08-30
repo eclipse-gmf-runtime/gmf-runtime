@@ -13,7 +13,7 @@ import org.eclipse.gef.RootEditPart;
 
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Defines the factory methods for creating the various editpart elements.

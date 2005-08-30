@@ -20,9 +20,9 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Node;
 
 
 /**
@@ -49,7 +49,7 @@ public class DiagramCreator {
 					OperationUtil.runAsWrite(new MRunnable() {
 
 						public Object run() {
-							Diagram diagram = DiagramUtil.createDiagram(null, "Freeform", preferencesHint); //$NON-NLS-1$
+							Diagram diagram = DiagramUtil.createDiagram(null, "logic", preferencesHint); //$NON-NLS-1$
 							Assert.isNotNull(diagram);
 							dgmContainer[0] = diagram;
 							return null;

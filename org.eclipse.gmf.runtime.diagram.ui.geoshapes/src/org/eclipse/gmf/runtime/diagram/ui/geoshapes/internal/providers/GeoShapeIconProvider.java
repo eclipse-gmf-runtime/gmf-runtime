@@ -18,7 +18,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.GeoshapesResourceManager;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Provides Geoshape Icons

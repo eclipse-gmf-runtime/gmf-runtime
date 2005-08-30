@@ -10,7 +10,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.layout;
 
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNode;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Node;
 
 
 /**

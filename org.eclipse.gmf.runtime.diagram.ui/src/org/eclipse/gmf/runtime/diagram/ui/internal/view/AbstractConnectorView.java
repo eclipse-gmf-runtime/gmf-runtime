@@ -22,13 +22,13 @@ import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.Anchor;
-import com.ibm.xtools.notation.Bendpoints;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.RelativeBendpoints;
-import com.ibm.xtools.notation.View;
-import com.ibm.xtools.notation.datatype.RelativeBendpoint;
+import org.eclipse.gmf.runtime.notation.Anchor;
+import org.eclipse.gmf.runtime.notation.Bendpoints;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 
 /*
  * @canBeSeenBy %partners
@@ -178,14 +178,14 @@ public abstract class AbstractConnectorView
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.IConnectorView#setSourceAnchor(com.ibm.xtools.notation.Anchor)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.IConnectorView#setSourceAnchor(org.eclipse.gmf.runtime.notation.Anchor)
 	 */
 	public void setSourceAnchor(Anchor anchor) {
 		getEdge().setSourceAnchor(anchor);
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.IConnectorView#setTargetAnchor(com.ibm.xtools.notation.Anchor)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.IConnectorView#setTargetAnchor(org.eclipse.gmf.runtime.notation.Anchor)
 	 */
 	public void setTargetAnchor(Anchor anchor) {
 		getEdge().setTargetAnchor(anchor);

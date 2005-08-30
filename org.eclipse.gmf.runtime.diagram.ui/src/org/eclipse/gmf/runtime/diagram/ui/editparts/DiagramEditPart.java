@@ -55,8 +55,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Controller for the diagram 

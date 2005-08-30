@@ -20,13 +20,13 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.JumpLinkStatus;
-import com.ibm.xtools.notation.JumpLinkType;
-import com.ibm.xtools.notation.RelativeBendpoints;
-import com.ibm.xtools.notation.Routing;
-import com.ibm.xtools.notation.Smoothness;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
+import org.eclipse.gmf.runtime.notation.JumpLinkType;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.Smoothness;
 
 /**
  * @author choang

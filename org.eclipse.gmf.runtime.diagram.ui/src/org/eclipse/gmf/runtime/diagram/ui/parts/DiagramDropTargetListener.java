@@ -27,7 +27,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Performs a drop of one or more semantic elements using a given transfer. The Drop is performed by

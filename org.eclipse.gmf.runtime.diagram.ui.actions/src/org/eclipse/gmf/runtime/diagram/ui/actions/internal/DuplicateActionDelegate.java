@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An action delegate that handles duplication of selected model elements and

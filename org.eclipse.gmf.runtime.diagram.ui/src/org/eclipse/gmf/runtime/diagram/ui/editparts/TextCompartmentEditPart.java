@@ -59,9 +59,9 @@ import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.DirectEditRequestWrapper;
 import org.eclipse.gmf.runtime.gef.ui.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.parts.WrapTextCellEditor;
-import com.ibm.xtools.notation.FontStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /*
  * @canBeSeenBy %partners

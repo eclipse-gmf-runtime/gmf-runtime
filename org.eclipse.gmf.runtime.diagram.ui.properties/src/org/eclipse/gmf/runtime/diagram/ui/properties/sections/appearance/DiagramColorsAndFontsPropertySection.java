@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 public class DiagramColorsAndFontsPropertySection

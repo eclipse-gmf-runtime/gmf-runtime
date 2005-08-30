@@ -10,12 +10,12 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**
  * An interface defining a <code>IDocument</code> with content 
- * of <code>com.ibm.xtools.notation.Diagram</code>
+ * of <code>org.eclipse.gmf.runtime.notation.Diagram</code>
  * 
  * @author mgoyal
  */

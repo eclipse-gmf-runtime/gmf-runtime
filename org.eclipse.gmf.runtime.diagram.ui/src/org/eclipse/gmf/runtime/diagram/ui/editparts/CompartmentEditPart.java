@@ -18,7 +18,7 @@ import org.eclipse.gef.requests.SelectionRequest;
 
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.gef.ui.tools.DelegatingDragEditPartsTracker;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar

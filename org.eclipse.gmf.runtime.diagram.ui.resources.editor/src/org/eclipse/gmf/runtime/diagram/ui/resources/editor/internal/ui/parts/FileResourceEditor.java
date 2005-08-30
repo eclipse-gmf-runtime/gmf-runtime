@@ -17,7 +17,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IEditorInput;
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.Util;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * An editor without IDE dependencies.  The expected input is an

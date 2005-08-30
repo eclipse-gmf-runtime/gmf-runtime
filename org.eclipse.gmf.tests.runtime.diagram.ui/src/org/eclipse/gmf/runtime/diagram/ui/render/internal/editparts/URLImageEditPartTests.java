@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

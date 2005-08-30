@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 import org.eclipse.core.runtime.IAdaptable;
 
 import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.AbstractResizableCompartmentViewFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is the base factory class for all shape compartment views, it will 

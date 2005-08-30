@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 
-import com.ibm.xtools.notation.SortingDirection;
+import org.eclipse.gmf.runtime.notation.SortingDirection;
 
 /**
  * Provides a <code>ViewerSorter</code> which tracks the type 

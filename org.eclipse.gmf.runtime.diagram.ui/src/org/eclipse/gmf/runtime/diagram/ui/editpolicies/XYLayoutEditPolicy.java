@@ -40,8 +40,8 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.Guide;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Guide;
+import org.eclipse.gmf.runtime.notation.View;
 
 /*
  * @canBeSeenBy %partners

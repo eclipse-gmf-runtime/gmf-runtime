@@ -19,9 +19,9 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import com.ibm.xtools.notation.LayoutConstraint;
-import com.ibm.xtools.notation.NotationFactory;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.View;
 /**
  * The base abstract node view factory 
  * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractNodeViewFactory

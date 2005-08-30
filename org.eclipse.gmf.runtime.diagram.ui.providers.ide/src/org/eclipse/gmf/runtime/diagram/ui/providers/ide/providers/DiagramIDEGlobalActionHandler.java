@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionCon
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.resources.AddBookmarkHelper;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The global action handler for diagram global actions with IDE dependencies. 

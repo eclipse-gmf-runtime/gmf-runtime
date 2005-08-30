@@ -39,7 +39,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Concrete class that extends the GEF's <code>ComponentEditPolicy</code>.

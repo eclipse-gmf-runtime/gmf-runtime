@@ -15,9 +15,9 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.ShapeStyle;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.ShapeStyle;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The LEDView Factory class 

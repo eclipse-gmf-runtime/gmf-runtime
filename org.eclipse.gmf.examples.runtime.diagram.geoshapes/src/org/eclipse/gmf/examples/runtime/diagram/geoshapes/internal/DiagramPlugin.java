@@ -16,8 +16,8 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.provider.NotationItemProviderAdapterFactory;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
 
 
 /**

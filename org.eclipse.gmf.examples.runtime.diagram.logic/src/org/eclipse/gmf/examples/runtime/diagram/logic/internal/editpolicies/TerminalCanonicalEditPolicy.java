@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author qili
@@ -72,7 +72,7 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 	/** 
 	 * Returns <tt>false</tt> not to delete LogicShapeCompartmentview.
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#shouldDeleteView(com.ibm.xtools.notation.View)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#shouldDeleteView(org.eclipse.gmf.runtime.notation.View)
 	 */
 	protected boolean shouldDeleteView(View view) {
 		return view.getType().equals(LogicConstants.LOGIC_SHAPE_COMPARTMENT) == false; //$NON-NLS-1$

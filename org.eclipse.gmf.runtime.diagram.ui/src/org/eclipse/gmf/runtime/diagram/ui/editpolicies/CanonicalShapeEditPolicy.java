@@ -13,7 +13,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This edit policy will register itself with the model server to receive

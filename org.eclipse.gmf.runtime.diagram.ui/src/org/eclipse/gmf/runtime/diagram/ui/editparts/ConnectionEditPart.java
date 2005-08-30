@@ -93,18 +93,18 @@ import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
 import org.eclipse.gmf.runtime.gef.ui.internal.tools.SelectConnectorEditPartTracker;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.FontStyle;
-import com.ibm.xtools.notation.JumpLinkStatus;
-import com.ibm.xtools.notation.JumpLinkType;
-import com.ibm.xtools.notation.LineStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.RelativeBendpoints;
-import com.ibm.xtools.notation.Routing;
-import com.ibm.xtools.notation.RoutingStyle;
-import com.ibm.xtools.notation.Smoothness;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
+import org.eclipse.gmf.runtime.notation.JumpLinkType;
+import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.RoutingStyle;
+import org.eclipse.gmf.runtime.notation.Smoothness;
+import org.eclipse.gmf.runtime.notation.View;
 /*
  * @canBeSeenBy %partners
  */
@@ -936,8 +936,8 @@ abstract public class ConnectionEditPart
 		List modelConstraint = bendpoints.getPoints(); 
 		List figureConstraint = new ArrayList();
 		for (int i = 0; i < modelConstraint.size(); i++) {
-			com.ibm.xtools.notation.datatype.RelativeBendpoint wbp =
-				(com.ibm.xtools.notation.datatype.RelativeBendpoint) modelConstraint.get(i);
+			org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint wbp =
+				(org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint) modelConstraint.get(i);
 			RelativeBendpoint rbp =
 				new RelativeBendpoint(getConnectionFigure());
 			rbp.setRelativeDimensions(

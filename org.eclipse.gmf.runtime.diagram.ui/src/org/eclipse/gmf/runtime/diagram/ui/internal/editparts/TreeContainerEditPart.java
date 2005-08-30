@@ -13,7 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author melaasar

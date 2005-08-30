@@ -27,7 +27,7 @@
       <viewProvider class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers.DiagramViewProvider">
          <Priority name="Lowest">
          </Priority>
-         <context viewClass="com.ibm.xtools.notation.Diagram" semanticHints="">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="">
          </context>         
       </viewProvider>
    </extension>
@@ -68,7 +68,7 @@
               filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.NotationElementFilter"
               id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.GeneralDiagram"
               tab="geoshapes.tab.General">
-           <input type="com.ibm.xtools.notation.Diagram"/>
+           <input type="org.eclipse.gmf.runtime.notation.Diagram"/>
         </propertySection>
         
         <propertySection

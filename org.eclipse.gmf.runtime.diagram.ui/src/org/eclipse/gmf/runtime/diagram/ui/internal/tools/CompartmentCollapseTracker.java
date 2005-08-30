@@ -22,9 +22,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPar
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import com.ibm.xtools.notation.DrawerStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.DrawerStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*

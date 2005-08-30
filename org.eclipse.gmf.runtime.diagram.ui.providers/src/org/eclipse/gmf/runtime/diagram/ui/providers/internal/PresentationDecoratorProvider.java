@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOpe
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorKeys;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Provides decorators for the presentation layer.

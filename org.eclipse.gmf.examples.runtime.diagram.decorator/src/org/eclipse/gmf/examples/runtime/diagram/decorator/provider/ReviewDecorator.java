@@ -20,11 +20,11 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.emf.core.IOperationEvent;
 import org.eclipse.gmf.runtime.emf.core.OperationListener;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import com.ibm.xtools.notation.DescriptionStyle;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.DescriptionStyle;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author sshaw

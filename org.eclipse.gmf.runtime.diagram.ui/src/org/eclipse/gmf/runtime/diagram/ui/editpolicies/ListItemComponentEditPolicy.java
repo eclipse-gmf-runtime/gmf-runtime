@@ -12,7 +12,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IInsertableEditPart;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 

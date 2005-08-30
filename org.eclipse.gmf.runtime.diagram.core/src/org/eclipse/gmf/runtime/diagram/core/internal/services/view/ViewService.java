@@ -21,10 +21,10 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.Edge;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  *
@@ -258,7 +258,7 @@ final public class ViewService
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createConnectorView(org.eclipse.core.runtime.IAdaptable, com.ibm.xtools.notation.View, java.lang.String, int, boolean, java.lang.String)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createConnectorView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, java.lang.String)
 	 */
 	public final View createConnectorView(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index,
@@ -305,7 +305,7 @@ final public class ViewService
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createNodeView(org.eclipse.core.runtime.IAdaptable, com.ibm.xtools.notation.View, java.lang.String, int, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createNodeView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
 	 */
 	public View createNodeView(IAdaptable semanticAdapter,
 			View containerView, String semanticHint, int index,

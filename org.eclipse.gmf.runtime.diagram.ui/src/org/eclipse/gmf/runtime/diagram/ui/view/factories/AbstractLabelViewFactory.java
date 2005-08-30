@@ -9,8 +9,8 @@
  */
 package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 
-import com.ibm.xtools.notation.LayoutConstraint;
-import com.ibm.xtools.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 
 /**
  * the base factory class for all label views

@@ -645,11 +645,11 @@
             <method name="getProxyClassID()" value="notation.Diagram">
             </method>
          </object>                    
-         <context viewClass="com.ibm.xtools.notation.Node" semanticHints="Note, Text, Description, DiagramName">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="Note, Text, Description, DiagramName">
          </context>
-         <context viewClass="com.ibm.xtools.notation.Node" semanticHints="" elements="DiagramLink_VP">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="" elements="DiagramLink_VP">
          </context>
-         <context viewClass="com.ibm.xtools.notation.Edge" semanticHints="NoteAttachment">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints="NoteAttachment">
          </context>
       </viewProvider>
    </extension> 
@@ -658,7 +658,7 @@
       <editpartProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationEditPartProvider">
          <Priority name="Lowest">
          </Priority>
-         <object class="com.ibm.xtools.notation.View" id="ShapesByType">
+         <object class="org.eclipse.gmf.runtime.notation.View" id="ShapesByType">
             <method name="getType()" value="Note, Text, NoteAttachment, DiagramName, Description">
             </method>
          </object>

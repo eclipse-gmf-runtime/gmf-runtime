@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.eclipse.gef.Request;
 
-import com.ibm.xtools.notation.Filtering;
-import com.ibm.xtools.notation.Sorting;
+import org.eclipse.gmf.runtime.notation.Filtering;
+import org.eclipse.gmf.runtime.notation.Sorting;
 
 
 /**

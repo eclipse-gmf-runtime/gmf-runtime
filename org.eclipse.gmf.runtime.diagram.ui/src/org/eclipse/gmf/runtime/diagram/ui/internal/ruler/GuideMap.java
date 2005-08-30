@@ -8,7 +8,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.ruler;
 
-import com.ibm.xtools.notation.Guide;
+import org.eclipse.gmf.runtime.notation.Guide;
 
 
 /**

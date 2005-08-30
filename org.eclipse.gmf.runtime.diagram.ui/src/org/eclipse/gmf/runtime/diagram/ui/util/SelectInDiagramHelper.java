@@ -23,8 +23,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
-import com.ibm.xtools.notation.Diagram;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Helper for selecting an element on a diagram.  Works for closed diagrams

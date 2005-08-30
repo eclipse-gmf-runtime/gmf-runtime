@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.util.Assert;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 /**
  * Copy Command used to copy the list of <code>IView</code> to the system
  * clipboard

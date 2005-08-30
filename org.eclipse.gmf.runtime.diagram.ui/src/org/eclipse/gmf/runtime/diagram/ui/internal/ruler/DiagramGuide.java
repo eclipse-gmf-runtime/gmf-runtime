@@ -14,9 +14,9 @@ import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.util.EMap;
 
-import com.ibm.xtools.notation.Alignment;
-import com.ibm.xtools.notation.Guide;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Alignment;
+import org.eclipse.gmf.runtime.notation.Guide;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

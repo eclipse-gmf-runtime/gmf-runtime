@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugi
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
-import com.ibm.xtools.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Utility for using the DiagramPrinter to print diagrams after displaying

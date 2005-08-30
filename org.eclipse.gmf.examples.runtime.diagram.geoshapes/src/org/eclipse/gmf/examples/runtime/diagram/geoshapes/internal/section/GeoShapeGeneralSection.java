@@ -20,11 +20,11 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.TextChangeHelper;
-import com.ibm.xtools.notation.DescriptionStyle;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Style;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.DescriptionStyle;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author Eliza Tworkowska

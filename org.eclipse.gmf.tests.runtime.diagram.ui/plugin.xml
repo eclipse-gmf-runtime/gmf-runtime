@@ -10,7 +10,7 @@
                name="Lowest">
          </Priority>
          <context
-               viewClass="com.ibm.xtools.notation.Diagram"
+               viewClass="org.eclipse.gmf.runtime.notation.Diagram"
                semanticHints="PresentationTestsDiagramKind">
          </context>
        </viewProvider>
@@ -30,7 +30,7 @@
       <Priority
                name="Lowest">
       </Priority>
-      <object class="com.ibm.xtools.notation.Diagram" id="TestDiagram">
+      <object class="org.eclipse.gmf.runtime.notation.Diagram" id="TestDiagram">
         	 <method name="getType()" value="PresentationTestsDiagramKind"/>
 	  </object>
 	  <context views="TestDiagram">

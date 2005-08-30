@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Implements a Connection Editpart to represnt a Wire like

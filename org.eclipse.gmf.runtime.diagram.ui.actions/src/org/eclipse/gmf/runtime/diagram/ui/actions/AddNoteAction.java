@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import com.ibm.xtools.notation.Node;
+import org.eclipse.gmf.runtime.notation.Node;
 
 /**
  * Concrete implemention of AttachedShapeAction which attaches a new Notational Note to the

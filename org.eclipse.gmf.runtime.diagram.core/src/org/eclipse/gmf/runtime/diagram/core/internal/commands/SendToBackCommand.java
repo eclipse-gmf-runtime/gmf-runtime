@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This command moves a view from it's container and inserts it in the "back"

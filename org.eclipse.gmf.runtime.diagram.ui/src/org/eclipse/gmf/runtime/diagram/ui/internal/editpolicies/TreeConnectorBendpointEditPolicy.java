@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectorBendpointEditPol
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ForestRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.TreeRouter;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.LineMode;
-import com.ibm.xtools.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Edge;
 
 
 /**

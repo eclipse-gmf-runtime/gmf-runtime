@@ -12,7 +12,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.TerminalCanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GatedShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**

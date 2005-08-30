@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest.ConnectorViewDescriptor;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This command is used to create a connector view between two 

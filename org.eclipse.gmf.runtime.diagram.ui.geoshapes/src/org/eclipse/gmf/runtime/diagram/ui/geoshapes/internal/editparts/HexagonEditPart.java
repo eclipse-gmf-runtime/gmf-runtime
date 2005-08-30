@@ -16,7 +16,7 @@ import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoS
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeHexagonFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author jschofie

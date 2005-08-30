@@ -33,13 +33,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompar
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import com.ibm.xtools.notation.Filtering;
-import com.ibm.xtools.notation.FilteringStyle;
-import com.ibm.xtools.notation.NotationPackage;
-import com.ibm.xtools.notation.Sorting;
-import com.ibm.xtools.notation.SortingDirection;
-import com.ibm.xtools.notation.SortingStyle;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.Filtering;
+import org.eclipse.gmf.runtime.notation.FilteringStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Sorting;
+import org.eclipse.gmf.runtime.notation.SortingDirection;
+import org.eclipse.gmf.runtime.notation.SortingStyle;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An editpart implementation of the ResizableCompartment as a list compartment

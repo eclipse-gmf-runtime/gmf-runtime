@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
  
 /**
  * Command to refresh and revalidate a given <code>IGraphicalEditPart</code>

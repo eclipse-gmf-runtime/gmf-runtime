@@ -18,9 +18,9 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.internal.view.IContainerView;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import com.ibm.xtools.notation.LayoutConstraint;
-import com.ibm.xtools.notation.Node;
-import com.ibm.xtools.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 
 /**
  * @author melaasar

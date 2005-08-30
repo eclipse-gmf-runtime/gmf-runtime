@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.RoundedRe
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.ShadowRectangleEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.TriangleEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author jschofie

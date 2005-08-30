@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.listener.ModelServerListene
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A model server listener that broadcast EObject events to

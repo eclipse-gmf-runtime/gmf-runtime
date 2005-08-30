@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
-import com.ibm.xtools.notation.View;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar
