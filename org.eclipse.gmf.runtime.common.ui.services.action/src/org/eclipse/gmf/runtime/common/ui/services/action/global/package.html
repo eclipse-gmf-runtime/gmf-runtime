@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<p>Provides a set of classes that implement a <code>Service</code>
+that provides an extensible way to handle commonly used (global) actions
+in different views and editors. When a <code>GlobalAction</code> is
+registered as the action handler for a retargetable action in a given
+workbench part, the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.GlobalActionHandlerService}
+is consulted to do the real work in running the action.  The service
+allows different handlers to be used depending on the nature of the element(s) 
+selected in the workbench part.</p>
+
+<p>Global actions are action handlers for Eclipse <i>retargetable</i>
+actions. The real action handler work is delegated to the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler}s
+provided by the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.GlobalActionHandlerService}
+for the active workbench part.</p>
+
+<p>In order to contribute global action handlers to the service, clients
+should use the <code>org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders</code>
+extension point. The provider implementation specified in the extension
+point should subclass the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandlerProvider}
+class in this package.</p>
+
+<p>Modeling platform global action handlers should subclass the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler}
+class.</p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

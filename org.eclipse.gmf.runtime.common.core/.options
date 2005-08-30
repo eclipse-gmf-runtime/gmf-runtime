@@ -1,0 +1,34 @@
+# Debugging options for the org.eclipse.gmf.runtime.common.core plug-in
+
+# Turn on general debugging for the org.eclipse.gmf.runtime.common.core plug-in
+org.eclipse.gmf.runtime.common.core/debug=true
+
+# Trace when exceptions are caught
+org.eclipse.gmf.runtime.common.core/debug/exceptions/catching=false
+# Trace when exceptions are thrown
+org.eclipse.gmf.runtime.common.core/debug/exceptions/throwing=false
+
+# Trace when methods are entered
+org.eclipse.gmf.runtime.common.core/debug/methods/entering=false
+# Trace when methods are exited
+org.eclipse.gmf.runtime.common.core/debug/methods/exiting=false
+
+# Trace information related to command administration
+org.eclipse.gmf.runtime.common.core/debug/commands/admin=false
+# Trace when commands are executed
+org.eclipse.gmf.runtime.common.core/debug/commands/execute=false
+# Trace when commands are undone
+org.eclipse.gmf.runtime.common.core/debug/commands/undo=false
+# Trace when commands are redone
+org.eclipse.gmf.runtime.common.core/debug/commands/redo=false
+
+# Trace information related to service configuration
+org.eclipse.gmf.runtime.common.core/debug/services/config=false
+# Trace when providers/policies are activated
+org.eclipse.gmf.runtime.common.core/debug/services/activate=false
+# Trace when operations are executed
+org.eclipse.gmf.runtime.common.core/debug/services/execute=false
+
+
+#On demand plugin loading
+org.eclipse.gmf.runtime.common.core/debug/plugin/ondemand/loading=false

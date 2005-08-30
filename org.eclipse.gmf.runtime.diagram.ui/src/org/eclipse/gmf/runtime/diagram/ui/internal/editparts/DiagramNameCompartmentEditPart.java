@@ -1,0 +1,135 @@
+/*
+ *+------------------------------------------------------------------------+
+ *| Licensed Materials - Property of IBM                                   |
+ *| (C) Copyright IBM Corp. 2004.  All Rights Reserved.       		       |
+ *|                                                                        |
+ *| US Government Users Restricted Rights - Use, duplication or disclosure |
+ *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+ *+------------------------------------------------------------------------+
+ */
+package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
+
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.swt.graphics.Image;
+
+import org.eclipse.gmf.runtime.common.ui.services.icon.IconOptions;
+import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
+import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
+import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import com.ibm.xtools.notation.View;
+
+/**
+ * Name compartment for NalDiagramView elements.  
+ * This compartment is not editable. 
+ * 
+ * @author jcorchis
+ * @canBeSeenBy %level1
+ */
+public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
+	
+	private IconOptions iconOptions;
+	protected static final int ICON_INDEX = 0;
+	protected static final int NUM_ICONS = 1;	
+
+	/**
+	 * @param view
+	 */
+	public DiagramNameCompartmentEditPart(View view) {
+		super(view);
+		iconOptions = new IconOptions();
+		iconOptions.set(IconOptions.GET_STEREOTYPE_IMAGE_FOR_ELEMENT);
+		iconOptions.set(IconOptions.NO_DEFAULT_STEREOTYPE_IMAGE);
+		setNumIcons(NUM_ICONS);
+	}
+
+	protected IFigure createFigure() {
+		WrapLabel label = new WrapLabel();
+		label.setLabelAlignment(PositionConstants.TOP);
+		label.setIconAlignment(PositionConstants.TOP);
+		label.setTextAlignment(PositionConstants.TOP);
+		label.setTextWrap(true);
+		label.setTextWrapAlignment(PositionConstants.CENTER);
+		return label;
+	}
+
+	/** Return the semantic element associated to this editpart. */
+	protected EObject resolveSemanticElement() {
+		return (EObject) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+
+			public Object run() {
+				View primary = getPrimaryView();
+				if (primary != null)
+					return ViewUtil.resolveSemanticElement(primary);
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Returns the icon image associated with the diagram.
+	 * @param the 
+	 * @return Image
+	 */
+	protected Image getLabelIcon(int i) {
+		EObject element = resolveSemanticElement();
+		if (element != null)
+			return IconService.getInstance().getIcon(new EObjectAdapter(element));
+		return null;
+	}
+	
+	/**
+	 * @return <tt>false</tt> 
+	 */
+	protected boolean isEditable() { 
+		return false; 
+	}
+	
+	/**
+	 * Selectable if the parent edit part is not a DiagramLinkEditPart.
+	 *  @return <tt>false</tt> if the parent is a DiagramLinkEditPart.
+	 */
+	public boolean isSelectable() {
+		return false;
+	}
+	
+	public void createDefaultEditPolicies() {
+		super.createDefaultEditPolicies();
+		installEditPolicy(EditPolicy.COMPONENT_ROLE,
+				new DiagramLinkComponentEditPolicy());	
+	}
+	
+	/**
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setVisibilty(boolean)
+	 */
+	protected void setVisibility(boolean vis) {
+		super.setVisibility(vis && resolveSemanticElement() != null);
+	}
+
+	private class DiagramLinkComponentEditPolicy extends ComponentEditPolicy {
+		
+		/**
+		 * Returns a command to set the model to null. 
+		 */
+		public Command createDeleteViewCommand(GroupRequest request) {
+			CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
+					PresentationResourceManager.
+					getI18NString("Command.CreateDiagramLink"),//$NON-NLS-1$
+					(View)getHost().getParent().getModel(), 
+					null);
+			return new EtoolsProxyCommand(com);
+		}
+	}
+}

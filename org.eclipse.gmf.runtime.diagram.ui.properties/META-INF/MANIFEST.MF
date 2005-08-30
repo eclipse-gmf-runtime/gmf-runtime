@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Presentation Properties Plug-in
+Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.properties; singleton:=true
+Bundle-Version: 7.0.0
+Bundle-ClassPath: properties.jar
+Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.properties.internal.PresentationPropertiesPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.properties,
+ org.eclipse.gmf.runtime.diagram.ui.properties.descriptors,
+ org.eclipse.gmf.runtime.diagram.ui.properties.filters,
+ org.eclipse.gmf.runtime.diagram.ui.properties.internal,
+ org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n,
+ org.eclipse.gmf.runtime.diagram.ui.properties.providers,
+ org.eclipse.gmf.runtime.diagram.ui.properties.sections,
+  org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance,
+ org.eclipse.gmf.runtime.diagram.ui.properties.util,
+ org.eclipse.gmf.runtime.diagram.ui.properties.views
+Require-Bundle: org.eclipse.ui;visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui;visibility:=reexport,
+ org.eclipse.wst.common.ui.properties;visibility:=reexport,
+ org.eclipse.gmf.runtime.emf.commands.core,
+ org.eclipse.gmf.runtime.emf.ui;visibility:=reexport,
+ org.eclipse.gmf.runtime.emf.ui.properties;visibility:=reexport,
+ org.eclipse.gmf.runtime.diagram.ui;visibility:=reexport,
+ org.eclipse.gef,
+ org.eclipse.gmf.runtime.common.ui.services.properties;visibility:=reexport
+Eclipse-AutoStart: true

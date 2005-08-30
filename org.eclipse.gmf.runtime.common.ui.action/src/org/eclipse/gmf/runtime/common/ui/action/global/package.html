@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<p>Provides a set of classes for creating global actions for use with 
+the Global Action Handler Service.</p>
+
+<p>Global actions are action handlers for Eclipse <i>retargetable</i>
+actions. The real action handler work is delegated to the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler}s
+provided by the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.global.GlobalActionHandlerService}
+for the active workbench part.</p>
+
+<p>Modeling platform global action implementations should subclass the
+{@link org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction}
+class in this package. Each global action has a {@link
+org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId} by which
+it can be identified in the <code>org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders</code>
+extension point.</p>
+
+@see org.eclipse.gmf.runtime.common.ui.services.action.global
+@canBeSeenBy %partners
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.common.core">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.common.core" id="propertiesConfiguration" name="Properties Configurations Extension Point"/>
+      </appInfo>
+      <documentation>
+         This extension point is used to define plug-in-specific strings in external properties files, such that clients of the plug-in can refer to these strings without loading the plug-in itself (loading of the plug-in is deferred).
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="PropertiesConfiguration" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The identifier of the extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  The identifier of the extension.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  The name of the extension.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="PropertiesConfiguration">
+      <complexType>
+         <attribute name="path" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The relative path to a properties file
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Following is an example of a Properties configuration: 
+
+&lt;p&gt;
+&lt;pre&gt;
+   &lt;extension
+         id=&quot;propertiesConfiguration&quot;
+         name=&quot;%ext.propertiesConfiguration&quot;
+         point=&quot;org.eclipse.gmf.runtime.common.core.propertiesConfiguration&quot;&gt;
+      &lt;PropertiesConfiguration path=&quot;properties/myProject.properties&quot;/&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Licensed Materials - Property of IBM&lt;br&gt;
+(C) Copyright IBM Corp. 2002, 2004.  All Rights Reserved.&lt;br&gt;
+US Government Users Restricted Rights - Use, duplication or disclosure&lt;br&gt;
+restricted by GSA ADP Schedule Contract with IBM Corp.&lt;br&gt;
+      </documentation>
+   </annotation>
+
+</schema>

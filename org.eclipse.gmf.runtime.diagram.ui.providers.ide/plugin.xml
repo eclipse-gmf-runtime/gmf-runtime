@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+      id="diagramIDEContributionItemProvider"
+      name="%ext.diagramIDEContributionItemProvider"
+      point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEContributionItemProvider"
+         checkPluginLoaded="false">
+         <Priority
+            name="Low">
+         </Priority>
+         <partContribution
+            class="org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart">
+               <partAction
+                  global="true"
+                  id="bookmark">
+            </partAction>
+         </partContribution>         
+      </contributionItemProvider>
+   </extension> 
+
+</plugin>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="GENERATOR" content="IBM Software Development Platform">
+<TITLE>Aurora Use Case Analysis Document: &lt;&lt;Feature Name&gt;&gt;</TITLE>
+<LINK rel="stylesheet" href="technote.css" type="text/css">
+</HEAD>
+<BODY>
+<A name="top"></A><IMG border="0" src="logo.gif" width="629" height="192"><H1 align="center">RMP Use Case Analysis Document: <BR>
+Zoom tool</H1>
+<TABLE border="0" cellspacing="8">
+	<TBODY>
+		<TR>
+			<TD>Version: 0.1</TD>
+			<TD>Date: 05/03/09</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H2>Contents</H2>
+<UL>
+	<LI><A href="#intro">Introduction</A></LI>
+	<LI><A href="#refs">References</A></LI>
+	<LI><A href="#trace">Traceability</A></LI>
+	<LI><A href="#reqs">Requirements</A></LI><LI><A href="#constraints">Constraints and Limitations</A></LI>
+	<LI><A href="#usecases">Use Cases</A></LI></UL>
+<HR>
+<H2><A name="intro"></A>Introduction</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P>This feature introduces the ability to zoom in and out on the diagram surface using a tool to specify the context of where the zoom action will be centered on..</P>
+<H2><A name="refs"></A>References</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P><SPAN
+	style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA'>n/a</SPAN></P>
+<H2><A name="trace"></A>Traceability</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P><SPAN
+	style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA'></SPAN>RATLC00532659 - Zoom tool</P>
+<H2><A name="reqs"></A>Requirements</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P><SPAN
+	style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA'>- Should be able to zoom in on a specific element or set of elements.<BR>- Ability to zoom-in and zoom-out.<BR>- Integrated with existing zoom functionality via the toolbar and animated zoom.
+</SPAN></P>
+<H2><A name="constraints"></A>Constraints and Limitations</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P><SPAN
+	style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA'>A keyboard modifier is nescessary in order to access the zoom-out functionality since right mouse click is reservered for context menu invocation.</SPAN></P>
+<HR>
+<H2><A name="usecases" href=""></A>Use Cases</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P>This section describes high-level user interaction use cases. It does not attempt to capture interactions at the code level.</P>
+<P>Mini TOC of use cases:</P>
+<UL>
+	<LI><A href="#uc1">Zoom in on a point</A></LI>
+	<LI><A href="#uc2">Zoom out on a point</A></LI>
+	<LI><A href="#uc3">Zoom in to a rectangular area</A></LI></UL><H3><A name="uc1"></A>Zoom in on a point</H3>
+<P class="backto"><FONT size="2">[<A href="#usecases">back to use cases</A>]</FONT></P>
+<P>The user wishes to zoom to a particular area of the diagram.</P>
+<P>Preconditions:</P>
+<UL>
+	<LI>Diagram is open.</LI>
+</UL>
+<P>Flow of events:</P>
+<OL>
+	<LI>User selects the zoom tool.</LI>
+	<LI>User left mouse clicks on the diagram surface at a specific location</LI></OL>
+<P>Postconditions:</P>
+<UL>
+	<LI>Diagram zooms in by an incremental percentage with the point location staying at the center of the diagram view port.</LI>
+</UL>
+<H3><A name="uc2"></A>Zoom out on a point </H3>
+<P class="backto"><FONT size="2">[<A href="#usecases">back to use cases</A>]</FONT></P>
+<P>The user wishes to zoom out of a particular area of the diagram.</P>
+<P>Preconditions:</P>
+<UL>
+	<LI>Diagram is open.</LI>
+</UL>
+<P>Flow of events:</P>
+<OL>
+	<LI>User selects the zoom tool.</LI>
+	<LI>User presses down the &lt;SHIFT&gt; key and keeps it depressed.</LI>
+	<LI>User left mouse clicks on the diagram surface at a specific
+	location.</LI>
+</OL>
+<P>Postconditions:</P>
+<UL>
+	<LI>Diagram zooms out by an incremental percentage with the point
+	location staying at the center of the diagram view port.</LI>
+</UL><H3><A name="uc3"></A>Zoom in to a rectangular area</H3>
+<P class="backto"><FONT size="2">[<A href="#usecases">back to use cases</A>]</FONT></P>
+<P>The user wishes to zoom in to a particular rectangular area of the diagram.</P>
+<P>Preconditions:</P>
+<UL>
+	<LI>Diagram is open</LI>
+</UL>
+<P>Flow of events:</P>
+<OL>
+	<LI>User selects the zoom tool.</LI>
+	<LI>User left mouse clicks on the diagram surface and drags the mouse to create a rectangular feedback selection box.</LI>
+	<LI>User releases the mouse button after creating the selection rectangle.</LI></OL>
+<P>Postconditions:</P>
+<UL>
+	<LI>Diagram zooms in completely to the specified rectangle with the rectangle bounds filling out to the bounds of the view port.</LI>
+</UL><HR>
+<P style="margin-left: 0pt"><IMG border="0" src="copyright.gif" width="324" height="14"></P>
+</BODY>
+</HTML>

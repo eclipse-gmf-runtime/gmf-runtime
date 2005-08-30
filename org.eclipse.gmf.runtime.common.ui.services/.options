@@ -1,0 +1,9 @@
+# Debugging options for the org.eclipse.gmf.runtime.common.ui.services plug-in
+
+# Turn on general debugging for the org.eclipse.gmf.runtime.common.ui.services plug-in
+org.eclipse.gmf.runtime.common.ui.services/debug=true
+
+# Trace when exceptions are caught
+org.eclipse.gmf.runtime.common.ui.services/debug/exceptions/catching=false
+# Trace when exceptions are thrown
+org.eclipse.gmf.runtime.common.ui.services/debug/exceptions/throwing=false

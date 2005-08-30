@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.common.ui.services.properties">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.common.ui.services.properties" id="propertyModifiers" name="Properties Modifiers Extention Point"/>
+      </appInfo>
+      <documentation>
+         This extension point facilitates the configuration of modifiers for the properties service (&lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesService&lt;/tt&gt;). Using this extension point, modifiers are registered to specific property providers, which contribute properties to the Eclipse property sheet view part. The role of a modifier is to write-protectect and/or set flags for properties provided by the provider, for which this modifier is for. The associated provider(s) is indicated by the Provider element. There can be one or more associated providers. If the modifier is to be attached to all property providers, it&apos;s Provider&apos;s element class should be set to &apos;*&apos;.
+&lt;P&gt;
+A policy may be specified to delay loading the modifier until it is applicable
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="PropertyModifier"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="PropertyModifier">
+      <complexType>
+         <sequence>
+            <element ref="Priority"/>
+            <element ref="Policy" minOccurs="0" maxOccurs="1"/>
+            <element ref="Provider" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Priority">
+      <complexType>
+         <attribute name="name" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Lowest">
+                  </enumeration>
+                  <enumeration value="Low">
+                  </enumeration>
+                  <enumeration value="Medium">
+                  </enumeration>
+                  <enumeration value="High">
+                  </enumeration>
+                  <enumeration value="Highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Policy">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="plugin" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Provider">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         The following is an example propertyModifiers extension:
+&lt;p&gt;
+&lt;pre&gt;
+   &lt;extension 
+      id=&quot;com.ibm.xtools.project.ui.editors.providers.ReadOnlyDiagramPropertiesModifier&quot; 
+      name=&quot;%ext.readOnlyPropertiesModifier&quot; 
+      point=&quot;org.eclipse.gmf.runtime.common.ui.services.properties.propertyModifiers&quot;&gt;
+      &lt;PropertyModifier class=&quot;com.ibm.xtools.project.ui.properties.providers.ReadOnlyDiagramPropertiesModifier&quot;&gt;
+         &lt;Priority name=&quot;Highest&quot;&gt;
+         &lt;/Priority&gt;
+            &lt;Provider class=&quot;*&quot;&gt;
+         &lt;/Provider&gt;                  
+      &lt;/PropertyModifier&gt;
+   &lt;/extension&gt; 
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright 2005 IBM Corporation. All Rights Reserved.
+      </documentation>
+   </annotation>
+
+</schema>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--                                                                        -->
+<!-- Licensed Materials - Property of IBM                                   -->
+<!-- (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    -->
+<!--                                                                        -->
+<!-- US Government Users Restricted Rights - Use, duplication or disclosure -->
+<!-- restricted by GSA ADP Schedule Contract with IBM Corp.                 -->
+<!--                                                                        -->
+
+
+<plugin>
+
+     <extension-point id="dragDropListenerProviders" name="%extPoint.dragDropListenerProviders" schema="schema/dragDropListenerProviders.exsd"/>
+   <extension-point id="transferAdapterProviders" name="%extPoint.transferAdapterProviders" schema="schema/transferAdapterProviders.exsd"/>
+
+   <extension
+         id="transferAdapterProviders"
+         name="%ext.transferAdapterProviders"
+         point="org.eclipse.gmf.runtime.common.ui.services.dnd.transferAdapterProviders">
+      <TransferAdapterProvider
+            class="org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.TransferAdapterProvider"
+            id="commonTransferAdapterProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+         <AdapterType
+               operation="drag">
+            <TransferId
+                  id="customDataTransfer">
+            </TransferId>
+            <TransferId
+                  id="selectionTransfer">
+            </TransferId>
+            <TransferId
+                  id="fileTransfer">
+            </TransferId>
+            <TransferId
+                  id="pluginTransfer">
+            </TransferId>
+            <TransferId
+                  id="textTransfer">
+            </TransferId>
+            <TransferId
+                  id="richTextTransfer">
+            </TransferId>
+         </AdapterType>
+         <AdapterType
+               operation="drop">
+            <TransferId
+                  id="navigatorSelectionTransfer">
+            </TransferId>
+            <TransferId
+                  id="customDataTransfer">
+            </TransferId>
+            <TransferId
+                  id="selectionTransfer">
+            </TransferId>
+            <TransferId
+                  id="resourceTransfer">
+            </TransferId>
+            <TransferId
+                  id="fileTransfer">
+            </TransferId>
+            <TransferId
+                  id="pluginTransfer">
+            </TransferId>
+            <TransferId
+                  id="markerTransfer">
+            </TransferId>
+            <TransferId
+                  id="textTransfer">
+            </TransferId>
+            <TransferId
+                  id="richTextTransfer">
+            </TransferId>
+         </AdapterType>
+      </TransferAdapterProvider>
+   </extension>
+
+
+</plugin>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides implementations of various common dialogs.
+These dialogs include
+<UL>
+<LI>{@link org.eclipse.gmf.runtime.common.ui.dialogs.DispatchingProgressMonitorDialog Dispatching Progress Monitor} dialog</LI>
+<LI>{@link org.eclipse.gmf.runtime.common.ui.dialogs.ShowRelatedElementsDialog Show Related Elements} and {@link org.eclipse.gmf.runtime.common.ui.dialogs.ShowHideRelationshipsDialog Show Hide Relationships} dialogs</LI>
+</UL>
+and 
+<UL>
+<LI>{@link org.eclipse.gmf.runtime.common.ui.dialogs.FilterWarningDialog Filter Warning} dialog</LI>
+<LI>{@link org.eclipse.gmf.runtime.common.ui.dialogs.PopupDialog Popup} dialog</LI>
+<LI>{@link org.eclipse.gmf.runtime.common.ui.dialogs.PropertiesDialog Properties} dialog</LI>
+<LI>{@link org.eclipse.gmf.runtime.common.ui.dialogs.SaveAllDirtyEditorsDialog Save All Dirty Editors} dialog</LI>
+</UL>
+</P>
+
+<h2>Dialogs</h2>
+<P>
+The use of most of the dialogs in this class is obvious.  One of the most
+commonly used dialogs in this package is the
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.DispatchingProgressMonitorDialog
+Dispatching Progress Monitor dialog}, which will dispatch pending UI events to
+the display thread whenever its <code>isCanceled()</code> method is called.
+</P>
+
+<h3>Show Related Elements and Show Hide Relationships</h3>
+<P>{@link org.eclipse.gmf.runtime.common.ui.dialogs.ShowRelatedElementsDialog
+Show Related Elements} and
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.ShowHideRelationshipsDialog
+Show Hide Relationships}, also referred to as SRE and SHR, are also commonly
+used dialogs.  Each dialog shows
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement
+SelectableElement} objects, which for our purposes represent relationships.
+SelectableElement objects are represented as trees, and leaf SelectableElement
+objects may be either set to selected, unselected, or leave, which are defined by
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType SelectedType}.
+SelectableElement objects are displayed to the user using a label provider,
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElementsLabelProvider
+SelectableElementsLabelProvider} or
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElementsTriStateLabelProvider
+SelectableElementsTriStateLabelProvider}, and a
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElementsContentProvider
+content provider}.</P>
+
+<h4>Show Related Elements</h4>
+<P>The SRE dialog, which implements
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.IShowRelatedElementsWithDetails
+IShowRelatedElementsWithDetails}, is slightly more complex than the SHR dialog
+in that it also supports presets, and it may be separated into two sides, the
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.ShowRelatedElementsPredefinedComposite
+ShowRelatedElementsPredefinedComposite} for the presets and the
+{@link org.eclipse.gmf.runtime.common.ui.dialogs.ShowRelatedElementsComposite
+ShowRelatedElementsComposite} for the user to choose detailed settings.</P>
+
+<h2>Package Specification</h2>
+
+<P>For more information, please see 
+{@link org.eclipse.jface.dialogs.Dialog org.eclipse.jface.dialogs.Dialog}</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

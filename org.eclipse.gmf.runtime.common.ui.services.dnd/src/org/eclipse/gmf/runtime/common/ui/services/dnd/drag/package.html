@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides core support for the drag component of drag and drop.  The two main types of
+classes in this package are those that pertain to the drag source, and those
+that pertain to adapting the transfer agent for the item to be dragged for use
+with the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterProvider
+TransferAdapterProvider}.  See the schema documentation for
+transferAdapterProviders for more information.</P>
+
+<h2>The Drag Source</h2>
+<P>The {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.AbstractDragSourceListener
+AbstractDragSourceListener}, which extends the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceListener
+IDragSourceListener} for listening to drags, determines if the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.DragSourceContext
+DragSourceContext} is draggable.  Drag providers should subclass the
+{@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.AbstractDragSourceListener
+AbstractDragSourceListener} and handle the {@link
+org.eclipse.swt.dnd.DragSourceEvent DragSourceEvent}.</P>
+
+<h2>The Drag Adapter</h2>
+<P>The {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.TransferDragSourceAdapter
+TransferDragSourceAdapter} implements the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.ITransferDragSourceListener
+ITransferDragSourceListener} interface.  It adapts the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent
+ITransferAgent} for use with the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterProvider
+TransferAdapterProvider} and notifies its {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceListener
+IDragSourceListener} array with {@link org.eclipse.swt.dnd.DragSourceEvent
+DragSourceEvent} notifications.</P>
+
+<h2>Package Specification</h2>
+
+<P>For more information on transferring data using Eclipse drag and drop, please
+see {@link org.eclipse.swt.dnd.Transfer org.eclipse.swt.dnd.Transfer} and {@link
+org.eclipse.swt.dnd.TransferData org.eclipse.swt.dnd.TransferData}.</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

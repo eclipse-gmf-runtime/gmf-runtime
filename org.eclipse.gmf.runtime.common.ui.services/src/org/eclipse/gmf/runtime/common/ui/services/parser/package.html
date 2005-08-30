@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides the framework for the parser service.
+Given an {@link org.eclipse.core.runtime.IAdaptable IAdaptable} hint, the {@link
+org.eclipse.gmf.runtime.common.ui.services.parser.ParserService ParserService}
+class contains a method to return a parser for the IAdaptable.
+This is performed using the {@link
+org.eclipse.gmf.runtime.common.ui.services.parser.GetParserOperation
+GetParserOperation}.  From this method, the ParserService class provides
+implementations of convenience methods to obtain text for the IAdaptable and to
+determine whether or not the IAdaptable can be edited.  Flags for the parser
+service may be defined in an interface with constants such as {@link
+org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint
+CommonParserHint} or using a convenience wrapper such as {@link
+org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions
+ParserOptions}.</P>
+
+<h2>Using this Package</h2>
+<P>To implement a parser provider, implement {@link
+org.eclipse.gmf.runtime.common.ui.services.parser.IParserProvider
+IParserProvider}, typically subclassing {@link
+org.eclipse.gmf.runtime.common.core.service.AbstractProvider}.  For on demand loading,
+consider implementing {@link org.eclipse.gmf.runtime.common.core.service.IProviderPolicy
+IProviderPolicy} and in particular the {@link
+org.eclipse.gmf.runtime.common.core.service.IProviderPolicy#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
+provides()} method.  To implement the parser to be returned by the
+IParserProvider, implement the {@link
+org.eclipse.gmf.runtime.common.ui.services.parser.IParser IParser}
+interface.</P>
+
+<h2>Package Specification</h2>
+
+<P>For more information on the Service Infrastructure, please see 
+{@link org.eclipse.gmf.runtime.common.core.service.Service
+org.eclipse.gmf.runtime.common.core.service.Service}</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

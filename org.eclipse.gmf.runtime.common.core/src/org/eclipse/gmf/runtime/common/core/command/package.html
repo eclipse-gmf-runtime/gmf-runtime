@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+Provides a set of classes for executing, undoing and redoing units of
+work, known as
+<i>Commands</i>
+. This API is an implementation of the Command design pattern. Using
+this API, application operations can be done, undone, redone and
+canceled without any dependency on UI components.
+<p>The intent of the Command design pattern is to divide the
+responsibility for performing application operations among different
+objects. The Command object encapsulates the knowledge to perform an
+operation, as well as the knowledge to undo and redo that operation. It
+is different from the object that makes the request to perform the
+operation.</p>
+
+<p>Modeling platform command implementations should subclass the {@link
+org.eclipse.gmf.runtime.common.core.command.AbstractCommand} class in
+this package. Two or more commands can be composed together into a
+single {@link
+org.eclipse.gmf.runtime.common.core.command.CompositeCommand}, which can
+be undone and redone in a single step.</p>
+
+<p>Commands should be executed, undone and redone through an instance of
+the {@link org.eclipse.gmf.runtime.common.core.command.CommandManager}
+class. The command manager will maintain a history of the commands that
+it has executed that are eligible to be undone and redone.</p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--                                                                        -->
+<!-- Licensed Materials - Property of IBM                                   -->
+<!-- (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    -->
+<!--                                                                        -->
+<!-- US Government Users Restricted Rights - Use, duplication or disclosure -->
+<!-- restricted by GSA ADP Schedule Contract with IBM Corp.                 -->
+<!--                                                                        -->
+
+<plugin>
+
+     <extension
+         id="transferAdapterProviders"
+         name="%ext.transferAdapterProviders"
+         point="org.eclipse.gmf.runtime.common.ui.services.dnd.transferAdapterProviders">
+      <TransferAdapterProvider
+            class="org.eclipse.gmf.runtime.common.ui.services.dnd.ide.internal.core.IDETransferAdapterProvider"
+            id="commonIDETransferAdapterProvider">
+         <Priority
+               name="Low">
+         </Priority>
+         <AdapterType
+               operation="drag">
+            <TransferId
+                  id="navigatorSelectionTransfer">
+            </TransferId>
+            <TransferId
+                  id="resourceTransfer">
+            </TransferId>
+            <TransferId
+                  id="markerTransfer">
+            </TransferId>
+         </AdapterType>
+         <AdapterType
+               operation="drop">
+            <TransferId
+                  id="navigatorSelectionTransfer">
+            </TransferId>
+            <TransferId
+                  id="resourceTransfer">
+            </TransferId>
+            <TransferId
+                  id="markerTransfer">
+            </TransferId>
+         </AdapterType>
+      </TransferAdapterProvider>
+   </extension>
+
+</plugin>

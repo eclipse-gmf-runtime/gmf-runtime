@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<p>Provides a set of classes for defining <i>Actions</i> which are run
+in order to carry out application behaviour that the user has requested
+through the user-interface. Two types of actions are supported, namely <i>plugin-in</i>
+actions, and <i>retargetable</i> (or global) actions. Both kinds of
+actions are eligible to be repeated through the {@link
+org.eclipse.gmf.runtime.common.ui.action.ActionManager}.</p>
+
+<p>The <i>plugin-in</i> actions can be contributed using the extension
+points provided by the Eclipse platform, namely:
+<ul>
+	<li>org.eclipse.ui.actionsSets</li>
+	<li>org.eclipse.ui.editorActions</li>
+	<li>org.eclipse.ui.popupMenus</li>
+	<li>org.eclipse.ui.viewActions</li>
+</ul>
+The behaviour of these action extensions is defined in an
+<i>action delegate</i>
+. Modeling platform
+<i>plugin-in</i>
+action implementations should subclass the {@link
+org.eclipse.gmf.runtime.common.ui.action.AbstractActionDelegate} class
+in this package and implement the interface(s) appropriate to the
+Eclipse platform extension point(s) being used.
+</p>
+
+<p>The <i>retargetable</i> (or global) actions can be contributed using
+the extension points provided by the Eclipse platform, namely:
+<ul>
+	<li>org.eclipse.ui.actionSets</li>
+	<li>org.eclipse.ui.editors</li>
+</ul>
+The behaviour of these action extensions is defined in an
+<i>action handler</i>
+. Modeling platform
+<i>retargetable</i>
+action implementations should subclass the {@link
+org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler} class in
+this package.
+</p>
+
+<p>Modeling platform actions are run through an instance of the {@link
+org.eclipse.gmf.runtime.common.ui.action.ActionManager} class. The
+action manager will keep track of the last action that was run that is
+eligible to be repeated.</p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension-point id="actionFilterProviders" name="%extPoint.actionFilterProviders" schema="schema/actionFilterProviders.exsd"/>
+   <extension-point id="globalActionHandlerProviders" name="%extPoint.globalActionHandlerProviders" schema="schema/globalActionHandlerProviders.exsd"/>
+   <extension-point id="contributionItemProviders" name="%extPoint.contributionItemProviders" schema="schema/contributionItemProviders.exsd"/>
+   
+
+</plugin>

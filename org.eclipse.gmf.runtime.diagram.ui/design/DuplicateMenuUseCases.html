@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="GENERATOR" content="IBM Software Development Platform">
+<TITLE>Aurora Use Case Analysis Document: &lt;&lt;Feature Name&gt;&gt;</TITLE>
+<LINK rel="stylesheet" href="technote.css" type="text/css">
+</HEAD>
+<BODY>
+<A name="top"></A><IMG border="0" src="logo.gif" width="629" height="192"><H1 align="center">Aurora Use Case Analysis Document:<BR>
+Duplicate Menu</H1>
+<TABLE border="0" cellspacing="8">
+	<TBODY>
+		<TR>
+			<TD>Version: 1.01</TD>
+			<TD>Date: Mar. 7, 2005</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<H2>Contents</H2>
+<UL>
+	<LI><A href="#intro">Introduction</A></LI>
+	<LI><A href="#refs">References</A></LI>
+	<LI><A href="#trace">Traceability</A></LI>
+	<LI><A href="#reqs">Requirements</A></LI><LI><A href="#constraints">Constraints and Limitations</A></LI>
+	<LI><A href="#usecases">Use Cases</A></LI></UL>
+<HR>
+<H2><A name="intro"></A>Introduction</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P><SPAN
+	style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA'><SPAN
+	style='font-size:11.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Times New Roman";mso-fareast-font-family:"Times New Roman";
+mso-ansi-language:EN-US;mso-fareast-language:EN-US;mso-bidi-language:AR-SA'>The duplicate menu creates
+a deep copy of the element(s) or view(s) selected.</SPAN></SPAN> Duplicating a set of model elements will create a copy of the elements and all the relationships between them. Duplicating a set of views on a diagram will create a copy of the underlying elements (if applicable) and create a copy of the views on the diagram that now reference the copied elements. </P>
+<H2><A name="refs"></A>References</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<UL>
+	<LI>Rose RealTime behavior.</LI>
+	<LI><SPAN
+		style='font-size:11.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Times New Roman";mso-fareast-font-family:"Times New Roman";
+mso-ansi-language:EN-US;mso-fareast-language:EN-US;mso-bidi-language:AR-SA'>Copy
+	/ Paste behavior in RSA.</SPAN></LI>
+</UL>
+<H2><A name="trace"></A>Traceability</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<P><SPAN
+	style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA'>RATLC00519284
+Support &quot;Duplicate&quot; functionality</SPAN>.</P>
+<H2><A name="reqs"></A>Requirements</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<UL>
+	<LI>The duplicate behavior can be invoked on a selection in one of
+	three ways:
+	<OL>
+		<LI>By right-clicking and selecting the Duplicate menu. The Duplicate menu will appear near the Copy menu and in an Edit submenu if one is available.</LI>
+		<LI>By selecting the Edit &gt; Duplicate menu on the toolbar.</LI>
+		<LI>By pressing Ctrl Shift D.</LI>
+	</OL>
+	</LI>
+	<LI>The basic duplicate behavior to duplicate UML elements and views on a diagram will be available at the core platform level. Modeler will use this basic behavior. It must be implemented so that if a client wishes to support duplicating custom elements on a diagram, it would be possible to use the default duplicate UML elements functionality or provide their own duplicate elements functionality.</LI></UL><H2><A name="constraints"></A>Constraints and Limitations</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<UL>
+	<LI>Duplicating a diagram will only duplicate the diagram and its views and not duplicate the semantic elements.</LI>
+	<LI>Duplicating a model will do the same as if the user had created a new model using the model they want to duplicate as a template. At this time, this will not be implemented. Further investigation needs to take place to see if this is possible.</LI>
+	<LI>When duplicating model elements, the duplicate menu will only be enabled on elements that support duplication. The following elements do not support duplication at this time:
+	<OL>
+		<LI>Any element in a container that can only have one element of its type (e.g. the expression of a constraint).</LI>
+	</OL>
+	</LI>
+	<LI>When duplicating views on a diagram, the duplicate menu will only be enabled on views that support duplication. The following views to not support duplication at this time:
+	<OL>
+		<LI>Any view for which the underlying semantic element cannot be duplicated.</LI>
+		<LI>Any views on a sequence diagram. (It is much more difficult to implement on sequence diagrams as the location matters in the ordering of messages. At this point it is not deemed beneficial enough to the user to implement.)</LI>
+		<LI>Any connector views for which the ends are not also selected.</LI>
+	</OL>
+	</LI>
+</UL>
+<HR>
+<H2><A name="usecases" href=""></A>Use Cases</H2>
+<P class="backto"><FONT size="2">[<A href="#top">back to top</A>]</FONT></P>
+<UL>
+	<LI><A href="#uc1">Duplicate a model element in Model Explorer.</A></LI>
+	<LI><A href="#uc2">Duplicate a notation-only view on a diagram.</A></LI>
+	<LI><A href="#uc3">Duplicate a view with a semantic model element on a diagram.</A></LI></UL><H3><A name="uc1"></A>Duplicate a model element in Model Explorer.</H3>
+<P class="backto"><FONT size="2">[<A href="#usecases">back to use cases</A>]</FONT></P>
+<P>Flow of events:</P>
+<OL>
+	<LI>The user selects one or more elements in the Model Explorer.</LI>
+	<LI>The user initiates a duplicate action.</LI>
+	<LI>The selected element(s) are duplicated. </LI></OL>
+<P>Postconditions:</P><UL><LI>The duplicated elements will have Duplicate_X appended to their original name
+	where X is the lowest integer that creates a unique name within its
+	container.</LI>
+	<LI>The duplicated elements are created in the same container as its original element.</LI>
+	<LI>A deep copy of the elements are created. Any references in a
+	duplicated element to other elements that were also duplicated will now
+	reference the new duplicated element (e.g. see generalization
+	relationship below). Any references in a non-duplicated element to an element that was duplicated, will remain the same.</LI>
+</UL>
+<P align="center"><IMG border="0" src="DuplicateME.gif" width="175" height="133"></P>
+<H3><A name="uc2"></A>Duplicate a notation-only view on a diagram.</H3>
+<P class="backto"><FONT size="2">[<A href="#usecases">back to use cases</A>]</FONT></P><P>Flow of events:</P>
+<OL>
+	<LI>The user selects one or more notation-only views on a diagram.</LI>
+	<LI>The user initiates a duplicate action.</LI>
+	<LI>The selected views are duplicated. </LI>
+</OL>
+<P>Postconditions:</P>
+<UL>
+	<LI>Connectors are only duplicated if they are selected as well.</LI>
+	<LI>The duplicated views look the same as the original views (i.e. all view properties are also copied).</LI>
+	<LI>The duplicated views are located just below and to the right of the
+	original views.</LI>
+	<LI>The duplicated views are selected.</LI>
+</UL>
+<P align="center"><IMG border="0" src="DuplicateNotationOnly.gif" width="315"
+	height="101"></P>
+<H3><A name="uc3"></A>Duplicate a view with a semantic model element on a diagram.</H3>
+<P class="backto"><FONT size="2">[<A href="#usecases">back to use cases</A>]</FONT></P><P>Flow of events:</P>
+<OL>
+	<LI>The user selects one or more views with a semantic model element on a diagram.</LI>
+	<LI>The user initiates a duplicate action.</LI>
+	<LI>The selected views and underlying elements are duplicated. </LI>
+</OL>
+<P>Postconditions:</P>
+<UL>
+	<LI>The underlying model elements are duplicated just as if the user
+	had performed a duplicate on the elements in model explorer. See <A
+		href="#uc1">Use Case 1</A>.</LI>
+	<LI>Connectors are only duplicated if they are selected as well.</LI>
+	<LI>The duplicated views look the same as the original views (i.e. all
+	view properties are also copied) except that they reference the new duplicated elements.</LI>
+	<LI>The duplicated views are located just below and to the right of the
+	original views.</LI>
+	<LI>The duplicated views are selected.</LI>
+</UL>
+<P align="center"><IMG border="0" src="DuplicateViewAndElement.gif" width="384"
+	height="95"></P>
+<HR>
+<P style="margin-left: 0pt"><IMG border="0" src="copyright.gif" width="324" height="14"></P>
+</BODY>
+</HTML>

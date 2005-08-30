@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="documentProviders" name="Document Providers Registry" schema="schema/documentProviders.exsd"/>
+   <extension
+         id="DefaultDiagramDocumentProviders"
+         name="Default Diagram Document Providers"
+         point="org.eclipse.gmf.runtime.diagram.ui.resources.editor.documentProviders">
+      <provider
+            class="org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramInputDocumentProvider"
+            documentType="org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument"
+            id="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.DiagramInputDocumentProvider"
+            inputTypes="org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput"/>
+   </extension>
+</plugin>

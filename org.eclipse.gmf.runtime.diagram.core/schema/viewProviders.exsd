@@ -1,0 +1,353 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.diagram.core">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.diagram.core" id="viewProviders" name="%extPoint.viewProviders"/>
+      </appInfo>
+      <documentation>
+         [Enter description of this extension point.]
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="viewProvider" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The identifier of the extension point, i.e. &lt;tt&gt;org.eclipse.gmf.runtime.diagram.core.viewProviders&lt;/tt&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  The identifier of the extension, e.g. viewProvider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  The name of the extension, e.g. %ext.viewProvider.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="viewProvider">
+      <annotation>
+         <documentation>
+            The view provider description tag. A provider&apos;s description outlines zero or more objects to be referenced by the provider&apos;s contexts, and then lists zero or more contexts supported by the provider.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="Priority"/>
+            <element ref="object" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="context" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of the view provider class
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Priority">
+      <annotation>
+         <documentation>
+            The description for the priority of the view provider
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" use="required">
+            <annotation>
+               <documentation>
+                  The priority of the provider. It can be one of the following values:
+&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Lowest">
+                  </enumeration>
+                  <enumeration value="Low">
+                  </enumeration>
+                  <enumeration value="Medium">
+                  </enumeration>
+                  <enumeration value="High">
+                  </enumeration>
+                  <enumeration value="Highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="object">
+      <annotation>
+         <documentation>
+            A descriptor of an object that is examined by this provider. The object can have an optional set of methods to call upon.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A unique (within the context of this provider XML definition) identifier for the object
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface who is assignable from or adaptable to the object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="staticMethod">
+      <annotation>
+         <documentation>
+            A static method to call by reflection on the class.
+The static method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
+
+The rules of evaluation are as follows:
+1- The return value string has to be in the &quot;value&quot; string set.
+2- The return value string has to be not in the &quot;notValue&quot; string set.
+3- The return value object has to be in the &quot;value&quot; object set.
+4- The return value object has to be not in the &quot;notValue&quot; object set.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="value" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="notValue" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the Static Method, the format should be PluginID\ClassName.method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of primitive parameters or %Context(pluginID/className) to use the context object as a parameter . other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;pluginID/ClassName.func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="notValue" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="method">
+      <annotation>
+         <documentation>
+            A method to call by reflection on the object. The method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
+
+The rules of evaluation are as follows:
+
+1- The return value string has to be in the &quot;value&quot; string set.
+2- The return value string has to be not in the &quot;notValue&quot; string set.
+3- The return value object has to be in the &quot;value&quot; object set.
+4- The return value object has to be not in the &quot;notValue&quot; object set.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="value" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="notValue" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="notValue" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="value">
+      <annotation>
+         <documentation>
+            A descriptor of an object that represents a method&apos;s returned value. The descriptor can include an optional set of methods to call on the &quot;value&quot; object.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="notValue">
+      <annotation>
+         <documentation>
+            A descriptor of an object that represents a method&apos;s returned value that is not required. The descriptor can include an optional set of methods to call on the &quot;notValue&quot; object.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="context">
+      <annotation>
+         <documentation>
+            A context supported by the view provider which contains values for the different hint parameters needed to create views.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+         </sequence>
+         <attribute name="viewClass">
+            <annotation>
+               <documentation>
+                  A fully qualified name of a view class from a list of different kinds of views createable by the view service that the provider can accept in this context. This field is an enumeration consisting of one of the following possible values:
+
+com.ibm.xtools.notation.Node
+com.ibm.xtools.notation.Diagram
+com.ibm.xtools.notation.Edge
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="com.ibm.xtools.notation.Node">
+                  </enumeration>
+                  <enumeration value="com.ibm.xtools.notation.Diagram">
+                  </enumeration>
+                  <enumeration value="com.ibm.xtools.notation.Edge">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="elements" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated list of object ids (from the provider XML definition) that represents elements that this provider can accept for in this context.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="containerViews" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated list of object ids (from the provider XML definition) that represents container views that this provider can accept in this context.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="semanticHints" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated list of strings that represents semantic hints that this provider can accept in this context.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

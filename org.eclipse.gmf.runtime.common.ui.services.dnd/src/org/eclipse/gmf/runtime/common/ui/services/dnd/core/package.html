@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides core support for drag and drop. The two main services in this package for drag
+and drop are {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.DragDropListenerService
+DragDropListenerService} and {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterService
+TransferAdapterService}.</P>
+
+<h2>DragDropListenerService and TransferAdapterService</h2>
+<P>The {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.DragDropListenerService
+DragDropListenerService} contains methods to get the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.IDragSourceListener
+IDragSourceListener} and
+{@link org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetListener
+IDropTargetListener}, which are interfaces implemented by drag and drop
+providers.  It also contains a method to get Transfer ID strings, which can then
+be passed on to the TransferAdapterService to return {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drag.ITransferDragSourceListener}
+ITransferDragSourceListener or {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.ITransferDropTargetListener}
+ITransferDropTargetListener, which are interfaces to be implemented by drag and
+drop adapters for different transfer types.
+
+
+<h2>Package Specification</h2>
+
+<P>For more information on transferring data using Eclipse drag and drop, please
+see {@link org.eclipse.swt.dnd.Transfer org.eclipse.swt.dnd.Transfer} and {@link
+org.eclipse.swt.dnd.TransferData org.eclipse.swt.dnd.TransferData}.</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

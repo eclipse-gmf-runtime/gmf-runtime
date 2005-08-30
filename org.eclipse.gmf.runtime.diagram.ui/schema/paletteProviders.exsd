@@ -1,0 +1,414 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.diagram.ui">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.diagram.ui" id="paletteProviders" name="%extPoint.paletteProviders"/>
+      </appInfo>
+      <documentation>
+         [Enter description of this extension point.]
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="paletteProvider" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The identifier of the extension point, i.e. &lt;tt&gt;org.eclipse.gmf.runtime.diagram.ui.paletteProviders&lt;/tt&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  The identifier of the extension, e.g. paletteProvider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  The name of the extension, e.g. %ext.paletteProvider.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="paletteProvider">
+      <annotation>
+         <documentation>
+            The palette provider description tag. A provider&apos;s description outlines the targetting context (the editor and the editor&apos;s content) and zero or more palette contributions in that context.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="Priority"/>
+            <element ref="editor" minOccurs="0" maxOccurs="1"/>
+            <element ref="content" minOccurs="0" maxOccurs="1"/>
+            <element ref="contribution" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string" use="default" value="org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.DefaultPaletteProvider">
+            <annotation>
+               <documentation>
+                  The fully qualified name of the palette provider class
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Priority">
+      <annotation>
+         <documentation>
+            The description for the priority of the palette provider
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" use="required">
+            <annotation>
+               <documentation>
+                  The priority of the provider. It can be one of the following values:
+&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Lowest">
+                  </enumeration>
+                  <enumeration value="Low">
+                  </enumeration>
+                  <enumeration value="Medium">
+                  </enumeration>
+                  <enumeration value="High">
+                  </enumeration>
+                  <enumeration value="Highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="editor">
+      <annotation>
+         <documentation>
+            A descriptor for the targetted editor.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  The published id of the targetted editor. Although this field is optional, at least one of the two fields (id &amp; class) has to be specified.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the target editor.  The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+
+Although this field is optional, at least one of the two fields (id &amp; class) has to be specified.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="content">
+      <annotation>
+         <documentation>
+            A descriptor for the targetted editor&apos;s content.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the target editor&apos;s content object.  The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contribution">
+      <annotation>
+         <documentation>
+            A descriptor for a palette contribution.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="entry" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="factoryClass" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class that represents the factory for the contributions. The class has to implemenent the interface : org.eclipse.gmf.runtime.gef.ui.internal.ui.palette.PaletteFactory
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="entry">
+      <annotation>
+         <documentation>
+            A descriptor for a palette contribution entry.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="expand" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="kind" use="required">
+            <annotation>
+               <documentation>
+                  The kind of the entry (drawer | stack | separator | tool | template)
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="drawer">
+                  </enumeration>
+                  <enumeration value="separator">
+                  </enumeration>
+                  <enumeration value="template">
+                  </enumeration>
+                  <enumeration value="tool">
+                  </enumeration>
+                  <enumeration value="stack">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a user-defined id for the entry (unique within a provider)
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a fully qualified path of contribution. The format is: 
+/&lt;drawer id&lt;/separator id | entry id&gt;&gt; or /&lt;group id&lt;/separator id | entry id&gt;&gt;
+
+All path ids should have been previously defined. Previous means either earlier in the XML file or another one with a lower priority (order). If a path ends with a separator id, the new entry is appended to the elements following the separator (just before the next separator or at the end of the container if it has no more separators below that one). If a path ends with a normal entry id, the new entry is inserted after that entry.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  the palette entry label (not required for separators)
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  The pallete entry description
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="small_icon" type="string">
+            <annotation>
+               <documentation>
+                  The palette entry small icon
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="large_icon" type="string">
+            <annotation>
+               <documentation>
+                  The palette entry large icon
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="permission">
+            <annotation>
+               <documentation>
+                  The palette entry permission (None | HideOnly | limited | full). For description of the meaning of those, please refer to GEF&apos;s documentation.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="None">
+                  </enumeration>
+                  <enumeration value="HideOnly">
+                  </enumeration>
+                  <enumeration value="Limited">
+                  </enumeration>
+                  <enumeration value="Full">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="expand">
+      <annotation>
+         <documentation>
+            A descriptor for a condition to make palette drawers initially expanded. The descriptor con
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="content" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="force" type="boolean" use="default" value="false">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="method">
+      <annotation>
+         <documentation>
+            A method to call by reflection on the object. The method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
+
+The rules of evaluation are as follows:
+
+1- The return value string has to be in the &quot;value&quot; string set.
+2- The return value string has to be not in the &quot;notValue&quot; string set.
+3- The return value object has to be in the &quot;value&quot; object set.
+4- The return value object has to be not in the &quot;notValue&quot; object set.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="value" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="notValue" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="notValue" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="value">
+      <annotation>
+         <documentation>
+            A descriptor of an object that represents a method&apos;s returned value. The descriptor can include an optional set of methods to call on the &quot;value&quot; object.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="notValue">
+      <annotation>
+         <documentation>
+            A descriptor of an object that represents a method&apos;s returned value that is not required. The descriptor can include an optional set of methods to call on the &quot;notValue&quot; object.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

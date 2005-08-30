@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="IDEDiagramDocumentProviders"
+         name="IDE Diagram Document Providers"
+         point="org.eclipse.gmf.runtime.diagram.ui.resources.editor.documentProviders">
+      <provider
+            class="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDiagramDocumentProvider"
+            documentType="org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument"
+            id="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.FileDiagramDocumentProvider"
+            inputTypes="org.eclipse.ui.IFileEditorInput"/>
+      <provider
+            class="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.StorageDiagramDocumentProvider"
+            documentType="org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument"
+            id="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.StorageDiagramDocumentProvider"
+            inputTypes="org.eclipse.ui.IStorageEditorInput"/>
+   </extension>
+
+    
+</plugin>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<p>Provides a set of classes to help in evaluating expressions for
+Eclipse <i>plug-in</i> action enablement and visibility. The {@link
+org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService}
+allows clients to extend the action filters supported by objects
+selected in workbench. It also permits the entire workbench selection 
+to be considered so that an action can be enabled if it is supported on one 
+or more elements in the selection.</p>
+
+<p>To add a new attribute to an object for action filtering, the object
+must implement the <code>IAdaptable</code> interface and an adapter
+factory must be registered that returns the 
+{@link org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService}
+when the object is adapted to <code>IActionFilter</code>. An 
+{@link org.eclipse.gmf.runtime.common.ui.services.action.filter.IActionFilterProvider} 
+can then be registered to provide the test for the attribute using the 
+<code>org.eclipse.gmf.runtime.common.ui.services.action.actionFilterProviders</code>
+extension point.</p>
+
+<p>Such attributes are named in <code>objectState</code> elements which
+evaluate the attribute state of each object in the current selection for
+enablement or visibility criteria (see the org.eclipse.ui.popupMenus extension point for details).
+Eclipse documentation states that if each object in the selection has 
+the specified attribute state, the expression is evaluated as true. However, this is
+not necessarily the case for attributes defined by an action filter provider, which can 
+optionally evaluate the expression to true if one or more of the objects in the selection
+has the specified attribute state.  The meaning of the value of the attribute (the <code>objectState</code> value) 
+is defined by the action filter provider.</p>
+
+<p>Action filter providers should be implemented by extending the {@link
+org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider}
+class in this package.</p>
+
+@canBeSeenBy %partners
+
+</body>
+</html>

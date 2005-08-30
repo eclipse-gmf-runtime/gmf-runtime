@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Editor Plug-in
+Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.resources.editor; singleton:=true
+Bundle-Version: 7.0.0
+Bundle-ClassPath: editor.jar
+Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.resources.editor.document,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.notationprovider,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.utils
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.gmf.runtime.common.ui,
+ org.eclipse.emf.ecore,
+ com.ibm.xtools.notation,
+ org.eclipse.gmf.runtime.emf.core,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.gmf.runtime.diagram.ui.properties,
+ com.ibm.xtools.notation.edit
+Eclipse-AutoStart: true

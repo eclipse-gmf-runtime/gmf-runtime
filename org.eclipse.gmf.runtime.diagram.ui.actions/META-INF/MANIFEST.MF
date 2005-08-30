@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Plugin.name
+Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.actions
+Bundle-Version: 7.0.0
+Bundle-ClassPath: diagramactions.jar
+Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin
+Bundle-Vendor: %Plugin.providerName
+Bundle-Localization: plugin
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.actions,
+ org.eclipse.gmf.runtime.diagram.ui.actions.internal,
+ org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n
+Require-Bundle: org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.gmf.runtime.emf.commands.core,
+ org.eclipse.core.runtime
+Eclipse-AutoStart: true

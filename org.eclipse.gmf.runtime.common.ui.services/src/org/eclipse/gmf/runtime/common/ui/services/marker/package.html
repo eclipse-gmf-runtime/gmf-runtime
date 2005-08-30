@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides the Marker Navigation service, which is used to
+navigate to an Eclipse {@link org.eclipse.core.resources.IMarker IMarker} in an
+Eclipse {@link org.eclipse.ui.IEditorPart IEditorPart}.</P>
+
+<h2>Using this Package</h2>
+
+<P>
+The
+{@link org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService
+Marker Navigation Service} implements {@link
+org.eclipse.gmf.runtime.common.ui.services.marker.IMarkerNavigationProvider
+org.eclipse.gmf.runtime.common.ui.services.marker.IMarkerNavigationProvider}.
+The interface contains only one method, {@link
+org.eclipse.gmf.runtime.common.ui.services.marker#gotoMarker(org.eclipse.ui.IEditorPart,
+org.eclipse.core.resources.IMarker) gotoMarker(IEditorPart, IMarker)}, which
+takes the {@link org.eclipse.ui.IEditorPart IEditorPart} and the {@link
+org.eclipse.core.resources.IMarker IMarker} to navigate to.
+
+Providers may subclass {@link
+org.eclipse.gmf.runtime.common.ui.services.marker.AbstractMarkerNavigationProvider
+AbstractMarkerNavigationProvider}, which implements the required
+{@link org.eclipse.gmf.runtime.common.ui.services.marker.IMarkerNavigationProvider
+IMarkerNavigationProvider}.  The only operation executed by the service is
+{@link org.eclipse.gmf.runtime.common.ui.services.marker.GotoMarkerOperation
+GotoMarkerOperation}, whose {@link
+org.eclipse.gmf.runtime.common.ui.services.marker.GotoMarkerOperation#GotoMarkerOperation(org.eclipse.ui.IEditorPart,
+org.eclipse.core.resources.IMarker) constructor} takes the same parameters as the
+interface's method.
+
+</P>
+
+<h2>Package Specification</h2>
+
+<P>For more information on Eclipse Markers, please see 
+{@link org.eclipse.core.resources.IMarker org.eclipse.core.resources.IMarker}</P>
+<P>For more information on the Service Infrastructure, please see 
+{@link org.eclipse.gmf.runtime.common.core.service.Service
+org.eclipse.gmf.runtime.common.core.service.Service}</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

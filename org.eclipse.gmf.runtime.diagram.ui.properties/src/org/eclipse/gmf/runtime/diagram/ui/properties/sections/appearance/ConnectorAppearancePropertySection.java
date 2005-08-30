@@ -1,0 +1,389 @@
+/*
+ *+------------------------------------------------------------------------+
+ *| Licensed Materials - Property of IBM                                   |
+ *| (C) Copyright IBM Corp. 2004, 2005.  All Rights Reserved.              |
+ *|                                                                        |
+ *| US Government Users Restricted Rights - Use, duplication or disclosure |
+ *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+ *+------------------------------------------------------------------------+
+ */
+package org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.eclipse.emf.common.util.AbstractEnumerator;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import com.ibm.xtools.notation.JumpLinkStatus;
+import com.ibm.xtools.notation.JumpLinkType;
+import com.ibm.xtools.notation.Routing;
+import com.ibm.xtools.notation.Smoothness;
+import com.ibm.xtools.notation.View;
+
+/**
+ * @author dlander, nbalaba
+ * @canBeSeenBy com.ibm.xtools.uml.ui.diagram.*
+ * 
+ * Appearance properties
+ */
+public class ConnectorAppearancePropertySection
+	extends ColorsAndFontsPropertySection {
+
+	protected static final String REVERSE_JUMP_LINKS_NAME_LABEL = ResourceManager
+	.getI18NString("ConnectorAppearanceDetails.ReverseJumpLinksLabel.Text"); //$NON-NLS-1$
+	
+	private static final String ROUTER_OPTIONS_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.RouterOptionsLabel.Text"); //$NON-NLS-1$
+
+	protected static final String AVOID_OBSTACLES_NAME_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.AvoidObstaclesLabel.Text"); //$NON-NLS-1$
+
+	protected static final String CLOSEST_DISTANCE_NAME_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.ClosestDistanceLabel.Text"); //$NON-NLS-1$
+
+	protected static final String LINE_ROUTER_NAME_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.LineRouterLabel.Text"); //$NON-NLS-1$
+
+	protected static final String SMOOTHNESS_NAME_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.SmoothnessLabel.Text"); //$NON-NLS-1$
+
+	protected static final String JUMP_LINKS_NAME_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.JumpLinksLabel.Text"); //$NON-NLS-1$
+
+	protected static final String JUMP_LINK_TYPE_NAME_LABEL = ResourceManager
+		.getI18NString("ConnectorAppearanceDetails.JumpLinkTypeLabel.Text"); //$NON-NLS-1$
+
+
+
+	private static final String JUMP_LINKS_GROUP_NAME = ResourceManager
+	.getI18NString("ConnectorAppearanceDetails.JumpLinkGroupLabel.Text"); //$NON-NLS-1$
+	
+
+	// radio buttonn widgets cache with a button as a value and abstract
+	// enumeration literal as a key
+	protected Map buttons = new HashMap();
+
+	private Button avoidObstaclesButton;
+
+	private Button closestDistanceButton;
+
+	private Button reverseJumpLinksButton;
+
+	/**
+	 * Transfer data to model
+	 */
+	private void updateModel(final String szCmd, final String szID,
+			final Object val) {
+		if (isReadOnly()) {
+			refresh();
+			return;
+		}
+
+		ArrayList commands = new ArrayList();
+
+		Iterator it = getInput().iterator();
+
+		while (it.hasNext()) {
+			final ConnectionNodeEditPart ep = (ConnectionNodeEditPart) it
+				.next();
+
+			Resource res = ((View) ep.getModel()).eResource();
+
+			commands.add(createCommand(szCmd, res, new Runnable() {
+
+				public void run() {
+					ep.setPropertyValue(szID, val);
+				}
+			}));
+		}
+
+		executeAsCompositeCommand(szCmd, commands);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection#initializeControls(org.eclipse.swt.widgets.Composite)
+	 */
+	protected void initializeControls(Composite parent) {
+		createPaintedSectionComposite(parent);
+		Composite groups = getWidgetFactory().createComposite(composite);
+		groups.setLayout(new GridLayout(2, false));		
+		createFontsAndColorsGroups(groups);		
+		colorsAndFontsGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING ));		
+		createConnectorPropertyGroups(groups);
+	}	
+	/**
+	 * @see org.eclipse.gmf.runtime.common.ui.properties.ISection#createControls(org.eclipse.swt.widgets.Composite,
+	 *      org.eclipse.gmf.runtime.common.ui.properties.TabbedPropertySheetPage)
+	 */
+	public void createConnectorPropertyGroups(Composite groups) {
+
+		// routing
+		Group routing = getWidgetFactory().createGroup(groups,
+			ROUTER_OPTIONS_LABEL);
+		routing.setLayout(new GridLayout(1, false));
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		routing.setLayoutData(data);
+		
+		// smoothness
+		createRadioGroup(groups, Smoothness.VALUES.iterator(),
+			"PropertyDescriptorFactory.Smoothness.Smooth", //$NON-NLS-1$
+			Properties.ID_SMOOTHNESS, ResourceManager
+				.getI18NString("AppearanceDetails.SmoothnessCommand.Text"), //$NON-NLS-1$
+			SMOOTHNESS_NAME_LABEL, 1);
+		
+
+
+		// line router
+		createRadioGroup(routing, Routing.VALUES.iterator(),
+			"ConnectorAppearancePropertySection.Router.", //$NON-NLS-1$
+			Properties.ID_ROUTING, ResourceManager
+				.getI18NString("AppearanceDetails.LineRouterCommand.Text"), //$NON-NLS-1$
+			LINE_ROUTER_NAME_LABEL, 3);
+
+		// router options
+		createRouterOptionsGroup(routing);
+
+		// jump links
+		Group jumpLinks = getWidgetFactory().createGroup(groups,
+			JUMP_LINKS_GROUP_NAME);
+		jumpLinks.setLayout(new GridLayout(2, false));
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		jumpLinks.setLayoutData(data);
+
+		// jump links status
+		createRadioGroup(jumpLinks, JumpLinkStatus.VALUES.iterator(),
+			"PropertyDescriptorFactory.JumplinksStatus.", //$NON-NLS-1$
+			Properties.ID_JUMPLINKS_STATUS, ResourceManager
+				.getI18NString("AppearanceDetails.JumpLinksCommand.Text"), //$NON-NLS-1$
+			JUMP_LINKS_NAME_LABEL, 2);
+
+		// jump links type
+		createRadioGroup(jumpLinks, JumpLinkType.VALUES.iterator(),
+			"PropertyDescriptorFactory.JumplinksType.", //$NON-NLS-1$
+			Properties.ID_JUMPLINKS_TYPE, ResourceManager
+				.getI18NString("AppearanceDetails.JumpLinkTypeCommand.Text"), //$NON-NLS-1$
+			JUMP_LINK_TYPE_NAME_LABEL, 2);
+
+		Composite jumpLinksComposite = getWidgetFactory().createComposite(
+			jumpLinks);
+		jumpLinksComposite.setLayout(new GridLayout(2, false));
+
+		reverseJumpLinksButton = getWidgetFactory().createButton(
+			jumpLinksComposite, REVERSE_JUMP_LINKS_NAME_LABEL, SWT.CHECK);//$NON-NLS-1$
+		reverseJumpLinksButton.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent event) {
+				updateModel(
+					ResourceManager
+						.getI18NString("AppearanceDetails.ReverseJumpLinksCommand.Text"), //$NON-NLS-1$
+					Properties.ID_JUMPLINKS_REVERSE, new Boolean(
+						reverseJumpLinksButton.getSelection()));
+			}
+		});
+
+	}
+
+	/**
+	 * Create router options group
+	 * 
+	 * @param groups -
+	 *            aprent composite
+	 */
+	protected void createRouterOptionsGroup(Composite groups) {
+
+		Composite routerOptionsGroup = getWidgetFactory().createComposite(
+			groups);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		routerOptionsGroup.setLayoutData(data);
+		routerOptionsGroup.setLayout(new GridLayout(2, false));
+
+		avoidObstaclesButton = getWidgetFactory().createButton(
+			routerOptionsGroup, AVOID_OBSTACLES_NAME_LABEL, SWT.CHECK);
+		avoidObstaclesButton.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent event) {
+				updateModel(
+					ResourceManager
+						.getI18NString("AppearanceDetails.AvoidObstaclesCommand.Text"), //$NON-NLS-1$
+					Properties.ID_AVOIDOBSTRUCTIONS, new Boolean(
+						avoidObstaclesButton.getSelection()));
+			}
+		});
+
+		closestDistanceButton = getWidgetFactory().createButton(
+			routerOptionsGroup, CLOSEST_DISTANCE_NAME_LABEL, SWT.CHECK);//$NON-NLS-1$
+
+		closestDistanceButton.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent event) {
+				updateModel(
+					ResourceManager
+						.getI18NString("AppearanceDetails.ClosestDistanceCommand.Text"), //$NON-NLS-1$
+					Properties.ID_CLOSESTDISTANCE, new Boolean(
+						closestDistanceButton.getSelection()));
+			}
+		});
+	}
+
+	/**
+	 * Create and return a group of radio buttons representing a property
+	 * 
+	 * @param parent -
+	 *            patrent compopsite
+	 * @return - a last control created for this group
+	 */
+	protected void createRadioGroup(Composite parent, Iterator iterator,
+			String propertyValueNameKey, final Object propertyId,
+			final String commandName, String propertyName, int rows) {
+
+		Group group = getWidgetFactory().createGroup(parent, propertyName);
+		group.setLayout(new GridLayout(rows, true));
+		GridData data = new GridData(GridData.FILL_BOTH);//GridData.FILL_HORIZONTAL | 
+		group.setLayoutData(data);
+
+		Button radioButton = null;
+		for (Iterator e = iterator; e.hasNext();) {
+			AbstractEnumerator literal = (AbstractEnumerator) e.next();
+			String propertyValueName = translate(propertyId, literal,
+				propertyValueNameKey);
+
+			radioButton = getWidgetFactory().createButton(group,
+				propertyValueName, SWT.RADIO);
+			radioButton.setData(literal);
+			buttons.put(literal, radioButton);
+			radioButton.addSelectionListener(new SelectionAdapter() {
+
+				public void widgetSelected(SelectionEvent event) {
+					setPropertyValue(event, propertyId, commandName); //$NON-NLS-1$
+				}
+			});
+
+			if (isReadOnly())
+				radioButton.setEnabled(false);
+		}
+
+	}
+
+	/**
+	 * @param propertyValueNameKey -
+	 *            bundle key prefix
+	 * @param name -
+	 *            bundle key suffix
+	 * @return - translated string
+	 */
+	private String translate(Object propertyId, AbstractEnumerator literal,
+			String propertyValueNameKey) {
+
+		if (propertyId == Properties.ID_JUMPLINKS_TYPE
+			&& literal.getName().equals("Semicircle"))//$NON-NLS-1$
+			return PresentationResourceManager
+				.getI18NString(propertyValueNameKey + "SemiCircle");//$NON-NLS-1$
+
+		return PresentationResourceManager.getI18NString(propertyValueNameKey
+			+ literal.getName());
+
+	}
+
+	/**
+	 * @param event
+	 */
+	protected void setPropertyValue(SelectionEvent event,
+			final Object propertyId, String commandName) {
+
+		ArrayList commands = new ArrayList();
+		Iterator it = getInput().iterator();
+		final Button button = (Button) event.getSource();
+
+		while (it.hasNext()) {
+			final IGraphicalEditPart ep = (IGraphicalEditPart) it.next();
+
+			commands.add(createCommand(commandName, ((View) ep.getModel())
+				.eResource(), new Runnable() {
+
+				public void run() {
+
+					ep.setPropertyValue(propertyId, button.getData());
+
+				}
+			}));
+		}
+
+		executeAsCompositeCommand(commandName, commands);
+
+	}
+
+	/**
+	 * @see org.eclipse.gmf.runtime.common.ui.properties.view.ITabbedPropertySection#refresh()
+	 */
+	public void refresh() {
+		super.refresh();
+		try {
+			executeAsReadAction(new Runnable() {
+
+				public void run() {
+
+					// Update display from model
+					ConnectionEditPart obj = (ConnectionEditPart) getSingleInput();
+
+					if (!avoidObstaclesButton.isDisposed()) {
+						Boolean val = (Boolean) obj
+							.getPropertyValue(Properties.ID_AVOIDOBSTRUCTIONS);
+						avoidObstaclesButton.setSelection(val.booleanValue());
+					}
+
+					if (!closestDistanceButton.isDisposed()) {
+						Boolean val = (Boolean) obj
+							.getPropertyValue(Properties.ID_CLOSESTDISTANCE);
+						closestDistanceButton.setSelection(val.booleanValue());
+					}
+
+					if (!reverseJumpLinksButton.isDisposed()) {
+						Boolean val = (Boolean) obj
+							.getPropertyValue(Properties.ID_JUMPLINKS_REVERSE);
+						reverseJumpLinksButton.setSelection(val.booleanValue());
+					}
+
+					Button button = (Button) buttons.get(obj
+						.getPropertyValue(Properties.ID_JUMPLINKS_STATUS));
+					if (button != null)
+						button.setSelection(true);
+
+					button = (Button) buttons.get(obj
+						.getPropertyValue(Properties.ID_JUMPLINKS_TYPE));
+					if (button != null)
+						button.setSelection(true);
+
+					button = (Button) buttons.get(obj
+						.getPropertyValue(Properties.ID_ROUTING));
+					if (button != null)
+						button.setSelection(true);
+
+					button = (Button) buttons.get(obj
+						.getPropertyValue(Properties.ID_SMOOTHNESS));
+					if (button != null)
+						button.setSelection(true);
+
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

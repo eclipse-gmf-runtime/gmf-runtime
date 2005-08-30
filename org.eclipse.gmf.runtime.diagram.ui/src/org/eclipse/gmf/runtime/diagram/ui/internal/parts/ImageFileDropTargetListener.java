@@ -1,0 +1,108 @@
+/*
+ *+------------------------------------------------------------------------+
+ *| Licensed Materials - Property of IBM                                   |
+ *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.              |
+ *|                                                                        |
+ *| US Government Users Restricted Rights - Use, duplication or disclosure |
+ *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+ *+------------------------------------------------------------------------+
+ */
+package org.eclipse.gmf.runtime.diagram.ui.internal.parts;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPartViewer;
+import org.eclipse.swt.SWTException;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TransferData;
+
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener;
+
+/**
+ * @author sshaw
+ * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
+ * 
+ * Drop target listener to support dropping of image files onto the diagram
+ * surface.
+ */
+public class ImageFileDropTargetListener
+	extends DiagramDropTargetListener {
+
+	/**
+	 * @param viewer
+	 * @param xfer
+	 */
+	public ImageFileDropTargetListener(EditPartViewer viewer) {
+		super(viewer, FileTransfer.getInstance());
+	}
+
+	/**
+	 * This implementation includes in the list only elements that are instances
+	 * of IElement.
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener#getElementsBeingDropped()
+	 */
+	protected List getObjectsBeingDropped() {
+		/*  Get the selection from the transfer agent */
+		TransferData[] data = getCurrentEvent().dataTypes;
+		List fileList = new ArrayList();
+		
+		for (int i=0; i < data.length; i++) {
+			
+			if (FileTransfer.getInstance().isSupportedType(data[i])) {
+				// FileTransfers from the PE are supported, but an 
+				// SWT exception is thrown when using nativeToJava call.
+				try {
+					Object files = FileTransfer.getInstance().nativeToJava(data[i]);
+					if (files instanceof String[]) {
+						String[] fileStrings = (String[])files;
+						for	(int j=0; j<fileStrings.length; j++)
+							fileList.add(fileStrings[j]);
+					}				
+				} catch (SWTException e) {
+					return null;
+				}
+
+			}
+		}
+		
+		if (fileList.size() > 0)
+			return fileList;
+		
+		return null;
+	}
+
+	/**
+	 * This implementation assumes that elements being dropped are instances of
+	 * IElement.
+	 * 
+	 * @see org.eclipse.gef.dnd.TransferDropTargetListener#isEnabled(org.eclipse.swt.dnd.DropTargetEvent)
+	 */
+	public boolean isEnabled(DropTargetEvent event) {
+
+		if (super.isEnabled(event)) {
+			Object modelObj = getViewer().getContents().getModel();
+			if (modelObj instanceof EObject) {
+				return getDropObjectsRequest().getObjects() != null;
+			} else if (modelObj instanceof IAdaptable) {
+				final EObject target = (EObject) ((IAdaptable) modelObj)
+					.getAdapter(EObject.class);
+				List elements = getDropObjectsRequest().getObjects();
+
+				// additional check
+				if (elements == null || target == null) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+}

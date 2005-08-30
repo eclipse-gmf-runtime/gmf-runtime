@@ -1,0 +1,892 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.common.ui.services.action">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.common.ui.services.action" id="contributionItemProviders" name="Contribution Item Providers Extension Point"/>
+      </appInfo>
+      <documentation>
+         &lt;P&gt;
+This extension point is used to register providers that contribute to different workbench part&apos;s contribution managers. The contributions described in this extension point could be for a workbench part&apos;s action bars (referred to as part contributions) or for a workbench part&apos;s popup menu (referred to as popup contributions). This extension point provides an XML description of those contributions to be read by the described providers. The extension point provides an alternative to the following Eclipse extension points:
+&lt;/P&gt;
+&lt;UL&gt;
+&lt;LI&gt;org.eclipse.ui.editorActions&lt;/LI&gt;
+&lt;LI&gt;org.eclipse.ui.viewActions&lt;/LI&gt;
+&lt;LI&gt;org.eclipse.ui.popupMenus (viewerContribution)&lt;/LI&gt;
+&lt;/UL&gt;
+&lt;P&gt;
+However, this extension point focuses on distinguishing the contribution criteria from the enablement and visibility of the described contributions. The description of each contribution has the following minimum information:
+&lt;/P&gt;
+&lt;UL&gt;
+&lt;LI&gt;Information to create the contribution (e.g., id)&lt;/LI&gt;
+&lt;LI&gt;Information to perform the contribution (e.g., path within manager)&lt;/LI&gt;
+&lt;LI&gt;Information to consider the contribution (e.g., target id, class)&lt;/LI&gt;
+&lt;/UL&gt;
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="contributionItemProvider" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a fully qualified identifier of the target extension point, in this case, &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionItemsProviders&lt;/tt&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional identifier of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  an optional human readable name of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contributionItemProvider">
+      <annotation>
+         <documentation>
+            This element is used to describe a contribution item provider that will contribute actions and toolbar items to a view&apos;s popup menus or action bars.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="Priority"/>
+            <group>
+               <element ref="partContribution" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="popupContribution" minOccurs="0" maxOccurs="unbounded"/>
+            </group>
+         </sequence>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the name of a fully qualified class that implements the the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider&lt;/tt&gt; and &lt;tt&gt;org.eclipse.gmf.runtime.common.core.service.IProvider&lt;/tt&gt; interfaces
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="checkPluginLoaded" type="boolean" use="default" value="true">
+            <annotation>
+               <documentation>
+                  indicates whether or not the service should only consider contributions from this provider if the declaring plugin is already loaded (either true or false). Default value is true.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="Priority">
+      <annotation>
+         <documentation>
+            This element is used to specify the priority that this provider has relative to other contribution item providers that are registered to provide the same kind of contribution to the same menu or toolbar.  All providers have the opportunity to make their contributions.  The provider with the lowest priority will be chosen as the first contributor, while the provider with the highest priority will be chosen as the last contributor.  This means that a provider wishing to add contributions to menus or groups contributed by another provider must have the higher priority so that the menu or group has already been contributed by the time it is asked to make its own contributions.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" use="required">
+            <annotation>
+               <documentation>
+                  the name of the provider priority, one of &lt;tt&gt;Lowest&lt;/tt&gt;, &lt;tt&gt;Low&lt;/tt&gt;, &lt;tt&gt;Medium&lt;/tt&gt;, &lt;tt&gt;High&lt;/tt&gt;, or &lt;tt&gt;Highest&lt;/tt&gt;
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Lowest">
+                  </enumeration>
+                  <enumeration value="Low">
+                  </enumeration>
+                  <enumeration value="Medium">
+                  </enumeration>
+                  <enumeration value="High">
+                  </enumeration>
+                  <enumeration value="Highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partContribution">
+      <annotation>
+         <documentation>
+            This element is used to add a group of menus, groups, actions, and/or toolbar items to a workbench part. At least one of the two attributes &lt;tt&gt;id&lt;/tt&gt; or &lt;tt&gt;class&lt;/tt&gt; must be specified for this element.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="partMenu" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="partMenuGroup" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="partAction" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="partCustom" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="partActionGroup" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional unique identifier of a registered workbench part that is the target of this contribution
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  an optional name of a fully qualified class or interface. Contributions will be made to all workbench parts that subclass or implement this type.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupContribution">
+      <annotation>
+         <documentation>
+            &lt;P&gt;
+This element is used to add a group of menus, groups, actions, and/or custom items to a context menu. At least one of the two attributes &lt;tt&gt;id&lt;/tt&gt; or &lt;tt&gt;class&lt;/tt&gt; must be specified for this element.
+&lt;/P&gt;
+&lt;P&gt;
+Criteria for the visibility of this group of contributions can be specified by any number of the same kind of criteria elements from among:
+&lt;UL&gt;
+&lt;LI&gt;popupStructuredContributionCriteria&lt;/LI&gt;
+&lt;LI&gt;popupTextContributionCriteria&lt;/LI&gt;
+&lt;LI&gt;popupMarkContributionCriteria&lt;/LI&gt;
+&lt;/UL&gt;
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <choice minOccurs="0" maxOccurs="unbounded">
+               <element ref="popupStructuredContributionCriteria"/>
+               <element ref="popupTextContributionCriteria"/>
+               <element ref="popupMarkContributionCriteria"/>
+            </choice>
+            <element ref="popupMenu" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="popupMenuGroup" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="popupAction" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="popupCustom" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="popupActionGroup" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional unique identifier of a registered context menu that is the target of this contribution
+&lt;BR&gt;
+For a given part, there could be one or more context menus. This id is used to specify the one the contributions are for.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  an optional name of a fully qualified class or interface. Contributions will be made to all context menus that subclass or implement this type.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partMenu">
+      <annotation>
+         <documentation>
+            This element is used to add menu to a workbench part&apos;s action bars.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  an optional identifier used to reference this menu contribution. It must be unique within the contribution item provider
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="menubarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this menu within the part&apos;s menubar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the menubar.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="toolbarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this menu within the part&apos;s toolbar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the toolbar.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partMenuGroup">
+      <annotation>
+         <documentation>
+            A description for a menu group contribution to be contributed to a workbench part&apos;s action bars.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the part menu group contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="menubarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this menu group within the part&apos;s menubar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. There should be a &apos;/&apos; at the end of the path. The menu group is inserted to the end of the last submenu in the path. If the field was omitted, the contribution will not take place to the menubar.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="toolbarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this menu group within the part&apos;s toolbar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. There should be a &apos;/&apos; at the end of the path. The menu group is inserted to the end of the last submenu in the path. If the field was omitted, the contribution will not take place to the toolbar.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="separator" type="boolean" use="default" value="true">
+            <annotation>
+               <documentation>
+                  A flag indicating whether the menu group is a separator &lt;true&gt; (default) or a group marker &lt;false&gt;.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partAction">
+      <annotation>
+         <documentation>
+            A description for an action contribution to be contributed to a workbench part&apos;s action bars.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the part action contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="menubarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this action within the part&apos;s menubar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the menubar.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="toolbarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this action within the part&apos;s toolbar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the toolbar.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="global" type="boolean" use="default" value="false">
+            <annotation>
+               <documentation>
+                  A flag that determines whether the action is global or not. If the action is marked global, it will be added to the workbench part&apos;s global action handlers.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partCustom">
+      <annotation>
+         <documentation>
+            A description for a custom contribution to be contributed to a workbench part&apos;s action bars.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the part custom contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="menubarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this custom contribution within the part&apos;s menubar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the menubar.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="toolbarPath" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this custom contribution within the part&apos;s toolbar. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the toolbar.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupMenu">
+      <annotation>
+         <documentation>
+            A description for a menu contribution to be contributed to a workbench part&apos;s popup menu.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the popup menu manager contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="default" value="/additionsGroup">
+            <annotation>
+               <documentation>
+                  The contribution path of this menu within the popup. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the popup menu.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupMenuGroup">
+      <annotation>
+         <documentation>
+            A description for a menu group contribution to be contributed to a workbench part&apos;s popup menu.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the popup menu group contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="default" value="/">
+            <annotation>
+               <documentation>
+                  The contribution path of this menu group within the popup menu. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. There should be a &apos;/&apos; at the end of the path. The menu group is inserted to the end of the last submenu in the path. If the field was omitted, the contribution will not take place to the popup menu.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="separator" type="boolean" use="default" value="true">
+            <annotation>
+               <documentation>
+                  A flag indicating whether the menu group is a separator (true) (default) or a group marker (false).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupAction">
+      <annotation>
+         <documentation>
+            A description for an action contribution to be contributed to a workbench part&apos;s popup menu.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the popup action contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="default" value="/additionsGroup">
+            <annotation>
+               <documentation>
+                  The contribution path of this action within the popup. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the popup menu.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupCustom">
+      <annotation>
+         <documentation>
+            A description for a custom contribution to be contributed to a workbench part&apos;s popup menu.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the popup custom contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string" use="default" value="/additionsGroup">
+            <annotation>
+               <documentation>
+                  The contribution path of this custom contribution within the popup. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited. The final token in the path is either a group_id or a contribution_id.
+&lt;BR&gt;
+If the last token was a group, the contribution will be appended to the end of the group. Otherwise, the contribution will be inserted after the given contribution id. If the field was omitted, the contribution will not take place to the popup menu.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupStructuredContributionCriteria">
+      <annotation>
+         <documentation>
+            A description for a structured selection contribution criteria for a workbench part&apos;s popup menu contribution. The criteria can have an optional set of methods to call on the &quot;selected objects&quot;
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="objectCount" type="string">
+            <annotation>
+               <documentation>
+                  The number of objects in the selection that this contribution applies to.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="objectClass" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface who is assignable or adaptable from the classes of objects in the selection. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+&lt;PRE&gt;className&lt;(plugin id)&gt;?&lt;/PRE&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="policyClass" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupTextContributionCriteria">
+      <annotation>
+         <documentation>
+            A description for a text selection contribution criteria for a workbench part&apos;s popup menu contribution.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="text" type="string">
+            <annotation>
+               <documentation>
+                  The text in the selection. This is an optional field
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="policyClass" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupMarkContributionCriteria">
+      <annotation>
+         <documentation>
+            A description for a mark selection contribution criteria for a workbench part&apos;s popup menu contribution.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="documentClass" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface who is assignable or adaptable from the document of the mark selection. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+&lt;PRE&gt;className&lt;(plugin id)&gt;?&lt;/PRE&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="policyClass" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="method">
+      <annotation>
+         <documentation>
+            A method to call by reflection on the object. The method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
+
+The rules of evaluation are as follows:
+&lt;OL&gt;
+&lt;LI&gt;The return value string has to be in the &quot;value&quot; string set.&lt;/LI&gt;
+&lt;LI&gt;The return value string has to be not in the &quot;notValue&quot; string set.&lt;/LI&gt;
+&lt;LI&gt;The return value object has to be in the &quot;value&quot; object set.&lt;/LI&gt;
+&lt;LI&gt;The return value object has to be not in the &quot;notValue&quot; object set.&lt;/LI&gt;
+&lt;/OL&gt;
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="value" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="notValue" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;PRE&gt;&lt;string&gt;[,&lt;string&gt;]*&lt;/PRE&gt;
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="notValue" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;PRE&gt;&lt;string&gt;[,&lt;string&gt;]*&lt;/PRE&gt;
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="value">
+      <annotation>
+         <documentation>
+            A descriptor of an object that represents a method&apos;s returned value. The descriptor can include an optional set of methods to call on the &quot;value&quot; object.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+&lt;PRE&gt;className&lt;(plugin id)&gt;?&lt;/PRE&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="notValue">
+      <annotation>
+         <documentation>
+            A descriptor of an object that represents a method&apos;s returned value that is not required. The descriptor can include an optional set of methods to call on the &quot;notValue&quot; object.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
+&lt;PRE&gt;className&lt;(plugin id)&gt;?&lt;/PRE&gt;
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="popupActionGroup">
+      <annotation>
+         <documentation>
+            A description for a action group contribution to be contributed to a workbench part&apos;s popup menu.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the popup action group contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string">
+            <annotation>
+               <documentation>
+                  he contribution path of this action group within the popup. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*&lt;group_id|contribution_id&gt;
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be submenu_id path that is also &apos;/&apos; delimited.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partActionGroup">
+      <annotation>
+         <documentation>
+            A description for an Action Group contribution to be contributed to a workbench part&apos;s action bars.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the part action group contribution. The id is unique within a provider.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         The following is an example of a provider extension 
+&lt;PRE&gt;
+ &lt;extension
+         id=&quot;PresentationContributionItemProvider&quot;
+         name=&quot;%ext.contributionItemProvider&quot;
+          point=&quot;org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders&quot;&gt;
+      &lt;contributionItemProvider
+            class=&quot;com.ibm.xtools.project.ui.providers.PresentationContributionItemProvider&quot;&gt;
+         &lt;Priority
+               name=&quot;Lowest&quot;&gt;
+         &lt;/Priority&gt;
+         &lt;partContribution
+               class=&quot;org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorPart&quot;&gt;
+            &lt;partMenu
+                  menubarPath=&quot;/additions&quot;
+                  id=&quot;diagramMenu&quot;&gt;
+            &lt;/partMenu&gt;
+            &lt;partMenuGroup
+                  menubarPath=&quot;/diagramMenu/&quot;
+                  toolbarPath=&quot;/&quot;
+                  id=&quot;viewGroup&quot;&gt;
+            &lt;/partMenuGroup&gt;
+            &lt;partMenu
+                  menubarPath=&quot;/diagramMenu/viewGroup&quot;
+                  toolbarPath=&quot;/viewGroup&quot;
+                  id=&quot;selectMenu&quot;&gt;
+            &lt;/partMenu&gt;
+            &lt;partMenuGroup
+                  menubarPath=&quot;/diagramMenu/selectMenu/&quot;
+                  toolbarPath=&quot;/selectMenu/&quot;
+                  id=&quot;selectGroup&quot;&gt;
+            &lt;/partMenuGroup&gt;
+            &lt;partAction
+                  global=&quot;true&quot;
+                  menubarPath=&quot;/diagramMenu/selectMenu/selectGroup&quot;
+                  toolbarPath=&quot;/selectMenu/selectGroup&quot;
+                  id=&quot;selectAll&quot;&gt;
+            &lt;/partAction&gt;
+            &lt;partAction
+                  menubarPath=&quot;/diagramMenu/selectMenu/selectGroup&quot;
+                  toolbarPath=&quot;/selectMenu/selectGroup&quot;
+                  id=&quot;selectAllShapesAction&quot;&gt;
+            &lt;/partAction&gt;
+            &lt;partAction
+                  menubarPath=&quot;/diagramMenu/selectMenu/selectGroup&quot;
+                  toolbarPath=&quot;/selectMenu/selectGroup&quot;
+                  id=&quot;selectAllConnectorsAction&quot;&gt;
+            &lt;/partAction&gt;
+            &lt;partCustom
+                  menubarPath=&quot;/diagramMenu/viewGroup&quot;
+                  toolbarPath=&quot;/viewGroup&quot;
+                  id=&quot;zoomContributionItem&quot;&gt;
+            &lt;/partCustom&gt;
+         &lt;/partContribution&gt;
+         &lt;popupContribution
+               id=&quot;org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu&quot;&gt;
+            &lt;popupMenuGroup
+                  id=&quot;viewGroup&quot;&gt;
+            &lt;/popupMenuGroup&gt;
+            &lt;popupMenu
+                  path=&quot;/viewGroup&quot;
+                  id=&quot;selectMenu&quot;&gt;
+            &lt;/popupMenu&gt;
+            &lt;popupMenuGroup
+                  path=&quot;/selectMenu/&quot;
+                  id=&quot;selectGroup&quot;&gt;
+            &lt;/popupMenuGroup&gt;
+            &lt;popupAction
+                  path=&quot;/selectMenu/selectGroup&quot;
+                  id=&quot;selectAll&quot;&gt;
+            &lt;/popupAction&gt;
+            &lt;popupAction
+                  path=&quot;/selectMenu/selectGroup&quot;
+                  id=&quot;selectAllShapesAction&quot;&gt;
+            &lt;/popupAction&gt;
+            &lt;popupAction
+                  path=&quot;/selectMenu/selectGroup&quot;
+                  id=&quot;selectAllConnectorsAction&quot;&gt;
+            &lt;/popupAction&gt;
+            &lt;popupCustom
+                  path=&quot;/viewGroup&quot;
+                  id=&quot;zoomContributionItem&quot;&gt;
+            &lt;/popupCustom&gt;
+         &lt;/popupContribution&gt;
+         &lt;popupContribution
+               class=&quot;org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider&quot;&gt;
+            &lt;popupStructuredContributionCriteria
+                 objectCount=&quot;2&quot;                  
+                 objectClass=&quot;org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart&quot;&gt;
+            &lt;/popupStructuredContributionCriteria&gt;
+            &lt;popupAction
+                  path=&quot;/alignMenu/alignVerticalGroup&quot;
+                  id=&quot;alignTopAction&quot;&gt;
+            &lt;/popupAction&gt;
+         &lt;/popupContribution&gt;
+      &lt;/contributionItemProvider&gt;
+   &lt;/extension&gt;
+&lt;/PRE&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         &lt;P&gt;
+The value of the contribution item provider &lt;tt&gt;class&lt;/tt&gt; attribute must be a fully qualified name of a Java class that implements the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider&lt;/tt&gt;. For convenience, this can be a subclass of &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider&lt;/tt&gt;.
+&lt;/P&gt;
+&lt;p&gt;
+The order of contribution is given as follows:
+&lt;OL&gt;
+&lt;LI&gt;the priority of the provider (Lowest first)&lt;/LI&gt;
+&lt;LI&gt;the order of the definition within the XML file&lt;/LI&gt;
+&lt;/OL&gt;
+&lt;/P&gt;
+&lt;P&gt;
+Therefore, a contribution path has to fully exist prior to being used as a path of contribution.
+&lt;/P&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright 2003, 2005 IBM Corporation. All Rights Reserved.
+      </documentation>
+   </annotation>
+
+</schema>

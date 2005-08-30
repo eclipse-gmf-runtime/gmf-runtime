@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2004, 2005.  All Rights Reserved.              |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides preference page helpers, including an abstract preference
+page that supports context sensitive help and some field editors intended for
+use on preference pages.</P>
+
+<h2>Using this Package</h2>
+
+<P>First, subclass
+{@link org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage
+AbstractPreferencePage}.  The resulting preference page will support context
+sensitive help.
+</P>
+
+<P>The {@link org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor
+CheckboxFieldEditor}
+and the {@link org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor
+ComboFieldEditor}
+may be used on the subclassed preference page or another
+{@link org.eclipse.ui.IWorkbenchPreferencePage
+IWorkbenchPreferencePage}.
+
+Implement the
+{@link org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+createFieldEditors()} method to add the field editors.</P>
+
+<h2>Package Specification</h2>
+
+<P>For more information, please see {@link org.eclipse.ui.IWorkbenchPreferencePage
+IWorkbenchPreferencePage}.</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

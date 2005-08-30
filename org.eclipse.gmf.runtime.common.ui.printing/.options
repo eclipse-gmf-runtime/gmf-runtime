@@ -1,0 +1,21 @@
+# Debugging options for the com.ibm.xtools.common.printing plug-in
+
+# Turn on general debugging for the com.ibm.xtools.common.printing plug-in
+com.ibm.xtools.common.printing/debug=true
+
+# Trace when exceptions are caught
+com.ibm.xtools.common.printing/debug/exceptions/catching=false
+# Trace when exceptions are thrown
+com.ibm.xtools.common.printing/debug/exceptions/throwing=false
+
+# Trace when methods are entered
+com.ibm.xtools.common.printing/debug/methods/entering=false
+# Trace when methods are exited
+com.ibm.xtools.common.printing/debug/methods/exiting=false
+
+# Trace information related to action administration
+com.ibm.xtools.common.printing/debug/actions/admin=false
+# Trace when actions are run
+com.ibm.xtools.common.printing/debug/actions/run=false
+# Trace when actions are repeated
+com.ibm.xtools.common.printing/debug/actions/repeat=false

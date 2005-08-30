@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  /*
+   *+------------------------------------------------------------------------+
+   *| Licensed Materials - Property of IBM                                   |
+   *| (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    |
+   *|                                                                        |
+   *| US Government Users Restricted Rights - Use, duplication or disclosure |
+   *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+   *+------------------------------------------------------------------------+
+   */
+
+-->
+</head>
+<body>
+
+<P>Provides core support for the drop component of drag and drop.  The two main types of
+classes in this package are those that pertain to the drop target, and those
+that pertain to adapting the transfer agent for the item to be dropped for use
+with the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterProvider
+TransferAdapterProvider}.  See the schema documentation for
+transferAdapterProviders for more information.</P>
+
+<h2>The Drop Target</h2>
+<P>The {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.AbstractDropTargetListener
+AbstractDropTargetListener}, which extends the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetListener
+IDropTargetListener} for listening to drops, determines if the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.DropTargetContext
+DropTargetContext} can support drops.  Drop providers should subclass the
+{@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.AbstractDropTargetListener
+AbstractDropTargetListener} and handle the SWT {@link
+org.eclipse.swt.dnd.DropTargetEvent DropTargetEvent} or the xtools
+{@link org.eclipse.gmf.runtime.common.ui.services.dnd.drop.DropTargetEvent
+DropTargetEvent}.</P>
+
+<h2>The Drop Adapter</h2>
+<P>The {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.TransferDropTargetAdapter
+TransferDropTargetAdapter} implements the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.ITransferDropTargetListener
+ITransferDropTargetListener} interface.  It adapts the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent
+ITransferAgent} for use with the {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterProvider
+TransferAdapterProvider} and notifies its {@link
+org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetListener
+IDropTargetListener} array with {@link org.eclipse.swt.dnd.DropTargetEvent
+DropTargetEvent} notifications.</P>
+
+<h2>Package Specification</h2>
+
+<P>For more information on transferring data using Eclipse drag and drop, please
+see {@link org.eclipse.swt.dnd.Transfer org.eclipse.swt.dnd.Transfer} and {@link
+org.eclipse.swt.dnd.TransferData org.eclipse.swt.dnd.TransferData}.</P>
+
+@canBeSeenBy %partners
+</body>
+</html>

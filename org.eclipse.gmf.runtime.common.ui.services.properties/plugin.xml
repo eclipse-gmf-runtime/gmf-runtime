@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--                                                                        -->
+<!-- Licensed Materials - Property of IBM                                   -->
+<!-- (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    -->
+<!--                                                                        -->
+<!-- US Government Users Restricted Rights - Use, duplication or disclosure -->
+<!-- restricted by GSA ADP Schedule Contract with IBM Corp.                 -->
+<!--                                                                        -->
+
+<plugin>
+
+     <extension-point id="propertiesProviders" name="%extPoint.propertiesProviders" schema="schema/propertiesProviders.exsd"/>
+   <extension-point id="propertyModifiers" name="%extPoint.propertyModifiers" schema="schema/propertyModifiers.exsd"/>
+  
+
+</plugin>

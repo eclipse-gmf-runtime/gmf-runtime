@@ -1,0 +1,261 @@
+/*
+ *+------------------------------------------------------------------------+
+ *| Licensed Materials - Property of IBM                                   |
+ *| (C) Copyright IBM Corp. 2002, 2005.  All Rights Reserved.              |
+ *|                                                                        |
+ *| US Government Users Restricted Rights - Use, duplication or disclosure |
+ *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
+ *+------------------------------------------------------------------------+
+ */
+package org.eclipse.gmf.runtime.common.ui.services.action.contributionitem;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbenchPart;
+import org.osgi.framework.Bundle;
+
+import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
+import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ContributeToActionBarsOperation;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ContributeToPopupMenuOperation;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.DisposeContributionsOperation;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionDescriptorReader;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ProviderContributionDescriptor;
+import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
+import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
+
+/**
+ * A service for contributing items into different <code>IWorkbenchPart</code>'s 
+ * contribution managers: ActionBars and ContextMenu(s).
+ * 
+ * @see IContributionItemProvider
+ * @see AbstractContributionItemProvider
+ * 
+ * @author melaasar
+ */
+public class ContributionItemService
+	extends Service
+	implements IContributionItemProvider {
+
+	/**
+	 * A descriptor for <code>IContributionItemProvider</code> defined
+	 * by a configuration element.
+	 */
+	protected static class ProviderDescriptor
+		extends Service.ProviderDescriptor {
+
+		private static final String CHECK_PLUGIN_LOADED = "checkPluginLoaded"; //$NON-NLS-1$
+
+		/** the provider contribution descriptor parsed from XML */
+		private ProviderContributionDescriptor contributionDescriptor;
+		/** a flag to check if plugin is loaded */
+		private boolean checkPluginLoaded = true;
+
+		/**
+		 * Constructs a <code>IContributionItemProvider</code> descriptor for
+		 * the specified configuration element.
+		 * 
+		 * @param element The configuration element describing the provider.
+		 */
+		public ProviderDescriptor(IConfigurationElement element) {
+			super(element);
+
+			String s = element.getAttribute(CHECK_PLUGIN_LOADED);
+			if (s != null)
+				this.checkPluginLoaded = Boolean.valueOf(s).booleanValue();
+
+			this.contributionDescriptor =
+				ProviderContributionDescriptor.parse(element);
+			assert null != contributionDescriptor : "contributionDescriptor cannot be null"; //$NON-NLS-1$
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
+		 */
+		public boolean provides(IOperation operation) {
+			// if asked to check that the plugin is loaded and it is not, ignore
+			if (checkPluginLoaded && !isPluginLoaded())
+				return false;
+			
+			// if no XML contributions, forward to the provider 
+			if (!contributionDescriptor.hasContributions())
+				return super.provides(operation);
+
+			if (operation instanceof ContributeToActionBarsOperation) {
+				ContributeToActionBarsOperation op =
+					(ContributeToActionBarsOperation) operation;
+				return contributionDescriptor.hasContributionsFor(
+					op.getWorkbenchPartDescriptor().getPartId(),
+					op.getWorkbenchPartDescriptor().getPartClass());
+			} else if (operation instanceof ContributeToPopupMenuOperation) {
+				ContributeToPopupMenuOperation op =
+					(ContributeToPopupMenuOperation) operation;
+				ISelection selection =
+					op
+						.getWorkbenchPart()
+						.getSite()
+						.getSelectionProvider()
+						.getSelection();
+				return contributionDescriptor.hasContributionsFor(
+					op.getPopupMenu(),
+					selection);
+			} else if (operation instanceof DisposeContributionsOperation) {
+				if (provider != null)
+					return provider.provides(operation);
+			}
+			return false;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.common.core.internal.service.Service.ProviderDescriptor#getProvider()
+		 */
+		public IProvider getProvider() {
+			if (provider == null) {
+				IProvider newProvider = super.getProvider();
+				if (provider instanceof IContributionDescriptorReader) {
+					IContributionDescriptorReader reader =
+						(IContributionDescriptorReader) newProvider;
+					reader.setContributionDescriptor(contributionDescriptor);
+				}
+				return newProvider;
+			}
+			return super.getProvider();
+		}
+
+		/**
+		 * Verify if the declaring pluging of the propety provider is loaded.
+		 * 
+		 * @return <code>true</code> if the declaring pluging of the propety
+		 *         provider is loaded, <code>false</code> otherwise
+		 */
+		private boolean isPluginLoaded() {
+			String pluginId = getElement().getDeclaringExtension().getNamespace();
+			Bundle bundle = Platform.getBundle(pluginId);
+			return null != bundle
+				&& bundle.getState() == org.osgi.framework.Bundle.ACTIVE;
+
+		}
+	}
+
+	/** 
+	 * The single instance of the contribution item service. 
+	 */
+	private static ContributionItemService instance =
+		new ContributionItemService();
+
+	/**
+	 * Returns the single instanceo of the <code>ContributionItemService</code>.
+	 * 
+	 * @return The single instance of the <code>ContributionItemService</code>
+	 */
+	public static ContributionItemService getInstance() {
+		return instance;
+	}
+
+	/**
+	 * Creates a new <code>ContributionItemService</code> instance.
+	 */
+	private ContributionItemService() {
+		 /* private constructor */
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.core.internal.service.Service#newProviderDescriptor(org.eclipse.core.runtime.IConfigurationElement)
+	 */
+	protected Service.ProviderDescriptor newProviderDescriptor(
+		IConfigurationElement element) {
+		return new ProviderDescriptor(element);
+	}
+
+	/**
+	 * Makes contributions to the given <code>actionBars</code> that belong to the given part.
+	 * @param actionBars the action bars
+	 * @param workbenchPart the workbench part
+	 * @see #contributeToActionBars(IActionBars, IWorkbenchPartDescriptor)
+	 */
+	public void contributeToActionBars(
+		IActionBars actionBars,
+		IWorkbenchPart workbenchPart) {
+		contributeToActionBars(
+			actionBars,
+			new WorkbenchPartDescirptor(
+				workbenchPart.getSite().getId(),
+				workbenchPart.getClass(),
+				workbenchPart.getSite().getPage()));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider#contributeToActionBars(org.eclipse.ui.IActionBars, org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
+	 */
+	public void contributeToActionBars(
+		IActionBars actionBars,
+		IWorkbenchPartDescriptor workbenchPartDescriptor) {
+		execute(
+			new ContributeToActionBarsOperation(
+				actionBars,
+				workbenchPartDescriptor));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider#contributeToPopupMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.ui.IWorkbenchPart)
+	 */
+	public void contributeToPopupMenu(
+		IMenuManager popupMenu,
+		IWorkbenchPart workbenchPart) {
+		execute(new ContributeToPopupMenuOperation(popupMenu, workbenchPart));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider#disposeContributions(org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
+	 */
+	public void disposeContributions(IWorkbenchPartDescriptor workbenchPartDescriptor) {
+		execute(new DisposeContributionsOperation(workbenchPartDescriptor));
+	}
+
+	/**
+	 * Disposes of the contributions that have been made to the <code>workbenchPart</code>.
+	 * @param workbenchPart the workbench part
+	 */
+	public void disposeContributions(IWorkbenchPart workbenchPart) {
+		execute(
+			new DisposeContributionsOperation(
+				new WorkbenchPartDescirptor(
+					workbenchPart.getSite().getId(),
+					workbenchPart.getClass(),
+					workbenchPart.getSite().getPage())));
+
+	}
+
+	/**
+	 * Executes the operation with the REVERSE strategy.
+	 * 
+	 * @param operation the operation to be executed.
+	 */
+	private void execute(IOperation operation) {
+		execute(ExecutionStrategy.REVERSE, operation);
+	}
+
+	/**
+	 * Removes the disabled contributions from a contribution manager.
+	 * 
+	 * @param manager the contribution manager
+	 */
+	public void removeDisabledContributions(IContributionManager manager) {
+		IContributionItem[] contributions = manager.getItems();
+		for (int i = 0; i < contributions.length; i++) {
+			if (contributions[i] instanceof IContributionManager)
+				removeDisabledContributions(
+					(IContributionManager) contributions[i]);
+			if (!contributions[i].isEnabled())
+				manager.remove(contributions[i]);
+		}
+	}
+}
