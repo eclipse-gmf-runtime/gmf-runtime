@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package 
+         uri = "http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore" 
+         class = "org.eclipse.gmf.tests.runtime.emf.type.ui.employee.EmployeePackage" />
+   </extension>
+  
+   <extension
+         point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+  
+         <!-- Test custom element type factory -->
+         <elementTypeFactory
+               factory="org.eclipse.gmf.runtime.emf.type.core.internal.tests.SecurityClearedElementTypeFactory"
+               kind = "org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared"
+               params = "securityClearance">
+         </elementTypeFactory>
+         
+         <!-- Test metamodel -->
+         <metamodel
+                nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore">
+                
+           <!-- Test metamodel types -->
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.department"     
+                   icon="icons/department.gif"
+                   name="Department"
+                   eclass="Department"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.DepartmentEditHelper"> 
+           </metamodelType>
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"     
+                   icon="icons/employee.gif"
+                   name="Employee"
+                   eclass="Employee"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.EmployeeEditHelper"> 
+           </metamodelType>
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.student"     
+                   icon="icons/student.gif"
+                   name="Student"
+                   eclass="Student"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.StudentEditHelper"> 
+           </metamodelType>
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.office"     
+                   icon="icons/office.gif"
+                   name="Office"
+                   eclass="Office"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.OfficeEditHelper"> 
+           </metamodelType>
+
+           <specializationType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.secretDepartment"
+                   name="Secret Department"
+                   kind="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared"> 
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.department"/>
+               <matcher class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.SecretDepartmentMatcher"/>
+           </specializationType>
+           
+           <!-- Test specialization type with eContainer and matcher -->
+           <specializationType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.manager"
+                   name="Manager"
+                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ManagerEditHelperAdvice"> 
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"/>
+               <eContainer>
+                  <eContainmentFeature qname="Department.manager"/>
+               </eContainer>
+               <matcher class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ManagerMatcher"/>
+           </specializationType>
+           
+           <!-- Test specialization type with enablement -->
+           <specializationType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.executive"
+                   name="Executive"
+                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ExecutiveEditHelperAdvice"> 
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.manager"/>
+               <enablement>
+                  <test property="org.eclipse.gmf.tests.runtime.emf.type.ui.officeHasDoor" value="true"/>
+               </enablement>
+           </specializationType>
+           
+           <!-- Test custom specialization type -->
+           <specializationType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.topSecret"
+                   name="TopSecret"
+               	   kind="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared">
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"/>
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.manager"/>
+               <param name="securityClearance" value = "topSecret"/>
+           </specializationType>
+
+           <!-- Test advice binding with eContainer -->
+           <adviceBinding
+                id="org.eclipse.gmf.tests.runtime.emf.type.ui.financeEmployee"
+                typeId="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"
+                class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.FinanceEditHelperAdvice"
+                inheritance="all"> 
+                <eContainer>
+                   <enablement>
+                      <test property="org.eclipse.gmf.tests.runtime.emf.type.ui.departmentName" value="Finance"/>
+                   </enablement>
+                </eContainer>
+           </adviceBinding> 
+           <adviceBinding
+                id="org.eclipse.gmf.tests.runtime.emf.type.ui.notInheritedEmployeeAdvice"
+                typeId="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"
+                class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.NotInheritedEditHelperAdvice"> 
+           </adviceBinding>    
+           
+           <!-- Test duplicate metamodel type ID -->
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee" 
+                   name="DuplicateEmployee"
+                   eclass="Employee"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.EmployeeEditHelper"> 
+           </metamodelType>
+           
+           <!-- Test duplicate eclass -->
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee2" 
+                   name="Employee"
+                   eclass="Employee"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.EmployeeEditHelper"> 
+           </metamodelType>
+           
+           <!-- Test specializing more than one metamodel type -->
+           <specializationType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.multipleMetamodelTypes"
+                   name="MultipleMetamodelTypes"
+                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.internal.tests.MultipleMetamodelTypesEditHelperAdvice"> 
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.student"/>
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.department"/>
+           </specializationType>
+           
+           <!-- Test specializing non-existent type -->
+           <specializationType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.SpecializesNoSuchType"
+                   name="NoSuchType"> 
+               <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.noSuchType"/>
+           </specializationType>
+           
+        </metamodel>
+        
+        <!-- Test metamodel that doesn't exist -->
+        <metamodel nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Does.not.exist">
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.ui.noMetamodel"     
+                   name="NoMetamodel"
+                   eclass="None"
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.NoEditHelper"> 
+           </metamodelType>
+        </metamodel>
+        
+        <!-- Text specialization that doesn't need a metamodel -->
+        <specializationType
+                id="org.eclipse.gmf.tests.runtime.emf.type.ui.nullSpecialization"     
+                name="NullSpecialization">
+             <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
+        </specializationType>
+   </extension>
+   
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+           id="org.eclipse.gmf.tests.runtime.emf.type.ui.OfficeTester"
+           type="org.eclipse.gmf.tests.runtime.emf.type.ui.employee.Employee"
+           namespace="org.eclipse.gmf.tests.runtime.emf.type.ui"
+           properties="officeHasDoor, officeWindowCount"
+           class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.OfficeTester">
+       </propertyTester>
+       <propertyTester
+           id="org.eclipse.gmf.tests.runtime.emf.type.ui.DepartmentTester"
+           type="org.eclipse.gmf.tests.runtime.emf.type.ui.employee.Department"
+           namespace="org.eclipse.gmf.tests.runtime.emf.type.ui"
+           properties="departmentName"
+           class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.DepartmentTester">
+        </propertyTester>
+   </extension>
+</plugin>

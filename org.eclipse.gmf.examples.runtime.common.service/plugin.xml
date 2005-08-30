@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--                                                                        -->
+<!-- Licensed Materials - Property of IBM                                   -->
+<!-- (C) Copyright IBM Corp. 2005.  All Rights Reserved.                    -->
+<!--                                                                        -->
+<!-- US Government Users Restricted Rights - Use, duplication or disclosure -->
+<!-- restricted by GSA ADP Schedule Contract with IBM Corp.                 -->
+<!--                                                                        -->
+
+<plugin>
+
+     <extension-point id="widgetProviders" name="%WidgetProviders" schema="schema/widgetProviders.exsd"/>   
+   
+	<!--
+	Note: The providers are put in the same plugin project for simplicity.  
+	-->   
+   <extension point="org.eclipse.gmf.examples.runtime.common.service.widgetProviders">
+      <widgetProvider class="org.eclipse.gmf.examples.runtime.common.service.providers.WidgetProvider">
+         <Priority name="Low"/>
+         <orderSize max="5000" min="50"/>
+      </widgetProvider>
+   </extension>      
+   
+   <extension point="org.eclipse.gmf.examples.runtime.common.service.widgetProviders">
+      <widgetProvider class="org.eclipse.gmf.examples.runtime.common.service.providers.SuperWidgetProvider">
+         <Priority name="High"/>
+         <orderSize max="10000" min="100"/> 
+      </widgetProvider>     
+   </extension>   
+   
+   <extension point="org.eclipse.ui.actionSets">
+      <actionSet 
+         label="%widgetServiceActionSet"
+         visible="true"
+         id="com.ibm.xtools.common.core.examples.client.actionSet">
+         <action id="com.ibm.xtools.common.core.examples.runExampleAction"
+            label="%runwidget.label"
+            menubarPath="com.ibm.xtools.pde.examples.menu/additions"
+            class="org.eclipse.gmf.examples.runtime.common.service.client.RunExampleAction">
+         </action>
+         <menu
+               label="%sampleMenu"
+               id="com.ibm.xtools.pde.examples.menu">
+         </menu>            
+      </actionSet>
+   </extension>     
+  
+</plugin>

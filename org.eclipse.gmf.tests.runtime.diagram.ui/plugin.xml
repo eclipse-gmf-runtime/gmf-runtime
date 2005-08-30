@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
+      <viewProvider
+            class="org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestsViewProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+         <context
+               viewClass="com.ibm.xtools.notation.Diagram"
+               semanticHints="PresentationTestsDiagramKind">
+         </context>
+       </viewProvider>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor name="Test Diagram Editor"
+         default="false"
+         icon="images/viewer.gif"
+         class="org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramTestEditor"
+         id="org.eclipse.gmf.tests.runtime.diagram.ui.DiagramTestEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
+      <editpartProvider class="org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestsEditPartProvider">
+      <Priority
+               name="Lowest">
+      </Priority>
+      <object class="com.ibm.xtools.notation.Diagram" id="TestDiagram">
+        	 <method name="getType()" value="PresentationTestsDiagramKind"/>
+	  </object>
+	  <context views="TestDiagram">
+      </context>
+      </editpartProvider>
+   </extension>
+
+
+</plugin>

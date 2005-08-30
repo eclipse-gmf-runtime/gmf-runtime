@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Plugin.name
+Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.emf.ui.properties
+Bundle-Version: 7.0.0
+Bundle-ClassPath: tests.jar
+Bundle-Vendor: %Plugin.providerName
+Bundle-Localization: plugin
+Export-Package: org.eclipse.gmf.tests.runtime.emf.ui.properties
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit

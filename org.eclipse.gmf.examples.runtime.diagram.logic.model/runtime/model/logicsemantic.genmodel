@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.gmf.examples.runtime.diagram.logic.model/src"
+    editDirectory="/org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/src" editorDirectory="/org.eclipse.gmf.examples.runtime.diagram.logic.model.editor/src"
+    modelPluginID="org.eclipse.gmf.examples.runtime.diagram.logic.model" runtimeJar="true"
+    modelName="Logicsemantic" editPluginClass="org.eclipse.gmf.examples.runtime.diagram.logic.model.provider.LogicsemanticEditPlugin"
+    editorPluginClass="org.eclipse.gmf.examples.runtime.diagram.logic.model.presentation.LogicsemanticEditorPlugin"
+    runtimeCompatibility="false">
+  <foreignModel>..\rosemodel\logicsemantic.mdl</foreignModel>
+  <genPackages prefix="Semantic" basePackage="org.eclipse.gmf.examples.runtime.diagram.logic"
+      ecorePackage="logicsemantic.ecore#/">
+    <genClasses ecoreClass="logicsemantic.ecore#//LED">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logicsemantic.ecore#//LED/value"/>
+    </genClasses>
+    <genClasses ecoreClass="logicsemantic.ecore#//Element">
+      <genFeatures property="None" children="true" createChild="false" ecoreFeature="ecore:EReference logicsemantic.ecore#//Element/terminals"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference logicsemantic.ecore#//Element/outputTerminals"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference logicsemantic.ecore#//Element/inputTerminals"/>
+    </genClasses>
+    <genClasses ecoreClass="logicsemantic.ecore#//Wire">
+      <genFeatures notify="false" children="true" createChild="true" ecoreFeature="ecore:EReference logicsemantic.ecore#//Wire/source"/>
+      <genFeatures notify="false" children="true" createChild="true" ecoreFeature="ecore:EReference logicsemantic.ecore#//Wire/target"/>
+    </genClasses>
+    <genClasses ecoreClass="logicsemantic.ecore#//Circuit"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//Gate"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//FlowContainer"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//AndGate"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//OrGate"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//XORGate"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//Model"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//ContainerElement">
+      <genFeatures notify="false" children="true" createChild="true" ecoreFeature="ecore:EReference logicsemantic.ecore#//ContainerElement/children"/>
+    </genClasses>
+    <genClasses ecoreClass="logicsemantic.ecore#//Terminal">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute logicsemantic.ecore#//Terminal/id"/>
+    </genClasses>
+    <genClasses ecoreClass="logicsemantic.ecore#//OutputTerminal"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//InputTerminal"/>
+    <genClasses ecoreClass="logicsemantic.ecore#//InputOutputTerminal"/>
+  </genPackages>
+</genmodel:GenModel>

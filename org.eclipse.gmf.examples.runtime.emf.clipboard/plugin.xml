@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <!-- Register the clipboard support for the Library metamodel -->
+   <extension point="org.eclipse.gmf.runtime.emf.clipboard.core.clipboardSupport">
+      <factory
+            class="org.eclipse.gmf.examples.runtime.emf.clipboard.library.LibraryClipboardSupportFactory"
+            nsURI="http:///com/ibm/xtools/emf/metamodel/example/pde/rmplibrary.ecore/1.0.0"
+            priority="medium"/>
+   </extension>
+   
+   <!-- Register an extension parser for the library metamodel, to ensure that
+        we use resources that assign UUIDs to elements. -->
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="rmplibrary"
+            class="org.eclipse.gmf.examples.runtime.emf.clipboard.library.LibraryResourceFactory"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.editorActions"> 
+      <editorContribution 
+         id="org.eclipse.emf.query.examples.ocl.editorContribution" 
+         targetID="org.eclipse.emf.examples.library.presentation.RMPLibraryEditorID"> 
+         <menu
+               label="%_UI_ClipMenu_label"
+               path="org.eclipse.emf.examples.libraryMenuID/additions"
+               id="org.eclipse.gmf.runtime.emf.clipboard.coreMenuID">
+            <separator name="additions"/>
+         </menu>
+         <action
+               label="%_UI_Paste_label"
+               class="org.eclipse.gmf.examples.runtime.emf.clipboard.actions.PasteDelegate"
+               menubarPath="org.eclipse.emf.examples.libraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
+               icon="icons/paste.gif"
+               id="org.eclipse.gmf.examples.runtime.emf.clipboard.PasteAction">
+            <enablement>
+               <objectClass
+                     name="org.eclipse.emf.ecore.EObject">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               label="%_UI_Copy_label"
+               class="org.eclipse.gmf.examples.runtime.emf.clipboard.actions.CopyDelegate"
+               menubarPath="org.eclipse.emf.examples.libraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
+               icon="icons/copy.gif"
+               id="org.eclipse.gmf.examples.runtime.emf.clipboard.CopyAction">
+            <enablement>
+               <objectClass
+                     name="org.eclipse.emf.ecore.EObject">
+               </objectClass>
+            </enablement>
+         </action>
+      </editorContribution> 
+   </extension> 
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="org.eclipse.emf.examples.library.presentation.RMPLibraryEditorID"
+            id="org.eclipse.gmf.examples.runtime.emf.clipboard.viewerContribution">
+         <menu
+               label="%_UI_ClipMenu_label"
+               path="additions"
+               id="org.eclipse.gmf.runtime.emf.clipboard.coreMenuID">
+            <separator name="additions"/>
+         </menu>
+         <action
+               label="%_UI_Paste_label"
+               class="org.eclipse.gmf.examples.runtime.emf.clipboard.actions.PasteDelegate"
+               menubarPath="org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
+               icon="icons/paste.gif"
+               id="org.eclipse.gmf.examples.runtime.emf.clipboard.PasteAction">
+            <enablement>
+               <objectClass
+                     name="org.eclipse.emf.ecore.EObject">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               label="%_UI_Copy_label"
+               class="org.eclipse.gmf.examples.runtime.emf.clipboard.actions.CopyDelegate"
+               menubarPath="org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
+               icon="icons/copy.gif"
+               id="org.eclipse.gmf.examples.runtime.emf.clipboard.CopyAction">
+            <enablement>
+               <objectClass
+                     name="org.eclipse.emf.ecore.EObject">
+               </objectClass>
+            </enablement>
+         </action>
+      </viewerContribution>
+   </extension>
+</plugin>

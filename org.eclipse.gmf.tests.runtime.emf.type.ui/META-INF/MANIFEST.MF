@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Plugin.name
+Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.emf.type.ui; singleton:=true
+Bundle-Version: 7.0.0
+Bundle-ClassPath: tests.jar
+Bundle-Activator: org.eclipse.gmf.tests.runtime.emf.type.ui.TestPlugin
+Bundle-Vendor: %Plugin.providerName
+Bundle-Localization: plugin
+Export-Package: org.eclipse.gmf.tests.runtime.emf.type.ui.internal,
+ org.eclipse.gmf.tests.runtime.emf.type.ui,
+ org.eclipse.gmf.tests.runtime.emf.type.ui.employee,
+ org.eclipse.gmf.tests.runtime.emf.type.ui.employee.impl,
+ org.eclipse.gmf.tests.runtime.emf.type.ui.employee.util
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.expressions,
+ org.eclipse.emf.ecore,
+ org.eclipse.gmf.runtime.emf.type.core,
+ org.eclipse.gmf.runtime.common.core,
+ org.junit
+Eclipse-AutoStart: true

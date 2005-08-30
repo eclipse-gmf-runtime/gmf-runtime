@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build.src.zip" basedir=".">
+
+	<target name="init">
+		<dirname property="workspace.folder" file="${basedir}"/>	
+		<dirname property="src.folder" file="${basedir}/src"/>
+		<property name="dest.file" value="${workspace.folder}/org.eclipse.gmf.examples.runtime.ui.pde/examples/service_provider_src.zip"/>
+		<defaultexcludes add="**/BuildInfo.java"/>	
+			
+	</target>
+		
+	<target name="build.src.zip" depends="init" description="Build Src.zip">
+	
+		<echo level="info" message="Creating ${dest.file}"/>
+		
+		<!-- Create zip for wizard -->
+		<zip destfile="${dest.file}" basedir="${src.folder}" update="true" filesonly="false" whenempty="skip"
+			excludes="**/*.class">			
+		</zip>
+		
+		<!-- Copy zip for java doc -->
+		<copy toDir="${workspace.folder}/com.ibm.xtools.platform.doc.isv/html/tutorials/">
+			<fileset file="${dest.file}"/>
+		</copy>
+		
+		<copy toDir="${workspace.folder}/org.eclipse.gmf.runtime.doc.isv/html/tutorials/">
+			<fileset file="${dest.file}"/>
+		</copy>		
+				
+	</target>
+	
+</project>

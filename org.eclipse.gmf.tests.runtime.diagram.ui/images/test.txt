@@ -1,0 +1,11 @@
+\com.ibm.xtools.gef\src\com\ibm\xtools\gef\internal\editpolicies\ConnectorBendpointEditPolicy.java
+\com.ibm.xtools.gef\src\com\ibm\xtools\gef\internal\figures\routers\TreeRouter.java
+\com.ibm.xtools.gef\src\com\ibm\xtools\gef\internal\figures\routers\ForestRouter.java
+\com.ibm.xtools.gef\src\com\ibm\xtools\gef\internal\figures\routers\BranchRouter.java
+\com.ibm.xtools.gef\src\com\ibm\xtools\gef\internal\editpolicies\LineMode.java
+\com.ibm.xtools.presentation\src\com\ibm\xtools\presentation\internal\editpolicies\ConnectorLineSegEditPolicy.java
+\com.ibm.xtools.presentation\src\com\ibm\xtools\presentation\internal\editpolicies\ConnectorBendpointEditPolicy.java
+\com.ibm.xtools.presentation\src\com\ibm\xtools\presentation\internal\editparts\ConnectionEditPart.java
+\com.ibm.xtools.presentation\src\com\ibm\xtools\presentation\internal\editpolicies\TreeConnectorBendpointEditPolicy.java
+
+Move source branch up and out from line makes line jump to over side?

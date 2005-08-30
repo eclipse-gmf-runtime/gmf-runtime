@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--                                                                        			-->
+<!-- Licensed Materials - Use restricted, please refer to the "Samples Gallery" terms	-->
+<!-- and conditions in the IBM International Program License Agreement.					-->
+<!-- 																					-->
+<!-- (c) Copyright IBM Corporation 2005. All Rights Reserved.                  			-->
+<!--                                                                        			-->
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%actionSetLabel"
+            visible="true"
+            id="org.eclipse.gmf.examples.runtime.diagram.actionSet">
+         <action
+               label="%layout_menuLabel"
+               icon="icons/diagram.gif"
+               tooltip="%layout_tooltip"
+               class="org.eclipse.gmf.examples.runtime.diagram.layout.actions.SquareLayoutAction"
+               menubarPath="com.ibm.xtools.pde.examples.menu/additions"
+               id="org.eclipse.gmf.examples.runtime.diagram.layout.actions.SquareLayoutAction">
+         </action>
+         <menu
+               label="%sampleMenu"
+               id="com.ibm.xtools.pde.examples.menu">
+         </menu>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.layoutProviders">
+      <layoutProvider
+            class="org.eclipse.gmf.examples.runtime.diagram.layout.provider.SquareLayoutProvider">
+         <Priority
+               name="Medium">
+         </Priority>
+      </layoutProvider> 
+   </extension>
+</plugin>
+
