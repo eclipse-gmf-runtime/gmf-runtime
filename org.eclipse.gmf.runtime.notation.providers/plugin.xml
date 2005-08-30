@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         id="NotationMetaModelProvider"
+         name="Notation MetaModel Provider"
+         point="org.eclipse.gmf.runtime.emf.core.MetaModelProviders">
+      <MetaModelProvider
+            class="org.eclipse.gmf.runtime.notation.providers.internal.NotationMetaModelProvider">
+         <Priority name="Low" />
+       </MetaModelProvider>
+   </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.emf.clipboard.core.clipboardSupport">
+      <factory
+            nsURI="http://www.ibm.com/xtools/1.5.0/Notation"
+            priority="lowest"
+            class="org.eclipse.gmf.runtime.notation.providers.internal.copypaste.ClipboardSupportFactory">
+      </factory>
+   </extension>
+
+</plugin>

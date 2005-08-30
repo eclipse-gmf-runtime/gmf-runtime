@@ -1,0 +1,15 @@
+# Debugging options for the org.eclipse.gmf.runtime.notation.providers plug-in
+
+# Turn on general debugging for the org.eclipse.gmf.runtime.notation.providers plug-in
+org.eclipse.gmf.runtime.notation.providers/debug=true
+
+# Trace when exceptions are caught
+org.eclipse.gmf.runtime.notation.providers/debug/exceptions/catching=false
+# Trace when exceptions are thrown
+org.eclipse.gmf.runtime.notation.providers/debug/exceptions/throwing=false
+
+# Trace when methods are entered
+org.eclipse.gmf.runtime.notation.providers/debug/methods/entering=false
+# Trace when methods are exited
+org.eclipse.gmf.runtime.notation.providers/debug/methods/exiting=false
+
