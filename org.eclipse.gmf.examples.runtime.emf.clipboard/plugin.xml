@@ -12,11 +12,13 @@
    
    <!-- Register an extension parser for the library metamodel, to ensure that
         we use resources that assign UUIDs to elements. -->
-   <extension point="org.eclipse.emf.ecore.extension_parser">
+   <!-- For the time-being, we will assume that the org.eclipse.gmf.example.runtime.emf plugin is installed and
+         will provide us with a viable MResource that supports UUIDs. -->
+   <!-- <extension point="org.eclipse.emf.ecore.extension_parser">
       <parser
             type="rmplibrary"
             class="org.eclipse.gmf.examples.runtime.emf.clipboard.library.LibraryResourceFactory"/>
-   </extension>
+   </extension> -->
    
    <extension point="org.eclipse.ui.editorActions"> 
       <editorContribution 
