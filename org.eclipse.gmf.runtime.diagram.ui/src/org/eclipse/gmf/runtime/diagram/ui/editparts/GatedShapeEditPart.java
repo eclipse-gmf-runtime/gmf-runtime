@@ -141,7 +141,7 @@ public abstract class GatedShapeEditPart extends ShapeNodeEditPart {
 	 * 
 	 * @see #createMainFigure()
 	 */
-	protected final NodeFigure createNodeFigure() {
+	protected  NodeFigure createNodeFigure() {
 		return new GatedPaneFigure(createMainFigure());
 	}
 
