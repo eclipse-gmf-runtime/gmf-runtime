@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Editor Plug-in
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.resources.editor; singleton:=true
-Bundle-Version: 7.0.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: editor.jar
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin
 Bundle-Vendor: IBM

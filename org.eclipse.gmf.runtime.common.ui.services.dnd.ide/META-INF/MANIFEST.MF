@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.services.dnd.ide; singleton:=true
-Bundle-Version: 7.0.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: uiservicesdndide.jar
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.services.dnd.ide.internal.CommonUIServicesDNDIDEPlugin
 Bundle-Vendor: %Plugin.providerName

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.actions
-Bundle-Version: 7.0.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: diagramactions.jar
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin
 Bundle-Vendor: %Plugin.providerName

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.action.ide
-Bundle-Version: 7.0.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: commonuiactionide.jar
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.action.ide.internal.CommonUIActionIDEPlugin
 Bundle-Vendor: %Plugin.providerName

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide; singleton:=true
-Bundle-Version: 7.0.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: editoride.jar
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin
 Bundle-Vendor: %Plugin.providerName
