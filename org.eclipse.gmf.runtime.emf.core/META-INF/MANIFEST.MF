@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.emf.core; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: emfmsl.jar
 Bundle-Activator: org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

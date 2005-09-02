@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.emf.type.core; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: emftype.jar
 Bundle-Activator: org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin
 Bundle-Vendor: %Plugin.providername
 Bundle-Localization: plugin

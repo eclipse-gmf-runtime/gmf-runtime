@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.diagram.layout; singleton:=true
-Bundle-Version: 6.0.0
-Bundle-ClassPath: layoutExample.jar
+Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.examples.runtime.diagram.layout.LayoutPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

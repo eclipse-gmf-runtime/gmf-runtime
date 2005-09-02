@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.services.action; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: uiservicesaction.jar
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

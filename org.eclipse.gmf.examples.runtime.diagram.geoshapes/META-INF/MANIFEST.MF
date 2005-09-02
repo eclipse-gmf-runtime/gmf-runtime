@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Geoshape Plug-in
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.diagram.geoshapes; singleton:=true
-Bundle-Version: 7.0.0
-Bundle-ClassPath: examples-geoshapes.jar
+Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin

@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.draw2d.ui.render
 Bundle-Version: 1.0.0
-Bundle-ClassPath: xdraw2dren.jar
 Bundle-Activator: org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.emf.clipboard; singleton:=true
-Bundle-Version: 7.0.0
-Bundle-ClassPath: clipboardexample.jar
+Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.examples.runtime.emf.clipboard.ClipboardExamplePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

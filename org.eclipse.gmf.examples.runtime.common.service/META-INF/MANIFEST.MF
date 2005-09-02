@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.common.service; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: service.jar
 Bundle-Activator: org.eclipse.gmf.examples.runtime.common.service.ServicePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

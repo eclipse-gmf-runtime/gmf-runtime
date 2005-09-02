@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.emf.type.ui; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.gmf.tests.runtime.emf.type.ui.TestPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

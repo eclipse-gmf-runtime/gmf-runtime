@@ -4,7 +4,6 @@ Bundle-Name: %Fragment.name
 Bundle-Vendor: %Fragment.providerName
 Bundle-Version: 1.0.0
 Bundle-Localization: printingWin32Fragment
-Bundle-ClassPath: printingwin32.jar
 Fragment-Host: org.eclipse.gmf.runtime.common.ui.printing;bundle-version="1.0.0"
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.ui,

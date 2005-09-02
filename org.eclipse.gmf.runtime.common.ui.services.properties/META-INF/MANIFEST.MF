@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %PluginName
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.services.properties; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: properties.jar
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.services.properties.internal.PSFCommonUIPlugin
 Bundle-Vendor: IBM
 Bundle-Localization: plugin

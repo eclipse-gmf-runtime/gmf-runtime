@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: DiagramPrinting Plug-in
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.printing
 Bundle-Version: 1.0.0
-Bundle-ClassPath: diagramprinting.jar
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugin
 Bundle-Vendor: IBM
 Bundle-Localization: plugin

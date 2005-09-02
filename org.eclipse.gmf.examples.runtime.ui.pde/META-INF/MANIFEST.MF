@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.ui.pde; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: examples.jar
 Bundle-Activator: org.eclipse.gmf.examples.runtime.ui.pde.internal.GmfExamplesPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

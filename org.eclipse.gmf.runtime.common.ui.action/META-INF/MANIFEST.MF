@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.action
 Bundle-Version: 1.0.0
-Bundle-ClassPath: commonuiaction.jar
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
