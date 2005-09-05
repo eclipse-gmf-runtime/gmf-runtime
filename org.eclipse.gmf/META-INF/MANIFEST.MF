@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Graphical Modeling Framework
+Bundle-SymbolicName: org.eclipse.gmf
+Bundle-Version: 1.0.0
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Eclipse-AutoStart: true
