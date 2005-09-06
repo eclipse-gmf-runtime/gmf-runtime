@@ -150,6 +150,7 @@ public class TextDirectEditManager
 				 * stay in focus
 				 */
 				getCellEditor().getControl().setVisible(true);
+				((TextCellEditorEx) getCellEditor()).setDeactivationLock(true);
 				return;
 			}
 		}

@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 public class TextCellEditorEx extends TextCellEditor {
 	
 	private Object originalValue;
+	private boolean deactivationLock = false;
 
 	/**
 	 */
@@ -91,4 +92,34 @@ public class TextCellEditorEx extends TextCellEditor {
 			return originalValue != null;
 		return !getValue().equals(originalValue);
 	}
+
+	/* 
+	 * Runs super deactivate unless it has been locked
+	 * and otherwise unlocks deactivation
+	 * @see org.eclipse.jface.viewers.CellEditor#deactivate()
+	 */
+	public void deactivate() {
+		if (! isDeactivationLocked())
+			super.deactivate();
+		setDeactivationLock(false);
+	}
+
+	/**
+	 * Returns true if deactivation has been locked
+	 * @return
+	 */
+	public boolean isDeactivationLocked() {
+		return deactivationLock;
+	}
+
+	
+	/**
+	 * Sets deactivation lock so that the cell editor 
+	 * does not perform deactivate
+	 * @param deactivationLock
+	 */
+	public void setDeactivationLock(boolean deactivationLock) {
+		this.deactivationLock = deactivationLock;
+	}
+
 }
