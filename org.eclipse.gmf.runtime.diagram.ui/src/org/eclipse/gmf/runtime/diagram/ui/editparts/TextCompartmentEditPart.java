@@ -13,29 +13,16 @@ import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DirectEditRequest;
-import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellEditorValidator;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.accessibility.AccessibleEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Text;
-
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
@@ -45,23 +32,26 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.DirectEditRequestWrapper;
-import org.eclipse.gmf.runtime.gef.ui.parts.TextCellEditorEx;
-import org.eclipse.gmf.runtime.gef.ui.parts.WrapTextCellEditor;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.swt.accessibility.AccessibleEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 
 /*
  * @canBeSeenBy %partners
@@ -73,30 +63,6 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class TextCompartmentEditPart extends CompartmentEditPart {
 	
-	/**
-	 * the text cell editor locator
-	 * @author mmostafa
-	 *
-	 */
-	public class TextCellEditorLocator implements CellEditorLocator {
-
-		public void relocate(CellEditor celleditor) {
-			Text text = (Text) celleditor.getControl();
-			Rectangle rect = getLabel().getTextBounds().getCopy();
-			getLabel().translateToAbsolute(rect);
-			
-			if (getLabel().isTextWrapped() && getLabel().getText().length() > 0)
-				rect.setSize(new Dimension(text.computeSize(rect.width, SWT.DEFAULT)));
-			else {
-				int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
-				rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr*2, 0));
-			}
-
-			if (!rect.equals(new Rectangle(text.getBounds())))
-				text.setBounds(rect.x, rect.y, rect.width, rect.height);
-		}
-
-	}
 	/** the direct edit manager for text editing */
 	private DirectEditManager manager;
 	/** the text parser */
@@ -574,11 +540,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 		if (manager == null)
 			setManager(
 				new TextDirectEditManager(
-					this,
-					getLabel().isTextWrapped()
-						? WrapTextCellEditor.class
-						: TextCellEditorEx.class,
-					new TextCellEditorLocator()));
+					this));
 		return manager;
 	}
 	/**

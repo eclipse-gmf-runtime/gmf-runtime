@@ -9,12 +9,8 @@
  */
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
-import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.Request;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.gmf.runtime.gef.ui.tools.DelegatingDragEditPartsTracker;
 
 /**
  * @author qili
@@ -31,16 +27,10 @@ public class LogicShapeCompartmentEditPart extends ShapeCompartmentEditPart{
 		super(view);
 	}
 	
-	/**
-	 * We want to override the drag tracker to make it easier to move the circuit shape.
-	 * The ability to marquee select inside the shape compartment is not important in this
-	 * shape.
-	 * 
-	 * @see org.eclipse.gef.EditPart#getDragTracker(org.eclipse.gef.Request)
+	/* 
+	 * Overridden to turn off support for drag selection of children.
 	 */
-	public DragTracker getDragTracker(Request request) {
-		return new DelegatingDragEditPartsTracker(
-			this,
-			getTopGraphicEditPart());
+	protected boolean supportsDragSelection() {
+		return false;
 	}
 }

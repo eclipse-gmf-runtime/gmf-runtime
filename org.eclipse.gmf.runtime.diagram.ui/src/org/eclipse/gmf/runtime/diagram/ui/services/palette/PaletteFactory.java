@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.palette;
+package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 
 import org.eclipse.gef.Tool;
 
@@ -40,14 +40,14 @@ public interface PaletteFactory {
 	 */
 	public class Adapter implements PaletteFactory {
 		/**
-		 * @see org.eclipse.gmf.runtime.gef.ui.palette.PaletteFactory#getTemplate(java.lang.String)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory#getTemplate(java.lang.String)
 		 */
 		public Object getTemplate(String templateId) {
 			return null;
 		}
 
 		/**
-		 * @see org.eclipse.gmf.runtime.gef.ui.palette.PaletteFactory#createTool(java.lang.String)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory#createTool(java.lang.String)
 		 */
 		public Tool createTool(String toolId) {
 			return null;

@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.actions;
+package org.eclipse.gmf.runtime.gef.ui.internal.actions;
 
 import java.util.ArrayList;
 import java.util.Iterator;

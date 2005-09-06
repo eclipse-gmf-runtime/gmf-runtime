@@ -7,9 +7,9 @@ Bundle-Activator: org.eclipse.gmf.runtime.gef.ui.internal.GefPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.gef.ui,
- org.eclipse.gmf.runtime.gef.ui.actions,
  org.eclipse.gmf.runtime.gef.ui.figures,
  org.eclipse.gmf.runtime.gef.ui.internal,
+ org.eclipse.gmf.runtime.gef.ui.internal.actions,
  org.eclipse.gmf.runtime.gef.ui.internal.editparts,
  org.eclipse.gmf.runtime.gef.ui.internal.editpolicies,
  org.eclipse.gmf.runtime.gef.ui.internal.figures,
@@ -18,9 +18,7 @@ Export-Package: org.eclipse.gmf.runtime.gef.ui,
  org.eclipse.gmf.runtime.gef.ui.internal.palette,
  org.eclipse.gmf.runtime.gef.ui.internal.requests,
  org.eclipse.gmf.runtime.gef.ui.internal.tools,
- org.eclipse.gmf.runtime.gef.ui.palette,
- org.eclipse.gmf.runtime.gef.ui.parts,
- org.eclipse.gmf.runtime.gef.ui.tools
+ org.eclipse.gmf.runtime.gef.ui.internal.parts
 Require-Bundle: org.eclipse.ui,
  org.eclipse.draw2d;visibility:=reexport,
  org.eclipse.gef,

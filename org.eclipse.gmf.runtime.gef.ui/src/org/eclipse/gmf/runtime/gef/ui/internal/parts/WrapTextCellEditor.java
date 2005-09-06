@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.parts;
+package org.eclipse.gmf.runtime.gef.ui.internal.parts;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;

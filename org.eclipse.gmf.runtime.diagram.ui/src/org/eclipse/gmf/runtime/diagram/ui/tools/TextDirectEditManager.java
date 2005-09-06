@@ -9,10 +9,19 @@
  */
 package org.eclipse.gmf.runtime.diagram.ui.tools;
 
+import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
+import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.CellEditor;
@@ -28,13 +37,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import org.eclipse.gmf.runtime.gef.ui.parts.TextCellEditorEx;
 
 /**
  * @author melaasar
@@ -62,17 +64,75 @@ public class TextDirectEditManager
 	 * flag used to avoid unhooking listeners twice if the UI thread is blocked
 	 */
 	private boolean listenersAttached = true;
+	
+	/**
+	 * the text cell editor locator
+	 * @author mmostafa
+	 *
+	 */
+	static private class TextCellEditorLocator implements CellEditorLocator {
+
+		private WrapLabel wrapLabel;
+		
+		public TextCellEditorLocator(WrapLabel wrapLabel) {
+			super();
+			this.wrapLabel = wrapLabel;
+		}
+
+		
+		public WrapLabel getWrapLabel() {
+			return wrapLabel;
+		}
+
+		public void relocate(CellEditor celleditor) {
+			Text text = (Text) celleditor.getControl();
+			Rectangle rect = getWrapLabel().getTextBounds().getCopy();
+			getWrapLabel().translateToAbsolute(rect);
+			
+			if (getWrapLabel().isTextWrapped() && getWrapLabel().getText().length() > 0)
+				rect.setSize(new Dimension(text.computeSize(rect.width, SWT.DEFAULT)));
+			else {
+				int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
+				rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr*2, 0));
+			}
+
+			if (!rect.equals(new Rectangle(text.getBounds())))
+				text.setBounds(rect.x, rect.y, rect.width, rect.height);
+		}
+
+	}
+	
 	/**
 	 * constructor
-	 * @param source 
-	 * @param editorType 
+	 * 
+	 * @param source <code>GraphicalEditPart</code> to support direct edit of.  The figure of
+	 * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
+	 */
+	public TextDirectEditManager(GraphicalEditPart source) {
+
+		super(source, getTextCellEditorClass(source),
+				new TextCellEditorLocator((WrapLabel)source.getFigure()));
+	}
+
+	/**
+	 * @param source
+	 * @param editorType
 	 * @param locator
 	 */
-	public TextDirectEditManager(GraphicalEditPart source, Class editorType,
-			CellEditorLocator locator) {
-
-		super(source, editorType, locator);
+	public TextDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator) {
+		super(source, editorType, locator);		
 	}
+
+	private static Class getTextCellEditorClass(GraphicalEditPart source){
+		assert source.getFigure() instanceof WrapLabel;
+		
+		WrapLabel wrapLabel = (WrapLabel)source.getFigure();
+		if (wrapLabel.isTextWrapped())
+			return WrapTextCellEditor.class;
+		
+		return TextCellEditorEx.class;
+	}
+	
 
 	/**
 	 * Given a <code>WrapLabel</code> object, this will calculate the 

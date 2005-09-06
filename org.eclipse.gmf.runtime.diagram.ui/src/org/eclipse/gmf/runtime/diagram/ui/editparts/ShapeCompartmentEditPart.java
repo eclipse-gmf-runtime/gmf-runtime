@@ -471,9 +471,23 @@ public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditP
 	}
 	
 	/**
+	 * Determines if the shape compartment supports drag selection of it's children.  Otherwise, it will default
+	 * to the core behavior of selecting the compartment itself on click on the compartment background surface.
+	 * 
+	 * @return <code>boolean</code> <code>true</code> if shape compartment supports drag selection of it's children,
+	 * <code>false</code> otherwise.
+	 */
+	protected boolean supportsDragSelection() {
+		return true;
+	}
+	
+	/**
 	 * @see org.eclipse.gef.EditPart#getDragTracker(org.eclipse.gef.Request)
 	 */
 	public DragTracker getDragTracker(Request req) {
+		if (!supportsDragSelection())
+			return super.getDragTracker(req);
+		
 		if (req instanceof SelectionRequest 
 			&& ((SelectionRequest)req).getLastButtonPressed() == 3)
 				return new DeselectAllTracker(this) {
@@ -539,15 +553,9 @@ public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditP
 	}
 	
 	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart#setIsSupportingViewActions(boolean)
 	 */
 	public void setIsSupportingViewActions(boolean supportsViewActions){
 		this.isSupportingViewActions = supportsViewActions;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#shouldAllowDisableCanonicalRefresh()
-	 */
-	protected boolean shouldAllowDisableCanonicalRefresh() {
-		return false;
 	}
 }

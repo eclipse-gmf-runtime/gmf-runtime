@@ -14,17 +14,16 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts.Editor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.Util;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
-
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts.Editor;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.Util;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**

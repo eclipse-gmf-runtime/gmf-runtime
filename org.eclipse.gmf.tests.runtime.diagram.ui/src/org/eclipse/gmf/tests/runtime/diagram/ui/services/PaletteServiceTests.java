@@ -24,12 +24,12 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.IProviderPolicy;
 import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditor;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
+import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
-import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteToolEntry;
-import org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.TestingConfigurationElement;
 import org.eclipse.ui.IEditorPart;
 

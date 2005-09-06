@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.tools;
+package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 
 /**
@@ -15,7 +15,7 @@ package org.eclipse.gmf.runtime.gef.ui.tools;
  * 
  * @author oboyko
  */
-public interface IShapeRotatable {
+public interface IRotatableEditPart {
 
 	/**
 	 * This determines if an <code>EditPart</code> can be rotated or not.  By introducing

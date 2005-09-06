@@ -24,9 +24,9 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
-import org.eclipse.gmf.runtime.gef.ui.internal.handles.RotateHandle;
+import org.eclipse.gmf.runtime.diagram.ui.internal.handles.RotateHandle;
+import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RotateTracker;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.RotateShapeRequest;
-import org.eclipse.gmf.runtime.gef.ui.internal.tools.RotateTracker;
 
 /**
  * A rotatable editpolicy for rotating fork and join itparts

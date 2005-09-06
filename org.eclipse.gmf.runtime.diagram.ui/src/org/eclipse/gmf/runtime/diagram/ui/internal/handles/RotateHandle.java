@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.internal.handles;
+package org.eclipse.gmf.runtime.diagram.ui.internal.handles;
 
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Locator;
@@ -17,7 +17,7 @@ import org.eclipse.gef.handles.ResizeHandle;
 import org.eclipse.gef.handles.SquareHandle;
 import org.eclipse.swt.graphics.Cursor;
 
-import org.eclipse.gmf.runtime.gef.ui.internal.tools.RotateTracker;
+import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RotateTracker;
 
 
 /**

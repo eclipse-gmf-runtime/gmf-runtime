@@ -13,9 +13,9 @@ import org.eclipse.gef.Tool;
 
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.ZoomTool;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
-import org.eclipse.gmf.runtime.gef.ui.palette.PaletteFactory;
 
 /**
  * A palette factory for common UML entries

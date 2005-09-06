@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.tools;
+package org.eclipse.gmf.runtime.gef.ui.internal.tools;
 
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;

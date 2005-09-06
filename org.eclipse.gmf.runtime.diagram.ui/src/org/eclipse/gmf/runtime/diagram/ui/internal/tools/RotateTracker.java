@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.gef.ui.internal.tools;
+package org.eclipse.gmf.runtime.diagram.ui.internal.tools;
 
 
 import org.eclipse.draw2d.Cursors;
@@ -17,8 +17,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.swt.graphics.Cursor;
 
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IRotatableEditPart;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.RotateShapeRequest;
-import org.eclipse.gmf.runtime.gef.ui.tools.IShapeRotatable;
 
 /**
  * Rotate tracker provides support for figure rotations.
@@ -54,8 +54,8 @@ public class RotateTracker extends ResizeTracker {
 		// check if the selected edit parts implement rotatable interface and 
 		// if they are check if they are rotatable
 		for (int i=0; i<getOperationSet().size() && result; i++) {
-			result = getOperationSet().get(i) instanceof IShapeRotatable ?  
-			((IShapeRotatable) getOperationSet().get(i)).isRotatable() : false; 
+			result = getOperationSet().get(i) instanceof IRotatableEditPart ?  
+			((IRotatableEditPart) getOperationSet().get(i)).isRotatable() : false; 
 		}
 		return result;
 	}

@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.gef.ui.parts.TextCellEditorEx;
+import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**

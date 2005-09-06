@@ -15,9 +15,9 @@ import java.util.Map;
 import org.eclipse.gef.Tool;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
+import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
-import org.eclipse.gmf.runtime.gef.ui.palette.PaletteFactory;
 
 /**
  * A palette factory for Logic Entries

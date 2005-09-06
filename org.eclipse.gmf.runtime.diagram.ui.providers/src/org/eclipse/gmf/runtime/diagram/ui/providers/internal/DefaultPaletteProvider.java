@@ -34,13 +34,13 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteTemplateEntry;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
+import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
-import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteTemplateEntry;
-import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteToolEntry;
-import org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer;
-import org.eclipse.gmf.runtime.gef.ui.palette.PaletteFactory;
 
 /**
  * The defaul palette provider. It reads XML palette contributions from the

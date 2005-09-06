@@ -22,10 +22,10 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
-import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteToolEntry;
 
 /**
  * This is the default action bar editpolicy installed on diagrams. The

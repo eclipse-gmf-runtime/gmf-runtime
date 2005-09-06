@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.eclipse.gef.Tool;
 
+import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
-import org.eclipse.gmf.runtime.gef.ui.palette.PaletteFactory;
 
 /**
  * A palette factory for Geoshapes Entries
