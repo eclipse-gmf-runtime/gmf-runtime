@@ -17,11 +17,11 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectorHandleLocatorTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectorHandleTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.DiagramCommandStackTest;
+import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.RubberBandSelectionToolTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {
@@ -42,6 +42,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(DiagramTests.suite());
 		suite.addTest(ShapeTests.suite());
 		suite.addTestSuite(RubberBandSelectionToolTest.class);
+		suite.addTest(PaletteServiceTests.suite());
 		return suite;
 	}
 

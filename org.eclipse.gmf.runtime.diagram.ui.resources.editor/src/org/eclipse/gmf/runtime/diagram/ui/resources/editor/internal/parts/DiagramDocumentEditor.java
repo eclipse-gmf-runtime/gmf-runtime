@@ -10,7 +10,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -22,8 +21,26 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.palette.PaletteContainer;
-import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gmf.runtime.common.core.command.CommandManager;
+import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
+import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentEditor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentProvider;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IElementStateListener;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry.IDocumentProviderSelector;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -54,29 +71,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.osgi.framework.Bundle;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
-import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentEditor;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentProvider;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IElementStateListener;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProviderRegistry.IDocumentProviderSelector;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
-import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
-import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteType;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 
 /**
@@ -119,41 +113,11 @@ public class DiagramDocumentEditor
 		return super.getAdapter(type);
 	}
 
-	/* Will create the palette for the diagram based on the type of project
-	 * the diagram is in.  In additional it will uncollapsed the palette drawer 
-	 * that are applicable to this diagram type.
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithPalette#getPaletteRoot()
-	 */
-	protected PaletteRoot getPaletteRoot() {
-		PaletteRoot paletteRoot = null;
-		String defaultDrawerToHaveOpen;
-
-		paletteRoot =
-			PaletteService.createPalette(
-				this,
-				getDefaultPaletteContent(),
-				PaletteType.UMLVIEWER);
-		defaultDrawerToHaveOpen = PaletteType.UMLVIEWER.getName();
-
-		Iterator iter = paletteRoot.getChildren().iterator();
-
-		//looping through and uncollapsing the drawer that is applicable to this
-		//diagram
-		while (iter.hasNext()) {
-			PaletteContainer container = (PaletteContainer) iter.next();
-
-			if (container instanceof org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer) {
-				org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer drawer = (org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer) container;
-				if (drawer.getId().equals(defaultDrawerToHaveOpen)) {
-					drawer.setInitialState(org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer.INITIAL_STATE_OPEN);
-				}
-			}
-		}
-		return paletteRoot;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite,
+	 *      org.eclipse.ui.IEditorInput)
 	 */
 	public void init(final IEditorSite site, final IEditorInput input)
 		throws PartInitException {
@@ -226,9 +190,12 @@ public class DiagramDocumentEditor
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart#getDiagram()
 	 */
 	public Diagram getDiagram() {
-		IDiagramDocument document = ((IDiagramDocument)getDocumentProvider().getDocument(getEditorInput()));
-		if(document != null)
-			return document.getDiagram();
+		if (getDocumentProvider() != null) {
+			IDiagramDocument document = ((IDiagramDocument) getDocumentProvider()
+				.getDocument(getEditorInput()));
+			if (document != null)
+				return document.getDiagram();
+		}
 		return null;
 	}
 	
@@ -295,11 +262,10 @@ public class DiagramDocumentEditor
 		return CommandManager.getDefault();
 	}
 
-	/**
-	 * @overridable
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette#getDefaultPaletteContent()
 	 */
-	protected EditorInputPaletteContent getDefaultPaletteContent() {
+	protected Object getDefaultPaletteContent() {
 		EditorInputPaletteContent defPaletteContent = null;
 		if(getDiagram() != null) {
 			defPaletteContent = new EditorInputPaletteContent(getEditorInput(), getDiagramDocument());

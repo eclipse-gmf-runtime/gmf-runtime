@@ -9,9 +9,14 @@
  */
 package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.gef.palette.PaletteContainer;
+import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
@@ -23,6 +28,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.ContributeToPaletteOperation;
@@ -49,7 +55,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 	 * element.
 	 */
 	protected static class ProviderDescriptor
-		extends Service.ProviderDescriptor {
+		extends ActivityFilterProviderDescriptor {
 
 		/** the provider configuration parsed from XML */
 		private PaletteProviderConfiguration providerConfiguration;
@@ -72,6 +78,9 @@ public class PaletteService extends Service implements IPaletteProvider {
 		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 		 */
 		public boolean provides(IOperation operation) {
+			if (!super.provides(operation)) {
+				return false;
+			}
 			if (getPolicy() != null)
 				return getPolicy().provides(operation);
 			if (operation instanceof ContributeToPaletteOperation) {
@@ -186,20 +195,21 @@ public class PaletteService extends Service implements IPaletteProvider {
 
 	/**
 	 * Creates default palette root.
+	 * 
 	 * @param editor
+	 *            the editor
 	 * @param content
-	 * @param type
-	 * @return <code>PaletteRoot</code>
+	 *            the palette content
+	 * @return a new palette root with contributions from all providers
 	 */
-	public static PaletteRoot createPalette(
+	public PaletteRoot createPalette(
 		final IEditorPart editor,
-		final Object content,
-		final PaletteType type) {
+		final Object content) {
 		final PaletteRoot root = new PaletteRoot();
 		try {
 			DiagramMEditingDomainGetter.getMEditingDomain(editor).runAsRead( new MRunnable() {
 		        public Object run() {
-		            getInstance().contributeToPalette(editor, content, root);
+		            contributeToPalette(editor, content, root);
 		            return null;
 		        }
 		    });
@@ -211,5 +221,79 @@ public class PaletteService extends Service implements IPaletteProvider {
 		}
 		return root;
 	}
+	
+	/**
+	 * Updates the palette root given.
+	 * 
+	 * @param existingRoot
+	 *            existing palette root in which to add/remove entries that are
+	 *            now provided for or no longer provided for
+	 * @param editor
+	 *            the editor
+	 * @param content
+	 *            the palette content
+	 */
+	public void updatePalette(
+		PaletteRoot existingRoot,
+		final IEditorPart editor,
+		final Object content) {
+		
+		PaletteRoot newRoot = createPalette(editor, content);
+		updatePaletteContainerEntries(existingRoot, newRoot);
+	}
+	
+	/**
+	 * Updates the children of an existing palette container to match the
+	 * palette entries in a new palette container by adding or removing new
+	 * palette entries only. This method works recursively on any children that
+	 * are palette container entries. Existing leaf palette entries that are to
+	 * be kept remain the same -- they are not replaced with the new palette
+	 * entry. This is so that palette state (such as whether a drawer is pinned
+	 * or expanded) can be preserved when the palette is updated.
+	 * 
+	 * @param existingContainer
+	 *            the palette container to be updated with new entries, have
+	 *            obsolete entries removed, and whose existing entries will
+	 *            remain the same
+	 * @param newContainer
+	 *            the new palette entries
+	 */
+	private void updatePaletteContainerEntries(
+			PaletteContainer existingContainer, PaletteContainer newContainer) {
 
+		HashMap existingEntries = new HashMap();
+		for (Iterator iter = existingContainer.getChildren().iterator(); iter
+			.hasNext();) {
+			PaletteEntry entry = (PaletteEntry) iter.next();
+			existingEntries.put(entry.getId(), entry);
+		}
+
+		List updatedChildren = new ArrayList(newContainer.getChildren().size());
+
+		for (Iterator iter = newContainer.getChildren().iterator(); iter
+			.hasNext();) {
+			PaletteEntry newEntry = (PaletteEntry) iter.next();
+
+			Object existingEntry = existingEntries.get(newEntry.getId());
+			if (existingEntry != null) {
+				// keep the existing entry
+				updatedChildren.add(existingEntry);
+				if (existingEntry instanceof PaletteContainer
+					&& newEntry instanceof PaletteContainer) {
+					// look for new/deleted entries in
+					// palette containers
+					updatePaletteContainerEntries(
+						(PaletteContainer) existingEntry,
+						(PaletteContainer) newEntry);
+				}
+			} else {
+				// add new entries that did not
+				// previously exist
+				updatedChildren.add(newEntry);
+			}
+
+		}
+		existingContainer.setChildren(updatedChildren);
+	}
+	
 }

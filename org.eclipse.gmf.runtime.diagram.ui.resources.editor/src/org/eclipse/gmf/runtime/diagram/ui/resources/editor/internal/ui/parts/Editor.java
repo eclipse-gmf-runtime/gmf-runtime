@@ -33,27 +33,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gef.palette.PaletteContainer;
-import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -77,12 +56,28 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.notationprov
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.PaletteContent;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.RunnableQueue;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.Util;
-import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
-import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteType;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 
 
 /**
@@ -312,42 +307,6 @@ public abstract class Editor
 
 	public IProject getProject() {
 		return project;
-	}
-
-	/* Will create the palette for the diagram based on the type of project
-	 * the diagram is in.  In additional it will uncollapsed the palette drawer 
-	 * that are applicable to this diagram type.
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithPalette#getPaletteRoot()
-	 */
-	protected PaletteRoot getPaletteRoot() {
-		PaletteRoot paletteRoot = null;
-		String defaultDrawerToHaveOpen;
-
-		paletteRoot =
-			PaletteService.createPalette(
-				this,
-				getDefaultPaletteContent(getDiagram()),
-				PaletteType.UMLVIEWER);
-		defaultDrawerToHaveOpen = PaletteType.UMLVIEWER.getName();
-
-		Iterator iter = paletteRoot.getChildren().iterator();
-
-		//looping through and uncollapsing the drawer that is applicable to this
-		//diagram
-		while (iter.hasNext()) {
-
-			PaletteContainer container = (PaletteContainer) iter.next();
-
-			if (container instanceof org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer) {
-
-				org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer drawer = (org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer) container;
-				if (drawer.getId().equals(defaultDrawerToHaveOpen)) {
-					drawer.setInitialState(org.eclipse.gmf.runtime.gef.ui.palette.PaletteDrawer.INITIAL_STATE_OPEN);
-				}
-
-			}
-		}
-		return paletteRoot;
 	}
 
 	public Editor() {
@@ -935,14 +894,14 @@ public abstract class Editor
 		getDiagramGraphicalViewer().deselectAll();
 	}
 	
-	protected Object getDefaultPaletteContent(Diagram diagView) {
-		Assert.isNotNull(diagView);
-		Diagram diagram = diagView.getDiagram();
+	protected Object getDefaultPaletteContent() {
+		Diagram diagram = getDiagram();
+		Assert.isNotNull(diagram);
 		PaletteContent defPaletteContent = null;
 		if(diagram != null) {
 			//IResource workspaceRes = getWorkspaceResource(diagram);
 			//IProject project = workspaceRes != null ? workspaceRes.getProject() : null;
-			defPaletteContent = new PaletteContent(null, diagView);
+			defPaletteContent = new PaletteContent(null, diagram);
 		}
 		return defPaletteContent;
 	}

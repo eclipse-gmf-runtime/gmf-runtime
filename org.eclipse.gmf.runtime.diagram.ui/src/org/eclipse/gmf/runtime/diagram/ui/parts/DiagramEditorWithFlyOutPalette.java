@@ -22,16 +22,19 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ImageFileDropTargetListener;
+import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
+import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
+import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
-
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ImageFileDropTargetListener;
-import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
-import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.ActivityManagerEvent;
+import org.eclipse.ui.activities.IActivityManagerListener;
 
 /**
  * A generic diagram editor with a palette.  This supports the palette moved from
@@ -40,11 +43,12 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
  * @author choang
  */
 public abstract class DiagramEditorWithFlyOutPalette
-	extends DiagramEditor
+	extends DiagramEditor implements IActivityManagerListener
 {
 
 	boolean fHasFlyoutPalette = true;
 	public DiagramEditorWithFlyOutPalette() {
+		// empty
 	}
 	
 	public DiagramEditorWithFlyOutPalette(boolean hasFlyout) {
@@ -81,6 +85,10 @@ public abstract class DiagramEditorWithFlyOutPalette
 			getDiagramGraphicalViewer().addDropTargetListener(
 				(TransferDropTargetListener) new ImageFileDropTargetListener(
 					getDiagramGraphicalViewer()));
+			
+			PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
+			.addActivityManagerListener(this);
+			
 		} else {
 			super.initializeGraphicalViewer();
 		}
@@ -92,7 +100,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 	 */
 	protected PaletteViewerProvider createPaletteViewerProvider() {
 		assert fHasFlyoutPalette == true;
-		getEditDomain().setPaletteRoot(getPaletteRoot());
+		getEditDomain().setPaletteRoot(createPaletteRoot());
 		return new PaletteViewerProvider(getEditDomain()){
 
 			/**
@@ -307,14 +315,36 @@ public abstract class DiagramEditorWithFlyOutPalette
 	}
 
 	/**
-	 * Returns the PaletteRoot for the palette viewer.
-	 * @return the palette root
+	 * Creates the palette root for the palette viewer.
+	 * 
+	 * @return the new palette root
 	 */
-	protected abstract PaletteRoot getPaletteRoot();
+	private PaletteRoot createPaletteRoot() {
+		return PaletteService.getInstance().createPalette(this,
+			getDefaultPaletteContent());
+	}
 
 	/**
-	 * Returns the palette view provider that is reponsible for
-	 * creating and palette view.
+	 * Updates the palette root by adding/removing entries as necessary.
+	 */
+	private void updatePaletteRoot() {
+		PaletteService.getInstance().updatePalette(
+			getEditDomain().getPaletteViewer().getPaletteRoot(), this,
+			getDefaultPaletteContent());
+	}
+
+	/**
+	 * Gets the palette content to be sent to the palette service when creating
+	 * the palette.
+	 * 
+	 * @return the palette content
+	 */
+	protected abstract Object getDefaultPaletteContent();
+
+	/**
+	 * Returns the palette view provider that is reponsible for creating and
+	 * palette view.
+	 * 
 	 * @return PaletteViewerProvider
 	 */
 	protected final PaletteViewerProvider getPaletteViewerProvider() {
@@ -492,4 +522,16 @@ public abstract class DiagramEditorWithFlyOutPalette
 			paletteWidth = width;
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.activities.IActivityManagerListener#activityManagerChanged(org.eclipse.ui.activities.ActivityManagerEvent)
+	 */
+	public void activityManagerChanged(ActivityManagerEvent activityManagerEvent) {
+		if (activityManagerEvent.haveEnabledActivityIdsChanged()) {
+			updatePaletteRoot();
+		}
+	}
+	
 }

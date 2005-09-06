@@ -16,10 +16,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
@@ -36,7 +36,7 @@ public class ModelingAssistantService
 	 * by a configuration element.
 	 */
 	protected static class ProviderDescriptor
-		extends Service.ProviderDescriptor {
+		extends ActivityFilterProviderDescriptor {
 
 		/** the provider configuration parsed from XML */
 		private ModelingAssistantProviderConfiguration providerConfiguration;
@@ -59,6 +59,9 @@ public class ModelingAssistantService
 		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 		 */
 		public boolean provides(IOperation operation) {
+			if (!super.provides(operation)) {
+				return false;
+			}
 			if (getPolicy() != null)
 				return getPolicy().provides(operation);
 

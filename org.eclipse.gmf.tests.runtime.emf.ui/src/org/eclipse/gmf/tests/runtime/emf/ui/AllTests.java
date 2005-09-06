@@ -32,6 +32,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		TestSuite suite = new TestSuite();
 		suite.addTest(EmptyTest.suite());
 		suite.addTestSuite(UIOperationListenerTestCase.class);
+		suite.addTestSuite(ModelingAssistantServiceTests.class);
 		return suite;
 	}
 

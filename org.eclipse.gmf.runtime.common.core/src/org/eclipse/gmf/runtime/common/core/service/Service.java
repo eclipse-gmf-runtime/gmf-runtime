@@ -74,7 +74,7 @@ public abstract class Service
 	 * 
 	 * @author khussey
 	 */
-	protected static class ProviderDescriptor
+	public static class ProviderDescriptor
 		extends AbstractProvider
 		implements IProvider, IProviderChangeListener {
 
