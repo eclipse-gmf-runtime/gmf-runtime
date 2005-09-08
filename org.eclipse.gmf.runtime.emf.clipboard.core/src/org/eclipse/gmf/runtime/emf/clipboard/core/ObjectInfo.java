@@ -83,7 +83,7 @@ public class ObjectInfo {
 		return hints.indexOf(hint) != NONE;
 	}
 
-	void makeCopyAlwaysObjectInfoList(List allCopyAlwaysObjectsInfoList) {
+	public void makeCopyAlwaysObjectInfoList(List allCopyAlwaysObjectsInfoList) {
 		Iterator it = allCopyAlwaysObjectsInfoList.iterator();
 		ObjectInfo objInfo = null;
 		while (it.hasNext()) {

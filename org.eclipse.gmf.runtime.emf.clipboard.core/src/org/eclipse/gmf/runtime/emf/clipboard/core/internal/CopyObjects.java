@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,21 +19,21 @@ import java.util.Set;
  * A data structure that holds info needed through the copy process
  * @author Yasser Lulu 
  */
-class CopyObjects {
+public class CopyObjects {
 
-	Collection originalObjects;
+	public Collection originalObjects;
 
-	Map copyParent2CopyMap = new HashMap();
+	public Map copyParent2CopyMap = new HashMap();
 
-	Map copyParent2ObjectsMap = new HashMap();
+	public Map copyParent2ObjectsMap = new HashMap();
 
-	Map copyAlwaysMap = new HashMap();
+	public Map copyAlwaysMap = new HashMap();
 
-	Set combinedCopyAlwaysSet = new HashSet();
+	public Set combinedCopyAlwaysSet = new HashSet();
 
-	Map objectsToCopyParentMap = new HashMap();
+	public Map objectsToCopyParentMap = new HashMap();
 
-	Set totalCopyObjects = new HashSet();
+	public Set totalCopyObjects = new HashSet();
 
 	/**
 	 * Initializes me with my original objects.
@@ -44,7 +44,7 @@ class CopyObjects {
 		this.originalObjects = originalObjects;
 	}
 	
-	void clear(){
+	public void clear(){
 		originalObjects.clear();
 		copyParent2CopyMap.clear();
 		copyAlwaysMap.clear();

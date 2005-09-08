@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +15,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
+import org.eclipse.gmf.runtime.emf.clipboard.core.OverrideCopyOperation;
 
 /**
  * The default paste operation.  Extensibility is provided by the callback

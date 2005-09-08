@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardSupportManager;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.DefaultClipboardSupport;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.PasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SerializationEMFResource;
 
 

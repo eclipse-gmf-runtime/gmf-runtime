@@ -17,6 +17,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.MergedEObjectInfo;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ResourceInfo;
 
 
 /**

@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -28,7 +28,11 @@ import org.eclipse.emf.ecore.util.EObjectWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SerializationEMFResource;
+import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
+import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
 
 /**
  * A paste operation that pastes copied elements into their new parent.
@@ -66,7 +70,7 @@ public class PasteIntoParentOperation
 	 * 
 	 * @return the parent object's XML resource
 	 */
-	protected final XMLResource getParentResource() {
+	public final XMLResource getParentResource() {
 		if (parentResource == null) {
 			parentResource = getClipboardOperationHelper().getResource(
 				getEObject());
@@ -89,7 +93,7 @@ public class PasteIntoParentOperation
 	 * @param objId the object ID to retrieve
 	 * @return the corresponding object, or <code>null</code> if not found
 	 */
-	protected EObject getLoadedEObject(String objId) {
+	public EObject getLoadedEObject(String objId) {
 		return (EObject) getLoadedResource().getIDToEObjectMapCopy().get(objId);
 	}
 
@@ -99,7 +103,7 @@ public class PasteIntoParentOperation
 	 * @param eObject the object whose ID is to be retrieved
 	 * @return the corresponding ID, or <code>null</code> if not found
 	 */
-	protected String getLoadedEObjectID(EObject eObject) {
+	public String getLoadedEObjectID(EObject eObject) {
 		return (String) getLoadedResource().getEObjectToIDMapCopy()
 			.get(eObject);
 	}
@@ -320,7 +324,7 @@ public class PasteIntoParentOperation
 				ObjectCopyType.OBJ_COPY_TYPE_ORIGINAL);
 			//sort them as they are in the resouce content list
 			Collections.sort(originalChildObjectInfo,
-				new ClipboardSupportUtil.ListIndexComparator(getLoadedResource()
+				new ListIndexComparator(getLoadedResource()
 					.getContents()) {
 
 					public int compare(Object obj_1, Object obj_2) {
@@ -564,7 +568,7 @@ public class PasteIntoParentOperation
 	 * 
 	 * @return the paste target
 	 */
-	protected final EObject getEObject() {
+	public final EObject getEObject() {
 		return element;
 	}
 
@@ -596,7 +600,7 @@ public class PasteIntoParentOperation
 	 * 
 	 * @see #getParentResource()
 	 */
-	protected EObject getEObject(String objId) {
+	public EObject getEObject(String objId) {
 		return (EObject) getParentResource().getIDToEObjectMap().get(objId);
 	}
 
@@ -608,7 +612,7 @@ public class PasteIntoParentOperation
 	 * 
 	 * @see #getParentResource()
 	 */
-	protected String getEObjectID(EObject eObject) {
+	public String getEObjectID(EObject eObject) {
 		return (String) getParentResource().getEObjectToIDMap().get(eObject);
 	}
 

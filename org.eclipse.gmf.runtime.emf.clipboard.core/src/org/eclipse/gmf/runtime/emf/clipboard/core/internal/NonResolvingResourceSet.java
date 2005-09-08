@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;

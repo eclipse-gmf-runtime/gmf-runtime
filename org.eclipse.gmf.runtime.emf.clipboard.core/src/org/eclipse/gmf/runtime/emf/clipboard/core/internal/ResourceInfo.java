@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 
 
 /**
@@ -26,7 +28,7 @@ import java.util.Map;
  * 
  * @see ResourceInfoProcessor
  */
-class ResourceInfo {
+public class ResourceInfo {
 
 	/**
 	 * Initializes me.
@@ -45,7 +47,7 @@ class ResourceInfo {
 
 	String encoding;
 
-	Map objects = new HashMap();
+	public Map objects = new HashMap();
 
 	private Map objectInfoTypeMap;
 

@@ -22,6 +22,10 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.MergedEObjectInfo;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ObjectCopyType;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.PasteIntoParentOperation;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ResourceInfoProcessor;
 
 
 /**
@@ -197,7 +201,7 @@ public class PasteChildOperation
 	 * @return the pasted element, or <code>null</code> if I did not succeed
 	 *     in pasting
 	 */
-	protected EObject getPastedElement() {
+	public EObject getPastedElement() {
 		return pastedElement;
 	}
 

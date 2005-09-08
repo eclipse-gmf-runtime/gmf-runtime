@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 
 
 /**
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @see ResourceInfo 
  */
-class ResourceInfoProcessor {
+public class ResourceInfoProcessor {
 
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -73,7 +74,7 @@ class ResourceInfoProcessor {
 
 	private static final String HINTS = "HINTS"; //$NON-NLS-1$
 
-	static final String NONE = "NONE"; //$NON-NLS-1$
+	public static final String NONE = "NONE"; //$NON-NLS-1$
 
 	private static final String COPY_PARENT_ID = "COPY_PARENT_ID"; //$NON-NLS-1$
 
@@ -274,7 +275,7 @@ class ResourceInfoProcessor {
 		return resourceInfo;
 	}
 
-	static String getResourceInfo(int offset, String encoding,
+	public static String getResourceInfo(int offset, String encoding,
 			SavingEMFResource emfResource, Map hintMap, CopyObjects copyObjects) {
 
 		StringBuffer stringBuffer = new StringBuffer();

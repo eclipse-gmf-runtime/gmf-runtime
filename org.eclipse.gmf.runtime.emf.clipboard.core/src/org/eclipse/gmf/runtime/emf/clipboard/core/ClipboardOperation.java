@@ -12,8 +12,6 @@ package org.eclipse.gmf.runtime.emf.clipboard.core;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardDebugOptions;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 
 /**
@@ -56,7 +54,7 @@ public abstract class ClipboardOperation {
 	 * 
 	 * @return my progress monitor (never <code>null</code>)
 	 */
-	protected IProgressMonitor getProgressMonitor() {
+	public IProgressMonitor getProgressMonitor() {
 		return monitor;
 	}
 
@@ -76,7 +74,7 @@ public abstract class ClipboardOperation {
 	 * 
 	 * @return my clipboard support
 	 */
-	protected final IClipboardSupport getClipboardOperationHelper() {
+	public final IClipboardSupport getClipboardOperationHelper() {
 		// TODO: Rename this as getClipboardSupport()
 		return clipboardSupport;
 	}

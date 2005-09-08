@@ -7,26 +7,28 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.ecore.EObject;
 
 /**
- * types representing the reason a given object was serialized (copied)
- *  
  * @author Yasser Lulu 
  */
-class ObjectCopyType {
+public class MergedEObjectInfo {
+
+	public String mergedEObjectID;
+
+	public EObject mergedEObject;
+
+	public List targetEObjects;
 
 	/**
 	 * 
 	 */
-	private ObjectCopyType() {
-		//private
+	public MergedEObjectInfo() {
+		targetEObjects = new ArrayList();
 	}
-
-	static final String OBJ_COPY_TYPE_PARENT = "OCT_PARENT"; //$NON-NLS-1$
-
-	static final String OBJ_COPY_TYPE_ALWAYS = "OCT_ALWAYS"; //$NON-NLS-1$
-
-	static final String OBJ_COPY_TYPE_ORIGINAL = "OCT_ORIGINAL"; //$NON-NLS-1$
-
 }

@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SerializationEMFResource;
+import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 /**
  * @author Yasser Lulu

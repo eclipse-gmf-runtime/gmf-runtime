@@ -7,7 +7,7 @@
  *| restricted by GSA ADP Schedule Contract with IBM Corp.                 |
  *+------------------------------------------------------------------------+
  */
-package org.eclipse.gmf.runtime.emf.clipboard.core;
+package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,15 +36,13 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 
-import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil.ListIndexComparator;
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardDebugOptions;
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SerializationEMFResource;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 /**
  * @author Yasser Lulu
  */
-class SavingEMFResource
+public class SavingEMFResource
 	extends SerializationEMFResource {
 
 	private Map copy2ObjectMap;
@@ -57,7 +55,7 @@ class SavingEMFResource
 
 	private Collection excludedObjects;
 
-	SavingEMFResource(URI uri, String encoding, Map defaultSaveOptions,
+	public SavingEMFResource(URI uri, String encoding, Map defaultSaveOptions,
 		Map copy2ObjectMap, CopyObjects copyObjects,
 		IClipboardSupport clipboardOperationHelper) {
 		super(encoding, uri, clipboardOperationHelper);
