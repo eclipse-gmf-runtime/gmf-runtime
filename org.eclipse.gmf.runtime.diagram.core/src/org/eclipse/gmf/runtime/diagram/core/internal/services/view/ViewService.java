@@ -15,16 +15,17 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.diagram.core.providers.ViewProviderConfiguration;
 
 /**
  *
@@ -247,25 +248,19 @@ final public class ViewService
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createDiagramView(org.eclipse.core.runtime.IAdaptable, java.lang.String, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
-	 */
 	public final Diagram createDiagramView(IAdaptable semanticAdapter,
 		String diagramKindType, PreferencesHint preferencesHint) {
 		Diagram view = (Diagram) execute(new CreateDiagramViewOperation(
 			semanticAdapter, diagramKindType, preferencesHint));
 		return view;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createConnectorView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, java.lang.String)
-	 */
-	public final View createConnectorView(IAdaptable semanticAdapter,
+
+	public final Edge createConnectorView(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index,
 		boolean persisted, PreferencesHint preferencesHint) {
-		View view = (View) execute(new CreateConnectorViewOperation(
+		Edge edge = (Edge) execute(new CreateConnectorViewOperation(
 			semanticAdapter, containerView, semanticHint, index, persisted, preferencesHint));
-		return view;
+		return edge;
 	}
 
 	/**
@@ -287,6 +282,7 @@ final public class ViewService
 	}
 
 	/**
+	 * creates a persisted View
 	 * @param semanticElement
 	 * @param containerView
 	 * @param semanticHint
@@ -304,9 +300,6 @@ final public class ViewService
 			index, true, preferencesHint);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.IViewProvider#createNodeView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
-	 */
 	public View createNodeView(IAdaptable semanticAdapter,
 			View containerView, String semanticHint, int index,
 			boolean persisted, PreferencesHint preferencesHint) {

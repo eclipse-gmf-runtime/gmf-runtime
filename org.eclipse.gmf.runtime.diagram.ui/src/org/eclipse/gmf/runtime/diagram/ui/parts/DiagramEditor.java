@@ -100,7 +100,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
@@ -108,6 +107,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRulerProvider;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;

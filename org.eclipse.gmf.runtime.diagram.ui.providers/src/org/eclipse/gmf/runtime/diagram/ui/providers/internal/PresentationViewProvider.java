@@ -13,14 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.DiagramTextCompartmentViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.NoteAttachmentViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.NoteViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.TextViewFactory;
+import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectorViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.NoteViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -42,10 +41,10 @@ public class PresentationViewProvider extends AbstractViewProvider {
 	/** list of supported shape views. */
 	private Map nodeMap = new HashMap();
 	{
-		nodeMap.put(CommonParserHint.DESCRIPTION, DiagramTextCompartmentViewFactory.class);
-		nodeMap.put(Properties.DIAGRAM_NAME, DiagramTextCompartmentViewFactory.class);
+		nodeMap.put(CommonParserHint.DESCRIPTION, BasicNodeViewFactory.class);
+		nodeMap.put(Properties.DIAGRAM_NAME, BasicNodeViewFactory.class);
 		nodeMap.put(Properties.NOTE, NoteViewFactory.class);
-		nodeMap.put(Properties.TEXT, TextViewFactory.class);
+		nodeMap.put(Properties.TEXT, TextShapeViewFactory.class);
 		nodeMap.put(NotationPackage.eINSTANCE.getDiagram(), NoteViewFactory.class);	
 	}
 	/** list of supported connector views. */
@@ -53,7 +52,7 @@ public class PresentationViewProvider extends AbstractViewProvider {
 	{
 		connectorMap.put(
 			Properties.NOTEATTACHMENT,
-			NoteAttachmentViewFactory.class);
+			ConnectorViewFactory.class);
 	}
 
 	/**
@@ -96,7 +95,7 @@ public class PresentationViewProvider extends AbstractViewProvider {
 	
 	public static boolean isTextView(View view){
 		if ((instance != null) && (view != null)) {
-			return (instance.nodeMap.get(view.getType()) instanceof TextViewFactory);
+			return (instance.nodeMap.get(view.getType()) instanceof TextShapeViewFactory);
 		}
 		return false;
 	}

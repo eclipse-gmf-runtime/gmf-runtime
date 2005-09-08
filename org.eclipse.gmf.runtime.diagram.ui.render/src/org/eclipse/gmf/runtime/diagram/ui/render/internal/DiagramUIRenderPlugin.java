@@ -2,7 +2,7 @@ package org.eclipse.gmf.runtime.diagram.ui.render.internal;
 
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.render.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.ResourceManager;
 
 /**
  * The Diagram UI Render plug-in.

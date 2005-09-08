@@ -15,20 +15,19 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.AndGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.CircuitViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.ConnectionPointViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LEDViewFactory;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicDiagramViewFactory;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicFlowCompartmentViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicFlowContainerViewFactory;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicShapeCompartmentViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.OrGateViewFactory;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.WireViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.XORGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectorViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.ListCompartmentViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.ResizableCompartmentViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -41,7 +40,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 
 	HashMap diagramMap = new HashMap(); 
 	{
-		diagramMap.put("logic", LogicDiagramViewFactory.class);//$NON-NLS-1$
+		diagramMap.put("logic", DiagramViewFactory.class);//$NON-NLS-1$
 	}
 	
 //	 Map to hold the Node Views
@@ -58,15 +57,15 @@ public class LogicViewProvider extends AbstractViewProvider {
 		nodeMap.put( SemanticPackage.eINSTANCE.getInputOutputTerminal(), ConnectionPointViewFactory.class );
 		
 		// Shape Compartments
-		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentViewFactory.class); //$NON-NLS-1$
+		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, ResizableCompartmentViewFactory.class); //$NON-NLS-1$
 		// List Compartments
-		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, LogicFlowCompartmentViewFactory.class); //$NON-NLS-1$
+		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class); //$NON-NLS-1$
 	}
 	
 	// Map to hold the Line/Connector Views
 	private Map connectorMap = new HashMap();
 	{
-		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), WireViewFactory.class);
+		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), ConnectorViewFactory.class);
 	}
 	
 	/**
@@ -94,7 +93,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 	}
 	
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider#getDiagramViewClass(IAdaptable, java.lang.String)
+	 * @see org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider#getDiagramViewClass(IAdaptable, java.lang.String)
 	 */
 	protected Class getDiagramViewClass(IAdaptable semanticAdapter, String diagramKind) {
 		return (Class) diagramMap.get(diagramKind);

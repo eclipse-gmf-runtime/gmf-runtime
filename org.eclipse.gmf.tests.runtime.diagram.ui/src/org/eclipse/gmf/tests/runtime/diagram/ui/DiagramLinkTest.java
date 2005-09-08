@@ -21,9 +21,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DefaultNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;

@@ -20,6 +20,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.clipboard.AWTViewImageTransferable;
 
 /**
  * Used for image transfer to the clipboard. This is only supported when on

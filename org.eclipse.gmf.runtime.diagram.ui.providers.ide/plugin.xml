@@ -7,7 +7,7 @@
       name="%ext.diagramIDEContributionItemProvider"
       point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
       <contributionItemProvider
-         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEContributionItemProvider"
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal.providers.DiagramIDEContributionItemProvider"
          checkPluginLoaded="false">
          <Priority
             name="Low">

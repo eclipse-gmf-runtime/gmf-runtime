@@ -9,18 +9,25 @@
  */
 package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 
-import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import java.util.List;
+
 import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * the base factory class for all label views
- * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory
+ * The factory class responsible for creating the Resizable Compartment View 
  * @author mmostafa
  */
-public class AbstractLabelViewFactory
+public class ResizableCompartmentViewFactory
 	extends BasicNodeViewFactory {
 
-	protected LayoutConstraint createLayoutConstraint() {
-		return NotationFactory.eINSTANCE.createLocation();
+	/**
+	 * @return a list of style for the newly created view or an empty list if none (do not return null)
+	 */
+	protected List createStyles(View view) {
+		List styles = super.createStyles(view);
+		styles.add(NotationFactory.eINSTANCE.createDrawerStyle());
+		styles.add(NotationFactory.eINSTANCE.createTitleStyle());
+		return styles;
 	}
 }

@@ -141,7 +141,7 @@
       <contributionItemProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicContributionItemProvider">
          <Priority name="Low">
          </Priority>
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart">
             </popupStructuredContributionCriteria>
             <popupMenuGroup id="valueChangeGroup">

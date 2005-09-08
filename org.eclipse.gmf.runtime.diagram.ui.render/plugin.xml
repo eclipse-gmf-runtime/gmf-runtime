@@ -14,7 +14,7 @@
          name="%EditPartProvider.name"
          point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
       <editpartProvider
-            class="org.eclipse.gmf.runtime.diagram.ui.render.providers.DiagramUIRenderEditPartProvider">
+            class="org.eclipse.gmf.runtime.diagram.ui.render.internal.providers.DiagramUIRenderEditPartProvider">
          <Priority
                name="Low">
          </Priority>

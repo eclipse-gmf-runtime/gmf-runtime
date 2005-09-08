@@ -14,9 +14,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.internal.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -39,13 +40,13 @@ public class GeoShapeViewFactory
 		// fill color
 		RGB fillRGB = PreferenceConverter.getColor(store,
 			IPreferenceConstants.PREF_NOTE_FILL_COLOR);
-		setPreferncePropertyValue(view, Properties.ID_FILLCOLOR,
+		ViewUtil.setPropertyValue(view, Properties.ID_FILLCOLOR,
 			FigureUtilities.RGBToInteger(fillRGB));
 
 		//line color
 		RGB lineRGB = PreferenceConverter.getColor(store,
 			IPreferenceConstants.PREF_NOTE_LINE_COLOR);
-		setPreferncePropertyValue(view, Properties.ID_LINECOLOR,
+		ViewUtil.setPropertyValue(view, Properties.ID_LINECOLOR,
 			FigureUtilities.RGBToInteger(lineRGB));
 	}
 }

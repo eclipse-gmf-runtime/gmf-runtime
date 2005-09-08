@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
@@ -138,9 +139,7 @@ public class LogicEditorUtil extends IDEEditorUtil {
 					//create model semantic element and hook it up with diagram view
 					EObject model = EObjectUtil.create(SemanticPackage.eINSTANCE.getModel());
 					IAdaptable adapter = new EObjectAdapter(model);
-					Diagram view = ViewService.getInstance()
-						.createDiagramView(adapter, kind, new PreferencesHint(LogicDiagramPlugin.EDITOR_ID));
-					
+					Diagram view = DiagramUtil.createDiagram(model, kind, new PreferencesHint(LogicDiagramPlugin.EDITOR_ID));
 					if (view != null) {
 						notationModel_.getContents().add(view);
 						notationModel_.getContents().add(model);

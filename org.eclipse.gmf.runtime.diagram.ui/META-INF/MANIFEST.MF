@@ -57,6 +57,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.diagram.ui.services.palette,
  org.eclipse.gmf.runtime.diagram.ui.tools,
  org.eclipse.gmf.runtime.diagram.ui.util,
+ org.eclipse.gmf.runtime.diagram.ui.providers,
  org.eclipse.gmf.runtime.diagram.ui.view.factories
 Require-Bundle: org.eclipse.ui.views,
  org.eclipse.ui,

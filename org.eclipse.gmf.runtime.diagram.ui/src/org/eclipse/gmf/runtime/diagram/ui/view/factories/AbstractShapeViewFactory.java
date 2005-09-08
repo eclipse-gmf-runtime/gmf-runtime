@@ -16,6 +16,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
@@ -24,10 +25,10 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.View;
 /**
  * The base abstract node view factory 
- * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractNodeViewFactory
+ * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory
  * @author mmostafa
  */
-public class AbstractShapeViewFactory extends AbstractNodeViewFactory {
+public class AbstractShapeViewFactory extends BasicNodeViewFactory {
 
 	/**
 	 * Method used to create the layout constraint that will get set on the 
@@ -52,7 +53,7 @@ public class AbstractShapeViewFactory extends AbstractNodeViewFactory {
 		// fill color
 		RGB fillRGB = PreferenceConverter.getColor(store,
 			IPreferenceConstants.PREF_FILL_COLOR);
-		setPreferncePropertyValue(view, Properties.ID_FILLCOLOR,
+		ViewUtil.setPropertyValue(view, Properties.ID_FILLCOLOR,
 			FigureUtilities.RGBToInteger(fillRGB));
 	}
 	
@@ -62,7 +63,7 @@ public class AbstractShapeViewFactory extends AbstractNodeViewFactory {
 	 * method in you factory sub class to provide additional styles
 	 * @return a list of style for the newly created view or an empty list if none (do not return null)
 	 */
-	protected List createStyles() {
+	protected List createStyles(View view) {
 		List styles = new ArrayList();
 		styles.add(NotationFactory.eINSTANCE.createShapeStyle());
 		return styles;

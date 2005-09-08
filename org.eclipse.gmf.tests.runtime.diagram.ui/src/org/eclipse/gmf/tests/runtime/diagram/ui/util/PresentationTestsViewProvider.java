@@ -11,8 +11,8 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 import org.eclipse.core.runtime.IAdaptable;
 
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractDiagramViewFactory;
+import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
 
 /**
  * This is a view provider for the presentation tests. It needs to provide a
@@ -25,26 +25,16 @@ import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractDiagramViewFact
 public class PresentationTestsViewProvider
 	extends AbstractViewProvider {
 
-	/**
-	 * This is the presentation diagram view class to use.
-	 */
-	public static class PresentationTestsDiagramViewFactory
-		extends AbstractDiagramViewFactory {
-
-		// TODO: delete me
-
-	}
-
 	/** the diagram kind to use to request a 'presentation tests diagram' */
 	public static final String PRESENTATION_TESTS_DIAGRAM_KIND = "PresentationTestsDiagramKind"; //$NON-NLS-1$
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider#getDiagramViewClass(IAdaptable,
+	 * @see org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider#getDiagramViewClass(IAdaptable,
 	 *      java.lang.String)
 	 */
 	protected Class getDiagramViewClass(IAdaptable semanticAdapter,
 			String diagramKind) {
-		return PRESENTATION_TESTS_DIAGRAM_KIND.equals(diagramKind) ? PresentationTestsDiagramViewFactory.class
+		return PRESENTATION_TESTS_DIAGRAM_KIND.equals(diagramKind) ? DiagramViewFactory.class
 			: null;
 	}
 }

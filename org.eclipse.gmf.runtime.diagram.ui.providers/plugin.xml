@@ -269,7 +269,7 @@
             <partAction menubarPath="/diagramMenu/makeSameSizeMenu/sameSizeGroup" id="makeSameWidthAction">
             </partAction>                
          </partContribution>         
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
 <!-- main context menu groups -->
 			<popupMenuGroup id="umlAddGroup">
             </popupMenuGroup>			
@@ -321,7 +321,7 @@
        	</popupContribution> 
        	
        	<!-- added here for display ordering purposes -->
-       	<popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+       	<popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
             </popupStructuredContributionCriteria>
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart">
@@ -340,14 +340,14 @@
             </popupAction>             
         </popupContribution>  
           
-        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart">        
             </popupStructuredContributionCriteria> 
             <popupMenu path="/filterFormatGroup" id="formatMenu">
             </popupMenu>
          </popupContribution>    
          
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart">
             </popupStructuredContributionCriteria>
             <popupMenu path="/filterFormatGroup" id="formatMenu">
@@ -358,7 +358,7 @@
             </popupAction>
           </popupContribution>          
        
-        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">            
+        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">            
             <popupAction path="/findGroup" id="find">
             </popupAction>
              
@@ -399,7 +399,7 @@
         </popupContribution>
         
 <!-- format menu actions -->           
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart">
             </popupStructuredContributionCriteria>     
             <popupAction path="/formatMenu/applyAppearanceGroup" id="copyAppearancePropertiesAction">
@@ -423,7 +423,7 @@
          </popupContribution>
          
 <!-- format and filter menu actions -->         
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart">
             </popupStructuredContributionCriteria>                    
             <popupMenu path="/formatMenu/miscellaneousGroup" id="alignMenu">
@@ -471,7 +471,7 @@
             </popupAction>     
          </popupContribution>       
          
-         <popupContribution> class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider"
+         <popupContribution> class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider"
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
             </popupStructuredContributionCriteria>
             <popupAction path="/navigateMenu/openGroup" id="open">
@@ -494,14 +494,14 @@
             </popupAction>
          </popupContribution>
          
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart">
             </popupStructuredContributionCriteria>
             <popupAction path="/filtersMenu/expandFilterGroup" id="sortfilterAction">
             </popupAction>
          </popupContribution>
         
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart">
             </popupStructuredContributionCriteria>
              <popupMenu path="/formatMenu/fontFillLineGroup" id="routerMenu">
@@ -514,14 +514,14 @@
             </popupAction>
          </popupContribution>
          
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
          	<popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart">
          	</popupStructuredContributionCriteria>
          	<popupAction path="/formatMenu/routerMenu/routerGroup" id="treeRouterAction">
             </popupAction>
          </popupContribution>
          
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart">
             </popupStructuredContributionCriteria>
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
@@ -535,7 +535,7 @@
             </popupAction>
          </popupContribution>
          
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart">
             </popupStructuredContributionCriteria>
             <popupAction path="/formatMenu/arrangeMenu" id="arrangeAllAction">
@@ -545,7 +545,7 @@
          </popupContribution>
 
          <!-- View Menu Contributions -->
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
                   <method name="isSupportingViewActions()" value="true">
                </method>
@@ -576,18 +576,18 @@
             </popupAction>
          </popupContribution>
          
-         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart"/>
             <popupAction path="/filtersMenu/miscellaneousGroup" id="showCompartmentTitle"/>
          </popupContribution>  
             
-        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart">              
             </popupStructuredContributionCriteria> 
             <popupAction path="/editGroup" id="deleteFromDiagramAction">
             </popupAction>            
           </popupContribution>                   
-          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart">
                <method name="getView().getSemanticElement()" notValue="null">                  
                </method>               
@@ -595,7 +595,7 @@
             <popupAction path="/editGroup" id="deleteFromModelAction">
             </popupAction>            
           </popupContribution>
-           <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramContextMenuProvider">
+           <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart" objectCount="1">
             </popupStructuredContributionCriteria> 
            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.GeoShapeEditPart" objectCount="1">

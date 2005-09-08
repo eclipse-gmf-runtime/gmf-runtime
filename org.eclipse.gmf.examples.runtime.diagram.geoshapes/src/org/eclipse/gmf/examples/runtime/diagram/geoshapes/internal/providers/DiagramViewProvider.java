@@ -12,9 +12,8 @@ package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.AbstractViewProvider;
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factories.DiagramViewFactory;
+import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
 
 /**
  * 
