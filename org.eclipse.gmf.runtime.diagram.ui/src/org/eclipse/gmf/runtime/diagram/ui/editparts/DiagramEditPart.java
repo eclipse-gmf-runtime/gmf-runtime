@@ -210,8 +210,8 @@ public class DiagramEditPart
 
 	/**
 	 * returns all connectors owned by this diagram, the returned list is 
-	 * a list of <code>Edge</code>s
-	 * @return list of <code>Edge</code>s
+	 * a list of <code>ConnectionEditPart</code>s
+	 * @return list of <code>ConnectionEditPart</code>s
 	 */
 	public List getConnectors() {
 		Iterator views = getDiagramView().getEdges().iterator(); 

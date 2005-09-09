@@ -35,6 +35,9 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.diagram.ui.geoshapes,
  org.eclipse.gmf.runtime.diagram.ui.providers,
  org.eclipse.gmf.tests.runtime.common.core,
- org.eclipse.gmf.runtime.diagram.ui.resources.editor
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor,
+ org.eclipse.gmf.examples.runtime.diagram.logic,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
+ org.eclipse.gmf.examples.runtime.diagram.logic.model
 Eclipse-AutoStart: true
 Plugin-Class: org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin

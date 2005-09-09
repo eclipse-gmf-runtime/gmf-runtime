@@ -20,6 +20,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.C
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.ConnectionPointViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LEDViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicFlowContainerViewFactory;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicShapeCompartmentViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.OrGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.XORGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
@@ -27,7 +28,6 @@ import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectorViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.ListCompartmentViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ResizableCompartmentViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -57,7 +57,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 		nodeMap.put( SemanticPackage.eINSTANCE.getInputOutputTerminal(), ConnectionPointViewFactory.class );
 		
 		// Shape Compartments
-		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, ResizableCompartmentViewFactory.class); //$NON-NLS-1$
+		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentViewFactory.class); //$NON-NLS-1$
 		// List Compartments
 		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class); //$NON-NLS-1$
 	}

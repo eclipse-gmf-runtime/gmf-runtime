@@ -11,6 +11,7 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.util;
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorFileCreator;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
 
 
 /**
@@ -27,7 +28,7 @@ public class LogicDiagramFileCreator extends IDEEditorFileCreator{
 	 * This class is a singleton that can only be accessed through this static method.
 	 * @return VizDiagramFileCreator The singleton instance
 	 */
-	static public LogicDiagramFileCreator getInstance() {
+	static public EditorFileCreator getInstance() {
 		return INSTANCE;
 	}
 	

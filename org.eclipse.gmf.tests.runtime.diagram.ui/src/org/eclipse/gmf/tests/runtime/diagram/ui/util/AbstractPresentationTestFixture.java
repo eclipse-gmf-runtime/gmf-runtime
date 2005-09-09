@@ -318,8 +318,10 @@ public abstract class AbstractPresentationTestFixture
 	protected void createDiagramEditPart()
 		throws Exception
 	{
-		setDiagramEditPart(OffscreenEditPartFactory.getInstance()
-			.createDiagramEditPart(getDiagram()));
+		if (getDiagramEditPart() == null) {
+			setDiagramEditPart(OffscreenEditPartFactory.getInstance()
+				.createDiagramEditPart(getDiagram()));
+		}
 	}
 	
 	/**
