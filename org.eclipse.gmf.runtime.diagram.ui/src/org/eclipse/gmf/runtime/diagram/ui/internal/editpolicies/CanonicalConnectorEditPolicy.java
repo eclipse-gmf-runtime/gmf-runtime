@@ -340,7 +340,7 @@ public abstract class CanonicalConnectorEditPolicy
 	 * @param connector the <code>EObject</code> element that we are canonical trying to create a view for.
 	 * @return the <code>EditPart</code> that is the source of the <code>View</code> we want to create
 	 */
-	private EditPart getTargetEditPartFor(EObject connector) {
+	protected EditPart getTargetEditPartFor(EObject connector) {
 		EObject tel;
 		EditPart tep;
 		tel = getTargetElement(connector);
