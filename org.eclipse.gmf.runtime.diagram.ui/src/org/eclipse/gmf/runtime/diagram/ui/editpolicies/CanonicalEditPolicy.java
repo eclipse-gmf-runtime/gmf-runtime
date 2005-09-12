@@ -48,6 +48,7 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
@@ -681,6 +682,8 @@ implements PropertyChangeListener {
 	 * @param notifier An element notifer to add the listener to
 	 * @return <tt>true</tt> if the listener was added, otherwise <tt>false</tt>
 	 * @throws NullPointerException if either <tt>filterId</tt> or <tt>listner</tt> parameters are <tt>null</tt>.
+	 * @deprecated use {@link CanonicalEditPolicy#addListenerFilter(String, PropertyChangeListener, EObject)} or
+	 * {@link CanonicalEditPolicy#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
 	 */
 	protected boolean addListenerFilter(
 		String filterId,

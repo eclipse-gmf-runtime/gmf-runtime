@@ -156,7 +156,7 @@ public abstract class GraphicalEditPart
 	 * @param notifier
 	 *            An element notifer to add the listener to
 	 * @deprecated use {@link GraphicalEditPart#addListenerFilter(String, PropertyChangeListener, EObject)} or
-	 * {@link ConnectionEditPart#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
+	 * {@link GraphicalEditPart#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
 	 */
 	protected void addListenerFilter(String filterId,
 			PropertyChangeListener listener, PropertyChangeNotifier notifier) {
