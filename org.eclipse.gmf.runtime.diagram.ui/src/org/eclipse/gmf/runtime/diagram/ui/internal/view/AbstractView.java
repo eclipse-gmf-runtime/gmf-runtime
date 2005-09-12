@@ -155,6 +155,7 @@ public abstract class AbstractView implements IView, IContainerView, Properties 
 
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.core.internal.view.IView#getPropertyChangeNotifier()
+	 * @deprecated
 	 */
 	public final PropertyChangeNotifier getPropertyChangeNotifier() {
 		return PresentationListener.getNotifier(getViewElement());

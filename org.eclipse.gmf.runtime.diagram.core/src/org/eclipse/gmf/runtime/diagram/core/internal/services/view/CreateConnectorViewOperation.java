@@ -58,7 +58,7 @@ public class CreateConnectorViewOperation extends CreateChildViewOperation {
 	 * @see com.ibm.xtools.common.service.IOperation#execute(IProvider)
 	 */
 	public Object execute(IProvider provider) {
-		return ((IViewProvider) provider).createConnectorView(
+		return ((IViewProvider) provider).createEdge(
 			getSemanticAdapter(),
 			getContainerView(),
 			getSemanticHint(),

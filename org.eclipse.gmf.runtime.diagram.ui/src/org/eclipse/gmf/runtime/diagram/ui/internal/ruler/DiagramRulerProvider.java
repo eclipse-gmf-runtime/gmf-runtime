@@ -70,13 +70,13 @@ public class DiagramRulerProvider extends RulerProvider {
 				// Add a new Guide
 				if( event.getNewValue() != null && event.getOldValue() == null ) {
 					guide = (Guide)event.getNewValue();
-					PresentationListener.getNotifier(guide).addPropertyChangeListener(guideListener);
+					PresentationListener.getInstance().addPropertyChangeListener(guide,guideListener);
 				}
 
 				// Remove Guide
 				if( event.getNewValue() == null && event.getOldValue() != null ) {
 					guide = (Guide)event.getOldValue();
-					PresentationListener.getNotifier(guide).removePropertyChangeListener(guideListener);
+					PresentationListener.getInstance().removePropertyChangeListener(guide,guideListener);
 				}
 				
 				for (int i = 0; i < listeners.size(); i++) {
@@ -133,7 +133,7 @@ public class DiagramRulerProvider extends RulerProvider {
 		Iterator iter = getGuides().iterator();
 		while(iter.hasNext()) {
 			Guide guide = (Guide)iter.next();
-			PresentationListener.getNotifier(guide).addPropertyChangeListener(guideListener);
+			PresentationListener.getInstance().addPropertyChangeListener(guide,guideListener);
 		}
 		
 		refreshMap();

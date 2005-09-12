@@ -49,6 +49,8 @@ public class PresentationListener extends ModelServerListener {
 	 * gets a notifier to the given element.
 	 * @param element the element to get the notifier for
 	 * @return the Notifier of the element
+	 * @deprecated the PropertyChangeNotifier is deprecated, to add a listener use the 
+	 * <code>addPropertyChangeListener</code> Api instead.
 	 */
 	public static PropertyChangeNotifier getNotifier(EObject element) {
 		return PresentationListener.getInstance().getPropertyChangeNotifier(element);
@@ -58,6 +60,8 @@ public class PresentationListener extends ModelServerListener {
 	 * gets a notifier to the given element.
 	 * @param element the element to get the notifier for
 	 * @return the Notifier of the element
+	 * @deprecated the PropertyChangeNotifier is deprecated, to add a listener use the 
+	 * <code>addPropertyChangeListener</code> Api instead.
 	 */
 	public static PropertyChangeNotifier getNotifier(EObject element,EStructuralFeature feature) {
 		return PresentationListener.getInstance().getPropertyChangeNotifier(element,feature);

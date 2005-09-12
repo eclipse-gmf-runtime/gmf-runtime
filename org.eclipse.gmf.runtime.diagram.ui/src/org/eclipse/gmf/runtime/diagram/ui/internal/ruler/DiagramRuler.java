@@ -77,12 +77,12 @@ public class DiagramRuler {
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		PresentationListener.getNotifier(getGuideStyle()).addPropertyChangeListener(listener);
+		PresentationListener.getInstance().addPropertyChangeListener(getGuideStyle(),listener);
 
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		PresentationListener.getNotifier(getGuideStyle()).removePropertyChangeListener(listener);
+		PresentationListener.getInstance().removePropertyChangeListener(getGuideStyle(),listener);
 
 	}
 }

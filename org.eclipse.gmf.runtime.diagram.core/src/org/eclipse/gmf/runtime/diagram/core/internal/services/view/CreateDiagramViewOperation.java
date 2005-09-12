@@ -49,7 +49,7 @@ public class CreateDiagramViewOperation extends CreateViewOperation {
 	 * @see com.ibm.xtools.common.service.IOperation#execute(IProvider)
 	 */
 	public Object execute(IProvider provider) {
-		return ((IViewProvider) provider).createDiagramView(getSemanticAdapter(), getSemanticHint(), getPreferencesHint());
+		return ((IViewProvider) provider).createDiagram(getSemanticAdapter(), getSemanticHint(), getPreferencesHint());
 	}
 
 }

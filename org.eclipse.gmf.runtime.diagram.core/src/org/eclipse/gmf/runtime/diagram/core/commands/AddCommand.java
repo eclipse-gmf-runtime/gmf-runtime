@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * A command to add a view to a parent view at a given index
+ * A command to add a view to a another view at a given index
  * 
  * @author melaasar
  */

@@ -29,9 +29,6 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
-import org.eclipse.swt.accessibility.AccessibleEvent;
-import org.eclipse.ui.views.properties.IPropertySource;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelNonResizableEditPolicy;
@@ -43,12 +40,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.accessibility.AccessibleEvent;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 /**
  * Controller for all label that deals with interactions bewteen
@@ -267,7 +265,7 @@ public class LabelEditPart extends TopGraphicEditPart {
 
 	protected void addNotationalListeners() {
 		super.addNotationalListeners();
-		addListenerFilter("PrimaryView", this, ViewUtil.getPropertyChangeNotifier(getPrimaryView())); //$NON-NLS-1$
+		addListenerFilter("PrimaryView", this, getPrimaryView()); //$NON-NLS-1$
 	}
 
 	protected void removeNotationalListeners() {

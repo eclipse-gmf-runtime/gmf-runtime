@@ -14,19 +14,18 @@ import java.beans.PropertyChangeEvent;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.ExposeHelper;
 import org.eclipse.gef.editparts.ViewportExposeHelper;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.FontData;
-
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Ratio;
 import org.eclipse.gmf.runtime.notation.TitleStyle;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontData;
 
 /**
  * An editpart for controlling generic resizable compartment views
@@ -242,7 +241,7 @@ public abstract class ResizableCompartmentEditPart
 	 */
 	protected void addNotationalListeners() {
 		super.addNotationalListeners();
-		addListenerFilter("PrimaryView", this, ViewUtil.getPropertyChangeNotifier(getPrimaryView())); //$NON-NLS-1$
+		addListenerFilter("PrimaryView", this, getPrimaryView()); //$NON-NLS-1$
 	}
 
 	/**

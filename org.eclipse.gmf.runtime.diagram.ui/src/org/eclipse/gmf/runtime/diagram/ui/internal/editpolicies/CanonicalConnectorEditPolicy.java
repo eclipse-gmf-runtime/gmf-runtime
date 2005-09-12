@@ -29,10 +29,9 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -48,7 +47,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest.ConnectorViewDescriptor;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -576,8 +574,7 @@ public abstract class CanonicalConnectorEditPolicy
 			deferred.add(element);
 			//
 			// add a listener to this element to properly destroy it form the cache
-			addListenerFilter(DEFERRED_CONNECTOR_FILTER_ID, this, PresentationListener
-					.getNotifier(getSemanticHost()));
+			addListenerFilter(DEFERRED_CONNECTOR_FILTER_ID, this,getSemanticHost());
 		}
 	}
 	

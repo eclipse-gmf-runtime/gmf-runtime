@@ -21,15 +21,13 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.handles.AbstractHandle;
-
-import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
+import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.CollapseFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.CompartmentCollapseTracker;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -64,9 +62,6 @@ public class CompartmentCollapseHandle
 
 	/** the handle figure */
 	protected CollapseFigure collapseFigure = null;
-
-	/** the owner's model listener */
-	private PropertyChangeNotifier notifier;
 
 	/**
 	 * Creates a new Compartment Collapse Handle 
@@ -123,8 +118,7 @@ public class CompartmentCollapseHandle
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
 		View view = owner.getNotationView();
 		if (view!=null){
-			notifier = ViewUtil.getPropertyChangeNotifier(view);
-			notifier.addPropertyChangeListener(CompartmentCollapseHandle.this);
+			PresentationListener.getInstance().addPropertyChangeListener(owner.getNotationView(),CompartmentCollapseHandle.this);
 		}
 	}
 
@@ -132,7 +126,8 @@ public class CompartmentCollapseHandle
 	 * @see org.eclipse.draw2d.IFigure#removeNotify()
 	 */
 	public void removeNotify() {
-		notifier.removePropertyChangeListener(this);
+		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
+		PresentationListener.getInstance().removePropertyChangeListener(owner.getNotationView(),this);
 		super.removeNotify();
 	}
 

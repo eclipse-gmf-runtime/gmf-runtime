@@ -57,7 +57,7 @@ public class CircuitViewFactory
 		super.decorateView(containerView, view, semanticAdapter, semanticHint,
 			index, persisted);
 
-		getViewService().createNodeView(semanticAdapter, view,
+		getViewService().createNode(semanticAdapter, view,
 			LogicConstants.LOGIC_SHAPE_COMPARTMENT, ViewUtil.APPEND, getPreferencesHint()); //$NON-NLS-1$
 	}
 }

@@ -21,9 +21,8 @@ import java.util.Map;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
-
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
@@ -31,7 +30,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ListComponentEdi
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ModifySortFilterEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.notation.Filtering;
 import org.eclipse.gmf.runtime.notation.FilteringStyle;
@@ -381,7 +379,7 @@ public abstract class ListCompartmentEditPart
 			EObject eObject = ViewUtil.resolveSemanticElement((View)modelChildrenListeners.get(i));
 			if (eObject != null)
 				addListenerFilter(
-					"SemanticModel" + i, this, PresentationListener.getNotifier(eObject)); //$NON-NLS-1$
+					"SemanticModel" + i, this, eObject); //$NON-NLS-1$
 		}	
 		listening = true;
 	}

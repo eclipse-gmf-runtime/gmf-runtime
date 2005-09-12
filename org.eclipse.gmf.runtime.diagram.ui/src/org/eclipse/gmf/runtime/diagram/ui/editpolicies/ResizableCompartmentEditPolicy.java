@@ -22,8 +22,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-
-import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
+import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
@@ -31,7 +30,6 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHandle;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 
 /**
  * A resizable editpolicy for resizable compartments. The editpolicy could be vertical
@@ -143,7 +141,6 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 	private EditPartListener hostListener;
 	private EditPartListener parentListener;
 	private PropertyChangeListener propertyListener;
-	private PropertyChangeNotifier propertyNotifier;
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#addSelectionListener()
@@ -170,17 +167,14 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 					setSelectedState();
 			}
 		};
-		propertyNotifier = ViewUtil.getPropertyChangeNotifier(
-			getGraphicalEditPart().getNotationView());
-		propertyNotifier.addPropertyChangeListener(propertyListener);
+		PresentationListener.getInstance().addPropertyChangeListener(getGraphicalEditPart().getNotationView(),propertyListener);
 	}
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
 	protected void removeSelectionListener() {
-		if (propertyNotifier != null)
-			propertyNotifier.removePropertyChangeListener(propertyListener);
+		PresentationListener.getInstance().removePropertyChangeListener(getGraphicalEditPart().getNotationView(),propertyListener);
 		getHost().removeEditPartListener(hostListener);
 		getParentGraphicEditPart().removeEditPartListener(parentListener);
 	}

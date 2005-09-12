@@ -84,12 +84,12 @@ public class DiagramLinkTest
 		annotation.getContents().add(diagram2);
 		
 		// simulate creating a valid Diagram Link	using the new format
-		View link1 = ViewService.getInstance().createNodeView(new EObjectAdapter(diagram1),diagram1,Properties.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+		View link1 = ViewService.getInstance().createNode(new EObjectAdapter(diagram1),diagram1,Properties.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 		assertValidDiagramLinkView(link1);
 		
 		
 		//simulate loading  broken link using the new format	
-		View link2 = ViewService.getInstance().createNodeView(new EObjectAdapter(diagram2),diagram1,Properties.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+		View link2 = ViewService.getInstance().createNode(new EObjectAdapter(diagram2),diagram1,Properties.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 		assertValidDiagramLinkView(link2);
 		link2.setElement(null);
 		View link2NotationView = (View)EcoreUtil.copy(link2);

@@ -17,7 +17,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 /**
  * An object that allows listeners to listen and stop listening to events related
  * to a given model element 
- * 
+ * @deprecated this class is not needed any more, to add a listener to the <code>PresentationListener</code>
+ * use <code>PresentationListener.addPropertyChangeListener</code>
  * @author melaasar
  */
 public final class PropertyChangeNotifier {
@@ -28,6 +29,7 @@ public final class PropertyChangeNotifier {
 	/**
 	 * Create an instance.
 	 * @param element element to listen to
+	 * @deprecated
 	 */
 	public PropertyChangeNotifier(EObject element) {
 		this.element = element;
@@ -38,6 +40,7 @@ public final class PropertyChangeNotifier {
 	 * @param element element to listen to
 	 * @param feature the feature interested in; if this parameter is null, it means it is 
 	 * 				  interested in all features
+	 * @deprecated
 	 */
 	public PropertyChangeNotifier(EObject element ,EStructuralFeature feature){
 		this.element = element;
@@ -47,7 +50,8 @@ public final class PropertyChangeNotifier {
 	/**
 	 * Registers the supplied listener with the model server listener to
 	 * receives events fires againts the cached element.
-	 * @param listener the Listener to add 
+	 * @param listener the Listener to add
+	 * @deprecated 
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (feature==null)
@@ -58,7 +62,8 @@ public final class PropertyChangeNotifier {
 
 	/**
 	 * Unregisters the supplied listener from the model server.
-	 * @param listener the Listener to remove 
+	 * @param listener the Listener to remove
+	 * @deprecated 
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		if (feature==null)

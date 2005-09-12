@@ -18,9 +18,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.CanonicalConnectorEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
@@ -52,11 +50,11 @@ public abstract class CanonicalShapeCompartmentEditPolicy
 	public void activate() {
 		Style style = ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
 		if ( style != null ) {
-			addListenerFilter("NotationListener_DrawerStyle", this, PresentationListener.getNotifier(style)); //$NON-NLS-1$
+			addListenerFilter("NotationListener_DrawerStyle", this,style); //$NON-NLS-1$
 		}
 		style = ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getCanonicalStyle());
 		if ( style != null ) {
-			addListenerFilter("NotationListener_CanonicalStyle", this, PresentationListener.getNotifier(style));  //$NON-NLS-1$
+			addListenerFilter("NotationListener_CanonicalStyle", this, style);  //$NON-NLS-1$
 		}
 		super.activate();
 	}

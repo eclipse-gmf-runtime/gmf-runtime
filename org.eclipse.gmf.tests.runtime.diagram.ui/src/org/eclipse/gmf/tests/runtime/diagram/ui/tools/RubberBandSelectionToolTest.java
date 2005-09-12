@@ -20,28 +20,27 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandSelectionTool;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
-import org.eclipse.gmf.tests.runtime.diagram.ui.framework.DiagramTestCase;
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramTestEditor;
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestsViewProvider;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
+import org.eclipse.gmf.tests.runtime.diagram.ui.framework.DiagramTestCase;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramTestEditor;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestsViewProvider;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 
 /**
@@ -240,7 +239,7 @@ public class RubberBandSelectionToolTest
 		AbstractTestBase.println("Creating diagram"); //$NON-NLS-1$
 		OperationUtil.runAsUnchecked(new Runnable() {
 			public void run() {
-				diagramView = ViewService.getInstance().createDiagramView(null,
+				diagramView = DiagramUtil.createDiagram(null,
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 			}});
 		

@@ -283,12 +283,23 @@ public abstract class ModelServerListener
 		}
 	}
 
-	/** Returns a notifier to the given element. */
+	/**
+	 * Returns a notifier to the given element.
+	 * @param element
+	 * @deprecated the PropertyChangeNotifier is deprecated
+	 * @return
+	 */
 	public PropertyChangeNotifier getPropertyChangeNotifier(EObject element) {
 		return new PropertyChangeNotifier(element);
 	}
 	
-	/** Returns a notifier to the given element. */
+	/**
+	 * Returns a notifier to the given element.
+	 * @param element
+	 * @param feature
+	 * @deprecated the PropertyChangeNotifier is deprecated
+	 * @return
+	 */
 	public PropertyChangeNotifier getPropertyChangeNotifier(EObject element,EStructuralFeature feature) {
 		return new PropertyChangeNotifier(element,feature);
 	}

@@ -36,10 +36,10 @@ public class TextShapeViewFactory
 		super.decorateView(containerView, view, semanticAdapter, semanticHint,
 			index, persisted);
 
-		getViewService().createNodeView(semanticAdapter, view,
+		getViewService().createNode(semanticAdapter, view,
 			Properties.DIAGRAM_NAME, ViewUtil.APPEND, persisted, getPreferencesHint());
 
-		getViewService().createNodeView(semanticAdapter, view,
+		getViewService().createNode(semanticAdapter, view,
 			CommonParserHint.DESCRIPTION, ViewUtil.APPEND, persisted, getPreferencesHint());
 	}
 

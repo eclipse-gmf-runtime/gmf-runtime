@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
- * abstract command that creates a diagram by calling the view service
+ * Creates a diagram
  *
  * @author schafe
  */
@@ -64,7 +64,7 @@ public class CreateDiagramCommand
 
 		// Create the new diagram element
 		//IElementCollection contents = getOwnedDiagramCollection(createOwningElement(progressMonitor));
-		Diagram diagram = ViewService.getInstance().createDiagramView(
+		Diagram diagram = ViewService.getInstance().createDiagram(
 			new EObjectAdapter(getSemanticContext()), getDiagramType(), getPreferencesHint());
 
 		return new CommandResult(new Status(IStatus.OK, getPluginId(),

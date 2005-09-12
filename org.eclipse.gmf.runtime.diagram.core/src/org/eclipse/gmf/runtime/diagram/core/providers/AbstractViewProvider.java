@@ -88,7 +88,7 @@ public class AbstractViewProvider extends AbstractProvider
 		return false;
 	}
 
-	public final Diagram createDiagramView(
+	public final Diagram createDiagram(
 			IAdaptable contextElement,
 			String diagramKind, PreferencesHint preferencesHint){
 		return (Diagram) createNewView(
@@ -100,7 +100,7 @@ public class AbstractViewProvider extends AbstractProvider
 						preferencesHint});
 	}
 
-	public final Edge createConnectorView(
+	public final Edge createEdge(
 		IAdaptable semanticAdapter,
 		View containerView,
 		String semanticHint,
@@ -121,14 +121,14 @@ public class AbstractViewProvider extends AbstractProvider
 				preferencesHint});
 	}
 
-	public final View createNodeView(
+	public final Node createNode(
 			IAdaptable semanticAdapter,
 			View containerView,
 			String semanticHint,
 			int index,
 			boolean persisted, PreferencesHint preferencesHint) {
 
-			return createNewView(
+			return (Node)createNewView(
 				getNodeViewClass(
 					semanticAdapter,
 					containerView,

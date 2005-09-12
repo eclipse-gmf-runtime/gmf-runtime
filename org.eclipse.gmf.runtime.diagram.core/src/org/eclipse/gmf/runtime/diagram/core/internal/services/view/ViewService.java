@@ -21,16 +21,16 @@ import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider;
+import org.eclipse.gmf.runtime.diagram.core.providers.ViewProviderConfiguration;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.gmf.runtime.diagram.core.providers.ViewProviderConfiguration;
 
 /**
  *
  * A service for manipulating the notational models
- * @author melaasar
+ * @author melaasar, mmostafa
  */
 final public class ViewService
 	extends Service
@@ -238,24 +238,24 @@ final public class ViewService
 			    "The default View service does not support " + viewKind.getName() + " as a view kind";//$NON-NLS-1$ //$NON-NLS-2$
 
 		if (viewKind == Diagram.class)
-			return createDiagramView(semanticAdapter, semanticHint, preferencesHint);
+			return createDiagram(semanticAdapter, semanticHint, preferencesHint);
 		else if (viewKind == Edge.class)
-			return createConnectorView(semanticAdapter, containerView,
+			return createEdge(semanticAdapter, containerView,
 				semanticHint, index, persisted, preferencesHint);
 		else if (viewKind == Node.class)
-			return createNodeView(semanticAdapter, containerView, semanticHint,
+			return createNode(semanticAdapter, containerView, semanticHint,
 				index, persisted, preferencesHint);
 		return null;
 	}
 
-	public final Diagram createDiagramView(IAdaptable semanticAdapter,
+	public final Diagram createDiagram(IAdaptable semanticAdapter,
 		String diagramKindType, PreferencesHint preferencesHint) {
 		Diagram view = (Diagram) execute(new CreateDiagramViewOperation(
 			semanticAdapter, diagramKindType, preferencesHint));
 		return view;
 	}
 
-	public final Edge createConnectorView(IAdaptable semanticAdapter,
+	public final Edge createEdge(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index,
 		boolean persisted, PreferencesHint preferencesHint) {
 		Edge edge = (Edge) execute(new CreateConnectorViewOperation(
@@ -277,12 +277,12 @@ final public class ViewService
 	 */
 	public final View createConnectorView(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index, PreferencesHint preferencesHint) {
-		return createConnectorView(semanticAdapter, containerView,
+		return createEdge(semanticAdapter, containerView,
 			semanticHint, index, true, preferencesHint);
 	}
 
 	/**
-	 * creates a persisted View
+	 * creates a persisted Node
 	 * @param semanticElement
 	 * @param containerView
 	 * @param semanticHint
@@ -292,19 +292,33 @@ final public class ViewService
 	 *            preference store from which to retrieve diagram preference
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 * @return
+	 * @return the created node
 	 */
-	public final View createNodeView(IAdaptable semanticElement,
+	public final Node createNode(IAdaptable semanticElement,
 		View containerView, String semanticHint, int index, PreferencesHint preferencesHint) {
-		return createNodeView(semanticElement, containerView, semanticHint,
+		return createNode(semanticElement, containerView, semanticHint,
 			index, true, preferencesHint);
 	}
 
-	public View createNodeView(IAdaptable semanticAdapter,
+	/**
+	 * creates a Node
+	 * @param semanticElement
+	 * @param containerView
+	 * @param semanticHint
+	 * @param persisted
+	 * @param index
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return the created node
+	 */
+	public Node createNode(IAdaptable semanticAdapter,
 			View containerView, String semanticHint, int index,
 			boolean persisted, PreferencesHint preferencesHint) {
-		View view = (View) execute(new CreateNodeViewOperation(
+		Node node = (Node) execute(new CreateNodeViewOperation(
 			semanticAdapter, containerView, semanticHint, index, persisted, preferencesHint));
-		return view;
+		return node;
 	}
 }

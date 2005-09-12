@@ -61,6 +61,7 @@ public interface IView extends IAdaptable {
 	 * Retrieves the view's property change notifier object
 	 * 
 	 * @return IPropertyChangeNotifier
+	 * @deprecated
 	 */
 	public PropertyChangeNotifier getPropertyChangeNotifier();
 	

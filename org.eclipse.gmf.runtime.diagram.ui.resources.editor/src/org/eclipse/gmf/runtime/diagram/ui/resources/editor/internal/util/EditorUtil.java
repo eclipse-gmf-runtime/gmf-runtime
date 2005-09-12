@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
@@ -190,8 +191,8 @@ public class EditorUtil {
 			final Resource notationModel_ = notationModel;
 			MEditingDomainGetter.getMEditingDomain(notationModel_).runAsUnchecked(new MRunnable() {
 				public Object run() {
-					View view = ViewService.getInstance()
-						.createDiagramView(null, kind, preferencesHint);
+					View view = DiagramUtil
+						.createDiagram(null, kind, preferencesHint);
 					
 					if (view != null) {
 						notationModel_.getContents().add(view.getDiagram());

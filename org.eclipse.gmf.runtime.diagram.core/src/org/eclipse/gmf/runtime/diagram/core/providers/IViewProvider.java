@@ -15,6 +15,7 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -34,8 +35,9 @@ public interface IViewProvider extends IProvider {
 	 *            preference store from which to retrieve diagram preference
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 *  @return the created <code>Diagram</code>
 	 */
-	public Diagram createDiagramView(
+	public Diagram createDiagram(
 		IAdaptable semanticAdapter,
 		String diagramKind, PreferencesHint preferencesHint);
 
@@ -51,8 +53,9 @@ public interface IViewProvider extends IProvider {
 	 *            preference store from which to retrieve diagram preference
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return the created <code>Edge</code>
 	 */
-	public Edge createConnectorView(
+	public Edge createEdge(
 		IAdaptable semanticAdapter,
 		View containerView,
 		String semanticHint,
@@ -60,7 +63,7 @@ public interface IViewProvider extends IProvider {
 		boolean persisted, PreferencesHint preferencesHint);
 		
 	/** 
-	 * create an <code>View</code> element.
+	 * create a <code>Node</code>.
 	 * @param IAdaptable (for semantic element)
 	 * @param containerView the container view that will contain the created view.
 	 * @param indicates the type of the view, it could be used later to determine the view type
@@ -71,8 +74,9 @@ public interface IViewProvider extends IProvider {
 	 *            preference store from which to retrieve diagram preference
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return the created <code>Node</code>
 	 */
-	public View createNodeView(
+	public Node createNode(
 		IAdaptable semanticAdapter,
 		View containerView,
 		String semanticHint,

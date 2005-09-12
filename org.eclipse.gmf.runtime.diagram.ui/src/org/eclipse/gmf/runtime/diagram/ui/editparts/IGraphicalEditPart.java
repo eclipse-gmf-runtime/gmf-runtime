@@ -42,7 +42,7 @@ public interface IGraphicalEditPart
 	public View getNotationView();
 
 	/**
-	 * Method getDiagramEditDomain.
+	 * Gets the associated DiagramEditDomain to the edit part
 	 * @return IDiagramEditDomain
 	 */
 	public IDiagramEditDomain getDiagramEditDomain();
@@ -75,7 +75,7 @@ public interface IGraphicalEditPart
 	public Object getPropertyValue(Object id);
 
 	/**
-	 * Method setPropertyValue.
+	 * Convenience method to set a property value.
 	 * @param id
 	 * @param value
 	 */
@@ -96,7 +96,7 @@ public interface IGraphicalEditPart
 	public EditPart findEditPart(EditPart epBegin, EObject theElement);
 	
 	/**
-	 * Convenience method returns the editpart's parimary view.
+	 * Convenience method returns the editpart's primary view.
 	 * @return the primary view 
 	 */
 	public View getPrimaryView();

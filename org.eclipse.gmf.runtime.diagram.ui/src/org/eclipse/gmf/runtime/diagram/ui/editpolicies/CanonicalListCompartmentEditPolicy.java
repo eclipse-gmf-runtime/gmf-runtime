@@ -10,9 +10,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import org.eclipse.gef.EditPart;
-
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -46,7 +44,7 @@ public abstract class CanonicalListCompartmentEditPolicy
 		DrawerStyle dstyle = (DrawerStyle)((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
 		if ( dstyle != null ) {
 			// add listener to host view (handle case when user changes collapsing property)
-			addListenerFilter("NotationListener_Collapsed", this, PresentationListener.getNotifier(dstyle)); //$NON-NLS-1$
+			addListenerFilter("NotationListener_Collapsed", this, dstyle); //$NON-NLS-1$
 		}
 
 		super.activate();

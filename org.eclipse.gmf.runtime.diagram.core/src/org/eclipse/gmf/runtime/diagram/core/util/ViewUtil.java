@@ -428,6 +428,8 @@ public class ViewUtil{
 	 * Retrieves the view's property change notifier object
 	 * @param view the view to use to get the notifier
 	 * @return the property change notifier
+	 * @deprecated the PropertyChangeNotifier is deprecated, to add a listner to the 
+	 * <code>PresentationListener</code>use <code>PresentationListener.addPropertyChangeListener()</code>
 	 */
 	public static PropertyChangeNotifier getPropertyChangeNotifier(View view) {
 		return PresentationListener.getNotifier(view);

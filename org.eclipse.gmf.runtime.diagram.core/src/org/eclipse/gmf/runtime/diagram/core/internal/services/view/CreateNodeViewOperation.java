@@ -61,7 +61,7 @@ public class CreateNodeViewOperation extends CreateChildViewOperation
 	 * @see com.ibm.xtools.common.service.IOperation#execute(IProvider)
 	 */
 	public Object execute(IProvider provider) {
-		return ((IViewProvider) provider).createNodeView(
+		return ((IViewProvider) provider).createNode(
 			getSemanticAdapter(),
 			getContainerView(),
 			getSemanticHint(),

@@ -12,10 +12,8 @@ package org.eclipse.gmf.runtime.diagram.core.listener;
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
@@ -149,14 +147,6 @@ public class NotificationEvent extends PropertyChangeEvent {
 	 */
 	public final boolean isRedoNotification() {
 		return MEditingDomainGetter.getMEditingDomain(this).isRedoNotification( getNotification() );
-	}
-	
-	/**
-	 * gets the <code>Notification</code>'s <code>EObject</code> type
-	 * @return the <code>EObject</code>'s <code>EClass</code>
-	 */
-	public final EClass getElementType() {
-		return getElement().eClass();
 	}
 	
 	/**

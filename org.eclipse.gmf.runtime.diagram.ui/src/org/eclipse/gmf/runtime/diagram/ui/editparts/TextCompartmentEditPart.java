@@ -31,7 +31,6 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
@@ -402,7 +401,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 
 	protected void addNotationalListeners() {
 		super.addNotationalListeners();
-		addListenerFilter("PrimaryView", this, ViewUtil.getPropertyChangeNotifier(getPrimaryView())); //$NON-NLS-1$
+		addListenerFilter("PrimaryView", this, getPrimaryView()); //$NON-NLS-1$
 	}
 
 	protected void addSemanticListeners() {
@@ -412,7 +411,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 				((ISemanticParser) getParser()).getSemanticElementsBeingParsed(semanticElement);
 
 			for (int i = 0; i < parserElements.size(); i++)
-				addListenerFilter("SemanticModel" + i, this, PresentationListener.getNotifier((EObject)parserElements.get(i))); //$NON-NLS-1$
+				addListenerFilter("SemanticModel" + i, this,(EObject)parserElements.get(i)); //$NON-NLS-1$
 
 		} else 
 			super.addSemanticListeners();

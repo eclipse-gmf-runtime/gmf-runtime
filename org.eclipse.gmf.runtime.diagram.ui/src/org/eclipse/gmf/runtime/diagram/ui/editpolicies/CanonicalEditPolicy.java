@@ -29,14 +29,12 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -45,6 +43,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -52,7 +51,6 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -60,6 +58,8 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -583,10 +583,12 @@ implements PropertyChangeListener {
 	public void activate() {
 		EObject semanticHost = getSemanticHost();
 		if ( semanticHost != null && !isActive() ) {
-			addListenerFilter(SEMANTIC_FILTER_ID, this, PresentationListener
-					.getNotifier(semanticHost));
+			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
 			// add listener to host view (handle case when user changes "visibility" property)
-			addListenerFilter("NotationListener_Visibility", this, PresentationListener.getNotifier(((View)getHost().getModel()),NotationPackage.eINSTANCE.getView_Visible()));//$NON-NLS-1$
+			addListenerFilter("NotationListener_Visibility", //$NON-NLS-1$
+							  this,
+							  (View)getHost().getModel(),
+							  NotationPackage.eINSTANCE.getView_Visible());//$NON-NLS-1$
 			
 			refresh();
 		}
@@ -669,7 +671,7 @@ implements PropertyChangeListener {
 		UnregisterEditPolicy();
     }
 	
-	/**
+    /**
 	 * Adds a listener filter by adding the given listener to a passed notifier.
 	 * The supplied <tt>listener</tt> will not be added to there is already a listener
 	 * registered against the supplied <tt>filterId</tt>
@@ -701,6 +703,71 @@ implements PropertyChangeListener {
 		return false;
 	}
 	
+    /**
+	 * Adds a listener filter by adding the given listener to a passed notifier.
+	 * The supplied <tt>listener</tt> will not be added to there is already a listener
+	 * registered against the supplied <tt>filterId</tt>
+	 * 
+	 * @param filterId A unique filter id (within the same editpart instance)
+	 * @param listener A listener instance
+	 * @param notifier An element notifer to add the listener to
+	 * @return <tt>true</tt> if the listener was added, otherwise <tt>false</tt>
+	 * @throws NullPointerException if either <tt>filterId</tt> or <tt>listner</tt> parameters are <tt>null</tt>.
+	 */
+	protected boolean addListenerFilter(
+		String filterId,
+		PropertyChangeListener listener,
+		EObject element) {
+		if ( filterId == null || listener == null ) {
+			throw new NullPointerException();
+		}
+
+		if (element != null) {
+			if (_listenerFilters == null)
+				_listenerFilters = new HashMap();
+			
+			if ( !_listenerFilters.containsKey(filterId)) {
+				PresentationListener.getInstance().addPropertyChangeListener(element,listener);
+				_listenerFilters.put(filterId, new Object[] { element, listener });
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Adds a listener filter by adding the given listener to a passed notifier.
+	 * The supplied <tt>listener</tt> will not be added to there is already a listener
+	 * registered against the supplied <tt>filterId</tt>
+	 * 
+	 * @param filterId A unique filter id (within the same editpart instance)
+	 * @param listener A listener instance
+	 * @param notifier An element notifer to add the listener to
+	 * @return <tt>true</tt> if the listener was added, otherwise <tt>false</tt>
+	 * @throws NullPointerException if either <tt>filterId</tt> or <tt>listner</tt> parameters are <tt>null</tt>.
+	 */
+	protected boolean addListenerFilter(
+		String filterId,
+		PropertyChangeListener listener,
+		EObject element,
+		EStructuralFeature feature) {
+		if ( filterId == null || listener == null ) {
+			throw new NullPointerException();
+		}
+
+		if (element != null) {
+			if (_listenerFilters == null)
+				_listenerFilters = new HashMap();
+			
+			if ( !_listenerFilters.containsKey(filterId)) {
+				PresentationListener.getInstance().addPropertyChangeListener(element,feature,listener);
+				_listenerFilters.put(filterId, new Object[] { element,feature, listener });
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Removes a listener previously added with the given id
 	 * @param filterId the filter id
@@ -711,8 +778,19 @@ implements PropertyChangeListener {
 		Object[] objects = (Object[]) _listenerFilters.remove(filterId);
 		if (objects == null)
 			return;
-		((PropertyChangeNotifier) objects[0]).removePropertyChangeListener(
-			(PropertyChangeListener) objects[1]);
+		if (objects.length>2){
+			PresentationListener.getInstance().removePropertyChangeListener(
+				(EObject)objects[0],(EStructuralFeature)objects[1],(PropertyChangeListener) objects[2]);
+		}else {
+			if (objects[0] instanceof PropertyChangeNotifier){
+				((PropertyChangeNotifier) objects[0]).removePropertyChangeListener(
+					(PropertyChangeListener) objects[1]);
+			} else{
+				PresentationListener.getInstance().removePropertyChangeListener(
+					(EObject)objects[0],(PropertyChangeListener) objects[1]);
+			}
+		}
+		
 	}
 	
 	/**

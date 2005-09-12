@@ -66,10 +66,7 @@ public class DiagramUtil {
 	public static Diagram createDiagram(EObject context, String kind, PreferencesHint preferencesHint) {
 		IAdaptable viewModel = (context != null) ? new EObjectAdapter(context) : null;
 		String viewType = (kind != null) ? kind : ""; //$NON-NLS-1$
-		/*IDiagramView view = ViewService.getInstance().createDiagramView(viewModel, viewType);
-		Diagram diagram = (view != null) ? (Diagram) view.getAdapter(Diagram.class) : null;
-		return diagram;*/
-		return ViewService.getInstance().createDiagramView(viewModel, viewType, preferencesHint);
+		return ViewService.getInstance().createDiagram(viewModel, viewType, preferencesHint);
 	}
 
 	/**
@@ -89,7 +86,7 @@ public class DiagramUtil {
 		Assert.isNotNull(container, "The container is null"); //$NON-NLS-1$
 		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
 		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
-		View view = ViewService.getInstance().createNodeView(viewModel, container, viewType, ViewUtil.APPEND, preferencesHint);
+		View view = ViewService.getInstance().createNode(viewModel, container, viewType, ViewUtil.APPEND, preferencesHint);
 		return (view != null) ? (Node)view : null;
 	}
 

@@ -17,9 +17,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IActionFilter;
-
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconOptions;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
@@ -29,14 +26,15 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.IncarnationUtil;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IActionFilter;
 
 /**
  * @author melaasar
@@ -51,12 +49,6 @@ public class TreeEditPart
 
 	/** the element parser */
 	private IAdaptable referenceAdapter;
-
-	/** the container view's notifier */
-	private PropertyChangeNotifier viewNotifier = null;
-
-	/** the container view's notifier */
-	private PropertyChangeNotifier semanticNotifier = null;
 	
 	private IView view = null;
 
@@ -82,27 +74,16 @@ public class TreeEditPart
 	public void activate() {
 		super.activate();
 
-		viewNotifier = ViewUtil.getPropertyChangeNotifier((View)getModel());
-		if (viewNotifier != null)
-			viewNotifier.addPropertyChangeListener(this);
-
-		semanticNotifier = PresentationListener.getNotifier(getSemanticElement());
-		if (semanticNotifier != null)
-			semanticNotifier.addPropertyChangeListener(this);
+		PresentationListener.getInstance().addPropertyChangeListener((View)getModel(),this);
+		PresentationListener.getInstance().addPropertyChangeListener(getSemanticElement(),this);
 	}
 
 	/**
 	 * @see org.eclipse.gef.EditPart#deactivate()
 	 */
 	public void deactivate() {
-		if (semanticNotifier != null) {
-			semanticNotifier.removePropertyChangeListener(this);
-			semanticNotifier = null;
-		}
-
-		if (viewNotifier != null)
-			viewNotifier.removePropertyChangeListener(this);
-
+		PresentationListener.getInstance().removePropertyChangeListener((View)getModel(),this);
+		PresentationListener.getInstance().removePropertyChangeListener(getSemanticElement(),this);
 		super.deactivate();
 	}
 
