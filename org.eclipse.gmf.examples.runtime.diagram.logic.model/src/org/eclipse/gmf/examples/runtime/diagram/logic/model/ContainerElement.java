@@ -1,9 +1,14 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id: ContainerElement.java,v 1.1 2005/08/30 13:48:50 sshaw Exp $
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
+
 package org.eclipse.gmf.examples.runtime.diagram.logic.model;
 
 import org.eclipse.emf.common.util.EList;

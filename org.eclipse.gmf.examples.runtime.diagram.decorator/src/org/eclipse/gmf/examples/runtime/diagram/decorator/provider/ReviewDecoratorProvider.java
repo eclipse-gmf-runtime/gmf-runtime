@@ -1,9 +1,14 @@
-/*
- * Licensed Materials - Use restricted, please refer to the "Samples Gallery" terms
- * and conditions in the IBM International Program License Agreement.
+/******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * © Copyright IBM Corporation 2005. All Rights Reserved. 
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
+
 package org.eclipse.gmf.examples.runtime.diagram.decorator.provider;
 
 import org.eclipse.jface.util.Assert;
