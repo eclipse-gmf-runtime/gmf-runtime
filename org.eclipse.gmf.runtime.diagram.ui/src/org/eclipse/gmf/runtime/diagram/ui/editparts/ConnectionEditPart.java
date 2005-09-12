@@ -205,6 +205,8 @@ abstract public class ConnectionEditPart
 	 * @param filterId A unique filter id (within the same editpart instance)
 	 * @param listener A listener instance
 	 * @param notifier An element notifer to add the listener to
+	 * @deprecated use {@link ConnectionEditPart#addListenerFilter(String, PropertyChangeListener, EObject)} or
+	 * {@link ConnectionEditPart#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
 	 */
 	protected void addListenerFilter(
 		String filterId,
