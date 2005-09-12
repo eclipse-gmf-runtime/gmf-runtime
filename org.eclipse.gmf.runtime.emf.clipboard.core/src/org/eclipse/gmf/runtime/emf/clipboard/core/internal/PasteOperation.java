@@ -16,7 +16,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
-import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 import org.eclipse.gmf.runtime.emf.clipboard.core.OverrideCopyOperation;
 
