@@ -19,6 +19,7 @@ import java.util.ListIterator;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
@@ -32,7 +33,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalShapeCompartmentEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -48,7 +49,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
  */
 public class LogicCanonicalTests extends AbstractTestBase {
 	
-	private static class CircuitCompartmentCanonicalEditPolicy extends CanonicalShapeCompartmentEditPolicy {
+	private static class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEditPolicy {
 
 		protected List getSemanticChildrenList() {
 			EObject modelRef = resolveSemanticElement();
@@ -69,7 +70,7 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			return ledElements;
 		}
 		
-		protected List getSemanticConnectorsList() {
+		protected List getSemanticConnectionsList() {
 			EObject modelRef = resolveSemanticElement();
 			
 			Circuit circuitElement = (Circuit) modelRef;
@@ -331,6 +332,16 @@ public class LogicCanonicalTests extends AbstractTestBase {
 		finally {
 			println("test_ReparentLED() complete.");//$NON-NLS-1$
 		}
+	}
+	
+	public void test_createLEDUsingTool() {
+		IGraphicalEditPart logicCompartment = getCanonicalCompartment(0);
+		Rectangle rect = new Rectangle(logicCompartment.getFigure().getBounds());
+		logicCompartment.getFigure().translateToAbsolute(rect);
+		IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
+		
+		getCanonicalTestFixture().createShapeUsingTool(typeLED, rect.getCenter(), logicCompartment);
+		assertEquals( "Unexpected LED count.", 1, logicCompartment.getChildren().size() );//$NON-NLS-1$
 	}
 
 }

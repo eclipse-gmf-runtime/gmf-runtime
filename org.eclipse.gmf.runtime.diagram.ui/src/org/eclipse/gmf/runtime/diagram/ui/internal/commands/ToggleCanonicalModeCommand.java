@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.commands;
+package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

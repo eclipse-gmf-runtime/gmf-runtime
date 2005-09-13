@@ -12,6 +12,7 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import junit.framework.Assert;
 
@@ -20,20 +21,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.part.EditorPart;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
@@ -42,11 +38,17 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.EditorPart;
 
 
 /**
@@ -366,21 +368,37 @@ public abstract class AbstractPresentationTestFixture
 		getCommandStack().execute(cmd);
 		assertEquals(previousNumChildren + 1, containerEP.getChildren().size());
 
+		Object newView = ((IAdaptable) ((List) request.getNewObject()).get(0)).getAdapter(View.class);
+		assertNotNull(newView);
+		assertTrue(!ViewUtil.isTransient((View)newView));
+		
+		EObject element = ((View)newView).getElement();
+		
 		getCommandStack().undo();
 		assertEquals(previousNumChildren, containerEP.getChildren().size());
 
 		getCommandStack().redo();
 		assertEquals(previousNumChildren + 1, containerEP.getChildren().size());
 
-		Object newView = ((IAdaptable) ((List) request.getNewObject()).get(0))
-			.getAdapter(View.class);
-		assertNotNull(newView);
-
-		ShapeEditPart newShape = (ShapeEditPart) getDiagramEditPart()
+		IGraphicalEditPart newShape = null;
+		if (element != null) {
+			List children = containerEP.getChildren();
+			ListIterator li = children.listIterator();
+			while (li.hasNext()) {
+				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
+				if (gep.getNotationView().getElement().equals(element)) {
+					newShape = (ShapeEditPart)gep;
+				}
+			}
+		}
+		else {
+			newShape = (ShapeEditPart) getDiagramEditPart()
 			.getViewer().getEditPartRegistry().get(newView);
-		assertNotNull(newShape);
-
-		return newShape;
+			assertNotNull(newShape);
+		}
+		
+		assertTrue(newShape != null && newShape instanceof ShapeEditPart);
+		return (ShapeEditPart)newShape;
 	}
 
 	/**

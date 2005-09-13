@@ -29,6 +29,7 @@ import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -44,13 +45,11 @@ import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
@@ -58,10 +57,12 @@ import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.notation.CanonicalStyle;
+import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.widgets.Display;
 
 
@@ -87,7 +88,7 @@ public abstract class CanonicalEditPolicy extends AbstractEditPolicy
 implements PropertyChangeListener {
 	
 	/** Runs the supplied commands asyncronously. */
-	public static class AsyncCommand extends Command {
+	private static class AsyncCommand extends Command {
 		private final CompoundCommand _cc;
 		
 		
@@ -178,7 +179,7 @@ implements PropertyChangeListener {
 	private Map _listenerFilters;
 		
 	/** Adds <code>String.class</tt> adaptablity to return a factory hint. */
-	public static final class CanonicalElementAdapter extends EObjectAdapter {
+	protected static final class CanonicalElementAdapter extends EObjectAdapter {
 		private String _hint;
 		
 		/**
@@ -494,21 +495,26 @@ implements PropertyChangeListener {
 	 * @return command create view command(s)
 	 */
 	protected Command getCreateViewCommand(CreateRequest request) {
-		Assert.isTrue( request instanceof CreateViewRequest);
-		CompositeCommand cc = new CompositeCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
-		Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
+		Command cmd = host().getCommand(request);
+		if (cmd == null) {
+			assert request instanceof CreateViewRequest;
+			CompositeCommand cc = new CompositeCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+			Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
 
-		while (descriptors.hasNext()) {
-			CreateViewRequest.ViewDescriptor descriptor =
-				(CreateViewRequest.ViewDescriptor)descriptors.next();
+			while (descriptors.hasNext()) {
+				CreateViewRequest.ViewDescriptor descriptor =
+					(CreateViewRequest.ViewDescriptor)descriptors.next();
 
-			ICommand createCommand = getCreateViewCommand(descriptor);
+				ICommand createCommand = getCreateViewCommand(descriptor);
 
-			cc.compose(createCommand);
+				cc.compose(createCommand);
+			}
+			cmd = new EtoolsProxyCommand(cc.unwrap());
 		}
-		return new EtoolsProxyCommand(cc.unwrap());
-
+		
+		return cmd;
 	}
+	
 	/**
 	 * @param descriptor 
 	 * @return ICommand to create a view given a descriptor
@@ -520,7 +526,7 @@ implements PropertyChangeListener {
 				(View)getHost().getModel());
 		return createCommand;
 	}
-
+	
 	/**
 	 * Return a create view request.  
 	 * @param descriptors a {@link CreateViewRequest.ViewDescriptor} list.
@@ -587,17 +593,28 @@ implements PropertyChangeListener {
 		EObject semanticHost = getSemanticHost();
 		if ( semanticHost != null && !isActive() ) {
 			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
+			
+			// listen to persisted children to eliminate duplicate views.
+			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
 			// add listener to host view (handle case when user changes "visibility" property)
 			addListenerFilter("NotationListener_Visibility", //$NON-NLS-1$
 							  this,
 							  (View)getHost().getModel(),
 							  NotationPackage.eINSTANCE.getView_Visible());//$NON-NLS-1$
 			
+			Style style = ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
+			if ( style != null ) {
+				addListenerFilter("NotationListener_DrawerStyle", this, style); //$NON-NLS-1$
+			}
+			style = ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getCanonicalStyle());
+			if ( style != null ) {
+				addListenerFilter("NotationListener_CanonicalStyle", this, style);  //$NON-NLS-1$
+			}
+			
 			refresh();
 		}
 		RegisterEditPolicy();
 	}
-
 
 	/**
 	 * Return <tt>true</tt> if the editpolicy is enabled and its host
@@ -605,7 +622,19 @@ implements PropertyChangeListener {
 	 * @return <tt>true</tt>
 	 */
 	public boolean isEnabled() {
-		return _enabled && ((View)host().getModel()).isVisible();
+		DrawerStyle dstyle = (DrawerStyle) ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
+		boolean isCollapsed = dstyle == null ? false : dstyle.isCollapsed();
+		
+		if ( isCollapsed ) {
+			return false;
+		}
+		
+		CanonicalStyle style = getCanonicalStyle();
+		boolean enabled = _enabled && ((View)host().getModel()).isVisible();
+		
+		return style == null 
+			? enabled
+			: style.isCanonical() && enabled;
 	}
 
 	/**
@@ -669,44 +698,10 @@ implements PropertyChangeListener {
     			removeListenerFilter(id);
     		}
     	}
-    	removeListenerFilter("NotationListener_Visibility");//$NON-NLS-1$
-		
+    	
 		UnregisterEditPolicy();
     }
-	
-    /**
-	 * Adds a listener filter by adding the given listener to a passed notifier.
-	 * The supplied <tt>listener</tt> will not be added to there is already a listener
-	 * registered against the supplied <tt>filterId</tt>
-	 * 
-	 * @param filterId A unique filter id (within the same editpart instance)
-	 * @param listener A listener instance
-	 * @param notifier An element notifer to add the listener to
-	 * @return <tt>true</tt> if the listener was added, otherwise <tt>false</tt>
-	 * @throws NullPointerException if either <tt>filterId</tt> or <tt>listner</tt> parameters are <tt>null</tt>.
-	 * @deprecated use {@link CanonicalEditPolicy#addListenerFilter(String, PropertyChangeListener, EObject)} or
-	 * {@link CanonicalEditPolicy#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
-	 */
-	protected boolean addListenerFilter(
-		String filterId,
-		PropertyChangeListener listener,
-		PropertyChangeNotifier notifier) {
-		if ( filterId == null || listener == null ) {
-			throw new NullPointerException();
-		}
 
-		if (notifier != null) {
-			if (_listenerFilters == null)
-				_listenerFilters = new HashMap();
-			
-			if ( !_listenerFilters.containsKey(filterId)) {
-				notifier.addPropertyChangeListener(listener);
-				_listenerFilters.put(filterId, new Object[] { notifier, listener });
-				return true;
-			}
-		}
-		return false;
-	}
 	
     /**
 	 * Adds a listener filter by adding the given listener to a passed notifier.
@@ -787,15 +782,9 @@ implements PropertyChangeListener {
 			PresentationListener.getInstance().removePropertyChangeListener(
 				(EObject)objects[0],(EStructuralFeature)objects[1],(PropertyChangeListener) objects[2]);
 		}else {
-			if (objects[0] instanceof PropertyChangeNotifier){
-				((PropertyChangeNotifier) objects[0]).removePropertyChangeListener(
-					(PropertyChangeListener) objects[1]);
-			} else{
-				PresentationListener.getInstance().removePropertyChangeListener(
+			PresentationListener.getInstance().removePropertyChangeListener(
 					(EObject)objects[0],(PropertyChangeListener) objects[1]);
-			}
 		}
-		
 	}
 	
 	/**
@@ -848,7 +837,7 @@ implements PropertyChangeListener {
 	protected boolean shouldHandleSemanticEvent(NotificationEvent event) {
 		return event.isElementAddedToSlot() || event.isElementRemovedFromSlot();
 	}
-		
+	
 	/**
 	 * Handles <code>NotificationEvent</code> and resynchronizes the canonical
 	 * container if the event should be handled.
@@ -859,6 +848,12 @@ implements PropertyChangeListener {
 		
 		boolean shouldRefresh = false;
 		if ( shouldHandleNotificationEvent(event) ) {
+			if ( NotationPackage.eINSTANCE.getCanonicalStyle_Canonical() == event.getFeature() ) {
+				CanonicalStyle style = (CanonicalStyle) ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getCanonicalStyle());
+				if (style != null) {
+					setEnable(style.isCanonical());
+				}
+			}
 			shouldRefresh = true;
 		}
 		
@@ -872,7 +867,7 @@ implements PropertyChangeListener {
 		if (shouldRefresh)
 			refresh();
 	}
-
+	
 	/**
 	 * Determines if the the <code>NotificationEvent</code> should be handled / processed
 	 * by the editpolicy.
@@ -881,7 +876,10 @@ implements PropertyChangeListener {
 	 * @return <code>true</code> if event should be handled, <code>false</code> otherwise.
 	 */
 	protected boolean shouldHandleNotificationEvent( NotificationEvent event) {
-	  if ( NotationPackage.eINSTANCE.getView_Visible() == event.getFeature() ) {
+	  if ( NotationPackage.eINSTANCE.getDrawerStyle_Collapsed() == event.getFeature() || 
+	 	   NotationPackage.eINSTANCE.getCanonicalStyle_Canonical() == event.getFeature() ||
+	 	   NotationPackage.eINSTANCE.getView_Visible() == event.getFeature() ||
+	 	   NotationPackage.eINSTANCE.getView_PersistedChildren() == event.getFeature()) {
 		  return true;
 	  }
 
@@ -956,10 +954,34 @@ implements PropertyChangeListener {
 	 */
 	final protected void makeViewsImmutable(List createdViews) {
 		if (createdViews != null && !createdViews.isEmpty()) {
+			addListenersToContainers(createdViews);
+			
 			List viewAdapters = prepareAdapterList(createdViews);
 			Command immutable = SetViewMutabilityCommand.makeImmutable(viewAdapters);
 			AsyncCommand ac = new AsyncCommand(immutable);
 			ac.execute();
+		}
+	}
+
+	private void addListenersToContainers(List createdViews) {
+		UniqueEList list = new UniqueEList();
+		ListIterator li = createdViews.listIterator();
+		while (li.hasNext()) {
+			Object obj = li.next();
+			if (obj instanceof IAdaptable) {
+				View view = (View)((IAdaptable)obj).getAdapter(View.class);
+				if (view != null)
+					list.add(view.eContainer());
+			}
+		}
+		
+		ListIterator liContainers = list.listIterator();
+		while (liContainers.hasNext()) {
+			View containerView = (View)liContainers.next();
+			addListenerFilter("NotationListener_Container" + containerView.toString(), //$NON-NLS-1$
+				  this,
+				  containerView,
+				  NotationPackage.eINSTANCE.getView_PersistedChildren()); 
 		}
 	}
 	
@@ -1070,14 +1092,25 @@ implements PropertyChangeListener {
 		EObject semanticChild;
 		Iterator viewChildrenIT = viewChildren.iterator();
 		List orphaned = new ArrayList();
+		Map viewToSemanticMap = new HashMap();
 		while( viewChildrenIT.hasNext() ) {
 			viewChild = (View)viewChildrenIT.next();
 			semanticChild = viewChild.getElement();
-			if (semanticChildren.contains(semanticChild) ) {
+			if (semanticChildren.contains(semanticChild)) {
 				semanticChildren.remove(semanticChild);
+				viewToSemanticMap.put(semanticChild, viewChild);
 			}
 			else {
 				orphaned.add(viewChild);
+			}
+			
+			View viewInMap = (View)viewToSemanticMap.get(semanticChild);
+			if (viewInMap != null && !viewChild.equals(viewInMap)) { 
+				if (viewInMap.isMutable()) {
+					orphaned.remove(viewChild);
+					orphaned.add(viewInMap);
+					viewToSemanticMap.put(semanticChild, viewChild);
+				}
 			}
 		}
 		return orphaned;
@@ -1101,5 +1134,13 @@ implements PropertyChangeListener {
 	 */
 	protected final EObject resolveSemanticElement() {
 		return ViewUtil.resolveSemanticElement((View)host().getModel());
+	}
+
+	/**
+	 * gets the canonical style that may be installed on the host shape compartment view.
+	 * @return <code>CanonicalStyle</code>
+	 */
+	protected CanonicalStyle getCanonicalStyle() {
+		return (CanonicalStyle) ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getCanonicalStyle());
 	}				
 }

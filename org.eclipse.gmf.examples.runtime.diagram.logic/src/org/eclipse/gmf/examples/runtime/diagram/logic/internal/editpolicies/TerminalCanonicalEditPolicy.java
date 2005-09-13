@@ -17,15 +17,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Point;
-
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Element;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
@@ -86,9 +85,9 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 	 */
 	private final Element getLogicElement() {
 		return (Element)ViewUtil.resolveSemanticElement((View)(this.host().getModel()));
-	}	
+	}
 	
-	/* (non-Javadoc)
+		/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#getCreateViewCommand(org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor)
 	 */
 	protected ICommand getCreateViewCommand(ViewDescriptor descriptor) {
@@ -112,5 +111,5 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 		cc.compose(boundsCommand);
 		
 		return cc;
-	}
+	}	
 }
