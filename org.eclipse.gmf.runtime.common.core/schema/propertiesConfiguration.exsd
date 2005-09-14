@@ -106,10 +106,12 @@
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Licensed Materials - Property of IBM&lt;br&gt;
-(C) Copyright IBM Corp. 2002, 2004.  All Rights Reserved.&lt;br&gt;
-US Government Users Restricted Rights - Use, duplication or disclosure&lt;br&gt;
-restricted by GSA ADP Schedule Contract with IBM Corp.&lt;br&gt;
+        Copyright (c) 2002, 2004 IBM Corporation and others.&lt;br&gt;
+	All rights reserved. This program and the accompanying materials 
+	are made available under the terms of the Eclipse Public License v1.0 
+	which accompanies this distribution, and is available at 
+	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+
       </documentation>
    </annotation>
 
