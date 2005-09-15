@@ -14,9 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -149,6 +151,18 @@ public class ClipboardPlugin extends EMFPlugin {
             //
             plugin = this;
         }
+        
+		public void start(BundleContext context) throws Exception {
+			super.start(context);
+
+			configureClipboardSupport();
+		}
+
+		private void configureClipboardSupport() {
+			ClipboardSupportManager.configureExtensions(Platform
+				.getExtensionRegistry().getConfigurationElementsFor(
+					ClipboardSupportManager.EP_CLIPBOARD_SUPPORT));
+		}
     }
     
     public static class Tracing {

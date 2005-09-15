@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupportFactory;
  * @author Christian W. Damus (cdamus)
  */
 public class ClipboardSupportManager {
+	public static final String EP_CLIPBOARD_SUPPORT = "org.eclipse.gmf.runtime.emf.clipboard.core.clipboardSupport"; //$NON-NLS-1$
 	static final String E_NSURI = "nsURI"; //$NON-NLS-1$
 	static final String E_CLASS = "class"; //$NON-NLS-1$
 	
