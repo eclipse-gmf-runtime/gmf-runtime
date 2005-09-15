@@ -21,12 +21,11 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
-import org.eclipse.gef.internal.InternalImages;
 import org.eclipse.gef.requests.AlignmentRequest;
 import org.eclipse.gef.tools.ToolUtilities;
-import org.eclipse.ui.IWorkbenchPage;
-
+import org.eclipse.gef.ui.actions.AlignmentAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author melaasar
@@ -99,6 +98,11 @@ public class AlignAction extends PresentationAction {
 		setId(this.id);
 		String text = null;
 		String toolTipText = null;
+		AlignmentAction gefAlignmentAction = new AlignmentAction(getWorkbenchPart(), alignment);
+		setHoverImageDescriptor(gefAlignmentAction.getHoverImageDescriptor());
+		setImageDescriptor(gefAlignmentAction.getImageDescriptor());				
+		setDisabledImageDescriptor(gefAlignmentAction.getDisabledImageDescriptor());
+		gefAlignmentAction.dispose();
 		
 		switch (alignment) {
 			case PositionConstants.LEFT: {
@@ -111,9 +115,6 @@ public class AlignAction extends PresentationAction {
 					text = Messages.getString("AlignLeft");//$NON-NLS-1$
 					toolTipText = Messages.getString("AlignLeft");//$NON-NLS-1$
 				}				
-				setHoverImageDescriptor(InternalImages.DESC_HORZ_ALIGN_LEFT);
-				setImageDescriptor(InternalImages.DESC_HORZ_ALIGN_LEFT_DIS);				
-				setDisabledImageDescriptor(InternalImages.DESC_HORZ_ALIGN_LEFT_DIS);
 				break;
 			}
 			case PositionConstants.RIGHT: {
@@ -125,9 +126,6 @@ public class AlignAction extends PresentationAction {
 					text = Messages.getString("AlignRight");//$NON-NLS-1$
 					toolTipText = Messages.getString("AlignRight");//$NON-NLS-1$
 				}					
-				setHoverImageDescriptor(InternalImages.DESC_HORZ_ALIGN_RIGHT);
-				setImageDescriptor(InternalImages.DESC_HORZ_ALIGN_RIGHT_DIS);
-				setDisabledImageDescriptor(InternalImages.DESC_HORZ_ALIGN_RIGHT_DIS);
 				break;
 			}
 			case PositionConstants.TOP: {
@@ -139,9 +137,6 @@ public class AlignAction extends PresentationAction {
 					text = Messages.getString("AlignTop");//$NON-NLS-1$
 					toolTipText = Messages.getString("AlignTop");//$NON-NLS-1$
 				}				
-				setHoverImageDescriptor(InternalImages.DESC_VERT_ALIGN_TOP);
-				setImageDescriptor(InternalImages.DESC_VERT_ALIGN_TOP_DIS);
-				setDisabledImageDescriptor(InternalImages.DESC_VERT_ALIGN_TOP_DIS);
 				break;
 			}
 			case PositionConstants.BOTTOM: {
@@ -153,9 +148,6 @@ public class AlignAction extends PresentationAction {
 					text = Messages.getString("AlignBottom");//$NON-NLS-1$
 					toolTipText = Messages.getString("AlignBottom");//$NON-NLS-1$
 				}		
-				setHoverImageDescriptor(InternalImages.DESC_VERT_ALIGN_BOTTOM);
-				setImageDescriptor(InternalImages.DESC_VERT_ALIGN_BOTTOM_DIS);
-				setDisabledImageDescriptor(InternalImages.DESC_VERT_ALIGN_BOTTOM_DIS);
 				break;
 			}
 			case PositionConstants.CENTER: {
@@ -167,9 +159,6 @@ public class AlignAction extends PresentationAction {
 					text = Messages.getString("AlignCenter");//$NON-NLS-1$
 					toolTipText = Messages.getString("AlignCenter");//$NON-NLS-1$
 				}	
-				setHoverImageDescriptor(InternalImages.DESC_HORZ_ALIGN_CENTER);
-				setImageDescriptor(InternalImages.DESC_HORZ_ALIGN_CENTER_DIS);
-				setDisabledImageDescriptor(InternalImages.DESC_HORZ_ALIGN_CENTER_DIS);
 				break;
 			}
 			case PositionConstants.MIDDLE: {
@@ -181,9 +170,6 @@ public class AlignAction extends PresentationAction {
 					text = Messages.getString("AlignMiddle");//$NON-NLS-1$
 					toolTipText = Messages.getString("AlignMiddle");//$NON-NLS-1$
 				}	
-				setHoverImageDescriptor(InternalImages.DESC_VERT_ALIGN_MIDDLE);
-				setImageDescriptor(InternalImages.DESC_VERT_ALIGN_MIDDLE_DIS);
-				setDisabledImageDescriptor(InternalImages.DESC_VERT_ALIGN_MIDDLE_DIS);
 				break;
 			}			
 		}
