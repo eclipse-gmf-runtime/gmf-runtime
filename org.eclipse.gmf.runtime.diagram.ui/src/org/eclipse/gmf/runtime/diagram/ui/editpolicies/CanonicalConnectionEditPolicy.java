@@ -155,33 +155,36 @@ public abstract class CanonicalConnectionEditPolicy
 	 * 
 	 * @param element
 	 *            an <tt>View</tt> or <tt>EObject</tt> instance.
+	 * @param context
+	 * 			  an <code>EObject</code> that is the context for the element.  Typically,
+	 * 			  this will be either <code>null</code> or it will the <code>Edge</code>
+	 * 			  that is connected to the <code>element</code> to find the <code>EditPart</code> of.
 	 * @return an editpart; <tt>null</tt> if non could be found.
 	 */
-	protected final EditPart getEditPartFor(Object element) {
-		if (element instanceof EObject && !(element instanceof View)) {
-			EObject eObject = (EObject) element;
+	private EditPart getEditPartFor(EObject element, EObject context) {
+		if (!(element instanceof View)) {
 			EditPartViewer viewer = getHost().getViewer();
 			if (viewer instanceof IDiagramGraphicalViewer) {
 				List parts = ((IDiagramGraphicalViewer) viewer)
-					.findEditPartsForElement(EObjectUtil.getID(eObject),
+					.findEditPartsForElement(EObjectUtil.getID(element),
 						ShapeNodeEditPart.class);
 
 				if (parts.isEmpty()) {
 					// reach for the container's editpart instead and force it
 					// to refresh
-					EObject container = ((EObject) element).eContainer();
-					EditPart containerEP = getEditPartFor(container);
+					EObject container = element.eContainer();
+					EditPart containerEP = getEditPartFor(container, null);
 					if (containerEP != null) {
 						containerEP.refresh();
 						parts = ((IDiagramGraphicalViewer) viewer)
-							.findEditPartsForElement(EObjectUtil.getID(eObject),
+							.findEditPartsForElement(EObjectUtil.getID(element),
 								ShapeNodeEditPart.class);
 					}
 				}
 
 				// Check if the part is contained with-in the host EditPart
 				// since we are canonically updated the host.
-				return findEditPartForElement(element, parts);
+				return findEditPartForElement(element, context, parts);
 			}
 		}
 
@@ -195,13 +198,17 @@ public abstract class CanonicalConnectionEditPolicy
 	 * 
 	 * @param element
 	 *            an <tt>View</tt> or <tt>EObject</tt> instance.
+	 * @param context
+	 * 			  an <code>EObject</code> that is the context for the element.  Typically,
+	 * 			  this will be either <code>null</code> or it will the <code>Edge</code>
+	 * 			  that is connected to the <code>element</code> to find the <code>EditPart</code> of.
 	 * @param parts
 	 * 			  a <code>List</code> of <code>EditPart</codes> to search for a specific
 	 * 			  instance that is the exact representation of <code>element</code>
 	 * 			  in the host context.
 	 * @return an editpart; <tt>null</tt> if non could be found.
 	 */
-	protected EditPart findEditPartForElement(Object element, List parts) {
+	protected EditPart findEditPartForElement(EObject element, EObject context, List parts) {
 		EditPart ancestor = getHost();
 		while (ancestor != null) {
 			EditPart ep = reachForEditPartWithAncestor(parts, ancestor);
@@ -347,7 +354,7 @@ public abstract class CanonicalConnectionEditPolicy
 		EObject tel;
 		EditPart tep;
 		tel = getTargetElement(connector);
-		tep = getEditPartFor(tel);
+		tep = getEditPartFor(tel, connector);
 		return tep;
 	}
 
@@ -365,7 +372,7 @@ public abstract class CanonicalConnectionEditPolicy
 		EObject sel;
 		EditPart sep;
 		sel = getSourceElement(connector);
-		sep = getEditPartFor(sel);
+		sep = getEditPartFor(sel, connector);
 		return sep;
 	}
 
@@ -512,11 +519,11 @@ public abstract class CanonicalConnectionEditPolicy
 		while (li.hasNext()) {
 			IAdaptable adaptable = (IAdaptable) li.next();
 			Edge edge = (Edge) adaptable.getAdapter(Edge.class);
-			EditPart sourceEP = getEditPartFor(edge.getSource());
+			EditPart sourceEP = getEditPartFor(edge.getSource(), edge);
 			if (sourceEP != null) {
 				ends.add(sourceEP);
 			}
-			EditPart targetEP = getEditPartFor(edge.getTarget());
+			EditPart targetEP = getEditPartFor(edge.getTarget(), edge);
 			if (targetEP != null) {
 				ends.add(targetEP);
 			}
