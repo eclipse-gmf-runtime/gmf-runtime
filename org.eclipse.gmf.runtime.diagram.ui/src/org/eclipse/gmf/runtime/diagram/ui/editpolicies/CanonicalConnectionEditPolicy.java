@@ -154,7 +154,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * mapping cannot be found inside this manager.
 	 * 
 	 * @param element
-	 *            an <tt>View</tt> or <tt>IElement</tt> instance.
+	 *            an <tt>View</tt> or <tt>EObject</tt> instance.
 	 * @return an editpart; <tt>null</tt> if non could be found.
 	 */
 	protected final EditPart getEditPartFor(Object element) {
@@ -181,19 +181,37 @@ public abstract class CanonicalConnectionEditPolicy
 
 				// Check if the part is contained with-in the host EditPart
 				// since we are canonically updated the host.
-				EditPart ancestor = getHost();
-				while (ancestor != null) {
-					EditPart ep = reachForEditPartWithAncestor(parts, ancestor);
-					if (ep != null)
-						return ep;
-					ancestor = ancestor.getParent();
-				}
-
-				return null;
+				return findEditPartForElement(element, parts);
 			}
 		}
 
 		return (EditPart) host().getViewer().getEditPartRegistry().get(element);
+	}
+
+	/**
+	 * Finds the specific <code>EditPart</code> from a <code>List</code> of editparts
+	 * that is the exact representation of the given <code>element</code> in the 
+	 * host context.
+	 * 
+	 * @param element
+	 *            an <tt>View</tt> or <tt>EObject</tt> instance.
+	 * @param parts
+	 * 			  a <code>List</code> of <code>EditPart</codes> to search for a specific
+	 * 			  instance that is the exact representation of <code>element</code>
+	 * 			  in the host context.
+	 * @return an editpart; <tt>null</tt> if non could be found.
+	 */
+	protected EditPart findEditPartForElement(Object element, List parts) {
+		EditPart ancestor = getHost();
+		while (ancestor != null) {
+			EditPart ep = reachForEditPartWithAncestor(parts, ancestor);
+			if (ep != null) {
+				return ep;
+			}
+			ancestor = ancestor.getParent();
+		}
+		
+		return null;
 	}
 
 	/**
