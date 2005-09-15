@@ -68,7 +68,7 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 	}
 
 	/** Return the semantic element associated to this editpart. */
-	protected EObject resolveSemanticElement() {
+	public EObject resolveSemanticElement() {
 		return (EObject) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
 
 			public Object run() {

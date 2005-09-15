@@ -15,11 +15,12 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
+import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -30,13 +31,6 @@ import org.eclipse.gmf.runtime.notation.View;
 public interface IGraphicalEditPart
 	extends org.eclipse.gef.GraphicalEditPart, IEditableEditPart {
 
-	/**
-	 * Method getView.
-	 * @return IView
-	 * @deprecated use getNotationView instead
-	 */
-	public IView getView();
-	
 	/**
 	 * Return the editpart's associated Notation View.
 	 * @return <code>View</code>, the associated view or null if there is no associated Notation View
@@ -118,4 +112,11 @@ public interface IGraphicalEditPart
 	 * @return the preferences hint
 	 */
 	public PreferencesHint getDiagramPreferencesHint();
+	
+	/**
+	 * Gets the semantic element associated to this editpart's view.
+	 * @return the semantic element or <code>null</code> if the semantic element was
+	 * <code>null</code> or unresolvable 
+	 */
+	public EObject resolveSemanticElement();
 }

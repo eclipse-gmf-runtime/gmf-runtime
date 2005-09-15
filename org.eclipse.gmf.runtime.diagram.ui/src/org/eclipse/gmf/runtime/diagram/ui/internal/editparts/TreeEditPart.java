@@ -25,12 +25,10 @@ import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
-import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.IncarnationUtil;
 import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
@@ -52,8 +50,6 @@ public class TreeEditPart
 	/** the element parser */
 	private IAdaptable referenceAdapter;
 	
-	private IView view = null;
-
 	/**
 	 * @param model
 	 */
@@ -96,13 +92,13 @@ public class TreeEditPart
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
 	}
 
-	/** gets the model as an <code>IView</code>
-	 * @return IView
+	/** gets the model as a <code>View</code>
+	 * @return View
 	 */
-	protected IView getView() {
-		if (view==null)
-			view = IncarnationUtil.incarnateView((View)getModel()); 
-		return view;
+	protected View getNotationView() {
+		if (getModel() instanceof View)
+			return (View)getModel();
+		return null;
 	}
 
 	/** Return the editpart's underlying semantic element. */

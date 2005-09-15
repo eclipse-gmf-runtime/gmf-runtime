@@ -52,7 +52,6 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
@@ -72,7 +71,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectorEditPol
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectorLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectorBendpointEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.IncarnationUtil;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -128,11 +126,6 @@ abstract public class ConnectionEditPart
 	/** Used for accessibility. */
 	protected AccessibleEditPart accessibleEP;
 	
-	/**
-	 * @deprecated
-	 */
-	private IView incarnatedView = null;
-
 	/**
 	 * gets a property change command for the passed property, using both of the 
 	 * old and new values 
@@ -578,7 +571,7 @@ abstract public class ConnectionEditPart
 	 * element is unresolvable or null it will return null
 	 * @return non proxy EObject or NULL 
 	 */
-	protected EObject resolveSemanticElement() {
+	public EObject resolveSemanticElement() {
 		return (EObject) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead( new MRunnable() {
 			public Object run() {
 				return ViewUtil.resolveSemanticElement((View) getModel());
@@ -600,16 +593,6 @@ abstract public class ConnectionEditPart
 		return null;
 	}
 
-	/** 
-	 * Return the editpart's associated view.
-	 * Same as calling <code>(IView)getModel()</code>
-	 */ 
-	public IView getView() {
-		if (incarnatedView==null)
-			incarnatedView = IncarnationUtil.incarnateView((View)getModel());
-		return incarnatedView;
-	}
-	
 	/**
 	 * Return the editpart's associated Notation View.
 	 * @return <code>View</code>, the associated view or null if there is no associated Notation View

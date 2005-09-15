@@ -50,7 +50,6 @@ import org.eclipse.gmf.runtime.common.core.util.IAdaptableSelection;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
@@ -65,7 +64,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeC
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.IncarnationUtil;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -110,8 +108,6 @@ public abstract class GraphicalEditPart
 
 	/** Used for handling the editable status of the edit part */
 	private final IEditableEditPart editableEditPart;
-	
-	private IView incarnatedView = null;
 	
 	//	protected Command getPropertyChangeCommand(
 	//		Object property,
@@ -555,7 +551,7 @@ public abstract class GraphicalEditPart
 	 * @return the semantic element or <code>null</code> if the semantic element was
 	 * <code>null</code> or unresolvable 
 	 */
-	protected EObject resolveSemanticElement() {
+	public EObject resolveSemanticElement() {
 		return (EObject) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
 
 			public Object run() {
@@ -578,17 +574,6 @@ public abstract class GraphicalEditPart
 		return null;
 	}
 
-	/**
-	 * Return the editpart's associated view. Same as calling
-	 * <code>(IView)getModel()</code>
-	 */
-	public IView getView() {
-		if (incarnatedView==null){
-			incarnatedView = IncarnationUtil.incarnateView((View)getModel()); 
-		}
-		return incarnatedView;
-	}
-	
 	/**
 	 * Return the editpart's associated Notation View.
 	 * @return <code>View</code>, the associated view or null if there is no associated Notation View

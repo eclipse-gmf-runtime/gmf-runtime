@@ -516,6 +516,7 @@ If the last token was a group, the contribution will be appended to the end of t
       <complexType>
          <sequence>
             <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="staticMethod" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="objectCount" type="string">
             <annotation>
@@ -540,6 +541,50 @@ If the last token was a group, the contribution will be appended to the end of t
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
                </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="staticMethod">
+      <annotation>
+         <documentation>
+            A static method to call by reflection on the class.
+The static method has a name and a value. The value could be described by its string representation (value &amp; notValue), or as an object &quot;value&quot; or &quot;notValue&quot;. 
+
+The rules of evaluation are as follows:
+1- The return value string has to be in the &quot;value&quot; string set.
+2- The return value string has to be not in the &quot;notValue&quot; string set.
+3- The return value object has to be in the &quot;value&quot; object set.
+4- The return value object has to be not in the &quot;notValue&quot; object set.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="value" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="notValue" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the Static Method, the format should be PluginID\ClassName.method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of primitive parameters or %Context(pluginID/className) to use the context object as a parameter . other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;pluginID/ClassName.func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="notValue" type="string">
+            <annotation>
+               <documentation>
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
@@ -885,12 +930,11 @@ Therefore, a contribution path has to fully exist prior to being used as a path 
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2003, 2005  IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
+         Copyright (c) 2003, 2005  IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

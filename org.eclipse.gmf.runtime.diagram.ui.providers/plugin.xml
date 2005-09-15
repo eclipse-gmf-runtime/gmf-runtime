@@ -597,7 +597,7 @@
           </popupContribution>                   
           <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart">
-               <method name="getView().getSemanticElement()" notValue="null">                  
+               <method name="getNotationView().getElement()" notValue="null">                  
                </method>               
             </popupStructuredContributionCriteria>
             <popupAction path="/editGroup" id="deleteFromModelAction">

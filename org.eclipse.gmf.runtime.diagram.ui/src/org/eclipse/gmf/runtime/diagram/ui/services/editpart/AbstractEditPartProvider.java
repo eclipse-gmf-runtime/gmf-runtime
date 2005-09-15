@@ -22,7 +22,6 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.diagram.core.internal.view.IView;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
@@ -158,15 +157,6 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 		return null;
 	}
 
-	/**
-	 * gets the supplied view's underlying notation element's eClass
-	 * @param view 
-	 * @deprecated replaced by @link #getReferencedElementEClass(View)
-	 * @return EClass
-	 */
-	protected static EClass getReferencedElementEClass( IView view ) {
-		return ProxyUtil.getProxyClass(view.getSemanticElement());
-	}
 	
 	/**
 	 * gets the supplied view's underlying notation element's eClass
