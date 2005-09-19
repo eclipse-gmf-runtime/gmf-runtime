@@ -336,7 +336,7 @@ public class ElementTypeRegistryTest
 
 	public void test_getElementTypeFactory_custom() {
 		IElementTypeFactory factory = getFixture().getElementTypeFactory(
-			"org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared"); //$NON-NLS-1$
+			"org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ISecurityCleared"); //$NON-NLS-1$
 		assertNotNull(factory);
 		assertEquals(SecurityClearedElementTypeFactory.class, factory
 			.getClass());

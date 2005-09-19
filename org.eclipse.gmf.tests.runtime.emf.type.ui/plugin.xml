@@ -21,8 +21,8 @@
   
          <!-- Test custom element type factory -->
          <elementTypeFactory
-               factory="org.eclipse.gmf.runtime.emf.type.core.internal.tests.SecurityClearedElementTypeFactory"
-               kind = "org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared"
+               factory="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.SecurityClearedElementTypeFactory"
+               kind = "org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ISecurityCleared"
                params = "securityClearance">
          </elementTypeFactory>
          
@@ -36,55 +36,55 @@
                    icon="icons/department.gif"
                    name="Department"
                    eclass="Department"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.DepartmentEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.DepartmentEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"     
                    icon="icons/employee.gif"
                    name="Employee"
                    eclass="Employee"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.EmployeeEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.EmployeeEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.student"     
                    icon="icons/student.gif"
                    name="Student"
                    eclass="Student"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.StudentEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.StudentEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.office"     
                    icon="icons/office.gif"
                    name="Office"
                    eclass="Office"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.OfficeEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.OfficeEditHelper"> 
            </metamodelType>
 
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.secretDepartment"
                    name="Secret Department"
-                   kind="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared"> 
+                   kind="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ISecurityCleared"> 
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.department"/>
-               <matcher class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.SecretDepartmentMatcher"/>
+               <matcher class="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.SecretDepartmentMatcher"/>
            </specializationType>
            
            <!-- Test specialization type with eContainer and matcher -->
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.manager"
                    name="Manager"
-                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ManagerEditHelperAdvice"> 
+                   edithelperadvice="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ManagerEditHelperAdvice"> 
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"/>
                <eContainer>
                   <eContainmentFeature qname="Department.manager"/>
                </eContainer>
-               <matcher class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ManagerMatcher"/>
+               <matcher class="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ManagerMatcher"/>
            </specializationType>
            
            <!-- Test specialization type with enablement -->
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.executive"
                    name="Executive"
-                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ExecutiveEditHelperAdvice"> 
+                   edithelperadvice="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ExecutiveEditHelperAdvice"> 
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.manager"/>
                <enablement>
                   <test property="org.eclipse.gmf.tests.runtime.emf.type.ui.officeHasDoor" value="true"/>
@@ -95,7 +95,7 @@
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.topSecret"
                    name="TopSecret"
-               	   kind="org.eclipse.gmf.runtime.emf.type.core.internal.tests.ISecurityCleared">
+               	   kind="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.ISecurityCleared">
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"/>
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.manager"/>
                <param name="securityClearance" value = "topSecret"/>
@@ -105,7 +105,7 @@
            <adviceBinding
                 id="org.eclipse.gmf.tests.runtime.emf.type.ui.financeEmployee"
                 typeId="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"
-                class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.FinanceEditHelperAdvice"
+                class="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.FinanceEditHelperAdvice"
                 inheritance="all"> 
                 <eContainer>
                    <enablement>
@@ -116,7 +116,7 @@
            <adviceBinding
                 id="org.eclipse.gmf.tests.runtime.emf.type.ui.notInheritedEmployeeAdvice"
                 typeId="org.eclipse.gmf.tests.runtime.emf.type.ui.employee"
-                class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.NotInheritedEditHelperAdvice"> 
+                class="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.NotInheritedEditHelperAdvice"> 
            </adviceBinding>    
            
            <!-- Test duplicate metamodel type ID -->
@@ -124,7 +124,7 @@
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee" 
                    name="DuplicateEmployee"
                    eclass="Employee"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.EmployeeEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.EmployeeEditHelper"> 
            </metamodelType>
            
            <!-- Test duplicate eclass -->
@@ -132,14 +132,14 @@
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.employee2" 
                    name="Employee"
                    eclass="Employee"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.EmployeeEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.EmployeeEditHelper"> 
            </metamodelType>
            
            <!-- Test specializing more than one metamodel type -->
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.multipleMetamodelTypes"
                    name="MultipleMetamodelTypes"
-                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.internal.tests.MultipleMetamodelTypesEditHelperAdvice"> 
+                   edithelperadvice="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.MultipleMetamodelTypesEditHelperAdvice"> 
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.student"/>
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.ui.department"/>
            </specializationType>
@@ -159,7 +159,7 @@
                    id="org.eclipse.gmf.tests.runtime.emf.type.ui.noMetamodel"     
                    name="NoMetamodel"
                    eclass="None"
-                   edithelper="org.eclipse.gmf.runtime.emf.type.core.internal.tests.NoEditHelper"> 
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.NoEditHelper"> 
            </metamodelType>
         </metamodel>
         
@@ -177,14 +177,14 @@
            type="org.eclipse.gmf.tests.runtime.emf.type.ui.employee.Employee"
            namespace="org.eclipse.gmf.tests.runtime.emf.type.ui"
            properties="officeHasDoor, officeWindowCount"
-           class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.OfficeTester">
+           class="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.OfficeTester">
        </propertyTester>
        <propertyTester
            id="org.eclipse.gmf.tests.runtime.emf.type.ui.DepartmentTester"
            type="org.eclipse.gmf.tests.runtime.emf.type.ui.employee.Department"
            namespace="org.eclipse.gmf.tests.runtime.emf.type.ui"
            properties="departmentName"
-           class="org.eclipse.gmf.runtime.emf.type.core.internal.tests.DepartmentTester">
+           class="org.eclipse.gmf.tests.runtime.emf.type.ui.internal.DepartmentTester">
         </propertyTester>
    </extension>
 </plugin>
