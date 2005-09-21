@@ -196,7 +196,7 @@ public class PropertiesBrowserPage
 	 */
 	public void setActionBars(IActionBars actionBars) {
 
-		if (contributor != null) {
+		if (contributor != null && contributor instanceof IWorkbenchPart) {
 
 			/*
 			 * Override the undo and redo global action handlers to use the
