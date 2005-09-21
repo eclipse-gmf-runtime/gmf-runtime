@@ -59,14 +59,12 @@ public class CreateWireCommand
 	 */
 	public boolean isExecutable() {
 
-		if (!(getSource() instanceof OutputTerminal)) {
-			return false;
+		if ((getSource() instanceof OutputTerminal &&
+			getTarget() instanceof InputTerminal)) {
+			return super.isExecutable();
 		}
-		if (getTarget() != null && !(getTarget() instanceof InputTerminal)) {
-			return false;
-		}
-
-		return super.isExecutable();
+		
+		return false;
 	}
 
 }

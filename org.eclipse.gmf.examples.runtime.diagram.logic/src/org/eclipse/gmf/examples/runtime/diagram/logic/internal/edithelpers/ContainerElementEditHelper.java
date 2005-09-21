@@ -11,10 +11,11 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.CreateWireCommand;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.OutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 
@@ -44,7 +45,8 @@ public class ContainerElementEditHelper
 
 		setDefaultContainmentFeature(req);
 
-		if (req.getElementType() == LogicSemanticType.WIRE) {
+		if (req.getElementType() == LogicSemanticType.WIRE && 
+			req.getSource() instanceof OutputTerminal) {
 			return new CreateWireCommand(req);
 		}
 
