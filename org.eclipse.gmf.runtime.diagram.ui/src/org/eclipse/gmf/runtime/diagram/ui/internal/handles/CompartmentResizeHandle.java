@@ -23,8 +23,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.tools.ResizeTracker;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
@@ -80,9 +80,13 @@ public class CompartmentResizeHandle extends AbstractHandle {
 	
 	protected IFigure getCompartmentFigure()
 	{
-		if( getOwner().getFigure() instanceof GatedPaneFigure ){
+		if (getOwner() instanceof ResizableCompartmentEditPart) {
+			return ((ResizableCompartmentEditPart)getOwner()).getCompartmentFigure();
+		}
+		else if( getOwner().getFigure() instanceof GatedPaneFigure ){
 			return ((GatedPaneFigure)getOwner().getFigure()).getElementPane();
 		}
+		
 		return getOwner().getFigure();
 	}
 	
