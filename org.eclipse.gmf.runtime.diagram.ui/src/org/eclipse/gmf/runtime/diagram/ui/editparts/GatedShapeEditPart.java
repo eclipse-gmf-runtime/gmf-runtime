@@ -45,7 +45,7 @@ public abstract class GatedShapeEditPart extends ShapeNodeEditPart {
 	 * Returns the editpart's main figure.
 	 * @return <code>IFigure</code>
 	 */
-	protected final IFigure getMainFigure() {
+	protected IFigure getMainFigure() {
 		return getGatedPaneFigure().getElementPane();
 	}
 
