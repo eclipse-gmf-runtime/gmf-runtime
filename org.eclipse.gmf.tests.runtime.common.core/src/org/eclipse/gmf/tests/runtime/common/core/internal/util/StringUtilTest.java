@@ -67,15 +67,15 @@ public class StringUtilTest extends TestCase {
     	assertTrue(StringUtil.encodeURL("http://www.ibm.ca/").equals("http://www.ibm.ca/")); //$NON-NLS-1$ //$NON-NLS-2$
     	assertTrue(StringUtil.encodeURL("http://www.ibm.ca").equals("http://www.ibm.ca")); //$NON-NLS-1$ //$NON-NLS-2$
     	assertTrue(StringUtil.encodeURL("C:\\dir\\sub").equals("C:\\dir\\sub")); //$NON-NLS-1$ //$NON-NLS-2$
-    	assertTrue(StringUtil.encodeURL("Filיname with spaces.doc").equals("Filיname with spaces.doc")); //$NON-NLS-1$ //$NON-NLS-2$
+    	assertTrue(StringUtil.encodeURL("Fil\u00E9name with spaces.doc").equals("Fil\u00E9name with spaces.doc")); //$NON-NLS-1$ //$NON-NLS-2$
     	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=rational&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=rational&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
 
     	//These should change after encoding
-    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=יחוגט&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
-    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=יחוגט%3d&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%3d&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
-    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=יחוגט%a&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25a&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
-    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=יחוגט%fg%a&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25fg%25a&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
-    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=יחוגט%%a&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25%25a&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$ 
-    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=יחוגט%&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
+    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=\u00E9\u00E7\u00E5\u00E2\u00E8&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
+    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=\u00E9\u00E7\u00E5\u00E2\u00E8%3d&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%3d&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
+    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=\u00E9\u00E7\u00E5\u00E2\u00E8%a&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25a&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
+    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=\u00E9\u00E7\u00E5\u00E2\u00E8%fg%a&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25fg%25a&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
+    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=\u00E9\u00E7\u00E5\u00E2\u00E8%%a&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25%25a&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$ 
+    	assertTrue(StringUtil.encodeURL("http://www.ibm.com/Search/?q=\u00E9\u00E7\u00E5\u00E2\u00E8%&v=14&lang=en&cc=ca").equals("http://www.ibm.com/Search/?q=%C3%A9%C3%A7%C3%A5%C3%A2%C3%A8%25&v=14&lang=en&cc=ca")); //$NON-NLS-1$ //$NON-NLS-2$
     }    
 }
