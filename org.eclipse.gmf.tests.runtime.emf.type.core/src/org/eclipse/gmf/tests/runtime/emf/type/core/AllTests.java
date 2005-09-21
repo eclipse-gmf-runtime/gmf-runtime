@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.tests.runtime.emf.type.ui;
+package org.eclipse.gmf.tests.runtime.emf.type.core;
 
 import java.util.Arrays;
 
@@ -19,7 +19,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.gmf.tests.runtime.emf.type.ui.internal.providers.ElementTypeIconProviderTest;
 
 public class AllTests
 	extends TestCase
@@ -31,7 +30,11 @@ public class AllTests
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(ElementTypeIconProviderTest.suite());
+		suite.addTest(AbstractEditHelperTest.suite());
+		suite.addTest(ElementTypeRegistryTest.suite());
+		suite.addTest(CreateElementRequestTest.suite());
+		suite.addTest(MetamodelTypeDescriptorTest.suite());
+		suite.addTest(SpecializationTypeDescriptorTest.suite());
 		return suite;
 	}
 

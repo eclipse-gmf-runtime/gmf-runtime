@@ -7,15 +7,13 @@ Bundle-Activator: org.eclipse.gmf.tests.runtime.emf.type.ui.TestPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.tests.runtime.emf.type.ui.internal,
- org.eclipse.gmf.tests.runtime.emf.type.ui,
- org.eclipse.gmf.tests.runtime.emf.type.ui.employee,
- org.eclipse.gmf.tests.runtime.emf.type.ui.employee.impl,
- org.eclipse.gmf.tests.runtime.emf.type.ui.employee.util
+ org.eclipse.gmf.tests.runtime.emf.type.ui
+Eclipse-AutoStart: true
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.expressions,
- org.eclipse.emf.ecore,
  org.eclipse.gmf.runtime.emf.type.core,
  org.eclipse.gmf.runtime.common.core,
- org.junit
-Eclipse-AutoStart: true
+ org.junit,
+ org.eclipse.gmf.runtime.common.ui.services,
+ org.eclipse.gmf.runtime.emf.type.ui,
+ org.eclipse.gmf.tests.runtime.emf.type.core
