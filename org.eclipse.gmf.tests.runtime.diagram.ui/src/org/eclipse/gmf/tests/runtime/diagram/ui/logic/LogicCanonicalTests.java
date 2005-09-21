@@ -23,6 +23,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
@@ -342,6 +344,51 @@ public class LogicCanonicalTests extends AbstractTestBase {
 		
 		getCanonicalTestFixture().createShapeUsingTool(typeLED, rect.getCenter(), logicCompartment);
 		assertEquals( "Unexpected LED count.", 1, logicCompartment.getChildren().size() );//$NON-NLS-1$
+	}
+	
+	public void test_createWireUsingTool() {
+		try {
+			println("test_AddDeleteWire() starting ...");//$NON-NLS-1$
+			IGraphicalEditPart logicCompartment = getCanonicalCompartment(0);
+			
+			Rectangle rect = new Rectangle(logicCompartment.getFigure().getBounds());
+			IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
+			LEDEditPart ledEP1 = (LEDEditPart)getCanonicalTestFixture().createShapeUsingTool(typeLED, rect.getTopLeft().getTranslated(10, 10), logicCompartment);
+			rect = new Rectangle(logicCompartment.getFigure().getBounds());
+			LEDEditPart ledEP2 = (LEDEditPart)getCanonicalTestFixture().createShapeUsingTool(typeLED, rect.getBottomRight().getTranslated(-10, -10), logicCompartment);
+			
+			Terminal term1 = (Terminal)((LED)ledEP1.getNotationView().getElement()).getOutputTerminals().get(0);
+			TerminalEditPart tep1 = null;
+			ListIterator li = ledEP1.getChildren().listIterator();
+			while (li.hasNext()) {
+				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
+				if (gep.getNotationView().getElement().equals(term1))
+					tep1 = (TerminalEditPart)gep;
+			}
+			
+			Terminal term2 = (Terminal)((LED)ledEP2.getNotationView().getElement()).getInputTerminals().get(0);
+			TerminalEditPart tep2 = null;
+			li = ledEP2.getChildren().listIterator();
+			while (li.hasNext()) {
+				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
+				if (gep.getNotationView().getElement().equals(term2))
+					tep2 = (TerminalEditPart)gep;
+			}
+			
+			IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
+						
+			getCanonicalTestFixture().createConnectorUsingTool(tep1, tep2, typeWire);
+			List connectorEPs = getDiagramEditPart().getConnectors();
+			
+			assertEquals( "Unexpected Wire count.", 1, connectorEPs.size()); //$NON-NLS-1$
+			ConnectionEditPart ep = (ConnectionEditPart)connectorEPs.get(0);
+			assertTrue( "Unexpected source.", ((View)ep.getSource().getModel()).getElement().equals(term1));//$NON-NLS-1$
+			assertTrue( "Unexpected target.", ((View)ep.getTarget().getModel()).getElement().equals(term2));//$NON-NLS-1$
+			assertTrue(((View)ep.getModel()).getElement() instanceof Wire);
+		}
+		finally {
+			println("test_AddDeleteWire() complete.");//$NON-NLS-1$
+		}
 	}
 
 }
