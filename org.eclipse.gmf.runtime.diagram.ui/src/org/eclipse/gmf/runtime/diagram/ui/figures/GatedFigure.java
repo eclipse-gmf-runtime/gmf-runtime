@@ -52,13 +52,6 @@ public class GatedFigure extends NodeFigure {
 
 	
 	/**
-	 * Simply paint the children.
-	 */
-	protected void paintFigure(Graphics graphics) {
-		paintClientArea(graphics);
-	}
-
-	/**
 	 * Paints this Figure's client area. The client area is typically defined as the anything
 	 * inside the Figure's {@link Border} or {@link Insets}, and by default includes the
 	 * children of this Figure. On return, this method must leave the given Graphics in its

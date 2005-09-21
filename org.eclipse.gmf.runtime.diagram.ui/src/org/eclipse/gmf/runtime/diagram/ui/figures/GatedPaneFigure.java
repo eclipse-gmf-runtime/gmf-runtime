@@ -13,13 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.DelegatingLayout;
-import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -116,13 +114,7 @@ public class GatedPaneFigure extends GateFigure {
 			return elementFigure.getBounds().getCopy();
 		}
 	}
-	 
-	
-	protected void paintChildren(Graphics graphics) {
-		super.paintChildren(graphics);
-		if( gatedFigure != null )
-			gatedFigure.paintClientArea(graphics);
-	}
+
 		
 	/**
 	 * Give the main figure the entire bounds of the wrapper.
@@ -133,7 +125,6 @@ public class GatedPaneFigure extends GateFigure {
 		}
 		// When parent resizes, cause the gates to be relocated.
 		getGatePane().invalidateTree();
-		erase();
 	}
 		
 
