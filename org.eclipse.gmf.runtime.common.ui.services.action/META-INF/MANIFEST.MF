@@ -14,5 +14,6 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.services.action.contributionit
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.common.core,
- org.eclipse.gmf.runtime.common.ui
+ org.eclipse.gmf.runtime.common.ui,
+ org.eclipse.gmf.runtime.common.ui.services
 Eclipse-AutoStart: true

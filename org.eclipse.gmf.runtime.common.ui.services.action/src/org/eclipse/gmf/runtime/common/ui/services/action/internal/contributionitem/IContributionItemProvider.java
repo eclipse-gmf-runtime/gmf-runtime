@@ -40,7 +40,7 @@ import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
  * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService
  * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider 
  * 
- * @author melaasar
+ * @author melaasar, cmahoney
  */
 public interface IContributionItemProvider extends IProvider {
 
@@ -57,6 +57,24 @@ public interface IContributionItemProvider extends IProvider {
 	 * @param workbenchPartDescriptor The context workbench part descriptor
 	 */
 	public void contributeToActionBars(
+		IActionBars actionBars,
+		IWorkbenchPartDescriptor workbenchPartDescriptor);
+	
+	/**
+	 * Contributes to the given action bars that belong to a part described with
+	 * the given part descriptor ONLY IF this provider has not already
+	 * contributed to this part.
+	 * <P>
+	 * This API is usually called when an event takes place such that new
+	 * providers may now provide contributions to the actionbars. Only those new
+	 * providers need to add their contributions.
+	 * 
+	 * @param actionBars
+	 *            The target action bars
+	 * @param workbenchPartDescriptor
+	 *            The context workbench part descriptor
+	 */
+	public void updateActionBars(
 		IActionBars actionBars,
 		IWorkbenchPartDescriptor workbenchPartDescriptor);
 

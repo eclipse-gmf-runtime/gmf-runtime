@@ -166,7 +166,8 @@ public class ModelingAssistantServiceTests
 	}
 
 	/**
-	 * Tests the public API of the ConnectorHandle class.
+	 * Tests that the UI contributions made by a provider affected by a
+	 * capability will be shown/hidden as the capability is enabled/disabled.
 	 * 
 	 * @throws Exception
 	 */

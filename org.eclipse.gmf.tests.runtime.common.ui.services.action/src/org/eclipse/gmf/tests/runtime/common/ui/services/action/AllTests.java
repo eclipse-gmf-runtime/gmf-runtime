@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.common.ui.services.action.contributionitem.ContributionItemServiceTests;
 import org.eclipse.gmf.tests.runtime.common.ui.services.action.internal.filter.ActionFilterServiceTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {
@@ -30,6 +31,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
 		suite.addTest(ActionFilterServiceTest.suite());
+		suite.addTest(ContributionItemServiceTests.suite());
 		return suite;
 	}
 

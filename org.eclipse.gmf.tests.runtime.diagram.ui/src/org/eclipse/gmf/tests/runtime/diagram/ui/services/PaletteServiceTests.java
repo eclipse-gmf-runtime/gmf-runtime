@@ -222,7 +222,8 @@ public class PaletteServiceTests
 	}
 
 	/**
-	 * Tests the public API of the ConnectorHandle class.
+	 * Tests that the UI contributions made by a provider affected by a
+	 * capability will be shown/hidden as the capability is enabled/disabled.
 	 * 
 	 * @throws Exception
 	 */
@@ -325,20 +326,20 @@ public class PaletteServiceTests
 
 	}
 
-	/**
-	 * Prints out the palette entries to the console. Used for debugging.
-	 * 
-	 * @param paletteContainer
-	 */
-	private void printPalette(PaletteContainer paletteContainer, String prefix) {
-		for (Iterator iter = paletteContainer.getChildren().iterator(); iter
-			.hasNext();) {
-			PaletteEntry entry = (PaletteEntry) iter.next();
-			System.out.println(prefix + entry.getLabel());
-			if (entry instanceof PaletteContainer) {
-				printPalette((PaletteContainer) entry, prefix + "  "); //$NON-NLS-1$
-			}
-		}
-	}
+//	/**
+//	 * Prints out the palette entries to the console. Used for debugging.
+//	 * 
+//	 * @param paletteContainer
+//	 */
+//	private void printPalette(PaletteContainer paletteContainer, String prefix) {
+//		for (Iterator iter = paletteContainer.getChildren().iterator(); iter
+//			.hasNext();) {
+//			PaletteEntry entry = (PaletteEntry) iter.next();
+//			System.out.println(prefix + entry.getLabel());
+//			if (entry instanceof PaletteContainer) {
+//				printPalette((PaletteContainer) entry, prefix + "  "); //$NON-NLS-1$
+//			}
+//		}
+//	}
 
 }

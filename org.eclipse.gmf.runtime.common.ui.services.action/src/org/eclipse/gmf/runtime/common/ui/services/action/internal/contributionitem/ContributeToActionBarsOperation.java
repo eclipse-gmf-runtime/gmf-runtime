@@ -24,9 +24,9 @@ import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
  * @see ContributionItemService
  * @see IContributionItemProvider
  * 
- * @author melaasar
+ * @author melaasar, cmahoney
  */
-public final class ContributeToActionBarsOperation implements IOperation {
+public class ContributeToActionBarsOperation implements IOperation {
 
 	/** the part's action bars */
 	private final IActionBars actionBars;

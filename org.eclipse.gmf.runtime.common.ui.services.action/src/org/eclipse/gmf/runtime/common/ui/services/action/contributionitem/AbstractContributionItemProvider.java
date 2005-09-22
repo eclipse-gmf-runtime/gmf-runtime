@@ -12,25 +12,12 @@
 package org.eclipse.gmf.runtime.common.ui.services.action.contributionitem;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IContributionManager;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.actions.ActionGroup;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -48,6 +35,31 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.util.ActionGroupCache;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.action.IContributionManagerOverrides;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.activities.IIdentifier;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
  * An abstract implementation of the IContributionItemProvider interface
@@ -59,7 +71,7 @@ import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
  * subclass this class but rather implement the <code>IContributionItemProvider</code>
  * interface directly. 
  * 
- * @author melaasar
+ * @author melaasar, cmahoney
  */
 public abstract class AbstractContributionItemProvider
 	extends AbstractProvider
@@ -71,6 +83,19 @@ public abstract class AbstractContributionItemProvider
 	private Map actionCache = new HashMap();
 	/** the Action Group registry cache by workbench part descriptor */
 	private ActionGroupCache actionGroupCache = new ActionGroupCache();
+	
+	/**
+	 * Identifies the plugin where the contributions were made so that these
+	 * contributions can be filtered if an activity/capability associated with
+	 * the plugin is disabled.
+	 */
+	private IPluginContribution pluginContribution;
+	
+	/**
+	 * A list of part descriptors ids for which actionbar contributions have
+	 * already been made.
+	 */
+	private Set partDescriptors = new HashSet();
 
 	/**
 	 * Gets the structured selection from the workbench part described by
@@ -124,6 +149,33 @@ public abstract class AbstractContributionItemProvider
 	public final void contributeToActionBars(
 		IActionBars actionBars,
 		IWorkbenchPartDescriptor partDescriptor) {
+		
+		contributeToActionBars(actionBars, partDescriptor, false);
+	}
+	
+	/**
+	 * Contributes to the given action bars that belong to a part described with
+	 * the given part descriptor.
+	 * 
+	 * <p>
+	 * Note: There are currently issues with updating the main menu manager when
+	 * multiple editors are open. If contributing to a menu manager that the
+	 * contribution item service contributed (e.g. the diagram menu), when
+	 * updating it does not always find the instance of the menu manager
+	 * associated with the correct editor.
+	 * 
+	 * @param actionBars
+	 *            The target action bars
+	 * @param workbenchPartDescriptor
+	 *            The context workbench part descriptor
+	 * @param updateOnly
+	 *            If true, this is called when only updating the actionbars and
+	 *            not when the editor is first opened.
+	 */
+	private void contributeToActionBars(IActionBars actionBars,
+			IWorkbenchPartDescriptor partDescriptor, boolean updateOnly) {
+
+		partDescriptors.add(partDescriptor);
 
 		Iterator contributions =
 			contributionDescriptor
@@ -140,13 +192,15 @@ public abstract class AbstractContributionItemProvider
 				ProviderContributionDescriptor.PartMenuDescriptor item =
 					(ProviderContributionDescriptor.PartMenuDescriptor) c;
 
-				contributeItem(
-					new MenuContributionItemAdapter(
-						item.getId(),
-						partDescriptor),
-					actionBars.getMenuManager(),
-					item.getMenubarPath(),
-					item.getMenubarGroup());
+				if (!updateOnly) {
+					contributeItem(
+						new MenuContributionItemAdapter(
+							item.getId(),
+							partDescriptor),
+						actionBars.getMenuManager(),
+						item.getMenubarPath(),
+						item.getMenubarGroup());
+				}
 
 				contributeItem(
 					new MenuContributionItemAdapter(
@@ -161,13 +215,15 @@ public abstract class AbstractContributionItemProvider
 				ProviderContributionDescriptor.PartMenuGroupDescriptor item =
 					(ProviderContributionDescriptor.PartMenuGroupDescriptor) c;
 
-				contributeItem(
-					new MenuGroupContributionItemAdapter(
-						item.getId(),
-						item.isSeparator()),
-					actionBars.getMenuManager(),
-					item.getMenubarPath(),
-					item.getMenubarGroup());
+				if (!updateOnly) {
+					contributeItem(
+						new MenuGroupContributionItemAdapter(
+							item.getId(),
+							item.isSeparator()),
+						actionBars.getMenuManager(),
+						item.getMenubarPath(),
+						item.getMenubarGroup());
+				}
 
 				contributeItem(
 					new MenuGroupContributionItemAdapter(
@@ -182,13 +238,15 @@ public abstract class AbstractContributionItemProvider
 				ProviderContributionDescriptor.PartActionDescriptor item =
 					(ProviderContributionDescriptor.PartActionDescriptor) c;
 
-				contributeItem(
-					new ActionContributionItemAdapter(
-						item.getId(),
-						partDescriptor),
-					actionBars.getMenuManager(),
-					item.getMenubarPath(),
-					item.getMenubarGroup());
+				if (!updateOnly) {
+					contributeItem(
+						new ActionContributionItemAdapter(
+							item.getId(),
+							partDescriptor),
+						actionBars.getMenuManager(),
+						item.getMenubarPath(),
+						item.getMenubarGroup());
+				}
 
 				contributeItem(
 					new ActionContributionItemAdapter(
@@ -208,13 +266,15 @@ public abstract class AbstractContributionItemProvider
 				ProviderContributionDescriptor.PartCustomDescriptor item =
 					(ProviderContributionDescriptor.PartCustomDescriptor) c;
 
-				contributeItem(
-					new CustomContributionItemAdapter(
-						item.getId(),
-						partDescriptor),
-					actionBars.getMenuManager(),
-					item.getMenubarPath(),
-					item.getMenubarGroup());
+				if (!updateOnly) {
+					contributeItem(
+						new CustomContributionItemAdapter(
+							item.getId(),
+							partDescriptor),
+						actionBars.getMenuManager(),
+						item.getMenubarPath(),
+						item.getMenubarGroup());
+				}
 
 				contributeItem(
 					new CustomContributionItemAdapter(
@@ -238,6 +298,16 @@ public abstract class AbstractContributionItemProvider
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider#updateActionBars(org.eclipse.ui.IActionBars, org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
+	 */
+	public final void updateActionBars(IActionBars actionBars,
+			IWorkbenchPartDescriptor partDescriptor) {
+
+		if (!partDescriptors.contains(partDescriptor)) {
+			contributeToActionBars(actionBars, partDescriptor, true);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider#contributeToPopupMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.ui.IWorkbenchPart)
@@ -345,6 +415,8 @@ public abstract class AbstractContributionItemProvider
 		
 		// dispose of the action group contributions
 		actionGroupCache.dispose(partDescriptor);
+		
+		partDescriptors.remove(partDescriptor);
 	}
 
 	/* (non-Javadoc)
@@ -625,7 +697,7 @@ public abstract class AbstractContributionItemProvider
 			Log.error(CommonUIServicesActionPlugin.getDefault(), CommonUIServicesActionStatusCodes.SERVICE_FAILURE, "Error adding contribution item", e); //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
 	 * Contributes the given item to the given manager in the given path/group.
 	 * 
@@ -686,7 +758,7 @@ public abstract class AbstractContributionItemProvider
 			if (adapter == IContributionItem.class) {
 				IAction action = getAction(actionId, partDescriptor);
 				if (action != null)
-					return new ActionContributionItem(action);
+					return new PluginActionContributionItem(action);
 			} else if (adapter == String.class) {
 				return actionId;
 			}
@@ -745,7 +817,7 @@ public abstract class AbstractContributionItemProvider
 
 		public Object getAdapter(Class adapter) {
 			if (adapter == IContributionItem.class) {
-				return createMenuManager(menuId, partDescriptor);
+				return new PluginMenuManager(createMenuManager(menuId, partDescriptor));
 			} else if (adapter == String.class) {
 				return menuId;
 			}
@@ -776,8 +848,8 @@ public abstract class AbstractContributionItemProvider
 		public Object getAdapter(Class adapter) {
 			if (adapter == IContributionItem.class) {
 				if (isSeparator)
-					return new Separator(groupId);
-				return new GroupMarker(groupId);
+					return new PluginSeparator(groupId);
+				return new PluginGroupMarker(groupId);
 			} else if (adapter == String.class) {
 				return groupId;
 			}
@@ -817,5 +889,312 @@ public abstract class AbstractContributionItemProvider
 			return null;
 		}
 	}
+	
+	/**
+	 * Checks if there are activities that have been matched to the plug-in in
+	 * which the provider has been contributed and if those activities are
+	 * enabled.
+	 * 
+	 * @return true if matching activities are enabled
+	 */
+	private boolean areActivitiesEnabled() {
+		if (!WorkbenchActivityHelper.isFiltering())
+			return true;
 
+		IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
+			.getWorkbench().getActivitySupport();
+		IIdentifier id = workbenchActivitySupport.getActivityManager()
+			.getIdentifier(
+				WorkbenchActivityHelper
+					.createUnifiedId(getPluginContribution()));
+		if (id != null && !id.isEnabled()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Sets the plugin contribution which identifies the plugin where the
+	 * contributions were made so that these contributions can be filtered if an
+	 * activity/capability associated with the plugin is disabled.
+	 * 
+	 * @param pluginContribution
+	 *            the plugin contribution
+	 */
+	void setPluginContribution(IPluginContribution pluginContribution) {
+		this.pluginContribution = pluginContribution;
+	}
+
+	/**
+	 * Gets the plugin contribution which identifies the plugin where the
+	 * contributions were made so that these contributions can be filtered if an
+	 * activity/capability associated with the plugin is disabled.
+	 * 
+	 * @return the plugin contribution
+	 */
+	IPluginContribution getPluginContribution() {
+		return pluginContribution;
+	}
+
+	/**
+	 * An <code>IMenuManager</code> whose visibility is affected by
+	 * activites/capabilities.
+	 * 
+	 * @author cmahoney
+	 */
+	private class PluginMenuManager
+		implements IMenuManager {
+
+		private IMenuManager realMenuManager;
+
+		public PluginMenuManager(IMenuManager menuManager) {
+			this.realMenuManager = menuManager;
+		}
+
+		public void add(IAction action) {
+			realMenuManager.add(action);
+		}
+
+		public void add(IContributionItem item) {
+			realMenuManager.add(item);
+		}
+
+		public void addMenuListener(IMenuListener listener) {
+			realMenuManager.addMenuListener(listener);
+		}
+
+		public void appendToGroup(String groupName, IAction action) {
+			realMenuManager.appendToGroup(groupName, action);
+		}
+
+		public void appendToGroup(String groupName, IContributionItem item) {
+			realMenuManager.appendToGroup(groupName, item);
+		}
+
+		public void dispose() {
+			realMenuManager.dispose();
+		}
+
+		public void fill(Composite parent) {
+			realMenuManager.fill(parent);
+		}
+
+		public void fill(CoolBar parent, int index) {
+			realMenuManager.fill(parent, index);
+		}
+
+		public void fill(Menu parent, int index) {
+			realMenuManager.fill(parent, index);
+		}
+
+		public void fill(ToolBar parent, int index) {
+			realMenuManager.fill(parent, index);
+		}
+
+		public IContributionItem find(String id) {
+			return realMenuManager.find(id);
+		}
+
+		public IMenuManager findMenuUsingPath(String path) {
+			return realMenuManager.findMenuUsingPath(path);
+		}
+
+		public IContributionItem findUsingPath(String path) {
+			return realMenuManager.findUsingPath(path);
+		}
+
+		public String getId() {
+			return realMenuManager.getId();
+		}
+
+		public IContributionItem[] getItems() {
+			return realMenuManager.getItems();
+		}
+
+		public IContributionManagerOverrides getOverrides() {
+			return realMenuManager.getOverrides();
+		}
+
+		public boolean getRemoveAllWhenShown() {
+			return realMenuManager.getRemoveAllWhenShown();
+		}
+
+		public void insertAfter(String id, IAction action) {
+			realMenuManager.insertAfter(id, action);
+		}
+
+		public void insertAfter(String id, IContributionItem item) {
+			realMenuManager.insertAfter(id, item);
+		}
+
+		public void insertBefore(String id, IAction action) {
+			realMenuManager.insertBefore(id, action);
+		}
+
+		public void insertBefore(String id, IContributionItem item) {
+			realMenuManager.insertBefore(id, item);
+		}
+
+		public boolean isDirty() {
+			return realMenuManager.isDirty();
+		}
+
+		public boolean isDynamic() {
+			return realMenuManager.isDynamic();
+		}
+
+		public boolean isEmpty() {
+			return realMenuManager.isEmpty();
+		}
+
+		public boolean isEnabled() {
+			return realMenuManager.isEnabled();
+		}
+
+		public boolean isGroupMarker() {
+			return realMenuManager.isGroupMarker();
+		}
+
+		public boolean isSeparator() {
+			return realMenuManager.isSeparator();
+		}
+
+		public boolean isVisible() {
+			if (!areActivitiesEnabled()) {
+				return false;
+			}
+			return realMenuManager.isVisible();
+		}
+
+		public void markDirty() {
+			realMenuManager.markDirty();
+		}
+
+		public void prependToGroup(String groupName, IAction action) {
+			realMenuManager.prependToGroup(groupName, action);
+		}
+
+		public void prependToGroup(String groupName, IContributionItem item) {
+			realMenuManager.prependToGroup(groupName, item);
+		}
+
+		public IContributionItem remove(IContributionItem item) {
+			return realMenuManager.remove(item);
+		}
+
+		public IContributionItem remove(String id) {
+			return realMenuManager.remove(id);
+		}
+
+		public void removeAll() {
+			realMenuManager.removeAll();
+		}
+
+		public void removeMenuListener(IMenuListener listener) {
+			realMenuManager.removeMenuListener(listener);
+		}
+
+		public void saveWidgetState() {
+			realMenuManager.saveWidgetState();
+		}
+
+		public void setParent(IContributionManager parent) {
+			realMenuManager.setParent(parent);
+		}
+
+		public void setRemoveAllWhenShown(boolean removeAll) {
+			realMenuManager.setRemoveAllWhenShown(removeAll);
+		}
+
+		public void setVisible(boolean visible) {
+			realMenuManager.setVisible(visible);
+		}
+
+		public void update() {
+			realMenuManager.update();
+		}
+
+		public void update(boolean force) {
+			realMenuManager.update(force);
+		}
+
+		public void update(String id) {
+			realMenuManager.update(id);
+		}
+
+		public void updateAll(boolean force) {
+			realMenuManager.updateAll(force);
+		}
+	}
+
+	/**
+	 * A <code>Separator</code> whose visibility is affected by
+	 * activites/capabilities.
+	 * 
+	 * @author cmahoney
+	 */
+	private class PluginSeparator
+		extends Separator {
+
+		public PluginSeparator() {
+			super();
+		}
+
+		public PluginSeparator(String groupName) {
+			super(groupName);
+		}
+
+		public boolean isVisible() {
+			if (!areActivitiesEnabled()) {
+				return false;
+			}
+			return super.isVisible();
+		}
+
+	}
+
+	/**
+	 * A <code>GroupMarker</code> whose visibility is affected by
+	 * activites/capabilities.
+	 * 
+	 * @author cmahoney
+	 */
+	private class PluginGroupMarker
+		extends GroupMarker {
+
+		public PluginGroupMarker(String groupName) {
+			super(groupName);
+		}
+
+		public boolean isVisible() {
+			if (!areActivitiesEnabled()) {
+				return false;
+			}
+			return super.isVisible();
+		}
+
+	}
+
+	/**
+	 * An <code>ActionContributionItem</code> whose visibility is affected by
+	 * activites/capabilities.
+	 * 
+	 * @author cmahoney
+	 */
+	private class PluginActionContributionItem
+		extends ActionContributionItem {
+
+		public PluginActionContributionItem(IAction action) {
+			super(action);
+		}
+
+		public boolean isVisible() {
+			if (!areActivitiesEnabled()) {
+				return false;
+			}
+			return super.isVisible();
+		}
+	}
 }
+

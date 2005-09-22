@@ -13,14 +13,6 @@ package org.eclipse.gmf.runtime.common.ui.services.action.contributionitem;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IContributionManager;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbenchPart;
-import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
@@ -31,8 +23,16 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionDescriptorReader;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ProviderContributionDescriptor;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.UpdateActionBarsOperation;
+import org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.IWorkbenchPart;
+import org.osgi.framework.Bundle;
 
 /**
  * A service for contributing items into different <code>IWorkbenchPart</code>'s 
@@ -41,7 +41,7 @@ import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
  * @see IContributionItemProvider
  * @see AbstractContributionItemProvider
  * 
- * @author melaasar
+ * @author melaasar, cmahoney
  */
 public class ContributionItemService
 	extends Service
@@ -52,7 +52,7 @@ public class ContributionItemService
 	 * by a configuration element.
 	 */
 	protected static class ProviderDescriptor
-		extends Service.ProviderDescriptor {
+		extends ActivityFilterProviderDescriptor {
 
 		private static final String CHECK_PLUGIN_LOADED = "checkPluginLoaded"; //$NON-NLS-1$
 
@@ -83,17 +83,31 @@ public class ContributionItemService
 		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 		 */
 		public boolean provides(IOperation operation) {
-			// if asked to check that the plugin is loaded and it is not, ignore
-			if (checkPluginLoaded && !isPluginLoaded())
+			
+			// filter providers based on disabled capabilities
+			if (!super.provides(operation)) {
 				return false;
+			}
+			
+			// if asked to check that the plugin is loaded and it is not, ignore
+			if (checkPluginLoaded && !isPluginLoaded()) {
+				return false;
+			}
 			
 			// if no XML contributions, forward to the provider 
-			if (!contributionDescriptor.hasContributions())
-				return super.provides(operation);
+			if (!contributionDescriptor.hasContributions()) {
+				if (getPolicy() != null) {
+					return getPolicy().provides(operation);
+				}
+				if (getProvider() != null) {
+					return getProvider().provides(operation);
+				}
+			}
 
-			if (operation instanceof ContributeToActionBarsOperation) {
+			if (operation instanceof ContributeToActionBarsOperation) {			
 				ContributeToActionBarsOperation op =
 					(ContributeToActionBarsOperation) operation;
+
 				return contributionDescriptor.hasContributionsFor(
 					op.getWorkbenchPartDescriptor().getPartId(),
 					op.getWorkbenchPartDescriptor().getPartClass());
@@ -112,7 +126,7 @@ public class ContributionItemService
 			} else if (operation instanceof DisposeContributionsOperation) {
 				if (provider != null)
 					return provider.provides(operation);
-			}
+			} 
 			return false;
 		}
 
@@ -127,13 +141,27 @@ public class ContributionItemService
 						(IContributionDescriptorReader) newProvider;
 					reader.setContributionDescriptor(contributionDescriptor);
 				}
+				if (provider instanceof AbstractContributionItemProvider) {
+					((AbstractContributionItemProvider) provider)
+						.setPluginContribution(new IPluginContribution() {
+
+							public String getLocalId() {
+								return getElement().getDeclaringExtension()
+									.getSimpleIdentifier();
+							}
+
+							public String getPluginId() {
+								return getElement().getNamespace();
+							}
+						});
+				}
 				return newProvider;
 			}
 			return super.getProvider();
 		}
 
 		/**
-		 * Verify if the declaring pluging of the propety provider is loaded.
+		 * Verify if the declaring plugin of the provider is loaded; if it is not loaded, add a listener that.
 		 * 
 		 * @return <code>true</code> if the declaring pluging of the propety
 		 *         provider is loaded, <code>false</code> otherwise
@@ -145,6 +173,7 @@ public class ContributionItemService
 				&& bundle.getState() == org.osgi.framework.Bundle.ACTIVE;
 
 		}
+		
 	}
 
 	/** 
@@ -200,14 +229,15 @@ public class ContributionItemService
 	public void contributeToActionBars(
 		IActionBars actionBars,
 		IWorkbenchPartDescriptor workbenchPartDescriptor) {
-		execute(
-			new ContributeToActionBarsOperation(
-				actionBars,
-				workbenchPartDescriptor));
+		execute(new ContributeToActionBarsOperation(actionBars,
+			workbenchPartDescriptor));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider#contributeToPopupMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.ui.IWorkbenchPart)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider#contributeToPopupMenu(org.eclipse.jface.action.IMenuManager,
+	 *      org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void contributeToPopupMenu(
 		IMenuManager popupMenu,
@@ -222,6 +252,15 @@ public class ContributionItemService
 		execute(new DisposeContributionsOperation(workbenchPartDescriptor));
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider#updateActionBars(org.eclipse.ui.IActionBars, org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
+	 */
+	public void updateActionBars(IActionBars actionBars,
+			IWorkbenchPartDescriptor workbenchPartDescriptor) {
+		execute(new UpdateActionBarsOperation(actionBars,
+			workbenchPartDescriptor));
+	}
+	
 	/**
 	 * Disposes of the contributions that have been made to the <code>workbenchPart</code>.
 	 * @param workbenchPart the workbench part
@@ -245,19 +284,4 @@ public class ContributionItemService
 		execute(ExecutionStrategy.REVERSE, operation);
 	}
 
-	/**
-	 * Removes the disabled contributions from a contribution manager.
-	 * 
-	 * @param manager the contribution manager
-	 */
-	public void removeDisabledContributions(IContributionManager manager) {
-		IContributionItem[] contributions = manager.getItems();
-		for (int i = 0; i < contributions.length; i++) {
-			if (contributions[i] instanceof IContributionManager)
-				removeDisabledContributions(
-					(IContributionManager) contributions[i]);
-			if (!contributions[i].isEnabled())
-				manager.remove(contributions[i]);
-		}
-	}
 }

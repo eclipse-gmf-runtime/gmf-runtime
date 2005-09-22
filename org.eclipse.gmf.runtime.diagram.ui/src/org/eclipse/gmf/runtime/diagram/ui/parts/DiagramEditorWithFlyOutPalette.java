@@ -42,11 +42,31 @@ import org.eclipse.ui.activities.IActivityManagerListener;
  * A generic diagram editor with a palette.  This supports the palette moved from
  * the diagram to a palette view.  If the palette view is open than the
  * palette in the diagram will be removed.
- * @author choang
+ * @author choang, cmahoney
  */
 public abstract class DiagramEditorWithFlyOutPalette
-	extends DiagramEditor implements IActivityManagerListener
+	extends DiagramEditor
 {
+	/**
+	 * Listens for activity/capability events.
+	 * 
+	 * @author cmahoney
+	 */
+	class ActivityManagerListener
+		implements IActivityManagerListener {
+
+		public void activityManagerChanged(
+				ActivityManagerEvent activityManagerEvent) {
+			if (activityManagerEvent.haveEnabledActivityIdsChanged()) {
+				updatePaletteRoot();
+			}
+		}
+	}
+	
+	/**
+	 * The activity listener.
+	 */
+	private ActivityManagerListener activityManagerListener;
 
 	boolean fHasFlyoutPalette = true;
 	public DiagramEditorWithFlyOutPalette() {
@@ -88,8 +108,9 @@ public abstract class DiagramEditorWithFlyOutPalette
 				(TransferDropTargetListener) new ImageFileDropTargetListener(
 					getDiagramGraphicalViewer()));
 			
+			activityManagerListener = new ActivityManagerListener();
 			PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
-			.addActivityManagerListener(this);
+				.addActivityManagerListener(activityManagerListener);
 			
 		} else {
 			super.initializeGraphicalViewer();
@@ -525,15 +546,13 @@ public abstract class DiagramEditorWithFlyOutPalette
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.activities.IActivityManagerListener#activityManagerChanged(org.eclipse.ui.activities.ActivityManagerEvent)
-	 */
-	public void activityManagerChanged(ActivityManagerEvent activityManagerEvent) {
-		if (activityManagerEvent.haveEnabledActivityIdsChanged()) {
-			updatePaletteRoot();
+	protected void stopListening() {
+		if (activityManagerListener != null) {
+			PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
+				.removeActivityManagerListener(activityManagerListener);
 		}
+		activityManagerListener = null;
+		super.stopListening();
 	}
 	
 }
