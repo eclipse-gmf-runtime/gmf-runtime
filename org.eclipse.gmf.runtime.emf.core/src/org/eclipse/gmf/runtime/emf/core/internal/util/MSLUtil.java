@@ -47,7 +47,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.osgi.framework.Bundle;
 
-import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.IValidationStatus;
@@ -691,8 +690,7 @@ public class MSLUtil {
 	 * Post-process resource
 	 */
 	public static void postProcessResource(final Resource resource) {
-		Log.log(MSLPlugin.getDefault(),IStatus.ERROR,1,"CMCGEE: Resource "+resource+" will be postprocessed with contents "+resource.getContents());
-		
+
 		if (resource instanceof MSLResource) {
 
 			final MSLEditingDomain domain = (MSLEditingDomain) MEditingDomain
