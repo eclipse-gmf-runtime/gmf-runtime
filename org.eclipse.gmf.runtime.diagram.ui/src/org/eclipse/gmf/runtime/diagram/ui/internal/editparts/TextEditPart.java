@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 

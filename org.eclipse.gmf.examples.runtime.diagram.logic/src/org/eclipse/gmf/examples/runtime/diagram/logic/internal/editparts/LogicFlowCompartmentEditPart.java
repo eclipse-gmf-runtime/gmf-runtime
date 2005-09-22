@@ -15,6 +15,7 @@ import java.beans.PropertyChangeEvent;
 
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.LogicFlowEditPolicy;
@@ -82,6 +83,13 @@ public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#hasModelChildrenChanged(java.beans.PropertyChangeEvent)
 	 */
 	protected boolean hasModelChildrenChanged(PropertyChangeEvent evt) {
+		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#hasModelChildrenChanged(java.beans.PropertyChangeEvent)
+	 */
+	protected boolean hasModelChildrenChanged(Notification evt) {
 		return false;
 	}
 }

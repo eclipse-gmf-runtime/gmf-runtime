@@ -12,11 +12,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.ruler;
 
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.gef.rulers.RulerProvider;
-
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.GuideStyle;
@@ -80,13 +79,13 @@ public class DiagramRuler {
 		}
 	}
 	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		PresentationListener.getInstance().addPropertyChangeListener(getGuideStyle(),listener);
+	public void addNotificationListener(NotificationListener listener) {
+		PresentationListener.getInstance().addNotificationListener(getGuideStyle(),listener);
 
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		PresentationListener.getInstance().removePropertyChangeListener(getGuideStyle(),listener);
+	public void removeNotificationListener(NotificationListener listener) {
+		PresentationListener.getInstance().removeNotificationListener(getGuideStyle(),listener);
 
 	}
 }

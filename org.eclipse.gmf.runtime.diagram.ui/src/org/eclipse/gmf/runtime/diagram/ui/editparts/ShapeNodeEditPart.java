@@ -11,29 +11,28 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectorHandleEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterCompartmentItemsEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /*
@@ -183,13 +182,14 @@ public abstract class ShapeNodeEditPart
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
 	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (Properties.ID_SOURCECONNECTIONS.equals(evt.getPropertyName()))
+	protected void handleNotificationEvent(Notification notification) {
+		Object feature = notification.getFeature();
+		if (NotationPackage.eINSTANCE.getView_SourceEdges().equals(feature))
 			refreshSourceConnections();
-		else if (Properties.ID_TARGETCONNECTIONS.equals(evt.getPropertyName()))
+		else if (NotationPackage.eINSTANCE.getView_TargetEdges().equals(feature))
 			refreshTargetConnections();
 		else
-			super.handlePropertyChangeEvent(evt);
+			super.handleNotificationEvent(notification);
 	}
 	
 	/*

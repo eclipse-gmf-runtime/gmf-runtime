@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GateNonResizableEditPolic
 import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;

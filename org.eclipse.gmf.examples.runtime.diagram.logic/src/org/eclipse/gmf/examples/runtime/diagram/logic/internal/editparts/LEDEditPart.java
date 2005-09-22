@@ -11,18 +11,15 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.swt.graphics.Color;
-
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.LEDEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
@@ -33,14 +30,16 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * qili
@@ -112,14 +111,14 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
 	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(MetaModelUtil.getID(SemanticPackage.eINSTANCE.getLED_Value())))
+	protected void handleNotificationEvent(Notification evt) {
+		if (SemanticPackage.eINSTANCE.getLED_Value().equals(evt.getFeature()))
 			refreshValue();
-		else if (evt.getPropertyName().equals(Properties.ID_FONTCOLOR)) {
+		else if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(evt.getFeature())) {
 			refreshFontColor();
 		}
 		else
-			super.handlePropertyChangeEvent(evt);
+			super.handleNotificationEvent(evt);
 	}
 	
 	/* (non-Javadoc)

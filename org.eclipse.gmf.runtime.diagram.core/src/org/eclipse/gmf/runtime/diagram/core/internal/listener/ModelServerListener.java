@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal.listener;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,12 +25,10 @@ import java.util.WeakHashMap;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramDebugOptions;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
 import org.eclipse.gmf.runtime.emf.core.edit.MUniversalListener;
@@ -59,7 +56,6 @@ public abstract class ModelServerListener
 	/** listener map */
 	private final NotifierToKeyToListenersSetMap listeners = new NotifierToKeyToListenersSetMap();
 	
-	
 	/**
 	 * Utility class representing a Map of Notifier to a Map of Keys to 
 	 * a Set of listener
@@ -78,7 +74,7 @@ public abstract class ModelServerListener
 		 * 					based on their interest 
 		 * @param listener  the listener
 		 */
-		public void addListener(EObject notifier,Object key, PropertyChangeListener listener){
+		public void addListener(EObject notifier,Object key, Object listener){
 			Map keys = (Map)listenersMap.get(notifier);
 			if (keys==null){
 				keys = new HashMap();
@@ -99,7 +95,7 @@ public abstract class ModelServerListener
 		 * @param notifier the notifier the listener will listen to
 		 * @param listener the listener
 		 */
-		public void addListener(EObject notifier,PropertyChangeListener listener){
+		public void addListener(EObject notifier,Object listener){
 			addListener(notifier,LISTEN_TO_ALL_FEATURES,listener);
 		}
 		
@@ -109,7 +105,7 @@ public abstract class ModelServerListener
 		 * @param key
 		 * @param listener
 		 */
-		public void removeListener(EObject notifier,Object key,  PropertyChangeListener listener){
+		public void removeListener(EObject notifier,Object key,Object listener){
 			Map keys = (Map)listenersMap.get(notifier);
 			if (keys!=null){
 				Set listenersSet = (Set)keys.get(key);
@@ -180,7 +176,7 @@ public abstract class ModelServerListener
 			this + "#stopListening()"); //$NON-NLS-1$
 		super.stopListening();
 	}
-
+	
 	/** 
 	 * Model Server event callback method.  This method will redirect
 	 * the events to their respective event type handler
@@ -193,7 +189,6 @@ public abstract class ModelServerListener
 		// if the events contain "uncreated" objects, remove all events related to those
 		// objects from the event list (except the "uncreate" events themselves)
 		HashSet deletedObjects = new HashSet();
-
 		// first collect the "destroyed" objects
 		for (Iterator i = eventArray.iterator(); i.hasNext();) {
 			Notification event = (Notification) i.next();
@@ -244,8 +239,8 @@ public abstract class ModelServerListener
 	 * in receiving the supplied event.
 	 * This method is called by {@link #fireNotification(NotificationEvent)}.
 	 */
-	protected Set getInterestedListeners(Notification event) {
-		Collection c = getListeners(event.getNotifier(),event.getFeature());
+	protected Set getInterestedNotificationListeners(Notification event) {
+		Collection c = getNotificationListeners(event.getNotifier(),event.getFeature());
 		if (c != null) {
 			HashSet listenerSet = new HashSet();
 			listenerSet.addAll(c);
@@ -254,10 +249,6 @@ public abstract class ModelServerListener
 		return Collections.EMPTY_SET;
 	}
 
-	/** Wraps the supplied event into a property change event. */
-	protected NotificationEvent getNotificationEvent(Notification event) {
-		return new NotificationEvent(event);
-	}
 
 	/**
 	 * Forward the supplied event to all listeners listening on the supplied
@@ -270,49 +261,27 @@ public abstract class ModelServerListener
 	 * be removed one the MSL migration is complete.
 	 */
 	protected void fireNotification(Notification event) {
-		Collection listenerList = getInterestedListeners(event);
+		Collection listenerList = getInterestedNotificationListeners(event);
 		if (!listenerList.isEmpty()) {
 			List listenersSnapShot = new ArrayList(listenerList);
 			if (!listenerList.isEmpty()) {
-				NotificationEvent ne = getNotificationEvent(event);
 				for (Iterator listenerIT = listenersSnapShot.iterator(); listenerIT
 					.hasNext();) {
-					PropertyChangeListener listener = (PropertyChangeListener) listenerIT
+					NotificationListener listener = (NotificationListener) listenerIT
 						.next();
-					listener.propertyChange(ne);
+					listener.notifyChanged(event);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Returns a notifier to the given element.
-	 * @param element
-	 * @deprecated the PropertyChangeNotifier is deprecated
-	 * @return
-	 */
-	public PropertyChangeNotifier getPropertyChangeNotifier(EObject element) {
-		return new PropertyChangeNotifier(element);
-	}
-	
-	/**
-	 * Returns a notifier to the given element.
-	 * @param element
-	 * @param feature
-	 * @deprecated the PropertyChangeNotifier is deprecated
-	 * @return
-	 */
-	public PropertyChangeNotifier getPropertyChangeNotifier(EObject element,EStructuralFeature feature) {
-		return new PropertyChangeNotifier(element,feature);
-	}
-	
-	/**
 	 * Add the supplied <tt>listener</tt> to the listener list.
 	 * @param target	the traget to listen to 
 	 * @param listener	the listener
 	 */
-	public final void addPropertyChangeListener(EObject target,
-		PropertyChangeListener listener) {
+	public final void addNotificationListener(EObject target,
+		NotificationListener listener) {
 		if (target != null) {
 			listeners.addListener(target,LISTEN_TO_ALL_FEATURES,listener);
 		}
@@ -324,20 +293,20 @@ public abstract class ModelServerListener
 	 * @param key		the key for the listener
 	 * @param listener	the listener
 	 */
-	public final void addPropertyChangeListener(EObject target,EStructuralFeature key,
-		PropertyChangeListener listener) {
+	public final void addNotificationListener(EObject target,EStructuralFeature key,
+		NotificationListener listener) {
 		if (target != null) {
 			listeners.addListener(target,key,listener);
 		}
 	}
-
+	
 	/**
 	 * remove the supplied <tt>listener</tt> from the listener list.
 	 * @param target	the traget to listen to
 	 * @param listener	the listener
 	 */
-	public final void removePropertyChangeListener(EObject target,
-		PropertyChangeListener listener) {
+	public final void removeNotificationListener(EObject target,
+		NotificationListener listener) {
 		if (target != null) {
 			listeners.removeListener(target,LISTEN_TO_ALL_FEATURES,listener);
 		}
@@ -349,8 +318,8 @@ public abstract class ModelServerListener
 	 * @param key		the key for the listener
 	 * @param listener	the listener
 	 */
-	public final void removePropertyChangeListener(EObject target,Object key,
-		PropertyChangeListener listener) {
+	public final void removeNotificationListener(EObject target,Object key,
+		NotificationListener listener) {
 		if (target != null) {
 			listeners.removeListener(target,key,listener);
 		}
@@ -364,17 +333,15 @@ public abstract class ModelServerListener
 		}
 	}
 
-	protected Set getListeners(Object notifier) {
+	protected Set getNotificationListeners(Object notifier) {
 		return listeners.getListeners(notifier,LISTEN_TO_ALL_FEATURES);
 	}
 	
-	protected Set getListeners(Object notifier, Object key) {
-		Set listenersSet = null;
-		Collection c = null;
+	protected Set getNotificationListeners(Object notifier, Object key) {
 		if (key != null) {
 			if (!key.equals(LISTEN_TO_ALL_FEATURES)) {
-				listenersSet = new HashSet();
-				c = listeners.getListeners(notifier, key);
+				Set listenersSet = new HashSet();
+				Collection c = listeners.getListeners(notifier, key);
 				if (c != null && !c.isEmpty())
 					listenersSet.addAll(c);
 				c = listeners.getListeners(notifier, LISTEN_TO_ALL_FEATURES);

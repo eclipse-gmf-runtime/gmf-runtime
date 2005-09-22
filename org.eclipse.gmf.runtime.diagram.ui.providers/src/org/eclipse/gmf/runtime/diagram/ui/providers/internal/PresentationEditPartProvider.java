@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.gef.RootEditPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DescriptionCompartmentEditPart;
@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramNameCompartm
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.NoteAttachmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TextEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.CreateRootEditPartOperation;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -44,20 +43,20 @@ public class PresentationEditPartProvider extends AbstractEditPartProvider {
 	/** list of supported shape editparts. */
 	private Map shapeMap = new HashMap();
 	{
-		shapeMap.put(Properties.NOTE, NoteEditPart.class);
-		shapeMap.put(Properties.TEXT, TextEditPart.class);
+		shapeMap.put(ViewType.NOTE, NoteEditPart.class);
+		shapeMap.put(ViewType.TEXT, TextEditPart.class);
 	}
 	/** list of supportted text editparts. */
 	private Map textCompartmentMap = new HashMap();
 	{
-		textCompartmentMap.put(Properties.DIAGRAM_NAME, DiagramNameCompartmentEditPart.class);
+		textCompartmentMap.put(ViewType.DIAGRAM_NAME, DiagramNameCompartmentEditPart.class);
 		textCompartmentMap.put(CommonParserHint.DESCRIPTION, DescriptionCompartmentEditPart.class);
 	}
 	
 	/** list of supported connector editparts. */
 	private Map connectorMap = new HashMap();
 	{
-		connectorMap.put(Properties.NOTEATTACHMENT, NoteAttachmentEditPart.class);
+		connectorMap.put(ViewType.NOTEATTACHMENT, NoteAttachmentEditPart.class);
 	}
 	
 	/**

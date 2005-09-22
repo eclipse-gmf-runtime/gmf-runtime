@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -23,6 +22,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
@@ -38,14 +38,15 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.VisibilityComponentEditPo
 import org.eclipse.gmf.runtime.diagram.ui.figures.LabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.ResizableLabelLocator;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -251,18 +252,19 @@ public class LabelEditPart extends TopGraphicEditPart {
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
 	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (   evt.getPropertyName().equals(Properties.ID_POSITIONX) 
-				|| evt.getPropertyName().equals(Properties.ID_POSITIONY) 
-				|| evt.getPropertyName().equals(Properties.ID_EXTENTX)
-				|| evt.getPropertyName().equals(Properties.ID_EXTENTY)) {
+	protected void handleNotificationEvent(Notification notification) {
+		Object feature = notification.getFeature();
+		if (   NotationPackage.eINSTANCE.getLocation_X().equals(feature) 
+			|| NotationPackage.eINSTANCE.getLocation_Y().equals(feature) 
+			|| NotationPackage.eINSTANCE.getSize_Width().equals(feature)
+			|| NotationPackage.eINSTANCE.getSize_Height().equals(feature)) {
 			refreshBounds();
-		}else if (evt.getPropertyName().equals(Properties.ID_LINECOLOR)){
-			Integer c = (Integer) evt.getNewValue();
+		}else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature)){
+			Integer c = (Integer) notification.getNewValue();
 			setForegroundColor(PresentationResourceManager.getInstance().getColor(c));
 		}
 		else
-			super.handlePropertyChangeEvent(evt);
+			super.handleNotificationEvent(notification);
 	}
 
 	protected void addNotationalListeners() {

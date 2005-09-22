@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.properties;
+package org.eclipse.gmf.runtime.diagram.ui.internal.properties;
 
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -188,7 +188,6 @@ public interface Properties {
 	 * the  page height   property ID
 	 */
 	public static String ID_PAGE_HEIGHT = MetaModelUtil.getID(NotationPackage.eINSTANCE.getPageStyle_PageHeight());
-
 	
 	/**
 	 * the  extent x   property ID
@@ -211,27 +210,6 @@ public interface Properties {
 	 */
 	public static String ID_RATIO = MetaModelUtil.getID(NotationPackage.eINSTANCE.getRatio_Value());
 
-	/**
-	 * the note semantic hint
-	 */
-	public static String NOTE = "Note"; //$NON-NLS-1$
-	/**
-	 * the text semanti hint
-	 */
-	public static String TEXT = "Text"; //$NON-NLS-1$
-	/**
-	 * the note attachment semantic hint
-	 */
-	public static String NOTEATTACHMENT = "NoteAttachment"; //$NON-NLS-1$	
-	/**
-	 * diagram name semantic hint
-	 */
-	public static String DIAGRAM_NAME = "DiagramName"; //$NON-NLS-1$
-	/**
-	 * the diagram link semantic hint
-	 */
-	public static String DIAGRAM_LINK = "DiagramLink"; //$NON-NLS-1$
-	
 	/**
 	 * the diagram link annotation source
 	 */

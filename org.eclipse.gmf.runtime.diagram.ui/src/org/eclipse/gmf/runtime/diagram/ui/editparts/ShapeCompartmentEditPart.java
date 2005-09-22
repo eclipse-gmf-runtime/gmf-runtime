@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,6 +28,7 @@ import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
@@ -41,9 +43,7 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.tools.DeselectAllTracker;
-import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerNodeEditPolicy;
@@ -55,10 +55,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ShapeCompartmentDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.widgets.Display;
 /**
  * A generic (sub) shape container that holds instances of <code>ShapeNodeEditPart</code>s and
  * manages the display of <code>ConnectionNodeEditPart</code>s anchored to these shape editpart 
@@ -66,7 +67,7 @@ import org.eclipse.gmf.runtime.notation.View;
  *
  * @author mhanner
  */
-public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditPart implements ISurfaceEditPart {
+public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditPart implements ISurfaceEditPart, PropertyChangeListener {
 	
 	/** private connector refresh manager. */
 	private ConnectorRefreshMgr _crMgr;
@@ -399,14 +400,9 @@ public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditP
 	 */
 	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
 		String pName = event.getPropertyName();
-		if (Properties.ID_EXTENTX.equals(pName)
-			|| Properties.ID_EXTENTY.equals(pName)
-			|| RangeModel.PROPERTY_EXTENT.equals(pName)
+		if (RangeModel.PROPERTY_EXTENT.equals(pName)
 			|| RangeModel.PROPERTY_VALUE.equals(pName)) {
 			refreshConnectors();
-		}
-		else {
-			super.handlePropertyChangeEvent(event);
 		}
 	}
 	
@@ -417,9 +413,16 @@ public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditP
 	 * @see #refreshConnectors()
 	 * @param event a model server event.
 	 */
-	protected void handleNotificationEvent( NotificationEvent event ) {
-		super.handleNotificationEvent(event);
-		if ( event.isElementAddedToSlot() || event.isElementRemovedFromSlot() ) {
+	protected void handleNotificationEvent( Notification event ) {
+		Object feature = event.getFeature();
+		if (NotationPackage.eINSTANCE.getSize_Width().equals(feature)
+			|| NotationPackage.eINSTANCE.getSize_Height().equals(feature)) {
+			refreshConnectors();
+		} else
+			super.handleNotificationEvent(event);
+		
+		if (NotificationUtil.isElementAddedToSlot(event) ||
+			NotificationUtil.isElementRemovedFromSlot(event) ) {
 			refreshConnectors();
 		}
 	}
@@ -560,4 +563,15 @@ public abstract class ShapeCompartmentEditPart extends ResizableCompartmentEditP
 	public void setIsSupportingViewActions(boolean supportsViewActions){
 		this.isSupportingViewActions = supportsViewActions;
 	}
+	
+	/**
+	 * Handles the passed property changed event only if the editpart's view is
+	 * not deleted.
+	 */
+	public final void propertyChange(PropertyChangeEvent event) {
+		if (isActive())
+			handlePropertyChangeEvent(event);
+	}
+
+
 }

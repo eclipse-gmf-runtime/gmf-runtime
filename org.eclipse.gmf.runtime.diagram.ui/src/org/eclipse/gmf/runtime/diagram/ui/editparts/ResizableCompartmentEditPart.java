@@ -11,16 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
-
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.ExposeHelper;
 import org.eclipse.gef.editparts.ViewportExposeHelper;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Ratio;
@@ -106,42 +104,37 @@ public abstract class ResizableCompartmentEditPart
 	 */
 	protected abstract String getTitleName();
 
+		
 	/**
 	 * Handles the following properties: <BR>
 	 * <UL>
-	 * <LI>{@link Properties#ID_RATIO} calls {@link #refreshRatio()}
-	 * <LI>{@link Properties#ID_COLLAPSED} calls {@link #refreshCollapsed()}
-	 * <LI>{@link Properties#ID_SHOWCOMPARTMENTTITLE} calls {@link #refreshShowCompartmentTitle()}
+	 * <LI>{@link NotationPackage.eINSTANCE.getRatio_Value()} calls {@link #refreshRatio()}
+	 * <LI>{@link NotationPackage.eINSTANCE.getDrawerStyle_Collapsed()} calls {@link #refreshCollapsed()}
+	 * <LI>{@link NotationPackage.eINSTANCE.getTitleStyle_ShowTitle()} calls {@link #refreshShowCompartmentTitle()}
 	 * <UL>
 	 * <BR>
 	 * All other properties are forwarded to the parent class for processing.
 	 * @param evt a property change event.
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
 	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(Properties.ID_RATIO) 
-			|| evt.getOldValue() instanceof Ratio
-			|| evt.getNewValue() instanceof Ratio)
+	protected void handleNotificationEvent(Notification event ) {
+		Object feature = event.getFeature();
+		if (NotationPackage.eINSTANCE.getRatio_Value().equals(feature) 
+			|| event.getOldValue()instanceof Ratio
+			|| event.getNewValue() instanceof Ratio)
 			refreshRatio();
-		else if (evt.getPropertyName().equals(Properties.ID_COLLAPSED)){		
-			setCollapsed(((Boolean) evt.getNewValue()).booleanValue(), true);
+		else if (NotationPackage.eINSTANCE.getDrawerStyle_Collapsed().equals(feature)){		
+			setCollapsed(event.getNewBooleanValue(), true);
 			this.getFigure().revalidate();
-		} else if (
-			evt.getPropertyName().equals(Properties.ID_SHOWCOMPARTMENTTITLE))
-			setShowCompartmentTitle(
-				((Boolean) evt.getNewValue()).booleanValue());
-		else if (evt.getPropertyName().equals(Properties.ID_FONTCOLOR)){
-			Integer c = (Integer) evt.getNewValue();
+		} else if (NotationPackage.eINSTANCE.getTitleStyle_ShowTitle().equals(feature))
+			setShowCompartmentTitle(event.getNewBooleanValue());
+		else if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)){
+			Integer c = (Integer) event.getNewValue();
 			setFontColor(PresentationResourceManager.getInstance().getColor(c));
 		}
-		else
-			super.handlePropertyChangeEvent(evt);
-	}
-
-	protected void handleNotificationEvent( NotificationEvent event ) {
-		if (NotationPackage.eINSTANCE.getFontStyle().isInstance(event.getElement()))
+		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(event.getNotifier())){
 			refreshFont();
-		else
+		}else
 			super.handleNotificationEvent(event);
 	}
 		

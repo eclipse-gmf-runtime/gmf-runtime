@@ -80,6 +80,16 @@ public class EditPolicyService extends Service implements IEditPolicyProvider {
 
 			return providerConfiguration.supports(o.getEditPart());
 		}
+		
+		/** 
+		 * the default implementation is overriden here to make it easier to debug
+		 * XML providers, now when you select the ProviderDescriptor in the debug
+		 * window the provider class name will be displayed
+		 * @return the provider class name
+		 */
+		public String toString() {
+			return getElement().getAttribute("class"); 	 //$NON-NLS-1$
+		}
 	}
 
 	/** The singleton instance of the editpolicy service. */

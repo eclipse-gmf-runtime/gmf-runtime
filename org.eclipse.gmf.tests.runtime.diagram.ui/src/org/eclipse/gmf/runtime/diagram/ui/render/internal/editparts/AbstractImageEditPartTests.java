@@ -17,21 +17,20 @@ import java.util.ListIterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 
 
 /**
@@ -87,7 +86,7 @@ extends TestCase {
 
 						public void run() {
 							Node note1 = DiagramUtil.createNode(diagram,
-								null, Properties.NOTE, getPreferenceHint()); //$NON-NLS-1$
+								null, ViewType.NOTE, getPreferenceHint()); //$NON-NLS-1$
 							assertNotNull("Note1 creation failed", note1); //$NON-NLS-1$
 							list.add(note1);
 						}

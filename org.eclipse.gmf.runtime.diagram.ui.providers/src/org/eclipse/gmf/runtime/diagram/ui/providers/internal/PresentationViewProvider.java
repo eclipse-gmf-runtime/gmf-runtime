@@ -17,7 +17,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectorViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.NoteViewFactory;
@@ -44,16 +44,16 @@ public class PresentationViewProvider extends AbstractViewProvider {
 	private Map nodeMap = new HashMap();
 	{
 		nodeMap.put(CommonParserHint.DESCRIPTION, BasicNodeViewFactory.class);
-		nodeMap.put(Properties.DIAGRAM_NAME, BasicNodeViewFactory.class);
-		nodeMap.put(Properties.NOTE, NoteViewFactory.class);
-		nodeMap.put(Properties.TEXT, TextShapeViewFactory.class);
+		nodeMap.put(ViewType.DIAGRAM_NAME, BasicNodeViewFactory.class);
+		nodeMap.put(ViewType.NOTE, NoteViewFactory.class);
+		nodeMap.put(ViewType.TEXT, TextShapeViewFactory.class);
 		nodeMap.put(NotationPackage.eINSTANCE.getDiagram(), NoteViewFactory.class);	
 	}
 	/** list of supported connector views. */
 	static private Map connectorMap = new HashMap();
 	{
 		connectorMap.put(
-			Properties.NOTEATTACHMENT,
+			ViewType.NOTEATTACHMENT,
 			ConnectorViewFactory.class);
 	}
 

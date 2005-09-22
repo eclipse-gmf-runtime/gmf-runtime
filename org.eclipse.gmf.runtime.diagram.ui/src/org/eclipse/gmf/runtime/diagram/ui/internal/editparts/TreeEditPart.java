@@ -11,11 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
@@ -25,24 +23,24 @@ import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
 
 /**
- * @author melaasar
+ * @author melaasar, mmostafa
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class TreeEditPart
 	extends AbstractTreeEditPart
-	implements PropertyChangeListener {
+	implements NotificationListener {
 
 	/** the element parser */
 	private IParser parser;
@@ -72,16 +70,16 @@ public class TreeEditPart
 	public void activate() {
 		super.activate();
 
-		PresentationListener.getInstance().addPropertyChangeListener((View)getModel(),this);
-		PresentationListener.getInstance().addPropertyChangeListener(getSemanticElement(),this);
+		PresentationListener.getInstance().addNotificationListener((View)getModel(),this);
+		PresentationListener.getInstance().addNotificationListener(getSemanticElement(),this);
 	}
 
 	/**
 	 * @see org.eclipse.gef.EditPart#deactivate()
 	 */
 	public void deactivate() {
-		PresentationListener.getInstance().removePropertyChangeListener((View)getModel(),this);
-		PresentationListener.getInstance().removePropertyChangeListener(getSemanticElement(),this);
+		PresentationListener.getInstance().removeNotificationListener((View)getModel(),this);
+		PresentationListener.getInstance().removeNotificationListener(getSemanticElement(),this);
 		super.deactivate();
 	}
 
@@ -146,33 +144,24 @@ public class TreeEditPart
 	 * Handles the passed property changed event only if the editpart's view is not deleted
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
-	public final void propertyChange(PropertyChangeEvent event) {
+	public final void notifyChanged(Notification event) {
 		// Receiving an event while a view is deleted could only happen during "undo" of view creation,
 		// However, event handlers should be robust by using the event's value and not trying to read 
 		// the value from the model
 		if ((((View)getModel()).eResource() != null))
-			handlePropertyChangeEvent(event);
+			handleNotificationEvent(event);
 	}
 
-	/**
-	 * Handles the property changed event
-	 * @param event the property changed event
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
-		if (event.getPropertyName().equals(Properties.ID_SEMANTICREF)) {
-			reactivateSemanticElement();
-		} 
-		else if (event instanceof NotificationEvent) {
-			handleNotificationEvent((NotificationEvent) event);
-		}
-	}
-	
 	/**
 	 * Handles the supplied notification event. 
 	 * @param event
 	 */
-	protected void handleNotificationEvent( NotificationEvent event ) { 
-		refreshVisuals();
+	protected void handleNotificationEvent( Notification notification ) {
+		if (NotationPackage.eINSTANCE.getView_Element()==notification.getFeature()) {
+			reactivateSemanticElement();
+		} else{
+			refreshVisuals();
+		}
 	}
 	
 	/**

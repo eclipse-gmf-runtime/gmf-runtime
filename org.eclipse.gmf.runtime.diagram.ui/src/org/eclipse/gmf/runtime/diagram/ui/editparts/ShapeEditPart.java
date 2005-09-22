@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
@@ -23,15 +22,13 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
-
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ShapeResizableEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -89,46 +86,37 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		return getFigure().getBounds().getSize();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(Properties.ID_EXTENTX)
-			|| evt.getPropertyName().equals(Properties.ID_EXTENTY)
-			|| evt.getPropertyName().equals(Properties.ID_POSITIONX)
-			|| evt.getPropertyName().equals(Properties.ID_POSITIONY)) {
+	protected void handleNotificationEvent(Notification notification) {
+		Object feature = notification.getFeature();
+		if (NotationPackage.eINSTANCE.getSize_Width().equals(feature)
+			|| NotationPackage.eINSTANCE.getSize_Height().equals(feature)
+			|| NotationPackage.eINSTANCE.getLocation_X().equals(feature)
+			|| NotationPackage.eINSTANCE.getLocation_Y().equals(feature)) {
 			refreshBounds();
 		} 
-		else if (evt.getPropertyName().equals(Properties.ID_FILLCOLOR)) {
-			Integer c = (Integer) evt.getNewValue();
+		else if (NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {
+			Integer c = (Integer) notification.getNewValue();
 			setBackgroundColor(PresentationResourceManager.getInstance().getColor(c));
 		} 
-		else if (evt.getPropertyName().equals(Properties.ID_LINECOLOR)) {
-			Integer c = (Integer) evt.getNewValue();
+		else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature)) {
+			Integer c = (Integer) notification.getNewValue();
 			setForegroundColor(PresentationResourceManager.getInstance().getColor(c));
 		} 
-		else {
-			super.handlePropertyChangeEvent(evt);
-		}
-	}
-
-	protected void handleNotificationEvent(NotificationEvent e) {
-		Notification event = e.getNotification();
-		
-		if (NotationPackage.eINSTANCE.getFontStyle().isInstance(e.getElement()))
+		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(notification.getNotifier()))
 			refreshFont();
-		else if (event.getFeature() == NotationPackage.eINSTANCE.getView_Element()
-		 && ((EObject)event.getNotifier())== getNotationView())
+		else if (notification.getFeature() == NotationPackage.eINSTANCE.getView_Element()
+		 && ((EObject)notification.getNotifier())== getNotationView())
 			handleMajorSemanticChange();
 
-		else if (event.getEventType() == EventTypes.UNRESOLVE 
-				&& event.getNotifier() == ((View)getModel()).getElement())
+		else if (notification.getEventType() == EventTypes.UNRESOLVE 
+				&& notification.getNotifier() == ((View)getModel()).getElement())
 			handleMajorSemanticChange();
 
 		else
-			super.handleNotificationEvent(e);
+			super.handleNotificationEvent(notification);
 	}
 
+	
 	/**
 	 * refresh the bounds 
 	 */

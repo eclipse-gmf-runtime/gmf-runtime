@@ -20,13 +20,12 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -86,12 +85,12 @@ public class DiagramLinkTest
 		annotation.getContents().add(diagram2);
 		
 		// simulate creating a valid Diagram Link	using the new format
-		View link1 = ViewService.getInstance().createNode(new EObjectAdapter(diagram1),diagram1,Properties.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+		View link1 = ViewService.getInstance().createNode(new EObjectAdapter(diagram1),diagram1,ViewType.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 		assertValidDiagramLinkView(link1);
 		
 		
 		//simulate loading  broken link using the new format	
-		View link2 = ViewService.getInstance().createNode(new EObjectAdapter(diagram2),diagram1,Properties.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+		View link2 = ViewService.getInstance().createNode(new EObjectAdapter(diagram2),diagram1,ViewType.NOTE,0,true, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 		assertValidDiagramLinkView(link2);
 		link2.setElement(null);
 		View link2NotationView = (View)EcoreUtil.copy(link2);
@@ -115,7 +114,7 @@ public class DiagramLinkTest
 		// last check will be making sure that normal Notes still working fine
 		diagramLink = NotationFactory.eINSTANCE.createNode();
 		diagramLink.setElement(null);
-		diagramLink.setType(Properties.NOTE);
+		diagramLink.setType(ViewType.NOTE);
 		diagramLink.setVisible(true);
 		diagram1.insertChild(diagramLink);
 		assertValidNoteView(diagramLink);

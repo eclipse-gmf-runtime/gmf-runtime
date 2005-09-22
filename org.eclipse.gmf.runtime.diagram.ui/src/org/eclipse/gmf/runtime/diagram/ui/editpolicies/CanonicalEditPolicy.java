@@ -12,8 +12,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +27,7 @@ import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -43,7 +42,8 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
@@ -54,6 +54,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
@@ -85,7 +86,7 @@ import org.eclipse.swt.widgets.Display;
  * @author mhanner
  */
 public abstract class CanonicalEditPolicy extends AbstractEditPolicy 
-implements PropertyChangeListener {
+implements NotificationListener {
 	
 	/** Runs the supplied commands asyncronously. */
 	private static class AsyncCommand extends Command {
@@ -479,12 +480,15 @@ implements PropertyChangeListener {
 	 * @param cmd command that can be executed (i.e., cmd.canExecute() == true)
 	 */
 	protected void executeCommand( final Command cmd ) {
-		MEditingDomainGetter.getMEditingDomain((View)getHost().getModel()).runAsUnchecked( new MRunnable() {
+		int options = MRunOption.UNCHECKED /*| MRunOption.SILENT*/;
+		MEditingDomainGetter.getMEditingDomain((View)getHost().getModel()).runWithOptions(new MRunnable() {
+		//MEditingDomainGetter.getMEditingDomain((View)getHost().getModel()).runAsUnchecked( new MRunnable() {
 			public Object run() { 
 				cmd.execute(); 
 				return null;
 			}
-		});
+		},options);
+		//getHost().refresh();
 	}
 
 	/**
@@ -716,7 +720,7 @@ implements PropertyChangeListener {
 	 */
 	protected boolean addListenerFilter(
 		String filterId,
-		PropertyChangeListener listener,
+		NotificationListener listener,
 		EObject element) {
 		if ( filterId == null || listener == null ) {
 			throw new NullPointerException();
@@ -727,7 +731,7 @@ implements PropertyChangeListener {
 				_listenerFilters = new HashMap();
 			
 			if ( !_listenerFilters.containsKey(filterId)) {
-				PresentationListener.getInstance().addPropertyChangeListener(element,listener);
+				PresentationListener.getInstance().addNotificationListener(element,listener);
 				_listenerFilters.put(filterId, new Object[] { element, listener });
 				return true;
 			}
@@ -748,7 +752,7 @@ implements PropertyChangeListener {
 	 */
 	protected boolean addListenerFilter(
 		String filterId,
-		PropertyChangeListener listener,
+		NotificationListener listener,
 		EObject element,
 		EStructuralFeature feature) {
 		if ( filterId == null || listener == null ) {
@@ -760,7 +764,7 @@ implements PropertyChangeListener {
 				_listenerFilters = new HashMap();
 			
 			if ( !_listenerFilters.containsKey(filterId)) {
-				PresentationListener.getInstance().addPropertyChangeListener(element,feature,listener);
+				PresentationListener.getInstance().addNotificationListener(element,feature,listener);
 				_listenerFilters.put(filterId, new Object[] { element,feature, listener });
 				return true;
 			}
@@ -779,11 +783,11 @@ implements PropertyChangeListener {
 		if (objects == null)
 			return;
 		if (objects.length>2){
-			PresentationListener.getInstance().removePropertyChangeListener(
-				(EObject)objects[0],(EStructuralFeature)objects[1],(PropertyChangeListener) objects[2]);
+			PresentationListener.getInstance().removeNotificationListener(
+				(EObject)objects[0],(EStructuralFeature)objects[1],(NotificationListener) objects[2]);
 		}else {
-			PresentationListener.getInstance().removePropertyChangeListener(
-					(EObject)objects[0],(PropertyChangeListener) objects[1]);
+			PresentationListener.getInstance().removeNotificationListener(
+					(EObject)objects[0],(NotificationListener) objects[1]);
 		}
 	}
 	
@@ -791,15 +795,14 @@ implements PropertyChangeListener {
 	 * Event callback: filters out non IElementEvent events.
 	 * @param event an event fired from the model server.
 	 */
-	public final void propertyChange(PropertyChangeEvent event) {
-		if ( isHostStillValid() && event instanceof NotificationEvent ) {
-			NotificationEvent ne = (NotificationEvent)event;
-			EObject element = ne.getElement();
+	public final void notifyChanged(Notification notification) {
+		if ( isHostStillValid()) {
+			Object element = notification.getNotifier();
 			if ( element == null  ) {
 				return;
 			}
 			
-			handleNotificationEvent(ne);
+			handleNotificationEvent(notification);
 		}
 	}
 	
@@ -819,10 +822,8 @@ implements PropertyChangeListener {
 	 * @param event a semantic event.
 	 * @deprecated use {@link CanonicalEditPolicy#handleNotificationEvent} instead
 	 */
-	protected void handleSemanticEvent(NotificationEvent event) {
-		if ( shouldHandleSemanticEvent(event) ) {
-			refresh();
-		}
+	protected void handleSemanticEvent(Notification event) {
+		refresh();
 	}
 		
 	/**
@@ -834,8 +835,8 @@ implements PropertyChangeListener {
 	 * otherwise <tt>false</tt>.
 	 * @deprecated use {@link CanonicalEditPolicy#shouldHandleNotificationEvent} instead
 	 */
-	protected boolean shouldHandleSemanticEvent(NotificationEvent event) {
-		return event.isElementAddedToSlot() || event.isElementRemovedFromSlot();
+	protected boolean shouldHandleSemanticEvent(Notification event) {
+		return NotificationUtil.isElementAddedToSlot(event) || NotificationUtil.isElementRemovedFromSlot(event);
 	}
 	
 	/**
@@ -844,7 +845,7 @@ implements PropertyChangeListener {
 	 * 
 	 * @param event <code>NotificationEvent</code> to handle.
 	 */
-	protected void handleNotificationEvent(NotificationEvent event) {
+	protected void handleNotificationEvent(Notification event) {
 		
 		boolean shouldRefresh = false;
 		if ( shouldHandleNotificationEvent(event) ) {
@@ -875,7 +876,7 @@ implements PropertyChangeListener {
 	 * @param event <code>NotificationEvent</code> to check
 	 * @return <code>true</code> if event should be handled, <code>false</code> otherwise.
 	 */
-	protected boolean shouldHandleNotificationEvent( NotificationEvent event) {
+	protected boolean shouldHandleNotificationEvent(Notification event) {
 	  if ( NotationPackage.eINSTANCE.getDrawerStyle_Collapsed() == event.getFeature() || 
 	 	   NotationPackage.eINSTANCE.getCanonicalStyle_Canonical() == event.getFeature() ||
 	 	   NotationPackage.eINSTANCE.getView_Visible() == event.getFeature() ||
@@ -883,10 +884,11 @@ implements PropertyChangeListener {
 		  return true;
 	  }
 
-	  EObject element = event.getElement();
-	  return (!(element instanceof View) 
-	         && (event.isElementAddedToSlot() 
-	            || event.isElementRemovedFromSlot()));
+	  Object element = event.getNotifier();
+	  return (element instanceof EObject 
+			  && !(element instanceof View) 
+	         && (NotificationUtil.isElementAddedToSlot(event) 
+	            || NotificationUtil.isElementRemovedFromSlot(event)));
 	}
 
 			

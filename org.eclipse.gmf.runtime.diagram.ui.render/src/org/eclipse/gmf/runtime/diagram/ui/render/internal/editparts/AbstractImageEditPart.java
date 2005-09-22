@@ -11,11 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
 
-import java.beans.PropertyChangeEvent;
-
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
@@ -23,6 +18,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.figures.ScalableImageFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.WrapperNodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 
 /**
  * @author sshaw
@@ -148,14 +145,5 @@ public abstract class AbstractImageEditPart
 		}
 
 		return renderedImage;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		super.handlePropertyChangeEvent(evt);
 	}
 }

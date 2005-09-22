@@ -14,17 +14,17 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.graphics.RGB;
-
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * The Factory class responsible for creating Note Views
@@ -53,7 +53,7 @@ public class NoteViewFactory
 		// alignment)
 		if (view.getElement() instanceof Diagram){
 			if(semanticHint==null || semanticHint.length()==0)
-			   view.setType(Properties.NOTE);
+			   view.setType(ViewType.NOTE);
 			EAnnotation annotation  = EcoreFactory.eINSTANCE.createEAnnotation();
 			annotation.setSource(Properties.DIAGRAMLINK_ANNOTATION);
 			view.getEAnnotations().add(annotation);

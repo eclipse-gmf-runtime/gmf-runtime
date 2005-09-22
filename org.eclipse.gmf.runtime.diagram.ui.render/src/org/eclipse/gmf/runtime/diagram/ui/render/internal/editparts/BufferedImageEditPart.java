@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
 
-import java.beans.PropertyChangeEvent;
-
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -44,14 +42,5 @@ public class BufferedImageEditPart
 	public RenderedImage regenerateImageFromSource() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		super.handlePropertyChangeEvent(evt);
 	}
 }

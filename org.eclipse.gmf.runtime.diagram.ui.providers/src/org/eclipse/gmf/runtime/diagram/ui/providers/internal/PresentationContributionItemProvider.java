@@ -13,18 +13,12 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.actions.ActionFactory;
-
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ActionRegistry;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AddNoteAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AlignAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ShowPropertiesViewAction;
@@ -75,10 +69,15 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.actions.DeleteFromModelAction
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.OpenAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentUtil;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author melaasar
@@ -314,11 +313,11 @@ public class PresentationContributionItemProvider
 		if (actionId.equals(ActionIds.ACTION_SHOW_PROPERTIES_VIEW))
 			return new ShowPropertiesViewAction(workbenchPage);
 		if (actionId.equals(ActionIds.ACTION_ADD_NOTE))
-			return new CreateShapeViewAction(workbenchPage, ActionIds.ACTION_ADD_NOTE, Properties.NOTE, DiagramProvidersResourceManager.getI18NString("Note.menuItem"), //$NON-NLS-1$
+			return new CreateShapeViewAction(workbenchPage, ActionIds.ACTION_ADD_NOTE, ViewType.NOTE, DiagramProvidersResourceManager.getI18NString("Note.menuItem"), //$NON-NLS-1$
 				DiagramProvidersResourceManager.getInstance().getImageDescriptor(
 					DiagramProvidersResourceManager.DESC_NOTE));
 		if (actionId.equals(ActionIds.ACTION_ADD_TEXT))
-			return new CreateViewAction(workbenchPage, ActionIds.ACTION_ADD_TEXT, Properties.TEXT, DiagramProvidersResourceManager.getI18NString("Text.menuItem"), //$NON-NLS-1$
+			return new CreateViewAction(workbenchPage, ActionIds.ACTION_ADD_TEXT, ViewType.TEXT, DiagramProvidersResourceManager.getI18NString("Text.menuItem"), //$NON-NLS-1$
 				DiagramProvidersResourceManager.getInstance().getImageDescriptor(
 					DiagramProvidersResourceManager.DESC_TEXT));
 		if (actionId.equals(ActionIds.ACTION_ADD_NOTELINK))

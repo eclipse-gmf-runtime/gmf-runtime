@@ -12,18 +12,16 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.Connection;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
-
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Implements a Connection Editpart to represnt a Wire like
@@ -66,11 +64,9 @@ protected Connection createConnectionFigure(){
 /**
  * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
  */
-protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
-	super.handlePropertyChangeEvent(event);
-	
-    Object element = MetaModelUtil.getElement(event.getPropertyName());
-    if (element != null && element.equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id())) {
+protected void handleNotificationEvent(Notification event) {
+	super.handleNotificationEvent(event);
+	if (NotationPackage.eINSTANCE.getIdentityAnchor_Id().equals(event.getFeature())) {
     	anchorChange();
     }
 }

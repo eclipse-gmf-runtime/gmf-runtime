@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +18,12 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -31,7 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHandle;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * A resizable editpolicy for resizable compartments. The editpolicy could be vertical
@@ -142,8 +142,8 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 
 	private EditPartListener hostListener;
 	private EditPartListener parentListener;
-	private PropertyChangeListener propertyListener;
-
+	private NotificationListener propertyListener;
+	
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#addSelectionListener()
 	 */
@@ -163,20 +163,20 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 		};
 		getParentGraphicEditPart().addEditPartListener(parentListener);
 
-		propertyListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (Properties.ID_ISVISIBLE.equals(evt.getPropertyName()))
+		propertyListener = new NotificationListener() {
+			public void notifyChanged(Notification notification) {
+				if (NotationPackage.eINSTANCE.getView_Visible().equals(notification.getFeature()))
 					setSelectedState();
 			}
 		};
-		PresentationListener.getInstance().addPropertyChangeListener(getGraphicalEditPart().getNotationView(),propertyListener);
+		PresentationListener.getInstance().addNotificationListener(getGraphicalEditPart().getNotationView(),propertyListener);
 	}
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
 	protected void removeSelectionListener() {
-		PresentationListener.getInstance().removePropertyChangeListener(getGraphicalEditPart().getNotationView(),propertyListener);
+		PresentationListener.getInstance().removeNotificationListener(getGraphicalEditPart().getNotationView(),propertyListener);
 		getHost().removeEditPartListener(hostListener);
 		getParentGraphicEditPart().removeEditPartListener(parentListener);
 	}

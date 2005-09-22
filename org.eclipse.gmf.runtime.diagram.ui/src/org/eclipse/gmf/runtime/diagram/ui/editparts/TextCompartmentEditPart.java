@@ -19,6 +19,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPolicy;
@@ -32,12 +33,10 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -246,6 +245,17 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 	protected boolean isAffectingParserOptions(PropertyChangeEvent evt) {
 		return false;
 	}
+	
+	/**
+	 * Determines if the given Notification affects the paser options
+	 * 
+	 * @param evt The notification in question
+	 * @return whether the given notification affects the parser options
+	 */
+	protected boolean isAffectingParserOptions(Notification evt) {
+		return false;
+	}
+
 
 	/**
 	 * Method getLabelToolTip.
@@ -348,44 +358,40 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 			});
 	}
 
-	protected void handleNotificationEvent(NotificationEvent event) {
-		if (getParser() != null
-			&& getParser().isAffectingEvent(event.getNotification(),
+	protected void handleNotificationEvent(Notification event) {
+		Object feature = event.getFeature();
+		if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)){
+			Integer c = (Integer) event.getNewValue();
+			setFontColor(PresentationResourceManager.getInstance().getColor(c));
+		}
+		else if (NotationPackage.eINSTANCE.getFontStyle_Underline().equals(feature))
+			refreshUnderline();
+		else if (NotationPackage.eINSTANCE.getFontStyle_StrikeThrough().equals(feature))
+			refreshStrikeThrough();
+		else if (isAffectingParserOptions(event)) {
+			refreshParserOptions();
+			refreshLabel();
+		} 
+		else {
+			if (getParser() != null
+				&& getParser().isAffectingEvent(event,
 				getParserOptions().intValue())) {
 			refreshLabel();
 			return;
-		}
-		if (getParser() instanceof ISemanticParser) {
-			ISemanticParser modelParser = (ISemanticParser) getParser();
-			if (modelParser.areSemanticElementsAffected(null,
-					event.getNotification())) {
-				removeSemanticListeners();
-				if (resolveSemanticElement() != null)
-					addSemanticListeners();
-				refreshLabel();
-				return;
+			}
+			if (getParser() instanceof ISemanticParser) {
+				ISemanticParser modelParser = (ISemanticParser) getParser();
+				if (modelParser.areSemanticElementsAffected(null,
+						event)) {
+					removeSemanticListeners();
+					if (resolveSemanticElement() != null)
+						addSemanticListeners();
+					refreshLabel();
+					return;
+				}
 			}
 		}
 		super.handleNotificationEvent(event);
-	}
-	
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(Properties.ID_FONTCOLOR)){
-			Integer c = (Integer) evt.getNewValue();
-			setFontColor(PresentationResourceManager.getInstance().getColor(c));
-		}
-		else if (evt.getPropertyName().equals(Properties.ID_FONTUNDERLINE))
-			refreshUnderline();
-		else if (evt.getPropertyName().equals(Properties.ID_FONTSTRIKETHROUGH))
-			refreshStrikeThrough();
-		else if (isAffectingParserOptions(evt)) {
-			refreshParserOptions();
-			refreshLabel();
-		} else
-			super.handlePropertyChangeEvent(evt);
 	}
 
 	protected void refreshVisuals() {

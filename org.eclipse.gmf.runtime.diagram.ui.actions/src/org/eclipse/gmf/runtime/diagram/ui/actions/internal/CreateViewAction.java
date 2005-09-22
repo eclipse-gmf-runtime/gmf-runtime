@@ -12,15 +12,14 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gef.Request;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * This is the action handler for the diagram menu.   Adds actions to 
@@ -68,10 +67,10 @@ public class CreateViewAction extends PresentationAction {
 	
 		if (getId().equals(ActionIds.ACTION_ADD_NOTE)) {
 			viewDescriptor = new ViewDescriptor(null, Node.class,
-				Properties.NOTE, getPreferencesHint());
+				ViewType.NOTE, getPreferencesHint());
 		} else {
 			viewDescriptor = new ViewDescriptor(null, Node.class,
-				Properties.TEXT, getPreferencesHint());
+				ViewType.TEXT, getPreferencesHint());
 		}
 		
 		return new CreateViewRequest(viewDescriptor);

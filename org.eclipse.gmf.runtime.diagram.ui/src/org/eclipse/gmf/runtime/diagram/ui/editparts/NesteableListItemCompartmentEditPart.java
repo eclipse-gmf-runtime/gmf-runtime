@@ -16,22 +16,21 @@
  */
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.ExposeHelper;
 import org.eclipse.gef.editparts.ViewportExposeHelper;
-
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableCompartmentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
@@ -218,7 +217,6 @@ public class NesteableListItemCompartmentEditPart
 		}
 	}
 
-
 	/**
 	 * Handles the following properties: <BR>
 	 * <UL>
@@ -230,17 +228,18 @@ public class NesteableListItemCompartmentEditPart
 	 * @param evt a property change event.
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
 	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(Properties.ID_RATIO) 
+	protected void handleNotificationEvent(Notification evt) {
+		Object feature = evt.getFeature();
+		if (NotationPackage.eINSTANCE.getRatio_Value().equals(feature) 
 				|| evt.getOldValue() instanceof Ratio
 				|| evt.getNewValue() instanceof Ratio)
 			refreshRatio();
-		else if (evt.getPropertyName().equals(Properties.ID_COLLAPSED)){		
+		else if (NotationPackage.eINSTANCE.getDrawerStyle_Collapsed().equals(feature)){		
 			setCollapsed(((Boolean) evt.getNewValue()).booleanValue(), true);
 			this.getFigure().revalidate();
 		}
 		else
-			super.handlePropertyChangeEvent(evt);
+			super.handleNotificationEvent(evt);
 	}
 
 	/**

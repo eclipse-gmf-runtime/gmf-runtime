@@ -15,12 +15,9 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -44,7 +41,8 @@ public interface IGraphicalEditPart
 	public IDiagramEditDomain getDiagramEditDomain();
 
 	/**
-	 * Method getChildBySemanticHint.
+	 * Returns the first child inside this edit part that owns a view
+	 * with the same type as the passed hint
 	 * @param semanticHint
 	 * @return IGraphicalEditPart
 	 */

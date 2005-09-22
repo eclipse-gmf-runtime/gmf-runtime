@@ -19,20 +19,19 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.jface.util.Assert;
 
 
 /**
@@ -87,19 +86,19 @@ public class DiagramCreator {
 
 						public Object run() {
 							Node note1 = DiagramUtil.createNode(diagram,
-								null, Properties.NOTE, preferencesHint); //$NON-NLS-1$
+								null, ViewType.NOTE, preferencesHint); //$NON-NLS-1$
 							Assert.isNotNull(note1, "Note1 creation failed"); //$NON-NLS-1$
 							Assert.isTrue(diagram.getChildren().get(0) == note1,
 								"Note1 is not inserted in diagram"); //$NON-NLS-1$
 
 							Node note2 = DiagramUtil.createNode(diagram,
-								null, Properties.NOTE, preferencesHint); //$NON-NLS-1$
+								null, ViewType.NOTE, preferencesHint); //$NON-NLS-1$
 							Assert.isNotNull(note2, "Note2 creation failed"); //$NON-NLS-1$
 							Assert.isTrue(diagram.getChildren().get(1) == note2,
 								"Note2 is not inserted in diagram"); //$NON-NLS-1$
 
 							Edge noteAttachment = DiagramUtil.createEdge(
-								note1, note2, null, Properties.NOTEATTACHMENT, preferencesHint); //$NON-NLS-1$
+								note1, note2, null, ViewType.NOTEATTACHMENT, preferencesHint); //$NON-NLS-1$
 							Assert.isNotNull(noteAttachment,
 								"NoteAttachment creation failed"); //$NON-NLS-1$
 							Assert.isTrue(diagram.getEdges().get(0) == noteAttachment,

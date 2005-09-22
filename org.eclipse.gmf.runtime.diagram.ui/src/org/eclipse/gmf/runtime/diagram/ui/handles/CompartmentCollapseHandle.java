@@ -21,15 +21,17 @@ import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.handles.AbstractHandle;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.CollapseFigure;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.CompartmentCollapseTracker;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -42,7 +44,7 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class CompartmentCollapseHandle
 	extends AbstractHandle
-	implements PropertyChangeListener {
+	implements PropertyChangeListener, NotificationListener {
 
 	/** 
 	 * Positions the supplied figure in its owner's top left corner offset by [1,1] 
@@ -111,6 +113,14 @@ public class CompartmentCollapseHandle
 			collapseFigure.setCollapsed(
 				((Boolean) evt.getNewValue()).booleanValue());
 	}
+	
+	/**
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
+	public void notifyChanged(Notification notification) {
+		if (NotationPackage.eINSTANCE.getDrawerStyle_Collapsed()==notification.getFeature())
+			collapseFigure.setCollapsed(notification.getNewBooleanValue());
+	}
 
 	/**
 	 * @see org.eclipse.draw2d.IFigure#addNotify()
@@ -120,7 +130,7 @@ public class CompartmentCollapseHandle
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
 		View view = owner.getNotationView();
 		if (view!=null){
-			PresentationListener.getInstance().addPropertyChangeListener(owner.getNotationView(),CompartmentCollapseHandle.this);
+			PresentationListener.getInstance().addNotificationListener(owner.getNotationView(),CompartmentCollapseHandle.this);
 		}
 	}
 
@@ -129,7 +139,7 @@ public class CompartmentCollapseHandle
 	 */
 	public void removeNotify() {
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
-		PresentationListener.getInstance().removePropertyChangeListener(owner.getNotationView(),this);
+		PresentationListener.getInstance().removeNotificationListener(owner.getNotationView(),this);
 		super.removeNotify();
 	}
 

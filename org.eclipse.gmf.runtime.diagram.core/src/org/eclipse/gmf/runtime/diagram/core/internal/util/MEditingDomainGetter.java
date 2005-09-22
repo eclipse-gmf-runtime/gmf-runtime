@@ -19,8 +19,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
@@ -87,17 +85,6 @@ public class MEditingDomainGetter {
 		}
 		return (returnDefaultOnFailure) ? MEditingDomain.INSTANCE
 			: null;
-	}
-
-	public static MEditingDomain getMEditingDomain(
-			NotificationEvent notificationEvent) {
-		return getMEditingDomain(notificationEvent.getElement(), true);
-	}
-
-	public static MEditingDomain getMEditingDomain(
-			NotificationEvent notificationEvent, boolean returnDefaultOnFailure) {
-		return getMEditingDomain(notificationEvent.getElement(),
-			returnDefaultOnFailure);
 	}
 
 	public static MEditingDomain getMEditingDomain(Notification notification) {

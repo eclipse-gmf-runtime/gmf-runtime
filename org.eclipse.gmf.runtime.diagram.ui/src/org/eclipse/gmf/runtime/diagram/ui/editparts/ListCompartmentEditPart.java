@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -31,7 +30,6 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ListComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ModifySortFilterEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.notation.Filtering;
 import org.eclipse.gmf.runtime.notation.FilteringStyle;
@@ -48,6 +46,8 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public abstract class ListCompartmentEditPart
 	extends ResizableCompartmentEditPart {
+	
+	static long count = 0;
 	
 	/** list of model children that this edit part is listening */
 	protected List modelChildrenListeners;
@@ -100,7 +100,6 @@ public abstract class ListCompartmentEditPart
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
 	protected final List getModelChildren() {
-		
 		List sortedFilteredChildren = new ArrayList(getSortedChildren());
 		sortedFilteredChildren.removeAll(getFilteredChildren());
 		return sortedFilteredChildren;
@@ -120,15 +119,9 @@ public abstract class ListCompartmentEditPart
 	 * @param evt The event in question
 	 * @return <code>true</code> if the events affects model children, <code>false</code> otherwise
 	 */
-	abstract protected boolean hasModelChildrenChanged(PropertyChangeEvent evt);
+	abstract protected boolean hasModelChildrenChanged(Notification evt);
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
-		
-		super.handlePropertyChangeEvent(event);
-		
+	protected void handleNotificationEvent(Notification event ) {
 		// If a child has been added or removed while sorting
 		// or filtering is automatic, re-register the listeners.		
 		if (hasModelChildrenChanged(event) && modeAutomatic()) {
@@ -136,14 +129,14 @@ public abstract class ListCompartmentEditPart
 			addSemanticChildrenListeners();
 			refresh();
 		} 
-
-		if (Properties.ID_FILTERING.equals(event.getPropertyName())
-			|| Properties.ID_FILTERING_KEYS.equals(event.getPropertyName())
-			|| Properties.ID_FILTERED_OBJECTS.equals(event.getPropertyName())
-			|| Properties.ID_SORTING.equals(event.getPropertyName())
-			|| Properties.ID_SORTING_KEYS.equals(event.getPropertyName())
-			|| Properties.ID_SORTED_OBJECTS.equals(event.getPropertyName())) {
-			
+		
+		Object feature = event.getFeature();
+		if (NotationPackage.eINSTANCE.getFilteringStyle_Filtering().equals(feature)
+			|| NotationPackage.eINSTANCE.getFilteringStyle_FilteringKeys().equals(feature)
+			|| NotationPackage.eINSTANCE.getFilteringStyle_FilteredObjects().equals(feature)
+			|| NotationPackage.eINSTANCE.getSortingStyle_Sorting().equals(feature)
+			|| NotationPackage.eINSTANCE.getSortingStyle_SortingKeys().equals(feature)
+			|| NotationPackage.eINSTANCE.getSortingStyle_SortedObjects().equals(feature)) {
 			refresh();			
 			
 			if (modeAutomatic() && !listening) {  // start listening...
@@ -153,18 +146,16 @@ public abstract class ListCompartmentEditPart
 			if (!modeAutomatic() && listening) { // stop listening...
 				removeSemanticChildrenListeners();
 			}
-		} 
+		} else {
+			super.handleNotificationEvent(event);
+		}
 		
 		// refresh() if one of the children have changed a feature
 		// affecting sorting / filtering.
-		if (event instanceof NotificationEvent) {
-			Object feature = ((NotificationEvent) event).getFeature();
-
-			if (isAffectingSortingFiltering(feature) && modeAutomatic())
-				refresh();
-		}
-
+		if (isAffectingSortingFiltering(feature) && modeAutomatic())
+			refresh();
 	}
+	
 
 	/**
 	 * Returns a <code>List</code> of model children corresponding appearance order of the list 

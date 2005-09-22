@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
@@ -22,23 +21,16 @@ import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.DropRequest;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * Connection Node EditPart, a specialized Connection EditPart that installs 
  * a <code>ditPolicy.GRAPHICAL_NODE_ROLE</code> on this edit part. it also implements
@@ -170,24 +162,6 @@ abstract public class ConnectionNodeEditPart
 		return ((PolylineConnectionEx) getFigure()).getConnectionAnchor(terminal);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
-		if (Properties.ID_SOURCECONNECTIONS.equals(event.getPropertyName()))
-			refreshSourceConnections();
-		else
-		if (Properties.ID_TARGETCONNECTIONS.equals(event.getPropertyName()))
-			refreshTargetConnections();
-		else
-			super.handlePropertyChangeEvent(event);
-
-        Object element = MetaModelUtil.getElement(event.getPropertyName());
-        if (element != null && element.equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id())) {
-        	anchorChange();
-        }
-	}
-		
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.INoteableEditPart#canAttachNote()
 	 */
@@ -198,13 +172,21 @@ abstract public class ConnectionNodeEditPart
 	/*
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#handleNotificationEvent(org.eclipse.gmf.runtime.diagram.ui.internal.listener.NotificationEvent)
 	 */
-	protected void handleNotificationEvent(NotificationEvent e) {
-		super.handleNotificationEvent(e);
-		Notification event = e.getNotification();
-		if (event.getNewValue() instanceof IdentityAnchor ||
-	 			event.getOldValue() instanceof IdentityAnchor){
-	   		anchorChange();
-	    }
+	protected void handleNotificationEvent(Notification notification) {
+		Object feature = notification.getFeature();
+		if (NotationPackage.eINSTANCE.getView_SourceEdges().equals(feature))
+			refreshSourceConnections();
+		else
+		if (NotationPackage.eINSTANCE.getView_TargetEdges().equals(feature))
+			refreshTargetConnections();
+		else
+			super.handleNotificationEvent(notification);
+
+        if (  NotationPackage.eINSTANCE.getIdentityAnchor_Id().equals(feature) ||
+        	  notification.getNewValue() instanceof IdentityAnchor ||
+        	  notification.getOldValue() instanceof IdentityAnchor) {
+        	anchorChange();
+        }
 	}
 
     /**

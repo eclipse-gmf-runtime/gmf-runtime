@@ -14,9 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.View;
@@ -39,7 +38,7 @@ public class TextShapeViewFactory
 			index, persisted);
 
 		getViewService().createNode(semanticAdapter, view,
-			Properties.DIAGRAM_NAME, ViewUtil.APPEND, persisted, getPreferencesHint());
+			ViewType.DIAGRAM_NAME, ViewUtil.APPEND, persisted, getPreferencesHint());
 
 		getViewService().createNode(semanticAdapter, view,
 			CommonParserHint.DESCRIPTION, ViewUtil.APPEND, persisted, getPreferencesHint());

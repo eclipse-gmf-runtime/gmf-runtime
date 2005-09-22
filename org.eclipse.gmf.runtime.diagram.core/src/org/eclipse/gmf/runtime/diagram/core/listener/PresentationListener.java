@@ -18,8 +18,6 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.listener.ModelServerListener;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -47,46 +45,6 @@ public class PresentationListener extends ModelServerListener {
 		return instance;
 	}
 	
-	/**
-	 * gets a notifier to the given element.
-	 * @param element the element to get the notifier for
-	 * @return the Notifier of the element
-	 * @deprecated the PropertyChangeNotifier is deprecated, to add a listener use the 
-	 * <code>addPropertyChangeListener</code> Api instead.
-	 */
-	public static PropertyChangeNotifier getNotifier(EObject element) {
-		return PresentationListener.getInstance().getPropertyChangeNotifier(element);
-	}
-	
-	/**
-	 * gets a notifier to the given element.
-	 * @param element the element to get the notifier for
-	 * @return the Notifier of the element
-	 * @deprecated the PropertyChangeNotifier is deprecated, to add a listener use the 
-	 * <code>addPropertyChangeListener</code> Api instead.
-	 */
-	public static PropertyChangeNotifier getNotifier(EObject element,EStructuralFeature feature) {
-		return PresentationListener.getInstance().getPropertyChangeNotifier(element,feature);
-	}
-
-	/**
-	 * Wraps the supplied event into a property change event.
-	 * @param event	the event top wrap
-	 * @return	the Notification event
-	 */
-	protected NotificationEvent getNotificationEvent( Notification event ) {
-		Object notifier = event.getNotifier();
-		if (notifier instanceof View) {
-			View view = (View)notifier;
-			if (view != null)
-				return new NotificationEvent( 
-					view, 
-					event.getOldValue(),
-					event.getNewValue(),
-					event);
-		}
-		return new NotificationEvent(event);
-	}
 
 	/**
 	 * gets a subset of all the registered listeners who are interested
@@ -94,9 +52,8 @@ public class PresentationListener extends ModelServerListener {
 	 * @param event the event to use
 	 * @return	the interested listeners in the event
 	 */
-	protected Set getInterestedListeners( Notification event ) {
-		Set listenerSet = super.getInterestedListeners(event);
-
+	protected Set getInterestedNotificationListeners( Notification event ) {
+		Set listenerSet = super.getInterestedNotificationListeners(event);
 		EObject notifier = (EObject) event.getNotifier();
 		if (notifier instanceof EAnnotation){
 			addListenersOfNotifier(listenerSet, notifier.eContainer(), event);
@@ -117,7 +74,7 @@ public class PresentationListener extends ModelServerListener {
 	 */
 	private void addListenersOfNotifier(Set listenerSet, EObject notifier,Notification event) {
 		if (notifier != null) {
-			Collection c = getListeners(notifier, event.getFeature());
+			Collection c = getNotificationListeners(notifier, event.getFeature());
 			if (c != null) {
 				if (listenerSet.isEmpty())
 					listenerSet.addAll(c);

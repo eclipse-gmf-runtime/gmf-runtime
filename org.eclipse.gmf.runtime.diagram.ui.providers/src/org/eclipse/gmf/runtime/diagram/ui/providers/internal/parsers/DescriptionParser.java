@@ -13,18 +13,18 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.internal.parsers;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.notation.DescriptionStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 
 /**
  * Description parser
@@ -69,7 +69,7 @@ public class DescriptionParser implements IParser {
 		IAdaptable adapter,
 		String newString,
 		int flags) {
-		return new SetPropertyCommand(adapter, Properties.ID_DESCRIPTION, Properties.TEXT, newString);
+		return new SetPropertyCommand(adapter, Properties.ID_DESCRIPTION, ViewType.TEXT, newString);
 	}
 
 	/**

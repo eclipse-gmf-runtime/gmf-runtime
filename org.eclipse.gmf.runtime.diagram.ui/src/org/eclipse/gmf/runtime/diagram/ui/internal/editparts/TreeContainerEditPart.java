@@ -11,11 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.util.List;
 
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * @author melaasar
@@ -48,12 +48,13 @@ public class TreeContainerEditPart extends TreeEditPart {
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
 	 */
-	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
-		if (event.getPropertyName().equals(Properties.ID_PERSISTED_CHILDREN)||
-			event.getPropertyName().equals(Properties.ID_TRANSIENT_CHILDREN))
+	protected void handleNotificationEvent(Notification event) {
+		Object feature = event.getFeature();
+		if (NotationPackage.eINSTANCE.getView_PersistedChildren()==feature||
+			NotationPackage.eINSTANCE.getView_TransientChildren()==feature)
 			refreshChildren();
 		else
-			super.handlePropertyChangeEvent(event);
+			super.handleNotificationEvent(event);
 	}
 
 }

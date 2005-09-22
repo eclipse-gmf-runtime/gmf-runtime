@@ -19,9 +19,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectorViewCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -31,11 +30,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * Concrete implemention of AttachedShapeAction which attaches a new Notational Note to the
@@ -128,7 +127,7 @@ public class AddNoteAction extends AttachedShapeAction {
 
 			noteAttachmentCC.compose(
 				new DeferredCreateConnectorViewCommand(
-					Properties.NOTEATTACHMENT,
+					ViewType.NOTEATTACHMENT,
 					noteViewAdapter,
 					new EObjectAdapter((EObject)targetEditPart.getModel()),
 					editor.getDiagramGraphicalViewer(),

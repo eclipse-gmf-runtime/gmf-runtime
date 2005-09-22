@@ -48,7 +48,7 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * Provides miscellaneous diagram utilities
  * 
- * @author melaasar
+ * @author melaasar, mmostafa
  */
 
 public class DiagramUtil {
@@ -57,7 +57,7 @@ public class DiagramUtil {
 	 * Creates a diagram with the given context and kind
 	 * 
 	 * @param context The diagram element context
-	 * @param kind diagram kind
+	 * @param kind diagram kind, check {@link ViewType} for predefined values
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference
@@ -70,13 +70,13 @@ public class DiagramUtil {
 		String viewType = (kind != null) ? kind : ""; //$NON-NLS-1$
 		return ViewService.getInstance().createDiagram(viewModel, viewType, preferencesHint);
 	}
-
+	
 	/**
 	 * Creates a node for a given eObject and with a given type and inserts it into a given container
 	 * 
 	 * @param container The node view container
 	 * @param eObject The node view object context
-	 * @param type The node view type
+	 * @param type The node view type, check {@link ViewType} for predefined values
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference
@@ -97,7 +97,7 @@ public class DiagramUtil {
 	 *
 	 * @param diagram The container diagram 
 	 * @param eObject The edge view object context
-	 * @param type The edge view type
+	 * @param type The edge view type, check {@link ViewType} for predefined values
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference
@@ -119,7 +119,7 @@ public class DiagramUtil {
 	 * @param source The edge's source view
 	 * @param target The edge's target view
 	 * @param eObject The edge view object context
-	 * @param type The edge view type
+	 * @param type The edge view type, check {@link ViewType} for predefined values
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference

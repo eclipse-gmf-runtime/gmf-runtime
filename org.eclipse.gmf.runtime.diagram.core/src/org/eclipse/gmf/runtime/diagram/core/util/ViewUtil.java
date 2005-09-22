@@ -22,12 +22,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistElementCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
@@ -290,6 +287,19 @@ public class ViewUtil{
 	/**
 	 * checks if the passed feature is supported by the passed view
 	 * @param view  the view to use for the search
+	 * @param feature	the feature to look for
+	 * @return boolean	<tt>true</tt> if supported otherwise <tt>false</tt>
+	 */
+	public static boolean isFeatureSupported(View view,EStructuralFeature feature) {
+		if (feature != null) {
+			return isPropertySupported(view,feature, feature.getEContainingClass());
+		}
+		return false;
+	}
+	
+	/**
+	 * checks if the passed feature is supported by the passed view
+	 * @param view  the view to use for the search
 	 * @param feature the feature to look for
 	 * @param featureClass the feature's <code>EClass</code>
 	 * @return boolean	<tt>true</tt> if supported otherwise <tt>false</tt>
@@ -314,6 +324,7 @@ public class ViewUtil{
 	 * @param view the view to use to get the value
 	 * @param id the id of the property to get
 	 * @return the value of the property, or <code>null</code>
+	 * @deprecated use {@link ViewUtil#getPropertyValue(View, EStructuralFeature, EClass)} instead
 	 */
 	static public final Object getPropertyValue(View view, Object id) {
 		if(id instanceof String){
@@ -357,6 +368,7 @@ public class ViewUtil{
 	 * @param view the view to set the value on 
 	 * @param id  the id of the property being set
 	 * @param value  the value of the property being set
+	 * @deprecated use {@link ViewUtil#setPropertyValue(View, EStructuralFeature, EClass, Object)} instead
 	 */
 	public static void setPropertyValue(View view,Object id, Object value) {
 		if(id instanceof String){
@@ -424,17 +436,6 @@ public class ViewUtil{
 	public static String getSemanticElementClassId(View view) {
 		EObject element = view.getElement();
 	    return element == null ? null : ProxyUtil.getProxyClassID(element);
-	}
-	
-	/**
-	 * Retrieves the view's property change notifier object
-	 * @param view the view to use to get the notifier
-	 * @return the property change notifier
-	 * @deprecated the PropertyChangeNotifier is deprecated, to add a listner to the 
-	 * <code>PresentationListener</code>use <code>PresentationListener.addPropertyChangeListener()</code>
-	 */
-	public static PropertyChangeNotifier getPropertyChangeNotifier(View view) {
-		return PresentationListener.getNotifier(view);
 	}
 	
 	/**

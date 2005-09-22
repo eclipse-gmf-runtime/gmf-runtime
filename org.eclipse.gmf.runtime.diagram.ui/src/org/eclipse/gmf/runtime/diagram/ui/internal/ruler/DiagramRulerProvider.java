@@ -12,28 +12,26 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.ruler;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.rulers.RulerChangeListener;
 import org.eclipse.gef.rulers.RulerProvider;
-
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.CreateGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.DeleteGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.MoveGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
@@ -52,16 +50,12 @@ public class DiagramRulerProvider extends RulerProvider {
 	/*
 	 * PropertyChangeListerner for Rulers.
 	 */
-	private PropertyChangeListener rulerListener = new PropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent evt) {
-
-			if( evt instanceof NotificationEvent ) {
-				handleNotificationEvent( (NotificationEvent)evt );
-				return;
-			}
+	private NotificationListener rulerListener = new NotificationListener() {
+		public void notifyChanged(Notification evt) {
+			handleNotificationEvent(evt);
 		}
 		
-		private void handleNotificationEvent(NotificationEvent event) {
+		private void handleNotificationEvent(Notification event) {
 			Object feature = event.getFeature();
 
 			if( (feature == NotationPackage.eINSTANCE.getGuideStyle_HorizontalGuides() &&
@@ -74,13 +68,13 @@ public class DiagramRulerProvider extends RulerProvider {
 				// Add a new Guide
 				if( event.getNewValue() != null && event.getOldValue() == null ) {
 					guide = (Guide)event.getNewValue();
-					PresentationListener.getInstance().addPropertyChangeListener(guide,guideListener);
+					PresentationListener.getInstance().addNotificationListener(guide,guideListener);
 				}
 
 				// Remove Guide
 				if( event.getNewValue() == null && event.getOldValue() != null ) {
 					guide = (Guide)event.getOldValue();
-					PresentationListener.getInstance().removePropertyChangeListener(guide,guideListener);
+					PresentationListener.getInstance().removeNotificationListener(guide,guideListener);
 				}
 				
 				for (int i = 0; i < listeners.size(); i++) {
@@ -91,24 +85,18 @@ public class DiagramRulerProvider extends RulerProvider {
 		}
 	};
 
-	private PropertyChangeListener guideListener = new PropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent evt) {
-			
-			if( evt instanceof NotificationEvent ) {
-				handleNotificationEvent( (NotificationEvent)evt );
-				return;
-			}
+	private NotificationListener guideListener = new NotificationListener() {
+		public void notifyChanged(Notification evt) {
+			handleNotificationEvent(evt);
 		}
 		
-		private void handleNotificationEvent(NotificationEvent event) {
-		
+		private void handleNotificationEvent(Notification event) {
 			Object feature = event.getFeature();
-			
 			// Notify when the guide's position changes
 			if( feature == NotationPackage.eINSTANCE.getGuide_Position() ) {
 				for (int i = 0; i < listeners.size(); i++) {
 					((RulerChangeListener)listeners.get(i))
-							.notifyGuideMoved(event.getSource());
+							.notifyGuideMoved(event.getNotifier());
 				}
 			}
 			
@@ -119,7 +107,7 @@ public class DiagramRulerProvider extends RulerProvider {
 
 				for (int i = 0; i < listeners.size(); i++) {
 					((RulerChangeListener)listeners.get(i))
-							.notifyPartAttachmentChanged(event.getNewValue(), event.getSource());
+							.notifyPartAttachmentChanged(event.getNewValue(), event.getNotifier());
 				}
 			}
 		}
@@ -132,19 +120,19 @@ public class DiagramRulerProvider extends RulerProvider {
 	}
 	
 	public void init() {
-		theRuler.addPropertyChangeListener(rulerListener);
+		theRuler.addNotificationListener(rulerListener);
 
 		Iterator iter = getGuides().iterator();
 		while(iter.hasNext()) {
 			Guide guide = (Guide)iter.next();
-			PresentationListener.getInstance().addPropertyChangeListener(guide,guideListener);
+			PresentationListener.getInstance().addNotificationListener(guide,guideListener);
 		}
 		
 		refreshMap();
 	}
 	
 	public void uninit() {
-		theRuler.removePropertyChangeListener(rulerListener);
+		theRuler.removeNotificationListener(rulerListener);
 	}
 
 	/* (non-Javadoc)
