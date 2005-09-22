@@ -81,7 +81,6 @@ public class EditorService
 
 		IEditorPart editor = (IEditorPart) execute(new OpenEditorOperation(
 			editorInput));
-		assert null != editor;
 		return editor;
 	}
 
