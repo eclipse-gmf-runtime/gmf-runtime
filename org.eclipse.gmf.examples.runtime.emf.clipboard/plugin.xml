@@ -14,7 +14,7 @@
    <extension point="org.eclipse.gmf.runtime.emf.clipboard.core.clipboardSupport">
       <factory
             class="org.eclipse.gmf.examples.runtime.emf.clipboard.library.LibraryClipboardSupportFactory"
-            nsURI="http:///com/ibm/xtools/emf/metamodel/example/pde/rmplibrary.ecore/1.0.0"
+            nsURI="http:///org/eclipse/emf/examples/library/extlibrary.ecore/1.0.0"
             priority="medium"/>
    </extension>
    
@@ -24,24 +24,24 @@
          will provide us with a viable MResource that supports UUIDs. -->
    <!-- <extension point="org.eclipse.emf.ecore.extension_parser">
       <parser
-            type="rmplibrary"
+            type="extlibrary"
             class="org.eclipse.gmf.examples.runtime.emf.clipboard.library.LibraryResourceFactory"/>
    </extension> -->
    
    <extension point="org.eclipse.ui.editorActions"> 
       <editorContribution 
          id="org.eclipse.emf.query.examples.ocl.editorContribution" 
-         targetID="org.eclipse.emf.examples.library.presentation.RMPLibraryEditorID"> 
+         targetID="org.eclipse.emf.examples.extlibrary.presentation.EXTLibraryEditorID"> 
          <menu
                label="%_UI_ClipMenu_label"
-               path="org.eclipse.emf.examples.libraryMenuID/additions"
+               path="org.eclipse.emf.examples.extlibraryMenuID/additions"
                id="org.eclipse.gmf.runtime.emf.clipboard.coreMenuID">
             <separator name="additions"/>
          </menu>
          <action
                label="%_UI_Paste_label"
                class="org.eclipse.gmf.examples.runtime.emf.clipboard.actions.PasteDelegate"
-               menubarPath="org.eclipse.emf.examples.libraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
+               menubarPath="org.eclipse.emf.examples.extlibraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
                icon="icons/paste.gif"
                id="org.eclipse.gmf.examples.runtime.emf.clipboard.PasteAction">
             <enablement>
@@ -53,7 +53,7 @@
          <action
                label="%_UI_Copy_label"
                class="org.eclipse.gmf.examples.runtime.emf.clipboard.actions.CopyDelegate"
-               menubarPath="org.eclipse.emf.examples.libraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
+               menubarPath="org.eclipse.emf.examples.extlibraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
                icon="icons/copy.gif"
                id="org.eclipse.gmf.examples.runtime.emf.clipboard.CopyAction">
             <enablement>
@@ -68,7 +68,7 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            targetID="org.eclipse.emf.examples.library.presentation.RMPLibraryEditorID"
+            targetID="org.eclipse.emf.examples.extlibrary.presentation.EXTLibraryEditorID"
             id="org.eclipse.gmf.examples.runtime.emf.clipboard.viewerContribution">
          <menu
                label="%_UI_ClipMenu_label"

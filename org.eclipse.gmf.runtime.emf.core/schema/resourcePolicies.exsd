@@ -133,7 +133,7 @@ This extension point also allows metamodel providers to define custom &lt;code&g
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         An example extension for the RMP Library example metamodel, defining both a resource policy and a factory for auto-loading elements, looks like:
+         An example extension for the EXT Library example metamodel, defining both a resource policy and a factory for auto-loading elements, looks like:
 
 &lt;pre&gt;
   &lt;extension
@@ -142,12 +142,12 @@ This extension point also allows metamodel providers to define custom &lt;code&g
      &lt;policy
            class=&quot;org.eclipse.gmf.examples.runtime.emf.resources.LibraryResourcePolicy&quot;&gt;
         &lt;epackage
-              nsURI=&quot;http:///com/ibm/xtools/emf/metamodel/example/pde/rmplibrary.ecore/1.0.0&quot;/&gt;
+              nsURI=&quot;http:///org/eclipse/emf/examples/library/extlibrary.ecore/1.0.0&quot;/&gt;
      &lt;/policy&gt;
      
      &lt;efactory
-            class=&quot;org.eclipse.gmf.examples.runtime.emf.resources.LoadingRMPLibraryFactoryImpl&quot;
-            nsURI=&quot;http:///com/ibm/xtools/emf/metamodel/example/pde/rmplibrary.ecore/1.0.0&quot;/&gt;
+            class=&quot;org.eclipse.gmf.examples.runtime.emf.resources.LoadingEXTLibraryFactoryImpl&quot;
+            nsURI=&quot;http:///org/eclipse/emf/examples/library/extlibrary.ecore/1.0.0&quot;/&gt;
   &lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>

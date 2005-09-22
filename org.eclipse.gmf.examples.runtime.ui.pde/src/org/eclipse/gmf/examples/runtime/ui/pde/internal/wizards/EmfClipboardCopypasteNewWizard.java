@@ -34,9 +34,9 @@ public class EmfClipboardCopypasteNewWizard
 			ResourceManager.getI18NString("emf.clipboard.copypaste.desc"), //$NON-NLS-1$
 			new URL[] {
 				GmfExamplesPlugin.getDefault().find(new Path("examples/emf-clipboard-copypaste.zip")), //$NON-NLS-1$
-				GmfExamplesPlugin.getDefault().find(new Path("examples/rmp-library.zip")), //$NON-NLS-1$
-				GmfExamplesPlugin.getDefault().find(new Path("examples/rmp-library-edit.zip")), //$NON-NLS-1$
-				GmfExamplesPlugin.getDefault().find(new Path("examples/rmp-library-editor.zip")) //$NON-NLS-1$
+				GmfExamplesPlugin.getDefault().find(new Path("examples/ext-library.zip")), //$NON-NLS-1$
+				GmfExamplesPlugin.getDefault().find(new Path("examples/ext-library-edit.zip")), //$NON-NLS-1$
+				GmfExamplesPlugin.getDefault().find(new Path("examples/ext-library-editor.zip")) //$NON-NLS-1$
 			},
 			new String[] {
 				"{0}", //$NON-NLS-1$

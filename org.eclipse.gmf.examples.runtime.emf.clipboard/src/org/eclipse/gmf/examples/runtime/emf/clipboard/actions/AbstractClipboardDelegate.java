@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.examples.extlibrary.presentation.EXTLibraryEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,7 +26,6 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionDelegate;
 
-import org.eclipse.emf.examples.library.presentation.RMPLibraryEditor;
 
 /**
  * Abstract action delegate for copy/paste actions; provides common behaviours
@@ -43,7 +43,7 @@ abstract class AbstractClipboardDelegate
 	/**
 	 * The active editor
 	 */
-	private RMPLibraryEditor editor = null;
+	private EXTLibraryEditor editor = null;
 
 	/**
 	 * Selected {@link EObject}s.
@@ -89,7 +89,7 @@ abstract class AbstractClipboardDelegate
 	 * 
 	 * @return the current editor
 	 */
-	protected RMPLibraryEditor getEditor() {
+	protected EXTLibraryEditor getEditor() {
 		return editor;
 	}
 	
@@ -147,7 +147,7 @@ abstract class AbstractClipboardDelegate
 	 * Get the active library editor and its host shell.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		editor = (RMPLibraryEditor) targetEditor;
+		editor = (EXTLibraryEditor) targetEditor;
 		
 		if (targetEditor != null) {
 			this.shell = targetEditor.getSite().getShell();

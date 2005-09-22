@@ -32,10 +32,10 @@
 			<include name="org.eclipse.emf.validation.examples.adapter/emf-validation-adapter.zip"/>
 			<include name="org.eclipse.emf.validation.examples/emf-validation-general.zip"/>
 			
-			<!--  The following zips are for the RMP library metamodel that is required for the model services examples -->
-			<include name="org.eclipse.emf.examples.library/rmp-library.zip"/>
-			<include name="org.eclipse.emf.examples.library.edit/rmp-library-edit.zip"/>
-			<include name="org.eclipse.emf.examples.library.editor/rmp-library-editor.zip"/>
+			<!--  The following zips are for the EXT library metamodel that is required for the model services examples -->
+			<include name="org.eclipse.emf.examples.library/ext-library.zip"/>
+			<include name="org.eclipse.emf.examples.library.edit/ext-library-edit.zip"/>
+			<include name="org.eclipse.emf.examples.library.editor/ext-library-editor.zip"/>
 		</patternset>
 
 		<!-- IMPORTANT: Include new example icons here -->	

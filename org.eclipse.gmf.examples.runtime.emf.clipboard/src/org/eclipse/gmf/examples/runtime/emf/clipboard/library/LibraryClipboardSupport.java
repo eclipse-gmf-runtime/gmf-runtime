@@ -16,8 +16,8 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 
-import org.eclipse.emf.examples.library.RMPLibraryPackage;
 import org.eclipse.gmf.runtime.emf.clipboard.core.AbstractClipboardSupport;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteAction;
 
@@ -58,14 +58,14 @@ class LibraryClipboardSupport
 		EAttribute result;
 		
 		switch (eClass.getClassifierID()) {
-		case RMPLibraryPackage.BOOK:
-			result = RMPLibraryPackage.eINSTANCE.getBook_Title();
+		case EXTLibraryPackage.BOOK:
+			result = EXTLibraryPackage.eINSTANCE.getBook_Title();
 			break;
-		case RMPLibraryPackage.LIBRARY:
-			result = RMPLibraryPackage.eINSTANCE.getLibrary_Name();
+		case EXTLibraryPackage.LIBRARY:
+			result = EXTLibraryPackage.eINSTANCE.getLibrary_Name();
 			break;
-		case RMPLibraryPackage.WRITER:
-			result = RMPLibraryPackage.eINSTANCE.getWriter_Name();
+		case EXTLibraryPackage.WRITER:
+			result = EXTLibraryPackage.eINSTANCE.getWriter_Name();
 			break;
 		default:
 			result = null;
@@ -79,7 +79,7 @@ class LibraryClipboardSupport
 	 * Merge an author into an existing author of the same name when pasting.
 	 */
 	public PasteAction getPasteCollisionAction(EClass eClass) {
-		if (eClass == RMPLibraryPackage.eINSTANCE.getWriter()) {
+		if (eClass == EXTLibraryPackage.eINSTANCE.getWriter()) {
 			return PasteAction.MERGE;
 		} else {
 			return super.getPasteCollisionAction(eClass);
@@ -92,7 +92,7 @@ class LibraryClipboardSupport
 	public boolean isCopyAlways(EObject context, EReference eReference,
 			Object value) {
 		
-		if (eReference == RMPLibraryPackage.eINSTANCE.getWriter_Books()) {
+		if (eReference == EXTLibraryPackage.eINSTANCE.getWriter_Books()) {
 			return true;
 		} else {
 			return super.isCopyAlways(context, eReference, value);
