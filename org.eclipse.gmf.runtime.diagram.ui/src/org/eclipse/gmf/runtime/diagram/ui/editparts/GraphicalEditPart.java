@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,8 +52,9 @@ import org.eclipse.gmf.runtime.common.core.util.IAdaptableSelection;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
@@ -62,11 +65,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
@@ -89,13 +92,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 /**
- * @author melaasar,mmostafa
+ * @author melaasar
  * 
  * The root of all component graphical edit parts that own a view as a model
  */
 public abstract class GraphicalEditPart
 	extends AbstractGraphicalEditPart
-	implements IGraphicalEditPart, IAdaptableSelection, NotificationListener {
+	implements IGraphicalEditPart, PropertyChangeListener, IAdaptableSelection {
 
 	/** A map of listener filters ids to filter data */
 	private Map listenerFilters;
@@ -156,7 +159,7 @@ public abstract class GraphicalEditPart
 	 * @deprecated use {@link GraphicalEditPart#addListenerFilter(String, PropertyChangeListener, EObject)} or
 	 * {@link GraphicalEditPart#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
 	 */
-	/*protected void addListenerFilter(String filterId,
+	protected void addListenerFilter(String filterId,
 			PropertyChangeListener listener, PropertyChangeNotifier notifier) {
 		if (notifier == null)
 			return;
@@ -166,7 +169,7 @@ public abstract class GraphicalEditPart
 			listenerFilters = new HashMap();
 		notifier.addPropertyChangeListener(listener);
 		listenerFilters.put(filterId, new Object[] {notifier, listener});
-	}*/
+	}
 	
 	/**
 	 * Adds a listener filter by adding the given listener to a passed notifier
@@ -179,7 +182,7 @@ public abstract class GraphicalEditPart
 	 *            An element to add the listener to
 	 */
 	protected void addListenerFilter(String filterId,
-			NotificationListener listener,
+			PropertyChangeListener listener,
 			EObject element) {
 		if (element == null)
 			return;
@@ -187,7 +190,7 @@ public abstract class GraphicalEditPart
 		Assert.isNotNull(listener);
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		PresentationListener.getInstance().addPropertyChangeListener(element,listener);
 		listenerFilters.put(filterId, new Object[] {element, listener});
 	}
 	
@@ -202,7 +205,7 @@ public abstract class GraphicalEditPart
 	 *            An element to add the listener to
 	 */
 	protected void addListenerFilter(String filterId,
-			NotificationListener listener,
+			PropertyChangeListener listener,
 			EObject element,
 			EStructuralFeature feature) {
 		if (element == null)
@@ -211,7 +214,7 @@ public abstract class GraphicalEditPart
 		Assert.isNotNull(listener);
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		PresentationListener.getInstance().addPropertyChangeListener(element,listener);
 		listenerFilters.put(filterId, new Object[] {element,feature, listener});
 	}
 
@@ -257,9 +260,12 @@ public abstract class GraphicalEditPart
 				Object[] obj = (Object[]) listenerFilters.get(i.next());
 				if (obj.length>2){
 					PresentationListener.getInstance().
-						removeNotificationListener((EObject)obj[0],(EStructuralFeature) obj[1],(NotificationListener) obj[2]);
+						removePropertyChangeListener((EObject)obj[0],(EStructuralFeature) obj[1],(PropertyChangeListener) obj[2]);
 				}else {
-					PresentationListener.getInstance().removeNotificationListener((EObject) obj[0],(NotificationListener) obj[1]);
+					if (obj[0] instanceof PropertyChangeNotifier)
+						((PropertyChangeNotifier) obj[0]).removePropertyChangeListener((PropertyChangeListener) obj[1]);
+					else
+						PresentationListener.getInstance().removePropertyChangeListener((EObject) obj[0],(PropertyChangeListener) obj[1]);
 				}
 			}
 		}
@@ -593,6 +599,45 @@ public abstract class GraphicalEditPart
 	}
 
 	/**
+	 * Handles the passed property changed event only if the editpart's view is
+	 * not deleted.
+	 */
+	public final void propertyChange(PropertyChangeEvent event) {
+		if (isActive())
+			handlePropertyChangeEvent(event);
+	}
+
+	/**
+	 * Handles the property changed event
+	 * 
+	 * @param event
+	 *            the property changed event
+	 */
+	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
+		if (Properties.ID_PERSISTED_CHILDREN.equals(event.getPropertyName())||
+			Properties.ID_TRANSIENT_CHILDREN.equals(event.getPropertyName())) {
+			refreshChildren();
+		}
+		else if (Properties.ID_ISVISIBLE.equals(event.getPropertyName())) {
+			refreshVisibility();
+		}
+		else if (Properties.ID_SEMANTICREF.equals(event.getPropertyName())) {
+			handleMajorSemanticChange();
+		} else if (event instanceof NotificationEvent) {
+			handleNotificationEvent((NotificationEvent) event);
+		}
+	}
+
+	/**
+	 * Handles the supplied notification event.
+	 * 
+	 * @param e event to handle
+	 */
+	protected void handleNotificationEvent(NotificationEvent e) {
+		// for children to override
+	}
+
+	/**
 	 * Method reactivateSemanticModel. This method reactivates the edit part's
 	 * emantic model by: 1- removing semantic listeners 2- adding semantic
 	 * listeners if the semantic reference is resolvable 3- Refreshing it
@@ -723,11 +768,16 @@ public abstract class GraphicalEditPart
 			return;
 		if (objects.length>2){
 			PresentationListener.getInstance().
-				removeNotificationListener((EObject) objects[0],
+				removePropertyChangeListener((EObject) objects[0],
 											 (EStructuralFeature) objects[1],
-											 (NotificationListener) objects[2]);
+											 (PropertyChangeListener) objects[2]);
 		}else{
-			PresentationListener.getInstance().removeNotificationListener((EObject) objects[0],(NotificationListener) objects[1]);
+			if (objects[0] instanceof PropertyChangeNotifier){
+				((PropertyChangeNotifier) objects[0])
+				  .removePropertyChangeListener((PropertyChangeListener) objects[1]);
+			} else {
+				PresentationListener.getInstance().removePropertyChangeListener((EObject) objects[0],(PropertyChangeListener) objects[1]);
+			}
 		}
 		listenerFilters.remove(filterId);
 	}
@@ -1170,6 +1220,50 @@ public abstract class GraphicalEditPart
 			return ((IDiagramPreferenceSupport) getRoot()).getPreferencesHint();
 		}
 		return PreferencesHint.USE_DEFAULTS;
+	}
+
+	/*
+	 * ATTENTION!!!!: Do not remove, see below. Only update based on newer GEF framework
+	 *  
+	 * This function is "copied" from GEF for the following reason:
+	 * GEF does not check if the connector's source or target are the same as the editpart
+	 * before setting them to <code>null</code> which causes the following usecase to currently fail:
+	 * 
+	 * "in a model transaction, view's source connectors are detached, a new view is
+	 * created, and the connectors are attached to it, then the old view is destroyed"
+	 * 
+	 * The reason for the problem is the filtering of Deleted/Uncreated object's events in the
+	 * PresentationListener which prevents the first connector detach event from coming and 
+	 * avoiding the problem
+	 * 
+	 * TODO: Remove this override as soon as the bugzilla <Bug 110476> is resolved or the event filtering is removed
+	 * 
+	 * @see org.eclipse.gef.EditPart#removeNotify()
+	 */
+	public void removeNotify() {
+		if (getSelected() != SELECTED_NONE)
+			getViewer().deselect(this);
+		if (hasFocus())
+			getViewer().setFocus(null);
+
+		List children = getChildren();
+		for (int i = 0; i < children.size(); i++)
+			((EditPart)children.get(i))
+				.removeNotify();
+		unregister();
+		List conns;
+		conns = getSourceConnections();
+		for (int i = 0; i < conns.size(); i++) {
+			ConnectionEditPart conn = (ConnectionEditPart)conns.get(i);
+			if (conn.getSource() == this)
+				conn.setSource(null);
+		}
+		conns = getTargetConnections();
+		for (int i = 0; i < conns.size(); i++) {
+			ConnectionEditPart conn = (ConnectionEditPart)conns.get(i);
+			if (conn.getTarget() == this)
+				conn.setTarget(null);
+		}
 	}
 
 	public void notifyChanged(Notification notification) {

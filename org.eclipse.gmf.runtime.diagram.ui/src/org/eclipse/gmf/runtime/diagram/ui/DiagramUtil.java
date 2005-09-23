@@ -66,9 +66,7 @@ public class DiagramUtil {
 	 * @return A newly created <code>Diagram</code>
 	 */
 	public static Diagram createDiagram(EObject context, String kind, PreferencesHint preferencesHint) {
-		IAdaptable viewModel = (context != null) ? new EObjectAdapter(context) : null;
-		String viewType = (kind != null) ? kind : ""; //$NON-NLS-1$
-		return ViewService.getInstance().createDiagram(viewModel, viewType, preferencesHint);
+		return ViewService.getInstance().createDiagram(context, kind, preferencesHint);
 	}
 	
 	/**
@@ -86,10 +84,7 @@ public class DiagramUtil {
 	 */
 	public static Node createNode(View container, EObject eObject, String type, PreferencesHint preferencesHint) {
 		Assert.isNotNull(container, "The container is null"); //$NON-NLS-1$
-		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
-		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
-		View view = ViewService.getInstance().createNode(viewModel, container, viewType, ViewUtil.APPEND, preferencesHint);
-		return (view != null) ? (Node)view : null;
+		return ViewService.getInstance().createNode(container, eObject, type, preferencesHint);
 	}
 
 	/**
@@ -107,10 +102,7 @@ public class DiagramUtil {
 	 */
 	public static Edge createEdge(Diagram diagram, EObject eObject, String type, PreferencesHint preferencesHint) {
 		Assert.isNotNull(diagram, "The diagram is null"); //$NON-NLS-1$
-		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
-		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
-		View view = ViewService.getInstance().createConnectorView(viewModel, diagram, viewType, ViewUtil.APPEND, preferencesHint);
-		return (view != null) ? (Edge) view : null;
+		return ViewService.getInstance().createEdge(diagram, eObject, type, preferencesHint);
 	}
 	
 	/**
@@ -132,12 +124,7 @@ public class DiagramUtil {
 		Assert.isNotNull(target, "The target is null"); //$NON-NLS-1$
 		Assert.isNotNull(source.getDiagram(), "The source is detached"); //$NON-NLS-1$
 		Assert.isNotNull(target.getDiagram(), "The target is detached"); //$NON-NLS-1$
-		Edge edge = createEdge(source.getDiagram(), eObject, type, preferencesHint);
-		if (edge != null) {
-			edge.setSource(source);
-			edge.setTarget(target);
-		}
-		return edge;
+		return ViewService.getInstance().createEdge(source, target, eObject, type, preferencesHint);
 	}
 
 	/**

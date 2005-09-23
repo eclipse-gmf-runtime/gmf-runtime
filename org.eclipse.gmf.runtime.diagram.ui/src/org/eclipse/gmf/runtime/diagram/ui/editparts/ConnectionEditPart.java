@@ -53,8 +53,9 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationEvent;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.PropertyChangeNotifier;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectorBendpointEditPolicy;
@@ -70,11 +71,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectorEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectorLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectorBendpointEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
@@ -106,6 +107,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
+/*
+ * @canBeSeenBy %partners
+ */
 /**
  * the base edit part that controls <code>Edge</code> views, it is the basic 
  * controller for the connector's view
@@ -113,7 +117,7 @@ import org.eclipse.ui.IActionFilter;
  */
 abstract public class ConnectionEditPart
 	extends AbstractConnectionEditPart
-	implements IGraphicalEditPart, PropertyChangeListener, IContainedEditPart, IPrimaryEditPart, NotificationListener {
+	implements IGraphicalEditPart, PropertyChangeListener, IContainedEditPart, IPrimaryEditPart {
 
 	/** A map of listener filters ids to filter data */
 	private Map listenerFilters;
@@ -167,8 +171,6 @@ abstract public class ConnectionEditPart
 		super.activate();
 		}
 
-
-	
 	/**
 	 * Adds a listener filter by adding the given listener to a passed notifier
 	 * 
@@ -178,7 +180,34 @@ abstract public class ConnectionEditPart
 	 */
 	protected void addListenerFilter(
 		String filterId,
-		NotificationListener listener,
+		PropertyChangeListener listener,
+		PropertyChangeNotifier notifier) {
+
+		if (notifier == null)
+			return;
+
+		Assert.isNotNull(filterId);
+		Assert.isNotNull(listener);
+
+		if (listenerFilters == null)
+			listenerFilters = new HashMap();
+
+		notifier.addPropertyChangeListener(listener);
+		listenerFilters.put(filterId, new Object[] { notifier, listener });
+	}
+	
+	/**
+	 * Adds a listener filter by adding the given listener to a passed notifier
+	 * 
+	 * @param filterId A unique filter id (within the same editpart instance)
+	 * @param listener A listener instance
+	 * @param notifier An element notifer to add the listener to
+	 * @deprecated use {@link ConnectionEditPart#addListenerFilter(String, PropertyChangeListener, EObject)} or
+	 * {@link ConnectionEditPart#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
+	 */
+	protected void addListenerFilter(
+		String filterId,
+		PropertyChangeListener listener,
 		EObject element) {
 
 		if (element == null)
@@ -190,7 +219,7 @@ abstract public class ConnectionEditPart
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
 
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		PresentationListener.getInstance().addPropertyChangeListener(element,listener);
 		listenerFilters.put(filterId, new Object[] { element, listener });
 	}
 	
@@ -203,7 +232,7 @@ abstract public class ConnectionEditPart
 	 */
 	protected void addListenerFilter(
 		String filterId,
-		NotificationListener listener,
+		PropertyChangeListener listener,
 		EObject element,
 		EStructuralFeature feature) {
 
@@ -216,7 +245,7 @@ abstract public class ConnectionEditPart
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
 
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		PresentationListener.getInstance().addPropertyChangeListener(element,listener);
 		listenerFilters.put(filterId, new Object[] { element,feature, listener });
 	}
 
@@ -287,9 +316,12 @@ abstract public class ConnectionEditPart
 				Object[] obj = (Object[]) listenerFilters.get(i.next());
 				if (obj.length>2){
 					PresentationListener.getInstance().
-						removeNotificationListener((EObject)obj[0],(EStructuralFeature) obj[1],(NotificationListener) obj[2]);
+						removePropertyChangeListener((EObject)obj[0],(EStructuralFeature) obj[1],(PropertyChangeListener) obj[2]);
 				} else {
-					PresentationListener.getInstance().removeNotificationListener((EObject)obj[0],(NotificationListener) obj[1]);
+					if (obj[0] instanceof PropertyChangeNotifier)
+						((PropertyChangeNotifier) obj[0]).removePropertyChangeListener((PropertyChangeListener) obj[1]);
+					else
+						PresentationListener.getInstance().removePropertyChangeListener((EObject)obj[0],(PropertyChangeListener) obj[1]);
 				}
 			}
 		}
@@ -599,11 +631,61 @@ abstract public class ConnectionEditPart
 	 * @param event the property changed event
 	 */
 	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
-		if (event.getPropertyName().equals(Connection.PROPERTY_CONNECTION_ROUTER)) {
+		if (event.getPropertyName().equals(Properties.ID_PERSISTED_CHILDREN)||
+			event.getPropertyName().equals(Properties.ID_TRANSIENT_CHILDREN)) {
+			refreshChildren();
+		}
+		else if (event.getPropertyName().equals(Properties.ID_ISVISIBLE)) {
+			setVisibility(((Boolean) event.getNewValue()).booleanValue());
+		// Reactivating in response to semantic model reference change
+		// However, we need to verify that the event belongs to this editpart's view
+		// cannot do it now since property's source is (IView for RMS) and (IUMLView for EMF)
+		}
+		else if (
+			event.getPropertyName().equals(Properties.ID_ROUTING)
+				|| event.getPropertyName().equals(
+					Connection.PROPERTY_CONNECTION_ROUTER)) {
 			installRouter();
+		}
+		else if (
+			event.getPropertyName().equals(Properties.ID_SMOOTHNESS)
+				|| event.getPropertyName().equals(Properties.ID_AVOIDOBSTRUCTIONS)
+				|| event.getPropertyName().equals(Properties.ID_CLOSESTDISTANCE)
+				|| event.getPropertyName().equals(Properties.ID_JUMPLINKS_STATUS)
+				|| event.getPropertyName().equals(Properties.ID_JUMPLINKS_TYPE)
+				|| event.getPropertyName().equals(
+					Properties.ID_JUMPLINKS_REVERSE)) {
+			refreshVisuals();
+		}
+		else if (event.getPropertyName().equals(Properties.ID_LINECOLOR)) {
+			Integer c = (Integer) event.getNewValue();
+			setForegroundColor(PresentationResourceManager.getInstance().getColor(c));
+		}
+		else if (event.getPropertyName().equals(Properties.ID_BENDPOINT)) {
+			refreshBendpoints();
+		}
+		else if (event instanceof NotificationEvent) {
+			handleNotificationEvent((NotificationEvent) event);
 		}
 	}
 
+	
+	/**
+	 * Handles the supplied notification event.
+	 * @param e the event to handle
+	 */
+	protected void handleNotificationEvent(NotificationEvent e) {
+		Notification event = e.getNotification();
+		
+		if (event.getFeature() == NotationPackage.eINSTANCE.getView_Element()
+		 && ((EObject)event.getNotifier()) == getNotationView())
+			handleMajorSemanticChange();
+
+		else if (event.getEventType() == EventTypes.UNRESOLVE 
+				&& event.getNotifier() == ((View) getModel()).getElement())
+			handleMajorSemanticChange();
+	}
+		
 	/**
 	 * Method reactivateSemanticModel.
 	 * This method reactivates the edit part's emantic model by:
@@ -691,13 +773,20 @@ abstract public class ConnectionEditPart
 
 		if (objects.length>2){
 			PresentationListener.getInstance().
-				removeNotificationListener((EObject) objects[0],
+				removePropertyChangeListener((EObject) objects[0],
 											 (EStructuralFeature) objects[1],
-											 (NotificationListener) objects[2]);
+											 (PropertyChangeListener) objects[2]);
 		} else {
-			PresentationListener.getInstance().
-				removeNotificationListener((EObject) objects[0],
-					 				 (NotificationListener) objects[1]);
+			// check if it uses a PropertyChangeNotifier or not the block inside the if 
+			// statement should be removed as soon as the deprecation warnings are fixed
+			if (objects[0] instanceof PropertyChangeNotifier){
+				((PropertyChangeNotifier) objects[0]).removePropertyChangeListener(
+					(PropertyChangeListener) objects[1]);
+			} else {
+				PresentationListener.getInstance().
+					removePropertyChangeListener((EObject) objects[0],
+					 				 (PropertyChangeListener) objects[1]);
+			}
 		}
 		listenerFilters.remove(filterId);
 	}
@@ -1341,6 +1430,51 @@ abstract public class ConnectionEditPart
 		}
 		return PreferencesHint.USE_DEFAULTS;
 	}
+
+	/*
+	 * ATTENTION!!!!: Do not remove, see below. Only update based on newer GEF framework
+	 *  
+	 * This function is "copied" from GEF for the following reason:
+	 * GEF does not check if the connector's source or target are the same as the editpart
+	 * before setting them to <code>null</code> which causes the following usecase to currently fail:
+	 * 
+	 * "in a model transaction, view's source connectors are detached, a new view is
+	 * created, and the connectors are attached to it, then the old view is destroyed"
+	 * 
+	 * The reason for the problem is the filtering of Deleted/Uncreated object's events in the
+	 * PresentationListener which prevents the first connector detach event from coming and 
+	 * avoiding the problem
+	 * 
+	 * TODO: Remove this override as soon as the bugzilla <Bug 110476> is resolved or the event filtering is removed
+	 * 
+	 * @see org.eclipse.gef.EditPart#removeNotify()
+	 */
+	public void removeNotify() {
+		deactivateFigure();
+		if (getSelected() != SELECTED_NONE)
+			getViewer().deselect(this);
+		if (hasFocus())
+			getViewer().setFocus(null);
+
+		List children = getChildren();
+		for (int i = 0; i < children.size(); i++)
+			((EditPart)children.get(i))
+				.removeNotify();
+		unregister();
+		List conns;
+		conns = getSourceConnections();
+		for (int i = 0; i < conns.size(); i++) {
+			ConnectionEditPart conn = (ConnectionEditPart)conns.get(i);
+			if (conn.getSource() == this)
+				conn.setSource(null);
+		}
+		conns = getTargetConnections();
+		for (int i = 0; i < conns.size(); i++) {
+			ConnectionEditPart conn = (ConnectionEditPart)conns.get(i);
+			if (conn.getTarget() == this)
+				conn.setTarget(null);
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
@@ -1395,4 +1529,5 @@ abstract public class ConnectionEditPart
 				&& event.getNotifier() == ((View) getModel()).getElement())
 			handleMajorSemanticChange();
 	}
+	
 }
