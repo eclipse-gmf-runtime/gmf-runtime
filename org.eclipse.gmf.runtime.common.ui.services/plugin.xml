@@ -12,10 +12,11 @@
 
 <plugin>
 
-     <extension-point id="editorProviders" name="%extPoint.editorProviders" schema="schema/editorProviders.exsd"/>
+   <extension-point id="editorProviders" name="%extPoint.editorProviders" schema="schema/editorProviders.exsd"/>
    <extension-point id="markerNavigationProviders" name="%extPoint.markerNavigationProviders" schema="schema/markerNavigationProviders.exsd"/>
    <extension-point id="iconProviders" name="%extPoint.iconProviders" schema="schema/iconProviders.exsd"/>
    <extension-point id="parserProviders" name="%extPoint.parserProviders" schema="schema/parserProviders.exsd"/>
+   <extension-point id="elementSelectionProviders" name="%extPoint.elementSelectionProviders" schema="schema/elementSelectionProviders.exsd"/>
 
    <extension
          id="marker"

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
+import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionService;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
@@ -47,6 +48,11 @@ public class CommonUIServicesPlugin
 	 * Extension point name for the parser providers extension point.
 	 */
 	protected static final String PARSER_PROVIDERS_EXT_P_NAME = "parserProviders"; //$NON-NLS-1$ 
+
+	/**
+	 * Extension point name for the element selection extension point.
+	 */
+	protected static final String ELEMENT_SELECTION_PROVIDERS_EXT_P_NAME = "elementSelectionProviders"; //$NON-NLS-1$ 
 
 	/**
 	 * This plug-in's shared instance.
@@ -88,7 +94,7 @@ public class CommonUIServicesPlugin
 	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
 	 */
 	public AbstractResourceManager getResourceManager() {
-		//TODO ResourceManager.getInstance();
+		// TODO ResourceManager.getInstance();
 		return null;
 	}
 
@@ -100,12 +106,13 @@ public class CommonUIServicesPlugin
 		configureMarkerNavigationProviders();
 		configureIconProviders();
 		configureParserProviders();
+		configureElementSelectionProviders();
 	}
 
 	/**
 	 * Configures editor providers based on editor provider extension
 	 * configurations.
-	 *  
+	 * 
 	 */
 	private void configureEditorProviders() {
 		EditorService.getInstance().configureProviders(
@@ -117,7 +124,7 @@ public class CommonUIServicesPlugin
 	/**
 	 * Configures marker navigation providers based on marker navigation
 	 * provider extension configurations.
-	 *  
+	 * 
 	 */
 	private void configureMarkerNavigationProviders() {
 		MarkerNavigationService.getInstance().configureProviders(
@@ -138,11 +145,23 @@ public class CommonUIServicesPlugin
 	/**
 	 * Configures parser providers based on parser provider extension
 	 * configurations.
-	 *  
+	 * 
 	 */
 	private void configureParserProviders() {
 		ParserService.getInstance().configureProviders(
 			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
 				PARSER_PROVIDERS_EXT_P_NAME).getConfigurationElements());
+	}
+
+	/**
+	 * Configures element selection providers based on element selection
+	 * provider extension configurations.
+	 * 
+	 */
+	private void configureElementSelectionProviders() {
+		ElementSelectionService.getInstance().configureProviders(
+			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
+				ELEMENT_SELECTION_PROVIDERS_EXT_P_NAME)
+				.getConfigurationElements());
 	}
 }
