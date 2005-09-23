@@ -109,11 +109,10 @@ public abstract class ModelingAssistantProvider
 				((SelectExistingElementForTargetOperation) operation)
 					.getRelationshipType()).isEmpty();
 
-		} else if (operation instanceof GetTypesForAttributeOperation) {
+		} else if (operation instanceof GetTypesOperation) {
 
-			return !getTypesForAttribute(
-				((GetTypesForAttributeOperation) operation).getAttribute())
-				.isEmpty();
+			return !getTypes(((GetTypesOperation) operation).getHint(),
+				((GetTypesOperation) operation).getData()).isEmpty();
 
 		} else if (operation instanceof GetTypesForActionBarOperation) {
 
@@ -128,9 +127,9 @@ public abstract class ModelingAssistantProvider
 	/**
 	 * Returns an empty list.
 	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForAttribute(IAdaptable)
+	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypes(String, IAdaptable)
 	 */
-	public List getTypesForAttribute(IAdaptable attribute) {
+	public List getTypes(String hint, IAdaptable data) {
 		return Collections.EMPTY_LIST;
 	}
 

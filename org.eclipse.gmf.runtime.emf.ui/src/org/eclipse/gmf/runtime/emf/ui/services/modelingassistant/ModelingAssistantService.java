@@ -66,7 +66,6 @@ public class ModelingAssistantService
 			}
 			if (getPolicy() != null)
 				return getPolicy().provides(operation);
-
 			return isSupportedInExtension(operation) ? getProvider().provides(
 				operation) : false;
 		}
@@ -137,14 +136,14 @@ public class ModelingAssistantService
 	}
 
 	/**
-	 * Executes the <code>GetTypesForAttributeOperation</code> using the 
+	 * Executes the <code>GetTypesOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
 	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForAttribute(IAdaptable)
+	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypes(String, IAdaptable)
 	 */
-	public List getTypesForAttribute(IAdaptable attribute) {
+	public List getTypes(String hint, IAdaptable data) {
 		List results = execute(ExecutionStrategy.FORWARD,
-			new GetTypesForAttributeOperation(attribute));
+			new GetTypesOperation(hint, data));
 		return collapseList(results);
 	}
 

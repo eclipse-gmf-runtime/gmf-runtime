@@ -28,16 +28,17 @@ public interface IModelingAssistantProvider
 	extends IProvider {
 
 	/**
-	 * Gets a list of types to be used in the popup menu when qualifying an
-	 * attribute type. This is triggered when the user attempts to show an
-	 * untyped attribute as an association.
+	 * Gets a list of types to be used in the popup menu when performing some UI
+	 * gesture identified by the hint.
 	 * 
-	 * @param attribute
-	 *            the attribute to be shown as an association: adapts to
-	 *            editpart, view, element, etc.
+	 * @param hint
+	 *            identifies the hint or gesture
+	 * @param data
+	 *            <li>provides additional data that is required</li>
+	 *            <li>may be null depending on the hint</li>
 	 * @return a list of element types (<code>IElementType</code>)
 	 */
-	List getTypesForAttribute(IAdaptable attribute);
+	List getTypes(String hint, IAdaptable data);
 
 	/**
 	 * Returns a list of relationship types that could appear in EITHER the

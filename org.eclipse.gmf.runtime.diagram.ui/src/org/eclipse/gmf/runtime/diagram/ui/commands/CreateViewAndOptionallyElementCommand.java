@@ -361,4 +361,6 @@ public class CreateViewAndOptionallyElementCommand
 	protected void setCommand(Command command) {
 		this.command = command;
 	}
+	
+	
 }

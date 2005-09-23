@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
@@ -198,9 +199,9 @@ public class CreateOrSelectElementCommand
 
 		if (style == POPUP_DIALOG) {
 			setPopupDialog(new PopupDialog(parentShell, content,
-				new LabelProvider()));
+				getLabelProvider()));
 		} else {
-			setPopupMenu(new PopupMenu(content, new LabelProvider()));
+			setPopupMenu(new PopupMenu(content, getLabelProvider()));
 		}
 	}
 
@@ -285,5 +286,14 @@ public class CreateOrSelectElementCommand
 	 */
 	public ObjectAdapter getResultAdapter() {
 		return resultAdapter;
+	}
+
+	/**
+	 * Gets the label provider that is to be used to display each item in the popup menu.
+	 * 
+	 * @return the label provider
+	 */
+	protected ILabelProvider getLabelProvider() {
+		return new LabelProvider();
 	}
 }

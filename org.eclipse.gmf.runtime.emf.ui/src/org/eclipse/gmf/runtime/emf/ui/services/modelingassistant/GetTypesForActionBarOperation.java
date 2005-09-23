@@ -37,7 +37,7 @@ public class GetTypesForActionBarOperation
 		this.host = host;
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantOperation#getId()
 	 */
 	public String getId() {
@@ -47,14 +47,12 @@ public class GetTypesForActionBarOperation
 	/**
 	 * Returns the host. This is what will be used to assist in delayed loading
 	 * of a modeling assistant provider.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantOperation#getContext()
 	 */
 	public IAdaptable getContext() {
 		return getHost();
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(org.eclipse.gmf.runtime.common.core.service.IProvider)
 	 */
 	public Object execute(IProvider provider) {

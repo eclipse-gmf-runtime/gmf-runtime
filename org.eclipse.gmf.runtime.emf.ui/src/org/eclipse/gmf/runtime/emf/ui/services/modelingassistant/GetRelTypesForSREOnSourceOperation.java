@@ -38,7 +38,7 @@ public class GetRelTypesForSREOnSourceOperation
 		this.source = source;
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantOperation#getId()
 	 */
 	public String getId() {
@@ -48,14 +48,12 @@ public class GetRelTypesForSREOnSourceOperation
 	/**
 	 * Returns the source. This is what will be used to assist in delayed
 	 * loading of a modeling assistant provider.
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantOperation#getContext()
 	 */
 	public IAdaptable getContext() {
 		return getSource();
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(org.eclipse.gmf.runtime.common.core.service.IProvider)
 	 */
 	public Object execute(IProvider provider) {

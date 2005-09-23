@@ -9,42 +9,43 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
+package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
-import org.eclipse.gmf.runtime.diagram.ui.commands.PopupMenuCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.SelectExistingElementForSourceOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.SelectExistingElementForTargetOperation;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * <p>
  * A command that pops up a menu which can allow the user to select the type of
- * connector to be created and whether they want to create a new type or
- * select an existing element for the other end of the connector.
+ * connector to be created and whether they want to create a new type or select
+ * an existing element for the other end of the connector.
  * </p>
  * 
  * <p>
@@ -58,7 +59,6 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
  * </p>
  * 
  * @author cmahoney
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class GetConnectorTypeAndEndCommand
 	extends PopupMenuCommand {
@@ -66,10 +66,12 @@ public class GetConnectorTypeAndEndCommand
 	/**
 	 * Label provider of the first popup menu with the relationship types.
 	 */
-	private class ConnectorLabelProvider
+	protected class ConnectorLabelProvider
 		extends ElementTypeLabelProvider {
 
-		/**
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		public String getText(Object element) {
@@ -93,10 +95,12 @@ public class GetConnectorTypeAndEndCommand
 	 * Label provider of the second popup (submenus) for the type of the other
 	 * end.
 	 */
-	private class EndLabelProvider
+	protected class EndLabelProvider
 		extends ElementTypeLabelProvider {
 
-		/**
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		public String getText(Object element) {
@@ -104,7 +108,7 @@ public class GetConnectorTypeAndEndCommand
 				String theInputStr = PresentationResourceManager
 					.getI18NString("ConnectorHandle.Popup.NewX"); //$NON-NLS-1$
 				String text = MessageFormat.format(theInputStr,
-					new Object[] {((IElementType) element).getDisplayName()});
+					new Object[] {super.getText(element)});
 				return text;
 			} else {
 				return element.toString();
@@ -117,22 +121,25 @@ public class GetConnectorTypeAndEndCommand
 	 * when there is only one connector type (e.g. a single relationship type
 	 * palette tool is used).
 	 */
-	private class EndWithKnownConnectorTypeLabelProvider
+	protected class ConnectorAndEndLabelProvider
 		extends ElementTypeLabelProvider {
 
-		/** the known connector type */
-		private IElementType connectorType;
+		/** the known connector item */
+		private Object connectorItem;
 
 		/**
-		 * Creates a new <code>EndWithKnownConnectorTypeLabelProvider</code>.
+		 * Creates a new <code>ConnectorAndEndLabelProvider</code>.
 		 * 
 		 * @param connectorType
+		 *            the single known connector type
 		 */
-		protected EndWithKnownConnectorTypeLabelProvider(IElementType connectorType) {
-			this.connectorType = connectorType;
+		protected ConnectorAndEndLabelProvider(Object connectorItem) {
+			this.connectorItem = connectorItem;
 		}
 
-		/**
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		public String getText(Object element) {
@@ -145,8 +152,7 @@ public class GetConnectorTypeAndEndCommand
 					theInputStr = PresentationResourceManager
 						.getI18NString("ConnectorHandle.Popup.CreateXToNewY"); //$NON-NLS-1$
 				String text = MessageFormat.format(theInputStr, new Object[] {
-					connectorType.getDisplayName(),
-					((IElementType) element).getDisplayName()});
+					super.getText(connectorItem), super.getText(element)});
 				return text;
 			} else {
 				if (isDirectionReversed())
@@ -156,11 +162,19 @@ public class GetConnectorTypeAndEndCommand
 					theInputStr = PresentationResourceManager
 						.getI18NString("ConnectorHandle.Popup.CreateXToY"); //$NON-NLS-1$
 				String text = MessageFormat.format(theInputStr, new Object[] {
-					connectorType.getDisplayName(), super.getText(element)});
+					super.getText(connectorItem), super.getText(element)});
 				return text;
 			}
-
 		}
+		
+		/**
+		 * Gets the connector item.
+		 * @return the connector item
+		 */
+		protected Object getConnectorItem() {
+			return connectorItem;
+		}
+		
 	}
 
 	/**
@@ -170,23 +184,22 @@ public class GetConnectorTypeAndEndCommand
 		.getI18NString("ConnectorHandle.Popup.ExistingElement"); //$NON-NLS-1$
 
 	/** Label provider of the popup menu for the connector types. */
-	private ConnectorLabelProvider connectorLabelProvider;
+	private static ConnectorLabelProvider connectorLabelProvider;
 
 	/** Label provider of the submenus for the other end element. */
-	private EndLabelProvider endLabelProvider;
+	private static EndLabelProvider endLabelProvider;
 
 	/** Adapts to the connector type result. */
-	private ObjectAdapter connectorTypeAdapter = new ObjectAdapter();
+	private ObjectAdapter connectorAdapter = new ObjectAdapter();
 
 	/** Adapts to the other end type result. */
 	private ObjectAdapter endAdapter = new ObjectAdapter();
 
 	/**
-	 * The request to create a connection. It may contain the connector type
-	 * or it may be a <code>CreateUnspecifiedTypeConnectionRequest</code>.
+	 * The request to create a connection. It may contain the connector type or
+	 * it may be a <code>CreateUnspecifiedTypeConnectionRequest</code>.
 	 */
 	private CreateConnectionRequest request;
-
 
 	/** The container editpart to send the view request to. */
 	private IGraphicalEditPart containerEP;
@@ -203,25 +216,34 @@ public class GetConnectorTypeAndEndCommand
 	 *            create the other end is sent. This is used only for testing
 	 *            that a type is valid for the other end.
 	 */
-	public GetConnectorTypeAndEndCommand(CreateConnectionRequest request, IGraphicalEditPart containerEP) {
+	public GetConnectorTypeAndEndCommand(CreateConnectionRequest request,
+			IGraphicalEditPart containerEP) {
 
 		super(PresentationResourceManager
 			.getI18NString("Command.GetRelationshipTypeAndEndFromUser.Label"), //$NON-NLS-1$
 			Display.getCurrent().getActiveShell());
 		this.request = request;
 		this.containerEP = containerEP;
-		this.endLabelProvider = this.new EndLabelProvider();
-		this.connectorLabelProvider = this.new ConnectorLabelProvider();
 	}
 
 	/**
-	 * Gets the content to be used in the popup menu from the Modeling Assistant
-	 * Service and creates the popup menu.
+	 * Gets a list of all the connector items that will represent the connector
+	 * choices and will appear in the first part of the popup menu.
 	 * 
-	 * @return the top-level popup menu
+	 * <p>
+	 * If the objects in this are not <code>IElementTypes</code> or they
+	 * require a special label provider, then
+	 * {@link #getConnectorLabelProvider()} should be overridden to provide
+	 * this.
+	 * </p>
+	 * <p>
+	 * When this command has executed, the connector adapter result ({@link #getConnectorAdapter()})
+	 * will be populated with the connector item chosen.
+	 * </p>
+	 * 
+	 * @return the list of connector items to appear in the popup menu
 	 */
-	private PopupMenu createPopupMenu() {
-
+	protected List getConnectorMenuContent() {
 		List validRelTypes = new ArrayList();
 		if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
 			List allRelTypes = null;
@@ -258,8 +280,7 @@ public class GetConnectorTypeAndEndCommand
 					.add(((CreateRelationshipRequest) ((CreateConnectorViewAndElementRequest) request)
 						.getConnectorViewAndElementDescriptor()
 						.getCreateElementRequestAdapter().getAdapter(
-							CreateRelationshipRequest.class))
-						.getElementType());
+							CreateRelationshipRequest.class)).getElementType());
 			}
 		} else if (request instanceof CreateConnectorViewRequest) {
 			if (((CreateConnectorViewRequest) request).getStartCommand() != null) {
@@ -271,65 +292,104 @@ public class GetConnectorTypeAndEndCommand
 				}
 			}
 		}
-		
-		if (validRelTypes.isEmpty()) {
-			return null;
-		} else if (validRelTypes.size() == 1) {
-			final IElementType rType = (IElementType) validRelTypes.get(0);
+		return validRelTypes;
+	}
+
+	/**
+	 * Gets a list of all the end items that will represent the other end
+	 * choices and will appear in the submenu popup of the given connector item.
+	 * 
+	 * <p>
+	 * If the objects in this are not <code>IElementTypes</code> or they
+	 * require a special label provider, then {@link #getEndLabelProvider()}
+	 * should be overridden to provide this.
+	 * </p>
+	 * <p>
+	 * When this command has executed, the end adapter result ({@link #getEndAdapter()})
+	 * will be populated with the end item chosen.
+	 * </p>
+	 * 
+	 * @param connectorItem
+	 *            the connector item for which this will be a submenu
+	 * @return the list of end items to appear in the popup menu
+	 */
+	protected List getEndMenuContent(Object connectorItem) {
+		if (connectorItem instanceof IElementType) {
+			IElementType connectorType = (IElementType) connectorItem;
 			List menuContent = isDirectionReversed() ? ModelingAssistantService
-				.getInstance().getTypesForSource(getKnownEnd(), rType)
+				.getInstance().getTypesForSource(getKnownEnd(), connectorType)
 				: ModelingAssistantService.getInstance().getTypesForTarget(
-					getKnownEnd(), rType);
+					getKnownEnd(), connectorType);
+
 			menuContent = filterUnsupportedNodeTypes(menuContent);
-			if (!menuContent.isEmpty()) {
-				if (supportsExistingElement(rType)) {
-					menuContent.add(EXISTING_ELEMENT);
-				}
 
-				ILabelProvider labelProvider = this.new EndWithKnownConnectorTypeLabelProvider(
-					rType);
-				return new PopupMenu(menuContent, labelProvider) {
-
-					/**
-					 * @see org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu#getResult()
-					 */
-					public Object getResult() {
-						Object endResult = super.getResult();
-						if (endResult == null) {
-							return null;
-						} else {
-							List resultList = new ArrayList(2);
-							resultList.add(rType);
-							resultList.add(endResult);
-							return resultList;
-						}
-					}
-				};
+			if (!menuContent.isEmpty()
+				&& supportsExistingElement(connectorType)) {
+				menuContent.add(EXISTING_ELEMENT);
 			}
+
+			return menuContent;
+		}
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * Gets the content to be used in the popup menu from the Modeling Assistant
+	 * Service and creates the popup menu.
+	 * 
+	 * @return the top-level popup menu
+	 */
+	protected PopupMenu createPopupMenu() {
+
+		final List connectorMenuContent = getConnectorMenuContent();
+
+		if (connectorMenuContent == null || connectorMenuContent.isEmpty()) {
+			return null;
+		} else if (connectorMenuContent.size() == 1) {
+			List menuContent = getEndMenuContent(connectorMenuContent.get(0));
+			if (menuContent == null || menuContent.isEmpty()) {
+				return null;
+			}
+
+			ILabelProvider labelProvider = getConnectorAndEndLabelProvider(connectorMenuContent
+				.get(0));
+			return new PopupMenu(menuContent, labelProvider) {
+
+				/**
+				 * @see org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu#getResult()
+				 */
+				public Object getResult() {
+					Object endResult = super.getResult();
+					if (endResult == null) {
+						return null;
+					} else {
+						List resultList = new ArrayList(2);
+						resultList.add(connectorMenuContent.get(0));
+						resultList.add(endResult);
+						return resultList;
+					}
+				}
+			};
 		} else {
 			List menuContent = new ArrayList();
-			for (Iterator iter = validRelTypes.iterator(); iter.hasNext();) {
-				IElementType rType = (IElementType) iter.next();
+			for (Iterator iter = connectorMenuContent.iterator(); iter
+				.hasNext();) {
+				Object connectorItem = iter.next();
 
-				List subMenuContent = isDirectionReversed() ? ModelingAssistantService
-					.getInstance().getTypesForSource(getKnownEnd(), rType)
-					: ModelingAssistantService.getInstance().getTypesForTarget(
-						getKnownEnd(), rType);
-				subMenuContent = filterUnsupportedNodeTypes(subMenuContent);
+				List subMenuContent = getEndMenuContent(connectorItem);
+
 				if (subMenuContent.isEmpty()) {
 					continue;
 				}
-				if (supportsExistingElement(rType)) {
-					subMenuContent.add(EXISTING_ELEMENT);
-				}
 
 				PopupMenu subMenu = new PopupMenu(subMenuContent,
-					endLabelProvider);
+					getEndLabelProvider());
 
-				menuContent.add(new PopupMenu.CascadingMenu(rType, subMenu));
+				menuContent.add(new PopupMenu.CascadingMenu(connectorItem,
+					subMenu));
 			}
 			if (!menuContent.isEmpty()) {
-				return new PopupMenu(menuContent, connectorLabelProvider);
+				return new PopupMenu(menuContent, getConnectorLabelProvider());
 			}
 		}
 		return null;
@@ -349,7 +409,7 @@ public class GetConnectorTypeAndEndCommand
 			Request createRequest = CreateViewRequestFactory
 				.getCreateShapeRequest(type, containerEP
 					.getDiagramPreferencesHint());
-			
+
 			EditPart target = containerEP.getTargetEditPart(createRequest);
 			if (target != null) {
 				Command cmd = target.getCommand(createRequest);
@@ -361,7 +421,9 @@ public class GetConnectorTypeAndEndCommand
 		return validTypes;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
 	 */
 	public boolean isExecutable() {
@@ -371,8 +433,6 @@ public class GetConnectorTypeAndEndCommand
 	/**
 	 * Pops up the dialog with the content provided. If the user selects 'select
 	 * existing', then the select elements dialog also appears.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
 		PopupMenu popup = createPopupMenu();
@@ -392,7 +452,7 @@ public class GetConnectorTypeAndEndCommand
 		if (result instanceof List) {
 			List resultList = (List) result;
 			if (resultList.size() == 2) {
-				connectorTypeAdapter.setObject(resultList.get(0));
+				connectorAdapter.setObject(resultList.get(0));
 
 				Object targetResult = resultList.get(1);
 
@@ -438,12 +498,12 @@ public class GetConnectorTypeAndEndCommand
 	}
 
 	/**
-	 * Gets the connectorTypeAdapter.
+	 * Gets the connectorAdapter.
 	 * 
-	 * @return Returns the connectorTypeAdapter.
+	 * @return Returns the connectorAdapter.
 	 */
-	public ObjectAdapter getConnectorTypeAdapter() {
-		return connectorTypeAdapter;
+	public ObjectAdapter getConnectorAdapter() {
+		return connectorAdapter;
 	}
 
 	/**
@@ -451,7 +511,7 @@ public class GetConnectorTypeAndEndCommand
 	 * 
 	 * @return Returns the endAdapter.
 	 */
-	public ObjectAdapter getEndAdapter() {
+	public IAdaptable getEndAdapter() {
 		return endAdapter;
 	}
 
@@ -463,7 +523,7 @@ public class GetConnectorTypeAndEndCommand
 	 *         <code>CreateUnspecifiedTypeConnectionRequest</code>; false
 	 *         otherwise
 	 */
-	private boolean isDirectionReversed() {
+	protected boolean isDirectionReversed() {
 		return (request instanceof CreateUnspecifiedTypeConnectionRequest && ((CreateUnspecifiedTypeConnectionRequest) request)
 			.isDirectionReversed());
 	}
@@ -478,4 +538,46 @@ public class GetConnectorTypeAndEndCommand
 	private EditPart getKnownEnd() {
 		return request.getSourceEditPart();
 	}
+
+	/**
+	 * Gets the label provider that is to be used in the first menu of the popup
+	 * where the user is to choose the connector to be created.
+	 * 
+	 * @return the connector label provider
+	 */
+	protected ILabelProvider getConnectorLabelProvider() {
+		if (connectorLabelProvider == null) {
+			connectorLabelProvider = new ConnectorLabelProvider();
+		}
+		return connectorLabelProvider;
+	}
+
+	/**
+	 * Gets the label provider that is to be used in the second menu of the
+	 * popup where the user is to choose the end (could be source or target) to
+	 * be created.
+	 * 
+	 * @return the end label provider
+	 */
+	protected ILabelProvider getEndLabelProvider() {
+		if (endLabelProvider == null) {
+			endLabelProvider = new EndLabelProvider();
+		}
+		return endLabelProvider;
+	}
+
+	/**
+	 * Gets the label provider that is to be used when there is only one option
+	 * for the connector type so the popup menu consists of a single menu
+	 * identifying the connector type to be created and options for the other
+	 * end of which the user must choose
+	 * 
+	 * @param connectorItem
+	 *            the single known connector item
+	 * @return the label provider
+	 */
+	protected ILabelProvider getConnectorAndEndLabelProvider(Object connectorItem) {
+		return new ConnectorAndEndLabelProvider(connectorItem);
+	}
+
 }

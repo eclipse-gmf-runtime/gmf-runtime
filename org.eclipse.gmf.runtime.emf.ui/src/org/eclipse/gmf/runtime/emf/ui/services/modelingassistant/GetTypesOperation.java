@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,61 +12,74 @@
 package org.eclipse.gmf.runtime.emf.ui.services.modelingassistant;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
  * The operation used with the modeling assistant service that gets the type of
- * elements that can be created or used when qualifying an attribute's type.
+ * elements that can be created or used for a specific hint or gesture and optional data.
  * 
  * @author cmahoney
  */
-public class GetTypesForAttributeOperation
+public class GetTypesOperation
 	implements IModelingAssistantOperation {
+	
+	/** identifies the gesture */
+	private final String hint;
 
-	/** the attribute: adapts to editpart, view, element, etc. */
-	private final IAdaptable attribute;
+	/** additional data required */
+	private final IAdaptable data;
 
 	/**
-	 * Creates a new <code>GetTypesForAttributeOperation</code>.
+	 * Creates a new <code>GetTypesOperation</code>.
 	 * 
-	 * @param attribute
-	 *            the attribute: adapts to editpart, view, element, etc.
+	 * @param hint
+	 *            identifies the hint or gesture
+	 * @param data
+	 *            <li>provides additional data that is required</li>
+	 *            <li>may be null depending on the hint</li>
 	 */
-	protected GetTypesForAttributeOperation(IAdaptable attribute) {
-		this.attribute = attribute;
+	protected GetTypesOperation(String hint, IAdaptable data) {
+		this.hint = hint;
+		this.data = data;
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantOperation#getId()
+	 * The ID for a this operation is the hint itself.
 	 */
 	public String getId() {
-		return GET_TYPES_FOR_ATTRIBUTE_ID;
+		return getHint();
 	}
 
-	/**
-	 * Returns the attribute. This is what will be used to assist in delayed
-	 * loading of a modeling assistant provider.
-	 * 
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantOperation#getContext()
 	 */
 	public IAdaptable getContext() {
-		return getAttribute();
+		return getData();
 	}
-
-	/**
+	
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(org.eclipse.gmf.runtime.common.core.service.IProvider)
 	 */
 	public Object execute(IProvider provider) {
 		return ((IModelingAssistantProvider) provider)
-			.getTypesForAttribute(getAttribute());
+			.getTypes(getHint(), getData());
 	}
-
+	
 	/**
-	 * @return Returns the attribute that is to have its type qualified.
+	 * Gets the hint that identifies the gesture.
+	 * 
+	 * @return the hint
 	 */
-	public final IAdaptable getAttribute() {
-		return attribute;
+	public String getHint() {
+		return hint;
+	}
+	
+	/**
+	 * Gets the additional data required (if applicable). 
+	 * @return the data, may be null.
+	 */
+	public IAdaptable getData() {
+		return data;
 	}
 
 }

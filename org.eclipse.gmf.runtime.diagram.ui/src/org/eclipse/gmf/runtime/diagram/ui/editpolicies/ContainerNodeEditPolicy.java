@@ -18,14 +18,12 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreateRequest;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateViewAndOptionallyElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectorViewAndElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.GetConnectorTypeAndEndCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.commands.GetConnectorTypeAndEndCommand;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -46,8 +44,6 @@ public class ContainerNodeEditPolicy
 	/**
 	 * Only handles connection end requests. Cannot start a connector on a
 	 * container.
-	 * 
-	 * @see org.eclipse.gef.EditPolicy#getCommand(org.eclipse.gef.Request)
 	 */
 	public Command getCommand(Request request) {
 		if (RequestConstants.REQ_CONNECTION_END.equals(request.getType())
@@ -83,26 +79,26 @@ public class ContainerNodeEditPolicy
 
 		// Adds the command for the popup menu to get the relationship type and
 		// end element.
-		GetConnectorTypeAndEndCommand menuCmd = new GetConnectorTypeAndEndCommand(
-			request, (IGraphicalEditPart) getHost());
+		GetConnectorTypeAndEndCommand menuCmd = getConnectorTypeAndEndPopupCommand(
+			request);
 		cc.add(new EtoolsProxyCommand(menuCmd));
 
 		// Adds the command to create a view (and optionally an element) for
 		// the other end.
-		CreateViewAndOptionallyElementCommand createOtherEndCmd = getCreateViewAndOptionallyElementCommand(
+		CreateViewAndOptionallyElementCommand createOtherEndCmd = getCreateOtherEndCommand(
 			menuCmd.getEndAdapter(), request.getLocation());
 		cc.add(new EtoolsProxyCommand(createOtherEndCmd));
 		
 		// Adds the command to create the connector view and element.
 		ICommand connectorCmd = isDirectionReversed 
-			? getDeferredCreateConnectorViewAndElementCommand( 
+			? getCreateConnectorCommand( 
 				request,
-				menuCmd.getConnectorTypeAdapter(),
+				menuCmd.getConnectorAdapter(),
 				createOtherEndCmd.getResult(), 
 				request.getSourceEditPart())
-			: getDeferredCreateConnectorViewAndElementCommand(
+			: getCreateConnectorCommand(
 				request,
-				menuCmd.getConnectorTypeAdapter(), 
+				menuCmd.getConnectorAdapter(), 
 				request.getSourceEditPart(),
 				createOtherEndCmd.getResult());	
 			
@@ -111,18 +107,28 @@ public class ContainerNodeEditPolicy
 		return cc;
 	}
 	
-	/** 
-	 
-	 * @return a <code>CreateViewAndOptionallyElementCommand</code>
+	/**
+	 * @param request
+	 *            A single create connection request or unspecified connection
+	 *            requests (i.e. where the popup also prompts the user for the
+	 *            type of relationship to created).
+	 * @param part
+	 * @return
 	 */
+	protected GetConnectorTypeAndEndCommand getConnectorTypeAndEndPopupCommand(
+			CreateConnectionRequest request) {
+		return new GetConnectorTypeAndEndCommand(request,
+			(IGraphicalEditPart) getHost());
+	}
+
 	/**
 	 * Called by {@link #getConnectionAndEndCommands}.
 	 * @param endAdapter the end adapter 
 	 * @param location the location
 	 * @return command
 	 */
-	protected CreateViewAndOptionallyElementCommand getCreateViewAndOptionallyElementCommand(
-			ObjectAdapter endAdapter, Point location ) {
+	protected CreateViewAndOptionallyElementCommand getCreateOtherEndCommand(
+			IAdaptable endAdapter, Point location ) {
 		return new CreateViewAndOptionallyElementCommand(endAdapter,
 			(IGraphicalEditPart) getHost(), location,
 			((IGraphicalEditPart) getHost()).getDiagramPreferencesHint());
@@ -136,7 +142,7 @@ public class ContainerNodeEditPolicy
 	 * @param targetViewAdapter
 	 * @return a <code>DeferredCreateConnectorViewAndElementCommand</code>
 	 */
-	protected DeferredCreateConnectorViewAndElementCommand getDeferredCreateConnectorViewAndElementCommand(
+	protected ICommand getCreateConnectorCommand(
 			CreateRequest request,
 			IAdaptable typeInfoAdapter,
 			IAdaptable sourceViewAdapter,

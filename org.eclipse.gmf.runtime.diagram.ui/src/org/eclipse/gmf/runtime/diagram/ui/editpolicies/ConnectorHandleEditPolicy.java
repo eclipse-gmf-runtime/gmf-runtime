@@ -24,12 +24,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
-import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
 import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -37,29 +34,18 @@ import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandle;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandleLocator;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandle.HandleDirection;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * This editpolicy is responsible for adding the connector handles to a shape.
  * 
  * @author cmahoney
  */
-public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
-
-	/** Delay in ms to wait after leaving shape before removing handles. */
-	private static final int REMOVE_HANDLES_DELAY = 1000;
-
-	/** Only keep the widget visible for this length of time.*/
-	private int STAY_VISIBLE_DELAY = 2000;
-	
-	/**
-	 * Delay in ms to wait before showing the connector handles upon entering
-	 * the shape.
-	 */
-	private static final int ADD_HANDLES_DELAY = 200;
+public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 
 	/**
 	 * Listens to mouse events on the owner shape and handles so that the
@@ -73,7 +59,7 @@ public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
 
 		public void mouseExited(MouseEvent me) {
 			setMouseLocation(null);
-			removeConnectorHandlesAfterDelay();
+			removeHandlesAfterDelay(getDisappearanceDelayUponExit());
 		}
 
 		/**
@@ -102,7 +88,7 @@ public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
 			if (!shouldHoverActivate(me.getSource()))
 				setActivateOnHover(false);
 
-			addConnectorHandlesAfterDelay();
+			addHandlesAfterDelay(getAppearanceDelay());
 				
 			super.mouseMoved(me);
 		}		
@@ -324,11 +310,11 @@ public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
 		
 		if(!getActivateOnHover())
 		{
-			// dismiss the handles after STAY_VISIBLE_DELAY ms.
-			removeConnectorHandlesAfterDelayAmt(STAY_VISIBLE_DELAY);
+			// dismiss the handles after a delay
+			removeHandlesAfterDelay(getDisappearanceDelay());
 		}
 	}
-
+	
 	/**
 	 * Is the show connector handles preference turned on?
 	 * @return true iff the show connector handles preference is turned on
@@ -359,18 +345,12 @@ public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Sets a timer to remove the connector handles if the handles are currently
 	 * shown.
 	 */
-	private void removeConnectorHandlesAfterDelay() {
-		removeConnectorHandlesAfterDelayAmt(REMOVE_HANDLES_DELAY);
-		
-		
-	}
-	
-	private void removeConnectorHandlesAfterDelayAmt(int theDelay) {
+	private void removeHandlesAfterDelay(int theDelay) {
 		if (handles != null) {
 			Display.getCurrent().timerExec(theDelay, removeHandlesRunnable);
 		}
@@ -380,11 +360,12 @@ public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
 	 * Sets a timer to add the connector handles if the mouse is still in the
 	 * shape
 	 */
-	private void addConnectorHandlesAfterDelay() {
-		Display.getCurrent().timerExec(ADD_HANDLES_DELAY,
+	private void addHandlesAfterDelay(int theDelay) {
+		Display.getCurrent().timerExec(theDelay,
 			new AddHandlesRunnable(getMouseLocation()));
 	}
-	
+
+
 	/**
 	 * Removes the connector handles.
 	 */
@@ -476,4 +457,5 @@ public class ConnectorHandleEditPolicy extends GraphicalEditPolicy {
 	protected void setMouseLocation(Point mouseLocation) {
 		this.mouseLocation = mouseLocation;
 	}
+
 }

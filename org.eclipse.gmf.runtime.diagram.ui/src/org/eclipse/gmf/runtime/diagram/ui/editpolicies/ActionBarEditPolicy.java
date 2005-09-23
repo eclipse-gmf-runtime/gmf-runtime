@@ -36,15 +36,8 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
-import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
@@ -56,8 +49,13 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.tools.AddActionBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.AddUMLActionBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
-import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * 
@@ -70,10 +68,10 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  * Shapes/Connectors User defined would be nice Diagram Add UML (essentially
  * the current toolbox)
  * 
- * @author affrantz@us.ibm.com
+ * @author affrantz@us.ibm.com, cmahoney
  */
 
-public class ActionBarEditPolicy extends GraphicalEditPolicy {
+public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	
 	/* ************************** nested classes ************************/
 	/**
@@ -414,7 +412,7 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 
 		public void mouseExited(MouseEvent me) {
 			setMouseInsideShape(false);
-			hideActionBalloonDelayed(HIDE_DELAY);
+			hideActionBalloonDelayed(getDisappearanceDelayUponExit());
 		}
 		/**
 		 * We the tools to dismiss after the delay period if 
@@ -446,7 +444,7 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 				
 				myMouseHoverLocation.setLocation(me.getLocation());
 				if(getIsDisplayAtMouseHoverLocation())
-					showActionBalloonDelayed(SHOW_DELAY_LOCATION_SPECIFIC); // no delay
+					showActionBalloonDelayed(getAppearanceDelayLocationSpecific()); // no delay
 				else
 					showActionBalloon(); // no delay
 			}
@@ -477,7 +475,7 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 				if(!shouldHoverActivate(me.getSource()))
 					setActivateOnHover(false);
 				
-				showActionBalloonDelayed(DEFAULT_SHOW_DELAY);
+				showActionBalloonDelayed(getAppearanceDelay());
 			}
 
 			super.mouseMoved(me);
@@ -574,24 +572,12 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 }
 	/* ************************* End nested classes *********************/
 
-	/** Delay in ms to wait after leaving shape editpart. */
-	static private int HIDE_DELAY = 1000;
-	
-	/**
-	 * Delay in ms to wait before showing the actionbar upon entering the shape.
-	 */
-	private static final int DEFAULT_SHOW_DELAY = 200;
-
 	/**
 	 * Delay in ms to wait for displaying the actionBar on a diagrms or machine
-	 * diagram. There is no delay when displaying for a typcail shape.
+	 * diagram. This delay is greater than normal because the actionbar is more
+	 * intrusive.
 	 */
-	static private int SHOW_DELAY_LOCATION_SPECIFIC = 1000;
-	
-	/** Only keep the action bar visible for this length of time.
-	 * 
-	*/
-	static private int STAY_VISIBLE_DELAY = 2000;
+	private static final int APPEARANCE_DELAY_LOCATION_SPECIFIC = 1000;
 
 	/** Y postion offset from shape where the balloon top begin. */
 	static private int BALLOON_Y_OFFSET = 10;
@@ -620,7 +606,7 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 	private double myBallonOffsetPercent = BALLOON_X_OFFSET_RHS;
 
 	/** the figure used to surround the action buttons */
-	private RoundedRectangleWithTail myBalloon = null;
+	private IFigure myBalloon = null;
 
 	private Point myMouseHoverLocation = new Point();
 	
@@ -962,7 +948,7 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 		if (theList.isEmpty()) {
 			return;
 		}
-		createBalloon();
+		myBalloon = createActionBarFigure();
 
 	    int iTotal = ACTION_WIDTH_HGT * theList.size() + ACTION_MARGIN_RIGHT;
 
@@ -1062,11 +1048,11 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 		return preferenceStore.getBoolean(
 			IPreferenceConstants.PREF_SHOW_ACTION_BARS);
 	}
-	private RoundedRectangleWithTail getBalloon() {
+	private IFigure getBalloon() {
 		return myBalloon;
 	}
-	private void createBalloon() {
-		myBalloon = new RoundedRectangleWithTail();
+	protected IFigure createActionBarFigure() {
+		return new RoundedRectangleWithTail();
 	}
 	private void showActionBalloon() {
 		if(!shouldDisplayActionBar()  || !isPreferenceOn())
@@ -1101,10 +1087,10 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 
 		getBalloon().setLocation(thePoint);
 		
-		// dismiss the actionBar after STAY_VISIBLE_DELAY ms.
+		// dismiss the actionBar after a delay
 		if(!getActivateOnHover())
 		{
-			hideActionBalloonDelayed(STAY_VISIBLE_DELAY);
+			hideActionBalloonDelayed(getDisappearanceDelay());
 		}
 	}	
 	
@@ -1324,4 +1310,14 @@ public class ActionBarEditPolicy extends GraphicalEditPolicy {
 		this.myMouseHoverLocation.setLocation( theMouseHoverLocation.x, theMouseHoverLocation.y);
 	}
 
+	/**
+	 * Gets the amount of time to wait before showing the actionbar if the
+	 * actionbar is to be shown at the mouse location
+	 * {@link #getIsDisplayAtMouseHoverLocation()}.
+	 * 
+	 * @return the time to wait in milliseconds
+	 */
+	protected int getAppearanceDelayLocationSpecific() {
+		return APPEARANCE_DELAY_LOCATION_SPECIFIC;
+	}
 }
