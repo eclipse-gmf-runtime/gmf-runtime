@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.Disposable;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -29,10 +30,6 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
@@ -47,15 +44,19 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectorsRequest;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramState;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.IPresentationTestFixture;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestActionCallback;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author choang
@@ -380,8 +381,7 @@ public abstract class AbstractTestBase extends TestCase {
 
 		testCommand(cmd, new ITestCommandCallback() {
 			public void onCommandExecution() {
-		
-				assertEquals( expectedValue, ep.getPropertyValue(property) );
+					assertEquals( expectedValue, ep.getStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(property)) );
 			}
 		});
 	}

@@ -18,12 +18,15 @@ import java.util.Map;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -92,10 +95,14 @@ public class TextEditPart extends ShapeEditPart {
 		if (getAppearancePropertyIDs().length > 0) {
 			// only if there are any appearance properties
 			final Dictionary local_properties = new Hashtable();
-			for (int i = 0; i < getAppearancePropertyIDs().length; i++)
-				local_properties.put(
-					getAppearancePropertyIDs()[i],
-					getPropertyValue(getAppearancePropertyIDs()[i]));
+			for (int i = 0; i < getAppearancePropertyIDs().length; i++){
+				ENamedElement element = MetaModelUtil.getElement(getAppearancePropertyIDs()[i]);
+				if (element instanceof EStructuralFeature){
+					local_properties.put(
+						getAppearancePropertyIDs()[i],
+						getStructuralFeatureValue((EStructuralFeature)element));
+				}
+			}
 			String semanticType = ""; //$NON-NLS-1$
 			View view = getNotationView();
 			if (view!=null)

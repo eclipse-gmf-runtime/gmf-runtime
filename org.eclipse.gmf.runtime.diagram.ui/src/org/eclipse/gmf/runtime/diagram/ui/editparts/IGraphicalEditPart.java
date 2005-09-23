@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
@@ -61,19 +62,36 @@ public interface IGraphicalEditPart
 	public void fillAppearancePropertiesMap(Map properties);
 
 	/**
-	 * Convenience method to retreive the value for the supplied value
+	 * Convenience method to retreive the value for the supplied poperty
 	 * from the editpart's associated view element.
-	  * @param id the property id
+	 * @param id the property id
 	 * @return Object the value
+	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)} instead
 	 */
 	public Object getPropertyValue(Object id);
+	
+	/**
+	 * Convenience method to retreive the value for the supplied feature
+	 * from the editpart's associated view element.
+	 * @param feature the feature to use
+	 * @return Object the value
+	 */
+	public Object getStructuralFeatureValue(EStructuralFeature id);
 
 	/**
 	 * Convenience method to set a property value.
 	 * @param id
 	 * @param value
+	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)} instead
 	 */
 	public void setPropertyValue(Object id, Object value);
+	
+	/**
+	 * Convenience method to set a feature value.
+	 * @param feature
+	 * @param value
+	 */
+	public void setStructuralFeatureValue(EStructuralFeature feature, Object value);
 
 	/**
 	 * Method getAppearancePropertiesMap.

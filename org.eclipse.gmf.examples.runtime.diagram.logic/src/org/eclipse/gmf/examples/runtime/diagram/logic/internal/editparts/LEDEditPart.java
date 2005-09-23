@@ -33,7 +33,6 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -92,8 +91,8 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 	 */
 	protected void refreshBounds() {
 		Dimension size = getFigure().getSize();
-		int x = ((Integer) getPropertyValue(Properties.ID_POSITIONX)).intValue();
-		int y = ((Integer) getPropertyValue(Properties.ID_POSITIONY)).intValue();
+		int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
+		int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 		Point loc = new Point(x, y);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(
 			this,

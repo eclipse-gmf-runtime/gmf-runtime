@@ -21,7 +21,6 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
-
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectorLabelsEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -29,11 +28,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GateNonResizableEditPolic
 import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -64,8 +63,8 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 		if ( getFigure() instanceof GateFigure ) {
 		 	GateFigure.GateLocator locator = (GateFigure.GateLocator) getLocator();
 			if (locator != null) {
-				int x = ((Integer) getPropertyValue(Properties.ID_POSITIONX)).intValue();
-		    	int y = ((Integer) getPropertyValue(Properties.ID_POSITIONY)).intValue();
+				int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
+		    	int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 		    	Point loc = new Point(x, y);
 				locator.resetPosition(new Rectangle(loc, getFigure().getPreferredSize()));
 			} else {

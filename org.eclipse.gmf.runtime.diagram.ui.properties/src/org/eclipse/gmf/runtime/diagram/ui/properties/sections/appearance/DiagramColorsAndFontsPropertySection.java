@@ -18,15 +18,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Image;
 
 
 public class DiagramColorsAndFontsPropertySection
@@ -73,7 +72,7 @@ public class DiagramColorsAndFontsPropertySection
 						((View) ep.getModel()).eResource(), new Runnable() {
 	
 							public void run() {
-								ep.setPropertyValue(Properties.ID_FILLCOLOR,
+								ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor(),
 									FigureUtilities.RGBToInteger(fillColor));
 							}
 						}));

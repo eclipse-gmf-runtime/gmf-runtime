@@ -16,7 +16,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -41,17 +55,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Colors section to represent line and font properties of a shape or connector
@@ -415,8 +418,10 @@ public class ColorsAndFontsPropertySection
 						.getModel()).eResource(), new Runnable() {
 
 						public void run() {
-							ep.setPropertyValue(propertyId, FigureUtilities
-								.RGBToInteger(color));
+							ENamedElement element = (EStructuralFeature)MetaModelUtil.getElement(propertyId);
+							if (element instanceof EStructuralFeature)
+								ep.setStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(propertyId), FigureUtilities
+									.RGBToInteger(color));
 						}
 					}));
 				}
@@ -450,7 +455,7 @@ public class ColorsAndFontsPropertySection
 				((View) ep.getModel()).eResource(), new Runnable() {
 
 					public void run() {
-						ep.setPropertyValue(Properties.ID_FONTBOLD,
+						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Bold(),
 							new Boolean(fontBoldButton.getSelection()));
 					}
 				}));
@@ -475,7 +480,7 @@ public class ColorsAndFontsPropertySection
 				((View) ep.getModel()).eResource(), new Runnable() {
 
 					public void run() {
-						ep.setPropertyValue(Properties.ID_FONTITALIC,
+						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Italic(),
 							new Boolean(fontItalicButton.getSelection()));
 					}
 				}));
@@ -502,7 +507,7 @@ public class ColorsAndFontsPropertySection
 					.getModel()).eResource(), new Runnable() {
 
 					public void run() {
-						ep.setPropertyValue(Properties.ID_FONTNAME,
+						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_FontName(),
 							fontFamilyCombo.getText());
 					}
 				}));
@@ -529,7 +534,7 @@ public class ColorsAndFontsPropertySection
 					.getModel()).eResource(), new Runnable() {
 
 					public void run() {
-						ep.setPropertyValue(Properties.ID_FONTSIZE,
+						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_FontHeight(),
 							new Integer(fontSizeCombo.getText()));
 					}
 				}));
@@ -564,15 +569,15 @@ public class ColorsAndFontsPropertySection
 				if (ep != null) {
 
 					fontFamilyCombo.setText((String) getSingleInput()
-						.getPropertyValue(Properties.ID_FONTNAME));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_FontName()));
 					fontSizeCombo.setText(Integer
-						.toString(((Integer) getSingleInput().getPropertyValue(
-							Properties.ID_FONTSIZE)).intValue()));
+						.toString(((Integer) getSingleInput().getStructuralFeatureValue(
+							NotationPackage.eINSTANCE.getFontStyle_FontHeight())).intValue()));
 					fontBoldButton.setSelection(((Boolean) getSingleInput()
-						.getPropertyValue(Properties.ID_FONTBOLD))
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Bold()))
 						.booleanValue());
 					fontItalicButton.setSelection(((Boolean) getSingleInput()
-						.getPropertyValue(Properties.ID_FONTITALIC))
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Italic()))
 						.booleanValue());
 				}
 
@@ -632,9 +637,9 @@ public class ColorsAndFontsPropertySection
 				IGraphicalEditPart ep = getSingleInput();
 				if (ep != null) {
 					fontColor = FigureUtilities.integerToRGB((Integer) ep
-						.getPropertyValue(Properties.ID_FONTCOLOR));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_FontColor()));
 					lineColor = FigureUtilities.integerToRGB((Integer) ep
-						.getPropertyValue(Properties.ID_LINECOLOR));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getLineStyle_LineColor()));
 				}
 
 				return null;

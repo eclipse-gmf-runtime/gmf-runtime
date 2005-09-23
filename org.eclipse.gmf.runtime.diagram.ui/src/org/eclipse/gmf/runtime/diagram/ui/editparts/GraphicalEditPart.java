@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.AccessibleEditPart;
@@ -70,6 +71,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -533,11 +535,21 @@ public abstract class GraphicalEditPart
 	/**
 	 * Convenience method to retreive the value for the supplied value from the
 	 * editpart's associated view element. Same as calling
-	 * <code> getView().getPropertyValue(id)</code>.
+	 * <code> ViewUtil.getPropertyValue(getNotationView(),id)</code>.
+	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)} instead
 	 */
 
 	public Object getPropertyValue(Object id) {
 		return ViewUtil.getPropertyValue((View) getModel(), id);
+	}
+	
+	/**
+	 * Convenience method to retreive the value for the supplied value from the
+	 * editpart's associated view element. Same as calling
+	 * <code> ViewUtil.getStructuralFeatureValue(getNotationView(),feature)</code>.
+	 */
+	public Object getStructuralFeatureValue(EStructuralFeature feature) {
+		return ViewUtil.getStructuralFeatureValue((View) getModel(),feature);
 	}
 
 	
@@ -763,8 +775,25 @@ public abstract class GraphicalEditPart
 		getFigure().setForegroundColor(color);
 	}
 
+	/**
+	 * Sets the property with the given id if possible on this editpart's view
+	 * to the passed value.
+	 * @param id  the id of the property being set
+	 * @param value  the value of the property being set
+	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)} instead
+	 */
 	public void setPropertyValue(Object id, Object value) {
 		ViewUtil.setPropertyValue((View) getModel(), id, value);
+	}
+	
+	/**
+	 * Sets the passed feature if possible on this editpart's view
+	 * to the passed value.
+	 * @param feature the feature to use
+	 * @param value  the value of the property being set
+	 */
+	public void setStructuralFeatureValue(EStructuralFeature feature, Object value) {
+		ViewUtil.setStructuralFeatureValue((View) getModel(), feature, value);
 	}
 
 	/**
@@ -863,10 +892,12 @@ public abstract class GraphicalEditPart
 			final Dictionary local_properties = new Hashtable();
 			for (int i = 0; i < getAppearancePropertyIDs().length; i++) {
 				String prob = getAppearancePropertyIDs()[i];
-				if (ViewUtil.isPropertySupported((View)getModel(), prob))
+				ENamedElement element = MetaModelUtil.getElement(prob);
+				if (element instanceof EStructuralFeature &&
+					ViewUtil.isPropertySupported((View)getModel(), prob))
 					local_properties.put(
 						getAppearancePropertyIDs()[i],
-						getPropertyValue(prob));
+						getStructuralFeatureValue((EStructuralFeature)element));
 			}
 			properties.put(((View) getModel()).getType(), local_properties);
 		}

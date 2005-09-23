@@ -27,6 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPar
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DestroyEObjectCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -45,7 +46,7 @@ public class CanonicalTestFixture extends LogicTestFixture {
 				Properties.ID_COLLAPSED, Boolean.valueOf(collapse));
 		execute(spc);
 		assertEquals(
-				"Enexpected collapsed value", collapse, ((Boolean) rep.getPropertyValue(Properties.ID_COLLAPSED)).booleanValue());//$NON-NLS-1$
+				"Enexpected collapsed value", collapse, ((Boolean) rep.getStructuralFeatureValue(NotationPackage.eINSTANCE.getDrawerStyle_Collapsed())).booleanValue());//$NON-NLS-1$
 	}
 
 	/** Sets the <tt>IS_VISIBLE</tt> property value. */
@@ -55,7 +56,7 @@ public class CanonicalTestFixture extends LogicTestFixture {
 				Properties.ID_ISVISIBLE, Boolean.valueOf(visible));
 		execute(spc);
 		assertEquals(
-				"Enexpected visible value", visible, ((Boolean) gep.getPropertyValue(Properties.ID_ISVISIBLE)).booleanValue());//$NON-NLS-1$
+				"Enexpected visible value", visible, ((Boolean) gep.getStructuralFeatureValue(NotationPackage.eINSTANCE.getView_Visible())).booleanValue());//$NON-NLS-1$
 	}
 
 	/** Sets the <tt>ID_ISCANONICAL</tt> property value. */
@@ -65,7 +66,7 @@ public class CanonicalTestFixture extends LogicTestFixture {
 				Properties.ID_ISCANONICAL, Boolean.valueOf(enabled));
 		execute(spc);
 		assertEquals(
-				"Unexpected canonical value", enabled, ((Boolean) gep.getPropertyValue(Properties.ID_ISCANONICAL)).booleanValue());//$NON-NLS-1$
+				"Unexpected canonical value", enabled, ((Boolean) gep.getStructuralFeatureValue(NotationPackage.eINSTANCE.getCanonicalStyle_Canonical())).booleanValue());//$NON-NLS-1$
 	}
 
 	/** Returns the list of shape views that resolve to the supplied eClass. */

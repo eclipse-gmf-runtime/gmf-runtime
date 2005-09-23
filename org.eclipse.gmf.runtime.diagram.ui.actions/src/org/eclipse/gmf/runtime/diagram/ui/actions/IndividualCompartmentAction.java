@@ -15,15 +15,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * An abstract base class that represents a boolean-based action 
@@ -46,7 +46,7 @@ public abstract class IndividualCompartmentAction
 	public IndividualCompartmentAction(
 		IWorkbenchPage workbenchPage,
 		String compartmentSemanticHint) {
-		super(workbenchPage, Properties.ID_ISVISIBLE, Messages.getString("ConstrainedFlowLayoutEditPolicy.changeVisibilityCommand.label")); //$NON-NLS-1$);
+		super(workbenchPage, MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()), Messages.getString("ConstrainedFlowLayoutEditPolicy.changeVisibilityCommand.label")); //$NON-NLS-1$);
 		Assert.isNotNull(compartmentSemanticHint);
 		this.compartmentSemanticHint = compartmentSemanticHint;
 	}

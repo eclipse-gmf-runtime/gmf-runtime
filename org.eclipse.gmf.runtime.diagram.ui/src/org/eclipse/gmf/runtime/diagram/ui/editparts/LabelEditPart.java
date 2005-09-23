@@ -38,7 +38,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.VisibilityComponentEditPo
 import org.eclipse.gmf.runtime.diagram.ui.figures.LabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.ResizableLabelLocator;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
@@ -149,9 +148,9 @@ public class LabelEditPart extends TopGraphicEditPart {
 	 * handles non resizable lable refresh bounds
 	 */
 	private void handleNonResizableRefreshBoundS() {
-		int dx = ((Integer) getPropertyValue(Properties.ID_POSITIONX))
+		int dx = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X()))
 			.intValue();
-		int dy = ((Integer) getPropertyValue(Properties.ID_POSITIONY))
+		int dy = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y()))
 			.intValue();
 		Point offset = new Point(dx, dy);
 		if (getParent() instanceof AbstractConnectionEditPart) {
@@ -171,13 +170,13 @@ public class LabelEditPart extends TopGraphicEditPart {
 	 * handles resizable lable refresh bounds
 	 */
 	private void handleResizableRefreshBounds() {
-		int dx = ((Integer) getPropertyValue(Properties.ID_POSITIONX))
+		int dx = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X()))
 			.intValue();
-		int dy = ((Integer) getPropertyValue(Properties.ID_POSITIONY))
+		int dy = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y()))
 			.intValue();
-		int width = ((Integer) getPropertyValue(Properties.ID_EXTENTX))
+		int width = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Width()))
 			.intValue();
-		int height = ((Integer) getPropertyValue(Properties.ID_EXTENTY))
+		int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height()))
 			.intValue();
 		Rectangle rectangle = new Rectangle(dx,dy,width,height);
 		if (getParent() instanceof AbstractConnectionEditPart) {

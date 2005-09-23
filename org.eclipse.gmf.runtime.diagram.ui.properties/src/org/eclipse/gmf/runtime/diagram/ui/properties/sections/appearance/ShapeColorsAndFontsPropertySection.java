@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * Colors section to represent line, font and fill colors properties of a 2D shape
@@ -67,7 +68,7 @@ public class ShapeColorsAndFontsPropertySection
 				if (getSingleInput() instanceof GraphicalEditPart) {
 					GraphicalEditPart ep = (GraphicalEditPart) getSingleInput();
 					fillColor = FigureUtilities.integerToRGB((Integer) ep
-						.getPropertyValue(Properties.ID_FILLCOLOR));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor()));
 				} else
 					fillColor = DEFAULT_PREF_COLOR;
 

@@ -16,28 +16,27 @@ import java.util.Map;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.AndGateFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.AndGateTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OrGateFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OrGateTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OutputTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.XOrGateFigure;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.AndGate;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -93,8 +92,8 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 	 */
 	protected void refreshBounds() {
 		Dimension size = getFigure().getSize();
-		int x = ((Integer) getPropertyValue(Properties.ID_POSITIONX)).intValue();
-		int y = ((Integer) getPropertyValue(Properties.ID_POSITIONY)).intValue();
+		int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
+		int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 		Point loc = new Point(x, y);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(
 			this,

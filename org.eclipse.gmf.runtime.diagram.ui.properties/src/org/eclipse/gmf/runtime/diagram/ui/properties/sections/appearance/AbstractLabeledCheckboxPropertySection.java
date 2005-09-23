@@ -14,8 +14,15 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.editparts.AbstractEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,11 +32,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author dlander
@@ -69,12 +71,18 @@ public abstract class AbstractLabeledCheckboxPropertySection
 					// Update display from model
 					if (getSingleInput() instanceof GraphicalEditPart) {
 						GraphicalEditPart ep = (GraphicalEditPart) getSingleInput();
-						checkbox.setSelection(((Boolean) ep
-							.getPropertyValue(getID())).booleanValue());
+						ENamedElement element = MetaModelUtil.getElement(getID());
+						if (element instanceof EStructuralFeature){
+							checkbox.setSelection(((Boolean)ep
+								.getStructuralFeatureValue((EStructuralFeature)element)).booleanValue());
+						}
 					} else if (getSingleInput() instanceof ConnectionNodeEditPart) {
+						ENamedElement element = MetaModelUtil.getElement(getID());
 						ConnectionNodeEditPart ep = (ConnectionNodeEditPart) getSingleInput();
-						checkbox.setSelection(((Boolean) ep
-							.getPropertyValue(getID())).booleanValue());
+						if (element instanceof EStructuralFeature){
+							checkbox.setSelection(((Boolean) ep
+								.getStructuralFeatureValue((EStructuralFeature)element)).booleanValue());
+						}
 					}
 				}
 			});
@@ -127,12 +135,16 @@ public abstract class AbstractLabeledCheckboxPropertySection
 							public void run() {
 								if (aep instanceof GraphicalEditPart) {
 									GraphicalEditPart ep = (GraphicalEditPart) aep;
-									ep.setPropertyValue(getID(), new Boolean(
-										checkbox.getSelection()));
+									ENamedElement element = MetaModelUtil.getElement(getID());
+									if (element instanceof EStructuralFeature)
+										ep.setStructuralFeatureValue((EStructuralFeature)element, new Boolean(
+											checkbox.getSelection()));
 								} else if (aep instanceof ConnectionNodeEditPart) {
 									ConnectionNodeEditPart ep = (ConnectionNodeEditPart) aep;
-									ep.setPropertyValue(getID(), new Boolean(
-										checkbox.getSelection()));
+									ENamedElement element = MetaModelUtil.getElement(getID());
+									if (element instanceof EStructuralFeature)
+										ep.setStructuralFeatureValue((EStructuralFeature)element, new Boolean(
+											checkbox.getSelection()));
 								}
 							}
 						}));

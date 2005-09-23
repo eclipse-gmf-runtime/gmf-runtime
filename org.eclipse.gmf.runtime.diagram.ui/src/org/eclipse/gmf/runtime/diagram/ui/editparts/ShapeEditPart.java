@@ -19,7 +19,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy;
@@ -30,6 +32,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ShapeResizableEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -121,11 +124,11 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	 * refresh the bounds 
 	 */
 	protected void refreshBounds() {
-		int width = ((Integer) getPropertyValue(Properties.ID_EXTENTX)).intValue();
-		int height = ((Integer) getPropertyValue(Properties.ID_EXTENTY)).intValue();
+		int width = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Width())).intValue();
+		int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
 		Dimension size = new Dimension(width, height);
-		int x = ((Integer) getPropertyValue(Properties.ID_POSITIONX)).intValue();
-		int y = ((Integer) getPropertyValue(Properties.ID_POSITIONY)).intValue();
+		int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
+		int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 		Point loc = new Point(x, y);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(
 			this,
@@ -168,11 +171,13 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 
 		if (getAppearancePropertyIDs().length > 0) {
 			// only if there are any appearance properties
-
-			for (int i = 0; i < getAppearancePropertyIDs().length; i++)
-				local_properties.put(
-					getAppearancePropertyIDs()[i],
-					getPropertyValue(getAppearancePropertyIDs()[i]));
+			for (int i = 0; i < getAppearancePropertyIDs().length; i++){
+				ENamedElement element = MetaModelUtil.getElement(getAppearancePropertyIDs()[i]);
+				if (element instanceof EStructuralFeature)
+					local_properties.put(
+						getAppearancePropertyIDs()[i],
+						getStructuralFeatureValue((EStructuralFeature)element));
+			}
 			properties.put(
 				((View)getModel()).getType(),
 				local_properties);

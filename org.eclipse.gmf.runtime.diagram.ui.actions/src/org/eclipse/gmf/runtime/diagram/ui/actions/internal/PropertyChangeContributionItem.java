@@ -13,6 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import java.util.List;
 
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.Request;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IWorkbenchPage;
@@ -22,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PresentationContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -145,7 +148,10 @@ public abstract class PropertyChangeContributionItem
 
 		return MEditingDomainGetter.getMEditingDomain((View)editPart.getModel()).runAsRead(new MRunnable() {
 			public Object run() {
-				return editPart.getPropertyValue(thePropertyId);
+				ENamedElement element = MetaModelUtil.getElement(thePropertyId);
+				if (element instanceof EStructuralFeature)
+					return editPart.getStructuralFeatureValue((EStructuralFeature)element);
+				return null;
 			}
 		});
 	}

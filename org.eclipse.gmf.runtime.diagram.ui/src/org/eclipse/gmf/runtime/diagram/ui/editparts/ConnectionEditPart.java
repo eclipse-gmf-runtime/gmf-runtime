@@ -30,6 +30,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RelativeBendpoint;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.AccessibleEditPart;
@@ -81,6 +82,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ForestRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouter;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
@@ -527,12 +529,26 @@ abstract public class ConnectionEditPart
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#getPropertyValue(java.lang.Object)
+	/**
+	 * Convenience method to retreive the value for the supplied poperty
+	 * from the editpart's associated view element.
+	 * @param id the property id
+	 * @return Object the value
+	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)} instead
 	 */
 	public Object getPropertyValue(Object id) {
 		return ViewUtil.getPropertyValue((View) getModel(), id);
 	}
+	
+	/**
+	 * Convenience method to retreive the value for the supplied value from the
+	 * editpart's associated view element. Same as calling
+	 * <code> ViewUtil.getStructuralFeatureValue(getNotationView(),feature)</code>.
+	 */
+	public Object getStructuralFeatureValue(EStructuralFeature feature) {
+		return ViewUtil.getStructuralFeatureValue((View) getModel(),feature);
+	}
+
 
 	/**
 	 * try to resolve the semantic element and Return the resolven element; if the 
@@ -694,8 +710,24 @@ abstract public class ConnectionEditPart
 		getFigure().setForegroundColor(color);
 	}
 
+	/**
+	 * Convenience method to set a property value.
+	 * @param id
+	 * @param value
+	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)} instead
+	 */
 	public void setPropertyValue(Object id, Object value) {
 		ViewUtil.setPropertyValue((View) getModel(), id, value);
+	}
+	
+	/**
+	 * Sets the passed feature if possible on this editpart's view
+	 * to the passed value.
+	 * @param feature the feature to use
+	 * @param value  the value of the property being set
+	 */
+	public void setStructuralFeatureValue(EStructuralFeature feature, Object value) {
+		ViewUtil.setStructuralFeatureValue((View) getModel(), feature, value);
 	}
 
 	/**
@@ -1083,10 +1115,13 @@ abstract public class ConnectionEditPart
 			final Dictionary local_properties = new Hashtable();
 			for (int i = 0; i < getAppearancePropertyIDs().length; i++) {
 				String prob = getAppearancePropertyIDs()[i];
-				if (ViewUtil.isPropertySupported((View) getModel(),prob))
+				ENamedElement element = MetaModelUtil.getElement(prob);
+				if (element instanceof EStructuralFeature &&
+					ViewUtil.isPropertySupported((View) getModel(),prob)){
 					local_properties.put(
 						getAppearancePropertyIDs()[i],
-						getPropertyValue(prob));
+						getStructuralFeatureValue((EStructuralFeature)element));
+				}
 			}
 			properties.put(
 				((View) getModel()).getType(),

@@ -16,13 +16,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 
 /**
@@ -92,12 +91,12 @@ public class SetBoundsCommand extends AbstractModelCommand {
 		View view  = (View)adapter.getAdapter(View.class);
 		
 		if (location != null) {
-			ViewUtil.setPropertyValue(view,Properties.ID_POSITIONX, new Integer(location.x));
-			ViewUtil.setPropertyValue(view,Properties.ID_POSITIONY, new Integer(location.y));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(location.x));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(location.y));
 		}
 		if (size != null) {
-			ViewUtil.setPropertyValue(view,Properties.ID_EXTENTX, new Integer(size.width));
-			ViewUtil.setPropertyValue(view,Properties.ID_EXTENTY, new Integer(size.height));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Width(), new Integer(size.width));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Height(), new Integer(size.height));
 		}
 		return newOKCommandResult();
 	}

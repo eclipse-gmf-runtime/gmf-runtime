@@ -17,7 +17,22 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.AbstractEnumerator;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
+import org.eclipse.gmf.runtime.notation.JumpLinkType;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.Smoothness;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,18 +41,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
-import org.eclipse.gmf.runtime.notation.JumpLinkType;
-import org.eclipse.gmf.runtime.notation.Routing;
-import org.eclipse.gmf.runtime.notation.Smoothness;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author dlander, nbalaba
@@ -111,7 +114,9 @@ public class ConnectorAppearancePropertySection
 			commands.add(createCommand(szCmd, res, new Runnable() {
 
 				public void run() {
-					ep.setPropertyValue(szID, val);
+					ENamedElement element = MetaModelUtil.getElement(szID);
+					if (element instanceof EStructuralFeature)
+						ep.setStructuralFeatureValue((EStructuralFeature)element, val);
 				}
 			}));
 		}
@@ -320,8 +325,11 @@ public class ConnectorAppearancePropertySection
 				.eResource(), new Runnable() {
 
 				public void run() {
-
-					ep.setPropertyValue(propertyId, button.getData());
+					if (propertyId instanceof String){
+						ENamedElement element = MetaModelUtil.getElement((String)propertyId);
+						if (element instanceof EStructuralFeature)
+							ep.setStructuralFeatureValue((EStructuralFeature)propertyId, button.getData());
+					}
 
 				}
 			}));
@@ -346,39 +354,39 @@ public class ConnectorAppearancePropertySection
 
 					if (!avoidObstaclesButton.isDisposed()) {
 						Boolean val = (Boolean) obj
-							.getPropertyValue(Properties.ID_AVOIDOBSTRUCTIONS);
+							.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_AvoidObstructions());
 						avoidObstaclesButton.setSelection(val.booleanValue());
 					}
 
 					if (!closestDistanceButton.isDisposed()) {
 						Boolean val = (Boolean) obj
-							.getPropertyValue(Properties.ID_CLOSESTDISTANCE);
+							.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_ClosestDistance());
 						closestDistanceButton.setSelection(val.booleanValue());
 					}
 
 					if (!reverseJumpLinksButton.isDisposed()) {
 						Boolean val = (Boolean) obj
-							.getPropertyValue(Properties.ID_JUMPLINKS_REVERSE);
+							.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_JumpLinksReverse());
 						reverseJumpLinksButton.setSelection(val.booleanValue());
 					}
 
 					Button button = (Button) buttons.get(obj
-						.getPropertyValue(Properties.ID_JUMPLINKS_STATUS));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_JumpLinkStatus()));
 					if (button != null)
 						button.setSelection(true);
 
 					button = (Button) buttons.get(obj
-						.getPropertyValue(Properties.ID_JUMPLINKS_TYPE));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_JumpLinkType()));
 					if (button != null)
 						button.setSelection(true);
 
 					button = (Button) buttons.get(obj
-						.getPropertyValue(Properties.ID_ROUTING));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_Routing()));
 					if (button != null)
 						button.setSelection(true);
 
 					button = (Button) buttons.get(obj
-						.getPropertyValue(Properties.ID_SMOOTHNESS));
+						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_Smoothness()));
 					if (button != null)
 						button.setSelection(true);
 

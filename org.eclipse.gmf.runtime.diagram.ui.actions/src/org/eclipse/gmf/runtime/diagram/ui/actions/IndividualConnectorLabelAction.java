@@ -16,16 +16,16 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author mboos
@@ -47,7 +47,7 @@ public abstract class IndividualConnectorLabelAction
 			String[] labelSemanticHints) {
 		super(
 			workbenchPage,
-			Properties.ID_ISVISIBLE,
+			MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
 			Messages
 				.getString("ConstrainedFlowLayoutEditPolicy.changeVisibilityCommand.label")); //$NON-NLS-1$
 		Assert.isNotNull(labelSemanticHints);

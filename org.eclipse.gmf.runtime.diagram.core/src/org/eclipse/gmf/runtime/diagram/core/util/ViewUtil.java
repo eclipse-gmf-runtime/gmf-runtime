@@ -324,7 +324,7 @@ public class ViewUtil{
 	 * @param view the view to use to get the value
 	 * @param id the id of the property to get
 	 * @return the value of the property, or <code>null</code>
-	 * @deprecated use {@link ViewUtil#getPropertyValue(View, EStructuralFeature, EClass)} instead
+	 * @deprecated use {@link ViewUtil#getStructuralFeatureValue(View, EStructuralFeature)} instead
 	 */
 	static public final Object getPropertyValue(View view, Object id) {
 		if(id instanceof String){
@@ -332,6 +332,19 @@ public class ViewUtil{
 			if (feature != null) {
 				return ViewUtil.getPropertyValue(view,feature, feature.getEContainingClass());
 			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the value of the passed feature inside the passed view
+	 * @param view the view to use to get the value
+	 * @param feature the feature to use
+	 * @return the value of the property, or <code>null</code>
+	 */
+	static public final Object getStructuralFeatureValue(View view, EStructuralFeature feature) {
+		if (feature != null) {
+				return ViewUtil.getPropertyValue(view,feature, feature.getEContainingClass());
 		}
 		return null;
 	}
@@ -368,7 +381,7 @@ public class ViewUtil{
 	 * @param view the view to set the value on 
 	 * @param id  the id of the property being set
 	 * @param value  the value of the property being set
-	 * @deprecated use {@link ViewUtil#setPropertyValue(View, EStructuralFeature, EClass, Object)} instead
+	 * @deprecated use {@link ViewUtil#setStructuralFeatureValue(View, EStructuralFeature, Object}} instead
 	 */
 	public static void setPropertyValue(View view,Object id, Object value) {
 		if(id instanceof String){
@@ -377,6 +390,20 @@ public class ViewUtil{
 				ViewUtil.setPropertyValue(view,feature, feature.getEContainingClass(), value);
 				return;
 			}
+		}
+	}
+	
+	/**
+	 * Sets the passed feature if possible on the passed view
+	 * to the passed value.
+	 * @param view the view to set the value on 
+	 * @param feature the feature to use
+	 * @param value  the value of the property being set
+	 */
+	public static void setStructuralFeatureValue(View view,EStructuralFeature feature,Object value) {
+		if (feature != null) {
+				ViewUtil.setPropertyValue(view,feature, feature.getEContainingClass(), value);
+				return;
 		}
 	}
 
