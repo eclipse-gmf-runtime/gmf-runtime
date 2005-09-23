@@ -9,10 +9,12 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.requests;
+package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
 
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SemanticRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.SemanticRequestTranslator;
+import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /**
  * A GEF request that wraps a semantic request

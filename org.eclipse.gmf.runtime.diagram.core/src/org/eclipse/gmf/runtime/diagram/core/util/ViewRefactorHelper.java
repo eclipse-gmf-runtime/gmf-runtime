@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +26,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -318,7 +320,7 @@ public class ViewRefactorHelper {
 	 * @return A new node that references the given new element
 	 */
 	protected Node createNode(Node oldNode, EObject newElement) {
-		return ViewService.getInstance().createNode(ViewUtil.getContainerView(oldNode), newElement, getNewViewType(oldNode, newElement), getPreferencesHint());	
+		return createNode(ViewUtil.getContainerView(oldNode), newElement, getNewViewType(oldNode, newElement));	
 	}
 	
 	/**
@@ -331,7 +333,7 @@ public class ViewRefactorHelper {
 	 * @return A new edge that references the given new element
 	 */
 	protected Edge createEdge(Edge oldEdge, EObject newElement) {
-		return ViewService.getInstance().createEdge(oldEdge.getSource(), oldEdge.getTarget(), newElement, getNewViewType(oldEdge, newElement), getPreferencesHint());	
+		return createEdge(oldEdge.getSource(), oldEdge.getTarget(), newElement, getNewViewType(oldEdge, newElement));	
 	}
 
 	/**
@@ -344,7 +346,7 @@ public class ViewRefactorHelper {
 	 * @return A new diagram that references the given new element
 	 */
 	protected Diagram createDiagram(Diagram oldDiagram, EObject newElement) {
-		return ViewService.getInstance().createDiagram(newElement, getNewViewType(oldDiagram, newElement), getPreferencesHint());	
+		return createDiagram(newElement, getNewViewType(oldDiagram, newElement));	
 	}
 	
 	/**
@@ -358,5 +360,86 @@ public class ViewRefactorHelper {
 		if (oldView instanceof Diagram)
 			return ((Diagram)oldView).getType();
 		return null;
+	}
+	
+	/**
+	 * Creates a diagram with the given context and kind
+	 * 
+	 * @param context The diagram element context
+	 * @param kind diagram kind
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Diagram</code>
+	 */
+	private Diagram createDiagram(EObject context, String kind) {
+		IAdaptable viewModel = (context != null) ? new EObjectAdapter(context) : null;
+		String viewType = (kind != null) ? kind : ""; //$NON-NLS-1$
+		return ViewService.getInstance().createDiagram(viewModel, viewType, preferencesHint);
+	}
+	
+	/**
+	 * Creates a node for a given eObject and with a given type and inserts it into a given container
+	 * 
+	 * @param container The node view container
+	 * @param eObject The node view object context
+	 * @param type The node view type
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Node</code>
+	 */
+	private Node createNode(View container, EObject eObject, String type) {
+		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
+		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
+		View view = ViewService.getInstance().createNode(viewModel, container, viewType, ViewUtil.APPEND, preferencesHint);
+		return (view != null) ? (Node)view : null;
+	}
+	
+	/**
+	 * Creates an edge for a given eObject and with a given type in the given diagram
+	 *
+	 * @param diagram The container diagram 
+	 * @param eObject The edge view object context
+	 * @param type The edge view type
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Edge</code>
+	 */
+	private Edge createEdge(Diagram diagram, EObject eObject, String type) {
+		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
+		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
+		View view = ViewService.getInstance().createConnectorView(viewModel, diagram, viewType, ViewUtil.APPEND, preferencesHint);
+		return (view != null) ? (Edge) view : null;
+	}
+	
+	/**
+	 * Creates an edge for a given eObject and with a given type and connects it between a given source and a given target
+	 * 
+	 * @param source The edge's source view
+	 * @param target The edge's target view
+	 * @param eObject The edge view object context
+	 * @param type The edge view type
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Edge</code>
+	 */
+	private Edge createEdge(View source, View target, EObject eObject, String type) {
+		Edge edge = createEdge(source.getDiagram(), eObject, type);
+		if (edge != null) {
+			edge.setSource(source);
+			edge.setTarget(target);
+		}
+		return edge;
 	}
 }
