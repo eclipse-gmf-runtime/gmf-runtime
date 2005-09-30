@@ -20,6 +20,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramGraphicalViewerTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCanonicalTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCreationTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectorHandleLocatorTest;
@@ -49,6 +50,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(PaletteServiceTests.suite());
 		suite.addTest(LogicCanonicalTests.suite());
 		suite.addTest(LogicCreationTests.suite());
+		suite.addTest(DiagramGraphicalViewerTests.suite());
 		return suite;
 	}
 
