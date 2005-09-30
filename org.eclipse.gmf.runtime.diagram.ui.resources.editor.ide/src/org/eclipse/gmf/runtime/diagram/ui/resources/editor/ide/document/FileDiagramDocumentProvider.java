@@ -1,5 +1,4 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,10 +24,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
-
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramModificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentEvent;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
@@ -40,6 +37,8 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.utils.Diagra
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 
 
 /**
@@ -54,6 +53,7 @@ public class FileDiagramDocumentProvider
 	extends FileDocumentProvider implements IDiagramDocumentProvider {
 	
 	public class DiagramFileInfo extends FileInfo {
+		DiagramModificationListener fListener;
 		/**
 		 * Creates and returns a new file info.
 		 *
@@ -61,10 +61,11 @@ public class FileDiagramDocumentProvider
 		 * @param model the annotation model
 		 * @param fileSynchronizer the file synchronizer
 		 */
-		public DiagramFileInfo(IDocument document, FileSynchronizer fileSynchronizer) {
+		public DiagramFileInfo(IDocument document, FileSynchronizer fileSynchronizer, DiagramModificationListener listener) {
 			super(document, fileSynchronizer);
+			fListener = listener;
 		}
-
+		
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			if(event.getEventKind() == DocumentEvent.CONTENT_REPLACED) {
 				// release the existing content.
@@ -76,7 +77,8 @@ public class FileDiagramDocumentProvider
 					DiagramIOUtil.unload(diagramDoc.getEditingDomain(), existingContent);
 				}
 
-				Diagram newContent = (Diagram)event.getEventInfo();
+				IDiagramDocument diagramDocument = (IDiagramDocument)event.getEventInfo();
+				Diagram newContent = diagramDocument.getDiagram();
 				if(newContent != null && existingURI != null) {
 					newContent.eResource().setURI(existingURI);
 				}
@@ -109,6 +111,9 @@ public class FileDiagramDocumentProvider
 		Object content = info.fDocument.getContent();
 		if(content instanceof Diagram && info.fDocument instanceof IDiagramDocument) {
 			DiagramIOUtil.unload(((IDiagramDocument)info.fDocument).getEditingDomain(), (Diagram)content);
+
+			assert info instanceof DiagramFileInfo;
+			((DiagramFileInfo)info).fListener.stopListening();
 		}
 	}
 
@@ -190,13 +195,18 @@ public class FileDiagramDocumentProvider
 		
 		super.handleElementContentChanged(fileEditorInput);
 	}
-
-
+	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDocumentProvider#createFileInfo(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument, org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDocumentProvider.FileSynchronizer)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDocumentProvider#createFileInfo(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument, org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDocumentProvider.FileSynchronizer, org.eclipse.ui.IFileEditorInput)
 	 */
-	protected FileInfo createFileInfo(IDocument document, FileSynchronizer synchronizer) {
-		return new DiagramFileInfo(document, synchronizer);
+	protected FileInfo createFileInfo(IDocument document, FileSynchronizer synchronizer, IFileEditorInput input) {
+		assert document instanceof DiagramDocument; 
+		
+		DiagramModificationListener diagramListener = new FileDiagramModificationListener(this, (DiagramDocument)document, input);
+		DiagramFileInfo info = new DiagramFileInfo(document, synchronizer, diagramListener);
+		
+		diagramListener.startListening();
+		return info;
 	}
 
 	/* (non-Javadoc)

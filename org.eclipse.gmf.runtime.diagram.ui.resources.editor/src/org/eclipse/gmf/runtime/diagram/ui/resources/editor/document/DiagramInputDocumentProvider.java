@@ -18,15 +18,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.PlatformUI;
-import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -51,6 +50,8 @@ public class DiagramInputDocumentProvider
 		public boolean fIsReadOnly= true;
 		/** The flag representing the need to update the cached flag.  */
 		public boolean fUpdateCache= true;
+		
+		public DiagramModificationListener fListener = null;
 
 		/**
 		 * Creates a new storage info.
@@ -58,8 +59,9 @@ public class DiagramInputDocumentProvider
 		 * @param document the document
 		 * @param model the annotation model
 		 */
-		public DiagramResourceInfo(IDocument document) {
+		public DiagramResourceInfo(IDocument document, DiagramModificationListener listener) {
 			super(document);
+			fListener = listener;
 		}
 	}
 
@@ -117,13 +119,21 @@ public class DiagramInputDocumentProvider
 				document= createEmptyDocument();
 			}
 
-			ElementInfo info= new DiagramResourceInfo(document);
+			DiagramModificationListener listener = new DiagramModificationListener(this, (DiagramDocument)document);
+			ElementInfo info= new DiagramResourceInfo(document, listener);
 			info.fStatus= status;
+			listener.startListening();
 
 			return info;
 		}
 
 		return super.createElementInfo(element);
+	}
+	
+	protected void disposeElementInfo(Object element, ElementInfo info) {
+		super.disposeElementInfo(element, info);
+		
+		((DiagramResourceInfo)info).fListener.stopListening();
 	}
 
 	/**

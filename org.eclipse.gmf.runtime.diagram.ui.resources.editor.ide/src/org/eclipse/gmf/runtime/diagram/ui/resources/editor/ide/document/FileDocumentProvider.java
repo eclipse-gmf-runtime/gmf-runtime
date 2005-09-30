@@ -491,7 +491,7 @@ public abstract class FileDocumentProvider
 			FileSynchronizer f= new FileSynchronizer(input);
 			f.install();
 
-			FileInfo info= createFileInfo(d, f);
+			FileInfo info= createFileInfo(d, f, input);
 			info.fModificationStamp= computeModificationStamp(input.getFile());
 			info.fStatus= s;
 
@@ -501,7 +501,18 @@ public abstract class FileDocumentProvider
 		return super.createElementInfo(element);
 	}
 	
-	protected FileInfo createFileInfo(IDocument document, FileSynchronizer synchronizer) {
+	/**
+	 * Create a FileInfo for the given document.
+	 * 
+	 * May also construct and start required listeners.
+	 * 
+	 * @param document to create a FileInfo for
+	 * @param synchronizer FileSynchronizer which has been created for the
+	 * IFileEditorInput
+	 * @param input IFileEditorInput corresponding to the document
+	 * @return FileInfo for the given document
+	 */
+	protected FileInfo createFileInfo(IDocument document, FileSynchronizer synchronizer, IFileEditorInput input) {
 		return new FileInfo(document, synchronizer);
 	}
 	
@@ -566,19 +577,47 @@ public abstract class FileDocumentProvider
 			fireElementContentReplaced(fileEditorInput);
 
 		} else {
+			
+			handleExistingDocumentSaved(fileEditorInput, info, status);
 
-			removeUnchangedElementListeners(fileEditorInput, info);
-
-			// fires only the dirty state related event
-			info.fCanBeSaved= false;
-			info.fModificationStamp= computeModificationStamp(fileEditorInput.getFile());
-			info.fStatus= status;
-
-			addUnchangedElementListeners(fileEditorInput, info);
-
-			fireElementDirtyStateChanged(fileEditorInput, false);
 		}
 	}
+	
+	
+	/**
+	 * Called when an existing document matching the given IFileEditorInput
+	 * was saved.
+	 * 
+	 * @param input IFileEditorInput for the document that was saved 
+	 */
+	void handleExistingDocumentSaved(IFileEditorInput input) {
+		
+		ElementInfo info = getElementInfo(input);
+		assert info instanceof FileInfo;
+		
+		handleExistingDocumentSaved(input, (FileInfo)info, null);
+	}
+	
+	/**
+	 * Called when an existing document was saved.
+	 * 
+	 * @param fileEditorInput IFileEditorInput for the document that was saved
+	 * @param info FileInfo for the given fileEditorInput element
+	 * @param status IStatus of the FileInfo
+	 */
+	private void handleExistingDocumentSaved(IFileEditorInput fileEditorInput, FileInfo info, IStatus status) {
+		removeUnchangedElementListeners(fileEditorInput, info);
+
+		// fires only the dirty state related event
+		info.fCanBeSaved= false;
+		info.fModificationStamp= computeModificationStamp(fileEditorInput.getFile());
+		info.fStatus= status;
+
+		addUnchangedElementListeners(fileEditorInput, info);
+
+		fireElementDirtyStateChanged(fileEditorInput, false);		
+	}
+	
 
 	/**
 	 * Initializes the given document with the given stream using the given encoding.

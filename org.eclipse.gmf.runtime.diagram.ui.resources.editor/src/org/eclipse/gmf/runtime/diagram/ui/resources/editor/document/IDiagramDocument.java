@@ -45,18 +45,4 @@ public interface IDiagramDocument
 	 * @return the detached diagram.
 	 */
 	Diagram detachDiagram();
-	
-	/**
-	 * Disables the diagram dirtied listener.
-	 * 
-	 * @return oldState of the listener
-	 */
-	boolean disableDiagramListener();
-	
-	/**
-	 * Enables the diagram dirtied listener.
-	 * 
-	 * @return oldstate of the listener.
-	 */
-	boolean enableDiagramListener();
 }

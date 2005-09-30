@@ -1,6 +1,6 @@
 /******************************************************************************
  * Copyright (c) 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
+f * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -17,6 +17,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramModificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
@@ -37,6 +38,17 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 public class StorageDiagramDocumentProvider
 	extends StorageDocumentProvider
 	implements IDiagramDocumentProvider {
+	
+	//a StorageInfo with a DiagramModificationListener 
+	private class DiagramStorageInfo extends StorageInfo {
+
+		DiagramModificationListener fListener;
+		public DiagramStorageInfo(IDocument document, DiagramModificationListener listener) {
+			super(document);
+			fListener = listener;
+		}
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editor.StorageDocumentProvider#createEmptyDocument()
@@ -65,8 +77,8 @@ public class StorageDiagramDocumentProvider
 			MEditingDomain domain = ((IDiagramDocument)info.fDocument).getEditingDomain();
 			DiagramIOUtil.unload(domain, (Diagram)content);
 			
-			IDiagramDocument diagramDocument = (IDiagramDocument)info.fDocument;
-			diagramDocument.disableDiagramListener();
+			assert info instanceof DiagramStorageInfo;
+			((DiagramStorageInfo)info).fListener.stopListening();
 		}
 	}
 	
@@ -103,4 +115,15 @@ public class StorageDiagramDocumentProvider
 		assert false;
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.StorageDocumentProvider#createNewElementInfo(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument)
+	 */
+	public ElementInfo createNewElementInfo(IDocument document) {
+		DiagramModificationListener listener = new DiagramModificationListener(this, (DiagramDocument)document);
+		DiagramStorageInfo info = new DiagramStorageInfo(document, listener);
+		listener.startListening();
+		return info;
+	}
+
 }

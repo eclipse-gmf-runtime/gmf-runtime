@@ -121,17 +121,27 @@ public abstract class AbstractDocument
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editor.IDocument#setContent(java.lang.Object, long)
 	 */
 	public void setContent(Object documentContent, long modificationStamp) {
-		DocumentEvent changed= new DocumentEvent(this, DocumentEvent.CONTENT_REPLACED, documentContent);
-		DocumentEvent changing= new DocumentEvent(this, DocumentEvent.CONTENT_REPLACED, content);
-		fireDocumentAboutToBeChanged(changed);
+		
+		DocumentEvent eventToBeFired = null;
+		
+		if (content != documentContent) {
+			DocumentEvent changed= new DocumentEvent(this, DocumentEvent.CONTENT_REPLACED, documentContent);
+			DocumentEvent changing= new DocumentEvent(this, DocumentEvent.CONTENT_REPLACED, content);
+			fireDocumentAboutToBeChanged(changed);
 
-		content = documentContent;
+			content = documentContent;
 
-		fModificationStamp= modificationStamp;
-		changed.fModificationStamp= fModificationStamp;
-		changing.fModificationStamp = fModificationStamp;
+			fModificationStamp= modificationStamp;
+			changed.fModificationStamp= fModificationStamp;
+			changing.fModificationStamp = fModificationStamp;
 
-		fireDocumentChanged(changing);
+			eventToBeFired = changing;
+			fireDocumentChanged(changing);
+		}
+		else {
+			eventToBeFired = new DocumentEvent(this, DocumentEvent.CONTENT_MODIFIED, documentContent);
+			fireDocumentChanged(eventToBeFired);
+		}
 	}
 
 	private long getNextModificationStamp() {
