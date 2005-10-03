@@ -154,7 +154,11 @@ public class GraphicalNodeEditPolicy
 	 * @return ConnectionAnchor the connections target end will connect to.
 	 */
 	protected ConnectionAnchor getConnectionTargetAnchor(Request request) {
-		return getConnectableEditPart().getTargetConnectionAnchor(request);
+		INodeEditPart node = getConnectableEditPart();
+		if (node != null)
+			return node.getTargetConnectionAnchor(request);
+		
+		return null;
 	}
 	/**
 	 * get this edit policy's edit part <code>View</code>
@@ -257,6 +261,10 @@ public class GraphicalNodeEditPolicy
 	 * @see org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy#getReconnectTargetCommand(org.eclipse.gef.requests.ReconnectRequest)
 	 */
 	protected Command getReconnectTargetCommand(ReconnectRequest request) {
+		INodeEditPart node = getConnectableEditPart();
+		if (node == null)
+			return null;
+		
 		ConnectionAnchor targetAnchor = getConnectionTargetAnchor(request);
 		INodeEditPart targetEP = getConnectionCompleteEditPart(request);
 		if (targetEP == null) {
@@ -288,7 +296,7 @@ public class GraphicalNodeEditPolicy
 		if (cmdRouter != null) {
 			cmd = cmd == null ? cmdRouter : cmd.chain(cmdRouter);
 			// reset the bendpoints
-			ConnectionAnchor sourceAnchor = getConnectableEditPart()
+			ConnectionAnchor sourceAnchor = node
 					.getSourceConnectionAnchor(request);
 			PointList pointList = new PointList();
 			pointList.addPoint(sourceAnchor.getLocation(targetAnchor
@@ -312,18 +320,20 @@ public class GraphicalNodeEditPolicy
 	 * @see org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy#getReconnectSourceCommand(org.eclipse.gef.requests.ReconnectRequest)
 	 */
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {
-		ConnectionAnchor sourceAnchor = getConnectableEditPart()
-				.getSourceConnectionAnchor(request);
+		INodeEditPart node = getConnectableEditPart();
+		if (node == null)
+			return null;
+		
+		ConnectionAnchor sourceAnchor = node.getSourceConnectionAnchor(request);
 		SetConnectorEndsCommand sceCommand = new SetConnectorEndsCommand(null);
 		sceCommand.setConnectorAdaptor(new EObjectAdapter((View) request
 				.getConnectionEditPart().getModel()));
-		sceCommand.setNewSourceAdaptor(new EObjectAdapter((View)getConnectableEditPart()
+		sceCommand.setNewSourceAdaptor(new EObjectAdapter((View)node
 				.getModel()));
 		SetConnectorAnchorsCommand scaCommand = new SetConnectorAnchorsCommand(null);
 		scaCommand.setConnectorAdaptor(new EObjectAdapter((View) request
 			.getConnectionEditPart().getModel()));
-		scaCommand.setNewSourceTerminal(getConnectableEditPart()
-				.mapConnectionAnchorToTerminal(sourceAnchor));
+		scaCommand.setNewSourceTerminal(node.mapConnectionAnchorToTerminal(sourceAnchor));
 		CompositeCommand cc = new CompositeCommand(
 			PresentationResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Source")); //$NON-NLS-1$
 		cc.compose(sceCommand);
