@@ -216,7 +216,7 @@ abstract public class ConnectionEditPart
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
 
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		PresentationListener.getInstance().addNotificationListener(element,feature,listener);
 		listenerFilters.put(filterId, new Object[] { element,feature, listener });
 	}
 

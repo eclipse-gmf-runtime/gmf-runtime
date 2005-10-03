@@ -110,15 +110,6 @@ public abstract class GraphicalEditPart
 	/** Used for handling the editable status of the edit part */
 	private final IEditableEditPart editableEditPart;
 	
-	//	protected Command getPropertyChangeCommand(
-	//		Object property,
-	//		Object oldValue,
-	//		Object newValue) {
-	//		// by default return null, which means there is no special command to
-	// change the property
-	//		return null;
-	//	}
-
 	/**
 	 * Create an instance.
 	 * 
@@ -145,30 +136,6 @@ public abstract class GraphicalEditPart
 		GraphicalEditPart.super.activate();
 	}
 
-	/**
-	 * Adds a listener filter by adding the given listener to a passed notifier
-	 * 
-	 * @param filterId
-	 *            A unique filter id (within the same editpart instance)
-	 * @param listener
-	 *            A listener instance
-	 * @param notifier
-	 *            An element notifer to add the listener to
-	 * @deprecated use {@link GraphicalEditPart#addListenerFilter(String, PropertyChangeListener, EObject)} or
-	 * {@link GraphicalEditPart#addListenerFilter(String, PropertyChangeListener, EObject,EStructuralFeature )}
-	 */
-	/*protected void addListenerFilter(String filterId,
-			PropertyChangeListener listener, PropertyChangeNotifier notifier) {
-		if (notifier == null)
-			return;
-		Assert.isNotNull(filterId);
-		Assert.isNotNull(listener);
-		if (listenerFilters == null)
-			listenerFilters = new HashMap();
-		notifier.addPropertyChangeListener(listener);
-		listenerFilters.put(filterId, new Object[] {notifier, listener});
-	}*/
-	
 	/**
 	 * Adds a listener filter by adding the given listener to a passed notifier
 	 * 
@@ -212,7 +179,7 @@ public abstract class GraphicalEditPart
 		Assert.isNotNull(listener);
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		PresentationListener.getInstance().addNotificationListener(element,feature,listener);
 		listenerFilters.put(filterId, new Object[] {element,feature, listener});
 	}
 
