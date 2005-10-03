@@ -125,6 +125,7 @@ public class GatedPaneFigure extends GateFigure {
 		}
 		// When parent resizes, cause the gates to be relocated.
 		getGatePane().invalidateTree();
+		erase();
 	}
 		
 
