@@ -110,10 +110,9 @@ public class TextDirectEditManager
 	 * @param source <code>GraphicalEditPart</code> to support direct edit of.  The figure of
 	 * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
 	 */
-	public TextDirectEditManager(GraphicalEditPart source) {
-
-		super(source, getTextCellEditorClass(source),
-				new TextCellEditorLocator((WrapLabel)source.getFigure()));
+	public TextDirectEditManager(TextCompartmentEditPart source) {
+		super(source, getTextCellEditorClass(source), 
+				new TextCellEditorLocator(source.getLabel()));
 	}
 
 	/**
@@ -125,10 +124,9 @@ public class TextDirectEditManager
 		super(source, editorType, locator);		
 	}
 
-	private static Class getTextCellEditorClass(GraphicalEditPart source){
-		assert source.getFigure() instanceof WrapLabel;
-		
-		WrapLabel wrapLabel = (WrapLabel)source.getFigure();
+	private static Class getTextCellEditorClass(TextCompartmentEditPart source){
+		WrapLabel wrapLabel = source.getLabel();
+				
 		if (wrapLabel.isTextWrapped())
 			return WrapTextCellEditor.class;
 		
