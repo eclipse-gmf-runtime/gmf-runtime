@@ -328,7 +328,7 @@ public class ConnectorAppearancePropertySection
 					if (propertyId instanceof String){
 						ENamedElement element = MetaModelUtil.getElement((String)propertyId);
 						if (element instanceof EStructuralFeature)
-							ep.setStructuralFeatureValue((EStructuralFeature)propertyId, button.getData());
+							ep.setStructuralFeatureValue((EStructuralFeature)element, button.getData());
 					}
 
 				}
