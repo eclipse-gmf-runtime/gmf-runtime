@@ -27,6 +27,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
@@ -34,25 +35,26 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHand
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
- * A resizable editpolicy for resizable compartments. The editpolicy could be vertical
- * or horizontal
+ * A resizable editpolicy for resizable compartments. The editpolicy could be
+ * vertical or horizontal
  * 
  * @author melaasar
  */
-public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
+public class ResizableCompartmentEditPolicy
+	extends ResizableEditPolicyEx {
 
 	private boolean horizontal;
 
 	/**
-	 * Creates a new vertical ResizableCompartmentEditPolicy 
+	 * Creates a new vertical ResizableCompartmentEditPolicy
 	 */
 	public ResizableCompartmentEditPolicy() {
 		this(false);
 	}
 
-	
 	/**
 	 * creates a new ResizableCompartmentEditPolicy with the given orientation
+	 * 
 	 * @param horizontal
 	 */
 	public ResizableCompartmentEditPolicy(boolean horizontal) {
@@ -67,16 +69,16 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 	}
 
 	/**
-	 * This method is used to get the collapse handle(s). Subclasses can override
-	 * to provide different collapse handles 
-	 *
+	 * This method is used to get the collapse handle(s). Subclasses can
+	 * override to provide different collapse handles
+	 * 
 	 * @return a list of collapse handles
 	 */
 	protected List createCollapseHandles() {
 		IGraphicalEditPart part = (IGraphicalEditPart) getHost();
 
 		List collapseHandles = new ArrayList();
-		collapseHandles.add( new CompartmentCollapseHandle(part) );		
+		collapseHandles.add(new CompartmentCollapseHandle(part));
 		return collapseHandles;
 	}
 
@@ -85,8 +87,10 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 	 */
 	protected List createSelectionHandles() {
 		IGraphicalEditPart part = (IGraphicalEditPart) getHost();
-		int d1 = isHorizontal() ? PositionConstants.WEST : PositionConstants.NORTH;
-		int d2 = isHorizontal() ? PositionConstants.EAST : PositionConstants.SOUTH;
+		int d1 = isHorizontal() ? PositionConstants.WEST
+			: PositionConstants.NORTH;
+		int d2 = isHorizontal() ? PositionConstants.EAST
+			: PositionConstants.SOUTH;
 		List selectionHandles = new ArrayList();
 		selectionHandles.addAll(createCollapseHandles());
 		selectionHandles.add(new CompartmentResizeHandle(part, d1));
@@ -95,24 +99,43 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 	}
 
 	/**
+	 * @return the <code>ResizableCompartmentFigure</code> that is the
+	 *         corresponding figure for the host edit part.
+	 */
+	private ResizableCompartmentFigure getCompartmentFigure() {
+		ResizableCompartmentFigure compartmentFigure = null;
+		if (getGraphicalEditPart() instanceof ResizableCompartmentEditPart) {
+			compartmentFigure = ((ResizableCompartmentEditPart) getGraphicalEditPart())
+				.getCompartmentFigure();
+		} else if (getGraphicalEditPart().getFigure() instanceof ResizableCompartmentFigure) {
+			compartmentFigure = (ResizableCompartmentFigure) getGraphicalEditPart()
+				.getFigure();
+		}
+		// TODO: remove later. this is a temporary fix for defect
+		// RATLC00522565
+		// eventually we will put the GatedPaneFigure inside the resizable
+		// compartment
+		else if (getGraphicalEditPart().getFigure() instanceof GatedPaneFigure) {
+			GatedPaneFigure gpf = (GatedPaneFigure) getGraphicalEditPart()
+				.getFigure();
+			IFigure f = gpf.getElementPane();
+			if (f instanceof ResizableCompartmentFigure) {
+				compartmentFigure = (ResizableCompartmentFigure) f;
+			}
+		}
+
+		return compartmentFigure;
+	}
+
+	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#showSelection()
 	 */
 	protected void showSelection() {
 		super.showSelection();
 		if (getHost().getSelected() != EditPart.SELECTED_NONE) {
-			if ( getGraphicalEditPart().getFigure() instanceof ResizableCompartmentFigure){
-			ResizableCompartmentFigure f = 
-				(ResizableCompartmentFigure) getGraphicalEditPart().getFigure();
-			f.setSelected(true);
-			}
-			// TODO: remove later.  this is a temporary fix for defect RATLC00522565
-			// eventually we will put the GatedPaneFigure inside the resizable compartment
-			if ( getGraphicalEditPart().getFigure() instanceof GatedPaneFigure){
-				GatedPaneFigure gpf = (GatedPaneFigure) getGraphicalEditPart().getFigure();
-				IFigure f = gpf.getElementPane();
-				if( f instanceof ResizableCompartmentFigure ) {
-					((ResizableCompartmentFigure)f).setSelected(true);
-				}
+			ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+			if (compartmentFigure != null) {
+				compartmentFigure.setSelected(true);
 			}
 		}
 	}
@@ -123,32 +146,25 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 	protected void hideSelection() {
 		super.hideSelection();
 		if (getHost().getSelected() == EditPart.SELECTED_NONE) {
-			if ( getGraphicalEditPart().getFigure() instanceof ResizableCompartmentFigure){
-				ResizableCompartmentFigure f =
-					(ResizableCompartmentFigure) getGraphicalEditPart().getFigure();
-				f.setSelected(false);
-			}
-			//TODO: remove later.  this is a temporary fix for defect RATLC00522565
-			// eventually we will put the GatedPaneFigure inside the resizable compartment
-			if ( getGraphicalEditPart().getFigure() instanceof GatedPaneFigure){
-				GatedPaneFigure gpf = (GatedPaneFigure) getGraphicalEditPart().getFigure();
-				IFigure f = gpf.getElementPane();
-				if( f instanceof ResizableCompartmentFigure ) {
-					((ResizableCompartmentFigure)f).setSelected(false);
-				}
+			ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+			if (compartmentFigure != null) {
+				compartmentFigure.setSelected(false);
 			}
 		}
 	}
 
 	private EditPartListener hostListener;
+
 	private EditPartListener parentListener;
+
 	private NotificationListener propertyListener;
-	
+
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#addSelectionListener()
 	 */
 	protected void addSelectionListener() {
 		hostListener = new EditPartListener.Stub() {
+
 			public void selectedStateChanged(EditPart part) {
 				setSelectedState();
 				setFocus(part.hasFocus());
@@ -157,6 +173,7 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 		getHost().addEditPartListener(hostListener);
 
 		parentListener = new EditPartListener.Stub() {
+
 			public void selectedStateChanged(EditPart part) {
 				setSelectedState();
 			}
@@ -164,49 +181,53 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 		getParentGraphicEditPart().addEditPartListener(parentListener);
 
 		propertyListener = new NotificationListener() {
+
 			public void notifyChanged(Notification notification) {
-				if (NotationPackage.eINSTANCE.getView_Visible().equals(notification.getFeature()))
+				if (NotationPackage.eINSTANCE.getView_Visible().equals(
+					notification.getFeature()))
 					setSelectedState();
 			}
 		};
-		PresentationListener.getInstance().addNotificationListener(getGraphicalEditPart().getNotationView(),propertyListener);
+		PresentationListener.getInstance().addNotificationListener(
+			getGraphicalEditPart().getNotationView(), propertyListener);
 	}
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
 	protected void removeSelectionListener() {
-		PresentationListener.getInstance().removeNotificationListener(getGraphicalEditPart().getNotationView(),propertyListener);
+		PresentationListener.getInstance().removeNotificationListener(
+			getGraphicalEditPart().getNotationView(), propertyListener);
 		getHost().removeEditPartListener(hostListener);
 		getParentGraphicEditPart().removeEditPartListener(parentListener);
 	}
 
 	/**
-	 * Determine the select state of the policy based on:
-	 * 1- The select state of the compartment editpart
-	 * 2- The select state of the parent graphic editpart
-	 * 3- The visibility state of the compartment editpart 
+	 * Determine the select state of the policy based on: 1- The select state of
+	 * the compartment editpart 2- The select state of the parent graphic
+	 * editpart 3- The visibility state of the compartment editpart
 	 */
 	protected void setSelectedState() {
 		int hostState = getHost().getSelected();
 		int topState = EditPart.SELECTED_NONE;
-		
-		if (((GraphicalEditPart)getGraphicalEditPart()).getTopGraphicEditPart()!=null){
-			topState = ((GraphicalEditPart)getGraphicalEditPart()).getTopGraphicEditPart().getSelected();	
+
+		if (((GraphicalEditPart) getGraphicalEditPart())
+			.getTopGraphicEditPart() != null) {
+			topState = ((GraphicalEditPart) getGraphicalEditPart())
+				.getTopGraphicEditPart().getSelected();
 		}
-		
+
 		boolean vis = getGraphicalEditPart().getNotationView().isVisible();
 
-		if (vis 
-			&& ((hostState != EditPart.SELECTED_NONE || 
-			topState != EditPart.SELECTED_NONE)))
+		if (vis
+			&& ((hostState != EditPart.SELECTED_NONE || topState != EditPart.SELECTED_NONE)))
 			setSelectedState(EditPart.SELECTED);
 		else
 			setSelectedState(EditPart.SELECTED_NONE);
 	}
 
 	private GraphicalEditPart getParentGraphicEditPart() {
-		return (GraphicalEditPart)getGraphicalEditPart().getParent();
+		return (GraphicalEditPart) getGraphicalEditPart().getParent();
 	}
 
 	private IGraphicalEditPart getGraphicalEditPart() {
@@ -229,19 +250,19 @@ public class ResizableCompartmentEditPolicy extends ResizableEditPolicyEx {
 	}
 
 	/**
-	 * Creates a new ChangeBoundsRequest that respects the min and max of the resize deltas
+	 * Creates a new ChangeBoundsRequest that respects the min and max of the
+	 * resize deltas
 	 */
 	private ChangeBoundsRequest getResizeChildrenRequest(ChangeBoundsRequest r) {
 		Dimension delta = r.getSizeDelta();
 
-		ResizableCompartmentFigure f =
-			(ResizableCompartmentFigure) getHostFigure();
+		ResizableCompartmentFigure f = getCompartmentFigure();
+		
 		Dimension fd = f.getSize().getExpanded(delta);
 		fd.intersect(f.getMaximumSize()).union(f.getMinimumSize());
 		delta = fd.shrink(f.getSize().width, f.getSize().height);
 
-		boolean moved =
-			(r.getResizeDirection() & PositionConstants.NORTH_WEST) != 0;
+		boolean moved = (r.getResizeDirection() & PositionConstants.NORTH_WEST) != 0;
 		IFigure a = f.getAdjacentSibling(moved);
 		if (a != null) {
 			Dimension ad = a.getSize().getExpanded(delta.negate());
