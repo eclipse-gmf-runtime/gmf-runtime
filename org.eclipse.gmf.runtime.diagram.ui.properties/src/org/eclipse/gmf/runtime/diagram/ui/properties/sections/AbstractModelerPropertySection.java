@@ -470,7 +470,7 @@ public abstract class AbstractModelerPropertySection
 			return false;
 		}
 		EObject obj = (EObject)notification.getNotifier();
-		return obj.eContainer() == null && obj.eResource() == null;
+		return obj.eResource() == null;
 	}
 	
 	/**
