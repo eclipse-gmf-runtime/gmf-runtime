@@ -349,6 +349,13 @@ public class ConnectorAppearancePropertySection
 
 				public void run() {
 
+					// Deselect all the radio buttons;
+					// the appropriate radio buttons will be properly selected below				 
+					for (Iterator i = buttons.keySet().iterator(); i.hasNext();) {
+						Button radioButton = (Button) buttons.get(i.next());
+						radioButton.setSelection(false);
+					}
+															
 					// Update display from model
 					ConnectionEditPart obj = (ConnectionEditPart) getSingleInput();
 
