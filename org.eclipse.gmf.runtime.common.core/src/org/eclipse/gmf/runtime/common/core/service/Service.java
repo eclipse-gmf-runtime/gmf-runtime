@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.common.core.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +19,9 @@ import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
@@ -119,7 +118,6 @@ public abstract class Service
 		 */
 		protected ProviderDescriptor(IConfigurationElement element) {
 			super();
-
 			this.element = element;
 		}
 
@@ -146,12 +144,10 @@ public abstract class Service
 				CommonCorePlugin corePlugin = CommonCorePlugin.getDefault();
 
 				try {
-					Log.info(corePlugin, CommonCoreStatusCodes.OK, "Activating provider '" + getElement().getAttribute(A_CLASS) + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
-					provider =
-						(IProvider) getElement().createExecutableExtension(
-							A_CLASS);
+					Log.info(corePlugin, CommonCoreStatusCodes.OK, "Activating provider '" + element.getAttribute(A_CLASS) + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
+					provider = (IProvider)element.createExecutableExtension(A_CLASS);
 					provider.addProviderChangeListener(this);
-					Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider '" + String.valueOf(provider) + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
+					Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider '" + provider + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (CoreException ce) {
 					Trace.catching(corePlugin, CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(), "getProvider", ce); //$NON-NLS-1$
 					IStatus status = ce.getStatus();
@@ -177,8 +173,7 @@ public abstract class Service
 		 */
 		protected IProviderPolicy getPolicy() {
 			if (null == policy) {
-				IConfigurationElement[] elements =
-					getElement().getChildren(E_POLICY);
+				IConfigurationElement[] elements = element.getChildren(E_POLICY);
 
 				working: {
 					if (elements.length == 0) 
@@ -197,12 +192,9 @@ public abstract class Service
 	
 							// the following results in a core dump on Solaris if
 							// the policy plug-in cannot be found
-							policy =
-								(IProviderPolicy) getElement()
-									.createExecutableExtension(
-									E_POLICY);
+							policy = (IProviderPolicy)element.createExecutableExtension(E_POLICY);
 
-							Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider policy '" + String.valueOf(policy) + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
+							Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider policy '" + policy + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
 						} catch (CoreException ce) {
 							Trace.catching(corePlugin, CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(), "getPolicy", ce); //$NON-NLS-1$
 							IStatus status = ce.getStatus();
@@ -270,9 +262,9 @@ public abstract class Service
 	/**
 	 * The size of a cache which is indexed by {@link ProviderPriority} ordinals.
 	 */
-	private static final int cacheSize;
+	private static final int priorityCount;
 
-	// Initialize the cacheSize.
+	// Initialize priorityCount.
 	static {
 		// any priority will do to get the list of values
 		List priorities = ProviderPriority.HIGHEST.getValues();
@@ -285,7 +277,7 @@ public abstract class Service
 				maxOrdinal = ordinal;
 		}
 
-		cacheSize = maxOrdinal + 1;
+		priorityCount = maxOrdinal + 1;
 	}
 
 	/**
@@ -295,9 +287,9 @@ public abstract class Service
 	private final Map[] cache;
 
 	/**
-	 * The list of registered providers.
+	 * The lists of registered providers.
 	 */
-	private final Map providers = new HashMap();
+	private final ArrayList[] providers;
 	
 	/**
 	 * Whether the service uses optimistic caching.
@@ -357,15 +349,20 @@ public abstract class Service
 		super();
 
 		if (optimized) {
-			cache = new Map[cacheSize];
+			cache = new Map[priorityCount];
 
-			for (int ordinal = cacheSize; --ordinal >= 0;) {
+			for (int ordinal = priorityCount; --ordinal >= 0;) {
 				cache[ordinal] = createPriorityCache();
 			}
 		} else {
 			cache = null;
 		}
 		this.optimistic = optimistic;
+
+		providers = new ArrayList[priorityCount];
+
+		for (int ordinal = priorityCount; --ordinal >= 0;)
+			providers[ordinal] = new ArrayList(0);
 	}
 
 	/**
@@ -429,7 +426,7 @@ public abstract class Service
 	 */
 	protected final void clearCache() {
 		if (null != cache) {
-			for (int ordinal = cacheSize; --ordinal >= 0;) {
+			for (int ordinal = priorityCount; --ordinal >= 0;) {
 				cache[ordinal].clear();
 			}
 		}
@@ -444,15 +441,8 @@ public abstract class Service
 	 *            The priority of providers to be retrieved.
 	 * @return A complete list of providers of the specified priority.
 	 */
-	List getProviders(ProviderPriority priority) {
-		List result = (List) providers.get(priority);
-
-		if (null == result) {
-			result = new ArrayList();
-			providers.put(priority, result);
-		}
-
-		return result;
+	final List getProviders(ProviderPriority priority) {
+		return providers[priority.getOrdinal()];
 	}
 
 	/**
@@ -482,30 +472,34 @@ public abstract class Service
 
 		List providerList;
 
-		if (!isOptimized()) {
+		if (null == cache) {
 			providerList = strategy.getUncachedProviders(this, priority, operation);
 		} else {
+			Object cachingKey = getCachingKey(operation);
 			Map map = cache[priority.getOrdinal()];
-			providerList = (List) map.get(getCachingKey(operation));
+			providerList = (List)map.get(cachingKey);
 
-			if (!isOptimistic() && null != providerList) {
-				if (providerList.isEmpty()) {
-					providerList = null;
-				} else {
-					for (Iterator i = providerList.iterator(); i.hasNext();) {
-						IProvider provider = (IProvider) i.next();
-						if (!provider.provides(operation)) {
-							providerList = null;
+			if (null != providerList) {
+				if (optimistic)
+					return providerList;
+
+				int n = providerList.size();
+
+				if (n != 0) {
+					for (int i = 0;;) {
+						IProvider provider = (IProvider)providerList.get(i);
+
+						if (!provider.provides(operation))
 							break;
-						}
+
+						if (++i == n)
+							return providerList;
 					}
 				}
 			}
-			
-			if (null == providerList) {
-				providerList = strategy.getUncachedProviders(this, priority, operation);
-				map.put(getCachingKey(operation), providerList);
-			}
+
+			providerList = strategy.getUncachedProviders(this, priority, operation);
+			map.put(cachingKey, providerList);
 		}
 
 		return providerList;
@@ -517,11 +511,18 @@ public abstract class Service
 	 * @return A list of all providers of all priorities.
 	 */
 	protected final List getAllProviders() {
-		List allProviders = new ArrayList();
+		int i;
+		int n = priorityCount;
+		int total;
 
-		for (Iterator i = providers.values().iterator(); i.hasNext();) {
-			allProviders.addAll((List)i.next());
-		}
+		for (i = n, total = 0; --i >= 0;)
+			total += providers[i].size();
+
+		List allProviders = new ArrayList(total);
+
+		for (i = 0; i < n; ++i)
+			allProviders.addAll(providers[i]);
+
 		return allProviders;
 	}
 
@@ -540,12 +541,14 @@ public abstract class Service
 
 		assert null != priority : "null ProviderPriority"; //$NON-NLS-1$
 		assert null != provider : "null ProviderDescriptor"; //$NON-NLS-1$
-		
+
+		int ordinal = priority.getOrdinal();
+
 		if (null != cache) {
-			cache[priority.getOrdinal()].clear();
+			cache[ordinal].clear();
 		}
 
-		getProviders(priority).add(provider);
+		providers[ordinal].add(provider);
 		provider.addProviderChangeListener(this);
 	}
 
@@ -556,10 +559,10 @@ public abstract class Service
 	 *            The provider to be removed.
 	 */
 	protected final void removeProvider(ProviderDescriptor provider) {
-		assert null!= provider : "null provider"; //$NON-NLS-1$
+		assert null != provider : "null provider"; //$NON-NLS-1$
 		
-		for (Iterator i = providers.values().iterator(); i.hasNext();) {
-			if (((List) i.next()).remove(provider)) {
+		for (int i = 0, n = priorityCount; i < n; ++i) {
+			if (providers[i].remove(provider)) {
 				provider.removeProviderChangeListener(this);
 				clearCache();
 				break;
@@ -590,9 +593,9 @@ public abstract class Service
 			Trace.trace(
 					CommonCorePlugin.getDefault(),
 					CommonCoreDebugOptions.SERVICES_EXECUTE,
-					"Operation '" + String.valueOf(operation) + "' executed using strategy '" + String.valueOf(strategy) + "'."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}		
-		
+					"Operation '" + operation + "' executed using strategy '" + strategy + "'."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+
 		return results;
 	}
 
@@ -632,12 +635,15 @@ public abstract class Service
 	public final boolean provides(IOperation operation) {
 		assert null != operation : "null operation passed to provides(IOperation)"; //$NON-NLS-1$
 
-		for (Iterator list = providers.values().iterator(); list.hasNext();) {
-			for (Iterator provider = ((List) list.next()).iterator(); provider.hasNext();) {
-				if (((IProvider) provider.next()).provides(operation)) {
+		for (int priority = 0, n = priorityCount; priority < n; ++priority)
+		{
+			List providerList = providers[priority];
+			int providerCount = providerList.size();
+
+			for (int provider = 0; provider < providerCount; ++provider)
+				if (((IProvider)providerList.get(provider)).provides(operation))
 					return true;
-				}
-			}
+
 		}
 
 		return false;
@@ -662,15 +668,16 @@ public abstract class Service
 		assert null != strategy : "null strategy";  //$NON-NLS-1$
 		assert null != operation : "null operation"; //$NON-NLS-1$
 
-		for (int i = 0; i < ExecutionStrategy.PRIORITIES.length; i++) {
+		for (int i = 0; i < ExecutionStrategy.PRIORITIES.length; ++i) {
 			ProviderPriority priority = ExecutionStrategy.PRIORITIES[i];
 			List providerList = getProviders(strategy, priority, operation);
-			for (Iterator provider = providerList.iterator(); provider.hasNext();) {
-				if (((IProvider) provider.next()).provides(operation)) {
+			int providerCount = providerList.size();
+
+			for (int provider = 0; provider < providerCount; ++provider)
+				if (((IProvider)providerList.get(provider)).provides(operation))
 					return true;
-				}
-			}
 		}
+
 		return false;
 	}
 
@@ -688,6 +695,21 @@ public abstract class Service
 	}
 
 	/**
+	 * Registers the service providers described by the extensions of the
+	 * specified namespace and extension point name with this service.
+	 *
+	 * @param namespace the namespace for the given extension point 
+	 *		(e.g. <code>"org.eclipse.gmf.runtime.common.core"</code>)
+	 * @param extensionPointName the simple identifier of the 
+	 *		extension point (e.g. <code>"parserProviders"</code>)
+	 */
+	public final void configureProviders(String namespace, String extensionPointName) {
+		configureProviders(Platform.getExtensionRegistry()
+									.getExtensionPoint(namespace, extensionPointName)
+									.getConfigurationElements());
+	}
+
+	/**
 	 * Registers the service providers described by the specified configuration
 	 * <code>elements</code> with this service.
 	 * 
@@ -697,13 +719,36 @@ public abstract class Service
 	public final void configureProviders(IConfigurationElement[] elements) {
 		assert null != elements : "null elements"; //$NON-NLS-1$
 
-		for (int i = 0; i < elements.length; i++) {
-			addProvider(
-				ProviderPriority.parse(
-					getPriority(elements[i])),
-				newProviderDescriptor(elements[i]));
-			Trace.trace(CommonCorePlugin.getDefault(), CommonCoreDebugOptions.SERVICES_CONFIG, "Provider configured from extension '" + String.valueOf(elements[i].getDeclaringExtension()) + "'."); //$NON-NLS-1$ //$NON-NLS-2$
+		for (int i = 0; i < elements.length; ++i)
+		{
+			IConfigurationElement element = elements[i];
+
+			try
+			{
+				addProvider(ProviderPriority.parse(getPriority(element)),
+						newProviderDescriptor(element));
+			}
+			finally
+			{
+				if (Trace.shouldTrace(CommonCorePlugin.getDefault(), CommonCoreDebugOptions.SERVICES_CONFIG))
+				{
+					IExtension extension = element.getDeclaringExtension();
+					String identifier = extension.getUniqueIdentifier();
+
+					if (identifier == null)
+						identifier = String.valueOf(extension.getNamespace());
+
+					extension.getExtensionPointUniqueIdentifier();
+
+					Trace.trace(CommonCorePlugin.getDefault(), CommonCoreDebugOptions.SERVICES_CONFIG,
+							"Provider of '" + extension.getExtensionPointUniqueIdentifier() //$NON-NLS-1$
+								+ "' configured from extension '" + identifier + "'."); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
 		}
+
+		for (int i = priorityCount; --i >= 0;)
+			providers[i].trimToSize();
 	}
 
 	/**

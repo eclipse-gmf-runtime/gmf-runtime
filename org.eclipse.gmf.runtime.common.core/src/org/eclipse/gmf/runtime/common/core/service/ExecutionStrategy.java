@@ -14,9 +14,7 @@ package org.eclipse.gmf.runtime.common.core.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.eclipse.gmf.runtime.common.core.service.Service.ProviderDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
@@ -63,31 +61,33 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 	public static final ExecutionStrategy FIRST =
 		new ExecutionStrategy("First") { //$NON-NLS-1$
 		public List execute(Service service, IOperation operation) {
-			List results = Collections.EMPTY_LIST;
+			for (int i = 0; i < PRIORITIES.length; ++i) {
+				List providers = service.getProviders(this, PRIORITIES[i], operation);
 
-			for (int i = 0; i < PRIORITIES.length; i++) {
-				List targets = getProviders(service, this, PRIORITIES[i], operation);
-
-				if (!targets.isEmpty()) {
-					results = Collections.singletonList(operation.execute((IProvider) targets.get(0)));
-					break;
+				if (providers.size() != 0) {
+					return Collections.singletonList(operation.execute((IProvider) providers.get(0)));
 				}
 			}
-			return results;
+
+			return Collections.EMPTY_LIST;
 		}
+
 		public List getUncachedProviders(
 			Service service,
 			ProviderPriority priority,
 			IOperation operation) {
 
-			List providers = getProviders(service, priority);
+			List descriptors = service.getProviders(priority);
+			int size = descriptors.size();
 
-			for (ListIterator i = providers.listIterator(); i.hasNext();) {
-				ProviderDescriptor descriptor = (ProviderDescriptor) i.next();
+			for (int i = 0; i < size; ++i) {
+				ProviderDescriptor descriptor = (ProviderDescriptor)descriptors.get(i);
+
 				if (descriptor.provides(operation)) {
 					return Collections.singletonList(descriptor.getProvider());
 				}
 			}
+
 			return Collections.EMPTY_LIST;
 		}
 	};
@@ -99,36 +99,37 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 	public static final ExecutionStrategy LAST =
 		new ExecutionStrategy("Last") { //$NON-NLS-1$
 		public List execute(Service service, IOperation operation) {
-			List results = Collections.EMPTY_LIST;
-
-			for (int i = PRIORITIES.length - 1; i >= 0; i--) {
-				List targets = getProviders(service, this, PRIORITIES[i], operation);
-				int size = targets.size();
+			for (int i = PRIORITIES.length; --i >= 0;) {
+				List providers = service.getProviders(this, PRIORITIES[i], operation);
+				int size = providers.size();
 
 				if (size != 0) {
-					results = Collections.singletonList(
+					return Collections.singletonList(
 						operation.execute(
-							(IProvider) targets.get(size - 1)));
-					break;
+							(IProvider) providers.get(size - 1)));
 				}
 			}
-			return results;
+
+			return Collections.EMPTY_LIST;
 		}
+
 		public List getUncachedProviders(
 				Service service,
 				ProviderPriority priority,
 				IOperation operation) {
 
-				List providers = getProviders(service, priority);
+			List descriptors = service.getProviders(priority);
 
-				for (ListIterator i = providers.listIterator(providers.size()); i.hasPrevious();) {
-					ProviderDescriptor descriptor = (ProviderDescriptor) i.previous();
-					if (descriptor.provides(operation)) {
-						return Collections.singletonList(descriptor.getProvider());
-					}
+			for (int i = descriptors.size(); --i >= 0;) {
+				ProviderDescriptor descriptor = (ProviderDescriptor)descriptors.get(i);
+
+				if (descriptor.provides(operation)) {
+					return Collections.singletonList(descriptor.getProvider());
 				}
-				return Collections.EMPTY_LIST;
 			}
+
+			return Collections.EMPTY_LIST;
+		}
 	};
 
 	/**
@@ -140,13 +141,15 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 		public List execute(Service service, IOperation operation) {
 			List results = new ArrayList();
 
-			for (int i = 0; i < PRIORITIES.length; i++) {
-				List targets = getProviders(service, this, PRIORITIES[i], operation);
+			for (int i = 0; i < PRIORITIES.length; ++i) {
+				List providers = service.getProviders(this, PRIORITIES[i], operation);
+				int size = providers.size();
 
-				for (int j = 0; j < targets.size(); j++) {
-					results.add(operation.execute((IProvider) targets.get(j)));
+				for (int j = 0; j < size; ++j) {
+					results.add(operation.execute((IProvider) providers.get(j)));
 				}
 			}
+
 			return results;
 		}
 	};
@@ -160,13 +163,14 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 		public List execute(Service service, IOperation operation) {
 			List results = new ArrayList();
 
-			for (int i = PRIORITIES.length - 1; i >= 0; i--) {
-				List targets = getProviders(service, this, PRIORITIES[i], operation);
+			for (int i = PRIORITIES.length; --i >= 0;) {
+				List providers = service.getProviders(this, PRIORITIES[i], operation);
 
-				for (int j = targets.size() - 1; j >= 0; j--) {
-					results.add(operation.execute((IProvider) targets.get(j)));
+				for (int j = providers.size(); --j >= 0;) {
+					results.add(operation.execute((IProvider) providers.get(j)));
 				}
 			}
+
 			return results;
 		}
 	};
@@ -229,15 +233,19 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 		ProviderPriority priority,
 		IOperation operation) {
 
-		List targets = new ArrayList();
+		List descriptors = service.getProviders(priority);
+		int size = descriptors.size();
+		List providers = new ArrayList(size);
 
-		for (Iterator i = getProviders(service, priority).iterator(); i.hasNext();) {
-			ProviderDescriptor descriptor = (ProviderDescriptor) i.next();
+		for (int i = 0; i < size; ++i) {
+			ProviderDescriptor descriptor = (ProviderDescriptor)descriptors.get(i);
+
 			if (descriptor.provides(operation)) {
-				targets.add(descriptor.getProvider());
+				providers.add(descriptor.getProvider());
 			}
 		}
-		return targets;
+
+		return providers;
 	}
 
 	/**
