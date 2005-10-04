@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,11 @@ package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
@@ -93,6 +93,10 @@ public class SemanticService extends Service implements ISemanticProvider {
 	 * The singleton instance of the semantic service.
 	 */
 	private final static SemanticService instance = new SemanticService();
+
+	static {
+		instance.configureProviders(DiagramPlugin.getPluginId(), "semanticProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Retrieves the singleton instance of the semantic service.

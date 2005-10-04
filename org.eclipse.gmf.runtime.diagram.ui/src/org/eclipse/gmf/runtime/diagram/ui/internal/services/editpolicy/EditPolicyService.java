@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.CreateEditPoliciesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.IEditPolicyProvider;
 
@@ -89,11 +90,15 @@ public class EditPolicyService extends Service implements IEditPolicyProvider {
 		 */
 		public String toString() {
 			return getElement().getAttribute("class"); 	 //$NON-NLS-1$
-		}
+	}
 	}
 
 	/** The singleton instance of the editpolicy service. */
 	private final static EditPolicyService service = new EditPolicyService();
+	
+	static {
+		service.configureProviders(DiagramUIPlugin.getPluginId(), "editpolicyProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Retrieves the singleton instance of the editpolicy service.

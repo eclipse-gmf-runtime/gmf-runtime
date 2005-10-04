@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider;
@@ -119,6 +120,10 @@ final public class ViewService
 	 */
 	private final static ViewService instance = new ViewService();
 
+	static {
+		instance.configureProviders(DiagramPlugin.getPluginId(), "viewProviders"); //$NON-NLS-1$
+	}
+	
 	/**
 	 * Retrieves the singleton instance of the notation service.
 	 * 
@@ -213,7 +218,7 @@ final public class ViewService
 	}
 
 	private boolean providerExistsFor(IOperation operation) {
-		return provides(ExecutionStrategy.FIRST, operation);
+		return provides(operation);
 	}
 
 	/**

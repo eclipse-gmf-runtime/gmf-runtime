@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,12 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.services.layout;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
-
+import org.eclipse.jface.util.Assert;
 
 /** 
  * A service that provides for diagram layout.
@@ -31,11 +30,12 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
 final public class LayoutService
     extends Service implements ILayoutNodesProvider {
 
-    private final static LayoutService instance =
+	private final static LayoutService instance =
         new LayoutService();
 
-    protected LayoutService() {
+	private LayoutService() {
         super(); //no caching for now
+		configureProviders(DiagramUIPlugin.getPluginId(), "layoutProviders"); //$NON-NLS-1$
     }
 
     public static LayoutService getInstance() {

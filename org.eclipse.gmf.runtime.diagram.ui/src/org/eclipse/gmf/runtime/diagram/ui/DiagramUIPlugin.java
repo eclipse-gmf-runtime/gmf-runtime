@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,25 +11,18 @@
 
 package org.eclipse.gmf.runtime.diagram.ui;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.DecoratorService;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutService;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectorsPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.RulerGridPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
-import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
 
 /**
  * The DiagramUI  plugin defines all the artifacts needed for the
@@ -39,34 +32,6 @@ import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
  */
 public class DiagramUIPlugin
 	extends XToolsUIPlugin {
-
-	/**
-	 * The layout service extension point id
-	 */
-	private final static String LAYOUT_SERVICE_EXTENSION_POINT = "layoutProviders"; //$NON-NLS-1$ 
-
-	/**
-	 * The editpart service extension point id
-	 */
-	private final static String EDITPART_SERVICE_EXTENSION_POINT = "editpartProviders"; //$NON-NLS-1$ 
-
-	 
-
-	/**
-	 * The palette service extension point id
-	 */
-	private final static String PALETTE_SERVICE_EXTENSION_POINT = "paletteProviders"; //$NON-NLS-1$ 
-
-	
-	/**
-	 * The decoration service extension point id
-	 */
-	private final static String DECORATOR_SERVICE_EXTENSION_POINT = "decoratorProviders"; //$NON-NLS-1$ 
-
-	/**
-	 * The editpolicy service extension point id
-	 */
-	private final static String EDITPOLICY_SERVICE_EXTENSION_POINT = "editpolicyProviders"; //$NON-NLS-1$
 
 	/**
 	 * the plugin singleton
@@ -111,12 +76,6 @@ public class DiagramUIPlugin
 
 		PresentationListener.getInstance().startListening();
 		
-		configureEditPartProviders();
-		configurePaletteProviders();
-		configureDiagramLayoutProviders();
-		configureDecorationProviders();
-		configureEditPolicyProviders();		
-		
 		initializeDefaultDiagramPreferenceStore();
 		
 		// TODO: Move to Modeler/Visualizer plug-in.
@@ -132,69 +91,12 @@ public class DiagramUIPlugin
 		super.doShutdown();
 	}
 
-	/**
-	 * Configures diagram layout providers for the presentation plug-in based on
-	 * layout provider extension configurations.
-	 */
-	private void configureDiagramLayoutProviders() {
-		LayoutService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(
-				getPluginId(), LAYOUT_SERVICE_EXTENSION_POINT)
-				.getConfigurationElements());
-	}
-
-	/**
-	 * Configures editpart providers for the presentation plug-in based on
-	 * editpart provider extension configurations.
-	 */
-	private void configureEditPartProviders() {
-		EditPartService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				EDITPART_SERVICE_EXTENSION_POINT).getConfigurationElements());
-	}
-
-	
-
-	/**
-	 * Configures palette providers for the presentation plug-in based on
-	 * palette provider extension configurations.
-	 */
-	private void configurePaletteProviders() {
-		PaletteService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				PALETTE_SERVICE_EXTENSION_POINT).getConfigurationElements());
-	}
-
-	
-
-	/**
-	 * Configures decoration providers for the presentation plug-in based on
-	 * decoration provider extension configurations.
-	 */
-	private void configureDecorationProviders() {
-		DecoratorService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(
-				getPluginId(), DECORATOR_SERVICE_EXTENSION_POINT)
-				.getConfigurationElements());				
-	}
-
-	/**
-	 * Configures editpolicy providers for the presentation plug-in based on
-	 * editpolicy provider extension configurations.
-	 */
-	private void configureEditPolicyProviders() {
-		EditPolicyService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				EDITPOLICY_SERVICE_EXTENSION_POINT).getConfigurationElements());
-	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
 	 */
 	public AbstractResourceManager getResourceManager() {
 		return null; // TBD
 	}
-	
 
 	/**
 	 * Initializes the preference store to be used as default values when a
@@ -213,5 +115,4 @@ public class DiagramUIPlugin
 		PreferencesHint.registerPreferenceStore(
 			PreferencesHint.USE_DEFAULTS, defaultStore);
 	}
-
 }

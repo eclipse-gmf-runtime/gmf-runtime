@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,12 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
+import org.eclipse.jface.util.Assert;
 
 /**
  * This service is used to add decorators so that shapes and connectors on a
@@ -90,6 +90,10 @@ public class DecoratorService
 
 	/** The singleton instance of the decorator service. */
 	private final static DecoratorService service = new DecoratorService();
+
+	static {
+		service.configureProviders(DiagramUIPlugin.getPluginId(), "decoratorProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Retrieves the singleton instance of the decorator service.

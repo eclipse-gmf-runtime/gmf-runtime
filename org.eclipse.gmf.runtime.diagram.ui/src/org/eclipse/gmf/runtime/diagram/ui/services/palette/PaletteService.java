@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -123,11 +123,13 @@ public class PaletteService extends Service implements IPaletteProvider {
 	public void setContributions(IConfigurationElement configElement) {
 	//  
 	}
-	
-	
-	
+
 	/** the singleton instance of the palette service */
 	private final static PaletteService instance = new PaletteService();
+
+	static {
+		instance.configureProviders(DiagramUIPlugin.getPluginId(), "paletteProviders"); //$NON-NLS-1$
+	}
 
 	/** the standard group id */
 	public final static String GROUP_STANDARD = "standardGroup"; //$NON-NLS-1$
@@ -142,7 +144,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 	 *  Creates a new instance of the Palette Service
 	 */
 	protected PaletteService() {
-	    //empty ctor
+		super();
 	}
 
 	/**
