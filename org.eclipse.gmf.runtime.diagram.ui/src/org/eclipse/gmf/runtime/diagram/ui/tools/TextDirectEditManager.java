@@ -288,7 +288,7 @@ public class TextDirectEditManager
 		}
 		
 		// Set the controls text and position the caret at the end of the text
-		textControl.selectAll();
+		textControl.setSelection(toEdit.length());
 	}
 
 	/**
