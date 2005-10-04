@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,6 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
@@ -27,6 +24,8 @@ import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesDebug
 import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.internal.marker.IMarkerNavigationProvider;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * This service is the distribution point for "gotoMarker" requests made by
@@ -44,6 +43,10 @@ public class MarkerNavigationService
 
 	/** Remember the single instance of this service. */
 	private final static MarkerNavigationService instance = new MarkerNavigationService();
+	
+	static {
+		instance.configureProviders(CommonUIServicesPlugin.getPluginId(), "markerNavigationProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Marker Navigation Provider Descriptor.

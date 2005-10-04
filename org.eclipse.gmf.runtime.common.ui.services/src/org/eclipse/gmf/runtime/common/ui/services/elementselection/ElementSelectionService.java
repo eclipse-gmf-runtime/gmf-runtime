@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 
 /**
  * The element selection service.
@@ -29,6 +30,10 @@ public class ElementSelectionService
 	 * The singleton instance of the type selection service.
 	 */
 	private final static ElementSelectionService instance = new ElementSelectionService();
+
+	static {
+		instance.configureProviders(CommonUIServicesPlugin.getPluginId(), "elementSelectionProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Constructs a new type selection service.

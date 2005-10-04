@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,10 @@
 package org.eclipse.gmf.runtime.common.ui.services.parser;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 
 /**
  * The parser service which returns a parser for an IAdaptable.
@@ -31,6 +31,10 @@ public class ParserService
 	 */
 	private final static ParserService service = new ParserService();
 
+	static {
+		service.configureProviders(CommonUIServicesPlugin.getPluginId(), "parserProviders"); //$NON-NLS-1$
+	}
+	
 	/**
 	 * Retrieves the singleton instance of the parser service.
 	 *

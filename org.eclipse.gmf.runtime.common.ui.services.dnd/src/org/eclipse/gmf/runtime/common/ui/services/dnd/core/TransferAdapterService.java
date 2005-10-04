@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
@@ -122,6 +121,10 @@ public class TransferAdapterService
 	 * Attribute for the singleton
 	 */
 	private final static TransferAdapterService instance = new TransferAdapterService();
+
+	static {
+		instance.configureProviders(CommonUIServicesDNDPlugin.getPluginId(), "transferAdapterProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Return the singleton.

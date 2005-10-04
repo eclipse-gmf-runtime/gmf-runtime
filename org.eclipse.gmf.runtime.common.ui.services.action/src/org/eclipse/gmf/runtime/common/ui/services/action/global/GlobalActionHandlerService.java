@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
@@ -187,6 +186,10 @@ public class GlobalActionHandlerService
 	 */
 	private final static GlobalActionHandlerService instance =
 		new GlobalActionHandlerService();
+
+	static {
+		instance.configureProviders(CommonUIServicesActionPlugin.getPluginId(), "globalActionHandlerProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * The GlobalActionHandlerService constructor

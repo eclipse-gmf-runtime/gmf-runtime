@@ -24,6 +24,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 
 /**
  * A service for manipulating editors
@@ -38,6 +39,10 @@ public class EditorService
 	 * The singleton instance of the editor service.
 	 */
 	private final static EditorService instance = new EditorService();
+
+	static {
+		instance.configureProviders(CommonUIServicesPlugin.getPluginId(), "editorProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Constructs a new editor service.

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-
 
 package org.eclipse.gmf.runtime.common.ui.services.properties;
 
@@ -21,12 +20,12 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.common.ui.services.properties.internal.PSFCommonUIPlugin;
+import org.osgi.framework.Bundle;
 
 /**
  * The property service taks all property contributions from property source
@@ -108,7 +107,7 @@ public class PropertiesService
 	 * 
 	 * @author nbalaba
 	 */
-	class ModifiersService
+	static class ModifiersService
 		extends Service {
 
 		/**
@@ -161,6 +160,16 @@ public class PropertiesService
 	private Map modifiersMap = new HashMap();
 
 	/**
+	 * Extension point name for the properties providers extension point.
+	 */
+	private static final String PROPERTY_PROVIDERS_EXT_P_NAME = "propertiesProviders"; //$NON-NLS-1$
+
+	/**
+	 * Extension point name for the properties modifiers extension point.
+	 */
+	private static final String PROPERTY_MODIFIERS_EXT_P_NAME = "propertyModifiers"; //$NON-NLS-1$	
+
+	/**
 	 * This operation implements the logic for returning the same instance of
 	 * the Singleton pattern.
 	 * 
@@ -171,8 +180,8 @@ public class PropertiesService
 		if (uniqueInstance == null) {
 			uniqueInstance = new PropertiesService();
 		}
-		return uniqueInstance;
 
+		return uniqueInstance;
 	}
 
 	/**
@@ -182,6 +191,13 @@ public class PropertiesService
 	private PropertiesService() {
 		super();
 
+		String pluginId = PSFCommonUIPlugin.getPluginId();
+
+		configureProviders(pluginId, PROPERTY_PROVIDERS_EXT_P_NAME);
+
+		configureModifiers(Platform.getExtensionRegistry()
+									.getExtensionPoint(pluginId, PROPERTY_MODIFIERS_EXT_P_NAME)
+									.getConfigurationElements());
 	}
 
 	/**

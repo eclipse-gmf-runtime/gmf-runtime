@@ -17,6 +17,7 @@ import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ContributeToActionBarsOperation;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ContributeToPopupMenuOperation;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.DisposeContributionsOperation;
@@ -104,10 +105,9 @@ public class ContributionItemService
 				}
 			}
 
-			if (operation instanceof ContributeToActionBarsOperation) {			
+			if (operation instanceof ContributeToActionBarsOperation) {
 				ContributeToActionBarsOperation op =
 					(ContributeToActionBarsOperation) operation;
-
 				return contributionDescriptor.hasContributionsFor(
 					op.getWorkbenchPartDescriptor().getPartId(),
 					op.getWorkbenchPartDescriptor().getPartClass());
@@ -126,7 +126,7 @@ public class ContributionItemService
 			} else if (operation instanceof DisposeContributionsOperation) {
 				if (provider != null)
 					return provider.provides(operation);
-			} 
+			}
 			return false;
 		}
 
@@ -173,13 +173,12 @@ public class ContributionItemService
 				&& bundle.getState() == org.osgi.framework.Bundle.ACTIVE;
 
 		}
-		
 	}
 
-	/** 
+	/**
 	 * The single instance of the contribution item service. 
 	 */
-	private static ContributionItemService instance =
+	private static final ContributionItemService instance =
 		new ContributionItemService();
 
 	/**
@@ -195,7 +194,8 @@ public class ContributionItemService
 	 * Creates a new <code>ContributionItemService</code> instance.
 	 */
 	private ContributionItemService() {
-		 /* private constructor */
+		 super();
+		 configureProviders(CommonUIServicesActionPlugin.getPluginId(), "contributionItemProviders"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
@@ -230,7 +230,7 @@ public class ContributionItemService
 		IActionBars actionBars,
 		IWorkbenchPartDescriptor workbenchPartDescriptor) {
 		execute(new ContributeToActionBarsOperation(actionBars,
-			workbenchPartDescriptor));
+				workbenchPartDescriptor));
 	}
 
 	/*
@@ -284,4 +284,4 @@ public class ContributionItemService
 		execute(ExecutionStrategy.REVERSE, operation);
 	}
 
-}
+		}

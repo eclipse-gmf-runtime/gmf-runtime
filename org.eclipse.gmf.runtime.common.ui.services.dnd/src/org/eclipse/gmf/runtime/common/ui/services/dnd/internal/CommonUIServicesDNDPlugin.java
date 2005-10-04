@@ -11,12 +11,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.internal;
 
-import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.core.DragDropListenerService;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterService;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.ResourceManager;
 
 /**
@@ -27,17 +23,6 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.ResourceMana
  */
 public class CommonUIServicesDNDPlugin
 	extends XToolsUIPlugin {
-
-	/**
-	 * Extension point name for drag and drop listener providers extension
-	 * point.
-	 */
-	protected static final String DRAG_DROP_LISTENER_PROVIDERS_EXT_P_NAME = "dragDropListenerProviders"; //$NON-NLS-1$
-
-	/**
-	 * Extension point name for the transfer adapter providers extension point.
-	 */
-	protected static final String TRANSFER_ADAPTER_PROVIDERS_EXT_P_NAME = "transferAdapterProviders"; //$NON-NLS-1$
 
 	/**
 	 * This plug-in's shared instance.
@@ -78,38 +63,5 @@ public class CommonUIServicesDNDPlugin
 	 */
 	public AbstractResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
-	}
-
-	/**
-	 * Starts up this plug-in.
-	 */
-	protected void doStartup() {
-		configureDragDropListenerProviders();
-		configureTransferAdapterProviders();
-	}
-
-	/**
-	 * Configures drag and drop listener providers based drag and drop listener
-	 * providers extension configurations.
-	 *  
-	 */
-	private void configureDragDropListenerProviders() {
-		DragDropListenerService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				DRAG_DROP_LISTENER_PROVIDERS_EXT_P_NAME)
-				.getConfigurationElements());
-
-	}
-
-	/**
-	 * Configures transfer adapter providers based on marker navigation provider
-	 * extension configurations.
-	 *  
-	 */
-	private void configureTransferAdapterProviders() {
-		TransferAdapterService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				TRANSFER_ADAPTER_PROVIDERS_EXT_P_NAME)
-				.getConfigurationElements());
 	}
 }

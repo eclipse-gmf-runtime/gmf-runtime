@@ -11,11 +11,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.properties.internal;
 
-import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesService;
 import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFResourceManager;
 
 /**
@@ -24,16 +21,6 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFRe
  */
 public class PSFCommonUIPlugin
 	extends XToolsUIPlugin {
-
-	/**
-	 * Extension point name for the properties providers extension point.
-	 */
-	protected static final String PROPERTY_PROVIDERS_EXT_P_NAME = "propertiesProviders"; //$NON-NLS-1$
-
-	/**
-	 * Extension point name for the properties modifiers extension point.
-	 */
-	protected static final String PROPERTY_MODIFIERS_EXT_P_NAME = "propertyModifiers"; //$NON-NLS-1$	
 
 	//The shared instance.
 	private static PSFCommonUIPlugin plugin;
@@ -61,7 +48,7 @@ public class PSFCommonUIPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getBundle().getSymbolicName();
+		return getDefault().getSymbolicName();
 	}
 
 	/**
@@ -73,26 +60,5 @@ public class PSFCommonUIPlugin
 	 */
 	public AbstractResourceManager getResourceManager() {
 		return PSFResourceManager.getInstance();
-	}
-
-	/**
-	 * Starts up this plug-in.
-	 */
-	protected void doStartup() {
-		configurePropertiesProviders();
-	}
-
-	/**
-	 * Configures properties providers based on properties provider extension
-	 * configurations.
-	 */
-	private void configurePropertiesProviders() {
-		PropertiesService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				PROPERTY_PROVIDERS_EXT_P_NAME).getConfigurationElements());
-
-		PropertiesService.getInstance().configureModifiers(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				PROPERTY_MODIFIERS_EXT_P_NAME).getConfigurationElements());
 	}
 }

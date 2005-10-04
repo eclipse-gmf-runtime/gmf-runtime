@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,17 +11,14 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.icon;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
-import org.eclipse.gmf.runtime.common.ui.services.internal.icon.IconOperation;
+import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.internal.icon.IconServiceProviderConfiguration;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Service which handles icon operations.
@@ -29,11 +26,11 @@ import org.eclipse.gmf.runtime.common.ui.services.internal.icon.IconServiceProvi
  * @author Michael Yee
  */
 public class IconService extends Service implements IIconProvider {
-	
+
 	/** The singleton instance of the icon service. */
     private final static IconService _instance = new IconService();
 
-	/**
+    /**
 	 * A descriptor for <code>IIconProvider</code> defined
 	 * by a configuration element.
 	 * 
@@ -56,7 +53,6 @@ public class IconService extends Service implements IIconProvider {
 
 			this.providerConfiguration =
 				IconServiceProviderConfiguration.parse(element);
-			assert null != element : "NULL configuration element"; //$NON-NLS-1$
 		}
 
 		/**
@@ -94,7 +90,8 @@ public class IconService extends Service implements IIconProvider {
      * The IconService constructor
      */
     private IconService() {
-		/* empty method body */
+		super();
+		configureProviders(CommonUIServicesPlugin.getPluginId(), "iconProviders"); //$NON-NLS-1$
     }
 
     /**
@@ -107,21 +104,10 @@ public class IconService extends Service implements IIconProvider {
     }
 
     /**
-     * Executes the operation using the FIRST strategy.
-     * 
-     * @param operation the operation
-     * @return Object the result
-     */
-    private Object execute(IconOperation operation) {
-        List results = execute(ExecutionStrategy.FIRST, operation);
-        return results.isEmpty() ? null : results.get(0);
-    }
-
-    /**
      * @see org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider#getIcon(IAdaptable, int)
      */
     public Image getIcon(IAdaptable hint, int flags) {
-        return (Image) execute(new GetIconOperation(hint, flags));
+        return (Image)executeUnique(ExecutionStrategy.FIRST, new GetIconOperation(hint, flags));
     }
 
     /**
@@ -140,5 +126,4 @@ public class IconService extends Service implements IIconProvider {
 	protected Service.ProviderDescriptor newProviderDescriptor(IConfigurationElement element) {
 		return new ProviderDescriptor(element);
 	}
-
 }

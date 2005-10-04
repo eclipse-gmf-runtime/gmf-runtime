@@ -18,11 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent;
 import org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener;
@@ -39,6 +34,10 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServic
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.IActionFilterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.TestAttributeOperation;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A service that provides action filters that can be used in evaluating action
@@ -152,6 +151,10 @@ public class ActionFilterService
 	 *  
 	 */
 	private final static ActionFilterService instance = new ActionFilterService();
+
+	static {
+		instance.configureProviders(CommonUIServicesActionPlugin.getPluginId(), "actionFilterProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * The cached results (for optimization).

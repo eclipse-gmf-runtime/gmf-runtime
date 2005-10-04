@@ -229,6 +229,10 @@ public class DragDropListenerService
 	 */
 	private final static DragDropListenerService instance = new DragDropListenerService();
 
+	static {
+		instance.configureProviders(CommonUIServicesDNDPlugin.getPluginId(), "dragDropListenerProviders"); //$NON-NLS-1$
+	}
+	 
 	/**
 	 * The DragDropListenerService constructor
 	 */
