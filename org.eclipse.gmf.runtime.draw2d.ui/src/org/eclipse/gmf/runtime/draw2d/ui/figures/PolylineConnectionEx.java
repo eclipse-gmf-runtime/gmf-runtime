@@ -1308,6 +1308,9 @@ public class PolylineConnectionEx extends PolylineConnection {
 				this.dashes[i] = dash;
 			}
 		}
+		else {
+			this.dashes = null;
+		}
 	}
 
 	/** 
@@ -1315,7 +1318,7 @@ public class PolylineConnectionEx extends PolylineConnection {
 	 */
 	public void paintFigure(Graphics graphics) {
 		graphics.pushState();
-		if (dashes != null)
+		if (dashes != null && getLineStyle() == SWT.LINE_CUSTOM)
 			graphics.setLineDash(dashes);
 		super.paintFigure(graphics);
 		graphics.popState();
