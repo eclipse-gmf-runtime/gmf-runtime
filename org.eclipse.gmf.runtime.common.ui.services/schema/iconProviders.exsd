@@ -56,7 +56,7 @@
                   The provider class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider"/>
                </appInfo>
             </annotation>
          </attribute>

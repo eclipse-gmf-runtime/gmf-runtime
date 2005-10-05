@@ -54,7 +54,7 @@
                   The provider class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.parser.IParserProvider"/>
                </appInfo>
             </annotation>
          </attribute>

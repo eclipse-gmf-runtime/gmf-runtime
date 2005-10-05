@@ -71,10 +71,10 @@ However, this extension point focuses on distinguishing the contribution criteri
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  the name of a fully qualified class that implements the the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider&lt;/tt&gt; and &lt;tt&gt;org.eclipse.gmf.runtime.common.core.service.IProvider&lt;/tt&gt; interfaces
+                  the name of a fully qualified class that extends the the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider&lt;/tt&gt; and &lt;tt&gt;org.eclipse.gmf.runtime.common.core.service.IProvider&lt;/tt&gt; interfaces
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IContributionItemProvider"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -539,7 +539,7 @@ If the last token was a group, the contribution will be appended to the end of t
                   The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IPopupMenuContributionPolicy"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -610,7 +610,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
                   The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IPopupMenuContributionPolicy"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -641,7 +641,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
                   The fully qualified name of a contribution policy class (that usually resides in a different plugin/fragment that is assumed to be loaded) to be used to determine wether this contributon should be considered or not. The class has to implement the &lt;code&gt;IPopupMenuContributionPolicy&lt;/code&gt; interface.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IPopupMenuContributionPolicy"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -72,7 +72,7 @@ Note that the value attribute is optional. When available in the provider&apos;s
                   the name of a fully qualified class that implements the the &lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.action.filter.IActionFilterProvider&lt;/tt&gt; and &lt;tt&gt;org.eclipse.gmf.runtime.common.core.service.IProvider&lt;/tt&gt; interfaces
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.filter.IActionFilterProvider"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider"/>
                </appInfo>
             </annotation>
          </attribute>

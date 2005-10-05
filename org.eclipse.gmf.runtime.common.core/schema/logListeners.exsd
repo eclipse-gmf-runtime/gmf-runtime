@@ -46,11 +46,14 @@
                <documentation>
                   The listener class.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.core.runtime.ILogListener"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
-
+         
    <annotation>
       <appInfo>
          <meta.section type="examples"/>

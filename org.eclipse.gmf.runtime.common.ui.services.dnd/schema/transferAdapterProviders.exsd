@@ -59,6 +59,9 @@
                <documentation>
                   The provider class. Providers implement service functionality (operations).
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.ui.services.dnd.core.AbstractTransferAdapterProvider"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
