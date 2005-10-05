@@ -55,7 +55,7 @@ import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
 public abstract class AbstractContributionItem
 	extends ContributionItem
 	implements ISelectionChangedListener, ICommandManagerChangeListener,
-	IRepeatableAction {
+	IActionWithProgress {
 
 	/**
 	 * Flag to indicate whether or not this action has been set up.
@@ -649,26 +649,12 @@ public abstract class AbstractContributionItem
 	public WorkIndicatorType getWorkIndicatorType() {
 		return WorkIndicatorType.BUSY;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#isRepeatable()
-	 */
-	public boolean isRepeatable() {
-		return isEnabled();
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#isRunnable()
 	 */
 	public boolean isRunnable() {
 		return isEnabled();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#repeat(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public void repeat(IProgressMonitor progressMonitor) {
-		run(progressMonitor);
 	}
 
 	/* (non-Javadoc)

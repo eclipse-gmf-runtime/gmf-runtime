@@ -191,7 +191,7 @@ abstract public class CopyAction extends PresentationAction {
 
 	/** 
 	 * Refresh the enablement status based on whether the action is enabled or not.
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
+	 * @see org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress#refresh()
 	 */
 	public void refresh() {
 		setEnabled(calculateEnabled());

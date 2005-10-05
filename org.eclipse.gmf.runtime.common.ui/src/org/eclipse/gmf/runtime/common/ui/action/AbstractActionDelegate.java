@@ -63,7 +63,7 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
  * @see org.eclipse.ui.IWorkbenchWindowActionDelegate
  * @see org.eclipse.ui.IActionDelegate2
  */
-public abstract class AbstractActionDelegate implements IPartListener, IRepeatableAction {
+public abstract class AbstractActionDelegate implements IPartListener, IActionWithProgress {
 
 	/**
 	 * Flag to indicate whether or not this action has been set up.
@@ -365,17 +365,6 @@ public abstract class AbstractActionDelegate implements IPartListener, IRepeatab
 	}
 
 	/**
-	 * Retrieves a Boolean indicating whether this action delegate can be
-	 * repeated.
-	 * 
-	 * @return <code>true</code> if the action for this delegate is enabled;
-	 *          <code>false</code> otherwise.
-	 */
-	public boolean isRepeatable() {
-		return getAction().isEnabled();
-	}
-
-	/**
 	 * Retrieves a Boolean indicating whether this action delegate can be run.
 	 * 
 	 * @return <code>true</code> if the action for this delegate is enabled;
@@ -390,16 +379,6 @@ public abstract class AbstractActionDelegate implements IPartListener, IRepeatab
 	 */
 	public void refresh() {
 		 /* method not implemented */
-	}
-
-	/**
-	 * Re-runs this action delegate's action.
-	 */
-	public void repeat(IProgressMonitor progressMonitor) {
-		// The progress monitor can be ignored here because the ActionManager
-		// will be asked to run the action, and will supply the appropriate
-		// progress monitor to the run() method
-		getAction().run();
 	}
 
 	/**
@@ -470,14 +449,14 @@ public abstract class AbstractActionDelegate implements IPartListener, IRepeatab
 
 
 	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#getWorkIndicatorType()
+	 * @see org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress#getWorkIndicatorType()
 	 */
 	public WorkIndicatorType getWorkIndicatorType() {
 		return WorkIndicatorType.BUSY;
 	}
 	
 	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#setup()
+	 * @see org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress#setup()
 	 */
 	public boolean setup() {
 		setSetup(true);

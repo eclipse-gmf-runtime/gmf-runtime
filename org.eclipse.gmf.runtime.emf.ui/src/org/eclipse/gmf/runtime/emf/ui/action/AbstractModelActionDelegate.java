@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionDelegate;
-import org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction;
+import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.emf.ui.internal.MslUIDebugOptions;
@@ -42,7 +42,7 @@ public abstract class AbstractModelActionDelegate
 	/**
 	 * Runs this model action delegate as a read action.
 	 * 
-	 * @see IRepeatableAction#run(IProgressMonitor)
+	 * @see IActionWithProgress#run(IProgressMonitor)
 	 */
 	public final void run(final IProgressMonitor progressMonitor) {
 		try {

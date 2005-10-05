@@ -137,13 +137,6 @@ public final class GlobalUndoAction extends GlobalAction {
 		setText(label);
 	}
 
-    /**
-     * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#isRepeatable()
-     */
-    public boolean isRepeatable() {
-        return false;
-    }
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler#isCommandStackListener()
 	 */

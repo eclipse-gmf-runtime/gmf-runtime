@@ -61,7 +61,7 @@ import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
  */
 public abstract class AbstractActionHandler
 	extends Action
-	implements IDisposableAction, IRepeatableAction, ISelectionChangedListener,
+	implements IDisposableAction, IActionWithProgress, ISelectionChangedListener,
 	ICommandManagerChangeListener, IPropertyListener {
 
 	/**
@@ -370,17 +370,6 @@ public abstract class AbstractActionHandler
 	}
 
 	/**
-	 * Retrieves a Boolean indicating whether this action handler can be
-	 * repeated.
-	 * 
-	 * @return <code>true</code> if this action handler is enabled;
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isRepeatable() {
-		return isEnabled();
-	}
-
-	/**
 	 * Retrieves a Boolean indicating whether this action handler can be run.
 	 * 
 	 * @return <code>true</code> if this action handler is enabled;
@@ -425,13 +414,6 @@ public abstract class AbstractActionHandler
 	 */
 	protected boolean isCommandStackListener() {
 		return false;
-	}
-
-	/**
-	 * Re-runs this action handler.
-	 */
-	public void repeat(IProgressMonitor progressMonitor) {
-		run(progressMonitor);
 	}
 
 	/**

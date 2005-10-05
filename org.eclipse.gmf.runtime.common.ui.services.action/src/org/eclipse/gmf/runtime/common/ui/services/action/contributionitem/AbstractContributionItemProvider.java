@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
-import org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction;
+import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionStatusCodes;
@@ -460,8 +460,8 @@ public abstract class AbstractContributionItemProvider
 			}
 		}
 		else {
-			if ( action instanceof IRepeatableAction ) {
-				((IRepeatableAction)action).refresh();
+			if ( action instanceof IActionWithProgress ) {
+				((IActionWithProgress)action).refresh();
 			}
 		}
 		return action;

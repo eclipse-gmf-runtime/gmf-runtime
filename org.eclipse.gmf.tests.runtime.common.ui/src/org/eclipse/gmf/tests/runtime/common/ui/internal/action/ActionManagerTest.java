@@ -11,41 +11,36 @@
 
 package org.eclipse.gmf.tests.runtime.common.ui.internal.action;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManagerChangeEvent;
 import org.eclipse.gmf.runtime.common.ui.action.IActionManagerChangeListener;
-import org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction;
+import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
 
 /**
  * @author khussey
  */
 public class ActionManagerTest extends TestCase {
 
-    protected static class RepeatableAction implements IRepeatableAction {
+    protected static class RepeatableAction implements IActionWithProgress {
 
         private final String label;
 
         private final boolean runnable;
 
-        private final boolean repeatable;
-
         public RepeatableAction(
             String label,
-            boolean runnable,
-            boolean repeatable) {
+            boolean runnable) {
             super();
 
             this.label = label;
             this.runnable = runnable;
-            this.repeatable = repeatable;
         }
 
         public String getLabel() {
@@ -56,13 +51,7 @@ public class ActionManagerTest extends TestCase {
             return runnable;
         }
 
-        public boolean isRepeatable() {
-            return repeatable;
-        }
-
         public void refresh() {/*Empty block*/}
-
-        public void repeat(IProgressMonitor progressMonitor) {/*Empty block*/}
 
         public void run(IProgressMonitor progressMonitor) {/*Empty block*/}
 
@@ -84,11 +73,11 @@ public class ActionManagerTest extends TestCase {
             super(new CommandManager());
         }
 
-        protected IRepeatableAction getFixtureAction() {
+        protected IActionWithProgress getFixtureAction() {
             return super.getAction();
         }
 
-        protected void setFixtureAction(IRepeatableAction action) {
+        protected void setFixtureAction(IActionWithProgress action) {
             super.setAction(action);
         }
 
@@ -240,94 +229,28 @@ public class ActionManagerTest extends TestCase {
         }
     }
 
-    public void test_canRepeat() {
-        assertTrue(!getFixture().canRepeat());
-
-        getFixture().setFixtureAction(
-            new RepeatableAction(getName(), true, false));
-        assertTrue(!getFixture().canRepeat());
-
-        getFixture().setFixtureAction(
-            new RepeatableAction(getName(), true, true));
-        
-        // RATLC00534581 - repeat no longer supported
-        assertFalse(getFixture().canRepeat());
-    }
-
     public void test_clear() {
         assertNull(getFixture().getFixtureAction());
 
         getFixture().setFixtureAction(
-            new RepeatableAction(getName(), true, true));
+            new RepeatableAction(getName(), true));
         assertNotNull(getFixture().getFixtureAction());
 
         getFixture().clear();
         assertNull(getFixture().getFixtureAction());
     }
 
-    public void test_getRepeatLabel() {
-        assertEquals(
-            ActionManager.REPEAT_LABEL_PREFIX,
-            getFixture().getRepeatLabel());
-
-        getFixture().setFixtureAction(
-            new RepeatableAction(getName(), true, false));
-        assertEquals(
-            ActionManager.REPEAT_LABEL_PREFIX,
-            getFixture().getRepeatLabel());
-
-        getFixture().setFixtureAction(
-            new RepeatableAction(getName(), true, true));
-        assertEquals(ActionManager.REPEAT_LABEL_PREFIX, getFixture().getRepeatLabel());
-        
-        getFixture().setFixtureAction(null);
-        
-        // RATLC00534581 - repeat no longer supported
-        assertEquals(ActionManager.REPEAT_LABEL_PREFIX, getFixture().getRepeatLabel());
-    }
-
-    public void test_repeat() {
-        assertNull(getFixture().getFixtureAction());
-
-        try {
-            getFixture().repeat();
-            fail();
-        } catch (UnsupportedOperationException uoe) {
-            assertNull(getFixture().getFixtureAction());
-        }
-
-        IRepeatableAction action = new RepeatableAction(getName(), true, false);
-        getFixture().setFixtureAction(action);
-
-        try {
-            getFixture().repeat();
-            fail();
-        } catch (UnsupportedOperationException uoe) {
-            assertSame(action, getFixture().getFixtureAction());
-        }
-
-        action = new RepeatableAction(getName(), true, true);
-        getFixture().setFixtureAction(action);
-
-        try {
-            getFixture().repeat();            
-            fail("Expect exception because repeat is disabled."); //$NON-NLS-1$
-        } catch (UnsupportedOperationException uoe) {
-        	// RATLC00534581 - repeat no longer supported
-        }
-    }
-
     public void test_run() {
         assertNull(getFixture().getFixtureAction());
 
         try {
-            getFixture().run(new RepeatableAction(getName(), false, false));
+            getFixture().run(new RepeatableAction(getName(), false));
             fail();
         } catch (UnsupportedOperationException uoe) {
             assertNull(getFixture().getFixtureAction());
         }
 
-        IRepeatableAction action = new RepeatableAction(getName(), true, false);
+        IActionWithProgress action = new RepeatableAction(getName(), true);
         try {
             getFixture().run(action);
             assertSame(action, getFixture().getFixtureAction());
@@ -336,13 +259,13 @@ public class ActionManagerTest extends TestCase {
         }
 
         try {
-            getFixture().run(new RepeatableAction(getName(), false, true));
+            getFixture().run(new RepeatableAction(getName(), false));
             fail();
         } catch (UnsupportedOperationException uoe) {
             assertSame(action, getFixture().getFixtureAction());
         }
 
-        action = new RepeatableAction(getName(), true, true);
+        action = new RepeatableAction(getName(), true);
         try {
             getFixture().run(action);
             assertSame(action, getFixture().getFixtureAction());

@@ -40,16 +40,6 @@ public abstract class CommandManagerActionHandler
         refresh();
     }
 
-    /**
-     * Retrieves a Boolean indicating whether this action handler can be
-     * repeated.
-     * 
-     * @return <code>false</code>.
-     */
-    public boolean isRepeatable() {
-        return false;
-    }
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler#isCommandStackListener()
 	 */

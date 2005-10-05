@@ -27,7 +27,7 @@ public class ActionManagerChangeEvent extends EventObject {
     /**
      * The action that was run.
      */
-    private final IRepeatableAction action;
+    private final IActionWithProgress action;
 
     /**
      * Constructs a new action manager change event for the specified action
@@ -48,7 +48,7 @@ public class ActionManagerChangeEvent extends EventObject {
      */
     public ActionManagerChangeEvent(
         ActionManager source,
-        IRepeatableAction action) {
+        IActionWithProgress action) {
 
         super(source);
 
@@ -60,7 +60,7 @@ public class ActionManagerChangeEvent extends EventObject {
      * 
      * @return The value of the <code>action</code> instance variable.
      */
-    public IRepeatableAction getAction() {
+    public IActionWithProgress getAction() {
         return action;
     }
 

@@ -135,13 +135,6 @@ public final class GlobalRedoAction extends GlobalAction {
 		setText(label);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#isRepeatable()
-     */
-    public boolean isRepeatable() {
-        return false;
-    }
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler#isCommandStackListener()
 	 */

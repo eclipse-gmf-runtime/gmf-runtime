@@ -77,13 +77,6 @@ public final class GlobalSelectAllAction extends GlobalAction {
         return GlobalActionId.SELECT_ALL;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#isRepeatable()
-     */
-    public boolean isRepeatable() {
-        return false;
-    }
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler#isSelectionListener()
 	 */

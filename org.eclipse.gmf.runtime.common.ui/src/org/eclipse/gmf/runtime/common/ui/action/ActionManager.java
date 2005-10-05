@@ -19,23 +19,21 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.custom.BusyIndicator;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.custom.BusyIndicator;
 
 /**
- * Responsible for managing the running of repeatable actions. All repeatable
+ * Responsible for managing the running of actions. All
  * actions (delegates and handlers) channel their run requests through an action
  * manager. An action manager keeps track of the action that was last run and
- * fFires events to interested listeners whenever an action is run.
+ * fires events to interested listeners whenever an action is run.
  * 
  * @author khussey
  */
@@ -45,12 +43,6 @@ public class ActionManager {
 	 * The empty string.
 	 */
 	protected static final String EMPTY_STRING = ""; //$NON-NLS-1$
-
-	/**
-	 * The prefix for repeat action labels.
-	 */
-	public static final String REPEAT_LABEL_PREFIX = ResourceManager.getI18NString("ActionManager.repeat.label.prefix"); //$NON-NLS-1$
-
 	/**
 	 * A string containing only a space character.
 	 */
@@ -69,7 +61,7 @@ public class ActionManager {
 	/**
 	 * The last action that was run.
 	 */
-	private IRepeatableAction action = null;
+	private IActionWithProgress action = null;
 
 	/**
 	 * The action manager change listeners.
@@ -117,7 +109,7 @@ public class ActionManager {
 	 * 
 	 * @return The value of the <code>action</code> instance variable.
 	 */
-	protected final IRepeatableAction getAction() {
+	protected final IActionWithProgress getAction() {
 		return action;
 	}
 
@@ -127,7 +119,7 @@ public class ActionManager {
 	 * @param action The new value for the <code>action</code> instance
 	 *                variable.
 	 */
-	protected final void setAction(IRepeatableAction action) {
+	protected final void setAction(IActionWithProgress action) {
 		this.action = action;
 	}
 
@@ -138,16 +130,6 @@ public class ActionManager {
 	 */
 	protected final List getListeners() {
 		return listeners;
-	}
-
-	/** 
-	 * Retrieves the repeat label for the last action that was run.
-	 * 
-	 * @return The repeat label.
-	 */
-	public String getRepeatLabel() {
-		return REPEAT_LABEL_PREFIX
-			+ (canRepeat() ? SPACE + getAction().getLabel() : EMPTY_STRING);
 	}
 
 	/**
@@ -195,64 +177,12 @@ public class ActionManager {
 	}
 
 	/**
-	 * Retrieves a Boolean indicating whether the last action that was run
-	 * can be repeated.
-	 * 
-	 * @return <code>false</code>. Repeat is no longer supported.
-	 */
-	public boolean canRepeat() {
-		// RATLC00534581 - repeat no longer supported
-		return false;
-	}
-
-	/**
 	 * Clears this action manager by discarding the last action that was run.
 	 */
 	public void clear() {
 		setAction(null);
 
 		fireActionManagerChange(new ActionManagerChangeEvent(this));
-	}
-
-	/**
-	 * Repeats the last action that was run.
-	 * 
-	 * @exception UnsupportedOperationException If an action cannot be
-	 *                                           repeated.
-	 */
-	public void repeat() {
-		if (!canRepeat()) {
-			UnsupportedOperationException uoe =
-				new UnsupportedOperationException();
-			Trace.throwing(CommonUIPlugin.getDefault(), CommonUIDebugOptions.EXCEPTIONS_THROWING, getClass(), "repeat", uoe); //$NON-NLS-1$
-			throw uoe;
-		}
-
-		IRepeatableAction.WorkIndicatorType type =
-			getAction().getWorkIndicatorType();
-
-		if (type == IRepeatableAction.WorkIndicatorType.PROGRESS_MONITOR) {
-			repeatActionInProgressMonitorDialog(getAction(), false);
-
-		} else if (
-			type
-				== IRepeatableAction
-					.WorkIndicatorType
-					.CANCELABLE_PROGRESS_MONITOR) {
-			repeatActionInProgressMonitorDialog(getAction(), true);
-
-		} else if (type == IRepeatableAction.WorkIndicatorType.BUSY) {
-			// display hourglass cursor
-			BusyIndicator.showWhile(null, new Runnable() {
-				public void run() {
-					getAction().repeat(new NullProgressMonitor());
-				}
-			});
-		} else {
-			getAction().run(new NullProgressMonitor());
-		}
-
-		Trace.trace(CommonUIPlugin.getDefault(), CommonUIDebugOptions.ACTIONS_REPEAT, "Action '" + String.valueOf(getAction()) + "' repeated."); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -263,7 +193,7 @@ public class ActionManager {
 	 * @exception RuntimeException if any exception or error occurs 
 	 * 									   while running the action
 	 */
-	public void run(final IRepeatableAction theAction) {
+	public void run(final IActionWithProgress theAction) {
 		if (!theAction.isRunnable()) {
 			UnsupportedOperationException uoe =
 				new UnsupportedOperationException();
@@ -278,20 +208,20 @@ public class ActionManager {
 			return;
 		}
 
-		IRepeatableAction.WorkIndicatorType type =
+		IActionWithProgress.WorkIndicatorType type =
 			theAction.getWorkIndicatorType();
 
-		if (type == IRepeatableAction.WorkIndicatorType.PROGRESS_MONITOR) {
+		if (type == IActionWithProgress.WorkIndicatorType.PROGRESS_MONITOR) {
 			runActionInProgressMonitorDialog(theAction, false);
 
 		} else if (
 			type
-				== IRepeatableAction
+				== IActionWithProgress
 					.WorkIndicatorType
 					.CANCELABLE_PROGRESS_MONITOR) {
 			runActionInProgressMonitorDialog(theAction, true);
 
-		} else if (type == IRepeatableAction.WorkIndicatorType.BUSY) {
+		} else if (type == IActionWithProgress.WorkIndicatorType.BUSY) {
 			// display hourglass cursor
 			BusyIndicator.showWhile(null, new Runnable() {
 				public void run() {
@@ -356,36 +286,12 @@ public class ActionManager {
 	 * 									   while running the action
 	 */
 	private void runActionInProgressMonitorDialog(
-		final IRepeatableAction act,
+		final IActionWithProgress act,
 		boolean cancelable) {
 
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) {
 				act.run(monitor);
-			}
-		};
-		runInProgressMonitorDialog(runnable, cancelable);
-	}
-	
-	/**
-	 * Repeats <code>action</code> in the context of a progress monitor dialog.
-	 * The action runs in the same thread as the dialog. The cancel button on
-	 * the dialog is enabled if <code>cancelable</code> is <code>true</code>. 
-	 * 
-	 * @param act the action to run
-	 * @param cancelable <code>true</code> if the progress monitor should have
-	 * 					  an enabled cancel button, <code>false</code> otherwise.
-	 * 
-	 * @exception RuntimeException if any exception or error occurs 
-	 * 									   while repeating the action
-	 */
-	private void repeatActionInProgressMonitorDialog(
-		final IRepeatableAction act,
-		boolean cancelable) {
-
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) {
-				act.repeat(monitor);
 			}
 		};
 		runInProgressMonitorDialog(runnable, cancelable);
