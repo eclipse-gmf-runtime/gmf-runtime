@@ -378,10 +378,14 @@ public class PropertiesBrowserPage
 			super.labelProviderChanged(event);
 			return;
 		}
-		
-		List selection = new ArrayList();
 
-		for (Iterator e = getSelectedElements().iterator(); e.hasNext();) {
+		IStructuredSelection structuredSelection = getSelectedElements();
+		if (structuredSelection == null) {
+			return;
+		}
+
+		List selection = new ArrayList();
+		for (Iterator e = structuredSelection.iterator(); e.hasNext();) {
 			Object next = e.next();
 			if (next instanceof IAdaptable) {
 				Object object = ((IAdaptable) next).getAdapter(EObject.class);
