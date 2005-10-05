@@ -16,7 +16,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
 
@@ -40,6 +39,12 @@ public class Decoration
 	private IFigure owner;
 
 	/**
+	 * True if the decoration's visibility is not to be affected by the parent's
+	 * visibility; false otherwise.
+	 */
+	private boolean ignoreParentVisibility;
+
+	/**
 	 * Overridden to avoid having decorations show outside of resizeable
 	 * compartment figures when they are not in the viewable area.
 	 * 
@@ -52,7 +57,7 @@ public class Decoration
 
 		IFigure parentFigure = getOwnerFigure();
 		while (parentFigure != null) {
-			if (!parentFigure.isVisible()) {
+			if (!shouldIgnoreParentVisibility() && !parentFigure.isVisible()) {
 				return false;
 			}
 			if (parentFigure instanceof ResizableCompartmentFigure) {
@@ -70,7 +75,7 @@ public class Decoration
 		}
 		return super.isVisible();
 	}
-	
+
 	/**
 	 * If a locator has been set, it is used to locate this figure.
 	 * 
@@ -159,6 +164,20 @@ public class Decoration
 	 */
 	public void ancestorRemoved(IFigure ancestor) {
 		// NULL implementation
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration#setIgnoreParentVisibility(boolean)
+	 */
+	public void setIgnoreParentVisibility(boolean ignoreParentVisibility) {
+		this.ignoreParentVisibility = ignoreParentVisibility;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration#shouldIgnoreParentVisibility()
+	 */
+	public boolean shouldIgnoreParentVisibility() {
+		return ignoreParentVisibility;
 	}
 
 }

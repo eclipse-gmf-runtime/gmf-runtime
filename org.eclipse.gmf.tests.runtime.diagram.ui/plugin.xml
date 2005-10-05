@@ -46,5 +46,15 @@
       </editpartProvider>
    </extension>
 
+   <extension id="org.eclipse.gmf.tests.runtime.diagram.ui.MyDecoratorProvider" name="Diagram UI Tests Decorator" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <decoratorProvider class="org.eclipse.gmf.tests.runtime.diagram.ui.services.DecoratorServiceTests$TestDecoratorProvider">
+         <Priority name="Lowest">
+         </Priority>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="NOTE">
+         </object>
+         <context decoratorTargets="NOTE">
+         </context>
+      </decoratorProvider>
+   </extension>
 
 </plugin>
