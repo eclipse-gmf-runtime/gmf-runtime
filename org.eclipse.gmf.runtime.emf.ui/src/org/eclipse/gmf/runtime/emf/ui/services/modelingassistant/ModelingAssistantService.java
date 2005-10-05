@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
 
 /**
  * This service is used to assist the user with modeling gestures.
@@ -66,6 +67,7 @@ public class ModelingAssistantService
 			}
 			if (getPolicy() != null)
 				return getPolicy().provides(operation);
+
 			return isSupportedInExtension(operation) ? getProvider().provides(
 				operation) : false;
 		}
@@ -91,6 +93,10 @@ public class ModelingAssistantService
 
 	/** The singleton instance of the modeling assistant service. */
 	private final static ModelingAssistantService service = new ModelingAssistantService();
+
+	static {
+		service.configureProviders(MslUIPlugin.getPluginId(), "modelingAssistantProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * @see org.eclipse.gmf.runtime.common.core.service.Service#newProviderDescriptor(org.eclipse.core.runtime.IConfigurationElement)

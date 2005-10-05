@@ -11,14 +11,10 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.plugin;
 
-import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLPathmap;
-import org.eclipse.gmf.runtime.emf.core.internal.services.metamodel.MetamodelSupportService;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 
 /**
@@ -30,17 +26,11 @@ public class MSLPlugin
 	extends XToolsPlugin {
 
 	private static MSLPlugin plugin;
-
-	// extension points.
-	protected static final String METAMODEL_PROVIDERS_EXT_P_NAME = "MetaModelProviders"; //$NON-NLS-1$
-
-	protected static final String PATHMAPS_EXT_P_NAME = "Pathmaps"; //$NON-NLS-1$
 		
 	/**
 	 * Constructor.
 	 */
 	public MSLPlugin() {
-
 		super();
 		plugin = this;
 	}
@@ -56,7 +46,7 @@ public class MSLPlugin
 	 * Get plugin ID.
 	 */
 	public static String getPluginId() {
-		return getDefault().getBundle().getSymbolicName();
+		return getDefault().getSymbolicName();
 	}
 
 	/**
@@ -70,15 +60,8 @@ public class MSLPlugin
 	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#doStartup()
 	 */
 	protected void doStartup() {
-		MetamodelSupportService.configure(Platform.getExtensionRegistry()
-			.getExtensionPoint(getPluginId(), METAMODEL_PROVIDERS_EXT_P_NAME)
-			.getConfigurationElements());
-
-		MSLPathmap.configure(Platform.getExtensionRegistry().getExtensionPoint(
-			getPluginId(), PATHMAPS_EXT_P_NAME).getConfigurationElements());
-		
 		MSLAdapterFactoryManager.init();
-		
+
 		// This event listener must be registered _after_ all of the rest of
 		//  the MSL stuff is initialized. Otherwise, strange problems occur when
 		//  tracing is turned on.

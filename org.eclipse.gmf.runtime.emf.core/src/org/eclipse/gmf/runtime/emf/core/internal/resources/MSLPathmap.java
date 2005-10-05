@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,9 +54,9 @@ public class MSLPathmap {
 	private static final String PATH = "path"; //$NON-NLS-1$
 
 	// The path map as defined by the extensions
-	private static final Map PATH_MAP = Collections.synchronizedMap(new HashMap());
+	private static final Map PATH_MAP = Collections.synchronizedMap(configure());
 
-	private MSLEditingDomain domain = null;
+	private final MSLEditingDomain domain;
 
 	/**
 	 * Constructor.
@@ -153,7 +153,13 @@ public class MSLPathmap {
 	/**
 	 * Configure the Pathmaps extension point.
 	 */
-	public static void configure(IConfigurationElement[] configs) {
+	private static Map configure() {
+		Map paths = new HashMap();
+		
+		IConfigurationElement[] configs = Platform.getExtensionRegistry()
+				.getExtensionPoint(MSLPlugin.getPluginId(), "Pathmaps") //$NON-NLS-1$
+				.getConfigurationElements();
+
 		for (int i = 0; i < configs.length; ++i) {
 
 			IConfigurationElement element = configs[i];
@@ -190,7 +196,7 @@ public class MSLPathmap {
 				if (url == null)
 					continue;
 
-				PATH_MAP.put(var, url.toString());
+				paths.put(var, url.toString());
 
 			} catch (IOException e) {
 
@@ -199,6 +205,8 @@ public class MSLPathmap {
 					"configure", e); //$NON-NLS-1$
 			}
 		}
+
+		return paths;
 	}
 
 	/**

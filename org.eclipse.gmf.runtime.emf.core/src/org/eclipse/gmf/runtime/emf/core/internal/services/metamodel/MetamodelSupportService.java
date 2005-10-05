@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,10 +17,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.GetMetamodelSupportOperation;
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupport;
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupportProvider;
@@ -37,6 +37,10 @@ public class MetamodelSupportService
 	// the one instance of the service.
 	public final static MetamodelSupportService instance = new MetamodelSupportService(
 		true);
+	
+	static {
+		 instance.configureProviders(MSLPlugin.getPluginId(), "MetaModelProviders"); //$NON-NLS-1$
+	}
 
 	// cache the operations.
 	public final static Map operations = new HashMap();
@@ -69,13 +73,6 @@ public class MetamodelSupportService
 		}
 
 		return operation;
-	}
-
-	/**
-	 * Configures the meta-model service.
-	 */
-	public static void configure(IConfigurationElement[] elements) {
-		instance.configureProviders(elements);
 	}
 
 	/**

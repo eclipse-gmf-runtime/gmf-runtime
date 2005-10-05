@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,12 @@
 
 package org.eclipse.gmf.runtime.emf.ui.internal;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.emf.ui.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The MSL UI plug-in.
@@ -34,11 +31,6 @@ public class MslUIPlugin
 	 * This plug-in's shared instance.
 	 */
 	private static MslUIPlugin plugin;
-
-	/**
-	 * The modeling assistant service extension point id
-	 */
-	private final static String MODELING_ASSISTANT_SERVICE_EXTENSION_POINT = "modelingAssistantProviders"; //$NON-NLS-1$ 
 
 	/**
 	 * Creates a new plug-in runtime object.
@@ -64,7 +56,7 @@ public class MslUIPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getBundle().getSymbolicName();
+		return getDefault().getSymbolicName();
 	}
 
 	/**
@@ -99,23 +91,5 @@ public class MslUIPlugin
 			return null;
 		}
 		return window.getActivePage();
-	}
-
-	/**
-	 * Starts up this plug-in.
-	 */
-	protected void doStartup() {
-		configureModelingAssistantProviders();
-	}
-
-	/**
-	 * Configures modeling assistant providers based on modeling assistant
-	 * provider extension configurations.
-	 */
-	private void configureModelingAssistantProviders() {
-		ModelingAssistantService.getInstance().configureProviders(
-			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-				MODELING_ASSISTANT_SERVICE_EXTENSION_POINT)
-				.getConfigurationElements());
 	}
 }
