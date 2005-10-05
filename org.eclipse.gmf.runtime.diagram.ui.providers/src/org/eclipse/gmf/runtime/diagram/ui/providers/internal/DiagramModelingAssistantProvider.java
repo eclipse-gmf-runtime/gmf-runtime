@@ -15,17 +15,17 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.INotableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetRelTypesOnSourceAndTargetOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetRelTypesOnSourceOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetRelTypesOnTargetOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetTypesForSourceOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetTypesForTargetOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantProvider;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
  * Provides modeling assistant functionality for diagram shapes (i.e. connector
@@ -91,7 +91,14 @@ public class DiagramModelingAssistantProvider
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSource(org.eclipse.core.runtime.IAdaptable)
 	 */
 	public List getRelTypesOnSource(IAdaptable source) {
-		return getConnectorTypes();
+		if (source != null) {
+			INotableEditPart noteable = (INotableEditPart) source
+				.getAdapter(INotableEditPart.class);
+			if (noteable != null && noteable.canAttachNote()) {
+				return getConnectorTypes();
+			}
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 	/*
@@ -100,7 +107,14 @@ public class DiagramModelingAssistantProvider
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnTarget(org.eclipse.core.runtime.IAdaptable)
 	 */
 	public List getRelTypesOnTarget(IAdaptable target) {
-		return getConnectorTypes();
+		if (target != null) {
+			INotableEditPart noteable = (INotableEditPart) target
+				.getAdapter(INotableEditPart.class);
+			if (noteable != null && noteable.canAttachNote()) {
+				return getConnectorTypes();
+			}
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 	/*
@@ -111,9 +125,22 @@ public class DiagramModelingAssistantProvider
 	 */
 	public List getRelTypesOnSourceAndTarget(IAdaptable source,
 			IAdaptable target) {
-		
-		return source.getAdapter(NoteEditPart.class) != null || target.getAdapter(NoteEditPart.class) != null
-			? getConnectorTypes() : Collections.EMPTY_LIST;
+
+		if (source.getAdapter(NoteEditPart.class) != null) {
+			INotableEditPart noteable = (INotableEditPart) target
+				.getAdapter(INotableEditPart.class);
+			if (noteable != null && noteable.canAttachNote()) {
+				return getConnectorTypes();
+			}
+		} else if (target.getAdapter(NoteEditPart.class) != null) {
+			INotableEditPart noteable = (INotableEditPart) source
+				.getAdapter(INotableEditPart.class);
+			if (noteable != null && noteable.canAttachNote()) {
+				return getConnectorTypes();
+			}
+		}
+
+		return Collections.EMPTY_LIST;
 	}
 
 	/*

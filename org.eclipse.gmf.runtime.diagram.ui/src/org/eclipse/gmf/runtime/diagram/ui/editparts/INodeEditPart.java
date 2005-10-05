@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.gef.NodeEditPart;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.INoteableEditPart;
 
 
 /**
@@ -23,7 +22,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.INoteableEditPart;
  * An interface for all connectable editparts
  */
 public interface INodeEditPart 
-	extends NodeEditPart, INoteableEditPart {
+	extends NodeEditPart, INotableEditPart {
 
 	/**
 	 * Method mapConnectionAnchorToTerminal.
