@@ -12,6 +12,8 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode;
 
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.swt.widgets.Display;
 
 
@@ -51,19 +53,23 @@ public class HiMetricMapMode
 	public double getScale() {
 		return scale;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.figure.surface.mapmode.IMapMode#LPtoDP(int)
 	 */
 	public int LPtoDP(int logicalUnit) {
-		return (int)Math.round((logicalUnit * dpi ) / UNITS_PER_INCH);
+		Point devPt = new Point(logicalUnit, 0);
+		MapMode.translateToDP(devPt);
+		return devPt.x;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.figure.surface.mapmode.IMapMode#DPtoLP(int)
 	 */
 	public int DPtoLP(int deviceUnit) {
-		return (int)Math.round((deviceUnit * UNITS_PER_INCH) / dpi);
+		Point logPt = new Point(deviceUnit, 0);
+		MapMode.translateToLP(logPt);
+		return logPt.x;
 	}
 
 }

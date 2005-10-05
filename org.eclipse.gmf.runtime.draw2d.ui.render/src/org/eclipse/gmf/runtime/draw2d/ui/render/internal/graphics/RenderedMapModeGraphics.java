@@ -44,11 +44,11 @@ public class RenderedMapModeGraphics
 	 */
 	public void drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
 		if (getGraphics() instanceof DrawableRenderedImage) {
-			Rectangle r = mapRect(x, y, width, height);
+			Rectangle r = zoomRect(x, y, width, height);
 			((DrawableRenderedImage)getGraphics()).drawRenderedImage(srcImage, r.x, r.y, r.width, r.height);
 		}
 		else {
-			Rectangle r = mapRect(x, y, width, height);
+			Rectangle r = zoomRect(x, y, width, height);
 			RenderInfo info = srcImage.getRenderInfo();
 			info.setValues(r.width, r.height, 
 							info.getFillColor(), info.getOutlineColor(), 
