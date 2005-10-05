@@ -107,11 +107,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 			getDiagramGraphicalViewer().addDropTargetListener(
 				(TransferDropTargetListener) new ImageFileDropTargetListener(
 					getDiagramGraphicalViewer()));
-			
-			activityManagerListener = new ActivityManagerListener();
-			PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
-				.addActivityManagerListener(activityManagerListener);
-			
+						
 		} else {
 			super.initializeGraphicalViewer();
 		}
@@ -351,9 +347,14 @@ public abstract class DiagramEditorWithFlyOutPalette
 	 * Updates the palette root by adding/removing entries as necessary.
 	 */
 	private void updatePaletteRoot() {
-		PaletteService.getInstance().updatePalette(
-			getEditDomain().getPaletteViewer().getPaletteRoot(), this,
-			getDefaultPaletteContent());
+		if (getEditDomain() != null
+			&& getEditDomain().getPaletteViewer() != null
+			&& getEditDomain().getPaletteViewer().getPaletteRoot() != null) {
+			
+			PaletteService.getInstance().updatePalette(
+				getEditDomain().getPaletteViewer().getPaletteRoot(), this,
+				getDefaultPaletteContent());
+		}
 	}
 
 	/**
@@ -544,6 +545,13 @@ public abstract class DiagramEditorWithFlyOutPalette
 		public void setPaletteWidth(int width) {
 			paletteWidth = width;
 		}
+	}
+
+	protected void startListening() {
+		super.startListening();
+		activityManagerListener = new ActivityManagerListener();
+		PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
+			.addActivityManagerListener(activityManagerListener);
 	}
 
 	protected void stopListening() {
