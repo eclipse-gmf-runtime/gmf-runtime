@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.edit.MSemProcProvider;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
@@ -551,10 +552,12 @@ public class MSLEventBroker {
 
 				// this is a bad listener so remove it so the next
 				// listeners can get their events.
-				removeListener(listener);
+				// bugzilla110334: Do not remove listener as it will cause
+				// apps to fail entirely in certain cases.
+				//removeListener(listener);
 
 				Log.error(MSLPlugin.getDefault(), 1,
-					"removed failed event handler", e); //$NON-NLS-1$
+					ResourceManager.getI18NString("logError.badListener"), e); //$NON-NLS-1$
 
 				Trace.catching(MSLPlugin.getDefault(),
 					MSLDebugOptions.EXCEPTIONS_CATCHING, getClass(),
