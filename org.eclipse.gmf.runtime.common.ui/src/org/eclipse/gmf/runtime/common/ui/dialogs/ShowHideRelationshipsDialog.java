@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -465,8 +465,8 @@ public class ShowHideRelationshipsDialog
 			ResourceManager.getI18NString("ShowHideRelationshipsDialog.Title")); //$NON-NLS-1$
 
 		//set context sensitive help
-		WorkbenchHelp.setHelp(parent, helpContextId);
-
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpContextId);
+		
 		return parent;
 
 	}

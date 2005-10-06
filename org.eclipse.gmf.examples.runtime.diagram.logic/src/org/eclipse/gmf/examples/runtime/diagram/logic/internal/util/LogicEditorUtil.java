@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;

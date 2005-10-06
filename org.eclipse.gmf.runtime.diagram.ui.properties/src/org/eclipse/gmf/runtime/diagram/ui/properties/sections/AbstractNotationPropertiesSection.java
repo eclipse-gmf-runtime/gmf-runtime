@@ -30,7 +30,6 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertyS
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertyDescriptor;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;

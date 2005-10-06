@@ -24,8 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.help.WorkbenchHelp;
-
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
@@ -301,7 +300,7 @@ public class ShowRelatedElementsDialog
 
 		//set context sensitive help
 		if (helpContextId != null)
-			WorkbenchHelp.setHelp(parent, helpContextId);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpContextId);
 
 		return parent;
 	}

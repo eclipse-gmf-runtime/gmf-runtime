@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
@@ -65,7 +65,8 @@ public final class GlobalPropertiesAction extends GlobalAction {
         setText(PROPERTIES_TEXT);
 
         /*  set the context sensitive help */
-        WorkbenchHelp.setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);
+		
 		super.init();
     }
 

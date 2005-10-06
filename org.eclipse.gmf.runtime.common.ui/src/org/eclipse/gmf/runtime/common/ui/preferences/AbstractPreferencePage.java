@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Abstract class for preference pages. Subclasses must set the preference store
@@ -63,9 +63,9 @@ public abstract class AbstractPreferencePage
 		//initializing help context id, this is consistent
 		//with Eclipse preference pages
 		if (helpContextId != null)
-			WorkbenchHelp.setHelp(parent, helpContextId);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpContextId);
+			
 		return super.createContents(parent);
-
 	}
 
 	/*
