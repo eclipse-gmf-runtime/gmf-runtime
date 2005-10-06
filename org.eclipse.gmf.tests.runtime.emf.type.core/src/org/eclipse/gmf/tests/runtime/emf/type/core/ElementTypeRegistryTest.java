@@ -20,6 +20,8 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeAddedEvent;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -171,7 +173,7 @@ public class ElementTypeRegistryTest
 		executiveOffice.setNumberOfWindows(1);
 		executiveOffice.setHasDoor(true);
 		executive.setOffice(executiveOffice);
-
+		
 	}
 
 	/**
@@ -343,17 +345,36 @@ public class ElementTypeRegistryTest
 	}
 
 	public void test_getElementType_eClass() {
-		IElementType metamodeltType = getFixture().getElementType(
-			employeePkg.getDepartment());
+		
+		Object eClass = employeePkg.getDepartment();
+		IElementType metamodeltType = getFixture().getElementType(eClass);
+		
 		assertNotNull(metamodeltType);
 		assertEquals(EmployeeType.DEPARTMENT, metamodeltType);
 	}
 
 	public void test_getElementType_eObject() {
+		
+		Object eObject = financeManager;
 		IElementType metamodelType = getFixture().getElementType(
-			financeManager);
+			eObject);
+		
 		assertNotNull(metamodelType);
 		assertEquals(EmployeeType.EMPLOYEE, metamodelType);
+	}
+	
+	public void test_getElementType_eObject_eClass() {
+
+		MetamodelType eClassType = new MetamodelType(
+			"org.eclipse.gmf.tests.runtime.emf.type.core.eclass", null, null, //$NON-NLS-1$
+			EcorePackage.eINSTANCE.getEClass(), null);
+
+		getFixture().register(eClassType);
+
+		IElementType metamodelType = getFixture().getElementType(
+			(EObject) employeePkg.getDepartment());
+		assertNotNull(metamodelType);
+		assertSame(eClassType, metamodelType);
 	}
 	
 

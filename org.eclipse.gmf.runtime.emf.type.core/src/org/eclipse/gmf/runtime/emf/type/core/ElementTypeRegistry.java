@@ -312,27 +312,63 @@ public class ElementTypeRegistry {
 	}
 
 	/**
-	 * Gets the element type for <code>o</code>.
+	 * Convenience method to get an element type for <code>o</code>.
+	 * <P>
+	 * If <code>o</code> is an <code>IElementType</code>, returns
+	 * <code>o</code>.
+	 * <P>
+	 * If <code>o</code> is an <code>EClass</code>, returns the metamodel
+	 * type registered for <code>o</code>.
+	 * <P>
+	 * If <code>o</code> is an <code>EObject</code>, returns the metamodel
+	 * type registered for <code>o</code>'s eClass.
+	 * <P>            
+	 * Use {@link #getElementType(EObject)} to get metamodel types registered
+	 * for instances of the Ecore package itself.
 	 * 
 	 * @param o
 	 *            the object for which to find an element type.
-	 * @return <code>o</code> itself if it is an element type, otherwise the
-	 *         registered metamodel type if <code>o</code> is an
-	 *         <code>EObject</code> or an <code>EClass</code>.
+	 * @return <code>o</code> itself if it is an element type, otherwise
+	 *         returns the registered metamodel type
 	 */
 	public IElementType getElementType(Object o) {
 
 		if (o instanceof EClass) {
-			return getMetamodelType((EClass) o);
-
+			return getElementType((EClass) o);
+			
 		} else if (o instanceof EObject) {
-			return getMetamodelType((EObject) o);
+			return getElementType((EObject) o);
 
 		} else if (o instanceof IElementType) {
 			return (IElementType) o;
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Gets the registered element type for <code>eClass</code>.
+	 * 
+	 * @param eClass
+	 *            the <code>EClass</code> whose element type is to be found.
+	 * @return the metamodel type registered for <code>eClass</code>
+	 */
+	public IElementType getElementType(EClass eClass) {
+
+		return getMetamodelType(eClass);
+	}
+	
+	/**
+	 * Gets the registered element type for <code>eObject</code>.
+	 * 
+	 * @param eObject
+	 *            the <code>EObject</code> whose element type is to be found.
+	 * @return the metamodel type registered for <code>eObject</code>'s
+	 *         <code>EClass</code>
+	 */
+	public IElementType getElementType(EObject eObject) {
+
+		return getMetamodelType(eObject);
 	}
 
 	/**
