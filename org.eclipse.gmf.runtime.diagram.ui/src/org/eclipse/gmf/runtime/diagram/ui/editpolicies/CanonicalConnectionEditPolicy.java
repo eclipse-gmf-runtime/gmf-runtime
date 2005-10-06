@@ -162,7 +162,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return an editpart; <tt>null</tt> if non could be found.
 	 */
 	private EditPart getEditPartFor(EObject element, EObject context) {
-		if (!(element instanceof View)) {
+		if (element != null && !(element instanceof View)) {
 			EditPartViewer viewer = getHost().getViewer();
 			if (viewer instanceof IDiagramGraphicalViewer) {
 				List parts = ((IDiagramGraphicalViewer) viewer)
