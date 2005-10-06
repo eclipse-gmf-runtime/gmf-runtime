@@ -14,7 +14,7 @@
   <property name="eclipse-home" value="${basedir}\..\.."/>
 
   <!-- sets the properties eclipse-home, and library-file -->
-  <property name="plugin-name" value="org.eclipse.gmf.tests.runtime.common.uitest.xml"/>
+  <property name="plugin-name" value="org.eclipse.gmf.tests.runtime.common.ui"/>
   <property name="library-file" value="${libraryFile}"/>
 
   <!-- This target holds all initialization code that needs to be done for -->
@@ -35,6 +35,7 @@
       <property name="data-dir" value="${gmf-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="org.eclipse.gmf.tests.runtime.common.ui.AllTests"/>
+      <property name="vmargs" value="-ea"/>    	
     </ant>
   </target>
 

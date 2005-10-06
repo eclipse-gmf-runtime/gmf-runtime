@@ -35,6 +35,7 @@
       <property name="data-dir" value="${gmf-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="org.eclipse.gmf.tests.runtime.draw2d.ui.AllTests"/>
+    	<property name="vmargs" value="-ea"/>    	
     </ant>
   </target>
 
