@@ -22,6 +22,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeAddedEvent;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -31,8 +32,10 @@ import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationType;
 import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.SpecializationType;
+import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultElementTypeFactory;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
@@ -50,6 +53,15 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.internal.SecurityClearedEleme
  */
 public class ElementTypeRegistryTest
 	extends TestCase {
+	
+	private class MySpecializationAdvice extends AbstractEditHelperAdvice {
+		public MySpecializationAdvice() {
+			super();
+		}
+		protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
+			return super.getBeforeCreateCommand(request);
+		}
+	}
 
 	private ElementTypeRegistry fixture = null;
 
@@ -448,10 +460,12 @@ public class ElementTypeRegistryTest
 	}
 	
 	public void test_register_specializationType() {
+
+		IEditHelperAdvice specialAdvice = new MySpecializationAdvice();
 		
 		String id = "dynamic.specialization.type"; //$NON-NLS-1$
 		final ISpecializationType dynamicSpecializationType = new SpecializationType(id, null, id,
-			new IElementType[] {EmployeeType.EMPLOYEE}, null, null, null);
+			new IElementType[] {EmployeeType.EMPLOYEE}, null, null, specialAdvice);
 		
 		final boolean[] listenerNotified = new boolean[] {false};
 		IElementTypeRegistryListener listener = new IElementTypeRegistryListener() {
@@ -468,9 +482,15 @@ public class ElementTypeRegistryTest
 		 
 		boolean result = ElementTypeRegistry.getInstance().register(dynamicSpecializationType);
 		
+		// Check that the element type was registered
 		assertTrue(result);
 		assertTrue(listenerNotified[0]);
-		assertSame(dynamicSpecializationType, ElementTypeRegistry.getInstance().getType(id));
+		assertSame(dynamicSpecializationType, getFixture().getType(id));
+		
+		// Check that the advice can be retrieved
+		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
+			dynamicSpecializationType);
+		assertTrue(Arrays.asList(advice).contains(specialAdvice));
 		
 		ElementTypeRegistry.getInstance().removeElementTypeRegistryListener(listener);
 	}

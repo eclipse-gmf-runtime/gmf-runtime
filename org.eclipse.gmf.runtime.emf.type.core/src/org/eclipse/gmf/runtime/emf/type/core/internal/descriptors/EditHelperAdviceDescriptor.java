@@ -42,20 +42,31 @@ public class EditHelperAdviceDescriptor
 	private String editHelperAdviceName;
 
 	/**
-	 * Constructs a new container descriptor from the configuration element.
+	 * Constructs a new edit helper advice descriptor from the configuration element.
 	 * 
 	 * @param specialization
 	 *            the configuration element
-	 * @throws CoreException
-	 *             when the configuration element does not contain the required
-	 *             elements and attributes
 	 */
 	public EditHelperAdviceDescriptor(String editHelperAdviceName,
-			SpecializationTypeDescriptor specialization)
-		throws CoreException {
+			SpecializationTypeDescriptor specialization) {
 
 		this.editHelperAdviceName = editHelperAdviceName;
 		this.specializationDescriptor = specialization;
+	}
+	
+	/**
+	 * Constructs a new descriptor for the edit helper advice.
+	 * 
+	 * @param editHelperAdvice
+	 *            the edit helper advice
+	 * @param specialization
+	 *            the configuration element
+	 */
+	public EditHelperAdviceDescriptor(IEditHelperAdvice editHelperAdvice,
+			SpecializationTypeDescriptor specialization) {
+
+		this(editHelperAdvice.getClass().getName(), specialization);
+		this.editHelperAdvice = editHelperAdvice;
 	}
 
 	/*

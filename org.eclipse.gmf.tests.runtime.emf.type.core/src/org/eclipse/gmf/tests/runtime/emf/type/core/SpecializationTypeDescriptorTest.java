@@ -51,6 +51,7 @@ public class SpecializationTypeDescriptorTest extends TestCase {
 		assertEquals(EmployeeType.MANAGER.getId(), getFixture().getId());
 		assertEquals(EmployeeType.MANAGER.getIconURL(), getFixture().getIconURL());
 		assertEquals(EmployeeType.MANAGER.getEContainerDescriptor(), getFixture().getContainerDescriptor());
+		assertEquals(EmployeeType.MANAGER.getEditHelperAdvice(), getFixture().getEditHelperAdviceDescriptor().getEditHelperAdvice());
 		assertEquals(EmployeeType.MANAGER.getEditHelperAdvice(), getFixture().getEditHelperAdvice());
 		assertEquals(EmployeeType.MANAGER, getFixture().getElementType());
 		assertEquals(EmployeeType.MANAGER.getMatcher(), getFixture().getMatcher());

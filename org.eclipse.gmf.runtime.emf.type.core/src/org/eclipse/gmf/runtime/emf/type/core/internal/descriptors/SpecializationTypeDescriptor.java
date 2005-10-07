@@ -99,11 +99,13 @@ public class SpecializationTypeDescriptor
 	 * @param specializationType the specialization type
 	 */
 	public SpecializationTypeDescriptor(ISpecializationType specializationType) {
-		
+
 		super(specializationType);
-		
+
 		this.containerDescriptor = specializationType.getEContainerDescriptor();
 		this.editHelperAdvice = specializationType.getEditHelperAdvice();
+		this.editHelperAdviceDescriptor = new EditHelperAdviceDescriptor(
+			editHelperAdvice, this);
 		this.matcher = specializationType.getMatcher();
 		this.specializationType = specializationType;
 		this.specializedTypeIds = specializationType.getSpecializedTypeIds();
