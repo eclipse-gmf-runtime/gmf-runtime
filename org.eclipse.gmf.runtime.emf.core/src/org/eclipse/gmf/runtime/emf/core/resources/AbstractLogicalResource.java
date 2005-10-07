@@ -323,7 +323,7 @@ public abstract class AbstractLogicalResource
 			//    that was detached from me
 			URI unitUri = (URI) detachedIdToResourceMap.remove(getID(object));
 			
-			if (unitUri != null) {
+			if ((unitUri != null) && !uri.equals(getURI())) {
 				unit = getPhysicalResource(unitUri);
 			}
 		}
