@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.UpdateActionBarsOperation;
 import org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
-import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
+import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionBars;
@@ -217,7 +217,7 @@ public class ContributionItemService
 		IWorkbenchPart workbenchPart) {
 		contributeToActionBars(
 			actionBars,
-			new WorkbenchPartDescirptor(
+			new WorkbenchPartDescriptor(
 				workbenchPart.getSite().getId(),
 				workbenchPart.getClass(),
 				workbenchPart.getSite().getPage()));
@@ -268,7 +268,7 @@ public class ContributionItemService
 	public void disposeContributions(IWorkbenchPart workbenchPart) {
 		execute(
 			new DisposeContributionsOperation(
-				new WorkbenchPartDescirptor(
+				new WorkbenchPartDescriptor(
 					workbenchPart.getSite().getId(),
 					workbenchPart.getClass(),
 					workbenchPart.getSite().getPage())));

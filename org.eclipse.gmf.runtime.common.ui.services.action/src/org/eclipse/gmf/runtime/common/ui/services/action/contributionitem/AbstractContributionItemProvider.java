@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ProviderContributionDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.ActionGroupCache;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
-import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
+import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -320,7 +320,7 @@ public abstract class AbstractContributionItemProvider
 			workbenchPart.getSite().getSelectionProvider().getSelection();
 
 		IWorkbenchPartDescriptor partDescriptor =
-			new WorkbenchPartDescirptor(
+			new WorkbenchPartDescriptor(
 				workbenchPart.getSite().getId(),
 				workbenchPart.getClass(),
 				workbenchPart.getSite().getPage());

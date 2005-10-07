@@ -15,7 +15,7 @@ import org.eclipse.gef.ui.actions.ActionBarContributor;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
-import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescirptor;
+import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
@@ -64,7 +64,7 @@ public abstract class DiagramActionBarContributor
 		super.init(bars);
 
 		descriptor =
-			new WorkbenchPartDescirptor(
+			new WorkbenchPartDescriptor(
 				getEditorId(),
 				getEditorClass(),
 				getPage());
