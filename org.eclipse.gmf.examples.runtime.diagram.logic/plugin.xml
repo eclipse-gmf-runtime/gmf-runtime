@@ -60,8 +60,8 @@
   
   <!-- Palette Provider -->
          <extension
-         id="presentationPaletteProvider"
-         name="%ext.presentationPaletteProvider"
+         id="logicPaletteProvider"
+         name="%ext.logicPaletteProvider"
          point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
        <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultPaletteProvider">
          <Priority name="Low">
@@ -83,11 +83,13 @@
             </entry>
             <entry label="%LEDTool.Label" kind="tool" description="%LEDTool.Description" large_icon="icons/ledicon24.gif" path="/logicDrawer/" small_icon="icons/ledicon16.gif" id="LED">
             </entry>
-            <entry label="%OrGateTool.Label" kind="tool" description="%OrGateTool.Description" large_icon="icons/or24.gif" path="/logicDrawer/" small_icon="icons/or16.gif" id="OrGate">
+            <entry label="%GateStack.Label" kind="stack" description="%GateStack.Description" small_icon="icons/or24.gif" path="/logicDrawer/" id="noteStack">
             </entry>
-            <entry label="%AndGateTool.Label" kind="tool" description="%AndGateTool.Description" large_icon="icons/and24.gif" path="/logicDrawer/" small_icon="icons/and16.gif" id="AndGate">
+            <entry label="%OrGateTool.Label" kind="tool" description="%OrGateTool.Description" large_icon="icons/or24.gif" path="/logicDrawer/noteStack/" small_icon="icons/or16.gif" id="OrGate">
             </entry>
-            <entry label="%XORGateTool.Label" kind="tool" description="%XORGateTool.Description" large_icon="icons/xor24.gif" path="/logicDrawer/" small_icon="icons/xor16.gif" id="XORGate">
+            <entry label="%AndGateTool.Label" kind="tool" description="%AndGateTool.Description" large_icon="icons/and24.gif" path="/logicDrawer/noteStack/" small_icon="icons/and16.gif" id="AndGate">
+            </entry>
+            <entry label="%XORGateTool.Label" kind="tool" description="%XORGateTool.Description" large_icon="icons/xor24.gif" path="/logicDrawer/noteStack/" small_icon="icons/xor16.gif" id="XORGate">
             </entry>
             <entry label="%ConnectionTool.Label" kind="tool" description="%ConnectionTool.Description" path="/logicDrawer/" small_icon="icons/connection16.gif" large_icon="icons/connection24.gif" id="wire">
             </entry>

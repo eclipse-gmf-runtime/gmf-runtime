@@ -48,9 +48,7 @@ public class LogicPaletteFactory
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.rational.xtools.gef.ui.palette.PaletteFactory#createTool(java.lang.String)
+	 *  Create the tool according to type  	 
 	 */
 	public Tool createTool(String toolId) {
 		
