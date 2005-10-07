@@ -24,15 +24,12 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
-import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
@@ -72,15 +69,16 @@ import org.eclipse.swt.widgets.Display;
  */
 
 public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
-	
-	/* ************************** nested classes ************************/
+
+	/* ************************** nested classes *********************** */
 	/**
-	 *
+	 * 
 	 * Class to hold pertinent information about the tool placed on the actionbar
 	 * 
-	 * @author affrantz@us.ibm.com 
+	 * @author affrantz@us.ibm.com
 	 */
 	private class ActionBarDescriptor {
+
 		/** The action button tooltip */
 		private String _tooltip = new String();
 
@@ -105,51 +103,51 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				Image i,
 				IElementType elementType,
 				DragTracker theTracker) {
-				_tooltip = s;
-				_icon = i;
-				_dragTracker = theTracker;
-				_elementType = elementType;
+			_tooltip = s;
+			_icon = i;
+			_dragTracker = theTracker;
+			_elementType = elementType;
 
-			}
+		}
 
 		/**
-		 * gets the element type associated with this Descriptor 
+		 * gets the element type associated with this Descriptor
 		 * @return element type
 		 */
 		public final IElementType getElementtype() {
 			return _elementType;
 		}
-		
+
 		/**
-		 * gets the icon associated with this Descriptor 
+		 * gets the icon associated with this Descriptor
 		 * @return Image
 		 */
 		public final Image getIcon() {
 			return _icon;
 		}
-		
+
 		/**
-		 * gets the drag tracker associated with this Descriptor 
+		 * gets the drag tracker associated with this Descriptor
 		 * @return drag tracker
 		 */
 		public final DragTracker getDragTracker() {
 			return _dragTracker;
 		}
-		
+
 		/**
-		 * gets the tool tip associated with this Descriptor 
+		 * gets the tool tip associated with this Descriptor
 		 * @return string
-		 */		
+		 */
 		public final String getToolTip() {
 			return _tooltip;
 		}
 
 	} // end ActionBarDescriptor
-	
+
 	/**
 	 * Default tool placed on the actionbar
 	 * 
-	 * @author affrantz@us.ibm.com 
+	 * @author affrantz@us.ibm.com
 	 */
 	private class ActionBarLabelHandle extends Label implements Handle {
 		/**
@@ -162,7 +160,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		/** The dragTracker CreationTool associated with the handle * */
 		private DragTracker myDragTracker = null;
-		
+
 		private Image getDisabledImage()
 		{
 			if (myDisabledImage != null)
@@ -171,7 +169,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			Image theImage = this.getIcon();
 			if (theImage == null)
 				return null;
-				
+
 			myDisabledImage = new Image(Display.getCurrent(), theImage, SWT.IMAGE_DISABLE);
 			imagesToBeDisposed.add(myDisabledImage);
 			return myDisabledImage;
@@ -188,7 +186,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			this.setOpaque(true);
 			this.setBackgroundColor(ColorConstants.buttonLightest);
 		}
-		
+
 		/**
 		 * @see org.eclipse.gef.Handle#getAccessibleLocation()
 		 */
@@ -212,17 +210,17 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			super.paintBorder(graphics);
 
 			if (myMouseOver) {
-				
+
 				Rectangle area = getClientArea();
 				graphics.setForegroundColor(ColorConstants.black);
 				graphics.setBackgroundColor(ColorConstants.white);
-			
+
 				graphics.drawFocus(
 					area.x,
 					area.y,
 					area.width - 1,
 					area.height - 1);
-				
+
 			}
 
 		}
@@ -253,7 +251,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		 * @see org.eclipse.draw2d.IFigure#handleMousePressed(org.eclipse.draw2d.MouseEvent)
 		 *      set ActionBarEditPolicy.myActionMoveFigure bit so the ActionBar
 		 *      is not dismissed after creating an item in the editpart
-		 *  
+		 * 
 		 */
 		public void handleMousePressed(MouseEvent event) {
 
@@ -273,9 +271,8 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			super.handleMousePressed(event);
 		}
 
-		
 		/**
-		 * checks if tool tip is enabled or not 
+		 * checks if tool tip is enabled or not
 		 * @return true or false
 		 */
 		protected boolean isToolEnabled()
@@ -287,9 +284,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			}
 			return true;
 		}
-		
-		
-		
+
 		/**
 		 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 		 */
@@ -303,7 +298,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 					graphics.drawImage(theImage, getIconLocation());
 					graphics.translate(-bounds.x, -bounds.y);
 					return;
-				}				
+				}
 
 			}
 			super.paintFigure(graphics);
@@ -314,15 +309,17 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	private static Image DESC_ACTION_ACTIONBAR_PLUS_IMAGE = Images.DESC_ACTION_ACTIONBAR_PLUS.createImage();
 	private static Image DESC_ACTION_ACTIONBAR_IMAGE = Images.DESC_ACTION_ACTIONBAR.createImage();
 	/**
-	 *
+	 * 
 	 * This is the figure that represents the ballon portion of the actionbar
 	 * 
 	 * @author affrantz@us.ibm.com
 	 */
 	private class RoundedRectangleWithTail extends RoundedRectangle {
-		
+
 		private Image myActionTailImage = null;
-		private boolean bIsInit=false;
+
+		private boolean bIsInit = false;
+
 		private int myCornerDimension = 6;
 
 		/**
@@ -339,6 +336,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			this.setOpaque(true);
 
 		}
+
 		/**
 		 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 		 */
@@ -346,11 +344,10 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			int shiftWidth = 3;
 			Image theTail = getTail();
 			Rectangle theBounds = this.getBounds().getCopy();
-			theBounds.height -= theTail.getBounds().height ;
+			theBounds.height -= theTail.getBounds().height;
 			theBounds.height -= shiftWidth;// shift slight above cursor
-			theBounds.x 	+= shiftWidth; // shift slight to right of cursor
-			theBounds.width -= (shiftWidth+1); // otherwise rhs is clipped
-			
+			theBounds.x += shiftWidth; // shift slight to right of cursor
+			theBounds.width -= (shiftWidth + 1); // otherwise rhs is clipped
 
 			// fill the round rectangle first since it is opaque
 			graphics.fillRoundRectangle(
@@ -377,7 +374,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 					if(myActionTailImage == null)
 					{
 						myActionTailImage = DESC_ACTION_ACTIONBAR_PLUS_IMAGE;
-						bIsInit=true;
+						bIsInit = true;
 					}
 				}
 				else
@@ -385,109 +382,75 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 					if(myActionTailImage == null)
 					{
 						myActionTailImage = DESC_ACTION_ACTIONBAR_IMAGE;
-						bIsInit=true;
+						bIsInit = true;
 					}
 				}
-				
+
 			}
 			return myActionTailImage;
-		
+
 		}
 
 	}
-	
-	/**
-	 * Listens to mouse events on the owner shape and handles so that the
-	 * action bar balloon can be added or removed.
-	 * 
-	 * @author affrantz@us.ibm.com
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#isDiagramAssistant(java.lang.Object)
 	 */
-	private class ActionBarMouseMotionListener extends MouseMotionListener.Stub {
+	protected boolean isDiagramAssistant(Object object) {
+		return object instanceof RoundedRectangleWithTail
+			|| object instanceof ActionBarLabelHandle;
+	}
 
-		public void mouseEntered(MouseEvent me) {
-			// Avoid handles from being removed if the mouse has moved back
-			// inside the shape when the handles were already being displayed.
-			setMouseInsideShape(true);
-		}
+	/**
+	 * Adds the connector handles after a delay
+	 */
+	public void mouseHover(MouseEvent me) {
+			// if the cursor is inside the actionbar
+			// or the keyboar triggred activation
+			// then we do not want to deactivate
+			if (!isDiagramAssistant(me.getSource()))
+				setAvoidHidingDiagramAssistant(false);
 
-		public void mouseExited(MouseEvent me) {
-			setMouseInsideShape(false);
-			hideActionBalloonDelayed(getDisappearanceDelayUponExit());
-		}
-		/**
-		 * We the tools to dismiss after the delay period if 
-		 * the mouse is inside the shape, but we do not want the tools to 
-		 * dismiss if the mouse is inside the one of the tools.
-		 * 
-		 */
-		private boolean shouldHoverActivate(Object theObj)
-		{
-			if(theObj instanceof RoundedRectangleWithTail)
-				return true;
-			if(theObj instanceof ActionBarLabelHandle)
-				return true;
-			
-			
-			return false;
-		}
-		/**
-		 * Adds the connector handles after a delay
-		 */
-		public void mouseHover(MouseEvent me) {
-			if(getActivateOnHover())
-			{
-				// if the cursor is inside the actionbar
-				// or the keyboar triggred activation 
-				// then we do not want to deactivate
-				if(!shouldHoverActivate(me.getSource()))
-					setActivateOnHover(false);
-				
-				myMouseHoverLocation.setLocation(me.getLocation());
-				if(getIsDisplayAtMouseHoverLocation())
-					showActionBalloonDelayed(getAppearanceDelayLocationSpecific()); // no delay
-				else
-					showActionBalloon(); // no delay
-			}
-				
-			
-		}
-		/**
-		 * @see org.eclipse.draw2d.MouseMotionListener#mouseMoved(org.eclipse.draw2d.MouseEvent)
-		 */
-		public void mouseMoved(MouseEvent me) {
-			
+			setMouseLocation(me.getLocation());
+			if (getIsDisplayAtMouseHoverLocation())
+				showDiagramAssistantAfterDelay(getAppearanceDelayLocationSpecific()); // no
+																						// delay
+			else
+				showDiagramAssistant(getMouseLocation()); // no delay
+	}
+
+	/**
+	 * @see org.eclipse.draw2d.MouseMotionListener#mouseMoved(org.eclipse.draw2d.MouseEvent)
+	 */
+	public void mouseMoved(MouseEvent me) {
+
 			if(getIsDisplayAtMouseHoverLocation() && shouldDisplayActionBar())
 			{
-				Object srcObj = me.getSource(); 
-				if((srcObj!=null)&& srcObj.equals(getHostFigure()))
-				{	
-					hideActionBalloon();
-				}
+			Object srcObj = me.getSource();
+			if ((srcObj != null) && srcObj.equals(getHostFigure())) {
+				hideDiagramAssistant();
 			}
-			setActivateOnHover(true);
-			setMouseMoveLocation(me.getLocation());
-			setMyMouseHoverLocation(me.getLocation());
-			
-			if(!getIsDisplayAtMouseHoverLocation() && shouldDisplayActionBar()) {
-				// if the cursor is inside the actionbar
-				// or the keyboar triggred activation 
-				// then we do not want to deactivate
-				if(!shouldHoverActivate(me.getSource()))
-					setActivateOnHover(false);
-				
-				showActionBalloonDelayed(getAppearanceDelay());
-			}
-
-			super.mouseMoved(me);
 		}
+		setAvoidHidingDiagramAssistant(true);
+		setMouseLocation(me.getLocation());
 
+		if (!getIsDisplayAtMouseHoverLocation() && shouldDisplayActionBar()) {
+			// if the cursor is inside the actionbar
+			// or the keyboar triggred activation
+			// then we do not want to deactivate
+			if (!isDiagramAssistant(me.getSource()))
+				setAvoidHidingDiagramAssistant(false);
+
+			showDiagramAssistantAfterDelay(getAppearanceDelay());
+		}
 	}
+
 	/**
 	 * Listens to the owner figure being moved so the handles can be removed
 	 * when this occurs.
 	 * 
 	 * @author affrantz@us.ibm.com
-	 *  
+	 * 
 	 */
 	private class OwnerMovedListener implements FigureListener {
 
@@ -500,6 +463,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				return true;
 			return false;
 		}
+
 		/**
 		 * @see org.eclipse.draw2d.FigureListener#figureMoved(org.eclipse.draw2d.IFigure)
 		 */
@@ -512,7 +476,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			// item.
 			if (getFlag(ACTIONBAR_MOVE_FIGURE)
 				&& hasPositionChanged(source.getBounds())) {
-				hideActionBalloon(); // without delay
+				hideDiagramAssistant(); // without delay
 			} else {
 				setFlag(ACTIONBAR_MOVE_FIGURE, false); // toggle flag back
 				Rectangle theBounds = source.getBounds();
@@ -524,42 +488,20 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	}
 
 	/**
-	 * Listens to the focus events on the owner editpart so that the handles
-	 * can be added when the space bar is pressed. I tried to use
-	 * IFigure.addFocusListener(), but the figure isn't getting any focus
-	 * change events when the space bar is pressed.
-	 * 
-	 * @author affrantz@us.ibm.com 
-	 */
-	private class EditPartFocusListener extends EditPartListener.Stub {
-		/**
-		 * @see org.eclipse.gef.EditPartListener#selectedStateChanged(org.eclipse.gef.EditPart)
-		 */
-		public void selectedStateChanged(EditPart part) {
-	
-			if (part.hasFocus() && isMouseInsideShape()) {
-				showActionBalloon();
-			} else {
-				hideActionBalloon();
-			}
-		}
-	}
-	/**
-	 *
 	 * Listens for mouse key presses so the actionbar can be dismissed if the context 
 	 * menu is displayed
 	 * 
-	 * @author affrantz@us.ibm.com 
+	 * @author affrantz@us.ibm.com
 	 */
 	private class ActionBarMouseListener extends MouseListener.Stub {
-		
+
 		/**
 		 * @see org.eclipse.draw2d.MouseListener#mousePressed(org.eclipse.draw2d.MouseEvent)
-		*/
+		 */
 		public void mousePressed(MouseEvent me) {
-			if(3 == me.button) // context menu, hide the actionbar
+			if (3 == me.button) // context menu, hide the actionbar
 			{
-				hideActionBalloon();
+				hideDiagramAssistant();
 			}
 			super.mousePressed(me);
 			setActionbarOnDiagramActivated(true);
@@ -567,10 +509,11 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		public void mouseReleased(MouseEvent me)
 		{
 			super.mouseReleased(me);
-			
+
 		}
-}
-	/* ************************* End nested classes *********************/
+	}
+
+	/* ************************* End nested classes ******************** */
 
 	/**
 	 * Delay in ms to wait for displaying the actionBar on a diagrms or machine
@@ -584,59 +527,52 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 	/** Y postion offset from shape where the balloon top begin. */
 	static private double BALLOON_X_OFFSET_RHS = 0.65;
+
 	static private double BALLOON_X_OFFSET_LHS = 0.25;
 
 	/** Y postion offset from shape where the balloon top begin. */
 	static private int ACTION_WIDTH_HGT = 30;
+
 	static private int ACTION_BUTTON_START_X = 5;
+
 	static private int ACTION_BUTTON_START_Y = 5;
+
 	static private int ACTION_MARGIN_RIGHT = 10;
 
 	/** ActionBar bits */
 	static private int ACTIONBAR_ACTIVATEONHOVER				= 0x01; /* Display the action when hovering*/
 	static private int ACTIONBAR_MOVE_FIGURE			 		= 0x02; /* Ignore the first figureMoved event when creating elements inside a shape via an actionBar*/ 
 	static private int ACTIONBAR_DISPLAYATMOUSEHOVERLOCATION	= 0x04; /* Display the actIOnbar at the mouse location used by diagrams and machine edit parts*/
-	static private int ACTIONBAR_MOUSEINSIDE_SHAPE 				= 0x08; /* is the Mouse inside the bounds of the shape */
 	static private int ACTIONBAR_ONDIAGRAMACTIVATED				= 0x10; /* For actionBars on diagram and machine edit parts, where we ACTIONBAR_DISPLAYATMOUSEHOVERLOCATION, don't display actionBar until user clicks on surface*/
 	static private int ACTIONBAR_HOST_IS_CONNECTOR				= 0x20; /* For actionBars on connector edit parts*/
-	
+
 	/** Bit field for the actrionbar associated bits */
-	private int myActionBarFlags 								= ACTIONBAR_ACTIVATEONHOVER;
-	
+	private int myActionBarFlags = ACTIONBAR_ACTIVATEONHOVER;
+
 	private double myBallonOffsetPercent = BALLOON_X_OFFSET_RHS;
 
 	/** the figure used to surround the action buttons */
 	private IFigure myBalloon = null;
 
-	private Point myMouseHoverLocation = new Point();
-	
 	/** The action bar descriptors for the action bar buttons */
 	private List myActionBarDescriptors = new ArrayList();
 
 	/** Images created that must be deleted when actionbar is removed */
 	protected List imagesToBeDisposed = new ArrayList();
-	
-	/** mouse motion listener for the owner shape and handles */
-	private ActionBarMouseMotionListener myMouseListener = new ActionBarMouseMotionListener();
-	
-	/** mouse keys listener for the owner shape*/
+
+	/** mouse keys listener for the owner shape */
 	private ActionBarMouseListener myMouseKeyListener = new ActionBarMouseListener();
 
 	/** listener for owner shape movement */
 	private OwnerMovedListener myOwnerMovedListener = new OwnerMovedListener();
 
-	/** listener for focus change on editpart */
-	private EditPartFocusListener myFocusListener = new EditPartFocusListener();
-
-	private Point myMouseMoveLocation = new Point();
-	
 	/** flag for whether mouse cursor within shape */
-	
+
 	private void setFlag(int bit, boolean b)
 	{
-		if(b)
+		if (b)
 			myActionBarFlags |= bit;
-		else if(getFlag(bit))
+		else if (getFlag(bit))
 			myActionBarFlags ^= bit;
 
 	}
@@ -656,34 +592,25 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	{
 		return getFlag(ACTIONBAR_ONDIAGRAMACTIVATED);
 	}
-	// Member functions
-	private void setActivateOnHover(boolean bVal)
-	{
-		setFlag(ACTIONBAR_ACTIVATEONHOVER, bVal);
-	}
-	private boolean getActivateOnHover()
-	{
-		return getFlag(ACTIONBAR_ACTIVATEONHOVER);
-	}
-	
+
 	/**
-	 * set the host is connector flag 
+	 * set the host is connector flag
 	 * @param bVal the new value
 	 */
 	protected void setHostIsConnector(boolean bVal)
 	{
 		setFlag(ACTIONBAR_HOST_IS_CONNECTOR, bVal);
 	}
-	
+
 	/**
-	 * get the host is connector flag 
+	 * get the host is connector flag
 	 * @return true or false
 	 */
 	protected boolean getHostIsConnector()
 	{
 		return getFlag(ACTIONBAR_HOST_IS_CONNECTOR);
 	}
-	
+
 	/**
 	 * Populates the action bar with actionbar descriptors added by suclassing
 	 * this editpolicy (i.e. <code>fillActionBarDescriptors</code> and by
@@ -712,7 +639,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	protected void fillActionDescriptors() {
 		// subclasses can override.
 	}
-	
+
 	private boolean isSelectionToolActive()
 	{
 		// getViewer calls getParent so check for null
@@ -724,32 +651,32 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				return true;
 			}
 		}
-		return false;		
+		return false;
 	}
 	/** Never display actionbars when there is an active tool on the pallette
 	 * 
-	 */ 
+	 */
 	private boolean shouldDisplayActionBar()
 	{
 		//RATLC00532515: ActionBars shouldn't be shown if the host edit part isn't editable.
 		if (getHost() instanceof GraphicalEditPart) {
-			if (!((GraphicalEditPart)getHost()).isEditModeEnabled()) {
+			if (!((GraphicalEditPart) getHost()).isEditModeEnabled()) {
 				return false;
 			}
 		}
 		if(this.getIsDisplayAtMouseHoverLocation())
 		{
-			if(getHostIsConnector())
+			if (getHostIsConnector())
 				return isSelectionToolActive();
-			 if(getActionbarOnDiagramActivated())
-			 	return isSelectionToolActive();
-			 return false;
+			if (getActionbarOnDiagramActivated())
+				return isSelectionToolActive();
+			return false;
 		}
 		else
 			return isSelectionToolActive();
 
 	}
-	
+
 	/**
 	 * allows plugins to add their own actionbar tools and tips
 	 * @param elementType
@@ -781,14 +708,13 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		DragTracker theTracker) {
 
 		String theInputStr = PresentationResourceManager.getI18NString("ActionBar.AddNew"); //$NON-NLS-1$
-		
-		
+
+
 		String theTip = MessageFormat.format(theInputStr, new Object[] {elementType.getDisplayName()});
 	
 		addActionBarDescriptor(elementType, theImage, theTracker, theTip);
 	}
 
-	
 	/**
 	 * default method for plugins which passes along the AddActionBarTool
 	 * as the tool to be used.
@@ -802,7 +728,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			new AddActionBarTool(getHost(), elementType));
 
 	}
-	
+
 	/**
 	 * @param elementType
 	 * @param theImage
@@ -820,7 +746,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		myActionBarDescriptors.add(desc);
 
 	}
-	
+
 	/**
 	 * method used primarily to add UnspecifiedTypeCreationTool
 	 * @param elementType
@@ -835,11 +761,11 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		AddActionBarTool theTracker =
 			new AddActionBarTool(getHost(), theRequest);
-		
+
 		this.addActionBarDescriptor(elementType, theImage, theTracker);
-	
+
 	}
-	
+
 	/**
 	 * default method for plugins which passes along the AddUMLActionBarTool as
 	 * the tool to be used.
@@ -861,19 +787,19 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 */
 	protected void addActionBarDescriptor(
 		IElementType elementType,
-		Image theImage) {	
-		
+			Image theImage) {
+
 		DragTracker theTracker;
-		if (elementType instanceof INotationType){
+		if (elementType instanceof INotationType) {
 			theTracker = new AddActionBarTool(getHost(), elementType);
 		}
 		else{
 			theTracker = new AddUMLActionBarTool(getHost(), elementType);
 		}
 		this.addActionBarDescriptor(elementType, theImage, theTracker);
-		
+
 	}
-	
+
 	/**
 	 * @param elementType
 	 * @param theImage
@@ -902,11 +828,12 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		myActionBarDescriptors.add(desc);
 
 	}
+
 	/**
 	 * method used primarily to add UnspecifiedTypeCreationTool
 	 * @param elementType
 	 * @param theImage
-	 * @param theTool 
+	 * @param theTool
 	 * @deprecated Use <code>addActionBarDescriptor2</code> instead. All your
 	 *             actionbar scenarios should be tested when migrating to
 	 *             <code>addActionBarDescriptor2</code>. The difference
@@ -927,9 +854,9 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		AddUMLActionBarTool theTracker =
 			new AddUMLActionBarTool(getHost(), theRequest);
-		
+
 		this.addActionBarDescriptor(elementType, theImage, theTracker);
-	
+
 	}
 
 	/**
@@ -939,6 +866,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	protected List getActionBarDescriptors() {
 		return myActionBarDescriptors;
 	}
+
 	/**
 	 * initialize the action bars from the list of action descriptors.
 	 */
@@ -950,7 +878,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		}
 		myBalloon = createActionBarFigure();
 
-	    int iTotal = ACTION_WIDTH_HGT * theList.size() + ACTION_MARGIN_RIGHT;
+		int iTotal = ACTION_WIDTH_HGT * theList.size() + ACTION_MARGIN_RIGHT;
 
 		getBalloon().setSize(
 			iTotal,
@@ -967,7 +895,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				new ActionBarLabelHandle(
 					theDesc.getDragTracker(),
 					theDesc.getIcon());
-			
+
 			Rectangle r1 = new Rectangle();
 			r1.setLocation(xLoc, yLoc);
 			xLoc += ACTION_WIDTH_HGT;
@@ -984,58 +912,12 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 			getBalloon().add(b);
 
-			b.addMouseMotionListener(this.myMouseListener);
+			b.addMouseMotionListener(this);
 			b.addMouseListener(this.myMouseKeyListener);
 
 		}
 	}
 
-
-
-	/** the <code>Runnable</code> used for the remove handles delay timer */
-	private Runnable hideBalloonRunnable = new Runnable() {
-		public void run() {
-			if (!isMouseInsideShape() || !getActivateOnHover()) {
-				hideActionBalloon();
-			}
-		}
-	};
-	
-	/** the <code>Runnable</code> class used for the show balloon delay timer */
-	private class ShowBalloonRunnable
-		implements Runnable {
-
-		/** the mouse location when the timer was started */
-		private Point originalMouseLocation;
-
-		/**
-		 * @param originalMouseLocation
-		 */
-		protected ShowBalloonRunnable(Point originalMouseLocation) {
-			this.originalMouseLocation = originalMouseLocation;
-		}
-
-		/**
-		 * The connector handles are added when this task is run, assuming the
-		 * mouse is still at the same spot where it was when the timer was
-		 * started (i.e. only add the connector handles when the user stops
-		 * moving the mouse).
-		 */
-		public void run() {
-			if (isMouseInsideShape()
-				&& originalMouseLocation.equals(getMouseMoveLocation())) {
-				showActionBalloon();
-			}
-		}
-	}
-	
-	private void setMouseInsideShape(boolean bVal) {
-		this.setFlag(ACTIONBAR_MOUSEINSIDE_SHAPE, bVal);
-	}
-	private boolean isMouseInsideShape() {
-		return getFlag(ACTIONBAR_MOUSEINSIDE_SHAPE);
-	}
-	
 	/**
 	 * Is the Action bar preference turned on?
 	 * 
@@ -1044,29 +926,41 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	private boolean isPreferenceOn() {
 		IPreferenceStore preferenceStore = (IPreferenceStore)
 			((IGraphicalEditPart) getHost())
-				.getDiagramPreferencesHint().getPreferenceStore();
+			.getDiagramPreferencesHint().getPreferenceStore();
 		return preferenceStore.getBoolean(
 			IPreferenceConstants.PREF_SHOW_ACTION_BARS);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#isDiagramAssistantShowing()
+	 */
+	protected boolean isDiagramAssistantShowing() {
+		return getBalloon() != null;
+	}
+
 	private IFigure getBalloon() {
 		return myBalloon;
 	}
+
 	protected IFigure createActionBarFigure() {
 		return new RoundedRectangleWithTail();
 	}
-	private void showActionBalloon() {
-		if(!shouldDisplayActionBar()  || !isPreferenceOn())
+
+	protected void showDiagramAssistant(Point referencePoint) {
+		if (!shouldDisplayActionBar() || !isPreferenceOn())
 			return;
-		
-		// already have a one 
+
+		// already have a one
 		if (getBalloon() != null && getBalloon().getParent() != null) 
 		{
-			return ;
+			return;
 		}
-		
+
 		if (this.myActionBarDescriptors.isEmpty()) 
 		{
-			
+
 			populateActionBars();
 			initActionBars();
 
@@ -1074,26 +968,29 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				return; // nothing to show
 			}
 		}
-		getBalloon().addMouseMotionListener(myMouseListener);
+		getBalloon().addMouseMotionListener(this);
 		getBalloon().addMouseListener(myMouseKeyListener);
-		
 
 		// the feedback layer figures do not recieve mouse events so do not use
 		// it for actionbars
 		IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
 		layer.add(getBalloon());
-				
-		Point thePoint = getBalloonPosition();
+		
+		if (referencePoint == null) {
+			referencePoint = getHostFigure().getBounds().getCenter();
+		}
+
+		Point thePoint = getBalloonPosition(referencePoint);
 
 		getBalloon().setLocation(thePoint);
-		
+
 		// dismiss the actionBar after a delay
-		if(!getActivateOnHover())
+		if(!shouldAvoidHidingDiagramAssistant())
 		{
-			hideActionBalloonDelayed(getDisappearanceDelay());
+			hideDiagramAssistantAfterDelay(getDisappearanceDelay());
 		}
-	}	
-	
+	}
+
 	/**
 	 * getter for the IsDisplayAtMouseHoverLocation flag
 	 * @return true or false
@@ -1102,52 +999,56 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	{
 		return getFlag(ACTIONBAR_DISPLAYATMOUSEHOVERLOCATION);
 	}
+
 	/**
 	 * setter for the IsDisplayAtMouseHoverLocation
-	 * @param bVal 
+	 * @param bVal
 	 */
 	protected void setIsDisplayAtMouseHoverLocation(boolean bVal)
 	{
 		setFlag(ACTIONBAR_DISPLAYATMOUSEHOVERLOCATION, bVal);
 	}
-	
-	/** 
-	 * For editparts that consume the entire viewport, statechart, structure, communication,
-	 * we want to display the actionbar at the mouse location.  
-	 * @return Point
-	 */ 
-	private Point getBalloonPosition()
+
+	/**
+	 * For editparts that consume the entire viewport, statechart, structure,
+	 * communication, we want to display the actionbar at the mouse location.
+	 * @param referencePoint
+	 *            The reference point which may be used to determine where the
+	 *            diagram assistant should be located. This is most likely the
+	 *            current mouse location. 
+	 *            @return Point
+	 */
+	private Point getBalloonPosition(Point referencePoint)
 	{
 		Point thePoint = new Point();
 		boolean atMouse = getIsDisplayAtMouseHoverLocation();
-		if(atMouse)
-		{	
-			thePoint.setLocation(myMouseHoverLocation);
+		if (atMouse) {
+			thePoint.setLocation(referencePoint);
 			getHostFigure().translateToAbsolute(thePoint);
 			getBalloon().translateToRelative(thePoint);
-			
-			//	shift the ballon so it is above the cursor.
-			thePoint.y -= ACTION_WIDTH_HGT;  
-			
+
+			// shift the ballon so it is above the cursor.
+			thePoint.y -= ACTION_WIDTH_HGT;
+
 			if (willBalloonBeClipped(thePoint)) {
 				Rectangle rcBounds = getHostFigure().getBounds().getCopy();
 				getHostFigure().translateToAbsolute(rcBounds);
 				getBalloon().translateToRelative(rcBounds);
 				Dimension dim = getBalloon().getSize();
-				int offsetX = dim.width + ACTION_WIDTH_HGT; 
+				int offsetX = dim.width + ACTION_WIDTH_HGT;
 				thePoint.x = rcBounds.right() - offsetX;
 			}
-						
+
 		}
 		else
 		{
 			Dimension theoffset = new Dimension();
 			Rectangle rcBounds = getHostFigure().getBounds().getCopy();
-	
+
 			getHostFigure().translateToAbsolute(rcBounds);
 			getBalloon().translateToRelative(rcBounds);
 
-			theoffset.height = - (BALLOON_Y_OFFSET + ACTION_WIDTH_HGT);
+			theoffset.height = -(BALLOON_Y_OFFSET + ACTION_WIDTH_HGT);
 			theoffset.width = (int) (rcBounds.width * myBallonOffsetPercent);
 
 			thePoint.x = rcBounds.x + theoffset.width;
@@ -1157,10 +1058,11 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				theoffset.width = (int) (rcBounds.width * myBallonOffsetPercent);
 				thePoint.x = rcBounds.x + theoffset.width;
 
-			}			
+			}
 		}
 		return thePoint;
 	}
+
 	private boolean willBalloonBeClipped(Point pnt) {
 		Control ctrl1 = getHost().getViewer().getControl();
 		if (ctrl1 instanceof FigureCanvas) {
@@ -1174,8 +1076,9 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		}
 		return false;
 	}
+
 	private void teardownActionBar() {
-		getBalloon().removeMouseMotionListener(myMouseListener);
+		getBalloon().removeMouseMotionListener(this);
 		getBalloon().removeMouseListener(myMouseKeyListener);
 		// the feedback layer figures do not recieve mouse events
 		IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
@@ -1186,38 +1089,31 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		this.myActionBarDescriptors.clear();
 		setRightHandDisplay(); // set back to default
-		
+
 		for (Iterator iter = imagesToBeDisposed.iterator(); iter.hasNext();) {
 			((Image) iter.next()).dispose();
 		}
 		imagesToBeDisposed.clear();
 
 	}
-	private void hideActionBalloon() {
+
+	protected void hideDiagramAssistant() {
 		if (getBalloon() != null) {
 
 			teardownActionBar();
 		}
 
 	}
-	
-	/**
-	 * Sets a timer to show the actionbar
-	 *  
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#showDiagramAssistantAfterDelay(int)
 	 */
-	private void showActionBalloonDelayed(int theDelay) {
-		if (getBalloon() == null) {
-			Display.getCurrent().timerExec(theDelay,
-				new ShowBalloonRunnable(getMouseMoveLocation()));
-		}
-	}	
-	
-	/**
-	 * Sets a timer to remove the actionbar if currently shown.
-	 */	
-	private void hideActionBalloonDelayed(int theDelay) {
-		if (getBalloon() != null) {
-			Display.getCurrent().timerExec(theDelay, hideBalloonRunnable);
+	protected void showDiagramAssistantAfterDelay(int theDelay) {
+		// only show the actionbar if it isn't already showing
+		if (!isDiagramAssistantShowing()) {
+			super.showDiagramAssistantAfterDelay(theDelay);
 		}
 	}
 
@@ -1228,13 +1124,9 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	public void activate() {
 		super.activate();
 
-		getHostFigure().addMouseMotionListener(this.myMouseListener);
 		getHostFigure().addMouseListener(this.myMouseKeyListener);
 		getHostFigure().addFigureListener(this.myOwnerMovedListener);
 
-		((IGraphicalEditPart) getHost()).addEditPartListener(
-			this.myFocusListener);
-		
 		if (getHost() instanceof ISurfaceEditPart) {
 			setIsDisplayAtMouseHoverLocation(true);
 		}
@@ -1245,69 +1137,36 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 * @see org.eclipse.gef.EditPolicy#deactivate()
 	 */
 	public void deactivate() {
-		getHostFigure().removeMouseMotionListener(this.myMouseListener);
 		getHostFigure().removeMouseListener(this.myMouseKeyListener);
 		getHostFigure().removeFigureListener(this.myOwnerMovedListener);
-		
-		((IGraphicalEditPart) getHost()).removeEditPartListener(
-			this.myFocusListener);
-		hideActionBalloon();
 
 		super.deactivate();
 
 	}
+
 	/**
 	 * This is the default which places the actionbar to favor the right side
 	 * of the shape
-	 *  
+	 * 
 	 */
 	protected void setRightHandDisplay() {
 		this.myBallonOffsetPercent = BALLOON_X_OFFSET_RHS;
 	}
+
 	/**
 	 * Place the actionbar to favor the left had side of the shape
-	 *  
+	 * 
 	 */
 	protected void setLeftHandDisplay() {
 		this.myBallonOffsetPercent = BALLOON_X_OFFSET_LHS;
 	}
+
 	/**
-	 * check thee right display status 
+	 * check thee right display status
 	 * @return true or false
 	 */
 	protected boolean isRightDisplay() {
 		return (BALLOON_X_OFFSET_RHS == myBallonOffsetPercent);
-	}
-	
-	/**
-	 * sets the mouse move location
-	 * @param thePoint
-	 */
-	protected void setMouseMoveLocation(Point thePoint)
-	{
-		this.myMouseMoveLocation = thePoint;
-	}
-	
-	/**
-	 * gets the mouse move location
-	 * @return point
-	 */
-	protected Point getMouseMoveLocation()
-	{
-		return this.myMouseMoveLocation;
-	}
-		
-	/**
-	 * @return Returns the myMouseHoverLocation.
-	 */
-	protected Point getMyMouseHoverLocation() {
-		return myMouseHoverLocation;
-	}
-	/**
-	 * @param theMouseHoverLocation The myMouseHoverLocation to set.
-	 */
-	protected void setMyMouseHoverLocation(Point theMouseHoverLocation) {
-		this.myMouseHoverLocation.setLocation( theMouseHoverLocation.x, theMouseHoverLocation.y);
 	}
 
 	/**
@@ -1320,4 +1179,35 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	protected int getAppearanceDelayLocationSpecific() {
 		return APPEARANCE_DELAY_LOCATION_SPECIFIC;
 	}
+	
+	/**
+	 * @deprecated Use {@link DiagramAssistantEditPolicy#setMouseLocation(Point)}
+	 */
+	protected void setMouseMoveLocation(Point thePoint)
+	{
+		setMouseLocation(thePoint);
+	}
+	
+	/**
+	 * @deprecated Use {@link DiagramAssistantEditPolicy#getMouseLocation()
+	 */
+	protected Point getMouseMoveLocation()
+	{
+		return getMouseLocation();
+	}
+		
+	/**
+	 * @deprecated Use {@link DiagramAssistantEditPolicy#getMouseLocation()
+	 */
+	protected Point getMyMouseHoverLocation() {
+		return getMouseLocation();
+	}
+	
+	/**
+	 * @deprecated Use {@link DiagramAssistantEditPolicy#setMouseLocation(Point)}
+	 */
+	protected void setMyMouseHoverLocation(Point theMouseHoverLocation) {
+		setMouseLocation(theMouseHoverLocation);
+	}
+
 }

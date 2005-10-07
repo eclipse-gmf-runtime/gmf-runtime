@@ -17,8 +17,9 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.SelectionRequest;
-
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DelegatingMouseEventsEditPolicy;
 import org.eclipse.gmf.runtime.gef.ui.internal.tools.DelegatingDragEditPartsTracker;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -37,6 +38,14 @@ public abstract class CompartmentEditPart extends GraphicalEditPart implements I
 		super(view);
 	}
 
+	protected void createDefaultEditPolicies() {
+		super.createDefaultEditPolicies();
+		installEditPolicy(EditPolicyRoles.CONNECTOR_HANDLES_ROLE,
+			new DelegatingMouseEventsEditPolicy(EditPolicyRoles.CONNECTOR_HANDLES_ROLE));
+		installEditPolicy(EditPolicyRoles.ACTIONBAR_ROLE,
+			new DelegatingMouseEventsEditPolicy(EditPolicyRoles.ACTIONBAR_ROLE));
+	}
+	
 	/**
 	 * By default, all compartment edit parts get selectable only if 
 	 * the compartment's top level container matches the top level
