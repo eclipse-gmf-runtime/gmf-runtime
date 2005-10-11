@@ -824,7 +824,20 @@ public class WrapLabel
 					x += textWidth - tokenWidth;
 					break;
 			}
+			
+			// increase the clipping rectangle by a small amount to account for font overhang
+			// from italic / irregular characters etc.
+			Rectangle clipRect = new Rectangle();
+			graphics.getClip(clipRect);
+			if (getTextExtents(token, f).width + x <= clipRect.getTopRight().x) {
+				Rectangle newClipRect = new Rectangle(clipRect);
+				newClipRect.width += getTextExtents(token.substring(token.length() - 1), f).width / 2;
+				graphics.setClip(newClipRect);
+			}
+				
 			graphics.drawText(token, x, y);
+			graphics.setClip(clipRect);
+			
 			y += fontHeight;
 
 			if (isTextUnderlined())
@@ -1327,7 +1340,7 @@ public class WrapLabel
 	 * Gets the tex extent scaled to the mapping mode
 	 */
 	private static Dimension getTextExtents(String s, Font f) {
-		Dimension d = FigureUtilities.getTextExtents(s, f).expand(-1, 0);
+		Dimension d = FigureUtilities.getTextExtents(s, f);
 		return new Dimension(MapMode.DPtoLP(d.width), MapMode.DPtoLP(d.height));
 	}
 	
