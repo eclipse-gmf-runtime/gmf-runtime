@@ -368,4 +368,14 @@ public class TextDirectEditManager
 		}
 	}
 
+	public void showFeedback() {
+		try {
+			getEditPart().getRoot();
+			super.showFeedback();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+
 }
