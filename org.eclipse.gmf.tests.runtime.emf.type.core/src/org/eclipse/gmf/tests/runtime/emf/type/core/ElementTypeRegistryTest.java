@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -528,5 +529,26 @@ public class ElementTypeRegistryTest
 		IElementType nullSpecialization = getFixture().getType(
 			"org.eclipse.gmf.tests.runtime.emf.type.core.nullSpecialization"); //$NON-NLS-1$
 		assertNotNull(nullSpecialization);
+		
+		department.setManager(null);
+		assertNull(department.getManager());
+		
+		CreateElementRequest createRequest = new CreateElementRequest(
+			department, nullSpecialization);
+		
+		createRequest.setParameter("MANAGER", manager); //$NON-NLS-1$
+		
+		IElementType elementType = ElementTypeRegistry.getInstance()
+			.getElementType(createRequest.getEditHelperContext());
+		
+		ICommand command = elementType.getEditCommand(createRequest);
+		
+		assertNotNull(command);
+		assertTrue(command.isExecutable());
+		
+		command.execute(new NullProgressMonitor());
+		assertSame(manager, department.getManager());
+		
+		assertNull(command.getCommandResult().getReturnValue());
 	}
 }

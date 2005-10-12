@@ -166,7 +166,8 @@
         <!-- Text specialization that doesn't need a metamodel -->
         <specializationType
                 id="org.eclipse.gmf.tests.runtime.emf.type.core.nullSpecialization"     
-                name="NullSpecialization">
+                name="NullSpecialization"
+                 edithelperadvice = "org.eclipse.gmf.tests.runtime.emf.type.core.internal.NullElementTypeAdvice">
              <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
         </specializationType>
    </extension>

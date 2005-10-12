@@ -110,15 +110,17 @@ public class MetamodelType
 
 		if (super.getAllSuperTypes() == null) {
 			LinkedHashSet result = new LinkedHashSet();
-			List supertypes = getEClass().getEAllSuperTypes();
-
-			for (int i = 0; i < supertypes.size(); i++) {
-				EClass nextEClass = (EClass) supertypes.get(i);
-				IElementType nextElementType = ElementTypeRegistry
-					.getInstance().getElementType(nextEClass);
-
-				if (nextElementType != null) {
-					result.add(nextElementType);
+			if (getEClass() != null) {
+				List supertypes = getEClass().getEAllSuperTypes();
+	
+				for (int i = 0; i < supertypes.size(); i++) {
+					EClass nextEClass = (EClass) supertypes.get(i);
+					IElementType nextElementType = ElementTypeRegistry
+						.getInstance().getElementType(nextEClass);
+	
+					if (nextElementType != null) {
+						result.add(nextElementType);
+					}
 				}
 			}
 			setAllSupertypes((IElementType[]) result
