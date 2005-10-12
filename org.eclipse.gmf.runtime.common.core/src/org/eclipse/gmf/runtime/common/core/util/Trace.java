@@ -146,10 +146,7 @@ public class Trace {
 				value = (Boolean) cachedOptions.get(option);
 	
 				if (null == value) {
-					value =
-						new Boolean(
-							Boolean.TRUE.toString().equalsIgnoreCase(
-								Platform.getDebugOption(option)));
+					value = Boolean.valueOf(Platform.getDebugOption(option));
 	
 					cachedOptions.put(option, value);
 				}

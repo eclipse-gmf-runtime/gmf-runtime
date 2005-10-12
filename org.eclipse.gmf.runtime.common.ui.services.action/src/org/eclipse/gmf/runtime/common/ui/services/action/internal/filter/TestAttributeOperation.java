@@ -148,7 +148,7 @@ public class TestAttributeOperation implements IOperation {
      * 
      */
     public Object execute(IProvider provider) {
-        return new Boolean(
+        return Boolean.valueOf(
             ((IActionFilterProvider) provider).testAttribute(
                 getTarget(),
                 getName(),

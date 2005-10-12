@@ -72,7 +72,7 @@ public class ExtendedBooleanPropertyDescriptor
 	 * @return an instance of <code>Boolean</code>
 	 */
 	static public Boolean indexToValue(Integer i) {
-		return new Boolean(i.intValue() == 0 ? false : true);
+		return Boolean.valueOf(i.intValue() != 0);
 	}
 
 }

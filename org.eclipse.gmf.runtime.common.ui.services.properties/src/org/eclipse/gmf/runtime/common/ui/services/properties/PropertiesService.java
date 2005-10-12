@@ -67,8 +67,7 @@ public class PropertiesService
 		 */
 		public boolean provides(IOperation operation) {
 			String attr_value = getElement().getAttribute(A_PLUGIN_LOADED);
-			Boolean pluginLoadedVerify = attr_value == null ? new Boolean(false)
-				: new Boolean(attr_value);
+			Boolean pluginLoadedVerify = Boolean.valueOf(attr_value);
 
 			// instead of the policy we
 			// use plugin loaded test

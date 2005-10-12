@@ -361,8 +361,8 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
      */
     protected CellEditor createBooleanCellEditor(Composite composite) {
         return new ExtendedComboBoxCellEditor(composite,
-                Arrays.asList(new Object[] { new Boolean(false),
-                        new Boolean(true) }), getLabelProvider(), true);
+                Arrays.asList(new Object[] { Boolean.FALSE,
+                          Boolean.TRUE }), getLabelProvider(), true);
     }
 
     /*

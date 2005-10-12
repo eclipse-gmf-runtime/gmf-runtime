@@ -200,7 +200,7 @@ public class ConnectorAppearancePropertySection
 				updateModel(
 					ResourceManager
 						.getI18NString("AppearanceDetails.ReverseJumpLinksCommand.Text"), //$NON-NLS-1$
-					Properties.ID_JUMPLINKS_REVERSE, new Boolean(
+					Properties.ID_JUMPLINKS_REVERSE, Boolean.valueOf(
 						reverseJumpLinksButton.getSelection()));
 			}
 		});
@@ -229,7 +229,7 @@ public class ConnectorAppearancePropertySection
 				updateModel(
 					ResourceManager
 						.getI18NString("AppearanceDetails.AvoidObstaclesCommand.Text"), //$NON-NLS-1$
-					Properties.ID_AVOIDOBSTRUCTIONS, new Boolean(
+					Properties.ID_AVOIDOBSTRUCTIONS, Boolean.valueOf(
 						avoidObstaclesButton.getSelection()));
 			}
 		});
@@ -243,7 +243,7 @@ public class ConnectorAppearancePropertySection
 				updateModel(
 					ResourceManager
 						.getI18NString("AppearanceDetails.ClosestDistanceCommand.Text"), //$NON-NLS-1$
-					Properties.ID_CLOSESTDISTANCE, new Boolean(
+					Properties.ID_CLOSESTDISTANCE, Boolean.valueOf(
 						closestDistanceButton.getSelection()));
 			}
 		});
