@@ -38,21 +38,21 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	/**
 	 * ther clip height constant
 	 */
-	static public final int CLIP_HEIGHT = 317;
+	static public final int CLIP_HEIGHT = MapMode.DPtoLP(12);
 	
 	/**
 	 * the margin constant 
 	 */
-	static public final int MARGIN = 132;
+	static public final int MARGIN = MapMode.DPtoLP(5);
 	
 	/**
 	 * the clip margin constant
 	 */
-	static public final int CLIP_MARGIN = 370;
+	static public final int CLIP_MARGIN = MapMode.DPtoLP(14);
 	static private final int clipHeight = CLIP_HEIGHT;
-	static private final int clipWidth = CLIP_HEIGHT + 26;
-	private static final int DEFAULT_NOTE_WIDTH  = 2645;
-	private static final int DEFAULT_NOTE_HEIGHT = 1455;
+	static private final int clipWidth = CLIP_HEIGHT + MapMode.DPtoLP(1);
+	private static final int DEFAULT_NOTE_WIDTH  = MapMode.DPtoLP(100);
+	private static final int DEFAULT_NOTE_HEIGHT = MapMode.DPtoLP(56);
 	
 	private boolean diagrsamLinkMode = false;;
 
