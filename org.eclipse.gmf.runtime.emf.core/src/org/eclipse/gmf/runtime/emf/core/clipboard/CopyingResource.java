@@ -256,7 +256,7 @@ public class CopyingResource
 	 * Returns the object based on the fragment as an ID.
 	 */
 	protected EObject getEObjectByID(String id) {
-		EObject eObj = (EObject) xmlResource.getIDToEObjectMap().get(id);
+		EObject eObj = xmlResource.getEObject(id);
 		if (eObj == null) {
 			return super.getEObjectByID(id);
 		}
@@ -316,7 +316,10 @@ public class CopyingResource
 	}
 
 	private void copyIDs() {
-		getEObjectToIDMap().putAll(xmlResource.getEObjectToIDMap());
-		getIDToEObjectMap().putAll(xmlResource.getIDToEObjectMap());
+		for (Iterator iter = xmlResource.getAllContents(); iter.hasNext(); ) {
+			EObject eObject = (EObject)iter.next();
+			getEObjectToIDMap().put(eObject, EObjectUtil.getID(eObject));
+			getIDToEObjectMap().put(EObjectUtil.getID(eObject), eObject);
+		}
 	}
 }

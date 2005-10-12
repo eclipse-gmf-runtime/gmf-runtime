@@ -788,6 +788,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#openUndoInterval()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void openUndoInterval() {
 		undoStack.openUndoInterval(MSLConstants.EMPTY_STRING,
@@ -796,6 +797,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#openUndoInterval(java.lang.String)
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void openUndoInterval(String label) {
 		undoStack.openUndoInterval(label, MSLConstants.EMPTY_STRING);
@@ -804,6 +806,7 @@ public class MSLEditingDomain
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#openUndoInterval(java.lang.String,
 	 *      java.lang.String)
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void openUndoInterval(String label, String description) {
 		undoStack.openUndoInterval(label, description);
@@ -811,6 +814,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#closeUndoInterval()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public MUndoInterval closeUndoInterval() {
 		return undoStack.closeUndoInterval();
@@ -904,6 +908,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#startRead()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void startRead() {
 		undoStack.startAction(MSLUndoStack.ActionLockMode.READ);
@@ -911,6 +916,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#startWrite()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void startWrite() {
 		undoStack.startAction(MSLUndoStack.ActionLockMode.WRITE);
@@ -918,6 +924,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#startUnchecked()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void startUnchecked() {
 		undoStack.startAction(MSLUndoStack.ActionLockMode.UNCHECKED);
@@ -925,6 +932,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#complete()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void complete() {
 		undoStack.completeAction();
@@ -932,6 +940,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#completeAndValidate()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public IStatus completeAndValidate()
 		throws MSLActionAbandonedException {
@@ -940,6 +949,7 @@ public class MSLEditingDomain
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#abandon()
+	 * @deprecated overrides a deprecated method from MEditingDomain
 	 */
 	public void abandon() {
 		undoStack.abandonAction();

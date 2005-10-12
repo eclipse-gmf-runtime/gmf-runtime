@@ -32,6 +32,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.edit.MSemProcProvider;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack;
+import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack.ActionLockMode;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
@@ -216,14 +217,16 @@ public class MSLEventBroker {
 				validateEvents = false;
 
 			if ((options & MRunOption.UNCHECKED) != 0)
-				domain.startUnchecked();
+				//domain.startUnchecked();
+				domain.getUndoStack().startAction(ActionLockMode.UNCHECKED);
 
 			result = runnable.run();
 
 		} finally {
 
 			if ((options & MRunOption.UNCHECKED) != 0)
-				domain.complete();
+				//domain.complete();
+				domain.getUndoStack().completeAction();
 
 			sendEventsToListeners = savedSendEventsToListeners;
 			sendEventsToMetaModel = savedSendEventsToMetaModel;

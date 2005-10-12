@@ -364,16 +364,13 @@ public class PasteIntoParentOperation
 	}
 
 	private void recycleObjectId(EObject pastedEObject) {
-		String newId = (String) getParentResource().getEObjectToIDMap().remove(
-			pastedEObject);
+		String newId = getParentResource().getID(pastedEObject);
 		if (newId != null) {
 			String originalId = (String) getLoadedEObjectToIDMapCopy().get(
 				pastedEObject);
-			getParentResource().getEObjectToIDMap().put(pastedEObject,
-				originalId);
-			getParentResource().getIDToEObjectMap().remove(newId);
-			getParentResource().getIDToEObjectMap().put(originalId,
-				pastedEObject);
+			getParentResource().setID(pastedEObject, originalId);
+		} else {
+			getParentResource().setID(pastedEObject, null);
 		}
 	}
 
@@ -498,8 +495,7 @@ public class PasteIntoParentOperation
 				}
 			}
 			if (val.eIsProxy()) {
-				resolvedVal = ClipboardSupportUtil.resolve(val, getParentResource()
-					.getIDToEObjectMap());
+				resolvedVal = ClipboardSupportUtil.resolve(val, getParentResource());
 				if (resolvedVal.eIsProxy()) {
 					resolvedVal = EcoreUtil.resolve(val, getParentResource());
 				}
@@ -603,7 +599,7 @@ public class PasteIntoParentOperation
 	 * @see #getParentResource()
 	 */
 	public EObject getEObject(String objId) {
-		return (EObject) getParentResource().getIDToEObjectMap().get(objId);
+		return getParentResource().getEObject(objId);
 	}
 
 	/**
@@ -615,7 +611,7 @@ public class PasteIntoParentOperation
 	 * @see #getParentResource()
 	 */
 	public String getEObjectID(EObject eObject) {
-		return (String) getParentResource().getEObjectToIDMap().get(eObject);
+		return getParentResource().getID(eObject);
 	}
 
 	/**

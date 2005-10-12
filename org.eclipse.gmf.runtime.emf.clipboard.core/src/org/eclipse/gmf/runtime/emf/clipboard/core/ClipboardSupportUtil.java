@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
-
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 
 /**
@@ -679,6 +679,38 @@ public final class ClipboardSupportUtil {
 				EObject resolvedObject = (EObject) idToEObjectMap.get(id);
 				if (resolvedObject != null && resolvedObject != proxy) {
 					return resolve(resolvedObject, idToEObjectMap);
+				}
+			} catch (Exception exception) {
+				ClipboardPlugin.catching(ClipboardSupportUtil.class, RESOLVE, exception);
+			}
+		}
+		return proxy;
+	}
+
+	/**
+	 * Resolves a <code>proxy</code>, using the specified resource.  If a proxy
+	 * resolves to another proxy, then this procedure repeats until either a
+	 * non-proxy is found or it is not resolved.
+	 * 
+	 * @param proxy a proxy
+	 * @param resource the resource containing a mapping of element ID strings to {@link EObject}s
+	 * @return a resolved element, or a proxy if it could not be resolved.  In
+	 *     either case, the result may be different than the original
+	 *     <code>proxy</code> (this is different from the behaviour of the
+	 *     {@link org.eclipse.emf.ecore.util.EcoreUtil#resolve(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)}
+	 *     method
+	 */
+	public static EObject resolve(EObject proxy, XMLResource resource) {
+		URI proxyUri = ((InternalEObject) proxy).eProxyURI();
+		if (proxyUri != null) {
+			try {
+				String id = getProxyID(proxyUri);
+				if ((id == null) || (id.length() == 0)) {
+					id = proxyUri.fragment();
+				}
+				EObject resolvedObject = resource.getEObject(id);
+				if (resolvedObject != null && resolvedObject != proxy) {
+					return resolve(resolvedObject, resource);
 				}
 			} catch (Exception exception) {
 				ClipboardPlugin.catching(ClipboardSupportUtil.class, RESOLVE, exception);
