@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
@@ -168,6 +169,7 @@ public class ZoomContributionItem
 		combo.addListener(SWT.Selection, this);
 		combo.addListener(SWT.KeyDown, this);
 		combo.setItems(getZoomLevelsAsText());
+		combo.setVisibleItemCount(IUIConstants.DEFAULT_DROP_DOWN_SIZE);
 		return combo;
 	}
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
 
 /**
  * Drop down combo box conbtribution item that changes font's name
@@ -58,6 +59,7 @@ public class FontNameContributionItem
 		String[] strings = FontHelper.getFontNames();
 		
 		Combo box = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+		box.setVisibleItemCount(IUIConstants.DEFAULT_DROP_DOWN_SIZE);
 		box.setItems(strings);
 		box.addListener(SWT.Selection, this);
 		box.select(0);
