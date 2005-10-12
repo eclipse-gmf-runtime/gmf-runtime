@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
  *
  * Subclass to allow implementation of the DrawableRenderedImage interface
  */
-public class ScaledGraphics extends org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics 
+public class RenderedScaledGraphics extends org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics 
 					implements DrawableRenderedImage {
 	
 	private Graphics graphics;
@@ -36,7 +36,7 @@ public class ScaledGraphics extends org.eclipse.gmf.runtime.draw2d.ui.internal.g
 	 * Constructs a new ScaledGraphics based on the given Graphics object.
 	 * @param g the base graphics object
 	 */
-	public ScaledGraphics(Graphics g) {
+	public RenderedScaledGraphics(Graphics g) {
 		super(g);
 		graphics = g;
 	}

@@ -393,6 +393,14 @@ Font getCachedFont(FontKey key) {
 	return Draw2dResourceManager.getInstance().getFont(Display.getCurrent(), data);
 }
 
+/**
+ * Allows clients to reset the font cache utilized by the ScaledGraphics in
+ * order to avoid caching more objects then necessary.
+ */
+static public void resetFontCache() {
+	Draw2dResourceManager.getInstance().clearFontCache();
+}
+
 FontData getCachedFontData(Font f) {
 	FontData data = (FontData)fontDataCache.get(f);
 	if (data != null)

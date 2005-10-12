@@ -255,6 +255,8 @@ public class ScalableImageFigure extends ImageFigure {
            	((DrawableRenderedImage) graphics).drawRenderedImage(getRenderedImage(new Dimension(getBounds().width, getBounds().height)),
                        x, y, getBounds().width, getBounds().height);
 		} else { 
+		   // translate to device coordinates for rendering
+		   area = (Rectangle)MapMode.translateToDP(area);
            RenderedImage rndImage = getRenderedImage(new Dimension(area.width, area.height));
            if (rndImage != null)
            		graphics.drawImage(renderedImage.getSWTImage(), x, y); 

@@ -11,11 +11,16 @@
 
 package org.eclipse.gmf.runtime.gef.ui.internal.editparts;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
@@ -31,6 +36,7 @@ public class AnimatableZoomManager
 	extends ZoomManager {
 
 	private int zoomAnimationStyle = ANIMATE_NEVER;
+	private List animationListeners = new ArrayList();
 
 	/**
 	 * @return Returns the zoomAnimationStyle.
@@ -54,6 +60,35 @@ public class AnimatableZoomManager
 	 */
 	public void setZoomAnimationStyle(int style) {
 		zoomAnimationStyle = style;
+	}
+	
+	/**
+	 * Adds the given ZoomListener to this ZoomManager's list of listeners.
+	 * @param listener the ZoomListener to be added
+	 */
+	public void addZoomListener(ZoomListener listener) {
+		super.addZoomListener(listener);
+		if (listener instanceof AnimatedZoomListener) {
+			animationListeners.add(listener);
+		}
+	}
+	
+	/**
+	 * Notifies listeners that the animated zoom has started.
+	 */
+	protected void fireAnimatedZoomStarted() {
+		Iterator iter = animationListeners.iterator();
+		while (iter.hasNext())
+			((AnimatedZoomListener)iter.next()).animatedZoomStarted();
+	}
+	
+	/**
+	 * Notifies listeners that the animated zoom has ended.
+	 */
+	protected void fireAnimatedZoomEnded() {
+		Iterator iter = animationListeners.iterator();
+		while (iter.hasNext())
+			((AnimatedZoomListener)iter.next()).animatedZoomEnded();
 	}
 	
 	/**
@@ -149,7 +184,10 @@ public class AnimatableZoomManager
 		}
 		boolean finished = false;
 		
+		fireAnimatedZoomStarted();
+		
 		while(!finished) {
+			
 			if (animationModel == null || animationModel.isFinished())
 				finished = true;
 			
@@ -165,5 +203,7 @@ public class AnimatableZoomManager
 			if (animationModel != null)
 				progress = animationModel.getProgress();
 		}
+		
+		fireAnimatedZoomEnded();
 	}
 }

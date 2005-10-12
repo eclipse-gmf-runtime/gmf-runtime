@@ -11,10 +11,18 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal.l10n;
 
-import org.eclipse.core.runtime.Plugin;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 
 
 /**
@@ -48,7 +56,7 @@ public class Draw2dResourceManager extends AbstractUIResourceManager {
 	/**
 	 * Singleton instance for the resource manager
 	 */
-	private static AbstractUIResourceManager resourceManager =
+	private static Draw2dResourceManager resourceManager =
 		new Draw2dResourceManager();
 
 	/**
@@ -62,7 +70,7 @@ public class Draw2dResourceManager extends AbstractUIResourceManager {
 	 * Return singleton instance of the resource manager
 	 * @return AbstractResourceManager
 	 */
-	public static AbstractUIResourceManager getInstance() {
+	public static Draw2dResourceManager getInstance() {
 		return resourceManager;
 	}
 
@@ -88,12 +96,7 @@ public class Draw2dResourceManager extends AbstractUIResourceManager {
 	 */
 	protected void initializeUIResources() {
 		initializeMessageResources();
-		initializeImageResources();
 	}	
-
-	protected void initializeImageResources() {
-		super.initializeImageResources();
-	}
 
     /**
      * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#getPlugin()
@@ -102,4 +105,36 @@ public class Draw2dResourceManager extends AbstractUIResourceManager {
         return Draw2dPlugin.getInstance();
     }
 
+    private Map fonts = null;
+	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager#getFont(org.eclipse.swt.graphics.Device, org.eclipse.swt.graphics.FontData)
+	 */
+	public Font getFont(Device device, FontData fd) {
+		if (fonts == null)
+			fonts = new HashMap();
+			
+		Object value = fonts.get(fd.toString());
+		if (value != null) {
+			return (Font) value;
+		}
+		Font newFont = new Font(device, fd);
+		fonts.put(fd.toString(), newFont);
+		return newFont;
+	}
+	
+	/**
+	 * Removes all fonts currently in the cache and dispose of them
+	 */
+	public void clearFontCache() {
+		if (fonts != null) {
+			List keys = new ArrayList(fonts.keySet());
+			Iterator keyiter = keys.iterator();
+			while (keyiter.hasNext()) {
+				Font font = (Font)fonts.remove(keyiter.next());
+				font.dispose();
+			}
+		}
+	}
 }

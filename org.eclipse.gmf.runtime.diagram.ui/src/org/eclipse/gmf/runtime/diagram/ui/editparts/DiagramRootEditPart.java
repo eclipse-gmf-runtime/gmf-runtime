@@ -24,12 +24,9 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.rulers.RulerProvider;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
@@ -45,8 +42,12 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeFreeformLayer;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * RootEditPart which manages the Diagram's layers and creates the discrete zoom
@@ -79,6 +80,18 @@ public class DiagramRootEditPart
 		}
 	}
 	
+	static protected class DiagramScalableFreeformLayeredPane extends
+		org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane implements ZoomListener {
+	
+		/* 
+		 * (non-Javadoc)
+		 * @see org.eclipse.gef.editparts.ZoomListener#zoomChanged(double)
+		 */
+		public void zoomChanged(double zoom) {
+			ScaledGraphics.resetFontCache();
+		}
+	}
+
 	private DiagramRuler verticalRuler, horizontalRuler;
 	private AnimatableZoomManager zoomManager;
 	private double[] zoomLevels = {.05, .1, .25, .5, .75, 1, 1.25, 1.5, 1.75, 2, 4};
@@ -173,7 +186,7 @@ public class DiagramRootEditPart
 	 * @return the new <code>ScalableFreeformLayeredPane</code>
 	 */
 	protected ScalableFreeformLayeredPane createScalableFreeformLayeredPane() {
-		return new org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane();
+		return new DiagramScalableFreeformLayeredPane();
 	}
 
 	/**
@@ -489,6 +502,11 @@ public class DiagramRootEditPart
 		if (getWorkspaceViewerPreferences() != null)
 			getWorkspaceViewerPreferences().addPropertyChangeListener(listener);	
 		initPreferenceStoreListener();
+		
+		ScalableFreeformLayeredPane pane = getLayers();
+		if (pane instanceof ZoomListener) {
+			getZoomManager().addZoomListener((ZoomListener)pane);
+		}
 	}
 	
 	/**
@@ -498,6 +516,12 @@ public class DiagramRootEditPart
 		if (getWorkspaceViewerPreferences() != null)
 			getWorkspaceViewerPreferences().removePropertyChangeListener(listener);
 		removePreferenceStoreListener();
+		
+		ScalableFreeformLayeredPane pane = getLayers();
+		if (pane instanceof ZoomListener) {
+			getZoomManager().removeZoomListener((ZoomListener)pane);
+		}
+		
 		super.deactivate();
 	}
 	

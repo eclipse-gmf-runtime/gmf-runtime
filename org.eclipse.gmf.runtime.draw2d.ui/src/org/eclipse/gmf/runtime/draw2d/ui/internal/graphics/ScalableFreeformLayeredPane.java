@@ -47,7 +47,7 @@ public class ScalableFreeformLayeredPane
 		}
 
     	// Create MapMode Graphics Object
-        MapModeGraphics gMM = new MapModeGraphics(graphics);
+        MapModeGraphics gMM = createMapModeGraphics(graphics);
     	gMM.pushState();
   	
     	if (getChildren().isEmpty()) {
@@ -57,7 +57,7 @@ public class ScalableFreeformLayeredPane
     	if (getScale() == 1.0) {
     		super.paintClientArea(gMM);
     	} else {
-    		ScaledGraphics g = new ScaledGraphics(gMM);
+    		ScaledGraphics g = createScaledGraphics(gMM);
     		boolean optimizeClip = getBorder() == null || getBorder().isOpaque();
     		if (!optimizeClip)
     			g.clipRect(getBounds().getCropped(getInsets()));
@@ -70,6 +70,24 @@ public class ScalableFreeformLayeredPane
     	
     	gMM.popState();
     }
+
+	/**
+	 * @param graphics <code>MapModeGraphics</code> object to wrap with a <code>ScaledGraphics</code>
+	 * @return <code>ScaledGraphics</code>
+	 */
+	protected ScaledGraphics createScaledGraphics(MapModeGraphics gMM) {
+		ScaledGraphics g = new ScaledGraphics(gMM);
+		return g;
+	}
+
+	/**
+	 * @param graphics <code>Graphics</code> object to wrap with a <code>MapModeGraphics</code>
+	 * @return <code>MapModeGraphics</code>
+	 */
+	protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
+		MapModeGraphics gMM = new MapModeGraphics(graphics);
+		return gMM;
+	}
 
     /**
      * @see org.eclipse.draw2d.Figure#getClientArea()
