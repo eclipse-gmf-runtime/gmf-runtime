@@ -57,7 +57,7 @@ public class ShapeColorsAndFontsPropertySection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.xtools.uml.ui.diagram.internal.properties.sections.appearance.ColorsPropertySection#setColors()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ColorsAndFontsPropertySection#updateColorCache()
 	 */
 	protected void updateColorCache() {
 		super.updateColorCache();

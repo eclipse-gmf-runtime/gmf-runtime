@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
  * An emumeration of element types and their associated element kind
  * 
  * @deprecated Replaced with the element type registry in
- *             <code>com.ibm.xtools.emf.typ</code>. Element Types are
+ *             <code>org.eclipse.gmf.runtime.emf.type.core</code>. Element Types are
  *             registered using the
  *             <code>org.eclipse.gmf.runtime.emf.type.core.elementTypes</code> extension
  *             point and can be accessed by ID using
@@ -87,14 +87,14 @@ public abstract class ElementType extends EnumeratedType implements IElementType
     }
 
     /* (non-Javadoc)
-     * @see com.ibm.xtools.msl.core.internal.util.IElementType#getEClass()
+     * @see org.eclipse.gmf.runtime.emf.core.internal.util.IElementType#getEClass()
      */
     public EClass getEClass() {
         return languageElementKind;
     }
     
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.msl.core.internal.util.IElementType#getEClassName()
+	 * @see org.eclipse.gmf.runtime.emf.core.internal.util.IElementType#getEClassName()
 	 */
 	public String getEClassName() {
 		return MetaModelUtil.getID(getEClass());

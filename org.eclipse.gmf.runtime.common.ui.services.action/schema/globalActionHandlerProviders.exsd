@@ -210,15 +210,15 @@ To delay plugin loading, the recommended strategy for policies is to define them
          name=&quot;%ext.globalActionHandlerProviders&quot;
          point=&quot;org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders&quot;&gt;
       &lt;GlobalActionHandlerProvider
-            class=&quot;com.ibm.xtools.common.ui.views.internal.providers.GlobalActionHandlerProvider&quot;
+            class=&quot;org.eclipse.test.common.ui.views.internal.providers.GlobalActionHandlerProvider&quot;
             id=&quot;ContainerResourceGlobalActionHandlerProvider&quot;&gt;
          &lt;Priority
                name=&quot;Lowest&quot;&gt;
          &lt;/Priority&gt;
          &lt;ViewId
-               id=&quot;com.ibm.xtools.common.ui.views.DiagramNavigator&quot;&gt;
+               id=&quot;org.eclipse.test.common.ui.views.DiagramNavigator&quot;&gt;
             &lt;ElementType
-                  class=&quot;com.ibm.xtools.common.ui.views.internal.providers.ContainerViewerElement&quot;&gt;
+                  class=&quot;org.eclipse.test.common.ui.views.internal.providers.ContainerViewerElement&quot;&gt;
                &lt;GlobalActionId
                      actionId=&quot;open&quot;&gt;
                &lt;/GlobalActionId&gt;

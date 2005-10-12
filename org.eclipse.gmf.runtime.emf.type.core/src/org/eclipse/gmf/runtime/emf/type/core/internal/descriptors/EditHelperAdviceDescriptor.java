@@ -123,7 +123,7 @@ public class EditHelperAdviceDescriptor
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.xtools.emf.msl.type.IEditHelperAdviceDescriptor#getMatcher()
+	 * @see org.eclipse.gmf.runtime.emf.type.core.internal.impl.IEditHelperAdviceDescriptor#getMatcher()
 	 */
 	public IElementMatcher getMatcher() {
 		return specializationDescriptor.getMatcher();

@@ -96,7 +96,7 @@ public class MetamodelType
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.xtools.emf.msl.type.IElementType#getCommand(com.ibm.xtools.emf.msl.type.edit.EditCommandRequest)
+	 * @see org.eclipse.gmf.runtime.emf.type.core.IElementType#getCommand(org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest)
 	 */
 	public ICommand getEditCommand(IEditCommandRequest request) {
 		return getEditHelper().getEditCommand(request);

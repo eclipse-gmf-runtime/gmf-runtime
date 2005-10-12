@@ -141,12 +141,12 @@
       name=&quot;%ext.markerNavigationProviders&quot; 
       point=&quot;org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders&quot;&gt; 
       &lt;MarkerNavigationProvider 
-         class=&quot;com.ibm.xtools.project.ui.providers.ModelerMarkerNavigationProvider&quot;&gt; 
+         class=&quot;org.eclipse.test.project.ui.providers.ModelerMarkerNavigationProvider&quot;&gt; 
          &lt;Priority 
             name=&quot;Highest&quot;&gt; 
          &lt;/Priority&gt; 
          &lt;MarkerType 
-            name=&quot;com.ibm.xtools.modeler.bookmark&quot;&gt; 
+            name=&quot;org.eclipse.test.bookmark&quot;&gt; 
          &lt;/MarkerType&gt; 
       &lt;/MarkerNavigationProvider&gt; 
    &lt;/extension&gt; 

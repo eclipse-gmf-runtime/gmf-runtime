@@ -46,7 +46,7 @@ public class WidgetService
 	/**
 	 * Returns a <code>List</code> containing the Widgets requested or null if no Widget
 	 * providers are found that can create orderSize Widgets.
-	 * @see com.ibm.xtools.widgetapp.service.IWidgetProvider#createWidget(int)
+	 * @see org.eclipse.gmf.examples.runtime.common.service.application.IWidgetProvider#createWidget(int)
 	 */
 	public Object createWidget(int orderSize) {
 		return execute(new CreateWidgetOperation(orderSize));

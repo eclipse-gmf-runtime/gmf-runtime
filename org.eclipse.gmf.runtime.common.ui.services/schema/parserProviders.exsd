@@ -119,7 +119,7 @@
         name=&quot;%ext.parserProviders&quot; 
         point=&quot;org.eclipse.gmf.runtime.common.ui.services.parserProviders&quot;&gt; 
       &lt;ParserProvider 
-        class=&quot;com.ibm.xtools.project.providers.parser.MyParserProvider&quot;&gt; 
+        class=&quot;org.eclipse.test.project.providers.parser.MyParserProvider&quot;&gt; 
          &lt;Priority name=&quot;Lowest&quot;&gt;&lt;/Priority&gt; 
       &lt;/ParserProvider&gt; 
    &lt;/extension&gt; 

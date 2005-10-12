@@ -28,7 +28,7 @@ public final class ResourceManager extends AbstractResourceManager {
     }
 
     /* (non-Javadoc)
-     * @see com.ibm.xtools.common.l10n.AbstractResourceManager#initializeResources()
+     * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#initializeResources()
      */
     protected void initializeResources() {
         initializeMessageResources();

@@ -27,10 +27,6 @@
 		</zip>
 		
 		<!-- Copy zip for java doc -->
-		<copy toDir="${workspace.folder}/com.ibm.xtools.platform.doc.isv/html/tutorials/">
-			<fileset file="${dest.file}"/>
-		</copy>
-		
 		<copy toDir="${workspace.folder}/org.eclipse.gmf.runtime.doc.isv/html/tutorials/">
 			<fileset file="${dest.file}"/>
 		</copy>		

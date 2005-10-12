@@ -100,7 +100,7 @@ public final class EmptyFontRegistry extends FontRegistry {
 	}
 
 	/* Do nothing - the registry is always empty
-	 * @see com.ibm.xtools.common.l10n.FontRegistry#put(String, FontData[])
+	 * @see org.eclipse.jface.resource.FontRegistry#put(String, FontData[])
 	 */
 	public void put(String symbolicName, FontData[] fontData) {
 		/* empty method body */

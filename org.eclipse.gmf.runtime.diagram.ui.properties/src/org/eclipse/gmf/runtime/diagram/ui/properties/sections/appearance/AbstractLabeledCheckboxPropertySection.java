@@ -35,7 +35,6 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertyS
 
 /**
  * @author dlander
- * @canBeSeenBy com.ibm.xtools.uml.ui.diagram.*
  */
 public abstract class AbstractLabeledCheckboxPropertySection
 	extends AbstractNotationPropertiesSection {

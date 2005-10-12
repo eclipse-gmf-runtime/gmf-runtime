@@ -801,7 +801,7 @@ It has to start with a &apos;/&apos; indicating the root of the contribution man
          name=&quot;%ext.contributionItemProvider&quot;
           point=&quot;org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders&quot;&gt;
       &lt;contributionItemProvider
-            class=&quot;com.ibm.xtools.project.ui.providers.PresentationContributionItemProvider&quot;&gt;
+            class=&quot;org.eclipse.test.project.ui.providers.PresentationContributionItemProvider&quot;&gt;
          &lt;Priority
                name=&quot;Lowest&quot;&gt;
          &lt;/Priority&gt;

@@ -252,7 +252,7 @@ className&lt;(plugin id)&gt;?
         name=&quot;%ext.iconProviders&quot; 
         point=&quot;org.eclipse.gmf.runtime.common.ui.services.iconProviders&quot;&gt; 
       &lt;IconProvider 
-        class=&quot;com.ibm.xtools.project.providers.icon.MyIconProvider&quot;&gt; 
+        class=&quot;org.eclipse.test.project.providers.icon.MyIconProvider&quot;&gt; 
          &lt;Priority name=&quot;Lowest&quot;&gt;&lt;/Priority&gt; 
       &lt;/IconProvider&gt; 
    &lt;/extension&gt; 

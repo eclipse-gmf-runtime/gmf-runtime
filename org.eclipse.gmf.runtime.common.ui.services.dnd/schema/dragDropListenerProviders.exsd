@@ -103,7 +103,7 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  The target view part id, e.g. &lt;tt&gt;com.ibm.xtools.project.ui.views.MyView&lt;/tt&gt;
+                  The target view part id, e.g. &lt;tt&gt;org.eclipse.test.project.ui.views.MyView&lt;/tt&gt;
                </documentation>
             </annotation>
          </attribute>
@@ -118,7 +118,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The element type within the view part, e.g. &lt;tt&gt;com.ibm.xtools.project.ui.internal.providers.MyElement&lt;/tt&gt;
+                  The element type within the view part, e.g. &lt;tt&gt;org.eclipse.test.project.ui.internal.providers.MyElement&lt;/tt&gt;
                </documentation>
             </annotation>
          </attribute>
@@ -173,15 +173,15 @@
       name=&quot;%ext.dragDropListenerProviders&quot; 
       point=&quot;org.eclipse.gmf.runtime.common.ui.services.dnd.dragDropListenerProviders&quot;&gt; 
       &lt;DragDropListenerProvider 
-         class=&quot;com.ibm.xtools.project.ui.internal.providers.dnd.DragDropListenerProvider&quot; 
+         class=&quot;org.eclipse.test.project.ui.internal.providers.dnd.DragDropListenerProvider&quot; 
          id=&quot;myExplorerDragDropListenerProvider&quot;&gt; 
          &lt;Priority 
             name=&quot;Lowest&quot;&gt; 
          &lt;/Priority&gt; 
          &lt;ViewId 
-            id=&quot;com.ibm.xtools.project.ui.views.MyExplorer&quot;&gt; 
+            id=&quot;org.eclipse.test.project.ui.views.MyExplorer&quot;&gt; 
            &lt;ElementType 
-              class=&quot;com.ibm.xtools.project.ui.internal.providers.myexplorer.MyElement&quot;&gt; 
+              class=&quot;org.eclipse.test.project.ui.internal.providers.myexplorer.MyElement&quot;&gt; 
              &lt;OperationType 
                 operation=&quot;drag&quot;&gt; 
                &lt;TransferId 

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.ibm.xtools.common.ui.services">
+<schema targetNamespace="org.eclipse.gmf.runtime.common.ui.services">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.ibm.xtools.common.ui.services" id="elementSelection" name="Element Selection Providers Extension Point"/>
+         <meta.schema plugin="org.eclipse.gmf.runtime.common.ui.services" id="elementSelection" name="Element Selection Providers Extension Point"/>
       </appInfo>
       <documentation>
          This extension point facilitates the configuration of providers for the element selection service (&lt;tt&gt;org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionService&lt;/tt&gt;). Using this extension point, providers are registered to provide a list of element for the element selection composite and element selection dialog.
@@ -116,7 +116,7 @@
       name=&quot;%ext.elementSelectionProviders&quot; 
       point=&quot;org.eclipse.gmf.runtime.common.ui.services.elementSelectionProviders&quot;&gt; 
       &lt;elementSelectionProvider 
-         class=&quot;com.ibm.xtools.uml.ui.internal.providers.elementselection.UMLElementSelectionProvider&quot;&gt; 
+         class=&quot;org.eclipse.uml.ui.internal.providers.elementselection.UMLElementSelectionProvider&quot;&gt; 
          &lt;Priority 
             name=&quot;Highest&quot;&gt; 
          &lt;/Priority&gt; 

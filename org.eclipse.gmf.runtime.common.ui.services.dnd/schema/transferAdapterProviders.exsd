@@ -141,15 +141,15 @@
       name=&quot;%ext.dragDropListenerProviders&quot; 
       point=&quot;org.eclipse.gmf.runtime.common.ui.services.dnd.dragDropListenerProviders&quot;&gt; 
       &lt;DragDropListenerProvider 
-         class=&quot;com.ibm.xtools.project.ui.internal.providers.dnd.MyExplorerDragDropListenerProvider&quot; 
+         class=&quot;org.eclipse.test.project.ui.internal.providers.dnd.MyExplorerDragDropListenerProvider&quot; 
          id=&quot;myexplorerDragDropListenerProvider&quot;&gt; 
          &lt;Priority 
             name=&quot;Lowest&quot;&gt; 
          &lt;/Priority&gt; 
          &lt;ViewId 
-            id=&quot;com.ibm.xtools.modeler.ui.views.MyExplorer&quot;&gt; 
+            id=&quot;org.eclipse.test.modeler.ui.views.MyExplorer&quot;&gt; 
            &lt;ElementType 
-              class=&quot;com.ibm.xtools.project.ui.internal.providers.explorer.MyElement&quot;&gt; 
+              class=&quot;org.eclipse.test.project.ui.internal.providers.explorer.MyElement&quot;&gt; 
              &lt;OperationType 
                 operation=&quot;drag&quot;&gt; 
                &lt;TransferId 

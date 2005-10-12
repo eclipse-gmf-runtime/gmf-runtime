@@ -21,12 +21,12 @@
                icon="icons/diagram.gif"
                tooltip="%layout_tooltip"
                class="org.eclipse.gmf.examples.runtime.diagram.layout.actions.SquareLayoutAction"
-               menubarPath="com.ibm.xtools.pde.examples.menu/additions"
+               menubarPath="org.eclipse.gmf.examples.runtime.menu/additions"
                id="org.eclipse.gmf.examples.runtime.diagram.layout.actions.SquareLayoutAction">
          </action>
          <menu
                label="%sampleMenu"
-               id="com.ibm.xtools.pde.examples.menu">
+               id="org.eclipse.gmf.examples.runtime.menu">
          </menu>
       </actionSet>
    </extension>

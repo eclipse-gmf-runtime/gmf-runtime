@@ -1,6 +1,6 @@
 # Debugging options for the org.eclipse.gmf.runtime.emf.ui.properties plug-in
 
-# Turn on general debugging for the com.ibm.xtools.msl.ui plug-in
+# Turn on general debugging for the org.eclipse.gmf.runtime.emf.ui.properties plug-in
 org.eclipse.gmf.runtime.emf.ui.properties/debug=true
 
 # Trace when exceptions are caught

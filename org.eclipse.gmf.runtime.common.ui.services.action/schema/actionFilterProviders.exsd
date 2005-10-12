@@ -175,7 +175,7 @@ To delay plugin loading, the recommended strategy for policies is to define them
          name=&quot;%ext.actionFilterProviders&quot;
          point=&quot;org.eclipse.gmf.runtime.common.ui.services.action.actionFilterProviders&quot;&gt;
       &lt;ActionFilterProvider
-            class=&quot;com.ibm.xtools.project.ui.providers.action.AllAreElementsActionFilterProvider&quot;&gt;
+            class=&quot;org.eclipse.test.project.ui.providers.action.AllAreElementsActionFilterProvider&quot;&gt;
          &lt;Priority
                name=&quot;Highest&quot;&gt;
          &lt;/Priority&gt;

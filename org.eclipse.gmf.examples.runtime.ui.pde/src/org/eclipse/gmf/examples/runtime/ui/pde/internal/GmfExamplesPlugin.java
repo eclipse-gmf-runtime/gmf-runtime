@@ -25,8 +25,6 @@ public class GmfExamplesPlugin
 
 	/**
 	 * Constructor.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin
 	 */
 	public GmfExamplesPlugin() {
 		super();

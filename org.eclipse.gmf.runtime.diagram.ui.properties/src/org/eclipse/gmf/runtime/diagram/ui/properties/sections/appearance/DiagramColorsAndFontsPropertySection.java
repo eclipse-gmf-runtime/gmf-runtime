@@ -43,7 +43,7 @@ public class DiagramColorsAndFontsPropertySection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.xtools.uml.ui.diagram.internal.properties.sections.appearance.AbstractAppearancePropertySection#getSingleInput()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection#getSingleInput()
 	 */
 	public IGraphicalEditPart getSingleInput() {
 

@@ -128,10 +128,10 @@ A policy may be specified to delay loading the modifier until it is applicable
 &lt;p&gt;
 &lt;pre&gt;
    &lt;extension 
-      id=&quot;com.ibm.xtools.project.ui.editors.providers.ReadOnlyDiagramPropertiesModifier&quot; 
+      id=&quot;org.eclipse.test.project.ui.editors.providers.ReadOnlyDiagramPropertiesModifier&quot; 
       name=&quot;%ext.readOnlyPropertiesModifier&quot; 
       point=&quot;org.eclipse.gmf.runtime.common.ui.services.properties.propertyModifiers&quot;&gt;
-      &lt;PropertyModifier class=&quot;com.ibm.xtools.project.ui.properties.providers.ReadOnlyDiagramPropertiesModifier&quot;&gt;
+      &lt;PropertyModifier class=&quot;org.eclipse.test.project.ui.properties.providers.ReadOnlyDiagramPropertiesModifier&quot;&gt;
          &lt;Priority name=&quot;Highest&quot;&gt;
          &lt;/Priority&gt;
             &lt;Provider class=&quot;*&quot;&gt;

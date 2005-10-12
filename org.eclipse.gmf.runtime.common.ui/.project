@@ -2,12 +2,7 @@
 <projectDescription>
 	<name>org.eclipse.gmf.runtime.common.ui</name>
 	<comment></comment>
-	<projects>
-		<project>com.ibm.xtools.bml.emf</project>
-		<project>org.eclipse.gmf.runtime.common.core</project>
-		<project>org.eclipse.gmf.runtime.common.ui.services.dnd</project>
-		<project>org.eclipse.gmf.runtime.emf.core</project>
-	</projects>
+	<projects></projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

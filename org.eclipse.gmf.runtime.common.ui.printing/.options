@@ -1,21 +1,19 @@
-# Debugging options for the com.ibm.xtools.common.printing plug-in
+# Debugging options for the org.eclipse.gmf.runtime.common.ui.printing plug-in
 
-# Turn on general debugging for the com.ibm.xtools.common.printing plug-in
-com.ibm.xtools.common.printing/debug=true
+# Turn on general debugging for the org.eclipse.gmf.runtime.common.ui.printing plug-in
+org.eclipse.gmf.runtime.common.ui.printing/debug=true
 
 # Trace when exceptions are caught
-com.ibm.xtools.common.printing/debug/exceptions/catching=false
+org.eclipse.gmf.runtime.common.ui.printing/debug/exceptions/catching=false
 # Trace when exceptions are thrown
-com.ibm.xtools.common.printing/debug/exceptions/throwing=false
+org.eclipse.gmf.runtime.common.ui.printing/debug/exceptions/throwing=false
 
 # Trace when methods are entered
-com.ibm.xtools.common.printing/debug/methods/entering=false
+org.eclipse.gmf.runtime.common.ui.printing/debug/methods/entering=false
 # Trace when methods are exited
-com.ibm.xtools.common.printing/debug/methods/exiting=false
+org.eclipse.gmf.runtime.common.ui.printing/debug/methods/exiting=false
 
 # Trace information related to action administration
-com.ibm.xtools.common.printing/debug/actions/admin=false
+org.eclipse.gmf.runtime.common.ui.printing/debug/actions/admin=false
 # Trace when actions are run
-com.ibm.xtools.common.printing/debug/actions/run=false
-# Trace when actions are repeated
-com.ibm.xtools.common.printing/debug/actions/repeat=false
+org.eclipse.gmf.runtime.common.ui.printing/debug/actions/run=false

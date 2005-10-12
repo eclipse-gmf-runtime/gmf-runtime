@@ -17,9 +17,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
- * This interface enables Xtools clients to handle the navigation when the user
- * goes to (double clicks) a marker that the client has defined. The client can
- * either perform the necessary feedback in their provider or can delegate the
+ * This interface enables clients to handle the navigation when the user goes to
+ * (double clicks) a marker that the client has defined. The client can either
+ * perform the necessary feedback in their provider or can delegate the
  * operation via an applicable mechanism (e.g., a GEF request).
  * 
  * @author Kevin Cornell

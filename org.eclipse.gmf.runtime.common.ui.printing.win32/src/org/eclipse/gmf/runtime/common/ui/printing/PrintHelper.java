@@ -102,7 +102,7 @@ public class PrintHelper
 
 			// Globalization support required for the print dll.
 			// Drive:\install
-			// directory\com.ibm.xtools.common.printing.win32\os\win32\x86\"locale"\DiagramPrint.dll
+			// directory\org.eclipse.gmf.runtime.common.ui.printing.win32\os\win32\x86\"locale"\DiagramPrint.dll
 			// ...check for DLL using the full locale name.
 			// ...if the file exists, then that's all we need
 			Path dllPath = new Path(startingFolder + File.separator

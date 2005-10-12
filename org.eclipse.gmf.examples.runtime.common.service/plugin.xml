@@ -35,15 +35,15 @@
       <actionSet 
          label="%widgetServiceActionSet"
          visible="true"
-         id="com.ibm.xtools.common.core.examples.client.actionSet">
-         <action id="com.ibm.xtools.common.core.examples.runExampleAction"
+         id="org.eclipse.gmf.examples.runtime.common.service.client.actionSet">
+         <action id="org.eclipse.gmf.examples.runtime.common.service.client.RunExampleAction"
             label="%runwidget.label"
-            menubarPath="com.ibm.xtools.pde.examples.menu/additions"
+            menubarPath="org.eclipse.gmf.examples.runtime.menu/additions"
             class="org.eclipse.gmf.examples.runtime.common.service.client.RunExampleAction">
          </action>
          <menu
                label="%sampleMenu"
-               id="com.ibm.xtools.pde.examples.menu">
+               id="org.eclipse.gmf.examples.runtime.menu">
          </menu>            
       </actionSet>
    </extension>     

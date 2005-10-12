@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Group;
 
 /**
  * @author dlander, nbalaba
- * @canBeSeenBy com.ibm.xtools.uml.ui.diagram.*
  * 
  * Appearance properties
  */

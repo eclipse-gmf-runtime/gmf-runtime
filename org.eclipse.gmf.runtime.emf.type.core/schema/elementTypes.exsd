@@ -217,7 +217,7 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
                   The fully qualified name of a class that implements &lt;code&gt;org.eclipse.gmf.runtime.emf.type.core.edit.IEditHelperAdvice&lt;/code&gt;.  This attribute is used to specify the class that provides editing advice for elements of this type. Editing advice can be contributed before and/or after the default editing behaviour.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="com.ibm.xtools.emf.msl.type.IEditHelperAdvice"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -258,7 +258,7 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
                   The fully qualified name of a class that implements &lt;code&gt;org.eclipse.gmf.runtime.emf.type.core.edit.IEditHelperAdvice&lt;/code&gt;.  This attribute is used to specify the class that provides editing advice for elements of this type. Editing advice can be contributed before and/or after the default editing behaviour.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="com.ibm.xtools.emf.msl.type.IEditHelperAdvice"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -446,7 +446,7 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
                      name=&quot;%CustomType&quot;
                      kind=&quot;org.eclipse.gmf.runtime.emf.type.core.CustomElementKind&quot;
                      edithelperadvice=&quot;org.eclipse.gmf.runtime.emf.type.core.CustomEditHelperAdvice&quot;&gt; 
-                 &lt;specializes id=&quot;com.ibm.xtools.uml.property&quot;/&gt;
+                 &lt;specializes id=&quot;org.eclipse.gmf.runtime.emf.type.core.eobject&quot;/&gt;
                  &lt;param 
                          name=&quot;customParameter1&quot; 
                          value=&quot;value1&quot;&gt;
@@ -503,12 +503,11 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
+         Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

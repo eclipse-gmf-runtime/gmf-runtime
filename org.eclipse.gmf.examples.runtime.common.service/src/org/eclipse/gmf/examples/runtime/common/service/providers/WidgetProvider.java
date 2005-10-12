@@ -43,7 +43,7 @@ public class WidgetProvider
 
 	/**
 	 * Create the number of Widgets requested.
-	 * @see com.ibm.xtools.widgetapp.service.IWidgetProvider#createWidget(int)
+	 * @see org.eclipse.gmf.examples.runtime.common.service.application.IWidgetProvider#createWidget(int)
 	 */
 	public Object createWidget(int orderSize) {
 		List widgets = new ArrayList(orderSize);

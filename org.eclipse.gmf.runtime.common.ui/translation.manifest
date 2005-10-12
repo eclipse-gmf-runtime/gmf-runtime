@@ -1,2 +1,2 @@
 plugin.properties
-src\com\ibm\xtools\common\ui\internal\l10n\messages.properties
+src\org\eclipse\gmf\runtime\common\ui\internal\l10n\messages.properties

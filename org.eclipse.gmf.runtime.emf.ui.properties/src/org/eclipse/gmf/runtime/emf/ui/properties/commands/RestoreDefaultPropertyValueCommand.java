@@ -74,21 +74,21 @@ public class RestoreDefaultPropertyValueCommand extends AbstractModelCommand {
 	}
 
 	/* (non-Javadoc)
-		 * @see com.rational.xtools.common.core.command.AbstractCommand#isRedoable()
+		 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#isRedoable()
 		 */
 	public boolean isRedoable() {
 		return true;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.rational.xtools.common.core.command.AbstractCommand#isUndoable()
+	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#isUndoable()
 	 */
 	public boolean isUndoable() {
 		return true;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.rational.xtools.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
 
@@ -110,14 +110,14 @@ public class RestoreDefaultPropertyValueCommand extends AbstractModelCommand {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.rational.xtools.common.core.command.AbstractCommand#doRedo()
+	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
 	 */
 	protected CommandResult doRedo() {
 		return doExecute(new NullProgressMonitor());
 	}
 
 	/* (non-Javadoc)
-	 * @see com.rational.xtools.common.core.command.AbstractCommand#doUndo()
+	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
 	 */
 	protected CommandResult doUndo() {
 		CommandResult result;

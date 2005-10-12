@@ -63,7 +63,7 @@
       &lt;br&gt;&lt;tt&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;extension&lt;/tt&gt;
       &lt;br&gt;&lt;tt&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;point=&quot;org.eclipse.gmf.runtime.common.core.logListeners&quot;&amp;gt;&lt;/tt&gt;
       &lt;br&gt;&lt;tt&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;LogListener&lt;/tt&gt;
-      &lt;br&gt;&lt;tt&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;class=&quot;com.ibm.xtools.listeners.SomeListenerProvider&quot;&amp;gt;&lt;/tt&gt;
+      &lt;br&gt;&lt;tt&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;class=&quot;org.eclipse.test.listeners.SomeListenerProvider&quot;&amp;gt;&lt;/tt&gt;
       &lt;br&gt;&lt;tt&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;/extension&amp;gt;&lt;/tt&gt;
       
       

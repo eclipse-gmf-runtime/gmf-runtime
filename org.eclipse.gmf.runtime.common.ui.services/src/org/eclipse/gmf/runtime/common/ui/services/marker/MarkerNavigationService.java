@@ -29,7 +29,7 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * This service is the distribution point for "gotoMarker" requests made by
- * Eclipse to an IEditorPart. In all Xtools editors, the implementation of the
+ * Eclipse to an IEditorPart. In all editors, the implementation of the
  * gotoMarker() method simply forwards the request to this service.
  * <p>
  * Marker navigation providers are chosen based upon priority and the list of
@@ -43,9 +43,10 @@ public class MarkerNavigationService
 
 	/** Remember the single instance of this service. */
 	private final static MarkerNavigationService instance = new MarkerNavigationService();
-	
+
 	static {
-		instance.configureProviders(CommonUIServicesPlugin.getPluginId(), "markerNavigationProviders"); //$NON-NLS-1$
+		instance.configureProviders(CommonUIServicesPlugin.getPluginId(),
+			"markerNavigationProviders"); //$NON-NLS-1$
 	}
 
 	/**
