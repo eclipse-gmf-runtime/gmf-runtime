@@ -23,7 +23,7 @@ http://www.eclipse.org/legal/epl-v10.html
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://update.eclipse.org/updates"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/technology/gmf/updates/site.xml"/>
       <discovery label="%updateSiteName" url="http://update.eclipse.org/updates"/>
    </url>
 
