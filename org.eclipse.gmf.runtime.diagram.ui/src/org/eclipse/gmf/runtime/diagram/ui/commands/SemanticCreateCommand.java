@@ -67,8 +67,7 @@ public class SemanticCreateCommand extends AbstractCommand {
 			Object object =	result.getReturnValue();
 			if (object instanceof Collection) {
 				Collection col = (Collection) object;
-				if (!col.isEmpty())
-					object = col.iterator().next();
+				object = col.isEmpty() ? null : col.iterator().next();
 			}
 			if (object != null) {
 				Assert.isTrue(object instanceof EObject, "Failed to get an IElement out of the semantic command returned value");//$NON-NLS-1$
