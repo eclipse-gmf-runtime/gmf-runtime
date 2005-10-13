@@ -22,6 +22,7 @@ import junit.textui.TestRunner;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeAddedEvent;
@@ -359,18 +360,17 @@ public class ElementTypeRegistryTest
 
 	public void test_getElementType_eClass() {
 		
-		Object eClass = employeePkg.getDepartment();
-		IElementType metamodeltType = getFixture().getElementType(eClass);
+		IElementType metamodelType = getFixture().getElementType(
+			employeePkg.getDepartment());
 		
-		assertNotNull(metamodeltType);
-		assertEquals(EmployeeType.DEPARTMENT, metamodeltType);
+		assertNotNull(metamodelType);
+		assertEquals(EmployeeType.DEPARTMENT, metamodelType);
 	}
 
 	public void test_getElementType_eObject() {
 		
-		Object eObject = financeManager;
 		IElementType metamodelType = getFixture().getElementType(
-			eObject);
+			financeManager);
 		
 		assertNotNull(metamodelType);
 		assertEquals(EmployeeType.EMPLOYEE, metamodelType);
@@ -384,8 +384,10 @@ public class ElementTypeRegistryTest
 
 		getFixture().register(eClassType);
 
+		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
+
 		IElementType metamodelType = getFixture().getElementType(
-			(EObject) employeePkg.getDepartment());
+			myEClassInstance);
 		assertNotNull(metamodelType);
 		assertSame(eClassType, metamodelType);
 	}

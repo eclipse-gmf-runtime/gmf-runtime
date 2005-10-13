@@ -317,14 +317,11 @@ public class ElementTypeRegistry {
 	 * If <code>o</code> is an <code>IElementType</code>, returns
 	 * <code>o</code>.
 	 * <P>
-	 * If <code>o</code> is an <code>EClass</code>, returns the metamodel
-	 * type registered for <code>o</code>.
-	 * <P>
 	 * If <code>o</code> is an <code>EObject</code>, returns the metamodel
 	 * type registered for <code>o</code>'s eClass.
 	 * <P>            
-	 * Use {@link #getElementType(EObject)} to get metamodel types registered
-	 * for instances of the Ecore package itself.
+	 * Use {@link #getElementType(EClass)} to get metamodel types registered
+	 * for a specific <code>EClass</code>.
 	 * 
 	 * @param o
 	 *            the object for which to find an element type.
@@ -333,10 +330,7 @@ public class ElementTypeRegistry {
 	 */
 	public IElementType getElementType(Object o) {
 
-		if (o instanceof EClass) {
-			return getElementType((EClass) o);
-			
-		} else if (o instanceof EObject) {
+		if (o instanceof EObject) {
 			return getElementType((EObject) o);
 
 		} else if (o instanceof IElementType) {
