@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.dnd.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.dnd.internal.DiagramDnDPlugin;
@@ -70,7 +69,6 @@ public class DiagramDnDResourceManager extends AbstractUIResourceManager {
 	 * @see org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager#initializeUIResources()
 	 */
 	protected void initializeUIResources() {
-		initializeImageResources();
 		initializeMessageResources();
 	}
 

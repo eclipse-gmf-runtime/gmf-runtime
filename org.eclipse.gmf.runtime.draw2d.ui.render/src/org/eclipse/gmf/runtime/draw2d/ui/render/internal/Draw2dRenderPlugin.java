@@ -11,10 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 
@@ -60,13 +57,8 @@ public class Draw2dRenderPlugin
 			singleton = this;
 	}
 
-	/**
-	 * Starts up this presentatuin plug-in.
-	 * 
-	 * @exception CoreException
-	 *                If this presentation plug-in did not start up properly.
-	 * 
-	 * @see AbstractUIPlugin#startup()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#doStartup()
 	 */
 	protected void doStartup() {
 		// empty method

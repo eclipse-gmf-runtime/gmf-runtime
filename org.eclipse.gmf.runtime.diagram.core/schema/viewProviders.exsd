@@ -70,9 +70,9 @@
       <complexType>
          <attribute name="name" use="required">
             <annotation>
-               <documentation>
-                  The priority of the provider. It can be one of the following values:
-&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
+                <documentation>
+               The priority of the provider. It can be one of the following values:
+&#x3e;Lowest, Low, Medium, High, Highest&#x3e;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
                </documentation>
             </annotation>
             <simpleType>
@@ -346,13 +346,11 @@ org.eclipse.gmf.runtime.notation.Edge
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
-         
+         Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

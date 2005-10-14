@@ -17,17 +17,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /**
  * Paste Command for the views
@@ -86,10 +85,10 @@ public final class PasteCommand extends ClipboardCommand {
                     View view = (View) i.next();
                     if (view instanceof Node &&
                     	((Node)view).getLayoutConstraint() instanceof Location/*view instanceof IShapeView*/) {
-                    	Integer x = (Integer) ViewUtil.getPropertyValue(view,Properties.ID_POSITIONX);
-                        ViewUtil.setPropertyValue(view,Properties.ID_POSITIONX, new Integer(x.intValue() + MapMode.DPtoLP(10)));
-                        Integer y = (Integer) ViewUtil.getPropertyValue(view,Properties.ID_POSITIONY);
-                        ViewUtil.setPropertyValue(view,Properties.ID_POSITIONY, new Integer(y.intValue() + MapMode.DPtoLP(10)));
+                    	Integer x = (Integer) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X());
+                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(x.intValue() + MapMode.DPtoLP(10)));
+                        Integer y = (Integer) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y());
+                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(y.intValue() + MapMode.DPtoLP(10)));
                     }
                 }
 	        }

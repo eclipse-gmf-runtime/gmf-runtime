@@ -17,12 +17,11 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
-
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener;
 
 /**
  * @author sshaw
@@ -82,7 +81,6 @@ public class ImageFileDropTargetListener
 	 * This implementation assumes that elements being dropped are instances of
 	 * IElement.
 	 * 
-	 * @see org.eclipse.gef.dnd.TransferDropTargetListener#isEnabled(org.eclipse.swt.dnd.DropTargetEvent)
 	 */
 	public boolean isEnabled(DropTargetEvent event) {
 

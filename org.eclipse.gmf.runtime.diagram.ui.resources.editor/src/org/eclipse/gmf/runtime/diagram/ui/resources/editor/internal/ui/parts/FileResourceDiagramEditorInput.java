@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts;
 import java.lang.ref.WeakReference;
 
 import org.eclipse.core.resources.IFile;
-
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 
@@ -25,7 +24,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * @author wdiu, Wayne Diu
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
  */
-public class FileResourceDiagramEditorInput extends FileResourceEditorInput implements IFileResourceDiagramEditorInput {
+public class FileResourceDiagramEditorInput extends FileResourceEditorInput{
 	
 	/**
 	 * The editor's diagram stored as a weak reference

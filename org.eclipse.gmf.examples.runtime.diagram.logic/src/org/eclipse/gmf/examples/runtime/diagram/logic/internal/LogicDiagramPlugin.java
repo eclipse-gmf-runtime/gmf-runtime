@@ -11,14 +11,12 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.provider.SemanticItemProviderAdapterFactory;
+import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
+import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
 
@@ -42,16 +40,6 @@ public class LogicDiagramPlugin
 	 */
 	private static LogicDiagramPlugin plugin;
 
-	/**
-	 * The constructor.
-	 *
-	 * @see org.eclipse.core.runtime.Plugin#Plugin(IPluginDescriptor)
-	 */
-	public LogicDiagramPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
-		plugin = this;
-	}
-	
 	/**
 	 * The constructor.
 	 * 

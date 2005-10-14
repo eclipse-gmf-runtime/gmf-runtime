@@ -17,7 +17,8 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.framework.DiagramTestCase;
@@ -50,12 +51,13 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 	protected IFile createDiagram()
 		throws Exception {
 
-		OperationUtil.runAsUnchecked(new Runnable() {
+		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
 
-			public void run() {
+			public Object run() {
 				Diagram diagram = DiagramUtil.createDiagram(null,
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 				diagramView = diagram;
+				return null;
 			}
 		});
 
@@ -64,12 +66,12 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 
 	protected View createView() {
 		final View []toCreate = new View[1];
-				
-		OperationUtil.runAsUnchecked(new Runnable() {
+			MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
 
-			public void run() {
+			public Object run() {
 				View view = ViewService.getInstance().createNode(null,diagramView,"Note",0,false, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 				toCreate[0] = view;
+				return null;
 			}
 		});
 

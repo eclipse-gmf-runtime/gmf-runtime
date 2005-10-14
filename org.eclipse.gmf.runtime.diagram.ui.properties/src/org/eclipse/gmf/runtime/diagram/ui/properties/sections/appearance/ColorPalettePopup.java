@@ -13,6 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -34,10 +37,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 
 public class ColorPalettePopup {
 
@@ -240,7 +239,7 @@ public class ColorPalettePopup {
 			button.setImage(image);
 			button.addSelectionListener(new SelectionAdapter() {
 
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(SelectionEvent e1) {
 					selectedColor = rgb;
 					shell.dispose();
 				}

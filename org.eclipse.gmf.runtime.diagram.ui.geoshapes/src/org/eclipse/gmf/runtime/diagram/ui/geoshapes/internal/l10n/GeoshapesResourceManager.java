@@ -17,7 +17,6 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.runtime.common.core.l10n.EmptyResourceBundle;
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.GeoshapesPlugin;
@@ -74,7 +73,6 @@ public class GeoshapesResourceManager extends AbstractUIResourceManager {
 	 * @see org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager#initializeUIResources()
 	 */
 	protected void initializeUIResources() {
-		initializeImageResources();
 		initializeMessageResources();
 	}
 

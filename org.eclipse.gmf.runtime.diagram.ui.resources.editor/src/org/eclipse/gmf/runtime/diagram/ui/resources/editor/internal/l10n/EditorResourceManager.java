@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n;
 
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 
@@ -69,7 +68,6 @@ public class EditorResourceManager extends AbstractUIResourceManager {
 	 * @see org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager#initializeUIResources()
 	 */
 	protected void initializeUIResources() {
-		initializeImageResources();
 		initializeMessageResources();
 	}
 

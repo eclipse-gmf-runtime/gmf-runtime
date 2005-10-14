@@ -16,7 +16,7 @@
       	name="%Geoshape_example_graphical_editor_name" 
       	extensions="geo" 
       	icon="icons/geoshape.gif" 
-      	class="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.parts.IDEEditor" 
+      	class="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagramEditorWithFlyoutPalette" 
       	contributorClass="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.parts.DiagramActionBarContributor" 
       	id="GeoshapeEditor">
       </editor>

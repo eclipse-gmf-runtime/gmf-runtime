@@ -17,9 +17,9 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 
@@ -74,31 +74,29 @@ static class IncrementDecrementCommand
 	}
 	
 	public void execute(){
-		try {
-			boolean undoIntervalOpened = false;
-			if (!OperationUtil.isUndoIntervalOpen()){
-				OperationUtil.openUndoInterval();
-				undoIntervalOpened = true;
-			}
-			OperationUtil.runAsWrite(new MRunnable() {
-				public Object run(){
-					int value = child.getValue();
-					if(isIncrement){
-						if(value==15)value=-1;
-						child.setValue(value+1);
-					}else{
-						if(value==0)value=16;
-						child.setValue(value-1);
+		MEditingDomain.INSTANCE.runInUndoInterval(new Runnable(){
+			public void run(){
+					try {
+						MEditingDomain.INSTANCE.runAsWrite(new MRunnable() {
+							public Object run(){
+								int value = child.getValue();
+								if(isIncrement){
+									if(value==15)value=-1;
+									child.setValue(value+1);
+								}else{
+									if(value==0)value=16;
+									child.setValue(value-1);
+								}
+								return child;
+							}
+						}
+						);
+					} catch (MSLActionAbandonedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					return child;
-				}
 			}
-			);
-			if (undoIntervalOpened)
-				OperationUtil.closeUndoInterval();
-		} catch (MSLActionAbandonedException e) {
-			e.printStackTrace();
-		}
+		});
 	}
 	
 	public void undo(){

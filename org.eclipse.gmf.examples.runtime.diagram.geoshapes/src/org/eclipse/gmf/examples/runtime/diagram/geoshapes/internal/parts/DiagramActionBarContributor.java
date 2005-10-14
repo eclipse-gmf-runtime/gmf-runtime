@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.parts;
 
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.parts.IDEEditor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagramEditorWithFlyoutPalette;
 
 /**
  * The geoshapes diagram editor action bar contributor. This allows the
@@ -34,7 +34,7 @@ public class DiagramActionBarContributor
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor#getEditorClass()
 	 */
 	protected Class getEditorClass() {
-		return IDEEditor.class;
+		return FileDiagramEditorWithFlyoutPalette.class;
 	}
 
 	/**

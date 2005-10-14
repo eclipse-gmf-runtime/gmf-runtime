@@ -16,12 +16,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * @author jschofie
@@ -46,16 +45,16 @@ public class SetBoundsCommandTest
 		assertTrue(getCommand().isExecutable());
 	
 		assertEquals( new Integer(-1),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(-1),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 		
 		getCommand().execute(new NullProgressMonitor());
 		
 		assertEquals( new Integer(WIDTH),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(HEIGHT),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 	}
 	
 	public void testMove() {
@@ -65,20 +64,20 @@ public class SetBoundsCommandTest
 		assertTrue(moveCommand.isExecutable());
 		
 		assertEquals( new Integer(0),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_POSITIONX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
 		assertEquals( new Integer(0),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_POSITIONY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
 			
 		moveCommand.execute(new NullProgressMonitor());
 			
 		assertEquals( new Integer(XPOS),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_POSITIONX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
 		assertEquals( new Integer(YPOS),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_POSITIONY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
 		assertEquals( new Integer(-1),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(-1),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 	}
 	
 	public void testResize() {
@@ -88,15 +87,15 @@ public class SetBoundsCommandTest
 		assertTrue(resizeCommand.isExecutable());
 		
 		assertEquals( new Integer(-1),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(-1),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 			
 		resizeCommand.execute(new NullProgressMonitor());
 			
 		assertEquals( new Integer(WIDTH),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTX));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(HEIGHT),
-			ViewUtil.getPropertyValue(noteView,Properties.ID_EXTENTY));
+			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 	}
 }

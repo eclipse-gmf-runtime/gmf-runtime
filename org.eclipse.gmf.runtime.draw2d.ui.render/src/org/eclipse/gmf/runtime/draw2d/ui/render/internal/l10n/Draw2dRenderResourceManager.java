@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
@@ -71,12 +70,7 @@ public class Draw2dRenderResourceManager extends AbstractUIResourceManager {
 	 */
 	protected void initializeUIResources() {
 		initializeMessageResources();
-        initializeImageResources();
 	}	
-
-	protected void initializeImageResources() {
-		super.initializeImageResources();
-	}
 
     /**
      * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#getPlugin()

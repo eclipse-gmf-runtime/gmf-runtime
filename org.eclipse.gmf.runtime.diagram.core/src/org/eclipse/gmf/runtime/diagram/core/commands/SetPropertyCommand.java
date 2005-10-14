@@ -16,11 +16,14 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -91,8 +94,11 @@ public class SetPropertyCommand extends AbstractModelCommand {
 	 */
 	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
 		View view = (View) viewAdapter.getAdapter(View.class);
-		if (view != null)
-			ViewUtil.setPropertyValue(view,propertyId, newValue);
+		if (view != null){
+			ENamedElement namedElement =  MetaModelUtil.getElement(propertyId);
+			if (namedElement instanceof EStructuralFeature)
+				ViewUtil.setStructuralFeatureValue(view,(EStructuralFeature)namedElement, newValue);
+		}
 		return newOKCommandResult();
 	}
 

@@ -14,17 +14,16 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.graphics.RGB;
-
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.swt.graphics.RGB;
 /**
  * The base abstract node view factory 
  * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory
@@ -55,7 +54,7 @@ public class AbstractShapeViewFactory extends BasicNodeViewFactory {
 		// fill color
 		RGB fillRGB = PreferenceConverter.getColor(store,
 			IPreferenceConstants.PREF_FILL_COLOR);
-		ViewUtil.setPropertyValue(view, Properties.ID_FILLCOLOR,
+		ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getFillStyle_FillColor(),
 			FigureUtilities.RGBToInteger(fillRGB));
 	}
 	

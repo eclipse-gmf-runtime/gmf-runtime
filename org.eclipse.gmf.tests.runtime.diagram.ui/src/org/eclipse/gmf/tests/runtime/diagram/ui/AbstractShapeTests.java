@@ -14,15 +14,15 @@ package org.eclipse.gmf.tests.runtime.diagram.ui;
 import java.util.Iterator;
 
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
 
 /**
  * @author chmahone,choang
@@ -53,7 +53,7 @@ public abstract class AbstractShapeTests extends AbstractTestBase {
     protected void testCommandOnEditParts(
         final Request request,
         final Object propertyValue,
-        final String propertyID) {
+        final EStructuralFeature feature) {
         Iterator objects = getShapesIn(getDrawSurfaceEditPart()).iterator();
         while (objects.hasNext()) {
             IGraphicalEditPart editPart = (IGraphicalEditPart) objects.next();
@@ -63,7 +63,7 @@ public abstract class AbstractShapeTests extends AbstractTestBase {
                 testCommand(cmd, new ITestCommandCallback() {
                     public void onCommandExecution() {
                         assertTrue(
-                            ViewUtil.getPropertyValue(view,propertyID).equals(
+                            ViewUtil.getStructuralFeatureValue(view,feature).equals(
                                 propertyValue));
                     }
                 });

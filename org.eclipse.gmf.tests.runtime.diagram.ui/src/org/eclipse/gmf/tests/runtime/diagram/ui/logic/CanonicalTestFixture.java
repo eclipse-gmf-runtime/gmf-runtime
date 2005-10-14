@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -96,8 +98,14 @@ public class CanonicalTestFixture extends LogicTestFixture {
 	public void makeModelReadOnly(boolean readOnly) {
 		IFile file = getDiagramFile(); // getModelFile();
 		assertNotNull("file expected.", file);//$NON-NLS-1$
-		file.setReadOnly(readOnly);
-
+		ResourceAttributes resourceAttributes = file.getResourceAttributes();
+		resourceAttributes.setReadOnly(readOnly);
+		try {
+			file.setResourceAttributes(resourceAttributes);
+		} catch (CoreException e) {
+			// nothing we can do here 
+		}
+		//setResourceAttributes
 		println(file.getFullPath() + ".isReadOnly() == " + file.isReadOnly());//$NON-NLS-1$
 	}
 

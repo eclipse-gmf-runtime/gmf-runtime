@@ -33,12 +33,11 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.IPropertyValueDeferred;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
@@ -54,12 +53,12 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /**
  * @author sshaw
@@ -242,10 +241,10 @@ public class RadialProvider
 				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
 				View view = gep.getNotationView();
 				if (view!=null){
-					Integer pos = (Integer)ViewUtil.getPropertyValue(view,Properties.ID_POSITIONX);
-					ViewUtil.setPropertyValue(view,Properties.ID_POSITIONX, new Integer(pos.intValue() + translate.x));
-					pos = (Integer)ViewUtil.getPropertyValue(view,Properties.ID_POSITIONY);
-					ViewUtil.setPropertyValue(view,Properties.ID_POSITIONY, new Integer(pos.intValue() + translate.y));
+					Integer pos = (Integer)ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X());
+					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(pos.intValue() + translate.x));
+					pos = (Integer)ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y());
+					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(pos.intValue() + translate.y));
 				}
 			}
 			
@@ -1143,8 +1142,8 @@ public class RadialProvider
 			public Point getDelta() {
 				View view = rootEP.getNotationView();
 				if (view!=null){
-					Integer posX = (Integer)ViewUtil.getPropertyValue(view,Properties.ID_POSITIONX);
-					Integer posY = (Integer)ViewUtil.getPropertyValue(view,Properties.ID_POSITIONY);
+					Integer posX = (Integer)ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X());
+					Integer posY = (Integer)ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y());
 					return new Point(posX.intValue(), posY.intValue());
 				}
 				return new Point(0,0);

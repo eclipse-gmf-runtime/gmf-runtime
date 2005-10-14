@@ -13,7 +13,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.ui.parts;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.parts.IDEEditor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagramEditorWithFlyoutPalette;
 
 /**
  * @author qili
@@ -28,7 +28,7 @@ public class LogicDiagramActionBarContributor
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramActionBarContributor#getEditorClass()
 	 */
 	protected Class getEditorClass() {
-		return IDEEditor.class;
+		return FileDiagramEditorWithFlyoutPalette.class;
 	}
 
 	/**

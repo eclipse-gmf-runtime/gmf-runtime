@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.gef.ui.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.gef.ui.internal.GefPlugin;
 
@@ -74,12 +73,8 @@ public class GefResourceManager extends AbstractUIResourceManager {
 	 */
 	protected void initializeUIResources() {
 		initializeMessageResources();
-        initializeImageResources();
 	}	
 
-	protected void initializeImageResources() {
-		super.initializeImageResources();
-	}
 
     /**
      * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#getPlugin()

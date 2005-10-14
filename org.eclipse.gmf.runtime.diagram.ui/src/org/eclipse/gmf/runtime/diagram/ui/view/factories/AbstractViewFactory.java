@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
@@ -20,8 +21,8 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.core.view.factories.ViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -111,24 +112,24 @@ abstract public class AbstractViewFactory implements ViewFactory {
 			PreferenceConverter.getColor(
 				store,
 				IPreferenceConstants.PREF_LINE_COLOR);
-		ViewUtil.setPropertyValue(view,Properties.ID_LINECOLOR, FigureUtilities.RGBToInteger(lineRGB));
+		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.RGBToInteger(lineRGB));
 
 		//default font
 		FontData fontData =
 			PreferenceConverter.getFontData(
 				store,
 				IPreferenceConstants.PREF_DEFAULT_FONT);
-		ViewUtil.setPropertyValue(view,Properties.ID_FONTNAME, fontData.getName());
-		ViewUtil.setPropertyValue(view,Properties.ID_FONTSIZE, new Integer(fontData.getHeight()));
-		ViewUtil.setPropertyValue(view,Properties.ID_FONTBOLD, Boolean.valueOf((fontData.getStyle() & SWT.BOLD) != 0));
-		ViewUtil.setPropertyValue(view,Properties.ID_FONTITALIC, Boolean.valueOf((fontData.getStyle() & SWT.ITALIC) != 0));
+		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontName(), fontData.getName());
+		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontHeight(), new Integer(fontData.getHeight()));
+		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_Bold(), Boolean.valueOf((fontData.getStyle() & SWT.BOLD) != 0));
+		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_Italic(), Boolean.valueOf((fontData.getStyle() & SWT.ITALIC) != 0));
 
 		//font color
 		RGB fontRGB =
 			PreferenceConverter.getColor(
 				store,
 				IPreferenceConstants.PREF_FONT_COLOR);
-		ViewUtil.setPropertyValue(view,Properties.ID_FONTCOLOR, FigureUtilities.RGBToInteger(fontRGB));
+		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontColor(), FigureUtilities.RGBToInteger(fontRGB));
 	}
 	
 	

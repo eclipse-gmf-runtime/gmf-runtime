@@ -30,7 +30,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandSelectionTool
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -239,10 +240,11 @@ public class RubberBandSelectionToolTest
 		throws Exception {
 		
 		AbstractTestBase.println("Creating diagram"); //$NON-NLS-1$
-		OperationUtil.runAsUnchecked(new Runnable() {
-			public void run() {
+		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
+			public Object run() {
 				diagramView = DiagramUtil.createDiagram(null,
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+				return null;
 			}});
 		
 		return null;

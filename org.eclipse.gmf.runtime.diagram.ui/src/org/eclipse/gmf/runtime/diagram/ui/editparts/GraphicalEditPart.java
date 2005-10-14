@@ -1164,9 +1164,9 @@ public abstract class GraphicalEditPart
 		if (hasFocus())
 			getViewer().setFocus(null);
 
-		List children = getChildren();
-		for (int i = 0; i < children.size(); i++)
-			((EditPart)children.get(i))
+		List _children = getChildren();
+		for (int i = 0; i < _children.size(); i++)
+			((EditPart)_children.get(i))
 				.removeNotify();
 		unregister();
 		List conns;

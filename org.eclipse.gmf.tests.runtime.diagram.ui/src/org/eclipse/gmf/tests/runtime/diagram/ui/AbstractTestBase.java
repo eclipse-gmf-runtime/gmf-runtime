@@ -44,8 +44,8 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectorsRequest;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -232,17 +232,13 @@ public abstract class AbstractTestBase extends TestCase {
 		getCommandStack().execute(command);
 		flushEventQueue();
 
-		try {
-			OperationUtil.runAsRead( new Runnable() {
-				public void run() {
-					callback.onCommandExecution();
-				}
-			});
-		} catch (MSLActionAbandonedException e) {
-			assertTrue( "OperationUtil.runAsRead failed", false ); //$NON-NLS-1$
-			e.printStackTrace();
-		}
-
+		MEditingDomain.INSTANCE.runAsRead( new MRunnable() {
+			public Object run() {
+				callback.onCommandExecution();
+				return null;
+			}
+		});
+		
 		DiagramState state2 = getDiagramState();
 
 		// checking if the command stack is in an undoable state first

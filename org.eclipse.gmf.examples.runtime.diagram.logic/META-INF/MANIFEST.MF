@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Logic Plug-in
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.diagram.logic; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
+Bundle-Activator: org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.examples.runtime.diagram.logic.internal,
@@ -46,4 +46,4 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
  org.eclipse.gmf.runtime.diagram.ui.render
 Eclipse-AutoStart: true
-Plugin-Class: org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin
+

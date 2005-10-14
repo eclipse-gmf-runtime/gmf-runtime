@@ -247,7 +247,7 @@ public class NesteableListItemCompartmentEditPart
 	 */
 	protected void refreshRatio() {
 		if (ViewUtil.isPropertySupported((View)getModel(), Properties.ID_RATIO))
-			setRatio((Double) ViewUtil.getPropertyValue((View)getModel(), Properties.ID_RATIO));
+			setRatio((Double) ViewUtil.getStructuralFeatureValue((View)getModel(), NotationPackage.eINSTANCE.getRatio_Value()));
 		else
 			setRatio(new Double(-1));
 	}

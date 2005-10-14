@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
  */
 public class FileResourceEditorInput
-	implements IPathEditorInput, IPersistableElement, IFileResourceEditorInput {
+	implements IPathEditorInput, IPersistableElement {
 	
 	/**
 	 * The path key for the memento
@@ -119,15 +119,4 @@ public class FileResourceEditorInput
 	public void saveState(IMemento memento) {
 		memento.putString(MEMENTO_PATH_KEY, file.getFullPath().toString());
 	}
-	
-	/**
-	 * Returns the IFile for this editor input, which was passed in through
-	 * the constructor 
-	 * 
-	 * @return IFile for this editor input
-	 */
-	public IFile getFile() {
-		return file;
-	}
-
 }

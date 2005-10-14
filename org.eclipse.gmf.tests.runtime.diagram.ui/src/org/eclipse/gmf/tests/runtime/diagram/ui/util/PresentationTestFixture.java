@@ -16,8 +16,9 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 
 
 /**
@@ -46,18 +47,19 @@ public class PresentationTestFixture
 	protected void createDiagram()
 		throws Exception {
 
-		OperationUtil.runInUndoInterval(new Runnable() {
+		MEditingDomain.INSTANCE.runInUndoInterval(new Runnable() {
 
 			public void run() {
 				try {
-					OperationUtil.runAsWrite(new Runnable() {
+					MEditingDomain.INSTANCE.runAsWrite(new MRunnable() {
 
-						public void run() {
+						public Object run() {
 							setDiagram(DiagramUtil
 								.createDiagram(
 									null,
 									PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND,
 									getPreferencesHint()));
+							return null;
 						}
 					});
 				} catch (MSLActionAbandonedException e) {

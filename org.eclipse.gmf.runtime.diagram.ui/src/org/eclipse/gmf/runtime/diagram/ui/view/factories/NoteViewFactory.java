@@ -21,6 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -74,13 +75,13 @@ public class NoteViewFactory
 				PreferenceConverter.getColor(
 					store,
 					IPreferenceConstants.PREF_NOTE_FILL_COLOR);
-			ViewUtil.setPropertyValue(view,Properties.ID_FILLCOLOR, FigureUtilities.RGBToInteger(fillRGB));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFillStyle_FillColor(), FigureUtilities.RGBToInteger(fillRGB));
 
 			//line color
 			RGB lineRGB =
 				PreferenceConverter.getColor(
 					store,
 					IPreferenceConstants.PREF_NOTE_LINE_COLOR);
-			ViewUtil.setPropertyValue(view,Properties.ID_LINECOLOR, FigureUtilities.RGBToInteger(lineRGB));
+			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.RGBToInteger(lineRGB));
 		}	}
 }

@@ -11,16 +11,15 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories;
 
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
-
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The GeoShapeView Factory class
@@ -41,13 +40,13 @@ public class GeoShapeViewFactory
 		// fill color
 		RGB fillRGB = PreferenceConverter.getColor(store,
 			IPreferenceConstants.PREF_NOTE_FILL_COLOR);
-		ViewUtil.setPropertyValue(view, Properties.ID_FILLCOLOR,
+		ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getFillStyle_FillColor(),
 			FigureUtilities.RGBToInteger(fillRGB));
 
 		//line color
 		RGB lineRGB = PreferenceConverter.getColor(store,
 			IPreferenceConstants.PREF_NOTE_LINE_COLOR);
-		ViewUtil.setPropertyValue(view, Properties.ID_LINECOLOR,
+		ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getLineStyle_LineColor(),
 			FigureUtilities.RGBToInteger(lineRGB));
 	}
 }

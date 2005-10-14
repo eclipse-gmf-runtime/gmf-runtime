@@ -43,7 +43,7 @@ public class DeleteSemanticAction
 
 	public void init() {
 		super.init();
-		setText("Delete Semantic Element");
+		setText("Delete Semantic Element"); //$NON-NLS-1$
 	}
 
 	protected Request createTargetRequest() {

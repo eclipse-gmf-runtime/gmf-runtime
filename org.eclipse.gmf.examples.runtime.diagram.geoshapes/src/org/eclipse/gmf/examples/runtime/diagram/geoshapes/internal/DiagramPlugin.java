@@ -11,11 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -34,16 +32,6 @@ public class DiagramPlugin extends XToolsUIPlugin {
 	 * The shared instance.
 	 */
 	private static DiagramPlugin plugin;
-
-	/**
-	 * The constructor.
-	 *
-	 * @see org.eclipse.core.runtime.Plugin#Plugin(IPluginDescriptor)
-	 */
-	public DiagramPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
-		plugin = this;
-	}
 	
 	/**
 	 * The constructor.

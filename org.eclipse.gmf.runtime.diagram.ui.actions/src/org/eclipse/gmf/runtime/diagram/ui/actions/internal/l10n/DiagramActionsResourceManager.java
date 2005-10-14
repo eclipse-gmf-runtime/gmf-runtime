@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
-
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
 
@@ -70,7 +69,6 @@ public class DiagramActionsResourceManager
 	 */
 	protected void initializeUIResources() {
 		initializeMessageResources();
-		initializeImageResources();
 	}
 
 	/**

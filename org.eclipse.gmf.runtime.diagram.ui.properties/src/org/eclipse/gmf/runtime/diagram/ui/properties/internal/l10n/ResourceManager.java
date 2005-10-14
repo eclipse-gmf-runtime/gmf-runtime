@@ -64,7 +64,6 @@ public final class ResourceManager extends AbstractUIResourceManager {
 	 */
 	protected void initializeResources() {
 		initializeMessageResources();
-		initializeImageResources();		
 	}
 
     /**

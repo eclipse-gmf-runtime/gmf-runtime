@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.diagram.ui; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
+Bundle-Activator: org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts,
@@ -14,8 +14,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts,
  org.eclipse.gmf.tests.runtime.diagram.ui.parts,
  org.eclipse.gmf.tests.runtime.diagram.ui.tools,
  org.eclipse.gmf.tests.runtime.diagram.ui.util
-Require-Bundle: org.eclipse.core.runtime.compatibility,
- org.eclipse.ui.ide,
+Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.junit,
  org.eclipse.ui,
@@ -40,4 +39,3 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
  org.eclipse.gmf.examples.runtime.diagram.logic.model
 Eclipse-AutoStart: true
-Plugin-Class: org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin

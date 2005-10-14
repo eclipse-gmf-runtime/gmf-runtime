@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.notation.providers.internal.util;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
 import org.eclipse.gmf.runtime.notation.providers.internal.l10n.ResourceManager;
@@ -43,9 +41,8 @@ public class NotationMSLPlugin
 	 * @param descriptor
 	 *            The plug-in descriptor.
 	 */
-	public NotationMSLPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
-
+	public NotationMSLPlugin() {
+		super();
 		plugin = this;
 	}
 
@@ -64,7 +61,7 @@ public class NotationMSLPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getDescriptor().getUniqueIdentifier();
+		return getDefault().getBundle().getSymbolicName();
 	}
 
 	/**

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Geoshape Plug-in
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.diagram.geoshapes; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
+Bundle-Activator: org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.DiagramPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal,
@@ -37,4 +37,4 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.diagram.ui.providers,
  org.eclipse.gmf.runtime.diagram.ui.providers.ide
 Eclipse-AutoStart: true
-Plugin-Class: org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.DiagramPlugin
+

@@ -46,7 +46,7 @@ public class GeoshapesPlugin extends XToolsUIPlugin {
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getDescriptor().getUniqueIdentifier();
+		return getDefault().getBundle().getSymbolicName();
 	}
 	
 	/* (non-Javadoc)

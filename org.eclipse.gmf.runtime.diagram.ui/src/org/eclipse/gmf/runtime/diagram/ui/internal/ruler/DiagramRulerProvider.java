@@ -191,8 +191,8 @@ public class DiagramRulerProvider extends RulerProvider {
 		while (iter.hasNext()) {
 			View part = (View)iter.next();
 			
-			int x = ((Integer) ViewUtil.getPropertyValue(part,Properties.ID_POSITIONX)).intValue();
-			int y = ((Integer) ViewUtil.getPropertyValue(part,Properties.ID_POSITIONY)).intValue();
+			int x = ((Integer) ViewUtil.getStructuralFeatureValue(part,NotationPackage.eINSTANCE.getLocation_X())).intValue();
+			int y = ((Integer) ViewUtil.getStructuralFeatureValue(part,NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 
 			SetPropertyCommand spc;
 

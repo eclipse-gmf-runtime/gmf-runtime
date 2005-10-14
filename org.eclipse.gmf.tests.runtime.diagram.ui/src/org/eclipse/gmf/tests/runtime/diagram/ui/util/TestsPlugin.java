@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -31,8 +30,8 @@ public class TestsPlugin extends AbstractUIPlugin {
 	/**
 	 * The constructor.
 	 */
-	public TestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public TestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle= ResourceBundle.getBundle("org.eclipse.gmf.tests.runtime.diagram.ui.TestsPluginResources"); //$NON-NLS-1$
