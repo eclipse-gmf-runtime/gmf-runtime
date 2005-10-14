@@ -119,7 +119,7 @@ public class AbstractViewProvider extends AbstractProvider
 				containerView,
 				semanticHint,
 				new Integer(index),
-				new Boolean(persisted),
+				Boolean.valueOf(persisted),
 				preferencesHint});
 	}
 
@@ -140,7 +140,7 @@ public class AbstractViewProvider extends AbstractProvider
 					containerView,
 					semanticHint,
 					new Integer(index),
-					new Boolean(persisted),
+					Boolean.valueOf(persisted),
 					preferencesHint});
 	}
 	

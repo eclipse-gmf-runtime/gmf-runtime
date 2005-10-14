@@ -46,8 +46,7 @@ public class VisibilityComponentEditPolicy
 			SetPropertyCommand c = new SetPropertyCommand(
 				PresentationResourceManager.getInstance().getString("Command.hideLabel.Label"), //$NON-NLS-1$
 				new EObjectAdapter((View) getHost().getModel()),
-				Properties.ID_ISVISIBLE, new Boolean(
-					false));
+				Properties.ID_ISVISIBLE, Boolean.FALSE);
 			cc.compose(c);
 		} else {
 			for (int i = 0; i < toDel.size(); i++) {
@@ -56,7 +55,7 @@ public class VisibilityComponentEditPolicy
 					PresentationResourceManager.getInstance().getString("Command.hideLabel.Label"), //$NON-NLS-1$
 					new EObjectAdapter((View)gep.getModel()),
 					Properties.ID_ISVISIBLE,
-					new Boolean(false));
+					Boolean.FALSE);
 				cc.compose(c);
 			}
 		}

@@ -136,13 +136,13 @@ public abstract class AbstractLabeledCheckboxPropertySection
 									GraphicalEditPart ep = (GraphicalEditPart) aep;
 									ENamedElement element = MetaModelUtil.getElement(getID());
 									if (element instanceof EStructuralFeature)
-										ep.setStructuralFeatureValue((EStructuralFeature)element, new Boolean(
+										ep.setStructuralFeatureValue((EStructuralFeature)element, Boolean.valueOf(
 											checkbox.getSelection()));
 								} else if (aep instanceof ConnectionNodeEditPart) {
 									ConnectionNodeEditPart ep = (ConnectionNodeEditPart) aep;
 									ENamedElement element = MetaModelUtil.getElement(getID());
 									if (element instanceof EStructuralFeature)
-										ep.setStructuralFeatureValue((EStructuralFeature)element, new Boolean(
+										ep.setStructuralFeatureValue((EStructuralFeature)element, Boolean.valueOf(
 											checkbox.getSelection()));
 								}
 							}

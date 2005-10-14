@@ -404,7 +404,7 @@ public class DiagramRootEditPart
 
 			// Refresh the Rulers
 			Boolean oldValue = (Boolean)getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
-			getViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY, new Boolean(false));
+			getViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY, Boolean.FALSE);
 			getViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY, oldValue );
 			
 			// Update the Grids

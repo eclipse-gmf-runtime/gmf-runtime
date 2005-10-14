@@ -999,7 +999,7 @@ public abstract class DiagramEditor
 			// Show/Hide Rulers
 			getDiagramGraphicalViewer().setProperty(
 				RulerProvider.PROPERTY_RULER_VISIBILITY,
-				new Boolean(getWorkspaceViewerPreferenceStore().getBoolean(
+				Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
 					WorkspaceViewerProperties.VIEWRULERS)));
 			
 		}
@@ -1007,17 +1007,17 @@ public abstract class DiagramEditor
 		// Snap to Grid
 		getDiagramGraphicalViewer().setProperty(
 			SnapToGeometry.PROPERTY_SNAP_ENABLED,
-			new Boolean(getWorkspaceViewerPreferenceStore().getBoolean(
+			Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
 				WorkspaceViewerProperties.SNAPTOGRID)));
 
 		// Hide/Show Grid
 		getDiagramGraphicalViewer().setProperty(
 			SnapToGrid.PROPERTY_GRID_ENABLED,
-			new Boolean(getWorkspaceViewerPreferenceStore().getBoolean(
+			Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
 				WorkspaceViewerProperties.VIEWGRID)));
 		getDiagramGraphicalViewer().setProperty(
 			SnapToGrid.PROPERTY_GRID_VISIBLE,
-			new Boolean(getWorkspaceViewerPreferenceStore().getBoolean(
+			Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
 				WorkspaceViewerProperties.VIEWGRID)));
 
 		// Grid Origin (always 0, 0)

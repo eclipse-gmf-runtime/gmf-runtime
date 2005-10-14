@@ -1184,7 +1184,7 @@ public class SortFilterPage extends PropertyPage {
 			Object result = null;
 			int columnIndex = findPropertyIndex(property);
 			if (columnIndex == 0) {
-				result = new Boolean(item.isVisible());
+				result = Boolean.valueOf(item.isVisible());
 			}
 			return result;
 		}

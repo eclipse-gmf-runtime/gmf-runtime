@@ -92,11 +92,11 @@ class SVGImageConverter {
 		
 		transcoder.addTranscodingHint(
 				SWTImageTranscoder.KEY_MAINTAIN_ASPECT_RATIO,
-				new Boolean(info.shouldMaintainAspectRatio()));
+				Boolean.valueOf(info.shouldMaintainAspectRatio()));
 	
 		transcoder.addTranscodingHint(
 				SWTImageTranscoder.KEY_ANTI_ALIASING,
-				new Boolean(info.shouldAntiAlias()));
+				Boolean.valueOf(info.shouldAntiAlias()));
 				
 		if (info.getFillColor() != null) {
 			transcoder.addTranscodingHint(

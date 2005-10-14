@@ -188,7 +188,7 @@ public class ForestRouter extends BendpointConnectionRouter implements Orthogona
 		
 		if (trunkVertexes.get(trunkKey) == null ||
 			Math.abs(trunkExt) > ownerExt) {
-			trunkVertexes.put(trunkKey, new Boolean(true));
+			trunkVertexes.put(trunkKey, Boolean.TRUE);
 			return trunk;
 		}
 		else {

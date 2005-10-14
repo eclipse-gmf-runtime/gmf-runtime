@@ -65,7 +65,7 @@ public class ConnectorLabelsEditPolicy extends AbstractEditPolicy {
 					ChangePropertyValueRequest req = new ChangePropertyValueRequest(
 						PresentationResourceManager.getInstance().getString("Command.hideLabel.Label"), //$NON-NLS-1$
 						Properties.ID_ISVISIBLE,
-						new Boolean(showHide));
+						Boolean.valueOf(showHide));
 					Command setLabelVisCmd = ep.getCommand(req);
 					if (setLabelVisCmd != null && setLabelVisCmd.canExecute())
 						cc.add(setLabelVisCmd);

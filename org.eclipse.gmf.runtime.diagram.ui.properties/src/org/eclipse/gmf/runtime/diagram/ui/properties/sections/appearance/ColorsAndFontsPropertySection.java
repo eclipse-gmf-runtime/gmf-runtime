@@ -456,7 +456,7 @@ public class ColorsAndFontsPropertySection
 
 					public void run() {
 						ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Bold(),
-							new Boolean(fontBoldButton.getSelection()));
+							Boolean.valueOf(fontBoldButton.getSelection()));
 					}
 				}));
 		}

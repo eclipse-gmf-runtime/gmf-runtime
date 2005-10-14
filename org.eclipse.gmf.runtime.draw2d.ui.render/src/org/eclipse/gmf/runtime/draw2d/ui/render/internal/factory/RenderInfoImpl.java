@@ -140,8 +140,8 @@ public final class RenderInfoImpl implements RenderInfo {
 	public int hashCode() {
 		int hashCode = (new Integer(width)).hashCode();
 		hashCode = hashCode + (new Integer(height)).hashCode();
-		hashCode = hashCode + (new Boolean(maintainAspectRatio)).hashCode();
-		hashCode = hashCode + (new Boolean(antialias)).hashCode();
+		hashCode = hashCode + (Boolean.valueOf(maintainAspectRatio)).hashCode();
+		hashCode = hashCode + (Boolean.valueOf(antialias)).hashCode();
 		if (fill != null)
 			hashCode = hashCode + fill.hashCode();
 		if (outline != null)

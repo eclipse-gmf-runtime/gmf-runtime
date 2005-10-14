@@ -82,8 +82,8 @@ public class FontDialogAction extends PropertyChangeAction {
 			CompoundCommand cc = new CompoundCommand(Messages.getString("PropertyDescriptorFactory.Font")); //$NON-NLS-1$
 			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTNAME, Properties.ID_FONTNAME, fData.getName())));
 			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTSIZE, Properties.ID_FONTSIZE, new Integer(fData.getHeight()))));
-			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTBOLD, Properties.ID_FONTBOLD, new Boolean((fData.getStyle() & SWT.BOLD) != 0))));
-			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTITALIC, Properties.ID_FONTITALIC, new Boolean((fData.getStyle() & SWT.ITALIC) != 0))));
+			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTBOLD, Properties.ID_FONTBOLD, Boolean.valueOf((fData.getStyle() & SWT.BOLD) != 0))));
+			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTITALIC, Properties.ID_FONTITALIC, Boolean.valueOf((fData.getStyle() & SWT.ITALIC) != 0))));
 			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTCOLOR, Properties.ID_FONTCOLOR, FigureUtilities.RGBToInteger(fColor))));
 			execute(cc, progressMonitor);
 		}

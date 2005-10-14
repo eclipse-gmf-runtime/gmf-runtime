@@ -760,7 +760,7 @@ public class RadialProvider
 				if (editpart instanceof ShapeEditPart) {
 					request = new ChangePropertyValueRequest(
 						DiagramProvidersResourceManager
-							.getI18NString("RadialProvider.changeVisibilityRequest.label"), Properties.ID_ISVISIBLE, new Boolean(false)); //$NON-NLS-1$
+							.getI18NString("RadialProvider.changeVisibilityRequest.label"), Properties.ID_ISVISIBLE, Boolean.FALSE); //$NON-NLS-1$
 
 					ShapeEditPart shapeEditPart = (ShapeEditPart) editpart;
 					
