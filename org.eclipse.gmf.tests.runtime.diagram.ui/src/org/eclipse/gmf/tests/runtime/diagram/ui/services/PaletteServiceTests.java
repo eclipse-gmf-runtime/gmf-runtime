@@ -172,6 +172,37 @@ public class PaletteServiceTests
 		}
 	}
 
+	/**
+	 * A test palette provider.
+	 */
+	public static class ProviderD
+		extends DefaultPaletteProvider {
+
+		public static String DRAWER_D = "DRAWER_D"; //$NON-NLS-1$
+
+		public static String TOOL_D = "TOOL_D"; //$NON-NLS-1$
+
+		public void contributeToPalette(IEditorPart editor, Object content,
+				PaletteRoot root) {
+
+			PaletteDrawer drawerD = new PaletteDrawer(DRAWER_D, DRAWER_D);
+			drawerD.add(new PaletteToolEntry(TOOL_D, TOOL_D, null));
+			root.add(drawerD);
+
+			PaletteDrawer drawerA = (PaletteDrawer) findChildPaletteEntry(root,
+				ProviderA.DRAWER_A);
+			drawerA.add(new PaletteToolEntry(TOOL_D, TOOL_D, null));
+			PaletteDrawer drawerB = (PaletteDrawer) findChildPaletteEntry(root,
+				ProviderB.DRAWER_B);
+			if (drawerB != null) {
+				drawerB.add(new PaletteToolEntry(TOOL_D, TOOL_D, null));
+			}
+			PaletteStack stackA = (PaletteStack) findChildPaletteEntry(drawerA,
+				ProviderA.STACK_A);
+			stackA.add(new PaletteToolEntry(TOOL_D, TOOL_D, null));
+		}
+	}
+
 	public PaletteServiceTests(String name) {
 		super(name);
 	}
@@ -248,6 +279,12 @@ public class PaletteServiceTests
 		getPaletteService().addPaletteProvider(ProviderPriority.HIGH,
 			descriptorC);
 
+		// set up providerD
+		MyPaletteService.ProviderDescriptor descriptorD = new MyPaletteService.ProviderDescriptor(
+			new ProviderD());
+		getPaletteService().addPaletteProvider(ProviderPriority.HIGHEST,
+			descriptorD);
+
 		// test service
 		DiagramDocumentEditor editor = new DiagramDocumentEditor(true);
 
@@ -259,87 +296,129 @@ public class PaletteServiceTests
 		PaletteEntry toolA = (PaletteEntry) drawerA.getChildren().get(0);
 		PaletteStack stackA = (PaletteStack) drawerA.getChildren().get(1);
 		PaletteEntry stackAToolA = (PaletteEntry) stackA.getChildren().get(0);
+		PaletteEntry stackAToolC = (PaletteEntry) stackA.getChildren().get(2);
 
-		validatePaletteEntries(paletteRoot, true);
+		validatePaletteEntries(paletteRoot, true, true);
+
+		stackA.setActiveEntry(stackAToolC);
 
 		descriptorB.setActivitiesEnabled(false);
 		getPaletteService().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
-		validatePaletteEntries(paletteRoot, false);
+		validatePaletteEntries(paletteRoot, false, true);
 
 		descriptorB.setActivitiesEnabled(true);
+		descriptorD.setActivitiesEnabled(false);
 		getPaletteService().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
-		validatePaletteEntries(paletteRoot, true);
+		validatePaletteEntries(paletteRoot, true, false);
+
+		descriptorB.setActivitiesEnabled(false);
+		descriptorD.setActivitiesEnabled(true);
+		getPaletteService().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
+		validatePaletteEntries(paletteRoot, false, true);
+
+		descriptorD.setActivitiesEnabled(false);
+		getPaletteService().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
+		validatePaletteEntries(paletteRoot, false, false);
 
 		// Verify that the instances of the entries did not change.
 		assertEquals(drawerA, paletteRoot.getChildren().get(1));
 		assertEquals(toolA, drawerA.getChildren().get(0));
 		assertEquals(stackA, drawerA.getChildren().get(1));
 		assertEquals(stackAToolA, stackA.getChildren().get(0));
+		assertEquals(stackAToolC, stackA.getActiveEntry());
 
 	}
 
 	/**
-	 * Standard [Separator] Select DRAWER_A TOOL_A STACK_A TOOL_A TOOL_B TOOL_C
-	 * TOOL_B TOOL_C DRAWER_B TOOL_B DRAWER_C TOOL_C
+	 * Validates many of the palette entries.
 	 * 
 	 * @param providerBEnabled
 	 *            true if provider B is enabled
+	 * @param providerDEnabled
+	 *            true if provider D is enabled
 	 */
 	private void validatePaletteEntries(PaletteRoot paletteRoot,
-			boolean providerBEnabled) {
-		PaletteDrawer drawer;
-		PaletteStack stack;
+			boolean providerBEnabled, boolean providerDEnabled) {
 
-		int index = 1;
-		drawer = (PaletteDrawer) paletteRoot.getChildren().get(index++);
-		assertEquals(ProviderA.DRAWER_A, drawer.getId());
+		PaletteDrawer drawerA = null;
+		PaletteDrawer drawerB = null;
+		PaletteStack stackA;
+
+		// verify drawers
+		int index = 1; // skip default drawer
+		drawerA = (PaletteDrawer) paletteRoot.getChildren().get(index++);
+		assertEquals(ProviderA.DRAWER_A, drawerA.getId());
 		if (providerBEnabled) {
-			assertEquals(ProviderB.DRAWER_B, (((PaletteDrawer) paletteRoot
-				.getChildren().get(index++)).getId()));
+			drawerB = (PaletteDrawer) paletteRoot.getChildren().get(index++);
+			assertEquals(ProviderB.DRAWER_B, drawerB.getId());
 		}
 		assertEquals(ProviderC.DRAWER_C, (((PaletteDrawer) paletteRoot
 			.getChildren().get(index++)).getId()));
-
-		index = 0;
-		assertEquals(ProviderA.TOOL_A, (((PaletteEntry) drawer.getChildren()
-			.get(index++)).getId()));
-
-		stack = (PaletteStack) drawer.getChildren().get(index++);
-		assertEquals(ProviderA.STACK_A, stack.getId());
-
-		if (providerBEnabled) {
-			assertEquals(ProviderB.TOOL_B, (((PaletteEntry) drawer
+		if (providerDEnabled) {
+			assertEquals(ProviderD.DRAWER_D, (((PaletteDrawer) paletteRoot
 				.getChildren().get(index++)).getId()));
 		}
-		assertEquals(ProviderC.TOOL_C, (((PaletteEntry) drawer.getChildren()
-			.get(index++)).getId()));
 
+		// verify drawer A tools
 		index = 0;
-		assertEquals(ProviderA.TOOL_A, (((PaletteEntry) stack.getChildren()
+		assertEquals(ProviderA.TOOL_A, (((PaletteEntry) drawerA.getChildren()
+			.get(index++)).getId()));
+		stackA = (PaletteStack) drawerA.getChildren().get(index++);
+		assertEquals(ProviderA.STACK_A, stackA.getId());
+		if (providerBEnabled) {
+			assertEquals(ProviderB.TOOL_B, (((PaletteEntry) drawerA
+				.getChildren().get(index++)).getId()));
+		}
+		assertEquals(ProviderC.TOOL_C, (((PaletteEntry) drawerA.getChildren()
+			.get(index++)).getId()));
+		if (providerDEnabled) {
+			assertEquals(ProviderD.TOOL_D, (((PaletteEntry) drawerA
+				.getChildren().get(index++)).getId()));
+		}
+
+		// verify stack A tools
+		index = 0;
+		assertEquals(ProviderA.TOOL_A, (((PaletteEntry) stackA.getChildren()
 			.get(index++)).getId()));
 		if (providerBEnabled) {
-			assertEquals(ProviderB.TOOL_B, (((PaletteEntry) stack.getChildren()
-				.get(index++)).getId()));
+			assertEquals(ProviderB.TOOL_B, (((PaletteEntry) stackA
+				.getChildren().get(index++)).getId()));
 		}
-		assertEquals(ProviderC.TOOL_C, (((PaletteEntry) stack.getChildren()
+		assertEquals(ProviderC.TOOL_C, (((PaletteEntry) stackA.getChildren()
 			.get(index++)).getId()));
+		if (providerDEnabled) {
+			assertEquals(ProviderD.TOOL_D, (((PaletteEntry) stackA
+				.getChildren().get(index++)).getId()));
+		}
 
+		// verify drawer B tools
+		if (providerBEnabled) {
+			index = 0;
+			assertEquals(ProviderB.TOOL_B, (((PaletteEntry) drawerB
+				.getChildren().get(index++)).getId()));
+			if (providerDEnabled) {
+				assertEquals(ProviderD.TOOL_D, (((PaletteEntry) drawerB
+					.getChildren().get(index++)).getId()));
+			}
+
+		}
 	}
 
-//	/**
-//	 * Prints out the palette entries to the console. Used for debugging.
-//	 * 
-//	 * @param paletteContainer
-//	 */
-//	private void printPalette(PaletteContainer paletteContainer, String prefix) {
-//		for (Iterator iter = paletteContainer.getChildren().iterator(); iter
-//			.hasNext();) {
-//			PaletteEntry entry = (PaletteEntry) iter.next();
-//			System.out.println(prefix + entry.getLabel());
-//			if (entry instanceof PaletteContainer) {
-//				printPalette((PaletteContainer) entry, prefix + "  "); //$NON-NLS-1$
-//			}
-//		}
-//	}
+	// /**
+	// * Prints out the palette entries to the console. Used for debugging.
+	// *
+	// * @param paletteContainer
+	// */
+	// private void printPalette(PaletteContainer paletteContainer, String
+	// prefix) {
+	// for (Iterator iter = paletteContainer.getChildren().iterator(); iter
+	// .hasNext();) {
+	// PaletteEntry entry = (PaletteEntry) iter.next();
+	// System.out.println(prefix + entry.getLabel());
+	// if (entry instanceof PaletteContainer) {
+	// printPalette((PaletteContainer) entry, prefix + " "); //$NON-NLS-1$
+	// }
+	// }
+	// }
 
 }

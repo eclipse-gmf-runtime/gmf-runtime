@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,9 +21,6 @@ import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
@@ -41,6 +37,8 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteGroup;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author melaasar
@@ -265,23 +263,29 @@ public class PaletteService extends Service implements IPaletteProvider {
 	private void updatePaletteContainerEntries(
 			PaletteContainer existingContainer, PaletteContainer newContainer) {
 
-		HashMap existingEntries = new HashMap();
+		HashMap existingEntryIds = new HashMap();
 		for (Iterator iter = existingContainer.getChildren().iterator(); iter
 			.hasNext();) {
 			PaletteEntry entry = (PaletteEntry) iter.next();
-			existingEntries.put(entry.getId(), entry);
+			existingEntryIds.put(entry.getId(), entry);
 		}
 
-		List updatedChildren = new ArrayList(newContainer.getChildren().size());
-
+		int lastExistingEntryIndex = 0;
+		// cycle through the new entries
 		for (Iterator iter = newContainer.getChildren().iterator(); iter
 			.hasNext();) {
 			PaletteEntry newEntry = (PaletteEntry) iter.next();
 
-			Object existingEntry = existingEntries.get(newEntry.getId());
-			if (existingEntry != null) {
-				// keep the existing entry
-				updatedChildren.add(existingEntry);
+			PaletteEntry existingEntry = (PaletteEntry) existingEntryIds
+				.get(newEntry.getId());
+			if (existingEntry != null) { // is already in existing container
+				// update the index
+				lastExistingEntryIndex = existingContainer.getChildren()
+					.indexOf(existingEntry);
+
+				// remove the entry that was just updated from the map
+				existingEntryIds.remove(existingEntry.getId());
+
 				if (existingEntry instanceof PaletteContainer
 					&& newEntry instanceof PaletteContainer) {
 					// look for new/deleted entries in
@@ -290,14 +294,18 @@ public class PaletteService extends Service implements IPaletteProvider {
 						(PaletteContainer) existingEntry,
 						(PaletteContainer) newEntry);
 				}
-			} else {
-				// add new entries that did not
-				// previously exist
-				updatedChildren.add(newEntry);
+			} else { // this is a new entry that did not previously exist
+				existingContainer.add(++lastExistingEntryIndex, newEntry);
 			}
-
 		}
-		existingContainer.setChildren(updatedChildren);
+
+		// remove existing entries that were not found in the new container
+		for (Iterator iter = existingEntryIds.values().iterator(); iter
+			.hasNext();) {
+			PaletteEntry entry = (PaletteEntry) iter.next();
+			existingContainer.remove(entry);
+		}
+
 	}
 	
 }
