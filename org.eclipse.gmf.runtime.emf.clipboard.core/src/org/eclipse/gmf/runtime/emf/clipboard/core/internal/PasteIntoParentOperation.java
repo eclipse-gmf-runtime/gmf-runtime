@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -35,6 +36,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.ResourceManager;
 
 /**
  * A paste operation that pastes copied elements into their new parent.
@@ -139,6 +141,24 @@ public class PasteIntoParentOperation
 		
 		//IMPORTANT: ALWAYS LOAD/RELOAD a fresh copy for every parent
 		eLoadedResource = loadEObjects();
+		
+		// Bug 112516: Ensure that we will not attempt to insert GUIDs that
+		//    already exist
+		if (getHintsMap().containsKey(ClipboardUtil.IGNORE_RECYCLE_HINT_ID) == false) {
+			Iterator childEObjectInfoIt = getOriginalChildObjectInfo().iterator();
+
+			while (childEObjectInfoIt.hasNext()) {
+				ObjectInfo objectInfo = (ObjectInfo) childEObjectInfoIt.next();
+				if (objectInfo.hasHint(ClipboardUtil.RECYCLE_HINT_ID)
+						&& findDuplicateGUID(getLoadedEObject(objectInfo.objId))) {
+					throwException(
+						"PasteIntoParentOperation", //$NON-NLS-1$
+						new IllegalArgumentException(
+							ResourceManager.getI18NString("copypaste.duplicateId"))); //$NON-NLS-1$
+				}
+			}
+		}
+		
 		getContentObject2ProxyMap();
 	}
 
@@ -161,6 +181,39 @@ public class PasteIntoParentOperation
 			.getSerializationAnnotation();
 		contentObject2ProxyMap = pasteIntoParentOperation
 			.getContentObject2ProxyMap();
+	}
+
+	/**
+	 * Determines whether we will be attempting to paste an element into the
+	 * destination resource that already contains the pasted element's GUID.
+	 * When this occurs, we fail the paste operation.  The check for duplicate
+	 * GUIDs is recursive over the content tree of the element to be pasted.
+	 *
+	 * @param toPaste the element to be pasted
+	 *
+	 * @return <code>true</code> if we would be pasting an element whose ID
+	 *     already exists in the target resource; <code>false</code>, otherwise
+	 */
+	private boolean findDuplicateGUID(EObject toPaste) {
+		XMLResource parentRes = getParentResource();
+		EObject original = (EObject) getContentObject2ProxyMap().get(toPaste);
+		URI sourceUri = (original == null)
+			? null
+			: EcoreUtil.getURI(original).trimFragment();  // this is a proxy
+
+		boolean result = false;
+
+		if (!parentRes.getURI().equals(sourceUri)) {
+			// don't need to check anything when pasting into the source
+			//    resource (from which we cut in the first place)
+			Iterator iter = EcoreUtil.getAllContents(Collections.singleton(toPaste));
+			while (!result && iter.hasNext()) {
+				result = parentRes.getEObject(
+					getLoadedEObjectID((EObject) iter.next())) != null;
+			}
+		}
+
+		return result;
 	}
 
 	/**

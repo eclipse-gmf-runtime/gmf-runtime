@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
-import org.eclipse.gmf.runtime.emf.clipboard.core.OverrideCopyOperation;
 
 /**
  * The default paste operation.  Extensibility is provided by the callback
@@ -30,7 +29,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.OverrideCopyOperation;
  * by clients.  Clients may not instantiate it.
  * </p>
  * 
- * @see OverrideCopyOperation
+ * @see org.eclipse.gmf.runtime.emf.clipboard.core.OverrideCopyOperation
  * 
  * @author Yasser Lulu
  */
