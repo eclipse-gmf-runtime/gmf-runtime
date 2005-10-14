@@ -49,7 +49,43 @@ import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.rulers.RulerComposite;
-import org.eclipse.gef.ui.stackview.CommandStackInspectorPage;
+import org.eclipse.gmf.runtime.common.core.command.CommandManager;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
+import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
+import org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService;
+import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.InsertAction;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteAction;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
+import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRulerProvider;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
+import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.GuideStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
@@ -74,49 +110,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.IShowInSource;
-import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
-import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
-import org.eclipse.gmf.runtime.diagram.ui.internal.actions.InsertAction;
-import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteAction;
-import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
-import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRulerProvider;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
-import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.GuideStyle;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar
@@ -438,8 +435,6 @@ public abstract class DiagramEditor
 			viewer.setRootEditPart(new DiagramRootTreeEditPart());
 			return new DiagramOutlinePage(viewer);
 		}
-		if (type == CommandStackInspectorPage.class)
-			return new CommandStackInspectorPage(getCommandStack());
 		if (type == CommandManager.class)
 			return getCommandManager();
 		if (ActionManager.class == type)
@@ -448,16 +443,6 @@ public abstract class DiagramEditor
 			return getDiagramEditDomain();
 		if (type == ZoomManager.class)
 			return getZoomManager();
-		
-		if (type == IShowInTargetList.class) {
-			return new IShowInTargetList() {
-				public String[] getShowInTargetIds() {
-					return new String[] { "com.ibm.xtools.modeler.ui.views.modelexplorer.ModelExplorer" }; //$NON-NLS-1$
-				}
-
-			};
-		}
-
 		return super.getAdapter(type);
 
 	}
