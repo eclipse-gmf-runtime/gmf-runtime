@@ -11,13 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -42,14 +39,5 @@ public class TextShapeViewFactory
 
 		getViewService().createNode(semanticAdapter, view,
 			CommonParserHint.DESCRIPTION, ViewUtil.APPEND, persisted, getPreferencesHint());
-	}
-
-	/**
-	 * @return a list of style for the newly created view or an empty list if none (do not return null)
-	 */
-	protected List createStyles(View view) {
-		List styles = super.createStyles(view);
-		styles.add(NotationFactory.eINSTANCE.createShapeStyle());
-		return styles;
 	}
 }
