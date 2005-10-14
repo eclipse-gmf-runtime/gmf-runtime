@@ -37,8 +37,6 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractAddActionBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
@@ -48,26 +46,17 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.AddUMLActionBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * 
  * ActionBars are esentially a cartoon balloon with buttons that are activated
- * during mouse hover over a shape. The current thinking is to start this by
- * including the Add UML commands for the appropirate shape. The idea for this
- * came from the bpel editor and we are drawing the balloon the same as the
- * bpel editor. Addtional usages for actionbar's (besides add uml)
- * Shapes/Connectors Format Commands Shapes/Connectors Appearance Commands
- * Shapes/Connectors User defined would be nice Diagram Add UML (essentially
- * the current toolbox)
+ * during mouse hover over a shape.
  * 
  * @author affrantz@us.ibm.com, cmahoney
  */
-
 public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 	/* ************************** nested classes *********************** */
@@ -415,8 +404,9 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			if (getIsDisplayAtMouseHoverLocation())
 				showDiagramAssistantAfterDelay(getAppearanceDelayLocationSpecific()); // no
 																						// delay
-			else
+			else if (shouldShowDiagramAssistant()) {
 				showDiagramAssistant(getMouseLocation()); // no delay
+			}
 	}
 
 	/**
@@ -424,7 +414,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 */
 	public void mouseMoved(MouseEvent me) {
 
-			if(getIsDisplayAtMouseHoverLocation() && shouldDisplayActionBar())
+		if(getIsDisplayAtMouseHoverLocation())
 			{
 			Object srcObj = me.getSource();
 			if ((srcObj != null) && srcObj.equals(getHostFigure())) {
@@ -434,7 +424,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		setAvoidHidingDiagramAssistant(true);
 		setMouseLocation(me.getLocation());
 
-		if (!getIsDisplayAtMouseHoverLocation() && shouldDisplayActionBar()) {
+		if (!getIsDisplayAtMouseHoverLocation()) {
 			// if the cursor is inside the actionbar
 			// or the keyboar triggred activation
 			// then we do not want to deactivate
@@ -653,17 +643,16 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		}
 		return false;
 	}
-	/** Never display actionbars when there is an active tool on the pallette
-	 * 
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#shouldShowDiagramAssistant()
 	 */
-	private boolean shouldDisplayActionBar()
+	protected boolean shouldShowDiagramAssistant()
 	{
-		//RATLC00532515: ActionBars shouldn't be shown if the host edit part isn't editable.
-		if (getHost() instanceof GraphicalEditPart) {
-			if (!((GraphicalEditPart) getHost()).isEditModeEnabled()) {
-				return false;
-			}
+		if (!super.shouldShowDiagramAssistant()) {
+			return false;
 		}
+
 		if(this.getIsDisplayAtMouseHoverLocation())
 		{
 			if (getHostIsConnector())
@@ -918,17 +907,11 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		}
 	}
 
-	/**
-	 * Is the Action bar preference turned on?
-	 * 
-	 * @return true iff the show action bar preference is turned on
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#getPreferenceName()
 	 */
-	private boolean isPreferenceOn() {
-		IPreferenceStore preferenceStore = (IPreferenceStore)
-			((IGraphicalEditPart) getHost())
-			.getDiagramPreferencesHint().getPreferenceStore();
-		return preferenceStore.getBoolean(
-			IPreferenceConstants.PREF_SHOW_ACTION_BARS);
+	String getPreferenceName() {
+		return IPreferenceConstants.PREF_SHOW_ACTION_BARS;
 	}
 
 	/*
@@ -949,8 +932,6 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	}
 
 	protected void showDiagramAssistant(Point referencePoint) {
-		if (!shouldDisplayActionBar() || !isPreferenceOn())
-			return;
 
 		// already have a one
 		if (getBalloon() != null && getBalloon().getParent() != null) 

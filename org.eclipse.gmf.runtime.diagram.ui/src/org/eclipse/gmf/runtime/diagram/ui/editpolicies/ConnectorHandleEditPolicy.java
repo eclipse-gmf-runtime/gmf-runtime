@@ -21,8 +21,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -30,10 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandle;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandleLocator;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandle.HandleDirection;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
-import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * This editpolicy is responsible for adding the connector handles to a shape.
@@ -155,8 +150,6 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 		if (referencePoint == null) {
 			referencePoint = getHostFigure().getBounds().getRight();
 		}
-		if (!(isOkayToShowConnectorHandles()))
-			return;
 
 		handles = getHandleFigures();
 		if (handles == null) {
@@ -186,35 +179,13 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 		}
 	}
 	
-	/**
-	 * Is the show connector handles preference turned on?
-	 * @return true iff the show connector handles preference is turned on
-	 */
-	private boolean isShowHandlesPreferenceOn() {
-		IPreferenceStore preferenceStore = (IPreferenceStore)
-			((IGraphicalEditPart) getHost())
-				.getDiagramPreferencesHint().getPreferenceStore();
-		return preferenceStore.getBoolean(
-			IPreferenceConstants.PREF_SHOW_CONNECTOR_HANDLES);
-	}
-
-	/**
-	 * Is the semantic reference (if applicable) is unresolvable?
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return true iff the semantic reference (if applicable) is unresolvable
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#getPreferenceName()
 	 */
-	private boolean isSemanticReferenceUnresolvable() {
-		final View view = (View)getHost().getModel();
-		if (view.getElement() != null) {
-			Boolean retval = (Boolean) MEditingDomainGetter.getMEditingDomain(view).runAsRead(new MRunnable() {
-
-				public Object run() {
-					return new Boolean(ViewUtil.resolveSemanticElement(view) == null);
-				}
-			});
-			return retval.booleanValue();
-		}
-		return false;
+	String getPreferenceName() {
+		return IPreferenceConstants.PREF_SHOW_CONNECTOR_HANDLES;
 	}
 
 	/**
@@ -251,6 +222,7 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 	/**
 	 * checks if the Host edit part is editable or not
 	 * @return true or false
+	 * @deprecated if someone needs this let me know -- Cherie Mahoney
 	 */
 	protected boolean isEditable() {
 		GraphicalEditPart theEditPart = null;
@@ -261,25 +233,32 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 		return false;
 	}
 	
-	
 	/**
 	 * checks if it is ok to show ConnectorHandles or not 
 	 * @return true or false
+	 * @deprecated use shouldShowDiagramAssistant()
 	 */
 	protected boolean isOkayToShowConnectorHandles(){
-		if (handles != null || !getHost().isActive() || 
-				!isShowHandlesPreferenceOn() || 
-				isSemanticReferenceUnresolvable() ||
-				!isSelectionToolActive() ||
-				!isEditable())
-		{
+		return shouldShowDiagramAssistant();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#shouldShowDiagramAssistant()
+	 */
+	protected boolean shouldShowDiagramAssistant(){
+		if (!super.shouldShowDiagramAssistant()) {
+			return false;
+		}
+		if (handles != null || !isSelectionToolActive()) {
 			return false;
 		}
 		return true;
 	}
 	
 	/**
-	 * get the connector handle locator using the host and the passed reference point
+	 * get the connector handle locator using the host and the passed reference
+	 * point
+	 * 
 	 * @param referencePoint
 	 * @return <code>ConnectorHandleLocator</code>
 	 */

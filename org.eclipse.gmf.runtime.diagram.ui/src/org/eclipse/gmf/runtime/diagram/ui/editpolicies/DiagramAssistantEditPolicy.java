@@ -17,8 +17,19 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
+import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Encapsulates behavior common to editpolicies that popup diagram assistants.
@@ -60,7 +71,9 @@ public abstract class DiagramAssistantEditPolicy
 					&& !shouldAvoidHidingDiagramAssistant()) {
 					hideDiagramAssistant();
 				}
-				showDiagramAssistant(originalMouseLocation);
+				if (shouldShowDiagramAssistant()) {
+					showDiagramAssistant(originalMouseLocation);
+				}
 			}
 		}
 	}
@@ -98,7 +111,7 @@ public abstract class DiagramAssistantEditPolicy
 		 * @see org.eclipse.gef.EditPartListener#selectedStateChanged(org.eclipse.gef.EditPart)
 		 */
 		public void selectedStateChanged(EditPart part) {
-			if (part.hasFocus()) {
+			if (part.hasFocus() && shouldShowDiagramAssistant()) {
 				showDiagramAssistant(getMouseLocation());
 			} else {
 				hideDiagramAssistant();
@@ -179,7 +192,102 @@ public abstract class DiagramAssistantEditPolicy
 	 * Hides the diagram assistant figure(s).
 	 */
 	protected abstract void hideDiagramAssistant();
+	
+	/**
+	 * Returns true if the diagram assistant should be shown; false otherwise.
+	 * This can be overridden to check any other conditions which must be met
+	 * prior to showing the diagram assistant.
+	 * 
+	 * @return true if the diagram assistant should be shown; false otherwise.
+	 */
+	protected boolean shouldShowDiagramAssistant() {
+		return isPreferenceOn() && getHost().isActive() && isHostEditable()
+			&& isHostResolvable() && isDiagramPartActive();
+	}
 
+	/**
+	 * Returns true if the preference to show this diagram assistant is on or if
+	 * there is no applicable preference; false otherwise.
+	 */
+	protected boolean isPreferenceOn() {
+		String prefName = getPreferenceName();
+		if (prefName == null) {
+			return true;
+		}
+		IPreferenceStore preferenceStore = (IPreferenceStore) ((IGraphicalEditPart) getHost())
+			.getDiagramPreferencesHint().getPreferenceStore();
+		return preferenceStore.getBoolean(prefName);
+	}
+
+	/**
+	 * The preference name indicating if the preference should be on or off.
+	 * This preference must be a boolean preference stored in the diagram
+	 * preferences.
+	 * 
+	 * @return the preference name if applicable; null otherwise
+	 */
+	String getPreferenceName() {
+		return null;
+	}
+	
+	/**
+	 * Checks if the host editpart is editable.
+	 * 
+	 * @return True if the host is editable; false otherwise.
+	 */
+	private boolean isHostEditable() {
+		if (getHost() instanceof GraphicalEditPart) {
+			return ((GraphicalEditPart) getHost()).isEditModeEnabled();
+		}
+		return true;
+	}
+
+	/**
+	 * Is the host's semantic reference resolvable (if applicable)?
+	 * 
+	 * @return true if the semantic reference is resolvable, true if there is no
+	 *         semantic reference, and false otherwise
+	 */
+	private boolean isHostResolvable() {
+		final View view = (View) getHost().getModel();
+		if (view.getElement() != null) {
+			Boolean retval = (Boolean) MEditingDomainGetter.getMEditingDomain(
+				view).runAsRead(new MRunnable() {
+
+				public Object run() {
+					return ViewUtil.resolveSemanticElement(view) != null ? Boolean.TRUE
+						: Boolean.FALSE;
+				}
+			});
+			return retval.booleanValue();
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Checks if the diagram part is active.
+	 * 
+	 * @return True if the diagram part is active; false otherwise.
+	 */
+	private boolean isDiagramPartActive() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench()
+			.getActiveWorkbenchWindow();
+
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				IWorkbenchPart activePart = page.getActivePart();
+				if (activePart instanceof IDiagramWorkbenchPart) {
+					return ((IDiagramWorkbenchPart) activePart)
+						.getDiagramEditPart().getRoot().equals(
+							((IGraphicalEditPart) getHost()).getRoot());
+				}
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Shows the diagram assistant after a certain amount of time has passed.
 	 * 
@@ -187,8 +295,10 @@ public abstract class DiagramAssistantEditPolicy
 	 *            the delay in milliseconds
 	 */
 	protected void showDiagramAssistantAfterDelay(int delay) {
-		Display.getCurrent().timerExec(delay,
-			new ShowDiagramAssistantRunnable(getMouseLocation()));
+		if (shouldShowDiagramAssistant()) {
+			Display.getCurrent().timerExec(delay,
+				new ShowDiagramAssistantRunnable(getMouseLocation()));
+		}
 	}
 
 	/**
