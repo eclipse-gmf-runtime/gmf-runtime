@@ -58,7 +58,13 @@ public abstract class DiagramEditorWithFlyOutPalette
 		public void activityManagerChanged(
 				ActivityManagerEvent activityManagerEvent) {
 			if (activityManagerEvent.haveEnabledActivityIdsChanged()) {
-				updatePaletteRoot();
+				if (getEditDomain() != null
+					&& getEditDomain().getPaletteViewer() != null
+					&& getEditDomain().getPaletteViewer().getPaletteRoot() != null) {
+
+					createPaletteRoot(getEditDomain().getPaletteViewer()
+						.getPaletteRoot());
+				}
 			}
 		}
 	}
@@ -119,7 +125,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 	 */
 	protected PaletteViewerProvider createPaletteViewerProvider() {
 		assert fHasFlyoutPalette == true;
-		getEditDomain().setPaletteRoot(createPaletteRoot());
+		getEditDomain().setPaletteRoot(createPaletteRoot(null));
 		return new PaletteViewerProvider(getEditDomain()){
 
 			/**
@@ -334,26 +340,23 @@ public abstract class DiagramEditorWithFlyOutPalette
 	}
 
 	/**
-	 * Creates the palette root for the palette viewer.
+	 * Creates the palette root for the palette viewer or updates the existing
+	 * palette root passed in if entries should be added/removed based on the
+	 * current state.
 	 * 
-	 * @return the new palette root
+	 * @param existingPaletteRoot
+	 *            the existing palette root if the palette has already been
+	 *            created, or null if the palette root has not yet been created
+	 * @return the new palette root or the updated palette root
 	 */
-	private PaletteRoot createPaletteRoot() {
-		return PaletteService.getInstance().createPalette(this,
-			getDefaultPaletteContent());
-	}
-
-	/**
-	 * Updates the palette root by adding/removing entries as necessary.
-	 */
-	private void updatePaletteRoot() {
-		if (getEditDomain() != null
-			&& getEditDomain().getPaletteViewer() != null
-			&& getEditDomain().getPaletteViewer().getPaletteRoot() != null) {
-			
-			PaletteService.getInstance().updatePalette(
-				getEditDomain().getPaletteViewer().getPaletteRoot(), this,
+	protected PaletteRoot createPaletteRoot(PaletteRoot existingPaletteRoot) {
+		if (existingPaletteRoot == null) {
+			return PaletteService.getInstance().createPalette(this,
 				getDefaultPaletteContent());
+		} else {
+			PaletteService.getInstance().updatePalette(existingPaletteRoot,
+				this, getDefaultPaletteContent());
+			return existingPaletteRoot;
 		}
 	}
 
