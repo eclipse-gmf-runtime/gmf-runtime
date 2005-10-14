@@ -881,7 +881,6 @@ public abstract class AbstractContributionItemProvider
 			if (adapter == IContributionItem.class) {
 				IContributionItem item =
 					createCustomContributionItem(customId, partDescriptor);
-				item.update();
 				return item;
 			} else if (adapter == String.class) {
 				return customId;
