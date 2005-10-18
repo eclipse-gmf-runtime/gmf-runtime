@@ -66,8 +66,10 @@ public abstract class DiagramDocumentEditorMatchingStrategy
 				}
 			});
 			
-			IEditorInput editorInput = docProvider.createInputWithEditingDomain(input, getDefaultDomain());
-			return editorInput.equals(existingEditorInput);
+			if (docProvider != null) {
+				IEditorInput editorInput = docProvider.createInputWithEditingDomain(input, getDefaultDomain());
+				return editorInput.equals(existingEditorInput);
+			}
 		}
 		return false;
 	}
