@@ -134,8 +134,11 @@ public class DiagramAssistantTests
 		// should not be shown if the diagram editor is not the active editor
 		IWorkbenchPage page = PlatformUI.getWorkbench()
 			.getActiveWorkbenchWindow().getActivePage();
-		page.activate(page.findView("org.eclipse.ui.views.ResourceNavigator")); //$NON-NLS-1$
-		assertFalse(da.shouldShowDiagramAssistant());
+		if (page.getViewReferences().length > 0) {
+			// Activate the first view found, if there is one.
+			page.activate(page.getViewReferences()[0].getPart(false));
+			assertFalse(da.shouldShowDiagramAssistant());
+		}
 
 		page.activate(getDiagramWorkbenchPart());
 		assertTrue(da.shouldShowDiagramAssistant());
