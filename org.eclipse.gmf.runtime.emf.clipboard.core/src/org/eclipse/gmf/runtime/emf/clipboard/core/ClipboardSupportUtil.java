@@ -760,17 +760,20 @@ public final class ClipboardSupportUtil {
 		EReference parentReference = null;
 		while (it.hasNext()) {
 			parentReference = (EReference) it.next();
-			if ((originalReference != null)
-				&& parentReference.equals(originalReference)) {
-				//perfect match...return it
-				return parentReference;
-			}
-			if ((parentReference.isChangeable())
-				&& (parentReference.isDerived() == false)) {
-				if (createClipboardSupport(parentEObject).canContain(
-						parentEObject, parentReference, childEClass)) {
-					//holds same eObject type, collect it
-					compatibleRefrencesList.add(parentReference);
+			// check if the parentReference is a containment reference
+			if (parentReference.isContainment()) {
+				if ((originalReference != null)
+					&& parentReference.equals(originalReference)) {
+					//perfect match...return it
+					return parentReference;
+				}
+				if ((parentReference.isChangeable())
+					&& (parentReference.isDerived() == false)) {
+					if (createClipboardSupport(parentEObject).canContain(
+							parentEObject, parentReference, childEClass)) {
+						//holds same eObject type, collect it
+						compatibleRefrencesList.add(parentReference);
+					}
 				}
 			}
 		}
