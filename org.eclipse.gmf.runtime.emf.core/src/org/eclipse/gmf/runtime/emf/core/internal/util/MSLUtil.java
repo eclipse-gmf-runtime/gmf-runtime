@@ -1281,7 +1281,7 @@ public class MSLUtil {
 		if (oldPosition != -1) {
 
 			if ((position != -1) && (position < ownerList.size()))
-				ownerList.move(oldPosition, position);
+				ownerList.move(position, oldPosition);
 
 		} else if (position == -1)
 			ownerList.add(object);
