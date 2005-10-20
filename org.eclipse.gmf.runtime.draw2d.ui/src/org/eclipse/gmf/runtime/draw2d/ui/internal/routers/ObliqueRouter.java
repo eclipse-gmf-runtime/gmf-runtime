@@ -394,7 +394,7 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
         conn.translateToAbsolute(ptAbsE2);
 		if (newLine.size() == 2)
 			ptAbsE2 = ptAbsS1;
-		Point ptE1 = conn.getTargetAnchor().getLocation(ptAbsE2); 
+		Point ptE1 = new Point(conn.getTargetAnchor().getLocation(ptAbsE2)); 
 		conn.translateToRelative(ptE1);
         
 		newLine.setPoint(ptS1, 0);
