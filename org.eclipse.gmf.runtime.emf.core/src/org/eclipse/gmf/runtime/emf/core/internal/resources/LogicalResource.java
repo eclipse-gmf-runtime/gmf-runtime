@@ -30,6 +30,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
@@ -661,6 +662,13 @@ public class LogicalResource
 			super.notifyChanged(notification);
 			
 			if (isEnabled() && !notification.isTouch()) {
+				Object feature = notification.getFeature();
+				if (feature instanceof EStructuralFeature &&
+						((EStructuralFeature) feature).isTransient()) {
+					// don't respond to transient features
+					return;
+				}
+				
 				Object notifier = notification.getNotifier();
 				
 				if (notifier instanceof EObject) {
