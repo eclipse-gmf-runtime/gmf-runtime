@@ -138,6 +138,8 @@ public class OrthogonalRouterUtilities {
 			ConnectionAnchor anchor,
 			Point ref) {
 			
+			assert anchor != null && anchor.getOwner() != null;
+			
 			Point ptAbsRef = getEdgePoint(conn, anchor, ref);
 			conn.translateToAbsolute(ptAbsRef);
 			Point ptEdge = anchor.getLocation(ptAbsRef);

@@ -498,7 +498,6 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		// don't try to do rectilinear routing.
 		if (isReorienting(conn)) {
 			super.routeLine(conn, nestedRoutingDepth, newLine);
-			checkEndSegments(conn, newLine);
 			resetEndPointsToEdge(conn, newLine);
 			return;
 		}
