@@ -29,7 +29,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
@@ -45,9 +44,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.DuplicateViewsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.PasteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.RefreshEditPartCommand;
@@ -339,15 +336,6 @@ public class ContainerEditPolicy
 			if (ep instanceof ConnectionEditPart || ep instanceof ShapeEditPart
 				|| ep instanceof ListItemCompartmentEditPart) {
 				
-				// TODO: Remove when I've had a chance to test this on machine
-				// diagrams.
-				TopGraphicEditPart topEP = ((IGraphicalEditPart) ep)
-					.getTopGraphicEditPart();
-				if (topEP != null
-					&& topEP.getParent() instanceof ShapeCompartmentEditPart) {
-					return null;
-				}
-				
 				// More work needs to be done to duplicate connections whose
 				// source or target isn't also duplicated, so disable for now.
 				if (ep instanceof ConnectionEditPart) {
@@ -391,7 +379,8 @@ public class ContainerEditPolicy
 					new ArrayList(elementsToDuplicate));
 				Command duplicateElementsCommand = getHost().getCommand(
 					new EditCommandRequestWrapper(duplicateElementsRequest));
-				if (duplicateElementsCommand != null) {
+				if (duplicateElementsCommand != null
+					&& duplicateElementsCommand.canExecute()) {
 					CompositeCommand cc = new CompositeCommand(
 						PresentationResourceManager
 							.getI18NString("Commands.Duplicate.Label")); //$NON-NLS-1$
