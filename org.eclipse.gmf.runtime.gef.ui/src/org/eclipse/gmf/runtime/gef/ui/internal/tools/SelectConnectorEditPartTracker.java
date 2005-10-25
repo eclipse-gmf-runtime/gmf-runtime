@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.gef.ui.internal.tools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.Connection;
@@ -176,6 +177,15 @@ public class SelectConnectorEditPartTracker extends SelectEditPartTracker {
 		bSourceFeedback = bSet;
 	}
 
+	/**
+	 * @see org.eclipse.gef.tools.AbstractTool#createOperationSet()
+	 */
+	protected List createOperationSet() {
+		List list = new ArrayList();
+		list.add(getConnectionEditPart());
+		return list;
+	}
+	
 	/**
 	 * Method showSourceFeedback.
 	 * Show the source drag feedback for the drag occurring
