@@ -154,7 +154,9 @@ public class SlidableAnchor
 		ownReference = normalizeToStraightlineTolerance(foreignReference, ownReference, STRAIGHT_LINE_TOLERANCE);
 		
 		Point location = getLocation(ownReference, foreignReference);
-		if (location == null)
+		if (location == null || 
+			getBox().expand(1, 1).contains(foreignReference) &&
+			!getBox().shrink(1, 1).contains(foreignReference))
 			location = getLocation(getBox().getCenter(), foreignReference);
 		
 		if (location==null) {

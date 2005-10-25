@@ -61,6 +61,20 @@ public class FigureSlidableAnchorTests
 		assertTrue(reference.x==p2.x);
 	}
 	
+	public void testGetLocationFromReferenceOnBorder() {
+		NodeFigure fig = new NodeFigure();
+		fig.setBounds(new Rectangle(100,100, 100, 100));
+		
+		Point p1 = new Point(200,150); 
+		ConnectionAnchor anchor = fig.getSourceConnectionAnchorAt(p1);
+		
+		// verify when reference point is on or close to border, the returned location
+		// is the same point.
+		Point p2 = new Point(200, 175); 
+		Point reference = anchor.getLocation(new Point(200, 175));
+		assertTrue(reference.y == p2.y);
+	}
+	
 	public void testAnchorPosition() {
 		NodeFigure fig = new NodeFigure();
 		fig.setBounds(new Rectangle(-10,-10, 20, 20));
