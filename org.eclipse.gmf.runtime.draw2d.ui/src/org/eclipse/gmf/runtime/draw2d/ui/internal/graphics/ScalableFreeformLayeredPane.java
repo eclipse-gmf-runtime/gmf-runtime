@@ -42,8 +42,10 @@ public class ScalableFreeformLayeredPane
     */
     protected void paintClientArea(Graphics graphics) {
     	// Use Anti-Aliasing
-    	if (graphics instanceof SWTGraphics) {
+    	if ((graphics instanceof SWTGraphics) && antiAlias) {
 			graphics.setAntialias(SWT.ON);			
+		} else {
+			graphics.setAntialias(SWT.OFF);			
 		}
 
     	// Create MapMode Graphics Object
