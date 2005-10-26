@@ -504,6 +504,9 @@ public class DiagramRootEditPart
 		initPreferenceStoreListener();
 		
 		ScalableFreeformLayeredPane pane = getLayers();
+		
+		refreshEnableAntiAlias();
+		
 		if (pane instanceof ZoomListener) {
 			getZoomManager().addZoomListener((ZoomListener)pane);
 		}
