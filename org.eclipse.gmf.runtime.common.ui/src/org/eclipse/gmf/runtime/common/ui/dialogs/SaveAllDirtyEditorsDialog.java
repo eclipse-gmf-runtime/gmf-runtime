@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ListDialog;
 
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * Dialog which displays all dirty editors and prompts user if they should be
@@ -50,10 +50,8 @@ public class SaveAllDirtyEditorsDialog
 	public SaveAllDirtyEditorsDialog(Shell parent) {
 		super(parent);
 
-		setTitle(ResourceManager
-			.getI18NString("SaveAllDirtyEditorsDialog.title")); //$NON-NLS-1$
-		setMessage(ResourceManager
-			.getI18NString("SaveAllDirtyEditorsDialog.message")); //$NON-NLS-1$
+		setTitle(CommonUIMessages.SaveAllDirtyEditorsDialog_title);
+		setMessage(CommonUIMessages.SaveAllDirtyEditorsDialog_message);
 		setAddCancelButton(true);
 
 		setLabelProvider(new LabelProvider() {

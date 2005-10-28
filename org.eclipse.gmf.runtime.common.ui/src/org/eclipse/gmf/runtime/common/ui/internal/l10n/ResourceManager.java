@@ -53,9 +53,9 @@ public final class ResourceManager extends AbstractUIResourceManager {
      *          contain this entry.
      * @param key The resource bundle key. 
      */
-    public static String getI18NString(String key) {
-        return getInstance().getString(key);
-    }
+    //public static String getI18NString(String key) {
+    //    return getInstance().getString(key);
+    //}
 
     /**
      * Initializes this resource manager's resources.

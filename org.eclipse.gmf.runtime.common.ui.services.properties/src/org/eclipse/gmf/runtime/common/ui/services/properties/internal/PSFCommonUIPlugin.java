@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.properties.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFResourceManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -49,16 +47,5 @@ public class PSFCommonUIPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return PSFResourceManager.getInstance();
 	}
 }

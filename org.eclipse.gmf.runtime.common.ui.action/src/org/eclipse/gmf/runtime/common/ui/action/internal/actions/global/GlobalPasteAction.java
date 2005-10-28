@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -27,10 +28,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalPasteAction extends GlobalAction {
-    /**
-     * Label definition of the paste action.
-     */
-    private static final String PASTE_TEXT = ResourceManager.getI18NString("GlobalPasteAction.label"); //$NON-NLS-1$
 
     /**
      * Action definition id of the paste action.
@@ -77,7 +74,7 @@ public final class GlobalPasteAction extends GlobalAction {
                 : PASTE);
 
         /* set the label */
-        setText(PASTE_TEXT);
+        setText(CommonUIActionMessages.GlobalPasteAction_label);
 
         /* set the image */
         setImageDescriptor(PASTE_IMAGE);

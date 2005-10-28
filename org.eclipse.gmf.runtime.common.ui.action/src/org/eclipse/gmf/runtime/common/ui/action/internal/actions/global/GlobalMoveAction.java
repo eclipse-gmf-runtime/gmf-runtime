@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -27,10 +28,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalMoveAction extends GlobalAction {
-	/**
-	 * Label definition of the move action.
-	 */
-	private static final String MOVE_TEXT = ResourceManager.getI18NString("GlobalMoveAction.label"); //$NON-NLS-1$
 
 	/**
 	 * Action definition id of the move action.
@@ -77,7 +74,7 @@ public final class GlobalMoveAction extends GlobalAction {
 				: MOVE);
 
 		/* set the label */
-		setText(MOVE_TEXT);
+		setText(CommonUIActionMessages.GlobalMoveAction_label);
 
 		/*  set the image */
 		setImageDescriptor(MOVE_IMAGE);

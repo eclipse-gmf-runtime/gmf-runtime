@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 
 /**
  * Global Close Action
@@ -54,7 +54,7 @@ public class GlobalCloseAction extends GlobalAction {
                 : getActionId());
 
         // Set the label
-        setText(ResourceManager.getI18NString("GlobalCloseAction.label")); //$NON-NLS-1$
+        setText(CommonUIActionMessages.GlobalCloseAction_label);
 
         // Do not define image descriptors. The "Close" action does not have one.
 

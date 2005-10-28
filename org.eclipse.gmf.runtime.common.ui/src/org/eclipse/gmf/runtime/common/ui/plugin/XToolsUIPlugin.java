@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * The abstract parent of all XTools UI plug-ins.
@@ -51,18 +51,6 @@ public abstract class XToolsUIPlugin
 	 * Attribute for a holding a list of <code>ISaveParticipant</code>
 	 */
 	private final List listOfSaveParticipants = new ArrayList();
-
-	/**
-	 * Error message used when startup of a plug-in fails.
-	 */
-	protected static final String STARTUP_ERROR_MESSAGE = ResourceManager
-		.getI18NString("XToolsUIPlugin._ERROR_.startupErrorMessage"); //$NON-NLS-1$
-
-	/**
-	 * Error message used when shutdown of a plug-in fails.
-	 */
-	protected static final String SHUTDOWN_ERROR_MESSAGE = ResourceManager
-		.getI18NString("XToolsUIPlugin._ERROR_.shutDownErrorMessage"); //$NON-NLS-1$
 
 	/**
 	 * Creates a new plug-in runtime object.
@@ -89,7 +77,9 @@ public abstract class XToolsUIPlugin
 	 * 
 	 * @return A resource manager instance for this plug-in.
 	 */
-	public abstract AbstractResourceManager getResourceManager();
+	public AbstractResourceManager getResourceManager() {
+		return null;
+	}
 
 	/**
 	 * Starts up this plug-in.
@@ -135,7 +125,7 @@ public abstract class XToolsUIPlugin
 	 *            The name of this plug-in.
 	 */
 	protected String getStartupErrorMessage(String pluginName) {
-		return MessageFormat.format(STARTUP_ERROR_MESSAGE,
+		return MessageFormat.format(CommonUIMessages.XToolsUIPlugin__ERROR__startupErrorMessage,
 			new Object[] {pluginName});
 	}
 
@@ -148,7 +138,7 @@ public abstract class XToolsUIPlugin
 	 *            The name of this plug-in.
 	 */
 	protected String getShutdownErrorMessage(String pluginName) {
-		return MessageFormat.format(SHUTDOWN_ERROR_MESSAGE,
+		return MessageFormat.format(CommonUIMessages.XToolsUIPlugin__ERROR__shutDownErrorMessage,
 			new Object[] {pluginName});
 	}
 

@@ -23,7 +23,7 @@ import org.osgi.framework.Constants;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
-import org.eclipse.gmf.runtime.common.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.core.internal.l10n.CommonCoreMessages;
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -34,20 +34,8 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * @author khussey
  * @canBeSeenBy %partners
  */
-public abstract class XToolsPlugin
+public class XToolsPlugin
 	extends Plugin {
-
-	/**
-	 * Error message used when startup of a plug-in fails.
-	 */
-	protected static final String STARTUP_ERROR_MESSAGE = ResourceManager
-		.getI18NString("XToolsPlugin._ERROR_.startupErrorMessage"); //$NON-NLS-1$
-
-	/**
-	 * Error message used when shutdown of a plug-in fails.
-	 */
-	protected static final String SHUTDOWN_ERROR_MESSAGE = ResourceManager
-		.getI18NString("XToolsPlugin._ERROR_.shutdownErrorMessage"); //$NON-NLS-1$
 
 	/**
 	 * Creates a new plug-in runtime object.
@@ -72,8 +60,12 @@ public abstract class XToolsPlugin
 	 * Retrieves a resource manager instance for this plug-in.
 	 * 
 	 * @return A resource manager instance for this plug-in.
+	 * @deprecated ResourceManager is to be replaced with a class that extends NLS.
+	 * @see org.eclipse.osgi.util.NLS
 	 */
-	public abstract AbstractResourceManager getResourceManager();
+	public AbstractResourceManager getResourceManager() {
+		return null;
+	}
 
 	/**
 	 * Starts up this plug-in.
@@ -98,7 +90,7 @@ public abstract class XToolsPlugin
 	 *            The name of this plug-in.
 	 */
 	protected String getStartupErrorMessage(String pluginName) {
-		return MessageFormat.format(STARTUP_ERROR_MESSAGE,
+		return MessageFormat.format(CommonCoreMessages.XToolsPlugin__ERROR__startupErrorMessage,
 			new Object[] {pluginName});
 	}
 
@@ -111,7 +103,7 @@ public abstract class XToolsPlugin
 	 *            The name of this plug-in.
 	 */
 	protected String getShutdownErrorMessage(String pluginName) {
-		return MessageFormat.format(SHUTDOWN_ERROR_MESSAGE,
+		return MessageFormat.format(CommonCoreMessages.XToolsPlugin__ERROR__shutdownErrorMessage,
 			new Object[] {pluginName});
 	}
 

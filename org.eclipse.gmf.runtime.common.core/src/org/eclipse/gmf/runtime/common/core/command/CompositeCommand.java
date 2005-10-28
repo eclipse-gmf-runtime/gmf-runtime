@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
-import org.eclipse.gmf.runtime.common.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.core.internal.l10n.CommonCoreMessages;
 
 /**
  * A command that is composed of other
@@ -51,12 +51,6 @@ public class CompositeCommand
 	 * The empty string.
 	 */
 	protected static final String EMPTY_STRING = ""; //$NON-NLS-1$
-
-	/**
-	 * The status message for a cancelled command.
-	 */
-	protected static final String CANCELLED_MESSAGE = ResourceManager
-		.getInstance().getString("AbstractCommand._INFO_.cancelOperation"); //$NON-NLS-1$
 
 	/**
 	 * The commands of which this composite command is composed.
@@ -497,7 +491,7 @@ public class CompositeCommand
 	 */
 	protected CommandResult newCancelledCommandResult() {
 		return new CommandResult(new Status(IStatus.ERROR, getPluginId(),
-			CommonCoreStatusCodes.CANCELLED, CANCELLED_MESSAGE, null), null);
+			CommonCoreStatusCodes.CANCELLED, CommonCoreMessages.AbstractCommand__INFO__cancelOperation, null), null);
 	}
 
 	/**

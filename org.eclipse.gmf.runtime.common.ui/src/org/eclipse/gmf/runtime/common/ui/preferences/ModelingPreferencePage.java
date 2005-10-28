@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * This preference page provides general modeling preferences for the modeling
@@ -30,30 +30,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
  */
 public class ModelingPreferencePage
 	extends AbstractPreferencePage {
-
-	private String OPEN_UNRECOGNIZED_CONTENT_LABEL = ResourceManager
-		.getI18NString("ModelingPreferencePage.OpenUnrecognizedContent.label"); //$NON-NLS-1$
-
-	private String OPEN_UNRECOGNIZED_CONTENT_ALWAYS = ResourceManager
-		.getI18NString("ModelingPreferencePage.OpenUnrecognizedContent.always"); //$NON-NLS-1$
-
-	private String OPEN_UNRECOGNIZED_CONTENT_NEVER = ResourceManager
-		.getI18NString("ModelingPreferencePage.OpenUnrecognizedContent.never"); //$NON-NLS-1$
-
-	private String OPEN_UNRECOGNIZED_CONTENT_PROMPT = ResourceManager
-		.getI18NString("ModelingPreferencePage.OpenUnrecognizedContent.prompt"); //$NON-NLS-1$
-
-	private String SAVE_UNRECOGNIZED_CONTENT_LABEL = ResourceManager
-		.getI18NString("ModelingPreferencePage.SaveUnrecognizedContent.label"); //$NON-NLS-1$
-
-	private String SAVE_UNRECOGNIZED_CONTENT_ALWAYS = ResourceManager
-		.getI18NString("ModelingPreferencePage.SaveUnrecognizedContent.always"); //$NON-NLS-1$
-
-	private String SAVE_UNRECOGNIZED_CONTENT_NEVER = ResourceManager
-		.getI18NString("ModelingPreferencePage.SaveUnrecognizedContent.never"); //$NON-NLS-1$
-
-	private String SAVE_UNRECOGNIZED_CONTENT_PROMPT = ResourceManager
-		.getI18NString("ModelingPreferencePage.SaveUnrecognizedContent.prompt"); //$NON-NLS-1$	
 
 	private RadioGroupFieldEditor openLaterVersion = null;
 
@@ -78,25 +54,25 @@ public class ModelingPreferencePage
 
 		addField(openLaterVersion = new RadioGroupFieldEditor(
 			IPreferenceConstants.OPEN_UNRECOGNIZED_VERSIONS,
-			OPEN_UNRECOGNIZED_CONTENT_LABEL,
+			CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_label,
 			3, //$NON-NLS-1$
 			new String[][] {
-				{OPEN_UNRECOGNIZED_CONTENT_ALWAYS,
+				{CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_always,
 					MessageDialogWithToggle.ALWAYS}, //$NON-NLS-1$
-				{OPEN_UNRECOGNIZED_CONTENT_NEVER, MessageDialogWithToggle.NEVER}, //$NON-NLS-1$
-				{OPEN_UNRECOGNIZED_CONTENT_PROMPT,
+				{CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_never, MessageDialogWithToggle.NEVER}, //$NON-NLS-1$
+				{CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_prompt,
 					MessageDialogWithToggle.PROMPT}}, //$NON-NLS-1$
 			getFieldEditorParent(), true));
 
 		addField(saveLaterVersion = new RadioGroupFieldEditor(
 			IPreferenceConstants.SAVE_UNRECOGNIZED_VERSIONS,
-			SAVE_UNRECOGNIZED_CONTENT_LABEL,
+			CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_label,
 			3, //$NON-NLS-1$
 			new String[][] {
-				{SAVE_UNRECOGNIZED_CONTENT_ALWAYS,
+				{CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_always,
 					MessageDialogWithToggle.ALWAYS}, //$NON-NLS-1$
-				{SAVE_UNRECOGNIZED_CONTENT_NEVER, MessageDialogWithToggle.NEVER}, //$NON-NLS-1$
-				{SAVE_UNRECOGNIZED_CONTENT_PROMPT,
+				{CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_never, MessageDialogWithToggle.NEVER}, //$NON-NLS-1$
+				{CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_prompt,
 					MessageDialogWithToggle.PROMPT}}, //$NON-NLS-1$
 			getFieldEditorParent(), true));
 

@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 
 /** 
  * Global Open Action - this action provides a global "open" type of action. 
@@ -60,7 +60,7 @@ public final class GlobalOpenAction extends GlobalAction {
                 : getActionId());
 
         /* Set the label */
-        setText(ResourceManager.getI18NString("GlobalOpenAction.label")); //$NON-NLS-1$
+        setText(CommonUIActionMessages.GlobalOpenAction_label);
 
         /* Do not define image dewscriptors. The "Open" command does not have them. */
 

@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
-import org.eclipse.gmf.runtime.common.core.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -90,6 +89,8 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * @see java.util.ResourceBundle
  * @author Natalia Balaba
  * @canBeSeenBy %partners
+ * @deprecated ResourceManager is to be replaced with a class that extends NLS.
+ * @see org.eclipse.osgi.util.NLS
  */
 
 public abstract class AbstractResourceManager {
@@ -320,7 +321,7 @@ public abstract class AbstractResourceManager {
 			Trace.catching(
 					getPlugin(),
 					CommonCoreDebugOptions.EXCEPTIONS_CATCHING,
-					ResourceManager.class,
+					AbstractResourceManager.class,
 					"messageFormat", //$NON-NLS-1$
 					e);
 			
@@ -366,9 +367,9 @@ public abstract class AbstractResourceManager {
 			case 1 :
 				return String.valueOf(items.iterator().next());
 			case 2 :
-				return formatPair(ResourceManager.getInstance(), items);
+				return formatPair(this, items);
 			default :
-				return formatList(ResourceManager.getInstance(), items);
+				return formatList(this, items);
 		}
 	}
 

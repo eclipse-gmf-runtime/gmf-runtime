@@ -43,7 +43,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.contentassist.ContentAssistHandler;
 
 import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * A class that enables inline-text editing for tree nodes
@@ -53,9 +53,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
  */
 
 public class TreeInlineTextEditor {
-
-	private static final String ERROR_DIALOG_TITLE = ResourceManager
-		.getI18NString("TreeInlineTextEditor.errorDialogTitle"); //$NON-NLS-1$
 
 	/**
 	 * a tree editor used to aid in editing the nodes
@@ -348,7 +345,7 @@ public class TreeInlineTextEditor {
 	 *  
 	 */
 	protected void openErrorDialog(IStatus status) {
-		ErrorDialog.openError(getShell(), ERROR_DIALOG_TITLE, null, status);
+		ErrorDialog.openError(getShell(), CommonUIMessages.TreeInlineTextEditor_errorDialogTitle, null, status);
 	}
 
 	private Shell getShell() {

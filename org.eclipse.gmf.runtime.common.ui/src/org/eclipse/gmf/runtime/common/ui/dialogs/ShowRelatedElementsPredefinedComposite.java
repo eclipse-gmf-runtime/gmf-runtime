@@ -37,7 +37,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 
 /**
@@ -117,8 +117,8 @@ public class ShowRelatedElementsPredefinedComposite
 
 	static {
 		try {
-			VIEWER_HEIGHT = Integer.parseInt(ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.VIEWER_HEIGHT")); //$NON-NLS-1$
+			VIEWER_HEIGHT = Integer.parseInt(
+				CommonUIMessages.ShowRelatedElementsDialog_VIEWER_HEIGHT);
 		} catch (NumberFormatException e) {
 			Trace.catching(CommonUIPlugin.getDefault(),
 				CommonUIDebugOptions.EXCEPTIONS_CATCHING, CommonUIPlugin
@@ -137,13 +137,13 @@ public class ShowRelatedElementsPredefinedComposite
 	 */
 	protected InputDialog saveAsDialog = new InputDialog(
 		Display.getDefault().getActiveShell(),
-		ResourceManager
-			.getI18NString("ShowRelatedElementsPredefinedComposite.SaveAs"), ResourceManager.getI18NString("ShowRelatedElementsPredefinedComposite.ChooseName"), StringStatics.BLANK, new IInputValidator() { //$NON-NLS-1$ //$NON-NLS-2$
+			CommonUIMessages.ShowRelatedElementsPredefinedComposite_SaveAs, 
+			CommonUIMessages.ShowRelatedElementsPredefinedComposite_ChooseName, 
+			StringStatics.BLANK, new IInputValidator() { //$NON-NLS-1$ //$NON-NLS-2$
 
 			public String isValid(String newText) {
 				if (containsSpecialCharacter(newText) || newText.length() == 0) {
-					return ResourceManager
-						.getI18NString("ShowRelatedElementsPredefinedComposite.SpecialCharacter"); //$NON-NLS-1$
+					return CommonUIMessages.ShowRelatedElementsPredefinedComposite_SpecialCharacter; 
 				}
 				return null;
 			}
@@ -180,8 +180,7 @@ public class ShowRelatedElementsPredefinedComposite
 	 * Default string
 	 */
 	protected static final String DEFAULT_STRING = SPECIAL_OPENING
-		+ ResourceManager
-			.getI18NString("ShowRelatedElementsPredefinedComposite.DefaultQuery") + SPECIAL_CLOSING; //$NON-NLS-1$
+		+ CommonUIMessages.ShowRelatedElementsPredefinedComposite_DefaultQuery + SPECIAL_CLOSING; 
 
 	/**
 	 * Constructor
@@ -221,12 +220,10 @@ public class ShowRelatedElementsPredefinedComposite
 		assert null != details;
 		if (!isDetails) {
 			details
-				.setText(ResourceManager
-					.getI18NString("ShowRelatedElementsPredefinedComposite.ShowDetails")); //$NON-NLS-1$
+				.setText(CommonUIMessages.ShowRelatedElementsPredefinedComposite_ShowDetails);
 		} else {
 			details
-				.setText(ResourceManager
-					.getI18NString("ShowRelatedElementsPredefinedComposite.HideDetails")); //$NON-NLS-1$
+				.setText(CommonUIMessages.ShowRelatedElementsPredefinedComposite_HideDetails);
 		}
 	}
 
@@ -240,8 +237,7 @@ public class ShowRelatedElementsPredefinedComposite
 		this.setLayout(new GridLayout(1, false));
 
 		new Label(this, SWT.NULL)
-			.setText(ResourceManager
-				.getI18NString("ShowRelatedElementsPredefinedComposite.CustomQuery")); //$NON-NLS-1$
+			.setText(CommonUIMessages.ShowRelatedElementsPredefinedComposite_CustomQuery); 
 
 		predefinedBox = new List(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
@@ -402,13 +398,10 @@ public class ShowRelatedElementsPredefinedComposite
 		//do not use messageformat since the ordering must be like this for
 		//consistency with the rest
 		predefinedBox
-			.add(ResourceManager
-				.getI18NString("ShowRelatedElementsPredefinedComposite.UserCustomQuery") //$NON-NLS-1$
+			.add(CommonUIMessages.ShowRelatedElementsPredefinedComposite_UserCustomQuery 
 				+ StringStatics.SPACE
 				+ SPECIAL_OPENING
-				+ ResourceManager
-					.getI18NString("ShowRelatedElementsPredefinedComposite.DefaultQuery") + SPECIAL_CLOSING); //$NON-NLS-1$
-
+				+ CommonUIMessages.ShowRelatedElementsPredefinedComposite_DefaultQuery + SPECIAL_CLOSING); 
 	}
 
 	/**
@@ -489,8 +482,7 @@ public class ShowRelatedElementsPredefinedComposite
 	 */
 	protected void makePredefinedSettingsButtons(Composite buttons) {
 		saveAs = new Button(buttons, SWT.PUSH);
-		saveAs.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsPredefinedComposite.SaveAs")); //$NON-NLS-1$
+		saveAs.setText(CommonUIMessages.ShowRelatedElementsPredefinedComposite_SaveAs); 
 		saveAs.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -504,8 +496,7 @@ public class ShowRelatedElementsPredefinedComposite
 		saveAs.setLayoutData(WindowUtil.makeButtonData(saveAs));
 
 		delete = new Button(buttons, SWT.PUSH);
-		delete.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsPredefinedComposite.Delete")); //$NON-NLS-1$
+		delete.setText(CommonUIMessages.ShowRelatedElementsPredefinedComposite_Delete);
 
 		delete.addSelectionListener(new SelectionListener() {
 

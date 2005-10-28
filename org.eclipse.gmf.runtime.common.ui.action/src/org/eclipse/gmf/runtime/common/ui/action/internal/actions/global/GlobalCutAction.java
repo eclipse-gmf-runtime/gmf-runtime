@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManag
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -30,10 +31,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalCutAction extends GlobalAction {
-    /**
-     * Label definition of the cut action.
-     */
-    private static final String CUT_TEXT = ResourceManager.getI18NString("GlobalCutAction.label"); //$NON-NLS-1$
 
     /**
      * Action definition id of the cut action.
@@ -80,7 +77,7 @@ public final class GlobalCutAction extends GlobalAction {
                 : CUT);
 
         /* set the label */
-        setText(CUT_TEXT);
+        setText(CommonUIActionMessages.GlobalCutAction_label);
 
         /*  set the image */
         setImageDescriptor(CUT_IMAGE);

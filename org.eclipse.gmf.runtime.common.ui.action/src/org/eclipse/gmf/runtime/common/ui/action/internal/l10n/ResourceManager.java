@@ -21,6 +21,7 @@ import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
  * cursor types of resources for this plug-in.
  * 
  * @author ldamus
+ * @deprecated Replaced with CommonUIActionMessages
  */
 public final class ResourceManager extends AbstractUIResourceManager {
 

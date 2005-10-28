@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.dialogs;
 
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
@@ -18,8 +19,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
 
 /**
  * A Preference Dialog which has a Close button in place of OK/Cancel buttons,
@@ -79,7 +78,7 @@ public class PropertiesDialog
 
 		// set title to "Properties"
 		getShell().setText(
-			ResourceManager.getI18NString("PropertiesDialog.title")); //$NON-NLS-1$
+			CommonUIMessages.PropertiesDialog_title);
 
 		return control;
 	}

@@ -36,7 +36,7 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesD
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.DragListenerContext;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.IListenerContext;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.CommonUIServicesDNDMessages;
 
 /**
  * This class delegates all the drag source events to the transfer drag source
@@ -46,18 +46,6 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.ResourceMana
  */
 public final class DelegatingDragSourceAdapter
 	implements DragSourceListener {
-
-	/**
-	 * Attribute for the error message
-	 */
-	private static final String ERROR_MSG = ResourceManager
-		.getI18NString("DelegatingDragSourceAdapter.errorMessage"); //$NON-NLS-1$
-
-	/**
-	 * Attribute for the error message for logging
-	 */
-	private static final String ERROR_MSG_LOG = ResourceManager
-		.getI18NString("DelegatingDragSourceAdapter._ERROR_.errorMessage"); //$NON-NLS-1$
 
 	/**
 	 * Attribute for the all transfer drag source adapters mapped to their
@@ -541,7 +529,7 @@ public final class DelegatingDragSourceAdapter
 
 		IStatus status = new Status(IStatus.ERROR, CommonUIServicesDNDPlugin
 			.getPluginId(), CommonUIServicesDNDStatusCodes.DRAG_ACTION_FAILURE,
-			ERROR_MSG_LOG, exception);
+			CommonUIServicesDNDMessages.DelegatingDragSourceAdapter__ERROR__errorMessage, exception);
 
 		Log.log(CommonUIServicesDNDPlugin.getDefault(), status);
 
@@ -549,7 +537,8 @@ public final class DelegatingDragSourceAdapter
 
 			status = new Status(IStatus.ERROR, CommonUIServicesDNDPlugin
 				.getPluginId(),
-				CommonUIServicesDNDStatusCodes.DRAG_ACTION_FAILURE, ERROR_MSG,
+				CommonUIServicesDNDStatusCodes.DRAG_ACTION_FAILURE, 
+				CommonUIServicesDNDMessages.DelegatingDragSourceAdapter__ERROR__errorMessage,
 				exception);
 
 			ErrorDialog.openError(getContext().getActivePart().getSite()

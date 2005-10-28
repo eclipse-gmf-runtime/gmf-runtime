@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesD
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.IListenerContext;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.CommonUIServicesDNDMessages;
 
 /**
  * This class delegates all the drop target events to the transfer drop target
@@ -44,14 +44,14 @@ public class DelegatingDropTargetAdapter
 	/**
 	 * Attribute for the error message
 	 */
-	private static final String ERROR_MSG = ResourceManager
-		.getI18NString("DelegatingDropTargetAdapter.errorMessage"); //$NON-NLS-1$
+	//private static final String ERROR_MSG = ResourceManager
+	//	.getI18NString("DelegatingDropTargetAdapter.errorMessage"); //$NON-NLS-1$
 
 	/**
 	 * Attribute for the error message for logging
 	 */
-	private static final String ERROR_MSG_LOG = ResourceManager
-		.getI18NString("DelegatingDropTargetAdapter._ERROR_.errorMessage"); //$NON-NLS-1$
+	//private static final String ERROR_MSG_LOG = ResourceManager
+	//	.getI18NString("DelegatingDropTargetAdapter._ERROR_.errorMessage"); //$NON-NLS-1$
 
 	/**
 	 * Attribute for the transfer drop target adapters.
@@ -548,7 +548,7 @@ public class DelegatingDropTargetAdapter
 
 		IStatus status = new Status(IStatus.ERROR, CommonUIServicesDNDPlugin
 			.getPluginId(), CommonUIServicesDNDStatusCodes.DROP_ACTION_FAILURE,
-			ERROR_MSG_LOG, exception);
+			CommonUIServicesDNDMessages.DelegatingDropTargetAdapter__ERROR__errorMessage, exception);
 
 		Log.log(CommonUIServicesDNDPlugin.getDefault(), status);
 
@@ -556,7 +556,8 @@ public class DelegatingDropTargetAdapter
 
 			status = new Status(IStatus.ERROR, CommonUIServicesDNDPlugin
 				.getPluginId(),
-				CommonUIServicesDNDStatusCodes.DROP_ACTION_FAILURE, ERROR_MSG,
+				CommonUIServicesDNDStatusCodes.DROP_ACTION_FAILURE, 
+				CommonUIServicesDNDMessages.DelegatingDropTargetAdapter_errorMessage,
 				exception);
 
 			ErrorDialog.openError(getContext().getActivePart().getSite()

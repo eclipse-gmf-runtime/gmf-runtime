@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -27,10 +28,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalRefreshAction extends GlobalAction {
-    /**
-     * Label definition of the REFRESH action.
-     */
-    private static final String REFRESH_TEXT = ResourceManager.getI18NString("GlobalRefreshAction.label"); //$NON-NLS-1$
 
     /**
      * Action definition id of the REFRESH action.
@@ -78,7 +75,7 @@ public final class GlobalRefreshAction extends GlobalAction {
                 : REFRESH);
 
         /* set the label */
-        setText(REFRESH_TEXT);
+        setText(CommonUIActionMessages.GlobalRefreshAction_label);
 
         /*  set the image */
         setImageDescriptor(REFRESH_IMAGE);

@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 
 /**
  * Global Find Action
@@ -26,10 +26,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalFindAction extends GlobalAction {
-	/**
-	 * Label definition of the find action.
-	 */
-	private static final String FIND_TEXT = ResourceManager.getI18NString("GlobalFindAction.label"); //$NON-NLS-1$
 
 	/**
 	 * Action definition id of the find action.
@@ -61,7 +57,7 @@ public final class GlobalFindAction extends GlobalAction {
 				: FIND);
 
 		/* set the label */
-		setText(FIND_TEXT);
+		setText(CommonUIActionMessages.GlobalFindAction_label);
 
 		/*  set the context sensitive help */
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

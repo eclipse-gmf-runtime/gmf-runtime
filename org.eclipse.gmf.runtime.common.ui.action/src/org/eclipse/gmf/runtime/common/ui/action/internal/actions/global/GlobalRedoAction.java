@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -32,18 +33,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  */
 public final class GlobalRedoAction extends GlobalAction {
     
-	/**
-	 * The stand-alone Redo label. 
-	 */
-	private static final String REDO_LABEL = ResourceManager
-		.getI18NString("GlobalRedoAction.label"); //$NON-NLS-1$
-
-	/**
-	 * The Redo label to be used with a command label.
-	 */
-	private static final String REDO_LABEL_FORMATTED = ResourceManager
-		.getI18NString("GlobalRedoAction.formattedLabel"); //$NON-NLS-1$
-
     /**
      * Action definition id of the redo action.
      */
@@ -89,7 +78,7 @@ public final class GlobalRedoAction extends GlobalAction {
                 : REDO);
 
         /* Set the label */
-        setText(REDO_LABEL);
+        setText(CommonUIActionMessages.GlobalRedoAction_label);
 
         /* Set the image */
         setImageDescriptor(REDO_IMAGE);
@@ -127,10 +116,10 @@ public final class GlobalRedoAction extends GlobalAction {
      */
     public void refresh() {
 		setEnabled(getCommandManager().canRedo());
-		String label = REDO_LABEL;
+		String label = CommonUIActionMessages.GlobalRedoAction_label;
 		String commandLabel = getCommandManager().getRedoLabel();
 		if (commandLabel != null) {
-			label = MessageFormat.format(REDO_LABEL_FORMATTED,
+			label = MessageFormat.format(CommonUIActionMessages.GlobalRedoAction_formattedLabel,
 				new Object[] {removeMnemonics(commandLabel)});
 		}
 		setText(label);

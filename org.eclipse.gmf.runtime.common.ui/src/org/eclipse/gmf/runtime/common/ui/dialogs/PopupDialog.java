@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * A simple dialog with a list from which the user can select one item.
@@ -28,18 +28,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
  */
 public class PopupDialog
 	extends ListDialog {
-
-	/**
-	 * Dialog title.
-	 */
-	private static final String TITLE = ResourceManager.getInstance()
-		.getString("PopupDialog.title"); //$NON-NLS-1$
-
-	/**
-	 * Dialog message.
-	 */
-	private static final String MESSAGE = ResourceManager.getInstance()
-		.getString("PopupDialog.message"); //$NON-NLS-1$
 
 	/**
 	 * Content Provider.
@@ -83,8 +71,8 @@ public class PopupDialog
 		setLabelProvider(labelProvider);
 		setContentProvider(contentProvider);
 		setInput(contents);
-		setTitle(TITLE);
-		setMessage(MESSAGE);
+		setTitle(CommonUIMessages.PopupDialog_title);
+		setMessage(CommonUIMessages.PopupDialog_message);
 	}
 
 }

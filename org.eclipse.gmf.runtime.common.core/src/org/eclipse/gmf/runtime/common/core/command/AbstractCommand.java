@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
-import org.eclipse.gmf.runtime.common.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.core.internal.l10n.CommonCoreMessages;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 
@@ -52,11 +52,6 @@ public abstract class AbstractCommand implements ICommand {
 	 */
 	protected static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-	/**
-	 * The status message for a cancelled command.
-	 */
-	protected static final String CANCELLED_MESSAGE = ResourceManager.getInstance().getString("AbstractCommand._INFO_.cancelOperation"); //$NON-NLS-1$
-	
 	/**
 	 * The label for this command.
 	 */
@@ -278,7 +273,7 @@ public abstract class AbstractCommand implements ICommand {
 				IStatus.ERROR,
 				getPluginId(),
 				CommonCoreStatusCodes.CANCELLED,
-				CANCELLED_MESSAGE,
+				CommonCoreMessages.AbstractCommand__INFO__cancelOperation,
 				null),
 			null);
 	}

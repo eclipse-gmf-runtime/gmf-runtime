@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * Show related elements dialog box, called from an action.
@@ -128,8 +128,7 @@ public class ShowRelatedElementsDialog
 
 	static {
 		try {
-			MAX_VIEWER_WIDTH = Integer.parseInt(ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.MAX_VIEWER_WIDTH")); //$NON-NLS-1$
+			MAX_VIEWER_WIDTH = Integer.parseInt(CommonUIMessages.ShowRelatedElementsDialog_MAX_VIEWER_WIDTH); //$NON-NLS-1$
 		} catch (NumberFormatException e) {
 			Trace.catching(CommonUIPlugin.getDefault(),
 				CommonUIDebugOptions.EXCEPTIONS_CATCHING, CommonUIPlugin
@@ -295,8 +294,7 @@ public class ShowRelatedElementsDialog
 			this.showRelatedElementsComposite.getTreeViewer().refresh();
 		}
 
-		getShell().setText(
-			ResourceManager.getI18NString("ShowRelatedElementsDialog.Title")); //$NON-NLS-1$
+		getShell().setText(CommonUIMessages.ShowRelatedElementsDialog_Title);
 
 		//set context sensitive help
 		if (helpContextId != null)

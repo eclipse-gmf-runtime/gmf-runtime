@@ -11,11 +11,10 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.properties.extended;
 
+import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.CommonUIServicesPropertiesMessages;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-
-import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFResourceManager;
 
 /**
  * @author Tauseef A. Israr Created on: Sep 9, 2002
@@ -23,10 +22,6 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFRe
 public class ExtendedPropertyDescriptor
 	extends PropertyDescriptor
 	implements IExtendedPropertyDescriptor {
-
-	/** Blank extended property descriptor. */
-	public static final String BLANK = PSFResourceManager
-		.getI18NString("ExtendedPropertyDescriptor.blank"); //$NON-NLS-1$
 
 	private IPropertySource propertySource;
 
@@ -80,7 +75,7 @@ public class ExtendedPropertyDescriptor
 	 * @see org.eclipse.gmf.runtime.common.ui.services.properties.extended.IExtendedPropertyDescriptor#getBlank()
 	 */
 	public Object getBlank() {
-		return BLANK;
+		return CommonUIServicesPropertiesMessages.ExtendedPropertyDescriptor_blank;
 	}
 
 	/**

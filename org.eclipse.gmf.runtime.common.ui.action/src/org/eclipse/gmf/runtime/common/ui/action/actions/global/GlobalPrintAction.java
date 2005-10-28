@@ -18,6 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -65,7 +66,7 @@ public final class GlobalPrintAction extends GlobalAction {
 		setId(getWorkbenchActionConstant());
 
 		/* set the label */
-		setText(ResourceManager.getI18NString("GlobalPrintAction.label")); //$NON-NLS-1$
+		setText(CommonUIActionMessages.GlobalPrintAction_label);
 
 		/* change the image in case someone tries this from a context menu,
 		 * not needed from the file menu */

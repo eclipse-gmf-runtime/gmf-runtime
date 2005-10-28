@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManag
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -30,10 +31,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalCopyAction extends GlobalAction {
-	/**
-	 * Label definition of the copy action.
-	 */
-	private static final String COPY_TEXT = ResourceManager.getI18NString("CopyAction.label"); //$NON-NLS-1$
 
 	/**
 	 * Action definition id of the copy action.
@@ -82,7 +79,7 @@ public final class GlobalCopyAction extends GlobalAction {
 				: COPY);
 
 		/* set the label */
-		setText(COPY_TEXT);
+		setText(CommonUIActionMessages.CopyAction_label);
 
 		/*  set the image */
 		setImageDescriptor(COPY_IMAGE);

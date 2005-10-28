@@ -18,7 +18,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.editors.IRevertiblePart;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
@@ -30,15 +30,6 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionCon
  */
 public class RevertGlobalActionHandler
 	extends AbstractGlobalActionHandler {
-
-	private final static String CONFIRMATION_DIALOG_TITLE = ResourceManager
-		.getI18NString("RevertGlobalActionHandler.messageBox.title"); //$NON-NLS-1$
-
-	private final static String CONFIRMATION_DIALOG_MESSAGE = ResourceManager
-		.getI18NString("RevertGlobalActionHandler.messageBox.message"); //$NON-NLS-1$
-
-	private final static String CONFIRMATION_DIALOG_PROMPT = ResourceManager
-		.getI18NString("RevertGlobalActionHandler.messageBox.prompt"); //$NON-NLS-1$
 
 	/*
 	 * (non-Javadoc)
@@ -88,13 +79,13 @@ public class RevertGlobalActionHandler
 
 		if (window != null) {
 
-			String message = CONFIRMATION_DIALOG_MESSAGE
-				+ "\n\n" + CONFIRMATION_DIALOG_PROMPT; //$NON-NLS-1$
+			String message = CommonUIActionMessages.RevertGlobalActionHandler_messageBox_message
+				+ "\n\n" + CommonUIActionMessages.RevertGlobalActionHandler_messageBox_prompt; //$NON-NLS-1$
 
 			MessageBox messageBox = new MessageBox(window.getShell(), SWT.YES
 				| SWT.NO | SWT.CANCEL | SWT.ICON_QUESTION);
 
-			messageBox.setText(CONFIRMATION_DIALOG_TITLE);
+			messageBox.setText(CommonUIActionMessages.RevertGlobalActionHandler_messageBox_title);
 			messageBox.setMessage(message);
 
 			if (messageBox.open() == SWT.YES) {

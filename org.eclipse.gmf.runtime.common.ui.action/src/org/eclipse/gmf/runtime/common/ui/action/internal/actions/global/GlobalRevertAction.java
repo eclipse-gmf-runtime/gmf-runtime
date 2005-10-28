@@ -17,7 +17,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 
 /**
  * Global action for the retargetable "REVERT" action.
@@ -26,12 +26,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  */
 public class GlobalRevertAction
 	extends GlobalAction {
-
-	/**
-	 * Label definition of the REVERT action.
-	 */
-	private static final String REVERT_TEXT = ResourceManager
-		.getI18NString("GlobalRevertAction.label"); //$NON-NLS-1$
 
 	/**
 	 * Action definition id of the REVERT action.
@@ -79,7 +73,7 @@ public class GlobalRevertAction
 			: REVERT);
 
 		// Set the label
-		setText(REVERT_TEXT);
+		setText(CommonUIActionMessages.GlobalRevertAction_label);
 
 		super.init();
 	}

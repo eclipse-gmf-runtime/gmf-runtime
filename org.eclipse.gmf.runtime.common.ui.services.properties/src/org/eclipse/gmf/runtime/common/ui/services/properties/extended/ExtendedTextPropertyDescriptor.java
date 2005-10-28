@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.common.ui.services.properties.extended;
 
 import java.text.MessageFormat;
 
+import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.CommonUIServicesPropertiesMessages;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -21,19 +22,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFResourceManager;
-
 /**
  * @author Tauseef A. Israr
  * Created on: Sep 9, 2002
  */
 public class ExtendedTextPropertyDescriptor
 	extends ExtendedPropertyDescriptor {
-
-	/**
-	 * The title of the dialog box.
-	 */
-	private static String DIALOG_TITLE = PSFResourceManager.getI18NString("ExtendedTextPropertyDescriptor.PropertiesViewErrorDialog.Title"); //$NON-NLS-1$ 
 
 	/**
 	 * Constructor for ExtendedTextPropertyDescriptor.
@@ -108,7 +102,7 @@ public class ExtendedTextPropertyDescriptor
 					if (!newValidState) {
 						MessageDialog.openError(
 							Display.getCurrent().getActiveShell(),
-							DIALOG_TITLE,
+							CommonUIServicesPropertiesMessages.ExtendedTextPropertyDescriptor_PropertiesViewErrorDialog_Title,
 							getErrorMessage());
 						fireCancelEditor();
 					} else {

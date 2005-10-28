@@ -42,6 +42,7 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementTreeSelectionChangedAndMouseAndKeyListener;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementsContentProvider;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementsTriStateLabelProvider;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 
@@ -106,13 +107,12 @@ public class ShowHideRelationshipsDialog
 
 	static {
 		try {
-			MAX_VIEWER_WIDTH = Integer.parseInt(ResourceManager
-				.getI18NString("ShowHideRelationshipsDialog.MAX_VIEWER_WIDTH")); //$NON-NLS-1$
-			MAX_VIEWER_HEIGHT = Integer
-				.parseInt(ResourceManager
-					.getI18NString("ShowHideRelationshipsDialog.MAX_VIEWER_HEIGHT")); //$NON-NLS-1$
-			TEXT_AREA_HEIGHT = Integer.parseInt(ResourceManager
-				.getI18NString("ShowHideRelationshipsDialog.TEXT_AREA_HEIGHT")); //$NON-NLS-1$
+			MAX_VIEWER_WIDTH = Integer.parseInt(
+				CommonUIMessages.ShowHideRelationshipsDialog_MAX_VIEWER_WIDTH);
+			MAX_VIEWER_HEIGHT = Integer.parseInt(
+				CommonUIMessages.ShowHideRelationshipsDialog_MAX_VIEWER_HEIGHT);
+			TEXT_AREA_HEIGHT = Integer.parseInt(
+				CommonUIMessages.ShowHideRelationshipsDialog_TEXT_AREA_HEIGHT);
 		} catch (NumberFormatException e) {
 			/* already initialized with defaults */
 			Trace.catching(CommonUIPlugin.getDefault(),
@@ -275,8 +275,8 @@ public class ShowHideRelationshipsDialog
 		right.setLayout(new GridLayout(3, false));
 		right.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		ok = new Button(right, SWT.PUSH);
-		ok.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Button.OK")); //$NON-NLS-1$
+		ok.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Button_OK);
 		ok.setLayoutData(WindowUtil.makeFixedButtonData(ok));
 		ok.addSelectionListener(new SelectionAdapter() {
 
@@ -285,8 +285,8 @@ public class ShowHideRelationshipsDialog
 			}
 		});
 		cancel = new Button(right, SWT.PUSH);
-		cancel.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Button.Cancel")); //$NON-NLS-1$
+		cancel.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Button_Cancel);
 		cancel.setLayoutData(WindowUtil.makeFixedButtonData(cancel));
 		cancel.addSelectionListener(new SelectionAdapter() {
 
@@ -329,8 +329,8 @@ public class ShowHideRelationshipsDialog
 
 		Label label = new Label(top, SWT.WRAP);
 
-		label.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Description")); //$NON-NLS-1$
+		label.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Description);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 	}
@@ -360,8 +360,8 @@ public class ShowHideRelationshipsDialog
 		makeBlankBox(parent);
 
 		Label label = new Label(parent, SWT.NULL);
-		label.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Label.Legend")); //$NON-NLS-1$
+		label.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Label_Legend);
 
 		Composite legendBox = new Composite(parent, SWT.BORDER);
 
@@ -386,8 +386,8 @@ public class ShowHideRelationshipsDialog
 		label.setImage(selectedIcon);
 
 		label = new Label(elements[0], SWT.NULL);
-		label.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Label.LegendShow")); //$NON-NLS-1$
+		label.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendShow);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 
@@ -396,8 +396,8 @@ public class ShowHideRelationshipsDialog
 		label.setImage(unselectedIcon);
 
 		label = new Label(elements[1], SWT.NULL);
-		label.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Label.LegendHide")); //$NON-NLS-1$
+		label.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendHide);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 
@@ -406,8 +406,8 @@ public class ShowHideRelationshipsDialog
 		label.setImage(clearedIcon);
 
 		label = new Label(elements[2], SWT.NULL);
-		label.setText(ResourceManager
-			.getI18NString("ShowHideRelationshipsDialog.Label.LegendLeave")); //$NON-NLS-1$
+		label.setText(
+			CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendLeave);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 
@@ -462,7 +462,7 @@ public class ShowHideRelationshipsDialog
 		viewer.refresh();
 
 		getShell().setText(
-			ResourceManager.getI18NString("ShowHideRelationshipsDialog.Title")); //$NON-NLS-1$
+			CommonUIMessages.ShowHideRelationshipsDialog_Title); 
 
 		//set context sensitive help
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpContextId);

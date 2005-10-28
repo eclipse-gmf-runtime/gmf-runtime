@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -27,11 +28,7 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalRenameAction extends GlobalAction {
-    /**
-     * Label definition of the rename action.
-     */
-    private static final String RENAME_TEXT = ResourceManager.getI18NString("GlobalRenameAction.label"); //$NON-NLS-1$
-
+ 
     /**
      * Action definition id of the rename action.
      */
@@ -77,7 +74,7 @@ public final class GlobalRenameAction extends GlobalAction {
                 : RENAME);
 
         /* set the label */
-        setText(RENAME_TEXT);
+        setText(CommonUIActionMessages.GlobalRenameAction_label);
 
         /*  set the image */
         setImageDescriptor(RENAME_IMAGE);

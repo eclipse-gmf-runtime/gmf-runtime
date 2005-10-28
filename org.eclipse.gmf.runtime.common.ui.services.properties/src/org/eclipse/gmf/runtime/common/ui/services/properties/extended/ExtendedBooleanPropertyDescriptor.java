@@ -11,11 +11,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.properties.extended;
 
+import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.CommonUIServicesPropertiesMessages;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-
-import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFResourceManager;
-
 
 /**
  * @author Tauseef A. Israr
@@ -24,10 +22,6 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFRe
 public class ExtendedBooleanPropertyDescriptor
 	extends ExtendedComboboxPropertyDescriptor {
 
-	private static final String TRUE = PSFResourceManager.getI18NString("ExtendedBooleanPropertyDescriptor.True"); //$NON-NLS-1$
-
-	private static final String FALSE = PSFResourceManager.getI18NString("ExtendedBooleanPropertyDescriptor.False"); //$NON-NLS-1$
-
 	/**
 	 * Constructor for ExtendedBooleanPropertyDescriptor.
 	 * 
@@ -35,7 +29,10 @@ public class ExtendedBooleanPropertyDescriptor
 	 * @param displayName
 	 */
 	public ExtendedBooleanPropertyDescriptor(Object id, String displayName) {
-		super(id, displayName, new String[] { FALSE, TRUE });
+		super(id, displayName, new String[] { 
+			CommonUIServicesPropertiesMessages.ExtendedBooleanPropertyDescriptor_False, 
+			CommonUIServicesPropertiesMessages.ExtendedBooleanPropertyDescriptor_True 
+		});
 	}
 
 	/**
@@ -46,9 +43,9 @@ public class ExtendedBooleanPropertyDescriptor
 			public String getText(Object object) {
 				if (object instanceof Integer) {
 					if (((Integer) object).intValue() == 0)
-						return FALSE;
+						return CommonUIServicesPropertiesMessages.ExtendedBooleanPropertyDescriptor_False;
 					else if (((Integer) object).intValue() == 1)
-						return TRUE;
+						return CommonUIServicesPropertiesMessages.ExtendedBooleanPropertyDescriptor_True;
 				}
 				return (String) getBlank();
 			}

@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.ide.global.IDEGlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.ide.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n.CommonUIActionIDEMessages;
 
 /**
  * Global action to open a project resource.
@@ -58,7 +58,7 @@ public class GlobalOpenProjectAction
 		setId(getWorkbenchActionConstant() != null ? getWorkbenchActionConstant()
 			: getActionId());
 
-		setText(ResourceManager.getI18NString("GlobalOpenProjectAction.label")); //$NON-NLS-1$
+		setText(CommonUIActionIDEMessages.GlobalOpenProjectAction_label);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);
 		
 		super.init();

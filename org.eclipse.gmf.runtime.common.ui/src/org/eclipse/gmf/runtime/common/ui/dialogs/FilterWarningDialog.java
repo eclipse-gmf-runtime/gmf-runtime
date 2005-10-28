@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.dialogs;
 
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -24,8 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
-
 /**
  * A dialog class that would be displayed to warn the user when adding an
  * element to the ME while the ME's filtering settings hide such element. It
@@ -37,30 +36,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
  */
 public class FilterWarningDialog
 	extends Dialog {
-
-	/**
-	 * The dialog's title
-	 */
-	private static final String FILTER_WARNING_DLG_TITLE = ResourceManager
-		.getI18NString("FilterWarningDialog.title"); //$NON-NLS-1$;
-
-	/**
-	 * Dialog message - modify filter options to show element
-	 */
-	private static final String MODIFY_FILTER_OPTIONS = ResourceManager
-		.getI18NString("FilterWarningDialog.modifyOptions"); //$NON-NLS-1$
-
-	/**
-	 * Dialog message - don't show message again
-	 */
-	private static final String DONT_SHOW_FILTER_WARNING_DLG = ResourceManager
-		.getI18NString("FilterWarningDialog.dontShowAgain"); //$NON-NLS-1$
-
-	/**
-	 * Dialog message - element filtered
-	 */
-	private static final String FILTER_WARNING_DLG_MESSAGE = ResourceManager
-		.getI18NString("FilterWarningDialog.filteredOut"); //$NON-NLS-1$
 
 	/**
 	 * the ok button
@@ -104,7 +79,7 @@ public class FilterWarningDialog
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(FILTER_WARNING_DLG_TITLE);
+		newShell.setText(CommonUIMessages.FilterWarningDialog_title);
 	}
 
 	/*
@@ -139,7 +114,7 @@ public class FilterWarningDialog
 		data.verticalSpan = 2;
 		data.widthHint = convertWidthInCharsToPixels(60);
 		data.heightHint = convertHeightInCharsToPixels(4);
-		text.setText(FILTER_WARNING_DLG_MESSAGE);
+		text.setText(CommonUIMessages.FilterWarningDialog_filteredOut);
 		text.setLayoutData(data);
 		text.setCursor(null);
 		text.setBackground(outer.getBackground());
@@ -163,7 +138,7 @@ public class FilterWarningDialog
 		ok_button.setFont(parent.getFont());
 
 		modify_checkbox = new Button(outer, SWT.CHECK);
-		modify_checkbox.setText(MODIFY_FILTER_OPTIONS);
+		modify_checkbox.setText(CommonUIMessages.FilterWarningDialog_modifyOptions);
 		GridData modify_checkbox_data = new GridData();
 		modify_checkbox_data.horizontalAlignment = GridData.FILL;
 		modify_checkbox_data.verticalAlignment = GridData.BEGINNING;
@@ -175,7 +150,7 @@ public class FilterWarningDialog
 		modify_checkbox.setFont(parent.getFont());
 
 		dontshow_checkbox = new Button(outer, SWT.CHECK);
-		dontshow_checkbox.setText(DONT_SHOW_FILTER_WARNING_DLG);
+		dontshow_checkbox.setText(CommonUIMessages.FilterWarningDialog_dontShowAgain);
 		GridData dontshow_checkbox_data = new GridData();
 		dontshow_checkbox_data.horizontalAlignment = GridData.FILL;
 		dontshow_checkbox_data.verticalAlignment = GridData.BEGINNING;

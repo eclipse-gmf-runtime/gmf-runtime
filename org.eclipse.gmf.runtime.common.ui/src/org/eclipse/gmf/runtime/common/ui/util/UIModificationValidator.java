@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Status;
 
 import org.eclipse.gmf.runtime.common.core.command.IModificationValidator;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.gmf.runtime.common.ui.resources.FileModificationValidator;
 
 /**
@@ -33,12 +33,6 @@ public class UIModificationValidator
 	implements IModificationValidator {
 
 	/**
-	 * Modification message
-	 */
-	private static final String MODIFICATION = ResourceManager
-		.getI18NString("UIModificationValidator.ModificationMessage"); //$NON-NLS-1$
-
-	/**
 	 * Error status code. The OK status code is defined by Eclipse's Status
 	 * class.
 	 */
@@ -50,7 +44,7 @@ public class UIModificationValidator
 	 */
 	public IStatus validateEdit(IFile[] files) {
 		boolean ok = FileModificationValidator.getInstance().okToEdit(files,
-			MODIFICATION);
+			CommonUIMessages.UIModificationValidator_ModificationMessage);
 
 		return ok ? Status.OK_STATUS
 			: ERROR_STATUS;

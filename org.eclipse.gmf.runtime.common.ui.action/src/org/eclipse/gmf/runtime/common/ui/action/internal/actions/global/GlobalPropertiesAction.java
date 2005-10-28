@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 
 /**
  * Global Properties Action
@@ -26,10 +26,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author Vishy Ramaswamy
  */
 public final class GlobalPropertiesAction extends GlobalAction {
-    /**
-     * Label definition of the properties action.
-     */
-    private static final String PROPERTIES_TEXT = ResourceManager.getI18NString("GlobalPropertiesAction.label"); //$NON-NLS-1$
 
     /**
      * Action definition id of the properties action.
@@ -62,7 +58,7 @@ public final class GlobalPropertiesAction extends GlobalAction {
                 : PROPERTIES);
 
         /* set the label */
-        setText(PROPERTIES_TEXT);
+        setText(CommonUIActionMessages.GlobalPropertiesAction_label);
 
         /*  set the context sensitive help */
         PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

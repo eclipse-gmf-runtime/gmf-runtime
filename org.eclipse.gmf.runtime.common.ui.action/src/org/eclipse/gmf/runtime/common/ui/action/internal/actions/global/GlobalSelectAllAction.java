@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 
 /**
  * Global SelectAll Action
@@ -26,11 +26,7 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author vramaswa
  */
 public final class GlobalSelectAllAction extends GlobalAction {
-    /**
-     * Label definition of the select all action.
-     */
-    private static final String SELECT_ALL_TEXT = ResourceManager.getI18NString("SelectAllAction.label"); //$NON-NLS-1$
-
+ 
     /**
      * Action definition id of the select all action.
      */
@@ -63,7 +59,7 @@ public final class GlobalSelectAllAction extends GlobalAction {
                 : SELECT_ALL);
 
         /* Set the label */
-        setText(SELECT_ALL_TEXT);
+        setText(CommonUIActionMessages.SelectAllAction_label);
 
         /* Set the context sensitive help */
         PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -27,10 +28,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author vramaswa
  */
 public final class GlobalDeleteAction extends GlobalAction {
-	/**
-	 * Label definition of the delete action.
-	 */
-	private static final String DELETE_TEXT = ResourceManager.getI18NString("GlobalDeleteAction.label"); //$NON-NLS-1$
 
 	/**
 	 * Action definition id of the delete action.
@@ -77,7 +74,7 @@ public final class GlobalDeleteAction extends GlobalAction {
 				: DELETE);
 
 		/* Set the label */
-		setText(DELETE_TEXT);
+		setText(CommonUIActionMessages.GlobalDeleteAction_label);
 
 		/* Set the image */
 		setImageDescriptor(DELETE_IMAGE);

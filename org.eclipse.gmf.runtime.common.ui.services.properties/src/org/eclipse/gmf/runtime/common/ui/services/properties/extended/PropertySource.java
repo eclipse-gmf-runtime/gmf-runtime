@@ -20,19 +20,13 @@ import java.util.Map;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
-import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.PSFResourceManager;
+import org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n.CommonUIServicesPropertiesMessages;
 
 /**
  * @author Tauseef A. Israr Created on: Aug 27, 2002
  *  
  */
 public class PropertySource implements IExtendedPropertySource {
-
-    /**
-     * externalized error message
-     */
-    protected static final String PROPERTY_ID_DESCRIPTOR_ERROR = PSFResourceManager
-            .getI18NString("PropertySource._ERROR_.descriptorError"); //$NON-NLS-1$
 
     /**
      * refernce to the model element to whose properties are represented by this
@@ -109,7 +103,7 @@ public class PropertySource implements IExtendedPropertySource {
     public Object getEditableValue() {
         if (isDirty()) {
             setDirty(false);
-            return ExtendedPropertyDescriptor.BLANK;
+            return CommonUIServicesPropertiesMessages.ExtendedPropertyDescriptor_blank;
         }
         if (getElement() == null && enclosed != null)
             return enclosed.getEditableValue();
@@ -180,8 +174,8 @@ public class PropertySource implements IExtendedPropertySource {
 
             Object[] args = new Object[1];
             args[0] = id;
-            String message = MessageFormat.format(PROPERTY_ID_DESCRIPTOR_ERROR,
-                    args);
+            String message = MessageFormat.format(CommonUIServicesPropertiesMessages.PropertySource__ERROR__descriptorError,
+            	args);
 
             assert null != propertyDescriptor : message;
             if (propertyDescriptor.isDirty()) {
@@ -369,7 +363,7 @@ public class PropertySource implements IExtendedPropertySource {
         if (value == null)
             return true;
         if (value instanceof String) {
-            if (((String) value).equals(ExtendedPropertyDescriptor.BLANK))
+            if (((String) value).equals(CommonUIServicesPropertiesMessages.ExtendedPropertyDescriptor_blank))
                 return false;
         }
         return true;

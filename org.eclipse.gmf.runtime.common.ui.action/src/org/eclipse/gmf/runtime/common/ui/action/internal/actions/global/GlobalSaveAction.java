@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -27,10 +28,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  * @author vramaswa
  */
 public final class GlobalSaveAction extends GlobalAction {
-	/**
-	 * Label definition of the save action.
-	 */
-	private static final String SAVE_TEXT = ResourceManager.getI18NString("GlobalSaveAction.label"); //$NON-NLS-1$
 
 	/**
 	 * Action definition id of the save action.
@@ -78,7 +75,7 @@ public final class GlobalSaveAction extends GlobalAction {
 				: SAVE);
 
 		/* Set the label */
-		setText(SAVE_TEXT);
+		setText(CommonUIActionMessages.GlobalSaveAction_label);
 
 		/* Set the image */
 		setImageDescriptor(SAVE_IMAGE);

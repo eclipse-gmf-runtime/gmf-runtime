@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.ide.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.ResourceManager;
 
 /**
  * The common UI Services DND IDE plug-in.
@@ -53,14 +51,5 @@ public class CommonUIServicesDNDIDEPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getBundle().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
 	}
 }

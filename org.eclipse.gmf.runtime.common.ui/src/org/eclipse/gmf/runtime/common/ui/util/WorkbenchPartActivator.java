@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * This is just a helper class that is packages the steps necessary to activate
@@ -38,9 +38,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
  * @author Yasser Lulu
  */
 public final class WorkbenchPartActivator {
-
-	/** Error messages appearing if an error occurrs while opening a view. */
-	protected static String SHOW_VIEW_ERROR = ResourceManager.getInstance().getString("WorkbenchPartActivator.ErrorMessage"); //$NON-NLS-1$
 
 	/**
 	 * Inner class to perform the work of showing a workbench view in a 
@@ -87,7 +84,7 @@ public final class WorkbenchPartActivator {
 					pie);
 				String message =
 					MessageFormat.format(
-						SHOW_VIEW_ERROR,
+						CommonUIMessages.WorkbenchPartActivator_ErrorMessage,
 						new Object[] { viewId });
 				ErrorDialog.openError(
 					Display.getCurrent().getActiveShell(),

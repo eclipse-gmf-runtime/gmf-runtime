@@ -22,6 +22,8 @@ import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
  * 
  * @author nbalaba
  * @canBeSeenBy org.eclipse.gmf.runtime.common.core.*
+ * @deprecated ResourceManager is to be replaced with a class that extends NLS.
+ * @see org.eclipse.osgi.util.NLS
  */
 public final class ResourceManager extends AbstractResourceManager {
 

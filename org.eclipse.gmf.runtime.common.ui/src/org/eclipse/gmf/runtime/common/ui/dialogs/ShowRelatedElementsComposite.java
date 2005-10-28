@@ -41,7 +41,7 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementTreeSelectionChangedAndMouseAndKeyListener;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementsContentProvider;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementsTriStateLabelProvider;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * A composite intended to be used in the Show Related Elements dialog. It
@@ -389,8 +389,8 @@ public class ShowRelatedElementsComposite
 	 */
 	protected void createViewer() {
 		Label label = new Label(this, SWT.NULL);
-		label.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsDialog.RelationshipTypes")); //$NON-NLS-1$
+		label.setText(
+			CommonUIMessages.ShowRelatedElementsDialog_RelationshipTypes);
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 2;
 		label.setLayoutData(gridData);
@@ -464,12 +464,12 @@ public class ShowRelatedElementsComposite
 		gridLayout.marginHeight = gridLayout.marginWidth = 0;
 		this.expansionComposite.setLayout(gridLayout);
 
-		new Label(this.expansionComposite, SWT.NULL).setText(ResourceManager
-			.getI18NString("ShowRelatedElementsDialog.ExpansionGroup.Text")); //$NON-NLS-1$
+		new Label(this.expansionComposite, SWT.NULL).setText(
+			CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_Text);
 
 		consumerToSelection = new Button(this.expansionComposite, SWT.RADIO);
-		consumerToSelection.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsDialog.Incoming")); //$NON-NLS-1$
+		consumerToSelection.setText(
+			CommonUIMessages.ShowRelatedElementsDialog_Incoming); 
 		consumerToSelection.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -484,8 +484,8 @@ public class ShowRelatedElementsComposite
 		new Label(this.expansionComposite, SWT.NULL);
 
 		selectionToSupplier = new Button(this.expansionComposite, SWT.RADIO);
-		selectionToSupplier.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsDialog.Outgoing")); //$NON-NLS-1$
+		selectionToSupplier.setText(
+			CommonUIMessages.ShowRelatedElementsDialog_Outgoing);
 		selectionToSupplier.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -503,8 +503,8 @@ public class ShowRelatedElementsComposite
 
 		//TODO temporarily hide the all connected radio button
 		allConnected = new Button(this.expansionComposite, SWT.RADIO);
-		allConnected.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsDialog.AllConnected")); //$NON-NLS-1$
+		allConnected.setText(
+			CommonUIMessages.ShowRelatedElementsDialog_AllConnected);
 		allConnected.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -524,8 +524,8 @@ public class ShowRelatedElementsComposite
 
 		both = new Button(this.expansionComposite, SWT.RADIO);
 		both
-			.setText(ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.ExpansionGroup.RadioButton.Both")); //$NON-NLS-1$
+			.setText(
+				CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_RadioButton_Both);
 		both.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -543,8 +543,8 @@ public class ShowRelatedElementsComposite
 		contributeToExpansionGroupComposite(this.expansionComposite);
 
 		new Label(expansionComposite, SWT.NULL)
-			.setText(ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.ExpansionGroup.Label.Levels")); //$NON-NLS-1$
+			.setText(
+				CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_Label_Levels);
 
 		levels = new Text(this.expansionComposite, SWT.BORDER);
 		gridData = new GridData();
@@ -569,9 +569,8 @@ public class ShowRelatedElementsComposite
 
 		expandIndefinitely = new Button(this.expansionComposite, SWT.CHECK);
 		expandIndefinitely
-			.setText(ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.ExpansionGroup.CheckBox.Expand_Indefinitely")); //$NON-NLS-1$
-
+			.setText(
+				CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_CheckBox_Expand_Indefinitely); 
 		expandIndefinitely.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -600,8 +599,8 @@ public class ShowRelatedElementsComposite
 			if (alert) {
 				performValidateFailed();
 			}
-			return ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.LevelsValidation.Message"); //$NON-NLS-1$
+			return 
+				CommonUIMessages.ShowRelatedElementsDialog_LevelsValidation_Message;
 		}
 
 		//subclasses may add more validation here by returning the
@@ -640,11 +639,11 @@ public class ShowRelatedElementsComposite
 	 */
 	private void performValidateFailed() {
 		MessageBox validate = new MessageBox(getShell(), SWT.ICON_ERROR);
-		validate.setText(ResourceManager
-			.getI18NString("ShowRelatedElementsDialog.LevelsValidation.Title")); //$NON-NLS-1$
+		validate.setText(
+			CommonUIMessages.ShowRelatedElementsDialog_LevelsValidation_Title);
 		validate
-			.setMessage(ResourceManager
-				.getI18NString("ShowRelatedElementsDialog.LevelsValidation.Message")); //$NON-NLS-1$
+			.setMessage(
+				CommonUIMessages.ShowRelatedElementsDialog_LevelsValidation_Message);
 		validate.open();
 		levels.setFocus();
 	}
@@ -695,12 +694,12 @@ public class ShowRelatedElementsComposite
 			MessageBox messageBox = new MessageBox(getShell(), SWT.YES | SWT.NO
 				| SWT.ICON_QUESTION);
 			messageBox
-				.setText(ResourceManager
-					.getI18NString("ShowRelatedElementsDialog.ExpandIndefinitelyMessageBox.Title")); //$NON-NLS-1$
+				.setText(
+					CommonUIMessages.ShowRelatedElementsDialog_ExpandIndefinitelyMessageBox_Title);
 			messageBox
-				.setMessage(ResourceManager
-					.getI18NString("ShowRelatedElementsDialog.ExpandIndefinitelyMessageBox.Message.Sentence1") //$NON-NLS-1$
-					+ "\n" + ResourceManager.getI18NString("ShowRelatedElementsDialog.ExpandIndefinitelyMessageBox.Message.Sentence2")); //$NON-NLS-1$  //$NON-NLS-2$ 
+				.setMessage(
+					CommonUIMessages.ShowRelatedElementsDialog_ExpandIndefinitelyMessageBox_Message_Sentence1 
+					+ "\n" + CommonUIMessages.ShowRelatedElementsDialog_ExpandIndefinitelyMessageBox_Message_Sentence2); //$NON-NLS-1$ 
 			if (messageBox.open() == SWT.NO) {
 				expandIndefinitely.setSelection(false);
 			}

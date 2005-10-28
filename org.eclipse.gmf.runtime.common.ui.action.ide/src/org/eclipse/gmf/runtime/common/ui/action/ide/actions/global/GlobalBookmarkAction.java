@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.ide.global.IDEGlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.ide.internal.IHelpContextIds;
-import org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n.CommonUIActionIDEMessages;
 
 /** Global Bookmark Action
  * <p>
@@ -54,7 +54,7 @@ public class GlobalBookmarkAction extends GlobalAction {
                 : getActionId());
 
         /* Set the label */
-        setText(ResourceManager.getI18NString("GlobalBookmarkAction.label")); //$NON-NLS-1$
+        setText(CommonUIActionIDEMessages.GlobalBookmarkAction_label);
 
         /* Set the context sensitive help */
         PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

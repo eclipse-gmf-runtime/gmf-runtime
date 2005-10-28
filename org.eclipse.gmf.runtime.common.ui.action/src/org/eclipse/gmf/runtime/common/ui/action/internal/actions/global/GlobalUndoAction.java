@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 
 /**
@@ -32,18 +33,6 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
  */
 public final class GlobalUndoAction extends GlobalAction {
     
-	/**
-	 * The stand-alone undo label. 
-	 */
-    private static final String UNDO_LABEL = ResourceManager
-		.getI18NString("GlobalUndoAction.label"); //$NON-NLS-1$
-
-    /**
-	 * The Undo label to be used with a command label.
-     */
-    private static final String UNDO_LABEL_FORMATTED = ResourceManager
-		.getI18NString("GlobalUndoAction.formattedLabel"); //$NON-NLS-1$
-
     /**
      * Action definition id of the undo action.
      */
@@ -90,7 +79,7 @@ public final class GlobalUndoAction extends GlobalAction {
                 : UNDO);
 
         /* Set the label */
-        setText(UNDO_LABEL);
+        setText(CommonUIActionMessages.GlobalUndoAction_label);
 
         /* Set the image */
         setImageDescriptor(UNDO_IMAGE);
@@ -129,10 +118,10 @@ public final class GlobalUndoAction extends GlobalAction {
 	public void refresh() {
 		setEnabled(getCommandManager().canUndo());
 
-		String label = UNDO_LABEL;
+		String label = CommonUIActionMessages.GlobalUndoAction_label;
 		String commandLabel = getCommandManager().getUndoLabel();
 		if (commandLabel != null) {
-			label = MessageFormat.format(UNDO_LABEL_FORMATTED,
+			label = MessageFormat.format(CommonUIActionMessages.GlobalUndoAction_formattedLabel,
 				new Object[] {removeMnemonics(commandLabel)});
 		}
 		setText(label);
