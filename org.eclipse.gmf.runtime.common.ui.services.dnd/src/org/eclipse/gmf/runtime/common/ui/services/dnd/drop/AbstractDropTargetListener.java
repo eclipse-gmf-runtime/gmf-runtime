@@ -19,6 +19,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.DND;
@@ -31,7 +32,6 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.dialogs.DispatchingProgressMonitorDialog;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDPlugin;
@@ -434,8 +434,11 @@ public abstract class AbstractDropTargetListener
 			boolean cancelable) {
 
 		try {
-			new DispatchingProgressMonitorDialog(getShell()).run(cancelable,
-				runnable);
+			if (System.getProperty("RUN_PROGRESS_IN_THREAD") != null) { //$NON-NLS-1$
+				new ProgressMonitorDialog(null).run(true, cancelable, runnable);
+			} else {
+				new ProgressMonitorDialog(null).run(false, cancelable, runnable);
+			}
 
 		} catch (InvocationTargetException ite) {
 			Trace.catching(CommonUIServicesDNDPlugin.getDefault(),

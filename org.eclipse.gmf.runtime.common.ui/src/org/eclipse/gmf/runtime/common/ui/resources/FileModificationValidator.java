@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.RepositoryProvider;
+import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
@@ -110,6 +111,7 @@ public class FileModificationValidator {
 
 	/**
 	 * get the singleton instance of this class
+	 * 
 	 * @return singleton instance of the FileModificationValidator class
 	 */
 	public static FileModificationValidator getInstance() {
@@ -136,24 +138,36 @@ public class FileModificationValidator {
 	 * @return true if it is OK to edit the files.
 	 * @see org.eclipse.core.resources.IFileModificationValidator#validateEdit
 	 */
-	public boolean okToEdit(IFile[] files, String modificationReason) {
-		IStatus status = ResourcesPlugin.getWorkspace().validateEdit(files,
-			Display.getCurrent().getActiveShell());
-		if (status.isOK()) {
-			return true;
-		} else {
-			MessageDialog.openError(Display.getCurrent().getActiveShell(),
-				MessageFormat.format(editProblemDialogTitle,
-					new Object[] {modificationReason}), MessageFormat.format(
-					editProblemDialogMessage_part1,
-					new Object[] {modificationReason})
-					+ "\n\n" //$NON-NLS-1$
-					+ editProblemDialogMessage_part2
-					+ "\n" //$NON-NLS-1$
-					+ MessageFormat.format(editProblemDialogMessage_part3,
-						new Object[] {status.getMessage()}));
-			return false;
-		}
+	public boolean okToEdit(final IFile[] files, final String modificationReason) {
+		final boolean result[] = new boolean[] {false};
+
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+			public void run() {
+				IStatus status = ResourcesPlugin.getWorkspace().validateEdit(
+					files,
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getShell());
+				if (status.isOK()) {
+					result[0] = true;
+				} else {
+
+					MessageDialog.openError(PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getShell(), MessageFormat
+						.format(editProblemDialogTitle,
+							new Object[] {modificationReason}), MessageFormat
+						.format(editProblemDialogMessage_part1,
+							new Object[] {modificationReason})
+						+ "\n\n" //$NON-NLS-1$
+						+ editProblemDialogMessage_part2
+						+ "\n" //$NON-NLS-1$
+						+ MessageFormat.format(editProblemDialogMessage_part3,
+							new Object[] {status.getMessage()}));
+					result[0] = false;
+				}
+			}
+		});
+		return result[0];
 	}
 
 	/**
@@ -173,7 +187,7 @@ public class FileModificationValidator {
 
 		IFileModificationValidator validator = null;
 
-		//if no provider or no validator use the default validator
+		// if no provider or no validator use the default validator
 		if (provider != null) {
 			validator = provider.getFileModificationValidator();
 		}

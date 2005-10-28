@@ -255,8 +255,11 @@ public class ActionManager {
 		boolean cancelable) {
 
 		try {
-			//TODO: RATLC00538018 Cancel button does not work.
-			new ProgressMonitorDialog(null).run(false, cancelable, runnable);
+			if (System.getProperty("RUN_PROGRESS_IN_THREAD") != null) { //$NON-NLS-1$
+				new ProgressMonitorDialog(null).run(true, cancelable, runnable);
+			} else {
+				new ProgressMonitorDialog(null).run(false, cancelable, runnable);
+			}
 
 		} catch (InvocationTargetException ite) {
 			Trace.catching(CommonUIPlugin.getDefault(), CommonUIDebugOptions.EXCEPTIONS_CATCHING, getClass(), "run", ite); //$NON-NLS-1$

@@ -14,13 +14,13 @@ package org.eclipse.gmf.runtime.common.ui.util;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.dialogs.DispatchingProgressMonitorDialog;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
@@ -38,6 +38,8 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
  * meant to depend on the UI.
  * 
  * @author ldamus
+ * @deprecated Clients should use the Eclipse ProgressMonitorDialog
+ * @see org.eclipse.jface.dialogs.ProgressMonitorDialog
  */
 public class DispatchingProgressDialogUtil {
 
@@ -53,8 +55,11 @@ public class DispatchingProgressDialogUtil {
 			IRunnableWithProgress runnableWithProgress) {
 
 		try {
-			new DispatchingProgressMonitorDialog(null).run(true,
-				runnableWithProgress);
+			if (System.getProperty("RUN_PROGRESS_IN_THREAD") != null) { //$NON-NLS-1$
+				new ProgressMonitorDialog(null).run(true, true, runnableWithProgress);
+			} else {
+				new ProgressMonitorDialog(null).run(false, true, runnableWithProgress);
+			}
 
 		} catch (InvocationTargetException ite) {
 			Trace.catching(CommonUIPlugin.getDefault(),

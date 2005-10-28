@@ -51,6 +51,8 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
  * 
  * @author ldamus
  * @author Yasser Lulu
+ * @deprecated Clients should use the Eclipse ProgressMonitorDialog
+ * @see org.eclipse.jface.dialogs.ProgressMonitorDialog
  */
 
 public class DispatchingProgressMonitorDialog
