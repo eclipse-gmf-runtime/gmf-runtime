@@ -78,7 +78,7 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	static private Cursor CURSOR_SHAPE_NOT = new Cursor(Display.getDefault(), PresentationResourceManager
 		.getInstance().getImageDescriptor(NOSHAPECURSOR_SOURCE).getImageData(),
 		PresentationResourceManager.getInstance().getImageDescriptor(
-			NOSHAPECURSOR_MASK).getImageData(), 0, 0);		
+			NOSHAPECURSOR_MASK).getImageData(), 7, 7);		
 
 	/**
 	 * Method CreationTool.
