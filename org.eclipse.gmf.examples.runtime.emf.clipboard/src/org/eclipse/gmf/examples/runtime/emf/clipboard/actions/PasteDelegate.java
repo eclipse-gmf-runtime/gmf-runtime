@@ -19,13 +19,12 @@ import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.dnd.Clipboard;
-
-import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
-import org.eclipse.gmf.examples.runtime.emf.clipboard.ClipboardExamplePlugin;
+import org.eclipse.gmf.examples.runtime.emf.clipboard.internal.l10n.EMFClipboardMessages;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransfer;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransferType;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.dnd.Clipboard;
 
 
 
@@ -36,8 +35,8 @@ import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransferType;
 public class PasteDelegate
 	extends AbstractClipboardDelegate {
 
-	private static final String PROBLEMS_TITLE = ClipboardExamplePlugin.getResourceString("pasteProblems.title"); //$NON-NLS-1$
-	private static final String PROBLEMS_MESSAGE = ClipboardExamplePlugin.getResourceString("pasteProblems.msg"); //$NON-NLS-1$
+	private static final String PROBLEMS_TITLE = EMFClipboardMessages.pasteProblems_title;
+	private static final String PROBLEMS_MESSAGE = EMFClipboardMessages.pasteProblems_msg;
 	
 	/**
 	 * Initializes me.
@@ -55,8 +54,7 @@ public class PasteDelegate
 		
 		EditingDomain domain = getEditor().getEditingDomain();
 		
-		CompoundCommand command = new CompoundCommand(
-			ClipboardExamplePlugin.getResourceString("paste.label")); //$NON-NLS-1$
+		CompoundCommand command = new CompoundCommand(EMFClipboardMessages.paste_label);
 		
 		// add a command that does the paste to the composite
 		command.append(new RecordingCommand(

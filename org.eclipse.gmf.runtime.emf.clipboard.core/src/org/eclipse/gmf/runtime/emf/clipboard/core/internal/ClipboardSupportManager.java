@@ -23,8 +23,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupportFactory;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.EMFClipboardCoreMessages;
+import org.eclipse.osgi.util.NLS;
 
 
 /**
@@ -173,8 +174,7 @@ public class ClipboardSupportManager {
 			if ((nsUri == null) || (nsUri.length() == 0)) {
 				throw new CoreException(createErrorStatus(
 					ClipboardStatusCodes.CLIPBOARDSUPPORT_MISSING_NSURI,
-					ClipboardPlugin.getPlugin().getString(
-						"missing.nsUri_ERROR_", //$NON-NLS-1$
+					NLS.bind(EMFClipboardCoreMessages.missing_nsUri_ERROR_,
 						new Object[] {
 							ClipboardPlugin.EXTPT_CLIPBOARDSUPPORT,
 							config.getDeclaringExtension().getNamespace()})));
@@ -184,8 +184,7 @@ public class ClipboardSupportManager {
 			if (ePackage == null) {
 				throw new CoreException(createErrorStatus(
 					ClipboardStatusCodes.CLIPBOARDSUPPORT_UNRESOLVED_NSURI,
-					ClipboardPlugin.getPlugin().getString(
-						"unresolved.nsUri_ERROR_", //$NON-NLS-1$
+					NLS.bind(EMFClipboardCoreMessages.unresolved_nsUri_ERROR_,
 						new Object[] {
 							ClipboardPlugin.EXTPT_CLIPBOARDSUPPORT,
 							nsUri,
@@ -196,8 +195,7 @@ public class ClipboardSupportManager {
 			if ((className == null) || (className.length() == 0)) {
 				throw new CoreException(createErrorStatus(
 					ClipboardStatusCodes.CLIPBOARDSUPPORT_MISSING_CLASS,
-					ClipboardPlugin.getPlugin().getString(
-						"missing.class_ERROR_", //$NON-NLS-1$
+					NLS.bind(EMFClipboardCoreMessages.missing_class_ERROR_,
 						new Object[] {
 							ClipboardPlugin.EXTPT_CLIPBOARDSUPPORT,
 							config.getDeclaringExtension().getNamespace()})));
@@ -243,8 +241,7 @@ public class ClipboardSupportManager {
 				// log any other exception, too (such as ClassCastException)
 				ClipboardPlugin.getPlugin().log(createErrorStatus(
 					ClipboardStatusCodes.CLIPBOARDSUPPORT_FACTORY_FAILED,
-					ClipboardPlugin.getPlugin().getString(
-						"factory.failed_ERROR_", //$NON-NLS-1$
+					NLS.bind(EMFClipboardCoreMessages.factory_failed_ERROR_,
 						new Object[] {
 							IClipboardSupportFactory.class.getName(),
 							config.getAttribute(E_CLASS)}),

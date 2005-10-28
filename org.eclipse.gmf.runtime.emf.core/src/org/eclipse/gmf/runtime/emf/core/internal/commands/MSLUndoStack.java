@@ -18,7 +18,9 @@ import java.util.ListIterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
+import org.eclipse.emf.validation.model.EvaluationMode;
+import org.eclipse.emf.validation.service.IValidator;
+import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -27,16 +29,13 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.exceptions.MSLActionProtocolException;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLStatusCodes;
 import org.eclipse.gmf.runtime.emf.core.internal.util.ConstraintStatusAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.validation.ActionAbandonedNotification;
-import org.eclipse.emf.validation.model.EvaluationMode;
-import org.eclipse.emf.validation.service.IValidator;
-import org.eclipse.emf.validation.service.ModelValidationService;
 
 /**
  * The MSL listens to EMF notifications and populates the command stack on the
@@ -835,8 +834,8 @@ public class MSLUndoStack {
 
 		if (status == null)
 			status = new Status(IStatus.ERROR, MSLPlugin.getPluginId(),
-				MSLStatusCodes.VALIDATOR_PROTOCOL_ERROR, ResourceManager
-					.getI18NString("validation.nullStatus"), null); //$NON-NLS-1$
+				MSLStatusCodes.VALIDATOR_PROTOCOL_ERROR,
+					EMFCoreMessages.validation_nullStatus, null);
 
 		if (status.getSeverity() >= IStatus.ERROR) {
 

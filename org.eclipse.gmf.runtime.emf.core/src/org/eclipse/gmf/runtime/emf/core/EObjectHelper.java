@@ -26,19 +26,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
+import org.eclipse.emf.validation.model.EvaluationMode;
+import org.eclipse.emf.validation.service.IBatchValidator;
+import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.ConstraintStatusAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
-import org.eclipse.emf.validation.model.EvaluationMode;
-import org.eclipse.emf.validation.service.IBatchValidator;
-import org.eclipse.emf.validation.service.ModelValidationService;
 
 /**
  * The implementation of the <code>IEObjectHelper</code> interface.
@@ -47,15 +46,9 @@ import org.eclipse.emf.validation.service.ModelValidationService;
  */
 public class EObjectHelper
 	implements IEObjectHelper {
-	
-	/** Localized message key for the "multiple violations" message. */
-	private static final String MULTI_VIOLATIONS_KEY = "validation.multi"; //$NON-NLS-1$
-	
-	/** Localized message key for the "no validation required" message. */
-	private static final String NO_VALIDATION_KEY = "validation.none"; //$NON-NLS-1$
-	
+
 	private static final IStatus OK_STATUS = new Status(IStatus.OK, MSLPlugin
-		.getPluginId(), 0, ResourceManager.getI18NString(NO_VALIDATION_KEY),
+		.getPluginId(), 0, EMFCoreMessages.validation_none,
 		null);
 
 	/**
@@ -232,7 +225,7 @@ public class EObjectHelper
 		} else {
 			return new MultiStatus(MSLPlugin.getPluginId(), 0,
 				(IStatus[]) result.toArray(new IStatus[result.size()]),
-				ResourceManager.getI18NString(MULTI_VIOLATIONS_KEY), null);
+				EMFCoreMessages.validation_multi, null);
 		}
 	}
 

@@ -16,11 +16,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.resources.CannotAbsorbException;
@@ -83,8 +82,7 @@ public class MSLAbsorbCommand
 			res.separate(child, subres.getURI());
 		} catch (CannotSeparateException e) {
 			RuntimeException re = new MSLRuntimeException(
-				ResourceManager.getI18NString(
-					"separation.failed_EXC_"), //$NON-NLS-1$
+				EMFCoreMessages.separation_failed_EXC_,
 					e);
 
 			Trace.throwing(MSLPlugin.getDefault(),
@@ -99,8 +97,7 @@ public class MSLAbsorbCommand
 			res.absorb(child);
 		} catch (CannotAbsorbException e) {
 			RuntimeException re = new MSLRuntimeException(
-				ResourceManager.getI18NString(
-					"absorption.failed_EXC_"), //$NON-NLS-1$
+				EMFCoreMessages.absorption_failed_EXC_,
 					e);
 	
 			Trace.throwing(MSLPlugin.getDefault(),

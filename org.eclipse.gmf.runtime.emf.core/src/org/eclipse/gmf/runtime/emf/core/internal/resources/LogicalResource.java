@@ -37,9 +37,8 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLStatusCodes;
@@ -53,6 +52,7 @@ import org.eclipse.gmf.runtime.emf.core.resources.CannotAbsorbException;
 import org.eclipse.gmf.runtime.emf.core.resources.CannotSeparateException;
 import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 import org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Implementation of the {@linkplain ILogicalResource logical resource} API.
@@ -218,9 +218,7 @@ public class LogicalResource
 			Log.error(
 				MSLPlugin.getDefault(),
 				MSLStatusCodes.LOGICAL_SETURI_UNLOADED_FAILED,					
-				ResourceManager.getInstance().formatMessage(
-					"setUri.unloaded.failed_EXC_", //$NON-NLS-1$
-					new Object[] {uri}),
+				NLS.bind(EMFCoreMessages.setUri_unloaded_failed_EXC_, uri),
 				e);
 		}
 		

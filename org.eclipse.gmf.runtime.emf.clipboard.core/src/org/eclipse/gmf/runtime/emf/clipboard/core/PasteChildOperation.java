@@ -22,12 +22,11 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.MergedEObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ObjectCopyType;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.PasteIntoParentOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ResourceInfoProcessor;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.EMFClipboardCoreMessages;
 
 
 /**
@@ -42,8 +41,7 @@ public class PasteChildOperation
 	 * Localized prefix to prepend onto element names to disambiguate them
 	 * in resolving paste collisions.
 	 */
-	protected static final String COPY = ClipboardPlugin.getPlugin()
-		.getString("pasteChildOperation.copyPrefix"); //$NON-NLS-1$
+	protected static final String COPY = EMFClipboardCoreMessages.pasteChildOperation_copyPrefix;
 
 	/**
 	 * A reusable empty array of paste child operations.

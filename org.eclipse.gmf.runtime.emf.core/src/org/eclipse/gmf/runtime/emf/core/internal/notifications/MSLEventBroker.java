@@ -23,7 +23,6 @@ import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
@@ -34,7 +33,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MSemProcProvider;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack.ActionLockMode;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
@@ -560,7 +559,7 @@ public class MSLEventBroker {
 				//removeListener(listener);
 
 				Log.error(MSLPlugin.getDefault(), 1,
-					ResourceManager.getI18NString("logError.badListener"), e); //$NON-NLS-1$
+					EMFCoreMessages.logError_badListener, e);
 
 				Trace.catching(MSLPlugin.getDefault(),
 					MSLDebugOptions.EXCEPTIONS_CATCHING, getClass(),

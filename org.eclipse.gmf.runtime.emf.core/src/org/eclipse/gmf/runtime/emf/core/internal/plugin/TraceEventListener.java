@@ -11,18 +11,16 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.plugin;
 
-import java.text.MessageFormat;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.edit.DemuxingMListener;
 import org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener;
 import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
 import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Listens for model events and displays trace output.
@@ -79,63 +77,63 @@ public class TraceEventListener
 	public void handleElementCreatedEvent(Notification notification,
 			final EObject owner, final EObject newElement) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(ELEMENT_CREATED, new String[] {
+			NLS.bind(ELEMENT_CREATED, new String[] {
 				getClassName(newElement), getClassName(owner)}));
 	}
 
 	public void handleElementDeletedEvent(Notification notification,
 			final EObject owner, final EObject oldElement) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(ELEMENT_DELETED, new String[] {
+			NLS.bind(ELEMENT_DELETED, new String[] {
 				getClassName(oldElement), getClassName(owner)}));
 	}
 
 	public void handleElementModifiedEvent(Notification notification,
 			final EObject element) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(ELEMENT_MODIFIED,
+			NLS.bind(ELEMENT_MODIFIED,
 				new String[] {getClassName(element),}));
 	}
 
 	public void handleResourceUnloadedEvent(Notification notification,
 			final Resource resource, EObject modelRoot) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(MODEL_CLOSED, new String[] {ResourceUtil
+			NLS.bind(MODEL_CLOSED, new String[] {ResourceUtil
 				.getFilePath(resource)}));
 	}
 
 	public void handleResourceDirtiedEvent(Notification notification,
 			final Resource resource) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(MODEL_DIRTIED, new String[] {ResourceUtil
+			NLS.bind(MODEL_DIRTIED, new String[] {ResourceUtil
 				.getFilePath(resource)}));
 	}
 
 	public void handleResourceLoadedEvent(Notification notification,
 			final Resource resource) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(MODEL_OPENED, new String[] {ResourceUtil
+			NLS.bind(MODEL_OPENED, new String[] {ResourceUtil
 				.getFilePath(resource)}));
 	}
 
 	public void handleResourceSavedEvent(Notification notification,
 			final Resource resource) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(MODEL_SAVED, new String[] {ResourceUtil
+			NLS.bind(MODEL_SAVED, new String[] {ResourceUtil
 				.getFilePath(resource)}));
 	}
 
 	public void handleResourceImportedEvent(Notification notification,
 			final Resource resource) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(MODEL_IMPORT, new String[] {ResourceUtil
+			NLS.bind(MODEL_IMPORT, new String[] {ResourceUtil
 				.getFilePath(resource)}));
 	}
 
 	public void handleResourceExportedEvent(Notification notification,
 			final Resource resource) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(MODEL_EXPORT, new String[] {ResourceUtil
+			NLS.bind(MODEL_EXPORT, new String[] {ResourceUtil
 				.getFilePath(resource)}));
 	}
 
@@ -149,7 +147,7 @@ public class TraceEventListener
 	public void handleUndoIntervalClosedEvent(Notification notification,
 			final MUndoInterval undoInterval) {
 		Trace.trace(MSLPlugin.getDefault(), MSLDebugOptions.EVENTS,
-			MessageFormat.format(UNDO_INTERVAL_CLOSED,
+			NLS.bind(UNDO_INTERVAL_CLOSED,
 				new String[] {undoInterval.getLabel()}));
 	}
 

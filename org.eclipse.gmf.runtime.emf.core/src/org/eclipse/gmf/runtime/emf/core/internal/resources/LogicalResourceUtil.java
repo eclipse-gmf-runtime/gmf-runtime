@@ -32,10 +32,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLStatusCodes;
@@ -123,7 +122,7 @@ public class LogicalResourceUtil {
 		if (newUnit == oldUnit) {
 			// not allowed to separate into current storage unit
 			CannotSeparateException e = new CannotSeparateException(
-				ResourceManager.getI18NString("separate.sameUnit_ERROR_")); //$NON-NLS-1$
+				EMFCoreMessages.separate_sameUnit_ERROR_);
 			Trace.throwing(LogicalResourceUtil.class, "separate", e); //$NON-NLS-1$
 			throw e;
 		}
@@ -381,7 +380,7 @@ public class LogicalResourceUtil {
 					Log.error(
 						MSLPlugin.getDefault(),
 						MSLStatusCodes.LOGICAL_AUTOLOAD_FAILED,					
-						ResourceManager.getI18NString("autoload.failed_EXC_"), //$NON-NLS-1$
+						EMFCoreMessages.autoload_failed_EXC_,
 						e);
 				}
 			}
@@ -751,7 +750,7 @@ public class LogicalResourceUtil {
 					Log.warning(
 						MSLPlugin.getDefault(),
 						MSLStatusCodes.LOGICAL_LOAD_FAILED,				
-						ResourceManager.getI18NString("load.failed_EXC_"), //$NON-NLS-1$
+						EMFCoreMessages.load_failed_EXC_,
 						e);
 				}
 			}

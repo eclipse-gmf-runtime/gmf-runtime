@@ -20,9 +20,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.AbstractResourceWrapper;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourcePolicyManager;
@@ -162,7 +161,7 @@ public abstract class AbstractLogicalResource
 		if (physUri == null) {
 			// not provided by user and no policy had a suggestion
 			CannotSeparateException e = new CannotSeparateException(
-				ResourceManager.getI18NString("separate.noUri_ERROR_")); //$NON-NLS-1$
+				EMFCoreMessages.separate_noUri_ERROR_);
 			Trace.throwing(LogicalResourceUtil.class, "separate", e); //$NON-NLS-1$
 			throw e;
 		}
@@ -170,7 +169,7 @@ public abstract class AbstractLogicalResource
 		if (physUri.equals(oldUnit.getURI())) {
 			// not allowed to separate into current storage unit
 			CannotSeparateException e = new CannotSeparateException(
-				ResourceManager.getI18NString("separate.sameUnit_ERROR_")); //$NON-NLS-1$
+				EMFCoreMessages.separate_sameUnit_ERROR_);
 			Trace.throwing(LogicalResourceUtil.class, "separate", e); //$NON-NLS-1$
 			throw e;
 		}

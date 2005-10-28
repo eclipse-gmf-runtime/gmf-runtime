@@ -54,7 +54,6 @@ import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.OverrideableCommand;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.OperationListener;
@@ -73,7 +72,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLCommandGenerator;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack;
 import org.eclipse.gmf.runtime.emf.core.internal.index.MSLObjectIndexer;
 import org.eclipse.gmf.runtime.emf.core.internal.index.MSLResourceIndexer;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLContentAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLEventBroker;
 import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLObjectListener;
@@ -1026,8 +1025,7 @@ public class MSLEditingDomain
 						runnable.setStatus(new Status(IStatus.CANCEL,
 							MSLPlugin.getPluginId(),
 							MSLStatusCodes.OPERATION_CANCELED_BY_USER,
-							ResourceManager
-								.getI18NString("operation.canceled"), //$NON-NLS-1$
+							EMFCoreMessages.operation_canceled,
 							null));
 					} else {
 						try {
@@ -1413,8 +1411,7 @@ public class MSLEditingDomain
 							modifyOp.setResult(new Status(IStatus.ERROR,
 								MSLPlugin.getPluginId(),
 								MSLStatusCodes.OPERATION_FAILED,
-								ResourceManager
-									.getI18NString("operation.failed"), //$NON-NLS-1$
+								EMFCoreMessages.operation_failed,
 								e));
 							pendingException[0] = e;
 						}
@@ -1471,14 +1468,14 @@ public class MSLEditingDomain
 					readOp.run(monitor);
 
 					readOp.setResult(new Status(IStatus.OK, MSLPlugin
-						.getPluginId(), MSLStatusCodes.OK, ResourceManager
-						.getI18NString("operation.ok"), //$NON-NLS-1$
+						.getPluginId(), MSLStatusCodes.OK,
+						EMFCoreMessages.operation_ok,
 						null));
 				} catch (Exception e) {
 
 					readOp.setResult(new Status(IStatus.ERROR, MSLPlugin
 						.getPluginId(), MSLStatusCodes.OPERATION_FAILED,
-						ResourceManager.getI18NString("operation.failed"), //$NON-NLS-1$
+						EMFCoreMessages.operation_failed,
 						e));
 
 					pendingException[0] = e;

@@ -1,2 +1,2 @@
 plugin.properties
-src\com\ibm\xtools\emf\msl\core\internal\l10n\messages.properties
+src\org\eclipse\gmf\runtime\emf\core\internal\l10n\EMFCoreMessages.properties

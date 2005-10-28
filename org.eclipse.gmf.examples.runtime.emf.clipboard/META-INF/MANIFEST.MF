@@ -8,6 +8,7 @@ Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.examples.runtime.emf.clipboard,
  org.eclipse.gmf.examples.runtime.emf.clipboard.actions,
+ org.eclipse.gmf.examples.runtime.emf.clipboard.internal.l10n,
  org.eclipse.gmf.examples.runtime.emf.clipboard.library,
  org.eclipse.gmf.examples.runtime.emf.clipboard.transfer
 Require-Bundle: org.eclipse.core.runtime,

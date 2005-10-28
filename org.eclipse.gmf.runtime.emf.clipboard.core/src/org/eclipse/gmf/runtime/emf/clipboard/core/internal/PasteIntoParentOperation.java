@@ -30,13 +30,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.EMFClipboardCoreMessages;
 
 /**
  * A paste operation that pastes copied elements into their new parent.
@@ -154,7 +153,7 @@ public class PasteIntoParentOperation
 					throwException(
 						"PasteIntoParentOperation", //$NON-NLS-1$
 						new IllegalArgumentException(
-							ResourceManager.getI18NString("copypaste.duplicateId"))); //$NON-NLS-1$
+							EMFClipboardCoreMessages.copypaste_duplicateId));
 				}
 			}
 		}

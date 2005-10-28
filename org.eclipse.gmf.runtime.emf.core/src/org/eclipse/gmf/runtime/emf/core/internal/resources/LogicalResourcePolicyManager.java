@@ -25,9 +25,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLStatusCodes;
@@ -37,6 +36,7 @@ import org.eclipse.gmf.runtime.emf.core.resources.CannotAbsorbException;
 import org.eclipse.gmf.runtime.emf.core.resources.CannotSeparateException;
 import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResourcePolicy;
+import org.eclipse.osgi.util.NLS;
 
 
 /**
@@ -97,8 +97,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 					MSLPlugin.getDefault(),
 					IStatus.WARNING,
 					MSLStatusCodes.LOGICAL_INVALID_POLICY_ELEMENT,
-					ResourceManager.getInstance().formatMessage(
-						"resourcePolicy.element_WARN_", //$NON-NLS-1$
+					NLS.bind(EMFCoreMessages.resourcePolicy_element_WARN_,
 						new Object[] {
 							elements[i].getName(),
 							elements[i].getNamespace()}),
@@ -124,9 +123,8 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 			Log.warning(
 				MSLPlugin.getDefault(),
 				MSLStatusCodes.LOGICAL_INVALID_POLICY_ELEMENT,
-				ResourceManager.getInstance().formatMessage(
-					"resourcePolicy.nsUris_WARN_", //$NON-NLS-1$
-					new Object[] {element.getNamespace()}));
+				NLS.bind(EMFCoreMessages.resourcePolicy_nsUris_WARN_, element.getNamespace())
+			);
 		} else {
 			for (Iterator iter = nsUris.iterator(); iter.hasNext();) {
 				String nsUri = (String) iter.next();
@@ -193,7 +191,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 				Log.warning(
 					MSLPlugin.getDefault(),
 					MSLStatusCodes.LOGICAL_POLICY_FAILED,
-					ResourceManager.getI18NString("resource.policy_EXC_"), //$NON-NLS-1$
+					EMFCoreMessages.resource_policy_EXC_,
 					e);
 			}
 		}
@@ -225,7 +223,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 				Log.warning(
 					MSLPlugin.getDefault(),
 					MSLStatusCodes.LOGICAL_POLICY_FAILED,
-					ResourceManager.getI18NString("resource.policy_EXC_"), //$NON-NLS-1$
+					EMFCoreMessages.resource_policy_EXC_,
 					e);
 			}
 		}
@@ -250,7 +248,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 				Log.warning(
 					MSLPlugin.getDefault(),
 					MSLStatusCodes.LOGICAL_POLICY_FAILED,
-					ResourceManager.getI18NString("resource.policy_EXC_"), //$NON-NLS-1$
+					EMFCoreMessages.resource_policy_EXC_,
 					e);
 			}
 		}
@@ -275,7 +273,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 				Log.warning(
 					MSLPlugin.getDefault(),
 					MSLStatusCodes.LOGICAL_POLICY_FAILED,
-					ResourceManager.getI18NString("resource.policy_EXC_"), //$NON-NLS-1$
+					EMFCoreMessages.resource_policy_EXC_,
 					e);
 			}
 		}
@@ -298,7 +296,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 				Log.warning(
 					MSLPlugin.getDefault(),
 					MSLStatusCodes.LOGICAL_POLICY_FAILED,
-					ResourceManager.getI18NString("resource.policy_EXC_"), //$NON-NLS-1$
+					EMFCoreMessages.resource_policy_EXC_,
 					e);
 			}
 		}
@@ -366,8 +364,7 @@ public class LogicalResourcePolicyManager implements ILogicalResourcePolicy {
 						MSLPlugin.getDefault(),
 						IStatus.WARNING,
 						MSLStatusCodes.LOGICAL_INVALID_POLICY_ELEMENT,
-						ResourceManager.getInstance().formatMessage(
-							"resourcePolicy.element_WARN_", //$NON-NLS-1$
+						NLS.bind(EMFCoreMessages.resourcePolicy_element_WARN_,
 							new Object[] {
 								elements[i].getName(),
 								elements[i].getNamespace()}),
