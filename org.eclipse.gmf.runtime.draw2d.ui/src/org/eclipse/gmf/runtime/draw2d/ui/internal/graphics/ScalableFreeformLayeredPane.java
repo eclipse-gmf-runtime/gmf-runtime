@@ -15,9 +15,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.swt.SWT;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 
 /**
@@ -27,10 +26,24 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
  * Override for supporting anti-aliasing lines
  */
 public class ScalableFreeformLayeredPane
-	extends org.eclipse.draw2d.ScalableFreeformLayeredPane {
+	extends org.eclipse.draw2d.ScalableFreeformLayeredPane implements IMapMode {
 
 	boolean antiAlias = true;
+	private IMapMode mm;
 	
+	/**
+	 * @return <code>IMapMode</code> that is used to map coordinate coordinates
+	 * from device to logical.
+	 */
+	protected IMapMode getMapMode() {
+		return mm;
+	}
+
+	public ScalableFreeformLayeredPane(IMapMode mm) {
+		super();
+		this.mm = mm;
+	}
+
 	public void setAntiAlias(boolean antiAliasValue) {
 		antiAlias = antiAliasValue;
 		super.repaint();
@@ -87,7 +100,7 @@ public class ScalableFreeformLayeredPane
 	 * @return <code>MapModeGraphics</code>
 	 */
 	protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
-		MapModeGraphics gMM = new MapModeGraphics(graphics);
+		MapModeGraphics gMM = new MapModeGraphics(graphics, getMapMode());
 		return gMM;
 	}
 
@@ -97,7 +110,7 @@ public class ScalableFreeformLayeredPane
     public Rectangle getClientArea(Rectangle rect) {
     	
     	super.getClientArea(rect);
-    	MapMode.translateToLP(rect);
+    	getMapMode().DPtoLP(rect);
     	return rect;
     }
     
@@ -106,7 +119,7 @@ public class ScalableFreeformLayeredPane
      */
     public void translateToParent(Translatable t) {
     	super.translateToParent(t);
-    	MapMode.translateToDP(t);
+    	getMapMode().LPtoDP(t);
     }
 
     /**
@@ -114,7 +127,39 @@ public class ScalableFreeformLayeredPane
      */
     public void translateFromParent(Translatable t) {
     	super.translateFromParent( t );
-    	MapMode.translateToLP(t);
+    	getMapMode().DPtoLP(t);
     }
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#DPtoLP(int)
+	 */
+	public int DPtoLP(int deviceUnit) {
+		return getMapMode().DPtoLP(deviceUnit);
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#DPtoLP(org.eclipse.draw2d.geometry.Translatable)
+	 */
+	public Translatable DPtoLP(Translatable t) {
+		return getMapMode().DPtoLP(t);
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#LPtoDP(int)
+	 */
+	public int LPtoDP(int logicalUnit) {
+		return getMapMode().LPtoDP(logicalUnit);
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#LPtoDP(org.eclipse.draw2d.geometry.Translatable)
+	 */
+	public Translatable LPtoDP(Translatable t) {
+		return getMapMode().LPtoDP(t);
+	}
 
 }

@@ -14,6 +14,8 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.graphics;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.swt.graphics.Image;
 
@@ -28,10 +30,11 @@ public class MapModeGraphics extends ScaledGraphics {
 	/**
 	 * Constructs a new ScaledGraphics based on the given Graphics object.
 	 * @param g the base graphics object
+	 * @param mm <code>IMapMode</code> to retrieve the scale factor from.
 	 */
-	public MapModeGraphics(Graphics g) {
+	public MapModeGraphics(Graphics g, IMapMode mm) {
 		super(g);
-		setScale(MapMode.getScale());
+		setScale(DiagramMapModeUtil.getScale(mm));
 	}
 
 	/** @see Graphics#drawImage(Image, int, int) */
@@ -44,6 +47,11 @@ public class MapModeGraphics extends ScaledGraphics {
 	public void drawImage(Image srcImage, int sx, int sy, int sw, int sh,
 											int tx, int ty, int tw, int th) {
 		super.drawImage(srcImage, sx, sy, sw, sh, tx, ty, MapMode.DPtoLP(tw), MapMode.DPtoLP(th));
+	}
+	
+	/** @see Graphics#scale(double) */
+	public void scale(double amount) {
+		getGraphics().scale(amount);
 	}
 	
 	/**

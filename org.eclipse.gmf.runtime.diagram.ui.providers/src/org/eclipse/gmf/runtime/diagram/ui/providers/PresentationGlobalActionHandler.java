@@ -21,16 +21,11 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -45,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ClipboardCommand;
@@ -53,11 +49,18 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.properties.actions.PropertyPageViewAction;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * Class that implements the <code>IGlobalActionHandler</code> interface.
@@ -574,5 +577,25 @@ public class PresentationGlobalActionHandler
 				((IAdaptable) object).getAdapter(View.class));			
 		}
 		return null;
+	}
+	
+	/**
+	 * Retrieve the <code>IMapMode</code> object from the <code>DiagramRootEditPart</code>
+	 * 
+	 * @param cntxt the <code>IGlobalActionContext</code> holding the necessary information needed by this action handler 
+	 * @return <code>IMapMode</code> object that performs coordinate mapping from device to logical.  Returns null
+	 * if the context isn't valid.
+	 */
+	protected IMapMode getMapMode(IGlobalActionContext cntxt){
+		
+		IWorkbenchPart part = cntxt.getActivePart();
+		if (!(part instanceof IDiagramWorkbenchPart)) {
+			RootEditPart rootEP = ((IDiagramWorkbenchPart)part).getDiagramGraphicalViewer().getRootEditPart();
+			if (rootEP instanceof DiagramRootEditPart) {
+				return ((DiagramRootEditPart)part).getMapMode();
+			}
+		}
+		
+		return MapModeUtil.getMapMode();
 	}
 }

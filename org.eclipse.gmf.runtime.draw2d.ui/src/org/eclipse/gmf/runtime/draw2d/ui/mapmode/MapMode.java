@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,33 +13,17 @@
 package org.eclipse.gmf.runtime.draw2d.ui.mapmode;
 
 import org.eclipse.draw2d.geometry.Translatable;
-
-import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.HiMetricMapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
 
 
 /**
  * This class provides methods that convert from logical units
- * to device units.
+ * to device units.  Will be deprecated soon...
  * 
- * @author jschofie
+ * @author jschofie / sshaw
  */
 public class MapMode {
 
-	private static IMapMode currentImpl = new HiMetricMapMode();
-
-	/**
-	 * Sets the current mode map that will be utilized to perform the scaling from logical 
-	 * to device units.
-	 * 
-	 * @param mapMode the {@link IMapMode} object that the mapping will be delegated to.
-	 */
-	public static void setMapMode( IMapMode mapMode ) {
-		if( mapMode != null )
-			currentImpl = mapMode;
-		return;
-	}
-	
 	/**
 	 * Get the scale factor to apply to the Logical Units to get the
 	 * Device Units
@@ -47,7 +31,7 @@ public class MapMode {
 	 * @return scale factor
 	 */
 	public static double getScale() {
-		return currentImpl.getScale();
+		return DiagramMapModeUtil.getScale(MapModeUtil.getMapMode());
 	}
 
 	/**
@@ -58,7 +42,7 @@ public class MapMode {
 	 * @return the value represented in device units
 	 */
 	public static int LPtoDP( int logicalUnit ) {
-		return currentImpl.LPtoDP(logicalUnit);
+		return MapModeUtil.getMapMode().LPtoDP(logicalUnit);
 	}
 
 	/**
@@ -69,7 +53,7 @@ public class MapMode {
 	 * @return the value represented in logical units
 	 */
 	public static int DPtoLP( int deviceUnit ) {
-		return currentImpl.DPtoLP(deviceUnit);
+		return MapModeUtil.getMapMode().DPtoLP(deviceUnit);
 	}
 	
 	/**

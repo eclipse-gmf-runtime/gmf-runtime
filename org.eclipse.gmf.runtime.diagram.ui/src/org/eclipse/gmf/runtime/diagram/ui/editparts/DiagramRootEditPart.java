@@ -41,9 +41,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeFreeformLayer;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -83,6 +83,10 @@ public class DiagramRootEditPart
 	static protected class DiagramScalableFreeformLayeredPane extends
 		org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane implements ZoomListener {
 	
+		public DiagramScalableFreeformLayeredPane(IMapMode mm) {
+			super(mm);
+		}
+
 		/* 
 		 * (non-Javadoc)
 		 * @see org.eclipse.gef.editparts.ZoomListener#zoomChanged(double)
@@ -172,21 +176,13 @@ public class DiagramRootEditPart
         layers.add(new FreeformLayer(), DECORATION_UNPRINTABLE_LAYER);
         return layers;
     }
-    
-    /**
-    * Creates the <code>MapModeFreeformLayer</code>.
-	 * @return the new <code>MapModeFreeformLayer</code>
-	 */
-	protected MapModeFreeformLayer createMapModeFreeformLayer() {
-		return new MapModeFreeformLayer();
-	}
    
     /**
      * Creates the <code>ScalableFreeformLayeredPane</code>.
 	 * @return the new <code>ScalableFreeformLayeredPane</code>
 	 */
 	protected ScalableFreeformLayeredPane createScalableFreeformLayeredPane() {
-		return new DiagramScalableFreeformLayeredPane();
+		return new DiagramScalableFreeformLayeredPane(getMapMode());
 	}
 
 	/**
@@ -296,7 +292,7 @@ public class DiagramRootEditPart
 				spacingInPixels = (int)gridSpacing;
 		}
 
-		int spacing = MapMode.DPtoLP(spacingInPixels);
+		int spacing = getMapMode().DPtoLP(spacingInPixels);
 		getViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING,
 			new Dimension(spacing, spacing));
 	}
@@ -580,6 +576,16 @@ public class DiagramRootEditPart
 	 */
 	public PreferencesHint getPreferencesHint() {
 		return preferencesHint;
+	}
+	
+	/**
+	 * Override this if the Editor wishes to support a coordinate system other then the default 
+	 * (usually HiMetric coordinates).  
+	 * @return <code>IMapMode</code> that is the coordinate mapping for the Editor from device to
+	 * logical coordinates.
+	 */
+	public IMapMode getMapMode() {
+		return MapModeTypes.DEFAULT_MM;
 	}
 
 }

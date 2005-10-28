@@ -20,6 +20,16 @@ import java.util.List;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.GraphicsToGraphics2DAdaptor;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.GC;
@@ -27,17 +37,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.GraphicsToGraphics2DAdaptor;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 
 /**
  * Supports generation of AWT and SWT images of a diagram or a subset of
@@ -132,8 +131,9 @@ public class DiagramImageGenerator
 
 		BufferedImage awtImage = null;
 		try {
-			awtImage = new BufferedImage(MapMode.LPtoDP(sourceRect.width),
-				MapMode.LPtoDP(sourceRect.height),
+			IMapMode mm = getMapMode();
+			awtImage = new BufferedImage(mm.LPtoDP(sourceRect.width),
+				mm.LPtoDP(sourceRect.height),
 				BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
 			Graphics2D g2d = awtImage.createGraphics();
@@ -156,11 +156,11 @@ public class DiagramImageGenerator
 				.getHeight()));
 
 			Graphics graphics = new GraphicsToGraphics2DAdaptor(g2d,
-				new Rectangle(0, 0, MapMode.LPtoDP(sourceRect.width), MapMode
+				new Rectangle(0, 0, mm.LPtoDP(sourceRect.width), mm
 					.LPtoDP(sourceRect.height)));
 
 			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
-				graphics);
+				graphics, mm);
 
 			renderToGraphics(mapModeGraphics, new Point(sourceRect.x, sourceRect.y), selectedObjects);
 

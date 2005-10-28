@@ -17,6 +17,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
@@ -33,9 +34,10 @@ public class RenderedMapModeGraphics
 	/**
 	 * Constructor
 	 * @param g <code>Graphics</code> element to delegate render to
+	 * @param mm <code>IMapMode</code> to retrieve the scale factor from.
 	 */
-	public RenderedMapModeGraphics(Graphics g) {
-		super(g);
+	public RenderedMapModeGraphics(Graphics g, IMapMode mm) {
+		super(g, mm);
 	}
 	
 	/* 

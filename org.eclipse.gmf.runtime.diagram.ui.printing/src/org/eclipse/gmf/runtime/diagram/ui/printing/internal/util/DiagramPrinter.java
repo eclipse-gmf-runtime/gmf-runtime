@@ -18,6 +18,17 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
@@ -27,17 +38,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 /*
  * @canBeSeenBy %level1
@@ -84,6 +84,7 @@ public class DiagramPrinter
 	 * the {@link DiagramPreferencesRegistry}.
 	 */
 	private PreferencesHint preferencesHint;
+	private IMapMode mm;
 
 	/**
 	 * Creates a new instance. The following variables must be initialized
@@ -91,10 +92,31 @@ public class DiagramPrinter
 	 * <li><code>printer</code></li>
 	 * <li><code>display_dpi</code></li>
 	 * <li><code>diagrams</code></li>
+	 * @param mm <code>IMapMode</code> to do the coordinate mapping
 	 */
-	public DiagramPrinter(PreferencesHint preferencesHint) {
+	public DiagramPrinter(PreferencesHint preferencesHint, IMapMode mm) {
 		super();
 		this.preferencesHint = preferencesHint;
+		this.mm = mm;
+	}
+	
+	/**
+	 * Creates a new instance. The following variables must be initialized
+	 * before calling <code>run()</code>:
+	 * <li><code>printer</code></li>
+	 * <li><code>display_dpi</code></li>
+	 * <li><code>diagrams</code></li>
+	 * @param mm <code>IMapMode</code> to do the coordinate mapping
+	 */
+	public DiagramPrinter(PreferencesHint preferencesHint) {
+		this(preferencesHint, MapModeUtil.getMapMode());
+	}
+	
+	/**
+	 * @return <code>IMapMode</code> to do the coordinate mapping
+	 */
+	protected IMapMode getMapMode() {
+		return mm;
 	}
 	
 	/**
@@ -235,9 +257,9 @@ public class DiagramPrinter
 			- this.printer.getClientArea().height;
 		
 			// assume half on each side
-			offsetX = (int) (MapMode
+			offsetX = (int) (getMapMode()
 				.DPtoLP((int) (offsetX / 2.0f * display_dpi.x / printer.getDPI().x)) / userScale);
-			offsetY = (int) (MapMode
+			offsetY = (int) (getMapMode()
 				.DPtoLP((int) (offsetY / 2.0f * display_dpi.y / printer.getDPI().y)) / userScale);
 			
 			printerOffset = new Point(offsetX, offsetY);
@@ -334,7 +356,7 @@ public class DiagramPrinter
 
 		this.graphics.drawText(headerOrFooter,
 			HeaderAndFooterHelper.LEFT_MARGIN
-				+ (width - MapMode.DPtoLP(gc_.textExtent(headerOrFooter).x))
+				+ (width - getMapMode().DPtoLP(gc_.textExtent(headerOrFooter).x))
 				/ 2, HeaderAndFooterHelper.TOP_MARGIN);
 
 		headerOrFooter = HeaderAndFooterHelper.makeHeaderOrFooterString(
@@ -343,7 +365,7 @@ public class DiagramPrinter
 
 		this.graphics.drawText(headerOrFooter,
 			HeaderAndFooterHelper.LEFT_MARGIN
-				+ (width - MapMode.DPtoLP(gc_.textExtent(headerOrFooter).x))
+				+ (width - getMapMode().DPtoLP(gc_.textExtent(headerOrFooter).x))
 				/ 2, height - HeaderAndFooterHelper.BOTTOM_MARGIN);
 
 		this.graphics.popState(); //for drawing the text
@@ -513,7 +535,7 @@ public class DiagramPrinter
 	 */
 	protected MapModeGraphics createMapModeGraphics(Graphics theGraphics) {
 		return new MapModeGraphics(new PrinterGraphics(theGraphics, printer,
-			true));
+			true), getMapMode());
 	}
 	
 	/**

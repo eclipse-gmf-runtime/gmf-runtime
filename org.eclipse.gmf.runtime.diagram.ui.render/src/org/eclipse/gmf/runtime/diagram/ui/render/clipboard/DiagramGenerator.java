@@ -32,10 +32,8 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.ImageData;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
@@ -47,14 +45,16 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration
 import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.Sign;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.ImageData;
 
 /**
  * Provides the framework to generate SWT and AWT images of a diagram or a
@@ -65,7 +65,7 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 abstract public class DiagramGenerator {
 
-	private static final int IMAGE_MARGIN = MapMode.DPtoLP(10);
+	private int image_margin = 0;
 
 	private DiagramEditPart _dgrmEP;
 
@@ -77,6 +77,7 @@ abstract public class DiagramGenerator {
 	 */
 	public DiagramGenerator(DiagramEditPart dgrmEP) {
 		this._dgrmEP = dgrmEP;
+		image_margin = getMapMode().DPtoLP(10);
 	}
 
 	/**
@@ -180,12 +181,14 @@ abstract public class DiagramGenerator {
 
 		Graphics graphics = null;
 		try {
+			IMapMode mm = getMapMode();
+			
 			// Create the graphics and wrap it with the HiMetric graphics object
-			graphics = setUpGraphics(MapMode.LPtoDP(sourceRect.width), MapMode
+			graphics = setUpGraphics(mm.LPtoDP(sourceRect.width), mm
 				.LPtoDP(sourceRect.height));
 
 			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
-				graphics);
+				graphics, getMapMode());
 
 			renderToGraphics(mapModeGraphics, new Point(sourceRect.x, sourceRect.y), editparts);
 			imageDesc = getImageDescriptor(graphics);
@@ -208,6 +211,14 @@ abstract public class DiagramGenerator {
 			disposeGraphics(graphics);
 
 		return imageDesc;
+	}
+
+	/**
+	 * @return
+	 */
+	protected IMapMode getMapMode() {
+		IMapMode mm = MapModeUtil.getMapMode(getDiagramEditPart().getFigure());
+		return mm;
 	}
 
 	/**
@@ -541,13 +552,15 @@ abstract public class DiagramGenerator {
 		int minY = 0;
 		int maxY = 0;
 
+		IMapMode mm = getMapMode();
+		
 		for (int i = 0; i < (editparts.size()); i++) {
 			IGraphicalEditPart editPart = (IGraphicalEditPart) editparts.get(i);
 
 			IFigure figure = editPart.getFigure();
 			Rectangle bounds = figure.getBounds().getCopy();
 			translateToPrintableLayer(figure, bounds);
-			bounds = bounds.getExpanded(IMAGE_MARGIN, IMAGE_MARGIN);
+			bounds = bounds.getExpanded(getImageMargin(), getImageMargin());
 
 			if (i == 0) {
 				minX = bounds.x;
@@ -565,11 +578,11 @@ abstract public class DiagramGenerator {
 		int width = (maxX - minX);
 		int height = (maxY - minY);
 		if (width <= 0) {
-			width = MapMode.DPtoLP(100);
+			width = mm.DPtoLP(100);
 		}
 
 		if (height <= 0) {
-			height = MapMode.DPtoLP(100); // create an empty image if the
+			height = mm.DPtoLP(100); // create an empty image if the
 			// diagram does not contain child
 		}
 		org.eclipse.swt.graphics.Rectangle imageRect = new org.eclipse.swt.graphics.Rectangle(
@@ -593,7 +606,8 @@ abstract public class DiagramGenerator {
 		List editParts = new ArrayList();
 
 		List children = diagramEditPart.getPrimaryEditParts();
-
+		IMapMode mm = getMapMode();
+		
 		// We will use the diagram generate that was used to generate the image
 		// to figure out the outer-bound rectangle so that we are calculating
 		// the
@@ -626,10 +640,10 @@ abstract public class DiagramGenerator {
 					translateToPrintableLayer( figure, bounds );
 					bounds.translate( -imageRect.x, -imageRect.y );
 
-					position.setPartHeight(MapMode.LPtoDP(bounds.height));
-					position.setPartWidth(MapMode.LPtoDP(bounds.width));
-					position.setPartX(MapMode.LPtoDP(bounds.x));
-					position.setPartY(MapMode.LPtoDP(bounds.y));
+					position.setPartHeight(mm.LPtoDP(bounds.height));
+					position.setPartWidth(mm.LPtoDP(bounds.width));
+					position.setPartX(mm.LPtoDP(bounds.x));
+					position.setPartY(mm.LPtoDP(bounds.y));
 					result.add(0, position);
 			}
 			else if (part instanceof ConnectionEditPart) {
@@ -715,9 +729,9 @@ abstract public class DiagramGenerator {
 		// collect points clockwise
 		for (int i = 0; i < mainSegsLength; i++) {
 			segment = (LineSeg) mainSegs.get(i);
-			orthoPoint1 = segment.locatePoint(0.0, IMAGE_MARGIN, Sign.POSITIVE);
+			orthoPoint1 = segment.locatePoint(0.0, getImageMargin(), Sign.POSITIVE);
 			orthoPoint1.translate(-origin.x, -origin.y );
-			orthoPoint2 = segment.locatePoint(1.0, IMAGE_MARGIN, Sign.POSITIVE);
+			orthoPoint2 = segment.locatePoint(1.0, getImageMargin(), Sign.POSITIVE);
 			orthoPoint2.translate(-origin.x, -origin.y );
 
 			result.add(orthoPoint1);
@@ -752,13 +766,24 @@ abstract public class DiagramGenerator {
 	private List convertPolylineUnits(List polyPts) {
 		ArrayList result = new ArrayList();
 		Iterator iter = polyPts.iterator();
+		
+		IMapMode mm = getMapMode();
+		
 		while (iter.hasNext()) {
 			Point point = (Point) iter.next();
-			Point newPoint = new Point(MapMode.LPtoDP(point.x), MapMode.LPtoDP(point.y));
+			Point newPoint = new Point(mm.LPtoDP(point.x), mm.LPtoDP(point.y));
 			result.add(newPoint);
 		}
 		
 		return result;
+	}
+
+	
+	/**
+	 * @return <code>int</code> value that is the margin around the generated image in logical coordinates.
+	 */
+	protected int getImageMargin() {
+		return image_margin;
 	}
 	
 }

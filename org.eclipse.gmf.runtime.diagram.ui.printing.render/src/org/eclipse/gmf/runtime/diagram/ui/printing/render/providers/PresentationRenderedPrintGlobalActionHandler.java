@@ -35,6 +35,6 @@ public class PresentationRenderedPrintGlobalActionHandler
 	protected void doPrint(IGlobalActionContext cntxt) {
 		DefaultPrintActionHelper.doRun((IEditorPart) cntxt.getActivePart(),
 			new RenderedDiagramPrinter(getPreferencesHint((IEditorPart) cntxt
-				.getActivePart())));
+				.getActivePart()), getMapMode(cntxt)));
 	}
 }

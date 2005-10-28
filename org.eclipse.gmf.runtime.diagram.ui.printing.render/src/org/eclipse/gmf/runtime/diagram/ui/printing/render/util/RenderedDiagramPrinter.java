@@ -16,6 +16,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedPrinterGraphics;
 
@@ -31,6 +32,15 @@ public class RenderedDiagramPrinter
 	/**
 	 * Creates a new instance.
 	 * @param preferencesHint
+	 * @param mm <code>IMapMode</code> to do the coordinate mapping
+	 */
+	public RenderedDiagramPrinter(PreferencesHint preferencesHint, IMapMode mm) {
+		super(preferencesHint, mm);
+	}
+	
+	/**
+	 * Creates a new instance.
+	 * @param preferencesHint
 	 */
 	public RenderedDiagramPrinter(PreferencesHint preferencesHint) {
 		super(preferencesHint);
@@ -41,6 +51,6 @@ public class RenderedDiagramPrinter
 	 */
 	public MapModeGraphics createMapModeGraphics(Graphics theGraphics) {
 		return new RenderedMapModeGraphics(new RenderedPrinterGraphics(
-			theGraphics, printer, true));
+			theGraphics, printer, true), getMapMode());
 	}
 }

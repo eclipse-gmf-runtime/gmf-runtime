@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,9 @@
  ****************************************************************************/
 
 
-package org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode;
+package org.eclipse.gmf.runtime.draw2d.ui.mapmode;
+
+import org.eclipse.draw2d.geometry.Translatable;
 
 
 /**
@@ -22,14 +24,6 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode;
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  */
 public interface IMapMode {
-
-	
-	/**
-	 * Get the scale factor used when translating from Logical Units to
-	 * Device Units.
-	 * @return the scale factor applied to Logical Units to get Device Units
-	 */
-	public double getScale();
 
 	/**
 	 * Convert a Logical Unit into a Device Unit
@@ -46,5 +40,20 @@ public interface IMapMode {
 	 * @return the value represented in logical units
 	 */
 	public int DPtoLP(int deviceUnit);
+	
+	/**
+	 * Convert a <code>Translatable</code> to Device Units (pixels)
+	 * 
+	 * @param t the <code>Translatable</code> to convert
+	 * @return the parameter <code>t</code> that was scaled for convenience.
+	 */
+	public Translatable LPtoDP( Translatable t );
+	
+	/**
+	 * Convert a Translatable to Logical Units (i.e. Hi-Metrics)
+	 * @param t the Translatable to convert
+	 * @return the parameter <code>t</code> that was scaled for convenience.
+	 */
+	public Translatable DPtoLP( Translatable t );
 
 }

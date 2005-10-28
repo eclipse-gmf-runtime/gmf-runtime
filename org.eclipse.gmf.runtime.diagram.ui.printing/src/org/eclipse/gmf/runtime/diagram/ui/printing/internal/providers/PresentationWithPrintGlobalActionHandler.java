@@ -12,8 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.printing.internal.providers;
 
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
@@ -23,6 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * Concrete class that implements the <code>IGlobalActionHandler</code>
@@ -63,7 +62,7 @@ public class PresentationWithPrintGlobalActionHandler
 	protected void doPrint(IGlobalActionContext cntxt) {
 		DefaultPrintActionHelper.doRun((IEditorPart) cntxt.getActivePart(),
 			new DiagramPrinter(getPreferencesHint((IEditorPart) cntxt
-				.getActivePart())));
+				.getActivePart()), getMapMode(cntxt)));
 	}
 
 	/**

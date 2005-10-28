@@ -33,13 +33,14 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite( "All Shapes GEF Tests" ); //$NON-NLS-1$
 
-		suite.addTestSuite( MapModeTest.class );
+		suite.addTestSuite( MapModeUtilTest.class );
 		suite.addTestSuite( LineSegTest.class );
 		suite.addTestSuite( FigureUtilitiesTest.class );
 		suite.addTestSuite( LeftRightForestRouterTest.class );
 		suite.addTestSuite( TopDownForestRouterTest.class );
 		suite.addTestSuite( TreeRouterTest.class );
 		suite.addTestSuite( RectilinearRouterTest.class );
+		suite.addTestSuite( PolylineAnchorTest.class );
 		
         return suite;
 	}

@@ -19,6 +19,31 @@ import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
+import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.HeaderAndFooterHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelper;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.Assert;
@@ -44,30 +69,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
-import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.HeaderAndFooterHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelper;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Print Preview Action to display the Print Preview dialog. There are no static
@@ -671,11 +672,28 @@ public class PrintPreviewHelper {
 
 	}
 
+	private IMapMode mm;
+	
+	/**
+	 * The constructor.
+	 * @param mm <code>IMapMode</code> to do the coordinate mapping
+	 */
+	public PrintPreviewHelper(IMapMode mm) {
+		this.mm = mm;
+	}
+
 	/**
 	 * The constructor.
 	 */
 	public PrintPreviewHelper() {
-		//
+		this(MapModeUtil.getMapMode());
+	}
+	
+	/**
+	 * @return <code>IMapMode</code> to do the coordinate mapping
+	 */
+	protected IMapMode getMapMode() {
+		return mm;
 	}
 
 	/**
@@ -919,7 +937,7 @@ public class PrintPreviewHelper {
 
 			//or imageWidth / pageSize.x
 			float scale = ((float) imageHeight / (float) pageSize.y)
-				/ (float) MapMode.getScale();
+				/ (float) DiagramMapModeUtil.getScale(getMapMode());
 
 			for (int i = 0; i < numberOfRows; i++) {
 				for (int j = 0; j < numberOfColumns; j++) {
@@ -1102,7 +1120,7 @@ public class PrintPreviewHelper {
 			
 			g.drawText(
 				headerOrFooter,				
-				(pageSize.x - MapMode.DPtoLP(gc.textExtent(headerOrFooter).x)) / 2,
+				(pageSize.x - getMapMode().DPtoLP(gc.textExtent(headerOrFooter).x)) / 2,
 				HeaderAndFooterHelper.TOP_MARGIN);
 
 			headerOrFooter =
@@ -1114,7 +1132,7 @@ public class PrintPreviewHelper {
 
 			g.drawText(
 				headerOrFooter,
-				(pageSize.x - MapMode.DPtoLP(gc.textExtent(headerOrFooter).x)) / 2,
+				(pageSize.x - getMapMode().DPtoLP(gc.textExtent(headerOrFooter).x)) / 2,
 				pageSize.y - HeaderAndFooterHelper.BOTTOM_MARGIN);
 
 			g.popState(); //for drawing the text				
@@ -1195,7 +1213,7 @@ public class PrintPreviewHelper {
 	 */
 	protected MapModeGraphics createMapModeGraphics(
 			ScaledGraphics scaledGraphics) {
-		return new MapModeGraphics(scaledGraphics);
+		return new MapModeGraphics(scaledGraphics, getMapMode());
 	}
 	
 	

@@ -12,39 +12,21 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode;
 
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.swt.widgets.Display;
 
 
 /**
  * This class implements the MapMode interface to provide support for
- * HiMetric values.  HIMetric values are represented as 1/100 of an inch.
+ * an Identity mapping.  Performs a null mapping.
  * 
- * @author jschofie sshaw
+ * @author sshaw
  */
-public class HiMetricMapMode
+public class IdentityMapMode
 	implements IMapMode {
 
-	private float dpi;
-	private double scale = 1;
-	private static final double UNITS_PER_INCH = 2540.0;
-
-	public HiMetricMapMode() {
-		Display.getDefault().syncExec(new Runnable() {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.lang.Runnable#run()
-			 */
-			public void run() {
-				dpi = Display.getDefault().getDPI().x;
-			}
-		});
-		
-		scale = dpi / UNITS_PER_INCH;
+	public IdentityMapMode() {
+		// no initialization required
 	}
 	
 	/* 
@@ -52,9 +34,7 @@ public class HiMetricMapMode
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.figure.surface.mapmode.IMapMode#LPtoDP(int)
 	 */
 	public int LPtoDP(int logicalUnit) {
-		Point devPt = new Point(logicalUnit, 0);
-		devPt.performScale( scale );
-    	return devPt.x;
+		return logicalUnit;
 	}
 
 	/* 
@@ -62,9 +42,7 @@ public class HiMetricMapMode
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.figure.surface.mapmode.IMapMode#DPtoLP(int)
 	 */
 	public int DPtoLP(int deviceUnit) {
-		Point logPt = new Point(deviceUnit, 0);
-		logPt.performScale( 1 / scale );
-		return logPt.x;
+		return deviceUnit;
 	}
 
 	/* 
@@ -72,7 +50,6 @@ public class HiMetricMapMode
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#DPtoLP(org.eclipse.draw2d.geometry.Translatable)
 	 */
 	public Translatable DPtoLP(Translatable t) {
-		t.performScale( 1 / scale );
 		return t;
 	}
 
@@ -81,7 +58,6 @@ public class HiMetricMapMode
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#LPtoDP(org.eclipse.draw2d.geometry.Translatable)
 	 */
 	public Translatable LPtoDP(Translatable t) {
-		t.performScale( scale );
 		return t;
 	}
 

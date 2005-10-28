@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.figures.ScalableImageFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
@@ -62,7 +63,7 @@ public class RenderedDiagramRootEditPart
 		 * @see org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane#createMapModeGraphics(org.eclipse.draw2d.Graphics)
 		 */
 		protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
-			MapModeGraphics gMM = new RenderedMapModeGraphics(graphics);
+			MapModeGraphics gMM = new RenderedMapModeGraphics(graphics, getMapMode());
 			return gMM;
 		}
 
@@ -107,6 +108,10 @@ public class RenderedDiagramRootEditPart
 		public void animatedZoomStarted() {
 			animatedZoomOn = true;
 		}
+
+		public DiagramRenderedScalableFreeformLayeredPane(IMapMode mm) {
+			super(mm);
+		}
 	}
 
 	/**
@@ -114,7 +119,7 @@ public class RenderedDiagramRootEditPart
 	 * images.
 	 */
 	protected org.eclipse.draw2d.ScalableFreeformLayeredPane createScalableFreeformLayeredPane() {
-		setLayers(new DiagramRenderedScalableFreeformLayeredPane());
+		setLayers(new DiagramRenderedScalableFreeformLayeredPane(getMapMode()));
 		return getLayers();
 	}
 
