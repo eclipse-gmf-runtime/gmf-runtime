@@ -11,10 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramPreferenceInitializer;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * Initializes the preferences pages for the Logic Diagram Editor.
@@ -23,6 +22,14 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramPreferenceInitializ
  */
 public class LogicPreferencesInitializer
 	extends DiagramPreferenceInitializer {
+
+	public void initializeDefaultPreferences() {
+		super.initializeDefaultPreferences();
+		
+		// Resetting appearance settings in the logic preference store 
+		IPreferenceStore store = getPreferenceStore();	
+		LogicAppearancePreferencePage.initDefaults(store);
+	}
 
 	/*
 	 * (non-Javadoc)

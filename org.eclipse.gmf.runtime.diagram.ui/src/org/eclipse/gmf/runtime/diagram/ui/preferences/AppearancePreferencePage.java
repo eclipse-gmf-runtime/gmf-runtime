@@ -225,7 +225,7 @@ protected void addFontAndColorFields(Composite composite) {
 	 * Set the default font for this preference store.
 	 * @param store IPreferenceStore
 	 */
-	static private void setDefaultFontPreference(IPreferenceStore store){
+	static protected void setDefaultFontPreference(IPreferenceStore store){
 		FontData fontDataArray[] =
             JFaceResources.getDefaultFont().getFontData();
         FontData fontData = fontDataArray[0];

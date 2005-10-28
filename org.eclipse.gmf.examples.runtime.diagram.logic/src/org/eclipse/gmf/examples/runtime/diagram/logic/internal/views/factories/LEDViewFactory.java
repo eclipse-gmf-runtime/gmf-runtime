@@ -12,9 +12,8 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories;
 
 import org.eclipse.core.runtime.IAdaptable;
-
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -40,11 +39,9 @@ public class LEDViewFactory
 		View view = super.createView(semanticAdapter, containerView, semanticHint,
 			index, persisted, preferencesHint);
 		ShapeStyle style = (ShapeStyle)view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
-		style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.logicGreen)).intValue());
-		style.setFontName(""); //$NON-NLS-1$
-		style.setFontHeight(19);
 		style.setFontColor((FigureUtilities.colorToInteger(LogicColorConstants.displayText)).intValue());
-		style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.connectorGreen)).intValue());
+		style.setFontHeight(19);
 		return view;
 	}
+
 }
