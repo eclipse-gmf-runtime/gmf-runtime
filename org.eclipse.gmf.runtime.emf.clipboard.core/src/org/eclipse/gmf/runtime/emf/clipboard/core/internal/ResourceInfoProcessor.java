@@ -178,21 +178,23 @@ public class ResourceInfoProcessor {
 			eObjectWithValidContainer = emfResource.getOriginalEObject(eObject);
 		}
 
-		containerId = emfResource.getID(eObjectWithValidContainer.eContainer());
-		containerClass = eObjectWithValidContainer.eContainer().eClass()
-			.getInstanceClassName();
-
 		stringBuffer.append(OBJ_COPY_TYPE).append(SEPARATOR).append(copyType)
 			.append(PLUS);
 
 		stringBuffer.append(OBJ_ID).append(SEPARATOR).append(
 			emfResource.getID(eObject)).append(PLUS);
+		
+		if (eObjectWithValidContainer != null && eObjectWithValidContainer.eContainer() != null) {
+			containerId = emfResource.getID(eObjectWithValidContainer.eContainer());
+			containerClass = eObjectWithValidContainer.eContainer().eClass()
+				.getInstanceClassName();
 
-		stringBuffer.append(CONTAINER_ID).append(SEPARATOR).append(containerId)
-			.append(PLUS);
-
-		stringBuffer.append(CONTAINER_CLASS).append(SEPARATOR).append(
-			containerClass).append(PLUS);
+			stringBuffer.append(CONTAINER_ID).append(SEPARATOR).append(containerId)
+				.append(PLUS);
+	
+			stringBuffer.append(CONTAINER_CLASS).append(SEPARATOR).append(
+				containerClass).append(PLUS);
+		}
 
 		String hints = (String) hintMap.get(eObject);
 		stringBuffer.append(HINTS).append(SEPARATOR).append(

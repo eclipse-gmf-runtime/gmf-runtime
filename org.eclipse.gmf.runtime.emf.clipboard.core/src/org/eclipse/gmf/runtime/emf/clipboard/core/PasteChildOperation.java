@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.MergedEObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ObjectCopyType;
@@ -292,26 +293,29 @@ public class PasteChildOperation
 	 *     element type to paste into
 	 * @return the suitable parent, if found, otherwise <code>null</code>
 	 */
-	protected EObject getSuitableParentUsingAncestry(String preferredTypeName) {
-		EObject suitableParent = getSuitableParentUsingAncestry(
-			getParentEObject(), preferredTypeName, true);
+	protected PasteTarget getSuitableParentUsingAncestry(String preferredTypeName) {
+		PasteTarget suitableParent = getSuitableParentUsingAncestry(
+			getParentTarget(), preferredTypeName, true);
 		if (suitableParent == null) {
-			suitableParent = getSuitableParentUsingAncestry(getParentEObject(),
+			suitableParent = getSuitableParentUsingAncestry(getParentTarget(),
 				preferredTypeName, false);
 		}
 		return suitableParent;
 	}
 
-	private EObject getSuitableParentUsingAncestry(
-		EObject potentialParentObject, String preferredTypeName,
+	private PasteTarget getSuitableParentUsingAncestry(
+			PasteTarget potentialParent, String preferredTypeName,
 		boolean strictMatch) {
-		EObject suitableParent = checkPotentialParent(potentialParentObject,
+		PasteTarget suitableParent = checkPotentialParent(potentialParent,
 			preferredTypeName, strictMatch);
-		while ((suitableParent == null)
-			&& (potentialParentObject.eContainer() != null)) {
-			potentialParentObject = potentialParentObject.eContainer();
-			suitableParent = checkPotentialParent(potentialParentObject,
-				preferredTypeName, strictMatch);
+		if (suitableParent == null && !potentialParent.isResource()) {
+			EObject potentialParentObject = (EObject)potentialParent.getObject();
+			while ((suitableParent == null)
+				&& (potentialParentObject.eContainer() != null)) {
+				potentialParentObject = potentialParentObject.eContainer();
+				suitableParent = checkPotentialParent(new PasteTarget(potentialParentObject),
+					preferredTypeName, strictMatch);
+			}
 		}
 		return suitableParent;
 	}
@@ -341,8 +345,9 @@ public class PasteChildOperation
 					Iterator it = info.targetEObjects.iterator();
 					while (it.hasNext()) {
 						EObject mergeTarget = (EObject) it.next();
-						if (ClipboardSupportUtil.isChild(getParentEObject(),
-							mergeTarget)) {
+						if ((getParentTarget().isResource() &&
+								getParentTarget().getObject() == mergeTarget.eResource()) ||
+								ClipboardSupportUtil.isChild(getParentEObject(), mergeTarget)) {
 							return mergeTarget;
 						}
 					}
@@ -461,7 +466,7 @@ public class PasteChildOperation
 		} else {
 			//no parent with same ID, and the copy-parent not pasted already,
 			//then try other ways to match a parent
-			EObject possibleParent = getSuitableParentUsingAncestry(getLoadedDirectContainerEObject()
+			PasteTarget possibleParent = getSuitableParentUsingAncestry(getLoadedDirectContainerEObject()
 				.eClass().getInstanceClassName());
 			if (possibleParent != null) {
 				return doPasteInto(possibleParent);
@@ -486,6 +491,15 @@ public class PasteChildOperation
 	 */
 	public EObject getParentEObject() {
 		return getParentPasteProcess().getEObject();
+	}
+
+	/**
+	 * Gets the target object into which we are pasting a child.
+	 * 
+	 * @return the parent (target) object of the paste operation
+	 */
+	public PasteTarget getParentTarget() {
+		return getParentPasteProcess().getPasteTarget();
 	}
 
 	/**
@@ -559,7 +573,7 @@ public class PasteChildOperation
 			// whose
 			//original parent didn't resolve, thus, proceed normally
 			//by trying to paste in target obj
-			element = doPasteInto(getParentEObject());
+			element = doPasteInto(getParentTarget());
 			
 			if (element == null) {
 				/*-------------
@@ -578,7 +592,7 @@ public class PasteChildOperation
 				if ((element == null)
 					&& ((getChildObjectInfo()
 						.hasHint(ClipboardUtil.PASTE_TO_TARGET_PARENT)) || (isCopyAlways()))) {
-					EObject possibleParent = getSuitableParentUsingAncestry(getChildObjectInfo().containerClass);
+					PasteTarget possibleParent = getSuitableParentUsingAncestry(getChildObjectInfo().containerClass);
 					if (possibleParent != null) {
 						element = doPasteInto(possibleParent);
 					}
@@ -607,6 +621,24 @@ public class PasteChildOperation
 			EReference reference = getPasteContainmentFeature(pasteIntoEObject);
 			if (reference != null) {
 				return doPasteInto(pasteIntoEObject, reference);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Pastes my child object into the specified object.
+	 * 
+	 * @param pasteTarget the object to paste into
+	 * @return the newly pasted object, or <code>null</code> if the paste did
+	 *     not succeed
+	 */
+	protected EObject doPasteInto(PasteTarget pasteTarget) {
+		if (pasteTarget != null) {
+			if (pasteTarget.isResource()) {
+				return doPasteInto((Resource)pasteTarget.getObject());
+			} else {
+				return doPasteInto((EObject)pasteTarget.getObject());
 			}
 		}
 		return null;
@@ -643,6 +675,27 @@ public class PasteChildOperation
 				childElement = getPastedElement();
 			}
 		}
+		return childElement;
+	}
+
+	/**
+	 * Pastes my child object into the specified resource
+	 * 
+	 * @param pasteIntoResource the resource to paste into
+	 * @return the newly pasted object, or <code>null</code> if the paste did
+	 *     not succeed
+	 */
+	protected EObject doPasteInto(Resource pasteIntoResource) {
+		EObject childElement = null;
+		if (handleCollision(null, pasteIntoResource.getContents(),
+				getEObject(), getChildObjectInfo())) {
+			childElement = ClipboardSupportUtil.appendEObject(
+				pasteIntoResource, getEObject());
+		} else if (getPastedElement() != null) {
+			// our pasted element was already assigned by a merge action
+			childElement = getPastedElement();
+		}
+
 		return childElement;
 	}
 
@@ -704,16 +757,23 @@ public class PasteChildOperation
 
 	}
 
-	private EObject checkPotentialParent(EObject potentialParentObject,
+	private PasteTarget checkPotentialParent(PasteTarget potentialParent,
 		String preferredTypeName, boolean strictMatch) {
 		//match parent on type, if not then try ability to contain the child
-		if ((potentialParentObject instanceof EAnnotation) == false) {
-			if (potentialParentObject.eClass().getInstanceClassName().equals(
-				preferredTypeName)) {
-				return potentialParentObject;
-			} else if ((strictMatch == false)
-				&& (getPasteContainmentFeature(potentialParentObject) != null)) {
-				return potentialParentObject;
+		if ((potentialParent.getObject() instanceof EAnnotation) == false) {
+			if (potentialParent.isResource()) {
+				if (preferredTypeName == null || strictMatch == false) {
+					return potentialParent;
+				}
+			} else {
+				EObject potentialParentObject = (EObject)potentialParent.getObject();
+				if (potentialParentObject.eClass().getInstanceClassName().equals(
+					preferredTypeName)) {
+					return potentialParent;
+				} else if ((strictMatch == false)
+					&& (getPasteContainmentFeature(potentialParentObject) != null)) {
+					return potentialParent;
+				}
 			}
 		}
 		return null;
@@ -782,8 +842,13 @@ public class PasteChildOperation
 					if (canBeReplaced(object)) {
 						//Remove collision element, if any. Create new element
 						// in the same location.
-						ClipboardSupportUtil.destroyEObjectInCollection(object
-							.eContainer(), reference, object);
+						if (reference == null) {
+							// paste target is the resouce
+							ClipboardSupportUtil.destroyEObjectInResource(object);
+						} else {
+							ClipboardSupportUtil.destroyEObjectInCollection(object
+								.eContainer(), reference, object);
+						}
 						return true;
 					}
 					return false; //ignore it since we can't replace the other
@@ -1097,11 +1162,14 @@ public class PasteChildOperation
 	 * @see PasteAction#REPLACE
 	 */
 	protected boolean canBeReplaced(EObject eObject) {
-		if (eObject.equals(getParentEObject())) {
-			return false;
-		}
-		if (ClipboardSupportUtil.isChild(eObject, getParentEObject())) {
-			return false;
+		if (!getParentTarget().isResource()) {
+			// we now know that the target is an EObject
+			if (eObject.equals(getParentEObject())) {
+				return false;
+			}
+			if (ClipboardSupportUtil.isChild(eObject, getParentEObject())) {
+				return false;
+			}
 		}
 		return true;
 	}

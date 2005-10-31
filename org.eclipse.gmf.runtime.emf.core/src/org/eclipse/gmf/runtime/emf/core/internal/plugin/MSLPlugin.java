@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.plugin;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
@@ -46,13 +45,6 @@ public class MSLPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getSymbolicName();
-	}
-
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
 	}
 
 	/**

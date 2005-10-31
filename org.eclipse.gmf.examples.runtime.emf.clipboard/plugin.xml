@@ -44,11 +44,11 @@
                menubarPath="org.eclipse.emf.examples.extlibraryMenuID/org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
                icon="icons/paste.gif"
                id="org.eclipse.gmf.examples.runtime.emf.clipboard.PasteAction">
-            <enablement>
+            <!--<enablement>
                <objectClass
                      name="org.eclipse.emf.ecore.EObject">
                </objectClass>
-            </enablement>
+            </enablement>-->
          </action>
          <action
                label="%_UI_Copy_label"
@@ -82,11 +82,11 @@
                menubarPath="org.eclipse.gmf.runtime.emf.clipboard.coreMenuID/additions"
                icon="icons/paste.gif"
                id="org.eclipse.gmf.examples.runtime.emf.clipboard.PasteAction">
-            <enablement>
+            <!--<enablement>
                <objectClass
                      name="org.eclipse.emf.ecore.EObject">
                </objectClass>
-            </enablement>
+            </enablement>-->
          </action>
          <action
                label="%_UI_Copy_label"

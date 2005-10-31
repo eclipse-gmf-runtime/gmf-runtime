@@ -35,8 +35,8 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
+import org.eclipse.gmf.runtime.emf.clipboard.core.PasteTarget;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.EMFClipboardCoreMessages;
-
 /**
  * A paste operation that pastes copied elements into their new parent.
  * <p>
@@ -49,7 +49,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.internal.l10n.EMFClipboardCore
 public class PasteIntoParentOperation
 	extends BasePasteOperation {
 
-	private EObject element;
+	private PasteTarget element;
 
 	private LoadingEMFResource eLoadedResource;
 
@@ -75,8 +75,12 @@ public class PasteIntoParentOperation
 	 */
 	public final XMLResource getParentResource() {
 		if (parentResource == null) {
-			parentResource = getClipboardOperationHelper().getResource(
-				getEObject());
+			if (element.isResource()) {
+				parentResource = (XMLResource)element.getObject();
+			} else {
+				parentResource = getClipboardOperationHelper().getResource(
+					getEObject());
+			}
 		}
 		return parentResource;
 	}
@@ -131,7 +135,7 @@ public class PasteIntoParentOperation
 	 * @throws Exception if anything goes wrong
 	 */
 	public PasteIntoParentOperation(PasteOperation pasteProcess,
-			EObject element, Map hintsMap)
+			PasteTarget element, Map hintsMap)
 		throws Exception {
 		super(pasteProcess);
 		this.element = element;
@@ -162,7 +166,7 @@ public class PasteIntoParentOperation
 	}
 
 	private PasteIntoParentOperation(
-			PasteIntoParentOperation pasteIntoParentOperation, EObject element) {
+			PasteIntoParentOperation pasteIntoParentOperation, PasteTarget element) {
 		//use itself as spawner in order to know about any newly pasted
 		// elements by
 		//this newly cloned operation
@@ -223,7 +227,7 @@ public class PasteIntoParentOperation
 	 * @return the clone
 	 */
 	public PasteIntoParentOperation clone(EObject newElement) {
-		return new PasteIntoParentOperation(this, newElement);
+		return new PasteIntoParentOperation(this, new PasteTarget(newElement));
 	}
 
 	private void performPostPasteOperations(List operations)
@@ -619,6 +623,18 @@ public class PasteIntoParentOperation
 	 * @return the paste target
 	 */
 	public final EObject getEObject() {
+		if (!element.isResource()) {
+			return (EObject)element.getObject();
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieves the element into which I am pasting children.
+	 * 
+	 * @return the paste target
+	 */
+	public final PasteTarget getPasteTarget() {
 		return element;
 	}
 
@@ -749,13 +765,15 @@ public class PasteIntoParentOperation
 			while (annotations.hasNext()) {
 				EAnnotation ref_obj_Annotation = (EAnnotation) annotations
 					.next();
-				EObject eObj = ClipboardSupportUtil.resolve(
-					(EObject) ref_obj_Annotation.getReferences().get(0),
-					getLoadedIDToEObjectMapCopy());
-				containmentAnnotationReferences.add(eObj);
-				EObject eRef = EcoreUtil.resolve((EObject) ref_obj_Annotation
-					.getReferences().get(1), getParentResource());
-				containmentAnnotationReferences.add(eRef);
+				if (ref_obj_Annotation.getReferences().size() >= 2) {
+					EObject eObj = ClipboardSupportUtil.resolve(
+						(EObject) ref_obj_Annotation.getReferences().get(0),
+						getLoadedIDToEObjectMapCopy());
+					containmentAnnotationReferences.add(eObj);
+					EObject eRef = EcoreUtil.resolve((EObject) ref_obj_Annotation
+						.getReferences().get(1), getParentResource());
+					containmentAnnotationReferences.add(eRef);
+				}
 			}
 		}
 		return containmentAnnotationReferences;

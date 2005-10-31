@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
@@ -920,7 +919,33 @@ public class EObjectUtil {
 					return ClipboardUtil.pasteElementsFromString(
 						str, target, hints, new NullProgressMonitor());
 				} catch (Exception ex) {
-					handleException(ex, "pasteSelectionFromString"); //$NON-NLS-1$
+					handleException(ex, "deserialize"); //$NON-NLS-1$
+				}
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Pastes a collection of objects from a string. Hints are used to customize
+	 * the operation
+	 * 
+	 * @param target
+	 *            The target of the copy.
+	 * @param str
+	 *            The string to deserialize.
+	 * @param hints
+	 *            Hints used during paste.
+	 * @return The collection of pasted objects.
+	 */
+	public static Collection deserialize(final Resource target, final String str, final Map hints) {
+		return (Collection) OperationUtil.runWithNoSemProcs(new MRunnable() {
+			public Object run() {
+				try {
+					return ClipboardUtil.pasteElementsFromString(
+						str, target, hints, new NullProgressMonitor());
+				} catch (Exception ex) {
+					handleException(ex, "deserialize"); //$NON-NLS-1$
 				}
 				return null;
 			}

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardSupportManager;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.DefaultClipboardSupport;
@@ -174,6 +174,44 @@ public class ClipboardUtil {
 	 */
 	public static Collection pasteElementsFromString(String string,
 			EObject targetElement, final Map hints, IProgressMonitor monitor) {
+		return pasteElementsFromStringDelagate(string, new PasteTarget(targetElement), hints, monitor);
+	}
+	
+	/**
+	 * Deerializes elements from a string (obtained from the system clipboard)
+	 * and pastes them into the specified target element.
+	 * 
+	 * @param string the string containing the elements to be pasted
+	 * @param targetElement the element into which the new elements are to be
+	 *     pasted
+	 * @param hints a mapping of hints (defined as constants on this class), or
+	 *     <code>null</code> to provide no hints
+	 * @param monitor a progress monitor to track progress, or
+	 *     <code>null</code> if no progress feedback is required
+	 * 
+	 * @return the newly pasted {@link EObject}s
+	 */
+	public static Collection pasteElementsFromString(String string,
+			Resource targetElement, final Map hints, IProgressMonitor monitor) {
+		return pasteElementsFromStringDelagate(string, new PasteTarget(targetElement), hints, monitor);
+	}
+
+	/**
+	 * Deerializes elements from a string (obtained from the system clipboard)
+	 * and pastes them into the specified target element.
+	 * 
+	 * @param string the string containing the elements to be pasted
+	 * @param targetElement the element into which the new elements are to be
+	 *     pasted
+	 * @param hints a mapping of hints (defined as constants on this class), or
+	 *     <code>null</code> to provide no hints
+	 * @param monitor a progress monitor to track progress, or
+	 *     <code>null</code> if no progress feedback is required
+	 * 
+	 * @return the newly pasted {@link EObject}s
+	 */
+	private static Collection pasteElementsFromStringDelagate(String string,
+			PasteTarget targetElement, final Map hints, IProgressMonitor monitor) {
 		Set result = null;
 		
 		try {
@@ -183,7 +221,9 @@ public class ClipboardUtil {
 			
 			monitor.beginTask(BasePasteOperation.PASTE,
 				PasteOperation.TOTAL_WORK);
-			IClipboardSupport helper = createClipboardSupport(targetElement.eClass());
+			IClipboardSupport helper = targetElement.isResource()
+				? DefaultClipboardSupport.getInstance()
+				: createClipboardSupport(((EObject)targetElement.getObject()).eClass());
 			if (string.length() == 0) {
 				return Collections.EMPTY_SET;
 			}

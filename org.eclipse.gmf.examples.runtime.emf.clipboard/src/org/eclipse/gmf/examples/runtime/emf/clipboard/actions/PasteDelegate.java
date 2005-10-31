@@ -18,14 +18,16 @@ import java.util.Iterator;
 import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.internal.l10n.EMFClipboardMessages;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransfer;
 import org.eclipse.gmf.examples.runtime.emf.clipboard.transfer.EmfTransferType;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.dnd.Clipboard;
-
 
 
 /**
@@ -103,6 +105,20 @@ public class PasteDelegate
 					objectsPasted.addAll(pasted);
 				}
 			}
+
+			// paste into each selected resource
+			for (Iterator iter = getSelectedResources().iterator(); iter.hasNext();) {
+				Resource target = (Resource) iter.next();
+				
+				Collection pasted = ClipboardUtil.pasteElementsFromString(
+					clipString, target, null, null);
+				
+				if (pasted == null || pasted.isEmpty()) {
+					problems = true;
+				} else {
+					objectsPasted.addAll(pasted);
+				}
+			}
 		}
 		
 		if (problems) {
@@ -111,6 +127,17 @@ public class PasteDelegate
 		}
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+	 */
+	public void selectionChanged(IAction action, final ISelection selection) {
+		super.selectionChanged(action, selection);
+		if (!action.isEnabled()) {
+			action.setEnabled(!getSelectedResources().isEmpty());
+		}
+	}
+
 	/**
 	 * A command that selects a collection of elements in the editor whenever
 	 * it is executed or redone.

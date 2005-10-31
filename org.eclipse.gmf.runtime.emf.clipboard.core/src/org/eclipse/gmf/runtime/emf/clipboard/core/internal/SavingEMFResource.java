@@ -142,8 +142,18 @@ public class SavingEMFResource
 		EAnnotation ref_obj_Annotation = EcoreFactory.eINSTANCE
 			.createEAnnotation();
 		ref_obj_Annotation.getReferences().add(eObj);
-		ref_obj_Annotation.getReferences().add(
-			eObjectWithValidContainer.eContainmentFeature());
+		if (eObjectWithValidContainer != null) {
+			ref_obj_Annotation.getReferences().add(
+				eObjectWithValidContainer.eContainmentFeature());
+		} else {
+			// If there is no containment feature, which is the case when copying a
+			// root element, then an unattached EReference is added to the annotation.
+			// This EReference ensures that that the annotation references
+			// are serialized using CROSS_DOC.
+			// A better fix would be to add some intelligence to the sameDocMany(..) method
+			// of the XMISameImpl class created in method createXMLSave().
+			ref_obj_Annotation.getReferences().add(EcoreFactory.eINSTANCE.createEReference());
+		}
 		eAnnotation.getEAnnotations().add(ref_obj_Annotation);
 	}
 

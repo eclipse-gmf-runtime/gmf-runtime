@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
+import org.eclipse.gmf.runtime.emf.clipboard.core.PasteTarget;
 
 /**
  * The default paste operation.  Extensibility is provided by the callback
@@ -38,7 +38,7 @@ public class PasteOperation
 
 	private Map parentPasteRecordMap;
 
-	private EObject parent;
+	private PasteTarget parent;
 
 	private Map hintsMap;
 
@@ -66,7 +66,7 @@ public class PasteOperation
 	 */
 	public PasteOperation(IProgressMonitor monitor,
 			IClipboardSupport clipboardSupport, String string,
-			EObject parent, Map loadOptionsMap, Map hintsMap)
+			PasteTarget parent, Map loadOptionsMap, Map hintsMap)
 		throws Exception {
 		super(monitor, loadOptionsMap, ResourceInfoProcessor
 			.getResourceInfo(string), clipboardSupport);
@@ -77,7 +77,7 @@ public class PasteOperation
 	}
 
 	private final PasteIntoParentOperation getParentPasteProcess(
-			EObject parentElement)
+			PasteTarget parentElement)
 		throws Exception {
 		PasteIntoParentOperation parentPasteProcess = (PasteIntoParentOperation) parentPasteRecordMap
 			.get(parentElement);

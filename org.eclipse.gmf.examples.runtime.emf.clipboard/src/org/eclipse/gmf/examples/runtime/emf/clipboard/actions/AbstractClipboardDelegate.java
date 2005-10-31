@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.examples.extlibrary.presentation.EXTLibraryEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -51,6 +52,11 @@ abstract class AbstractClipboardDelegate
 	private Collection selectedEObjects = Collections.EMPTY_SET;
 
 	/**
+	 * Selected {@link Resource}s
+	 */
+	private Collection selectedResources = Collections.EMPTY_SET;
+	
+	/**
 	 * Initializes me.
 	 */
 	protected AbstractClipboardDelegate() {
@@ -66,6 +72,15 @@ abstract class AbstractClipboardDelegate
 		return selectedEObjects;
 	}
 	
+	/**
+	 * Retrieves the user's selected resources.
+	 * 
+	 * @return a collection of selected {@link Resouce}s
+	 */
+	protected Collection getSelectedResources() {
+		return selectedResources;
+	}
+
 	/**
 	 * Obtains the shell to use for opening dialogs.
 	 * 
@@ -98,21 +113,19 @@ abstract class AbstractClipboardDelegate
 	 */
 	public final void run(IAction action) {
 		Clipboard clipboard = null;
-		
-		if (!getSelectedObjects().isEmpty()) {
-			try {
-				clipboard = new Clipboard(getShell().getDisplay());
-				
-				doRun(clipboard);
-			} finally {
-				if (clipboard != null) {
-					// must clean up the clipboard that we created
-					clipboard.dispose();
-				}
+
+		try {
+			clipboard = new Clipboard(getShell().getDisplay());
+			
+			doRun(clipboard);
+		} finally {
+			if (clipboard != null) {
+				// must clean up the clipboard that we created
+				clipboard.dispose();
 			}
 		}
 	}
-	
+
 	/**
 	 * Implemented by sublasses to do their copy or paste to or from the
 	 * specified clipboard.
@@ -126,16 +139,20 @@ abstract class AbstractClipboardDelegate
 	 */
 	public void selectionChanged(IAction action, final ISelection selection) {
 		selectedEObjects = Collections.EMPTY_SET;
+		selectedResources = Collections.EMPTY_SET;
 		
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			selectedEObjects = new java.util.ArrayList();
+			selectedResources = new java.util.ArrayList();
 			
 			for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
 				Object next = iter.next();
 				
 				if (next instanceof EObject) {
 					selectedEObjects.add(next);
+				} else if (next instanceof Resource) {
+					selectedResources.add(next);
 				}
 			}
 		}

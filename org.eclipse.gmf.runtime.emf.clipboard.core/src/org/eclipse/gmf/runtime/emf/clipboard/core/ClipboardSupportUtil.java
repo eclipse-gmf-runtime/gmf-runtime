@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 
@@ -56,9 +57,8 @@ public final class ClipboardSupportUtil {
 
 	/**
 	 * Removes from a collection of <code>elements</code> any elements that
-	 * should not be copied.  These are those that do not have containers,
-	 * and those that have containers that are already in the
-	 * <code>elements</code> collection.
+	 * should not be copied.  These are those that have containers that are
+	 * already in the <code>elements</code> collection.
 	 * 
 	 * @param elements the collection of elements to be whittled down to those
 	 *     that should be copied.  <b>Note</b> that this collection is modified
@@ -71,9 +71,7 @@ public final class ClipboardSupportUtil {
 		Set set = new HashSet();
 		while (it.hasNext()) {
 			element = (EObject) it.next();
-			if (element.eContainer() != null) {
-				set.add(element);
-			}
+			set.add(element);
 		}
 		elements.clear();
 		elements.addAll(getUniqueElementsAncestry(set));
@@ -199,6 +197,22 @@ public final class ClipboardSupportUtil {
 			sendCreateEvent(referencedObject);
 		}
 		((Collection) eObject.eGet(reference)).add(referencedObject);
+		return referencedObject;
+	}
+
+	/**
+	 * Appends a resource's contents with an additional reference.
+	 * 
+	 * @param resource the resource
+	 * @param referencedObject an object to append to the list
+	 * 
+	 * @return <code>referencedObject</code> if it was successfully appended
+	 *     to the resource; <code>null</code>, otherwise
+	 * 
+	 */
+	public static EObject appendEObject(Resource resource, EObject referencedObject) {
+		sendCreateEvent(referencedObject);
+		resource.getContents().add(referencedObject);
 		return referencedObject;
 	}
 
@@ -345,6 +359,15 @@ public final class ClipboardSupportUtil {
 		} else {
 			((Collection) eObject.eGet(reference)).remove(referencedObject);
 		}
+	}
+
+	/**
+	 * Removes an element from a resource.
+	 * 
+	 * @param referencedObject an object to remove from the resource
+	 */
+	public static void destroyEObjectInResource(EObject referencedObject) {
+		createClipboardSupport(referencedObject).destroy(referencedObject);
 	}
 
 	/**
