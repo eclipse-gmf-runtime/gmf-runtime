@@ -314,7 +314,7 @@ public class PropertyPageCellEditor extends DialogCellEditor {
 	 * Returns the text widget
 	 * @return the text widget
 	 */
-	private Text getText() {
+	protected Text getText() {
 		return text;
 	}
 
@@ -584,5 +584,13 @@ public class PropertyPageCellEditor extends DialogCellEditor {
 		checkSelection();
 		checkDeleteable();
 	}
-
+	
+	/**
+	 * Getter method for value
+	 * @return the value of this cell editor
+	 */
+	protected Object getCellObjectValue() {
+		return value;
+	}
+	
 }
