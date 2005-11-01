@@ -80,10 +80,11 @@ public class ArrangeAction extends PresentationAction {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#getCommand()
 	 */
 	protected Command getCommand() {
-		if (getOperationSet().size() >= 2) {
+		if (!getOperationSet().isEmpty()) {
 			EditPart parent = getSelectionParent(getOperationSet());
-			if (parent != null)
+			if (parent != null) {
 				return parent.getCommand(getTargetRequest());
+			}
 		}
 		return UnexecutableCommand.INSTANCE;
 	}
@@ -98,7 +99,7 @@ public class ArrangeAction extends PresentationAction {
 	protected boolean calculateEnabled() {
 		
 		//arrange all, always enable
-		if( isArrangeAll() ){
+		if( isArrangeAll() && !getOperationSet().isEmpty()){
 			return true;
 		}
 
@@ -161,7 +162,7 @@ public class ArrangeAction extends PresentationAction {
 	}
 	
 	private List createOperationSet(List editparts) {
-		if (editparts.size() < 2)
+		if (editparts == null || editparts.isEmpty())
 			return Collections.EMPTY_LIST;
 		EditPart parent = getSelectionParent(editparts);
 		if (parent == null)
@@ -255,7 +256,7 @@ public class ArrangeAction extends PresentationAction {
 		if (animatedLayout) {
 			List operationSet = getOperationSet();
 			if (operationSet != null && !operationSet.isEmpty()) {
-				IGraphicalEditPart container = (IGraphicalEditPart)((EditPart)operationSet.get(0)).getParent();
+				IGraphicalEditPart container = (IGraphicalEditPart)getSelectionParent(operationSet);
 				AnimationFigureHelper.getInstance().animate(container.getFigure());
 			}
 		}
