@@ -210,11 +210,14 @@ public class CreateElementCommand
 	 */
 	public boolean isExecutable() {
 
-		boolean result = true;
-
+		if (getEClassToEdit() == null) {
+			return false;
+		}
+		
 		if (getContainmentFeature() != null) {
 			EClassifier eClassifier = getContainmentFeature().getEType();
-
+			boolean result = true;
+			
 			if (eClassifier instanceof EClass) {
 				result = ((EClass) eClassifier).isSuperTypeOf(getElementType()
 					.getEClass());

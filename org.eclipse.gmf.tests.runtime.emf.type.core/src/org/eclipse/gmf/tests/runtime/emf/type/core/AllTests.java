@@ -32,6 +32,7 @@ public class AllTests
 		TestSuite suite = new TestSuite();
 		suite.addTest(AbstractEditHelperTest.suite());
 		suite.addTest(ElementTypeRegistryTest.suite());
+		suite.addTest(CreateElementCommandTest.suite());
 		suite.addTest(CreateElementRequestTest.suite());
 		suite.addTest(MetamodelTypeDescriptorTest.suite());
 		suite.addTest(SpecializationTypeDescriptorTest.suite());
