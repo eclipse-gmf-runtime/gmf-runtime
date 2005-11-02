@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.AbstractCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.CommandManagerTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.CompositeCommandTest;
-import org.eclipse.gmf.tests.runtime.common.core.internal.l10n.AbstractResourceManagerTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.AbstractProviderTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.ExecutionStrategyTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.ProviderPriorityTest;
@@ -41,7 +40,6 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         TestSuite suite = new TestSuite();
         suite.addTest(AbstractCommandTest.suite());
         suite.addTest(AbstractProviderTest.suite());
-        suite.addTest(AbstractResourceManagerTest.suite());
         suite.addTest(CommandManagerTest.suite());
         suite.addTest(CompositeCommandTest.suite());
 		suite.addTest(ExecutionStrategyTest.suite());
