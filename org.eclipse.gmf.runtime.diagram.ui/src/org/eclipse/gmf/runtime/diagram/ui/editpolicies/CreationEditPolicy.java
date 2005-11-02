@@ -41,12 +41,12 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectorsRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -138,7 +138,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		Iterator editParts = request.getEditParts().iterator();
 		View container = (View)getHost().getAdapter(View.class);
 		EObject context = container == null ? null : ViewUtil.resolveSemanticElement(container);
-		CompositeCommand cc = new CompositeCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
 		while ( editParts.hasNext() ) {
 			EditPart ep = (EditPart)editParts.next();
 			if ( ep instanceof LabelEditPart ) {
@@ -168,7 +168,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 	 * @return A CompositeCommand that will reparent both the semantic and notation elements.
 	 */
 	protected ICommand getReparentCommand( IGraphicalEditPart gep ) {
-		CompositeCommand cc = new CompositeCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
 		View container = (View)getHost().getModel();
 		EObject context = ViewUtil.resolveSemanticElement(container);
 		View view = (View)gep.getModel();
@@ -219,7 +219,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 	 */
 	protected Command getCreateCommand(CreateViewRequest request) {
 
-		CompositeModelCommand cc = new CompositeModelCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeModelCommand cc = new CompositeModelCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
 		Iterator descriptors = request.getViewDescriptors().iterator();
 
 		while (descriptors.hasNext()) {
@@ -287,17 +287,17 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 			new SemanticCreateCommand(requestAdapter, createElementCommand);
 		Command viewCommand = getCreateCommand(request);
 
-		Command refreshConnectorCommand =
+		Command refreshConnectionCommand =
 			getHost().getCommand(
-				new RefreshConnectorsRequest(((List)request.getNewObject())));
+				new RefreshConnectionsRequest(((List)request.getNewObject())));
 
 
 		// form the compound command and return
 		CompositeCommand cc = new CompositeCommand(semanticCommand.getLabel());
 		cc.compose(semanticCommand);
 		cc.compose(new XtoolsProxyCommand(viewCommand));
-		if ( refreshConnectorCommand != null ) {
-			cc.compose(new XtoolsProxyCommand(refreshConnectorCommand));
+		if ( refreshConnectionCommand != null ) {
+			cc.compose(new XtoolsProxyCommand(refreshConnectionCommand));
 		}
 
 		return new EtoolsProxyCommand(cc);
@@ -340,7 +340,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		} else if (createCmds.size() == 1) {
 			return (Command) createCmds.values().toArray()[0];
 		} else {
-			CreateOrSelectElementCommand selectAndCreateConnectorCmd = new CreateOrSelectElementCommand(
+			CreateOrSelectElementCommand selectAndCreateConnectionCmd = new CreateOrSelectElementCommand(
 				Display.getCurrent().getActiveShell(), validTypes) {
 				
 				private Command _createCmd;
@@ -389,7 +389,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				}
 			};
 
-			return new EtoolsProxyCommand(selectAndCreateConnectorCmd);
+			return new EtoolsProxyCommand(selectAndCreateConnectionCmd);
 		}
 	}
 	

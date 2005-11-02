@@ -16,6 +16,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
+import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
@@ -38,15 +45,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
-import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 
 /**
  * @author melaasar
@@ -589,8 +587,13 @@ public class ColorPropertyContributionItem
 	public static ColorPropertyContributionItem createFontColorContributionItem(IWorkbenchPage workbenchPage) {
 		String propertyName = getResources().getString("PropertyDescriptorFactory.FontColor"); //$NON-NLS-1$
 		String toolTipText = getResources().getString("ColorChangeActionMenu.fontColor"); //$NON-NLS-1$
-		ImageData basicImageData = Images.DESC_ACTION_FONT_COLOR.getImageData();
-		ImageData disabledBasicImageData = Images.DESC_ACTION_FONT_COLOR_DISABLED.getImageData();
+		ImageData basicImageData = DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_FONT_COLOR)
+			.getImageData();
+		ImageData disabledBasicImageData = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_FONT_COLOR_DISABLED)
+			.getImageData();
 
 		return new ColorPropertyContributionItem(
 			workbenchPage,
@@ -612,8 +615,13 @@ public class ColorPropertyContributionItem
 	public static ColorPropertyContributionItem createLineColorContributionItem(IWorkbenchPage workbenchPage) {
 		String propertyName = getResources().getString("PropertyDescriptorFactory.LineColor"); //$NON-NLS-1$
 		String toolTipText = getResources().getString("ColorChangeActionMenu.lineColor"); //$NON-NLS-1$
-		ImageData basicImageData = Images.DESC_ACTION_LINE_COLOR.getImageData();
-		ImageData disabledBasicImageData = Images.DESC_ACTION_LINE_COLOR_DISABLED.getImageData();
+		ImageData basicImageData = DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_LINE_COLOR)
+			.getImageData();
+		ImageData disabledBasicImageData = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_LINE_COLOR_DISABLED)
+			.getImageData();
 
 		return new ColorPropertyContributionItem(
 			workbenchPage,
@@ -635,8 +643,13 @@ public class ColorPropertyContributionItem
 	public static ColorPropertyContributionItem createFillColorContributionItem(IWorkbenchPage workbenchPage) {
 		String propertyName = getResources().getString("PropertyDescriptorFactory.FillColor"); //$NON-NLS-1$
 		String toolTipText = getResources().getString("ColorChangeActionMenu.fillColor"); //$NON-NLS-1$
-		ImageData basicImageData = Images.DESC_ACTION_FILL_COLOR.getImageData();
-		ImageData disabledBasicImageData = Images.DESC_ACTION_FILL_COLOR_DISABLED.getImageData();
+		ImageData basicImageData = DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_FILL_COLOR)
+			.getImageData();
+		ImageData disabledBasicImageData = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_FILL_COLOR_DISABLED)
+			.getImageData();
 
 		return new ColorPropertyContributionItem(
 			workbenchPage,

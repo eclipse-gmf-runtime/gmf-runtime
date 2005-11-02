@@ -19,9 +19,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
-
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectorBendpointsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
 import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
@@ -31,6 +30,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
 
 /**
  * This EditPolicy defines the behavior of Bendpoints on a Connection.
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionBendpointEditPolicy
  */
 /*
  * @canBeSeenBy %partners
@@ -103,8 +103,8 @@ public class ConnectorBendpointEditPolicy
 		Point ptRef2 = connection.getTargetAnchor().getReferencePoint();
 		getConnection().translateToRelative(ptRef2);
 
-		SetConnectorBendpointsCommand sbbCommand = new SetConnectorBendpointsCommand();
-		sbbCommand.setConnectorAdapter(new EObjectAdapter(connectorView));
+		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+		sbbCommand.setEdgeAdapter(new EObjectAdapter(connectorView));
 		sbbCommand.setNewPointList(connection.getPoints(), ptRef1, ptRef2);
 
 		return new EtoolsProxyCommand(sbbCommand);
@@ -120,8 +120,8 @@ public class ConnectorBendpointEditPolicy
 		Connection connection = getConnection();
 		PointList newPoints = request.getPoints();
 
-		SetConnectorBendpointsCommand sbbCommand = new SetConnectorBendpointsCommand();
-		sbbCommand.setConnectorAdapter(new EObjectAdapter((Edge)getHost().getModel()));
+		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+		sbbCommand.setEdgeAdapter(new EObjectAdapter((Edge)getHost().getModel()));
 		
 		if (request.getSourceReference() != null && request.getTargetReference() != null) {
 			sbbCommand.setNewPointList(

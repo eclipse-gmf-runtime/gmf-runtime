@@ -20,6 +20,7 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
  * elements that can be created from an action bar.
  * 
  * @author cmahoney
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetTypesForPopupBarOperation}
  */
 public class GetTypesForActionBarOperation
 	implements IModelingAssistantOperation {
@@ -41,7 +42,7 @@ public class GetTypesForActionBarOperation
 	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantOperation#getId()
 	 */
 	public String getId() {
-		return GET_TYPES_FOR_ACTION_BAR_ID;
+		return GET_TYPES_FOR_POPUP_BAR_ID;
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class GetTypesForActionBarOperation
 	 */
 	public Object execute(IProvider provider) {
 		return ((IModelingAssistantProvider) provider)
-			.getTypesForActionBar(getHost());
+			.getTypesForPopupBar(getHost());
 	}
 
 	/**

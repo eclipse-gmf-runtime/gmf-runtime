@@ -54,9 +54,6 @@ public class LogicModelingAssistantProvider
 		logicShapeTypes.add(LogicSemanticType.XORGATE);
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSource(IAdaptable)
-	 */
 	public List getRelTypesOnSource(IAdaptable source) {
 		if (source.getAdapter(ITerminalOwnerEditPart.class) != null) {
 			return wireType;
@@ -64,10 +61,6 @@ public class LogicModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSourceAndTarget(IAdaptable,
-	 *      IAdaptable)
-	 */
 	public List getRelTypesOnSourceAndTarget(IAdaptable source,
 			IAdaptable target) {
 		if (source.getAdapter(ITerminalOwnerEditPart.class) != null
@@ -77,9 +70,6 @@ public class LogicModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnTarget(IAdaptable)
-	 */
 	public List getRelTypesOnTarget(IAdaptable target) {
 		if (target.getAdapter(ITerminalOwnerEditPart.class) != null) {
 			return wireType;
@@ -87,10 +77,6 @@ public class LogicModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForTarget(IAdaptable,
-	 *      IElementType)
-	 */
 	public List getTypesForTarget(IAdaptable source,
 			IElementType relationshipType) {
 		if (source.getAdapter(ITerminalOwnerEditPart.class) != null
@@ -100,12 +86,7 @@ public class LogicModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getTypesForActionBar(org.eclipse.core.runtime.IAdaptable)
-	 */
-	public List getTypesForActionBar(IAdaptable host) {
+	public List getTypesForPopupBar(IAdaptable host) {
 		Object ep = host.getAdapter(IGraphicalEditPart.class);
 		if (ep instanceof LogicShapeCompartmentEditPart
 			|| ep instanceof LogicFlowCompartmentEditPart) {

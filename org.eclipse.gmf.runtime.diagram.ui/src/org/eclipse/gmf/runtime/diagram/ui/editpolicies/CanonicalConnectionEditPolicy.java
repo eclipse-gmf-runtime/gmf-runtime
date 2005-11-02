@@ -39,13 +39,13 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ICanonicalShapeCompartmentLayout;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest.ConnectorViewDescriptor;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -54,7 +54,7 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * A specialized implementation of <code>CanonicalEditPolicy</code>.
- * This implementation will manage connectors owned by the semantic host.
+ * This implementation will manage connections owned by the semantic host.
  * 
  * @author mhanner / sshaw
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -89,7 +89,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * </pre>
 	 * 
 	 * @param relationship
-	 *            semantic connector
+	 *            semantic connection
 	 */
 	abstract protected EObject getSourceElement(EObject relationship);
 
@@ -104,11 +104,11 @@ public abstract class CanonicalConnectionEditPolicy
 	 * </pre>
 	 * 
 	 * @param relationship
-	 *            semantic connector
+	 *            semantic connection
 	 */
 	abstract protected EObject getTargetElement(EObject relationship);
 
-	/** Returns the diagram's connector views. */
+	/** Returns the diagram's connection views. */
 	private List getDiagramConnections() {
 		Diagram dView = ((View) host().getModel()).getDiagram();
 		return dView == null ? Collections.EMPTY_LIST
@@ -121,18 +121,18 @@ public abstract class CanonicalConnectionEditPolicy
 	}
 
 	/**
-	 * Return <tt>true</tt> if the connector should be drawn between the
+	 * Return <tt>true</tt> if the connection should be drawn between the
 	 * supplied endpoints; otherwise return <tt>false</tt>.
 	 * 
 	 * @param a
-	 *            connector's source element
+	 *            connection's source element
 	 * @param a
-	 *            connector's target element
+	 *            connection's target element
 	 * @return <tt>true</tt> if both parameters are not <tt>null</tt>;
 	 *         otherwise <tt>false</tt>
 	 */
 	protected boolean canCreateConnection(EditPart sep, EditPart tep,
-			EObject connector) {
+			EObject connection) {
 		if (sep != null && sep.isActive() && tep != null && tep.isActive()) {
 
 			View src = (View) sep.getAdapter(View.class);
@@ -259,15 +259,15 @@ public abstract class CanonicalConnectionEditPolicy
 	}
 
 	/**
-	 * Creates a connector view facde element for the supplied semantic element.
+	 * Creates a connection view facde element for the supplied semantic element.
 	 * An empty string is used as the default factory hint.
 	 * 
 	 * @param element
 	 *            the semantic element
 	 * @param the
-	 *            connectors source editpart
+	 *            connections source editpart
 	 * @param the
-	 *            connectors target editpart
+	 *            connections target editpart
 	 * @param index
 	 *            semantic elements position
 	 */
@@ -284,7 +284,7 @@ public abstract class CanonicalConnectionEditPolicy
 		String factoryHint = getDefaultFactoryHint();
 		IAdaptable elementAdapter = new CanonicalElementAdapter(connection,
 			factoryHint);
-		CreateConnectorViewRequest ccr = getCreateConnectionViewRequest(
+		CreateConnectionViewRequest ccr = getCreateConnectionViewRequest(
 			elementAdapter, getFactoryHint(elementAdapter, factoryHint), index);
 
 		//
@@ -295,14 +295,14 @@ public abstract class CanonicalConnectionEditPolicy
 		// TODO - remove hack.
 		/*
 		 * This is a temporary fix to the problem that if the source or the
-		 * targetedit part is persisted the set connector ends command will
+		 * targetedit part is persisted the set connection ends command will
 		 * modify the source and targets notational element by adding an edge
 		 * there. For Now if either the source or the target is persisted this
-		 * will create a persisted connector view.
+		 * will create a persisted connection view.
 		 */
 		if (!ViewUtil.isTransient(sView) || !ViewUtil.isTransient(tView)) {
-			CreateConnectorViewRequest.ConnectorViewDescriptor descriptor = ccr
-				.getConnectorViewDescriptor();
+			CreateConnectionViewRequest.ConnectionViewDescriptor descriptor = ccr
+				.getConnectionViewDescriptor();
 			descriptor.setPersisted(true);
 		}
 
@@ -328,7 +328,7 @@ public abstract class CanonicalConnectionEditPolicy
 			if (model == null) {
 				String eMsg = MessageFormat
 					.format(
-						PresentationResourceManager
+						DiagramResourceManager
 							.getI18NString("CanonicalEditPolicy.create.view.failed_ERROR_"),//$NON-NLS-1$
 						new Object[] {connection});
 				IllegalStateException ise = new IllegalStateException(eMsg);
@@ -344,17 +344,17 @@ public abstract class CanonicalConnectionEditPolicy
 	 * Calculates the <code>EditPart</code> that this connection element is
 	 * connected to at it's target.
 	 * 
-	 * @param connector
+	 * @param connection
 	 *            the <code>EObject</code> element that we are canonical
 	 *            trying to create a view for.
 	 * @return the <code>EditPart</code> that is the source of the
 	 *         <code>View</code> we want to create
 	 */
-	protected EditPart getTargetEditPartFor(EObject connector) {
+	protected EditPart getTargetEditPartFor(EObject connection) {
 		EObject tel;
 		EditPart tep;
-		tel = getTargetElement(connector);
-		tep = getEditPartFor(tel, connector);
+		tel = getTargetElement(connection);
+		tep = getEditPartFor(tel, connection);
 		return tep;
 	}
 
@@ -362,17 +362,17 @@ public abstract class CanonicalConnectionEditPolicy
 	 * Calculates the <code>EditPart</code> that this connection element is
 	 * connected to at it's source.
 	 * 
-	 * @param connector
+	 * @param connection
 	 *            the <code>EObject</code> element that we are canonical
 	 *            trying to create a view for.
 	 * @return the <code>EditPart</code> that is the target of the
 	 *         <code>View</code> we want to create
 	 */
-	protected EditPart getSourceEditPartFor(EObject connector) {
+	protected EditPart getSourceEditPartFor(EObject connection) {
 		EObject sel;
 		EditPart sep;
-		sel = getSourceElement(connector);
-		sep = getEditPartFor(sel, connector);
+		sel = getSourceElement(connection);
+		sep = getEditPartFor(sel, connection);
 		return sep;
 	}
 
@@ -386,8 +386,8 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return Command to create the views in the request
 	 */
 	protected Command getCreateViewCommand(CreateRequest request) {
-		if (request instanceof CreateConnectorViewRequest) {
-			CreateConnectorViewRequest ccr = (CreateConnectorViewRequest) request;
+		if (request instanceof CreateConnectionViewRequest) {
+			CreateConnectionViewRequest ccr = (CreateConnectionViewRequest) request;
 			EditPart ep = ccr.getTargetEditPart() == null ? ccr
 				.getSourceEditPart()
 				: ccr.getTargetEditPart();
@@ -425,7 +425,7 @@ public abstract class CanonicalConnectionEditPolicy
 	}
 
 	/**
-	 * Return a create connector view request.
+	 * Return a create connection view request.
 	 * 
 	 * @param elementAdapter
 	 *            semantic element
@@ -437,14 +437,14 @@ public abstract class CanonicalConnectionEditPolicy
 	 *            index
 	 * @return a create <i>non-persisted </i> view request
 	 */
-	private CreateConnectorViewRequest getCreateConnectionViewRequest(
+	private CreateConnectionViewRequest getCreateConnectionViewRequest(
 			IAdaptable elementAdapter, String hint, int index) {
-		return new CreateConnectorViewRequest(getConnectionViewDescriptor(
+		return new CreateConnectionViewRequest(getConnectionViewDescriptor(
 			elementAdapter, hint, index));
 	}
 
 	/**
-	 * Return a connector view descriptor.
+	 * Return a connection view descriptor.
 	 * 
 	 * @param elementAdapter
 	 *            semantic element
@@ -452,26 +452,26 @@ public abstract class CanonicalConnectionEditPolicy
 	 *            factory hint
 	 * @param index
 	 *            index
-	 * @return a create <i>non-persisted </i> connector view descriptor
+	 * @return a create <i>non-persisted </i> connection view descriptor
 	 */
-	private ConnectorViewDescriptor getConnectionViewDescriptor(
+	private ConnectionViewDescriptor getConnectionViewDescriptor(
 			IAdaptable elementAdapter, String hint, int index) {
-		return new ConnectorViewDescriptor(elementAdapter, hint, index, false,
+		return new ConnectionViewDescriptor(elementAdapter, hint, index, false,
 			((IGraphicalEditPart) getHost()).getDiagramPreferencesHint());
 	}
 
 	/**
-	 * Updates the set of connector views so that it is in sync with the
-	 * semantic connectors. This method is called in response to notification
+	 * Updates the set of connection views so that it is in sync with the
+	 * semantic connections. This method is called in response to notification
 	 * from the model.
 	 * <P>
-	 * The update is performed by comparing the exising connector views with the
-	 * set of semantic connectors returned from {@link #getSemanticConnectors()}.
-	 * Views whose semantic connector no longer exists or whose semantic
-	 * connector ends are <tt>null</tt> are
+	 * The update is performed by comparing the exising connection views with the
+	 * set of semantic connections returned from {@link #getSemanticConnectors()}.
+	 * Views whose semantic connection no longer exists or whose semantic
+	 * connection ends are <tt>null</tt> are
 	 * {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#deleteViews(Iterator) removed}.
 	 * New semantic children have their View
-	 * {@link  #createConnectorView(IElement, EditPart, EditPart, int, String)
+	 * {@link  #createEdge(IElement, EditPart, EditPart, int, String)
 	 * created}. Subclasses must override <code>getSemanticConnectors()</code>.
 	 * <P>
 	 * This refresh routine will not reorder the view list to ensure both it and
@@ -488,7 +488,7 @@ public abstract class CanonicalConnectionEditPolicy
 		Edge viewChild;
 		EObject semanticChild;
 		//
-		// current connector views
+		// current connection views
 		Collection viewChildren = getConnectionViews();
 		Collection semanticChildren = new HashSet();
 		semanticChildren.addAll(getSemanticConnectionsList());
@@ -513,7 +513,7 @@ public abstract class CanonicalConnectionEditPolicy
 
 		makeViewsMutable(viewDescriptors);
 
-		// now refresh all the connector containers to update the editparts
+		// now refresh all the connection containers to update the editparts
 		HashSet ends = new HashSet();
 		ListIterator li = viewDescriptors.listIterator();
 		while (li.hasNext()) {
@@ -585,7 +585,7 @@ public abstract class CanonicalConnectionEditPolicy
 	}
 
 	/**
-	 * Return the list of connectors between elements contained within the host
+	 * Return the list of connections between elements contained within the host
 	 * compartment. Subclasses should override
 	 * {@link #shouldIncludeConnection(Edge, List)} to modify the returned
 	 * collection's contents.
@@ -595,12 +595,12 @@ public abstract class CanonicalConnectionEditPolicy
 	protected Collection getConnectionViews() {
 		Collection retval = new HashSet();
 		List children = getViewChildren();
-		Iterator connectors = getDiagramConnections().iterator();
-		while (connectors.hasNext()) {
-			Edge connector = (Edge) connectors.next();
-			if (connector.getSource() != null && connector.getTarget() != null
-				&& shouldIncludeConnection(connector, children)) {
-				retval.add(connector);
+		Iterator connections = getDiagramConnections().iterator();
+		while (connections.hasNext()) {
+			Edge connection = (Edge) connections.next();
+			if (connection.getSource() != null && connection.getTarget() != null
+				&& shouldIncludeConnection(connection, children)) {
+				retval.add(connection);
 			}
 		}
 		return retval;
@@ -608,8 +608,8 @@ public abstract class CanonicalConnectionEditPolicy
 
 	/**
 	 * Called by {@link #getConnectionViews()} to determine if the underlying
-	 * shape compartment is responsible for the supplied connector. By default,
-	 * the following conditition must be met for the connector to be accepted:
+	 * shape compartment is responsible for the supplied connection. By default,
+	 * the following conditition must be met for the connection to be accepted:
 	 * <UL>
 	 * <LI> its source must not be null.
 	 * <LI> its target must not be null.
@@ -618,16 +618,16 @@ public abstract class CanonicalConnectionEditPolicy
 	 * <LI> the shape compartment contains the target (or the target's container
 	 * view). </LI>
 	 * 
-	 * @param connector
-	 *            the connector view
+	 * @param connection
+	 *            the connection view
 	 * @param children
 	 *            underlying shape compartment's children.
-	 * @return <tt>false</tt> if supplied connector should be ignored;
+	 * @return <tt>false</tt> if supplied connection should be ignored;
 	 *         otherwise <tt>true</tt>.
 	 */
-	protected boolean shouldIncludeConnection(Edge connector, List children) {
-		View src = connector.getSource();
-		View target = connector.getTarget();
+	protected boolean shouldIncludeConnection(Edge connection, List children) {
+		View src = connection.getSource();
+		View target = connection.getTarget();
 		//
 		// testing the src/tgt containerview in case the src/tgt are
 		// some type of gate view.

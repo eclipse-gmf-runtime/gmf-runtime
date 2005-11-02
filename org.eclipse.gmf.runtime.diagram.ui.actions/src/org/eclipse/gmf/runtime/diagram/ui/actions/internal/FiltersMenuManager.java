@@ -11,11 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.jface.action.Action;
 
 /**
  * The filters menu manager. It contains all filters-related actions.
@@ -30,8 +29,8 @@ public class FiltersMenuManager extends ActionMenuManager {
 	 */
 	private static class FiltersMenuAction extends Action {
 		public FiltersMenuAction() {
-			setText(Messages.getString("FiltersMenuManager.Filters.ActionLabelText")); //$NON-NLS-1$
-			setToolTipText(Messages.getString("FiltersMenuManager.Filters.ActionToolTipText")); //$NON-NLS-1$
+			setText(DiagramActionsResourceManager.getI18NString("FiltersMenuManager.Filters.ActionLabelText")); //$NON-NLS-1$
+			setToolTipText(DiagramActionsResourceManager.getI18NString("FiltersMenuManager.Filters.ActionToolTipText")); //$NON-NLS-1$
 		}
 	}
 

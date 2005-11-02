@@ -308,7 +308,7 @@ public class PolylineConnectionEx extends PolylineConnection {
     
     /**
      * Calculate the line segment index for a given point.  This is important
-     * for the drag tracker that add's bendpoints on a connector.
+     * for the drag tracker that add's bendpoints on a connection.
      * 
      * @param x the x value in relative coordinates
      * @param y the y value in relative coordinates

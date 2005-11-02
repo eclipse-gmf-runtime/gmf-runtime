@@ -33,12 +33,11 @@ import org.eclipse.swt.widgets.Text;
 
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 
 /**
- * Presentation Ruler & Grid preference page.
+ * Diagram Ruler & Grid preference page.
  * 
  * @author jschofie
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -124,26 +123,26 @@ public class RulerGridPreferencePage
 
 	private int oldUnits = -1;
 
-	private String RULER_GROUP_LABEL = PresentationResourceManager
+	private String RULER_GROUP_LABEL = DiagramResourceManager
 	.getI18NString("GriRulerPreferencePage.rulerGroup.label"); //$NON-NLS-1$
-	private String SHOW_RULERS_LABEL = PresentationResourceManager
+	private String SHOW_RULERS_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.showRulers.label"); //$NON-NLS-1$
-	private String RULER_UNITS_LABEL = PresentationResourceManager
+	private String RULER_UNITS_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.rulerUnits.label"); //$NON-NLS-1$
-	private String RULER_UNITS_IN_LABEL = PresentationResourceManager
+	private String RULER_UNITS_IN_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.rulerUnits.inch.label"); //$NON-NLS-1$
-	private String RULER_UNITS_CM_LABEL = PresentationResourceManager
+	private String RULER_UNITS_CM_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.rulerUnits.cm.label"); //$NON-NLS-1$
-	private String RULER_UNITS_PIXEL_LABEL = PresentationResourceManager
+	private String RULER_UNITS_PIXEL_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.rulerUnits.pixel.label"); //$NON-NLS-1$
 
-	private String GRID_GROUP_LABEL = PresentationResourceManager
+	private String GRID_GROUP_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.gridGroup.label"); //$NON-NLS-1$
-	private String SHOW_GRID_LABEL = PresentationResourceManager
+	private String SHOW_GRID_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.showGrid.label"); //$NON-NLS-1$
-	private String SNAP_TO_GRID_LABEL = PresentationResourceManager
+	private String SNAP_TO_GRID_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.snapToGrid.label"); //$NON-NLS-1$
-	private String GRID_SPACING_LABEL = PresentationResourceManager
+	private String GRID_SPACING_LABEL = DiagramResourceManager
 	.getI18NString("GridRulerPreferencePage.gridSpacing.label"); //$NON-NLS-1$
 	
 	// Ruler Field Editors

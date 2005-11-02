@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.core.view.factories.ViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -40,7 +40,7 @@ abstract public class AbstractViewFactory implements ViewFactory {
 
 	/**
 	 * The hint used to find the appropriate preference store from which general
-	 * diagramming preference values for properties of shapes, connectors, and
+	 * diagramming preference values for properties of shapes, connections, and
 	 * diagrams can be retrieved. This hint is mapped to a preference store in
 	 * the {@link DiagramPreferencesRegistry}.
 	 */

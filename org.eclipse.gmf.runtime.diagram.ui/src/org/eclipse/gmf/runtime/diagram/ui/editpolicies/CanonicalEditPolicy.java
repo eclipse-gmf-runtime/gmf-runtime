@@ -44,14 +44,14 @@ import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
@@ -376,7 +376,7 @@ implements NotificationListener {
 		if ( !isEnabled() ) {
 			return false;
 		}
-		final CompoundCommand cc = new CompoundCommand(PresentationResourceManager.getI18NString("DeleteCommand.Label"));//$NON-NLS-1$
+		final CompoundCommand cc = new CompoundCommand(DiagramResourceManager.getI18NString("DeleteCommand.Label"));//$NON-NLS-1$
 		while (views.hasNext()) {
 			View view = (View)views.next();
 			if ( shouldDeleteView(view) ) {
@@ -502,7 +502,7 @@ implements NotificationListener {
 		Command cmd = host().getCommand(request);
 		if (cmd == null) {
 			assert request instanceof CreateViewRequest;
-			CompositeCommand cc = new CompositeCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+			CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
 			Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
 
 			while (descriptors.hasNext()) {
@@ -731,7 +731,7 @@ implements NotificationListener {
 				_listenerFilters = new HashMap();
 			
 			if ( !_listenerFilters.containsKey(filterId)) {
-				PresentationListener.getInstance().addNotificationListener(element,listener);
+				DiagramEventBroker.getInstance().addNotificationListener(element,listener);
 				_listenerFilters.put(filterId, new Object[] { element, listener });
 				return true;
 			}
@@ -764,7 +764,7 @@ implements NotificationListener {
 				_listenerFilters = new HashMap();
 			
 			if ( !_listenerFilters.containsKey(filterId)) {
-				PresentationListener.getInstance().addNotificationListener(element,feature,listener);
+				DiagramEventBroker.getInstance().addNotificationListener(element,feature,listener);
 				_listenerFilters.put(filterId, new Object[] { element,feature, listener });
 				return true;
 			}
@@ -783,10 +783,10 @@ implements NotificationListener {
 		if (objects == null)
 			return;
 		if (objects.length>2){
-			PresentationListener.getInstance().removeNotificationListener(
+			DiagramEventBroker.getInstance().removeNotificationListener(
 				(EObject)objects[0],(EStructuralFeature)objects[1],(NotificationListener) objects[2]);
 		}else {
-			PresentationListener.getInstance().removeNotificationListener(
+			DiagramEventBroker.getInstance().removeNotificationListener(
 					(EObject)objects[0],(NotificationListener) objects[1]);
 		}
 	}
@@ -918,7 +918,7 @@ implements NotificationListener {
 			}
 		}
 		catch ( Throwable t ) {
-			String eMsg = PresentationResourceManager	.getI18NString("CanonicalEditPolicy.refresh.failed_ERROR_");//$NON-NLS-1$
+			String eMsg = DiagramResourceManager	.getI18NString("CanonicalEditPolicy.refresh.failed_ERROR_");//$NON-NLS-1$
 			Log.error(DiagramUIPlugin.getInstance(), IStatus.WARNING,
 					eMsg, t);
 		}
@@ -1051,7 +1051,7 @@ implements NotificationListener {
 				if (createdView == null) {
 					String eMsg =
 						MessageFormat.format(
-							PresentationResourceManager.getI18NString(
+							DiagramResourceManager.getI18NString(
 							"CanonicalEditPolicy.create.view.failed_ERROR_"),//$NON-NLS-1$
 							new Object[] { semanticChildren.get(i)});
 					IllegalStateException ise =

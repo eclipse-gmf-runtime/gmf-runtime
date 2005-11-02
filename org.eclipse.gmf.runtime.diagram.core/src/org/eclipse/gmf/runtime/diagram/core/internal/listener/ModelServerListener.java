@@ -46,6 +46,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
  * 
  * @author mhanner, mmostafa
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.core.*
+ * @deprecated Merged into {@link org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker}
  *
  */
 public abstract class ModelServerListener

@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHan
  * 
  * @author Vishy Ramaswamy
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
+* @deprecated use {@link org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider}
  */
 public final class PresentationGlobalActionHandlerProvider
 		extends

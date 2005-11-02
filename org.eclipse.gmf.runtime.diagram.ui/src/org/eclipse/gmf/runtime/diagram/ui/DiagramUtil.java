@@ -109,7 +109,7 @@ public class DiagramUtil {
 		Assert.isNotNull(diagram, "The diagram is null"); //$NON-NLS-1$
 		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
 		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
-		View view = ViewService.getInstance().createConnectorView(viewModel, diagram, viewType, ViewUtil.APPEND, preferencesHint);
+		View view = ViewService.getInstance().createEdge(viewModel, diagram, viewType, ViewUtil.APPEND, preferencesHint);
 		return (view != null) ? (Edge) view : null;
 	}
 	

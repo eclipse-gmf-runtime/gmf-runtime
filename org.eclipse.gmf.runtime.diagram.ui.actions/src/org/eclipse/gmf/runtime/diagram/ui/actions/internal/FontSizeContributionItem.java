@@ -11,6 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -19,12 +24,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
 
 /**
  * Drop down combo box conbtribution item that changes font's size
@@ -47,8 +46,8 @@ public class FontSizeContributionItem
 	 * @see org.eclipse.gmf.runtime.diagram.ui.ui.actions.ActionContribution#ActionContribution(IEditorPart, String)
 	 */
 	public FontSizeContributionItem(IWorkbenchPage workbenchPage) {
-		super(workbenchPage, ActionIds.CUSTOM_FONT_SIZE, Properties.ID_FONTSIZE, Messages.getString("PropertyDescriptorFactory.FontSize")); //$NON-NLS-1$
-		setLabel(Messages.getString("FontSizeContributionItem.tooltip")); //$NON-NLS-1$
+		super(workbenchPage, ActionIds.CUSTOM_FONT_SIZE, Properties.ID_FONTSIZE, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.FontSize")); //$NON-NLS-1$
+		setLabel(DiagramActionsResourceManager.getI18NString("FontSizeContributionItem.tooltip")); //$NON-NLS-1$
 	}
 
 	/**

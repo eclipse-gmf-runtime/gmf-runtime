@@ -22,7 +22,7 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartActivator;
-import org.eclipse.gmf.runtime.diagram.ui.actions.AbstractPresentationModelActionDelegate;
+import org.eclipse.gmf.runtime.diagram.ui.actions.AbstractDiagramModelActionDelegate;
 
 /**
  * Action delegate which handles showing one or more items selected in a
@@ -30,9 +30,10 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.AbstractPresentationModelActio
  * 
  * @author ldamus
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
+ * @deprecated To be deleted.  Not being used.
  */
 public class ShowInViewActionDelegate
-	extends AbstractPresentationModelActionDelegate
+	extends AbstractDiagramModelActionDelegate
 	implements IObjectActionDelegate {
 
 	/**

@@ -33,13 +33,13 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelNonResizableEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableLabelEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.VisibilityComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.LabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.ResizableLabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
@@ -209,7 +209,7 @@ public class LabelEditPart extends TopGraphicEditPart {
 		super.createDefaultEditPolicies();
 		installEditPolicy(
 			EditPolicy.PRIMARY_DRAG_ROLE,
-			new LabelNonResizableEditPolicy());
+			new NonResizableLabelEditPolicy());
 		installEditPolicy(
 			EditPolicy.COMPONENT_ROLE,
 			new VisibilityComponentEditPolicy());
@@ -260,7 +260,7 @@ public class LabelEditPart extends TopGraphicEditPart {
 			refreshBounds();
 		}else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature)){
 			Integer c = (Integer) notification.getNewValue();
-			setForegroundColor(PresentationResourceManager.getInstance().getColor(c));
+			setForegroundColor(DiagramResourceManager.getInstance().getColor(c));
 		}
 		else
 			super.handleNotificationEvent(notification);
@@ -311,12 +311,12 @@ public class LabelEditPart extends TopGraphicEditPart {
 	/**
 	 * Returns an object which is an instance of the given class
 	 * associated with this object.  If there are specific class types
-	 * that should be delegated to the connector editpart they must
+	 * that should be delegated to the connection editpart they must
 	 * be explicitely handled here (e.g. <code>IPropertySource</code>
-	 * is delegated to the connector editpart so that the property pages
-	 * reflect the connector when the label is selected).  Otherwise, 
+	 * is delegated to the connection editpart so that the property pages
+	 * reflect the connection when the label is selected).  Otherwise, 
 	 * the adapter from this editpart is first retrieved; if this is 
-	 * null, then the adapter from the connector editpart is returned.
+	 * null, then the adapter from the connection editpart is returned.
 	 * This means if a client asks for <code>IView</code> the label view
 	 * will be returned, but if a client asks for <code>IPrimaryView</code>
 	 * the owner view will be returned.
@@ -364,7 +364,7 @@ public class LabelEditPart extends TopGraphicEditPart {
 	}
 	
 	/**
-	 * Calculates a point located at a percentage of the connector 
+	 * Calculates a point located at a percentage of the connection 
 	 * @param percent
 	 * @return the point
 	 */

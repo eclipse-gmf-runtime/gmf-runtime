@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
@@ -39,7 +39,7 @@ public class CreateGuideCommand extends AbstractModelCommand {
 	 * @param position the position that the guide will initially be created at
 	 */
 	public CreateGuideCommand(DiagramRuler parent, int position) {
-		super(PresentationResourceManager.getInstance().getString( "Command.createGuide" ), //$NON-NLS-1$
+		super(DiagramResourceManager.getInstance().getString( "Command.createGuide" ), //$NON-NLS-1$
 			parent);
 		this.parent = parent;
 		this.position = position;

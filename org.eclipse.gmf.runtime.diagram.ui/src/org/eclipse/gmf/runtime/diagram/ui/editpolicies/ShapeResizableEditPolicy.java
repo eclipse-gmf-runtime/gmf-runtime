@@ -40,7 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
@@ -53,6 +53,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 2- It handles the autosize and deferred change bounds request
  *  
  * @author melaasar
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy}
  */
 public class ShapeResizableEditPolicy extends ResizableEditPolicyEx {
 
@@ -98,7 +99,7 @@ public class ShapeResizableEditPolicy extends ResizableEditPolicyEx {
 	protected Command getAutoSizeCommand(Request request) {
  		ICommand resizeCommand = 
  			new SetBoundsCommand(
- 				PresentationResourceManager.getI18NString("SetAutoSizeCommand.Label"),//$NON-NLS-1$
+ 				DiagramResourceManager.getI18NString("SetAutoSizeCommand.Label"),//$NON-NLS-1$
  				new EObjectAdapter((View) getHost().getModel()),
 				new Dimension(-1, -1)); 
 		return new EtoolsProxyCommand(resizeCommand);
@@ -139,7 +140,7 @@ public class ShapeResizableEditPolicy extends ResizableEditPolicyEx {
 				return newOKCommandResult();
 			}
 		}
-		SetDeferredPropertyCommand cmd = new SetDeferredPropertyCommand(PresentationResourceManager.getI18NString("ShapeResizableEditPolicy.MoveDeferredCommand.label"),new EObjectAdapter((View)getHost().getModel()), request.getLocationAdapter()); //$NON-NLS-1$
+		SetDeferredPropertyCommand cmd = new SetDeferredPropertyCommand(DiagramResourceManager.getI18NString("ShapeResizableEditPolicy.MoveDeferredCommand.label"),new EObjectAdapter((View)getHost().getModel()), request.getLocationAdapter()); //$NON-NLS-1$
 		return new EtoolsProxyCommand(cmd);
 	}
 

@@ -36,7 +36,7 @@ public abstract class DiagramPreferenceInitializer
 		DiagramsPreferencePage.initDefaults(store);
 		RulerGridPreferencePage.initDefaults(store);
 		AppearancePreferencePage.initDefaults(store);
-		ConnectorsPreferencePage.initDefaults(store);
+		ConnectionsPreferencePage.initDefaults(store);
 		PrintingPreferencePage.initDefaults(store);
 
 	}

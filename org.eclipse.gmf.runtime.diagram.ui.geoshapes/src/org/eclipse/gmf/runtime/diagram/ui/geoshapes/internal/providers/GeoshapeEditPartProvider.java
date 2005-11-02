@@ -56,9 +56,9 @@ public class GeoshapeEditPartProvider extends AbstractEditPartProvider {
 	}
 	
 	/** list of supported connector editparts. */
-	private Map connectorMap = new HashMap();
+	private Map connectionMap = new HashMap();
 	{
-		connectorMap.put( GeoshapeConstants.TOOL_LINE, LineEditPart.class);
+		connectionMap.put( GeoshapeConstants.TOOL_LINE, LineEditPart.class);
 	}
 	
 	
@@ -79,10 +79,10 @@ public class GeoshapeEditPartProvider extends AbstractEditPartProvider {
 	 * Set the editpart class to the editpart mapped to the supplied view's semantic hint.
 	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider#setConnectorEditPartClass(org.eclipse.gmf.runtime.diagram.ui.internal.view.IConnectorView)
 	 */
-	protected Class getConnectorEditPartClass(View view) {
+	protected Class getEdgeEditPartClass(View view) {
 		String semanticHint = view.getType();
 		if(semanticHint!=null && semanticHint.length()>0)
-			return ((Class)connectorMap.get(semanticHint));
+			return ((Class)connectionMap.get(semanticHint));
 		return null;
 	}
 }

@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
  * Sort/Filter dialog.  The OK button applies all changes from each 
@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
 public class SortFilterDialog extends PreferenceDialog {
 	
 	/** dialog title prefix */
-	private final String title = PresentationResourceManager.getInstance().getString("SortFilterDialog.title");//$NON-NLS-1$
+	private final String title = DiagramResourceManager.getInstance().getString("SortFilterDialog.title");//$NON-NLS-1$
 	
 	/**
 	 * CollectionEditorDialog constructor

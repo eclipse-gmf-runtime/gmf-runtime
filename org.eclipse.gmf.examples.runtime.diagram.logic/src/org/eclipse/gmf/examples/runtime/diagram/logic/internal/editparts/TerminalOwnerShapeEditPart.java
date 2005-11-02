@@ -12,7 +12,7 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.TerminalCanonicalEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GatedShapeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Abstract editpart class for logic shapes
  */
 public abstract class TerminalOwnerShapeEditPart 
-	extends GatedShapeEditPart 
+	extends BorderedShapeEditPart 
 	implements ITerminalOwnerEditPart
 {
 		

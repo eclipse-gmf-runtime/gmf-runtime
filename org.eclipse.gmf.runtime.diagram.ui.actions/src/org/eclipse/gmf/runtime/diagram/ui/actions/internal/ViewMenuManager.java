@@ -12,11 +12,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.jface.action.Action;
 
 /**
  * The View Menu Manager contains all View related actions
@@ -34,8 +33,8 @@ public class ViewMenuManager extends ActionMenuManager {
 	 */
 	private static class ViewMenuAction extends Action {
 		public ViewMenuAction() {
-			setText(Messages.getString( MENU_LABEL ));
-			setToolTipText(Messages.getString( MENU_TOOLTIP ));
+			setText(DiagramActionsResourceManager.getI18NString( MENU_LABEL ));
+			setToolTipText(DiagramActionsResourceManager.getI18NString( MENU_TOOLTIP ));
 		}
 	}
 

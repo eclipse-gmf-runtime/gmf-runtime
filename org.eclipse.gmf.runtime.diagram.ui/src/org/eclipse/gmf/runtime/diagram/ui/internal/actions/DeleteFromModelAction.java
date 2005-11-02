@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -73,8 +73,8 @@ public class DeleteFromModelAction
 	public void init() {
 		super.init();
 		setId(ActionIds.ACTION_DELETE_FROM_MODEL);
-		setText(PresentationResourceManager.getI18NString("DiagramEditor.Delete_from_Model"));//$NON-NLS-1$
-		setToolTipText(PresentationResourceManager.getI18NString("DiagramEditor.Delete_from_ModelToolTip"));//$NON-NLS-1$
+		setText(DiagramResourceManager.getI18NString("DiagramEditor.Delete_from_Model"));//$NON-NLS-1$
+		setToolTipText(DiagramResourceManager.getI18NString("DiagramEditor.Delete_from_ModelToolTip"));//$NON-NLS-1$
 		ISharedImages workbenchImages = PlatformUI.getWorkbench().getSharedImages();
 		setHoverImageDescriptor(
 			workbenchImages.getImageDescriptor(
@@ -89,7 +89,7 @@ public class DeleteFromModelAction
 	
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#getCommand(org.eclipse.gef.Request)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getCommand(org.eclipse.gef.Request)
 	 */
 	protected Command getCommand(Request request) {	
 		List operationSet = getOperationSet();

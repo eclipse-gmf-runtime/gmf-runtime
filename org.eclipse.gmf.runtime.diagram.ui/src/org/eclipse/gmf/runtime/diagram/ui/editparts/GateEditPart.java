@@ -22,13 +22,13 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectorLabelsEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionLabelsEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GateNonResizableEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GatedFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemContainerFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -41,6 +41,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author tisrar
  * @author jbruck
+ * @deprecated Renamed BorderItemEditPart
  */
 public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShapeEditPart eventually
 
@@ -55,13 +56,13 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 
 	/**
 	 * Refresh the bounds using a <tt>locator</tt> if this editpart's figure
-	 * is a {@link GateFigure}instance; otherwise, the <tt>super</tt>
+	 * is a {@link BorderItemFigure}instance; otherwise, the <tt>super</tt>
 	 * implementation is used. Locators are used since a <tt>gate element</tt>
 	 * 's position and extent properties are not persisted.
 	 */
 	protected void refreshBounds() {
-		if ( getFigure() instanceof GateFigure ) {
-		 	GateFigure.GateLocator locator = (GateFigure.GateLocator) getLocator();
+		if ( getFigure() instanceof BorderItemFigure ) {
+		 	BorderItemFigure.BorderItemLocator locator = (BorderItemFigure.BorderItemLocator) getLocator();
 			if (locator != null) {
 				int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
 		    	int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
@@ -79,7 +80,7 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	
 	/** Create a gate figure. */
 	protected NodeFigure createNodeFigure() {
-		return new GateFigure(DrawConstant.EAST);
+		return new BorderItemFigure(DrawConstant.EAST);
 	}
 	
 	
@@ -88,7 +89,7 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	 * @return the created <code>NodeFigure</code>
 	 */
 	protected NodeFigure createMainFigure()	{
-		return new GateFigure(DrawConstant.EAST);
+		return new BorderItemFigure(DrawConstant.EAST);
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	 */
 	
 	public void setLocator(Locator locator) {
-		((GateFigure) getFigure()).setLocator(locator);
+		((BorderItemFigure) getFigure()).setLocator(locator);
 	}
 	
 
@@ -109,7 +110,7 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	 * @return the <code>Locator</code>
 	 */
 	public Locator getLocator() {
-		return ((GateFigure) getFigure()).getLocator();
+		return ((BorderItemFigure) getFigure()).getLocator();
 	}
 	
 
@@ -128,8 +129,8 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	 * @return the <code>IFigure</code>
 	 */
 	public final IFigure getMainFigure() {
-		if(getFigure() instanceof GatedPaneFigure )	{
-			return ((GatedPaneFigure)getFigure()).getElementPane();
+		if(getFigure() instanceof BorderedFigure )	{
+			return ((BorderedFigure)getFigure()).getElementPane();
 		}
 		return getFigure();
 	}
@@ -137,16 +138,16 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 		
 	/**
 	 * gets this editpart's gated pane figure.
-	 * @return the <codE>GatedPaneFigure</code>
+	 * @return the <codE>BorderedFigure</code>
 	 */
-	protected final GatedPaneFigure getGatedPaneFigure() {
-		return (GatedPaneFigure)getFigure();
+	protected final BorderedFigure getGatedPaneFigure() {
+		return (BorderedFigure)getFigure();
 	}
 	
 		
 	protected IFigure getContentPaneFor(IGraphicalEditPart editPart) {
-		if (editPart instanceof GateEditPart) {
-			return getGatedPaneFigure().getGatePane();
+		if (editPart instanceof BorderItemEditPart) {
+			return getGatedPaneFigure().getBorderItemContainer();
 		} else {
 			return getMainFigure();
 		}
@@ -156,19 +157,19 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	
 	/**
 	 * Adds the supplied child to the editpart's gate figure if it is 
-	 * an instanceof {@link GateEditPart} and its figure is an instanceof {@link GateFigure}.
+	 * an instanceof {@link BorderItemEditPart} and its figure is an instanceof {@link BorderItemFigure}.
 	 */
 	
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		
 		IFigure childFigure = ((GraphicalEditPart)childEditPart).getFigure();
-		if ( childEditPart instanceof GateEditPart && childFigure instanceof GateFigure ) {
-			GateFigure gateFigure = (GateFigure) childFigure; 
-			GatedFigure gatedFigure = (GatedFigure) getContentPaneFor((IGraphicalEditPart) childEditPart);
+		if ( childEditPart instanceof BorderItemEditPart && childFigure instanceof BorderItemFigure ) {
+			BorderItemFigure gateFigure = (BorderItemFigure) childFigure; 
+			BorderItemContainerFigure gatedFigure = (BorderItemContainerFigure) getContentPaneFor((IGraphicalEditPart) childEditPart);
 			if (gateFigure.getLocator() != null) {
-				gatedFigure.addGate(gateFigure, gateFigure.getLocator());
+				gatedFigure.addBorderItem(gateFigure, gateFigure.getLocator());
 			} else {
-				gatedFigure.addGate(gateFigure, new GateFigure.GateLocator(gateFigure, getMainFigure()));	
+				gatedFigure.addBorderItem(gateFigure, new BorderItemFigure.BorderItemLocator(gateFigure, getMainFigure()));	
 			}
 		}
 		else {
@@ -184,10 +185,10 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	 */
 	protected void removeChildVisual(EditPart child) {
 		IFigure childFigure = ((GraphicalEditPart)child).getFigure();
-		if ( child instanceof GateEditPart && childFigure instanceof GateFigure ) {
-			GateFigure gateFigure = (GateFigure)childFigure;
-			GatedFigure gatedFigure = (GatedFigure) getContentPaneFor((IGraphicalEditPart) child);
-			gatedFigure.removeGate(gateFigure);
+		if ( child instanceof BorderItemEditPart && childFigure instanceof BorderItemFigure ) {
+			BorderItemFigure gateFigure = (BorderItemFigure)childFigure;
+			BorderItemContainerFigure gatedFigure = (BorderItemContainerFigure) getContentPaneFor((IGraphicalEditPart) child);
+			gatedFigure.removeBorderItem(gateFigure);
 		}
 		else {
 			IFigure fig = getContentPaneFor((IGraphicalEditPart) child);
@@ -198,12 +199,12 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	/** Include the gates's parent's parent to the list. */
 	Collection disableCanonicalFor( final Request request ) {
 		Collection disabled = super.disableCanonicalFor(request);
-		if ((request instanceof CreateConnectorViewRequest) ) {
-			CreateConnectorViewRequest ccvr = (CreateConnectorViewRequest)request;
-			if ( ccvr.getSourceEditPart() instanceof GateEditPart ) {
+		if ((request instanceof CreateConnectionViewRequest) ) {
+			CreateConnectionViewRequest ccvr = (CreateConnectionViewRequest)request;
+			if ( ccvr.getSourceEditPart() instanceof BorderItemEditPart ) {
 				disabled.add( ccvr.getSourceEditPart().getParent().getParent() );
 			}
-			if ( ccvr.getTargetEditPart() instanceof GateEditPart ) {
+			if ( ccvr.getTargetEditPart() instanceof BorderItemEditPart ) {
 				disabled.add( ccvr.getTargetEditPart().getParent().getParent() );
 			}
 		}
@@ -224,7 +225,7 @@ public class GateEditPart extends ShapeNodeEditPart {  // inherit from GatedShap
 	 */
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.CONNECTOR_LABELS,	new ConnectorLabelsEditPolicy()); // enable the +/- for floating labels.
+		installEditPolicy(EditPolicyRoles.CONNECTION_LABELS_ROLE,	new ConnectionLabelsEditPolicy()); // enable the +/- for floating labels.
 
 	}
 	

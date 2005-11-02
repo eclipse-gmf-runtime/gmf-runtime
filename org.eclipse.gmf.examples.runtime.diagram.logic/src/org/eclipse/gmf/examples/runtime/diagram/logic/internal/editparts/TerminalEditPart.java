@@ -21,8 +21,8 @@ import org.eclipse.gef.Request;
 
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GateEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author qili
  */
-public class TerminalEditPart extends GateEditPart {
+public class TerminalEditPart extends BorderItemEditPart {
 	
 	/**
 	 * @param view
@@ -70,12 +70,12 @@ public class TerminalEditPart extends GateEditPart {
 	public void activate() {
 		super.activate();
 		Insets parentInset = new Insets(0);
-		IFigure fig =  ((GateFigure)getFigure()).getBoundaryFigure();
+		IFigure fig =  ((BorderItemFigure)getFigure()).getBoundaryFigure();
 		if( fig != null ){
 			parentInset = fig.getInsets();
 		}
 		Rectangle rBounds = ((NodeFigure) getFigure()).getHandleBounds();
-		((GateFigure) getFigure()).setGateOffset(new Dimension(rBounds.width
+		((BorderItemFigure) getFigure()).setBorderItemOffset(new Dimension(rBounds.width
 			/ 2 + parentInset.getWidth() / 2, rBounds.height / 2 + parentInset.getHeight() / 2));
 	}
 }

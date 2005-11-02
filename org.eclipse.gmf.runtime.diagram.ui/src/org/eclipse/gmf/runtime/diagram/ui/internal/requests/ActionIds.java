@@ -15,10 +15,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
 
 
 /**
- * A list of constants defining the presentation contribution item ids
- */
-/*
- * @canBeSeenBy %level1
+ * A list of constants defining the diagram contribution item ids
  */
 public interface ActionIds {
 
@@ -37,7 +34,7 @@ public interface ActionIds {
 	public final String MENU_ALIGN = "alignMenu"; //$NON-NLS-1$
 	public final String MENU_SHOW_IN = "showInMenu"; //$NON-NLS-1$
 	public final String MENU_COMPARTMENT = "compartmentMenu"; //$NON-NLS-1$
-	public final String MENU_CONNECTOR_LABEL = "connectorLabelMenu"; //$NON-NLS-1$
+	public final String MENU_CONNECTION_LABEL = "connectorLabelMenu"; //$NON-NLS-1$
 	public final String MENU_ROUTER = "routerMenu"; //$NON-NLS-1$
 	public final String MENU_OPEN_WITH = "openWithMenu"; //$NON-NLS-1$
 
@@ -78,10 +75,10 @@ public interface ActionIds {
 	public final String ACTION_TOOLBAR_ARRANGE_ALL = "toolbarArrangeAllAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_ARRANGE_SELECTION = "toolbarArrangeSelectionAction"; //$NON-NLS-1$
 	public final String ACTION_SELECT_ALL_SHAPES = "selectAllShapesAction"; //$NON-NLS-1$
-	public final String ACTION_SELECT_ALL_CONNECTORS = "selectAllConnectorsAction"; //$NON-NLS-1$
+	public final String ACTION_SELECT_ALL_CONNECTIONS = "selectAllConnectorsAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_SELECT_ALL = "toolbarSelectAllAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_SELECT_ALL_SHAPES = "toolbarSelectAllShapesAction"; //$NON-NLS-1$
-	public final String ACTION_TOOLBAR_SELECT_ALL_CONNECTORS = "toolbarSelectAllConnectorsAction"; //$NON-NLS-1$
+	public final String ACTION_TOOLBAR_SELECT_ALL_CONNECTIONS = "toolbarSelectAllConnectorsAction"; //$NON-NLS-1$
 	public final String ACTION_AUTOSIZE = "autoSizeAction"; //$NON-NLS-1$
 	public final String ACTION_COMPARTMENT_ALL = "allCompartmentsAction"; //$NON-NLS-1$
 	public final String ACTION_COMPARTMENT_NONE = "noCompartmentsAction"; //$NON-NLS-1$
@@ -96,8 +93,8 @@ public interface ActionIds {
 	public final String ACTION_RECALC_PAGEBREAKS = "recalcPageBreaks";//$NON-NLS-1$
 	public final String ACTION_SORT_FILTER = "sortfilterAction";//$NON-NLS-1$
 	public final String ACTION_SHOW_PROPERTIES_VIEW = "showPropertiesViewAction";//$NON-NLS-1$
-	public final String ACTION_SHOW_CONNECTOR_LABELS = "showConnectorLabels"; //$NON-NLS-1$
-	public final String ACTION_HIDE_CONNECTOR_LABELS = "hideConnectorLabels"; //$NON-NLS-1$	
+	public final String ACTION_SHOW_CONNECTION_LABELS = "showConnectorLabels"; //$NON-NLS-1$
+	public final String ACTION_HIDE_CONNECTION_LABELS = "hideConnectorLabels"; //$NON-NLS-1$	
 	public final String ACTION_SHOW_COMPARTMENT_TITLE = "showCompartmentTitle"; //$NON-NLS-1$	
 	
 	/* The menu ID for the diagram editor popup menu */

@@ -21,19 +21,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.notation.Routing;
 
 /**
  * Connectors preferences page for diagram connector preferences.
  * 
  * @author cmahoney
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage}
  */
 public class ConnectorsPreferencePage
 	extends AbstractPreferencePage {
 
-	private String LINE_LABEL = PresentationResourceManager
-		.getI18NString("ConnectorsPreferencePage.lineStyle.label"); //$NON-NLS-1$
+	private String LINE_LABEL = DiagramResourceManager
+		.getI18NString("ConnectionsPreferencePage.lineStyle.label"); //$NON-NLS-1$
 
 	private ComboFieldEditor lineStyleFieldEditor = null;
 
@@ -78,11 +79,11 @@ public class ConnectorsPreferencePage
 		addField(lineStyleFieldEditor);
 		Combo lineStyleCombo = lineStyleFieldEditor.getComboControl();
 		lineStyleCombo
-			.add(PresentationResourceManager
-				.getI18NString("ConnectorsPreferencePage.ConnectorView.Manual.text")); //$NON-NLS-1$	
+			.add(DiagramResourceManager
+				.getI18NString("ConnectionsPreferencePage.ConnectionView.Manual.text")); //$NON-NLS-1$	
 		lineStyleCombo
-			.add(PresentationResourceManager
-				.getI18NString("ConnectorsPreferencePage.ConnectorView.Rectilinear.text")); //$NON-NLS-1$	
+			.add(DiagramResourceManager
+				.getI18NString("ConnectionsPreferencePage.ConnectionView.Rectilinear.text")); //$NON-NLS-1$	
 	}
 
 	/*

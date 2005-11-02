@@ -40,13 +40,11 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.tools.DeselectAllTracker;
-import org.eclipse.swt.widgets.Scrollable;
-
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramActionBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramDragDropEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramPopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
@@ -59,6 +57,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.widgets.Scrollable;
 
 /**
  * Controller for the diagram 
@@ -104,8 +103,8 @@ public class DiagramEditPart
 			new ContainerNodeEditPolicy());
 		installEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE,
 				new SnapFeedbackPolicy());
-		installEditPolicy(EditPolicyRoles.ACTIONBAR_ROLE,
-			new DiagramActionBarEditPolicy());
+		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE,
+			new DiagramPopupBarEditPolicy());
 	}
 
 	/* (non-Javadoc)
@@ -211,21 +210,22 @@ public class DiagramEditPart
 	}
 
 	/**
-	 * returns all connectors owned by this diagram, the returned list is 
-	 * a list of <code>ConnectionEditPart</code>s
+	 * returns all connections owned by this diagram, the returned list is a
+	 * list of <code>ConnectionEditPart</code>s
+	 * 
 	 * @return list of <code>ConnectionEditPart</code>s
 	 */
-	public List getConnectors() {
+	public List getConnections() {
 		Iterator views = getDiagramView().getEdges().iterator(); 
 
 		Map registry = getViewer().getEditPartRegistry();
-		List connectors = new ArrayList();
+		List connections = new ArrayList();
 		while (views.hasNext()) {
-			Object connectorEP = registry.get(views.next());
-			if (connectorEP != null)
-				connectors.add(connectorEP);
+			Object connectionEP = registry.get(views.next());
+			if (connectionEP != null)
+				connections.add(connectionEP);
 		}
-		return connectors;
+		return connections;
 	}
 
 	/**
@@ -233,12 +233,12 @@ public class DiagramEditPart
 	 * a Collections.EMPTY_LIST, which is immutable
 	 */
 	public List getPrimaryEditParts() {
-		List connectors = getConnectors();
+		List connections = getConnections();
 		List shapes = getChildren();
-		if (connectors.size() > 0 || shapes.size() > 0) {
+		if (connections.size() > 0 || shapes.size() > 0) {
 			List myChildren = new ArrayList();
 			myChildren.addAll(shapes);
-			myChildren.addAll(connectors);
+			myChildren.addAll(connections);
 			return myChildren;
 		}
 		return Collections.EMPTY_LIST;
@@ -379,15 +379,6 @@ public class DiagramEditPart
 	 */
 	public void setIsSupportingViewActions(boolean supportsViewActions){
 		this.isSupportingViewActions = supportsViewActions;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshChildren()
-	 */
-	protected void refreshChildren() {
-		// TODO Auto-generated method stub
-		super.refreshChildren();
 	}
 
 }

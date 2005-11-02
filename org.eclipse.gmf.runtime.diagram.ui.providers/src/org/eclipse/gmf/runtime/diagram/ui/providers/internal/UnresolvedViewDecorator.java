@@ -74,15 +74,15 @@ public class UnresolvedViewDecorator
 				false));
 
 		} else if (view instanceof Edge) {
-			Edge connectorView = (Edge)view;
+			Edge edge = (Edge)view;
 			if (element == null) {
 				HashedCircle circle = new HashedCircle(HashedCircle.HashType.X,
 					RADIUS);
 				circle.setFill(false);
 				setDecoration(getDecoratorTarget().addConnectionDecoration(
 					circle, 50, false));
-			} else if ((connectorView.getTarget() != null)&&(ViewUtil
-				.resolveSemanticElement(connectorView.getTarget()) == null)) {
+			} else if ((edge.getTarget() != null)&&(ViewUtil
+				.resolveSemanticElement(edge.getTarget()) == null)) {
 				HashedCircle circle = new HashedCircle(
 					HashedCircle.HashType.BACKSLASH, RADIUS);
 				circle.setFill(false);

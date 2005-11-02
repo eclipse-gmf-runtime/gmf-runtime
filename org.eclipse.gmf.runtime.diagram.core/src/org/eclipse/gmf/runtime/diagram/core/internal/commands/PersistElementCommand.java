@@ -15,11 +15,10 @@ package org.eclipse.gmf.runtime.diagram.core.internal.commands;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -35,7 +34,7 @@ public class PersistElementCommand extends AbstractModelCommand {
 	private View _view;
 
 	public PersistElementCommand(View view) {
-		super(Messages.getString("AddCommand.Label"), null);//$NON-NLS-1$
+		super(DiagramResourceManager.getI18NString("AddCommand.Label"), null);//$NON-NLS-1$
 		_view = view;
 	}
 	

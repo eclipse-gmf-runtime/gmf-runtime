@@ -30,12 +30,12 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeType;
-import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectorBendpointsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorEndpointTracker;
+import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionEndpointTracker;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
@@ -46,7 +46,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFix
  * ConnectorsTests
  */
 public class ConnectorTests
-	extends AbstractConnectorTests {
+	extends AbstractConnectionTests {
 
 	public static Test suite() {
 		return new TestSuite(ConnectorTests.class);
@@ -73,7 +73,7 @@ public class ConnectorTests
 			getFixture().openDiagram();
 			// Add a notes.
 			NoteEditPart note1EP = (NoteEditPart) getFixture()
-				.createShapeUsingTool(PresentationNotationType.NOTE,
+				.createShapeUsingTool(DiagramNotationType.NOTE,
 					new Point(10, 10));
 
 			ConnectionNodeEditPart line = (ConnectionNodeEditPart) getFixture()
@@ -82,7 +82,7 @@ public class ConnectorTests
 			flushEventQueue();
 
 			class MyConnectorEndpointTracker
-				extends ConnectorEndpointTracker {
+				extends ConnectionEndpointTracker {
 
 				private Point location;
 
@@ -146,11 +146,11 @@ public class ConnectorTests
 			getFixture().openDiagram();
 			// Add a notes.
 			NoteEditPart note1EP = (NoteEditPart) getFixture()
-				.createShapeUsingTool(PresentationNotationType.NOTE,
+				.createShapeUsingTool(DiagramNotationType.NOTE,
 					new Point(10, 10));
 
 			NoteEditPart note2EP = (NoteEditPart) getFixture()
-			.createShapeUsingTool(PresentationNotationType.NOTE,
+			.createShapeUsingTool(DiagramNotationType.NOTE,
 				new Point(300, 10));
 			
 			ConnectionNodeEditPart line = (ConnectionNodeEditPart) getFixture()
@@ -177,9 +177,9 @@ public class ConnectorTests
 			Point r1 = new Point(pointList.getFirstPoint());
 			Point r2 = new Point(pointList.getLastPoint());
 
-			SetConnectorBendpointsCommand bendpointsChanged =
-				new SetConnectorBendpointsCommand();
-			bendpointsChanged.setConnectorAdapter(new EObjectAdapter(line.getNotationView()));
+			SetConnectionBendpointsCommand bendpointsChanged =
+				new SetConnectionBendpointsCommand();
+			bendpointsChanged.setEdgeAdapter(new EObjectAdapter(line.getNotationView()));
 			bendpointsChanged.setNewPointList(newpts, r1, r2);
 			
 			getCommandStack().execute(new EtoolsProxyCommand(bendpointsChanged));
@@ -188,7 +188,7 @@ public class ConnectorTests
 			assertTrue(line.getConnectionFigure().getPoints().size() == 4);
 			
 			class MyConnectorEndpointTracker
-				extends ConnectorEndpointTracker {
+				extends ConnectionEndpointTracker {
 
 				private Point location;
 

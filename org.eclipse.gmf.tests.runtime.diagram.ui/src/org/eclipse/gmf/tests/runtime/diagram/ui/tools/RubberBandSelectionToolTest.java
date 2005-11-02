@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandSelectionTool;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
@@ -174,9 +174,9 @@ public class RubberBandSelectionToolTest
 
 		// Add two notes.
 		AbstractTestBase.println("Creating note shapes"); //$NON-NLS-1$
-		note1 = (NoteEditPart) createShapeUsingTool(PresentationNotationType.NOTE,
+		note1 = (NoteEditPart) createShapeUsingTool(DiagramNotationType.NOTE,
 				new Point(10, 10));
-		note2 = (NoteEditPart) createShapeUsingTool(PresentationNotationType.NOTE,
+		note2 = (NoteEditPart) createShapeUsingTool(DiagramNotationType.NOTE,
 				new Point(100, 100));
 
 		// ensure that the new shapes and connectors are properly laid out

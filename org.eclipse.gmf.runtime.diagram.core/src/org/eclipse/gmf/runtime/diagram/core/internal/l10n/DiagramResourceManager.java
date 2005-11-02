@@ -32,7 +32,7 @@ public class DiagramResourceManager
 	private static AbstractResourceManager resourceManager = new DiagramResourceManager();
 
 	/**
-	 * Constructor for PresentationResourceManager.
+	 * Constructor for DiagramResourceManager.
 	 */
 	private DiagramResourceManager() {
 		super();

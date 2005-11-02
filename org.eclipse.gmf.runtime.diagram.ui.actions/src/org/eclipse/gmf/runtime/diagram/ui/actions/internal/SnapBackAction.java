@@ -12,24 +12,22 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gef.Request;
-import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
- * Action that will permit a user to snap back a label of a connector back
- * to its orginal position relative to the connector.  Use when the label connector parent
+ * Action that will permit a user to snap back a label of a connection back
+ * to its orginal position relative to the connection.  Use when the label connection parent
  * can't be located.
  * 
  */
 /*
  * @canBeSeenBy %level1
  */
-public class SnapBackAction extends PresentationAction {
+public class SnapBackAction extends DiagramAction {
 
 	/**
 	 * @param page
@@ -47,12 +45,13 @@ public class SnapBackAction extends PresentationAction {
 		setText(DiagramActionsResourceManager.getI18NString("SnapBackAction.ActionLabelText")); //$NON-NLS-1$
 		setId(ActionIds.ACTION_SNAP_BACK);
 		setToolTipText(DiagramActionsResourceManager.getI18NString("SnapBackAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(Images.DESC_ACTION_SNAPBACK);
+		setImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_SNAPBACK));
 		setHoverImageDescriptor(getImageDescriptor());
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return new Request(RequestConstants.REQ_SNAP_BACK);

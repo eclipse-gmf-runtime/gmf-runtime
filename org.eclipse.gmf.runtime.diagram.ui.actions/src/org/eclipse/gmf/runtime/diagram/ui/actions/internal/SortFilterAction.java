@@ -18,18 +18,16 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
-import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterCompartmentItemsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterContentRequest;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * Action to sort/filter list compartment items.
@@ -37,7 +35,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author jcorchis
  * @canBeSeenBy %level1
  */
-public class SortFilterAction extends PresentationAction {
+public class SortFilterAction extends DiagramAction {
 	
 	public SortFilterAction(IWorkbenchPage workbenchpage) {		
 		super(workbenchpage);
@@ -45,7 +43,7 @@ public class SortFilterAction extends PresentationAction {
 
 	/**
 	 * Returns an instance of <code>SortFilterCompartmentItemsRequest</code> 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return new SortFilterCompartmentItemsRequest();
@@ -56,8 +54,12 @@ public class SortFilterAction extends PresentationAction {
 		setId(ActionIds.ACTION_SORT_FILTER);
 		setText(DiagramActionsResourceManager.getI18NString("SortFilterCompartmentsAction.ActionLabelText")); //$NON-NLS-1$
 		setToolTipText(DiagramActionsResourceManager.getI18NString("SortFilterCompartmentsAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(Images.DESC_ACTION_SORT_FILTER);	
-		setDisabledImageDescriptor(Images.DESC_ACTION_SORT_FILTER_DISABLED);	
+		setImageDescriptor(DiagramActionsResourceManager
+			.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_SORT_FILTER));
+		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_SORT_FILTER_DISABLED));	
 	}
 	/**
 	 * Enable this action if only one shape is selected and that 

@@ -16,11 +16,7 @@ import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 
 /**
- * The presentation plugin defines all the artifacts needed for the
- * visualization of modelling diagrams
- * 
  * @author melaasar
- * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
  */
 public class Draw2dRenderPlugin
 	extends XToolsUIPlugin {
@@ -46,11 +42,6 @@ public class Draw2dRenderPlugin
 		return getInstance().getBundle().getSymbolicName();
 	}
 
-	/**
-	 * Creates the presentation plugin instance
-	 * 
-	 * @see org.eclipse.core.runtime.Plugin#Plugin()
-	 */
 	public Draw2dRenderPlugin() {
 		super();
 		if (singleton == null)
@@ -64,9 +55,6 @@ public class Draw2dRenderPlugin
 		// empty method
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
 	public AbstractResourceManager getResourceManager() {
 		return null; // TBD
 	}

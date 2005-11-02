@@ -16,9 +16,9 @@ import org.eclipse.gef.EditPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GatedShapeCompartmentDragDropEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GatedFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemContainerFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -26,6 +26,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Compartment that allows gates to be added.
  * 
  * @author jbruck
+ * @deprecated Deleted. Wasn't being used anymore.
  */
 public class GatedCompartmentEditPart extends ShapeCompartmentEditPart {
 	/**
@@ -54,13 +55,13 @@ public class GatedCompartmentEditPart extends ShapeCompartmentEditPart {
 	}
 	
 	/**
-	 * Returns a {@link GatedPaneFigure}that will <i>wrap </i> this editpart's
+	 * Returns a {@link BorderedFigure}that will <i>wrap </i> this editpart's
 	 * main figure.
 	 * 
 	 * @see #createMainFigure()
 	 */
 	protected final IFigure createFigure() {
-		GatedPaneFigure fig = new GatedPaneFigure(createMainFigure());
+		BorderedFigure fig = new BorderedFigure(createMainFigure());
 		return fig;
 	}
 
@@ -74,10 +75,10 @@ public class GatedCompartmentEditPart extends ShapeCompartmentEditPart {
 
 	/**
 	 * getter for the gated pane figure.
-	 * @return <code>GatedPaneFigure</code>
+	 * @return <code>BorderedFigure</code>
 	 */
-	protected final GatedPaneFigure getGatedPaneFigure() {
-		return (GatedPaneFigure) getFigure();
+	protected final BorderedFigure getGatedPaneFigure() {
+		return (BorderedFigure) getFigure();
 	}
 
 	
@@ -94,15 +95,15 @@ public class GatedCompartmentEditPart extends ShapeCompartmentEditPart {
 	 * @return <code>IFigure</code>
 	 */
 	public IFigure getGateFigure() {
-		return getGatedPaneFigure().getGatePane();
+		return getGatedPaneFigure().getBorderItemContainer();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#getContentPaneFor(org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart)
 	 */
 	protected IFigure getContentPaneFor(IGraphicalEditPart editPart) {
-		if ( editPart instanceof GateEditPart ) {
-			return ((GatedPaneFigure) figure).getGatePane();
+		if ( editPart instanceof BorderItemEditPart ) {
+			return ((BorderedFigure) figure).getBorderItemContainer();
 		}
 		else {
 			return super.getContentPaneFor(editPart); // this will return the
@@ -113,16 +114,16 @@ public class GatedCompartmentEditPart extends ShapeCompartmentEditPart {
 
 	/**
 	 * Adds the supplied child to the editpart's gate figure if it is 
-	 * an instanceof {@link GateEditPart} and its figure is an instanceof {@link GateFigure}.
+	 * an instanceof {@link BorderItemEditPart} and its figure is an instanceof {@link BorderItemFigure}.
 	 */
 	protected void addChildVisual(EditPart childEditPart, int index) {
 
 		IFigure childFigure = ((GraphicalEditPart)childEditPart).getFigure();
-		if ( childEditPart instanceof GateEditPart && childFigure instanceof GateFigure) {
-			GateFigure gateFigure = (GateFigure) childFigure;
-			GatedFigure gatedFigure = (GatedFigure) getContentPaneFor((IGraphicalEditPart) childEditPart);
+		if ( childEditPart instanceof BorderItemEditPart && childFigure instanceof BorderItemFigure) {
+			BorderItemFigure gateFigure = (BorderItemFigure) childFigure;
+			BorderItemContainerFigure gatedFigure = (BorderItemContainerFigure) getContentPaneFor((IGraphicalEditPart) childEditPart);
 			IFigure boundaryFig = getMainFigure();
-			gatedFigure.addGate(gateFigure, new GateFigure.GateLocator(gateFigure, boundaryFig));
+			gatedFigure.addBorderItem(gateFigure, new BorderItemFigure.BorderItemLocator(gateFigure, boundaryFig));
 		}
 		else {
 			IFigure fig = getContentPaneFor((IGraphicalEditPart) childEditPart);
@@ -135,10 +136,10 @@ public class GatedCompartmentEditPart extends ShapeCompartmentEditPart {
 	 */
 	protected void removeChildVisual(EditPart child) {
 		IFigure childFigure = ((GraphicalEditPart)child).getFigure();
-		if ( child instanceof GateEditPart && childFigure instanceof GateFigure) {
-			GateFigure gateFigure = (GateFigure)childFigure;
-			GatedFigure gatedFigure = (GatedFigure) getContentPaneFor((IGraphicalEditPart) child);
-			gatedFigure.removeGate(gateFigure);
+		if ( child instanceof BorderItemEditPart && childFigure instanceof BorderItemFigure) {
+			BorderItemFigure gateFigure = (BorderItemFigure)childFigure;
+			BorderItemContainerFigure gatedFigure = (BorderItemContainerFigure) getContentPaneFor((IGraphicalEditPart) child);
+			gatedFigure.removeBorderItem(gateFigure);
 		}
 		else {
 			IFigure fig = getContentPaneFor((IGraphicalEditPart) child);

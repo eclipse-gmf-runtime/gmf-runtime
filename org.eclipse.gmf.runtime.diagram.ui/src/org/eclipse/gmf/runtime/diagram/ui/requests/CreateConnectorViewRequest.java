@@ -18,18 +18,17 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreationFactory;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
-import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectorEndsCommand;
+import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.jface.util.Assert;
 
 /**
  * 
@@ -47,7 +46,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
  * reqyest has to be used instead
  *  
  * @author melaasar
- * 
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest}
  */
 public class CreateConnectorViewRequest extends CreateConnectionRequest {
 
@@ -131,7 +130,7 @@ public class CreateConnectorViewRequest extends CreateConnectionRequest {
 	private ConnectorViewDescriptor connectorViewDescriptor;
 
 	/**
-	 * Convenience constructor for CreateConnectorViewRequest using a <code>IElement</code>
+	 * Convenience constructor for CreateConnectionViewRequest using a <code>IElement</code>
 	 * 
 	 * @param element a semantic element
 	 */
@@ -141,7 +140,7 @@ public class CreateConnectorViewRequest extends CreateConnectionRequest {
 
 
 	/**
-	 * Constructor for CreateConnectorViewRequest using a <code>ConnectorConnectorViewDescriptor</code>
+	 * Constructor for CreateConnectionViewRequest using a <code>ConnectorConnectorViewDescriptor</code>
 	 * 
 	 * @param connectorViewDescriptor a connector view descriptor
 	 */
@@ -213,8 +212,8 @@ public class CreateConnectorViewRequest extends CreateConnectionRequest {
 		Assert.isNotNull(sourceEditPart);
 		Assert.isNotNull(targetEditPart);
 
-		CreateConnectorViewRequest request =
-			new CreateConnectorViewRequest(element, preferencesHint);
+		CreateConnectionViewRequest request =
+			new CreateConnectionViewRequest(element, preferencesHint);
 
 		request.setSourceEditPart(sourceEditPart);
 		request.setTargetEditPart(targetEditPart);
@@ -235,7 +234,7 @@ public class CreateConnectorViewRequest extends CreateConnectionRequest {
 	 * @return <code>Command</code>
 	 */
 	public static Command getCreateCommand(
-		CreateConnectorViewRequest request,
+		CreateConnectionViewRequest request,
 		EditPart sourceEditPart,
 		EditPart targetEditPart) {
 
@@ -275,8 +274,8 @@ public class CreateConnectorViewRequest extends CreateConnectionRequest {
 		IAdaptable viewAdapter =
 			(IAdaptable) createCommand.getCommandResult().getReturnValue();
 
-		SetConnectorEndsCommand sceCommand = new SetConnectorEndsCommand(PresentationResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Source")); //$NON-NLS-1$
-		sceCommand.setConnectorAdaptor(viewAdapter);
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(DiagramResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Source")); //$NON-NLS-1$
+		sceCommand.setEdgeAdaptor(viewAdapter);
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);
 		sceCommand.setNewTargetAdaptor(targetViewAdapter);
 
@@ -307,8 +306,8 @@ public class CreateConnectorViewRequest extends CreateConnectionRequest {
 		IAdaptable viewAdapter =
 			(IAdaptable) createCommand.getCommandResult().getReturnValue();
 
-		SetConnectorEndsCommand sceCommand = new SetConnectorEndsCommand(PresentationResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Source")); //$NON-NLS-1$
-		sceCommand.setConnectorAdaptor(viewAdapter);
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(DiagramResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Source")); //$NON-NLS-1$
+		sceCommand.setEdgeAdaptor(viewAdapter);
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);
 		//sceCommand.setNewSourceTerminal("anchor"); //$NON-NLS-1$
 		sceCommand.setNewTargetAdaptor(targetViewAdapter);

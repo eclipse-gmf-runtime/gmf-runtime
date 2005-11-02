@@ -98,7 +98,7 @@
    </extension>
   
   <extension id="globalActionHandlerProviders" name="%ext.globalActionHandlerProviders" point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders">
-      <GlobalActionHandlerProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandlerProvider" id="logicGlobalActionHandlerProvider">
+      <GlobalActionHandlerProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider" id="logicGlobalActionHandlerProvider">
          <Priority name="Lowest">
          </Priority>
          <ViewId id="LogicEditor">
@@ -305,8 +305,8 @@
       <page
             name="%PreferencePage.Connectors"
             category="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicAppearancePreferencePage"
-            class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectorsPreferencePage"
-            id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectorsPreferencePage">
+            class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectionsPreferencePage"
+            id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectionsPreferencePage">
       </page>    
       <page
             name="%PreferencePage.RulerGrid"

@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
 import org.eclipse.ui.IWorkbenchPage;
 
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
  *  @see org.eclipse.gmf.runtime.notation.providers.internal.semproc.NotationSemProc
  */
 public class DeleteSemanticAction
-	extends PresentationAction
+	extends DiagramAction
 	implements LogicActionIds {
 
 	public DeleteSemanticAction(IWorkbenchPage workbenchPage) {

@@ -19,7 +19,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.SelectionRequest;
 
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ListItemComponentEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.TextNonResizableEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableTextEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.notation.View;
@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author melaasar
  * 
  * EditPart for list items
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart}
  */
 public class ListItemCompartmentEditPart extends TextCompartmentEditPart {
 	/**
@@ -66,7 +67,7 @@ public class ListItemCompartmentEditPart extends TextCompartmentEditPart {
 		super.createDefaultEditPolicies();
 		installEditPolicy(
 			EditPolicy.PRIMARY_DRAG_ROLE,
-			new TextNonResizableEditPolicy());
+			new NonResizableTextEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, 
 			new ListItemComponentEditPolicy());
 	}

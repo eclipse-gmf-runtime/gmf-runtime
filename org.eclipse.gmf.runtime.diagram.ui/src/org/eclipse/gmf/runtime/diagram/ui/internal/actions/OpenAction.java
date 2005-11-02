@@ -14,9 +14,9 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 import org.eclipse.gef.Request;
 import org.eclipse.ui.IWorkbenchPage;
 
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 
@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  *
  */
 public class OpenAction
-extends PresentationAction {
+extends DiagramAction {
 	private static final String ACTION_LABEL   = "Open.ActionLabelText"; //$NON-NLS-1$
 	private static final String ACTION_TOOLTIP = "Open.ActionToolTipText"; //$NON-NLS-1$
 	
@@ -45,8 +45,8 @@ extends PresentationAction {
 		super.init();
 		
 		setId(ActionIds.OPEN);
-		setText(PresentationResourceManager.getI18NString( ACTION_LABEL ) );
-		setToolTipText(PresentationResourceManager.getI18NString( ACTION_TOOLTIP ) );
+		setText(DiagramResourceManager.getI18NString( ACTION_LABEL ) );
+		setToolTipText(DiagramResourceManager.getI18NString( ACTION_TOOLTIP ) );
 	}
 
 	protected Request createTargetRequest() {		

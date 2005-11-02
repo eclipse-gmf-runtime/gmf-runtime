@@ -15,6 +15,7 @@ package org.eclipse.gmf.runtime.diagram.ui.properties;
  * A list of status codes for this plug-in.
  * 
  * @author nbalaba
+ * @deprecated Renamed to DiagramPropertiesStatusCodes and made internal.
  */
 public class PresentationPropertiesStatusCodes {
 

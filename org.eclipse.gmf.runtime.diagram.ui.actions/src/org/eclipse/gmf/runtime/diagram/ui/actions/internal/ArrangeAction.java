@@ -24,18 +24,17 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.tools.ToolUtilities;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * The Arrange Action: arranges a container editpart or a set of selected editparts
@@ -43,7 +42,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
  * @author melaasar
  * @canBeSeenBy %level1
  */
-public class ArrangeAction extends PresentationAction {
+public class ArrangeAction extends DiagramAction {
 
 	private boolean selectionOnly;
 
@@ -58,14 +57,14 @@ public class ArrangeAction extends PresentationAction {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return new ArrangeRequest(getId());
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#updateTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#updateTargetRequest()
 	 */
 	protected void updateTargetRequest() {
 		ArrangeRequest request = (ArrangeRequest) getTargetRequest();
@@ -77,14 +76,14 @@ public class ArrangeAction extends PresentationAction {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#getCommand()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getCommand()
 	 */
 	protected Command getCommand() {
 		if (!getOperationSet().isEmpty()) {
 			EditPart parent = getSelectionParent(getOperationSet());
 			if (parent != null) {
 				return parent.getCommand(getTargetRequest());
-			}
+		}
 		}
 		return UnexecutableCommand.INSTANCE;
 	}
@@ -116,9 +115,9 @@ public class ArrangeAction extends PresentationAction {
 	}
 
 	/* 
-	 * The operation set is the shapes, connectors or both on the diagrm edit part
+	 * The operation set is the shapes, connections or both on the diagrm edit part
 	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createOperationSet()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createOperationSet()
 	 */
 	protected List createOperationSet() {
 
@@ -193,11 +192,17 @@ public class ArrangeAction extends PresentationAction {
 	public static ArrangeAction createArrangeAllAction(IWorkbenchPage workbenchPage) {
 		ArrangeAction action = new ArrangeAction(workbenchPage,false);
 		action.setId(ActionIds.ACTION_ARRANGE_ALL);
-		action.setText(Messages.getString("ArrangeAction.ArrangeAll.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ArrangeAction.ArrangeAll.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(Images.DESC_ACTION_ARRANGE_ALL);
-		action.setDisabledImageDescriptor(Images.DESC_ACTION_ARRANGE_ALL_DISABLED);
-		action.setHoverImageDescriptor(Images.DESC_ACTION_ARRANGE_ALL);
+		action.setText(DiagramActionsResourceManager.getI18NString("ArrangeAction.ArrangeAll.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ArrangeAction.ArrangeAll.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_ALL);
+		action.setImageDescriptor(enabledImage);
+		action.setDisabledImageDescriptor(DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_ALL_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 	
@@ -208,11 +213,17 @@ public class ArrangeAction extends PresentationAction {
 	public static ArrangeAction createToolbarArrangeAllAction(IWorkbenchPage workbenchPage) {
 		ArrangeAction action = new ArrangeAction(workbenchPage, false);
 		action.setId(ActionIds.ACTION_TOOLBAR_ARRANGE_ALL);
-		action.setText(Messages.getString("ArrangeAction.toolbar.ArrangeAll.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ArrangeAction.toolbar.ArrangeAll.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(Images.DESC_ACTION_ARRANGE_ALL);
-		action.setDisabledImageDescriptor(Images.DESC_ACTION_ARRANGE_ALL_DISABLED);
-		action.setHoverImageDescriptor(Images.DESC_ACTION_ARRANGE_ALL);
+		action.setText(DiagramActionsResourceManager.getI18NString("ArrangeAction.toolbar.ArrangeAll.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ArrangeAction.toolbar.ArrangeAll.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_ALL);
+		action.setImageDescriptor(enabledImage);
+		action.setDisabledImageDescriptor(DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_ALL_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 
@@ -223,11 +234,17 @@ public class ArrangeAction extends PresentationAction {
 	public static ArrangeAction createArrangeSelectionAction(IWorkbenchPage workbenchPage) {
 		ArrangeAction action = new ArrangeAction(workbenchPage, true);
 		action.setId(ActionIds.ACTION_ARRANGE_SELECTION);
-		action.setText(Messages.getString("ArrangeAction.ArrangeSelection.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ArrangeAction.ArrangeSelection.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(Images.DESC_ACTION_ARRANGE_SELECTED);
-		action.setDisabledImageDescriptor(Images.DESC_ACTION_ARRANGE_SELECTED_DISABLED);
-		action.setHoverImageDescriptor(Images.DESC_ACTION_ARRANGE_SELECTED);
+		action.setText(DiagramActionsResourceManager.getI18NString("ArrangeAction.ArrangeSelection.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ArrangeAction.ArrangeSelection.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_SELECTED);
+		action.setImageDescriptor(enabledImage);
+		action.setDisabledImageDescriptor(DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_SELECTED_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 	
@@ -238,11 +255,17 @@ public class ArrangeAction extends PresentationAction {
 	public static ArrangeAction createToolbarArrangeSelectionAction(IWorkbenchPage workbenchPage) {
 		ArrangeAction action = new ArrangeAction(workbenchPage, true);
 		action.setId(ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION);
-		action.setText(Messages.getString("ArrangeAction.toolbar.ArrangeSelection.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ArrangeAction.toolbar.ArrangeSelection.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(Images.DESC_ACTION_ARRANGE_SELECTED);
-		action.setDisabledImageDescriptor(Images.DESC_ACTION_ARRANGE_SELECTED_DISABLED);
-		action.setHoverImageDescriptor(Images.DESC_ACTION_ARRANGE_SELECTED);
+		action.setText(DiagramActionsResourceManager.getI18NString("ArrangeAction.toolbar.ArrangeSelection.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ArrangeAction.toolbar.ArrangeSelection.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_SELECTED);
+		action.setImageDescriptor(enabledImage);
+		action.setDisabledImageDescriptor(DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_ARRANGE_SELECTED_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 	

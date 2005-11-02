@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
@@ -230,7 +230,7 @@ public class DecoratorServiceTests
 
 	private void createNote() {
 		CreateViewRequest createRequest = CreateViewRequestFactory
-			.getCreateShapeRequest(PresentationNotationType.NOTE,
+			.getCreateShapeRequest(DiagramNotationType.NOTE,
 				PreferencesHint.USE_DEFAULTS);
 		createRequest.setLocation(new Point(10, 10));
 		createRequest.setSize(new Dimension(100, 100));

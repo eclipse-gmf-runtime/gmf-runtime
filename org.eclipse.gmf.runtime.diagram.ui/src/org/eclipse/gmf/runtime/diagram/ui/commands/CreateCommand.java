@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.common.core.command.CMValidator;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.View;
@@ -62,7 +62,7 @@ public class CreateCommand extends AbstractModelCommand {
 		CreateViewRequest.ViewDescriptor viewDescriptor,
 		View containerView) {
 
-		super(PresentationResourceManager.getI18NString("CreateCommand.Label"),  containerView); //$NON-NLS-1$
+		super(DiagramResourceManager.getI18NString("CreateCommand.Label"),  containerView); //$NON-NLS-1$
 
 		Assert.isNotNull(viewDescriptor);
 		Assert.isNotNull(containerView);

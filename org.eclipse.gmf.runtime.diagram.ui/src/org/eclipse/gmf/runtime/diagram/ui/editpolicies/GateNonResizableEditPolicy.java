@@ -23,10 +23,10 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GateEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure.GateLocator;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure.BorderItemLocator;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Edit policy to restrict gate movement along border of Gated item.
  * 
  * @author jbruck
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.BorderItemSelectionEditPolicy}
  */
 public class GateNonResizableEditPolicy extends NonResizableEditPolicyEx {
 
@@ -66,8 +67,8 @@ public class GateNonResizableEditPolicy extends NonResizableEditPolicyEx {
 	 * @param request the request
 	 */
 	protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
-		GateEditPart gateEP = (GateEditPart) getHost();
-		GateLocator gateLocator = (GateFigure.GateLocator) gateEP.getLocator();
+		BorderItemEditPart gateEP = (BorderItemEditPart) getHost();
+		BorderItemLocator gateLocator = (BorderItemFigure.BorderItemLocator) gateEP.getLocator();
 		IFigure feedback = getDragSourceFeedbackFigure();
 		PrecisionRectangle rect = new PrecisionRectangle(
 				getInitialFeedbackBounds().getCopy());
@@ -87,8 +88,8 @@ public class GateNonResizableEditPolicy extends NonResizableEditPolicyEx {
 	 * @return the command contribution to the request
 	 */
 	protected Command getMoveCommand(ChangeBoundsRequest request) {
-		GateEditPart gateEP = (GateEditPart)getHost();
-		GateLocator gateLocator = (GateFigure.GateLocator)gateEP.getLocator();
+		BorderItemEditPart gateEP = (BorderItemEditPart)getHost();
+		BorderItemLocator gateLocator = (BorderItemFigure.BorderItemLocator)gateEP.getLocator();
 	
 		PrecisionRectangle rect = new PrecisionRectangle(getInitialFeedbackBounds().getCopy());
 		getHostFigure().translateToAbsolute(rect);
@@ -101,7 +102,7 @@ public class GateNonResizableEditPolicy extends NonResizableEditPolicyEx {
 
 		ICommand moveCommand = 
 			new SetBoundsCommand(
-				PresentationResourceManager.getI18NString("Commands.MoveElement"),//$NON-NLS-1$
+				DiagramResourceManager.getI18NString("Commands.MoveElement"),//$NON-NLS-1$
 				new EObjectAdapter((View) getHost().getModel()),
 				location);
 		return new EtoolsProxyCommand(moveCommand);

@@ -30,9 +30,9 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 */
 	public static final String	REQ_REFRESH = "refresh";		   //$NON-NLS-1$
     /**
-	 * constants for refresh connectors request
+	 * constants for refresh connections request
 	 */
-	public static final String REQ_REFRESH_CONNECTORS = "refresh_connectors"; //$NON-NLS-1$
+	public static final String REQ_REFRESH_CONNECTIONS = "refresh_connections"; //$NON-NLS-1$
     /**
 	 * constants for drag request
 	 */
@@ -59,9 +59,9 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 */
 	public static final String REQ_SEMANTIC_WRAPPER = "wrap semantic request"; //$NON-NLS-1$
     /**
-	 * constants for set all connector ben point request
+	 * constants for set all connection bendpoint request
 	 */
-	public static final String REQ_SET_ALL_BENDPOINT = "set_all_connector_bendpoint";	   //$NON-NLS-1$ 
+	public static final String REQ_SET_ALL_BENDPOINT = "set_all_connection_bendpoint";	   //$NON-NLS-1$ 
     /**
 	 * constants for arrange radial request
 	 */
@@ -119,9 +119,9 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 */
 	public static final String 	REQ_SNAP_BACK = "snap_back"; //$NON-NLS-1$
     /**
-	 * constants for toggle connector labels request
+	 * constants for toggle connection labels request
 	 */
-	public static final String 	REQ_TOGGLE_CONNECTOR_LABELS = "toggle_connector_label"; //$NON-NLS-1$
+	public static final String 	REQ_TOGGLE_CONNECTION_LABELS = "toggle_connection_label"; //$NON-NLS-1$
     /**
 	 * constants for toggle canonical mode request
 	 */
@@ -134,6 +134,15 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 * constants for duplicate  request
 	 */
 	public static final String REQ_DUPLICATE = "duplicate"; //$NON-NLS-1$
-		
+	
+	   /**
+	 * @deprecated use REQ_TOGGLE_CONNECTION_LABELS
+	 */
+	public static final String 	REQ_TOGGLE_CONNECTOR_LABELS = "toggle_connector_label"; //$NON-NLS-1$
+	   /**
+	 * @deprecated use REQ_REFRESH_CONNECTIONS
+	 */
+	public static final String REQ_REFRESH_CONNECTORS = "refresh_connectors"; //$NON-NLS-1$
+
 }
  

@@ -20,8 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 
 /**
@@ -35,28 +34,28 @@ public class DiagramsPreferencePage
 	extends AbstractPreferencePage {
 
 	//	localized labels
-	private String GLOBAL_SETTINGS_GROUP_LABEL = PresentationResourceManager
+	private String GLOBAL_SETTINGS_GROUP_LABEL = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.globalGroup.label"); //$NON-NLS-1$
 
-	private String SHOW_CONNECTOR_HANDLES_LABEL = PresentationResourceManager
-		.getI18NString("DiagramsPreferencePage.showConnectorHandles.label"); //$NON-NLS-1$
+	private String SHOW_CONNECTION_HANDLES_LABEL = DiagramResourceManager
+		.getI18NString("DiagramsPreferencePage.showConnectionHandles.label"); //$NON-NLS-1$
 
-	private String SHOW_ACTION_BARS_LABEL = PresentationResourceManager
-		.getI18NString("DiagramsPreferencePage.showActionBars.label"); //$NON-NLS-1$
+	private String SHOW_POPUP_BARS_LABEL = DiagramResourceManager
+		.getI18NString("DiagramsPreferencePage.showPopupBars.label"); //$NON-NLS-1$
 
-	private String ENABLE_ANIMATED_LAYOUT = PresentationResourceManager
+	private String ENABLE_ANIMATED_LAYOUT = DiagramResourceManager
 	.getI18NString("DiagramsPreferencePage.enableAnimatedLayout.label"); //$NON-NLS-1$
 
-	private String ENABLE_ANIMATED_ZOOM = PresentationResourceManager
+	private String ENABLE_ANIMATED_ZOOM = DiagramResourceManager
 	.getI18NString("DiagramsPreferencePage.enableAnimatedZoom.label"); //$NON-NLS-1$
 
-	private String ENABLE_ANTIALIAS = PresentationResourceManager
+	private String ENABLE_ANTIALIAS = DiagramResourceManager
 	.getI18NString("DiagramsPreferencePage.enableAntiAlias.label"); //$NON-NLS-1$	
 	
 	//preference page editor controls
-	private BooleanFieldEditor showConnectorHandles = null;
+	private BooleanFieldEditor showConnectionHandles = null;
 
-	private BooleanFieldEditor showActionBars = null;
+	private BooleanFieldEditor showPopupBars = null;
 	
 	private BooleanFieldEditor enableAnimatedLayout = null;
 
@@ -80,15 +79,15 @@ public class DiagramsPreferencePage
 
 		Composite composite = new Composite(generalGlobalGroup, SWT.NONE);		
 
-		showConnectorHandles = new BooleanFieldEditor(
-			IPreferenceConstants.PREF_SHOW_CONNECTOR_HANDLES,
-			SHOW_CONNECTOR_HANDLES_LABEL, composite);
-		addField(showConnectorHandles);
+		showConnectionHandles = new BooleanFieldEditor(
+			IPreferenceConstants.PREF_SHOW_CONNECTION_HANDLES,
+			SHOW_CONNECTION_HANDLES_LABEL, composite);
+		addField(showConnectionHandles);
 
-		showActionBars = new BooleanFieldEditor(
-			IPreferenceConstants.PREF_SHOW_ACTION_BARS, SHOW_ACTION_BARS_LABEL,
+		showPopupBars = new BooleanFieldEditor(
+			IPreferenceConstants.PREF_SHOW_POPUP_BARS, SHOW_POPUP_BARS_LABEL,
 			composite);
-		addField(showActionBars);
+		addField(showPopupBars);
 		
 		enableAnimatedLayout = new BooleanFieldEditor(
 			IPreferenceConstants.PREF_ENABLE_ANIMATED_LAYOUT, ENABLE_ANIMATED_LAYOUT,
@@ -115,9 +114,9 @@ public class DiagramsPreferencePage
 	 */
 	public static void initDefaults(IPreferenceStore preferenceStore) {
 
-		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_CONNECTOR_HANDLES, true);
+		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_CONNECTION_HANDLES, true);
 
-		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_ACTION_BARS, true);
+		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_POPUP_BARS, true);
 	
 		preferenceStore.setDefault(IPreferenceConstants.PREF_ENABLE_ANIMATED_LAYOUT, true);
 

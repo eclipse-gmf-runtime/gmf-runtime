@@ -17,7 +17,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories.GeoShapeViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectorViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -48,9 +48,9 @@ public class GeoshapeViewProvider
 	}
 	
 	//	 Map to hold the Line/Connector Views
-	private Map connectorMap = new HashMap();
+	private Map connectionMap = new HashMap();
 	{
-		connectorMap.put(GeoshapeConstants.TOOL_LINE, ConnectorViewFactory.class);
+		connectionMap.put(GeoshapeConstants.TOOL_LINE, ConnectionViewFactory.class);
 	}
 	/**
 	 * Returns the shape view class to instantiate based on the passed params
@@ -75,8 +75,8 @@ public class GeoshapeViewProvider
 	 * @param semanticHint
 	 * @return Class
 	 */
-	protected Class getConnectorViewClass(IAdaptable semanticAdapter,
+	protected Class getEdgeViewClass(IAdaptable semanticAdapter,
 			View containerView, String semanticHint) {
-		return (Class) connectorMap.get(semanticHint);
+		return (Class) connectionMap.get(semanticHint);
 	}
 }

@@ -137,7 +137,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			IGraphicalEditPart inTerminalEP1 = (IGraphicalEditPart) andEP.findEditPart(null, inTerminal1);
 			
 			createConnectorUsingTool(outTerminalEP1, inTerminalEP1, typeWire);
-			assertTrue("Led to And gate connection failed", getDiagramEditPart().getConnectors().size() == 1);//$NON-NLS-1$
+			assertTrue("Led to And gate connection failed", getDiagramEditPart().getConnections().size() == 1);//$NON-NLS-1$
 
 			Terminal outTerminal2 = (Terminal) andGate.getOutputTerminals().get(0);
 			IGraphicalEditPart outTerminalEP2 = (IGraphicalEditPart) andEP.findEditPart(null, outTerminal2);
@@ -146,7 +146,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			IGraphicalEditPart inTerminalEP2 = (IGraphicalEditPart) orEP.findEditPart(null, inTerminal2);
 
 			createConnectorUsingTool(outTerminalEP2, inTerminalEP2, typeWire);
-			assertTrue("And to Or gate connection failed", getDiagramEditPart().getConnectors().size() == 2);//$NON-NLS-1$
+			assertTrue("And to Or gate connection failed", getDiagramEditPart().getConnections().size() == 2);//$NON-NLS-1$
 		}
 		
 		public ConnectionEditPart createConnectorUsingTool(
@@ -154,7 +154,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 				final IGraphicalEditPart targetEditPart, 
 				IElementType elementType) {
 
-			class ConnectorCreationTool	extends	org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool {
+			class ConnectorCreationTool	extends	org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool {
 
 				public ConnectorCreationTool(IElementType theElementType) {
 					super(theElementType);

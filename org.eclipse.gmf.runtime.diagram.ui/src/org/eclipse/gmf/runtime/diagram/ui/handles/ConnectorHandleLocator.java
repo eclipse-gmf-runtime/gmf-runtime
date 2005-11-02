@@ -29,6 +29,7 @@ import org.eclipse.gef.handles.HandleBounds;
  * only be located on the east, west, or south side of the reference figure.
  * 
  * @author cmahoney
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandleLocator}
  */
 public class ConnectorHandleLocator
 	implements Locator {
@@ -61,7 +62,7 @@ public class ConnectorHandleLocator
 	private boolean bEastWestSouth = false;
 	
 	/**
-	 * Constructor for ConnectorHandleLocator.
+	 * Constructor for ConnectionHandleLocator.
 	 * @param reference the figure
 	 * @param cursorPosition the handles will be located on the border of the
 	 * shape as close to this position as possible
@@ -73,9 +74,9 @@ public class ConnectorHandleLocator
 
 	/**
 	 * Adds a connector handle to the list of handles.
-	 * @param handle the <code>ConnectorHandle</code> to add
+	 * @param handle the <code>ConnectionHandle</code> to add
 	 */
-	public void addHandle(ConnectorHandle handle) {
+	public void addHandle(ConnectionHandle handle) {
 		handles.add(handle);
 	}
 

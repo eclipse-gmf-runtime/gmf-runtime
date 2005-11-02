@@ -26,8 +26,8 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramGraphicalViewerTest
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCanonicalTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCreationTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicDiagramTests;
-import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectorHandleLocatorTest;
-import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectorHandleTest;
+import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleLocatorTest;
+import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.DiagramCommandStackTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.RubberBandSelectionToolTest;
@@ -41,8 +41,8 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
 		suite.addTest(DiagramCommandStackTest.suite());
-		suite.addTest(ConnectorHandleLocatorTest.suite());
-		suite.addTest(ConnectorHandleTest.suite());
+		suite.addTest(ConnectionHandleLocatorTest.suite());
+		suite.addTest(ConnectionHandleTest.suite());
 		suite.addTest(NoteTests.suite());
 		suite.addTest(CommandTests.suite());
 		//suite.addTest(URLImageEditPartTests.suite());

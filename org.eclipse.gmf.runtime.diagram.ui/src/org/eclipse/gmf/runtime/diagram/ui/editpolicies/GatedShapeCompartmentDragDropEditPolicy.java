@@ -24,8 +24,8 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.jface.util.Assert;
 
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GateEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ShapeCompartmentDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  * 
  * @see #setHost(EditPart)
  * @author mhanner
+ * @deprecated Deleted. Wasn't being used anymore.
  */
 public class GatedShapeCompartmentDragDropEditPolicy extends ShapeCompartmentDropEditPolicy {
 	/**
@@ -81,16 +82,16 @@ public class GatedShapeCompartmentDragDropEditPolicy extends ShapeCompartmentDro
 	}
 	
 	/** 
-	 * Return <tt>true</tt> if the supplied object is a {@link GateEditPart};
+	 * Return <tt>true</tt> if the supplied object is a {@link BorderItemEditPart};
 	 * otherwise <tt>false</tt>.  Clients may wish to override to provide more
 	 * involved checking.  This method is used by the <code>filterEditParts</code> 
 	 * methods.
 	 * @param object object being tested
-	 * @return <tt>true</tt> if the supplied object is a <code>GateEditPart</code>;
+	 * @return <tt>true</tt> if the supplied object is a <code>BorderItemEditPart</code>;
 	 * otherwise <tt>false</tt>.
 	 */
 	protected boolean isGateEditPart( Object object ) {
-		return object instanceof GateEditPart && ((GateEditPart)object).getMainFigure() instanceof GateFigure;
+		return object instanceof BorderItemEditPart && ((BorderItemEditPart)object).getMainFigure() instanceof BorderItemFigure;
 	}
 	
 	ChangeBoundsRequest cloneRequest( ChangeBoundsRequest request ) {
@@ -115,7 +116,7 @@ public class GatedShapeCompartmentDragDropEditPolicy extends ShapeCompartmentDro
 	}
 	
 	/**
-	 * Honours <code>DropElementRequest</code>s.  <code>GateEditPart</code>s
+	 * Honours <code>DropElementRequest</code>s.  <code>BorderItemEditPart</code>s
 	 * are removed from the supplied request and forwarded to the
 	 * <code>getDropGatesCommand()</code> method while the remaining
 	 * elements are forwarded to <code>getDropElementsCommand()</code>

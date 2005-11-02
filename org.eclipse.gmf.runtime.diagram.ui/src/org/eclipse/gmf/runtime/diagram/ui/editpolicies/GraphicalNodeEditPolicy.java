@@ -40,11 +40,10 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectorAnchorsCommand;
-import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectorEndsCommand;
+import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionAnchorsCommand;
+import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -53,12 +52,13 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectorBendpointsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewAndElementRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -90,9 +90,9 @@ public class GraphicalNodeEditPolicy
 	private IAdaptable _viewAdapter;
 	
 	/**
-	 * The label used for the command to create a new connector.
+	 * The label used for the command to create a new connection.
 	 */
-	private static final String CREATE_CONNECTOR_COMMAND_LABEL = PresentationResourceManager.getInstance()
+	private static final String CREATE_CONNECTION_COMMAND_LABEL = DiagramResourceManager.getInstance()
 		.getString("GraphicalNodeEditPolicy.createRelationshipCommand.label"); //$NON-NLS-1$
 	
 	protected Connection createDummyConnection(Request req) {
@@ -177,11 +177,11 @@ public class GraphicalNodeEditPolicy
 	 */
 	protected String getSemanticHint(Request request) {
 		String hint = null;
-		if (request instanceof CreateConnectorViewAndElementRequest) {
-			CreateConnectorViewAndElementRequest ccvr = (CreateConnectorViewAndElementRequest) request;
+		if (request instanceof CreateConnectionViewAndElementRequest) {
+			CreateConnectionViewAndElementRequest ccvr = (CreateConnectionViewAndElementRequest) request;
 			// get the element descriptor
 			CreateElementRequestAdapter requestAdapter = ccvr
-					.getConnectorViewAndElementDescriptor()
+					.getConnectionViewAndElementDescriptor()
 					.getCreateElementRequestAdapter();
 			// get the semantic request
 			CreateRelationshipRequest createElementRequest = (CreateRelationshipRequest) requestAdapter
@@ -190,9 +190,9 @@ public class GraphicalNodeEditPolicy
 		} else if (request instanceof ReconnectRequest) {
 			ReconnectRequest rr = (ReconnectRequest) request;
 			hint = ViewUtil.getSemanticElementClassId((View)rr.getConnectionEditPart().getModel());
-		} else if (request instanceof CreateConnectorViewRequest) {
-			CreateConnectorViewRequest ccvr = (CreateConnectorViewRequest) request;
-			hint = ccvr.getConnectorViewDescriptor().getSemanticHint();
+		} else if (request instanceof CreateConnectionViewRequest) {
+			CreateConnectionViewRequest ccvr = (CreateConnectionViewRequest) request;
+			hint = ccvr.getConnectionViewDescriptor().getSemanticHint();
 		}
 		return hint;
 	}
@@ -204,12 +204,12 @@ public class GraphicalNodeEditPolicy
 	 * connection has connected to a tree structure then the routing will
 	 * create a tree.
 	 * 
-	 * @param connector
-	 *            IAdaptable that is placeholder for not yet created connector.
+	 * @param connection
+	 *            IAdaptable that is placeholder for not yet created connection.
 	 *            Also adapts directly to a ConnectionEditPart in the case of a
 	 *            reorient.
-	 * @param connectorHint
-	 *            String that is the semantic hint of the connector being
+	 * @param connectionHint
+	 *            String that is the semantic hint of the connection being
 	 *            manipulated
 	 * @param currentRouterType
 	 *            Integer current representation of the routing style
@@ -217,10 +217,10 @@ public class GraphicalNodeEditPolicy
 	 *            EditPart that is being targeted by the request.
 	 * @return Command to make any routing adjustments if necessary.
 	 */
-	protected Command getRoutingAdjustment(IAdaptable connector,
-			String connectorHint, Routing currentRouterType, EditPart target) {
+	protected Command getRoutingAdjustment(IAdaptable connection,
+			String connectionHint, Routing currentRouterType, EditPart target) {
 		Command cmd = null;
-		if (connectorHint == null ||
+		if (connectionHint == null ||
 				target == null || target.getModel() == null
 				|| ((View)target.getModel()).getElement() == null)
 			return null;
@@ -228,7 +228,7 @@ public class GraphicalNodeEditPolicy
 		String targetHint = ViewUtil.getSemanticElementClassId((View) target.getModel());
 		Routing newRouterType = null;
 		if (target instanceof ITreeBranchEditPart
-				&& connectorHint.equals(targetHint)) {
+				&& connectionHint.equals(targetHint)) {
 			newRouterType = Routing.TREE_LITERAL;
 			ChangePropertyValueRequest cpvr = new ChangePropertyValueRequest(
 					StringStatics.BLANK, Properties.ID_ROUTING, newRouterType);
@@ -246,7 +246,7 @@ public class GraphicalNodeEditPolicy
 		if (newRouterType != null) {
 			// add commands for line routing. Convert the new connection and
 			// also the targeted connection.
-			ICommand spc = new SetPropertyCommand(connector,
+			ICommand spc = new SetPropertyCommand(connection,
 				Properties.ID_ROUTING, StringStatics.BLANK, newRouterType);
 			Command cmdRouter = new EtoolsProxyCommand(spc);
 			if (cmdRouter != null) {
@@ -270,17 +270,17 @@ public class GraphicalNodeEditPolicy
 		if (targetEP == null) {
 			return null;
 		}
-		SetConnectorEndsCommand sceCommand = new SetConnectorEndsCommand(null);
-		sceCommand.setConnectorAdaptor(new EObjectAdapter((EObject)request
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(null);
+		sceCommand.setEdgeAdaptor(new EObjectAdapter((EObject)request
 				.getConnectionEditPart().getModel()));
 		sceCommand.setNewTargetAdaptor(targetEP);
-		SetConnectorAnchorsCommand scaCommand = new SetConnectorAnchorsCommand(null);
-		scaCommand.setConnectorAdaptor(new EObjectAdapter((EObject) request
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(null);
+		scaCommand.setEdgeAdaptor(new EObjectAdapter((EObject) request
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewTargetTerminal(targetEP
 				.mapConnectionAnchorToTerminal(targetAnchor));
 		CompositeCommand cc = new CompositeCommand(
-			PresentationResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Target")); //$NON-NLS-1$
+			DiagramResourceManager.getI18NString("Commands.SetConnectionEndsCommand.Target")); //$NON-NLS-1$
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
 		Command cmd = new EtoolsProxyCommand(cc);
@@ -303,8 +303,8 @@ public class GraphicalNodeEditPolicy
 					.getReferencePoint()));
 			pointList.addPoint(targetAnchor.getLocation(sourceAnchor
 					.getReferencePoint()));
-			SetConnectorBendpointsCommand sbbCommand = new SetConnectorBendpointsCommand();
-			sbbCommand.setConnectorAdapter(request.getConnectionEditPart());
+			SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+			sbbCommand.setEdgeAdapter(request.getConnectionEditPart());
 			sbbCommand.setNewPointList(pointList, sourceAnchor
 					.getReferencePoint(), targetAnchor.getReferencePoint());
 			Command cmdBP = new EtoolsProxyCommand(sbbCommand);
@@ -325,17 +325,17 @@ public class GraphicalNodeEditPolicy
 			return null;
 		
 		ConnectionAnchor sourceAnchor = node.getSourceConnectionAnchor(request);
-		SetConnectorEndsCommand sceCommand = new SetConnectorEndsCommand(null);
-		sceCommand.setConnectorAdaptor(new EObjectAdapter((View) request
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(null);
+		sceCommand.setEdgeAdaptor(new EObjectAdapter((View) request
 				.getConnectionEditPart().getModel()));
 		sceCommand.setNewSourceAdaptor(new EObjectAdapter((View)node
 				.getModel()));
-		SetConnectorAnchorsCommand scaCommand = new SetConnectorAnchorsCommand(null);
-		scaCommand.setConnectorAdaptor(new EObjectAdapter((View) request
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(null);
+		scaCommand.setEdgeAdaptor(new EObjectAdapter((View) request
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewSourceTerminal(node.mapConnectionAnchorToTerminal(sourceAnchor));
 		CompositeCommand cc = new CompositeCommand(
-			PresentationResourceManager.getI18NString("Commands.SetConnectorEndsCommand.Source")); //$NON-NLS-1$
+			DiagramResourceManager.getI18NString("Commands.SetConnectionEndsCommand.Source")); //$NON-NLS-1$
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
 		return new EtoolsProxyCommand(cc);
@@ -365,14 +365,14 @@ public class GraphicalNodeEditPolicy
 		CompositeCommand cc = (CompositeCommand) proxy.getICommand();
 		ConnectionAnchor targetAnchor = targetEP
 			.getTargetConnectionAnchor(request);
-		SetConnectorEndsCommand sceCommand = (SetConnectorEndsCommand) cc
+		SetConnectionEndsCommand sceCommand = (SetConnectionEndsCommand) cc
 			.getCommands().get(1);
 		sceCommand.setNewTargetAdaptor(new EObjectAdapter(((IGraphicalEditPart) targetEP).getNotationView()));
-		SetConnectorAnchorsCommand scaCommand = (SetConnectorAnchorsCommand) cc
+		SetConnectionAnchorsCommand scaCommand = (SetConnectionAnchorsCommand) cc
 		.getCommands().get(2);
 		scaCommand.setNewTargetTerminal(targetEP
 			.mapConnectionAnchorToTerminal(targetAnchor));
-		setViewAdapter(sceCommand.getConnectorAdaptor());
+		setViewAdapter(sceCommand.getEdgeAdaptor());
 		INodeEditPart sourceEditPart = (INodeEditPart) request
 			.getSourceEditPart();
 		ConnectionAnchor sourceAnchor = sourceEditPart
@@ -386,7 +386,7 @@ public class GraphicalNodeEditPolicy
 			pointList.addPoint(sourceAnchor.getLocation(request.getLocation()));
 			pointList.addPoint(targetAnchor.getLocation(request.getLocation()));
 		}
-		SetConnectorBendpointsCommand sbbCommand = (SetConnectorBendpointsCommand) cc
+		SetConnectionBendpointsCommand sbbCommand = (SetConnectionBendpointsCommand) cc
 			.getCommands().get(3);
 		sbbCommand.setNewPointList(pointList, sourceAnchor.getReferencePoint(),
 			targetAnchor.getReferencePoint());
@@ -394,7 +394,7 @@ public class GraphicalNodeEditPolicy
 	}
 	
 	/**
-	 * Cache the view descriptor describing the connector to be create.
+	 * Cache the view descriptor describing the connection to be create.
 	 * 
 	 * @param viewAdapter
 	 */
@@ -411,28 +411,28 @@ public class GraphicalNodeEditPolicy
 		return _viewAdapter;
 	}
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
-		if (!(request instanceof CreateConnectorViewRequest))
+		if (!(request instanceof CreateConnectionViewRequest))
 			return null;
-		CreateConnectorViewRequest req = (CreateConnectorViewRequest) request;
-		CompositeCommand cc = new CompositeCommand(PresentationResourceManager.
-			getI18NString("Commands.CreateCommand.Connector.Label")); //$NON-NLS-1$
+		CreateConnectionViewRequest req = (CreateConnectionViewRequest) request;
+		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.
+			getI18NString("Commands.CreateCommand.Connection.Label")); //$NON-NLS-1$
 		Diagram diagramView = ((View)getHost().getModel())
 				.getDiagram();
 		CreateCommand createCommand = new CreateCommand(req
-				.getConnectorViewDescriptor(), diagramView.getDiagram());
+				.getConnectionViewDescriptor(), diagramView.getDiagram());
 		setViewAdapter((IAdaptable) createCommand.getCommandResult()
 				.getReturnValue());
-		SetConnectorEndsCommand sceCommand = new SetConnectorEndsCommand(null);
-		sceCommand.setConnectorAdaptor(getViewAdapter());
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(null);
+		sceCommand.setEdgeAdaptor(getViewAdapter());
 		sceCommand.setNewSourceAdaptor(new EObjectAdapter(getView()));
 		ConnectionAnchor sourceAnchor = getConnectableEditPart()
 				.getSourceConnectionAnchor(request);
-		SetConnectorAnchorsCommand scaCommand = new SetConnectorAnchorsCommand(null);
-		scaCommand.setConnectorAdaptor(getViewAdapter());
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(null);
+		scaCommand.setEdgeAdaptor(getViewAdapter());
 		scaCommand.setNewSourceTerminal(getConnectableEditPart()
 				.mapConnectionAnchorToTerminal(sourceAnchor));
-		SetConnectorBendpointsCommand sbbCommand = new SetConnectorBendpointsCommand();
-		sbbCommand.setConnectorAdapter(getViewAdapter());
+		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+		sbbCommand.setEdgeAdapter(getViewAdapter());
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
@@ -444,15 +444,15 @@ public class GraphicalNodeEditPolicy
 	
 	public Command getCommand(Request request) {
 		if (RequestConstants.REQ_CONNECTION_START.equals(request.getType())) {
-			if (request instanceof CreateConnectorViewAndElementRequest) {
-				return getConnectionAndRelationshipCreateCommand((CreateConnectorViewAndElementRequest) request);
+			if (request instanceof CreateConnectionViewAndElementRequest) {
+				return getConnectionAndRelationshipCreateCommand((CreateConnectionViewAndElementRequest) request);
 			} else if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
 				return getUnspecifiedConnectionCreateCommand((CreateUnspecifiedTypeConnectionRequest) request);
 			}
 		} else if (RequestConstants.REQ_CONNECTION_END
 			.equals(request.getType())) {
-			if (request instanceof CreateConnectorViewAndElementRequest) {
-				return getConnectionAndRelationshipCompleteCommand((CreateConnectorViewAndElementRequest) request);
+			if (request instanceof CreateConnectionViewAndElementRequest) {
+				return getConnectionAndRelationshipCompleteCommand((CreateConnectionViewAndElementRequest) request);
 			} else if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
 				return getUnspecifiedConnectionCompleteCommand((CreateUnspecifiedTypeConnectionRequest) request);
 			}
@@ -468,10 +468,10 @@ public class GraphicalNodeEditPolicy
 	 * @return Command
 	 */
 	protected Command getConnectionAndRelationshipCreateCommand(
-			CreateConnectorViewAndElementRequest request) {
+			CreateConnectionViewAndElementRequest request) {
 		// get the element descriptor
 		CreateElementRequestAdapter requestAdapter = request
-				.getConnectorViewAndElementDescriptor().getCreateElementRequestAdapter();
+				.getConnectionViewAndElementDescriptor().getCreateElementRequestAdapter();
 		// get the semantic request
 		CreateRelationshipRequest createElementRequest = (CreateRelationshipRequest) requestAdapter
 				.getAdapter(CreateRelationshipRequest.class);
@@ -526,10 +526,10 @@ public class GraphicalNodeEditPolicy
 				.hasNext();) {
 				Request individualRequest = (Request) iter.next();
 				Command cmd = null;
-				if (individualRequest instanceof CreateConnectorViewAndElementRequest) {
-					cmd = getConnectionAndRelationshipCreateCommand((CreateConnectorViewAndElementRequest) individualRequest);
-				} else if (individualRequest instanceof CreateConnectorViewRequest) {
-					cmd = getConnectionCreateCommand((CreateConnectorViewRequest) individualRequest);
+				if (individualRequest instanceof CreateConnectionViewAndElementRequest) {
+					cmd = getConnectionAndRelationshipCreateCommand((CreateConnectionViewAndElementRequest) individualRequest);
+				} else if (individualRequest instanceof CreateConnectionViewRequest) {
+					cmd = getConnectionCreateCommand((CreateConnectionViewRequest) individualRequest);
 				}
 				if (cmd != null) {
 					commands.add(cmd);
@@ -563,10 +563,10 @@ public class GraphicalNodeEditPolicy
 	 * @return Command
 	 */
 	protected Command getConnectionAndRelationshipCompleteCommand(
-			CreateConnectorViewAndElementRequest request) {
+			CreateConnectionViewAndElementRequest request) {
 		// get the element descriptor
 		CreateElementRequestAdapter requestAdapter = request
-				.getConnectorViewAndElementDescriptor().getCreateElementRequestAdapter();
+				.getConnectionViewAndElementDescriptor().getCreateElementRequestAdapter();
 		// get the semantic request
 		CreateRelationshipRequest createElementRequest = (CreateRelationshipRequest) requestAdapter
 				.getAdapter(CreateRelationshipRequest.class);
@@ -631,30 +631,30 @@ public class GraphicalNodeEditPolicy
 			.getInstance().getRelTypesOnSourceAndTarget(sourceEP, targetEP)
 			: request.getElementTypes();
 
-		final Map connectorCmds = new HashMap();
+		final Map connectionCmds = new HashMap();
 		List validRelTypes = new ArrayList();
 		for (Iterator iter = relTypes.iterator(); iter.hasNext();) {
 			IElementType type = (IElementType) iter.next();
-			Request createConnectorRequest = request
+			Request createConnectionRequest = request
 				.getRequestForType(type);
-			if (createConnectorRequest != null) {
+			if (createConnectionRequest != null) {
 				Command individualCmd = getHost().getCommand(
-					createConnectorRequest);
+					createConnectionRequest);
 
 				if (individualCmd != null && individualCmd.canExecute()) {
-					connectorCmds.put(type, individualCmd);
+					connectionCmds.put(type, individualCmd);
 					validRelTypes.add(type);
 				}
 			}
 		}
 		
-		if (connectorCmds.isEmpty()) {
+		if (connectionCmds.isEmpty()) {
 			return null;
-		} else if (connectorCmds.size() == 1) {
-			return (Command) connectorCmds.values().toArray()[0];
+		} else if (connectionCmds.size() == 1) {
+			return (Command) connectionCmds.values().toArray()[0];
 		} else {
-			CreateOrSelectElementCommand selectAndCreateConnectorCmd = new CreateOrSelectElementCommand(
-				CREATE_CONNECTOR_COMMAND_LABEL, Display.getCurrent().getActiveShell(), validRelTypes) {
+			CreateOrSelectElementCommand selectAndCreateConnectionCmd = new CreateOrSelectElementCommand(
+				CREATE_CONNECTION_COMMAND_LABEL, Display.getCurrent().getActiveShell(), validRelTypes) {
 				
 				/**
 				 * My command to undo/redo.
@@ -678,7 +678,7 @@ public class GraphicalNodeEditPolicy
 					IElementType relationshipType = (IElementType) cmdResult
 						.getReturnValue();
 
-					Command cmd = (Command) connectorCmds.get(relationshipType);
+					Command cmd = (Command) connectionCmds.get(relationshipType);
 					Assert.isTrue(cmd != null && cmd.canExecute());
 					cmd.execute();
 					undoCommand = cmd;
@@ -703,7 +703,7 @@ public class GraphicalNodeEditPolicy
 			};
 			
 
-			return new EtoolsProxyCommand(selectAndCreateConnectorCmd);
+			return new EtoolsProxyCommand(selectAndCreateConnectionCmd);
 		}
 	}
 
@@ -723,21 +723,21 @@ public class GraphicalNodeEditPolicy
 		EditPart realTargetEP = request.getSourceEditPart();
 		for (Iterator iter = request.getAllRequests().iterator(); iter
 			.hasNext();) {
-			CreateConnectionRequest connectorRequest = (CreateConnectionRequest) iter
+			CreateConnectionRequest connectionRequest = (CreateConnectionRequest) iter
 				.next();
 
 			// First, setup the request to initialize the connection start
 			// command.
-			connectorRequest.setSourceEditPart(null);
-			connectorRequest.setTargetEditPart(realSourceEP);
-			connectorRequest.setType(RequestConstants.REQ_CONNECTION_START);
-			realSourceEP.getCommand(connectorRequest);
+			connectionRequest.setSourceEditPart(null);
+			connectionRequest.setTargetEditPart(realSourceEP);
+			connectionRequest.setType(RequestConstants.REQ_CONNECTION_START);
+			realSourceEP.getCommand(connectionRequest);
 
 			// Now, setup the request in preparation to get the connection end
 			// command.
-			connectorRequest.setSourceEditPart(realSourceEP);
-			connectorRequest.setTargetEditPart(realTargetEP);
-			connectorRequest.setType(RequestConstants.REQ_CONNECTION_END);
+			connectionRequest.setSourceEditPart(realSourceEP);
+			connectionRequest.setTargetEditPart(realTargetEP);
+			connectionRequest.setType(RequestConstants.REQ_CONNECTION_END);
 		}
 
 		// The requests are now ready to be sent to get the connection end

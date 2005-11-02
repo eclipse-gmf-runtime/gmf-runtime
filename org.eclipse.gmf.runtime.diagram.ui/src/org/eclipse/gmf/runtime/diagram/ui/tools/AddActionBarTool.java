@@ -19,12 +19,11 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
-
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractAddActionBarTool;
+import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.notation.View;
@@ -35,10 +34,10 @@ import org.eclipse.gmf.runtime.notation.View;
  * calls Handle.getDragTracker during mouseDown.
  * 
  * @author affrantz, cmahoney
- * 
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.tools.PopupBarTool}
  */
 
-public class AddActionBarTool extends AbstractAddActionBarTool implements DragTracker {
+public class AddActionBarTool extends AbstractPopupBarTool implements DragTracker {
 
 	/** When creating shapes on a dgrm using the abar, we do not
 	 * want to cover the new shape with the abar, so we offset

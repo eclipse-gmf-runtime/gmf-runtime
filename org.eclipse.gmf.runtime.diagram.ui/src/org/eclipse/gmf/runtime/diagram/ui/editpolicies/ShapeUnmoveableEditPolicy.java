@@ -19,6 +19,7 @@ import org.eclipse.gef.commands.Command;
  * This edit policy does not allow elements to be moved
  * 
  * @author Wayne Diu, wdiu
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.UnmovableShapeEditPolicy}
  **/
 public class ShapeUnmoveableEditPolicy extends ShapeResizableEditPolicy {
 	

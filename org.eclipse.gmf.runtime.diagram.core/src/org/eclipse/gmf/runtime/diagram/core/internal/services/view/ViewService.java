@@ -209,7 +209,7 @@ final public class ViewService
 			return providerExistsFor(new CreateDiagramViewOperation(
 				semanticAdapter, semanticHint, preferencesHint));
 		else if (viewKind == Edge.class)
-			return providerExistsFor(new CreateConnectorViewOperation(
+			return providerExistsFor(new CreateEdgeViewOperation(
 				semanticAdapter, containerView, semanticHint, index, persisted, preferencesHint));
 		else if (viewKind == Node.class)
 			return providerExistsFor(new CreateNodeViewOperation(
@@ -265,7 +265,7 @@ final public class ViewService
 	public final Edge createEdge(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index,
 		boolean persisted, PreferencesHint preferencesHint) {
-		Edge edge = (Edge) execute(new CreateConnectorViewOperation(
+		Edge edge = (Edge) execute(new CreateEdgeViewOperation(
 			semanticAdapter, containerView, semanticHint, index, persisted, preferencesHint));
 		return edge;
 	}
@@ -282,7 +282,7 @@ final public class ViewService
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 * @return
 	 */
-	public final View createConnectorView(IAdaptable semanticAdapter,
+	public final View createEdge(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index, PreferencesHint preferencesHint) {
 		return createEdge(semanticAdapter, containerView,
 			semanticHint, index, true, preferencesHint);

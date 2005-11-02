@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.LabelHelper;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -38,9 +38,10 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * Edit policy which supports 
  * @author jcorchis
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeLabelEditPolicy}
  */
 public class ShapeLabelResizableEditPolicy
-	extends ShapeResizableEditPolicy {
+	extends ResizableShapeEditPolicy {
 	private Polyline tether = null;
 
 	/**
@@ -93,7 +94,7 @@ public class ShapeLabelResizableEditPolicy
 
  		ICommand moveCommand = 
  			new SetBoundsCommand(
- 				PresentationResourceManager.getI18NString("MoveLabelCommand.Label.Location"),//$NON-NLS-1$
+ 				DiagramResourceManager.getI18NString("MoveLabelCommand.Label.Location"),//$NON-NLS-1$
  				new EObjectAdapter((View)getHost().getModel()),
 				normalPoint); 
 		return new EtoolsProxyCommand(moveCommand);
@@ -175,7 +176,7 @@ public class ShapeLabelResizableEditPolicy
 
  		ICommand resizeCommand = 
  			new SetBoundsCommand(
- 				PresentationResourceManager.getI18NString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+ 				DiagramResourceManager.getI18NString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
  				new EObjectAdapter(shapeView),
 				rect.getSize()); 
 		return new EtoolsProxyCommand(resizeCommand);

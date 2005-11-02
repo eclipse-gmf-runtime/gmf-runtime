@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultConnectorEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.CreateRootEditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation;
@@ -193,7 +193,7 @@ final public class EditPartService
 					result = new DefaultNodeEditPart(view);
 				}
 			} else if (view instanceof Edge) {
-				result = new DefaultConnectorEditPart(view);
+				result = new DefaultConnectionEditPart(view);
 			} else if (view instanceof Diagram) {
 				result = new DiagramEditPart(view);
 			}

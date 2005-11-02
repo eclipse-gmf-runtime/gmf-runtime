@@ -37,7 +37,7 @@ public class GefResourceManager extends AbstractUIResourceManager {
 		new GefResourceManager();
 
 	/**
-	 * Constructor for PresentationResourceManager.
+	 * Constructor for GefResourceManager.
 	 */
 	private GefResourceManager() {
 		super();

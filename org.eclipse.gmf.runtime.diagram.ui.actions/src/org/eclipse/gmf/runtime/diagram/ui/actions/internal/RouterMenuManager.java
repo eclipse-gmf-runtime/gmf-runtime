@@ -11,12 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author melaasar
@@ -31,11 +30,18 @@ public class RouterMenuManager extends ActionMenuManager {
 	 */
 	private static class RouterMenuAction extends Action {
 		public RouterMenuAction() {
-			setText(Messages.getString("RouterActionMenu.LineStyleDropDownText")); //$NON-NLS-1$
-			setToolTipText(Messages.getString("RouterActionMenu.LineStyleDropDownTooltip")); //$NON-NLS-1$
-			setImageDescriptor(Images.DESC_ACTION_CHANGEROUTER_GROUP);
-			setDisabledImageDescriptor(Images.DESC_ACTION_CHANGEROUTER_GROUP_DISABLED);
-			setHoverImageDescriptor(Images.DESC_ACTION_CHANGEROUTER_GROUP);			
+			setText(DiagramActionsResourceManager.getI18NString("RouterActionMenu.LineStyleDropDownText")); //$NON-NLS-1$
+			setToolTipText(DiagramActionsResourceManager.getI18NString("RouterActionMenu.LineStyleDropDownTooltip")); //$NON-NLS-1$
+			
+			ImageDescriptor enabledImage = DiagramActionsResourceManager
+				.getInstance().getImageDescriptor(
+					DiagramActionsResourceManager.IMAGE_CHANGEROUTER_GROUP);
+			setImageDescriptor(enabledImage);
+			setDisabledImageDescriptor(DiagramActionsResourceManager
+				.getInstance()
+				.getImageDescriptor(
+					DiagramActionsResourceManager.IMAGE_CHANGEROUTER_GROUP_DISABLED));
+			setHoverImageDescriptor(enabledImage);			
 		}
 	}
 

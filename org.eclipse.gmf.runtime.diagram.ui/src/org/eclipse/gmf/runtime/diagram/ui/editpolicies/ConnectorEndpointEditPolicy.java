@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ConnectorStartHandle;
 /**
  * connector end point edit policy
  * @author mmostafa
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionEndpointEditPolicy}
  */
 public class ConnectorEndpointEditPolicy
 	extends org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy {

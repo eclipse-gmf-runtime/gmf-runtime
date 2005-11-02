@@ -25,7 +25,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalF
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
@@ -88,7 +88,7 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createOwnedTerminalFigure(org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal)
 	 */
 	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
-		GateFigure theFigure = null;
+		BorderItemFigure theFigure = null;
 		if (terminal instanceof InputTerminal) {
 			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId());
 		} else {

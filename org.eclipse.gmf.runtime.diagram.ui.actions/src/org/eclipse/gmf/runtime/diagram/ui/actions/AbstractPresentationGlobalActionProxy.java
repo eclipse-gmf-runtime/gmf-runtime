@@ -20,27 +20,28 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionCon
  * and destroys it after use.
  * 
  * @author wdiu, Wayne Diu
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.actions.AbstractDiagramGlobalActionProxy}
  */
 abstract public class AbstractPresentationGlobalActionProxy extends AbstractGlobalActionHandler {
 	
 	/**
-	 * Instantiate the PresentationAction.  You should call dispose() on the
+	 * Instantiate the DiagramAction.  You should call dispose() on the
 	 * action when done with it.  This is particularly important when the
 	 * action is a selection listener.
 	 * 
-	 * Subclasses should return an instance of the PresentationAction
+	 * Subclasses should return an instance of the DiagramAction
 	 * 
 	 * @param context the <code>IGlobalActionContext</code> holding nevessary context information for the action 
-	 * @return PresentationAction the newly instantiated action
+	 * @return DiagramAction the newly instantiated action
 	 */	
-	abstract protected PresentationAction instantiateAction(IGlobalActionContext context);
+	abstract protected DiagramAction instantiateAction(IGlobalActionContext context);
 	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#getCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
-		PresentationAction presentationAction =
+		DiagramAction presentationAction =
 			instantiateAction(cntxt);
 		presentationAction.init();
 		presentationAction.refresh();
@@ -54,7 +55,7 @@ abstract public class AbstractPresentationGlobalActionProxy extends AbstractGlob
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#canHandle(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public boolean canHandle(IGlobalActionContext cntxt) {
-		PresentationAction presentationAction = instantiateAction(cntxt);
+		DiagramAction presentationAction = instantiateAction(cntxt);
 		presentationAction.init();
 		presentationAction.refresh();
 		boolean isEnabled = presentationAction.isEnabled();

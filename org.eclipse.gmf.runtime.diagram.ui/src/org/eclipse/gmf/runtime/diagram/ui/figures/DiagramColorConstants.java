@@ -18,8 +18,6 @@ import org.eclipse.swt.graphics.Color;
  * Set of color constants that are commonly used.
  * 
  * @author sshaw
- * @canBeSeenBy %partners
- *
  */
 public interface DiagramColorConstants
 	extends ColorConstants{

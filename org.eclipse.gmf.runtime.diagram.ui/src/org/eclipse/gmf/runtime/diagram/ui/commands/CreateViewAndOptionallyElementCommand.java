@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -81,7 +81,7 @@ public class CreateViewAndOptionallyElementCommand
 	
 	/**
 	 * The hint used to find the appropriate preference store from which general
-	 * diagramming preference values for properties of shapes, connectors, and
+	 * diagramming preference values for properties of shapes, connections, and
 	 * diagrams can be retrieved. This hint is mapped to a preference store in
 	 * the {@link DiagramPreferencesRegistry}.
 	 */
@@ -106,7 +106,7 @@ public class CreateViewAndOptionallyElementCommand
 	 */
 	public CreateViewAndOptionallyElementCommand(IAdaptable elementAdapter,
 		IGraphicalEditPart containerEP, Point location, PreferencesHint preferencesHint) {
-		super(PresentationResourceManager.getI18NString("CreateCommand.Label")); //$NON-NLS-1$
+		super(DiagramResourceManager.getI18NString("CreateCommand.Label")); //$NON-NLS-1$
 
 		setElementAdapter(elementAdapter);
 		setContainerEP(containerEP);
@@ -194,9 +194,9 @@ public class CreateViewAndOptionallyElementCommand
 				{
 					MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(), SWT.YES | SWT.NO);
 
-					messageBox.setText(PresentationResourceManager.getI18NString("CreateViewAndOptionallyElementCommand.ViewExists.Title"));//$NON-NLS-1$
+					messageBox.setText(DiagramResourceManager.getI18NString("CreateViewAndOptionallyElementCommand.ViewExists.Title"));//$NON-NLS-1$
 					messageBox.setMessage(MessageFormat.
-						format(PresentationResourceManager.getI18NString("CreateViewAndOptionallyElementCommand.ViewExists.Message"), //$NON-NLS-1$
+						format(DiagramResourceManager.getI18NString("CreateViewAndOptionallyElementCommand.ViewExists.Message"), //$NON-NLS-1$
 						new Object[] {EObjectUtil.getName(element)}));
 					int iResult = messageBox.open();
 					if(iResult == SWT.YES)

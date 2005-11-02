@@ -17,6 +17,7 @@ import org.eclipse.gef.Request;
  * Request to set the visiblity of the labels.
  * 
  * @author jcorchis
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.requests.ToggleConnectionLabelsRequest}
  */
 public class ToggleConnectorLabelsRequest extends Request {
 	
@@ -28,7 +29,7 @@ public class ToggleConnectorLabelsRequest extends Request {
 	 * @param showConnectorLabel to show/hide the labels
 	 */
 	public ToggleConnectorLabelsRequest(boolean showConnectorLabel) {
-		super(RequestConstants.REQ_TOGGLE_CONNECTOR_LABELS);
+		super(RequestConstants.REQ_TOGGLE_CONNECTION_LABELS);
 		_showConnectorLabel = showConnectorLabel;
 	}
 	

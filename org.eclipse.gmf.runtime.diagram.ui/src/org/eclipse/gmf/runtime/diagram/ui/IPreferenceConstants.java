@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,15 @@
 package org.eclipse.gmf.runtime.diagram.ui;
 
 /**
- * Defines preference constants for presentation plugin.
+ * Defines preference constants for the GMF diagram layer.
  * 
  * @author schafe
- * 
+ * @deprecated Moved to org.eclipse.gmf.runtime.diagram.ui.preferences
  */
 public interface IPreferenceConstants {
 
     /**
-     * the connector line style; shows up in ConnectorsPreferencePage 
+     * the connection line style; shows up in ConnectionsPreferencePage 
      */
     public static final String PREF_LINE_STYLE = "Connectors.lineStyle"; //$NON-NLS-1$
 
@@ -69,14 +69,17 @@ public interface IPreferenceConstants {
      * show drop shadow preference; Global Preference 
      */
     public static final String PREF_SHOW_DROPSHADOW = "Global.showDropShadow"; //$NON-NLS-1$
+    
     /**
-     * show connector habdles preference; Global Preference 
+     * show connection handles preference; Global Preference 
      */
-	public static final String PREF_SHOW_CONNECTOR_HANDLES = "Global.showConnectorHandles"; //$NON-NLS-1$
+	public static final String PREF_SHOW_CONNECTION_HANDLES = "Global.showConnectionHandles"; //$NON-NLS-1$
+	
 	/**
-     * show action bars preference;; Global Preference 
+     * show popup bars preference;; Global Preference 
      */
-	public static final String PREF_SHOW_ACTION_BARS = "Global.showActionBars"; //$NON-NLS-1$
+	public static final String PREF_SHOW_POPUP_BARS = "Global.showPopupBars"; //$NON-NLS-1$
+
 	/**
      * the bold name preference;; Global Preference 
      */

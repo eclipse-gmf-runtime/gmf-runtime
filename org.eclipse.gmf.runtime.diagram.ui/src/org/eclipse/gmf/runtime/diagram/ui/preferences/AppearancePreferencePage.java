@@ -27,12 +27,11 @@ import org.eclipse.swt.widgets.Group;
 
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.FontFieldEditor;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
- * Presentation Appearance General preference page.
+ * Appearance General preference page.
  * 
  * @author schafe
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -41,13 +40,13 @@ public class AppearancePreferencePage
     extends AbstractPreferencePage {
 
     //localized labels
-	private String COLORANDFONT_GROUPBOX_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.colorAndFontGroupBox.label");//$NON-NLS-1$
-	private String DEFAULT_FONT_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.defaultFont.label"); //$NON-NLS-1$
-    private String FONT_COLOR_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.fontColor.label"); //$NON-NLS-1$
-    private String FILL_COLOR_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.fillColor.label"); //$NON-NLS-1$
-    private String LINE_COLOR_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.lineColor.label"); //$NON-NLS-1$
-    private String NOTE_FILL_COLOR_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.noteFillColor.label"); //$NON-NLS-1$
-    private String NOTE_LINE_COLOR_LABEL = PresentationResourceManager.getI18NString("GeneralPreferencePage.noteLineColor.label"); //$NON-NLS-1$
+	private String COLORANDFONT_GROUPBOX_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.colorAndFontGroupBox.label");//$NON-NLS-1$
+	private String DEFAULT_FONT_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.defaultFont.label"); //$NON-NLS-1$
+    private String FONT_COLOR_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.fontColor.label"); //$NON-NLS-1$
+    private String FILL_COLOR_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.fillColor.label"); //$NON-NLS-1$
+    private String LINE_COLOR_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.lineColor.label"); //$NON-NLS-1$
+    private String NOTE_FILL_COLOR_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.noteFillColor.label"); //$NON-NLS-1$
+    private String NOTE_LINE_COLOR_LABEL = DiagramResourceManager.getI18NString("GeneralPreferencePage.noteLineColor.label"); //$NON-NLS-1$
 				
     //preference page editor controls 
     private FontFieldEditor defaultFontEditor = null;

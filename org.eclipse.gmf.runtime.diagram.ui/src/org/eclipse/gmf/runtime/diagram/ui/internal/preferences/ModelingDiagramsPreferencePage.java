@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 
 /**
  * The diagrams preference page used for the Modeling preferences.
@@ -35,13 +35,13 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
 public class ModelingDiagramsPreferencePage
 	extends DiagramsPreferencePage {
 
-	private String DELETING_ELEMS_FROM_DS = PresentationResourceManager
+	private String DELETING_ELEMS_FROM_DS = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.DeletingElementsFromDiagramSurfaceGroup.label"); //$NON-NLS-1$
 
-	private String PROMPT_ON_DEL_FROM_MODEL = PresentationResourceManager
+	private String PROMPT_ON_DEL_FROM_MODEL = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.PromptOnDelFromModel.label"); //$NON-NLS-1$
 
-	private String PROMPT_ON_DEL_FROM_DIAGRAM = PresentationResourceManager
+	private String PROMPT_ON_DEL_FROM_DIAGRAM = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.PromptOnDelFromDiagram.label"); //$NON-NLS-1$
 
 

@@ -43,7 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.DuplicateViewsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.PasteCommand;
@@ -55,7 +55,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNode;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutService;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -117,7 +117,7 @@ public class ContainerEditPolicy
 		if (data != null
 			&& viewContext != null
 			&& editPart instanceof ISurfaceEditPart) {
-			return new EtoolsProxyCommand(new PasteCommand(PresentationResourceManager.getI18NString("PasteCommand.Label"), viewContext, data)); //$NON-NLS-1$
+			return new EtoolsProxyCommand(new PasteCommand(DiagramResourceManager.getI18NString("PasteCommand.Label"), viewContext, data)); //$NON-NLS-1$
 		}
 
 		return null;
@@ -334,7 +334,7 @@ public class ContainerEditPolicy
 		for (Iterator iter = request.getEditParts().iterator(); iter.hasNext();) {
 			Object ep = iter.next();
 			if (ep instanceof ConnectionEditPart || ep instanceof ShapeEditPart
-				|| ep instanceof ListItemCompartmentEditPart) {
+				|| ep instanceof ListItemEditPart) {
 				
 				// More work needs to be done to duplicate connections whose
 				// source or target isn't also duplicated, so disable for now.
@@ -382,13 +382,13 @@ public class ContainerEditPolicy
 				if (duplicateElementsCommand != null
 					&& duplicateElementsCommand.canExecute()) {
 					CompositeCommand cc = new CompositeCommand(
-						PresentationResourceManager
+						DiagramResourceManager
 							.getI18NString("Commands.Duplicate.Label")); //$NON-NLS-1$
 					cc
 						.compose(new XtoolsProxyCommand(
 							duplicateElementsCommand));
 					cc.compose(new DuplicateViewsCommand(
-						PresentationResourceManager
+						DiagramResourceManager
 							.getI18NString("Commands.Duplicate.Label"), //$NON-NLS-1$
 						request, notationViewsToDuplicate,
 						duplicateElementsRequest.getAllDuplicatedElementsMap()));
@@ -396,7 +396,7 @@ public class ContainerEditPolicy
 				}
 			} else {
 				return new EtoolsProxyCommand(new DuplicateViewsCommand(
-					PresentationResourceManager
+					DiagramResourceManager
 						.getI18NString("Commands.Duplicate.Label"), //$NON-NLS-1$
 					request, notationViewsToDuplicate));
 			}

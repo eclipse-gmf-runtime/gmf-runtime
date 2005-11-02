@@ -19,8 +19,9 @@ import org.eclipse.gef.commands.Command;
  * This edit policy does not allow elements to be moved
  * 
  * @author Wayne Diu, wdiu
- */
-public class ConnectorUnmoveableEditPolicy extends ConnectorEndpointEditPolicy {
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.UnmovableConnectionEditPolicy}
+ *  */
+public class ConnectorUnmoveableEditPolicy extends ConnectionEndpointEditPolicy {
 	/**
 	 * Just override getCommand to always return null.
 	 * 

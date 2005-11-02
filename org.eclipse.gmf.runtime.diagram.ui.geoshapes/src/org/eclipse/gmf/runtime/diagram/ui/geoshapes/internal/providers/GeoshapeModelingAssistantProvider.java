@@ -36,7 +36,7 @@ public class GeoshapeModelingAssistantProvider
 	extends ModelingAssistantProvider {
 
 	/** List containing the connector types. */
-	private static List connectorTypes = null;
+	private static List connectionTypes = null;
 
 	/** List containing the geoshape types. */
 	private static List shapeTypes = null;
@@ -46,11 +46,11 @@ public class GeoshapeModelingAssistantProvider
 	 * 
 	 * @return the list of connector types
 	 */
-	private static List getConnectorTypes() {
-		if (connectorTypes == null) {
-			connectorTypes = Collections.singletonList(GeoshapeType.LINE);
+	private static List getConnectionTypes() {
+		if (connectionTypes == null) {
+			connectionTypes = Collections.singletonList(GeoshapeType.LINE);
 		}
-		return connectorTypes;
+		return connectionTypes;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class GeoshapeModelingAssistantProvider
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSource(org.eclipse.core.runtime.IAdaptable)
 	 */
 	public List getRelTypesOnSource(IAdaptable source) {
-		return getConnectorTypes();
+		return getConnectionTypes();
 	}
 	
 	/*
@@ -96,7 +96,7 @@ public class GeoshapeModelingAssistantProvider
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnTarget(org.eclipse.core.runtime.IAdaptable)
 	 */
 	public List getRelTypesOnTarget(IAdaptable target) {
-		return getConnectorTypes();
+		return getConnectionTypes();
 	}
 	
 	/*
@@ -107,7 +107,7 @@ public class GeoshapeModelingAssistantProvider
 	 */
 	public List getRelTypesOnSourceAndTarget(IAdaptable source,
 			IAdaptable target) {
-		return getConnectorTypes();
+		return getConnectionTypes();
 	}
 
 	/*

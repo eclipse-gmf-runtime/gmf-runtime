@@ -38,7 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteTemplateEntry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
@@ -180,7 +180,7 @@ public class DefaultPaletteProvider
 
 			label = configElement.getAttribute(LABEL);
 			if (label == null)
-				label = PresentationResourceManager.getI18NString(DEFAULT_ENTRY_LABEL);
+				label = DiagramResourceManager.getI18NString(DEFAULT_ENTRY_LABEL);
 
 			description = configElement.getAttribute(DESCRIPTION);
 

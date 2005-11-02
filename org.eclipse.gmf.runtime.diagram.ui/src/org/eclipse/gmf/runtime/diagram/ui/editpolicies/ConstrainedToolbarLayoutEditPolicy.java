@@ -28,7 +28,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GateEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
@@ -36,7 +36,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetCompartmentRatioCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.FixedLocationResizableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TextSelectionEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -97,8 +97,8 @@ public class ConstrainedToolbarLayoutEditPolicy
 				return new ResizableCompartmentEditPolicy(isHorizontal());
 			else if (child instanceof TextCompartmentEditPart)
 				return new TextSelectionEditPolicy();
-			else if ( child instanceof GateEditPart)
-				return new GateNonResizableEditPolicy();
+			else if ( child instanceof BorderItemEditPart)
+				return new BorderItemSelectionEditPolicy();
 			else if ( child instanceof FixedLocationResizableEditPart)
 				return  child.getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);
 		}
@@ -136,7 +136,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 	 * @return command
 	 */
 	protected Command getAutoSizeCommand(Request request) {
-		CompositeModelCommand cmc = new CompositeModelCommand(PresentationResourceManager.getI18NString("Command.AdjustRatioCommand.Label")); //$NON-NLS-1$
+		CompositeModelCommand cmc = new CompositeModelCommand(DiagramResourceManager.getI18NString("Command.AdjustRatioCommand.Label")); //$NON-NLS-1$
 		Iterator children = getHost().getChildren().iterator();
 		while (children.hasNext()) {
 			IGraphicalEditPart child = (IGraphicalEditPart) children.next();
@@ -151,7 +151,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
 	 */
 	protected Command getResizeChildrenCommand(ChangeBoundsRequest req) {
-		CompositeModelCommand cmc = new CompositeModelCommand(PresentationResourceManager.getI18NString("Command.AdjustRatioCommand.Label")); //$NON-NLS-1$
+		CompositeModelCommand cmc = new CompositeModelCommand(DiagramResourceManager.getI18NString("Command.AdjustRatioCommand.Label")); //$NON-NLS-1$
 		
 		boolean before = transposer.t(req.getMoveDelta()).y != 0;
 		GraphicalEditPart c = (GraphicalEditPart) req.getEditParts().get(0);

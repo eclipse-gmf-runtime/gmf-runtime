@@ -19,13 +19,8 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
  * @author mmostafa
  */
 public class ResizableLabelEditPolicy
-	extends ShapeLabelResizableEditPolicy {
+	extends ResizableShapeLabelEditPolicy {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.xtools.presentation.internal.editpolicies.ShapeLabelResizableEditPolicy#adjustRect(org.eclipse.draw2d.geometry.PrecisionRectangle)
-	 */
 	protected void adjustRect(PrecisionRectangle rect) {
 		// do nothing, resizbale lables does not need rect adjustment
 	}

@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.gef.Tool;
 
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
-import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
+import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
 
@@ -59,7 +59,7 @@ public class GeoshapePaletteFactory
 		}
 
 		if (toolId.equals(GeoshapeConstants.TOOL_LINE)) {
-			return new ConnectorCreationTool(GeoshapeType.LINE);
+			return new ConnectionCreationTool(GeoshapeType.LINE);
 		}
 
 		if (toolId.equals(GeoshapeConstants.TOOL_OVAL)) {

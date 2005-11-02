@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 
 /**
  * 
- * An implementation of a context menu provider for presentation diagrams
+ * An implementation of a context menu provider for GMF diagrams
  * It adds contributions to the popup menu both programatically and through
  * the contribution item service
  * 

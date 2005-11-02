@@ -36,7 +36,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -362,7 +362,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 		Object feature = event.getFeature();
 		if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)){
 			Integer c = (Integer) event.getNewValue();
-			setFontColor(PresentationResourceManager.getInstance().getColor(c));
+			setFontColor(DiagramResourceManager.getInstance().getColor(c));
 		}
 		else if (NotationPackage.eINSTANCE.getFontStyle_Underline().equals(feature))
 			refreshUnderline();

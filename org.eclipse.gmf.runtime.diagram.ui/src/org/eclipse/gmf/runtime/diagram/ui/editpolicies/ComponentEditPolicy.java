@@ -27,12 +27,12 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IInsertableEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -52,11 +52,11 @@ import org.eclipse.gmf.runtime.notation.View;
 public class ComponentEditPolicy
 	extends org.eclipse.gef.editpolicies.ComponentEditPolicy {
 	
-	private static final String DELETE_FROM_DIAGRAM_DLG_TITLE = PresentationResourceManager
+	private static final String DELETE_FROM_DIAGRAM_DLG_TITLE = DiagramResourceManager
 	.getI18NString("PromptingDeleteAction.DeleteFromDiagramDialog.Title"); //$NON-NLS-1$ 
-	private static final String DELETE_FROM_DIAGRAM_DLG_MESSAGE = PresentationResourceManager
+	private static final String DELETE_FROM_DIAGRAM_DLG_MESSAGE = DiagramResourceManager
 	.getI18NString("PromptingDeleteAction.DeleteFromDiagramDialog.Message"); //$NON-NLS-1$ 	
-	private static final String DELETE_FROM_MODEL_DLG_TOGGLE_LABEL =PresentationResourceManager
+	private static final String DELETE_FROM_MODEL_DLG_TOGGLE_LABEL =DiagramResourceManager
 	.getI18NString("MessageDialogWithToggle.DoNotPromptAgainToggle.label"); //$NON-NLS-1$ 	
 
 

@@ -25,12 +25,12 @@ public class Messages {
 	
 	/**
 	 * Method getString.
-	 * Redirects to the PresentationResourceManager to get the string.
+	 * Redirects to the DiagramResourceManager to get the string.
 	 * 
 	 * @param id String key found in message.properties
 	 * @return String translatable string value that is associated with the key.
 	 */
 	public static String getString(String id) {
-		return PresentationResourceManager.getI18NString(id);
+		return DiagramResourceManager.getI18NString(id);
 	}
 } 

@@ -24,6 +24,7 @@ import org.eclipse.gef.Request;
  * relationships to refresh.
  * 
  * @author chmahone
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest}
  */
 public class RefreshConnectorsRequest extends Request {
 
@@ -41,7 +42,7 @@ public class RefreshConnectorsRequest extends Request {
 	 * form
 	 */
 	public RefreshConnectorsRequest(List shapes) {
-		super(RequestConstants.REQ_REFRESH_CONNECTORS);
+		super(RequestConstants.REQ_REFRESH_CONNECTIONS);
 
 		this.shapes = new ArrayList(shapes);
 	}

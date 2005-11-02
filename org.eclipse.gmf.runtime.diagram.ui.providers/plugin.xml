@@ -11,14 +11,14 @@
 <plugin>
 
      <extension id="iconProviders" name="%ext.iconProviders" point="org.eclipse.gmf.runtime.common.ui.services.iconProviders">
-      <IconProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationIconProvider">
+      <IconProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramIconProvider">
          <Priority name="Medium">
          </Priority>         
       </IconProvider>
    </extension>
    
     <extension id="presentationParserProviders" name="%ext.presentationParserProviders" point="org.eclipse.gmf.runtime.common.ui.services.parserProviders">
-      <ParserProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationParserProvider">
+      <ParserProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramParserProvider">
          <Priority name="Low">
          </Priority>
       </ParserProvider>
@@ -30,7 +30,7 @@
          point="org.eclipse.gmf.runtime.common.ui.services.properties.propertiesProviders">
       <PropertiesProvider
             verifyPluginLoaded="false"
-            class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationPropertiesProvider">
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramPropertiesProvider">
          <Priority
                name="Medium">
          </Priority>
@@ -38,7 +38,7 @@
    </extension>
    
    <extension id="presentationDecoratorProvider" name="%ext.presentationDecoratorProvider" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
-      <decoratorProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationDecoratorProvider">
+      <decoratorProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramDecoratorProvider">
          <Priority name="Lowest">
          </Priority>
          <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW">
@@ -49,7 +49,7 @@
    </extension>
    
    <extension id="presentationContributionItemProvider" name="%ext.presentationContributionItemProvider" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
-      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationContributionItemProvider" checkPluginLoaded="false">
+      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider" checkPluginLoaded="false">
          <Priority name="Lowest">
          </Priority>
          <partContribution class="org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart"> 
@@ -646,7 +646,7 @@
   </extension>
          
   <extension id="presentationViewProvider" name="%ext.presentationViewProvider" point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
-      <viewProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationViewProvider">
+      <viewProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramViewProvider">
          <Priority name="Lowest">
          </Priority>
          <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="DiagramLink_VP">
@@ -663,7 +663,7 @@
    </extension> 
    
    <extension id="presentationEditPartProvider" name="%ext.presentationEditPartProvider" point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
-      <editpartProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationEditPartProvider">
+      <editpartProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramEditPartProvider">
          <Priority name="Lowest">
          </Priority>
          <object class="org.eclipse.gmf.runtime.notation.View" id="ShapesByType">
@@ -719,7 +719,7 @@
          </Priority>
          <editor class="org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor">
          </editor>
-         <contribution factoryClass="org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PresentationPaletteFactory">
+         <contribution factoryClass="org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.DiagramPaletteFactory">
              <entry label="%ZoomTool.Label" kind="tool" description="%ZoomTool.Description" large_icon="icons/zoomplus_24x24.gif" small_icon="icons/zoomplus.gif" path="/standardGroup/selectionTool" id="zoomTool">
          	</entry>
             <entry label="%NoteStack.Label" kind="stack" description="%NoteStack.Description" small_icon="icons/note.gif" path="/standardGroup/" id="noteStack">

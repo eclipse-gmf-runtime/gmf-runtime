@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.FixedDistanceGatedPan
 
 /**
  * A locator that locates a child centered on it's parent.  The locator assume
- * the parent figure is a GatedPaneFigure and the target is a child of the
+ * the parent figure is a BorderedFigure and the target is a child of the
  * GatePane.
  * 
  * @author jcorchis

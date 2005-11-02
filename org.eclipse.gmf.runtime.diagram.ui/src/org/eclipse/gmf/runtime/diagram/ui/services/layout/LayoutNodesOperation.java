@@ -47,16 +47,10 @@ public class LayoutNodesOperation implements ILayoutNodesOperation {
             this.layoutHint = layoutHint;
     }
     
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.presentation.services.layout.ILayoutNodesOperation#getNodesToSizesMap()
-	 */
 	public List getLayoutNodes() {
 		return layoutNodes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.presentation.services.layout.ILayoutNodesOperation#getXOffset()
-	 */
 	public boolean shouldOffsetFromBoundingBox() {
 		return offsetFromBoundingBox;
 	}

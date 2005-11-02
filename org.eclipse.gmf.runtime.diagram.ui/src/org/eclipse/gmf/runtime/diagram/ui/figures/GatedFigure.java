@@ -40,6 +40,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  *  
  * @author tisrar
  * @author jbruck
+ * @deprecated renamed BorderItemContainerFigure
  */
 public class GatedFigure extends NodeFigure {
 	

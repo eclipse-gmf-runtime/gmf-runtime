@@ -38,7 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -159,8 +159,8 @@ public class AddBookmarkHelper {
 	static private String getDescription(
 		String defaultDescription,
 		IWorkbenchPart part) {
-		String title = PresentationResourceManager.getI18NString("AddBookmarkAction.dialog.title"); //$NON-NLS-1$
-		String message = PresentationResourceManager.getI18NString("AddBookmarkAction.dialog.message"); //$NON-NLS-1$
+		String title = DiagramResourceManager.getI18NString("AddBookmarkAction.dialog.title"); //$NON-NLS-1$
+		String message = DiagramResourceManager.getI18NString("AddBookmarkAction.dialog.message"); //$NON-NLS-1$
 
 		IInputValidator inputValidator = new IInputValidator() {
 			public String isValid(String newText) {

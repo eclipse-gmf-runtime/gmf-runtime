@@ -275,7 +275,7 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			getCanonicalTestFixture().execute(createWire);
 			flushEventQueue();
 			
-			List connectorEPs = getDiagramEditPart().getConnectors();
+			List connectorEPs = getDiagramEditPart().getConnections();
 			
 			assertEquals( "Unexpected Wire count.", 1, connectorEPs.size()); //$NON-NLS-1$
 			ConnectionEditPart ep = (ConnectionEditPart)connectorEPs.get(0);
@@ -287,7 +287,7 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			getCanonicalTestFixture().destroy( ((View)ep.getModel()).getElement() );
 			flushEventQueue();
 			
-			connectorEPs = getDiagramEditPart().getConnectors();
+			connectorEPs = getDiagramEditPart().getConnections();
 			assertEquals( "Unexpected Wire count.", 0, connectorEPs.size()); //$NON-NLS-1$
 		}
 		finally {
@@ -378,7 +378,7 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
 						
 			getCanonicalTestFixture().createConnectorUsingTool(tep1, tep2, typeWire);
-			List connectorEPs = getDiagramEditPart().getConnectors();
+			List connectorEPs = getDiagramEditPart().getConnections();
 			
 			assertEquals( "Unexpected Wire count.", 1, connectorEPs.size()); //$NON-NLS-1$
 			ConnectionEditPart ep = (ConnectionEditPart)connectorEPs.get(0);

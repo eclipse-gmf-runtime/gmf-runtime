@@ -25,6 +25,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
  * @author melaasar
  * 
  * A request to create a relationship element and its connector view
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest}
  */
 public class CreateConnectorViewAndElementRequest
 	extends CreateConnectorViewRequest implements SuppressibleUIRequest{
@@ -184,7 +185,7 @@ public class CreateConnectorViewAndElementRequest
 	 * @return Command
 	 **/
 	public static Command getCreateCommand(
-		CreateConnectorViewAndElementRequest request,
+		CreateConnectionViewAndElementRequest request,
 		EditPart sourceEditPart,
 		EditPart targetEditPart) {
 
@@ -213,7 +214,7 @@ public class CreateConnectorViewAndElementRequest
 	public static Command getCreateCommand(IElementType elementType,
 			EditPart sourceEditPart, EditPart targetEditPart,
 			PreferencesHint preferencesHint) {
-		return getCreateCommand(new CreateConnectorViewAndElementRequest(
+		return getCreateCommand(new CreateConnectionViewAndElementRequest(
 			elementType, preferencesHint), sourceEditPart, targetEditPart);
 	}
 	

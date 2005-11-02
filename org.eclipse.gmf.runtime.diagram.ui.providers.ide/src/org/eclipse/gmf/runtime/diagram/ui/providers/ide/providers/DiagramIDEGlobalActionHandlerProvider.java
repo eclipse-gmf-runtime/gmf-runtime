@@ -35,7 +35,7 @@ public final class DiagramIDEGlobalActionHandlerProvider
 	private Hashtable handlerList = new Hashtable();
 
 	/**
-	 * Constructor for PresentationGlobalActionHandlerProvider.
+	 * Constructor for DiagramGlobalActionHandlerProvider.
 	 */
 	public DiagramIDEGlobalActionHandlerProvider() {
 		super();

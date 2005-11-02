@@ -12,17 +12,16 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartActivator;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * An action to show Eclipse's properties view
@@ -55,10 +54,14 @@ public class ShowPropertiesViewAction extends AbstractActionHandler {
 	 */
 	private void initialize() {
 		setId(ActionIds.ACTION_SHOW_PROPERTIES_VIEW);
-		setText(PresentationResourceManager.getI18NString("ShowPropertiesViewAction.ActionLabelText")); //$NON-NLS-1$
-		setToolTipText(PresentationResourceManager.getI18NString("ShowPropertiesViewAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(Images.DESC_ACTION_SHOW_PROPERTIES_VIEW);
-		setHoverImageDescriptor(Images.DESC_ACTION_SHOW_PROPERTIES_VIEW);
+		setText(DiagramResourceManager.getI18NString("ShowPropertiesViewAction.ActionLabelText")); //$NON-NLS-1$
+		setToolTipText(DiagramResourceManager.getI18NString("ShowPropertiesViewAction.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor imageDesc = DiagramResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramResourceManager.IMAGE_SHOW_PROPERTIES_VIEW);
+		setImageDescriptor(imageDesc);
+		setHoverImageDescriptor(imageDesc);
 	}
 
 	/* (non-Javadoc)

@@ -30,10 +30,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 
 /**
  * The appearance preference page used for the Modeling preferences.
@@ -45,40 +45,40 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
 public class ModelingAppearancePreferencePage
 	extends AppearancePreferencePage {
 
-	private String STYLE_GROUPBOX_LABEL = PresentationResourceManager
+	private String STYLE_GROUPBOX_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.styleGroupBox.label");//$NON-NLS-1$
 
-	private String STYLE_COMBO_LABEL = PresentationResourceManager
+	private String STYLE_COMBO_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.styleComboBox.label");//$NON-NLS-1$
 
-	private String DEFAULT_LABEL = PresentationResourceManager
+	private String DEFAULT_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.style.default");//$NON-NLS-1$
 
-	private String CLASSIC_LABEL = PresentationResourceManager
+	private String CLASSIC_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.style.classic");//$NON-NLS-1$
 
-	private String COMMENT_FILL_COLOR_LABEL = PresentationResourceManager
+	private String COMMENT_FILL_COLOR_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.commentFillColor.label"); //$NON-NLS-1$
 
-	private String COMMENT_LINE_COLOR_LABEL = PresentationResourceManager
+	private String COMMENT_LINE_COLOR_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.commentLineColor.label"); //$NON-NLS-1$
 
-	private String CONSTRAINT_FILL_COLOR_LABEL = PresentationResourceManager
+	private String CONSTRAINT_FILL_COLOR_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.constraintFillColor.label"); //$NON-NLS-1$
 
-	private String CONSTRAINT_LINE_COLOR_LABEL = PresentationResourceManager
+	private String CONSTRAINT_LINE_COLOR_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.constraintLineColor.label"); //$NON-NLS-1$
 
-	private String GLOBAL_GROUPBOX_LABEL = PresentationResourceManager
+	private String GLOBAL_GROUPBOX_LABEL = DiagramResourceManager
 		.getI18NString("GeneralPreferencePage.globalGroupBox.label");//$NON-NLS-1$
 
-	private String SHOW_DROPSHADOW_LABEL = PresentationResourceManager
+	private String SHOW_DROPSHADOW_LABEL = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.showDropShadow.label"); //$NON-NLS-1$
 
-	private String SHOW_BOLD_NAME_LABEL = PresentationResourceManager
+	private String SHOW_BOLD_NAME_LABEL = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.showBoldName.label"); //$NON-NLS-1$
 
-	private String SHOW_GRADIENT_LABEL = PresentationResourceManager
+	private String SHOW_GRADIENT_LABEL = DiagramResourceManager
 		.getI18NString("DiagramsPreferencePage.showGradient.label"); //$NON-NLS-1$
 
 	private ColorFieldEditor commentFillColorEditor = null;

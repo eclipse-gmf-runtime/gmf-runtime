@@ -25,7 +25,7 @@ public abstract class AbstractNotationType
 	implements INotationType {
 
 	/**
-	 * Constructor for PresentationNotationType.
+	 * Constructor.
 	 * 
 	 * @param displayName
 	 *            the localized name of the type

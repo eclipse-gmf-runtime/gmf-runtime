@@ -14,16 +14,15 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * Connector router action
@@ -51,14 +50,20 @@ public class RouterAction extends CheckedPropertyAction {
 		RouterAction action =
 			new RouterAction(workbenchPage, Routing.RECTILINEAR_LITERAL);
 		action.setId(ActionIds.ACTION_ROUTER_RECTILINEAR);
-		action.setText(Messages.getString("ChangeRouterAction.Rectilinear.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ChangeRouterAction.Rectilinear.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_RECTILINEAR);
-		action.setDisabledImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_RECTILINEAR_DISABLED);
-		action.setHoverImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_RECTILINEAR);
+		action.setText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Rectilinear.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Rectilinear.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance()
+			.getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_CHANGEROUTERACTION_RECTILINEAR);
+		action.setImageDescriptor(enabledImage);
+		action
+			.setDisabledImageDescriptor(DiagramActionsResourceManager
+				.getInstance()
+				.getImageDescriptor(
+					DiagramActionsResourceManager.IMAGE_CHANGEROUTERACTION_RECTILINEAR_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 
@@ -72,14 +77,19 @@ public class RouterAction extends CheckedPropertyAction {
 		RouterAction action =
 			new RouterAction(workbenchPage, Routing.MANUAL_LITERAL);
 		action.setId(ActionIds.ACTION_ROUTER_OBLIQUE);
-		action.setText(Messages.getString("ChangeRouterAction.Oblique.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ChangeRouterAction.Oblique.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_OBLIQUE);
-		action.setDisabledImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_OBLIQUE_DISABLED);
-		action.setHoverImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_OBLIQUE);
+		action.setText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Oblique.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Oblique.ActionToolTipText")); //$NON-NLS-1$
+
+		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramResourceManager.IMAGE_CHANGEROUTERACTION_OBLIQUE);
+		action.setImageDescriptor(enabledImage);
+		action
+			.setDisabledImageDescriptor(DiagramResourceManager
+				.getInstance()
+				.getImageDescriptor(
+					DiagramResourceManager.IMAGE_CHANGEROUTERACTION_OBLIQUE_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 	
@@ -93,19 +103,22 @@ public class RouterAction extends CheckedPropertyAction {
 		RouterAction action =
 			new RouterAction(workbenchPage, Routing.TREE_LITERAL);
 		action.setId(ActionIds.ACTION_ROUTER_TREE);
-		action.setText(Messages.getString("ChangeRouterAction.Tree.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(Messages.getString("ChangeRouterAction.Tree.ActionToolTipText")); //$NON-NLS-1$
-		action.setImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_TREE);
-		action.setDisabledImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_TREE_DISABLED);
-		action.setHoverImageDescriptor(
-			Images.DESC_ACTION_CHANGEROUTERACTION_TREE);
+		action.setText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Tree.ActionLabelText")); //$NON-NLS-1$
+		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Tree.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramResourceManager.IMAGE_CHANGEROUTERACTION_TREE);
+		action.setImageDescriptor(enabledImage);
+		action.setDisabledImageDescriptor(DiagramResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramResourceManager.IMAGE_CHANGEROUTERACTION_TREE_DISABLED));
+		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#calculateEnabled()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
 		if (getId() == ActionIds.ACTION_ROUTER_TREE) {

@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -44,8 +43,6 @@ public abstract class ModelingAssistantProvider
 	 * true if the corresponding <code>getTypesFor*</code> call does not
 	 * return an empty list.
 	 * </p>
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
 	public boolean provides(IOperation operation) {
 		if (operation instanceof GetRelTypesOnSourceOperation) {
@@ -114,10 +111,10 @@ public abstract class ModelingAssistantProvider
 			return !getTypes(((GetTypesOperation) operation).getHint(),
 				((GetTypesOperation) operation).getData()).isEmpty();
 
-		} else if (operation instanceof GetTypesForActionBarOperation) {
+		} else if (operation instanceof GetTypesForPopupBarOperation) {
 
-			return !getTypesForActionBar(
-				((GetTypesForActionBarOperation) operation).getHost())
+			return !getTypesForPopupBar(
+				((GetTypesForPopupBarOperation) operation).getHost())
 				.isEmpty();
 
 		}
@@ -126,8 +123,6 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypes(String, IAdaptable)
 	 */
 	public List getTypes(String hint, IAdaptable data) {
 		return Collections.EMPTY_LIST;
@@ -136,8 +131,6 @@ public abstract class ModelingAssistantProvider
 	/**
 	 * Returns the same list of relationship types as
 	 * <code>getRelTypesOnSource</code>.
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getRelTypesForSREOnSource(org.eclipse.core.runtime.IAdaptable)
 	 */
 	public List getRelTypesForSREOnSource(IAdaptable source) {
 		return getRelTypesOnSource(source);
@@ -146,8 +139,6 @@ public abstract class ModelingAssistantProvider
 	/**
 	 * Returns the same list of relationship types as
 	 * <code>getRelTypesOnTarget</code>.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesForSREOnTarget(IAdaptable)
 	 */
 	public List getRelTypesForSREOnTarget(IAdaptable target) {
 		return getRelTypesOnTarget(target);
@@ -155,8 +146,6 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSource(IAdaptable)
 	 */
 	public List getRelTypesOnSource(IAdaptable source) {
 		return Collections.EMPTY_LIST;
@@ -164,8 +153,6 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnTarget(IAdaptable)
 	 */
 	public List getRelTypesOnTarget(IAdaptable target) {
 		return Collections.EMPTY_LIST;
@@ -173,9 +160,6 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSourceAndTarget(IAdaptable,
-	 *      IAdaptable)
 	 */
 	public List getRelTypesOnSourceAndTarget(IAdaptable source,
 			IAdaptable target) {
@@ -184,9 +168,6 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForSource(IAdaptable,
-	 *      IElementType)
 	 */
 	public List getTypesForSource(IAdaptable target,
 			IElementType relationshipType) {
@@ -195,19 +176,12 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForTarget(IAdaptable,
-	 *      IElementType)
 	 */
 	public List getTypesForTarget(IAdaptable source,
 			IElementType relationshipType) {
 		return Collections.EMPTY_LIST;
 	}
 
-	/**
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#selectExistingElementForSource(IAdaptable,
-	 *      IElementType)
-	 */
 	public EObject selectExistingElementForSource(IAdaptable target,
 			IElementType relationshipType) {
 
@@ -216,9 +190,6 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns null.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#selectExistingElementForTarget(IAdaptable,
-	 *      IElementType)
 	 */
 	public EObject selectExistingElementForTarget(IAdaptable source,
 			IElementType relationshipType) {
@@ -228,11 +199,19 @@ public abstract class ModelingAssistantProvider
 
 	/**
 	 * Returns an empty list.
+	 */
+	public List getTypesForPopupBar(IAdaptable host) {
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * Returns an empty list.
 	 * 
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getTypesForActionBar(IAdaptable)
+	 * @deprecated Renamed to {@link #getTypesForPopupBar(IAdaptable)}
 	 */
 	public List getTypesForActionBar(IAdaptable host) {
 		return Collections.EMPTY_LIST;
 	}
-}
 
+}

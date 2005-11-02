@@ -93,7 +93,7 @@ public class DiagramIDEGlobalActionHandler
 				return false;
 			}
 
-			// Check that primary view (i.e. shape view or connector view) is
+			// Check that primary view (i.e. shape view or connection view) is
 			// selected
 			View view = (View) ((EditPart) selectedElement)
 			.getAdapter(View.class);

@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.NoteAttachmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TextEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -70,20 +70,20 @@ public class NoteTests
 
 		// Add two notes.
 		NoteEditPart note1EP = (NoteEditPart) getFixture()
-			.createShapeUsingTool(PresentationNotationType.NOTE,
+			.createShapeUsingTool(DiagramNotationType.NOTE,
 				new Point(10, 10));
 		NoteEditPart note2EP = (NoteEditPart) getFixture()
-			.createShapeUsingTool(PresentationNotationType.NOTE,
+			.createShapeUsingTool(DiagramNotationType.NOTE,
 				new Point(100, 100));
 
 		// Create note attachment between the two notes.
 		NoteAttachmentEditPart noteAttachment1EP = (NoteAttachmentEditPart) getFixture()
 			.createConnectorUsingTool(note1EP, note2EP,
-				PresentationNotationType.NOTE_ATTACHMENT);
+				DiagramNotationType.NOTE_ATTACHMENT);
 
 		// Create a note attachment between a note and a connector.
 		getFixture().createConnectorUsingTool(note1EP, noteAttachment1EP,
-			PresentationNotationType.NOTE_ATTACHMENT);
+			DiagramNotationType.NOTE_ATTACHMENT);
 
 		// Test delete views.
 		Request request = new GroupRequest(RequestConstants.REQ_DELETE);
@@ -105,7 +105,7 @@ public class NoteTests
 
 		// Add a text shape.
 		TextEditPart textEP = (TextEditPart) getFixture().createShapeUsingTool(
-			PresentationNotationType.TEXT, new Point(10, 10));
+			DiagramNotationType.TEXT, new Point(10, 10));
 
 		testCommand(textEP.getCommand(new GroupRequest(
 			RequestConstants.REQ_DELETE)), new ITestCommandCallback() {
@@ -124,11 +124,11 @@ public class NoteTests
 	 * 
 	 * @throws Exception
 	 */
-	public void testConnectorHandleForNoteAttachment()
+	public void testConnectionHandleForNoteAttachment()
 		throws Exception {
 
 		NoteEditPart noteEP = (NoteEditPart) getFixture().createShapeUsingTool(
-			PresentationNotationType.NOTE, new Point(10, 10));
+			DiagramNotationType.NOTE, new Point(10, 10));
 
 		class NonAttachableNoteableEP
 			extends ShapeNodeEditPart
@@ -171,30 +171,30 @@ public class NoteTests
 			.getInstance();
 
 		assertTrue(service.getRelTypesOnSource(noteEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 		assertTrue(service.getRelTypesOnSource(attachableNoteableEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 		assertFalse(service.getRelTypesOnSource(nonAttachableNoteableEP)
-			.contains(PresentationNotationType.NOTE_ATTACHMENT));
+			.contains(DiagramNotationType.NOTE_ATTACHMENT));
 
 		assertTrue(service.getRelTypesOnTarget(noteEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 		assertTrue(service.getRelTypesOnTarget(attachableNoteableEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 		assertFalse(service.getRelTypesOnTarget(nonAttachableNoteableEP)
-			.contains(PresentationNotationType.NOTE_ATTACHMENT));
+			.contains(DiagramNotationType.NOTE_ATTACHMENT));
 
 		assertTrue(service.getRelTypesOnSourceAndTarget(noteEP,
 			attachableNoteableEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 		assertFalse(service.getRelTypesOnSourceAndTarget(noteEP,
 			nonAttachableNoteableEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 
 		assertTrue(service.getRelTypesOnSourceAndTarget(attachableNoteableEP,
-			noteEP).contains(PresentationNotationType.NOTE_ATTACHMENT));
+			noteEP).contains(DiagramNotationType.NOTE_ATTACHMENT));
 		assertFalse(service.getRelTypesOnSourceAndTarget(
 			nonAttachableNoteableEP, noteEP).contains(
-			PresentationNotationType.NOTE_ATTACHMENT));
+			DiagramNotationType.NOTE_ATTACHMENT));
 	}
 }

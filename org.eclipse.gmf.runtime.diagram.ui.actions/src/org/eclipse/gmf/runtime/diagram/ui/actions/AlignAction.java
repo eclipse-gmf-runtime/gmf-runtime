@@ -24,7 +24,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.AlignmentRequest;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gef.ui.actions.AlignmentAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -33,7 +33,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * This action is cloned from the GEF AlignmentAction
  * @see org.eclipse.gef.actions.AlignmentAction
  */
-public class AlignAction extends PresentationAction {
+public class AlignAction extends DiagramAction {
 
 	private String id;
 	private int alignment;
@@ -108,67 +108,67 @@ public class AlignAction extends PresentationAction {
 			case PositionConstants.LEFT: {
 				
 				if (isToolbarItem){
-					text = Messages.getString("AlignLeftToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignLeftToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignLeftToolbarAction.Label");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignLeftToolbarAction.Tooltip");//$NON-NLS-1$
 				}
 				else{
-					text = Messages.getString("AlignLeft");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignLeft");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignLeft");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignLeft");//$NON-NLS-1$
 				}				
 				break;
 			}
 			case PositionConstants.RIGHT: {
 				if (isToolbarItem){
-					text = Messages.getString("AlignRightToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignRightToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignRightToolbarAction.Label");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignRightToolbarAction.Tooltip");//$NON-NLS-1$
 				}
 				else{
-					text = Messages.getString("AlignRight");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignRight");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignRight");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignRight");//$NON-NLS-1$
 				}					
 				break;
 			}
 			case PositionConstants.TOP: {
 				if (isToolbarItem){
-					text = Messages.getString("AlignTopToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignTopToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignTopToolbarAction.Label");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignTopToolbarAction.Tooltip");//$NON-NLS-1$
 				}
 				else{
-					text = Messages.getString("AlignTop");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignTop");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignTop");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignTop");//$NON-NLS-1$
 				}				
 				break;
 			}
 			case PositionConstants.BOTTOM: {
 				if (isToolbarItem){
-					text = Messages.getString("AlignBottomToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignBottomToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignBottomToolbarAction.Label");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignBottomToolbarAction.Tooltip");//$NON-NLS-1$
 				}
 				else{
-					text = Messages.getString("AlignBottom");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignBottom");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignBottom");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignBottom");//$NON-NLS-1$
 				}		
 				break;
 			}
 			case PositionConstants.CENTER: {
 				if (isToolbarItem){
-					text = Messages.getString("AlignCenterToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignCenterToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignCenterToolbarAction.Label");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignCenterToolbarAction.Tooltip");//$NON-NLS-1$
 				}
 				else{
-					text = Messages.getString("AlignCenter");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignCenter");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignCenter");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignCenter");//$NON-NLS-1$
 				}	
 				break;
 			}
 			case PositionConstants.MIDDLE: {
 				if (isToolbarItem){
-					text = Messages.getString("AlignMiddleToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignMiddleToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignMiddleToolbarAction.Label");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignMiddleToolbarAction.Tooltip");//$NON-NLS-1$
 				}
 				else{
-					text = Messages.getString("AlignMiddle");//$NON-NLS-1$
-					toolTipText = Messages.getString("AlignMiddle");//$NON-NLS-1$
+					text = DiagramActionsResourceManager.getI18NString("AlignMiddle");//$NON-NLS-1$
+					toolTipText = DiagramActionsResourceManager.getI18NString("AlignMiddle");//$NON-NLS-1$
 				}	
 				break;
 			}			
@@ -193,7 +193,7 @@ public class AlignAction extends PresentationAction {
 
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createOperationSet()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createOperationSet()
 	 */
 	protected List createOperationSet() {
 		List editparts = super.createOperationSet();
@@ -211,7 +211,7 @@ public class AlignAction extends PresentationAction {
 
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		AlignmentRequest request = new AlignmentRequest(RequestConstants.REQ_ALIGN);
@@ -220,7 +220,7 @@ public class AlignAction extends PresentationAction {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#updateTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#updateTargetRequest()
 	 */
 	protected void updateTargetRequest() {
 		AlignmentRequest request = (AlignmentRequest) getTargetRequest();

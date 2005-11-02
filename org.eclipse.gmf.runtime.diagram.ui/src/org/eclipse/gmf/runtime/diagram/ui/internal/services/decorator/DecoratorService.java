@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOpe
 import org.eclipse.jface.util.Assert;
 
 /**
- * This service is used to add decorators so that shapes and connectors on a
+ * This service is used to add decorators so that shapes and connections on a
  * diagram can be decorated with adornments.
  * 
  * @author cmahoney

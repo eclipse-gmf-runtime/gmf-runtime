@@ -40,10 +40,10 @@ public abstract class CompartmentEditPart extends GraphicalEditPart implements I
 
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicyRoles.CONNECTOR_HANDLES_ROLE,
-			new DelegatingMouseEventsEditPolicy(EditPolicyRoles.CONNECTOR_HANDLES_ROLE));
-		installEditPolicy(EditPolicyRoles.ACTIONBAR_ROLE,
-			new DelegatingMouseEventsEditPolicy(EditPolicyRoles.ACTIONBAR_ROLE));
+		installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE,
+			new DelegatingMouseEventsEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE));
+		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE,
+			new DelegatingMouseEventsEditPolicy(EditPolicyRoles.POPUPBAR_ROLE));
 	}
 	
 	/**

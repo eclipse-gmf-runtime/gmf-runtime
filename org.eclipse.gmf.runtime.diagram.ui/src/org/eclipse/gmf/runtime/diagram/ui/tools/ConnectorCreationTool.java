@@ -30,9 +30,9 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Display;
  * enter the additional information.
  * 
  * @author melaasar
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool}
  */
 public class ConnectorCreationTool
 	extends org.eclipse.gef.tools.ConnectionCreationTool {
@@ -75,18 +76,18 @@ public class ConnectorCreationTool
 	static private String NOCONNECTORCURSOR_MASK = "dlcl16/noconnectcursor_mask.bmp";//$NON-NLS-1$
 	static private String NOCONNECTORCURSOR_SOURCE = "dlcl16/noconnectcursor_source.bmp";//$NON-NLS-1$	
 
-	static private Cursor CURSOR_CONNECTOR = new Cursor(Display.getDefault(), PresentationResourceManager
+	static private Cursor CURSOR_CONNECTOR = new Cursor(Display.getDefault(), DiagramResourceManager
 		.getInstance().getImageDescriptor(CONNECTORCURSOR_SOURCE).getImageData(),
-		PresentationResourceManager.getInstance().getImageDescriptor(
+		DiagramResourceManager.getInstance().getImageDescriptor(
 			CONNECTORCURSOR_MASK).getImageData(), 0, 0);
 
-	static private Cursor CURSOR_CONNECTOR_NOT = new Cursor(Display.getDefault(), PresentationResourceManager
+	static private Cursor CURSOR_CONNECTOR_NOT = new Cursor(Display.getDefault(), DiagramResourceManager
 		.getInstance().getImageDescriptor(NOCONNECTORCURSOR_SOURCE).getImageData(),
-		PresentationResourceManager.getInstance().getImageDescriptor(
+		DiagramResourceManager.getInstance().getImageDescriptor(
 			NOCONNECTORCURSOR_MASK).getImageData(), 0, 0);		
 
 	/**
-	 * Creates a new ConnectorCreationTool, the elementTypeInfo and viewFactoryhint will
+	 * Creates a new ConnectionCreationTool, the elementTypeInfo and viewFactoryhint will
 	 * be set later.
 	 */
 	public ConnectorCreationTool() {
@@ -146,7 +147,7 @@ public class ConnectorCreationTool
 	 */
 	protected Request createTargetRequest() {
 		return CreateViewRequestFactory
-			.getCreateConnectorRequest(getElementType(), getPreferencesHint());
+			.getCreateConnectionRequest(getElementType(), getPreferencesHint());
 	}
 
 	/**
@@ -271,8 +272,8 @@ public class ConnectorCreationTool
 				? (IGraphicalEditPart) selectedEditParts.get(1)
 				: sourceEditPart;
 
-			CreateConnectorViewRequest connectorRequest =
-				(CreateConnectorViewRequest) createTargetRequest();
+			CreateConnectionViewRequest connectorRequest =
+				(CreateConnectionViewRequest) createTargetRequest();
 
 			connectorRequest.setTargetEditPart(sourceEditPart);
 			connectorRequest.setType(RequestConstants.REQ_CONNECTION_START);

@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -74,7 +74,7 @@ public class OpenDiagramCommand extends AbstractCommand {
 	 * @param element to be opened.
 	 */
 	public OpenDiagramCommand( EObject element ) {
-		this(PresentationResourceManager.getI18NString("Command.openDiagram"), element);//$NON-NLS-1$
+		this(DiagramResourceManager.getI18NString("Command.openDiagram"), element);//$NON-NLS-1$
 	}
 	
 	/**

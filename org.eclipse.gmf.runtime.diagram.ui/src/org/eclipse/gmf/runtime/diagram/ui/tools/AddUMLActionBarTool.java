@@ -22,7 +22,7 @@ import org.eclipse.gef.requests.CreateRequest;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractAddActionBarTool;
+import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -40,18 +40,18 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author affrantz
  * 
- * @deprecated Use <code>AddActionBarTool</code> instead. The difference
+ * @deprecated Use <code>PopupBarTool</code> instead. The difference
  *             between the two is that <code>AddUMLActionBarTool</code> has
- *             been removed and <code>AddActionBarTool</code> is now used
+ *             been removed and <code>PopupBarTool</code> is now used
  *             always. <code>AddUMLActionBarTool</code> used a request to
- *             create an element only, whereas <code>AddActionBarTool</code>
+ *             create an element only, whereas <code>PopupBarTool</code>
  *             uses a request to create an element and view and if that does not
  *             return a command, then it tries a request to create an element
  *             only. Contact Cherie for assistance.
  *  
  */
 
-public class AddUMLActionBarTool extends AbstractAddActionBarTool implements DragTracker {
+public class AddUMLActionBarTool extends AbstractPopupBarTool implements DragTracker {
 
 	/** When creating shapes on a dgrm using the abar, we do not
 	 * want to cover the new shape with the abar, so we offset

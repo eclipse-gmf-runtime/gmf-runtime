@@ -34,7 +34,7 @@ public interface ViewFactory {
 	 * @param semanticAdapter
 	 *            semanitc element of the view, it can be null
 	 * @param containerView
-	 *            the view to contain the connector
+	 *            the view to contain the connection
 	 * @param semanticHint
 	 *            a semantic hint to reflect the view type, it can be empty
 	 * @param index

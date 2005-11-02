@@ -38,9 +38,9 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.properties.PresentationPropertiesStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.PresentationPropertiesDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.PresentationPropertiesPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCollapser;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
@@ -121,9 +121,9 @@ public abstract class AbstractModelerPropertySection
 
 		// RATLC000524513 Sometimes there is no eobject. For example if user
 		// creates a constraint,
-		// on a class there will be a connector shown on the diagram which
+		// on a class there will be a connection shown on the diagram which
 		// connects the constraint
-		// with the class. The user can select this connector, even though it
+		// with the class. The user can select this connection, even though it
 		// does not have an
 		// underlying eobject. Comments are similar. In this case we show only
 		// the appearanced tab.
@@ -270,7 +270,7 @@ public abstract class AbstractModelerPropertySection
 
 		CommandResult result = CommandManager.getDefault().execute(compCmd);
 
-		if (result.getStatus().getCode() == PresentationPropertiesStatusCodes.CANCELLED)
+		if (result.getStatus().getCode() == DiagramPropertiesStatusCodes.CANCELLED)
 			refresh();
 
 		bIsCommandInProgress = false;
@@ -499,11 +499,11 @@ public abstract class AbstractModelerPropertySection
 	 *            the action abandoned exception
 	 */
 	protected void handleException(MSLActionAbandonedException exception) {
-		Trace.catching(PresentationPropertiesPlugin.getDefault(),
-			PresentationPropertiesDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+		Trace.catching(DiagramPropertiesPlugin.getDefault(),
+			DiagramPropertiesDebugOptions.EXCEPTIONS_CATCHING, getClass(),
 			exception.getMessage(), exception);
-		Log.warning(PresentationPropertiesPlugin.getDefault(),
-			PresentationPropertiesStatusCodes.IGNORED_EXCEPTION_WARNING,
+		Log.warning(DiagramPropertiesPlugin.getDefault(),
+			DiagramPropertiesStatusCodes.IGNORED_EXCEPTION_WARNING,
 			exception.getMessage(), exception);
 	}
 
@@ -640,7 +640,7 @@ public abstract class AbstractModelerPropertySection
 	 * @return Returns the updateRequestCollapser.
 	 */
 	protected SectionUpdateRequestCollapser getUpdateRequestCollapser() {
-		return PresentationPropertiesPlugin.getDefault()
+		return DiagramPropertiesPlugin.getDefault()
 			.getUpdateRequestCollapser();
 	}
 }

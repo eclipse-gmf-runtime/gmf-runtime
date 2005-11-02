@@ -19,19 +19,18 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * This action is used to change the size of the selected shapes
@@ -39,7 +38,7 @@ import org.eclipse.gmf.runtime.notation.View;
 /*
  * @canBeSeenBy %level1
  */
-public class SizeBothAction extends PresentationAction {
+public class SizeBothAction extends DiagramAction {
 
 	private static final String ACTION_LABEL   = "SameSizeAction.MakeSameSizeBoth.ActionLabelText"; //$NON-NLS-1$
 	private static final String ACTION_TOOLTIP = "SameSizeAction.MakeSameSizeBoth.ActionToolTipText"; //$NON-NLS-1$
@@ -61,14 +60,17 @@ public class SizeBothAction extends PresentationAction {
 		super.init();
 		
 		setId(ActionIds.ACTION_MAKE_SAME_SIZE_BOTH);
-		setText(Messages.getString( ACTION_LABEL ) );
-		setToolTipText(Messages.getString( ACTION_TOOLTIP ) );
-		setImageDescriptor(Images.DESC_ACTION_MAKE_SAME_SIZE_BOTH);
-		setHoverImageDescriptor(Images.DESC_ACTION_MAKE_SAME_SIZE_BOTH);
+		setText(DiagramActionsResourceManager.getI18NString( ACTION_LABEL ) );
+		setToolTipText(DiagramActionsResourceManager.getI18NString( ACTION_TOOLTIP ) );
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_MAKE_SAME_SIZE_BOTH);
+		setImageDescriptor(enabledImage);
+		setHoverImageDescriptor(enabledImage);
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return null;
@@ -82,7 +84,7 @@ public class SizeBothAction extends PresentationAction {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#getCommand()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getCommand()
 	 */
 	protected Command getCommand() {
 		

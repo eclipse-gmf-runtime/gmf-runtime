@@ -11,14 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.BooleanPropertyAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author melaasar
@@ -49,12 +47,15 @@ public class FontStyleAction extends BooleanPropertyAction {
 	 * @return An instance of font style action
 	 */
 	public static FontStyleAction createBoldFontStyleAction(IWorkbenchPage workbenchPage) {
-		FontStyleAction action = new FontStyleAction(workbenchPage, Properties.ID_FONTBOLD, Messages.getString("PropertyDescriptorFactory.FontStyle.Bold")); //$NON-NLS-1$
+		FontStyleAction action = new FontStyleAction(workbenchPage, Properties.ID_FONTBOLD, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.FontStyle.Bold")); //$NON-NLS-1$
 		action.setId(ActionIds.ACTION_FONT_BOLD);
 		action.setText(DiagramActionsResourceManager.getInstance().getString("FontStyleAction.bold.text")); //$NON-NLS-1$
 		action.setToolTipText(DiagramActionsResourceManager.getInstance().getString("FontStyleAction.bold.tooltip")); //$NON-NLS-1$
-		action.setImageDescriptor(Images.DESC_ACTION_BOLD); //$NON-NLS-1$
-		action.setDisabledImageDescriptor(Images.DESC_ACTION_BOLD_DISABLED); //$NON-NLS-1$
+		action.setImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_BOLD));
+		action.setDisabledImageDescriptor(DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_BOLD_DISABLED));
 		return action;
 	}
 
@@ -65,12 +66,14 @@ public class FontStyleAction extends BooleanPropertyAction {
 	 * @return An instance of font style action
 	 */
 	public static FontStyleAction createItalicFontStyleAction(IWorkbenchPage workbenchPage) {
-		FontStyleAction action = new FontStyleAction(workbenchPage, Properties.ID_FONTITALIC, Messages.getString("PropertyDescriptorFactory.FontStyle.Italic")); //$NON-NLS-1$
+		FontStyleAction action = new FontStyleAction(workbenchPage, Properties.ID_FONTITALIC, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.FontStyle.Italic")); //$NON-NLS-1$
 		action.setId(ActionIds.ACTION_FONT_ITALIC);
 		action.setText(DiagramActionsResourceManager.getInstance().getString("FontStyleAction.italic.text")); //$NON-NLS-1$
 		action.setToolTipText(DiagramActionsResourceManager.getInstance().getString("FontStyleAction.italic.tooltip")); //$NON-NLS-1$
-		action.setImageDescriptor(Images.DESC_ACTION_ITALIC); //$NON-NLS-1$
-		action.setDisabledImageDescriptor(Images.DESC_ACTION_ITALIC_DISABLED); //$NON-NLS-1$
+		action.setImageDescriptor(DiagramResourceManager.getInstance()
+			.getImageDescriptor(DiagramResourceManager.IMAGE_ITALIC));
+		action.setDisabledImageDescriptor(DiagramResourceManager.getInstance()
+			.getImageDescriptor(DiagramResourceManager.IMAGE_ITALIC_DISABLED));
 		return action;
 	}
 

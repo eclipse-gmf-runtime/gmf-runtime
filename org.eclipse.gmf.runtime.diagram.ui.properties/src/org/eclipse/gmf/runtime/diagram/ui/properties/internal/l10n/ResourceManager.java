@@ -14,7 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n;
 import org.eclipse.core.runtime.Plugin;
 
 import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.PresentationPropertiesPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 
 /**
  * A singleton resource manager object that manages string, image, font and
@@ -70,7 +70,7 @@ public final class ResourceManager extends AbstractUIResourceManager {
      * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#getPlugin()
      */
     protected Plugin getPlugin() {
-        return PresentationPropertiesPlugin.getDefault();
+        return DiagramPropertiesPlugin.getDefault();
     }
 
 	protected void initializeUIResources() {

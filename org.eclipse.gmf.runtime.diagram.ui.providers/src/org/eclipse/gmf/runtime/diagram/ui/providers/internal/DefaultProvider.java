@@ -437,15 +437,15 @@ public abstract class DefaultProvider
 			ShapeEditPart shapeEP = (ShapeEditPart) e;
 			List sourceConnections = shapeEP.getSourceConnections();
 			for (int i = 0; i < sourceConnections.size(); i++) {
-				ConnectionEditPart connectorEP = (ConnectionEditPart) sourceConnections
+				ConnectionEditPart connectionEP = (ConnectionEditPart) sourceConnections
 					.get(i);
-				EditPart target = connectorEP.getTarget();
+				EditPart target = connectionEP.getTarget();
 
 				// check to see if the toView is in the shapesDict, if yes,
-				// the associated connectorView should be included on graph
+				// the associated connectionView should be included on graph
 				Object o = editPartToNodeDict.get(target);
 				if (o != null) {
-					connectionsToMove.add(connectorEP);
+					connectionsToMove.add(connectionEP);
 				}
 			}
 		}
@@ -479,7 +479,7 @@ public abstract class DefaultProvider
 			if (n == ghostNode)
 				continue;
 
-			// if node has no incoming connectors then assume it is
+			// if node has no incoming connections then assume it is
 			// not-connected to the main graph.
 			if (n.incoming.isEmpty()) {
 				Edge e = new Edge(ghostNode, n);
@@ -508,7 +508,7 @@ public abstract class DefaultProvider
 
 		NodeList nodes = build_nodes(selectedObjects, editPartToNodeDict);
 
-		// append connectorViews that should be added to the graph
+		// append edges that should be added to the graph
 		ArrayList objects = new ArrayList();
 		objects.addAll(selectedObjects);
 		objects.addAll(getRelevantConnections(editPartToNodeDict));
@@ -581,7 +581,7 @@ public abstract class DefaultProvider
 		if (cmd != null)
 			cc.add(cmd);
 		
-		// set the snapback position for all children owned by the connector
+		// set the snapback position for all children owned by the connection
 		List affectingChildren = getAffectingChildren(connectEP);
 		Request snapBackRequest = new Request(RequestConstants.REQ_SNAP_BACK);
 		ListIterator li = affectingChildren.listIterator();
@@ -599,7 +599,7 @@ public abstract class DefaultProvider
 	 * Method update_diagram. Once the layout has been calculated with the GEF
 	 * graph structure, the new layout values need to be propogated into the
 	 * diagram. This is accomplished by creating a compound command that
-	 * contains sub commands to change shapes positions and connector bendpoints
+	 * contains sub commands to change shapes positions and connection bendpoints
 	 * positions. The command is subsequently executed by the calling action and
 	 * then through the command infrastructure is undoable and redoable.
 	 * 

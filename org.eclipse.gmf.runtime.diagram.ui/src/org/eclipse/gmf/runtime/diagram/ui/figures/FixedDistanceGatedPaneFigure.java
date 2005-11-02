@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * 
  * @author jbruck
  */
-public class FixedDistanceGatedPaneFigure extends GateFigure {
+public class FixedDistanceGatedPaneFigure extends BorderItemFigure {
 	
 	private FixedDistanceGatedPane gatedFigure = null;
 	private IFigure elementFigure = null;
@@ -137,7 +137,7 @@ public class FixedDistanceGatedPaneFigure extends GateFigure {
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		// return minimum size that will hold element figure and gates.
 		// should return elementFigure.getBounds - positive insets.
-		// for now the bounds of the GatedPaneFigure will hold everything.
+		// for now the bounds of the BorderedFigure will hold everything.
 		Dimension mp = elementFigure.getPreferredSize(wHint, hHint).getCopy();
 		Dimension gp = getGatePane().getOffsets();
 		Dimension ret = new Dimension( Math.max(mp.width, gp.width), mp.height+gp.height); 

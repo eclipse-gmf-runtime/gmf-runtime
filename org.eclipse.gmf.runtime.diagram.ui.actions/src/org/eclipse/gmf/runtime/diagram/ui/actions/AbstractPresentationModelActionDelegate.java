@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * selected <code>EObject</code> in a model.
  * 
  * @author ldamus
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.actions.AbstractDiagramModelActionDelegate}
  */
 public abstract class AbstractPresentationModelActionDelegate
 	extends AbstractModelActionDelegate {

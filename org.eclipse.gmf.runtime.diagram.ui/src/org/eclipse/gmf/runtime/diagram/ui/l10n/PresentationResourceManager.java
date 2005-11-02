@@ -20,6 +20,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.AbstractResourceManager;
  * cursor types of resources for this plug-in
  *
  * @author chmahone
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager}
  *
  */
 public class PresentationResourceManager extends AbstractResourceManager {

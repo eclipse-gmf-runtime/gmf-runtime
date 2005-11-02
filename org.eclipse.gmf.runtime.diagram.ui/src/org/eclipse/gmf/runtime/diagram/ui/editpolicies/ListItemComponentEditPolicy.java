@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.notation.View;
 
 
 /**
- * EditPolicy to be installed on {@link org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemCompartmentEditPart}.
+ * EditPolicy to be installed on {@link org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart}.
  * This editpolicy will delete the selected element.
  * @author mhanner
  */

@@ -22,11 +22,11 @@ import org.eclipse.gef.ui.actions.DeleteAction;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -74,7 +74,7 @@ public class PromptingDeleteAction
 				IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_DIAGRAM));
 
 		CompoundCommand deleteCC =
-			new CompoundCommand(PresentationResourceManager.getI18NString("DeleteCommand.Label"));//$NON-NLS-1$
+			new CompoundCommand(DiagramResourceManager.getI18NString("DeleteCommand.Label"));//$NON-NLS-1$
 
 
 		deleteReq.setShowInformationDialog(false);

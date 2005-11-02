@@ -154,7 +154,7 @@ public class DecorationEditPolicy
 		 * @param figure
 		 *            the figure to be used as the decoration
 		 * @param percentageFromSource
-		 *            The percentage of the connector length away from the
+		 *            The percentage of the connection length away from the
 		 *            source end (range is from 0 to 100) where the decoration
 		 *            should be positioned.
 		 * @param isVolatile

@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -63,7 +63,7 @@ public class LabelSnapBackEditPolicy
 				return null;
 	 		ICommand moveCommand = 
 	 			new SetBoundsCommand(
-	 				PresentationResourceManager.getI18NString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+	 				DiagramResourceManager.getI18NString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
 	 				new EObjectAdapter(view),
 					offset); 
 			return new EtoolsProxyCommand(moveCommand);

@@ -24,7 +24,7 @@ import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectorHandleEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionHandleEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterCompartmentItemsEditPolicy;
@@ -73,8 +73,8 @@ public abstract class ShapeNodeEditPart
 			new GraphicalNodeEditPolicy());
 		installEditPolicy(EditPolicyRoles.SORT_FILTER_ROLE,
 			new SortFilterCompartmentItemsEditPolicy());
-			installEditPolicy(EditPolicyRoles.CONNECTOR_HANDLES_ROLE,
-				new ConnectorHandleEditPolicy());
+			installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE,
+				new ConnectionHandleEditPolicy());
 	}
 
 	protected final IFigure createFigure() {
@@ -100,11 +100,11 @@ public abstract class ShapeNodeEditPart
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(
 			ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connector = (ConnectionNodeEditPart) connEditPart;
+		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
 		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
 
 			public Object run() {
-				Anchor a = connector.getConnectorView().getSourceAnchor();
+				Anchor a = connection.getEdge().getSourceAnchor();
 				if (a instanceof IdentityAnchor)
 					return ((IdentityAnchor) a).getId();
 				return ""; //$NON-NLS-1$
@@ -135,11 +135,11 @@ public abstract class ShapeNodeEditPart
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(
 			ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connector = (ConnectionNodeEditPart) connEditPart;
+		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
 		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
 
 			public Object run() {
-				Anchor a = connector.getConnectorView().getTargetAnchor();
+				Anchor a = connection.getEdge().getTargetAnchor();
 				if (a instanceof IdentityAnchor)
 					return ((IdentityAnchor) a).getId();
 				return ""; //$NON-NLS-1$

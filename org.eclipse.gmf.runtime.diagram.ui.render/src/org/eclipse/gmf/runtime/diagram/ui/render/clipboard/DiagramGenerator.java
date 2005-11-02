@@ -42,7 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
@@ -155,7 +155,7 @@ abstract public class DiagramGenerator {
 
 	/**
 	 * Creates an SWT image descriptor for the list of editparts passed in.Any
-	 * connectors where both the source and target editparts are passed in are
+	 * connections where both the source and target editparts are passed in are
 	 * also drawn.
 	 * 
 	 * @param editparts
@@ -175,7 +175,8 @@ abstract public class DiagramGenerator {
 			 * @see org.eclipse.jface.resource.ImageDescriptor#getImageData()
 			 */
 			public ImageData getImageData() {
-				return Images.ICON_ERROR.getImageData();
+				return DiagramResourceManager.getInstance().getImage(
+					DiagramResourceManager.IMAGE_ERROR).getImageData();
 			}
 		};
 
@@ -222,7 +223,7 @@ abstract public class DiagramGenerator {
 	}
 
 	/**
-	 * Renders the list of editparts to the graphics object. Any connectors
+	 * Renders the list of editparts to the graphics object. Any connections
 	 * where both the source and target editparts are passed in are also drawn.
 	 * 
 	 * @param graphics
@@ -259,8 +260,8 @@ abstract public class DiagramGenerator {
 				// Get the list of edit parts
 				getNestedEditParts(editPart, editParts);
 
-				// Find the connectors to be painted
-				findConnectorsToPaint(editParts, connectionsToPaint);
+				// Find the connections to be painted
+				findConnectionsToPaint(editParts, connectionsToPaint);
 
 				// paint shape figure
 				IFigure figure = editPart.getFigure();
@@ -495,7 +496,7 @@ abstract public class DiagramGenerator {
 	 * @param connectionsToPaint
 	 *            the edit parts for connections will be appended to this list
 	 */
-	private void findConnectorsToPaint(List editParts, List connectionsToPaint) {
+	private void findConnectionsToPaint(List editParts, List connectionsToPaint) {
 
 		EditPartViewer viewer = getDiagramEditPart().getRoot().getViewer();
 
@@ -513,10 +514,10 @@ abstract public class DiagramGenerator {
 
 				// For each source connection...
 				for (int i = 0; i < sourceConnections.size(); i++) {
-					Edge connectorView = (Edge) sourceConnections.get(i);
+					Edge edge = (Edge) sourceConnections.get(i);
 
 					// Get the connections target
-					View toView = (connectorView).getTarget();
+					View toView = (edge).getTarget();
 
 					AbstractEditPart toEditPart = (AbstractEditPart) viewer
 						.getEditPartRegistry().get(toView);
@@ -524,10 +525,10 @@ abstract public class DiagramGenerator {
 					if (!element.equals(toEditPart)
 						&& editParts.contains(toEditPart)) {
 
-						ConnectionNodeEditPart connectorEditPart = (ConnectionNodeEditPart) viewer
-							.getEditPartRegistry().get(connectorView);
+						ConnectionNodeEditPart connectionEditPart = (ConnectionNodeEditPart) viewer
+							.getEditPartRegistry().get(edge);
 
-						connectionsToPaint.add(connectorEditPart);
+						connectionsToPaint.add(connectionEditPart);
 					}
 				}
 			}
@@ -607,7 +608,7 @@ abstract public class DiagramGenerator {
 
 		List children = diagramEditPart.getPrimaryEditParts();
 		IMapMode mm = getMapMode();
-		
+
 		// We will use the diagram generate that was used to generate the image
 		// to figure out the outer-bound rectangle so that we are calculating
 		// the
@@ -777,13 +778,12 @@ abstract public class DiagramGenerator {
 		
 		return result;
 	}
-
+	
 	
 	/**
 	 * @return <code>int</code> value that is the margin around the generated image in logical coordinates.
 	 */
 	protected int getImageMargin() {
 		return image_margin;
-	}
-	
+}	
 }

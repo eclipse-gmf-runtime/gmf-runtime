@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * 
  * @author tisrar
  * @author jbruck
- *
+ * @deprecated Renamed BorderItemFigure
  */
 public class GateFigure extends NodeFigure {
 
@@ -72,6 +72,7 @@ public class GateFigure extends NodeFigure {
 	 *  
 	 * @author tisrar
 	 * @author jbruck
+	 * @deprecated renamed BorderItemLocator
 	 */
 	public static class GateLocator implements Locator {
 
@@ -79,7 +80,7 @@ public class GateFigure extends NodeFigure {
 		private final static int HORIZONTAL_GAP = MapMode.DPtoLP(8);
 		
 		private IFigure boundaryFigure = null;
-		private GateFigure gate = null;
+		private BorderItemFigure gate = null;
 		private Point constraintLocation = new Point(0,0);  // port is relative to border fig.
 
 		/**
@@ -97,7 +98,7 @@ public class GateFigure extends NodeFigure {
 		 * @param gate
 		 * @param parentFigure
 		 */
-		public GateLocator(GateFigure gate, IFigure parentFigure) {
+		public GateLocator(BorderItemFigure gate, IFigure parentFigure) {
 			Assert.isNotNull(parentFigure);
 			Assert.isNotNull(gate);
 			this.boundaryFigure = parentFigure;
@@ -110,7 +111,7 @@ public class GateFigure extends NodeFigure {
 		 * @param parentFigure
 		 * @param rectProposed
 		 */
-		public GateLocator(GateFigure gate, IFigure parentFigure,
+		public GateLocator(BorderItemFigure gate, IFigure parentFigure,
 							Rectangle rectProposed) {
 			this(gate, parentFigure);
 			resetPosition( rectProposed );
@@ -180,23 +181,23 @@ public class GateFigure extends NodeFigure {
 			Rectangle gateBounds = gate.getHandleBounds().getCopy();
 			if ( side == DrawConstant.WEST ) {
 				x = parentFigureX - gateBounds.width
-						+ gate.getGateOffset().width;
+						+ gate.getBorderItemOffset().width;
 				y += parentFigureHeight / 2;
 			}
 			else if ( side == DrawConstant.EAST ) {
 				x = parentFigureX + parentFigureWidth
-						- gate.getGateOffset().width;
+						- gate.getBorderItemOffset().width;
 				y += parentFigureHeight / 2;
 			}
 			else if ( side == DrawConstant.NORTH ) {
 				y = parentFigureY - gateBounds.height
-						+ gate.getGateOffset().height;
+						+ gate.getBorderItemOffset().height;
 				x += parentFigureWidth / 2;
 			}
 			else if ( side == DrawConstant.SOUTH ) {
 				x += parentFigureWidth / 2;
 				y = parentFigureY + parentFigureHeight
-						- gate.getGateOffset().height;
+						- gate.getBorderItemOffset().height;
 			}
 			return new Point(x, y);
 		}
@@ -219,13 +220,13 @@ public class GateFigure extends NodeFigure {
 			int newX = suggestedLocation.x;
 			int newY = suggestedLocation.y;
 			int westX = parentFigureX - gateBounds.width
-					+ gate.getGateOffset().width;
+					+ gate.getBorderItemOffset().width;
 			int eastX = parentFigureX + parentFigureWidth
-					- gate.getGateOffset().width;
+					- gate.getBorderItemOffset().width;
 			int southY = parentFigureY + parentFigureHeight
-					- gate.getGateOffset().height;
+					- gate.getBorderItemOffset().height;
 			int northY = parentFigureY - gateBounds.height
-					+ gate.getGateOffset().height;
+					+ gate.getBorderItemOffset().height;
 			if ( suggestedSide == DrawConstant.WEST ) {
 				if ( suggestedLocation.x != westX ) {
 					newX = westX;
@@ -491,17 +492,17 @@ public class GateFigure extends NodeFigure {
 		}
 
 		/**
-		 * getter for the <code>GateFigure</code>
-		 * @return <code>GateFigure</code>
+		 * getter for the <code>BorderItemFigure</code>
+		 * @return <code>BorderItemFigure</code>
 		 */
-		public GateFigure getGate() {
+		public BorderItemFigure getGate() {
 			return gate;
 		}
 
 		/**
 		 * @param figure
 		 */
-		public void setGate(GateFigure figure) {
+		public void setGate(BorderItemFigure figure) {
 			gate = figure;
 		}
 	} // GateLocator

@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
  * @author jcorchis
@@ -26,8 +26,8 @@ public abstract class SortFilterLabelProvider
 
 	private static final String CHECKED_IMAGE = "checkboxselected.gif"; //$NON-NLS-1$
 	private static final String UNCHECKED_IMAGE = "checkboxcleared.gif"; //$NON-NLS-1$
-	private static Image checkedImage = PresentationResourceManager.getInstance().createImage(CHECKED_IMAGE);
-	private static Image uncheckedImage = PresentationResourceManager.getInstance().createImage(UNCHECKED_IMAGE);
+	private static Image checkedImage = DiagramResourceManager.getInstance().createImage(CHECKED_IMAGE);
+	private static Image uncheckedImage = DiagramResourceManager.getInstance().createImage(UNCHECKED_IMAGE);
 
 	
 	/**

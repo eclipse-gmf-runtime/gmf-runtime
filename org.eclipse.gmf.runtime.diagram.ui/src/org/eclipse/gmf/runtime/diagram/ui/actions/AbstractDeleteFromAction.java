@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
  * @author schafe
  */
 public abstract class AbstractDeleteFromAction
-	extends PresentationAction {
+	extends DiagramAction {
 	
 	
 	/**
@@ -52,7 +52,7 @@ public abstract class AbstractDeleteFromAction
 
 	/**
 	 *  Return the semantic request to destroy the element
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return 	new EditCommandRequestWrapper(new DestroyElementRequest(false));
@@ -66,7 +66,7 @@ public abstract class AbstractDeleteFromAction
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#updateTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#updateTargetRequest()
 	 */
 	protected void updateTargetRequest() {
 		

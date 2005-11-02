@@ -25,7 +25,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
@@ -130,7 +130,7 @@ public class CompartmentCollapseHandle
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
 		View view = owner.getNotationView();
 		if (view!=null){
-			PresentationListener.getInstance().addNotificationListener(owner.getNotationView(),CompartmentCollapseHandle.this);
+			DiagramEventBroker.getInstance().addNotificationListener(owner.getNotationView(),CompartmentCollapseHandle.this);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class CompartmentCollapseHandle
 	 */
 	public void removeNotify() {
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
-		PresentationListener.getInstance().removeNotificationListener(owner.getNotationView(),this);
+		DiagramEventBroker.getInstance().removeNotificationListener(owner.getNotationView(),this);
 		super.removeNotify();
 	}
 

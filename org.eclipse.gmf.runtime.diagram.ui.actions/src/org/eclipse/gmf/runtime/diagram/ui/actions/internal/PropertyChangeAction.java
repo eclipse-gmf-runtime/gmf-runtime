@@ -20,7 +20,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IWorkbenchPage;
 
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -36,7 +36,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 
-public abstract class PropertyChangeAction extends PresentationAction {
+public abstract class PropertyChangeAction extends DiagramAction {
 
 	// id of the property this action will change
 	private String propertyId = null;

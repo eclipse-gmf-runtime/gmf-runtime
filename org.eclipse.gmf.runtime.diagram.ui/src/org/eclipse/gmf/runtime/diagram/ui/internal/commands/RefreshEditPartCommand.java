@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.notation.View;
  
 /**
@@ -66,7 +66,7 @@ public class RefreshEditPartCommand
 			//
 			// problem with editpart registry
 			String eMsg = MessageFormat.format(  
-				PresentationResourceManager.getInstance().getString("RefreshEditPartCompartment.execute.failed_ERROR_"),//$NON-NLS-1$
+				DiagramResourceManager.getInstance().getString("RefreshEditPartCompartment.execute.failed_ERROR_"),//$NON-NLS-1$
 				new Object[] {notation});
 			Log.error( DiagramUIPlugin.getInstance(), IStatus.ERROR, eMsg);
 		}

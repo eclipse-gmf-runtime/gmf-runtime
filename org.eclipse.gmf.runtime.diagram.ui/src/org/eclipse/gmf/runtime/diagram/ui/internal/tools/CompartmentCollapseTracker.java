@@ -22,7 +22,7 @@ import org.eclipse.swt.events.KeyEvent;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -48,7 +48,7 @@ public class CompartmentCollapseTracker
 	}
 
 	protected Command getCommand(Boolean expand) {
-		ChangePropertyValueRequest request = new ChangePropertyValueRequest(PresentationResourceManager.getI18NString("PropertyDescriptorFactory.CollapseCompartment"), Properties.ID_COLLAPSED, expand); //$NON-NLS-1$
+		ChangePropertyValueRequest request = new ChangePropertyValueRequest(DiagramResourceManager.getI18NString("PropertyDescriptorFactory.CollapseCompartment"), Properties.ID_COLLAPSED, expand); //$NON-NLS-1$
 		return compartmentEditPart.getCommand(request);
 	}
 

@@ -18,6 +18,7 @@ import java.util.Map;
  * dialog.
  * 
  * @author jcorchis
+ * @deprecated To be deleted.  Not being used.
  */
 public interface IFilterItems {
 

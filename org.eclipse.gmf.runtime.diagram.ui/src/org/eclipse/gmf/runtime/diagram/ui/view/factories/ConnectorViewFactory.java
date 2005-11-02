@@ -43,7 +43,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * @see #decorateView(View, View, IAdaptable, String, int, boolean)
  * @see #createStyles()
  * @author mmostafa
- * 
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory}
  */
 
 public class ConnectorViewFactory

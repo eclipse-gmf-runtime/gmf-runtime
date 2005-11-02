@@ -48,6 +48,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * contains other children such as a list compartment.
  * 
  * @author choang
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editparts.NestableListItemEditPart}
  *
  */
 public class NesteableListItemCompartmentEditPart

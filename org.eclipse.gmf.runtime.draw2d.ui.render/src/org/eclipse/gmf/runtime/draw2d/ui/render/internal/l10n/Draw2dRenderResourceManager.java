@@ -34,7 +34,7 @@ public class Draw2dRenderResourceManager extends AbstractUIResourceManager {
 		new Draw2dRenderResourceManager();
 
 	/**
-	 * Constructor for PresentationResourceManager.
+	 * Constructor for Draw2dRenderResourceManager.
 	 */
 	private Draw2dRenderResourceManager() {
 		super();

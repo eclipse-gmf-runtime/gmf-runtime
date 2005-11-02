@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
-
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -51,8 +50,8 @@ import org.eclipse.gmf.runtime.common.core.util.IAdaptableSelection;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
@@ -65,7 +64,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEdit
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -155,7 +154,7 @@ public abstract class GraphicalEditPart
 		Assert.isNotNull(listener);
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
-		PresentationListener.getInstance().addNotificationListener(element,listener);
+		DiagramEventBroker.getInstance().addNotificationListener(element,listener);
 		listenerFilters.put(filterId, new Object[] {element, listener});
 	}
 	
@@ -179,14 +178,14 @@ public abstract class GraphicalEditPart
 		Assert.isNotNull(listener);
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
-		PresentationListener.getInstance().addNotificationListener(element,feature,listener);
+		DiagramEventBroker.getInstance().addNotificationListener(element,feature,listener);
 		listenerFilters.put(filterId, new Object[] {element,feature, listener});
 	}
 
-	/** Creates a connector editpart. */
+	/** Creates a connection editpart. */
 	final protected org.eclipse.gef.ConnectionEditPart createConnection(
-			Object connectorView) {
-		return (org.eclipse.gef.ConnectionEditPart) createChild(connectorView);
+			Object connectionView) {
+		return (org.eclipse.gef.ConnectionEditPart) createChild(connectionView);
 	}
 
 	/**
@@ -224,10 +223,10 @@ public abstract class GraphicalEditPart
 			for (Iterator i = listenerFilters.keySet().iterator(); i.hasNext();) {
 				Object[] obj = (Object[]) listenerFilters.get(i.next());
 				if (obj.length>2){
-					PresentationListener.getInstance().
+					DiagramEventBroker.getInstance().
 						removeNotificationListener((EObject)obj[0],(EStructuralFeature) obj[1],(NotificationListener) obj[2]);
 				}else {
-					PresentationListener.getInstance().removeNotificationListener((EObject) obj[0],(NotificationListener) obj[1]);
+					DiagramEventBroker.getInstance().removeNotificationListener((EObject) obj[0],(NotificationListener) obj[1]);
 				}
 			}
 		}
@@ -373,7 +372,7 @@ public abstract class GraphicalEditPart
 	 * Return a list of editparts who's canonical editpolicies should be disabled
 	 * prior to executing the commands associated to the supplied request.
 	 * This implementation will return the editpart honoring a <code>SemanticWrapperRequest</code>
-	 * and a <code>CreateConnectorViewRequest</code>'s source and target editparts.
+	 * and a <code>CreateConnectionViewRequest</code>'s source and target editparts.
 	 *
 	 * @param request a request that has returned a command.
 	 * @return list of editparts.
@@ -569,7 +568,7 @@ public abstract class GraphicalEditPart
 	 * property change event However, it will only work under the following
 	 * assumptions: 1- The old and new semantic models are compatible in their
 	 * kind 2- The deltas between old and new semantic models do not affect
-	 * notation 3- Connectors are not refereshed since they are maintained by
+	 * notation 3- Connections are not refereshed since they are maintained by
 	 * the diagram
 	 */
 	protected void reactivateSemanticModel() {
@@ -635,7 +634,7 @@ public abstract class GraphicalEditPart
 	protected void refreshBackgroundColor() {
 		FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFillStyle());
 		if ( style != null ) {
-			setBackgroundColor(PresentationResourceManager.getInstance().getColor(new Integer(style.getFillColor())));
+			setBackgroundColor(DiagramResourceManager.getInstance().getColor(new Integer(style.getFillColor())));
 		}
 	}
 
@@ -655,7 +654,7 @@ public abstract class GraphicalEditPart
 	protected void refreshFontColor() {
 		FontStyle style = (FontStyle)  getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
 		if ( style != null ) {
-			setFontColor(PresentationResourceManager.getInstance().getColor(new Integer(style.getFontColor())));
+			setFontColor(DiagramResourceManager.getInstance().getColor(new Integer(style.getFontColor())));
 		}
 	}
 
@@ -663,7 +662,7 @@ public abstract class GraphicalEditPart
 	protected void refreshForegroundColor() {
 		LineStyle style = (LineStyle)  getPrimaryView().getStyle(NotationPackage.eINSTANCE.getLineStyle());
 		if ( style != null ) {
-			setForegroundColor(PresentationResourceManager.getInstance().getColor(new Integer(style.getLineColor())));
+			setForegroundColor(DiagramResourceManager.getInstance().getColor(new Integer(style.getLineColor())));
 		}
 	}
 
@@ -690,12 +689,12 @@ public abstract class GraphicalEditPart
 		if (objects == null)
 			return;
 		if (objects.length>2){
-			PresentationListener.getInstance().
+			DiagramEventBroker.getInstance().
 				removeNotificationListener((EObject) objects[0],
 											 (EStructuralFeature) objects[1],
 											 (NotificationListener) objects[2]);
 		}else{
-			PresentationListener.getInstance().removeNotificationListener((EObject) objects[0],(NotificationListener) objects[1]);
+			DiagramEventBroker.getInstance().removeNotificationListener((EObject) objects[0],(NotificationListener) objects[1]);
 		}
 		listenerFilters.remove(filterId);
 	}
@@ -721,7 +720,7 @@ public abstract class GraphicalEditPart
 	 */
 	protected void setFont(FontData fontData) {
 		getFigure().setFont(
-			PresentationResourceManager.getInstance().getFont(
+			DiagramResourceManager.getInstance().getFont(
 				Display.getDefault(),
 				fontData));
 		getFigure().repaint();
@@ -1144,14 +1143,14 @@ public abstract class GraphicalEditPart
 	 * ATTENTION!!!!: Do not remove, see below. Only update based on newer GEF framework
 	 *  
 	 * This function is "copied" from GEF for the following reason:
-	 * GEF does not check if the connector's source or target are the same as the editpart
+	 * GEF does not check if the connection's source or target are the same as the editpart
 	 * before setting them to <code>null</code> which causes the following usecase to currently fail:
 	 * 
-	 * "in a model transaction, view's source connectors are detached, a new view is
-	 * created, and the connectors are attached to it, then the old view is destroyed"
+	 * "in a model transaction, view's source connections are detached, a new view is
+	 * created, and the connections are attached to it, then the old view is destroyed"
 	 * 
 	 * The reason for the problem is the filtering of Deleted/Uncreated object's events in the
-	 * PresentationListener which prevents the first connector detach event from coming and 
+	 * DiagramEventBroker which prevents the first connection detach event from coming and 
 	 * avoiding the problem
 	 * 
 	 * TODO: Remove this override as soon as the bugzilla <Bug 110476> is resolved or the event filtering is removed

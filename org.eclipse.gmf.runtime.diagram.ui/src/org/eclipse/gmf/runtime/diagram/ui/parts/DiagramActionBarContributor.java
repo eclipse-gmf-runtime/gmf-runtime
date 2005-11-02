@@ -29,7 +29,7 @@ import org.eclipse.ui.activities.IActivityManagerListener;
  * @author melaasar, cmahoney
  * 
  * An abstract implementation of a diagram editor action bar contributor
- * It contributes generic items that applies to all presentation diagrams 
+ * It contributes generic items that applies to all diagrams 
  */
 public abstract class DiagramActionBarContributor
 	extends ActionBarContributor {

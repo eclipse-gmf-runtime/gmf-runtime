@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.GuideStyle;
 
@@ -80,17 +80,17 @@ public class DiagramRuler {
 	}
 	
 	public void addNotificationListener(NotificationListener listener) {
-		PresentationListener.getInstance().addNotificationListener(getGuideStyle(),listener);
+		DiagramEventBroker.getInstance().addNotificationListener(getGuideStyle(),listener);
 
 	}
 
 	public void removeNotificationListener(NotificationListener listener) {
-		PresentationListener.getInstance().removeNotificationListener(getGuideStyle(),listener);
+		DiagramEventBroker.getInstance().removeNotificationListener(getGuideStyle(),listener);
 
 	}
 
 	
 	public void setGuideStyle(GuideStyle guideStyle) {
 		this.guideStyle = guideStyle;
-	}
+}
 }

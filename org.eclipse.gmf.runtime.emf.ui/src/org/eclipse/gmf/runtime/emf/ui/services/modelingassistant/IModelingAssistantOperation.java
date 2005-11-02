@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.emf.ui.services.modelingassistant;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 
 /**
@@ -57,12 +56,13 @@ public interface IModelingAssistantOperation
 	/** Id for the SelectExistingElementForTarget operation */
 	final String SELECT_EXISTING_ELEMENT_FOR_TARGET_ID = "SelectExistingElementForTarget"; //$NON-NLS-1$	
 
-	/** Id for the GetTypesForActionBar operation */
-	final String GET_TYPES_FOR_ACTION_BAR_ID = "GetTypesForActionBar"; //$NON-NLS-1$
+	/** Id for the GetTypesForPopupBar operation */
+	final String GET_TYPES_FOR_POPUP_BAR_ID = "GetTypesForPopupBar"; //$NON-NLS-1$
 
 	/**
 	 * Returns the id string to match that specified in the plugin.xml for
 	 * deferred loading.
+	 * 
 	 * @return the id string
 	 */
 	String getId();
@@ -70,6 +70,7 @@ public interface IModelingAssistantOperation
 	/**
 	 * Returns the context object to match that specified in the plugin.xml for
 	 * deferred loading.
+	 * 
 	 * @return the context object
 	 */
 	IAdaptable getContext();

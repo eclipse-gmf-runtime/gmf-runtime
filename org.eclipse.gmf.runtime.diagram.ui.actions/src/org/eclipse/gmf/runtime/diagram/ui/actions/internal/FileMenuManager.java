@@ -11,11 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.jface.action.Action;
 
 /**
  * The file menu manager. It contains all file-related actions.
@@ -30,8 +29,8 @@ public class FileMenuManager extends ActionMenuManager {
 	 */
 	private static class FileMenuAction extends Action {
 		public FileMenuAction() {
-			setText(Messages.getString("FileMenuManager.File.ActionLabelText")); //$NON-NLS-1$
-			setToolTipText(Messages.getString("FileMenuManager.File.ActionToolTipText")); //$NON-NLS-1$
+			setText(DiagramActionsResourceManager.getI18NString("FileMenuManager.File.ActionLabelText")); //$NON-NLS-1$
+			setToolTipText(DiagramActionsResourceManager.getI18NString("FileMenuManager.File.ActionToolTipText")); //$NON-NLS-1$
 		}
 	}
 

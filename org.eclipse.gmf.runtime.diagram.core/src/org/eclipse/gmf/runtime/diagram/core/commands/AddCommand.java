@@ -15,9 +15,8 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.View;
@@ -49,7 +48,7 @@ public class AddCommand extends AbstractModelCommand{
 	 * @param index the child insertion index
 	 */
 	public AddCommand(IAdaptable parent, IAdaptable child, int index) {
-		super(Messages.getString("AddCommand.Label"), null); //$NON-NLS-1$
+		super(DiagramResourceManager.getI18NString("AddCommand.Label"), null); //$NON-NLS-1$
 		assert null != parent : "Null parent in AddCommand";//$NON-NLS-1$
 		assert null != child : "Null child in AddCommand";//$NON-NLS-1$		
 		this.parent = parent;
@@ -87,7 +86,7 @@ public class AddCommand extends AbstractModelCommand{
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getLabel()
 	 */
 	public String getLabel() {
-		return Messages.getString("AddCommand.Label"); //$NON-NLS-1$
+		return DiagramResourceManager.getI18NString("AddCommand.Label"); //$NON-NLS-1$
 	}
 
 }

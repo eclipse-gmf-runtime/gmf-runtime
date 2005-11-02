@@ -26,6 +26,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
  * selection and focus feedback of text compartments.
  * 
  * @author melaasar
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableTextEditPolicy}
  */
 public class TextNonResizableEditPolicy
 	extends NonResizableEditPolicyEx {

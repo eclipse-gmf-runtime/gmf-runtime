@@ -58,9 +58,6 @@ public class ModelingAssistantService
 			assert providerConfiguration != null: "providerConfiguration is null"; //$NON-NLS-1$
 		}
 
-		/**
-		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
-		 */
 		public boolean provides(IOperation operation) {
 			if (!super.provides(operation)) {
 				return false;
@@ -98,9 +95,6 @@ public class ModelingAssistantService
 		service.configureProviders(MslUIPlugin.getPluginId(), "modelingAssistantProviders"); //$NON-NLS-1$
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.service.Service#newProviderDescriptor(org.eclipse.core.runtime.IConfigurationElement)
-	 */
 	protected Service.ProviderDescriptor newProviderDescriptor(
 		IConfigurationElement element) {
 		return new ProviderDescriptor(element);
@@ -144,8 +138,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetTypesOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypes(String, IAdaptable)
 	 */
 	public List getTypes(String hint, IAdaptable data) {
 		List results = execute(ExecutionStrategy.FORWARD,
@@ -156,8 +148,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetRelTypesOnSourceOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSource(IAdaptable)
 	 */
 	public List getRelTypesOnSource(IAdaptable source) {
 		List results = execute(ExecutionStrategy.FORWARD,
@@ -168,8 +158,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetRelTypesOnTargetOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnTarget(IAdaptable)
 	 */
 	public List getRelTypesOnTarget(IAdaptable target) {
 		List results = execute(ExecutionStrategy.FORWARD,
@@ -180,8 +168,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetRelTypesOnSourceAndTargetOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesOnSourceAndTarget(IAdaptable, IAdaptable)
 	 */
 	public List getRelTypesOnSourceAndTarget(IAdaptable source, IAdaptable target) {
 		List results = execute(ExecutionStrategy.FORWARD,
@@ -192,8 +178,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetRelTypesForSREOnSourceOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesForSREOnSource(org.eclipse.core.runtime.IAdaptable)
 	 */
 	public List getRelTypesForSREOnSource(IAdaptable source) {
 		List results = execute(ExecutionStrategy.FORWARD,
@@ -204,8 +188,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetRelTypesForSREOnTargetOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getRelTypesForSREOnTarget(IAdaptable)
 	 */
 	public List getRelTypesForSREOnTarget(IAdaptable target) {
 		List results = execute(ExecutionStrategy.FORWARD,
@@ -216,8 +198,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetTypesForSourceOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForSource(IAdaptable, IElementType)
 	 */
 	public List getTypesForSource(IAdaptable target,
 		IElementType relationshipType) {
@@ -229,8 +209,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>GetTypesForTargetOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#getTypesForTarget(IAdaptable, IElementType)
 	 */
 	public List getTypesForTarget(IAdaptable source,
 		IElementType relationshipType) {
@@ -242,8 +220,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>SelectExistingElementForSourceOperation</code> using the 
 	 * <code>FIRST</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#selectExistingElementForSource(IAdaptable, IElementType)
 	 */
 	public EObject selectExistingElementForSource(IAdaptable target,
 		IElementType relationshipType) {
@@ -256,8 +232,6 @@ public class ModelingAssistantService
 	/**
 	 * Executes the <code>SelectExistingElementForTargetOperation</code> using the 
 	 * <code>FIRST</code> execution strategy.
-	 * 
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantProvider#selectExistingElementForTarget(IAdaptable, IElementType)
 	 */
 	public EObject selectExistingElementForTarget(IAdaptable source,
 		IElementType relationshipType) {
@@ -268,14 +242,25 @@ public class ModelingAssistantService
 	}
 
 	/**
-	 * Executes the <code>GetTypesForActionBarOperation</code> using the 
+	 * Executes the <code>GetTypesForPopupBarOperation</code> using the 
+	 * <code>FORWARD</code> execution strategy.
+	 */
+	public List getTypesForPopupBar(IAdaptable host) {
+		List results = execute(ExecutionStrategy.FORWARD,
+			new GetTypesForPopupBarOperation(host));
+		return collapseList(results);
+	}
+
+	/**
+	 * Executes the <code>GetTypesForPopupBarOperation</code> using the 
 	 * <code>FORWARD</code> execution strategy.
 	 * 
 	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getTypesForActionBar(IAdaptable)
+	 * @deprecated Renamed to {@link #getTypesForPopupBar(IAdaptable)}
 	 */
 	public List getTypesForActionBar(IAdaptable host) {
 		List results = execute(ExecutionStrategy.FORWARD,
-			new GetTypesForActionBarOperation(host));
+			new GetTypesForPopupBarOperation(host));
 		return collapseList(results);
 	}
 

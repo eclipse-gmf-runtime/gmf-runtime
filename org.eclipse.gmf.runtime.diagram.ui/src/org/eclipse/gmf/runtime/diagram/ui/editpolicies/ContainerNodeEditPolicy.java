@@ -20,17 +20,17 @@ import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateViewAndOptionallyElementCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectorViewAndElementCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewAndElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.GetConnectorTypeAndEndCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /**
  * This is installed on a container editpart. It is responsible for creating
- * connectors from a source shape to an unspecified target and a target shape to
+ * connections from a source shape to an unspecified target and a target shape to
  * an unspecified source. A popup will appear asking the user to select or
  * create a new source or target element. This will handle both single create
  * connection requests and multi connection requests (i.e. where the popup also
@@ -42,7 +42,7 @@ public class ContainerNodeEditPolicy
 	extends GraphicalNodeEditPolicy {
 
 	/**
-	 * Only handles connection end requests. Cannot start a connector on a
+	 * Only handles connection end requests. Cannot start a connection on a
 	 * container.
 	 */
 	public Command getCommand(Request request) {
@@ -67,7 +67,7 @@ public class ContainerNodeEditPolicy
 	protected Command getConnectionAndEndCommands(
 			CreateConnectionRequest request) {
 
-		CompoundCommand cc = new CompoundCommand(PresentationResourceManager
+		CompoundCommand cc = new CompoundCommand(DiagramResourceManager
 			.getI18NString("Command.CreateRelationship.Label")); //$NON-NLS-1$
 
 		// Flags the case where the connection is to be created from a known
@@ -79,7 +79,7 @@ public class ContainerNodeEditPolicy
 
 		// Adds the command for the popup menu to get the relationship type and
 		// end element.
-		GetConnectorTypeAndEndCommand menuCmd = getConnectorTypeAndEndPopupCommand(
+		PromptForConnectionAndEndCommand menuCmd = getPromptForConnectionAndEndCommand(
 			request);
 		cc.add(new EtoolsProxyCommand(menuCmd));
 
@@ -89,20 +89,20 @@ public class ContainerNodeEditPolicy
 			menuCmd.getEndAdapter(), request.getLocation());
 		cc.add(new EtoolsProxyCommand(createOtherEndCmd));
 		
-		// Adds the command to create the connector view and element.
-		ICommand connectorCmd = isDirectionReversed 
-			? getCreateConnectorCommand( 
+		// Adds the command to create the connection view and element.
+		ICommand connectionCmd = isDirectionReversed 
+			? getCreateConnectionCommand( 
 				request,
-				menuCmd.getConnectorAdapter(),
+				menuCmd.getConnectionAdapter(),
 				createOtherEndCmd.getResult(), 
 				request.getSourceEditPart())
-			: getCreateConnectorCommand(
+			: getCreateConnectionCommand(
 				request,
-				menuCmd.getConnectorAdapter(), 
+				menuCmd.getConnectionAdapter(), 
 				request.getSourceEditPart(),
 				createOtherEndCmd.getResult());	
 			
-		cc.add(new EtoolsProxyCommand(connectorCmd));
+		cc.add(new EtoolsProxyCommand(connectionCmd));
 
 		return cc;
 	}
@@ -115,9 +115,9 @@ public class ContainerNodeEditPolicy
 	 * @param part
 	 * @return
 	 */
-	protected GetConnectorTypeAndEndCommand getConnectorTypeAndEndPopupCommand(
+	protected PromptForConnectionAndEndCommand getPromptForConnectionAndEndCommand(
 			CreateConnectionRequest request) {
-		return new GetConnectorTypeAndEndCommand(request,
+		return new PromptForConnectionAndEndCommand(request,
 			(IGraphicalEditPart) getHost());
 	}
 
@@ -136,18 +136,18 @@ public class ContainerNodeEditPolicy
 	
 	/**
 	 * Called by {@link #getConnectionAndEndCommands} .
-	 * @param request the create connector request
+	 * @param request the create connection request
 	 * @param typeInfoAdapter
 	 * @param sourceViewAdapter
 	 * @param targetViewAdapter
-	 * @return a <code>DeferredCreateConnectorViewAndElementCommand</code>
+	 * @return a <code>DeferredCreateConnectionViewAndElementCommand</code>
 	 */
-	protected ICommand getCreateConnectorCommand(
+	protected ICommand getCreateConnectionCommand(
 			CreateRequest request,
 			IAdaptable typeInfoAdapter,
 			IAdaptable sourceViewAdapter,
 			IAdaptable targetViewAdapter) {
-		return new DeferredCreateConnectorViewAndElementCommand(request,
+		return new DeferredCreateConnectionViewAndElementCommand(request,
 			typeInfoAdapter, sourceViewAdapter, targetViewAdapter, getHost()
 				.getViewer());
 	}

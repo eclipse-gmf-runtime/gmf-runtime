@@ -13,18 +13,16 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * Checked action for the View Page Breaks workspace property
@@ -32,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
  * @author jcorchis
  * @canBeSeenBy %level1
  */
-public class ViewPageBreaksAction extends PresentationAction {
+public class ViewPageBreaksAction extends DiagramAction {
 
 	/**
 	 * @param workbenchPage
@@ -42,14 +40,18 @@ public class ViewPageBreaksAction extends PresentationAction {
 		setText(DiagramActionsResourceManager.getI18NString("ViewPageBreaks.textLabel")); //$NON-NLS-1$
 		setId(ActionIds.ACTION_VIEW_PAGEBREAKS);
 		setToolTipText(DiagramActionsResourceManager.getI18NString("ViewPageBreaks.toolTip")); //$NON-NLS-1$
-		setImageDescriptor(Images.DESC_ACTION_VIEWPAGEBREAKS);
-		setDisabledImageDescriptor(Images.DESC_ACTION_VIEWPAGEBREAKS_DISABLED);
+		setImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_VIEWPAGEBREAKS));
+		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_VIEWPAGEBREAKS_DISABLED));
 	}
 
 	/**
 	 * Returns null, this action modifies the user's workspace preference.
 	 * @returns null
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return null;

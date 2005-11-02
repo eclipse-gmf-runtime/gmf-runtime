@@ -12,11 +12,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.jface.action.Action;
 
 /**
  * The ZOrder menu manager. It contains all Order-related actions
@@ -34,8 +33,8 @@ public class ZOrderMenuManager extends ActionMenuManager {
 	 */
 	private static class ZOrderMenuAction extends Action {
 		public ZOrderMenuAction() {
-			setText(Messages.getString( MENU_LABEL ));
-			setToolTipText(Messages.getString( MENU_TOOLTIP ));
+			setText(DiagramActionsResourceManager.getI18NString( MENU_LABEL ));
+			setToolTipText(DiagramActionsResourceManager.getI18NString( MENU_TOOLTIP ));
 		}
 	}
 

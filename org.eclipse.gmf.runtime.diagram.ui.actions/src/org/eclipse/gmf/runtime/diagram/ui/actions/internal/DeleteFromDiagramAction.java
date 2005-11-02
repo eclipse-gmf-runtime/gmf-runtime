@@ -26,7 +26,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -42,7 +42,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author schafe
  * @canBeSeenBy %level1
  */
-public class DeleteFromDiagramAction extends PresentationAction{
+public class DeleteFromDiagramAction extends DiagramAction{
 	
 	/**
 	 * Creates a <code>DeleteFromDiagramAction</code> with a default label.
@@ -67,8 +67,8 @@ public class DeleteFromDiagramAction extends PresentationAction{
 	public void init() {
 		super.init();
 		setId(ActionIds.ACTION_DELETE_FROM_DIAGRAM);
-		setText(DiagramActionsResourceManager.getI18NString("PresentationGlobalActionHandler.deleteFromDiagram"));//$NON-NLS-1$
-		setToolTipText(DiagramActionsResourceManager.getI18NString("PresentationGlobalActionHandler.deleteFromDiagramToolTip"));//$NON-NLS-1$
+		setText(DiagramActionsResourceManager.getI18NString("DeleteFromDiagram.ActionLabelText"));//$NON-NLS-1$
+		setToolTipText(DiagramActionsResourceManager.getI18NString("DeleteFromDiagram.ActionToolTipText"));//$NON-NLS-1$
 		ISharedImages workbenchImages = PlatformUI.getWorkbench().getSharedImages();
 		setHoverImageDescriptor(
 			workbenchImages.getImageDescriptor(
@@ -89,7 +89,7 @@ public class DeleteFromDiagramAction extends PresentationAction{
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest(){
 		
@@ -167,8 +167,8 @@ public class DeleteFromDiagramAction extends PresentationAction{
  			if (((View)model).getElement() == null){
  				continue;
  			} 				
- 			//Check if container of connector is canonical. 
- 			//A connector's container is not necessarily the connector editPart's parent.
+ 			//Check if container of connection is canonical. 
+ 			//A connection's container is not necessarily the connection editPart's parent.
  			if (selectedObject instanceof ConnectionEditPart){
  				ConnectionEditPart ePart = (ConnectionEditPart)selectedObject;
  				EditPart sEditPart = ePart.getSource();

@@ -15,8 +15,8 @@ import org.eclipse.emf.common.notify.Notification;
 
 /**
  * Defines an EMF {@link Notification} listener; any class interested in listenning 
- * to events from the {@link PresentationListener} it implement this interface.
- * the notifyChanged will get called by the {@link PresentationListener#handleElementEvent(Notification)}  
+ * to events from the {@link DiagramEventBroker} it implement this interface.
+ * the notifyChanged will get called by the {@link DiagramEventBroker#handleElementEvent(Notification)}  
  * 
  * @author mmostafa
  * 
@@ -25,7 +25,7 @@ import org.eclipse.emf.common.notify.Notification;
 public interface NotificationListener {
 	
 	/**
-	 * Will be called when a Notification event get sent from the PresentationListener
+	 * Will be called when a Notification event get sent from the DiagramEventBroker
 	 * @param notification	the notification object
 	 */
 	public void notifyChanged(Notification notification);

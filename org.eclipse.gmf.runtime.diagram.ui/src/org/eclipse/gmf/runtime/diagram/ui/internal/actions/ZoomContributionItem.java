@@ -22,6 +22,10 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -35,12 +39,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-
 /**
  * @author melaasar
  * @canBeSeenBy %level1
@@ -49,27 +47,27 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ZoomContributionItem
-	extends PresentationContributionItem
+	extends CustomContributionItem
 	implements ZoomListener, Listener {
 
 	/**
 	 * Custom zoom operations
 	 */
-	private static final String ZOOM_IN = PresentationResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomIn"); //$NON-NLS-1$
-	private static final String ZOOM_OUT = PresentationResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomOut"); //$NON-NLS-1$
-	private static final String ZOOM_100 = PresentationResourceManager.getI18NString("ZoomAction.Zoom100"); //$NON-NLS-1$
-	private static final String ZOOM_FIT = PresentationResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToFit"); //$NON-NLS-1$
-	private static final String ZOOM_WIDTH = PresentationResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToWidth"); //$NON-NLS-1$
-	private static final String ZOOM_HEIGHT = PresentationResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToHeight"); //$NON-NLS-1$
-	private static final String ZOOM_SELECTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToSelection"); //$NON-NLS-1$
+	private static final String ZOOM_IN = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomIn"); //$NON-NLS-1$
+	private static final String ZOOM_OUT = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomOut"); //$NON-NLS-1$
+	private static final String ZOOM_100 = DiagramResourceManager.getI18NString("ZoomAction.Zoom100"); //$NON-NLS-1$
+	private static final String ZOOM_FIT = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToFit"); //$NON-NLS-1$
+	private static final String ZOOM_WIDTH = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToWidth"); //$NON-NLS-1$
+	private static final String ZOOM_HEIGHT = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToHeight"); //$NON-NLS-1$
+	private static final String ZOOM_SELECTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToSelection"); //$NON-NLS-1$
 	
-	private static final String ZOOM_IN_ACTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomIn"); //$NON-NLS-1$
-	private static final String ZOOM_OUT_ACTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomOut"); //$NON-NLS-1$
-	private static final String ZOOM_100_ACTION = PresentationResourceManager.getI18NString("ZoomAction.Zoom100"); //$NON-NLS-1$
-	private static final String ZOOM_FIT_ACTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomToFit"); //$NON-NLS-1$
-	private static final String ZOOM_WIDTH_ACTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomToWidth"); //$NON-NLS-1$
-	private static final String ZOOM_HEIGHT_ACTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomToHeight"); //$NON-NLS-1$
-	private static final String ZOOM_SELECTION_ACTION = PresentationResourceManager.getI18NString("ZoomAction.ZoomToSelection"); //$NON-NLS-1$
+	private static final String ZOOM_IN_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomIn"); //$NON-NLS-1$
+	private static final String ZOOM_OUT_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomOut"); //$NON-NLS-1$
+	private static final String ZOOM_100_ACTION = DiagramResourceManager.getI18NString("ZoomAction.Zoom100"); //$NON-NLS-1$
+	private static final String ZOOM_FIT_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToFit"); //$NON-NLS-1$
+	private static final String ZOOM_WIDTH_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToWidth"); //$NON-NLS-1$
+	private static final String ZOOM_HEIGHT_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToHeight"); //$NON-NLS-1$
+	private static final String ZOOM_SELECTION_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToSelection"); //$NON-NLS-1$
 	
 	/**
 	 * The part's zoom manager
@@ -86,11 +84,11 @@ public class ZoomContributionItem
 	 */
 	public ZoomContributionItem(IWorkbenchPage workbenchPage) {
 		super(workbenchPage, ActionIds.CUSTOM_ZOOM);
-		setLabel(PresentationResourceManager.getI18NString("ZoomActionMenu.ZoomLabel")); //$NON-NLS-1$		
+		setLabel(DiagramResourceManager.getI18NString("ZoomActionMenu.ZoomLabel")); //$NON-NLS-1$		
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PresentationContributionItem#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.CustomContributionItem#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return null;
@@ -181,7 +179,7 @@ public class ZoomContributionItem
 			? new MenuItem(parent, SWT.CASCADE, index) 
 			: new MenuItem(parent, SWT.CASCADE);
 		createMenu(mi);
-		mi.setImage(createImage(Images.DESC_ACTION_ZOOM_IN));
+		mi.setImage(DiagramResourceManager.getInstance().getImage(DiagramResourceManager.IMAGE_ZOOM_IN));
 		return mi;
 	}
 
@@ -192,13 +190,27 @@ public class ZoomContributionItem
 	 */
 	private void createMenu(MenuItem mi) {
 		Menu menu = new Menu(mi.getParent());
-		createMenuItem(menu, ZOOM_IN_ACTION, ZOOM_IN, Images.DESC_ACTION_ZOOM_IN); //$NON-NLS-1$
-		createMenuItem(menu, ZOOM_OUT_ACTION, ZOOM_OUT, Images.DESC_ACTION_ZOOM_OUT); //$NON-NLS-1$
-		createMenuItem(menu, ZOOM_100_ACTION, ZOOM_100, Images.DESC_ACTION_ZOOM_100); //$NON-NLS-1$
-		createMenuItem(menu, ZOOM_FIT_ACTION, ZOOM_FIT, Images.DESC_ACTION_ZOOM_TOFIT); //$NON-NLS-1$
-		createMenuItem(menu, ZOOM_WIDTH_ACTION, ZOOM_WIDTH, Images.DESC_ACTION_ZOOM_TOFIT); //$NON-NLS-1$
-		createMenuItem(menu, ZOOM_HEIGHT_ACTION, ZOOM_HEIGHT, Images.DESC_ACTION_ZOOM_TOFIT); //$NON-NLS-1$
-		createMenuItem(menu, ZOOM_SELECTION_ACTION, ZOOM_SELECTION, Images.DESC_ACTION_ZOOM_TOFIT); //$NON-NLS-1$
+		createMenuItem(menu, ZOOM_IN_ACTION, ZOOM_IN, DiagramResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_IN));
+		createMenuItem(menu, ZOOM_OUT_ACTION, ZOOM_OUT, DiagramResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_OUT));
+		createMenuItem(menu, ZOOM_100_ACTION, ZOOM_100, DiagramResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_100));
+		createMenuItem(menu, ZOOM_FIT_ACTION, ZOOM_FIT, DiagramResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+		createMenuItem(menu, ZOOM_WIDTH_ACTION, ZOOM_WIDTH,
+			DiagramResourceManager.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+		createMenuItem(menu, ZOOM_HEIGHT_ACTION, ZOOM_HEIGHT,
+			DiagramResourceManager.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+		createMenuItem(menu, ZOOM_SELECTION_ACTION, ZOOM_SELECTION,
+			DiagramResourceManager.getInstance().getImageDescriptor(
+				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
 		mi.setMenu(menu);
 	}
 
@@ -352,7 +364,7 @@ public class ZoomContributionItem
 			if (selectionOnly) {
 				editParts = getStructuredSelection().iterator();
 			} else {
-				List allEditParts = getDiagramEditPart().getConnectors();
+				List allEditParts = getDiagramEditPart().getConnections();
 				allEditParts.addAll(getDiagramEditPart().getChildrenAffectingZoom());
 				editParts = allEditParts.iterator();
 			}

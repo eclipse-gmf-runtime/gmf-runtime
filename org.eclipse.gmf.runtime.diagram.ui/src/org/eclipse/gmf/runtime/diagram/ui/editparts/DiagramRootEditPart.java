@@ -31,7 +31,6 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ZoomableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
@@ -39,6 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
@@ -107,7 +107,7 @@ public class DiagramRootEditPart
 
 	/**
 	 * The hint used to find the appropriate preference store from which general
-	 * diagramming preference values for properties of shapes, connectors, and
+	 * diagramming preference values for properties of shapes, connections, and
 	 * diagrams can be retrieved. This hint is mapped to a preference store in
 	 * the {@link DiagramPreferencesRegistry}.
 	 */
@@ -176,7 +176,7 @@ public class DiagramRootEditPart
         layers.add(new FreeformLayer(), DECORATION_UNPRINTABLE_LAYER);
         return layers;
     }
-    
+   
     /**
      * Creates the <code>ScalableFreeformLayeredPane</code>.
 	 * @return the new <code>ScalableFreeformLayeredPane</code>
@@ -491,7 +491,6 @@ public class DiagramRootEditPart
 			IPreferenceConstants.PREF_RULER_UNITS);
 		setRulers(rulerUnits);
 	}
-
 	
 	/**
 	 * This is a workspace property request.  It does not use a <code>Command</code>
@@ -594,7 +593,7 @@ public class DiagramRootEditPart
 	public PreferencesHint getPreferencesHint() {
 		return preferencesHint;
 	}
-
+	
 	/**
 	 * Override this if the Editor wishes to support a coordinate system other then the default 
 	 * (usually HiMetric coordinates).  
@@ -604,11 +603,10 @@ public class DiagramRootEditPart
 	public IMapMode getMapMode() {
 		return MapModeTypes.DEFAULT_MM;
 	}
-	
+
 	public DiagramRuler getHorizontalRuler() {
 		return horizontalRuler;
-	}
-
+}
 	
 	private void setHorizontalRuler(DiagramRuler horizontalRuler) {
 		this.horizontalRuler = horizontalRuler;

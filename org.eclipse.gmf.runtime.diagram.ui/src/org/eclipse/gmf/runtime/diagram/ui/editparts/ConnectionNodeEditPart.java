@@ -64,14 +64,14 @@ abstract public class ConnectionNodeEditPart
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
 	 */
 	protected List getModelSourceConnections(){
-		return ViewUtil.getSourceConnections(getConnectorView());
+		return ViewUtil.getSourceConnections(getEdge());
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
 	 */
 	protected List getModelTargetConnections(){
-		return ViewUtil.getTargetConnections(getConnectorView());
+		return ViewUtil.getTargetConnections(getEdge());
 	}
 
 	protected ConnectionAnchor getSourceConnectionAnchor() {
@@ -86,10 +86,10 @@ abstract public class ConnectionNodeEditPart
 	 * @see NodeEditPart#getSourceConnectionAnchor(ConnectionEditPart)
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connector = (ConnectionNodeEditPart) connEditPart;
+		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
 		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead( new MRunnable() {
 			public Object run() {
-				Anchor a = connector.getConnectorView().getSourceAnchor();
+				Anchor a = connection.getEdge().getSourceAnchor();
 				if (a instanceof IdentityAnchor)
 					return ((IdentityAnchor) a).getId();
 				return ""; //$NON-NLS-1$
@@ -123,10 +123,10 @@ abstract public class ConnectionNodeEditPart
 	 * @see NodeEditPart#getTargetConnectionAnchor(ConnectionEditPart)
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connector = (ConnectionNodeEditPart) connEditPart;
+		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
 		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead( new MRunnable() {
 			public Object run() {
-				Anchor a = connector.getConnectorView().getTargetAnchor();
+				Anchor a = connection.getEdge().getTargetAnchor();
 				if (a instanceof IdentityAnchor)
 					return ((IdentityAnchor) a).getId();
 				return ""; //$NON-NLS-1$

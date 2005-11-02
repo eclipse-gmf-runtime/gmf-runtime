@@ -17,7 +17,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import org.eclipse.gmf.runtime.diagram.ui.figures.GateFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 
 /**
@@ -25,18 +25,18 @@ import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
  *
  * To manage fixed connection anchors
  */
-public class TerminalFigure extends GateFigure{
+public class TerminalFigure extends BorderItemFigure{
 	
 	protected FixedConnectionAnchor fixedAnchor;
 	
 	/**
 	 * @author sshaw
 	 *
-	 * Override for GateLocator that will fix the location for the connection point based on 
+	 * Override for BorderItemLocator that will fix the location for the connection point based on 
 	 * an initial position.  This locator will also scale the location of the connection if the
 	 * parent figure changes.
 	 */
-	static public class FixedGateLocation extends GateLocator {
+	static public class FixedGateLocation extends BorderItemLocator {
 		 
 		private Dimension initDim; 
 		public void relocate(IFigure target) {
@@ -57,7 +57,7 @@ public class TerminalFigure extends GateFigure{
 		 * @param gate
 		 * @param parentFigure
 		 */
-		public FixedGateLocation(GateFigure gate, IFigure parentFigure, Dimension initDim) {
+		public FixedGateLocation(BorderItemFigure gate, IFigure parentFigure, Dimension initDim) {
 			super(gate, parentFigure);
 			this.initDim = initDim;
 		}

@@ -18,9 +18,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
@@ -33,7 +32,7 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class SetPropertyCommand extends AbstractModelCommand {
 
-	static final private String CHANGE_PROPERTY_PATTERN = Messages.getString("Command.ChangeViewProperty.ChangePropertyPattern"); //$NON-NLS-1$ 
+	static final private String CHANGE_PROPERTY_PATTERN = DiagramResourceManager.getI18NString("Command.ChangeViewProperty.ChangePropertyPattern"); //$NON-NLS-1$ 
 
 	private IAdaptable viewAdapter;
 	private String propertyName;

@@ -15,7 +15,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.swt.graphics.Image;
 
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
  * @author sshaw
@@ -35,9 +35,9 @@ public class CollapseFigure extends RectangleFigure {
 		Image img;
 		
 		if (isCollapsed())
-			img = PresentationResourceManager.getInstance().getImage(PresentationResourceManager.IMAGE_HANDLE_EXPAND);
+			img = DiagramResourceManager.getInstance().getImage(DiagramResourceManager.IMAGE_HANDLE_EXPAND);
 		else
-			img = PresentationResourceManager.getInstance().getImage(PresentationResourceManager.IMAGE_HANDLE_COLLAPSE);
+			img = DiagramResourceManager.getInstance().getImage(DiagramResourceManager.IMAGE_HANDLE_COLLAPSE);
 		
 		graphics.drawImage(img, getBounds().x, getBounds().y);
 	}

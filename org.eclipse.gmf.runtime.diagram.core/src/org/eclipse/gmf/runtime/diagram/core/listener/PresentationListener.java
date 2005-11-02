@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * all registered listeners.
  * 
  * @author melaasar, mmostafa
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker}
  */
 public class PresentationListener extends ModelServerListener {
 	/** The PresentationListener singleton */

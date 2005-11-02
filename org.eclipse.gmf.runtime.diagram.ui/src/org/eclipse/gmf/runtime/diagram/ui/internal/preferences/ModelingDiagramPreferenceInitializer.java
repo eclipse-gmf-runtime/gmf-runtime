@@ -14,8 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramPreferenceInitializer;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 
 
 /**

@@ -44,7 +44,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterContentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.notation.Filtering;
@@ -60,22 +60,22 @@ public class FilterDialog
 	extends Dialog {
 	
 	/** dialog title prefix */
-	private final String title = PresentationResourceManager.getInstance().getString("SortFilterDialog.title");//$NON-NLS-1$
+	private final String title = DiagramResourceManager.getInstance().getString("SortFilterDialog.title");//$NON-NLS-1$
 	
 	/** filter list labels */
-	static private final String FILTER_ITEMS_CONTAINING = PresentationResourceManager.getInstance().getString("SortFilter.filterItemsListLabel"); //$NON-NLS-1$	
-	static private final String FILTER_ITEMS_LIST = PresentationResourceManager.getInstance().getString("SortFilter.fitlerListLabel"); //$NON-NLS-1$
+	static private final String FILTER_ITEMS_CONTAINING = DiagramResourceManager.getInstance().getString("SortFilter.filterItemsListLabel"); //$NON-NLS-1$	
+	static private final String FILTER_ITEMS_LIST = DiagramResourceManager.getInstance().getString("SortFilter.fitlerListLabel"); //$NON-NLS-1$
 
 	/** Tool tips and labels for the filter buttons */
-	static private final String ADD_TO = PresentationResourceManager.getInstance().getString("SortFilter.addTo"); //$NON-NLS-1$
+	static private final String ADD_TO = DiagramResourceManager.getInstance().getString("SortFilter.addTo"); //$NON-NLS-1$
 	private final String ADD_TO_LABEL = "<"; //$NON-NLS-1$
-	static private final String REMOVE_FROM = PresentationResourceManager.getInstance().getString("SortFilter.removeFrom"); //$NON-NLS-1$
+	static private final String REMOVE_FROM = DiagramResourceManager.getInstance().getString("SortFilter.removeFrom"); //$NON-NLS-1$
 	private final String REMOVE_FROM_LABEL = ">"; //$NON-NLS-1$	
-	static private final String ADD_ALL = PresentationResourceManager.getInstance().getString("SortFilter.addAll"); //$NON-NLS-1$
+	static private final String ADD_ALL = DiagramResourceManager.getInstance().getString("SortFilter.addAll"); //$NON-NLS-1$
 	private final String ADD_ALL_LABEL = "<<"; //$NON-NLS-1$
-	static private final String REMOVE_ALL = PresentationResourceManager.getInstance().getString("SortFilter.removeAll"); //$NON-NLS-1$
+	static private final String REMOVE_ALL = DiagramResourceManager.getInstance().getString("SortFilter.removeAll"); //$NON-NLS-1$
 	private final String REMOVE_ALL_LABEL = ">>"; //$NON-NLS-1$
-	static private final String APPLY = PresentationResourceManager.getInstance().getString("SortFilter.apply"); //$NON-NLS-1$
+	static private final String APPLY = DiagramResourceManager.getInstance().getString("SortFilter.apply"); //$NON-NLS-1$
 
 	/** List item widgets */
 	private org.eclipse.swt.widgets.List filterList = null;
@@ -438,7 +438,7 @@ public class FilterDialog
 
 		// Run the command
 		CompositeModelCommand cc = new CompositeModelCommand(
-			PresentationResourceManager
+			DiagramResourceManager
 				.getI18NString("Command.SortFilterCommand"));//$NON-NLS-1$		
 		Iterator iter = selection.iterator();
 		while (iter.hasNext()) {

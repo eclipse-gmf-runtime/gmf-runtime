@@ -37,7 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.LayoutHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.ChangeGuideCommand;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -74,7 +74,7 @@ public class XYLayoutEditPolicy
 			
 	 		ICommand boundsCommand = 
 	 			new SetBoundsCommand(
-	 				PresentationResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+	 				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
 	 				new EObjectAdapter((View) child.getModel()),
 					rect.getTopLeft()); 
 			return new EtoolsProxyCommand(boundsCommand);
@@ -191,7 +191,7 @@ public class XYLayoutEditPolicy
 
  		ICommand boundsCommand = 
  			new SetBoundsCommand(
- 				PresentationResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+ 				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
  				new EObjectAdapter(shapeView),
 				newBounds); 
 		return new EtoolsProxyCommand(boundsCommand);
@@ -223,7 +223,7 @@ public class XYLayoutEditPolicy
 	protected Command getCreateCommand(CreateRequest request) {
 		CreateViewRequest req = (CreateViewRequest) request;
 
-		CompositeModelCommand cc = new CompositeModelCommand(PresentationResourceManager.getInstance().getString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeModelCommand cc = new CompositeModelCommand(DiagramResourceManager.getInstance().getString("AddCommand.Label")); //$NON-NLS-1$
 		Iterator iter = req.getViewDescriptors().iterator();
 
 		final Rectangle BOUNDS = (Rectangle) getConstraintFor(request);
@@ -234,7 +234,7 @@ public class XYLayoutEditPolicy
 			CreateViewRequest.ViewDescriptor viewDescriptor = (CreateViewRequest.ViewDescriptor)iter.next(); 
 			Rectangle rect = getBoundsOffest(req, BOUNDS,viewDescriptor);
 			cc.compose(new SetBoundsCommand(
-				PresentationResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
 				viewDescriptor,
 				rect));
 		}

@@ -13,11 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
 
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewAndElementRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest.ConnectorViewDescriptor;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
@@ -65,8 +65,8 @@ public class CreateViewRequestFactory {
 	}
 
 	/**
-	 * Creates a new <code>CreateConnectorViewRequest</code> or
-	 * <code>CreateConnectorViewAndElementRequest</code> based on the
+	 * Creates a new <code>CreateConnectionViewRequest</code> or
+	 * <code>CreateConnectionViewAndElementRequest</code> based on the
 	 * <code>IElementType</code> passed in.
 	 * 
 	 * @param type
@@ -78,20 +78,20 @@ public class CreateViewRequestFactory {
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 * @return the new request
 	 */
-	public static CreateConnectorViewRequest getCreateConnectorRequest(
+	public static CreateConnectionViewRequest getCreateConnectionRequest(
 			IElementType type, PreferencesHint preferencesHint) {
 		if (type instanceof INotationType) {
 			// Pass in the type as the element adapter so that it can be
 			// retrieved in the cases where a popup menu is to appear with a
 			// list of types.
-			ConnectorViewDescriptor viewDescriptor = new ConnectorViewDescriptor(
+			ConnectionViewDescriptor viewDescriptor = new ConnectionViewDescriptor(
 				type, ((INotationType) type).getSemanticHint(), preferencesHint);
-			return new CreateConnectorViewRequest(viewDescriptor);
+			return new CreateConnectionViewRequest(viewDescriptor);
 		} else if (type instanceof IHintedType) {
-			return new CreateConnectorViewAndElementRequest(type,
+			return new CreateConnectionViewAndElementRequest(type,
 				((IHintedType) type).getSemanticHint(), preferencesHint);
 		} else {
-			return new CreateConnectorViewAndElementRequest(type, preferencesHint);
+			return new CreateConnectionViewAndElementRequest(type, preferencesHint);
 		}
 	}
 }

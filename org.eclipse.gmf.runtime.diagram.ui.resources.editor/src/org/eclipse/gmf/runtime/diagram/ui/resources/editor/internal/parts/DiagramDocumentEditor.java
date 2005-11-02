@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
@@ -207,8 +207,8 @@ public class DiagramDocumentEditor
 
 	// Save Overwrite Dialog (Yes/No) true for OK and false for otherwise
 	public boolean askUserSaveOverwrite() {
-		String title = PresentationResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.title"); //$NON-NLS-1$
-		String msg = PresentationResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.message"); //$NON-NLS-1$
+		String title = DiagramResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.title"); //$NON-NLS-1$
+		String msg = DiagramResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.message"); //$NON-NLS-1$
 		Shell shell = getSite().getShell();
 		return MessageDialog.openQuestion(shell, title, msg);
 	}
@@ -216,10 +216,10 @@ public class DiagramDocumentEditor
 	// Save/Close Dialog
 	// 0 -- Save, 1 -- Close, -1 -- Cancel
 	public int askUserSaveClose() {
-		String title = PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.title"); //$NON-NLS-1$
-		String message = PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.message"); //$NON-NLS-1$
-		String[] buttons = { PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.save"), //$NON-NLS-1$
-			PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.close")}; //$NON-NLS-1$
+		String title = DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.title"); //$NON-NLS-1$
+		String message = DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.message"); //$NON-NLS-1$
+		String[] buttons = { DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.save"), //$NON-NLS-1$
+			DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.close")}; //$NON-NLS-1$
 		MessageDialog dialog =
 			new MessageDialog(
 				getSite().getShell(),
@@ -234,8 +234,8 @@ public class DiagramDocumentEditor
 	
 	// Refresh Contents Dialog (Yes/No) true for OK and false for otherwise
 	public boolean askUserReload() {
-		String title = PresentationResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.title"); //$NON-NLS-1$
-		String msg = PresentationResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.message"); //$NON-NLS-1$
+		String title = DiagramResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.title"); //$NON-NLS-1$
+		String msg = DiagramResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.message"); //$NON-NLS-1$
 		Shell shell = getSite().getShell();
 		return MessageDialog.openQuestion(shell, title, msg);
 	}

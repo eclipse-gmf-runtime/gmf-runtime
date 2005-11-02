@@ -39,7 +39,7 @@ public class ReadOnlyDiagramPropertiesModifier
 	implements IPropertiesModifier {
 
 	/**
-	 * Return true if the PresentationPropertiesProvider would return true for
+	 * Return true if the <code>DiagramPropertiesProvider</code> would return true for
 	 * this operation and we are on a Browse Diagram.
 	 * 
 	 * @param operation

@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
 
 /**
- * This is the default action bar editpolicy installed on diagrams. The
+ * This is the default popup bar editpolicy installed on diagrams. The
  * actionbar is populated using the element types of the tools of the palette
  * drawer of the last selected palette tool. If the diagram was just opened, the
  * actionbar is populated using the element types of the tools of the palette
@@ -39,9 +39,10 @@ import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
  * actionbar.
  * 
  * @author cmahoney
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramPopupBarEditPolicy}
  */
 public class DiagramActionBarEditPolicy
-	extends ActionBarEditPolicy
+	extends PopupBarEditPolicy
 	implements PaletteListener {
 
 	/**
@@ -80,13 +81,13 @@ public class DiagramActionBarEditPolicy
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy#fillActionDescriptors()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy#fillActionDescriptors()
 	 */
-	protected void fillActionDescriptors() {
+	protected void fillPopupBarDescriptors() {
 		fillBasedOnLastActivePaletteTool();
-		if (getActionBarDescriptors().isEmpty()) {
+		if (getPopupBarDescriptors().isEmpty()) {
 			fillBasedOnOpenPaletteDrawer();
-			if (getActionBarDescriptors().isEmpty()) {
+			if (getPopupBarDescriptors().isEmpty()) {
 				fillWithDefaults();
 			}
 		}
@@ -128,7 +129,7 @@ public class DiagramActionBarEditPolicy
 	}
 
 	/**
-	 * Adds action bar descriptors for all the shape tools in the palette
+	 * Adds popup bar descriptors for all the shape tools in the palette
 	 * container of the last active palette tool.
 	 */
 	private void fillBasedOnLastActivePaletteTool() {
@@ -140,7 +141,7 @@ public class DiagramActionBarEditPolicy
 	}
 
 	/**
-	 * Adds action bar descriptors for all the shape tools in the given palette
+	 * Adds popup bar descriptors for all the shape tools in the given palette
 	 * container.
 	 * 
 	 * @param palContainer
@@ -163,7 +164,7 @@ public class DiagramActionBarEditPolicy
 							IElementType theToolType = theXtoolsTool
 								.getElementType();
 							if ((theToolType != null)) {
-								addActionBarDescriptor2(theToolType, IconService
+								addPopupBarDescriptor(theToolType, IconService
 									.getInstance().getIcon(theToolType));
 							}
 						}
@@ -178,7 +179,7 @@ public class DiagramActionBarEditPolicy
 	}
 
 	/**
-	 * Adds action bar descriptors for all the shape tools in the palette drawer
+	 * Adds popup bar descriptors for all the shape tools in the palette drawer
 	 * that is initially open.
 	 */
 	private void fillBasedOnOpenPaletteDrawer() {
@@ -202,7 +203,7 @@ public class DiagramActionBarEditPolicy
 	 * populated based on the state of the palette.
 	 */
 	protected void fillWithDefaults() {
-		// by default, add no action bar descriptors.
+		// by default, add no popup bar descriptors.
 	}
 
 }

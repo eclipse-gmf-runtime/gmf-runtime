@@ -14,10 +14,10 @@ package org.eclipse.gmf.runtime.diagram.ui;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectorsPreferencePage;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.RulerGridPreferencePage;
@@ -74,7 +74,7 @@ public class DiagramUIPlugin
 	protected void doStartup() {
 		super.doStartup();
 
-		PresentationListener.getInstance().startListening();
+		DiagramEventBroker.getInstance().startListening();
 		
 		initializeDefaultDiagramPreferenceStore();
 		
@@ -87,7 +87,7 @@ public class DiagramUIPlugin
 	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#doShutdown()
 	 */
 	protected void doShutdown() {
-		PresentationListener.getInstance().stopListening();
+		DiagramEventBroker.getInstance().stopListening();
 		super.doShutdown();
 	}
 
@@ -109,7 +109,7 @@ public class DiagramUIPlugin
 		DiagramsPreferencePage.initDefaults(defaultStore);
 		RulerGridPreferencePage.initDefaults(defaultStore);
 		AppearancePreferencePage.initDefaults(defaultStore);
-		ConnectorsPreferencePage.initDefaults(defaultStore);
+		ConnectionsPreferencePage.initDefaults(defaultStore);
 		PrintingPreferencePage.initDefaults(defaultStore);
 
 		PreferencesHint.registerPreferenceStore(

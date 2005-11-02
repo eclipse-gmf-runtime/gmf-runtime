@@ -38,11 +38,10 @@ import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractAddActionBarTool;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.tools.AddActionBarTool;
+import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.tools.AddUMLActionBarTool;
+import org.eclipse.gmf.runtime.diagram.ui.tools.PopupBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
@@ -56,6 +55,7 @@ import org.eclipse.swt.widgets.Display;
  * during mouse hover over a shape.
  * 
  * @author affrantz@us.ibm.com, cmahoney
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy}
  */
 public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
@@ -251,7 +251,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 				// is added to a shape, which causes the editpart to be
 				// resized.
 				setFlag(ACTIONBAR_MOVE_FIGURE, true);
-				// future: when other tools besides AddActionBarTool are
+				// future: when other tools besides PopupBarTool are
 				// used
 				// we will need a way in which to call
 
@@ -266,9 +266,9 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		 */
 		protected boolean isToolEnabled()
 		{
-			if((myDragTracker != null) && (myDragTracker instanceof AbstractAddActionBarTool))
+			if((myDragTracker != null) && (myDragTracker instanceof AbstractPopupBarTool))
 			{
-				AbstractAddActionBarTool abarTool = (AbstractAddActionBarTool) myDragTracker;
+				AbstractPopupBarTool abarTool = (AbstractPopupBarTool) myDragTracker;
 				return abarTool.isCommandEnabled();
 			}
 			return true;
@@ -295,8 +295,12 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		}
 	}
 
-	private static Image DESC_ACTION_ACTIONBAR_PLUS_IMAGE = Images.DESC_ACTION_ACTIONBAR_PLUS.createImage();
-	private static Image DESC_ACTION_ACTIONBAR_IMAGE = Images.DESC_ACTION_ACTIONBAR.createImage();
+	private static Image DESC_ACTION_ACTIONBAR_PLUS_IMAGE = DiagramResourceManager
+		.getInstance().getImage(DiagramResourceManager.IMAGE_POPUPBAR_PLUS);
+
+	private static Image DESC_ACTION_ACTIONBAR_IMAGE = DiagramResourceManager
+		.getInstance().getImage(DiagramResourceManager.IMAGE_POPUPBAR);
+	
 	/**
 	 * 
 	 * This is the figure that represents the ballon portion of the actionbar
@@ -696,7 +700,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 		Image theImage,
 		DragTracker theTracker) {
 
-		String theInputStr = PresentationResourceManager.getI18NString("ActionBar.AddNew"); //$NON-NLS-1$
+		String theInputStr = DiagramResourceManager.getI18NString("PopupBar.AddNew"); //$NON-NLS-1$
 
 
 		String theTip = MessageFormat.format(theInputStr, new Object[] {elementType.getDisplayName()});
@@ -705,7 +709,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	}
 
 	/**
-	 * default method for plugins which passes along the AddActionBarTool
+	 * default method for plugins which passes along the PopupBarTool
 	 * as the tool to be used.
 	 * @param elementType
 	 * @param theImage
@@ -714,7 +718,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			Image theImage) {
 
 		this.addActionBarDescriptor(elementType, theImage,
-			new AddActionBarTool(getHost(), elementType));
+			new PopupBarTool(getHost(), elementType));
 
 	}
 
@@ -728,8 +732,8 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			Image theImage,
 			String theTip) {
 
-		AddActionBarTool theTracker =
-			new AddActionBarTool(getHost(), elementType);
+		PopupBarTool theTracker =
+			new PopupBarTool(getHost(), elementType);
 		ActionBarDescriptor desc =
 			new ActionBarDescriptor(theTip, theImage, elementType, theTracker);
 		myActionBarDescriptors.add(desc);
@@ -748,8 +752,8 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 			CreateRequest theRequest)
 	{
 
-		AddActionBarTool theTracker =
-			new AddActionBarTool(getHost(), theRequest);
+		PopupBarTool theTracker =
+			new PopupBarTool(getHost(), theRequest);
 
 		this.addActionBarDescriptor(elementType, theImage, theTracker);
 
@@ -764,10 +768,10 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 *             actionbar scenarios should be tested when migrating to
 	 *             <code>addActionBarDescriptor2</code>. The difference
 	 *             between the two is that <code>AddUMLActionBarTool</code>
-	 *             has been removed and <code>AddActionBarTool</code> is now
+	 *             has been removed and <code>PopupBarTool</code> is now
 	 *             used always. <code>AddUMLActionBarTool</code> used a
 	 *             request to create an element only, whereas
-	 *             <code>AddActionBarTool</code> uses a request to create an
+	 *             <code>PopupBarTool</code> uses a request to create an
 	 *             element and view and if that does not return a command, then
 	 *             it tries a request to create an element only. Alternatively,
 	 *             you could migrate to use the Modeling Assistant Service to
@@ -780,7 +784,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		DragTracker theTracker;
 		if (elementType instanceof INotationType) {
-			theTracker = new AddActionBarTool(getHost(), elementType);
+			theTracker = new PopupBarTool(getHost(), elementType);
 		}
 		else{
 			theTracker = new AddUMLActionBarTool(getHost(), elementType);
@@ -797,10 +801,10 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 *             actionbar scenarios should be tested when migrating to
 	 *             <code>addActionBarDescriptor2</code>. The difference
 	 *             between the two is that <code>AddUMLActionBarTool</code>
-	 *             has been removed and <code>AddActionBarTool</code> is now
+	 *             has been removed and <code>PopupBarTool</code> is now
 	 *             used always. <code>AddUMLActionBarTool</code> used a
 	 *             request to create an element only, whereas
-	 *             <code>AddActionBarTool</code> uses a request to create an
+	 *             <code>PopupBarTool</code> uses a request to create an
 	 *             element and view and if that does not return a command, then
 	 *             it tries a request to create an element only. Contact Cherie
 	 *             for assistance.
@@ -827,10 +831,10 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 *             actionbar scenarios should be tested when migrating to
 	 *             <code>addActionBarDescriptor2</code>. The difference
 	 *             between the two is that <code>AddUMLActionBarTool</code>
-	 *             has been removed and <code>AddActionBarTool</code> is now
+	 *             has been removed and <code>PopupBarTool</code> is now
 	 *             used always. <code>AddUMLActionBarTool</code> used a
 	 *             request to create an element only, whereas
-	 *             <code>AddActionBarTool</code> uses a request to create an
+	 *             <code>PopupBarTool</code> uses a request to create an
 	 *             element and view and if that does not return a command, then
 	 *             it tries a request to create an element only. Contact Cherie
 	 *             for assistance.
@@ -911,7 +915,7 @@ public class ActionBarEditPolicy extends DiagramAssistantEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#getPreferenceName()
 	 */
 	String getPreferenceName() {
-		return IPreferenceConstants.PREF_SHOW_ACTION_BARS;
+		return IPreferenceConstants.PREF_SHOW_POPUP_BARS;
 	}
 
 	/*

@@ -21,7 +21,7 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -54,7 +54,7 @@ public class DiagramLinkDragDropEditPolicy extends DragDropEditPolicy {
 					View view = (View)getHost().getModel();
 			
 					CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
-								PresentationResourceManager.
+								DiagramResourceManager.
 									getI18NString("Command.CreateDiagramLink"),//$NON-NLS-1$
 								view, 
 								diagram);

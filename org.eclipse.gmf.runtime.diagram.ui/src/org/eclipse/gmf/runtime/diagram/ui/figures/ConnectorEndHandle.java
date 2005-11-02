@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorEndpointTracker;
  * the connector handle figure
  * @see org.eclipse.gef.handles.ConnectionHandle
  * @author mmuszyns
- *
+ * * @deprecated Renamed to {@link org.eclipse.gef.handles.ConnectionEndHandle}
  */
 public class ConnectorEndHandle extends ConnectionHandle {
 	/**

@@ -15,7 +15,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.notation.Node;
  * @author schafe
  * @canBeSeenBy %level1
  */
-public class CreateShapeViewAction extends PresentationAction {
+public class CreateShapeViewAction extends DiagramAction {
 
 	protected String semanticHint;
 

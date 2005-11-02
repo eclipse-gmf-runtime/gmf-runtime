@@ -24,13 +24,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ActionBarEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ShapeResizableEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -70,7 +70,7 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ContainerEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
-		installEditPolicy(EditPolicyRoles.ACTIONBAR_ROLE, new ActionBarEditPolicy());
+		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE, new PopupBarEditPolicy());
 	}
 
 	/**
@@ -99,11 +99,11 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		} 
 		else if (NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {
 			Integer c = (Integer) notification.getNewValue();
-			setBackgroundColor(PresentationResourceManager.getInstance().getColor(c));
+			setBackgroundColor(DiagramResourceManager.getInstance().getColor(c));
 		} 
 		else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature)) {
 			Integer c = (Integer) notification.getNewValue();
-			setForegroundColor(PresentationResourceManager.getInstance().getColor(c));
+			setForegroundColor(DiagramResourceManager.getInstance().getColor(c));
 		} 
 		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(notification.getNotifier()))
 			refreshFont();
@@ -190,6 +190,6 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	 * @return EditPolicy
 	 */
 	public EditPolicy getPrimaryDragEditPolicy() {
-		return new ShapeResizableEditPolicy();
+		return new ResizableShapeEditPolicy();
 	}
 }

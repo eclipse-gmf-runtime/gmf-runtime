@@ -18,7 +18,7 @@ import org.eclipse.gef.Tool;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
-import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
+import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 
 /**
@@ -44,7 +44,7 @@ public class LogicPaletteFactory
 	/** list of supported tool types. */
 	private Map connectorMap = new HashMap();
 	{
-		connectorMap.put( LogicConstants.TOOL_CONNECTION, new ConnectorCreationTool(LogicSemanticType.WIRE) );
+		connectorMap.put( LogicConstants.TOOL_CONNECTION, new ConnectionCreationTool(LogicSemanticType.WIRE) );
 	}
 
 	/*
@@ -53,7 +53,7 @@ public class LogicPaletteFactory
 	public Tool createTool(String toolId) {
 		
 		if (toolId.equals(LogicConstants.TOOL_CONNECTION)) {
-			return (ConnectorCreationTool)connectorMap.get(toolId);
+			return (ConnectionCreationTool)connectorMap.get(toolId);
 		} else {
 			return (CreationTool)toolMap.get(toolId);
 		}

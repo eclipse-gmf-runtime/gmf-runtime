@@ -25,6 +25,8 @@ import org.eclipse.gef.tools.ConnectionEndpointTracker;
  * This class overrides its superclass in order to fix 
  * a problem with proper tracking feedback for zooming
  * and scrolling.
+ * 
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionEndpointTracker}
  */
 public class ConnectorEndpointTracker extends ConnectionEndpointTracker {
 	

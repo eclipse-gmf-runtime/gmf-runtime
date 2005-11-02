@@ -420,7 +420,7 @@ public abstract class AbstractPresentationTestFixture
 	
 	/**
 	 * Creates a new connector using the request created by the
-	 * <code>ConnectorCreationTool</code>.
+	 * <code>ConnectionCreationTool</code>.
 	 * 
 	 * @param sourceEditPart
 	 *            the new connector's source
@@ -436,7 +436,7 @@ public abstract class AbstractPresentationTestFixture
 
 		class ConnectorCreationTool
 			extends
-			org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool {
+			org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool {
 
 			public ConnectorCreationTool(IElementType theElementType) {
 				super(theElementType);
@@ -463,17 +463,17 @@ public abstract class AbstractPresentationTestFixture
 		request.setType(RequestConstants.REQ_CONNECTION_END);
 		Command cmd = targetEditPart.getCommand(request);
 
-		int previousNumConnectors = getDiagramEditPart().getConnectors().size();
+		int previousNumConnectors = getDiagramEditPart().getConnections().size();
 
 		getCommandStack().execute(cmd);
 		assertEquals(previousNumConnectors + 1, getDiagramEditPart()
-			.getConnectors().size());
+			.getConnections().size());
 		getCommandStack().undo();
 		assertEquals(previousNumConnectors, getDiagramEditPart()
-			.getConnectors().size());
+			.getConnections().size());
 		getCommandStack().redo();
 		assertEquals(previousNumConnectors + 1, getDiagramEditPart()
-			.getConnectors().size());
+			.getConnections().size());
 
 		Object newView = ((IAdaptable) request.getNewObject())
 			.getAdapter(View.class);

@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GateEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 
 /**
@@ -174,7 +174,7 @@ private HashSet getAllChildren(EditPart editPart, HashSet allChildren1){
 	List children = editPart.getChildren();
 	for (int i = 0; i < children.size(); i++) {
 		GraphicalEditPart child = (GraphicalEditPart) children.get(i);
-		if (!(child instanceof GateEditPart)){
+		if (!(child instanceof BorderItemEditPart)){
 			allChildren1.add(child);
 			getAllChildren(child, allChildren1);
 		}

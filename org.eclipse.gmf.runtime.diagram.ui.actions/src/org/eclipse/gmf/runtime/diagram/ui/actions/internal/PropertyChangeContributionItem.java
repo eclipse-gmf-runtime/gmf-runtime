@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPage;
 
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PresentationContributionItem;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.CustomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
@@ -36,7 +36,7 @@ import org.eclipse.gmf.runtime.notation.View;
  *  
  */
 public abstract class PropertyChangeContributionItem
-	extends PresentationContributionItem {
+	extends CustomContributionItem {
 
 	// id of the property this action will change
 	private String propertyId = null;

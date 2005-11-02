@@ -44,7 +44,7 @@ import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.common.ui.util.SelectionRefresher;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
@@ -413,8 +413,8 @@ public abstract class Editor
 
 		/* check if the file is writable... */
 		if (file.isReadOnly()) {
-			String title = PresentationResourceManager.getI18NString("DiagramEditor.save.readonly.dialog.title"); //$NON-NLS-1$
-			String message = PresentationResourceManager.getI18NString("DiagramEditor.save.readonly.dialog.message"); //$NON-NLS-1$
+			String title = DiagramResourceManager.getI18NString("DiagramEditor.save.readonly.dialog.title"); //$NON-NLS-1$
+			String message = DiagramResourceManager.getI18NString("DiagramEditor.save.readonly.dialog.message"); //$NON-NLS-1$
 			MessageDialog.openError(
 				getSite().getShell(),
 				title,
@@ -555,10 +555,10 @@ public abstract class Editor
 		}
 		resourceListener.enable();
 
-		String title = PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.title"); //$NON-NLS-1$
-		String message = PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.message"); //$NON-NLS-1$
-		String[] buttons = { PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.save"), //$NON-NLS-1$
-			PresentationResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.close")}; //$NON-NLS-1$
+		String title = DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.title"); //$NON-NLS-1$
+		String message = DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.message"); //$NON-NLS-1$
+		String[] buttons = { DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.save"), //$NON-NLS-1$
+			DiagramResourceManager.getI18NString("DiagramEditor.handleDeleteEvent.dialog.button.close")}; //$NON-NLS-1$
 		MessageDialog dialog =
 			new MessageDialog(
 				shell,
@@ -651,8 +651,8 @@ public abstract class Editor
 		} else {
 			boolean answer = true;
 			if (prompt) {
-				String title = PresentationResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.title"); //$NON-NLS-1$
-				String msg = PresentationResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.message"); //$NON-NLS-1$
+				String title = DiagramResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.title"); //$NON-NLS-1$
+				String msg = DiagramResourceManager.getI18NString("DiagramEditor.activated.outofsync.dialog.message"); //$NON-NLS-1$
 				Shell shell = getSite().getShell();
 				answer = MessageDialog.openQuestion(shell, title, msg);
 			}
@@ -740,7 +740,7 @@ public abstract class Editor
 									getSite().getWorkbenchWindow().getShell(),
 									SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
 							mb.setMessage(file.getFullPath() + " " //$NON-NLS-1$
-							+PresentationResourceManager.getI18NString("DiagramEditor.performSaveAs.message")); //$NON-NLS-1$
+							+DiagramResourceManager.getI18NString("DiagramEditor.performSaveAs.message")); //$NON-NLS-1$
 							mb.open();
 							if (progressMonitor != null)
 								progressMonitor.setCanceled(true);
@@ -788,8 +788,8 @@ public abstract class Editor
 	private boolean validateUpdateConflict() {
 		boolean answer = true;
 		if (isUpdateConflict()) {
-			String title = PresentationResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.title"); //$NON-NLS-1$
-			String msg = PresentationResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.message"); //$NON-NLS-1$
+			String title = DiagramResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.title"); //$NON-NLS-1$
+			String msg = DiagramResourceManager.getI18NString("DiagramEditor.save.outofsync.dialog.message"); //$NON-NLS-1$
 			Shell shell = getSite().getShell();
 			answer = MessageDialog.openQuestion(shell, title, msg);
 		}

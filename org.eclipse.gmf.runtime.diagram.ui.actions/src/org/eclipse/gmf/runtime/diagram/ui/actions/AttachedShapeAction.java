@@ -45,9 +45,10 @@ import org.eclipse.gmf.runtime.notation.View;
  * and connectors are created.
  * 
  * @author jcorchis
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.actions.AttachShapeAction}
  */
 public abstract class AttachedShapeAction
-	extends PresentationAction {
+	extends DiagramAction {
 	
 	/** Offset from first selected shape */
 	protected static final int VERT_OFFSET = MapMode.DPtoLP(60);	
@@ -202,7 +203,7 @@ public abstract class AttachedShapeAction
 
 	/**
 	 *  Return null since this action doesn't use request to execute its commands.
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return null;

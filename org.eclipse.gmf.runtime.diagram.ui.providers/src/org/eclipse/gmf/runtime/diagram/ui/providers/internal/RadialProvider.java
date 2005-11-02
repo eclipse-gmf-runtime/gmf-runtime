@@ -404,10 +404,10 @@ public class RadialProvider
 			if (cmd != null)
 				cc.add(cmd);
 			
-			// route any extra connector, restViews should only contain
-			// connectors by now, all other views has
+			// route any extra connection, restViews should only contain
+			// connections by now, all other views has
 			// better be placed already.
-			cmd = routeConnectors(firstCircleParts);
+			cmd = routeConnection(firstCircleParts);
 			if (cmd != null)
 				cc.add(cmd);
 			
@@ -606,7 +606,7 @@ public class RadialProvider
 		 * relative to a given root view and a set of views.
 		 * 
 		 * @param rootEditPart
-		 *            ShapeEditPart to be compared against. If a connector ends
+		 *            ShapeEditPart to be compared against. If a connection ends
 		 *            on this root editpart the end must be related.
 		 * @param editparts
 		 *            List of a editparts that are used to compare against the
@@ -644,27 +644,27 @@ public class RadialProvider
 				allSet.add(ep);
 			}
 
-			//get a list of the selected connectors and the selected
-			//shapes connectors
-			List connectorEPs = new ArrayList();
+			//get a list of the selected connections and the selected
+			//shapes connections
+			List connectionEPs = new ArrayList();
 			for (int i = 0; i < count; i++) {
 				EditPart ep = (EditPart) editparts.get(i);
 				if (ep instanceof ShapeEditPart) {
 					ShapeEditPart shapeEP = (ShapeEditPart) ep;
-					connectorEPs.addAll(shapeEP.getSourceConnections());
-					connectorEPs.addAll(shapeEP.getTargetConnections());
+					connectionEPs.addAll(shapeEP.getSourceConnections());
+					connectionEPs.addAll(shapeEP.getTargetConnections());
 				} else if (ep instanceof ConnectionNodeEditPart) {
-					connectorEPs.add(ep);
+					connectionEPs.add(ep);
 				}
 			}
 
-			for (int i = 0; i < connectorEPs.size(); i++) {
-				EditPart ep = (EditPart) connectorEPs.get(i);
+			for (int i = 0; i < connectionEPs.size(); i++) {
+				EditPart ep = (EditPart) connectionEPs.get(i);
 				if (ep instanceof ConnectionNodeEditPart) {
-					ConnectionNodeEditPart connectorEP =
+					ConnectionNodeEditPart connectionEP =
 						(ConnectionNodeEditPart) ep;
-					EditPart fromEP = connectorEP.getSource();
-					EditPart toEP = connectorEP.getTarget();
+					EditPart fromEP = connectionEP.getSource();
+					EditPart toEP = connectionEP.getTarget();
 
 					EditPart el = null;
 					if (fromEP.equals(rootEditPart)) {
@@ -676,7 +676,7 @@ public class RadialProvider
 					if (el != null && allSet.contains(el)) {
 						childEPs.add(el);
 						posViewCount++;
-						childEPs.add(connectorEP);
+						childEPs.add(connectionEP);
 
 						allSet.remove(el);
 					}
@@ -751,7 +751,7 @@ public class RadialProvider
 			CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
 			
 			//diminish by collapsing all compartments and hiding
-			// connector labels.
+			// connection labels.
 			for (int i = 0; i < count; i++) {
 				EditPart editpart = (EditPart) editparts.get(i);
 				ChangePropertyValueRequest request = null;
@@ -930,22 +930,22 @@ public class RadialProvider
 		}
 
 		/**
-		 * Method routeConnectors.
+		 * Method routeConnections.
 		 * 
-		 * @param connectors
-		 *            List of connectors that need to be routed.
+		 * @param connections
+		 *            List of connections that need to be routed.
 		 * @return Command
 		 */
-		protected Command routeConnectors(List connectors) {
+		protected Command routeConnection(List connections) {
 
 			CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
-			ListIterator li = connectors.listIterator();
+			ListIterator li = connections.listIterator();
 
 			while (li.hasNext()) {
 				EditPart editpart = (EditPart) li.next();
 				if (editpart instanceof ConnectionNodeEditPart) {
 					Command cmd =
-						routeConnector((ConnectionNodeEditPart) editpart);
+						routeConnection((ConnectionNodeEditPart) editpart);
 					if (cmd != null)
 						cc.add(cmd);
 				}
@@ -958,20 +958,20 @@ public class RadialProvider
 		}
 
 		/**
-		 * Method routeConnector. Route the given connector accordingly to the
+		 * Method routeConnection. Route the given connection accordingly to the
 		 * layout algorithm. TBD utilize the "avoid obstructions" routing.
 		 * 
-		 * @param connectorEP
-		 *            ConnectionNodeEditPart connector to be routed.
+		 * @param connectionEP
+		 *            ConnectionNodeEditPart connection to be routed.
 		 * @return Command
 		 */
-		protected Command routeConnector(ConnectionNodeEditPart connectorEP) {
-			if (connectorEP == null)
+		protected Command routeConnection(ConnectionNodeEditPart connectionEP) {
+			if (connectionEP == null)
 				throw new InvalidParameterException();
 
-			// reset connectors
+			// reset connections
 
-			Connection connection = connectorEP.getConnectionFigure();
+			Connection connection = connectionEP.getConnectionFigure();
 			PointList newPoints = new PointList(2);
 			newPoints.addPoint(connection.getPoints().getFirstPoint());
 			newPoints.addPoint(connection.getPoints().getLastPoint());
@@ -981,7 +981,7 @@ public class RadialProvider
 					newPoints);
 
 			// recurse through the children to get the compound command
-			return connectorEP.getCommand(request);
+			return connectionEP.getCommand(request);
 		}
 
 		/**
@@ -1046,9 +1046,6 @@ public class RadialProvider
 				this.theta = theta;
 			}
 	        
-			/**
-			 * @see org.eclipse.gmf.runtime.diagram.ui.internal.commands.AbstractPresentationCommand#doExecute()
-			 */
 			public void execute() {
 				radius =
 					calculateNeededRadius(firstCircleViews, firstCircleViews.size() * theta);

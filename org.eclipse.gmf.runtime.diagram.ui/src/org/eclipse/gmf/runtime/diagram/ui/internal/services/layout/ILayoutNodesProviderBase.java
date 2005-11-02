@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
  * Implement this interface to contribute an extension to the
  * "layoutProviders" extension point.
  * The layoutNodes(List, boolean, IAdaptable) method call is 
- * invoked by internal presentation code for "arrange" actions.
+ * invoked by internal diagram code for "arrange" actions.
  * 
  * Consideration of dependencies has to be done when choosing the priority
  * of the provider.  

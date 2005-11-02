@@ -31,10 +31,10 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
  * This request encapsulates a list of
- * <code>CreateConnectorViewAndElementRequest</code> for each relationship
+ * <code>CreateConnectionViewAndElementRequest</code> for each relationship
  * type that this tool supports. Each method in
  * <code>CreateConnectionRequest</code> that is called to configure the
- * request in <code>ConnectorCreationTool</code> is propagated to each
+ * request in <code>ConnectionCreationTool</code> is propagated to each
  * individual request.
  * 
  * @author cmahoney
@@ -49,7 +49,7 @@ public class CreateUnspecifiedTypeConnectionRequest
 	private List relationshipTypes;
 
 	/**
-	 * A map containing the <code>CreateConnectorRequest</code> for each
+	 * A map containing the <code>CreateConnectionRequest</code> for each
 	 * element type.
 	 */
 	private Map requests = new HashMap();
@@ -61,14 +61,14 @@ public class CreateUnspecifiedTypeConnectionRequest
 	private boolean useModelingAssistantService;
 
 	/**
-	 * A flag to indicate if this request is to create a connector from target
+	 * A flag to indicate if this request is to create a connection from target
 	 * to source.
 	 */
 	private boolean directionReversed = false;
 	
 	/**
 	 * The hint used to find the appropriate preference store from which general
-	 * diagramming preference values for properties of shapes, connectors, and
+	 * diagramming preference values for properties of shapes, connections, and
 	 * diagrams can be retrieved. This hint is mapped to a preference store in
 	 * the {@link DiagramPreferencesRegistry}.
 	 */
@@ -107,7 +107,7 @@ public class CreateUnspecifiedTypeConnectionRequest
 			IElementType elementType = (IElementType) iter.next();
 
 			Request request = CreateViewRequestFactory
-				.getCreateConnectorRequest(elementType, getPreferencesHint());
+				.getCreateConnectionRequest(elementType, getPreferencesHint());
 			request.setType(getType());
 			requests.put(elementType, request);
 		}
@@ -204,7 +204,7 @@ public class CreateUnspecifiedTypeConnectionRequest
 	}
 
 	/**
-	 * Returns true if this request is to create a connector from target to
+	 * Returns true if this request is to create a connection from target to
 	 * source.
 	 * 
 	 * @return Returns the directionReversed.

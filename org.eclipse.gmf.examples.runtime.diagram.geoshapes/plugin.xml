@@ -96,7 +96,7 @@
         </propertySection>
 
         <propertySection
-              class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectorAppearancePropertySection"
+              class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectionAppearancePropertySection"
               filter="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.EditPartPropertySectionFilter"
               id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.ConnectorAppearancePropertySection"
               tab="geoshapes.tab.Appearance">
@@ -117,7 +117,7 @@
   	name="%ext.globalActionHandlerProviders" 
   	point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders">
       <GlobalActionHandlerProvider 
-      	class="org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandlerProvider" 
+      	class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider" 
       	id="geoshapesGlobalActionHandlerProvider">
          <Priority name="Lowest">
          </Priority>

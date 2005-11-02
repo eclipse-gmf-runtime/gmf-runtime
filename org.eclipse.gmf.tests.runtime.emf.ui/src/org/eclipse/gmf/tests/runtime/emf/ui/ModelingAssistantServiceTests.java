@@ -132,7 +132,7 @@ public class ModelingAssistantServiceTests
 			this.types = types;
 		}
 
-		public List getTypesForActionBar(IAdaptable host) {
+		public List getTypesForPopupBar(IAdaptable host) {
 			return types;
 		}
 	}
@@ -190,16 +190,16 @@ public class ModelingAssistantServiceTests
 
 		// test service
 		List allTypes = getModelingAssistantService()
-			.getTypesForActionBar(null);
+			.getTypesForPopupBar(null);
 		assertEquals(2, allTypes.size());
 
 		provider1Descriptor.setActivitiesEnabled(false);
 		assertEquals(1, getModelingAssistantService()
-			.getTypesForActionBar(null).size());
+			.getTypesForPopupBar(null).size());
 
 		provider1Descriptor.setActivitiesEnabled(true);
 		List allTypesAgain = getModelingAssistantService()
-			.getTypesForActionBar(null);
+			.getTypesForPopupBar(null);
 		assertEquals(2, allTypesAgain.size());
 		assertTrue(Arrays.equals(allTypes.toArray(), allTypesAgain.toArray()));
 	}

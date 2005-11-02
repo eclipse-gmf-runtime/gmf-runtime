@@ -17,7 +17,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.swt.graphics.Color;
@@ -91,12 +91,12 @@ public class LEDFigure
 		RGB whiteColor = ColorConstants.white.getRGB();
 		RGB backgroundColor = getBackgroundColor().getRGB();
 		RGB newHightlightRGB = new RGB((whiteColor.red + backgroundColor.red)/2 , (whiteColor.green + backgroundColor.green)/2 , (whiteColor.blue + backgroundColor.blue)/2 );
-		g.setBackgroundColor( PresentationResourceManager.getInstance()
+		g.setBackgroundColor( DiagramResourceManager.getInstance()
 			.getColor(newHightlightRGB));
 		g.fillRectangle(displayHighlight);
 		RGB blackColor = ColorConstants.black.getRGB();
 		RGB newShadowRGB = new RGB((blackColor.red + backgroundColor.red)/2 , (blackColor.green + backgroundColor.green)/2 , (blackColor.blue + backgroundColor.blue)/2 );
-		g.setBackgroundColor( PresentationResourceManager.getInstance()
+		g.setBackgroundColor( DiagramResourceManager.getInstance()
 			.getColor(newShadowRGB));
 		g.fillRectangle(displayShadow);
 		

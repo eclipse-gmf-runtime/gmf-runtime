@@ -24,20 +24,19 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.figures.LayoutHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
-import org.eclipse.gmf.runtime.diagram.ui.figures.LayoutHelper;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Generic Creation Tool - creates a semantic model element and a view for it
@@ -70,14 +69,14 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	static private String NOSHAPECURSOR_MASK = "dlcl16/noshapecursor_mask.bmp";//$NON-NLS-1$
 	static private String NOSHAPECURSOR_SOURCE = "dlcl16/noshapecursor_source.bmp";//$NON-NLS-1$	
 
-	static private Cursor CURSOR_SHAPE = new Cursor(Display.getDefault(), PresentationResourceManager
+	static private Cursor CURSOR_SHAPE = new Cursor(Display.getDefault(), DiagramResourceManager
 		.getInstance().getImageDescriptor(SHAPECURSOR_SOURCE).getImageData(),
-		PresentationResourceManager.getInstance().getImageDescriptor(
+		DiagramResourceManager.getInstance().getImageDescriptor(
 			SHAPECURSOR_MASK).getImageData(), 7, 7);
 
-	static private Cursor CURSOR_SHAPE_NOT = new Cursor(Display.getDefault(), PresentationResourceManager
+	static private Cursor CURSOR_SHAPE_NOT = new Cursor(Display.getDefault(), DiagramResourceManager
 		.getInstance().getImageDescriptor(NOSHAPECURSOR_SOURCE).getImageData(),
-		PresentationResourceManager.getInstance().getImageDescriptor(
+		DiagramResourceManager.getInstance().getImageDescriptor(
 			NOSHAPECURSOR_MASK).getImageData(), 7, 7);		
 
 	/**

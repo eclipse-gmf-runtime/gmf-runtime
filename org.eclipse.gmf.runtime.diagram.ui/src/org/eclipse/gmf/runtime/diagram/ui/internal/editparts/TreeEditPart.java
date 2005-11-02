@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -70,16 +70,16 @@ public class TreeEditPart
 	public void activate() {
 		super.activate();
 
-		PresentationListener.getInstance().addNotificationListener((View)getModel(),this);
-		PresentationListener.getInstance().addNotificationListener(getSemanticElement(),this);
+		DiagramEventBroker.getInstance().addNotificationListener((View)getModel(),this);
+		DiagramEventBroker.getInstance().addNotificationListener(getSemanticElement(),this);
 	}
 
 	/**
 	 * @see org.eclipse.gef.EditPart#deactivate()
 	 */
 	public void deactivate() {
-		PresentationListener.getInstance().removeNotificationListener((View)getModel(),this);
-		PresentationListener.getInstance().removeNotificationListener(getSemanticElement(),this);
+		DiagramEventBroker.getInstance().removeNotificationListener((View)getModel(),this);
+		DiagramEventBroker.getInstance().removeNotificationListener(getSemanticElement(),this);
 		super.deactivate();
 	}
 

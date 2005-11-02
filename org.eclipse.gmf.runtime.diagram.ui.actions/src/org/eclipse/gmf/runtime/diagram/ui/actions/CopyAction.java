@@ -15,29 +15,28 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * The copy action that copies the bitmap information on to the clipboard
- * This action is not really a Presentation action as it doesn't have
+ * This action is not really a <code>DiagramAction</code> as it doesn't have
  * a request.  The doRun() and the refresh() and calculatedEnabled() have been overwritten
  * appropriately.
  * @author Vishy Ramaswamy
  * @author choang refactor to use ActionContribution item service
  */
-abstract public class CopyAction extends PresentationAction {
+abstract public class CopyAction extends DiagramAction {
 	  /**
       * Imagedescriptor for the copy action
       */
@@ -76,7 +75,7 @@ abstract public class CopyAction extends PresentationAction {
 	public void init(){
 		super.init();
 		/* set the label for the action */
-		setText(Messages.getString("CopyAction.Copy")); //$NON-NLS-1$
+		setText(DiagramActionsResourceManager.getI18NString("CopyAction.Copy")); //$NON-NLS-1$
 
 		/*  set the image */
 		setImageDescriptor(COPY_IMAGE);
@@ -89,7 +88,7 @@ abstract public class CopyAction extends PresentationAction {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#calculateEnabled()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
 
@@ -130,7 +129,7 @@ abstract public class CopyAction extends PresentationAction {
 	 * If this list of parts contains a ShapeEditPart,
 	 * return true, otherwise false.
 	 * Copy feature enabled only if at at least one
-	 * non-connector is selected.
+	 * non-connection is selected.
 	 * 
 	 * @param parts the parts to check
 	 * @return boolean answering whether it is OK to copy the passed parts or not
@@ -157,10 +156,10 @@ abstract public class CopyAction extends PresentationAction {
 	}
 
 	/**
-	 * This action is not really a Presentation action as it doesn't have
+	 * This action is not really a <code>DiagramAction</code> as it doesn't have
 	 * a request.  The doRun() and the refresh() and calculatedEnabled() have been overwritten
 	 * appropriately.
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return null;

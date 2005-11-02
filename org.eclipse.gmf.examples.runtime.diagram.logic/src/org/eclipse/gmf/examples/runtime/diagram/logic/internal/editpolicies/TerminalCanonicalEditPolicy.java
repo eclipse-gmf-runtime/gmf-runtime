@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -91,7 +91,7 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#getCreateViewCommand(org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor)
 	 */
 	protected ICommand getCreateViewCommand(ViewDescriptor descriptor) {
-		CompositeCommand cc = new CompositeCommand(PresentationResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
 		
 		ICommand viewCommand = super.getCreateViewCommand(descriptor);
 		
@@ -103,7 +103,7 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 	
 		ICommand boundsCommand = 
 			new SetBoundsCommand(
-				PresentationResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
 				descriptor,
 				(Point)((ITerminalOwnerEditPart)getHost()).createBoundsMap().get(element.getId()));
 		

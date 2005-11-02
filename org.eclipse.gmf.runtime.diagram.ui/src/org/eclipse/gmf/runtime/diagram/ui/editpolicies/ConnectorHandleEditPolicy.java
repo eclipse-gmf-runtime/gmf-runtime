@@ -21,19 +21,19 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandle;
-import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandleLocator;
-import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectorHandle.HandleDirection;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
+import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandleLocator;
+import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle.HandleDirection;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 
 /**
  * This editpolicy is responsible for adding the connector handles to a shape.
  * 
  * @author cmahoney
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionHandleEditPolicy}
  */
 public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 
@@ -61,13 +61,13 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#isDiagramAssistant(java.lang.Object)
 	 */
 	protected boolean isDiagramAssistant(Object object) {
-		return object instanceof ConnectorHandle;
+		return object instanceof ConnectionHandle;
 	}
 
 	/**
 	 * Gets the two connector handle figures to be added to this shape if they
 	 * support user gestures.
-	 * @return a list of <code>ConnectorHandle</code> objects
+	 * @return a list of <code>ConnectionHandle</code> objects
 	 */
 	protected List getHandleFigures() {
 		List list = new ArrayList(2);
@@ -75,13 +75,13 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 		String tooltip;
 		tooltip = buildTooltip(HandleDirection.INCOMING);
 		if (tooltip != null) {
-			list.add(new ConnectorHandle((IGraphicalEditPart) getHost(),
+			list.add(new ConnectionHandle((IGraphicalEditPart) getHost(),
 				HandleDirection.INCOMING, tooltip));
 		}
 
 		tooltip = buildTooltip(HandleDirection.OUTGOING);
 		if (tooltip != null) {
-			list.add(new ConnectorHandle((IGraphicalEditPart) getHost(),
+			list.add(new ConnectionHandle((IGraphicalEditPart) getHost(),
 				HandleDirection.OUTGOING, tooltip));
 		}
 
@@ -112,15 +112,15 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 
 		if (supportsSRE) {
 			if (supportsCreation) {
-				return PresentationResourceManager
-					.getI18NString("ConnectorHandle.ToolTip.ShowRelatedElementsAndCreateRelationship"); //$NON-NLS-1$
+				return DiagramResourceManager
+					.getI18NString("ConnectionHandle.ToolTip.ShowRelatedElementsAndCreateRelationship"); //$NON-NLS-1$
 			} else {
-				return PresentationResourceManager
-					.getI18NString("ConnectorHandle.ToolTip.ShowRelatedElementsOnly"); //$NON-NLS-1$
+				return DiagramResourceManager
+					.getI18NString("ConnectionHandle.ToolTip.ShowRelatedElementsOnly"); //$NON-NLS-1$
 			}
 		} else if (supportsCreation) {
-			return PresentationResourceManager
-				.getI18NString("ConnectorHandle.ToolTip.CreateRelationshipOnly"); //$NON-NLS-1$
+			return DiagramResourceManager
+				.getI18NString("ConnectionHandle.ToolTip.CreateRelationshipOnly"); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -156,10 +156,10 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 			return;
 		}
 
-		ConnectorHandleLocator locator = getConnectorHandleLocator(referencePoint);
+		ConnectionHandleLocator locator = getConnectorHandleLocator(referencePoint);
 		IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
 		for (Iterator iter = handles.iterator(); iter.hasNext();) {
-			ConnectorHandle handle = (ConnectorHandle) iter.next();
+			ConnectionHandle handle = (ConnectionHandle) iter.next();
 			
 			handle.setLocator(locator);
 			locator.addHandle(handle);
@@ -185,7 +185,7 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#getPreferenceName()
 	 */
 	String getPreferenceName() {
-		return IPreferenceConstants.PREF_SHOW_CONNECTOR_HANDLES;
+		return org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants.PREF_SHOW_CONNECTION_HANDLES;
 	}
 
 	/**
@@ -260,10 +260,10 @@ public class ConnectorHandleEditPolicy extends DiagramAssistantEditPolicy {
 	 * point
 	 * 
 	 * @param referencePoint
-	 * @return <code>ConnectorHandleLocator</code>
+	 * @return <code>ConnectionHandleLocator</code>
 	 */
-	protected ConnectorHandleLocator getConnectorHandleLocator(Point referencePoint){
-		return new ConnectorHandleLocator(getHostFigure(), referencePoint);		
+	protected ConnectionHandleLocator getConnectorHandleLocator(Point referencePoint){
+		return new ConnectionHandleLocator(getHostFigure(), referencePoint);		
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#isDiagramAssistantShowing()

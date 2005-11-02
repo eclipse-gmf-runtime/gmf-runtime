@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * @author jbruck
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
-// TODO: Hide this class .. make private class of GatedPaneFigure
+// TODO: Hide this class .. make private class of BorderedFigure
 public class FixedDistanceGatedPane extends NodeFigure {
 	
 	// TODO: should be Inset for variable size

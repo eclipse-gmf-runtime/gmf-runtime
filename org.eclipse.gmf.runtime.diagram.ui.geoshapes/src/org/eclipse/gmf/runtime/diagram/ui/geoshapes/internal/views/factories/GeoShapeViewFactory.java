@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories;
 
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;

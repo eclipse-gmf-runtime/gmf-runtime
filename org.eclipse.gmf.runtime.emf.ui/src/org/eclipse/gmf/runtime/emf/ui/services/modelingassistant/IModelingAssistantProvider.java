@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -166,5 +166,18 @@ public interface IModelingAssistantProvider
 	 *            editpart, view, element, etc.
 	 * @return a list of element types (<code>IElementType</code>)
 	 */
+	List getTypesForPopupBar(IAdaptable host);
+
+	/**
+	 * Gets a list of types to be used in the actionbar to support creating an
+	 * shape or element within the context of another.
+	 * 
+	 * @param host
+	 *            the host on which the actionbar will be displayed: adapts to
+	 *            editpart, view, element, etc.
+	 * @return a list of element types (<code>IElementType</code>)
+	 * @deprecated Renamed to {@link #getTypesForPopupBar(IAdaptable)}
+	 */
 	List getTypesForActionBar(IAdaptable host);
+
 }

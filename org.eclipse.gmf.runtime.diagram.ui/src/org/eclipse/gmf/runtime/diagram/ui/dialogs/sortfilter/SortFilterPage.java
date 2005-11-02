@@ -60,7 +60,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterDialog;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterRootPreferenceNode;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.notation.Filtering;
@@ -81,21 +81,21 @@ import org.eclipse.gmf.runtime.notation.View;
 public class SortFilterPage extends PropertyPage {
 
 	/** Menu strings */
-	static final private String MOVE_UP_TOOL_TIP = PresentationResourceManager.getI18NString("SortFilter.moveItemUp"); //$NON-NLS-1$
-	static final private String MOVE_DOWN_TOOL_TIP = PresentationResourceManager.getI18NString("SortFilter.moveItemDown"); //$NON-NLS-1$
+	static final private String MOVE_UP_TOOL_TIP = DiagramResourceManager.getI18NString("SortFilter.moveItemUp"); //$NON-NLS-1$
+	static final private String MOVE_DOWN_TOOL_TIP = DiagramResourceManager.getI18NString("SortFilter.moveItemDown"); //$NON-NLS-1$
 
 	/** filter list labels */
-	static private final String FILTER_ITEMS_CONTAINING = PresentationResourceManager.getI18NString("SortFilter.filterItemsListLabel"); //$NON-NLS-1$	
-	static private final String FILTER_ITEMS_LIST = PresentationResourceManager.getI18NString("SortFilter.fitlerListLabel"); //$NON-NLS-1$
+	static private final String FILTER_ITEMS_CONTAINING = DiagramResourceManager.getI18NString("SortFilter.filterItemsListLabel"); //$NON-NLS-1$	
+	static private final String FILTER_ITEMS_LIST = DiagramResourceManager.getI18NString("SortFilter.fitlerListLabel"); //$NON-NLS-1$
 
 	/** Tool tips and labels for the filter buttons */
-	static private final String ADD_TO = PresentationResourceManager.getI18NString("SortFilter.addTo"); //$NON-NLS-1$
+	static private final String ADD_TO = DiagramResourceManager.getI18NString("SortFilter.addTo"); //$NON-NLS-1$
 	private final String ADD_TO_LABEL = "<"; //$NON-NLS-1$
-	static private final String REMOVE_FROM = PresentationResourceManager.getI18NString("SortFilter.removeFrom"); //$NON-NLS-1$
+	static private final String REMOVE_FROM = DiagramResourceManager.getI18NString("SortFilter.removeFrom"); //$NON-NLS-1$
 	private final String REMOVE_FROM_LABEL = ">"; //$NON-NLS-1$	
-	static private final String ADD_ALL = PresentationResourceManager.getI18NString("SortFilter.addAll"); //$NON-NLS-1$
+	static private final String ADD_ALL = DiagramResourceManager.getI18NString("SortFilter.addAll"); //$NON-NLS-1$
 	private final String ADD_ALL_LABEL = "<<"; //$NON-NLS-1$
-	static private final String REMOVE_ALL = PresentationResourceManager.getI18NString("SortFilter.removeAll"); //$NON-NLS-1$
+	static private final String REMOVE_ALL = DiagramResourceManager.getI18NString("SortFilter.removeAll"); //$NON-NLS-1$
 	private final String REMOVE_ALL_LABEL = ">>"; //$NON-NLS-1$	
 
 	/** the collection's elements (rows) */
@@ -578,7 +578,7 @@ public class SortFilterPage extends PropertyPage {
 						if (SortingDirection.ASCENDING_LITERAL
 							.equals(_sortingDirection)) {
 							// Use the ascending image
-							Image image = PresentationResourceManager
+							Image image = DiagramResourceManager
 								.getInstance().createImage(SORT_ARROW_UP);
 							column.setImage(image);
 							column.pack();
@@ -586,7 +586,7 @@ public class SortFilterPage extends PropertyPage {
 							.equals(_sortingDirection)) {
 							sorter.toggleSortingDirection();
 							// Use the descending image
-							Image image = PresentationResourceManager
+							Image image = DiagramResourceManager
 								.getInstance().createImage(SORT_ARROW_DN);
 							column.setImage(image);
 							column.pack();
@@ -652,7 +652,7 @@ public class SortFilterPage extends PropertyPage {
 		//to simulate a vertical toolbar (not possible), create a separate toolbar for each button
 		ToolBar toolBar = new ToolBar(parent, SWT.FLAT);
 		Image imageUp =
-			PresentationResourceManager.getInstance().createImage(
+			DiagramResourceManager.getInstance().createImage(
 				IMAGE_UP_PATH);
 		moveUpToolItem = new ToolItem(toolBar, SWT.PUSH);
 		moveUpToolItem.setEnabled(false);
@@ -665,7 +665,7 @@ public class SortFilterPage extends PropertyPage {
 		});
 		ToolBar toolBarDown = new ToolBar(parent, SWT.FLAT);
 		Image imageDown =
-			PresentationResourceManager.getInstance().createImage(
+			DiagramResourceManager.getInstance().createImage(
 				IMAGE_DOWN_PATH);
 		moveDownToolItem = new ToolItem(toolBarDown, SWT.PUSH);
 		moveDownToolItem.setEnabled(false);
@@ -987,7 +987,7 @@ public class SortFilterPage extends PropertyPage {
 					.getElements(PreferenceManager.PRE_ORDER)
 					.iterator();
 			SortFilterRootPreferenceNode rootNode = null;
-			CompositeModelCommand cc = new CompositeModelCommand(PresentationResourceManager.getI18NString("Command.SortFilterCommand"));//$NON-NLS-1$
+			CompositeModelCommand cc = new CompositeModelCommand(DiagramResourceManager.getI18NString("Command.SortFilterCommand"));//$NON-NLS-1$
 			while (nodes.hasNext()) {
 				PreferenceNode node = (PreferenceNode) nodes.next();
 				SortFilterPage page = (SortFilterPage) node.getPage();
@@ -1317,11 +1317,11 @@ public class SortFilterPage extends PropertyPage {
 							|| SortingDirection.ASCENDING_LITERAL
 								.equals(newSorter.getSortingDirection())) {
 							// Use the ascending image
-							image = PresentationResourceManager.getInstance()
+							image = DiagramResourceManager.getInstance()
 								.createImage(SORT_ARROW_UP);
 						} else {
 							// Use the descending image
-							image = PresentationResourceManager.getInstance()
+							image = DiagramResourceManager.getInstance()
 								.createImage(SORT_ARROW_DN);
 						}
 						columns[columnIndex].setImage(image);

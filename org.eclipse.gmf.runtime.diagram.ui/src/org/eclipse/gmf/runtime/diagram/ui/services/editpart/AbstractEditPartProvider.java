@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -86,19 +86,19 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 		if ( view instanceof Diagram)
 			return getDiagramEditPartClass(view );
 		else if ( view instanceof Edge )
-			return getConnectorEditPartClass(view);
+			return getEdgeEditPartClass(view);
 		else if (view instanceof Node)
 			return getNodeEditPartClass(view);
 		return null;
 	}
 	
 	/** 
-	 * Gets a connector's editpart class. 
+	 * Gets a connection's editpart class. 
 	 * This method should be overridden by a provider if it wants to provide this service. 
 	 * @param view the view to be <i>controlled</code> by the created editpart
 	 * @return <code>Class</code>
 	 */
-	protected Class getConnectorEditPartClass(View view ) {
+	protected Class getEdgeEditPartClass(View view ) {
 		return null;
 	}
 
@@ -135,7 +135,7 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 		} 
 		catch (Throwable e) {
 			String eMsg = MessageFormat.format(  
-				PresentationResourceManager.getInstance().getString("AbstractEditPartProvider.new.graphicaleditpart.failed_ERROR_"),//$NON-NLS-1$
+				DiagramResourceManager.getInstance().getString("AbstractEditPartProvider.new.graphicaleditpart.failed_ERROR_"),//$NON-NLS-1$
 				new Object[] {editpartClass});
 			Log.warning(DiagramUIPlugin.getInstance(), IStatus.WARNING, eMsg, e);
 			return null;

@@ -43,7 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectorsRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
@@ -460,8 +460,8 @@ public abstract class AbstractTestBase extends TestCase {
 
 		cc.add(diagramEP.getCommand(request));
 
-		RefreshConnectorsRequest rcRequest =
-			new RefreshConnectorsRequest((List)request.getNewObject());
+		RefreshConnectionsRequest rcRequest =
+			new RefreshConnectionsRequest((List)request.getNewObject());
 		cc.add(getDiagramEditPart().getCommand(rcRequest));
 
 		getCommandStack().execute(cc);
@@ -514,7 +514,7 @@ public abstract class AbstractTestBase extends TestCase {
 
 	/** Return <code>getDiagramEditPart().getConnectors()</code>. */
 	protected List getConnectors() {
-		return getDiagramEditPart().getConnectors();
+		return getDiagramEditPart().getConnections();
 	}
 	
 	/* Will run teardown if the setup fails.

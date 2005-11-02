@@ -27,7 +27,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.O
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.XORGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectorViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.ListCompartmentViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
@@ -67,7 +67,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 	// Map to hold the Line/Connector Views
 	private Map connectorMap = new HashMap();
 	{
-		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), ConnectorViewFactory.class);
+		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), ConnectionViewFactory.class);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public class LogicViewProvider extends AbstractViewProvider {
 	 * @param semanticHint
 	 * @return Class
 	 */
-	protected Class getConnectorViewClass(IAdaptable semanticAdapter,
+	protected Class getEdgeViewClass(IAdaptable semanticAdapter,
 			View containerView, String semanticHint) {
 		return (Class) connectorMap.get(getSemanticEClass(semanticAdapter));
 	}

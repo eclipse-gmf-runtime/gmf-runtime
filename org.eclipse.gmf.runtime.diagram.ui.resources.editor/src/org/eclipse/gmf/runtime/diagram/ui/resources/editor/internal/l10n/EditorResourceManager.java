@@ -33,7 +33,7 @@ public class EditorResourceManager extends AbstractUIResourceManager {
 		new EditorResourceManager();
 
 	/**
-	 * Constructor for PresentationResourceManager.
+	 * Constructor for DiagramResourceManager.
 	 */
 	public EditorResourceManager() {
 		super();

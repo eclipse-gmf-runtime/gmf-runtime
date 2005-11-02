@@ -28,10 +28,10 @@ import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewAndElementRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectorViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Display;
  * </p>
  * 
  * @author cmahoney
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand}
  */
 public class GetConnectorTypeAndEndCommand
 	extends PopupMenuCommand {
@@ -77,11 +78,11 @@ public class GetConnectorTypeAndEndCommand
 		public String getText(Object element) {
 			String theInputStr = null;
 			if (isDirectionReversed())
-				theInputStr = PresentationResourceManager
-					.getI18NString("ConnectorHandle.Popup.CreateXFrom"); //$NON-NLS-1$
+				theInputStr = DiagramResourceManager
+					.getI18NString("ConnectionHandle.Popup.CreateXFrom"); //$NON-NLS-1$
 			else
-				theInputStr = PresentationResourceManager
-					.getI18NString("ConnectorHandle.Popup.CreateXTo"); //$NON-NLS-1$
+				theInputStr = DiagramResourceManager
+					.getI18NString("ConnectionHandle.Popup.CreateXTo"); //$NON-NLS-1$
 
 			String text = MessageFormat.format(theInputStr, new Object[] {super
 				.getText(element)});
@@ -105,8 +106,8 @@ public class GetConnectorTypeAndEndCommand
 		 */
 		public String getText(Object element) {
 			if (element instanceof IElementType) {
-				String theInputStr = PresentationResourceManager
-					.getI18NString("ConnectorHandle.Popup.NewX"); //$NON-NLS-1$
+				String theInputStr = DiagramResourceManager
+					.getI18NString("ConnectionHandle.Popup.NewX"); //$NON-NLS-1$
 				String text = MessageFormat.format(theInputStr,
 					new Object[] {super.getText(element)});
 				return text;
@@ -146,21 +147,21 @@ public class GetConnectorTypeAndEndCommand
 			String theInputStr = null;
 			if (element instanceof IElementType) {
 				if (isDirectionReversed())
-					theInputStr = PresentationResourceManager
-						.getI18NString("ConnectorHandle.Popup.CreateXFromNewY"); //$NON-NLS-1$
+					theInputStr = DiagramResourceManager
+						.getI18NString("ConnectionHandle.Popup.CreateXFromNewY"); //$NON-NLS-1$
 				else
-					theInputStr = PresentationResourceManager
-						.getI18NString("ConnectorHandle.Popup.CreateXToNewY"); //$NON-NLS-1$
+					theInputStr = DiagramResourceManager
+						.getI18NString("ConnectionHandle.Popup.CreateXToNewY"); //$NON-NLS-1$
 				String text = MessageFormat.format(theInputStr, new Object[] {
 					super.getText(connectorItem), super.getText(element)});
 				return text;
 			} else {
 				if (isDirectionReversed())
-					theInputStr = PresentationResourceManager
-						.getI18NString("ConnectorHandle.Popup.CreateXFromY"); //$NON-NLS-1$
+					theInputStr = DiagramResourceManager
+						.getI18NString("ConnectionHandle.Popup.CreateXFromY"); //$NON-NLS-1$
 				else
-					theInputStr = PresentationResourceManager
-						.getI18NString("ConnectorHandle.Popup.CreateXToY"); //$NON-NLS-1$
+					theInputStr = DiagramResourceManager
+						.getI18NString("ConnectionHandle.Popup.CreateXToY"); //$NON-NLS-1$
 				String text = MessageFormat.format(theInputStr, new Object[] {
 					super.getText(connectorItem), super.getText(element)});
 				return text;
@@ -180,8 +181,8 @@ public class GetConnectorTypeAndEndCommand
 	/**
 	 * This can be added to the content list to add a 'select existing' option.
 	 */
-	private static String EXISTING_ELEMENT = PresentationResourceManager
-		.getI18NString("ConnectorHandle.Popup.ExistingElement"); //$NON-NLS-1$
+	private static String EXISTING_ELEMENT = DiagramResourceManager
+		.getI18NString("ConnectionHandle.Popup.ExistingElement"); //$NON-NLS-1$
 
 	/** Label provider of the popup menu for the connector types. */
 	private static ConnectorLabelProvider connectorLabelProvider;
@@ -205,7 +206,7 @@ public class GetConnectorTypeAndEndCommand
 	private IGraphicalEditPart containerEP;
 
 	/**
-	 * Creates a new <code>GetConnectorTypeAndEndCommand</code>.
+	 * Creates a new <code>PromptForConnectionAndEndCommand</code>.
 	 * 
 	 * @param request
 	 *            The request to create a connection. It may contain the
@@ -219,7 +220,7 @@ public class GetConnectorTypeAndEndCommand
 	public GetConnectorTypeAndEndCommand(CreateConnectionRequest request,
 			IGraphicalEditPart containerEP) {
 
-		super(PresentationResourceManager
+		super(DiagramResourceManager
 			.getI18NString("Command.GetRelationshipTypeAndEndFromUser.Label"), //$NON-NLS-1$
 			Display.getCurrent().getActiveShell());
 		this.request = request;
@@ -273,19 +274,19 @@ public class GetConnectorTypeAndEndCommand
 				}
 			}
 
-		} else if (request instanceof CreateConnectorViewAndElementRequest) {
-			if (((CreateConnectorViewAndElementRequest) request)
+		} else if (request instanceof CreateConnectionViewAndElementRequest) {
+			if (((CreateConnectionViewAndElementRequest) request)
 				.getStartCommand() != null) {
 				validRelTypes
-					.add(((CreateRelationshipRequest) ((CreateConnectorViewAndElementRequest) request)
-						.getConnectorViewAndElementDescriptor()
+					.add(((CreateRelationshipRequest) ((CreateConnectionViewAndElementRequest) request)
+						.getConnectionViewAndElementDescriptor()
 						.getCreateElementRequestAdapter().getAdapter(
 							CreateRelationshipRequest.class)).getElementType());
 			}
-		} else if (request instanceof CreateConnectorViewRequest) {
-			if (((CreateConnectorViewRequest) request).getStartCommand() != null) {
-				Object type = ((CreateConnectorViewRequest) request)
-					.getConnectorViewDescriptor().getElementAdapter()
+		} else if (request instanceof CreateConnectionViewRequest) {
+			if (((CreateConnectionViewRequest) request).getStartCommand() != null) {
+				Object type = ((CreateConnectionViewRequest) request)
+					.getConnectionViewDescriptor().getElementAdapter()
 					.getAdapter(IElementType.class);
 				if (type != null) {
 					validRelTypes.add(type);

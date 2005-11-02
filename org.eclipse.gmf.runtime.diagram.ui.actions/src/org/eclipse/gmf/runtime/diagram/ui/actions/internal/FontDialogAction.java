@@ -13,20 +13,17 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 
 /**
  * @author melaasar
@@ -43,11 +40,12 @@ public class FontDialogAction extends PropertyChangeAction {
 	 * @param propertyName
 	 */
 	public FontDialogAction(IWorkbenchPage workbenchPage) {
-		super(workbenchPage, Properties.ID_FONTCOLOR, Messages.getString("PropertyDescriptorFactory.Font")); //$NON-NLS-1$
+		super(workbenchPage, Properties.ID_FONTCOLOR, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.Font")); //$NON-NLS-1$
 		setId(ActionIds.ACTION_FONT_DIALOG);
 		setText(DiagramActionsResourceManager.getInstance().getString("FontAction.text")); //$NON-NLS-1$
 		setToolTipText(DiagramActionsResourceManager.getInstance().getString("FontAction.tooltip")); //$NON-NLS-1$
-		setImageDescriptor(Images.DESC_ACTION_FONT_COLOR); //$NON-NLS-1$
+		setImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_FONT_COLOR));
 	}
 
 	/**
@@ -79,7 +77,7 @@ public class FontDialogAction extends PropertyChangeAction {
 		RGB fColor = fontDialog.getRGB();
 
 		if (fData != null && fColor != null) {
-			CompoundCommand cc = new CompoundCommand(Messages.getString("PropertyDescriptorFactory.Font")); //$NON-NLS-1$
+			CompoundCommand cc = new CompoundCommand(DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.Font")); //$NON-NLS-1$
 			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTNAME, Properties.ID_FONTNAME, fData.getName())));
 			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTSIZE, Properties.ID_FONTSIZE, new Integer(fData.getHeight()))));
 			cc.add(getCommand(new ChangePropertyValueRequest(Properties.ID_FONTBOLD, Properties.ID_FONTBOLD, Boolean.valueOf((fData.getStyle() & SWT.BOLD) != 0))));

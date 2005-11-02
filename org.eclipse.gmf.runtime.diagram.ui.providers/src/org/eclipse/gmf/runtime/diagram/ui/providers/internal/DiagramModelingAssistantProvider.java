@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INotableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetRelTypesOnSourceAndTargetOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetRelTypesOnSourceOperation;
@@ -28,8 +28,8 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.GetTypesForTarg
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantProvider;
 
 /**
- * Provides modeling assistant functionality for diagram shapes (i.e. connector
- * handles, connector creation to a new shape).
+ * Provides modeling assistant functionality for diagram shapes (i.e. connection
+ * handles, connection creation to a new shape).
  * 
  * @author cmahoney
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
@@ -37,23 +37,23 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssista
 public class DiagramModelingAssistantProvider
 	extends ModelingAssistantProvider {
 
-	/** List containing the connector types. */
-	private static List connectorTypes = null;
+	/** List containing the connection types. */
+	private static List connectionTypes = null;
 
 	/** List containing the shape types. */
 	private static List shapeTypes = null;
 
 	/**
-	 * Gets the list of connector types initialized lazily.
+	 * Gets the list of connection types initialized lazily.
 	 * 
-	 * @return the list of connector types
+	 * @return the list of connection types
 	 */
-	private static List getConnectorTypes() {
-		if (connectorTypes == null) {
-			connectorTypes = Collections
-				.singletonList(PresentationNotationType.NOTE_ATTACHMENT);
+	private static List getConnectionTypes() {
+		if (connectionTypes == null) {
+			connectionTypes = Collections
+				.singletonList(DiagramNotationType.NOTE_ATTACHMENT);
 		}
-		return connectorTypes;
+		return connectionTypes;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class DiagramModelingAssistantProvider
 	private static List getShapeTypes() {
 		if (shapeTypes == null) {
 			shapeTypes = Collections
-				.singletonList(PresentationNotationType.NOTE);
+				.singletonList(DiagramNotationType.NOTE);
 		}
 		return shapeTypes;
 	}
@@ -95,7 +95,7 @@ public class DiagramModelingAssistantProvider
 			INotableEditPart noteable = (INotableEditPart) source
 				.getAdapter(INotableEditPart.class);
 			if (noteable != null && noteable.canAttachNote()) {
-				return getConnectorTypes();
+				return getConnectionTypes();
 			}
 		}
 		return Collections.EMPTY_LIST;
@@ -111,7 +111,7 @@ public class DiagramModelingAssistantProvider
 			INotableEditPart noteable = (INotableEditPart) target
 				.getAdapter(INotableEditPart.class);
 			if (noteable != null && noteable.canAttachNote()) {
-				return getConnectorTypes();
+				return getConnectionTypes();
 			}
 		}
 		return Collections.EMPTY_LIST;
@@ -130,13 +130,13 @@ public class DiagramModelingAssistantProvider
 			INotableEditPart noteable = (INotableEditPart) target
 				.getAdapter(INotableEditPart.class);
 			if (noteable != null && noteable.canAttachNote()) {
-				return getConnectorTypes();
+				return getConnectionTypes();
 			}
 		} else if (target.getAdapter(NoteEditPart.class) != null) {
 			INotableEditPart noteable = (INotableEditPart) source
 				.getAdapter(INotableEditPart.class);
 			if (noteable != null && noteable.canAttachNote()) {
-				return getConnectorTypes();
+				return getConnectionTypes();
 			}
 		}
 
@@ -155,7 +155,7 @@ public class DiagramModelingAssistantProvider
 		// Attaching a note to another note is unnecessary.
 		if (target.getAdapter(NoteEditPart.class) != null
 			|| !relationshipType
-				.equals(PresentationNotationType.NOTE_ATTACHMENT)) {
+				.equals(DiagramNotationType.NOTE_ATTACHMENT)) {
 			return Collections.EMPTY_LIST;
 		}
 
@@ -174,7 +174,7 @@ public class DiagramModelingAssistantProvider
 		// Attaching a note to another note is unnecessary.
 		if (source.getAdapter(NoteEditPart.class) != null
 			|| !relationshipType
-				.equals(PresentationNotationType.NOTE_ATTACHMENT)) {
+				.equals(DiagramNotationType.NOTE_ATTACHMENT)) {
 			return Collections.EMPTY_LIST;
 		}
 

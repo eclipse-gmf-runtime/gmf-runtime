@@ -24,14 +24,14 @@ import org.eclipse.gef.rulers.RulerChangeListener;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.CreateGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.DeleteGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.MoveGuideCommand;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
@@ -68,13 +68,13 @@ public class DiagramRulerProvider extends RulerProvider {
 				// Add a new Guide
 				if( event.getNewValue() != null && event.getOldValue() == null ) {
 					guide = (Guide)event.getNewValue();
-					PresentationListener.getInstance().addNotificationListener(guide,guideListener);
+					DiagramEventBroker.getInstance().addNotificationListener(guide,guideListener);
 				}
 
 				// Remove Guide
 				if( event.getNewValue() == null && event.getOldValue() != null ) {
 					guide = (Guide)event.getOldValue();
-					PresentationListener.getInstance().removeNotificationListener(guide,guideListener);
+					DiagramEventBroker.getInstance().removeNotificationListener(guide,guideListener);
 				}
 				
 				for (int i = 0; i < listeners.size(); i++) {
@@ -125,7 +125,7 @@ public class DiagramRulerProvider extends RulerProvider {
 		Iterator iter = getGuides().iterator();
 		while(iter.hasNext()) {
 			Guide guide = (Guide)iter.next();
-			PresentationListener.getInstance().addNotificationListener(guide,guideListener);
+			DiagramEventBroker.getInstance().addNotificationListener(guide,guideListener);
 		}
 		
 		refreshMap();
@@ -181,7 +181,7 @@ public class DiagramRulerProvider extends RulerProvider {
 	 * @see org.eclipse.gef.rulers.RulerProvider#getMoveGuideCommand(java.lang.Object, int)
 	 */
 	public Command getMoveGuideCommand(Object guide, int pDelta) {
-		CompoundCommand cmd = new CompoundCommand(PresentationResourceManager.getInstance().getString( "Command.moveGuide" ));  //$NON-NLS-1$
+		CompoundCommand cmd = new CompoundCommand(DiagramResourceManager.getInstance().getString( "Command.moveGuide" ));  //$NON-NLS-1$
 
 		// Get the Command to Move the Guide
 		cmd.add( new EtoolsProxyCommand( new MoveGuideCommand((Guide)guide, pDelta) ) );

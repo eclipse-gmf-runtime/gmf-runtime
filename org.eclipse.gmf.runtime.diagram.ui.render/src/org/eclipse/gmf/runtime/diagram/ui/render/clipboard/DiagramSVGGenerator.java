@@ -26,13 +26,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.w3c.dom.Element;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
@@ -40,6 +37,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderedImageDescriptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.export.GraphicsSVG;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.w3c.dom.Element;
 
 /**
  * Supports generation of an SVG DOM for a diagram or a subset of
@@ -148,7 +147,9 @@ public class DiagramSVGGenerator
 					DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
 					"createAWTImageForParts() failed to generate image", //$NON-NLS-1$
 					e);
-				return ImageConverter.convert(Images.ICON_ERROR);
+				return ImageConverter
+					.convert(DiagramResourceManager.getInstance().getImage(
+						DiagramResourceManager.IMAGE_ERROR));
 
 			} catch (Exception ex) {
 				// log the Exception but allow execution to continue
@@ -156,11 +157,14 @@ public class DiagramSVGGenerator
 					DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
 					"createAWTImageForParts() failed to generate image", //$NON-NLS-1$
 					ex);
-				return ImageConverter.convert(Images.ICON_ERROR);
+				return ImageConverter
+					.convert(DiagramResourceManager.getInstance().getImage(
+						DiagramResourceManager.IMAGE_ERROR));
 			}
 		}
 
-		return ImageConverter.convert(Images.ICON_ERROR);
+		return ImageConverter.convert(DiagramResourceManager.getInstance()
+			.getImage(DiagramResourceManager.IMAGE_ERROR));
 	}
 
 	/**

@@ -22,13 +22,13 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectorViewCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.PresentationNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
@@ -37,12 +37,12 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
- * Concrete implemention of AttachedShapeAction which attaches a new Notational Note to the
+ * Concrete implemention of AttachShapeAction which attaches a new Notational Note to the
  * targeted shapes.
  * 
  * @author jcorchis 
  */
-public class AddNoteAction extends AttachedShapeAction {
+public class AddNoteAction extends AttachShapeAction {
 
 	/**
 	 * Constructor
@@ -70,7 +70,7 @@ public class AddNoteAction extends AttachedShapeAction {
 
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#calculateEnabled()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
 		if (getSelectedObjects().isEmpty())
@@ -99,7 +99,7 @@ public class AddNoteAction extends AttachedShapeAction {
 
 		// note request
 		ViewDescriptor viewDescriptor =
-			new ViewDescriptor(null, Node.class, PresentationNotationType.NOTE.getSemanticHint(), getPreferencesHint());
+			new ViewDescriptor(null, Node.class, DiagramNotationType.NOTE.getSemanticHint(), getPreferencesHint());
 		CreateViewRequest noteRequest = new CreateViewRequest(viewDescriptor);
 		
 		noteRequest.setLocation(getLocation(selectedEditParts));
@@ -126,7 +126,7 @@ public class AddNoteAction extends AttachedShapeAction {
 				(IGraphicalEditPart) iter.next();
 
 			noteAttachmentCC.compose(
-				new DeferredCreateConnectorViewCommand(
+				new DeferredCreateConnectionViewCommand(
 					ViewType.NOTEATTACHMENT,
 					noteViewAdapter,
 					new EObjectAdapter((EObject)targetEditPart.getModel()),

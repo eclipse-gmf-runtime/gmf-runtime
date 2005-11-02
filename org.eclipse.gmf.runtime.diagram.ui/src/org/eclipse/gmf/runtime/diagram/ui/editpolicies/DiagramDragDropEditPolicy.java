@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectorsRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 
@@ -99,8 +99,8 @@ public class DiagramDragDropEditPolicy extends DragDropEditPolicy {
 			List result = (List)createViewRequest.getNewObject();
 			dropRequest.setResult(result);
 
-			RefreshConnectorsRequest refreshRequest =
-				new RefreshConnectorsRequest(result);
+			RefreshConnectionsRequest refreshRequest =
+				new RefreshConnectionsRequest(result);
 			Command refreshCommand = getHost().getCommand(refreshRequest);
 
 			ArrangeRequest arrangeRequest =

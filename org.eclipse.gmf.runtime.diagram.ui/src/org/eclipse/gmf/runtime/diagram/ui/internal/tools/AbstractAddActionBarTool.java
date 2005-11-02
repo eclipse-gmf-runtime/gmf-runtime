@@ -44,6 +44,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author affrantz
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
+ * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool}
  * 
  */
 

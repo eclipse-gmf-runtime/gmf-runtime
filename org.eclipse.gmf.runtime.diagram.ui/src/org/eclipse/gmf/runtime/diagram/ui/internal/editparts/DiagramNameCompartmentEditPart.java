@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -127,7 +127,7 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 		 */
 		public Command createDeleteViewCommand(GroupRequest request) {
 			CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
-					PresentationResourceManager.
+					DiagramResourceManager.
 					getI18NString("Command.CreateDiagramLink"),//$NON-NLS-1$
 					(View)getHost().getParent().getModel(), 
 					null);

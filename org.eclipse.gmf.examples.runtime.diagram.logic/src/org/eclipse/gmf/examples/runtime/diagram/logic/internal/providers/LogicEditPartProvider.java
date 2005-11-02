@@ -86,7 +86,7 @@ public class LogicEditPartProvider extends AbstractEditPartProvider {
 	 * Set the editpart class to the editpart mapped to the supplied view's semantic hint.
 	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider#setConnectorEditPartClass(org.eclipse.gmf.runtime.diagram.ui.internal.view.IConnectorView)
 	 */
-	protected Class getConnectorEditPartClass(View view) {
+	protected Class getEdgeEditPartClass(View view) {
 		return(Class) connectorMap.get(getReferencedElementEClass(view));
 	}
 

@@ -40,7 +40,7 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 	 * factory method, that will be called by the view service to creat
 	 * the view
 	 * @param semanticAdapter semanitc element of the view, it can be null
-     * @param containerView the view to contain the connector
+     * @param containerView the view to contain the connection
      * @param semanticHint a semantic hint to reflect the view type, it can be empty 
      * @param index position with parent's child collection 
      * @param persisted persisted flag, this will indicate if the created view

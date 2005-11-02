@@ -20,7 +20,6 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
@@ -46,7 +45,7 @@ public class TetherConnectionEditPolicy
 	 * 
 	 * @return the <code>Polyline</code>
 	 */
-	private Polyline getConnector() {
+	private Polyline getConnection() {
 		if (tether == null) {
 			tether = new PolylineConnectionEx();
 			tether.setLineStyle(Graphics.LINE_DASH);			
@@ -74,7 +73,7 @@ public class TetherConnectionEditPolicy
 	 */
 	public void activate() {
 		super.activate();
-		addConnector();
+		addConnection();
 		((IGraphicalEditPart) getHost()).getFigure().addFigureListener(
 			ownerMovedListener);
 	}
@@ -85,25 +84,25 @@ public class TetherConnectionEditPolicy
 	public void deactivate() {
 		((IGraphicalEditPart) getHost()).getFigure().removeFigureListener(
 			ownerMovedListener);
-		removeConnector();
+		removeConnection();
 		super.deactivate();
 	}
 
 	/**
 	 * Removes the tether from the label.
 	 */
-	private void removeConnector() {
-		if (getParentFigure().getChildren().contains(getConnector()))
-			getParentFigure().remove(getConnector());
+	private void removeConnection() {
+		if (getParentFigure().getChildren().contains(getConnection()))
+			getParentFigure().remove(getConnection());
 	}
 	
 	/**
 	 * Adds the tether
 	 *
 	 */
-	private void addConnector() {
-		if (!getParentFigure().getChildren().contains(getConnector()))
-			getParentFigure().add(getConnector());
+	private void addConnection() {
+		if (!getParentFigure().getChildren().contains(getConnection()))
+			getParentFigure().add(getConnection());
 	}
 
 	/**
@@ -144,9 +143,9 @@ public class TetherConnectionEditPolicy
 		else
 			startPoint = midLeft;
 
-		getConnector().setStart(startPoint);
-		getConnector().setEnd(refPoint);
-		getConnector().setForegroundColor(
+		getConnection().setStart(startPoint);
+		getConnection().setEnd(refPoint);
+		getConnection().setForegroundColor(
 			((AbstractGraphicalEditPart) getHost().getParent()).getFigure()
 				.getForegroundColor());
 	}

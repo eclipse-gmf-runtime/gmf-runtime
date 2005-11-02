@@ -44,7 +44,7 @@
    <propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
 	 <propertySection tab="property.tab.AppearancePropertySection" 
 	 	filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter" 
-	 	class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectorAppearancePropertySection" 
+	 	class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectionAppearancePropertySection" 
 	 	id="property.section.ConnectorAppearancePropertySection">
 	    <input type="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart">
 	    </input>

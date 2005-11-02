@@ -15,11 +15,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchPage;
 
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateConnectorViewAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateConnectionViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateShapeViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.GeoshapesResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationContributionItemProvider;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider;
 
 /**
  * @author jschofie
@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.providers.internal.PresentationContrib
  *
  * Creates the actions that can be performed on the various Geometric Shapes
  */
-public class GeoshapeContributionItemProvider extends PresentationContributionItemProvider {
+public class GeoshapeContributionItemProvider extends DiagramContributionItemProvider {
 
 	/**
 	 * The constructor
@@ -44,7 +44,7 @@ public class GeoshapeContributionItemProvider extends PresentationContributionIt
 		IWorkbenchPage workbenchPage = partDescriptor.getPartPage();
 
 		if( actionId.equals(ActionIds.ACTION_ADD_LINE) ) {
-			return new CreateConnectorViewAction(workbenchPage, 
+			return new CreateConnectionViewAction(workbenchPage, 
 					ActionIds.ACTION_ADD_LINE, 
 					GeoshapeConstants.TOOL_LINE,
 					GeoshapesResourceManager.getInstance().getString("geoshape.LineTool.Label"), //$NON-NLS-1$

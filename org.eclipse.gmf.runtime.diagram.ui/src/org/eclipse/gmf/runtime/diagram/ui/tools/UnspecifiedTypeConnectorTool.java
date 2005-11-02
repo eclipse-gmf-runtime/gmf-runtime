@@ -24,9 +24,10 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnecti
  * relationship types.
  * 
  * @author cmahoney
+ *  * @deprecated Renamed to {@link org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeConnectionTool}
  */
 public class UnspecifiedTypeConnectorTool
-	extends ConnectorCreationTool {
+	extends ConnectionCreationTool {
 
 	/**
 	 * The possible relationship types to appear in the popup (of type

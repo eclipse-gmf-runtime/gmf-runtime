@@ -30,10 +30,11 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * The GatePane applies a delegating layout manager to allow gate children to lay themselves out.
  * 
  * @author jbruck
+ * @deprecated Renamed BorderedFigure
  */
-public class GatedPaneFigure extends GateFigure {
+public class GatedPaneFigure extends BorderItemFigure {
 	
-	private GatedFigure gatedFigure;
+	private BorderItemContainerFigure gatedFigure;
 	private IFigure elementFigure;
 	
 	/**
@@ -42,8 +43,8 @@ public class GatedPaneFigure extends GateFigure {
 	 */
 	public GatedPaneFigure( IFigure elementFig ) {
 		super(DrawConstant.INVALID);
-		if (elementFig instanceof GateFigure) {
-			setPreferredSide(((GateFigure) elementFig).getPreferredSide());
+		if (elementFig instanceof BorderItemFigure) {
+			setPreferredSide(((BorderItemFigure) elementFig).getPreferredSide());
 		}
 
 		setOpaque(false); // set transparent by default
@@ -76,9 +77,9 @@ public class GatedPaneFigure extends GateFigure {
 	 * 
 	 * @return The gate pane
 	 */
-	public GatedFigure getGatePane() {     
+	public BorderItemContainerFigure getGatePane() {     
 		if (gatedFigure == null) {
-			gatedFigure = new GatedFigure();
+			gatedFigure = new BorderItemContainerFigure();
 			gatedFigure.setLayoutManager(new AnimatableDelegatingLayout());
 			gatedFigure.setVisible(true);
 		}

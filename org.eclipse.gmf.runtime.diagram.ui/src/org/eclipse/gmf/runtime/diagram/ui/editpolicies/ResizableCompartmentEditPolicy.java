@@ -24,11 +24,11 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.core.listener.PresentationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.GatedPaneFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHandle;
@@ -113,10 +113,10 @@ public class ResizableCompartmentEditPolicy
 		}
 		// TODO: remove later. this is a temporary fix for defect
 		// RATLC00522565
-		// eventually we will put the GatedPaneFigure inside the resizable
+		// eventually we will put the BorderedFigure inside the resizable
 		// compartment
-		else if (getGraphicalEditPart().getFigure() instanceof GatedPaneFigure) {
-			GatedPaneFigure gpf = (GatedPaneFigure) getGraphicalEditPart()
+		else if (getGraphicalEditPart().getFigure() instanceof BorderedFigure) {
+			BorderedFigure gpf = (BorderedFigure) getGraphicalEditPart()
 				.getFigure();
 			IFigure f = gpf.getElementPane();
 			if (f instanceof ResizableCompartmentFigure) {
@@ -188,7 +188,7 @@ public class ResizableCompartmentEditPolicy
 					setSelectedState();
 			}
 		};
-		PresentationListener.getInstance().addNotificationListener(
+		DiagramEventBroker.getInstance().addNotificationListener(
 			getGraphicalEditPart().getNotationView(), propertyListener);
 	}
 
@@ -196,7 +196,7 @@ public class ResizableCompartmentEditPolicy
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
 	protected void removeSelectionListener() {
-		PresentationListener.getInstance().removeNotificationListener(
+		DiagramEventBroker.getInstance().removeNotificationListener(
 			getGraphicalEditPart().getNotationView(), propertyListener);
 		getHost().removeEditPartListener(hostListener);
 		getParentGraphicEditPart().removeEditPartListener(parentListener);

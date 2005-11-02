@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * this class will define the icons and image descriptos for actions
  * @author sshaw
- *
+ * @deprecated Use {@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager}
  */
 public class Images {
 	
@@ -394,12 +394,12 @@ public class Images {
 		DESC_ACTON_RECALCPAGEBREAKS = createDescriptor(ENABLED_PREFIX + "recalcpagebreaks.gif"); //$NON-NLS-1$
 		DESC_ACTON_RECALCPAGEBREAKS_DISABLED = createDescriptor(DISABLED_PREFIX + "recalcpagebreaks.gif"); //$NON-NLS-1$
 		
-		DESC_ACTION_ACTIONBAR = createDescriptor("actionbar.gif"); //$NON-NLS-1$
+		DESC_ACTION_ACTIONBAR = createDescriptor("popupbar.gif"); //$NON-NLS-1$
 		DESC_ACTION_ACTIONBAR_INV = createDescriptor("actionbar_inv.gif"); //$NON-NLS-1$
 		
 		DESC_ACTION_SNAPBACK = createDescriptor("snapback.gif");//$NON-NLS-1$
 		
-		DESC_ACTION_ACTIONBAR_PLUS = createDescriptor("actionbar_plus.gif");//$NON-NLS-1$
+		DESC_ACTION_ACTIONBAR_PLUS = createDescriptor("popupbar_plus.gif");//$NON-NLS-1$
 
 		DESC_ACTION_SHOW_PROPERTIES_VIEW = createDescriptor("properties_view.gif");//$NON-NLS-1$
 
@@ -426,11 +426,11 @@ public class Images {
 	}
 
 	static private Image create(String filename) {
-		return PresentationResourceManager.getInstance().createImage(filename);
+		return DiagramResourceManager.getInstance().createImage(filename);
 	}
 
 	static private ImageDescriptor createDescriptor(String filename) {
-		return PresentationResourceManager.getInstance().createImageDescriptor(
+		return DiagramResourceManager.getInstance().createImageDescriptor(
 			filename);
 	}
 }

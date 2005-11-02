@@ -18,7 +18,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 
 /**
  * @author qili
@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
  */
 
 public class IncrementDecrementAction
-	extends PresentationAction
+	extends DiagramAction
 	implements LogicActionIds {
 
 	private static final String INCREMENT_REQUEST = "Increment", //$NON-NLS-1$
@@ -73,7 +73,7 @@ public class IncrementDecrementAction
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return new Request(actionMap.get(actionId));

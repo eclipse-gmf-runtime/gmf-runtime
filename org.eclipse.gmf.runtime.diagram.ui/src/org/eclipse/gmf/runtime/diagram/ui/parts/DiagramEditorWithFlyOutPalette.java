@@ -26,7 +26,7 @@ import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ImageFileDropTargetListener;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
-import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectorCreationTool;
+import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.swt.SWT;
@@ -157,7 +157,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 						 * Processes a <i>key released </i> event. This method
 						 * is called by the Tool whenever a key is released, and
 						 * the Tool is in the proper state. Override to support
-						 * pressing the enter key to create a shape or connector
+						 * pressing the enter key to create a shape or connection
 						 * (between two selected shapes)
 						 *
 						 * @param event
@@ -175,7 +175,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 										.createTool();
 
 								if (tool instanceof CreationTool
-									|| tool instanceof ConnectorCreationTool) {
+									|| tool instanceof ConnectionCreationTool) {
 
 									tool.keyUp(event, getDiagramGraphicalViewer());
 
@@ -212,7 +212,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 
 						/**
 						 * Override to support double-clicking a palette tool
-						 * entry to create a shape or connector (between two
+						 * entry to create a shape or connection (between two
 						 * selected shapes).
 						 *
 						 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
@@ -222,7 +222,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 								.createTool();
 
 							if (tool instanceof CreationTool
-								|| tool instanceof ConnectorCreationTool) {
+								|| tool instanceof ConnectionCreationTool) {
 
 								tool.setViewer(getDiagramGraphicalViewer());
 								tool.setEditDomain(getDiagramGraphicalViewer()

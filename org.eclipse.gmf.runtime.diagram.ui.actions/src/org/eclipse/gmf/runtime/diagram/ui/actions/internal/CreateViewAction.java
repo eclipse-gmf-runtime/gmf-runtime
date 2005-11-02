@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * @author schafe
  * @canBeSeenBy %level1
  */
-public class CreateViewAction extends PresentationAction {
+public class CreateViewAction extends DiagramAction {
 	
 	protected String semanticHint;
 	
@@ -92,7 +92,7 @@ public class CreateViewAction extends PresentationAction {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#updateTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#updateTargetRequest()
 	 */
 //	protected void updateTargetRequest() {
 //		super.updateTargetRequest();

@@ -12,13 +12,12 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gef.Request;
-import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Images;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.Messages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * 
@@ -28,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AutoSizeAction extends PresentationAction {
+public class AutoSizeAction extends DiagramAction {
 
 	/**
 	 * @param workbenchPage
@@ -36,16 +35,22 @@ public class AutoSizeAction extends PresentationAction {
 	public AutoSizeAction(IWorkbenchPage workbenchPage) {
 		super(workbenchPage);
 
-		setText(Messages.getString("AutoSizeAction.ActionLabelText")); //$NON-NLS-1$
+		setText(DiagramActionsResourceManager.getI18NString("AutoSizeAction.ActionLabelText")); //$NON-NLS-1$
 		setId(ActionIds.ACTION_AUTOSIZE);
-		setToolTipText(Messages.getString("AutoSizeAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(Images.DESC_ACTION_AUTOSIZE);
-		setDisabledImageDescriptor(Images.DESC_ACTION_AUTOSIZE_DISABLED);
-		setHoverImageDescriptor(Images.DESC_ACTION_AUTOSIZE);
+		setToolTipText(DiagramActionsResourceManager.getI18NString("AutoSizeAction.ActionToolTipText")); //$NON-NLS-1$
+		
+		ImageDescriptor enabledImage = DiagramActionsResourceManager
+			.getInstance().getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_AUTOSIZE);
+		setImageDescriptor(enabledImage);
+		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
+			.getImageDescriptor(
+				DiagramActionsResourceManager.IMAGE_AUTOSIZE_DISABLED));
+		setHoverImageDescriptor(enabledImage);
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.PresentationAction#createTargetRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
 		return new Request(RequestConstants.REQ_AUTOSIZE);

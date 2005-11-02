@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler;
+import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.AWTClipboardHelper;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.commands.CopyImageCommand;
 
@@ -35,7 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.internal.commands.CopyImageComm
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.render.*
  */
 public class ImageSupportGlobalActionHandler
-	extends PresentationGlobalActionHandler {
+	extends DiagramGlobalActionHandler {
 
 	/**
 	 * Constructor for CopyWithImageSupportGlobalActionHandler.
@@ -75,7 +75,7 @@ public class ImageSupportGlobalActionHandler
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler#canCopy(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#canCopy(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	protected boolean canCopy(IGlobalActionContext cntxt) {
 		return AWTClipboardHelper.getInstance().isImageCopySupported()
@@ -85,7 +85,7 @@ public class ImageSupportGlobalActionHandler
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler#canCut(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#canCut(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	protected boolean canCut(IGlobalActionContext cntxt) {
 		return AWTClipboardHelper.getInstance().isImageCopySupported()
@@ -95,7 +95,7 @@ public class ImageSupportGlobalActionHandler
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler#canPaste(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#canPaste(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	protected boolean canPaste(IGlobalActionContext cntxt) {
 		/* Check if the clipboard has data for the drawing surface */
@@ -106,7 +106,7 @@ public class ImageSupportGlobalActionHandler
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler#getCopyCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext,
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#getCopyCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext,
 	 *      org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart,
 	 *      boolean)
 	 */
@@ -139,7 +139,7 @@ public class ImageSupportGlobalActionHandler
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.PresentationGlobalActionHandler#createPasteViewRequest()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#createPasteViewRequest()
 	 */
 	protected PasteViewRequest createPasteViewRequest() {
 		CustomData data = AWTClipboardHelper.getInstance().getCustomData();

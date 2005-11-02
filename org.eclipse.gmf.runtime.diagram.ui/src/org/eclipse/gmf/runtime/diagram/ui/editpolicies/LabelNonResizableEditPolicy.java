@@ -31,7 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.LabelHelper;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -41,6 +41,8 @@ import org.eclipse.gmf.runtime.notation.View;
  * EditPolicy which moves a label relative to it parent.
  * 
  * @author jcorchis
+ * @deprecated Renamed to
+ *             {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableLabelEditPolicy}
  */
 public class LabelNonResizableEditPolicy extends NonResizableEditPolicyEx {
 
@@ -141,7 +143,7 @@ public class LabelNonResizableEditPolicy extends NonResizableEditPolicyEx {
 		
  		ICommand moveCommand = 
  			new SetBoundsCommand(
- 				PresentationResourceManager.getI18NString("MoveLabelCommand.Label.Location"),//$NON-NLS-1$
+ 				DiagramResourceManager.getI18NString("MoveLabelCommand.Label.Location"),//$NON-NLS-1$
  				new EObjectAdapter((View)editPart.getModel()),
 				normalPoint); 
 		return new EtoolsProxyCommand(moveCommand);

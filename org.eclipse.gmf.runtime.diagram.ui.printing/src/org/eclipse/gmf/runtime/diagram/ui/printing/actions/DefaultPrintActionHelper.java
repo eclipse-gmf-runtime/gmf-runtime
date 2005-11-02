@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.PresentationResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 
@@ -54,9 +54,9 @@ public class DefaultPrintActionHelper {
 		}
 
 		boolean isPrintToFit = MessageDialog.openQuestion(null,
-			PresentationResourceManager
+			DiagramResourceManager
 				.getI18NString("Print.MessageDialogTitle"), //$NON-NLS-1$
-			PresentationResourceManager
+			DiagramResourceManager
 				.getI18NString("Print.MessageDialogMessage")); //$NON-NLS-1$
 
 		final Printer printer = new Printer(data);
