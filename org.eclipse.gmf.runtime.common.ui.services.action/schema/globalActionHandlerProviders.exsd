@@ -187,11 +187,14 @@ To delay plugin loading, the recommended strategy for policies is to define them
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="plugin" type="string" use="required">
+         <attribute name="plugin" type="string">
             <annotation>
                <documentation>
                   the name of the plug-in that contains the provider policy
                </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

@@ -179,32 +179,26 @@ public abstract class Service
 					if (elements.length == 0) 
 						break working; // no child elements
 
-					String pluginId = elements[0].getAttribute(A_PLUGIN);
+					CommonCorePlugin corePlugin = CommonCorePlugin.getDefault();
 
-					if (null == pluginId)
-						break working; // no child elements
+					try {
+						Log.info(corePlugin, CommonCoreStatusCodes.OK, "Activating provider policy '" + elements[0].getAttribute(A_CLASS) + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
 
-					if (null != Platform.getBundle(pluginId)) {
-						CommonCorePlugin corePlugin = CommonCorePlugin.getDefault();
-
-						try {
-							Log.info(corePlugin, CommonCoreStatusCodes.OK, "Activating provider policy '" + elements[0].getAttribute(A_CLASS) + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
-	
-							// the following results in a core dump on Solaris if
-							// the policy plug-in cannot be found
-							policy = (IProviderPolicy)element.createExecutableExtension(E_POLICY);
-
-							Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider policy '" + policy + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
-						} catch (CoreException ce) {
-							Trace.catching(corePlugin, CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(), "getPolicy", ce); //$NON-NLS-1$
-							IStatus status = ce.getStatus();
-							Log.log(
-								corePlugin,
-								status.getSeverity(),
-								CommonCoreStatusCodes.SERVICE_FAILURE,
-								status.getMessage(),
-								status.getException());
-						}
+						// the following results in a core dump on Solaris if
+						// the policy plug-in cannot be found
+						
+						policy = (IProviderPolicy)element.createExecutableExtension(E_POLICY);
+						
+						Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider policy '" + policy + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
+					} catch (CoreException ce) {
+						Trace.catching(corePlugin, CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(), "getPolicy", ce); //$NON-NLS-1$
+						IStatus status = ce.getStatus();
+						Log.log(
+							corePlugin,
+							status.getSeverity(),
+							CommonCoreStatusCodes.SERVICE_FAILURE,
+							status.getMessage(),
+							status.getException());
 					}
 				}
 			}
