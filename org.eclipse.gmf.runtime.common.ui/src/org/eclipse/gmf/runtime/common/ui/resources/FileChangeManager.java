@@ -61,6 +61,7 @@ public class FileChangeManager
 
 	/**
 	 * get the singleton instance of this class
+	 * 
 	 * @return singleton instance of the FileChangeManager class
 	 */
 	public static FileChangeManager getInstance() {
@@ -77,7 +78,8 @@ public class FileChangeManager
 	 */
 	private FileChangeManager() {
 		super();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this,
+			IResourceChangeEvent.POST_CHANGE);
 	}
 
 	/*
@@ -98,17 +100,6 @@ public class FileChangeManager
 						CommonUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
 							.getMessage(), e);
 				}
-				break;
-
-			case IResourceChangeEvent.PRE_DELETE:
-				trace("...FileChangeManager: Project " //$NON-NLS-1$
-					+ getAbsolutePath(event.getResource())
-					+ " is about to be deleted."); //$NON-NLS-1$
-				break;
-			case IResourceChangeEvent.PRE_CLOSE:
-				trace("...FileChangeManager: Project " //$NON-NLS-1$
-					+ getAbsolutePath(event.getResource())
-					+ " is about to be closed."); //$NON-NLS-1$
 				break;
 			default:
 				break;
@@ -313,7 +304,7 @@ public class FileChangeManager
 
 				public void run(IProgressMonitor monitor)
 					throws CoreException {
- 
+
 					trace("...FileChangeManager: Resource " + getAbsolutePath(file) + " was refreshed"); //$NON-NLS-2$//$NON-NLS-1$
 					file.refreshLocal(IResource.DEPTH_ZERO, null);
 
