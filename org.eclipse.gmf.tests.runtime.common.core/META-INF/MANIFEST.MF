@@ -7,7 +7,6 @@ Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.tests.runtime.common.core.internal.command,
- org.eclipse.gmf.tests.runtime.common.core.internal.l10n,
  org.eclipse.gmf.tests.runtime.common.core.internal.service,
  org.eclipse.gmf.tests.runtime.common.core.internal.util,
  org.eclipse.gmf.tests.runtime.common.core
