@@ -206,7 +206,7 @@ public class FontFieldEditor extends FieldEditor {
 		gd.heightHint =
 			convertVerticalDLUsToPixels(
 				changeFontButton,
-				IDialogConstants.BUTTON_HEIGHT);
+				14);
 		int widthHint =
 			convertHorizontalDLUsToPixels(
 				changeFontButton,

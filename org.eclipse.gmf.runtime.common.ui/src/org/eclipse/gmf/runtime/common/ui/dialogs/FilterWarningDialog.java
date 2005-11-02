@@ -123,7 +123,7 @@ public class FilterWarningDialog
 		ok_button.setText(IDialogConstants.OK_LABEL);
 		GridData ok_button_data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
 			| GridData.GRAB_HORIZONTAL);
-		ok_button_data.heightHint = convertVerticalDLUsToPixels(IDialogConstants.BUTTON_HEIGHT);
+		ok_button_data.heightHint = convertVerticalDLUsToPixels(14);
 		ok_button_data.widthHint = Math.max(
 			convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH),
 			ok_button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);

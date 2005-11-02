@@ -93,7 +93,7 @@ public class WindowUtil {
 		data.heightHint =
 			Dialog.convertVerticalDLUsToPixels(
 				gc.getFontMetrics(),
-				IDialogConstants.BUTTON_HEIGHT);
+				14);
 		data.widthHint =
 			Math.max(
 				Dialog.convertHorizontalDLUsToPixels(
@@ -126,7 +126,7 @@ public class WindowUtil {
 		gridData.heightHint =
 			Dialog.convertVerticalDLUsToPixels(
 				gc.getFontMetrics(),
-				IDialogConstants.BUTTON_HEIGHT);
+				14);
 
 		gc.dispose();
 
