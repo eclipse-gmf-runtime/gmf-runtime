@@ -78,8 +78,7 @@
          <attribute name="name" use="required">
             <annotation>
                <documentation>
-                  The priority of the provider. It can be one of the following values:
-&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider at a higher priority will take a chance first at deciding provision.
+                  The priority of the provider. It can be one of the following values: Lowest, Low, Medium, High, Highest. Consideration of dependencies has to be done when choosing the priority. A provider at a higher priority will take a chance first at deciding provision.
                </documentation>
             </annotation>
             <simpleType>

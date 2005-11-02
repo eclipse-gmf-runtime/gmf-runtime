@@ -6,23 +6,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
  ****************************************************************************/
-
 
 package org.eclipse.gmf.examples.runtime.common.service.application;
 
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-
+import org.eclipse.gmf.examples.runtime.common.service.ServicePlugin;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 
 /**
- * Widget Service class. Service which provides the creation of Widgets. 
- *   
+ * Widget Service class. Service which provides the creation of Widgets.
+ *
  * @see org.eclipse.gmf.runtime.common.core.service
  */
 public class WidgetService
@@ -33,6 +32,10 @@ public class WidgetService
 	 * The singleton instance of the WidgetService.
 	 */
 	private final static WidgetService service = new WidgetService();
+
+	static {
+		service.configureProviders(ServicePlugin.getPluginId(), "widgetProviders"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Retrieves the singleton instance of the WidgetService.
@@ -50,11 +53,10 @@ public class WidgetService
 	 */
 	public Object createWidget(int orderSize) {
 		return execute(new CreateWidgetOperation(orderSize));
-		
-	}	
-	
+	}
+
 	/**
-	 * Executes the operation using a <code>ExecutingStrategy.FIRST</code> 
+	 * Executes the operation using a <code>ExecutingStrategy.FIRST</code>
 	 * @param operation the operation to execute
 	 * @return the results of the operation
 	 */
@@ -62,17 +64,17 @@ public class WidgetService
 		 List results = execute(ExecutionStrategy.FIRST, operation);
 		 return results.isEmpty() ? null : results;
 	}
-	
+
 	/**
 	 * Creates a new ProvderDescriptor based on the <code>IConfigurationElement</code>.
 	 * @see org.eclipse.gmf.runtime.common.core.service.Service#newProviderDescriptor(org.eclipse.core.runtime.IConfigurationElement)
 	 */
 	protected Service.ProviderDescriptor newProviderDescriptor(IConfigurationElement element) {
 		return new WidgetProviderDescriptor(element);
-	}	
-	
+	}
+
 	/**
-	 * WidgetProviderDescriptor. Provides convenient access to 
+	 * WidgetProviderDescriptor. Provides convenient access to
 	 * WidgetProvider configuration information.
 	 *
 	 */
@@ -85,7 +87,7 @@ public class WidgetService
 		/**
 		 * Constructs a <code>IWidgetProvider</code> descriptor for
 		 * the specified configuration element.
-		 * 
+		 *
 		 * @param element The configuration element describing the provider.
 		 */
 		public WidgetProviderDescriptor(IConfigurationElement element) {
@@ -124,5 +126,5 @@ public class WidgetService
 			}
 			return false;
 		}
-	}	
+	}
 }
