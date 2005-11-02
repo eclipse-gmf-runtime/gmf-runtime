@@ -720,10 +720,13 @@ public abstract class DiagramEditor
 	 * @return the zoom manager
 	 */
 	protected ZoomManager getZoomManager() {
-		return ((DiagramRootEditPart) getGraphicalViewer().getRootEditPart())
-			.getZoomManager();
+		return ((DiagramRootEditPart) getRootEditPart()).getZoomManager();
 	}
 
+	private RootEditPart getRootEditPart() {
+		return getGraphicalViewer().getRootEditPart();		
+	}
+	
 	/**
 	 * Convenience method to access the command manager associated with my
 	 * action manager. This command manager is used by my edit domain's 
@@ -925,8 +928,6 @@ public abstract class DiagramEditor
 		}
 	}
 
-	IPreferenceStore pluginStore = DiagramUIPlugin.getInstance()
-		.getPreferenceStore();
 
 	/**
 	 * Initializes the viewer's state from the workspace preference store.
@@ -953,7 +954,7 @@ public abstract class DiagramEditor
 		}
 
 		// Get the Ruler Units properties
-		int rulerUnits = pluginStore
+		int rulerUnits = ((IPreferenceStore) ((DiagramRootEditPart) getRootEditPart()).getPreferencesHint().getPreferenceStore())
 			.getInt(IPreferenceConstants.PREF_RULER_UNITS);
 
 		// Get the Guide Style
@@ -964,8 +965,9 @@ public abstract class DiagramEditor
 		if (guideStyle != null) {
 
 			// Set the Vertical Ruler properties
-			DiagramRuler verticalRuler = new DiagramRuler(false, rulerUnits,
-				guideStyle);
+			DiagramRuler verticalRuler = ((DiagramRootEditPart) getRootEditPart()).getVerticalRuler();
+			verticalRuler.setGuideStyle(guideStyle);
+			verticalRuler.setUnit(rulerUnits);
 			DiagramRulerProvider vertProvider = new DiagramRulerProvider(
 				verticalRuler);
 			vertProvider.init();
@@ -973,14 +975,15 @@ public abstract class DiagramEditor
 				RulerProvider.PROPERTY_VERTICAL_RULER, vertProvider);
 	
 			// Set the Horizontal Ruler properties
-			DiagramRuler horizontalRuler = new DiagramRuler(true, rulerUnits,
-				guideStyle);
+			DiagramRuler horizontalRuler = ((DiagramRootEditPart) getRootEditPart()).getHorizontalRuler();
+			horizontalRuler.setGuideStyle(guideStyle);
+			horizontalRuler.setUnit(rulerUnits);
 			DiagramRulerProvider horzProvider = new DiagramRulerProvider(
 				horizontalRuler);
 			horzProvider.init();
 			getDiagramGraphicalViewer().setProperty(
 				RulerProvider.PROPERTY_HORIZONTAL_RULER, horzProvider);
-	
+			
 			// Show/Hide Rulers
 			getDiagramGraphicalViewer().setProperty(
 				RulerProvider.PROPERTY_RULER_VISIBILITY,

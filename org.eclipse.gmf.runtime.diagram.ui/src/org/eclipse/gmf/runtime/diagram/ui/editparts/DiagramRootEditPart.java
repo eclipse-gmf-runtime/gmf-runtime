@@ -176,7 +176,7 @@ public class DiagramRootEditPart
         layers.add(new FreeformLayer(), DECORATION_UNPRINTABLE_LAYER);
         return layers;
     }
-   
+    
     /**
      * Creates the <code>ScalableFreeformLayeredPane</code>.
 	 * @return the new <code>ScalableFreeformLayeredPane</code>
@@ -438,11 +438,15 @@ public class DiagramRootEditPart
 	 * @param rulerUnits
 	 */
 	private void setRulers(int rulerUnits) {
-		if( verticalRuler != null ) {
-			verticalRuler.setUnit( rulerUnits );
+		if( getVerticalRuler() != null ) {
+			getVerticalRuler().setUnit( rulerUnits );
+		} else {
+			setVerticalRuler(new DiagramRuler(false, rulerUnits, null));
 		}
-		if( horizontalRuler != null ) {
-			horizontalRuler.setUnit( rulerUnits );
+		if( getHorizontalRuler() != null ) {
+			getHorizontalRuler().setUnit( rulerUnits );
+		} else {
+			setHorizontalRuler(new DiagramRuler(true, rulerUnits, null));			
 		}
 	}
 
@@ -477,6 +481,17 @@ public class DiagramRootEditPart
 			((org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane) layers).setAntiAlias(antiAlias);
 	}
 
+	/**
+	 * Refreshes ruler units on the diagram
+	 */
+	protected void refreshRulerUnits() {
+		IPreferenceStore preferenceStore =
+			(IPreferenceStore) getPreferencesHint().getPreferenceStore();
+		int rulerUnits = preferenceStore.getInt(
+			IPreferenceConstants.PREF_RULER_UNITS);
+		setRulers(rulerUnits);
+	}
+
 	
 	/**
 	 * This is a workspace property request.  It does not use a <code>Command</code>
@@ -502,6 +517,8 @@ public class DiagramRootEditPart
 		ScalableFreeformLayeredPane pane = getLayers();
 		
 		refreshEnableAntiAlias();
+		
+		refreshRulerUnits();
 		
 		if (pane instanceof ZoomListener) {
 			getZoomManager().addZoomListener((ZoomListener)pane);
@@ -577,7 +594,7 @@ public class DiagramRootEditPart
 	public PreferencesHint getPreferencesHint() {
 		return preferencesHint;
 	}
-	
+
 	/**
 	 * Override this if the Editor wishes to support a coordinate system other then the default 
 	 * (usually HiMetric coordinates).  
@@ -586,6 +603,25 @@ public class DiagramRootEditPart
 	 */
 	public IMapMode getMapMode() {
 		return MapModeTypes.DEFAULT_MM;
+	}
+	
+	public DiagramRuler getHorizontalRuler() {
+		return horizontalRuler;
+	}
+
+	
+	private void setHorizontalRuler(DiagramRuler horizontalRuler) {
+		this.horizontalRuler = horizontalRuler;
+	}
+
+	
+	public DiagramRuler getVerticalRuler() {
+		return verticalRuler;
+	}
+
+	
+	private void setVerticalRuler(DiagramRuler verticalRuler) {
+		this.verticalRuler = verticalRuler;
 	}
 
 }

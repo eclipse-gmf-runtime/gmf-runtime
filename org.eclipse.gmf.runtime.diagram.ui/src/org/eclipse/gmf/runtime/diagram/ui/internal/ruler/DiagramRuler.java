@@ -88,4 +88,9 @@ public class DiagramRuler {
 		PresentationListener.getInstance().removeNotificationListener(getGuideStyle(),listener);
 
 	}
+
+	
+	public void setGuideStyle(GuideStyle guideStyle) {
+		this.guideStyle = guideStyle;
+	}
 }
