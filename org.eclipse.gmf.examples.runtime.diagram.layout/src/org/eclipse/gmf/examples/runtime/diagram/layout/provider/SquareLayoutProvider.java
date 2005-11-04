@@ -65,9 +65,6 @@ public class SquareLayoutProvider extends AbstractProvider
 		return SQUARE_LAYOUT.equals(layoutType);	
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.presentation.services.layout.ILayoutNodesProvider#layoutNodes(java.util.List, boolean, org.eclipse.core.runtime.IAdaptable)
-	 */
 	public Runnable layoutNodes(List layoutNodes,
 			boolean offsetFromBoundingBox, IAdaptable layoutHint) {
 		

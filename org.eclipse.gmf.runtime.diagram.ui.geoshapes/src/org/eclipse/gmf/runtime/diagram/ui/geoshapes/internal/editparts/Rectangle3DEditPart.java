@@ -13,6 +13,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
 import org.eclipse.draw2d.IFigure;
+
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShape3DRectangleFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -36,16 +37,10 @@ public class Rectangle3DEditPart extends GeoShapeEditPart {
 		super(shapeView);
 	}
 		
-	/**
-	 * @see com.rational.xtools.presentation.editparts.ShapeNodeEditPart#createNodeFigure()
-	 */
 	protected NodeFigure createNodeFigure() {
 		return new GeoShape3DRectangleFigure( getMapMode().DPtoLP(100), getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
 	}
 
-	/**
-	 * @see org.eclipse.gef.GraphicalEditPart#getContentPane()
-	 */
 	public IFigure getContentPane() {
 		return ((GeoShapeFigure) getFigure()).getContentPane();
 	}

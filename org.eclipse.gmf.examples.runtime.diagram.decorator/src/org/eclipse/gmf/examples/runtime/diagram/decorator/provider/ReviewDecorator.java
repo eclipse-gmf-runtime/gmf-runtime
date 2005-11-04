@@ -148,8 +148,6 @@ public class ReviewDecorator implements IDecorator {
 	/**
 	 * Creates the appropriate review decoration if all the criteria is
 	 * satisfied by the view passed in.
-	 * 
-	 * @see com.ibm.xtools.presentation.services.decorator.IDecorator#refresh()
 	 */
 	public void refresh() {
 		removeDecoration();
@@ -196,8 +194,6 @@ public class ReviewDecorator implements IDecorator {
 	
 	/**
 	 * Adds decoration if applicable.
-	 * 
-	 * @see com.ibm.xtools.presentation.internal.services.decorator.IDecorator#activate()
 	 */
 	public void activate() {
 		MSLEditingDomain.INSTANCE.addOperationListener(operationListener);
@@ -205,8 +201,6 @@ public class ReviewDecorator implements IDecorator {
 
 	/**
 	 * Removes the decoration.
-	 * 
-	 * @see com.ibm.xtools.presentation.services.decorator.IDecorator#deactivate()
 	 */
 	public void deactivate() {
 		removeDecoration();

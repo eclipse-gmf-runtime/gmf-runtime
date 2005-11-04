@@ -18,6 +18,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
+
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -27,7 +28,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
  * @author sshaw
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  *
- * RectilinearRouter which routes the Connector so that the lines
+ * RectilinearRouter which routes the Connection so that the lines
  * are always vertical or horizontal.
  */
 public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter {

@@ -55,9 +55,6 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		super(view);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.presentation.internal.editparts.ShapeEditPart#getPrimaryDragEditPolicy()
-	 */
 	public EditPolicy getPrimaryDragEditPolicy() {
 		return new NonResizableEditPolicyEx();
 	}
@@ -88,8 +85,6 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 	
 	/**
 	 * Override to prevent change of bounds
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshBounds()
 	 */
 	protected void refreshBounds() {
 		Dimension size = getFigure().getSize();
@@ -102,9 +97,6 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 			new Rectangle(loc, size));
 	}
 	
-	/**
-	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createBoundsMap()
-	 */
 	public Map createBoundsMap() {
 		Map boundMap = new HashMap();
 		if(getModel()==null || !(getModel() instanceof View))
@@ -132,9 +124,6 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		return boundMap;
 	}
 	
-	/**
-	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createOwnedTerminalFigure(org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal)
-	 */
 	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
 		BorderItemFigure theFigure = null;
 		

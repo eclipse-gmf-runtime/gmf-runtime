@@ -47,7 +47,7 @@ public class GeoshapeViewProvider
 		//		shapeMap.put( GeoshapeConstants.TOOL_POLYGON, GeoShapeViewFactory.class);
 	}
 	
-	//	 Map to hold the Line/Connector Views
+	//	 Map to hold the Line/Connection Views
 	private Map connectionMap = new HashMap();
 	{
 		connectionMap.put(GeoshapeConstants.TOOL_LINE, ConnectionViewFactory.class);
@@ -67,7 +67,7 @@ public class GeoshapeViewProvider
 	}
 
 	/**
-	 * Returns the connector view class to instantiate based on the passed
+	 * Returns the connection view class to instantiate based on the passed
 	 * params
 	 * 
 	 * @param semanticAdapter

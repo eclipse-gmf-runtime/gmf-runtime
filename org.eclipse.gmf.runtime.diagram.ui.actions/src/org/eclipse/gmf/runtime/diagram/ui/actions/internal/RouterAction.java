@@ -25,7 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
- * Connector router action
+ * Connection router action
  * 
  * @author melaasar
  * @canBeSeenBy %level1

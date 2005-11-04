@@ -48,7 +48,7 @@ import org.eclipse.jface.util.Assert;
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
  */
-abstract public class ConnectorBendpointEditPolicy
+abstract public class ConnectionBendpointEditPolicy
 	extends SelectionHandlesEditPolicy
 	implements PropertyChangeListener {
 
@@ -85,7 +85,7 @@ abstract public class ConnectorBendpointEditPolicy
 	 * Constructor for EditPolicy
 	 * @param lineSegMode
 	 */
-	public ConnectorBendpointEditPolicy(LineMode lineSegMode) {
+	public ConnectionBendpointEditPolicy(LineMode lineSegMode) {
 		super();
 		this.lineSegMode = lineSegMode;
 	}
@@ -569,7 +569,7 @@ abstract public class ConnectorBendpointEditPolicy
 	 * This method will return a SetBendpointsCommand with the points retrieved from
 	 * the user feedback in the figure.
 	 * @param request BendpointRequest from the user gesture for moving / creating a bendpoint
-	 * @return Command SetBendpointsCommand that contains the point changes for the connector.
+	 * @return Command SetBendpointsCommand that contains the point changes for the connection.
 	 */
 	abstract protected Command getBendpointsChangedCommand(BendpointRequest request);
 

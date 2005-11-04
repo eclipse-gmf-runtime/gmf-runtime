@@ -56,7 +56,7 @@ public class GeoshapeType
 
 	/**
 	 * Gets a list of all the possible shape types. This is used by the
-	 * connector handles.
+	 * connection handles.
 	 * 
 	 * @return a list of shape types
 	 */

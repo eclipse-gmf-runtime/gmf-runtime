@@ -19,17 +19,17 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.util;
 public interface LabelViewConstants {
 	/** 
 	 * Percentage location for labels that are located
-	 * relative to the source end of a <code>Connector</code>
+	 * relative to the source end of a <code>Connection</code>
 	 */
 	public static final int SOURCE_LOCATION = 15;
 	/** 
 	 * Percentage location for labels that are located
-	 * relative to the target of a <code>Connector</code>
+	 * relative to the target of a <code>Connection</code>
 	 */
 	public static final int TARGET_LOCATION = 85;
 	/** 
 	 * Percentage location for labels that are located
-	 * relative to the middle of a <code>Connector</code>
+	 * relative to the middle of a <code>Connection</code>
 	 */
 	public static final int MIDDLE_LOCATION = 50;	
 }

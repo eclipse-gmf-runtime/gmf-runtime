@@ -85,8 +85,6 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 	
 	/**
 	 * Override to prevent change of bounds
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshBounds()
 	 */
 	protected void refreshBounds() {
 		Dimension size = getFigure().getSize();
@@ -106,9 +104,6 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 		((LEDFigure)getMainFigure()).setFontColor(color);
 	}
 	
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handlePropertyChangeEvent(java.beans.PropertyChangeEvent)
-	 */
 	protected void handleNotificationEvent(Notification evt) {
 		if (SemanticPackage.eINSTANCE.getLED_Value().equals(evt.getFeature()))
 			refreshValue();
@@ -119,9 +114,6 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 			super.handleNotificationEvent(evt);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.presentation.internal.editparts.ShapeEditPart#getPrimaryDragEditPolicy()
-	 */
 	public EditPolicy getPrimaryDragEditPolicy() {
 		return new NonResizableEditPolicyEx();
 	}
@@ -137,9 +129,6 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 		return new LEDFigure(ledSizeLP);
 	}
 	
-	/**
-	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createBoundsMap()
-	 */
 	public Map createBoundsMap() {
 		Map boundMap = new HashMap();
 		
@@ -156,9 +145,6 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 		return boundMap;
 	}
 	
-	/**
-	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createOwnedTerminalFigure(org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal)
-	 */
 	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
 		BorderItemFigure theFigure = null;
 		if (terminal instanceof InputTerminal) {

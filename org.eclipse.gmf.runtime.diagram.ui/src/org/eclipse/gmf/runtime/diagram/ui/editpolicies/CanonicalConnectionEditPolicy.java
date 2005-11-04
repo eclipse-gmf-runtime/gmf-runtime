@@ -479,13 +479,13 @@ public abstract class CanonicalConnectionEditPolicy
 	 * from the model.
 	 * <P>
 	 * The update is performed by comparing the exising connection views with the
-	 * set of semantic connections returned from {@link #getSemanticConnectors()}.
+	 * set of semantic connections returned from {@link #getSemanticConnections()}.
 	 * Views whose semantic connection no longer exists or whose semantic
 	 * connection ends are <tt>null</tt> are
 	 * {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#deleteViews(Iterator) removed}.
 	 * New semantic children have their View
 	 * {@link  #createEdge(IElement, EditPart, EditPart, int, String)
-	 * created}. Subclasses must override <code>getSemanticConnectors()</code>.
+	 * created}. Subclasses must override <code>getSemanticConnections()</code>.
 	 * <P>
 	 * This refresh routine will not reorder the view list to ensure both it and
 	 * the semantic children are in the same order since it is possible that
@@ -558,7 +558,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 */
 	protected void refreshSemantic() {
 		List createdViews = super.refreshSemanticChildren();
-		List createdConnectorViews = refreshSemanticConnections();
+		List createdConnectionViews = refreshSemanticConnections();
 
 		if (createdViews.size() > 1) {
 			// perform a layout of the container
@@ -567,10 +567,10 @@ public abstract class CanonicalConnectionEditPolicy
 			executeCommand(new EtoolsProxyCommand(layoutCmd));
 		}
 
-		List allViews = new ArrayList(createdConnectorViews.size()
+		List allViews = new ArrayList(createdConnectionViews.size()
 			+ createdViews.size());
 		allViews.addAll(createdViews);
-		allViews.addAll(createdConnectorViews);
+		allViews.addAll(createdConnectionViews);
 		makeViewsImmutable(allViews);
 	}
 
@@ -603,7 +603,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * {@link #shouldIncludeConnection(Edge, List)} to modify the returned
 	 * collection's contents.
 	 * 
-	 * @return list of <code>IConnectorView</code>s.
+	 * @return list of <code>IConnectionView</code>s.
 	 */
 	protected Collection getConnectionViews() {
 		Collection retval = new HashSet();

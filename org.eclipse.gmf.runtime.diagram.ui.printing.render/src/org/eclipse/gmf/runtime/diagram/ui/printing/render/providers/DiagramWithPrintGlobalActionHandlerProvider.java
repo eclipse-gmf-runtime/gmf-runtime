@@ -29,9 +29,6 @@ import org.eclipse.ui.IWorkbenchPart;
 public class DiagramWithPrintGlobalActionHandlerProvider
 	extends AbstractGlobalActionHandlerProvider {
 
-	/**
-	 * List for PresentationWithPrintGlobalActionHandlers.
-	 */
 	private Hashtable handlerList = new Hashtable();
 
 	/**

@@ -303,7 +303,7 @@
             id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicAppearancePreferencePage">
       </page>     
       <page
-            name="%PreferencePage.Connectors"
+            name="%PreferencePage.Connections"
             category="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicAppearancePreferencePage"
             class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectionsPreferencePage"
             id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectionsPreferencePage">

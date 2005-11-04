@@ -152,7 +152,7 @@ public class LabelNonResizableEditPolicy extends NonResizableEditPolicyEx {
 	/**
 	 * Overridden to use a customized drag tracker for the handles.
 	 * The <code>isMove()</code> method of the drag tracker needs to be
-	 * overridden as the parent of the label and connector will not be the
+	 * overridden as the parent of the label and connection will not be the
 	 * same as the target editpart, instead it returns true always since 
 	 * labels can only be moved and not resized.
 	 * @return a drag tracker

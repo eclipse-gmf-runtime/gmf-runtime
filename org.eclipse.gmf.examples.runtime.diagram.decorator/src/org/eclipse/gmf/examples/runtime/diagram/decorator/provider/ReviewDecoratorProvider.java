@@ -33,9 +33,6 @@ public class ReviewDecoratorProvider
 	/** The key used for the mood decoration */
 	public static final String REVIEW = "Review_Decorator"; //$NON-NLS-1$
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.presentation.services.decorator.IDecoratorProvider#createDecorators(com.ibm.xtools.presentation.services.decorator.IDecoratorTarget)
-	 */
 	public void createDecorators(IDecoratorTarget decoratorTarget) {
 		Node node = ReviewDecorator.getDecoratorTargetNode(decoratorTarget);
 		if (node != null) {

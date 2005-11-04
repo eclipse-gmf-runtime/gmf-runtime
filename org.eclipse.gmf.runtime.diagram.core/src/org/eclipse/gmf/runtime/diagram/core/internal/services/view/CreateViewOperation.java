@@ -38,7 +38,7 @@ public abstract class CreateViewOperation implements IOperation {
 	
 	/**
 	 * The hint used to find the appropriate preference store from which general
-	 * diagramming preference values for properties of shapes, connectors, and
+	 * diagramming preference values for properties of shapes, connections, and
 	 * diagrams can be retrieved. This hint is mapped to a preference store in
 	 * the {@link DiagramPreferencesRegistry}.
 	 */

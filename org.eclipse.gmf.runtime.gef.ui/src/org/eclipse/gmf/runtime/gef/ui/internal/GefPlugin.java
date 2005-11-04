@@ -16,9 +16,6 @@ import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 
 /**
- * The presentation plugin defines all the artifacts needed for the
- * visualization of modelling diagrams
- * 
  * @author melaasar
  */
 public class GefPlugin
@@ -46,7 +43,7 @@ public class GefPlugin
 	}
 
 	/**
-	 * Creates the presentation plugin instance
+	 * Creates the Gef plugin instance
 	 * 
 	 * @see org.eclipse.core.runtime.Plugin#Plugin()
 	 */

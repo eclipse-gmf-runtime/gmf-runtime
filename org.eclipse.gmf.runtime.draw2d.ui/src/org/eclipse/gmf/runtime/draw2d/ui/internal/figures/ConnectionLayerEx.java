@@ -95,7 +95,7 @@ public class ConnectionLayerEx extends ConnectionLayer {
 	/**
 	 * Method cleanJumpLinks
 	 * This method will reset the "dirtied" flag so that we know to redirty
-	 * all the connectors when the method "dirtyJumpLinks" is called.
+	 * all the connections when the method "dirtyJumpLinks" is called.
 	 */
 	public void cleanJumpLinks() {
 		dirtied = false;

@@ -35,7 +35,7 @@ import org.eclipse.jface.util.Assert;
  * 
  * A request to create new <code>IView</code> (s)
  * 
- * To instantiate this request, clients have to create a <code>ConnectorViewDescriptor</code>
+ * To instantiate this request, clients have to create a <code>ConnectionViewDescriptor</code>
  * or a list of <code>ConnectionViewDescriptor</code> s filling it with view
  * creation parameters. The <code>ConnectionViewDescriptor</code> is a inner
  * class to this request

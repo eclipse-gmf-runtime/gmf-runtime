@@ -26,8 +26,8 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssista
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
- * Provides modeling assistant functionality for geoshapes (i.e. connector
- * handles, connector creation to a new geoshape).
+ * Provides modeling assistant functionality for geoshapes (i.e. connection
+ * handles, connection creation to a new geoshape).
  * 
  * @author cmahoney
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
@@ -35,16 +35,16 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 public class GeoshapeModelingAssistantProvider
 	extends ModelingAssistantProvider {
 
-	/** List containing the connector types. */
+	/** List containing the connection types. */
 	private static List connectionTypes = null;
 
 	/** List containing the geoshape types. */
 	private static List shapeTypes = null;
 
 	/**
-	 * Gets the list of connector types initialized lazily.
+	 * Gets the list of connection types initialized lazily.
 	 * 
-	 * @return the list of connector types
+	 * @return the list of connection types
 	 */
 	private static List getConnectionTypes() {
 		if (connectionTypes == null) {

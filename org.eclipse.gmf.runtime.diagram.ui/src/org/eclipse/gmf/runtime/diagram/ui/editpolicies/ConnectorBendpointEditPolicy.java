@@ -36,7 +36,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
  * @canBeSeenBy %partners
  */
 public class ConnectorBendpointEditPolicy
-	extends org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.ConnectorBendpointEditPolicy { 
+	extends org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.ConnectionBendpointEditPolicy { 
 	
 	/**
 	 * @param lineSegMode

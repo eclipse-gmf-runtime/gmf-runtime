@@ -37,16 +37,10 @@ public class CylinderEditPart extends GeoShapeEditPart {
 		super(shapeView);
 	}
 		
-	/**
-	 * @see com.rational.xtools.presentation.editparts.ShapeNodeEditPart#createNodeFigure()
-	 */
 	protected NodeFigure createNodeFigure() {
 		return new GeoShapeCylinderFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
 	}
 
-	/**
-	 * @see org.eclipse.gef.GraphicalEditPart#getContentPane()
-	 */
 	public IFigure getContentPane() {
 		return ((GeoShapeFigure) getFigure()).getContentPane();
 	}

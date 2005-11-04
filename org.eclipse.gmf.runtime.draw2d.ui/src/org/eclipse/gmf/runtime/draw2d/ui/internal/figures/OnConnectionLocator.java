@@ -20,8 +20,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 
 
 /**
- * This locator places the figure on the connector, a specified 
- * percentage of the connector length away from the source end.
+ * This locator places the figure on the connection, a specified 
+ * percentage of the connection length away from the source end.
  * 
  * @author chmahone
  */
@@ -33,7 +33,7 @@ public class OnConnectionLocator extends ConnectionLocator {
 	/**
 	 * Constructor for <code>OnConnectionLocator</code>.
 	 * @param connection the parent <code>Connection</code> figure
-	 * @param percentageFromSource percentage of the connector length 
+	 * @param percentageFromSource percentage of the connection length 
 	 * away from the source end (range is from 0 to 100)
 	 */
 	public OnConnectionLocator(
@@ -45,7 +45,7 @@ public class OnConnectionLocator extends ConnectionLocator {
 	}
 
 	/**
-	 * Puts the figure a percentage of the connector length away from the source end.
+	 * Puts the figure a percentage of the connection length away from the source end.
 	 * @see org.eclipse.draw2d.ConnectionLocator#getLocation(PointList)
 	 */
 	protected Point getLocation(PointList points) {

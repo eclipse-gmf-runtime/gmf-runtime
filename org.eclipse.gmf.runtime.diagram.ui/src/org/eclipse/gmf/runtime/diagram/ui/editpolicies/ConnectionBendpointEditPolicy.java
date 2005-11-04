@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
  * This EditPolicy defines the behavior of Bendpoints on a Connection.
  */
 public class ConnectionBendpointEditPolicy
-	extends org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.ConnectorBendpointEditPolicy { 
+	extends org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.ConnectionBendpointEditPolicy { 
 	
 	/**
 	 * @param lineSegMode

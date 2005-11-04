@@ -15,7 +15,7 @@ import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeEnumerator;
 
 /**
- * Element types for notation elements defined in the presentation plugin.
+ * Element types for notation elements defined in the Diagram UI plugin.
  * 
  * @author cmahoney, ldamus
  * @canBeSeenBy %level1

@@ -181,7 +181,7 @@ public class LabelHelper {
 	}
 	
 	/**
-	 * Calculates the normalized offset from a point on a <code>Connector</code>'s point list to an point.
+	 * Calculates the normalized offset from a point on a <code>Connection</code>'s point list to an point.
 	 * 
 	 * @param ptLst
 	 * @param ptOnLine

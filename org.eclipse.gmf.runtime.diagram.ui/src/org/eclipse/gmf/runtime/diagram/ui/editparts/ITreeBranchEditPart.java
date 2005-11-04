@@ -14,7 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 /**
  * @author sshaw
  *
- * Interface is merely used to identify Connector EditParts that can contribute
+ * Interface is merely used to identify Connection EditParts that can contribute
  * to a tree structure.
  */
 public interface ITreeBranchEditPart extends org.eclipse.gef.ConnectionEditPart {

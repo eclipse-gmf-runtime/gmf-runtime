@@ -93,8 +93,8 @@ public class SetConnectionBendpointsCommand extends AbstractModelCommand {
 	 * Sets the edgeAdaptor.
 	 * @param edgeAdapter The edgeAdaptor to set
 	 */
-	public void setEdgeAdapter(IAdaptable connectorAdapter) {
-		this.edgeAdapter = connectorAdapter;
+	public void setEdgeAdapter(IAdaptable edgeAdapter) {
+		this.edgeAdapter = edgeAdapter;
 	}
 
 	/**

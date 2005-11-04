@@ -221,8 +221,7 @@ public class DiagramIOUtil {
 		// Check prefs to see how we handle compatibility issues.
 		IPreferenceStore prefs = CommonUIPlugin.getDefault()
 			.getPreferenceStore();
-		// The pref is available on globalPreferancesPage.java which is in
-		// presentation
+		// The pref is available on globalPreferancesPage.java
 		prefs
 			.setDefault(
 				org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.OPEN_UNRECOGNIZED_VERSIONS,
