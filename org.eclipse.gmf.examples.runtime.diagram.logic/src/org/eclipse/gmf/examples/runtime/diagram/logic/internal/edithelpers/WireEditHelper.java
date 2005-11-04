@@ -8,18 +8,14 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-/*
- * Created on May 2, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.ReorientWireCommand;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.OutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
@@ -40,25 +36,55 @@ public class WireEditHelper
 	/**
 	 * Gets a command to determine the container for a new wire element.
 	 */
-	protected ICommand getEditContextCommand(
-			final GetEditContextRequest req) {
+	protected ICommand getEditContextCommand(final GetEditContextRequest req) {
 
 		IEditCommandRequest editRequest = req.getEditCommandRequest();
 
 		if (editRequest instanceof CreateRelationshipRequest) {
 			final CreateRelationshipRequest createRelationshipRequest = (CreateRelationshipRequest) editRequest;
 
-			EObject container = EObjectContainmentUtil
-			.findContainerOfAnySubtype(
-					createRelationshipRequest.getSource(),
-					SemanticPackage.eINSTANCE
-							.getContainerElement());
-			
-			GetEditContextCommand result = new GetEditContextCommand(req);
-			result.setEditContext(container);
-			return result;
+			if (hasValidSourceAndTarget(createRelationshipRequest)) {
+
+				// Get the nearest container element to own the new wire.
+				EObject container = EObjectContainmentUtil
+					.findContainerOfAnySubtype(createRelationshipRequest
+						.getSource(), SemanticPackage.eINSTANCE
+						.getContainerElement());
+
+				GetEditContextCommand result = new GetEditContextCommand(req);
+				result.setEditContext(container);
+				return result;
+			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Checks the source and target elements in
+	 * <code>createRelationshipRequest</code>. Wires can only be created from
+	 * an <code>OutputTerminal</code> to and <code>InputTerminal</code>.
+	 * 
+	 * @param createRelationshipRequest
+	 *            the request
+	 * @return <code>true</code> if the source and target are valid,
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean hasValidSourceAndTarget(
+			CreateRelationshipRequest createRelationshipRequest) {
+
+		// If source is specified, it must be an output terminal.
+		EObject source = createRelationshipRequest.getSource();
+		if (source != null && !(source instanceof OutputTerminal)) {
+			return false;
+		}
+
+		// If target is specified, it must be an input terminal.
+		EObject target = createRelationshipRequest.getTarget();
+		if (target != null && !(target instanceof InputTerminal)) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	/**
