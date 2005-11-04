@@ -103,7 +103,7 @@ public class DiagramGraphicalViewerTests
 					.getElement()).getInputTerminals().get(0)),
 				TerminalEditPart.class).get(0);
 		ConnectionEditPart wireEP = getLogicTestFixture()
-			.createConnectorUsingTool(inputTerminalEP, outputTerminalEP,
+			.createConnectorUsingTool(outputTerminalEP, inputTerminalEP,
 				typeWire);
 
 		String wireID = EObjectUtil.getID(((View) wireEP.getModel())
