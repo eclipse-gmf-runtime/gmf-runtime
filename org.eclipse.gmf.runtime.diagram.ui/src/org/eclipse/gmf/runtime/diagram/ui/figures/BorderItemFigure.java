@@ -20,7 +20,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.jface.util.Assert;
 
@@ -80,9 +80,9 @@ public class BorderItemFigure
 	public static class BorderItemLocator
 		implements Locator {
 
-		private final static int VERTICAL_GAP = MapMode.DPtoLP(8);
+		//private final static int VERTICAL_GAP = MapMode.DPtoLP(8);
 
-		private final static int HORIZONTAL_GAP = MapMode.DPtoLP(8);
+		//private final static int HORIZONTAL_GAP = MapMode.DPtoLP(8);
 
 		private IFigure boundaryFigure = null;
 
@@ -327,11 +327,15 @@ public class BorderItemFigure
 				DrawConstant suggestedSide, int circuitCount) {
 			Point recommendedLocation = locateOnParent(suggestedLocation,
 				suggestedSide);
+			
+			int vertical_gap = MapModeUtil.getMapMode(getParentFigure()).DPtoLP(8);
+			int horizontal_gap = MapModeUtil.getMapMode(getParentFigure()).DPtoLP(8);
+			
 			if (circuitCount < 4 && conflicts(recommendedLocation)) {
 				if (suggestedSide == DrawConstant.WEST) {
 					do {
 						recommendedLocation.y += getBorderItemBounds().height
-							+ VERTICAL_GAP;
+							+ vertical_gap;
 					} while (conflicts(recommendedLocation));
 					if (recommendedLocation.y > getParentBorder()
 						.getBottomLeft().y
@@ -343,7 +347,7 @@ public class BorderItemFigure
 				} else if (suggestedSide == DrawConstant.SOUTH) {
 					do {
 						recommendedLocation.x += getBorderItemBounds().width
-							+ HORIZONTAL_GAP;
+							+ horizontal_gap;
 					} while (conflicts(recommendedLocation));
 					if (recommendedLocation.x > getParentBorder()
 						.getBottomRight().x
@@ -356,7 +360,7 @@ public class BorderItemFigure
 																	// side
 					do {
 						recommendedLocation.y -= getBorderItemBounds().height
-							- VERTICAL_GAP;
+							- vertical_gap;
 					} while (conflicts(recommendedLocation));
 					if (recommendedLocation.y < getParentBorder().getTopRight().y) { // east
 																						// is
@@ -369,7 +373,7 @@ public class BorderItemFigure
 				} else { // NORTH
 					do {
 						recommendedLocation.x -= getBorderItemBounds().width
-							- HORIZONTAL_GAP;
+							- horizontal_gap;
 					} while (conflicts(recommendedLocation));
 					if (recommendedLocation.x < getParentBorder().getTopLeft().x) {
 						return locateOnBorder(recommendedLocation,

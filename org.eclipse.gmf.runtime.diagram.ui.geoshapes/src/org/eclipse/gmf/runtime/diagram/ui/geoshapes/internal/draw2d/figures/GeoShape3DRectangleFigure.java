@@ -35,9 +35,10 @@ public class GeoShape3DRectangleFigure extends GeoShapeFigure
 	 * 
 	 * @param width initial or preferred width of the figure
 	 * @param height initial or preferred height of the figure
+	 * @param spacing <code>int</code> that is the margin between children in logical units
 	 */
-	public GeoShape3DRectangleFigure(int width, int height) {
-		super(width, height);
+	public GeoShape3DRectangleFigure(int width, int height, int spacing) {
+		super(width, height, spacing);
 	}
 				
 	/* (non-Javadoc)

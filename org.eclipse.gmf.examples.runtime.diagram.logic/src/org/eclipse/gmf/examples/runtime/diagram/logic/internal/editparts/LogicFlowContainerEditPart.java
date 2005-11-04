@@ -11,9 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPolicy;
-
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicFlowFigure;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -44,7 +44,7 @@ public class LogicFlowContainerEditPart
 	 * Overwrite createNodeFigure() in super class
 	 */
 	protected NodeFigure createNodeFigure() {
-		NodeFigure newFigure =  FigureFactory.createNewFlowContainer();
+		NodeFigure newFigure = new LogicFlowFigure(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		layout.setStretchMinorAxis(true);
 		newFigure.setLayoutManager(layout);

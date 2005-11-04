@@ -21,13 +21,14 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Orientable;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.ListScrollBar;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OverlayScrollPaneLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-
-import org.eclipse.gmf.runtime.draw2d.ui.figures.ListScrollBar;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OverlayScrollPaneLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 /**
  * A specialized implementation of <code>ResizableCompartmentFigure</code>, this
@@ -48,17 +49,40 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
 	 * Create an instance.  Calls {@link #configureFigure()} to reconfigure
 	 * the scrollpane.
 	 * 
+	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, int minClientSize)} instead.
+	 * Clients must specify the minClientSize in their own logical coordinate system instead of the
+	 * figure assuming a default.  @link{ ResizableCompartmentFigure.MIN_CLIENT_DP } is provided as a default
+	 * value for convenience in device coordinates.
+	 */
+	public ShapeCompartmentFigure() {
+		this(null, MapModeUtil.getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
+	}
+	
+	/**
+	 * Create an instance.  Calls {@link #configureFigure()} to reconfigure
+	 * the scrollpane.
+	 * 
 	 * @param title figure's title.
+	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, int minClientSize)} instead.
+	 * Clients must specify the minClientSize in their own logical coordinate system instead of the
+	 * figure assuming a default.  @link{ ResizableCompartmentFigure.MIN_CLIENT_DP } is provided as a default
+	 * value for convenience in device coordinates.
 	 */
 	public ShapeCompartmentFigure(String title) {
-		super(title);
-		configureFigure();
-
+		this(title, MapModeUtil.getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
 	}
-
-	/** Creates an instance.  */
-	public ShapeCompartmentFigure() {
-		this(null);
+	
+	/**
+	 * Create an instance.  Calls {@link #configureFigure()} to reconfigure
+	 * the scrollpane.
+	 * 
+	 * @param title figure's title.
+	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
+	 * logical coordinates.
+	 */
+	public ShapeCompartmentFigure(String title, int minClientSize) {
+		super(title, minClientSize);
+		configureFigure();
 	}
 
 	/**
@@ -69,9 +93,16 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
 		ScrollPane scrollpane = getScrollPane();
 		scrollpane.setViewport(new FreeformViewport());
 		
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
+			mm.DPtoLP(1), mm.DPtoLP(0));
+		Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
+		
 		scrollpane.setHorizontalScrollBar(
-			new ListScrollBar(Orientable.HORIZONTAL));
-		scrollpane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL));
+			new ListScrollBar(Orientable.HORIZONTAL, insets, size, 
+			mm.DPtoLP(10), mm.DPtoLP(50)));
+		scrollpane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
+			mm.DPtoLP(10), mm.DPtoLP(50)));
 
 		scrollpane.setScrollBarVisibility(ScrollPane.AUTOMATIC);
 		scrollpane.setLayoutManager(new OverlayScrollPaneLayout() );
@@ -79,9 +110,10 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
 		IFigure contents = new FreeformLayer();
 		contents.setLayoutManager(new FreeformLayout());
 		scrollpane.setContents(contents);
-		int MB = MapMode.DPtoLP(5);
+		
+		int MB = MapModeUtil.getMapMode(this).DPtoLP(5);
 		scrollpane.setBorder(new MarginBorder(MB, MB, MB, MB));
-		int SZ = MapMode.DPtoLP(10);
+		int SZ = MapModeUtil.getMapMode(this).DPtoLP(10);
 		scrollpane.setMinimumSize(new Dimension(SZ, SZ));
 	
 		this.setFont(FONT_TITLE);

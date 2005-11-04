@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -50,8 +49,8 @@ public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
 		
 		ResizableCompartmentFigure rcf = (ResizableCompartmentFigure) super.createFigure();
 		FlowLayout layout = new FlowLayout();
-		layout.setMajorSpacing(MapMode.DPtoLP(5));
-		layout.setMinorSpacing(MapMode.DPtoLP(5));
+		layout.setMajorSpacing(getMapMode().DPtoLP(5));
+		layout.setMinorSpacing(getMapMode().DPtoLP(5));
 		rcf.getContentPane().setLayoutManager(layout);
 		return rcf;
 	}

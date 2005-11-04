@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 /**
  * code copied from real logic example in gef
@@ -29,16 +28,16 @@ public class LogicFlowBorder
 	extends org.eclipse.draw2d.LineBorder 
 {
 	
-	protected int grabBarWidth = MapMode.DPtoLP(20);
-	protected Dimension grabBarSize = new Dimension(grabBarWidth, MapMode.DPtoLP(18));
+	private int grabBarWidth;
+	private Dimension grabBarSize;
 
 	public LogicFlowBorder() { 
 		// do nothing 
 	}
 
-	public LogicFlowBorder(int width) {
-		setGrabBarWidth(width);
-		grabBarSize = new Dimension(width, MapMode.DPtoLP(18));
+	public LogicFlowBorder(Dimension size) {
+		setGrabBarWidth(size.width);
+		this.grabBarSize = new Dimension(size);
 	}
 
 	public Insets getInsets(IFigure figure){

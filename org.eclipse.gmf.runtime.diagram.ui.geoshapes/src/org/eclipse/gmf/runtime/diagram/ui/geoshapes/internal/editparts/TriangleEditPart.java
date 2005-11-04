@@ -13,10 +13,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
 import org.eclipse.draw2d.IFigure;
-
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeTriangleFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -28,8 +26,6 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class TriangleEditPart extends GeoShapeEditPart {
 
-	private static final int FIGURE_BASE = MapMode.DPtoLP(50);
-	
 	/**
 	 * Constructor - Create an EditPart for a given model object (View)
 	 * 
@@ -44,7 +40,7 @@ public class TriangleEditPart extends GeoShapeEditPart {
 	 * @see com.rational.xtools.presentation.editparts.ShapeNodeEditPart#createNodeFigure()
 	 */
 	protected NodeFigure createNodeFigure() {
-		return new GeoShapeTriangleFigure( FIGURE_BASE );
+		return new GeoShapeTriangleFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
 	}
 
 	/**

@@ -27,9 +27,10 @@ public class GeoShapeCylinderFigure extends GeoShapeFigure {
 	 *
 	 * @param width initial width of figure
 	 * @param height initial height of the figure
+	 * @param spacing <code>int</code> that is the margin between children in logical units
 	 */
-	public GeoShapeCylinderFigure(int width, int height) {
-		super(width, height);
+	public GeoShapeCylinderFigure(int width, int height, int spacing) {
+		super(width, height, spacing);
 	}
 			
 	/* (non-Javadoc)

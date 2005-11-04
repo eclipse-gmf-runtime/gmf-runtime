@@ -20,8 +20,6 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.PageBreakNonResizableEditPolicy;
@@ -30,6 +28,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * Edit part which controls the page breaks figure. 
@@ -152,7 +152,7 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 	public Point getPageSize() {
 		IPreferenceStore s = getPreferenceStoreForPageSetup();
 		
-		return PageInfoHelper.getPageSize(s);
+		return PageInfoHelper.getPageSize(s, MapModeUtil.getMapMode(getPageBreaksFigure()));
 	}
 
 	/**

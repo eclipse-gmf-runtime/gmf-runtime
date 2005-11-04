@@ -14,13 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.internal.util;
 import java.text.DateFormat;
 import java.util.GregorianCalendar;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * Helper for header and footers. 
@@ -31,19 +29,19 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 public class HeaderAndFooterHelper {
 	
 	/**
-	 * Header margin from top of page in LP units
+	 * Header margin from top of page in device units
 	 */
-	public static final int TOP_MARGIN = MapMode.DPtoLP(5);
+	public static final int TOP_MARGIN_DP = 5;
 
 	/**
-	 * Header and footer Margin from left of page in LP units
+	 * Header and footer Margin from left of page in device units
 	 */
-	public static final int LEFT_MARGIN = MapMode.DPtoLP(5);
+	public static final int LEFT_MARGIN_DP = 5;
 
 	/**
-	 * Footer Margin from bottom of page in LP units
+	 * Footer Margin from bottom of page in device units
 	 */
-	public static final int BOTTOM_MARGIN = MapMode.DPtoLP(20);
+	public static final int BOTTOM_MARGIN_DP = 20;
 	
 	/**
 	 * Separator

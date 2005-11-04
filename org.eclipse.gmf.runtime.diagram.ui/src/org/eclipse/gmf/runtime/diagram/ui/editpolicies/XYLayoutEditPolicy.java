@@ -39,7 +39,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.ChangeGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
@@ -407,6 +408,8 @@ public class XYLayoutEditPolicy
 		RulerProvider provider = ((RulerProvider)getHost().getViewer().getProperty(
 				horizontal ? RulerProvider.PROPERTY_VERTICAL_RULER 
 				: RulerProvider.PROPERTY_HORIZONTAL_RULER));
-		return (Guide)provider.getGuideAt(MapMode.LPtoDP(pos));
+		IMapMode mm = MapModeUtil.getMapMode(((GraphicalEditPart)getHost()).getFigure());
+		
+		return (Guide)provider.getGuideAt(mm.LPtoDP(pos));
 	}
 }

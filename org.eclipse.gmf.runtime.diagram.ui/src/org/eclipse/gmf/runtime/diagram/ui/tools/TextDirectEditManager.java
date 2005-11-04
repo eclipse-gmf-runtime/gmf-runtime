@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -149,7 +149,7 @@ public class TextDirectEditManager
 	protected Font getScaledFont(WrapLabel label) {
 		Font scaledFont = label.getFont();
 		FontData data = scaledFont.getFontData()[0];
-		Dimension fontSize = new Dimension(0, MapMode.DPtoLP(data.getHeight()));
+		Dimension fontSize = new Dimension(0, MapModeUtil.getMapMode(label).DPtoLP(data.getHeight()));
 		label.translateToAbsolute(fontSize);
 		
 		if( Math.abs( data.getHeight() - fontSize.height ) < 2 )

@@ -27,8 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -36,6 +34,7 @@ import org.eclipse.gmf.runtime.common.ui.resources.FileChangeManager;
 import org.eclipse.gmf.runtime.common.ui.resources.IBookmark;
 import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -43,14 +42,15 @@ import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvide
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 
 /**
@@ -380,9 +380,10 @@ public class BookmarkDecorator
 
 		// add the bookmark decoration
 		if (editPart instanceof ShapeEditPart) {
+			IMapMode mm = MapModeUtil.getMapMode(((ShapeEditPart)editPart).getFigure());
 			setDecoration(getDecoratorTarget().addShapeDecoration(
 				DiagramProvidersResourceManager.getInstance().getImage(BOOKMARK),
-				IDecoratorTarget.Direction.NORTH_EAST, MapMode.DPtoLP(-4), true));
+				IDecoratorTarget.Direction.NORTH_EAST, mm.DPtoLP(-4), true));
 		} else if (view instanceof Edge) {
 			setDecoration(getDecoratorTarget().addConnectionDecoration(
 				DiagramProvidersResourceManager.getInstance().getImage(

@@ -19,8 +19,7 @@ import java.util.Map;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * A utility class used to find the location to place an <i>undefined</i>
@@ -150,6 +149,6 @@ public class LayoutHelper {
 	 */
 	public Point updateClobberedPosition(
 		IFigure clobbered, IFigure newlyAddedChild) {
-		return clobbered.getBounds().getRight().getCopy().translate(MapMode.DPtoLP(30), 0);
+		return clobbered.getBounds().getRight().getCopy().translate(MapModeUtil.getMapMode(newlyAddedChild).DPtoLP(30), 0);
 	}
 }

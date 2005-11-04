@@ -17,17 +17,16 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 
 
 /**
@@ -46,9 +45,6 @@ public class ScalableImageFigure extends ImageFigure {
     /** The cached SVGImage */
     private RenderedImage renderedImage = null;
     
-    /** Default meta image size */
-    private final int META_EXTENT = MapMode.DPtoLP(32);
-
     private boolean useDefaultImageSize = false;
     
     private boolean maintainAspectRatio = true;
@@ -165,7 +161,8 @@ public class ScalableImageFigure extends ImageFigure {
 			if (getImage() == null)
 				return preferredSize;
 			
-			preferredSize =  new Dimension(META_EXTENT,META_EXTENT);
+			int extent = MapModeUtil.getMapMode(this).DPtoLP(32);
+			preferredSize =  new Dimension(extent,extent);
 			if (useDefaultImageSize) {
 				if (getRenderedImage() != null) {
 					RenderedImage rndImage = getRenderedImage(new Dimension(0, 0));
@@ -174,8 +171,8 @@ public class ScalableImageFigure extends ImageFigure {
 						swtImage = rndImage.getSWTImage();
 					if (swtImage != null) {
 						org.eclipse.swt.graphics.Rectangle imgRect = swtImage.getBounds();
-						preferredSize.width = MapMode.DPtoLP(imgRect.width);
-						preferredSize.height = MapMode.DPtoLP(imgRect.height);
+						preferredSize.width = MapModeUtil.getMapMode(this).DPtoLP(imgRect.width);
+						preferredSize.height = MapModeUtil.getMapMode(this).DPtoLP(imgRect.height);
 					}
 				}
 			}
@@ -216,7 +213,6 @@ public class ScalableImageFigure extends ImageFigure {
 				useOriginalColors() ? null : translateSWTColorToAWTColor(getBackgroundColor()),
 				useOriginalColors() ? null : translateSWTColorToAWTColor(getForegroundColor()),
 				isMaintainAspectRatio(), // maintain aspect ratio
-				// TODO get the antialias property from the preferences.
 				isAntiAlias()); // antialias
 
 		RenderedImage newRenderedImage = getRenderedImage().getNewRenderedImage(newRenderInfo);
@@ -256,7 +252,7 @@ public class ScalableImageFigure extends ImageFigure {
                        x, y, getBounds().width, getBounds().height);
 		} else { 
 		   // translate to device coordinates for rendering
-		   area = (Rectangle)MapMode.translateToDP(area);
+		   area = (Rectangle)MapModeUtil.getMapMode(this).LPtoDP(area);
            RenderedImage rndImage = getRenderedImage(new Dimension(area.width, area.height));
            if (rndImage != null)
            		graphics.drawImage(renderedImage.getSWTImage(), x, y); 

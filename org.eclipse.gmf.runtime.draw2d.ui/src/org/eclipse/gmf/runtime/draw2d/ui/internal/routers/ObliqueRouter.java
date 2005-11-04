@@ -28,15 +28,14 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.jface.util.Assert;
 
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
@@ -553,7 +552,7 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
 		if (collectObstructs.size() > 0) {
 			Dimension buffer = new Dimension(ROUTER_OBSTRUCTION_BUFFER + 1, 0);
 			if (!isFeedback(conn))
-				buffer = (Dimension)MapMode.translateToLP(buffer);
+				buffer = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(buffer);
 			final int inflate = buffer.width;
 			
 			List collapsedRects = collapseRects(collectObstructs, inflate);
@@ -704,7 +703,7 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
 
 		Dimension selfrelsizeincr = new Dimension(SELFRELSIZEINCR, 0);
 		if (!isFeedback(conn))
-			selfrelsizeincr = (Dimension)MapMode.translateToLP(selfrelsizeincr);
+			selfrelsizeincr = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeincr);
 		
 		IFigure owner = conn.getSourceAnchor().getOwner();
 		Rectangle bBox = owner.getClientArea();
@@ -793,7 +792,7 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
 
 		Dimension selfrelsizeinit = new Dimension(SELFRELSIZEINIT, 0);
 		if (!isFeedback(conn))
-			selfrelsizeinit = (Dimension)MapMode.translateToLP(selfrelsizeinit);
+			selfrelsizeinit = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeinit);
 		
 		xNew = x + (nXDir * (selfrelsizeinit.width + nOffset));
 		Point p2 = new Point(xNew, y);
@@ -840,7 +839,7 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
 
 		Dimension selfrelsizeinit = new Dimension(SELFRELSIZEINIT, 0);
 		if (!isFeedback(conn))
-			selfrelsizeinit = (Dimension)MapMode.translateToLP(selfrelsizeinit);
+			selfrelsizeinit = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeinit);
 		
 		yNew = y + (nDir * (selfrelsizeinit.width + nOffset));
 		Point p2 = new Point(x, yNew);
@@ -883,7 +882,7 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
 		
 		Dimension selfrelsizeinit = new Dimension(SELFRELSIZEINIT, 0);
 		if (!isFeedback(conn))
-			selfrelsizeinit = (Dimension)MapMode.translateToLP(selfrelsizeinit);
+			selfrelsizeinit = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeinit);
 		
 		xNew = x + (nDir * (selfrelsizeinit.width + nOffset));
 		Point p2 = new Point(xNew, y);

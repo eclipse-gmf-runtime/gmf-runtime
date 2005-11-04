@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -39,16 +38,21 @@ public final class PasteCommand extends ClipboardCommand {
      * The clipboard data
      */
     private final ICustomData[] data; 
+    
+    private int offset = 0;
 
     /**
      * Constructor for PasteCommand.
      * @param viewContext
      * @param data
+     * @param offset
+	 * 			the <code>int</code> that is the offset from the original views that
+	 * 			the new views will be placed in logical coordinates
      */
     public PasteCommand(
         View viewContext,
-        ICustomData[] data) {
-        this(null, viewContext, data);
+        ICustomData[] data, int offset) {
+        this(null, viewContext, data, offset);
     }
 
     /**
@@ -56,12 +60,14 @@ public final class PasteCommand extends ClipboardCommand {
      * @param label
      * @param viewContext
      * @param data
-     * 
+     * @param offset
+	 * 			the <code>int</code> that is the offset from the original views that
+	 * 			the new views will be placed in logical coordinates
      */
     public PasteCommand(
         String label,
         View viewContext,
-        ICustomData[] data) {
+        ICustomData[] data, int offset) {
         super(label, viewContext);
 
         Assert.isNotNull(data);
@@ -86,9 +92,9 @@ public final class PasteCommand extends ClipboardCommand {
                     if (view instanceof Node &&
                     	((Node)view).getLayoutConstraint() instanceof Location/*view instanceof IShapeView*/) {
                     	Integer x = (Integer) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X());
-                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(x.intValue() + MapMode.DPtoLP(10)));
+                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(x.intValue() + offset));
                         Integer y = (Integer) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y());
-                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(y.intValue() + MapMode.DPtoLP(10)));
+                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(y.intValue() + offset));
                     }
                 }
 	        }

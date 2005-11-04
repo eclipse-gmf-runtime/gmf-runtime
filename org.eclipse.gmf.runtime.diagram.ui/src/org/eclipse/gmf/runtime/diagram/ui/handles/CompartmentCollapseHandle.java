@@ -28,11 +28,9 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.CollapseFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.CompartmentCollapseTracker;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -59,10 +57,7 @@ public class CompartmentCollapseHandle
 	}
 
 	/** handle figure dimension */
-	public static Dimension SIZE =
-		new Dimension(
-			MapMode.LPtoDP(ResizableCompartmentFigure.MIN_CLIENT_SIZE),
-			MapMode.LPtoDP(ResizableCompartmentFigure.MIN_CLIENT_SIZE));
+	public static Dimension SIZE = new Dimension(11, 11);
 
 	/** the handle figure */
 	protected CollapseFigure collapseFigure = null;
@@ -75,6 +70,7 @@ public class CompartmentCollapseHandle
 		setOwner(owner);
 		setLocator(new CollapseHandleLocator());
 		setCursor(Cursors.ARROW);
+		
 		setSize(SIZE);
 		setLayoutManager(new StackLayout());
 		add(collapseFigure = new CollapseFigure());

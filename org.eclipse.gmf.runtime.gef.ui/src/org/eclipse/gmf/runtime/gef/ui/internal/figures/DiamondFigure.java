@@ -28,17 +28,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  */
 public class DiamondFigure extends NodeFigure implements IPolygonAnchorableFigure{
 
-	private static final int PREF_SIZE = 1058;
-
-	/** 
-	 * Create an instance.  This constructor sets the default preferred size
-	 * to [1058,1058] in HiMetric coordinates. 
-	 * Same as calling <code>DiamondFigure(new Dimension(1058, 1058))</code>.
-	 */
-	public DiamondFigure() { 
-		this(new Dimension(PREF_SIZE, PREF_SIZE));
-	}
-
 	/** 
 	 * Create an instance.
 	 * @param dim the preferred size.

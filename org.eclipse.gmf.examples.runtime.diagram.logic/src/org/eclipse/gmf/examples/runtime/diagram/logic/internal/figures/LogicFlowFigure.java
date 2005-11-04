@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -30,9 +29,12 @@ public class LogicFlowFigure
 	extends NodeFigure
 	implements HandleBounds
 {
-	public LogicFlowFigure() {
+	private Dimension prefSize;
+	
+	public LogicFlowFigure(Dimension size) {
 		setBorder(new LogicFlowBorder());
 		setOpaque(true);
+		prefSize = size;
 	}
  
 	/**
@@ -43,9 +45,8 @@ public class LogicFlowFigure
 	}
 
 	public Dimension getPreferredSize(int w, int h) {
-		Dimension newPrefSize = super.getPreferredSize(MapMode.DPtoLP(w), MapMode.DPtoLP(h));
-		Dimension defaultSize = new Dimension(MapMode.DPtoLP(100),MapMode.DPtoLP(100));
-		newPrefSize.union(defaultSize);
+		Dimension newPrefSize = super.getPreferredSize(w, h);
+		newPrefSize.union(prefSize);
 		return newPrefSize;
 	}
 

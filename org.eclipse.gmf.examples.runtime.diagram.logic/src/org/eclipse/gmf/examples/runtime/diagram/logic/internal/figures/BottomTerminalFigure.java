@@ -16,9 +16,9 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * Node figure for Connection Points. Connection Points are small square items that can sit on the
@@ -29,29 +29,27 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
  */
 public class BottomTerminalFigure extends TerminalFigure {
 	
-	protected static PointList bottomConnector = new PointList();
+	private static PointList points = new PointList();
 	
 	static {
-		bottomConnector.addPoint(MapMode.DPtoLP(-3), MapMode.DPtoLP(0));
-		bottomConnector.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(0));
-		bottomConnector.addPoint(MapMode.DPtoLP(3), MapMode.DPtoLP(-2));
-		bottomConnector.addPoint(MapMode.DPtoLP(3), MapMode.DPtoLP(-7));
-		bottomConnector.addPoint(MapMode.DPtoLP(-2), MapMode.DPtoLP(-7));
-		bottomConnector.addPoint(MapMode.DPtoLP(-2), MapMode.DPtoLP(-2));
+		points.addPoint(-3, 0);
+		points.addPoint(2, 0);
+		points.addPoint(3, -2);
+		points.addPoint(3, -7);
+		points.addPoint(-2, -7);
+		points.addPoint(-2, -2);
 	}
 	
 	/**
 	 * Constructor
 	 * @param edge
 	 */
-	public BottomTerminalFigure(DrawConstant side, String ID) {
-		super(side);
-		Dimension preferredSize = new Dimension(MapMode.DPtoLP(6), MapMode.DPtoLP(7));
+	public BottomTerminalFigure(DrawConstant side, String ID, Dimension prefSize) {
+		super(side, prefSize);
 		setOpaque(true);
-		setSize(preferredSize);
+		setSize(prefSize);
 		
 		fixedAnchor = new FixedConnectionAnchor(this);
-		//c.offsetH = MapMode.DPtoLP(1);
 		fixedAnchor.topDown = false;
 		getConnectionAnchors().put(ID, fixedAnchor);
 	}
@@ -63,13 +61,16 @@ public class BottomTerminalFigure extends TerminalFigure {
 	 */
 	protected void paintFigure(Graphics graphics) {			
 		Rectangle r = getBounds().getCopy();
-		r.translate(0, MapMode.DPtoLP(4));
+		
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		r.translate(0, mm.DPtoLP(4));
 		
 		graphics.translate(r.getLocation());
 //		 Draw the gaps for the connectors
 		graphics.setForegroundColor(ColorConstants.white);
 		
-		PointList copy = bottomConnector.getCopy();
+		PointList copy = points.getCopy();
+		mm.DPtoLP(copy);
 		copy.translate(copy.getBounds().width / 2, copy.getBounds().height / 2);
 		graphics.fillPolygon(copy);
 		graphics.drawPolygon(copy);	

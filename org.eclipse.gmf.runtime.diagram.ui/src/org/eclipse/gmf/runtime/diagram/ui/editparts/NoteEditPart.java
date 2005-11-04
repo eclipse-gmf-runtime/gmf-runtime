@@ -11,9 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.OpenDiagramEditPolicy;
@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NonSemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -47,7 +48,9 @@ public class NoteEditPart extends ShapeNodeEditPart {
 	 * Creates a note figure.
 	 */
 	protected NodeFigure createNodeFigure() {
-		NoteFigure noteFigure = new NoteFigure();
+		IMapMode mm = getMapMode();
+		Insets insets = new Insets(mm.DPtoLP(5), mm.DPtoLP(5), mm.DPtoLP(5), mm.DPtoLP(14));
+		NoteFigure noteFigure = new NoteFigure(mm.DPtoLP(100), mm.DPtoLP(56), insets);
 		Object model = getModel();
 		if (model!=null && model instanceof View){
 			View notationView = (View)model;

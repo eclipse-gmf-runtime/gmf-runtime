@@ -20,9 +20,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 
 /**
@@ -44,10 +43,6 @@ public class PageBreaksFigure extends Figure {
     private int rows = 1;
     private int cols = 1;
 
-    private int BORDER_LINE_WIDTH = MapMode.DPtoLP(7);
-    private int LINE_WIDTH = MapMode.DPtoLP(1);
-    private int BOTTOM_PAGE_MARGIN = MapMode.DPtoLP(60);
-
     // List that contains the bounds of the filled 
     // rectangles which comprise the figure.    
     private List recList;
@@ -65,6 +60,18 @@ public class PageBreaksFigure extends Figure {
 	    }
     }
 
+    private int getBorderLineWidth() {
+    		return MapModeUtil.getMapMode(this).DPtoLP(7);
+    }
+    
+    private int getLineWidth() {
+    		return MapModeUtil.getMapMode(this).DPtoLP(1);
+    }
+    
+    private int getBottomPageMargin() {
+    		return MapModeUtil.getMapMode(this).DPtoLP(60);
+    }
+    
     public void setPageCount(int rows, int cols) {
         this.rows = Math.max(1, rows);
         this.cols = Math.max(1, cols);
@@ -112,26 +119,27 @@ public class PageBreaksFigure extends Figure {
         g.setBackgroundColor(ColorConstants.blue);
 
         // Draw the border
-        Rectangle top = new Rectangle(r.x, r.y, r.width, BORDER_LINE_WIDTH);
+        final int borderLineWidth = getBorderLineWidth();
+        Rectangle top = new Rectangle(r.x, r.y, r.width, borderLineWidth);
         recList.add(top);
 
         Rectangle right =
             new Rectangle(
-                r.x + r.width - BORDER_LINE_WIDTH,
+                r.x + r.width - borderLineWidth,
                 r.y,
-                BORDER_LINE_WIDTH + 1,
+                borderLineWidth + 1,
                 r.height);
         recList.add(right);
 
-        Rectangle left = new Rectangle(r.x, r.y, BORDER_LINE_WIDTH, r.height);
+        Rectangle left = new Rectangle(r.x, r.y, borderLineWidth, r.height);
         recList.add(left);
 
         Rectangle bottom =
             new Rectangle(
                 r.x,
-                r.y + r.height - BORDER_LINE_WIDTH,
+                r.y + r.height - borderLineWidth,
                 r.width,
-                BORDER_LINE_WIDTH + 1 );
+                borderLineWidth + 1 );
         recList.add(bottom);
 
         for (int i = 0; i < recList.size(); i++) {
@@ -139,7 +147,7 @@ public class PageBreaksFigure extends Figure {
         }
 
         // Draw the internal page division lines
-        g.setLineWidth(LINE_WIDTH);
+        g.setLineWidth(getLineWidth());
         Point location = getLocation();
 
         int colSize = (int) Math.floor(r.width / cols);
@@ -149,7 +157,7 @@ public class PageBreaksFigure extends Figure {
                 new Rectangle(
                     location.x + colsOffset,
                     location.y,
-                    LINE_WIDTH,
+                    getLineWidth(),
                     r.height);
             recList.add(rec);
             g.fillRectangle(rec);
@@ -163,7 +171,7 @@ public class PageBreaksFigure extends Figure {
                     location.x,
                     location.y + rowOffset,
                     r.width,
-                    LINE_WIDTH);
+                    getLineWidth());
             recList.add(rec);
             g.fillRectangle(rec);
         }
@@ -181,7 +189,7 @@ public class PageBreaksFigure extends Figure {
                 g.drawString(
                     pageNumber,
                     topCenter - size.width,
-                    rowOffset - (BOTTOM_PAGE_MARGIN + size.height));
+                    rowOffset - (getBottomPageMargin() + size.height));
             }
         }
     }

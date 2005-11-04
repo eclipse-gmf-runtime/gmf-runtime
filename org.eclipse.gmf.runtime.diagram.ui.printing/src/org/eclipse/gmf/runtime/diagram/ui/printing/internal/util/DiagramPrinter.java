@@ -291,7 +291,7 @@ public class DiagramPrinter
 
 		//calculate the number of page rows and columns
 		
-		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper.getPageSize(fPreferences, false);
+		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper.getPageSize(fPreferences, false, getMapMode());
 		
 		float fNumRows = (figureBounds.height * userScale)
 			/ pageSize.y;
@@ -301,7 +301,7 @@ public class DiagramPrinter
 			/ pageSize.x;
 		int numCols = (int) Math.ceil(fNumCols);
 		
-		PageMargins margins = PageInfoHelper.getPageMargins(fPreferences);
+		PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
 		adjustMargins(margins, userScale, getPrinterOffset());
 
 		GC gc_ = new GC(Display.getDefault());
@@ -355,18 +355,18 @@ public class DiagramPrinter
 			dgrmEP);
 
 		this.graphics.drawText(headerOrFooter,
-			HeaderAndFooterHelper.LEFT_MARGIN
+			getMapMode().DPtoLP(HeaderAndFooterHelper.LEFT_MARGIN_DP)
 				+ (width - getMapMode().DPtoLP(gc_.textExtent(headerOrFooter).x))
-				/ 2, HeaderAndFooterHelper.TOP_MARGIN);
+				/ 2, getMapMode().DPtoLP(HeaderAndFooterHelper.TOP_MARGIN_DP));
 
 		headerOrFooter = HeaderAndFooterHelper.makeHeaderOrFooterString(
 			WorkspaceViewerProperties.FOOTER_PREFIX, rowIndex, colIndex,
 			dgrmEP);
 
 		this.graphics.drawText(headerOrFooter,
-			HeaderAndFooterHelper.LEFT_MARGIN
+			getMapMode().DPtoLP(HeaderAndFooterHelper.LEFT_MARGIN_DP)
 				+ (width - getMapMode().DPtoLP(gc_.textExtent(headerOrFooter).x))
-				/ 2, height - HeaderAndFooterHelper.BOTTOM_MARGIN);
+				/ 2, height - getMapMode().DPtoLP(HeaderAndFooterHelper.BOTTOM_MARGIN_DP));
 
 		this.graphics.popState(); //for drawing the text
 
@@ -391,7 +391,7 @@ public class DiagramPrinter
 			PageMargins margins, Font font, int rowIndex, int colIndex) {
 
 		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-			.getPageSize(fPreferences, false);
+			.getPageSize(fPreferences, false, getMapMode());
 		int width = pageSize.x, height = pageSize.y;
 
 		int translateX = -(width * (colIndex - 1));
@@ -442,7 +442,7 @@ public class DiagramPrinter
 			loadedPreferences);
 
 		org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
-			.getPageSize(fPreferences);
+			.getPageSize(fPreferences, getMapMode());
 
 		Rectangle translate = new Rectangle(Math.min(0, figureBounds.x), Math
 			.min(0, figureBounds.y),
@@ -451,7 +451,7 @@ public class DiagramPrinter
 
 		// do not include margins
 		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-			.getPageSize(fPreferences, true);
+			.getPageSize(fPreferences, true, getMapMode());
 
 		// there's usually a difference between the total page area and the
 		// actual printable area
@@ -475,7 +475,7 @@ public class DiagramPrinter
 
 		this.graphics.scale(this.userScale);
 
-		PageMargins margins = PageInfoHelper.getPageMargins(fPreferences);
+		PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
 		adjustMargins(margins, userScale, getPrinterOffset());
 
 		GC gc_ = new GC(Display.getDefault());

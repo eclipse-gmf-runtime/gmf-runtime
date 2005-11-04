@@ -70,6 +70,8 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
@@ -1206,6 +1208,18 @@ public abstract class GraphicalEditPart
 		else if (NotationPackage.eINSTANCE.getView_Element().equals(event.getFeature())) {
 			handleMajorSemanticChange();
 		} 
+	}
+	
+	/**
+	 * @return <code>IMapMode</code> that allows for the coordinate mapping from device to
+	 * logical units. 
+	 */
+	final protected IMapMode getMapMode() {
+		EditPart parent = getParent();
+		if (parent instanceof org.eclipse.gef.GraphicalEditPart)
+			return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)parent).getFigure());
+		
+		return MapModeUtil.getMapMode();
 	}
 
 }

@@ -14,13 +14,12 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPolicy;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.ContainerHighlightEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.CircuitFigure;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
@@ -28,7 +27,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 /**
@@ -59,7 +58,7 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 	 * @return  Figure representing the circuit.
 	 */
 	protected NodeFigure createMainFigure() {
-		NodeFigure nf =  FigureFactory.createNewCircuit();
+		NodeFigure nf = new CircuitFigure(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100)));
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		nf.setLayoutManager(layout);
 		return nf;
@@ -71,15 +70,16 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 	public Map createBoundsMap() {
 		Map posMap = new HashMap();
 		
-		posMap.put( "A", new Point(MapMode.DPtoLP(11), MapMode.DPtoLP(-1))); //$NON-NLS-1$
-		posMap.put( "B", new Point(MapMode.DPtoLP(36), MapMode.DPtoLP(-1))); //$NON-NLS-1$
-		posMap.put( "C", new Point(MapMode.DPtoLP(61), MapMode.DPtoLP(-1))); //$NON-NLS-1$
-		posMap.put( "D", new Point(MapMode.DPtoLP(86), MapMode.DPtoLP(-1))); //$NON-NLS-1$
+		IMapMode mm = getMapMode();
+		posMap.put( "A", new Point(mm.DPtoLP(11), mm.DPtoLP(-1))); //$NON-NLS-1$
+		posMap.put( "B", new Point(mm.DPtoLP(36), mm.DPtoLP(-1))); //$NON-NLS-1$
+		posMap.put( "C", new Point(mm.DPtoLP(61), mm.DPtoLP(-1))); //$NON-NLS-1$
+		posMap.put( "D", new Point(mm.DPtoLP(86), mm.DPtoLP(-1))); //$NON-NLS-1$
 		
-		posMap.put( "1", new Point(MapMode.DPtoLP(11), MapMode.DPtoLP(100))); //$NON-NLS-1$
-		posMap.put( "2", new Point(MapMode.DPtoLP(36), MapMode.DPtoLP(100))); //$NON-NLS-1$
-		posMap.put( "3", new Point(MapMode.DPtoLP(61), MapMode.DPtoLP(100))); //$NON-NLS-1$
-		posMap.put( "4", new Point(MapMode.DPtoLP(86), MapMode.DPtoLP(100))); //$NON-NLS-1$
+		posMap.put( "1", new Point(mm.DPtoLP(11), mm.DPtoLP(100))); //$NON-NLS-1$
+		posMap.put( "2", new Point(mm.DPtoLP(36), mm.DPtoLP(100))); //$NON-NLS-1$
+		posMap.put( "3", new Point(mm.DPtoLP(61), mm.DPtoLP(100))); //$NON-NLS-1$
+		posMap.put( "4", new Point(mm.DPtoLP(86), mm.DPtoLP(100))); //$NON-NLS-1$
 		
 		return posMap;
 	}
@@ -90,12 +90,14 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
 		BorderItemFigure theFigure = null;
 		if (terminal instanceof InputTerminal) {
-			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId());
+			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId(), 
+				new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
-			theFigure = new BottomTerminalFigure(DrawConstant.SOUTH, terminal.getId());
+			theFigure = new BottomTerminalFigure(DrawConstant.SOUTH, terminal.getId(),
+				new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		}
 		
-		theFigure.setLocator(new TerminalFigure.FixedGateLocation(theFigure, getFigure(), CircuitFigure.SIZE));
+		theFigure.setLocator(new TerminalFigure.FixedGateLocation(theFigure, getFigure(), new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100))));
 		return theFigure;
 	}
 }

@@ -17,8 +17,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -35,8 +36,6 @@ public class LEDFigure
 {
 	private Color fontColor;
 	
-	public static final Dimension SIZE = new Dimension(MapMode.DPtoLP(61), MapMode.DPtoLP(44)); 
-
 	/**
 	 * Color of the shadow around the LEDFigure's display
 	 */
@@ -47,44 +46,47 @@ public class LEDFigure
 	 */
 	public static final Color DISPLAY_TEXT = new Color(null, 255, 199, 16);
 
-	protected static Rectangle displayRectangle = new Rectangle(MapMode.DPtoLP(15), MapMode.DPtoLP(11), MapMode.DPtoLP(31), MapMode.DPtoLP(25));
-	protected static Rectangle displayShadow = new Rectangle(MapMode.DPtoLP(14), MapMode.DPtoLP(10), MapMode.DPtoLP(32), MapMode.DPtoLP(26));
-	protected static Rectangle displayHighlight = new Rectangle(MapMode.DPtoLP(15), MapMode.DPtoLP(11), MapMode.DPtoLP(32), MapMode.DPtoLP(26));
-	protected static Point valuePoint = new Point(MapMode.DPtoLP(16), MapMode.DPtoLP(10));
-
-	protected static final int Y1 = MapMode.DPtoLP(0);
-	protected static final int Y2 = MapMode.DPtoLP(44);
-
 	protected String value;
 	
+	private Dimension prefSize;
 	/**
 	 * Creates a new LEDFigure
 	 */
-	public LEDFigure() {
-		getBounds().width = SIZE.width;
-		getBounds().height = SIZE.height;
+	public LEDFigure(Dimension prefSize) {
+		getBounds().width = prefSize.width;
+		getBounds().height = prefSize.height;
+		prefSize = new Dimension(prefSize);
 	}
 	
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return SIZE;
+		return new Dimension(prefSize);
 	}
 
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
 	 */
 	protected void paintFigure(Graphics g) {
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		Rectangle displayRectangle = new Rectangle(mm.DPtoLP(15), mm.DPtoLP(11), mm.DPtoLP(31), mm.DPtoLP(25));
+		Rectangle displayShadow = new Rectangle(mm.DPtoLP(14), mm.DPtoLP(10), mm.DPtoLP(32), mm.DPtoLP(26));
+		Rectangle displayHighlight = new Rectangle(mm.DPtoLP(15), mm.DPtoLP(11), mm.DPtoLP(32), mm.DPtoLP(26));
+		Point valuePoint = new Point(mm.DPtoLP(16), mm.DPtoLP(10));
+
+		int Y1 = mm.DPtoLP(0);
+		int Y2 = mm.DPtoLP(44);
+		
 		Rectangle r = getBounds().getCopy();
 		
 		g.translate(r.getLocation());
-		g.fillRectangle(MapMode.DPtoLP(0), MapMode.DPtoLP(0), r.width, r.height /*- MapMode.DPtoLP(4)*/);	
+		g.fillRectangle(mm.DPtoLP(0), mm.DPtoLP(0), r.width, r.height /*- MapMode.DPtoLP(4)*/);	
 		int right = r.width - 1;
-		g.drawLine(MapMode.DPtoLP(0), Y1, right, Y1);
-		g.drawLine(MapMode.DPtoLP(0), Y1, MapMode.DPtoLP(0), Y2);
+		g.drawLine(mm.DPtoLP(0), Y1, right, Y1);
+		g.drawLine(mm.DPtoLP(0), Y1, mm.DPtoLP(0), Y2);
 	
-		g.drawLine(MapMode.DPtoLP(0), Y2, right, Y2);
+		g.drawLine(mm.DPtoLP(0), Y2, right, Y2);
 		g.drawLine(right, Y1, right, Y2);
 
 		// Draw the display

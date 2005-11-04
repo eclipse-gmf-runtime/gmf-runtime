@@ -34,7 +34,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -74,12 +74,13 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		View view = (View)getModel();
 		EObject semanticElement = view.getElement();
 		EClass eClazz = semanticElement.eClass();
+		Dimension gateSize = new Dimension(getMapMode().DPtoLP(15), getMapMode().DPtoLP(17));
 		if (eClazz == SemanticPackage.eINSTANCE.getOrGate())	
-			newFigure = new OrGateFigure();
+			newFigure = new OrGateFigure(gateSize);
 		else if (eClazz == SemanticPackage.eINSTANCE.getAndGate())
-			newFigure = new AndGateFigure();
+			newFigure = new AndGateFigure(gateSize);
 		else if (eClazz == SemanticPackage.eINSTANCE.getXORGate())
-			newFigure = new XOrGateFigure();
+			newFigure = new XOrGateFigure(gateSize);
 		else
 			newFigure = null;
 		return newFigure;
@@ -112,18 +113,20 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		EObject semanticElement = view.getElement();
 		EClass eClazz = semanticElement.eClass();
 		
+		IMapMode mm = getMapMode();
+		
 		if (eClazz == SemanticPackage.eINSTANCE.getOrGate()) {
-			boundMap.put( "A", new Point(MapMode.DPtoLP(4), MapMode.DPtoLP(3))); //$NON-NLS-1$
-			boundMap.put( "B", new Point(MapMode.DPtoLP(5), MapMode.DPtoLP(3))); //$NON-NLS-1$
-			boundMap.put( "1", new Point(MapMode.DPtoLP(5), MapMode.DPtoLP(9))); //$NON-NLS-1$
+			boundMap.put( "A", new Point(mm.DPtoLP(4), mm.DPtoLP(3))); //$NON-NLS-1$
+			boundMap.put( "B", new Point(mm.DPtoLP(5), mm.DPtoLP(3))); //$NON-NLS-1$
+			boundMap.put( "1", new Point(mm.DPtoLP(5), mm.DPtoLP(9))); //$NON-NLS-1$
 		} else if (eClazz == SemanticPackage.eINSTANCE.getAndGate()) {
-			boundMap.put( "A", new Point(MapMode.DPtoLP(4), MapMode.DPtoLP(3))); //$NON-NLS-1$
-			boundMap.put( "B", new Point(MapMode.DPtoLP(9), MapMode.DPtoLP(3))); //$NON-NLS-1$
-			boundMap.put( "1", new Point(MapMode.DPtoLP(6), MapMode.DPtoLP(9))); //$NON-NLS-1$
+			boundMap.put( "A", new Point(mm.DPtoLP(4), mm.DPtoLP(3))); //$NON-NLS-1$
+			boundMap.put( "B", new Point(mm.DPtoLP(9), mm.DPtoLP(3))); //$NON-NLS-1$
+			boundMap.put( "1", new Point(mm.DPtoLP(6), mm.DPtoLP(9))); //$NON-NLS-1$
 		} else {
-			boundMap.put( "A", new Point(MapMode.DPtoLP(4), MapMode.DPtoLP(3))); //$NON-NLS-1$
-			boundMap.put( "B", new Point(MapMode.DPtoLP(5), MapMode.DPtoLP(3))); //$NON-NLS-1$
-			boundMap.put( "1", new Point(MapMode.DPtoLP(5), MapMode.DPtoLP(9))); //$NON-NLS-1$
+			boundMap.put( "A", new Point(mm.DPtoLP(4), mm.DPtoLP(3))); //$NON-NLS-1$
+			boundMap.put( "B", new Point(mm.DPtoLP(5), mm.DPtoLP(3))); //$NON-NLS-1$
+			boundMap.put( "1", new Point(mm.DPtoLP(5), mm.DPtoLP(9))); //$NON-NLS-1$
 		}
 		
 		return boundMap;
@@ -137,13 +140,16 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		
 		if (terminal instanceof InputTerminal) {
 			if (terminal.eContainer() instanceof AndGate) {
-				theFigure = new AndGateTerminalFigure(DrawConstant.NORTH, terminal.getId());
+				theFigure = new AndGateTerminalFigure(DrawConstant.NORTH, terminal.getId(), 
+					new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(2)));
 			} else {
-				theFigure = new OrGateTerminalFigure(DrawConstant.NORTH, terminal.getId());
+				theFigure = new OrGateTerminalFigure(DrawConstant.NORTH, terminal.getId(),
+					new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(4)));
 			}
 		}
 		else {
-			theFigure = new OutputTerminalFigure(DrawConstant.SOUTH, terminal.getId());
+			theFigure = new OutputTerminalFigure(DrawConstant.SOUTH, terminal.getId(),
+				new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(5)));
 		}
 		
 		return theFigure;

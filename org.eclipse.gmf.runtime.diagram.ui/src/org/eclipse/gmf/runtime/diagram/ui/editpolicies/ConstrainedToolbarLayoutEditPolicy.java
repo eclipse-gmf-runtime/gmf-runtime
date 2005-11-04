@@ -26,7 +26,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -38,7 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.FixedLocationResiza
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TextSelectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -162,7 +161,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 		IFigure a = ((ResizableCompartmentFigure) p).getAdjacentSibling(before);
 
 		double parentHeight = transposer.t(p.getParent().getSize()).height;
-		double heightDelta = MapMode.DPtoLP(transposer.t(req.getSizeDelta()).height);
+		double heightDelta = MapModeUtil.getMapMode(p).DPtoLP(transposer.t(req.getSizeDelta()).height);
 
 		Map registry = getHost().getViewer().getVisualPartMap();
 		Iterator figures = p.getParent().getChildren().iterator();

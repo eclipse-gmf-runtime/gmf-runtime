@@ -14,8 +14,8 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -26,21 +26,22 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  */
 public class AndGateFigure extends NodeFigure {
 	
-	private static final Dimension SIZE = new Dimension(MapMode.DPtoLP(15), MapMode.DPtoLP(17));
-
+	private Dimension prefSize;
+	
 	/**
 	 * Constructor for AndGateFigure.
 	 */
-	public AndGateFigure() {
-		getBounds().width = SIZE.width;
-		getBounds().height = SIZE.height; 
+	public AndGateFigure(Dimension prefSize) {
+		getBounds().width = prefSize.width;
+		getBounds().height = prefSize.height; 
+		this.prefSize = new Dimension(prefSize);
 	}
 
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return SIZE;
+		return new Dimension(prefSize);
 	}
 
 	/**
@@ -48,20 +49,22 @@ public class AndGateFigure extends NodeFigure {
 	 */
 	protected void paintFigure(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		r.translate(MapMode.DPtoLP(2), MapMode.DPtoLP(2));
-		r.setSize(MapMode.DPtoLP(11), MapMode.DPtoLP(9));
+		
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		r.translate(mm.DPtoLP(2), mm.DPtoLP(2));
+		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9));
 
 		//draw main area
 		g.fillRectangle(r);
 	
 		//outline main area
 		g.drawLine(r.x, r.y, r.right(), r.y);
-		g.drawLine(r.right(), r.y, r.right(), r.bottom() - MapMode.DPtoLP(1));
-		g.drawLine(r.x, r.y, r.x, r.bottom() - MapMode.DPtoLP(1));
+		g.drawLine(r.right(), r.y, r.right(), r.bottom() - mm.DPtoLP(1));
+		g.drawLine(r.x, r.y, r.x, r.bottom() - mm.DPtoLP(1));
 
 		//draw and outline the arc
-		r.height = MapMode.DPtoLP(9);
-		r.y += MapMode.DPtoLP(4);
+		r.height = mm.DPtoLP(9);
+		r.y += mm.DPtoLP(4);
 		g.fillArc(r, 180, 180);
 		r.width--;
 		r.height--;

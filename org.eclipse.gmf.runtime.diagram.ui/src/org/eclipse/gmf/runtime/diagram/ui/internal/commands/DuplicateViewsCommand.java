@@ -19,10 +19,8 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DuplicateEObjectsCommand;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
@@ -59,6 +57,8 @@ public class DuplicateViewsCommand
 	 * command executes.
 	 */
 	List duplicatedViewsToBeReturned = new ArrayList();
+	
+	private int offset = 0;
 
 	/**
 	 * Creates a new <code>DuplicateViewsCommand</code>.
@@ -74,12 +74,16 @@ public class DuplicateViewsCommand
 	 *            the map of elements that were duplicated that should be used
 	 *            to change the duplicated views to reference its dupliated
 	 *            element (if applicable)
+	 * @param offset
+	 * 			the <code>int</code> that is the offset from the original views that
+	 * 			the new views will be placed in logical coordinates
 	 */
 	public DuplicateViewsCommand(String label, DuplicateRequest request,
-			List viewsToDuplicate, Map duplicatedElements) {
+			List viewsToDuplicate, Map duplicatedElements, int offset) {
 		super(label, viewsToDuplicate);
 		this.duplicatedElements = duplicatedElements;
 		duplicatedViewsToBeReturned = request.getDuplicatedViews();
+		this.offset = offset;
 	}
 
 	/**
@@ -92,10 +96,13 @@ public class DuplicateViewsCommand
 	 *            views will be populated
 	 * @param viewsToDuplicate
 	 *            the views to be duplicated
+	 * @param offset
+	 * 			the <code>int</code> that is the offset from the original views that
+	 * 			the new views will be placed in logical coordinates
 	 */
 	public DuplicateViewsCommand(String label, DuplicateRequest request,
-			List viewsToDuplicate) {
-		this(label, request, viewsToDuplicate, null);
+			List viewsToDuplicate, int offset) {
+		this(label, request, viewsToDuplicate, null, offset);
 	}
 
 	/**
@@ -146,9 +153,9 @@ public class DuplicateViewsCommand
 				if (layoutConstraint instanceof Bounds) {
 					Bounds bounds = (Bounds) layoutConstraint;
 					int x = bounds.getX();
-					bounds.setX(x + MapMode.DPtoLP(10));
+					bounds.setX(x + offset);
 					int y = bounds.getY();
-					bounds.setY(y + MapMode.DPtoLP(10));
+					bounds.setY(y + offset);
 				}
 			}
 

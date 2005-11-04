@@ -31,7 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -46,9 +46,6 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public abstract class AttachShapeAction
 	extends DiagramAction {
-
-	/** Offset from first selected shape */
-	protected static final int VERT_OFFSET = MapMode.DPtoLP(60);
 
 	/**
 	 * Constructor
@@ -137,20 +134,21 @@ public abstract class AttachShapeAction
 
 		Dimension noteSize = new Dimension(0, 0);
 
+		GraphicalEditPart part = (GraphicalEditPart) editParts.get(0);
+		int vertOffset = MapModeUtil.getMapMode(part.getFigure()).DPtoLP(60);
 		Point location = new Point();
 		location.x = referenceLocation.x;
-		location.y = referenceLocation.y - noteSize.height - VERT_OFFSET;
+		location.y = referenceLocation.y - noteSize.height - vertOffset;
 
 		// convert the location to screen coordinates as that is what the
 		// creation command expects
-		GraphicalEditPart part = (GraphicalEditPart) editParts.get(0);
 		// this is done so that the new node don;t hide up in the scrollpane of
 		// the shapecompartment.
 		if ((location.y < 0)
 			&& (part.getParent() instanceof ShapeCompartmentEditPart)) {
 			location.y = referenceLocation.y;
 			location.x = part.getFigure().getBounds().getRight().x
-				+ VERT_OFFSET;
+				+ vertOffset;
 		}
 		part.getFigure().translateToAbsolute(location);
 

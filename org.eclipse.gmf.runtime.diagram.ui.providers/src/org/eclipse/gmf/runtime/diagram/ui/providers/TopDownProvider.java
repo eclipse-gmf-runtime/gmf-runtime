@@ -12,9 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.providers;
 
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 /**
  * @author sshaw
@@ -23,23 +21,21 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
  */
 public class TopDownProvider extends DefaultProvider {
 	
-	/* 
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateToGraph(org.eclipse.draw2d.geometry.Rectangle)
 	 */
 	protected Rectangle translateToGraph(Rectangle r) {
 		Rectangle rDP = new Rectangle(r);
-		MapMode.translateToDP(rDP);
+		getMapMode().LPtoDP(rDP);
 		return rDP;
 	}
 
-	/* 
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateFromGraph(org.eclipse.draw2d.geometry.Rectangle)
 	 */
 	protected Rectangle translateFromGraph(Rectangle rect) {
 		Rectangle rLP = new Rectangle(rect);
-		MapMode.translateToLP(rLP);
+		getMapMode().DPtoLP(rLP);
 		return rLP;
 	}
 }

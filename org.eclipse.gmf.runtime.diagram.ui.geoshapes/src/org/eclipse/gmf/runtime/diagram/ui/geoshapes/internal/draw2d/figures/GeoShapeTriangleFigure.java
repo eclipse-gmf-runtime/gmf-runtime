@@ -27,9 +27,10 @@ public class GeoShapeTriangleFigure extends GeoShapePolygonFigure {
 	 * Constructor - Creates a Triangle with a given Default size
 	 * 
 	 * @param base inital length of the squares base
+	 * @param spacing <code>int</code> that is the margin between children in logical units
 	 */
-	public GeoShapeTriangleFigure( int base ) {
-		super(base, base);
+	public GeoShapeTriangleFigure( int base, int spacing ) {
+		super(base, base, spacing);
 	}
 	
 	/**

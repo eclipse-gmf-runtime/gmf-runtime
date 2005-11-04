@@ -22,7 +22,6 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.LEDEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTerminalFigure;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LEDFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
@@ -34,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -127,11 +126,15 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 		return new NonResizableEditPolicyEx();
 	}
 	
+	final private Dimension ledSizeDP = new Dimension(61, 44);
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedShapeEditPart#createMainFigure()
 	 */
 	protected NodeFigure createMainFigure() {
-		return FigureFactory.createNewLED();
+		Dimension ledSizeLP = new Dimension(ledSizeDP);
+		getMapMode().DPtoLP(ledSizeLP);
+		return new LEDFigure(ledSizeLP);
 	}
 	
 	/**
@@ -140,14 +143,15 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 	public Map createBoundsMap() {
 		Map boundMap = new HashMap();
 		
-		boundMap.put( "A", new Point(MapMode.DPtoLP(51), MapMode.DPtoLP(1))); //$NON-NLS-1$
-		boundMap.put( "B", new Point(MapMode.DPtoLP(36), MapMode.DPtoLP(1))); //$NON-NLS-1$
-		boundMap.put( "C", new Point(MapMode.DPtoLP(21), MapMode.DPtoLP(1))); //$NON-NLS-1$
-		boundMap.put( "D", new Point(MapMode.DPtoLP(6), MapMode.DPtoLP(1))); //$NON-NLS-1$
-		boundMap.put( "1", new Point(MapMode.DPtoLP(51), MapMode.DPtoLP(44))); //$NON-NLS-1$
-		boundMap.put( "2", new Point(MapMode.DPtoLP(36), MapMode.DPtoLP(44))); //$NON-NLS-1$
-		boundMap.put( "3", new Point(MapMode.DPtoLP(21), MapMode.DPtoLP(44))); //$NON-NLS-1$
-		boundMap.put( "4", new Point(MapMode.DPtoLP(6), MapMode.DPtoLP(44))); //$NON-NLS-1$
+		IMapMode mm = getMapMode();
+		boundMap.put( "A", new Point(mm.DPtoLP(51), mm.DPtoLP(1))); //$NON-NLS-1$
+		boundMap.put( "B", new Point(mm.DPtoLP(36), mm.DPtoLP(1))); //$NON-NLS-1$
+		boundMap.put( "C", new Point(mm.DPtoLP(21), mm.DPtoLP(1))); //$NON-NLS-1$
+		boundMap.put( "D", new Point(mm.DPtoLP(6), mm.DPtoLP(1))); //$NON-NLS-1$
+		boundMap.put( "1", new Point(mm.DPtoLP(51), mm.DPtoLP(44))); //$NON-NLS-1$
+		boundMap.put( "2", new Point(mm.DPtoLP(36), mm.DPtoLP(44))); //$NON-NLS-1$
+		boundMap.put( "3", new Point(mm.DPtoLP(21), mm.DPtoLP(44))); //$NON-NLS-1$
+		boundMap.put( "4", new Point(mm.DPtoLP(6), mm.DPtoLP(44))); //$NON-NLS-1$
 		
 		return boundMap;
 	}
@@ -158,12 +162,17 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
 		BorderItemFigure theFigure = null;
 		if (terminal instanceof InputTerminal) {
-			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId());
+			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId(), 
+								new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
-			theFigure = new BottomTerminalFigure(DrawConstant.SOUTH, terminal.getId());
+			theFigure = new BottomTerminalFigure(DrawConstant.SOUTH, terminal.getId(), 
+								new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		}
 		
-		theFigure.setLocator(new TerminalFigure.FixedGateLocation(theFigure, getFigure(), LEDFigure.SIZE));
+		Dimension ledSizeLP = new Dimension(ledSizeDP);
+		getMapMode().DPtoLP(ledSizeLP);
+		
+		theFigure.setLocator(new TerminalFigure.FixedGateLocation(theFigure, getFigure(), ledSizeLP));
 		return theFigure;
 	}
 }

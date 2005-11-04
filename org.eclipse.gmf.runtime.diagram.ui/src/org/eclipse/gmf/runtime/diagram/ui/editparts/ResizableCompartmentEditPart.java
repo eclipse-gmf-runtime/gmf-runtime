@@ -75,7 +75,7 @@ public abstract class ResizableCompartmentEditPart
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
-		return new ResizableCompartmentFigure(getTitleName());
+		return new ResizableCompartmentFigure(getTitleName(), getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
 	}
 
 	/**

@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.swt.graphics.Color;
 
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -30,16 +29,17 @@ public class CircuitFigure
 	extends NodeFigure
 	implements HandleBounds
 {
-	public static final Dimension SIZE = new Dimension(MapMode.DPtoLP(100), MapMode.DPtoLP(100)); 
-
-	public CircuitFigure() {
+	private Dimension prefSize;
+	
+	public CircuitFigure(Dimension prefSize) {
 		setBorder(new CircuitBorder());
 		setOpaque(true);
+		this.prefSize = prefSize;
 	}
 
 	public Dimension getPreferredSize(int w, int h) {
 		Dimension newPrefSize = super.getPreferredSize(w, h);
-		Dimension defaultSize = SIZE;
+		Dimension defaultSize = prefSize;
 		newPrefSize.union(defaultSize);
 		return newPrefSize;
 	}

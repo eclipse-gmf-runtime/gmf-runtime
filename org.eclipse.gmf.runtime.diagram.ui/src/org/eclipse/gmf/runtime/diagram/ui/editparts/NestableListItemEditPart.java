@@ -24,11 +24,11 @@ import org.eclipse.gef.editparts.ViewportExposeHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableCompartmentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
-import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure; 
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -93,7 +93,7 @@ public class NestableListItemEditPart
 	protected IFigure createFigure() {
 
 		if (isResizable()) {
-			ResizableCompartmentFigure compartmentFigure = new NestedResizableCompartmentFigure();
+			ResizableCompartmentFigure compartmentFigure = new NestedResizableCompartmentFigure(getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
 			ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 			layout.setStretchMajorAxis(false);
 			layout.setStretchMinorAxis(false);
@@ -105,16 +105,15 @@ public class NestableListItemEditPart
 			// if the compartment is resizeable then we need to put a border
 			// around the text compartment so that we have enough room for the
 			// collpase handle.
-			int one = MapMode.DPtoLP(1);
+			IMapMode mm = getMapMode();
+			int one = mm.DPtoLP(1);
 
 			// indent to make room for collapse handle for each nested list item
 			compartmentFigure.getTextPane().setBorder(
-				new MarginBorder(one, MapMode.DPtoLP(15) / 2, one, MapMode
-					.DPtoLP(15) / 2));
+				new MarginBorder(one, mm.DPtoLP(15) / 2, one, mm.DPtoLP(15) / 2));
 			// indent for visual appearance
 			compartmentFigure.getContentPane().setBorder(
-				new MarginBorder(one, MapMode.DPtoLP(15), one, MapMode
-					.DPtoLP(15) / 2));
+				new MarginBorder(one, mm.DPtoLP(15), one, mm.DPtoLP(15) / 2));
 
 			WrapLabel label = getLabel();
 			label.setLabelAlignment(PositionConstants.LEFT);

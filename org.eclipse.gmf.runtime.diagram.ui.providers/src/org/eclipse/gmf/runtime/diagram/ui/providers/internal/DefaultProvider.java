@@ -39,8 +39,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
@@ -52,8 +50,10 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutProvider
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /**
  * Provider that creates a command for the DirectedGraph layout in GEF.
@@ -67,14 +67,22 @@ public abstract class DefaultProvider
 
 	// Minimum sep between icon and bottommost horizontal arc
 	protected int minX = -1;
-
 	protected int minY = -1;
-
-	protected static final int LAYOUTDEFAULTMARGIN = MapMode.DPtoLP(25);
+    private int layoutDefaultMargin = 0;
+    private IMapMode mm;
 	
 	private static final int NODE_PADDING = 30;
 	private static final int MIN_EDGE_PADDING = 5;
 	private static final int MAX_EDGE_PADDING = NODE_PADDING * 3;
+
+	
+	/**
+	 * @return the <code>IMapMode</code> that maps coordinates from
+	 * device to logical and vice-versa.
+	 */
+	protected IMapMode getMapMode() {
+		return mm;
+	}
 
 	/**
 	 * @see com.ibm.xtools.common.service.IProvider#provides(IOperation)
@@ -99,6 +107,7 @@ public abstract class DefaultProvider
 	public Command layoutEditParts(GraphicalEditPart containerEditPart,
 			IAdaptable layoutHint) {
 
+		mm = MapModeUtil.getMapMode(containerEditPart.getFigure());
 		if (containerEditPart == null) {
 			InvalidParameterException ipe = new InvalidParameterException();
 			Trace.throwing(DiagramProvidersPlugin.getInstance(),
@@ -131,6 +140,8 @@ public abstract class DefaultProvider
 		GraphicalEditPart containerEditPart = (GraphicalEditPart) editPart
 			.getParent();
 
+		mm = MapModeUtil.getMapMode(containerEditPart.getFigure());
+		
 		DirectedGraph g = new DirectedGraph();
 		build_graph(g, selectedObjects);
 		new DirectedGraphLayout().visit(g);
@@ -245,6 +256,7 @@ public abstract class DefaultProvider
 	 * @param rect
 	 *            <code>Rectangle</code> that has the values to be translated in 
 	 *            logical (relative) coordinates.
+	 *      
 	 * @return <code>Rectangle</code> in graph coordinates.
 	 */
 	abstract protected Rectangle translateToGraph(Rectangle r);
@@ -622,7 +634,7 @@ public abstract class DefaultProvider
 		CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
 
 		Point diff = getLayoutPositionDelta(g, isLayoutForSelected);
-
+		layoutDefaultMargin = MapModeUtil.getMapMode(diagramEP.getFigure()).DPtoLP(25);
 		Command cmd = getShapesPositionCommand(g, diff);
 		if (cmd != null)
 			cc.add(cmd);
@@ -664,7 +676,7 @@ public abstract class DefaultProvider
 			target = edge.target;
 			
 			if (cep != null) {
-				PointListUtilities.normalizeSegments(points, MapMode.DPtoLP(3));
+				PointListUtilities.normalizeSegments(points, MapModeUtil.getMapMode(cep.getFigure()).DPtoLP(3));
 					
 				// Reset the points list
 				Command cmd = routeThrough(edge, cep, source, target, points, diff.x, diff.y);
@@ -762,6 +774,6 @@ public abstract class DefaultProvider
 			return new Point(this.minX - ptLayoutMin.x, this.minY - ptLayoutMin.y);
 		}
 		
-		return new Point(LAYOUTDEFAULTMARGIN, LAYOUTDEFAULTMARGIN);
+		return new Point(layoutDefaultMargin, layoutDefaultMargin);
 	}
 }

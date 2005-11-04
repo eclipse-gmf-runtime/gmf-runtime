@@ -16,8 +16,8 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.FigureFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Color;
@@ -57,7 +57,8 @@ public void activateFigure(){
 protected Connection createConnectionFigure(){
 	if (getModel() == null)
 		return null;
-	Connection connx = FigureFactory.createNewBendableWire();
+	
+	Connection connx = new PolylineConnectionEx();
 	return connx;
 }
 

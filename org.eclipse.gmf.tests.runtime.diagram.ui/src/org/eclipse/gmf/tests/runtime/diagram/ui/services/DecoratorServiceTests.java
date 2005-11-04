@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOpe
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.PresentationTestFixture;
 
@@ -186,7 +186,7 @@ public class DecoratorServiceTests
 				IDecoration decoration = getDecoratorTarget()
 					.addShapeDecoration(circle,
 						IDecoratorTarget.Direction.NORTH_EAST,
-						MapMode.DPtoLP(-4), false);
+						MapModeUtil.getMapMode(noteEP.getFigure()).DPtoLP(-4), false);
 				decoration.setIgnoreParentVisibility(ignoreParentVisibility);
 				setDecoration(decoration);
 			}

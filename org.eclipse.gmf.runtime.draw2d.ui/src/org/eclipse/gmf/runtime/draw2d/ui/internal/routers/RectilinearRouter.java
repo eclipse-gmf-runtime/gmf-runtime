@@ -18,10 +18,9 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 
 /**
@@ -525,7 +524,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
             // Normalize the polyline to remove unwanted segments
 			Dimension tolerance = new Dimension(3, 0);
 			if (!isFeedback(conn))
-				tolerance = (Dimension)MapMode.translateToLP(tolerance);
+				tolerance = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(tolerance);
 			
             normalizationChangedLine |= PointListUtilities.normalizeSegments(newLine, tolerance.width);
 		}

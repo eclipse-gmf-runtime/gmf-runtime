@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 public class TerminalFigure extends BorderItemFigure{
 	
 	protected FixedConnectionAnchor fixedAnchor;
+	protected Dimension prefSize;
 	
 	/**
 	 * @author sshaw
@@ -66,8 +67,9 @@ public class TerminalFigure extends BorderItemFigure{
 	/**
 	 * @param preferredSide
 	 */
-	public TerminalFigure(DrawConstant preferredSide) {
+	public TerminalFigure(DrawConstant preferredSide, Dimension prefSize) {
 		super(preferredSide);
+		this.prefSize = new Dimension(prefSize);
 	}
 	
 	/* (non-Javadoc)
@@ -88,5 +90,12 @@ public class TerminalFigure extends BorderItemFigure{
 			return getConnectionAnchor(szAnchor);
 		}
 		return fixedAnchor;
+	}
+
+	/**
+	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
+	 */
+	public Dimension getPreferredSize(int wHint, int hHint) {
+		return new Dimension(prefSize);
 	}
 }

@@ -16,7 +16,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -27,6 +26,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class MapModeGraphics extends ScaledGraphics {
 
+	private IMapMode mm;
+	
 	/**
 	 * Constructs a new ScaledGraphics based on the given Graphics object.
 	 * @param g the base graphics object
@@ -35,6 +36,14 @@ public class MapModeGraphics extends ScaledGraphics {
 	public MapModeGraphics(Graphics g, IMapMode mm) {
 		super(g);
 		setScale(DiagramMapModeUtil.getScale(mm));
+		this.mm = mm;
+	}
+
+	/**
+	 * @return <code>IMapMode</code>
+	 */
+	public IMapMode getMapMode() {
+		return mm;
 	}
 
 	/** @see Graphics#drawImage(Image, int, int) */
@@ -46,7 +55,7 @@ public class MapModeGraphics extends ScaledGraphics {
 	/** @see Graphics#drawImage(Image, int, int, int, int, int, int, int, int) */
 	public void drawImage(Image srcImage, int sx, int sy, int sw, int sh,
 											int tx, int ty, int tw, int th) {
-		super.drawImage(srcImage, sx, sy, sw, sh, tx, ty, MapMode.DPtoLP(tw), MapMode.DPtoLP(th));
+		super.drawImage(srcImage, sx, sy, sw, sh, tx, ty, getMapMode().DPtoLP(tw), getMapMode().DPtoLP(th));
 	}
 	
 	/** @see Graphics#scale(double) */

@@ -22,9 +22,8 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 
 /**
@@ -164,7 +163,8 @@ public class ImageFigureEx
 		img = image;
 		if (img != null) {
 			org.eclipse.swt.graphics.Rectangle r = image.getBounds();
-			size = new Dimension(MapMode.DPtoLP(r.width), MapMode.DPtoLP(r.height));
+			size = new Dimension(MapModeUtil.getMapMode(this).DPtoLP(r.width), 
+								MapModeUtil.getMapMode(this).DPtoLP(r.height));
 		}
 		else
 			size = new Dimension();

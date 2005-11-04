@@ -24,8 +24,11 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -382,7 +385,7 @@ public class ZoomContributionItem
 			}
 
 			// Translate the region into pixels
-			MapMode.translateToDP(rectangle);
+			MapModeUtil.getMapMode(getDiagramEditPart().getFigure()).LPtoDP(rectangle);
 			
 			Viewport viewport = getZoomManager().getViewport();
 

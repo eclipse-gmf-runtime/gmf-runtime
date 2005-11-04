@@ -25,10 +25,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 
 /**
@@ -94,7 +93,7 @@ public class WrapLabel
 	/** the icon location */
 	private Point iconLocation;
 
-	private static class IconInfo {
+	private class IconInfo {
 		/** the label icons */
 		private ArrayList icons = new ArrayList();
 		/** total icon size */
@@ -139,8 +138,9 @@ public class WrapLabel
 		public Dimension getIconSize(int i) {
 			Image img = getIcon(i);
 			if (img != null && !img.isDisposed()) {
-				org.eclipse.swt.graphics.Rectangle bounds = img.getBounds();
-				return new Dimension(MapMode.DPtoLP(bounds.width), MapMode.DPtoLP(bounds.height));
+				org.eclipse.swt.graphics.Rectangle imgBounds = img.getBounds();
+				return new Dimension(MapModeUtil.getMapMode(WrapLabel.this).DPtoLP(imgBounds.width), 
+									MapModeUtil.getMapMode(WrapLabel.this).DPtoLP(imgBounds.height));
 			}
 			return EMPTY_DIMENSION;
 		}
@@ -478,7 +478,7 @@ public class WrapLabel
 	 * @since 2.0
 	 */
 	public int getIconTextGap() {
-		return MapMode.DPtoLP(3);
+		return MapModeUtil.getMapMode(this).DPtoLP(3);
 	}
 
 	/**
@@ -542,7 +542,7 @@ public class WrapLabel
 		Dimension effectiveSize = getTextSize().getExpanded(-shrink.width, -shrink.height);
 		
 		Font f = getFont();
-		int fontHeight = MapMode.DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
+		int fontHeight = MapModeUtil.getMapMode(this).DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
 		int maxLines = (int) (effectiveSize.height / (double) fontHeight);
 
 		StringBuffer accumlatedText = new StringBuffer();
@@ -597,7 +597,7 @@ public class WrapLabel
 		Font f = getFont();
 		int maxLines = Integer.MAX_VALUE;
 		if (hHint != -1) {
-			int fontHeight = MapMode.DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
+			int fontHeight = MapModeUtil.getMapMode(this).DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
 			maxLines = (int) (hHint / (double) fontHeight);
 		}
 
@@ -800,7 +800,7 @@ public class WrapLabel
 		StringTokenizer tokenizer = new StringTokenizer(subString, "\n"); //$NON-NLS-1$
 
 		Font f = getFont();
-		int fontHeight = MapMode.DPtoLP(FigureUtilities.getFontMetrics(f)
+		int fontHeight = MapModeUtil.getMapMode(this).DPtoLP(FigureUtilities.getFontMetrics(f)
 			.getHeight());
 		int textWidth = getTextExtents(subString, f).width;
 		int y = getTextLocation().y;
@@ -808,7 +808,7 @@ public class WrapLabel
 		// If the font's leading area is 0 then we need to add an offset to
 		// avoid truncating at the top (e.g. Korean fonts)
 		if (0 == FigureUtilities.getFontMetrics(f).getLeading()) {
-			int offset = MapMode.DPtoLP(2); // 2 is the leading area for default English
+			int offset = MapModeUtil.getMapMode(this).DPtoLP(2); // 2 is the leading area for default English
 			y += offset;
 		}				
 
@@ -829,9 +829,10 @@ public class WrapLabel
 			// from italic / irregular characters etc.
 			Rectangle clipRect = new Rectangle();
 			graphics.getClip(clipRect);
-			if (getTextExtents(token, f).width + x <= clipRect.getTopRight().x) {
+			
+			if (tokenWidth + x <= clipRect.getTopRight().x) {
 				Rectangle newClipRect = new Rectangle(clipRect);
-				newClipRect.width += getTextExtents(token.substring(token.length() - 1), f).width / 2;
+				newClipRect.width += (tokenWidth / token.length()) / 2;
 				graphics.setClip(newClipRect);
 			}
 				
@@ -1255,7 +1256,8 @@ public class WrapLabel
 	private Rectangle getSelectionRectangle() {
 		Rectangle figBounds = getTextBounds();
 		figBounds
-			.expand(new Insets(MapMode.DPtoLP(2), MapMode.DPtoLP(2), 0, 0));
+			.expand(new Insets(MapModeUtil.getMapMode(this).DPtoLP(2), 
+							MapModeUtil.getMapMode(this).DPtoLP(2), 0, 0));
 		translateToParent(figBounds);
 		figBounds.intersect(getBounds());
 		return figBounds;
@@ -1269,7 +1271,7 @@ public class WrapLabel
 	 * @param f font used to draw the text string
 	 * @param w width in pixles.
 	 */
-	private static int getLineWrapPosition(String s, Font f, int w) {
+	private int getLineWrapPosition(String s, Font f, int w) {
 		// create an iterator for line breaking positions
 		BreakIterator iter = BreakIterator.getLineInstance();
 		iter.setText(s);
@@ -1303,9 +1305,9 @@ public class WrapLabel
 	 * @return the largest substring that fits in the given width
 	 * @since 2.0
 	 */
-	private static int getLargestSubstringConfinedTo(String s, Font f, int w) {
+	private int getLargestSubstringConfinedTo(String s, Font f, int w) {
 		int min, max;
-		float avg = MapMode.DPtoLP(FigureUtilities.getFontMetrics(f)
+		float avg = MapModeUtil.getMapMode(this).DPtoLP(FigureUtilities.getFontMetrics(f)
 			.getAverageCharWidth());
 		min = 0;
 		max = s.length() + 1;
@@ -1339,9 +1341,10 @@ public class WrapLabel
 	/**
 	 * Gets the tex extent scaled to the mapping mode
 	 */
-	private static Dimension getTextExtents(String s, Font f) {
+	private Dimension getTextExtents(String s, Font f) {
 		Dimension d = FigureUtilities.getTextExtents(s, f);
-		return new Dimension(MapMode.DPtoLP(d.width), MapMode.DPtoLP(d.height));
+		return new Dimension(MapModeUtil.getMapMode(this).DPtoLP(d.width), 
+							MapModeUtil.getMapMode(this).DPtoLP(d.height));
 	}
 	
 }

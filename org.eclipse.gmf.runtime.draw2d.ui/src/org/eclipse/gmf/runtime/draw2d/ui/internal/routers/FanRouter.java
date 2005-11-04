@@ -18,9 +18,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
-
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * This class exists only as a workaround to Bugzilla Bug 37342: 
@@ -51,7 +50,7 @@ public class FanRouter extends org.eclipse.draw2d.FanRouter {
 	 */
 	private void routeBendpoints(Connection conn) {
 		if (!isFeedback(conn)) 
-			setSeparation(MapMode.DPtoLP(SEPARATION));
+			setSeparation(MapModeUtil.getMapMode(conn).DPtoLP(SEPARATION));
 		else
 			setSeparation(SEPARATION);
 		

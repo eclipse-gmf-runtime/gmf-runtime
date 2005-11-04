@@ -20,9 +20,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.DecoratorService;
@@ -32,9 +29,12 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OnConnectionLocator;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.figures.RelativeToBorderLocator;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * This editpolicy is responsible for adding the decorations from the
@@ -82,9 +82,10 @@ public class DecorationEditPolicy
 		public IDecoration addShapeDecoration(Image image, Direction direction,
 				int margin, boolean isVolatile) {
 
+			IMapMode mm = MapModeUtil.getMapMode(((GraphicalEditPart)getHost()).getFigure());
 			ImageFigureEx figure = new ImageFigureEx();
 			figure.setImage(image);
-			figure.setSize(MapMode.DPtoLP(image.getBounds().width), MapMode
+			figure.setSize(mm.DPtoLP(image.getBounds().width), mm
 				.DPtoLP(image.getBounds().height));
 
 			return addShapeDecoration(figure, direction, margin, isVolatile);
@@ -99,9 +100,10 @@ public class DecorationEditPolicy
 		public IDecoration addConnectionDecoration(Image image,
 				int percentageFromSource, boolean isVolatile) {
 
+			IMapMode mm = MapModeUtil.getMapMode(((GraphicalEditPart)getHost()).getFigure());
 			ImageFigureEx figure = new ImageFigureEx();
 			figure.setImage(image);
-			figure.setSize(MapMode.DPtoLP(image.getBounds().width), MapMode
+			figure.setSize(mm.DPtoLP(image.getBounds().width), mm
 				.DPtoLP(image.getBounds().height));
 
 			return addConnectionDecoration(figure, percentageFromSource,

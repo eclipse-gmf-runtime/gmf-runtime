@@ -27,9 +27,10 @@ public class GeoShapeHexagonFigure extends GeoShapePolygonFigure {
 	 * Constructor - Creates a hexagon with a given Default size
 	 * @param width initial width of the figure
 	 * @param height initial height of the figure
+	 * @param spacing <code>int</code> that is the margin between children in logical units
 	 */
-	public GeoShapeHexagonFigure( int width, int height ) {
-		super(width, height);
+	public GeoShapeHexagonFigure( int width, int height, int spacing ) {
+		super(width, height, spacing);
 	}
 	
 	/**

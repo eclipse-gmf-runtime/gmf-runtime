@@ -15,10 +15,10 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.LineBorderEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /*
  * @canBeSeenBy %partners
@@ -94,8 +94,8 @@ public class RectangularDropShadowLineBorder
 		Insets insetsNew = super.getInsets(figure);
 		insetsNew.top = 0;
 		insetsNew.left = 0;
-		insetsNew.bottom = MapMode.DPtoLP(insetsNew.bottom + getShadowHeight());
-		insetsNew.right = MapMode.DPtoLP(insetsNew.right + getShadowWidth());
+		insetsNew.bottom = MapModeUtil.getMapMode(figure).DPtoLP(insetsNew.bottom + getShadowHeight());
+		insetsNew.right = MapModeUtil.getMapMode(figure).DPtoLP(insetsNew.right + getShadowWidth());
 
 		return insetsNew;
 	}
@@ -131,8 +131,8 @@ public class RectangularDropShadowLineBorder
 		
 		insetsNew.top = 0;
 		insetsNew.left = 0;
-		insetsNew.bottom = MapMode.DPtoLP(getShadowHeight());
-		insetsNew.right = MapMode.DPtoLP(getShadowWidth());
+		insetsNew.bottom = MapModeUtil.getMapMode(figure).DPtoLP(getShadowHeight());
+		insetsNew.right = MapModeUtil.getMapMode(figure).DPtoLP(getShadowWidth());
 
 		return insetsNew;
 	}
@@ -174,17 +174,19 @@ public class RectangularDropShadowLineBorder
 		//Draw the dropShadow.
 		getDropShadow().drawShadow(figure,g,rBox);
 		
+		IMapMode mm = MapModeUtil.getMapMode(figure);
+		
 		//Draw the line border.				
 		if (getWidth() > 0) { 
 			//will not paint line border if width is 0
 			tempRect.setBounds(getPaintRectangle(figure, insets));
-			tempRect.width -= MapMode.DPtoLP(getShadowWidth());
-			tempRect.height -= MapMode.DPtoLP(getShadowHeight());
+			tempRect.width -= mm.DPtoLP(getShadowWidth());
+			tempRect.height -= mm.DPtoLP(getShadowHeight());
 			if (getWidth() % 2 == 1) {
-				tempRect.width -= MapMode.DPtoLP(1);
-				tempRect.height -= MapMode.DPtoLP(1);
+				tempRect.width -= mm.DPtoLP(1);
+				tempRect.height -= mm.DPtoLP(1);
 			}
-			tempRect.shrink(MapMode.DPtoLP(getWidth() / 2), MapMode.DPtoLP(getWidth() / 2));
+			tempRect.shrink(mm.DPtoLP(getWidth() / 2), mm.DPtoLP(getWidth() / 2));
 			g.setLineWidth(getWidth());
 
 			if (getColor() != null) {

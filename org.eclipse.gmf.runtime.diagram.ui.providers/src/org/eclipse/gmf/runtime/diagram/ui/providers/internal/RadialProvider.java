@@ -53,7 +53,8 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -222,10 +223,13 @@ public class RadialProvider
 			
 			Rectangle radialRect = calcBoundBox();
 			
+			IGraphicalEditPart firstEP = (IGraphicalEditPart)editParts.get(0);
+			IMapMode mm = MapModeUtil.getMapMode(firstEP.getFigure());
+			
 			// consider ideal location
 			Rectangle newRadialRect = new Rectangle(radialRect);
-			newRadialRect.translate( -radialRect.getTopLeft().x + MapMode.DPtoLP(50),
-							 -radialRect.getTopLeft().y + MapMode.DPtoLP(50));
+			newRadialRect.translate( -radialRect.getTopLeft().x + mm.DPtoLP(50),
+							 -radialRect.getTopLeft().y + mm.DPtoLP(50));
 			
 			if (origRect.x > newRadialRect.x && origRect.y > newRadialRect.y) {
 				newRadialRect = new Rectangle( Math.max(newRadialRect.x, origRect.x - (radialRect.width / 2)), 
@@ -1057,7 +1061,7 @@ public class RadialProvider
 					radius += rootDiagonal;
 				}
 				
-				radius = Math.max(MapMode.DPtoLP(180), radius);
+				radius = Math.max(MapModeUtil.getMapMode(rootEP.getFigure()).DPtoLP(180), radius);
 			}
 
 			/**

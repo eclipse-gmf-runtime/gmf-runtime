@@ -24,12 +24,11 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 
 /**
@@ -243,7 +242,7 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 			points.addPoint(bp.getLocation());
 		}
 		
-		straightenPoints(points, MapMode.DPtoLP(3));
+		straightenPoints(points, MapModeUtil.getMapMode(conn).DPtoLP(3));
 		return points;
 	}
 	

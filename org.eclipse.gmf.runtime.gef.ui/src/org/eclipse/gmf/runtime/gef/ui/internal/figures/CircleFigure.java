@@ -16,9 +16,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IOvalAnchorableFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.SlidableOvalAnchor;
 
@@ -30,11 +28,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.SlidableOvalAnchor;
  */
 public class CircleFigure extends DefaultSizeNodeFigure implements IOvalAnchorableFigure {
 
-	
-	/** Create an instance. */
-	public CircleFigure() {
-		this( MapMode.DPtoLP(25) );
-	}
 	
 	/**
 	 * Constructor for StateLineFigure.

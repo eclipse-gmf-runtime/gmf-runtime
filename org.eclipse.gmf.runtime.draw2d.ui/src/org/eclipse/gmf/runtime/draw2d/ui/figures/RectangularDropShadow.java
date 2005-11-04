@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * @author choang
@@ -107,7 +107,7 @@ public class RectangularDropShadow {
 	protected void drawTopRightShadow(IFigure figure, Graphics g, Rectangle rBox) {
 		Dimension dim = new Dimension(alpha_itr.width, alpha_itr.height);
 		Image itr = createImageFromAlpha(figure, alpha_itr, dim);
-		Point pt = new Point(rBox.getRight().x - MapMode.DPtoLP(alpha_ir.width),
+		Point pt = new Point(rBox.getRight().x - MapModeUtil.getMapMode(figure).DPtoLP(alpha_ir.width),
 			rBox.getTop().y );
 		g.drawImage(itr, pt);
 		itr.dispose();
@@ -119,12 +119,12 @@ public class RectangularDropShadow {
 	 * @param rBox
 	 */
 	protected void drawRightShadow(IFigure figure, Graphics g, Rectangle rBox) {
-		Dimension dim = getRightShadowDimension(rBox);
+		Dimension dim = getRightShadowDimension(figure, rBox);
 		Image ir = createImageFromAlpha(figure, alpha_ir, dim);
 		Point pt = 
 			new Point(
-				rBox.getRight().x - MapMode.DPtoLP(alpha_ir.width),
-				rBox.getTop().y + MapMode.DPtoLP(alpha_itr.height)) ;
+				rBox.getRight().x - MapModeUtil.getMapMode(figure).DPtoLP(alpha_ir.width),
+				rBox.getTop().y + MapModeUtil.getMapMode(figure).DPtoLP(alpha_itr.height)) ;
 		g.drawImage(ir, pt);
 		ir.dispose();
 	}
@@ -144,8 +144,8 @@ public class RectangularDropShadow {
 		
 		Point pt =
 			new Point(
-				rBox.getRight().x - MapMode.DPtoLP(alpha_ir.width),
-				rBox.getBottom().y - MapMode.DPtoLP(alpha_ib.height) );
+				rBox.getRight().x - MapModeUtil.getMapMode(figure).DPtoLP(alpha_ir.width),
+				rBox.getBottom().y - MapModeUtil.getMapMode(figure).DPtoLP(alpha_ib.height) );
 		g.drawImage(irb, pt);
 		irb.dispose();
 	}
@@ -157,12 +157,12 @@ public class RectangularDropShadow {
 	 */
 	protected void drawBottomShadow(IFigure figure, Graphics g, Rectangle rBox) {
 		
-		Dimension dim = getBottomShadowDimension(rBox);
+		Dimension dim = getBottomShadowDimension(figure, rBox);
 		Image ib = createImageFromAlpha(figure, alpha_ib, dim);
 		Point pt =
 			new Point(
-				rBox.getLeft().x + MapMode.DPtoLP(alpha_ilb.width),
-				rBox.getBottom().y - MapMode.DPtoLP(alpha_ib.height) );
+				rBox.getLeft().x + MapModeUtil.getMapMode(figure).DPtoLP(alpha_ilb.width),
+				rBox.getBottom().y - MapModeUtil.getMapMode(figure).DPtoLP(alpha_ib.height) );
 		g.drawImage(ib, pt);
 		ib.dispose();
 	}
@@ -177,18 +177,19 @@ public class RectangularDropShadow {
 		Image ilb = createImageFromAlpha(figure, alpha_ilb, dim);
 		Point pt =
 			new Point(rBox.getLeft().x,
-				rBox.getBottom().y - MapMode.DPtoLP(alpha_ib.height) );
+				rBox.getBottom().y - MapModeUtil.getMapMode(figure).DPtoLP(alpha_ib.height) );
 		g.drawImage(ilb, pt);
 		ilb.dispose();
 	}
 
 	/**
+	 * @param figure
 	 * @param rBox
 	 * @return the <code>Dimension</code> representing the right shadow
 	 */
-	protected Dimension getRightShadowDimension(Rectangle rBox) {
+	protected Dimension getRightShadowDimension(IFigure figure, Rectangle rBox) {
 
-		int height = Math.max(MapMode.LPtoDP(rBox.height) - alpha_itr.height - alpha_irb.height,
+		int height = Math.max(MapModeUtil.getMapMode(figure).LPtoDP(rBox.height) - alpha_itr.height - alpha_irb.height,
 			1);
 		return new Dimension(alpha_ir.width, height);
 	}
@@ -204,9 +205,9 @@ public class RectangularDropShadow {
 	 * @param rBox
 	 * @return the <code>Dimension</code> representing the bottom shadow
 	 */
-	protected Dimension getBottomShadowDimension(Rectangle rBox) {
+	protected Dimension getBottomShadowDimension(IFigure figure, Rectangle rBox) {
 
-		int width = Math.max(MapMode.LPtoDP( rBox.width ) - alpha_ilb.width - alpha_irb.width,
+		int width = Math.max(MapModeUtil.getMapMode(figure).LPtoDP( rBox.width ) - alpha_ilb.width - alpha_irb.width,
 			1);
 		return new Dimension(width, alpha_ib.height);
 	}

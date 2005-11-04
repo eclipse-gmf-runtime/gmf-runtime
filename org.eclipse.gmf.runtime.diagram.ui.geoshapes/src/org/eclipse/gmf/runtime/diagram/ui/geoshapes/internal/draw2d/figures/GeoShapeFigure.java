@@ -23,9 +23,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 
 
@@ -40,7 +38,7 @@ public class GeoShapeFigure extends DefaultSizeNodeFigure {
 	/**
 	 * Creates a new GeoShapeFigure
 	 */
-	public GeoShapeFigure(int defWidth, int defHeight) {
+	public GeoShapeFigure(int defWidth, int defHeight, int spacing) {
 		super(defWidth, defHeight);
 		setOpaque(true);
 		setLayoutManager(new StackLayout() {
@@ -66,7 +64,7 @@ public class GeoShapeFigure extends DefaultSizeNodeFigure {
 		
 		IFigure f = new Figure();
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
-		layout.setSpacing(MapMode.DPtoLP(5));
+		layout.setSpacing(spacing);
 		f.setLayoutManager(layout);
 		add(f);
 	}

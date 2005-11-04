@@ -16,8 +16,8 @@ import java.util.Map;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SnapToGuides;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 
 /**
@@ -38,17 +38,18 @@ public class SnapToGuidesEx
 	protected double getCorrectionFor(int[] guides, double value,
 			Map extendedData, boolean vert, int side) {
 
-		double resultMag = MapMode.DPtoLP((int)THRESHOLD);
+		IMapMode mm = MapModeUtil.getMapMode(container.getFigure());
+		double resultMag = mm.DPtoLP((int)THRESHOLD);
 		double result = THRESHOLD;
 
 		for (int i = 0; i < guides.length; i++) {
-			int offset = MapMode.DPtoLP(guides[i]);
+			int offset = mm.DPtoLP(guides[i]);
 			double magnitude;
 
 			magnitude = Math.abs(value - offset);
 			if (magnitude < resultMag) {
 				extendedData.put(vert ? KEY_VERTICAL_GUIDE
-					: KEY_HORIZONTAL_GUIDE, new Integer(MapMode.DPtoLP(guides[i])));
+					: KEY_HORIZONTAL_GUIDE, new Integer(mm.DPtoLP(guides[i])));
 				extendedData.put(vert ? KEY_VERTICAL_ANCHOR
 					: KEY_HORIZONTAL_ANCHOR, new Integer(side));
 				resultMag = magnitude;

@@ -32,15 +32,14 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.PolylineAnchor;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 
 
 /**
@@ -188,7 +187,7 @@ public class PolylineConnectionEx extends PolylineConnection {
 		Dimension absTol = new Dimension(TOLERANCE + lineWidth / 2, 0);
 		
     	if (!isFeedbackLayer) {
-    		MapMode.translateToLP(absTol);
+    		MapModeUtil.getMapMode(this).DPtoLP(absTol);
     	}
 
     	return absTol.width;
@@ -432,7 +431,7 @@ public class PolylineConnectionEx extends PolylineConnection {
     	Dimension jumpDim = new Dimension(JUMPLINK_DEFAULT_WIDTH, JUMPLINK_DEFAULT_HEIGHT);
     	
     	if (!isFeedbackLayer) {
-    		MapMode.translateToLP(jumpDim);
+    		MapModeUtil.getMapMode(this).DPtoLP(jumpDim);
     	}
     	
         return jumpDim;

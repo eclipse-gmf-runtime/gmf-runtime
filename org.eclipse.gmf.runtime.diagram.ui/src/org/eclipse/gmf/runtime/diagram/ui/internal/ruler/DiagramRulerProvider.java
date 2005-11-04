@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.CreateGuideCom
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.DeleteGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.MoveGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -114,11 +114,16 @@ public class DiagramRulerProvider extends RulerProvider {
 	};
 	
 	private DiagramRuler theRuler;
-
-	public DiagramRulerProvider( DiagramRuler ruler ) {
+	private IMapMode mm;
+	
+	public DiagramRulerProvider( DiagramRuler ruler, IMapMode mm ) {
 		theRuler = ruler;
+		this.mm = mm;
 	}
 	
+	private IMapMode getMapMode() {
+		return mm;
+	}
 	public void init() {
 		theRuler.addNotificationListener(rulerListener);
 
@@ -197,10 +202,10 @@ public class DiagramRulerProvider extends RulerProvider {
 			SetPropertyCommand spc;
 
 			if( ((DiagramRuler)getRuler()).isHorizontal()) {
-				x += MapMode.DPtoLP(pDelta);
+				x += getMapMode().DPtoLP(pDelta);
 				spc = new SetPropertyCommand(new EObjectAdapter(part), Properties.ID_POSITIONX, Properties.ID_POSITIONX, new Integer(x));
 			} else {
-				y += MapMode.DPtoLP(pDelta);
+				y += getMapMode().DPtoLP(pDelta);
 				spc = new SetPropertyCommand(new EObjectAdapter(part), Properties.ID_POSITIONY, Properties.ID_POSITIONY, new Integer(y));
 			}
 
@@ -335,4 +340,6 @@ public class DiagramRulerProvider extends RulerProvider {
 			}
 		}
 	}
+
+
 }

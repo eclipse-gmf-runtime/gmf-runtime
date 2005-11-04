@@ -14,11 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 
 /*
@@ -35,25 +35,6 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
  */
 public class NoteFigure extends DefaultSizeNodeFigure {
 
-	/**
-	 * ther clip height constant
-	 */
-	static public final int CLIP_HEIGHT = MapMode.DPtoLP(12);
-	
-	/**
-	 * the margin constant 
-	 */
-	static public final int MARGIN = MapMode.DPtoLP(5);
-	
-	/**
-	 * the clip margin constant
-	 */
-	static public final int CLIP_MARGIN = MapMode.DPtoLP(14);
-	static private final int clipHeight = CLIP_HEIGHT;
-	static private final int clipWidth = CLIP_HEIGHT + MapMode.DPtoLP(1);
-	private static final int DEFAULT_NOTE_WIDTH  = MapMode.DPtoLP(100);
-	private static final int DEFAULT_NOTE_HEIGHT = MapMode.DPtoLP(56);
-	
 	private boolean diagrsamLinkMode = false;;
 
 
@@ -61,21 +42,75 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	private int lineWidth = 1;  
 
 	/**
-	 * constructor
+	 * the clip height constant in device coordinates
+	 */
+	static public final int CLIP_HEIGHT_DP = 12;
+	
+	/**
+	 * the margin constant in device coordinates
+	 */
+	static public final int MARGIN_DP = 5;
+	
+	/**
+	 * the clip margin constant in device coordinates
+	 */
+	static public final int CLIP_MARGIN_DP = 14;
+	
+	/**
+	 * @deprecated Clients should map <code>MARGIN_DP</code> to logical coordinates using the <code>IMapMode</code>
+	 * object retrieve from @link{GraphicalEditPart#getMapMode()} or @link{MapModeUtil.getMapMode(IFigure)}
+	 */
+	public static final int MARGIN = MapModeUtil.getMapMode().DPtoLP(5);
+	
+	/**
+	 * @deprecated Clients should map <code>CLIP_HEIGHT_DP</code> to logical coordinates using the <code>IMapMode</code>
+	 * object retrieve from @link{GraphicalEditPart#getMapMode()} or @link{MapModeUtil.getMapMode(IFigure)}
+	 */
+	static public final int CLIP_HEIGHT = MapModeUtil.getMapMode().DPtoLP(12);
+	
+	/**
+	 * @deprecated Clients should map <code>CLIP_HEIGHT_DP</code> to logical coordinates using the <code>IMapMode</code>
+	 * object retrieve from @link{GraphicalEditPart#getMapMode()} or @link{MapModeUtil.getMapMode(IFigure)}
+	 */
+	static public final int CLIP_MARGIN = MapModeUtil.getMapMode().DPtoLP(14);
+	
+	/**
+	 * Constructor
+	 * 
+	 * @deprecated use @link(NoteFigure(int width, int height, Insets insets)) instead
 	 */
 	public NoteFigure() {
-		setDefaultSize(new Dimension(DEFAULT_NOTE_WIDTH, DEFAULT_NOTE_HEIGHT));
+		this(MapModeUtil.getMapMode().DPtoLP(100), MapModeUtil.getMapMode().DPtoLP(56), 
+			new Insets(MapModeUtil.getMapMode().DPtoLP(MARGIN_DP), 
+						MapModeUtil.getMapMode().DPtoLP(MARGIN_DP), 
+						MapModeUtil.getMapMode().DPtoLP(MARGIN_DP), 
+						MapModeUtil.getMapMode().DPtoLP(CLIP_MARGIN_DP)));
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param width <code>int</code> value that is the default width in logical units
+	 * @param height <code>int</code> value that is the default height in logical units
+	 * @param insets <code>Insets</code> that is the empty margin inside the note figure in logical units
+	 */
+	public NoteFigure(int width, int height, Insets insets) {
+		super(width, height);
 		setBorder(
-			new MarginBorder(
-				NoteFigure.MARGIN,
-				NoteFigure.MARGIN,
-				NoteFigure.MARGIN,
-				NoteFigure.CLIP_MARGIN));
+			new MarginBorder(insets.top, insets.left, insets.bottom, insets.right));
 
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
-		layout.setSpacing(MapMode.DPtoLP(5));
+		layout.setSpacing(insets.top);
 		setLayoutManager(layout);
+	}
+	
+	private int getClipHeight() {
+		return MapModeUtil.getMapMode(this).DPtoLP(12);
+	}
+	
+	private int getClipWidth() {
+		return getClipHeight() + MapModeUtil.getMapMode(this).DPtoLP(1);
 	}
 	
 	/**
@@ -86,10 +121,11 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	protected PointList getPointList(Rectangle r) {
 
 		PointList p = new PointList();
+		
 		p.addPoint(r.x, r.y);
 		if (!isDiagramLinkMode()){
-			p.addPoint(r.x + r.width - clipWidth, r.y);
-			p.addPoint(r.x + r.width - 1, r.y + clipHeight);
+			p.addPoint(r.x + r.width - getClipWidth(), r.y);
+			p.addPoint(r.x + r.width - 1, r.y + getClipHeight());
 		}else{
 			p.addPoint(r.x + r.width - 1, r.y) ;
 		}
@@ -110,9 +146,9 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	
 			if (withDanglingCorner) {
 				PointList corner = new PointList();
-				corner.addPoint(r.x + r.width - clipWidth, r.y);
-				corner.addPoint(r.x + r.width - clipWidth, r.y + clipHeight);
-				corner.addPoint(r.x + r.width, r.y + clipHeight);
+				corner.addPoint(r.x + r.width - getClipWidth(), r.y);
+				corner.addPoint(r.x + r.width - getClipWidth(), r.y + getClipHeight());
+				corner.addPoint(r.x + r.width, r.y + getClipHeight());
 				g.drawPolyline(corner);			
 			}
 		}		 

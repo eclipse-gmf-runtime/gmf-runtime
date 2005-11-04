@@ -33,9 +33,11 @@ public class NestedResizableCompartmentFigure extends ResizableCompartmentFigure
 	/**
 	 * Constructors a ResizeableComparmtmentFigure that has the text align to the left
 	 * and the scrollpane 
+	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
+	 * logical coordinates.
 	 */
-	public NestedResizableCompartmentFigure() {
-		super(null);
+	public NestedResizableCompartmentFigure(int minClientSize) {
+		super(null, minClientSize);
 		setBorder(null);
 		ConstrainedToolbarLayout layout = (ConstrainedToolbarLayout)getLayoutManager();
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT); //diff cause we want to align our title to the left top

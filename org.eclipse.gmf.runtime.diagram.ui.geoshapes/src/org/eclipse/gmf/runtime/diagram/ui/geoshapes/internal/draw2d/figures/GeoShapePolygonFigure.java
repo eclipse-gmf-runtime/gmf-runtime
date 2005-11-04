@@ -32,8 +32,8 @@ public abstract class GeoShapePolygonFigure
 	 */
 	abstract protected PointList calculatePoints(Rectangle rect);
 
-	public GeoShapePolygonFigure(int width, int height) {
-		super(width, height);
+	public GeoShapePolygonFigure(int width, int height, int spacing) {
+		super(width, height, spacing);
 	}
 
 	/*

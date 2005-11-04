@@ -20,7 +20,7 @@ import org.eclipse.draw2d.geometry.Translatable;
  * in the model to pixles.  For an example of how to use this interface
  * @see org.eclipse.gmf.runtime.gef.ui.internal.figure.surface.mapmode.HiMetricMapMode
  *
- * @author jschofie
+ * @author jschofie / sshaw
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  */
 public interface IMapMode {

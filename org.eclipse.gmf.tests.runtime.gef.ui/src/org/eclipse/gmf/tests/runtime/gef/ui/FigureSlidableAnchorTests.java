@@ -14,9 +14,9 @@ package org.eclipse.gmf.tests.runtime.gef.ui;
 import junit.framework.TestCase;
 
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.internal.figures.DiamondFigure;
 
@@ -104,7 +104,7 @@ public class FigureSlidableAnchorTests
 	}
 	
 	public void testAnchorLocationOnPolygonFigure() {
-		DiamondFigure fig = new DiamondFigure();
+		DiamondFigure fig = new DiamondFigure(new Dimension(1058, 1058));
 		fig.setBounds(Rectangle.SINGLETON);
 		fig.getBounds().setLocation(-10,-10);
 		fig.getBounds().setSize(20,20);

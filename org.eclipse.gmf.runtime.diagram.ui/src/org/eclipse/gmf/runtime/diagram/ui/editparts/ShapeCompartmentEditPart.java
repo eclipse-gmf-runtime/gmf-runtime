@@ -51,11 +51,13 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ShapeCompartmentDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -390,6 +392,8 @@ public abstract class ShapeCompartmentEditPart
 	protected IFigure createFigure() {
 		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getTitleName());
 		scf.getContentPane().setLayoutManager(getLayoutManager());
+		scf.addLayoutListener(new AnimatableLayoutListener());
+
 		return scf;
 	}
 

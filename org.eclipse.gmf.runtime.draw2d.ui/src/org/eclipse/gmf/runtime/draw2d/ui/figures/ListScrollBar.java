@@ -20,17 +20,17 @@ import org.eclipse.draw2d.ChangeListener;
 import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ScrollBar;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DropShadowButtonBorder;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DropShadowButtonBorder;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 
 
 /**
@@ -48,18 +48,28 @@ public class ListScrollBar extends ScrollBar {
 
 	private static Border dropshadow = new DropShadowButtonBorder();
 
-	private static Border margin = new MarginBorder(MapMode.DPtoLP(1), MapMode.DPtoLP(2),
-		MapMode.DPtoLP(1), MapMode.DPtoLP(0));
-
 	/**
-	 * @param orientation
+	 * Constructor
+	 * 
+	 * @param orientation int that is a define from <code>Orientable</code>
+	 * @param insets the <code>Insets> that represents the white space buffer around the scroll bar in 
+	 * logical coordinates.
+	 * @param size the <code>Dimension</code> that is the size of the scroll bar end boxes in 
+	 * logical coordinates
+	 * @param stepInc the <code>int</code> space to jump when incrementing the scroll bar one step in
+	 * logical coordinates
+	 * @param pageInc the <code>int</code> space to jump when paging the scroll bar up or down in
+	 * logical coordinates.
 	 */
-	public ListScrollBar(int orientation) {
+	public ListScrollBar(int orientation, Insets insets, Dimension size, int stepInc, int pageInc) {
 		setOrientation(orientation);
+		
+		Border margin = new MarginBorder(insets.top, insets.left, insets.bottom, insets.right);
+		
 		setBorder(margin);
-		setPreferredSize(MapMode.DPtoLP(15), MapMode.DPtoLP(15));
-		setStepIncrement(MapMode.DPtoLP(10));
-		setPageIncrement(MapMode.DPtoLP(50));
+		setPreferredSize(size.width, size.height);
+		setStepIncrement(stepInc);
+		setPageIncrement(pageInc);
 
 		upIcon = isHorizontal()? icons.left : icons.up;
 		upPressedIcon = isHorizontal()? icons.leftPressed : icons.upPressed;
@@ -68,6 +78,7 @@ public class ListScrollBar extends ScrollBar {
 		downPressedIcon = isHorizontal()? icons.rightPressed : icons.downPressed;
 		downGrayedIcon = isHorizontal()? icons.rightGrayed : icons.downGrayed;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.draw2d.ScrollBar#createDefaultDownButton()

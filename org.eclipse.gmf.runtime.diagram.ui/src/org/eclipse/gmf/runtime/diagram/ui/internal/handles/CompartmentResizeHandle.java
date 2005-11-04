@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * Creates a  non-visual resize handle for the given <code>ResizableCompartmentEditPart</code>.
@@ -70,7 +70,7 @@ public class CompartmentResizeHandle extends AbstractHandle {
 	public Dimension getPreferredSize(int wHint, int hHint) {
 		Rectangle rect = getOwnerFigure().getBounds().getCopy();
 
-		MapMode.translateToDP(rect);
+		MapModeUtil.getMapMode(getOwnerFigure()).LPtoDP(rect);
 		if ((location & PositionConstants.NORTH_SOUTH) != 0)
 			return new Dimension(rect.width, 3);
 		else

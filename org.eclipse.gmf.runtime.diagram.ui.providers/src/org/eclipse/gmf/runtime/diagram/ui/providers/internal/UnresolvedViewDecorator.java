@@ -13,7 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.HashedCircle;
@@ -21,8 +22,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -38,9 +38,6 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class UnresolvedViewDecorator
 	extends AbstractDecorator {
-
-	/** The radius of the decoration hashed circle */
-	private static final int RADIUS = MapMode.DPtoLP(8);
 
 	/**
 	 * Creates a new <code>UnresolvedViewDecorator</code>.
@@ -65,26 +62,28 @@ public class UnresolvedViewDecorator
 
 		EObject element = ViewUtil.resolveSemanticElement(view);
 
+		int radius = MapModeUtil.getMapMode(((GraphicalEditPart)editPart).getFigure()).DPtoLP(8);
+
 		if (editPart instanceof ShapeEditPart && element == null) {
 			HashedCircle circle = new HashedCircle(HashedCircle.HashType.X,
-				RADIUS);
+				radius);
 			circle.setFill(false);
 			setDecoration(getDecoratorTarget().addShapeDecoration(circle,
-				IDecoratorTarget.Direction.NORTH_EAST, MapMode.DPtoLP(-4),
+				IDecoratorTarget.Direction.NORTH_EAST, MapModeUtil.getMapMode(((ShapeEditPart)editPart).getFigure()).DPtoLP(-4),
 				false));
 
 		} else if (view instanceof Edge) {
-			Edge edge = (Edge)view;
+			Edge connectorView = (Edge)view;
 			if (element == null) {
 				HashedCircle circle = new HashedCircle(HashedCircle.HashType.X,
-					RADIUS);
+					radius);
 				circle.setFill(false);
 				setDecoration(getDecoratorTarget().addConnectionDecoration(
 					circle, 50, false));
-			} else if ((edge.getTarget() != null)&&(ViewUtil
-				.resolveSemanticElement(edge.getTarget()) == null)) {
+			} else if ((connectorView.getTarget() != null)&&(ViewUtil
+				.resolveSemanticElement(connectorView.getTarget()) == null)) {
 				HashedCircle circle = new HashedCircle(
-					HashedCircle.HashType.BACKSLASH, RADIUS);
+					HashedCircle.HashType.BACKSLASH, radius);
 				circle.setFill(false);
 				setDecoration(getDecoratorTarget().addConnectionDecoration(
 					circle, 70, false));

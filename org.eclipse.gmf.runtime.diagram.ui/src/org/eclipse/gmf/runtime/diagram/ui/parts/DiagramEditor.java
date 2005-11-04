@@ -967,12 +967,15 @@ public abstract class DiagramEditor
 		
 		if (guideStyle != null) {
 
+			RootEditPart rep = getGraphicalViewer().getRootEditPart();
+			DiagramRootEditPart root = (DiagramRootEditPart) rep;
+			
 			// Set the Vertical Ruler properties
 			DiagramRuler verticalRuler = ((DiagramRootEditPart) getRootEditPart()).getVerticalRuler();
 			verticalRuler.setGuideStyle(guideStyle);
 			verticalRuler.setUnit(rulerUnits);
 			DiagramRulerProvider vertProvider = new DiagramRulerProvider(
-				verticalRuler);
+				verticalRuler, root.getMapMode());
 			vertProvider.init();
 			getDiagramGraphicalViewer().setProperty(
 				RulerProvider.PROPERTY_VERTICAL_RULER, vertProvider);
@@ -982,7 +985,7 @@ public abstract class DiagramEditor
 			horizontalRuler.setGuideStyle(guideStyle);
 			horizontalRuler.setUnit(rulerUnits);
 			DiagramRulerProvider horzProvider = new DiagramRulerProvider(
-				horizontalRuler);
+				horizontalRuler, root.getMapMode());
 			horzProvider.init();
 			getDiagramGraphicalViewer().setProperty(
 				RulerProvider.PROPERTY_HORIZONTAL_RULER, horzProvider);

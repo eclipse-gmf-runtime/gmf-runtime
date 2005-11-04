@@ -705,7 +705,7 @@ public class PrintPreviewHelper {
 		if (totalNumberOfRows < 0) {
 			float numRows = ((float) getBounds().height)
 				/ PageInfoHelper
-					.getPageSize(getPreferenceStore(), false).y;
+					.getPageSize(getPreferenceStore(), false, getMapMode()).y;
 			totalNumberOfRows = Math.max(1, (int) Math.ceil(numRows));
 		}
 
@@ -812,7 +812,7 @@ public class PrintPreviewHelper {
 		if (totalNumberOfColumns < 0) {
 			float numCols = ((float) getBounds().width)
 				/ PageInfoHelper
-					.getPageSize(getPreferenceStore(), false).x;
+					.getPageSize(getPreferenceStore(), false, getMapMode()).x;
 			totalNumberOfColumns = Math.max(1, (int) Math.ceil(numCols));
 		}
 
@@ -916,7 +916,7 @@ public class PrintPreviewHelper {
 		//get printer ratio from the page, not the real printer
 
 		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-			.getPageSize(getPreferenceStore(), false);
+			.getPageSize(getPreferenceStore(), false, getMapMode());
 		Assert.isNotNull(pageSize);
 		
 		//width / height
@@ -930,7 +930,7 @@ public class PrintPreviewHelper {
 			imageHeight = (int) (imageWidth * (1.0f / printerRatio));
 		}
 		
-		PageMargins margins = PageInfoHelper.getPageMargins(getPreferenceStore());
+		PageMargins margins = PageInfoHelper.getPageMargins(getPreferenceStore(), getMapMode());
 
 		//make sure height and width are not 0, if too small <4, don't bother
 		if (!(imageHeight <= 4 || imageWidth <= 4)) {
@@ -1072,7 +1072,7 @@ public class PrintPreviewHelper {
 	 */
 	protected void drawPage(Graphics g, GC gc, float scale, int row, int col, PageMargins margins) {
 		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-		.getPageSize(getPreferenceStore(), false);
+		.getPageSize(getPreferenceStore(), false, getMapMode());
 		
 		g.pushState();
 
@@ -1121,7 +1121,7 @@ public class PrintPreviewHelper {
 			g.drawText(
 				headerOrFooter,				
 				(pageSize.x - getMapMode().DPtoLP(gc.textExtent(headerOrFooter).x)) / 2,
-				HeaderAndFooterHelper.TOP_MARGIN);
+				getMapMode().DPtoLP(HeaderAndFooterHelper.TOP_MARGIN_DP));
 
 			headerOrFooter =
 				HeaderAndFooterHelper.makeHeaderOrFooterString(
@@ -1133,7 +1133,7 @@ public class PrintPreviewHelper {
 			g.drawText(
 				headerOrFooter,
 				(pageSize.x - getMapMode().DPtoLP(gc.textExtent(headerOrFooter).x)) / 2,
-				pageSize.y - HeaderAndFooterHelper.BOTTOM_MARGIN);
+				pageSize.y - getMapMode().DPtoLP(HeaderAndFooterHelper.BOTTOM_MARGIN_DP));
 
 			g.popState(); //for drawing the text				
 		}

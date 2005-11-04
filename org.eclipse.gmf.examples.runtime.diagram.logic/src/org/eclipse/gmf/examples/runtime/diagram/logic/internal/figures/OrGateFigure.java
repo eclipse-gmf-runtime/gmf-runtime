@@ -15,8 +15,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -26,34 +26,36 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 public class OrGateFigure extends NodeFigure {
-	protected static final Dimension SIZE = new Dimension(MapMode.DPtoLP(15), MapMode.DPtoLP(17));
-	protected static final PointList GATE_OUTLINE = new PointList();
+	private static final PointList points = new PointList();
 
 	static {
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(10));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(2));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(4), MapMode.DPtoLP(4));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(6), MapMode.DPtoLP(5));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(7), MapMode.DPtoLP(5));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(8), MapMode.DPtoLP(5));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(10), MapMode.DPtoLP(4));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(12), MapMode.DPtoLP(2));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(12), MapMode.DPtoLP(10));
+		points.addPoint(2, 10);
+		points.addPoint(2, 2);
+		points.addPoint(4, 4);
+		points.addPoint(6, 5);
+		points.addPoint(7, 5);
+		points.addPoint(8, 5);
+		points.addPoint(10, 4);
+		points.addPoint(12, 2);
+		points.addPoint(12, 10);
 	}	
 
+	private Dimension prefSize;
+	
 	/**
 	 * Creates a new OrGateFigure
 	 */
-	public OrGateFigure() {
-		getBounds().width = SIZE.width; 
-		getBounds().height = SIZE.height;
+	public OrGateFigure(Dimension prefSize) {
+		getBounds().width = prefSize.width; 
+		getBounds().height = prefSize.height;
+		this.prefSize = new Dimension(prefSize);
 	}
 
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return SIZE;
+		return new Dimension(prefSize);
 	}
 
 	/**
@@ -61,20 +63,24 @@ public class OrGateFigure extends NodeFigure {
 	 */
 	protected void paintFigure(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		r.translate(MapMode.DPtoLP(2), MapMode.DPtoLP(2));
-		r.setSize(MapMode.DPtoLP(11), MapMode.DPtoLP(9));
+		
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		r.translate(mm.DPtoLP(2), mm.DPtoLP(2));
+		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9));
 	
 		//Draw the bottom arc of the gate
-		r.y += MapMode.DPtoLP(4);
-		r.width = r.width - MapMode.DPtoLP(1);
+		r.y += mm.DPtoLP(4);
+		r.width = r.width - mm.DPtoLP(1);
 		g.fillOval(r);
 		r.height--;
 		g.drawOval(r);
 	
 		//draw gate
 		g.translate(getLocation());
-		g.fillPolygon(GATE_OUTLINE);
-		g.drawPolyline(GATE_OUTLINE);
+		PointList outline = points.getCopy();
+		mm.DPtoLP(outline);
+		g.fillPolygon(outline);
+		g.drawPolyline(outline);
 		g.translate(getLocation().getNegated());
 	}
 }

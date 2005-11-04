@@ -17,7 +17,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * code copied from real logic example in gef
@@ -36,12 +37,13 @@ public class CircuitBorder
 
 	public void paint(IFigure figure, Graphics g, Insets in) {
 		Rectangle r = figure.getBounds().getCropped(in);
+		IMapMode mm = MapModeUtil.getMapMode(figure);
 		
 		//Draw the sides of the border
-		g.fillRectangle(r.x, r.y, r.width, MapMode.DPtoLP(6));
-		g.fillRectangle(r.x, r.bottom() - MapMode.DPtoLP(6), r.width, MapMode.DPtoLP(6));
-		g.fillRectangle(r.x, r.y + MapMode.DPtoLP(2), MapMode.DPtoLP(6), r.height - MapMode.DPtoLP(4));
-		g.fillRectangle(r.right() - MapMode.DPtoLP(6), r.y + MapMode.DPtoLP(2), MapMode.DPtoLP(6), r.height - MapMode.DPtoLP(4));
+		g.fillRectangle(r.x, r.y, r.width, mm.DPtoLP(6));
+		g.fillRectangle(r.x, r.bottom() - mm.DPtoLP(6), r.width, mm.DPtoLP(6));
+		g.fillRectangle(r.x, r.y + mm.DPtoLP(2), mm.DPtoLP(6), r.height - mm.DPtoLP(4));
+		g.fillRectangle(r.right() - mm.DPtoLP(6), r.y + mm.DPtoLP(2), mm.DPtoLP(6), r.height - mm.DPtoLP(4));
 
 		//Outline the border
 		g.drawLine(r.x, r.y + 8, r.right() - 1, r.y + 8);

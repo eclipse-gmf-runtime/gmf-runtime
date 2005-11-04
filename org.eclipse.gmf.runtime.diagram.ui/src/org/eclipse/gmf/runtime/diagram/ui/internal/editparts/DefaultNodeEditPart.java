@@ -16,12 +16,12 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
@@ -40,6 +40,10 @@ public class DefaultNodeEditPart
 	static class DefaultNodeFigure
 		extends DefaultSizeNodeFigure {
 
+		public DefaultNodeFigure(int width, int height) {
+			super(width, height);
+		}
+
 		protected void paintFigure(Graphics g) {
 			Rectangle r = Rectangle.SINGLETON;
 			r.setBounds(getBounds());
@@ -55,14 +59,14 @@ public class DefaultNodeEditPart
 			String txt = DiagramResourceManager
 				.getI18NString("InvalidView"); //$NON-NLS-1$
 
+			IMapMode mm = MapModeUtil.getMapMode(this);
 			if (txt != null && txt.length() > 0) {
 				Dimension td = FigureUtilities.getTextExtents(txt, g.getFont());
-				MapMode.translateToLP(td);
+				mm.DPtoLP(td);
 				Point p = FigureUtilities.getLocation(
 					PositionConstants.NORTH_SOUTH, td, r);
 				g.drawString(txt, p);
-				setPreferredSize(td.expand(MapMode.DPtoLP(10), MapMode
-					.DPtoLP(10)));
+				setPreferredSize(td.expand(mm.DPtoLP(10), mm.DPtoLP(10)));
 			}
 		}
 	}
@@ -80,7 +84,7 @@ public class DefaultNodeEditPart
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart#createNodeFigure()
 	 */
 	protected NodeFigure createNodeFigure() {
-		return new DefaultNodeFigure();
+		return new DefaultNodeFigure(getMapMode().DPtoLP(40), getMapMode().DPtoLP(40));
 	}
 
 }

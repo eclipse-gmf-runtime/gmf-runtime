@@ -14,8 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
 /**
  * @author jschofie
  *
@@ -23,22 +21,24 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
  */
 public class GeoShapeRoundedRectangleFigure extends GeoShapeFigure {
 
-	/** corner radius. */
-	private static final int RADIUS = MapMode.DPtoLP(20);
+	private int radius = 0;
 	
 	/**
 	 * Constructor - Creates a rounded rectangle with a given Default size
 	 * 
 	 * @param width inital width of the figure
 	 * @param height initial height of the figure
+	 * @param spacing <code>int<code> the spacing between children in logical units
+	 * @param radius <code>int</code> the radius size of the corner roundness in logical units
 	 */
-	public GeoShapeRoundedRectangleFigure( int width, int height ) {
-		super(width, height);
+	public GeoShapeRoundedRectangleFigure( int width, int height, int spacing, int radius ) {
+		super(width, height, spacing);
+		this.radius = radius; 
 	}
 
 	/** Return the corner radius. */
 	protected int getCornerRadius() {
-		return RADIUS;
+		return radius;
 	}
 	
 

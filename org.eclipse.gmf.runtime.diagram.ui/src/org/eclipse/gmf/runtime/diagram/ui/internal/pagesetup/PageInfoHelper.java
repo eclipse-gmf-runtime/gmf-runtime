@@ -21,12 +21,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
-import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
@@ -34,7 +28,12 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Helper to get information about a page.  Used by page breaks and print
@@ -105,15 +104,15 @@ public class PageInfoHelper {
      * Utility method that calculate the printer page size.      
      * @return point the page size point.x == width, point.y == height
      */
-    public static Point getPageSize(IPreferenceStore store) {
-    	return getPageSize(store, true);
+    public static Point getPageSize(IPreferenceStore store, IMapMode mm) {
+    	return getPageSize(store, true, mm);
     }
     
     /**
      * Utility method that calculate the printer page size.      
      * @return point the page size point.x == width, point.y == height
      */
-    public static Point getPageSize(IPreferenceStore store, boolean subtractMargins) {
+    public static Point getPageSize(IPreferenceStore store, boolean subtractMargins, IMapMode mm) {
 
 		double paperSizeWidth =
 			store.getDouble(WorkspaceViewerProperties.PREF_PAGE_WIDTH);
@@ -154,8 +153,8 @@ public class PageInfoHelper {
 		int[] paperSize = { 0, 0 };
 		org.eclipse.swt.widgets.Display display = Display.getDefault();
 		org.eclipse.swt.graphics.Point displayDPI = display.getDPI();
-		paperSize[0] = MapMode.DPtoLP((int)(width * displayDPI.x));
-		paperSize[1] = MapMode.DPtoLP((int)(height * displayDPI.y));
+		paperSize[0] = mm.DPtoLP((int)(width * displayDPI.x));
+		paperSize[1] = mm.DPtoLP((int)(height * displayDPI.y));
 
 		return new Point(paperSize[0], paperSize[1]);
     }
@@ -267,22 +266,18 @@ public class PageInfoHelper {
 	}	
 	
 	
-	public static PageMargins getPageMargins(IPreferenceStore preferenceStore) {
+	public static PageMargins getPageMargins(IPreferenceStore preferenceStore, IMapMode mm) {
 		assert Display.getDefault() != null;
 		
 		org.eclipse.swt.graphics.Point displayDPI = Display.getDefault().getDPI();
 		PageMargins margins = new PageMargins();
-		margins.left = MapMode
-		.DPtoLP((int) ( displayDPI.x * preferenceStore
+		margins.left = mm.DPtoLP((int) ( displayDPI.x * preferenceStore
 			.getDouble(WorkspaceViewerProperties.PREF_MARGIN_LEFT)));
-		margins.right = MapMode
-		.DPtoLP((int) ( displayDPI.x * preferenceStore
+		margins.right = mm.DPtoLP((int) ( displayDPI.x * preferenceStore
 			.getDouble(WorkspaceViewerProperties.PREF_MARGIN_RIGHT)));
-		margins.top = MapMode
-		.DPtoLP((int) ( displayDPI.y * preferenceStore
+		margins.top = mm.DPtoLP((int) ( displayDPI.y * preferenceStore
 			.getDouble(WorkspaceViewerProperties.PREF_MARGIN_TOP)));
-		margins.bottom = MapMode
-		.DPtoLP((int) ( displayDPI.y * preferenceStore
+		margins.bottom = mm.DPtoLP((int) ( displayDPI.y * preferenceStore
 			.getDouble(WorkspaceViewerProperties.PREF_MARGIN_BOTTOM)));
 		
 		return margins;

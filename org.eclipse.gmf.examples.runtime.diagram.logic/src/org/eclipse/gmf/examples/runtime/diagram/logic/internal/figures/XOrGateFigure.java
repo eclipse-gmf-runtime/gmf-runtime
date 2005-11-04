@@ -15,8 +15,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -27,45 +27,47 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  */
 public class XOrGateFigure extends NodeFigure {
 
-	protected static final Dimension SIZE = new Dimension(MapMode.DPtoLP(15), MapMode.DPtoLP(17));	
-	protected static final PointList GATE_OUTLINE = new PointList();
-	protected static final PointList GATE_TOP = new PointList();
+	private static final PointList outlinePoints = new PointList();
+	private static final PointList topPoints = new PointList();
 
 	static {
 		//setup gate outline
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(10));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(4));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(4), MapMode.DPtoLP(6));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(6), MapMode.DPtoLP(7));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(7), MapMode.DPtoLP(7));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(8), MapMode.DPtoLP(7));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(10), MapMode.DPtoLP(6));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(12), MapMode.DPtoLP(4));
-		GATE_OUTLINE.addPoint(MapMode.DPtoLP(12), MapMode.DPtoLP(10));
+		outlinePoints.addPoint(2, 10);
+		outlinePoints.addPoint(2, 4);
+		outlinePoints.addPoint(4, 6);
+		outlinePoints.addPoint(6, 7);
+		outlinePoints.addPoint(7, 7);
+		outlinePoints.addPoint(8, 7);
+		outlinePoints.addPoint(10, 6);
+		outlinePoints.addPoint(12, 4);
+		outlinePoints.addPoint(12, 10);
 
 		//setup top curve of gate
-		GATE_TOP.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(2));
-		GATE_TOP.addPoint(MapMode.DPtoLP(4), MapMode.DPtoLP(4));
-		GATE_TOP.addPoint(MapMode.DPtoLP(6), MapMode.DPtoLP(5));
-		GATE_TOP.addPoint(MapMode.DPtoLP(7), MapMode.DPtoLP(5));
-		GATE_TOP.addPoint(MapMode.DPtoLP(8), MapMode.DPtoLP(5));
-		GATE_TOP.addPoint(MapMode.DPtoLP(10), MapMode.DPtoLP(4));
-		GATE_TOP.addPoint(MapMode.DPtoLP(12), MapMode.DPtoLP(2));
+		topPoints.addPoint(2, 2);
+		topPoints.addPoint(4, 4);
+		topPoints.addPoint(6, 5);
+		topPoints.addPoint(7, 5);
+		topPoints.addPoint(8, 5);
+		topPoints.addPoint(10, 4);
+		topPoints.addPoint(12, 2);
 	}	
 
+	 private Dimension prefSize;
+	    
 	/**
 	 * Constructor for XOrGateFigure.
 	 */
-	public XOrGateFigure() {
-		getBounds().width = SIZE.width;
-		getBounds().height = SIZE.height;
+	public XOrGateFigure(Dimension prefSize) {
+		getBounds().width = prefSize.width;
+		getBounds().height = prefSize.height;
+		this.prefSize = new Dimension(prefSize);
 	}
 
 	/**
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return SIZE;
+		return new Dimension(prefSize);
 	}
 
 	/**
@@ -73,11 +75,13 @@ public class XOrGateFigure extends NodeFigure {
 	 */
 	protected void paintFigure(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		r.translate(MapMode.DPtoLP(2), MapMode.DPtoLP(2));
-		r.setSize(MapMode.DPtoLP(11), MapMode.DPtoLP(9)); 
+		
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		r.translate(mm.DPtoLP(2), mm.DPtoLP(2));
+		r.setSize(mm.DPtoLP(11), mm.DPtoLP(9)); 
 
 		//Draw an oval that represents the bottom arc
-		r.y += MapMode.DPtoLP(4);
+		r.y += mm.DPtoLP(4);
 	
 		/* 
 		 * Draw the bottom gate arc.
@@ -89,7 +93,7 @@ public class XOrGateFigure extends NodeFigure {
 		g.clipRect(r);
 		r.y--;
 		
-		r.width = r.width - MapMode.DPtoLP(1);
+		r.width = r.width - mm.DPtoLP(1);
 		g.fillOval(r);
 		r.height--;
 		g.drawOval(r);
@@ -97,9 +101,15 @@ public class XOrGateFigure extends NodeFigure {
 
 		//Draw the gate outline and top curve
 		g.translate(getLocation());
-		g.drawPolyline(GATE_TOP);
-		g.fillPolygon(GATE_OUTLINE);
-		g.drawPolyline(GATE_OUTLINE);
+		
+		PointList topLP = topPoints.getCopy();
+		mm.DPtoLP(topLP);
+		g.drawPolyline(topLP);
+		
+		PointList outlineLP = outlinePoints.getCopy();
+		mm.DPtoLP(outlineLP);
+		g.fillPolygon(outlineLP);
+		g.drawPolyline(outlineLP);
 		g.translate(getLocation().negate());
 	}
 }

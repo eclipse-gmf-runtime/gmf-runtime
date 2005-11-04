@@ -19,11 +19,10 @@ import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.jface.util.Assert;
 
 /**
  * Gates are figures that sit within GatedFigures and can be painted outside the client
@@ -76,8 +75,8 @@ public class GateFigure extends NodeFigure {
 	 */
 	public static class GateLocator implements Locator {
 
-		private final static int VERTICAL_GAP   = MapMode.DPtoLP(8);
-		private final static int HORIZONTAL_GAP = MapMode.DPtoLP(8);
+		//private final static int VERTICAL_GAP   = MapMode.DPtoLP(8);
+		//private final static int HORIZONTAL_GAP = MapMode.DPtoLP(8);
 		
 		private IFigure boundaryFigure = null;
 		private BorderItemFigure gate = null;
@@ -314,10 +313,14 @@ public class GateFigure extends NodeFigure {
 			int circuitCount) {
 			Point recommendedLocation = locateOnParent(suggestedLocation,
 					suggestedSide);
+			
+			int vertical_gap = MapModeUtil.getMapMode(getParentFigure()).DPtoLP(8);
+			int horizontal_gap = MapModeUtil.getMapMode(getParentFigure()).DPtoLP(8);
+			
 			if ( circuitCount < 4 && conflicts(recommendedLocation) ) {
 				if ( suggestedSide == DrawConstant.WEST ) {
 					do {
-						recommendedLocation.y += getGateBorder().height + VERTICAL_GAP;
+						recommendedLocation.y += getGateBorder().height + vertical_gap;
 					}
 					while ( conflicts(recommendedLocation) );
 					if ( recommendedLocation.y > getParentBorder()
@@ -329,7 +332,7 @@ public class GateFigure extends NodeFigure {
 				}
 				else if ( suggestedSide == DrawConstant.SOUTH ) {
 					do {
-						recommendedLocation.x += getGateBorder().width + HORIZONTAL_GAP;
+						recommendedLocation.x += getGateBorder().width + horizontal_gap;
 					}
 					while ( conflicts(recommendedLocation) );
 					if ( recommendedLocation.x > getParentBorder()
@@ -341,7 +344,7 @@ public class GateFigure extends NodeFigure {
 				}
 				else if ( suggestedSide == DrawConstant.EAST ) { // move up the east side
 					do {
-						recommendedLocation.y -= getGateBorder().height - VERTICAL_GAP;
+						recommendedLocation.y -= getGateBorder().height - vertical_gap;
 					}
 					while ( conflicts(recommendedLocation) );
 					if ( recommendedLocation.y < getParentBorder()
@@ -352,7 +355,7 @@ public class GateFigure extends NodeFigure {
 				}
 				else { // NORTH
 					do {
-						recommendedLocation.x -= getGateBorder().width - HORIZONTAL_GAP;
+						recommendedLocation.x -= getGateBorder().width - horizontal_gap;
 					}
 					while ( conflicts(recommendedLocation) );
 					if ( recommendedLocation.x < getParentBorder().getTopLeft().x ) {

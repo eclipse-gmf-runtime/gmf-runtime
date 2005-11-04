@@ -21,6 +21,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
  * to device units.  Will be deprecated soon...
  * 
  * @author jschofie / sshaw
+ * @deprecated use {@link org.eclipse.gmf.runtime.draw2d.ui.MapModeUtil} instead.
  */
 public class MapMode {
 

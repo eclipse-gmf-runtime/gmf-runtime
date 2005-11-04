@@ -61,6 +61,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ZOrderRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
@@ -117,12 +118,16 @@ public class ContainerEditPolicy
 		if (data != null
 			&& viewContext != null
 			&& editPart instanceof ISurfaceEditPart) {
-			return new EtoolsProxyCommand(new PasteCommand(DiagramResourceManager.getI18NString("PasteCommand.Label"), viewContext, data)); //$NON-NLS-1$
+			return new EtoolsProxyCommand(new PasteCommand(DiagramResourceManager.getI18NString("PasteCommand.Label"), viewContext, data, getPasteOffset())); //$NON-NLS-1$
 		}
 
 		return null;
 	}
 
+	private int getPasteOffset() {
+		return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)getHost()).getFigure()).DPtoLP(10);
+	}
+	
 	private class EditPartComparator implements Comparator {
 		
 		/* (non-Javadoc)
@@ -391,14 +396,14 @@ public class ContainerEditPolicy
 						DiagramResourceManager
 							.getI18NString("Commands.Duplicate.Label"), //$NON-NLS-1$
 						request, notationViewsToDuplicate,
-						duplicateElementsRequest.getAllDuplicatedElementsMap()));
+						duplicateElementsRequest.getAllDuplicatedElementsMap(), getPasteOffset()));
 					return new EtoolsProxyCommand(cc);
 				}
 			} else {
 				return new EtoolsProxyCommand(new DuplicateViewsCommand(
 					DiagramResourceManager
 						.getI18NString("Commands.Duplicate.Label"), //$NON-NLS-1$
-					request, notationViewsToDuplicate));
+					request, notationViewsToDuplicate, getPasteOffset()));
 			}
 		}
 		return null;

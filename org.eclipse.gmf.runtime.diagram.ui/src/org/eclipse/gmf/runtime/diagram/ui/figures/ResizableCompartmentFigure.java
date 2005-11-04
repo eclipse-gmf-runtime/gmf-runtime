@@ -20,18 +20,19 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Orientable;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ListScrollBar;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.OneLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimatableScrollPane;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OverlayScrollPaneLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 
 
 /**
@@ -46,18 +47,12 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * @author melaasar
  * @author choang
  */
+/**
+ * @author Steve
+ *
+ */
 public class ResizableCompartmentFigure extends NodeFigure {
 
-	/**
-	 * The minimum client area height for the compartment
-	 */
-	public static final int MIN_CLIENT_SIZE = MapMode.DPtoLP(11);
-
-	/**
-	 * The minmum dimension for the compartment
-	 */
-	private static Dimension minClientDim = new Dimension(MIN_CLIENT_SIZE,MIN_CLIENT_SIZE);
-	
 	private boolean _horizontal = false;
 
 	/**
@@ -68,6 +63,12 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * The compartment title label
 	 */
 	private WrapLabel titleLabel;
+	
+	/**
+	 * the minimum size the client area can occupy in logical coordinates
+	 */
+	private int minClientSize = 0;
+	
 	/**
 	 * The compartment scroll pane
 	 */
@@ -83,10 +84,30 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	private boolean isScrollPaneInitialized = false;
 
 	/**
-	 * A constructor for a top level resizable compartment figure
+	 * Specifies the default minimum client size of this figure in device coordinates.
+	 * Clients should use their editors <code>IMapMode</code> to convert this to logical
+	 * coordinates.
+	 */
+	public static final int MIN_CLIENT_DP = 11;
+	
+	/**
 	 * @param compartmentTitle
+	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, int minClientSize)} instead.
+	 * Clients must specify the minClientSize in their own logical coordinate system instead of the
+	 * figure assuming a default.  @link{ ResizableCompartmentFigure.MIN_CLIENT_DP } is provided as a default
+	 * value for convenience in device coordinates.
 	 */
 	public ResizableCompartmentFigure(String compartmentTitle) {
+		this(compartmentTitle, MapModeUtil.getMapMode().DPtoLP(MIN_CLIENT_DP));
+	}
+	/**
+	 * A constructor for a top level resizable compartment figure
+	 * @param compartmentTitle
+	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
+	 * logical coordinates.
+	 */
+	public ResizableCompartmentFigure(String compartmentTitle, int minClientSize) {
+		this.minClientSize = minClientSize;
 		setTextPane(new Figure() {
 			public Dimension getMaximumSize() {
 				return getPreferredSize();
@@ -110,14 +131,30 @@ public class ResizableCompartmentFigure extends NodeFigure {
 		scrollPane.getViewport().setContentsTracksWidth(true);
 		scrollPane.getViewport().setContentsTracksHeight(false);
 		scrollPane.setLayoutManager(new OverlayScrollPaneLayout());
-		scrollPane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL));
+		
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
+			mm.DPtoLP(1), mm.DPtoLP(0));
+		Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
+		
+		scrollPane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
+									mm.DPtoLP(10), mm.DPtoLP(50)));
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
 		scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
 		scrollPane.setContents(new Figure());
 		scrollPane.getContents().setBorder(
-				new MarginBorder(1, MIN_CLIENT_SIZE/2, 1, MIN_CLIENT_SIZE/2));			
+				new MarginBorder(1, getMinClientSize()/2, 1, getMinClientSize()/2));			
 		return scrollPane;
 	}
+	
+	/**
+	 * @return that is the minimum size the client area can occupy in 
+	 * logical coordinates.
+	 */
+	final protected int getMinClientSize() {
+		return minClientSize;
+	}
+	
 	/**
 	 * Sets the compartment title visibility
 	 * 
@@ -276,7 +313,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 		super.paintFigure(graphics);
 		if (selected) {
 			graphics.setLineWidth(2);
-			graphics.drawRectangle(getClientArea().shrink(MapMode.DPtoLP(1), MapMode.DPtoLP(1)));
+			graphics.drawRectangle(getClientArea().shrink(MapModeUtil.getMapMode(this).DPtoLP(1), MapModeUtil.getMapMode(this).DPtoLP(1)));
 		}
 	}
 	
@@ -376,7 +413,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * @return <code>Dimension</code>
 	 */
 	public Dimension getMinClientDimension(){
-		return minClientDim;
+		return new Dimension(getMinClientSize(), getMinClientSize());
 	}
 	
 	/*

@@ -15,9 +15,9 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 
 /**
@@ -28,24 +28,31 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
  */
 public class OrGateTerminalFigure extends TerminalFigure {
 	
-	protected static PointList connector = new PointList();
+	private static PointList points = new PointList();
 	
 	static {
-		connector.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(0));
-		connector.addPoint(MapMode.DPtoLP(2), MapMode.DPtoLP(4));
+		points.addPoint(2, 0);
+		points.addPoint(2, 4);
+	}
+	
+	/**
+	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
+	 */
+	public Dimension getPreferredSize(int wHint, int hHint) {
+		return new Dimension(prefSize);
 	}
 	
 	/**
 	 * Constructor
 	 * @param edge
 	 */
-	public OrGateTerminalFigure(DrawConstant side, String ID) {
-		super(side);
-		Dimension preferredSize = new Dimension(MapMode.DPtoLP(4), MapMode.DPtoLP(4));
-		setSize(preferredSize);
+	public OrGateTerminalFigure(DrawConstant side, String ID, Dimension prefSize) {
+		super(side, prefSize);
+		setSize(prefSize);
+		this.prefSize = new Dimension(prefSize);
 		
 		fixedAnchor = new FixedConnectionAnchor(this);
-		fixedAnchor.offsetH = MapMode.DPtoLP(2);
+		fixedAnchor.offsetH = prefSize.width / 2;
 		getConnectionAnchors().put(ID, fixedAnchor);
 	}
 		
@@ -56,10 +63,11 @@ public class OrGateTerminalFigure extends TerminalFigure {
 	 */
 	protected void paintFigure(Graphics graphics) {	
 		Rectangle r = getBounds().getCopy();
-		r.translate(MapMode.DPtoLP(0), MapMode.DPtoLP(0));
 		
 		graphics.translate(r.getLocation());
-		PointList copy = connector.getCopy();
+		PointList copy = points.getCopy();
+		IMapMode mm = MapModeUtil.getMapMode(this);
+		mm.DPtoLP(copy);
 		graphics.drawPolygon(copy);	
 	}
 

@@ -33,15 +33,14 @@ import org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy;
 import org.eclipse.gef.handles.BendpointCreationHandle;
 import org.eclipse.gef.handles.BendpointMoveHandle;
 import org.eclipse.gef.requests.BendpointRequest;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.FeedbackConnection;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouterUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.handles.BendpointCreationInvisibleHandle;
 import org.eclipse.gmf.runtime.gef.ui.internal.handles.LineSegMoveInvisibleHandle;
+import org.eclipse.jface.util.Assert;
 
 /**
  * This EditPolicy defines the behavior of Bendpoints on a Connection.
@@ -635,7 +634,8 @@ abstract public class ConnectorBendpointEditPolicy
 			startRect);
 		getConnection().translateToRelative(startRect);
 		if (getLineSegMode().equals(LineMode.ORTHOGONAL_CONSTRAINED))
-			startRect.expand(MapMode.DPtoLP(-2), MapMode.DPtoLP(-2));
+			startRect.expand(MapModeUtil.getMapMode(getConnection()).DPtoLP(-2), 
+							MapModeUtil.getMapMode(getConnection()).DPtoLP(-2));
 		
 		if (!startRect.contains(line.getOrigin())) {
 			return true;
@@ -662,7 +662,8 @@ abstract public class ConnectorBendpointEditPolicy
 			endRect);
 		getConnection().translateToRelative(endRect);
 		if (getLineSegMode().equals(LineMode.ORTHOGONAL_CONSTRAINED))
-			endRect.expand(MapMode.DPtoLP(-2), MapMode.DPtoLP(-2)); 
+			endRect.expand(MapModeUtil.getMapMode(getConnection()).DPtoLP(-2), 
+						MapModeUtil.getMapMode(getConnection()).DPtoLP(-2)); 
 		
 		if (!endRect.contains(line.getTerminus())) {
 			return true;
