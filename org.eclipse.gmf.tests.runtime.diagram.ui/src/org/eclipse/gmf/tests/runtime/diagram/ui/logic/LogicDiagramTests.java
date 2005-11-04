@@ -11,12 +11,24 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.tools.SelectionTool;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractDiagramTests;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorSite;
 
 /**
@@ -61,6 +73,66 @@ public class LogicDiagramTests
 			}
 		}
 		assertTrue(foundIt);
+	}
+	
+	/**
+	 * Tests the CTRL-D keystroke which initiates a delete from model action.
+	 * See Bugzilla 115108.
+	 */
+	public void testDeleteFromModel()
+		throws Exception {
+
+		getTestFixture().openDiagram();
+
+		List primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
+		int initialCount = primaryEditParts.size();
+
+		if (initialCount < 1) {
+			fail("Test requires at least one edit part on the diagram"); //$NON-NLS-1$
+		}
+
+		// Get the element to be deleted.
+		IGraphicalEditPart editPartToDelete = (IGraphicalEditPart) primaryEditParts
+			.get(0);
+		EObject semanticElement = (EObject) editPartToDelete
+			.getAdapter(EObject.class);
+		EObject semanticContainer = semanticElement.eContainer();
+
+		// Select the edit part to be deleted.
+		EditPartViewer rootViewer = getDiagramEditPart().getRoot().getViewer();
+		rootViewer.deselectAll();
+		rootViewer.select(editPartToDelete);
+
+		// Set the preference to not confirm the element deletion.
+		((IPreferenceStore) getDiagramEditPart().getDiagramPreferencesHint()
+			.getPreferenceStore()).setValue(
+			IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_MODEL, false);
+
+		// Create the CTRL-D event
+		Event e = new Event();
+		e.character = (char) 0x4;
+		e.keyCode = 100;
+		e.stateMask = SWT.CTRL;
+		e.widget = editPartToDelete.getViewer().getControl();
+
+		// Simulate the CTRL-D keystroke
+		SelectionTool tool = new SelectionTool();
+		tool.setEditDomain((EditDomain) getDiagramWorkbenchPart()
+			.getDiagramEditDomain());
+		tool.activate();
+		tool.keyDown(new KeyEvent(e), rootViewer);
+
+		// Verify that the edit part and the semantic element have been deleted.
+		primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
+
+		assertEquals(
+			"Size of primary edit parts should have decreased.", initialCount - 1, primaryEditParts.size()); //$NON-NLS-1$
+		
+		assertFalse(
+			"Primary edit part not deleted.", primaryEditParts.contains(editPartToDelete)); //$NON-NLS-1$
+
+		assertFalse(
+			"Semantic element not deleted.", semanticContainer.eContents().contains(semanticElement)); //$NON-NLS-1$
 	}
 
 }

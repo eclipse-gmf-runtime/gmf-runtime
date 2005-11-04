@@ -209,7 +209,9 @@ public class SemanticRequestTranslator {
 		if (semanticRequest instanceof org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest) {
 			result = translate((org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest) semanticRequest);
 
-		} else if (requestClass == DestroyElementRequest.class) {
+		} else if (requestClass == DestroyElementRequest.class
+			|| requestClass == DestroyRequestViaKeyboard.class) {
+			
 			result = translate((DestroyElementRequest) semanticRequest);
 
 		} else if (requestClass == DuplicateElementsRequest.class) {
