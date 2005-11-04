@@ -615,9 +615,17 @@ implements NotificationListener {
 				addListenerFilter("NotationListener_CanonicalStyle", this, style);  //$NON-NLS-1$
 			}
 			
-			refresh();
+			refreshOnActivate();
 		}
 		RegisterEditPolicy();
+	}
+
+	/**
+	 * Refresh that is called on activate of the editpolicy to ensure that all relevant editparts
+	 * can receive canonically created connections.
+	 */
+	protected void refreshOnActivate() {
+		refresh();
 	}
 
 	/**

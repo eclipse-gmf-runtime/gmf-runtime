@@ -120,6 +120,19 @@ public abstract class CanonicalConnectionEditPolicy
 		return Collections.EMPTY_LIST;
 	}
 
+	/* 
+	 * Override to ensure that all owned editparts are activated before the editpolicy refresh
+	 * is invoked that will try to canonically create connections and shapes.
+	 */
+	protected void refreshOnActivate() {
+		// need to activate editpart children before invoking the canonical refresh
+		List c = getHost().getChildren();
+		for (int i = 0; i < c.size(); i++)
+			((EditPart)c.get(i)).activate();
+
+		refresh();
+	}
+	
 	/**
 	 * Return <tt>true</tt> if the connection should be drawn between the
 	 * supplied endpoints; otherwise return <tt>false</tt>.
