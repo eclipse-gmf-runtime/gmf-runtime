@@ -13,6 +13,7 @@ package org.eclipse.gmf.tests.runtime.common.ui.internal.resources;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URI;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -472,6 +473,11 @@ public class FileChangeEventTest extends TestCase {
 
 		public void setResourceAttributes(ResourceAttributes attributes) throws CoreException {
 			/*Empty block*/
+		}
+
+		public URI getLocationURI() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 	
