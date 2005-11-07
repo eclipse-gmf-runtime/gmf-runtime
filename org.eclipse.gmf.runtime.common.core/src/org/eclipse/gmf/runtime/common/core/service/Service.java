@@ -218,12 +218,25 @@ public abstract class Service
 		public boolean provides(IOperation operation) {
 			IProviderPolicy thePolicy = getPolicy();
 
-			if (null != thePolicy)
-				return thePolicy.provides(operation);
+			if (null != thePolicy) {
+				try {
+					return thePolicy.provides(operation);
+				}
+				catch (Exception e) {
+					Log.log(
+						CommonCorePlugin.getDefault(),
+						IStatus.ERROR,
+						CommonCoreStatusCodes.SERVICE_FAILURE,
+						"Ignoring provider since policy " + thePolicy + " threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
+						e);
+					return false;
+				}
+			}
 
 			IProvider theProvider = getProvider();
 
-			return null != theProvider && theProvider.provides(operation);
+			return (theProvider != null) ?
+				safeProvides(theProvider, operation) : false;
 		}
 
 		/**
@@ -483,7 +496,7 @@ public abstract class Service
 					for (int i = 0;;) {
 						IProvider provider = (IProvider)providerList.get(i);
 
-						if (!provider.provides(operation))
+						if (!safeProvides(provider, operation))
 							break;
 
 						if (++i == n)
@@ -635,7 +648,7 @@ public abstract class Service
 			int providerCount = providerList.size();
 
 			for (int provider = 0; provider < providerCount; ++provider)
-				if (((IProvider)providerList.get(provider)).provides(operation))
+				if (safeProvides(((IProvider)providerList.get(provider)), operation))
 					return true;
 
 		}
@@ -668,7 +681,7 @@ public abstract class Service
 			int providerCount = providerList.size();
 
 			for (int provider = 0; provider < providerCount; ++provider)
-				if (((IProvider)providerList.get(provider)).provides(operation))
+				if (safeProvides (((IProvider)providerList.get(provider)), operation))
 					return true;
 		}
 
@@ -766,6 +779,41 @@ public abstract class Service
 	 */
 	protected ProviderDescriptor newProviderDescriptor(IConfigurationElement element) {
 		return new ProviderDescriptor(element);
+	}
+	
+	/**
+	 * Safely calls a provider's provides() method.
+	 * 
+	 * The provider must not be null.
+	 * 
+	 * Returns true if there were no exceptions thrown and the provides() method
+	 * returns true.  Returns false if an exception was thrown or the provides()
+	 * method returns false.
+	 * 
+	 * An entry is added to the log if the provider threw an exception.  
+	 * 
+	 * @param provider to safely execute the provides() method
+	 * @param operation passed into the provider's provides() method
+	 * @return true if there were no exceptions thrown and the provides() method
+	 * returns true.  Returns false if an exception was thrown or the provides()
+	 * method returns false.
+	 */
+	private static boolean safeProvides(IProvider provider, IOperation operation) {
+		assert provider != null;
+		
+		try {
+			return provider.provides(operation);
+		}
+		catch (Exception e) {
+			Log.log(
+				CommonCorePlugin.getDefault(),
+				IStatus.ERROR,
+				CommonCoreStatusCodes.SERVICE_FAILURE,
+				"Ignoring provider " + provider + " since it threw an exception in the provides() method", //$NON-NLS-1$ //$NON-NLS-2$
+				e);
+			return false;
+		}
+		
 	}
 
 }

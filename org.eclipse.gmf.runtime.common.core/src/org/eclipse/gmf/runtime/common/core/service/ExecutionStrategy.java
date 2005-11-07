@@ -16,8 +16,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
+import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
 import org.eclipse.gmf.runtime.common.core.service.Service.ProviderDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 
 /**
  * An enumeration of provider execution strategies.
@@ -83,7 +87,7 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 			for (int i = 0; i < size; ++i) {
 				ProviderDescriptor descriptor = (ProviderDescriptor)descriptors.get(i);
 
-				if (descriptor.provides(operation)) {
+				if (safeProvides(descriptor, operation)) {
 					return Collections.singletonList(descriptor.getProvider());
 				}
 			}
@@ -123,7 +127,7 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 			for (int i = descriptors.size(); --i >= 0;) {
 				ProviderDescriptor descriptor = (ProviderDescriptor)descriptors.get(i);
 
-				if (descriptor.provides(operation)) {
+				if (safeProvides(descriptor, operation)) {
 					return Collections.singletonList(descriptor.getProvider());
 				}
 			}
@@ -240,7 +244,7 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 		for (int i = 0; i < size; ++i) {
 			ProviderDescriptor descriptor = (ProviderDescriptor)descriptors.get(i);
 
-			if (descriptor.provides(operation)) {
+			if (safeProvides(descriptor, operation)) {
 				providers.add(descriptor.getProvider());
 			}
 		}
@@ -278,4 +282,39 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 		IOperation operation) {
 		return service.getProviders(strategy, priority, operation); 
 	}
+	
+	/**
+	 * Safely calls a provider's provides() method.
+	 * 
+	 * The provider must not be null.
+	 * 
+	 * Returns true if there were no exceptions thrown and the provides() method
+	 * returns true.  Returns false if an exception was thrown or the provides()
+	 * method returns false.
+	 * 
+	 * An entry is added to the log if the provider threw an exception.  
+	 * 
+	 * @param provider to safely execute the provides() method
+	 * @param operation passed into the provider's provides() method
+	 * @return true if there were no exceptions thrown and the provides() method
+	 * returns true.  Returns false if an exception was thrown or the provides()
+	 * method returns false.
+	 */
+	private static boolean safeProvides(IProvider provider, IOperation operation) {
+		assert provider != null;
+		
+		try {
+			return provider.provides(operation);
+		}
+		catch (Exception e) {
+			Log.log(
+				CommonCorePlugin.getDefault(),
+				IStatus.ERROR,
+				CommonCoreStatusCodes.SERVICE_FAILURE,
+				"Ignoring provider " + provider + " since it threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
+				e);
+			return false;
+		}
+		
+	}	
 }
