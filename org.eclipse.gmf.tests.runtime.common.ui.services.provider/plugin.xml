@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         id="parserProviders"
+         name="%ext.parserProviders"
+         point="org.eclipse.gmf.runtime.common.ui.services.parserProviders">
+         
+      <ParserProvider
+            class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers.TestParserProvider">
+         <Priority name="Highest"/>
+         <Policy class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies.TestParserPolicy"/>
+      </ParserProvider>
+
+   </extension>   
+      
+   <extension
+         id="iconProviders"
+         name="%ext.parserProviders"
+         point="org.eclipse.gmf.runtime.common.ui.services.iconProviders">
+      
+      
+      <IconProvider
+            class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers.TestExceptionThrowingPolicyIconProvider">
+         <Priority name="Medium"/>
+         <Policy class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies.TestExceptionThrowingIconPolicy"/>
+      </IconProvider>
+      
+      <IconProvider
+            class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers.TestExceptionThrowingIconProvider">
+         <Priority name="Low"/>
+      </IconProvider>
+      
+      <IconProvider
+            class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers.TestNoExceptionsIconProvider">
+         <Priority name="Lowest"/>
+         <Policy class="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies.TestNoExceptionsAdaptableIconPolicy"/>
+      </IconProvider>
+      
+   </extension>   
+
+</plugin>

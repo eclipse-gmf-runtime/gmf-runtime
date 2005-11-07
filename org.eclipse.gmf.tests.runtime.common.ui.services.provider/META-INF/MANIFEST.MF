@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Plugin.name
+Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.common.ui.services.provider; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.CommonUIServicesProviderPlugin
+Bundle-Vendor: %Plugin.providerName
+Bundle-Localization: plugin
+Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal,
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies,
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers,
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses
+Require-Bundle: org.eclipse.gmf.runtime.common.ui.services
+Eclipse-AutoStart: true; exceptions="org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies, org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses"
