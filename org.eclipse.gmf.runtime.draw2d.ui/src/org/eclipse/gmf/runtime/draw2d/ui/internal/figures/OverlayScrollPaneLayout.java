@@ -56,72 +56,73 @@ public class OverlayScrollPaneLayout extends ScrollPaneLayout {
 	public void layout(IFigure parent) {
 		ScrollPane scrollpane = (ScrollPane) parent;
 		Rectangle clientArea = parent.getClientArea();
-
-		ScrollBar hBar = scrollpane.getHorizontalScrollBar(),
-			vBar = scrollpane.getVerticalScrollBar();
-		Viewport viewport = scrollpane.getViewport();
-
-		Insets insets = new Insets();
-		insets.bottom =
-			hBar.getPreferredSize(clientArea.width, clientArea.height).height;
-		insets.right =
-			vBar.getPreferredSize(clientArea.width, clientArea.height).width;
+		int bottom = 0;
+		int right  = 0 ;
 
 		int hVis = scrollpane.getHorizontalScrollBarVisibility(),
-			vVis = scrollpane.getVerticalScrollBarVisibility();
-
-		Dimension available = clientArea.getSize(),
-			preferred =
-				viewport
-					.getPreferredSize(available.width, available.height)
-					.getCopy();
-
-		boolean none = available.contains(preferred),
-			both =
-				!none
-					&& vVis != NEVER
-					&& hVis != NEVER
-					&& preferred.contains(available),
-			showV = both || preferred.height > available.height,
-			showH = both || preferred.width > available.width;
-
+		vVis = scrollpane.getVerticalScrollBarVisibility();
+		
+		
+		Viewport viewport = scrollpane.getViewport();
+		Dimension available = clientArea.getSize();
+		Dimension preferred = viewport.getPreferredSize(available.width, available.height).getCopy();
+		boolean none = available.contains(preferred);
+		boolean both =
+			!none
+				&& vVis != NEVER
+				&& hVis != NEVER
+				&& preferred.contains(available);
+		boolean showV = both || preferred.height > available.height;
+		boolean showH = both || preferred.width > available.width;
 		//Adjust for visibility override flags
 		showV = !(vVis == NEVER) && (showV || vVis == ALWAYS);
 		showH = !(hVis == NEVER) && (showH || hVis == ALWAYS);
-
-		if (!showV)
-			insets.right = 0;
-		if (!showH)
-			insets.bottom = 0;
 		Rectangle bounds, viewportArea = clientArea;
-
-		int vPad = showV ? vBar.getSize().width : 0;
-		int hPad = showH ?  hBar.getSize().height : 0;
+		int hPad = 0;
+		int vPad = 0;
+		ScrollBar vBar = null;
+		ScrollBar hBar = null;
+		
+		if (hVis!=NEVER)
+			hBar = scrollpane.getHorizontalScrollBar();
+		if (vVis!=NEVER)
+			vBar = scrollpane.getVerticalScrollBar();
+				
+		if (showH){
+			bottom = hBar.getPreferredSize(clientArea.width, clientArea.height).height;
+			hPad = hBar.getSize().height;
+		}
+		
+		if (showV){
+			right =	vBar.getPreferredSize(clientArea.width, clientArea.height).width;
+			vPad = vBar.getSize().width;
+		}
+		
 		if (showV) {
 			bounds =
 				new Rectangle(
-					viewportArea.right() - insets.right,
+					viewportArea.right() - right,
 					viewportArea.y,
-					insets.right,
+					right,
 					viewportArea.height - hPad);
 			vBar.setBounds(bounds);
-			//vBar.setMaximum(preferred.height);
 		}
 		if (showH) {
 			bounds =
 				new Rectangle(
 					viewportArea.x,
-					viewportArea.bottom() - insets.bottom,
+					viewportArea.bottom() - bottom,
 					viewportArea.width - vPad,
-					insets.bottom);
+					bottom);
 			hBar.setBounds(bounds);
-			//hBar.setMaximum(preferred.width);
 		}
-		vBar.setVisible(showV);
-		hBar.setVisible(showH);
+		if (vBar!=null)
+			vBar.setVisible(showV);
+		if (hBar!=null)
+			hBar.setVisible(showH);
 		viewport.setBounds(viewportArea);
 	}
-
+		
 	/* 
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ScrollPaneLayout#calculateMinimumSize(org.eclipse.draw2d.IFigure)

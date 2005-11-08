@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal.figures;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
 
@@ -106,5 +107,23 @@ public class AnimatableScrollPane extends ScrollPane {
 			? pref
 			: pref.getScaled(scale).expand(min.getScaled(1.0f - scale));
 	}
+	
+	/**
+	 * @see IFigure#validate()
+	 */
+	public void validate() {
+		if (isValid())
+			return;
+		setValid(true);
+		layout();
+		
+		for (int i = 0; i < getChildren().size(); i++)
+			((IFigure)getChildren().get(i)).validate();
+		if (getHorizontalScrollBarVisibility()!= NEVER)
+			getHorizontalScrollBar().validate();
+		if (getVerticalScrollBarVisibility()!= NEVER)
+			getVerticalScrollBar().validate();
+	}
+
 
 }
