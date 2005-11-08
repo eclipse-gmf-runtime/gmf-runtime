@@ -52,7 +52,7 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 				return true;
 		}
 		else if (operation instanceof CreateGraphicEditPartOperation) {
-			View view = ((CreateRootEditPartOperation)operation).getView();
+			View view = ((CreateGraphicEditPartOperation)operation).getView();
 			if (view instanceof Diagram && view.getType().equals(dgrmType)) 
 				return true;
 		}
