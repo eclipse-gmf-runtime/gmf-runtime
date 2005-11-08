@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -124,6 +123,9 @@ public abstract class GraphicalEditPart
 
 	/** Registers this editpart to recieve notation and semantic events. */
 	public void activate() {
+		if (isActive()){
+			return;
+		}
 		addNotationalListeners();
 		
 		EObject semanticProxy = ((View) getModel()).getElement();
@@ -135,6 +137,7 @@ public abstract class GraphicalEditPart
 			addListenerFilter("SemanticProxy", this, semanticProxy); //$NON-NLS-1$
 		}
 		GraphicalEditPart.super.activate();
+		
 	}
 
 	/**
@@ -496,7 +499,8 @@ public abstract class GraphicalEditPart
 	protected List getModelChildren() {
 		Object model = getModel();
 		if(model!=null && model instanceof View){
-			return new ArrayList(((View)model).getChildren());
+			//return ((View)model).getVisibleChildren();
+			return ((View)model).getChildren();
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -504,7 +508,7 @@ public abstract class GraphicalEditPart
 	/**
 	 * Convenience method to retreive the value for the supplied value from the
 	 * editpart's associated view element. Same as calling
-	 * <code> ViewUtil.getPropertyValue(getNotationView(),id)</code>.
+	 * <code> ViewUtil.getPropertyValue(getNotationViewT(),id)</code>.
 	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)} instead
 	 */
 
