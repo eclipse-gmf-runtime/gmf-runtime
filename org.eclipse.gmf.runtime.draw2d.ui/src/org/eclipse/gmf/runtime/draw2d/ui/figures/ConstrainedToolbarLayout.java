@@ -79,6 +79,8 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 		int wHint,
 		int hHint) {
 		Insets insets = container.getInsets();
+		if (!container.isVisible())
+			return new Dimension(insets.getWidth(),insets.getHeight());
 		if (isHorizontal()) {
 			wHint = -1;
 			if (hHint >= 0)
@@ -115,8 +117,10 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 		IFigure container,
 		int wHint,
 		int hHint) {
-
 		Insets insets = container.getInsets();
+		if (!container.isVisible())
+			return new Dimension(insets.getWidth(),insets.getHeight());
+		
 		if (isHorizontal()) {
 			wHint = -1;
 			if (hHint >= 0)
@@ -150,6 +154,8 @@ public class ConstrainedToolbarLayout extends ToolbarLayout {
 	 * @see org.eclipse.draw2d.LayoutManager#layout(IFigure)
 	 */
 	public void layout(IFigure parent) {
+		if (!parent.isVisible())
+			return;
 		List children = getChildren(parent);
 		int numChildren = children.size();
 		Rectangle clientArea = transposer.t(parent.getClientArea());
