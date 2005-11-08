@@ -11,18 +11,16 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -48,6 +46,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramPopupBarEditPolicy
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
@@ -57,6 +56,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Scrollable;
 
 /**
@@ -69,9 +69,7 @@ import org.eclipse.swt.widgets.Scrollable;
 public class DiagramEditPart
 	extends GraphicalEditPart
 	implements LayerConstants, ISurfaceEditPart {
-	
 	private boolean shouldUpdatePageBreakLocation = false;
-	
 	private boolean isSupportingViewActions = true;
 	
 	/**
@@ -105,6 +103,20 @@ public class DiagramEditPart
 				new SnapFeedbackPolicy());
 		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE,
 			new DiagramPopupBarEditPolicy());
+	}
+	
+	/**
+	 * @author mmostafa
+	 * PageBreaksLayoutListener Listens to post layout so it can update the page breaks  
+	 */
+	private class PageBreaksLayoutListener extends LayoutListener.Stub {
+
+		public void postLayout(IFigure container) {
+			super.postLayout(container);
+			updatePageBreaksLocation();
+		}
+		
+		
 	}
 
 	/* (non-Javadoc)
@@ -142,8 +154,7 @@ public class DiagramEditPart
 					return this;
 				return null;
 			}
-			
-			
+
 			/* (non-Javadoc)
 			 * @see org.eclipse.draw2d.Figure#validate()
 			 */
@@ -157,7 +168,7 @@ public class DiagramEditPart
 		};
 		f.setLayoutManager(new FreeformLayout());
 		f.addLayoutListener(new AnimatableLayoutListener());
-
+		f.addLayoutListener(new PageBreaksLayoutListener());
 		return f;
 	}
 
@@ -256,25 +267,6 @@ public class DiagramEditPart
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		final IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
 		getContentPane().add(child, index);
-
-		// Fired when figures are added or moved on the diagram			
-		child.addFigureListener(new FigureListener() {
-			public void figureMoved(IFigure source) {
-				updatePageBreaksLocation();
-			}
-		});
-
-		// Fired when figures are to be deleted on the diagram
-		child.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				String pName = evt.getPropertyName();
-				Object newValue = evt.getNewValue();
-				if (pName == "parent" && newValue == null) { //$NON-NLS-1$
-					shouldUpdatePageBreakLocation = true;
-					//updatePageBreaksLocation();
-				}
-			}
-		});
 	}
 	
 	/**
@@ -284,15 +276,12 @@ public class DiagramEditPart
 		if ( getParent() == null || getRoot() == null ) {
 			return;
 		}
-
-		if (((DiagramRootEditPart) getRoot()).getWorkspaceViewerPreferences() == null)
+		// do not update unless we really need to
+		PageBreakEditPart pagebreakEditpart = ((DiagramRootEditPart)getRoot()).getPageBreakEditPart();
+		if (pagebreakEditpart == null ||
+			pagebreakEditpart.getFigure().isVisible())
 			return;
-
-		((DiagramRootEditPart) getRoot())
-		.getPageBreakEditPart()
-		.resize(
-		getChildrenBounds());
-		
+		pagebreakEditpart.resize(getChildrenBounds());
 		Rectangle r =
 			((DiagramRootEditPart) getRoot())
 				.getPageBreakEditPart()
@@ -380,5 +369,4 @@ public class DiagramEditPart
 	public void setIsSupportingViewActions(boolean supportsViewActions){
 		this.isSupportingViewActions = supportsViewActions;
 	}
-
 }
