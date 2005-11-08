@@ -11,9 +11,13 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.XYLayout;
@@ -22,14 +26,16 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.tools.ToolUtilities;
+import org.eclipse.gmf.runtime.diagram.ui.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -79,11 +85,19 @@ public class ArrangeAction extends DiagramAction {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getCommand()
 	 */
 	protected Command getCommand() {
-		if (!getOperationSet().isEmpty()) {
-			EditPart parent = getSelectionParent(getOperationSet());
-			if (parent != null) {
-				return parent.getCommand(getTargetRequest());
+		if (isArrangeAll()){
+			CompoundCommand arrangeCC = new CompoundCommand(getLabel());
+			List elements = getOperationSet();
+			for (Iterator iter = elements.iterator(); iter.hasNext();) {
+				EditPart element = (EditPart) iter.next();
+				arrangeCC.add(element.getCommand(getTargetRequest()));
+			}
+			return arrangeCC;
 		}
+		else if (getOperationSet().size() >= 2) {
+			EditPart parent = getSelectionParent(getOperationSet());
+			if (parent != null)
+				return parent.getCommand(getTargetRequest());
 		}
 		return UnexecutableCommand.INSTANCE;
 	}
@@ -120,13 +134,12 @@ public class ArrangeAction extends DiagramAction {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createOperationSet()
 	 */
 	protected List createOperationSet() {
-
 		List selection = getSelectedObjects();
 		
 		if( isArrangeAll() ) {
-			if( !selection.isEmpty() && selection.get(0) instanceof ShapeCompartmentEditPart )
-				return createOperationSet( ((ShapeCompartmentEditPart)selection.get(0)).getChildren());
-
+			if( !selection.isEmpty()){
+				return getElementsToArrange(selection);
+			}
 			if( getDiagramEditPart() != null )				
 				return createOperationSet(getDiagramEditPart().getChildren());
 
@@ -278,11 +291,45 @@ public class ArrangeAction extends DiagramAction {
 		
 		if (animatedLayout) {
 			List operationSet = getOperationSet();
-			if (operationSet != null && !operationSet.isEmpty()) {
+			if (isArrangeAll()){
+				for (Iterator iter = operationSet.iterator(); iter.hasNext();) {
+					IGraphicalEditPart element = (IGraphicalEditPart) iter.next();
+					AnimationFigureHelper.getInstance().animate(element.getFigure());
+				}
+			}
+			else if (operationSet != null && !operationSet.isEmpty()) {
 				IGraphicalEditPart container = (IGraphicalEditPart)getSelectionParent(operationSet);
 				AnimationFigureHelper.getInstance().animate(container.getFigure());
 			}
 		}
+	}
+	
+	/**
+	 * @param selection
+	 * @return
+	 */
+	private List getElementsToArrange(List selection) {
+		Set parentsSet = new HashSet();
+		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			Object element = iter.next();
+			if (element instanceof ShapeCompartmentEditPart || element instanceof DiagramEditPart){
+				parentsSet.add(element);
+			} else if (element instanceof EditPart){
+				EditPart gEditPart = 
+					(EditPart)element;
+				EditPart parentEditPart = gEditPart.getParent();
+				if (parentEditPart instanceof ShapeCompartmentEditPart ||
+					parentEditPart instanceof DiagramEditPart){
+					if (!parentsSet.contains(parentEditPart))
+						parentsSet.add(parentEditPart);
+				}
+			}
+		}
+		if (parentsSet.isEmpty())
+			return Collections.EMPTY_LIST;
+		List elements = new ArrayList();
+		elements.addAll(parentsSet);			
+		return elements;
 	}
 
 }
