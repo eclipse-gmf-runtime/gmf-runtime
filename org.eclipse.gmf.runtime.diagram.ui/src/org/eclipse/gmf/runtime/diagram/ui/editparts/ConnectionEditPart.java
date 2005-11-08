@@ -80,6 +80,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ForestRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouter;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
@@ -1515,5 +1517,19 @@ abstract public class ConnectionEditPart
 		else if (event.getEventType() == EventTypes.UNRESOLVE
 			&& event.getNotifier() == ((View) getModel()).getElement())
 			handleMajorSemanticChange();
+	}
+	
+	/**
+	 * @return <code>IMapMode</code> that allows for the coordinate mapping from device to
+	 * logical units. 
+	 */
+	final protected IMapMode getMapMode() {
+		EditPart parent = getParent();
+		if (parent instanceof DiagramRootEditPart) 
+			return ((DiagramRootEditPart)parent).getMapMode();
+		else if (parent instanceof org.eclipse.gef.GraphicalEditPart)
+			return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)parent).getFigure());
+		
+		return MapModeUtil.getMapMode();
 	}
 }
