@@ -26,11 +26,10 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.osgi.framework.Bundle;
 
 /**
  * Concrete subclasses can be used to assist in parsing service provider
@@ -849,11 +848,11 @@ public class AbstractProviderConfiguration {
 			if(endIndex==-1 || endIndex==parameterTypeString.length()-1)
 				throw new IllegalArgumentException(); //$NON-NLS-1$
 			String parameterPluginID = parameterTypeString.substring(0,endIndex).trim();
-			Bundle bundle = getPluginBundle(parameterPluginID);
-			if(bundle==null)
-				return Object.class;
 			String parameterClassName = parameterTypeString.substring(endIndex + 1);
-			return loadClass(parameterClassName, bundle);
+			Class clazz = loadClass(parameterClassName,parameterPluginID);
+			if(clazz==null)
+				clazz =  Object.class;
+			return clazz;
 		}
 
 		/**
@@ -1141,39 +1140,54 @@ public class AbstractProviderConfiguration {
 	 *            The class loader
 	 * @return The loaded class or <code>null</code> if could not be loaded
 	 */
-	protected static Class loadClass(
-		String className,
-		Bundle bundle) {
-			/*
-			WeakReference ref = (WeakReference) successLookupTable.get(className);
-			Class found = (ref != null) ? (Class) ref.get() : null;
-
-			if (found == null) {
-				if (ref != null)
-					successLookupTable.remove(className);
-				Collection classNames = (Collection)failureLookupTable.get(bundle);
-				if (classNames == null || !classNames.contains(className)) {
-					try {
-						found = bundle.loadClass(className);
-						successLookupTable.put(className, new WeakReference(found));
-					} catch (ClassNotFoundException e) {
-						if (classNames == null) {
-							classNames = new ArrayList();
-							failureLookupTable.put(bundle, classNames);
-						}
-						classNames.add(className);
-					}
-				}
-			}
-			return found;
-*/		
+	 /*protected static Class loadClass(String className, Bundle bundle) {
 		try {
 			return bundle.loadClass(className);
 		} catch (ClassNotFoundException e) {
 			return null;
 		}
+	}*/
+	
+	/**
+	 * A utility method to load a class using its name and a given class loader.
+	 * 
+	 * @param className
+	 *            The class name
+	 * @param bundle
+	 *            The class loader
+	 * @return The loaded class or <code>null</code> if could not be loaded
+	 */
+	protected static Class loadClass(String className, String pluginId) {
+		StringBuffer keyStringBuf = new StringBuffer(className.length()
+			+ pluginId.length() + 2); // 2 is for . and extra.
+		keyStringBuf.append(pluginId);
+		keyStringBuf.append('.');
+		keyStringBuf.append(className);
+		String keyString = keyStringBuf.toString();
+		WeakReference ref = (WeakReference) successLookupTable.get(keyString);
+		Class found = (ref != null) ? (Class) ref.get()
+			: null;
+		if (found == null) {
+			if (ref != null)
+				successLookupTable.remove(keyString);
+			if (!failureLookupTable.contains(keyString)) {
+				try {
+					Bundle bundle = getPluginBundle(pluginId);
+					if (bundle!=null){
+						found = bundle.loadClass(className);
+						successLookupTable.put(keyString, new WeakReference(found));
+					}else{
+						failureLookupTable.add(keyString);
+					}
+				} catch (ClassNotFoundException e) {
+					failureLookupTable.add(keyString);
+				}
+			}
+		}
+		return found;
 	}
-
+	
+	
 	/**
 	 * Given a bundle id, it checks if the bundle is found and activated. If it
 	 * is, the method returns the bundle, otherwise it returns <code>null</code>.
@@ -1296,37 +1310,7 @@ public class AbstractProviderConfiguration {
 		if (!(object instanceof IAdaptable))
 			return null;
 		if(pluginId != null) {
-			StringBuffer keyStringBuf = new StringBuffer(className.length() + pluginId.length() + 2); // 2 is for . and extra.
-			keyStringBuf.append(pluginId);
-			keyStringBuf.append('.');
-			keyStringBuf.append(className);
-			String keyString = keyStringBuf.toString();
-			
-			// Return null if this failed before
-			if(failureLookupTable.contains(keyString))
-				return null;
-			
-			// Check to see if this key string is in the success table.
-			WeakReference loadedClassRef = (WeakReference)successLookupTable.get(keyString);
-			Class theClass = null;
-			if(loadedClassRef != null)
-				theClass = (Class)loadedClassRef.get();
-			
-			if(theClass == null) {
-				Bundle bundle = (pluginId != null) 
-						? getPluginBundle(pluginId)
-						: null;
-						
-				if (bundle == null)
-					return null;
-				theClass = loadClass(className, bundle);
-				
-				if(theClass != null)
-					successLookupTable.put(keyString, new WeakReference(theClass));
-				else
-					failureLookupTable.add(keyString);
-			}
-			
+			Class theClass = loadClass(className,pluginId);
 			return theClass != null ? ((IAdaptable) object).getAdapter(theClass) : null;
 		}
 		return null;
@@ -1411,11 +1395,10 @@ public class AbstractProviderConfiguration {
 	 * @return					the  method object
 	 */
 	private static Method getStaticMethod(StaticMethodDescriptor staticMethodDescriptor) {
-		Bundle bundle = getPluginBundle(staticMethodDescriptor.getPluginID());
-		if (bundle == null)
-			return null;
 		Class theClass = loadClass(staticMethodDescriptor.getClassName(),
-								   bundle);
+									staticMethodDescriptor.getPluginID());
+		if (theClass==null)
+			return null;
 		Method theMethod = null;
 		try {
 			String methodSignature = staticMethodDescriptor.getSignature(); 
