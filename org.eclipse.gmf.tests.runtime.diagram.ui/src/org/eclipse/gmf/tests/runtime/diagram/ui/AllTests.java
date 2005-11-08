@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts.URLImageEditPartTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramAssistantTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.SemanticCreateCommandTest;
@@ -45,7 +46,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(ConnectionHandleTest.suite());
 		suite.addTest(NoteTests.suite());
 		suite.addTest(CommandTests.suite());
-		//suite.addTest(URLImageEditPartTests.suite());
+		suite.addTest(URLImageEditPartTests.suite());
 		suite.addTest(ConnectorTests.suite()); 
 		suite.addTest(DiagramTests.suite());
 		suite.addTest(ShapeTests.suite());
