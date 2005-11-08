@@ -28,14 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -52,6 +44,13 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Utility class to render a diagram to an image file.
@@ -86,7 +85,7 @@ public class CopyToImageUtil {
 		viewer.setEditDomain(editDomain);
 
 		RootEditPart rootEP = EditPartService.getInstance()
-			.createRootEditPart();
+			.createRootEditPart(diagram);
 		if (rootEP instanceof IDiagramPreferenceSupport) {
 			((IDiagramPreferenceSupport) rootEP)
 				.setPreferencesHint(preferencesHint);

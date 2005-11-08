@@ -50,6 +50,7 @@ public class IdentityMapMode
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#DPtoLP(org.eclipse.draw2d.geometry.Translatable)
 	 */
 	public Translatable DPtoLP(Translatable t) {
+		t.performScale( 1.0 );
 		return t;
 	}
 
@@ -58,6 +59,7 @@ public class IdentityMapMode
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#LPtoDP(org.eclipse.draw2d.geometry.Translatable)
 	 */
 	public Translatable LPtoDP(Translatable t) {
+		t.performScale( 1.0 );
 		return t;
 	}
 

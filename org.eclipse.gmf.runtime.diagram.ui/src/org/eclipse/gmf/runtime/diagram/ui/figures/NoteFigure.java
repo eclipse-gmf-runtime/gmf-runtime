@@ -166,7 +166,9 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	 * @see org.eclipse.draw2d.IFigure#getPreferredSize(int, int)
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return super.getPreferredSize(wHint, hHint).getUnioned(new Dimension(2645, 1322));
+		return super.getPreferredSize(wHint, hHint).getUnioned(new Dimension(
+								MapModeUtil.getMapMode(this).DPtoLP(100), 
+								MapModeUtil.getMapMode(this).DPtoLP(50)));
 	}
 	
 	/**

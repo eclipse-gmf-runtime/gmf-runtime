@@ -9,18 +9,28 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart;
+package org.eclipse.gmf.runtime.diagram.ui.services.editpart;
 
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * Concrete operation to create a <code>RootEditPart</code> (or
  * subclass) element.
  * 
  * @author cmahoney
- * @canBeSeenBy %level1
  */
 public class CreateRootEditPartOperation extends EditPartOperation {
+
+	/**
+	 * Constructor
+	 * @param diagram <code>Diagram</code> notation object that is the context for the operation.
+	 */
+	public CreateRootEditPartOperation(Diagram diagram) {
+		super(diagram);
+	}
 
 	/**
 	 * Creates the editpart.
@@ -30,13 +40,6 @@ public class CreateRootEditPartOperation extends EditPartOperation {
 	 * @return the created editpart instance.
 	 */
 	public Object execute(IProvider provider) {
-		return ((IEditPartProvider) provider).createRootEditPart();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation#determineCachingKey()
-	 */
-	protected String determineCachingKey() {
-		return "RootEditPart"; //$NON-NLS-1$
+		return ((IEditPartProvider) provider).createRootEditPart((Diagram)getView());
 	}
 }

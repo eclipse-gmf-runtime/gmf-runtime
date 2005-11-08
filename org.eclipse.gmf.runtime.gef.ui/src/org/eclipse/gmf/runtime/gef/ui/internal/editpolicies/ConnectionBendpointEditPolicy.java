@@ -53,7 +53,7 @@ abstract public class ConnectionBendpointEditPolicy
 	implements PropertyChangeListener {
 
 	private static List NULL_CONSTRAINT = new ArrayList();
-	private static final int STICKY_TOLERANCE = 6 * 26;
+	private static final int STICKY_TOLERANCE_DP = 6;
 
 	private LineMode lineSegMode = LineMode.OBLIQUE;
 	
@@ -290,7 +290,7 @@ abstract public class ConnectionBendpointEditPolicy
 	 */
 	private boolean lineContainsPoint(Point p1, Point p2, Point p) {
 		LineSeg line = new LineSeg(p1, p2);
-		return line.containsPoint(p, STICKY_TOLERANCE / 3);
+		return line.containsPoint(p, getStickyTolerance() / 3);
 	}
 
 	/**
@@ -499,6 +499,9 @@ abstract public class ConnectionBendpointEditPolicy
 		int nIndex,
 		Bendpoint bp) {
 		Point ptLoc = new Point(bp.getLocation());
+		
+		int sticky_tolerance = getStickyTolerance();
+		
 		if (nIndex > 0) {
 			Point ptPrev;
 			if ((nIndex - 1) == 0) {
@@ -510,9 +513,9 @@ abstract public class ConnectionBendpointEditPolicy
 			} else
 				ptPrev = ((Bendpoint) constraint.get(nIndex - 1)).getLocation();
 
-			if (Math.abs(ptPrev.x - ptLoc.x) < STICKY_TOLERANCE)
+			if (Math.abs(ptPrev.x - ptLoc.x) < sticky_tolerance)
 				ptLoc.x = ptPrev.x;
-			if (Math.abs(ptPrev.y - ptLoc.y) < STICKY_TOLERANCE)
+			if (Math.abs(ptPrev.y - ptLoc.y) < sticky_tolerance)
 				ptLoc.y = ptPrev.y;
 		}
 
@@ -527,9 +530,9 @@ abstract public class ConnectionBendpointEditPolicy
 			} else
 				ptNext = ((Bendpoint) constraint.get(nIndex + 1)).getLocation();
 
-			if (Math.abs(ptNext.x - ptLoc.x) < STICKY_TOLERANCE)
+			if (Math.abs(ptNext.x - ptLoc.x) < sticky_tolerance)
 				ptLoc.x = ptNext.x;
-			if (Math.abs(ptNext.y - ptLoc.y) < STICKY_TOLERANCE)
+			if (Math.abs(ptNext.y - ptLoc.y) < sticky_tolerance)
 				ptLoc.y = ptNext.y;
 		}
 
@@ -539,6 +542,11 @@ abstract public class ConnectionBendpointEditPolicy
 		} else {
 			constraint.set(nIndex, bp);
 		}
+	}
+
+	private int getStickyTolerance() {
+		int sticky_tolerance = MapModeUtil.getMapMode(getConnection()).DPtoLP(STICKY_TOLERANCE_DP);
+		return sticky_tolerance;
 	}
 
 	/**

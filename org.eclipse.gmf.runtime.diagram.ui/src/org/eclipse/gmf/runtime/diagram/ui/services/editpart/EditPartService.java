@@ -32,7 +32,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.CreateRootEditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartProviderConfiguration;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
@@ -224,12 +223,13 @@ final public class EditPartService
 		});
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider#createRootEditPart()
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider#createRootEditPart(org.eclipse.gmf.runtime.notation.Diagram)
 	 */
-	public RootEditPart createRootEditPart() {
+	public RootEditPart createRootEditPart(Diagram diagram) {
 		RootEditPart result;
-		CreateRootEditPartOperation createRootEditPartOperation = new CreateRootEditPartOperation();
+		CreateRootEditPartOperation createRootEditPartOperation = new CreateRootEditPartOperation(diagram);
 		result = (RootEditPart) execute(createRootEditPartOperation);
 
 		// provide default implementation

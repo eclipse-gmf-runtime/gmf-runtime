@@ -12,11 +12,11 @@
 package org.eclipse.gmf.runtime.diagram.ui.render.internal.providers;
 
 import org.eclipse.gef.RootEditPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.CreateRootEditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
+import org.eclipse.gmf.runtime.diagram.ui.services.editpart.CreateRootEditPartOperation;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * EditPart provider for the Diagram UI Render plug-in.
@@ -39,7 +39,7 @@ public class DiagramUIRenderEditPartProvider
 	/**
 	 * Creates a diagram root editpart that supports rendering of images.
 	 */
-	public RootEditPart createRootEditPart() {
+	public RootEditPart createRootEditPart(Diagram diagram) {
 		return new RenderedDiagramRootEditPart();
 	}
 }

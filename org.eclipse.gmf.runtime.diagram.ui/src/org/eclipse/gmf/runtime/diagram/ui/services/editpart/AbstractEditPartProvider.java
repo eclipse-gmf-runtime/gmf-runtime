@@ -156,7 +156,6 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 		}
 		return null;
 	}
-
 	
 	/**
 	 * gets the supplied view's underlying notation element's eClass
@@ -167,10 +166,19 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 		return ProxyUtil.getProxyClass(view.getElement());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider#createRootEditPart()
+	/**
+	 * @return the <code>RootEditPart</code>
+	 * @deprecated clients should override {@link AbstractEditPartProvider#createRootEditPart(Diagram)} instead
 	 */
 	public RootEditPart createRootEditPart() {
+		return null;
+	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider#createRootEditPart(org.eclipse.gmf.runtime.notation.Diagram)
+	 */
+	public RootEditPart createRootEditPart(Diagram diagram) {
 		return null;
 	}
 }

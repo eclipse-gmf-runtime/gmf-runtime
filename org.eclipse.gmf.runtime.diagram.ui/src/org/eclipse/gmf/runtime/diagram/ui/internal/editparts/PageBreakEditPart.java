@@ -19,8 +19,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.PageBreakNonResizableEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
@@ -28,6 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -152,7 +155,13 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 	public Point getPageSize() {
 		IPreferenceStore s = getPreferenceStoreForPageSetup();
 		
-		return PageInfoHelper.getPageSize(s, MapModeUtil.getMapMode(getPageBreaksFigure()));
+		IMapMode mm = MapModeUtil.getMapMode();
+		RootEditPart drEP = getRoot();
+		if (drEP instanceof DiagramRootEditPart) {
+			mm = ((DiagramRootEditPart)drEP).getMapMode();
+		}
+		
+		return PageInfoHelper.getPageSize(s, mm);
 	}
 
 	/**

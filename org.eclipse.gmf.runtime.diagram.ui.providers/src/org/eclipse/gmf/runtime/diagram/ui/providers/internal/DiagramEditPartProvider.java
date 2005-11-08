@@ -24,8 +24,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DescriptionCompartm
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramNameCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.NoteAttachmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TextEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.CreateRootEditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
+import org.eclipse.gmf.runtime.diagram.ui.services.editpart.CreateRootEditPartOperation;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -103,7 +104,7 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider#createDiagramRootEditPart()
 	 */
-	public RootEditPart createRootEditPart() {
+	public RootEditPart createRootEditPart(Diagram diagram) {
 		return new DiagramRootEditPart();
 	}
 }

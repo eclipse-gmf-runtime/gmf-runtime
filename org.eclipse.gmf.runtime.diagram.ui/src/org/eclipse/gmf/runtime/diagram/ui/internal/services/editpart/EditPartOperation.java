@@ -12,6 +12,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /**
  * Abstract operation that simply stores the associated view and provides an
@@ -23,6 +26,24 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 public abstract class EditPartOperation
 	implements IOperation {
 
+	/** cached view. */
+	private final View view;
+	
+	/** a dummy caching key */
+	private static final String dummyHiny = "dummy";  //$NON-NLS-1$
+
+	/**
+	 * Constructor. Caches the supplied view.
+	 * 
+	 * @param view
+	 *            the view element to be <i>controlled </i> by the created
+	 *            editpart.
+	 */
+	protected EditPartOperation(View view) {
+		Assert.isNotNull(view);
+		this.view = view;
+	}
+	
 	/** cached caching key */
 	private String cachingKey;
 
@@ -38,11 +59,27 @@ public abstract class EditPartOperation
 	}
 
 	/**
-	 * Determines the caching key for this operation.
-	 * 
-	 * @return a string to be used as the caching key
+	 * gets the cached view.
+	 * @return the notation View
 	 */
-	protected abstract String determineCachingKey();
+	public final View getView() {
+		return view;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation#determineCachingKey()
+	 */
+	protected String determineCachingKey() {
+		String type = getView().getType();
+		if (type != null && type.length() > 0)
+			return type;
+	
+		String classId = ViewUtil.getSemanticElementClassId(getView());
+		if (classId != null)
+			return classId;
+	
+		return dummyHiny;
+	}
 
 }
 

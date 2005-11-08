@@ -62,7 +62,7 @@ public class OffscreenEditPartFactory {
 		customViewer.setEditDomain(editDomain);
 
 		customViewer.setRootEditPart(EditPartService.getInstance()
-			.createRootEditPart());
+			.createRootEditPart(diagram));
 
 		customViewer.setEditPartFactory(EditPartService.getInstance());
 

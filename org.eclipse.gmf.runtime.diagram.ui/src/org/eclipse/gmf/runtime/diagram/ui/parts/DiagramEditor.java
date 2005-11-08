@@ -579,7 +579,7 @@ public abstract class DiagramEditor
 		IDiagramGraphicalViewer viewer = getDiagramGraphicalViewer();
 		
 		RootEditPart rootEP = EditPartService.getInstance()
-			.createRootEditPart();
+			.createRootEditPart(getDiagram());
 		if (rootEP instanceof IDiagramPreferenceSupport) {
 			((IDiagramPreferenceSupport) rootEP)
 				.setPreferencesHint(getPreferencesHint());

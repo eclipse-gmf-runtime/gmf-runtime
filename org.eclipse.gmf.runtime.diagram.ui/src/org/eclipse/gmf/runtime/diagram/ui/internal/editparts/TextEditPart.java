@@ -35,8 +35,8 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class TextEditPart extends ShapeEditPart {
 
-	private static final int TEXT_DEFAULT_WIDTH  = 2645;
-	private static final int TEXT_DEFAULT_HEIGHT =  344;
+	private static final int TEXT_DEFAULT_WIDTH_DP  = 100;
+	private static final int TEXT_DEFAULT_HEIGHT_DP =  13;
 	
 
 	/**
@@ -56,11 +56,12 @@ public class TextEditPart extends ShapeEditPart {
 	}
 
 	protected IFigure createFigure() {
-		DefaultSizeNodeFigure nodeFigure = new DefaultSizeNodeFigure();
+		Dimension defaultSize = new Dimension(getMapMode().DPtoLP(TEXT_DEFAULT_WIDTH_DP), getMapMode().DPtoLP(TEXT_DEFAULT_HEIGHT_DP));
+		DefaultSizeNodeFigure nodeFigure = new DefaultSizeNodeFigure(defaultSize.width, defaultSize.height);
 		nodeFigure.setBorder(null);
 		nodeFigure.setOpaque(false);
 		nodeFigure.setLayoutManager(new StackLayout());
-		nodeFigure.setDefaultSize(new Dimension(TEXT_DEFAULT_WIDTH, TEXT_DEFAULT_HEIGHT));
+		nodeFigure.setDefaultSize(defaultSize);
 		return nodeFigure;
 	}
 

@@ -68,11 +68,13 @@ public class DiagramLinkEditPart extends ShapeNodeEditPart {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart#createNodeFigure()
 	 */
 	protected NodeFigure createNodeFigure() {
-		DefaultSizeNodeFigure fig = new DefaultSizeNodeFigure();
-		fig.setBorder(new MarginBorder(132, 132, 132, 132));
+		Dimension defaultSize = new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(25));
+		DefaultSizeNodeFigure fig = new DefaultSizeNodeFigure(defaultSize.width, defaultSize.height);
+		int margin = getMapMode().DPtoLP(5);
+		fig.setBorder(new MarginBorder(margin, margin, margin, margin));
 		fig.setLayoutManager(new ConstrainedToolbarLayout());
 		fig.setOpaque(true);
-		fig.setDefaultSize(new Dimension(2645, 660));
+		fig.setDefaultSize(defaultSize);
 		return fig;
 	}
 	

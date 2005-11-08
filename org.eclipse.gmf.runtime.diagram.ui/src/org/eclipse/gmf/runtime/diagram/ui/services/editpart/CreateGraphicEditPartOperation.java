@@ -11,12 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.editpart;
 
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.View;
  
 /**
@@ -27,12 +24,6 @@ import org.eclipse.gmf.runtime.notation.View;
 public class CreateGraphicEditPartOperation
 	extends EditPartOperation {
 	
-	/** cached view. */
-	private final View view;
-	
-	/** a dummy caching key */
-	private static final String dummyHiny = "dummy";  //$NON-NLS-1$
-
 	/**
 	 * Constructor. Caches the supplied view.
 	 * 
@@ -41,8 +32,7 @@ public class CreateGraphicEditPartOperation
 	 *            editpart.
 	 */
 	protected CreateGraphicEditPartOperation(View view) {
-		Assert.isNotNull(view);
-		this.view = view;
+		super(view);
 	}
 
 	/** 
@@ -52,28 +42,5 @@ public class CreateGraphicEditPartOperation
 	 */
 	public Object execute(IProvider provider) {
 		return ((IEditPartProvider) provider).createGraphicEditPart(getView());
-	}
-
-	/**
-	 * gets the cached view.
-	 * @return the notation View
-	 */
-	public final View getView() {
-		return view;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation#determineCachingKey()
-	 */
-	protected String determineCachingKey() {
-		String type = getView().getType();
-		if (type != null && type.length() > 0)
-			return type;
-	
-		String classId = ViewUtil.getSemanticElementClassId(getView());
-		if (classId != null)
-			return classId;
-	
-		return dummyHiny;
 	}
 }

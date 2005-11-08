@@ -69,7 +69,7 @@ public class PrintHelper {
 		viewer.setEditDomain(editDomain);
 
 		RootEditPart rootEP = EditPartService.getInstance()
-			.createRootEditPart();
+			.createRootEditPart(diagram);
 		if (rootEP instanceof IDiagramPreferenceSupport && preferencesHint != null) {
 			((IDiagramPreferenceSupport) rootEP)
 				.setPreferencesHint(preferencesHint);

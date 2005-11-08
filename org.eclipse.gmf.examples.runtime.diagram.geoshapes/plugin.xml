@@ -42,8 +42,9 @@
   
   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
       <editpartProvider class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers.DiagramEditPartProvider">
-         <Priority name="Low">
-         </Priority>
+         <Priority name="Medium">
+         </Priority>     
+	      <context providesRootEditPart="true"/>
       </editpartProvider>
    </extension>
   

@@ -12,9 +12,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart;
 
 import org.eclipse.gef.RootEditPart;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -31,8 +31,9 @@ public interface IEditPartProvider extends IProvider
 	
 	/**
 	 * Creates a <code>RootEditPart</code>. 
+	 * @param diagram <code>Diagram</code> notation object that is the context for the operation.
 	 * @return the <code>RootEditPart</code>
 	 */
-	public RootEditPart createRootEditPart();
+	public RootEditPart createRootEditPart(Diagram diagram);
 }
 
