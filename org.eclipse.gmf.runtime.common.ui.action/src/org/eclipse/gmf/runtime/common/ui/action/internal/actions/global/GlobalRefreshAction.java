@@ -18,9 +18,10 @@ import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Refresh Action
@@ -37,18 +38,21 @@ public final class GlobalRefreshAction extends GlobalAction {
     /**
      * Imagedescriptor for the REFRESH action
      */
-    private static final ImageDescriptor REFRESH_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/etool16/refresh_nav.gif"); //$NON-NLS-1$
+    private static final ImageDescriptor REFRESH_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REFRESH_NAV_ETOOL16);
+    
+    /**
+     * Imagedescriptor for the REFRESH action
+     */
+    private static final ImageDescriptor DISABLED_REFRESH_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REFRESH_NAV_DTOOL16);
 
     /**
      * Imagedescriptor for the REFRESH action
      */
-    private static final ImageDescriptor DISABLED_REFRESH_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/dtool16/refresh_nav.gif"); //$NON-NLS-1$
-
-    /**
-     * Imagedescriptor for the REFRESH action
-     */
-    private static final ImageDescriptor HOVER_REFRESH_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/ctool16/refresh_nav.gif"); //$NON-NLS-1$
-
+    private static final ImageDescriptor HOVER_REFRESH_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REFRESH_NAV_CTOOL16);
+    
 	/**
 	 * @param workbenchPage
 	 */

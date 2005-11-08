@@ -17,9 +17,10 @@ import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global action for printing
@@ -31,18 +32,20 @@ public final class GlobalPrintAction extends GlobalAction {
 	/**
 	 * Imagedescriptor for the print action
 	 */
-	private static final ImageDescriptor PRINT_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/etool16/print_edit.gif"); //$NON-NLS-1$
-
+	private static final ImageDescriptor PRINT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_PRINT_EDIT_ETOOL16);
 	/**
 	 * Imagedescriptor for the print action
 	 */
-	private static final ImageDescriptor DISABLED_PRINT_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/dtool16/print_edit.gif"); //$NON-NLS-1$
-
+	private static final ImageDescriptor DISABLED_PRINT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_PRINT_EDIT_DTOOL16);
+		
 	/**
 	 * Imagedescriptor for the print action
 	 */
-	private static final ImageDescriptor HOVER_PRINT_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/ctool16/print_edit.gif"); //$NON-NLS-1$
-
+	private static final ImageDescriptor HOVER_PRINT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(),CommonUIActionPluginImages.IMG_PRINT_EDIT_CTOOL16);
+		
 	/**
 	 * @param workbenchPage
 	 */

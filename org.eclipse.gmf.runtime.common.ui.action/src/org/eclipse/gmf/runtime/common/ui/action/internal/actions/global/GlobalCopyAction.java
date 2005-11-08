@@ -21,9 +21,10 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Copy Action
@@ -40,17 +41,20 @@ public final class GlobalCopyAction extends GlobalAction {
 	/**
 	 * Imagedescriptor for the copy action
 	 */
-	private static final ImageDescriptor COPY_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/etool16/copy_edit.gif"); //$NON-NLS-1$
+	private static final ImageDescriptor COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_ETOOL16); 
+		
+	/**
+	 * Imagedescriptor for the copy action
+	 */
+	private static final ImageDescriptor DISABLED_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_DTOOL16);
 
 	/**
 	 * Imagedescriptor for the copy action
 	 */
-	private static final ImageDescriptor DISABLED_COPY_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/dtool16/copy_edit.gif"); //$NON-NLS-1$
-
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor HOVER_COPY_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/ctool16/copy_edit.gif"); //$NON-NLS-1$
+	private static final ImageDescriptor HOVER_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_CTOOL16); //$NON-NLS-1$
 
 	/**
 	 * @param workbenchPage

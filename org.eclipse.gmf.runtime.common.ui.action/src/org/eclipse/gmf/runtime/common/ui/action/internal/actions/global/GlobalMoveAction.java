@@ -18,9 +18,10 @@ import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Move Action
@@ -37,18 +38,21 @@ public final class GlobalMoveAction extends GlobalAction {
 	/**
 	 * Imagedescriptor for the move action
 	 */
-	private static final ImageDescriptor MOVE_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/etool16/move_edit.gif"); //$NON-NLS-1$
-
+	private static final ImageDescriptor MOVE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_MOVE_EDIT_ETOOL16);
+		
 	/**
 	 * Imagedescriptor for the move action
 	 */
-	private static final ImageDescriptor DISABLED_MOVE_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/dtool16/move_edit.gif"); //$NON-NLS-1$
-
+	private static final ImageDescriptor DISABLED_MOVE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_MOVE_EDIT_DTOOL16);
+		
 	/**
 	 * Imagedescriptor for the move action
 	 */
-	private static final ImageDescriptor HOVER_MOVE_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/ctool16/move_edit.gif"); //$NON-NLS-1$
-
+	private static final ImageDescriptor HOVER_MOVE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_MOVE_EDIT_CTOOL16);
+	
 	/**
 	 * @param workbenchPage
 	 */

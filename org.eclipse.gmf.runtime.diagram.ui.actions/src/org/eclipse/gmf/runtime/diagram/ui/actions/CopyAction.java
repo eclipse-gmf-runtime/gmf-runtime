@@ -16,7 +16,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
@@ -37,22 +38,23 @@ import org.eclipse.ui.IWorkbenchPage;
  * @author choang refactor to use ActionContribution item service
  */
 abstract public class CopyAction extends DiagramAction {
-	  /**
-      * Imagedescriptor for the copy action
-      */
-    private static final ImageDescriptor COPY_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/etool16/copy_edit.gif"); //$NON-NLS-1$
+	/**
+	 * Imagedescriptor for the copy action
+	 */
+	private static final ImageDescriptor COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_ETOOL16); 
+		
+	/**
+	 * Imagedescriptor for the copy action
+	 */
+	private static final ImageDescriptor DISABLED_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_DTOOL16);
 
-    /**
-     * Imagedescriptor for the copy action
-     */
-    private static final ImageDescriptor DISABLED_COPY_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/dtool16/copy_edit.gif"); //$NON-NLS-1$
-
-    /**
-     * Imagedescriptor for the copy action
-     */
-    private static final ImageDescriptor HOVER_COPY_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/ctool16/copy_edit.gif"); //$NON-NLS-1$
-
-
+	/**
+	 * Imagedescriptor for the copy action
+	 */
+	private static final ImageDescriptor HOVER_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_CTOOL16);
 
 	/**
 	 * JRE Version

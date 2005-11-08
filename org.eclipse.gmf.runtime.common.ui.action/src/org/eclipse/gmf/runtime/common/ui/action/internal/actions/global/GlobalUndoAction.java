@@ -21,9 +21,10 @@ import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Undo Action
@@ -41,18 +42,21 @@ public final class GlobalUndoAction extends GlobalAction {
     /**
      * Imagedescriptor for the undo action
      */
-    private static final ImageDescriptor UNDO_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/etool16/undo_edit.gif"); //$NON-NLS-1$
-
+    private static final ImageDescriptor UNDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_UNDO_EDIT_ETOOL16);
+    	
     /**
      * Imagedescriptor for the undo action
      */
-    private static final ImageDescriptor DISABLED_UNDO_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/dtool16/undo_edit.gif"); //$NON-NLS-1$
-
+    private static final ImageDescriptor DISABLED_UNDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_UNDO_EDIT_DTOOL16);
+    
     /**
      * Imagedescriptor for the undo action
      */
-    private static final ImageDescriptor HOVER_UNDO_IMAGE = ResourceManager.getInstance().getImageDescriptor("full/ctool16/undo_edit.gif"); //$NON-NLS-1$
-
+    private static final ImageDescriptor HOVER_UNDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
+    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_UNDO_EDIT_CTOOL16);
+    
 	/**
 	 * @param workbenchPage
 	 */
