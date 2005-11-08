@@ -21,6 +21,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.dialogs.SelectableElement;
 import org.eclipse.gmf.runtime.common.ui.dialogs.SelectedType;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIIconNames;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
@@ -47,26 +48,6 @@ public class SelectableElementsTriStateLabelProvider
 	 */
 	private Hashtable imagePool = new Hashtable();
 
-	/**
-	 * Green plus file
-	 */
-	private static final String SELECTED_ICON = "checkboxselected.gif"; //$NON-NLS-1$
-
-	/**
-	 * Red x file
-	 */
-	private static final String UNSELECTED_ICON = "checkboxunselected.gif"; //$NON-NLS-1$
-
-	/**
-	 * Greyed file
-	 */
-	private static final String GREYED_ICON = "checkboxgreyed.gif"; //$NON-NLS-1$
-
-	/**
-	 * Cleared checkbox file
-	 */
-	private static final String CHECKBOX_ICON = "checkboxcleared.gif"; //$NON-NLS-1$
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -92,7 +73,7 @@ public class SelectableElementsTriStateLabelProvider
 				if (overlayImage == null) {
 					try {
 						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(SELECTED_ICON));
+							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_SELECTED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
 						Trace.catching(CommonUIPlugin.getDefault(),
@@ -120,7 +101,7 @@ public class SelectableElementsTriStateLabelProvider
 				if (overlayImage == null) {
 					try {
 						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(UNSELECTED_ICON));
+							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_UNSELECTED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
 						//don't just return the image,
@@ -149,7 +130,7 @@ public class SelectableElementsTriStateLabelProvider
 				if (overlayImage == null) {
 					try {
 						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(CHECKBOX_ICON));
+							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_CLEARED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
 						//don't just return the image,
@@ -176,7 +157,7 @@ public class SelectableElementsTriStateLabelProvider
 				if (overlayImage == null) {
 					try {
 						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(GREYED_ICON));
+							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_GREYED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
 						//don't just return the image,
@@ -264,8 +245,8 @@ public class SelectableElementsTriStateLabelProvider
 		//if your icon size is > short, then that would be very strange
 		//change it to int if you think that it will be a problem
 		super(
-			(ResourceManager.getInstance().getImageDescriptor(SELECTED_ICON) == null) ? (short) 0
+			(ResourceManager.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_SELECTED) == null) ? (short) 0
 				: (short) (ResourceManager.getInstance().getImageDescriptor(
-					SELECTED_ICON).getImageData().width), (short) 0);
+					CommonUIIconNames.IMG_CHECKBOX_SELECTED).getImageData().width), (short) 0);
 	}
 }

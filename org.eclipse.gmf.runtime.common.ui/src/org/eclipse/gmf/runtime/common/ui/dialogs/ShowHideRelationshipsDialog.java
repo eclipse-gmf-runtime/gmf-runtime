@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIIconNames;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementTreeSelectionChangedAndMouseAndKeyListener;
@@ -163,11 +164,11 @@ public class ShowHideRelationshipsDialog
 
 		try {
 			selectedIcon = ResourceManager.getInstance().createImage(
-				"legendcheckboxselected.gif"); //$NON-NLS-1$
+				CommonUIIconNames.IMG_CHECKBOX_SELECTED); //$NON-NLS-1$
 			unselectedIcon = ResourceManager.getInstance().createImage(
-				"legendcheckboxunselected.gif"); //$NON-NLS-1$
+				CommonUIIconNames.IMG_CHECKBOX_UNSELECTED); //$NON-NLS-1$
 			clearedIcon = ResourceManager.getInstance().createImage(
-				"legendcheckboxcleared.gif"); //$NON-NLS-1$
+				CommonUIIconNames.IMG_CHECKBOX_CLEARED); //$NON-NLS-1$
 		} catch (Exception e) {
 			Trace.catching(CommonUIPlugin.getDefault(),
 				CommonUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
