@@ -302,6 +302,9 @@ public class SlidableImageAnchor
 	 * @see org.eclipse.gmf.runtime.gef.ui.figures.SlidableAnchor#getLocation(org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Point)
 	 */
 	protected Point getLocation(Point ownReference, Point foreignReference) {
+		Image image = getImage();
+		if (image==null)
+			return super.getLocation(ownReference,foreignReference);
 		Rectangle ownerRect = new Rectangle(getBox());
 		PointList intersections = getIntersectionPoints(ownReference, foreignReference);
 		if (intersections!=null && intersections.size()!=0) {

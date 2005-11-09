@@ -59,7 +59,8 @@ public class RenderedMapModeGraphics
 			RenderedImage img = srcImage.getNewRenderedImage(info);
 			
 			Image swtImg = img.getSWTImage();
-			getGraphics().drawImage(swtImg, r.x, r.y + r.height - swtImg.getBounds().height);
+			if (swtImg!=null)
+				getGraphics().drawImage(swtImg, r.x, r.y + r.height - swtImg.getBounds().height);
 		}
 	}
 }

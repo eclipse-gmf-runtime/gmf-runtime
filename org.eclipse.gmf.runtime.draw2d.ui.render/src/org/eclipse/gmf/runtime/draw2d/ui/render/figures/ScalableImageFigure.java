@@ -254,7 +254,7 @@ public class ScalableImageFigure extends ImageFigure {
 		   // translate to device coordinates for rendering
 		   area = (Rectangle)MapModeUtil.getMapMode(this).LPtoDP(area);
            RenderedImage rndImage = getRenderedImage(new Dimension(area.width, area.height));
-           if (rndImage != null)
+           if (rndImage != null && renderedImage.getSWTImage()!=null)
            		graphics.drawImage(renderedImage.getSWTImage(), x, y); 
            	// no need to dispose img since it is managed by the SVGImage object lifetime
         }
