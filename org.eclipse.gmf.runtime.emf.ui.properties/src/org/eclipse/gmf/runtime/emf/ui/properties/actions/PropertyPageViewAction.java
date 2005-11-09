@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -42,7 +43,7 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesPlugin;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesResourceManager;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 
 /**
  * Action responsible for showing the properties page dialog when the it is
@@ -58,44 +59,12 @@ public class PropertyPageViewAction
 	extends Action {
 
 	/**
-	 * The title of the message dialog shown when there are no properties to be
-	 * shown.
-	 */
-	private static final String NO_PROPERTIES_TITLE = EMFPropertiesResourceManager
-		.getInstance().getString(
-			"PropertyPageViewAction.NoPropertiesMessageBox.Title"); //$NON-NLS-1$    
-
-	/**
-	 * The message shown when there are no properties.
-	 */
-	private static final String NO_PROPERTIES_MESSAGE = EMFPropertiesResourceManager
-		.getInstance().getString(
-			"PropertyPageViewAction.NoPropertiesMessageBox.Message"); //$NON-NLS-1$ 
-
-	/**
-	 * The property page action label.
-	 */
-	private static final String PROPERTY_PAGE_ACTION_LABEL = EMFPropertiesResourceManager
-		.getInstance().getString("PropertyPageViewAction.label"); //$NON-NLS-1$
-
-	/**
-	 * The property page action tooltip.
-	 */
-	private static final String PROPERTY_PAGE_ACTION_TOOLTIP = EMFPropertiesResourceManager
-		.getInstance().getString("PropertyPageViewAction.tooltip"); //$NON-NLS-1$
-
-	/**
-	 * The property page action image.
-	 */
-	private static final ImageDescriptor PROPERTY_PAGE_ACTION_IMAGE = EMFPropertiesResourceManager
-		.getInstance().getImageDescriptor("property_page.gif"); //$NON-NLS-1$
-
-	/**
 	 * Constructs a new action with the default label, image and tooltip.
 	 */
 	public PropertyPageViewAction() {
-		super(PROPERTY_PAGE_ACTION_LABEL, PROPERTY_PAGE_ACTION_IMAGE);
-		setToolTipText(PROPERTY_PAGE_ACTION_TOOLTIP);
+		super(EMFUIPropertiesMessages.PropertyPageViewAction_label, 
+				AbstractUIPlugin.imageDescriptorFromPlugin(EMFPropertiesPlugin.getPluginId(), "icons/property_page.gif"));
+		setToolTipText(EMFUIPropertiesMessages.PropertyPageViewAction_tooltip);
 	}
 
 	/*
@@ -151,7 +120,8 @@ public class PropertyPageViewAction
 							} else {
 								MessageDialog.openInformation(Display
 									.getCurrent().getActiveShell(),
-									NO_PROPERTIES_TITLE, NO_PROPERTIES_MESSAGE);
+									EMFUIPropertiesMessages.PropertyPageViewAction_NoPropertiesMessageBox_Title, 
+									EMFUIPropertiesMessages.PropertyPageViewAction_NoPropertiesMessageBox_Message);
 							}
 						}
 					});

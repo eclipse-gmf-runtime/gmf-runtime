@@ -31,8 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
 import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.ResourceManager;
-
+import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 
 /**
  * The preference page for Modeler validation controls.
@@ -46,20 +45,6 @@ public class ValidationPreferencePage
 	/* Define an offset used to add spacing in the combobox so that international
 	 * characters aren't truncated. */
 	private static final int OFFSET = 5;
-
-	
-	private static final String LIVE_VALIDATION_GROUP_LABEL =
-		ResourceManager.getI18NString("Validation.liveValidationGroupLabel"); //$NON-NLS-1$
-	private static final String LIVE_VALIDATION_DESTINATION_PROMPT =
-		ResourceManager.getI18NString("Validation.liveValidationDestinationPrompt"); //$NON-NLS-1$
-	private static final String LIVE_VALIDATION_DESTINATION_DIALOG =
-		ResourceManager.getI18NString("Validation.liveValidationDestination.dialogComboItem"); //$NON-NLS-1$
-	private static final String LIVE_VALIDATION_DESTINATION_CONSOLE =
-		ResourceManager.getI18NString("Validation.liveValidationDestination.consoleComboItem"); //$NON-NLS-1$
-	private static final String LIVE_VALIDATION_SHOW_CONSOLE_PROMPT =
-		ResourceManager.getI18NString("Validation.liveValidationShowConsolePrompt"); //$NON-NLS-1$
-	private static final String LIVE_VALIDATION_WARN_DIALOG_PROMPT =
-		ResourceManager.getI18NString("Validation.liveValidationWarnDialogPrompt"); //$NON-NLS-1$
 	
 	private ComboFieldEditor liveProblemDisplayField;
 	private Combo liveProblemDisplayCombo;
@@ -114,7 +99,7 @@ public class ValidationPreferencePage
      */
     private void createLiveValidationProblemsGroup(Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(LIVE_VALIDATION_GROUP_LABEL);
+		group.setText(EMFUIMessages.Validation_liveValidationGroupLabel);
         GridLayout layout = new GridLayout();
         layout.numColumns = 1;
         group.setLayout(layout);
@@ -133,7 +118,7 @@ public class ValidationPreferencePage
         Composite block = new Composite(group, SWT.NONE);
         liveProblemDisplayField = new ComboFieldEditor(
         	IPreferenceConstants.VALIDATION_LIVE_PROBLEMS_DISPLAY,
-			LIVE_VALIDATION_DESTINATION_PROMPT,
+        	EMFUIMessages.Validation_liveValidationDestinationPrompt,
 			block,
 			ComboFieldEditor.INT_TYPE,
 			false,
@@ -142,8 +127,8 @@ public class ValidationPreferencePage
 			true);
         addField(liveProblemDisplayField);
         liveProblemDisplayCombo = liveProblemDisplayField.getComboControl();
-        liveProblemDisplayCombo.add(LIVE_VALIDATION_DESTINATION_DIALOG);
-        liveProblemDisplayCombo.add(LIVE_VALIDATION_DESTINATION_CONSOLE);
+        liveProblemDisplayCombo.add(EMFUIMessages.Validation_liveValidationDestination_dialogComboItem);
+        liveProblemDisplayCombo.add(EMFUIMessages.Validation_liveValidationDestination_consoleComboItem);
         data = new GridData();
         Point size = liveProblemDisplayCombo.computeSize(SWT.DEFAULT, SWT.DEFAULT);
         data.widthHint = size.x + OFFSET;
@@ -155,7 +140,7 @@ public class ValidationPreferencePage
         warningsInDialog =
             new CheckBoxFieldEditor(
                 IPreferenceConstants.VALIDATION_LIVE_WARNINGS_IN_DIALOG,
-                LIVE_VALIDATION_WARN_DIALOG_PROMPT,
+                EMFUIMessages.Validation_liveValidationWarnDialogPrompt,
                 block);
         addField(warningsInDialog);
         warningsInDialog.getCheckbox().addSelectionListener(checkBoxUpdater);
@@ -164,7 +149,7 @@ public class ValidationPreferencePage
         showOutputView =
             new CheckBoxFieldEditor(
                 IPreferenceConstants.VALIDATION_LIVE_SHOW_CONSOLE,
-                LIVE_VALIDATION_SHOW_CONSOLE_PROMPT,
+                EMFUIMessages.Validation_liveValidationShowConsolePrompt,
                 block);
         addField(showOutputView);
 	}

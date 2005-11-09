@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.emf.ui.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.ResourceManager;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -57,17 +55,6 @@ public class MslUIPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
 	}
 
 	/**

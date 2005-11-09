@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.ui.properties.commands.RestoreDefaultPropertyValueCommand;
 import org.eclipse.gmf.runtime.emf.ui.properties.commands.SetModelPropertyValueCommand;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesResourceManager;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 
 /**
  * An property sheet entry for elements in the model. The changes to the model
@@ -34,12 +34,6 @@ import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesReso
  * @author nbalaba
  */
 public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
-
-    /**
-     * Label for the command that sets the property.
-     */
-    public static final String UNDO_PROPERTY_LABEL = EMFPropertiesResourceManager
-            .getInstance().getString("UndoablePropertySheetEntry.commandName"); //$NON-NLS-1$
 
     /**
      * Constructs a new instance with a command manager for executing property
@@ -160,7 +154,8 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
         // Inform our parent
         getParentEntry().valueChanged(
                 this,
-                getCompositeCommand(MessageFormat.format(UNDO_PROPERTY_LABEL,
+                getCompositeCommand(MessageFormat.format(
+                		EMFUIPropertiesMessages.UndoablePropertySheetEntry_commandName,
                         new String[] { getDescriptor().getDisplayName() })));
 
     }

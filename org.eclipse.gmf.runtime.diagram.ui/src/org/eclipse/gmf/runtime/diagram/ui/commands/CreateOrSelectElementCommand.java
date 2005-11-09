@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.common.ui.dialogs.PopupDialog;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.emf.ui.dialogs.AbstractSelectElementDialog;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
@@ -71,22 +71,19 @@ public class CreateOrSelectElementCommand
 	 * Add this to the content list of the popup menu to add an 'unspecified'
 	 * option.
 	 */
-	public static final String UNSPECIFIED = ResourceManager
-		.getI18NString("CreateOrSelectElementCommand.PopupMenu.UnspecifiedMenuItem.Text"); //$NON-NLS-1$
+	public static final String UNSPECIFIED = EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_UnspecifiedMenuItem_Text;
 
 	/**
 	 * Add this to the content list of the popup menu to add a 'select existing'
 	 * option.
 	 */
-	public static final String SELECT_EXISTING = ResourceManager
-		.getI18NString("CreateOrSelectElementCommand.PopupMenu.SelectExistingElementMenuItem.Text"); //$NON-NLS-1$
+	public static final String SELECT_EXISTING = EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_SelectExistingElementMenuItem_Text;
 
 	/**
-	 * Add this to the content list of the popup menu to add a 'create without binding'
-	 * option.
+	 * Add this to the content list of the popup menu to add a 'create without
+	 * binding' option.
 	 */
-	public static final String CREATE_WITHOUT_BINDING = ResourceManager
-		.getI18NString("CreateOrSelectElementCommand.PopupMenu.CreateWithoutBindingMenuItem.Text"); //$NON-NLS-1$
+	public static final String CREATE_WITHOUT_BINDING = EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateWithoutBindingMenuItem_Text;
 
 	/**
 	 * The default label provider for the the menu items used in this command.
@@ -104,8 +101,7 @@ public class CreateOrSelectElementCommand
 			if (object instanceof IElementType) {
 				return MessageFormat
 					.format(
-						ResourceManager
-							.getI18NString("CreateOrSelectElementCommand.PopupMenu.CreateMenuItem.Text"), //$NON-NLS-1$
+						EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateMenuItem_Text,
 						new Object[] {text});
 			}
 			return text;
@@ -153,9 +149,8 @@ public class CreateOrSelectElementCommand
 	 */
 	public CreateOrSelectElementCommand(Shell parentShell, List content,
 			int style) {
-		this(ResourceManager
-			.getI18NString("CreateOrSelectElementCommand.Label"), //$NON-NLS-1$
-			parentShell, content, style);
+		this(EMFUIMessages.CreateOrSelectElementCommand_Label, parentShell,
+			content, style);
 	}
 
 	/**
@@ -214,9 +209,8 @@ public class CreateOrSelectElementCommand
 	 *            the popup menu
 	 */
 	public CreateOrSelectElementCommand(Shell parentShell, PopupMenu popupMenu) {
-		super(ResourceManager
-			.getI18NString("CreateOrSelectElementCommand.Label"), //$NON-NLS-1$
-			parentShell, popupMenu);
+		super(EMFUIMessages.CreateOrSelectElementCommand_Label, parentShell,
+			popupMenu);
 	}
 
 	/**
@@ -289,7 +283,8 @@ public class CreateOrSelectElementCommand
 	}
 
 	/**
-	 * Gets the label provider that is to be used to display each item in the popup menu.
+	 * Gets the label provider that is to be used to display each item in the
+	 * popup menu.
 	 * 
 	 * @return the label provider
 	 */

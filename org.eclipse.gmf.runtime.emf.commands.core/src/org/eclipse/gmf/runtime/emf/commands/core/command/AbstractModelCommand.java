@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.commands.core.internal.MSLCommandsDebugOptions;
 import org.eclipse.gmf.runtime.emf.commands.core.internal.MSLCommandsPlugin;
 import org.eclipse.gmf.runtime.emf.commands.core.internal.MSLCommandsStatusCodes;
-import org.eclipse.gmf.runtime.emf.commands.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.commands.core.internal.l10n.EMFCommandsCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
@@ -71,9 +71,9 @@ public abstract class AbstractModelCommand
 	 * Error message to display when the write action has been abandoned
 	 * because a live constraint has been violated.
 	 */
-	private final static String ABANDONED_ACTION_ERROR = ResourceManager
-		.getInstance().getString("AbstractModelCommand._ERROR_.abandonedActionErrorMessage"); //$NON-NLS-1$
-
+	//private final static String ABANDONED_ACTION_ERROR = 
+	//	EMFCommandsCoreMessages.AbstractModelCommand__ERROR__abandonedActionErrorMessage;
+	
 	/**
 	 * Element or file used to determine affected objects.  See getAffectedObjects() 
 	 */
@@ -411,7 +411,8 @@ public abstract class AbstractModelCommand
 		// such actions are never validated, so the abandon action event should
 		// never be fired.
 		setResult(new CommandResult(new Status(IStatus.ERROR, getPluginId(),
-			MSLCommandsStatusCodes.VALIDATION_FAILURE, ABANDONED_ACTION_ERROR,
+			MSLCommandsStatusCodes.VALIDATION_FAILURE, 
+			EMFCommandsCoreMessages.AbstractModelCommand__ERROR__abandonedActionErrorMessage,
 			null)));
 		
 		Trace.trace(MSLCommandsPlugin.getDefault(), MSLCommandsDebugOptions.MODEL_OPERATIONS, "MSLActionAbandonedException"); //$NON-NLS-1$

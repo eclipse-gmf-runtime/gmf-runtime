@@ -38,7 +38,6 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesResourceManager;
 
 /**
  * @author nbalaba
@@ -48,12 +47,6 @@ import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesReso
  */
 public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
         implements ICompositeSourcePropertyDescriptor {
-
-	/** Name of the undo property change command. */
-    public static final String UNDO_PROPERTY = EMFPropertiesResourceManager
-            .getInstance()
-            .getString(
-                    "EMFCompositeSourcePropertyDescriptor.undoProperty.commandName"); //$NON-NLS-1$
 
     protected String category = null;
 

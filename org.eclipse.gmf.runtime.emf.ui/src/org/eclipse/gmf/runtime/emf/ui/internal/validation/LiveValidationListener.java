@@ -35,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.util.ConsoleUtil;
 import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.gmf.runtime.emf.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.emf.ui.preferences.ValidationLiveProblemsDestination;
 import org.eclipse.emf.validation.model.EvaluationMode;
@@ -53,53 +53,6 @@ import org.eclipse.emf.validation.service.ValidationEvent;
 public class LiveValidationListener
 	implements IValidationListener {
 
-    /** Message indicating that problems were found in applying model changes. */
-    private static final String VALIDATION_PROBLEMS = ResourceManager.getI18NString("Validation.problems"); //$NON-NLS-1$
-
-    /** Message indicating that model changes were rolled back. */
-    private static final String VALIDATION_ROLLED_BACK = ResourceManager.getI18NString("Validation.rollback"); //$NON-NLS-1$
-    
-    /**
-     * Message reporting an error.  The arguments are:
-     * <ul>
-     *   <li><tt>{0}</tt> - the message from the validation service</li>
-     * </ul>
-     */
-    private static final String VALIDATION_ERROR = ResourceManager.getI18NString("Validation.error"); //$NON-NLS-1$
-
-    /**
-     * Message reporting a warning.  The arguments are:
-     * <ul>
-     *   <li><tt>{0}</tt> - the message from the validation service</li>
-     * </ul>
-     */
-    private static final String VALIDATION_WARNING = ResourceManager.getI18NString("Validation.warn"); //$NON-NLS-1$
-
-    /**
-     * Message reporting a note.  The arguments are:
-     * <ul>
-     *   <li><tt>{0}</tt> - the message from the validation service</li>
-     * </ul>
-     */
-    private static final String VALIDATION_NOTE = ResourceManager.getI18NString("Validation.note"); //$NON-NLS-1$
-
-    /** Shown in a dialog window when live validation rolls back a model update. */
-    private static final String VALIDATION_LIVE_ERROR = ResourceManager.getI18NString("Validation.liveError"); //$NON-NLS-1$
-    
-    /** Shown in a dialog window when live validation generates warnings. */
-    private static final String VALIDATION_LIVE_WARNING = ResourceManager.getI18NString("Validation.liveWarning.part1") //$NON-NLS-1$
-    		+ "\n\n"	+ ResourceManager.getI18NString("Validation.liveWarning.part2"); //$NON-NLS-1$ //$NON-NLS-2$
-    
-    
-    /** Title of dialog window for live validation. */
-    private static final String VALIDATION_LIVE_DIALOG_TITLE = ResourceManager.getI18NString("Validation.liveDialogTitle"); //$NON-NLS-1$
-
-    /**
-     * The category of output view to use for our messages.
-     */
-    private static final String PXDE_OUTPUT_CATEGORY = ResourceManager.getInstance().getString("Validation.outputProviderCategory"); //$NON-NLS-1$
-    
-    
     /**
      * Helper object for creating message to output view.
      */
@@ -141,8 +94,8 @@ public class LiveValidationListener
     			|| (!getOutputUtility().hasErrors() && !warningsInDialog)) {
             if (messages.length() > 0) {
             	
-	            ConsoleUtil.println(PXDE_OUTPUT_CATEGORY, VALIDATION_PROBLEMS);
-	            ConsoleUtil.println(PXDE_OUTPUT_CATEGORY, messages);
+	            ConsoleUtil.println(EMFUIMessages.Validation_outputProviderCategory, EMFUIMessages.Validation_problems);
+	            ConsoleUtil.println(EMFUIMessages.Validation_outputProviderCategory, messages);
         	}
 
             final boolean showConsole =
@@ -151,7 +104,7 @@ public class LiveValidationListener
             
             if (getOutputUtility().hasProblems()) {
             	if (showConsole) {            		
-            		ConsoleUtil.showConsole( PXDE_OUTPUT_CATEGORY);
+            		ConsoleUtil.showConsole( EMFUIMessages.Validation_outputProviderCategory);
             	}
             }
         } else if (destination == ValidationLiveProblemsDestination.DIALOG) {
@@ -174,8 +127,9 @@ public class LiveValidationListener
                 	IStatus[] details = toStatusArray(event);
                 	
                 	String message = event.getSeverity() >= IStatus.ERROR
-						? VALIDATION_LIVE_ERROR
-						: VALIDATION_LIVE_WARNING;
+						? EMFUIMessages.Validation_liveError
+						: EMFUIMessages.Validation_liveWarning_part1
+			    		+ "\n\n"	+ EMFUIMessages.Validation_liveWarning_part2;
                 	
                 	// the dialog should show INFO severity for errors because
                 	//   the corrective action has already been taken by the
@@ -218,7 +172,7 @@ public class LiveValidationListener
                 	
 					new LiveValidationDialog(
                 		Display.getCurrent().getActiveShell(),
-						VALIDATION_LIVE_DIALOG_TITLE,
+                		EMFUIMessages.Validation_liveDialogTitle,
 						message,
 						toDisplay).open();
                 }
@@ -314,7 +268,7 @@ public class LiveValidationListener
                 output);
 
             if (hasErrors()) {
-                output.append(VALIDATION_ROLLED_BACK);
+                output.append(EMFUIMessages.Validation_rollback);
                 output.append(StringStatics.PLATFORM_NEWLINE);
             }
         }
@@ -353,14 +307,14 @@ public class LiveValidationListener
                         case IStatus.ERROR :
                             hasProblems = true;
                             hasErrors = true;
-                            messagePattern = VALIDATION_ERROR;
+                            messagePattern = EMFUIMessages.Validation_error;
                             break;
                         case IStatus.WARNING :
                             hasProblems = true;
-                            messagePattern = VALIDATION_WARNING;
+                            messagePattern = EMFUIMessages.Validation_warn;
                             break;
                         default :
-                            messagePattern = VALIDATION_NOTE;
+                            messagePattern = EMFUIMessages.Validation_note;
                             break;
                     }
 
@@ -424,8 +378,7 @@ public class LiveValidationListener
 				Control spacer = new Label(composite, SWT.NONE);
 
 				final Button checkbox = new Button(composite, SWT.CHECK);
-				checkbox.setText(ResourceManager
-					.getI18NString("Validation.dontShowCheck")); //$NON-NLS-1$
+				checkbox.setText(EMFUIMessages.Validation_dontShowCheck);
 
 				GridData data = new GridData(GridData.GRAB_HORIZONTAL
 					| GridData.HORIZONTAL_ALIGN_FILL

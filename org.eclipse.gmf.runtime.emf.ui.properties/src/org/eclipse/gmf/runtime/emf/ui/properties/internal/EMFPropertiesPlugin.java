@@ -9,16 +9,13 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-
 package org.eclipse.gmf.runtime.emf.ui.properties.internal;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesResourceManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -53,17 +50,6 @@ public class EMFPropertiesPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getBundle().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return EMFPropertiesResourceManager.getInstance();
 	}
 
 	/**

@@ -29,7 +29,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesResourceManager;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 
 /**
  * A structured selection for use in the property page dialog.  It
@@ -49,12 +49,6 @@ import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFPropertiesReso
  */
 public class PropertyPageSelection
     implements IAdaptable, IStructuredSelection {
-
-    /**
-     * The text used in the title of the property dialog when
-     * there is more than a single element selected.
-     */
-    private static final String SELECTED_ELEMENTS = EMFPropertiesResourceManager.getInstance().getString("PropertyPageSelection.PropertyDialog.selectedElementsTitle"); //$NON-NLS-1$
 
     /**
      * My selection
@@ -116,7 +110,7 @@ public class PropertyPageSelection
                 }
                 public String getLabel(Object o) {
                     if (getSelection().size() > 1) {
-                        return SELECTED_ELEMENTS;
+                        return EMFUIPropertiesMessages.PropertyPageSelection_PropertyDialog_selectedElementsTitle;
                     } else {
                         EObject element =
                             (EObject) getAdapter(EObject.class);
@@ -124,7 +118,7 @@ public class PropertyPageSelection
                             return ParserService.getInstance().getPrintString(
                                 new EObjectAdapter(element));
                         } else {
-                            return SELECTED_ELEMENTS;
+                            return EMFUIPropertiesMessages.PropertyPageSelection_PropertyDialog_selectedElementsTitle;
                         }
 
                     }

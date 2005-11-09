@@ -51,7 +51,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 
 /**
  * An abstract implementation of a section in a tab in the tabbed property sheet
@@ -77,9 +77,7 @@ public abstract class AbstractModelerPropertySection
 	private boolean bIsCommandInProgress = false;
 
 	/** value changed string */
-	static protected String VALUE_CHANGED_STRING = ResourceManager
-		.getInstance().getString(
-			"AbstractPropertySection.UndoIntervalPropertyString"); //$NON-NLS-1$
+	static protected String VALUE_CHANGED_STRING = EMFUIMessages.AbstractPropertySection_UndoIntervalPropertyString;
 
 	/** object currently selected on either a diagram or a ME - a view */
 	protected List input;

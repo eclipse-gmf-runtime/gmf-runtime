@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.emf.commands.core.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
-import org.eclipse.gmf.runtime.emf.commands.core.internal.l10n.ResourceManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -48,7 +46,4 @@ public class MSLCommandsPlugin extends XToolsPlugin {
 		return getDefault().getBundle().getSymbolicName();
 	}
 
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
-	}
 }
