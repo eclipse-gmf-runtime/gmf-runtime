@@ -208,15 +208,13 @@ public class DiagramEventBroker
 			Notification event = (Notification) i.next();
 			Object eventFeature = event.getFeature();
 
-			// ignore touch event who r not resolve events, ignor any
-			// event that had no feature on it, and ignot the mutable feature
+			// ignore touch event if it is not a resolve event,and ignore the mutable feature
 			// events
-			if (eventFeature != null
-				&& (eventFeature.equals(NotationPackage.eINSTANCE
-					.getView_Mutable()) || (event.isTouch() && event
-					.getEventType() != Notification.RESOLVE)))
-				continue;
-
+			if ((event.isTouch() && event.getEventType() != Notification.RESOLVE)||
+			     NotationPackage.eINSTANCE.getView_Mutable().equals(eventFeature)){
+				 continue;
+			}
+			
 			Object notifier = event.getNotifier();
 			if (notifier instanceof EObject) {
 				if (deletedObjects.contains(event.getNotifier())
