@@ -45,6 +45,7 @@ import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.tools.DeselectAllTracker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
@@ -173,10 +174,13 @@ public abstract class ShapeCompartmentEditPart
 		protected Set getConnectionNodes(ShapeCompartmentEditPart scep) {
 			Set endPoints = new HashSet();
 			Object modelObject = scep.getModel();
-			if (scep.getViewer() == null || modelObject == null
+			if (scep.getViewer() == null || modelObject == null 
 				|| !(modelObject instanceof View)) {
 				return endPoints;
 			}
+			
+			if (((View)modelObject).getDiagram()==null)
+				return endPoints;
 
 			Diagram diagram = ((View) modelObject).getDiagram();
 			Map registry = scep.getViewer().getEditPartRegistry();
