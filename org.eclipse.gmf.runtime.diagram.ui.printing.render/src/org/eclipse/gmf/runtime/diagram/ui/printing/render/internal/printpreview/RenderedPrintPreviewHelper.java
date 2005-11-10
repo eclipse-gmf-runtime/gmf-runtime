@@ -14,8 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview.PrintPreviewHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 
 /**
@@ -26,21 +24,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapMod
  */
 public class RenderedPrintPreviewHelper
 	extends PrintPreviewHelper {
-
-	/**
-	 * The constructor.
-	 * @param mm <code>IMapMode</code> to do the coordinate mapping
-	 */
-	public RenderedPrintPreviewHelper(IMapMode mm) {
-		super(mm);
-	}
-	
-	/**
-	 * The constructor.
-	 */
-	public RenderedPrintPreviewHelper() {
-		super(MapModeUtil.getMapMode());
-	}
 
 	/*
 	 * (non-Javadoc)

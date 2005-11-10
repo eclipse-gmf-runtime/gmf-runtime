@@ -147,6 +147,17 @@
             </ElementType>
          </ViewId>
       </GlobalActionHandlerProvider>
+      
+      <!--Printing -->
+      <GlobalActionHandlerProvider class="org.eclipse.gmf.runtime.diagram.ui.printing.render.providers.DiagramWithPrintGlobalActionHandlerProvider" id="logicPrintGlobalActionHandlerProvider">
+         <Priority name="Lowest"/>
+         <ViewId id="LogicEditor">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="print"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      
   </extension><extension id="LogicContributionItemProvider" name="%ext.contributionItemProvider" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
       <contributionItemProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicContributionItemProvider">
          <Priority name="Low">
@@ -164,7 +175,10 @@
                   id="deleteSemanticAction"
                   path="/valueChangeGroup"/>
          </popupContribution>
-         
+         <partContribution id="LogicEditor">
+            <partAction menubarPath="/file/print" id="printPreviewAction">
+            </partAction>
+         </partContribution>
        </contributionItemProvider>
    </extension>
    
@@ -308,6 +322,12 @@
             class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectionsPreferencePage"
             id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicConnectionsPreferencePage">
       </page>    
+      <page
+            name="%PreferencePage.Printing"
+            category="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicDiagramsPreferencePage"
+            class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicPrintingPreferencePage"
+            id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicPrintingPreferencePage">
+      </page>
       <page
             name="%PreferencePage.RulerGrid"
             category="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicDiagramsPreferencePage"

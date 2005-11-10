@@ -11,14 +11,15 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
 
-import org.eclipse.jface.action.IAction;
-
-import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
-import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.DeleteSemanticAction;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.IncrementDecrementAction;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.LogicActionIds;
-
+import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
+import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
+import org.eclipse.gmf.runtime.diagram.ui.printing.actions.PrintPreviewAction;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.EnhancedPrintActionHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview.RenderedPrintPreviewHelper;
+import org.eclipse.jface.action.IAction;
 
 /**
  * @author qili
@@ -41,6 +42,9 @@ public class LogicContributionItemProvider
 			return new IncrementDecrementAction(partDescriptor.getPartPage(), actionId);
 		} else if (actionId.equals(DELETE_SEMANTIC_VALUE)) {
 			return new DeleteSemanticAction(partDescriptor.getPartPage());
+		} else if (actionId.equals(PrintPreviewAction.ID)) {
+			return new PrintPreviewAction(new EnhancedPrintActionHelper(),
+				new RenderedPrintPreviewHelper());
 		}
 
 		return super.createAction(actionId, partDescriptor);

@@ -11,11 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.providers;
 
-import org.eclipse.ui.IEditorPart;
-
+import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
-import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.render.util.RenderedDiagramPrinter;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.EnhancedPrintActionHelper;
 
 /**
  * A specialized <code>DiagramWithPrintGlobalActionHandler</code> that
@@ -26,14 +24,11 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.render.util.RenderedDiagramPr
 public class DiagramWithPrintGlobalActionHandler
 	extends org.eclipse.gmf.runtime.diagram.ui.printing.providers.DiagramWithPrintGlobalActionHandler {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.printing.internal.providers.DiagramWithPrintGlobalActionHandler#doPrint(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.printing.providers.DiagramWithPrintGlobalActionHandler#doPrint(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	protected void doPrint(IGlobalActionContext cntxt) {
-		DefaultPrintActionHelper.doRun((IEditorPart) cntxt.getActivePart(),
-			new RenderedDiagramPrinter(getPreferencesHint((IEditorPart) cntxt
-				.getActivePart()), getMapMode(cntxt)));
+		IPrintActionHelper helper = new EnhancedPrintActionHelper();
+		helper.doPrint(cntxt.getActivePart());
 	}
 }

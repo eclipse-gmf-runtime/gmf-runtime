@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.DiagramUIPrintingRenderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.diagram.ui.printing.render.internal,
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.printing.render.actions,
+ org.eclipse.gmf.runtime.diagram.ui.printing.render.internal,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.l10n,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.providers,

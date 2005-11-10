@@ -25,12 +25,14 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugin;
@@ -349,6 +351,8 @@ public class PrintPreviewHelper {
 		}
 
 		initializeToolbarImages();
+		
+		initializeMapMode();
 
 		diagramEditPart = null;
 		pageBreakBounds = null;
@@ -676,17 +680,9 @@ public class PrintPreviewHelper {
 	
 	/**
 	 * The constructor.
-	 * @param mm <code>IMapMode</code> to do the coordinate mapping
-	 */
-	public PrintPreviewHelper(IMapMode mm) {
-		this.mm = mm;
-	}
-
-	/**
-	 * The constructor.
 	 */
 	public PrintPreviewHelper() {
-		this(MapModeUtil.getMapMode());
+		//do nothing
 	}
 	
 	/**
@@ -695,7 +691,30 @@ public class PrintPreviewHelper {
 	protected IMapMode getMapMode() {
 		return mm;
 	}
-
+	
+	/**
+	 * Initialize the map mode variable
+	 */
+	private void initializeMapMode() {
+		DiagramEditor diagramEditor = getDiagramEditorPart();
+		
+		assert diagramEditor != null;
+		
+		IDiagramGraphicalViewer viewer = diagramEditor.getDiagramGraphicalViewer();
+		
+		if (viewer != null) {
+			RootEditPart rootEP = viewer.getRootEditPart();
+			
+			if (rootEP instanceof DiagramRootEditPart) {
+				this.mm = ((DiagramRootEditPart) rootEP).getMapMode();;
+				return;
+				
+			}
+		}
+		
+		this.mm = MapModeUtil.getMapMode();
+	}
+	
 	/**
 	 * Return and cache the total number of rows used by the diagram
 	 * 
