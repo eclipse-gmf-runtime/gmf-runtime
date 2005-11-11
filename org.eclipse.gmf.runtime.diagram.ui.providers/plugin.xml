@@ -403,7 +403,9 @@
             </popupAction>           
 <!-- navigate menu actions -->
             <popupMenu path="/navigateMenu/showGroup" id="showInMenu">
-            </popupMenu>          
+            </popupMenu>   
+            <popupMenuGroup path="/navigateMenu/showInMenu/" id="additions">
+            </popupMenuGroup>       
         </popupContribution>
         
 <!-- format menu actions -->           
@@ -487,7 +489,9 @@
             <popupAction path="/fileMenu/printGroup" id="print">
             </popupAction>            
   			<popupMenu path="/navigateMenu/openGroup" id="openWithMenu">
-            </popupMenu>             
+            </popupMenu>       
+            <popupMenuGroup path="/navigateMenu/openWithMenu/" id="additions">
+            </popupMenuGroup>           
             <popupAction path="/editMenu/undoGroup" id="undo">
             </popupAction>
             <popupAction path="/editMenu/undoGroup" id="redo">
