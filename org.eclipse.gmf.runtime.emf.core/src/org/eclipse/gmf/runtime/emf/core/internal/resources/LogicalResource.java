@@ -424,7 +424,7 @@ public class LogicalResource
 		} else {
 			// we're not dirty, so we don't need an output stream to write to,
 			//    but we probably have sub-units that need saving
-			doSave(null, options);
+			doSave((OutputStream)null, options);
 			setModified(false);
 		}
 	}
