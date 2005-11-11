@@ -46,7 +46,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramPopupBarEditPolicy
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
@@ -277,11 +276,15 @@ public class DiagramEditPart
 			return;
 		}
 		// do not update unless we really need to
-		PageBreakEditPart pagebreakEditpart = ((DiagramRootEditPart)getRoot()).getPageBreakEditPart();
-		if (pagebreakEditpart == null ||
-			pagebreakEditpart.getFigure().isVisible())
+		IPreferenceStore preferenceStore = ((DiagramRootEditPart) getRoot()).getWorkspaceViewerPreferences();
+		// do not update unless we really need to
+		if (preferenceStore == null ||
+			preferenceStore.getBoolean(WorkspaceViewerProperties.VIEWPAGEBREAKS)==false)
 			return;
-		pagebreakEditpart.resize(getChildrenBounds());
+
+		((DiagramRootEditPart) getRoot())
+				.getPageBreakEditPart().resize(getChildrenBounds());
+		
 		Rectangle r =
 			((DiagramRootEditPart) getRoot())
 				.getPageBreakEditPart()
