@@ -57,7 +57,7 @@ public class URLImageEditPartTests
 	private String TEST8 = new String("test8.doc");//$NON-NLS-1$
 	private String TEST9 = new String("test9.xls");//$NON-NLS-1$
 	private String TEST10 = new String("nofile.xxx");//$NON-NLS-1$
-	private String TEST11 = new String("test11.xsd");//$NON-NLS-1$
+	//private String TEST11 = new String("test11.xsd");//$NON-NLS-1$
 	
 	private static final String TRANSLATE_PATH_ARGUMENT = "$nl$"; //$NON-NLS-1$
 	private static final String IMAGES = "images"; //$NON-NLS-1$
@@ -141,8 +141,8 @@ public class URLImageEditPartTests
 			getNode(), getURL(TEST9)));
 		nonImageFixtures.add(new URLImageEditPartFixture1(
 			getNode(), getURL(TEST10)));
-		nonImageFixtures.add(new URLImageEditPartFixture1(
-			getNode(), getURL(TEST11)));
+		//nonImageFixtures.add(new URLImageEditPartFixture1(
+			//getNode(), getURL(TEST11)));
 		nonImageFixtures.add(new URLImageEditPartFixture1(
 			getNode(), null)); // test null URL
 		return nonImageFixtures;
