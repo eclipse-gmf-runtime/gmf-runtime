@@ -79,13 +79,9 @@ public final class CommonUIMessages extends NLS {
 	public static String OutputView_HideActiveCategory_Tooltip;
 	public static String OutputView_ShowAllHiddenCategories_Tooltip;
 	public static String FileModificationValidator_EditProblemDialogTitle;
-	public static String FileModificationValidator_EditProblemDialogMessage_part1;
-	public static String FileModificationValidator_EditProblemDialogMessage_part2;
-	public static String FileModificationValidator_EditProblemDialogMessage_part3;
+	public static String FileModificationValidator_EditProblemDialogMessage;
 	public static String FileModificationValidator_SaveProblemDialogTitle;
-	public static String FileModificationValidator_SaveProblemDialogMessage_part1;
-	public static String FileModificationValidator_SaveProblemDialogMessage_part2;
-	public static String FileModificationValidator_SaveProblemDialogMessage_part3;
+	public static String FileModificationValidator_SaveProblemDialogMessage;
 	public static String FileModificationValidator_OK;
 	public static String FileModificationValidator_FileIsReadOnlyErrorMessage;
 	public static String PopupDialog_title;

@@ -33,11 +33,6 @@ public final class CommonCoreMessages extends NLS {
 	public static String list_suffix;
 	public static String NavigatorCategoryDescriptor__ERROR__invalidXML;
 	public static String NavigatorContentTypeDescriptor__ERROR__invalidXML;
-	public static String FileModificationValidator_EditProblemDialogTitle;
-	public static String FileModificationValidator_EditProblemDialogMessage_part1;
-	public static String FileModificationValidator_EditProblemDialogMessage_part2;
-	public static String FileModificationValidator_EditProblemDialogMessage_part3;
-	public static String FileModificationValidator_EditProblemDialogMessage_workspace;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CommonCoreMessages.class);

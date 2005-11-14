@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.common.ui.resources;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileModificationValidator;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,7 +19,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.ui.PlatformUI;
 
@@ -68,43 +68,36 @@ public class FileModificationValidator {
 	 * @see org.eclipse.core.resources.IFileModificationValidator#validateEdit
 	 */
 	public boolean okToEdit(final IFile[] files, final String modificationReason) {
-		final boolean result[] = new boolean[] {false};
+		Shell shell = null;
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && Display.getCurrent() != null) {
+			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell();
+		}
 
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		final IStatus status = ResourcesPlugin.getWorkspace().validateEdit(
+			files, shell);
+		if (status.isOK()) {
+			return true;
+		} else {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-			public void run() {
-				IStatus status = ResourcesPlugin.getWorkspace().validateEdit(
-					files,
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getShell());
-				if (status.isOK()) {
-					result[0] = true;
-				} else {
-
+				public void run() {
 					MessageDialog
 						.openError(
 							PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getShell(),
-							MessageFormat
-								.format(
+							NLS
+								.bind(
 									CommonUIMessages.FileModificationValidator_EditProblemDialogTitle,
-									new Object[] {modificationReason}),
-							MessageFormat
-								.format(
-									CommonUIMessages.FileModificationValidator_EditProblemDialogMessage_part1,
-									new Object[] {modificationReason})
-								+ "\n\n" //$NON-NLS-1$
-								+ CommonUIMessages.FileModificationValidator_EditProblemDialogMessage_part2
-								+ "\n" //$NON-NLS-1$
-								+ MessageFormat
-									.format(
-										CommonUIMessages.FileModificationValidator_EditProblemDialogMessage_part3,
-										new Object[] {status.getMessage()}));
-					result[0] = false;
+									modificationReason),
+							NLS
+								.bind(
+									CommonUIMessages.FileModificationValidator_EditProblemDialogMessage,
+									modificationReason, status.getMessage()));
 				}
-			}
-		});
-		return result[0];
+			});
+			return false;
+		}
 	}
 
 	/**
@@ -140,16 +133,13 @@ public class FileModificationValidator {
 		} else {
 			MessageDialog
 				.openError(
-					Display.getCurrent().getActiveShell(),
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getShell(),
 					CommonUIMessages.FileModificationValidator_SaveProblemDialogTitle,
-					CommonUIMessages.FileModificationValidator_SaveProblemDialogMessage_part1
-						+ "\n\n" //$NON-NLS-1$
-						+ CommonUIMessages.FileModificationValidator_SaveProblemDialogMessage_part2
-						+ "\n" //$NON-NLS-1$
-						+ MessageFormat
-							.format(
-								CommonUIMessages.FileModificationValidator_SaveProblemDialogMessage_part3,
-								new Object[] {status.getMessage()}));
+					NLS
+						.bind(
+							CommonUIMessages.FileModificationValidator_SaveProblemDialogMessage,
+							status.getMessage()));
 			return false;
 		}
 	}
@@ -163,10 +153,10 @@ public class FileModificationValidator {
 	 */
 	private IStatus getDefaultStatus(IFile file) {
 		if (file.isReadOnly()) {
-			String message = MessageFormat
-				.format(
+			String message = NLS
+				.bind(
 					CommonUIMessages.FileModificationValidator_FileIsReadOnlyErrorMessage,
-					new Object[] {file.getFullPath().toString()});
+					file.getFullPath().toString());
 			return new Status(Status.ERROR, CommonUIPlugin.getPluginId(),
 				Status.ERROR, message, null);
 		} else {
