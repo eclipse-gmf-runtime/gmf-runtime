@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
-
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
@@ -61,6 +60,20 @@ public abstract class MEditingDomain
 	 */
 	public static MEditingDomain createNewDomain() {
 		return new MSLEditingDomain();
+	}
+
+	/**
+	 * Creates a new MSL editing domain on the specified resource set.
+	 * The client can provide a custom resource set implementation, and the MSL
+	 * will apply its read/write protocol, eventing, validation, etc. semantics
+	 * to it.
+	 * 
+	 * @param rset a resource set provided by the client
+	 * 
+	 * @return The new editing domain
+	 */
+	public static MEditingDomain createNewDomain(ResourceSet rset) {
+		return new MSLEditingDomain(rset);
 	}
 
 	/**
@@ -783,6 +796,17 @@ public abstract class MEditingDomain
 	 */
 	public static MEditingDomain getEditingDomain(ResourceSet resourceSet) {
 		return MSLEditingDomain.getEditingDomain(resourceSet);
+	}
+	
+	/**
+	 * Associates the specified resource set with an editing domain.
+	 * 
+	 * @param rset the resource set to associate with the <code>domain</code>
+	 * @param domain the editing domain to associate with the resource set
+	 */
+	public static void setEditingDomain(ResourceSet rset, MEditingDomain domain) {
+		
+		MSLEditingDomain.setEditingDomain(rset, domain);
 	}
 
 	/**

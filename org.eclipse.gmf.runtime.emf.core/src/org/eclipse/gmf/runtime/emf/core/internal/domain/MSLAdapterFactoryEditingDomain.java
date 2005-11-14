@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
@@ -43,6 +44,18 @@ public class MSLAdapterFactoryEditingDomain
 		super(composedFactory, new BasicCommandStack());
 
 		this.resourceSet = new MSLAdapterFactoryEditingDomainResourceSet();
+	}
+
+	/**
+	 * Constructor.
+	 */
+	public MSLAdapterFactoryEditingDomain(
+			MSLComposedAdapterFactory composedFactory,
+			ResourceSet rset) {
+
+		super(composedFactory, new BasicCommandStack());
+
+		this.resourceSet = rset;
 	}
 
 	protected class MSLAdapterFactoryEditingDomainResourceSet

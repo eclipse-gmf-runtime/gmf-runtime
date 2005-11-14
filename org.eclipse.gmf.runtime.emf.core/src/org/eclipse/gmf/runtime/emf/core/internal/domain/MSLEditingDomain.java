@@ -151,12 +151,24 @@ public class MSLEditingDomain
 	 */
 	public MSLEditingDomain() {
 
+		this((ResourceSet) null);
+	}
+
+	/**
+	 * Constructor.
+	 */
+	public MSLEditingDomain(ResourceSet rset) {
+
 		super();
 
 		MSLComposedAdapterFactory composedFactory = MSLAdapterFactoryManager
 			.getAdapterFactory();
 
-		editingDomain = new MSLAdapterFactoryEditingDomain(composedFactory);
+		if (rset != null) {
+			editingDomain = new MSLAdapterFactoryEditingDomain(composedFactory, rset);
+		} else {
+			editingDomain = new MSLAdapterFactoryEditingDomain(composedFactory);
+		}
 
 		contentAdapter = new MSLContentAdapter(this);
 
@@ -1816,6 +1828,43 @@ public class MSLEditingDomain
 			return (MSLEditingDomain) reference.get();
 
 		return null;
+	}
+	
+	/**
+	 * Associates the specified resource set with an editing domain.
+	 * 
+	 * @param rset the resource set to associate with the <code>domain</code>
+	 * @param domain the editing domain to associate with the resource set
+	 */
+	public static void setEditingDomain(ResourceSet rset, MEditingDomain domain) {
+		
+		MEditingDomain currentDomain = getEditingDomain(rset);
+		
+		if (currentDomain != domain) {
+			if (currentDomain instanceof MSLEditingDomain) {
+				// remove current content adapter
+				rset.eAdapters().remove(((MSLEditingDomain) currentDomain).getContentAdapter());
+			}
+			
+			if (domain instanceof MSLEditingDomain) {
+				MSLEditingDomain newDomain = (MSLEditingDomain) domain;
+				
+				// attach new content adapter
+				rset.eAdapters().add(newDomain.getContentAdapter());
+				
+				// for each resource that is loaded, ensure that the new domain
+				//   know that it has finished loading
+				for (Iterator iter = rset.getResources().iterator(); iter.hasNext();) {
+					Resource next = (Resource) iter.next();
+					
+					if (next.isLoaded()) {
+						newDomain.getResouceListener().markResourceFinishedLoading(next);
+					}
+				}
+			}
+			
+			resourceSets.put(rset, new WeakReference(domain));
+		}
 	}
 
 	/**
