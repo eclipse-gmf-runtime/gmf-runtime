@@ -10,7 +10,7 @@
  ****************************************************************************/
 
 
-package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util;
+package org.eclipse.gmf.runtime.diagram.ui.resources.editor.util;
 
 
 import java.io.ByteArrayInputStream;
@@ -55,16 +55,16 @@ import org.eclipse.gmf.runtime.notation.View;
 public class EditorUtil {
 
 	/**
-	 * @param diagramFileCreator
-	 * @param containerPath
-	 * @param fileName
-	 * @param diagramId
-	 * @param initialContents
-	 * @param kind
-	 * @param dWindow
-	 * @param progressMonitor
-	 * @param openEditor
-	 * @param saveDiagram
+	 * @param diagramFileCreator 
+	 * @param containerPath Directory path where the file will be stored
+	 * @param fileName Name of the file to be created
+	 * @param initialContents InputStream of the initial contents of the file if desired
+	 * @param diagramId the id of the editor extension to use
+	 * @param kind diagram kind, check {@link ViewType} for predefined values
+	 * @param dWindow the workbench window containing the active page
+	 * @param progressMonitor A progress monitor for tracking the progress of the action's execution
+	 * @param openEditor boolean indicating if the editor containing the diagram should be opened
+	 * @param saveDiagram boolean indicating if the diagram is to be saved
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference
@@ -73,7 +73,7 @@ public class EditorUtil {
 	 * @return
 	 */
 	public static final IFile createAndOpenDiagram(
-			EditorFileCreator diagramFileCreator,
+			DiagramFileCreator diagramFileCreator,
 			IPath containerPath, String fileName, String diagramId,
 			InputStream initialContents,
 			String kind, IWorkbenchWindow dWindow,
@@ -94,6 +94,14 @@ public class EditorUtil {
 		return newFile;
 	}
 	
+	/**
+	 * @param file IFile to be opened
+	 * @param dWindow the workbench window containing the active page
+	 * @param saveDiagram boolean indicating if the diagram is to be saved
+	 * @param progressMonitor A progress monitor for tracking the progress of the action's execution
+	 * @param diagramId the id of the editor extension to use
+	 * @return editpart representing opened diagram
+	 */
 	public static final DiagramEditPart openDiagram(IFile file,
 			IWorkbenchWindow dWindow, boolean saveDiagram,
 			IProgressMonitor progressMonitor, String diagramId) {
@@ -151,7 +159,7 @@ public class EditorUtil {
 	 *         not created
 	 */
 	public static IFile createNewDiagramFile(
-			EditorFileCreator diagramFileCreator,
+			DiagramFileCreator diagramFileCreator,
 			IPath containerFullPath, String fileName,
 			InputStream initialContents, final String kind,
 			Shell shell, final IProgressMonitor progressMonitor, final PreferencesHint preferencesHint) {
@@ -236,7 +244,7 @@ public class EditorUtil {
 	 * Method getInitialContents. Gets the initial contents of the UML
 	 * Visualizer diagram file. Currently it returns an empty byte stream.
 	 *
-	 * @return InputStream Byte stream that will initially populate the UML
+	 * @return Byte stream that will initially populate the UML
 	 *         Visualizer diagram file.
 	 */
 	public static InputStream getInitialContents() {

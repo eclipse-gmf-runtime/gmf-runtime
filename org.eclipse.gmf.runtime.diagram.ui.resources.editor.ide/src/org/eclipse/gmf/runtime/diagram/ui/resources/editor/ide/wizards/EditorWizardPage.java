@@ -39,8 +39,8 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUti
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorUtil;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.EditorUtil;
 ;
 
 /**
@@ -206,7 +206,7 @@ public abstract class EditorWizardPage
 	/* (non-Javadoc)
 	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramFileCreator()
 	 */
-	public abstract EditorFileCreator getDiagramFileCreator();
+	public abstract DiagramFileCreator getDiagramFileCreator();
 
 	/* (non-Javadoc)
 	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramKind()

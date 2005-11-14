@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.ui.parts;
 
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditorMatchingStrategy;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditorMatchingStrategy;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
@@ -23,7 +23,7 @@ public class LogicDiagramEditorMatchingStrategy
 	extends DiagramDocumentEditorMatchingStrategy {
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditorMatchingStrategy#getDefaultDomain()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditorMatchingStrategy#getDefaultDomain()
 	 */
 	public MEditingDomain getDefaultDomain() {
 		return MEditingDomain.INSTANCE;

@@ -17,15 +17,14 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicDiagramFileCreator;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicEditorUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 
 
 /**
@@ -34,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorF
  *
  * Create Logic Diagram Wizard Page
  */
-public class LogicWizardPage extends EditorWizardPage{
+public class LogicWizardPage extends EditorWizardPage {
 
 	/**
 	 * LogicDiagramWizardPage constructor
@@ -84,7 +83,7 @@ public class LogicWizardPage extends EditorWizardPage{
 	/* (non-Javadoc)
 	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramFileCreator()
 	 */
-	public EditorFileCreator getDiagramFileCreator() {
+	public DiagramFileCreator getDiagramFileCreator() {
 		return LogicDiagramFileCreator.getInstance();
 	}
 	

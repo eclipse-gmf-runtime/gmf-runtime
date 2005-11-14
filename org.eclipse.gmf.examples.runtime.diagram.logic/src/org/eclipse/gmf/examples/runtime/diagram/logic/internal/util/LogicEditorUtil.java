@@ -20,15 +20,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramDebugOptions;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorUtil;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
@@ -48,10 +47,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class LogicEditorUtil extends IDEEditorUtil {
 	
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil#createAndOpenDiagram(org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator, org.eclipse.core.runtime.IPath, java.lang.String, java.io.InputStream, java.lang.String, org.eclipse.ui.IWorkbenchWindow, org.eclipse.core.runtime.IProgressMonitor, boolean, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil#createAndOpenDiagram(org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator, org.eclipse.core.runtime.IPath, java.lang.String, java.io.InputStream, java.lang.String, org.eclipse.ui.IWorkbenchWindow, org.eclipse.core.runtime.IProgressMonitor, boolean, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
 	 */
 	public static final IFile createAndOpenDiagram(
-			EditorFileCreator diagramFileCreator,
+			DiagramFileCreator diagramFileCreator,
 			IPath containerPath, String fileName, InputStream initialContents,
 			String kind, IWorkbenchWindow dWindow,
 			IProgressMonitor progressMonitor, boolean openEditor,
@@ -93,7 +92,7 @@ public class LogicEditorUtil extends IDEEditorUtil {
 	 *         not created
 	 */
 	public static final IFile createNewDiagramFile(
-			EditorFileCreator diagramFileCreator,
+			DiagramFileCreator diagramFileCreator,
 			IPath containerFullPath, String fileName,
 			InputStream initialContents, final String kind,
 			Shell shell, final IProgressMonitor progressMonitor) {
@@ -125,8 +124,8 @@ public class LogicEditorUtil extends IDEEditorUtil {
 
 		} catch (Exception e) {
 			Trace.catching(LogicDiagramPlugin.getInstance(),
-				EditorDebugOptions.EXCEPTIONS_CATCHING,
-				EditorUtil.class, "createNewDiagramFile", //$NON-NLS-1$
+				LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
+				LogicEditorUtil.class, "createNewDiagramFile", //$NON-NLS-1$
 				e);
 		}
 

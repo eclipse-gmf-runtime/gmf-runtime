@@ -13,10 +13,8 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n;
 
 import org.eclipse.core.runtime.Plugin;
-
-import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorResourceManager;
+import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 
 
 /**
@@ -25,42 +23,58 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorR
  * 
  * @author qili
  */
-public class LogicResourceManager extends EditorResourceManager{
-	/**
-	 * Constructor for LogicResourceManager.
-	 */
-	private LogicResourceManager() {
-		super();
-	}
-	
-	/**
-	 * A shortcut method to get localized string
-	 * @param key - resource bundle key. 
-	 * @return - localized string value or a key if the bundle does not contain
-	 * 			  this entry
-	 */
-	public static String getI18NString(String key) {
-		return getInstance().getString(key);
-	}
-	
-	/**
-	 * Singleton instance for the resource manager
-	 */
-	private static EditorResourceManager logicResourceManager =
-		new LogicResourceManager();
+public class LogicResourceManager extends AbstractUIResourceManager {
 
-	/**
-	 * Return singleton instance of the resource manager
-	 * @return AbstractResourceManager
-	 */
-	public static AbstractUIResourceManager getInstance() {
-		return logicResourceManager;
-	}
+		/**
+		 * Singleton instance for the resource manager
+		 */
+		private static AbstractUIResourceManager resourceManager =
+			new LogicResourceManager();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#getPlugin()
-	 */
-	protected Plugin getPlugin() {
-		return LogicDiagramPlugin.getInstance();
-	}
+		/**
+		 * Constructor for DiagramResourceManager.
+		 */
+		public LogicResourceManager() {
+			super();
+		}
+
+		/**
+		 * Return singleton instance of the resource manager
+		 * @return AbstractResourceManager
+		 */
+		public static AbstractUIResourceManager getInstance() {
+			return resourceManager;
+		}
+
+		/**
+		 * A shortcut method to get localized string
+		 * @param key - resource bundle key. 
+		 * @return - localized string value or a key if the bundle does not contain
+		 * 			  this entry
+		 */
+		public static String getI18NString(String key) {
+			return getInstance().getString(key);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#initializeResources()
+		 */
+		protected void initializeResources() {
+			//do nothing
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager#initializeUIResources()
+		 */
+		protected void initializeUIResources() {
+			initializeMessageResources();
+		}
+
+		/**
+		 * @see org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager#getPlugin()
+		 */
+		protected Plugin getPlugin() {
+			return LogicDiagramPlugin.getInstance();
+		}
+
 }

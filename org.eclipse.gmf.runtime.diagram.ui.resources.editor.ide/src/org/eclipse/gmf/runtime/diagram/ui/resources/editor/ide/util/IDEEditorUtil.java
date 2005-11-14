@@ -28,8 +28,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorUtil;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.EditorUtil;
 
 /**
  * Diagram utilities for IDE editors
@@ -91,7 +91,7 @@ public class IDEEditorUtil extends EditorUtil {
 	 * @return IFile containing the created diagram
 	 */
 	public static IFile createAndOpenDiagram(
-			EditorFileCreator diagramFileCreator,
+			DiagramFileCreator diagramFileCreator,
 			IPath containerPath, String fileName, InputStream initialContents,
 			String kind, IWorkbenchWindow dWindow,
 			IProgressMonitor progressMonitor, boolean openEditor,

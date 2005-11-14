@@ -19,16 +19,16 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorFil
  *
  * Class that generates diagram files.
  */
-public class DiagramFileCreator extends IDEEditorFileCreator{
+public class GeoShapeDiagramFileCreator extends IDEEditorFileCreator {
 	
-	private static DiagramFileCreator INSTANCE = new DiagramFileCreator();
+	private static GeoShapeDiagramFileCreator INSTANCE = new GeoShapeDiagramFileCreator();
 
 	/**
 	 * Method getInstance.
 	 * This class is a singleton that can only be accessed through this static method.
 	 * @return VizDiagramFileCreator The singleton instance
 	 */
-	static public DiagramFileCreator getInstance() {
+	static public GeoShapeDiagramFileCreator getInstance() {
 		return INSTANCE;
 	}
 	

@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.utils.DiagramIOUtil;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.DiagramIOUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;

@@ -14,7 +14,8 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.resources.editor.document,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util,
- org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.utils
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.util,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.common.ui,

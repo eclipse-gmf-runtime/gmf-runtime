@@ -11,13 +11,12 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards;
 
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.util.GeoShapeDiagramFileCreator;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.util.DiagramFileCreator;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
 
 
 /**
@@ -26,7 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorF
  *
  * Create Diagram Wizard Page
  */
-public class DiagramWizardPage extends EditorWizardPage{
+public class DiagramWizardPage extends EditorWizardPage {
 
 	/**
 	 * DiagramWizardPage constructor
@@ -56,8 +55,8 @@ public class DiagramWizardPage extends EditorWizardPage{
 	/* (non-Javadoc)
 	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramFileCreator()
 	 */
-	public EditorFileCreator getDiagramFileCreator() {
-		return DiagramFileCreator.getInstance();
+	public DiagramFileCreator getDiagramFileCreator() {
+		return GeoShapeDiagramFileCreator.getInstance();
 	}
 	
 	/* (non-Javadoc)

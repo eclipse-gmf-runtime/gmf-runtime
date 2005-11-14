@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.utils;
+package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util;
 
 import java.io.InputStream;
 import java.util.Iterator;

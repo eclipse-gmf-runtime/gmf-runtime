@@ -35,7 +35,6 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -75,7 +74,7 @@ public class LogicTestFixture
 			LogicDiagramFileCreator.getInstance(), 
 			getProject().getFullPath(),
 			"logicTest", //$NON-NLS-1$
-			EditorUtil.getInitialContents(),
+			LogicEditorUtil.getInitialContents(),
 			"logic", //$NON-NLS-1$
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 			new NullProgressMonitor());

@@ -24,16 +24,16 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.EditorFileCreator;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 
 /**
  * A file creator that creates a file in an IDE dependent
  * WorkspaceModifyOperation.
  * 
- * @author wdiu, Wayne Diu, refactored from EditorFileCreator
+ * @author wdiu, Wayne Diu, refactored from DiagramFileCreator
  */
 public abstract class IDEEditorFileCreator
-	extends EditorFileCreator {
+	extends DiagramFileCreator {
 
 	/**
 	 * Creates the file, taking other file operations in the workspace into
