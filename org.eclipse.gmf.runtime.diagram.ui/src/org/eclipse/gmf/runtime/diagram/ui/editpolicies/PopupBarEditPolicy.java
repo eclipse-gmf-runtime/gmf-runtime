@@ -508,13 +508,6 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 
 	/* ************************* End nested classes ******************** */
 
-	/**
-	 * Delay in ms to wait for displaying the popup bar on a diagrms or machine
-	 * diagram. This delay is greater than normal because the popup bar is more
-	 * intrusive.
-	 */
-	private static final int APPEARANCE_DELAY_LOCATION_SPECIFIC = 1000;
-
 	/** Y postion offset from shape where the balloon top begin. */
 	static private int BALLOON_Y_OFFSET = 10;
 
@@ -1153,7 +1146,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 	 * @return the time to wait in milliseconds
 	 */
 	protected int getAppearanceDelayLocationSpecific() {
-		return APPEARANCE_DELAY_LOCATION_SPECIFIC;
+		return getAppearanceDelay();
 	}
 
 }
