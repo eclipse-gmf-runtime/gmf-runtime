@@ -16,6 +16,7 @@ import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.Tool;
+import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
 import org.eclipse.gef.ui.palette.PaletteContextMenuProvider;
@@ -25,6 +26,8 @@ import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ImageFileDropTargetListener;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDragSourceListener;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
@@ -113,7 +116,16 @@ public abstract class DiagramEditorWithFlyOutPalette
 			getDiagramGraphicalViewer().addDropTargetListener(
 				(TransferDropTargetListener) new ImageFileDropTargetListener(
 					getDiagramGraphicalViewer()));
-						
+
+			// Add a transfer drag target listener that is supported on
+			// palette template entries whose template is a creation tool.
+			// This will enable drag and drop of the palette shape creation
+			// tools.
+			getDiagramGraphicalViewer()
+				.addDropTargetListener(
+					new PaletteToolTransferDropTargetListener(
+						getGraphicalViewer()));
+
 		} else {
 			super.initializeGraphicalViewer();
 		}
@@ -140,6 +152,14 @@ public abstract class DiagramEditorWithFlyOutPalette
 
 				viewer.getKeyHandler().setParent(getPaletteKeyHandler());
 				viewer.getControl().addMouseListener(getPaletteMouseListener());
+
+				// Add a transfer drag target listener that is supported on
+				// palette template entries whose template is a creation tool.
+				// This will enable drag and drop of the palette shape creation
+				// tools.
+				viewer
+					.addDragSourceListener(new PaletteToolTransferDragSourceListener(
+						viewer));
 
 			}
 

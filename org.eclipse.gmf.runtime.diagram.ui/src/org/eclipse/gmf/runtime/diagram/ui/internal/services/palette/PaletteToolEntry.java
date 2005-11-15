@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.palette;
 
 import org.eclipse.gef.Tool;
-
+import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 
 /**
@@ -21,8 +21,8 @@ import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
  * @author melaasar
  */
 public class PaletteToolEntry
-	extends org.eclipse.gef.palette.ToolEntry {
-
+	extends CombinedTemplateCreationEntry {
+	
 	/** the drawer's id */
 	private Tool tool;
 	private PaletteFactory factory;
@@ -36,13 +36,12 @@ public class PaletteToolEntry
 		String id,
 		String label,
 		PaletteFactory factory) {
-		super(label, null, null, null);
+		super(label, null, null, null, null, null);
 		setId(id);
 		this.factory = factory;
+		setTemplate(this);
 	}
 
-	/**  @see org.eclipse.gef.palette.ToolEntry#createTool()
-	*/
 	public Tool createTool() {
 		return tool != null ? tool : factory.createTool(getId());
 	}

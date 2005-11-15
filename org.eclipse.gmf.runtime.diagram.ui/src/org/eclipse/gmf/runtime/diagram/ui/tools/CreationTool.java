@@ -118,9 +118,6 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 		return PreferencesHint.USE_DEFAULTS;
 	}
 
-	/**
-	 * @see org.eclipse.gef.tools.TargetingTool#createTargetRequest()
-	 */
 	protected Request createTargetRequest() {
 		return CreateViewRequestFactory.getCreateShapeRequest(getElementType(),
 			getPreferencesHint());
@@ -129,18 +126,12 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	/**
 	 * Since both the view and semantic requests contain results we need to free
 	 * them when the tool is deactivated
-	 * 
-	 * @see org.eclipse.gef.Tool#deactivate()
 	 */
 	public void deactivate() {
 		super.deactivate();
 		setTargetRequest(null);
 	}
 
-	/**
-	 * 
-	 * @see org.eclipse.gef.tools.CreationTool#performCreation(int)
-	 */
 	protected void performCreation(int button) {
 		
 		antiScroll = true;
@@ -193,7 +184,6 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 
 	/**
 	*  Handles double click to create the shape in defualt position
-	* @see org.eclipse.gef.tools.AbstractTool#handleDoubleClick(int)
 	*/
 	protected boolean handleDoubleClick(int button) {
 
@@ -213,8 +203,8 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	protected void createShapeAt(Point point){
 		
 		setTargetEditPart(getCurrentViewer().getRootEditPart().getContents());
-				getCreateRequest().setLocation(point);
-				setCurrentCommand(getCommand());
+		getCreateRequest().setLocation(point);
+		setCurrentCommand(getCommand());
 		performCreation(0);
 	}
 
@@ -232,9 +222,6 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 		return false;
 	}
 
-	/**
-	 * @see org.eclipse.gef.tools.TargetingTool#setTargetEditPart(org.eclipse.gef.EditPart)
-	 */
 	protected void setTargetEditPart(EditPart editpart) {
 		// Set the target request to null if the target editpart has changed.
 		// This needs to be done so that the context element (if applicable) in
@@ -260,8 +247,6 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	/**
 	 * Overridden so that the current tool will remain active (locked) if the
 	 * user is pressing the ctrl key.
-	 * 
-	 * @see org.eclipse.gef.tools.AbstractTool#handleFinished()
 	 */
 	protected void handleFinished() {
 		if (!getCurrentInput().isControlKeyDown()) {
@@ -309,4 +294,27 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 				(editPart.getViewer() != null))
 				editPart.getViewer().reveal(editPart);
 	}
+
+	/**
+	 * Creates the request.
+	 * 
+	 * @see #createTargetRequest()
+	 */
+	public final Request createCreateRequest() {
+		return createTargetRequest();
+	}
+
+	/**
+	 * Selects the new shapes and puts them in direct edit mode if desired.
+	 * 
+	 * @param viewer
+	 *            the editpart viewer
+	 * @param objects
+	 *            the collection of new shapes
+	 * @see #selectAddedObject(EditPartViewer, Collection)
+	 */
+	public final void selectNewShapes(EditPartViewer viewer, Collection objects) {
+		selectAddedObject(viewer, objects);
+	}
+
 }
