@@ -58,6 +58,7 @@ public interface IGraphicalEditPart
 	/**
 	 * Method fillAppearancePropertiesMap.
 	 * @param properties
+	 * @deprecated this is no longer needed by the copy appearance action.
 	 */
 	public void fillAppearancePropertiesMap(Map properties);
 
@@ -96,6 +97,7 @@ public interface IGraphicalEditPart
 	/**
 	 * Method getAppearancePropertiesMap.
 	 * @return Map
+	 * @deprecated this is no longer needed by the copy appearance action.
 	 */
 	public Map getAppearancePropertiesMap();
 	

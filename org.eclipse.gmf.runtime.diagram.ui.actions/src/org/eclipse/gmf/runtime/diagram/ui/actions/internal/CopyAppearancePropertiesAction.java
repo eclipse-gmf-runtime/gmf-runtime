@@ -12,17 +12,13 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.gef.Request;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -79,7 +75,7 @@ public class CopyAppearancePropertiesAction extends DiagramAction {
 		List set = super.createOperationSet();
 		if (!set.isEmpty()) {
 			IGraphicalEditPart editPart = (IGraphicalEditPart) set.get(0);
-			request.setProperties(getEditPartAppearancePropertiesMap(editPart));
+			request.setViewToCopyFrom(editPart.getNotationView());
 		}
 		super.updateTargetRequest();
 	}
@@ -93,19 +89,4 @@ public class CopyAppearancePropertiesAction extends DiagramAction {
 			operationSet.remove(0);
 		return operationSet;
 	}
-
-	/**
-	 * Get the apprearance properties map of the given editpart
-	 * 
-	 * @param editPart
-	 * @return
-	 */
-	private Map getEditPartAppearancePropertiesMap(final IGraphicalEditPart editPart) {
-		return (Map)MEditingDomainGetter.getMEditingDomain((View)editPart.getModel()).runAsRead( new MRunnable() {
-			public Object run() {
-				return editPart.getAppearancePropertiesMap();
-			}
-		});
-	}
-
 }

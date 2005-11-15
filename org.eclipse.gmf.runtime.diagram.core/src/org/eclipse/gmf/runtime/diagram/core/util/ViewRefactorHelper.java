@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -216,13 +217,36 @@ public class ViewRefactorHelper {
 	 * @param newView The new view to copy features to
 	 */
 	protected void copyViewFeatures(View oldView, View newView) {
-		newView.setVisible(oldView.isVisible());
-		copyViewStyles(oldView, newView);
+		copyViewAppearance(oldView, newView, new ArrayList());
 		newView.getSourceEdges().addAll(oldView.getSourceEdges());
 		newView.getTargetEdges().addAll(oldView.getTargetEdges());
 		copyViewChildren(oldView, newView);
 	}
 
+	/**
+	 * Copies the appearance of the old view to the new view.  Typically this means copying the visibility
+	 * and the styles of the root and it's children.
+	 * 
+	 * @param oldView The old view to copy style features from
+	 * @param newView The new view to copy style features to
+	 * @param excludeStyles the <code>List</code> of <code>Style.eClass</code> types to exclude
+	 * from the copy operation.
+	 */
+	public void copyViewAppearance(View oldView, View newView, final List excludeStyles) {
+		newView.setVisible(oldView.isVisible());
+		copyViewStyles(oldView, newView, excludeStyles);
+		
+		for (Iterator j = new ArrayList(oldView.getPersistedChildren()).iterator(); j.hasNext();) {
+			Node oldChildNode = (Node) j.next();
+			if (oldView.getElement() == oldChildNode.getElement() && oldChildNode.getType() != null) {
+				Node newChildNode = (Node) ViewUtil.getChildBySemanticHint(newView, oldChildNode.getType());
+				if (newChildNode != null) {
+					copyViewAppearance(oldChildNode, newChildNode, excludeStyles);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Copies the style features of the old view to the new view
 	 * 
@@ -230,6 +254,18 @@ public class ViewRefactorHelper {
 	 * @param newView The new view to copy style features to
 	 */
 	protected void copyViewStyles(View oldView, View newView) {
+		copyViewStyles(oldView, newView, new ArrayList());
+	}
+	
+	/**
+	 * Copies the style features of the old view to the new view
+	 * 
+	 * @param oldView The old view to copy style features from
+	 * @param newView The new view to copy style features to
+	 * @param excludeStyles the <code>List</code> of <code>Style.eClass</code> types to exclude
+	 * from the copy operation.
+	 */
+	protected void copyViewStyles(View oldView, View newView, final List excludeStyles) {
 		for (Iterator i = oldView.getStyles().iterator(); i.hasNext();) {
 			Style oldStyle = (Style) i.next();
 
@@ -241,6 +277,11 @@ public class ViewRefactorHelper {
 			for (Iterator j = oldStyle.eClass().getEAllStructuralFeatures().iterator(); j.hasNext();) {
 				EStructuralFeature feature = (EStructuralFeature) j.next();
 				Style newStyle;
+				
+				EClass containingStyleEClass = feature.getEContainingClass();
+				if (excludeStyles.contains(containingStyleEClass))
+					continue;
+				
 				if (eClassMap.containsKey(feature.getEContainingClass())) {
 					newStyle = (Style) eClassMap.get(feature.getEContainingClass());
 				} else {
