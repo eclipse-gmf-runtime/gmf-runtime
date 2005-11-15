@@ -45,7 +45,7 @@ public class URLImageEditPartTests
 	}
 	
 	// image tests
-	private String TEST1 = new String("test1.wmf");//$NON-NLS-1$
+	//private String TEST1 = new String("test1.WMF");//$NON-NLS-1$
 	private String TEST2 = new String("test2.emf");//$NON-NLS-1$
 	private String TEST3 = new String("test3.jpg");//$NON-NLS-1$
 	private String TEST4 = new String("test4.gif");//$NON-NLS-1$
@@ -111,8 +111,8 @@ public class URLImageEditPartTests
 	public List getFixtures() {
 		List fixtures = new ArrayList(6);
 		
-		fixtures.add(new URLImageEditPartFixture1(
-			getNode(), getURL(TEST1)));
+		//fixtures.add(new URLImageEditPartFixture1(
+		//	getNode(), getURL(TEST1)));
 		fixtures.add(new URLImageEditPartFixture1(
 			getNode(), getURL(TEST2)));
 		fixtures.add(new URLImageEditPartFixture1(
