@@ -16,18 +16,12 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.draw2d.Ellipse;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
@@ -228,16 +222,6 @@ public class DecoratorServiceTests
 		return (PresentationTestFixture) testFixture;
 	}
 
-	private void createNote() {
-		CreateViewRequest createRequest = CreateViewRequestFactory
-			.getCreateShapeRequest(DiagramNotationType.NOTE,
-				PreferencesHint.USE_DEFAULTS);
-		createRequest.setLocation(new Point(10, 10));
-		createRequest.setSize(new Dimension(100, 100));
-		getDiagramEditPart().getCommand(createRequest).execute();
-		flushEventQueue();
-	}
-
 	/**
 	 * Some basic decorator tests.
 	 * 
@@ -246,7 +230,7 @@ public class DecoratorServiceTests
 	public void testNoteDecorator()
 		throws Exception {
 
-		createNote();
+		getFixture().createNote();
 
 		NoteDecorator myDecorator = TestDecoratorProvider.getMyNoteDecorator();
 		Decoration decoration = myDecorator.getDecoration();
@@ -287,7 +271,7 @@ public class DecoratorServiceTests
 
 		NoteDecorator.ignoreParentVisibility = true;
 
-		createNote();
+		getFixture().createNote();
 
 		NoteDecorator myDecorator = TestDecoratorProvider.getMyNoteDecorator();
 		Decoration decoration = myDecorator.getDecoration();

@@ -108,12 +108,15 @@ public class ContainerNodeEditPolicy
 	}
 	
 	/**
+	 * Gets a command that pops up a menu which can allow the user to select the
+	 * type of connector to be created and whether they want to create a new
+	 * type or select an existing element for the other end of the connector.
+	 * 
 	 * @param request
 	 *            A single create connection request or unspecified connection
 	 *            requests (i.e. where the popup also prompts the user for the
 	 *            type of relationship to created).
-	 * @param part
-	 * @return
+	 * @return the command to popup up the menu
 	 */
 	protected PromptForConnectionAndEndCommand getPromptForConnectionAndEndCommand(
 			CreateConnectionRequest request) {

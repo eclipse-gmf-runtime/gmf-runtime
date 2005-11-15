@@ -11,14 +11,24 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
+import java.util.List;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**
@@ -87,5 +97,22 @@ public class PresentationTestFixture
 	 */
 	public PreferencesHint getPreferencesHint() {
 		return PreferencesHint.USE_DEFAULTS;
+	}
+	
+	/**
+	 * Creates a note on the diagram and returns its editpart.
+	 */
+	public NoteEditPart createNote() {
+		CreateViewRequest createRequest = CreateViewRequestFactory
+			.getCreateShapeRequest(DiagramNotationType.NOTE,
+				PreferencesHint.USE_DEFAULTS);
+		createRequest.setLocation(new Point(10, 10));
+		createRequest.setSize(new Dimension(100, 100));
+		getDiagramEditPart().getCommand(createRequest).execute();
+		flushEventQueue();
+		return (NoteEditPart) getDiagramEditPart().getViewer()
+			.getEditPartRegistry().get(
+				((IAdaptable) ((List) createRequest.getNewObject()).get(0))
+					.getAdapter(View.class));
 	}
 }
