@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %PluginName
+Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.services.properties; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.services.properties.internal.PSFCommonUIPlugin
-Bundle-Vendor: IBM
+Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.ui.services.properties,
  org.eclipse.gmf.runtime.common.ui.services.properties.descriptors,

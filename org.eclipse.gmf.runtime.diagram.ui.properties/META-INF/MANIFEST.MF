@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Presentation Properties Plug-in
+Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.properties; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin
-Bundle-Vendor: IBM
+Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.diagram.ui.properties,
  org.eclipse.gmf.runtime.diagram.ui.properties.descriptors,
