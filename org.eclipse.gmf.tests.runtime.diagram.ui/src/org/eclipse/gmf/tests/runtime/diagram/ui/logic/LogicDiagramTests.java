@@ -12,17 +12,28 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.tools.SelectionTool;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractDiagramTests;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -49,6 +60,57 @@ public class LogicDiagramTests
 
 	protected void setTestFixture() {
 		testFixture = new LogicTestFixture();
+	}
+
+	/** Return <code>(LogicTestFixture)getTestFixture();</code> */
+	protected LogicTestFixture getLogicTestFixture() {
+		return (LogicTestFixture)getTestFixture();
+	}
+	
+	public void testSelect()
+		throws Exception {
+		
+		List children = getTestFixture().getDiagramEditPart().getChildren();
+		if (children.isEmpty())
+			assertFalse(true);
+		
+		EditPart firstEP = (EditPart)children.get(0);
+		if (firstEP instanceof CircuitEditPart ) {
+			CircuitEditPart circuitEditPart = (CircuitEditPart)firstEP;
+			
+			IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
+			Point pos = circuitEditPart.getFigure().getBounds().getBottomRight();
+			circuitEditPart.getFigure().translateToAbsolute(pos);
+			pos.translate(100, 100);
+			LEDEditPart ledEP2 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, pos, getDiagramEditPart());
+			
+			Terminal term1 = (Terminal)((Circuit)circuitEditPart.getNotationView().getElement()).getOutputTerminals().get(0);
+			TerminalEditPart tep1 = null;
+			ListIterator li = circuitEditPart.getChildren().listIterator();
+			while (li.hasNext()) {
+				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
+				if (gep.getNotationView().getElement().equals(term1))
+					tep1 = (TerminalEditPart)gep;
+			}
+			
+			Terminal term2 = (Terminal)((LED)ledEP2.getNotationView().getElement()).getInputTerminals().get(0);
+			TerminalEditPart tep2 = null;
+			li = ledEP2.getChildren().listIterator();
+			while (li.hasNext()) {
+				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
+				if (gep.getNotationView().getElement().equals(term2))
+					tep2 = (TerminalEditPart)gep;
+			}
+			
+			IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
+						
+			getLogicTestFixture().createConnectorUsingTool(tep1, tep2, typeWire);
+			
+			super.testSelect();
+			return;
+		}
+
+		assertFalse(true);
 	}
 
 	/**
