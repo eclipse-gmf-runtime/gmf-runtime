@@ -21,6 +21,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.gmf.runtime.emf.core,
  org.eclipse.gmf.runtime.diagram.ui,
- org.eclipse.gmf.runtime.diagram.ui.resources.editor;visibility:=reexport,
- org.eclipse.core.filebuffers
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor;visibility:=reexport
 Eclipse-LazyStart: true
