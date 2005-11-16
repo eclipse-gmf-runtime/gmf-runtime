@@ -13,9 +13,12 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.ConnectionEditPart;
@@ -24,8 +27,8 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
@@ -86,11 +89,11 @@ public class SelectAllAction extends DiagramAction {
 	}
 
 	/**
-	 * This method searches an edit part for a child that is a gate edit part
+	 * This method searches an edit part for a child that is a border item edit part
 	 * @param parent part needed to search
-	 * @return list of gated edit parts that are direct children of the parent
+	 * @return list of border item edit parts that are direct children of the parent
 	 */
-	private List getGateEditParts(EditPart parent) {
+	private List getBorderItemEditParts(EditPart parent) {
 		List list = new LinkedList();
 		
 		
@@ -101,7 +104,7 @@ public class SelectAllAction extends DiagramAction {
 				list.add(child);
 				list.addAll(child.getChildren());
 			}
-			list.addAll( getGateEditParts(child) );
+			list.addAll( getBorderItemEditParts(child) );
 		}
 		
 		if( list.isEmpty() )
@@ -132,7 +135,7 @@ public class SelectAllAction extends DiagramAction {
 				EditPart child = (EditPart)iter.next();
 				list.add( child );
 				if (!(editpart instanceof DiagramEditPart))
-					list.addAll( getGateEditParts( child ) );
+					list.addAll( getBorderItemEditParts( child ) );
 			}
 
 			return list;
@@ -164,13 +167,19 @@ public class SelectAllAction extends DiagramAction {
 	protected List addSelectableConnections(List editparts) {
 		List selectableConnections = new ArrayList();
 		DiagramEditPart diagramEditPart = getDiagramEditPart();
+		Set connnectableEditParts = new HashSet(editparts);
+		ListIterator li = editparts.listIterator();
+		while (li.hasNext()) {
+			connnectableEditParts.addAll(getBorderItemEditParts((EditPart)li.next()));
+		}
+		
 		if (diagramEditPart != null) {
 			Iterator connections = diagramEditPart.getConnections().iterator();
 			while (connections.hasNext()) {
 				ConnectionEditPart connection =
 					(ConnectionEditPart) connections.next();
-				if (editparts.contains(connection.getSource())
-					|| editparts.contains(connection.getTarget()))
+				if (connnectableEditParts.contains(connection.getSource())
+					|| connnectableEditParts.contains(connection.getTarget()))
 					selectableConnections.add(connection);
 			}
 		}
