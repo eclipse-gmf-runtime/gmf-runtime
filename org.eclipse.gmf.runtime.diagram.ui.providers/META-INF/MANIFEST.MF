@@ -16,4 +16,4 @@ Require-Bundle: org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.common.ui.services
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

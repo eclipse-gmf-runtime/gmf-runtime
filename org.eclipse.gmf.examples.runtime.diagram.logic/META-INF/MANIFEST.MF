@@ -22,8 +22,6 @@ Export-Package: org.eclipse.gmf.examples.runtime.diagram.logic.internal,
  org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories,
  org.eclipse.gmf.examples.runtime.diagram.logic.internal.wizards
 Require-Bundle: org.eclipse.core.runtime.compatibility,
- org.eclipse.ui.ide,
- org.eclipse.ui.editors,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -39,13 +37,10 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.notation;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.core;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.commands.core,
- org.eclipse.gmf.runtime.diagram.ui.geoshapes,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor,
- org.eclipse.gmf.runtime.diagram.ui.providers.ide,
  org.eclipse.gmf.runtime.notation.providers,
  org.eclipse.gmf.examples.runtime.diagram.logic.model,
  org.eclipse.gmf.examples.runtime.diagram.logic.model.edit,
- org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
- org.eclipse.gmf.runtime.diagram.ui.render
-Eclipse-AutoStart: true
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide
+Eclipse-LazyStart: false
 

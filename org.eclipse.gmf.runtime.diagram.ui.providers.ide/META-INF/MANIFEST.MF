@@ -10,8 +10,5 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal,
  org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers
 Require-Bundle: org.eclipse.gmf.runtime.common.ui.action.ide,
  org.eclipse.gmf.runtime.diagram.ui,
- org.eclipse.gmf.runtime.diagram.ui.actions,
- org.eclipse.gmf.runtime.diagram.ui.providers;visibility:=reexport,
- org.eclipse.gmf.runtime.emf.commands.core,
- org.eclipse.core.runtime
-Eclipse-AutoStart: true
+ org.eclipse.gmf.runtime.emf.commands.core
+Eclipse-LazyStart: true

@@ -10,4 +10,4 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.printing,
  org.eclipse.gmf.runtime.common.ui.printing.internal
 Require-Bundle: org.eclipse.swt,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

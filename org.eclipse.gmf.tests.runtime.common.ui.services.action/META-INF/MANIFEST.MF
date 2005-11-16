@@ -9,5 +9,5 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services.action,
  org.eclipse.gmf.tests.runtime.common.ui.services.action.internal.filter
 Require-Bundle: org.junit,
  org.eclipse.gmf.runtime.common.ui,
- org.eclipse.gmf.runtime.common.ui.services.action,
- org.eclipse.gmf.tests.runtime.common.core
+ org.eclipse.gmf.runtime.common.ui.services.action
+Eclipse-LazyStart: false

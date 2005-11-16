@@ -12,4 +12,4 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.actions,
 Require-Bundle: org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

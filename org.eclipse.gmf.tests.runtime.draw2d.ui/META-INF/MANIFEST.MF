@@ -11,5 +11,5 @@ Export-Package: org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers,
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.draw2d.ui,
  org.eclipse.draw2d,
- org.eclipse.ui,
  org.junit
+Eclipse-LazyStart: false

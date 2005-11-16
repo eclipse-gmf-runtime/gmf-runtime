@@ -13,3 +13,4 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.core.internal.command,
 Require-Bundle: org.eclipse.gmf.runtime.common.core,
  org.eclipse.core.runtime.compatibility,
  org.junit
+Eclipse-LazyStart: false

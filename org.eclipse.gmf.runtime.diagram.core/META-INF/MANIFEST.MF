@@ -27,4 +27,4 @@ Require-Bundle: org.eclipse.gmf.runtime.common.core,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.gmf.runtime.emf.core;visibility:=reexport,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

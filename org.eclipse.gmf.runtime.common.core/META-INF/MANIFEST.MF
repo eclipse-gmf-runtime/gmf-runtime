@@ -15,4 +15,4 @@ Export-Package: org.eclipse.gmf.runtime.common.core.command,
  org.eclipse.gmf.runtime.common.core.util
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -15,3 +15,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.emf.core,
  org.eclipse.emf.examples.library,
  org.eclipse.core.resources
+Eclipse-LazyStart: false

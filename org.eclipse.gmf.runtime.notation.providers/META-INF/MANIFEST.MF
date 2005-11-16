@@ -12,12 +12,11 @@ Export-Package: org.eclipse.gmf.runtime.notation.providers.internal.l10n,
  org.eclipse.gmf.runtime.notation.providers.internal.semproc,
  org.eclipse.gmf.runtime.notation.providers.internal.util
 Require-Bundle: org.eclipse.core.runtime.compatibility,
- org.eclipse.ui,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.gmf.runtime.common.core,
  org.eclipse.gmf.runtime.emf.core,
  org.eclipse.emf.edit,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.gmf.runtime.notation.edit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 

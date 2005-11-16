@@ -28,8 +28,6 @@ Require-Bundle: org.eclipse.ui.views;visibility:=reexport,
  org.eclipse.gmf.runtime.common.core;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.team.core;visibility:=reexport,
- org.eclipse.help;visibility:=reexport,
  org.eclipse.ui;visibility:=reexport,
- org.eclipse.core.runtime;visibility:=reexport,
- org.eclipse.ui.editors;visibility:=reexport
-Eclipse-AutoStart: true
+ org.eclipse.core.runtime;visibility:=reexport
+Eclipse-LazyStart: true
