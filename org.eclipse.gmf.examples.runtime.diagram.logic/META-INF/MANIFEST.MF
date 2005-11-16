@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Logic Plug-in
+Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.diagram.logic; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.examples.runtime.diagram.logic.internal,
  org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions,
