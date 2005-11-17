@@ -476,7 +476,14 @@ public class FileChangeEventTest extends TestCase {
 		}
 
 		public URI getLocationURI() {
-			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void createLink(URI location, int updateFlags, IProgressMonitor monitor) throws CoreException {
+			/*Empty block*/
+		}
+
+		public URI getRawLocationURI() {
 			return null;
 		}
 	}
