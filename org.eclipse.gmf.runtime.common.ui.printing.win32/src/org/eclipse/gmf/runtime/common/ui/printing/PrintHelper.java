@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,9 @@
 
 package org.eclipse.gmf.runtime.common.ui.printing;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.ui.PlatformUI;
 
@@ -40,132 +36,126 @@ public class PrintHelper
 	implements IPrintHelper {
 
 	/**
-	 * The WIN32 folder name to append to the starting directory. Do not
-	 * externalize the directory name strings.
+	 * Dynamic link library name without the extension
 	 */
-	private static final String WIN32_FOLDER = File.separator + "os" //$NON-NLS-1$
-		+ File.separator + "win32" + File.separator + "x86"; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String DLL_NAME = "DiagramPrint"; //$NON-NLS-1$
 
 	/**
-	 * The starting directory has .win32 appended to it, since we are in a.
-	 * win32 fragment. Do not externalize the directory name strings.
+	 * Country and language separator
 	 */
-	private static final String WIN32_END = ".win32"; //$NON-NLS-1$
+	private static final String SEPARATOR = StringStatics.UNDER_SCORE;
+
+	//to avoid throwing exceptions because of trying to load dlls for
+	//unsupported locales, maintain an array of supported countries and
+	//languages
+	
+	//in the array below, if there are multiple entries for the same
+	//language, put the country specific one first
+	
+	/**
+	 * Supported languages strings.  Default locale is SUPPORTED[0].
+	 */
+	private static final String SUPPORTED[] = {"en", "de", "es", "fr", "it", "ja", "ko", "pt_BR", "zh_CN", "zh_TW"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
 	/**
-	 * DLL Name
+	 * Default locale, English language
 	 */
-	private static final String DLL_NAME = "DiagramPrint.dll"; //$NON-NLS-1$
-
+	private static final String DEFAULT_LOCALE = SUPPORTED[0];
+	
+	
 	/*
 	 * Load the dll
 	 */
 	static {
-		try {
-			String startingFolder = new Path(Platform.resolve(
-				PrintingPlugin.getDefault().getBundle().getEntry("/"))//$NON-NLS-1$
-				.getFile()).toOSString();
+		
+		//Although a far nicer way to do this dll loading is by using
+		//Bundle-NativeCode in manifest.mf, I am not doing it that way
+		//because of Bugzilla https://bugs.eclipse.org/bugs/show_bug.cgi?id=116497
+		
+		//When the Bugzilla has been fixed, this static block can be replaced
+		//with one line of code
+		//System.loadLibrary("DiagramPrint");
 
-			//strip the ending, os string may have file separator
-			if (startingFolder.endsWith(File.separator)) {
-				startingFolder = startingFolder.substring(0, startingFolder
-					.length()
-					- File.separator.length());
-			}
+		//These lines would need to be added to the manifest.mf
+		//Bundle-NativeCode: os/win32/x86/de/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=de,
+		// os/win32/x86/es/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=es,
+		// os/win32/x86/fr/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=fr,
+		// os/win32/x86/it/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=it,
+		// os/win32/x86/ja/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=ja,
+		// os/win32/x86/ko/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=ko,
+		// os/win32/x86/pt_BR/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; selection-filter = "(osgi.nl = pt_BR)",	
+		// os/win32/x86/zh_CN/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; selection-filter = "(osgi.nl = zh_CN)",
+		// os/win32/x86/zh_TW/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; selection-filter = "(osgi.nl = zh_TW)",
+		// os/win32/x86/en/DiagramPrint.dll ; osname=WindowsXP ; processor = x86		
 
-			//get the version separator, if necessary
-			String version = (String) PrintingPlugin.getDefault().getBundle()
-				.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
-			int end = startingFolder.length() - version.length() - 1;
-			//very strange if end isn't at least 1
-			if (startingFolder.endsWith(version) && end >= 1) {
-				startingFolder = startingFolder.substring(0, end);
-				startingFolder = startingFolder.concat(WIN32_END).concat(
-					StringStatics.PLUGIN_VERSION_SEPARATOR).concat(version)
-					.concat(WIN32_FOLDER);
-			} else {
-				startingFolder = startingFolder.concat(WIN32_END).concat(
-					WIN32_FOLDER);
-			}
+		
+		boolean success = false;
+		String language = Locale.getDefault().getLanguage().toLowerCase();
+		String country = Locale.getDefault().getCountry().toUpperCase();
 
-			//According to eclipse bug
-			//53767 Absolute path preceeded by forward slash
-			//https://bugs.eclipse.org/bugs/show_bug.cgi?id=53767
-			//it is OK for an absolute path to have a forward
-			//slash in front of it.
+		//try from most specific to least specific, following osgi
+		//guidelines
 
-			//strip the preceeding / or \, be safe and check for both
-			if (startingFolder.startsWith(StringStatics.FORWARD_SLASH)
-				|| startingFolder.startsWith(StringStatics.BACKWARD_SLASH)) {
-				startingFolder = startingFolder.substring(1);
-			}
+		if (language != null) {
 
-			// Globalization support required for the print dll.
-			// Drive:\install
-			// directory\org.eclipse.gmf.runtime.common.ui.printing.win32\os\win32\x86\"locale"\DiagramPrint.dll
-			// ...check for DLL using the full locale name.
-			// ...if the file exists, then that's all we need
-			Path dllPath = new Path(startingFolder + File.separator
-				+ Locale.getDefault().toString() + File.separator + DLL_NAME);
-			if (dllPath.toFile().exists())
-				// file is there, might as well load the dll
-				System.load(dllPath.toString());
-			else {
-				// ...otherwise we just use the language and country code
-				dllPath = new Path(startingFolder + File.separator
-					+ Locale.getDefault().getLanguage() + "_" //$NON-NLS-1$
-					+ Locale.getDefault().getCountry() + File.separator
-					+ DLL_NAME);
-				if (dllPath.toFile().exists()) {
-					// file is there, might as well load the dll
-					System.load(dllPath.toString());
-				} else {
-					// ... well just try the language code allone
-					dllPath = new Path(startingFolder + File.separator
-					+ Locale.getDefault().getLanguage() + File.separator
-					+ DLL_NAME);
-					if (dllPath.toFile().exists()) {
-						// file is there, might as well load the dll
-						System.load(dllPath.toString());
-					}
-					else {
-						//load English for an unsupported locale
-						dllPath = new Path(startingFolder + File.separator
-							+ Locale.ENGLISH.toString() + File.separator
-							+ DLL_NAME);
-						//for this last one, don't bother checking to see if the
-						//file exists so that an exception will be thrown if it
-						//doesn't
-						System.load(dllPath.toString());
+			String localizedVersion = (country != null) ? language + SEPARATOR + country : language;
+
+			for (int i = 0; i < SUPPORTED.length; i++) {
+				
+				if (localizedVersion.equals(SUPPORTED[i])) {
+					success = true;
+				}
+				else if (language.equals(SUPPORTED[i])) {
+					//this check is redundant in the unlikely event that country
+					//is null and language equals the localizedVersion
+					localizedVersion = language;
+					success = true;
+				}
+				
+				if (success) {
+					success = false;
+					//Runtime.getRuntime().findLibrary() is protected,
+					//surround loadLibrary() with try catch
+					try {
+						System.loadLibrary(DLL_NAME + SEPARATOR
+							+ localizedVersion);
+						success = true;
+						break;
+					} catch (UnsatisfiedLinkError ule) {
+						//try without the country
+						//loadedDLL is still false
+						Trace.catching(PrintingPlugin.getDefault(),
+							CommonPrintingDebugOptions.EXCEPTIONS_CATCHING,
+							PrintHelper.class, "Link", ule); //$NON-NLS-1$
+						Log.error(PrintingPlugin.getDefault(),
+							CommonPrintingStatusCodes.RESOURCE_FAILURE,
+							"Failed to load DiagramPrint dll for " //$NON-NLS-1$
+								+ localizedVersion);
+						Trace.throwing(PrintingPlugin.getDefault(),
+							CommonPrintingDebugOptions.EXCEPTIONS_THROWING,
+							PrintHelper.class, "Link", ule); //$NON-NLS-1$*/
 					}
 				}
 			}
-
-		} catch (UnsatisfiedLinkError ule) {
-			Trace.catching(PrintingPlugin.getDefault(),
-				CommonPrintingDebugOptions.EXCEPTIONS_CATCHING,
-				PrintHelper.class, "Link", ule); //$NON-NLS-1$
-			Log.error(PrintingPlugin.getDefault(),
-				CommonPrintingStatusCodes.RESOURCE_FAILURE,
-				"Failed to load DiagramPrint.dll", ule); //$NON-NLS-1$
-			Trace.throwing(PrintingPlugin.getDefault(),
-				CommonPrintingDebugOptions.EXCEPTIONS_THROWING,
-				PrintHelper.class, "Link", ule); //$NON-NLS-1$*/
-			throw ule;
-		} catch (IOException ioe) {
-			Trace.catching(PrintingPlugin.getDefault(),
-				CommonPrintingDebugOptions.EXCEPTIONS_CATCHING,
-				PrintHelper.class, "Link path", ioe); //$NON-NLS-1$
-			Log.error(PrintingPlugin.getDefault(),
-				CommonPrintingStatusCodes.RESOURCE_FAILURE,
-				"Failed to resolve link path for DiagramPrint.dll", ioe); //$NON-NLS-1$
-			//cannot resolve the link path will give a link error
-			UnsatisfiedLinkError ule = new UnsatisfiedLinkError();
-			Trace.throwing(PrintingPlugin.getDefault(),
-				CommonPrintingDebugOptions.EXCEPTIONS_THROWING,
-				PrintHelper.class, "Link path", ule); //$NON-NLS-1$*/
-			throw ule;
 		}
+
+		if (!success) {
+			try {
+				System.loadLibrary(DLL_NAME + SEPARATOR + DEFAULT_LOCALE);
+			} catch (UnsatisfiedLinkError ule) {
+				Trace.catching(PrintingPlugin.getDefault(),
+					CommonPrintingDebugOptions.EXCEPTIONS_CATCHING,
+					PrintHelper.class, "Link", ule); //$NON-NLS-1$
+				Log.error(PrintingPlugin.getDefault(),
+					CommonPrintingStatusCodes.RESOURCE_FAILURE,
+					"Failed to load DiagramPrint_en.dll for language " + ((language == null) ? "null" : language) + " and country " + ((country == null) ? "null" : country), ule); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				Trace.throwing(PrintingPlugin.getDefault(),
+					CommonPrintingDebugOptions.EXCEPTIONS_THROWING,
+					PrintHelper.class, "Link", ule); //$NON-NLS-1$*/
+				throw ule;
+			}
+		}
+
 	}
 
 	/*
