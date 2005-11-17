@@ -129,6 +129,8 @@ public class DiagramGlobalActionHandler
 					CommandStack cs = diagramPart.getDiagramEditDomain()
 						.getDiagramCommandStack();
 					cs.execute(paste);
+					diagramPart.getDiagramEditPart().getFigure().invalidate();
+					diagramPart.getDiagramEditPart().getFigure().validate();
 					selectAddedObject(diagramPart.getDiagramGraphicalViewer(),
 						DiagramCommandStack.getReturnValues(paste));
 					return null;
@@ -600,6 +602,7 @@ public class DiagramGlobalActionHandler
 		}
 		if (!editparts.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(editparts));
+			viewer.reveal((EditPart) editparts.get(0));
 		}
 	}
 

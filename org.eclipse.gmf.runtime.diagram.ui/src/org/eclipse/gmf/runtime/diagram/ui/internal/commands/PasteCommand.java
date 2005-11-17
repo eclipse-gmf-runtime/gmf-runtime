@@ -72,6 +72,7 @@ public final class PasteCommand extends ClipboardCommand {
 
         Assert.isNotNull(data);
         this.data = data;
+        this.offset = offset;
     }
 
 	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
@@ -115,7 +116,7 @@ public final class PasteCommand extends ClipboardCommand {
         while( pastedElements.hasNext() ) {
             Object element = pastedElements.next();
             if (element instanceof View) {
-	            retval.add(view);
+	            retval.add(element);
 	        }
         }
         return retval;
