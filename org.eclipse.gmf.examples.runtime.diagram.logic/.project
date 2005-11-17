@@ -2,15 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.examples.runtime.diagram.logic</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.runtime.common.core</project>
-		<project>org.eclipse.gmf.runtime.common.ui</project>
-		<project>org.eclipse.gmf.runtime.emf.core</project>
-		<project>org.eclipse.gmf.runtime.gef.ui</project>
-		<project>com.ibm.xtools.msl.core</project>
-		<project>org.eclipse.gmf.runtime.notation</project>
-		<project>org.eclipse.gmf.runtime.diagram.ui</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

@@ -2,9 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.runtime.common.ui.services.dnd.ide</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.runtime.common.ui</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

@@ -2,21 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.examples.runtime.ui.pde</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.examples.runtime.diagram.geoshapes</project>
-		<project>org.eclipse.gmf.examples.runtime.diagram.logic</project>
-		<project>org.eclipse.gmf.examples.runtime.diagram.logic.model</project>
-		<project>org.eclipse.gmf.examples.runtime.diagram.logic.model.edit</project>
-		<project>org.eclipse.gmf.examples.runtime.diagram.decorator</project>
-		<project>org.eclipse.gmf.examples.runtime.diagram.layout</project>
-		<project>org.eclipse.gmf.examples.runtime.emf.clipboard</project>
-		<project>org.eclipse.emf.ocl.examples.interpreter</project>
-		<project>org.eclipse.emf.query.examples.ocl</project>
-		<project>org.eclipse.emf.validation.examples.ocl</project>
-		<project>org.eclipse.emf.query.examples.statements</project>
-		<project>org.eclipse.emf.validation.examples.adapter</project>
-		<project>org.eclipse.emf.validation.examples</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

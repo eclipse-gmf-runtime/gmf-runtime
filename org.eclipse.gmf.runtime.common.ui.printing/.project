@@ -2,10 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.runtime.common.ui.printing</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.runtime.common.core</project>
-		<project>org.eclipse.gmf.runtime.common.ui</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

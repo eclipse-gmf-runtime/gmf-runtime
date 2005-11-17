@@ -2,9 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.tests.runtime.draw2d.ui</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.tests.runtime.draw2d.ui</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

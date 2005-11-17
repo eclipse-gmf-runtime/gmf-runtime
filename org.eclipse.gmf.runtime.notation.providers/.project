@@ -2,12 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.runtime.notation.providers</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.runtime.common.core</project>
-		<project>org.eclipse.gmf.runtime.emf.core</project>
-		<project>org.eclipse.gmf.runtime.notation</project>
-		<project>org.eclipse.gmf.runtime.notation.edit</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

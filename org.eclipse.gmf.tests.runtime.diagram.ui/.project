@@ -2,14 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.tests.runtime.diagram.ui</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.runtime.common.core</project>
-		<project>org.eclipse.gmf.runtime.common.ui</project>
-		<project>org.eclipse.gmf.runtime.diagram.ui</project>
-		<project>org.eclipse.gmf.runtime.diagram.ui.render</project>
-		<project>org.eclipse.gmf.runtime.emf.core</project>
-		<project>org.eclipse.gmf.runtime.notation</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

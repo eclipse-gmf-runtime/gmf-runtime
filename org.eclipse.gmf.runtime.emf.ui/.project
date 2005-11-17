@@ -2,12 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.runtime.emf.ui</name>
 	<comment></comment>
-	<projects>
-		<project>org.eclipse.gmf.runtime.common.core</project>
-		<project>org.eclipse.gmf.runtime.common.ui</project>
-		<project>org.eclipse.gmf.runtime.emf.core</project>
-		<project>org.eclipse.gmf.runtime.common.ui.services</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

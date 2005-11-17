@@ -2,10 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.gmf.examples.runtime.diagram.decorator</name>
 	<comment></comment>
-	<projects>
-		<project>com.ibm.xtools.emf.msl</project>
-		<project>com.ibm.xtools.modeler</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
