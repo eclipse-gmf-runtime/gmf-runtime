@@ -17,4 +17,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.tests.runtime.common.core,
  org.eclipse.gmf.tests.runtime.emf.core,
  org.eclipse.pde.runtime
-Eclipse-LazyStart: false
+Eclipse-AutoStart: false

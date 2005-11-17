@@ -14,4 +14,4 @@ Require-Bundle: org.eclipse.gmf.runtime.common.ui.action.ide,
  org.eclipse.gmf.runtime.diagram.ui.providers;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.core.runtime
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

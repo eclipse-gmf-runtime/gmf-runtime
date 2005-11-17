@@ -13,4 +13,4 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.services.properties,
  org.eclipse.gmf.runtime.common.ui.services.properties.internal.l10n
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui;visibility:=reexport
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

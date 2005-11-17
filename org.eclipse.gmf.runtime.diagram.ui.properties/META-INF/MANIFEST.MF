@@ -25,4 +25,4 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.diagram.ui;visibility:=reexport,
  org.eclipse.gef,
  org.eclipse.gmf.runtime.common.ui.services.properties;visibility:=reexport
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

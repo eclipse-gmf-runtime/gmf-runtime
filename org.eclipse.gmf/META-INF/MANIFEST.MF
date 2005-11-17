@@ -5,4 +5,4 @@ Bundle-SymbolicName: org.eclipse.gmf
 Bundle-Version: 1.0.0
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Eclipse-LazyStart: false
+Eclipse-AutoStart: false

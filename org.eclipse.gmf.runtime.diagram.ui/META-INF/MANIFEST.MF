@@ -75,4 +75,4 @@ Require-Bundle: org.eclipse.ui.views,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
  org.eclipse.gmf.runtime.diagram.core;visibility:=reexport
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true

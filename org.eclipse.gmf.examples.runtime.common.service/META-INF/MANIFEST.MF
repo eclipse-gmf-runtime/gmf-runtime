@@ -13,4 +13,4 @@ Export-Package: org.eclipse.gmf.examples.runtime.common.service,
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.common.core
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true
