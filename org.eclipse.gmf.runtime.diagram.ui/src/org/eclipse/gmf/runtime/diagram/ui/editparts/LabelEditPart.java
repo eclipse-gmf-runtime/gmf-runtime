@@ -119,7 +119,7 @@ public class LabelEditPart extends TopGraphicEditPart {
 		if (semanticHint == null) {
 			semanticHint = ((String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
 				public Object run() {
-					return new String(((View)getModel()).getType());
+					return ((View)getModel()).getType();
 				}
 			}));
 		}

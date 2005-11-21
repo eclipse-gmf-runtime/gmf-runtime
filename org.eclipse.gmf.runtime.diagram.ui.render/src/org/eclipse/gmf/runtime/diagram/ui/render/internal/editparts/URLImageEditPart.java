@@ -98,7 +98,7 @@ abstract public class URLImageEditPart
 	 */
 	private String calculateLaunchPath(String urlExp) {
 		String launchPath = null;
-		String urlExpression = new String(urlExp);
+		String urlExpression = urlExp;
 		String pathImageIsRelativeTo = getPathImagePathIsRelativeTo();
 		Path path = new Path(urlExpression);
 		if (path != null) {

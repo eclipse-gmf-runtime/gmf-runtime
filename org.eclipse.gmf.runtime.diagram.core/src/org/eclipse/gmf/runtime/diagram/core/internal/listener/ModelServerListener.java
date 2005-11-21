@@ -52,7 +52,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 public abstract class ModelServerListener
 	extends MUniversalListener {
 	
-	private static String LISTEN_TO_ALL_FEATURES = new String("*");  //$NON-NLS-1$
+	private static String LISTEN_TO_ALL_FEATURES = "*";  //$NON-NLS-1$
 
 	/** listener map */
 	private final NotifierToKeyToListenersSetMap listeners = new NotifierToKeyToListenersSetMap();

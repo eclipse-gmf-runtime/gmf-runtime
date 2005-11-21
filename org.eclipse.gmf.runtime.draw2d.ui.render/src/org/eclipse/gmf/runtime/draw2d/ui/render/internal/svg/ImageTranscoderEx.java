@@ -188,7 +188,7 @@ public class ImageTranscoderEx extends ImageTranscoder {
 		AffineTransform Px;
 		String ref = null;
 		try {
-			ref = new URL(uri == null ? new String(""): uri).getRef(); //$NON-NLS-1$
+			ref = new URL(uri == null ? "": uri).getRef(); //$NON-NLS-1$
 		} catch (MalformedURLException ex) {
 			// nothing to do, catched previously
 		}

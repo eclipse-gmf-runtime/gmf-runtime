@@ -45,19 +45,19 @@ public class URLImageEditPartTests
 	}
 	
 	// image tests
-	//private String TEST1 = new String("test1.WMF");//$NON-NLS-1$
-	private String TEST2 = new String("test2.emf");//$NON-NLS-1$
-	private String TEST3 = new String("test3.jpg");//$NON-NLS-1$
-	private String TEST4 = new String("test4.gif");//$NON-NLS-1$
-	private String TEST5 = new String("test5.bmp");//$NON-NLS-1$
-	private String TEST6 = new String("test6.svg");//$NON-NLS-1$
+	//private String TEST1 = "test1.WMF";//$NON-NLS-1$
+	private String TEST2 = "test2.emf";//$NON-NLS-1$
+	private String TEST3 = "test3.jpg";//$NON-NLS-1$
+	private String TEST4 = "test4.gif";//$NON-NLS-1$
+	private String TEST5 = "test5.bmp";//$NON-NLS-1$
+	private String TEST6 = "test6.svg";//$NON-NLS-1$
 	
 	// non-image tests 
-	private String TEST7 = new String("test7.txt");//$NON-NLS-1$
-	private String TEST8 = new String("test8.doc");//$NON-NLS-1$
-	private String TEST9 = new String("test9.xls");//$NON-NLS-1$
-	private String TEST10 = new String("nofile.xxx");//$NON-NLS-1$
-	//private String TEST11 = new String("test11.xsd");//$NON-NLS-1$
+	private String TEST7 = "test7.txt";//$NON-NLS-1$
+	private String TEST8 = "test8.doc";//$NON-NLS-1$
+	private String TEST9 = "test9.xls";//$NON-NLS-1$
+	private String TEST10 = "nofile.xxx";//$NON-NLS-1$
+	//private String TEST11 = "test11.xsd";//$NON-NLS-1$
 	
 	private static final String TRANSLATE_PATH_ARGUMENT = "$nl$"; //$NON-NLS-1$
 	private static final String IMAGES = "images"; //$NON-NLS-1$

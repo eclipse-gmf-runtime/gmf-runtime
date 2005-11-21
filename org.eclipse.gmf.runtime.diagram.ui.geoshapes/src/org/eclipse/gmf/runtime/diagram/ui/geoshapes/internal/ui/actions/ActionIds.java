@@ -20,17 +20,17 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.ui.actions;
  */
 public class ActionIds {
 
-	public static String ACTION_ADD_LINE			= new String( "addLineAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_OVAL            = new String( "addOvalAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_TRIANGLE        = new String( "addTriangleAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_RECTANGLE		= new String( "addRectangleAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_SHADOWRECTANGLE = new String( "addShadowRectangleAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_3DRECTANGLE		= new String( "add3DRectangleAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_ROUNDRECTANGLE	= new String( "addRoundRectangleAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_HEXAGON			= new String( "addHexagonAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_OCTAGON			= new String( "addOctagonAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_PENTAGON		= new String( "addPentagonAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_DIAMOND			= new String( "addDiamondAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_CYLINDER		= new String( "addCylinderAction" ); //$NON-NLS-1$
-	public static String ACTION_ADD_POLYGON			= new String( "addPolygonAction" );  //$NON-NLS-1$
+	public static String ACTION_ADD_LINE			=  "addLineAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_OVAL            =  "addOvalAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_TRIANGLE        =  "addTriangleAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_RECTANGLE		=  "addRectangleAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_SHADOWRECTANGLE =  "addShadowRectangleAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_3DRECTANGLE		=  "add3DRectangleAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_ROUNDRECTANGLE	=  "addRoundRectangleAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_HEXAGON			=  "addHexagonAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_OCTAGON			=  "addOctagonAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_PENTAGON		=  "addPentagonAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_DIAMOND			=  "addDiamondAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_CYLINDER		=  "addCylinderAction" ; //$NON-NLS-1$
+	public static String ACTION_ADD_POLYGON			=  "addPolygonAction" ;  //$NON-NLS-1$
 }

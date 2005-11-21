@@ -47,7 +47,7 @@ import org.eclipse.gmf.runtime.notation.View;
 public class DiagramEventBroker
 	extends MUniversalListener {
 
-	private static String LISTEN_TO_ALL_FEATURES = new String("*"); //$NON-NLS-1$
+	private static String LISTEN_TO_ALL_FEATURES = "*"; //$NON-NLS-1$
 
 	/** listener map */
 	private final NotifierToKeyToListenersSetMap listeners = new NotifierToKeyToListenersSetMap();

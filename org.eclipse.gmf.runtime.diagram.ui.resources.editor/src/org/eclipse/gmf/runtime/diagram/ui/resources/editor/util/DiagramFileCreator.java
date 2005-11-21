@@ -75,7 +75,7 @@ public abstract class DiagramFileCreator {
 	 */
 	public String appendExtensionToFileName(String szFileName) {
 		if (!szFileName.endsWith(getExtension())) {
-			return new String(szFileName + getExtension());
+			return szFileName + getExtension();
 		} else
 			return szFileName;
 	}
@@ -91,14 +91,14 @@ public abstract class DiagramFileCreator {
 		String szFileName) {
 		int nFileNumber = 1;
 
-		String szNewFileName = new String(szFileName);
+		String szNewFileName = szFileName;
 		
 		IPath filePath = containerPath.append(appendExtensionToFileName(szNewFileName));
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		
 		while (workspaceRoot.exists(filePath)) {
 			nFileNumber++;
-			szNewFileName = new String(szFileName + nFileNumber);
+			szNewFileName = szFileName + nFileNumber;
 			filePath = containerPath.append(appendExtensionToFileName(szNewFileName));
 		}
 		return szNewFileName;
