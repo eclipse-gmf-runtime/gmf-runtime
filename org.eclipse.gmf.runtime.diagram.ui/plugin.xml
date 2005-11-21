@@ -16,40 +16,6 @@
    <extension-point id="layoutProviders" name="%extPoint.layoutProviders" schema="schema/layoutProviders.exsd"/>
    <extension-point id="decoratorProviders" name="%extPoint.decoratorProviders" schema="schema/decoratorProviders.exsd"/>
    <extension-point id="diagramPreferenceStores" name="%extPoint.diagramPreferenceStores" schema="schema/diagramPreferenceStores.exsd"/>
-   
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="xtools.modeling"
-            class="org.eclipse.gmf.runtime.diagram.ui.internal.preferences.ModelingDiagramsPreferencePage"
-            id="presentation.diagram"
-            name="%PreferencePage.Root.Diagrams">
-      </page>
-      <page
-            name="%PreferencePage.Appearance"
-            category="presentation.diagram"
-            class="org.eclipse.gmf.runtime.diagram.ui.internal.preferences.ModelingAppearancePreferencePage"
-            id="presentation.appearance">
-      </page>     
-      <page
-            name="%PreferencePage.RulerGrid"
-            category="presentation.diagram"
-            class="org.eclipse.gmf.runtime.diagram.ui.internal.preferences.ModelingRulerGridPreferencePage"
-            id="presentation.rulergrid">
-      </page>
-      
-      <page
-            name="%PreferencePage.Printing"
-            category="presentation.diagram"
-            class="org.eclipse.gmf.runtime.diagram.ui.internal.preferences.ModelingPrintingPreferencePage"
-            id="presentation.printing">
-      </page>
-      
-   </extension>
-   
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.gmf.runtime.diagram.ui.internal.preferences.ModelingDiagramPreferenceInitializer" />
-   </extension>
 
 <!-- Icon Provider -->
    

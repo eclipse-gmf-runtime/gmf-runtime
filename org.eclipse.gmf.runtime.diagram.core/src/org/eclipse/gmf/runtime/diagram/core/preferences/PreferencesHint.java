@@ -35,8 +35,9 @@ public class PreferencesHint {
 
 	/**
 	 * The hint that indicates that the preferences under the "Modeling"
-	 * category should be used for the diagramming preferences. TODO: Move to
-	 * Modeler / Visualizer common plugin.
+	 * category should be used for the diagramming preferences. 
+	 * @deprecated If you were using this and need assistance ask Cherie (cmahoney@ca.ibm.com).
+     * To be deleted after Dec 21, 2005.
 	 */
 	public static final PreferencesHint MODELING = new PreferencesHint(
 		"MODELING"); //$NON-NLS-1$

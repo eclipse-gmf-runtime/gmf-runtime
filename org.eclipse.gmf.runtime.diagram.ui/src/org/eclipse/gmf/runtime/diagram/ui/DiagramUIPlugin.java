@@ -77,10 +77,6 @@ public class DiagramUIPlugin
 		DiagramEventBroker.getInstance().startListening();
 		
 		initializeDefaultDiagramPreferenceStore();
-		
-		// TODO: Move to Modeler/Visualizer plug-in.
-		PreferencesHint.registerPreferenceStore(
-			PreferencesHint.MODELING, getPreferenceStore());
 	}
 
 	/* (non-Javadoc)

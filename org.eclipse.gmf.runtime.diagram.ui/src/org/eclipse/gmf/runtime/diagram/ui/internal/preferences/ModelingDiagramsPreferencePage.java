@@ -28,7 +28,8 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 /**
  * The diagrams preference page used for the Modeling preferences.
  * 
- * TODO: Move to Modeler / Visualizer common plugin.
+ * @deprecated These preferences are not supported in the diagram layer.
+ * To be deleted after Dec 21, 2005.
  * 
  * @author cmahoney
  */
