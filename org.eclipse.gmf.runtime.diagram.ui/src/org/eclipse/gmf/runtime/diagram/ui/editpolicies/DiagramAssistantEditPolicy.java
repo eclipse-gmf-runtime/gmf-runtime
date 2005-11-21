@@ -201,7 +201,7 @@ public abstract class DiagramAssistantEditPolicy
 	 * @return true if the diagram assistant should be shown; false otherwise.
 	 */
 	protected boolean shouldShowDiagramAssistant() {
-		return isPreferenceOn() && getHost().isActive() && isHostEditable()
+		return getHost().isActive() && isPreferenceOn() && isHostEditable()
 			&& isHostResolvable() && isDiagramPartActive();
 	}
 
