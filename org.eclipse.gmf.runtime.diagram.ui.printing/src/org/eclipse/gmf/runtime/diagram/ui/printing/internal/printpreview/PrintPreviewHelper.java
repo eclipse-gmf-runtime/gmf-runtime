@@ -360,12 +360,22 @@ public class PrintPreviewHelper {
 		userX = 0;
 		userY = 0;
 
-		numberOfRowsToDisplay = 2;
-		numberOfColumnsToDisplay = 2;
-
 		totalNumberOfRows = -1;
 		totalNumberOfColumns = -1;
-
+		
+		if (getTotalNumberOfRows() == 1 && getTotalNumberOfColumns() == 1) {
+			numberOfRowsToDisplay = 1;
+			numberOfColumnsToDisplay = 1;
+		}
+		else if (getTotalNumberOfRows() == 1) {
+			numberOfRowsToDisplay = 1;
+			numberOfColumnsToDisplay = 2;
+		}
+		else {
+			numberOfRowsToDisplay = 2;
+			numberOfColumnsToDisplay = 2;
+		}
+		
 		Display display = Display.getDefault();
 		shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.TITLE
 			| SWT.CLOSE | SWT.BORDER);
@@ -662,7 +672,7 @@ public class PrintPreviewHelper {
 		composite = new Composite(body, SWT.NULL);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
 
-		updateCompositeForNumberOfColumns(2, 2);
+		updateCompositeForNumberOfColumns(numberOfRowsToDisplay, numberOfColumnsToDisplay);
 
 		updateLeftRightUpDownButtonsForToolbar();
 
