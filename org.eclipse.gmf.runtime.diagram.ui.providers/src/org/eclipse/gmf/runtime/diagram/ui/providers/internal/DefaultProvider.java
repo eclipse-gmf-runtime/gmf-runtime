@@ -122,7 +122,11 @@ public abstract class DefaultProvider
 		build_graph(g, containerEditPart.getChildren());
 		new DirectedGraphLayout().visit(g);
 		// update the diagram based on the graph
-		return update_diagram(containerEditPart, g, false);
+		Command cmd = update_diagram(containerEditPart, g, false);
+		
+		// reset mm mapmode to avoid memory leak
+		mm = null;
+		return cmd;
 	}
 
 	/**
@@ -146,8 +150,11 @@ public abstract class DefaultProvider
 		build_graph(g, selectedObjects);
 		new DirectedGraphLayout().visit(g);
 		// update the diagram based on the graph
-		return update_diagram(containerEditPart, g, true);
-
+		Command cmd = update_diagram(containerEditPart, g, true);
+		
+		// reset mm mapmode to avoid memory leak
+		mm = null;
+		return cmd;
 	}
 
 	/**
