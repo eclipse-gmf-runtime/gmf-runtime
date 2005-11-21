@@ -30,6 +30,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
@@ -568,6 +569,15 @@ public class ColorsAndFontsPropertySection
 				IGraphicalEditPart ep = getSingleInput();
 				if (ep != null) {
 
+					Style style = ep.getNotationView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
+					boolean enableFontWidgets = style != null;
+					
+					fontFamilyCombo.setEnabled(enableFontWidgets);
+					fontSizeCombo.setEditable(enableFontWidgets);
+					fontBoldButton.setEnabled(enableFontWidgets);
+					fontItalicButton.setEnabled(enableFontWidgets);
+					fontColorButton.setEnabled(enableFontWidgets);
+					
 					fontFamilyCombo.setText((String) getSingleInput()
 						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_FontName()));
 					fontSizeCombo.setText(Integer
