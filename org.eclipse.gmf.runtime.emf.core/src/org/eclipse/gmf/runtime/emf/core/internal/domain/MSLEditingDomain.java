@@ -1185,14 +1185,7 @@ public class MSLEditingDomain
 	public Command createCommand(Class commandClass,
 			CommandParameter commandParameter) {
 
-		RuntimeException e = new UnsupportedOperationException();
-
-		Trace
-			.throwing(MSLPlugin.getDefault(),
-				MSLDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"createCommand", e); //$NON-NLS-1$
-
-		throw e;
+		return editingDomain.createCommand(commandClass, commandParameter);
 	}
 
 	/**
@@ -1200,27 +1193,14 @@ public class MSLEditingDomain
 	 */
 	public Command createOverrideCommand(OverrideableCommand command) {
 
-		RuntimeException e = new UnsupportedOperationException();
-
-		Trace.throwing(MSLPlugin.getDefault(),
-			MSLDebugOptions.EXCEPTIONS_THROWING, getClass(),
-			"createOverrideCommand", e); //$NON-NLS-1$
-
-		throw e;
+		return editingDomain.createOverrideCommand(command);
 	}
 
 	/**
 	 * @see org.eclipse.emf.edit.domain.EditingDomain#getCommandStack()
 	 */
 	public CommandStack getCommandStack() {
-
-		RuntimeException e = new UnsupportedOperationException();
-
-		Trace.throwing(MSLPlugin.getDefault(),
-			MSLDebugOptions.EXCEPTIONS_THROWING, getClass(),
-			"getCommandStack", e); //$NON-NLS-1$
-
-		throw e;
+		return editingDomain.getCommandStack();
 	}
 
 	/**
