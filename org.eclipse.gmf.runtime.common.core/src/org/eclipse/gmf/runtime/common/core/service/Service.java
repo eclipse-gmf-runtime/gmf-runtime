@@ -179,7 +179,7 @@ public abstract class Service
 		 */
 		protected IProviderPolicy getPolicy() {
 			//long start = System.currentTimeMillis();
-			if (policyInitialized) {
+			if (!policyInitialized) {
 				//count++;
 				IConfigurationElement[] elements = element.getChildren(E_POLICY);
 				working: {
