@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.gef.Request;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 
 /**
  * A Request to change the Z-Order

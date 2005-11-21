@@ -14,8 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 import org.eclipse.gef.Request;
 import org.eclipse.ui.IWorkbenchPage;
 
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 

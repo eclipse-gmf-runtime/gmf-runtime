@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 
