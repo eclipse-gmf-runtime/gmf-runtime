@@ -162,7 +162,7 @@
    <extension
          point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
       <paletteProvider
-            class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultPaletteProvider">
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
          <Priority
                name="Low">
          </Priority>

@@ -718,7 +718,7 @@
    </extension>
    
       <extension id="presentationPaletteProvider" name="%ext.presentationPaletteProvider" point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
-      <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultPaletteProvider">
+      <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
          <Priority name="Lowest">
          </Priority>
          <editor class="org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor">

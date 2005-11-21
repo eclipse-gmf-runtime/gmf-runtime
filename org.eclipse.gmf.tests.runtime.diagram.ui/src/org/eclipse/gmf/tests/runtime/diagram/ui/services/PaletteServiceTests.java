@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.common.core.service.IProviderPolicy;
 import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultPaletteProvider;
+import org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditor;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;

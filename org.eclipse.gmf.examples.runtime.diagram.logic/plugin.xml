@@ -63,7 +63,7 @@
          id="logicPaletteProvider"
          name="%ext.logicPaletteProvider"
          point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
-       <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultPaletteProvider">
+       <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
          <Priority name="Low">
          </Priority>
          <editor id="LogicEditor">
