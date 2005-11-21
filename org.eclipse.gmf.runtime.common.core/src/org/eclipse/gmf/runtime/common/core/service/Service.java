@@ -79,10 +79,6 @@ public abstract class Service
 		extends AbstractProvider
 		implements IProvider, IProviderChangeListener {
 		
-	//	private static long count = 0; 
-		
-		//private static long time = 0 ;
-		
 		protected boolean policyInitialized = false;
 
 		/**
@@ -178,9 +174,8 @@ public abstract class Service
 		 *         specified).
 		 */
 		protected IProviderPolicy getPolicy() {
-			//long start = System.currentTimeMillis();
 			if (!policyInitialized) {
-				//count++;
+				policyInitialized = true;
 				IConfigurationElement[] elements = element.getChildren(E_POLICY);
 				working: {
 					if (elements.length == 0) 
@@ -209,9 +204,6 @@ public abstract class Service
 					}
 				}
 			}
-			//time  += (System.currentTimeMillis() - start);
-			//System.out.println("Serive getPolicy() = " + count + " Time  = " + time);
-
 			return policy;
 		}
 
