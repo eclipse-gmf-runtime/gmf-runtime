@@ -11,12 +11,16 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal.graphics;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 
 
 /**
@@ -69,19 +73,23 @@ public class ScalableFreeformLayeredPane
     		gMM.popState();
     		return;
     	}
-    	if (getScale() == 1.0) {
-    		super.paintClientArea(gMM);
-    	} else {
-    		ScaledGraphics g = createScaledGraphics(gMM);
-    		boolean optimizeClip = getBorder() == null || getBorder().isOpaque();
-    		if (!optimizeClip)
-    			g.clipRect(getBounds().getCropped(getInsets()));
-    		g.scale(getScale());
-    		g.pushState();
-    		paintChildren(g);
-    		g.dispose();
-    		gMM.restoreState();
-    	}
+    	try {
+			if (getScale() == 1.0) {
+				super.paintClientArea(gMM);
+			} else {
+				ScaledGraphics g = createScaledGraphics(gMM);
+				boolean optimizeClip = getBorder() == null || getBorder().isOpaque();
+				if (!optimizeClip)
+					g.clipRect(getBounds().getCropped(getInsets()));
+				g.scale(getScale());
+				g.pushState();
+				paintChildren(g);
+				g.dispose();
+				gMM.restoreState();
+			}
+		} catch (SWTException e) {
+			Log.error(Draw2dPlugin.getInstance(), IStatus.ERROR,e.getMessage(), e);
+		}
     	
     	gMM.popState();
     }
