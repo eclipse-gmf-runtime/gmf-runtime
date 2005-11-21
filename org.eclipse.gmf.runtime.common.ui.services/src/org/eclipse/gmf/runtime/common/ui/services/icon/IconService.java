@@ -59,8 +59,12 @@ public class IconService extends Service implements IIconProvider {
 		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 		 */
 		public boolean provides(IOperation operation) {
-			if (getPolicy() != null)
-				return getPolicy().provides(operation);
+			if (!policyInitialized){
+				policy = getPolicy();
+				policyInitialized = true;
+			}
+			if (policy != null)
+				return policy.provides(operation);
 			if (provider == null) {
 				if (isSupportedInExtention(operation)) {
 					providerConfiguration = null;

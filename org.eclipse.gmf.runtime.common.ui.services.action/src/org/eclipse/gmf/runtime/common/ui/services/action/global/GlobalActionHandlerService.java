@@ -112,9 +112,12 @@ public class GlobalActionHandlerService
 
 			/* Check if the action is handled */
 			if (actionIdList.contains(actionId)) {
-				if (getPolicy() != null) {
-					return getPolicy().provides(operation);
+				if (!policyInitialized){
+					policy = getPolicy();
+					policyInitialized = true;
 				}
+				if (policy != null)
+					return policy.provides(operation);
 				return true;
 			}
 

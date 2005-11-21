@@ -78,6 +78,12 @@ public abstract class Service
 	public static class ProviderDescriptor
 		extends AbstractProvider
 		implements IProvider, IProviderChangeListener {
+		
+	//	private static long count = 0; 
+		
+		//private static long time = 0 ;
+		
+		protected boolean policyInitialized = false;
 
 		/**
 		 * The name of the 'class' XML attribute.
@@ -172,9 +178,10 @@ public abstract class Service
 		 *         specified).
 		 */
 		protected IProviderPolicy getPolicy() {
-			if (null == policy) {
+			//long start = System.currentTimeMillis();
+			if (policyInitialized) {
+				//count++;
 				IConfigurationElement[] elements = element.getChildren(E_POLICY);
-
 				working: {
 					if (elements.length == 0) 
 						break working; // no child elements
@@ -202,6 +209,8 @@ public abstract class Service
 					}
 				}
 			}
+			//time  += (System.currentTimeMillis() - start);
+			//System.out.println("Serive getPolicy() = " + count + " Time  = " + time);
 
 			return policy;
 		}
@@ -216,18 +225,21 @@ public abstract class Service
 		 *         provides the operation; <code>false</code> otherwise.
 		 */
 		public boolean provides(IOperation operation) {
-			IProviderPolicy thePolicy = getPolicy();
+			if (!policyInitialized){
+				policy = getPolicy();
+				policyInitialized = true;
+			}
 
-			if (null != thePolicy) {
+			if (null != policy) {
 				try {
-					return thePolicy.provides(operation);
+					return policy.provides(operation);
 				}
 				catch (Exception e) {
 					Log.log(
 						CommonCorePlugin.getDefault(),
 						IStatus.ERROR,
 						CommonCoreStatusCodes.SERVICE_FAILURE,
-						"Ignoring provider since policy " + thePolicy + " threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
+						"Ignoring provider since policy " + policy + " threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
 						e);
 					return false;
 				}

@@ -81,8 +81,13 @@ public class PaletteService extends Service implements IPaletteProvider {
 			if (!super.provides(operation)) {
 				return false;
 			}
-			if (getPolicy() != null)
-				return getPolicy().provides(operation);
+			if (!policyInitialized){
+				policy = getPolicy();
+				policyInitialized = true;
+			}
+			if (policy != null)
+				return policy.provides(operation);
+			
 			if (operation instanceof ContributeToPaletteOperation) {
 				ContributeToPaletteOperation o =
 					(ContributeToPaletteOperation) operation;

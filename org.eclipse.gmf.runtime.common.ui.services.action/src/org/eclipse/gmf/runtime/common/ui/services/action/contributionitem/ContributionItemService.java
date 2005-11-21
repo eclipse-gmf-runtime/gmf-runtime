@@ -97,7 +97,11 @@ public class ContributionItemService
 			
 			// if no XML contributions, forward to the provider 
 			if (!contributionDescriptor.hasContributions()) {
-				if (getPolicy() != null) {
+				if (!policyInitialized){
+					policyInitialized = true;
+					policy = getPolicy();
+				}
+				if (policy!=null) {
 					return getPolicy().provides(operation);
 				}
 				if (getProvider() != null) {
