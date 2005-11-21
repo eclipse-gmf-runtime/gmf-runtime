@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringToFrontComman
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendBackwardCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
@@ -49,7 +50,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.DuplicateViewsComman
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.PasteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.RefreshEditPartCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;

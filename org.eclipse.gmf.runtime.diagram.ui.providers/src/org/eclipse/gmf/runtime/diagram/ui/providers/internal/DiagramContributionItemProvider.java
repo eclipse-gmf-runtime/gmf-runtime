@@ -19,6 +19,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.Abstra
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ActionRegistry;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AddNoteAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AlignAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ShowPropertiesViewAction;
@@ -68,7 +69,6 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ZOrderMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.DeleteFromModelAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.OpenAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentUtil;
