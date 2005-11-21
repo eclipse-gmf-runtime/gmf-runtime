@@ -20,14 +20,13 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.util.SVGConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.GraphicsToGraphics2DAdaptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGImage;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 /**
@@ -165,6 +164,10 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 
 			treeManager.appendGroup(toAppend, null);
 	    }
+	    else {
+	    	super.drawRenderedImage(srcImage, x, y, width, height);
+		}
 	}
+	
 
 }

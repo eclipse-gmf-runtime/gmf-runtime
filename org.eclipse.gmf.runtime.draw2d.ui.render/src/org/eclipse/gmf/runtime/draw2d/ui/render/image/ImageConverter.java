@@ -42,7 +42,12 @@ public class ImageConverter {
 		ImageData imageData = srcImage.getImageData();
 		int width = imageData.width;
 		int height = imageData.height;
-
+		ImageData maskData = null;
+		int alpha[] = new int[1];
+		
+		if (imageData.alphaData == null)
+			maskData = imageData.getTransparencyMask();
+		
 		// now we should have the image data for the bitmap, decompressed in imageData[0].data.
 		// Convert that to a Buffered Image.
 		BufferedImage image = new BufferedImage( imageData.width, imageData.height, BufferedImage.TYPE_INT_ARGB );
@@ -61,20 +66,17 @@ public class ImageConverter {
 		
 				// check for alpha channel
 				if (alphaRaster != null) {
-					int alpha[] = new int[1];
-					
 					if( imageData.alphaData != null) {
 						alpha[0] = imageData.getAlpha( x, y );
+						alphaRaster.setPixel( x, y, alpha );
 					}
 					else {
 						// check for transparency mask
-						ImageData maskData = imageData.getTransparencyMask();
 						if( maskData != null) {
 							alpha[0] = maskData.getPixel( x, y ) == 0 ? 0 : 255;
+							alphaRaster.setPixel( x, y, alpha );
 						}
 					}
-					
-					alphaRaster.setPixel( x, y, alpha );
 				}
 			}
 		}
