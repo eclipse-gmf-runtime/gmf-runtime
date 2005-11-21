@@ -1392,8 +1392,7 @@ public class DiagramDocumentEditor
 		String title= ""; //$NON-NLS-1$
 
 		if (input != null) {
-			IEditorRegistry editorRegistry= PlatformUI.getWorkbench().getEditorRegistry();
-			IEditorDescriptor editorDesc= editorRegistry.findEditor(getSite().getId());
+			IEditorDescriptor editorDesc = getEditorDescriptor();
 			ImageDescriptor imageDesc= editorDesc != null ? editorDesc.getImageDescriptor() : null;
 
 			fTitleImage= imageDesc != null ? imageDesc.createImage() : null;
@@ -1407,6 +1406,17 @@ public class DiagramDocumentEditor
 
 		if (oldImage != null && !oldImage.isDisposed())
 			oldImage.dispose();
+	}
+
+	/**
+	 * Retrieves the descriptor for this editor
+	 * 
+	 * @return the editor descriptor
+	 */
+	final protected IEditorDescriptor getEditorDescriptor() {
+		IEditorRegistry editorRegistry= PlatformUI.getWorkbench().getEditorRegistry();
+		IEditorDescriptor editorDesc= editorRegistry.findEditor(getSite().getId());
+		return editorDesc;
 	}
 
 	/* (non-Javadoc)
