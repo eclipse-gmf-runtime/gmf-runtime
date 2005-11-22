@@ -55,7 +55,7 @@ public class LEDFigure
 	public LEDFigure(Dimension prefSize) {
 		getBounds().width = prefSize.width;
 		getBounds().height = prefSize.height;
-		prefSize = new Dimension(prefSize);
+		this.prefSize = new Dimension(prefSize);
 	}
 	
 	/**
