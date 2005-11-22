@@ -24,7 +24,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ListComponentEditPolicy;
@@ -61,14 +60,10 @@ public abstract class ListCompartmentEditPart
 		super(view);
 	}
 	
-	/**
-	 * 
-	 */
 	protected void createDefaultEditPolicies() {
+		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicyRoles.MODIFY_SORT_FILTER_ROLE, new ModifySortFilterEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ListComponentEditPolicy());
-		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE, new PopupBarEditPolicy());
-		super.createDefaultEditPolicies();
 	}
 		
 
