@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
