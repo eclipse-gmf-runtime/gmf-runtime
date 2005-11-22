@@ -28,14 +28,14 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 
-public class DiagramDocumentEditorIDE
+public class IDEDiagramDocumentEditor
 	extends DiagramDocumentEditor {
 
-	public DiagramDocumentEditorIDE(MEditingDomain domain, boolean hasFlyoutPalette) {
+	public IDEDiagramDocumentEditor(MEditingDomain domain, boolean hasFlyoutPalette) {
 		super(domain, hasFlyoutPalette);
 	}
 
-	public DiagramDocumentEditorIDE(boolean hasFlyoutPalette) {
+	public IDEDiagramDocumentEditor(boolean hasFlyoutPalette) {
 		super(hasFlyoutPalette);
 	}
 

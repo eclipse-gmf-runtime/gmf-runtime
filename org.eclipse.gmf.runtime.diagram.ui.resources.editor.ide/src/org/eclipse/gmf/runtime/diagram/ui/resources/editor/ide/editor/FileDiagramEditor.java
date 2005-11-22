@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
  * @author mgoyal
  */
 public class FileDiagramEditor
-	extends DiagramDocumentEditorIDE {
+	extends IDEDiagramDocumentEditor {
 
 	/**
 	 * Constructs a file diagram editor, with flyout palette if
