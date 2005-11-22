@@ -47,12 +47,6 @@ public final class GlobalRenameAction extends GlobalAction {
     private static final ImageDescriptor DISABLED_RENAME_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
     	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_RENAME_EDIT_DTOOL16);
     
-    /**
-     * Imagedescriptor for the rename action
-     */
-    private static final ImageDescriptor HOVER_RENAME_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_RENAME_EDIT_CTOOL16);
-    
 	/**
 	 * @param workbenchPage
 	 */
@@ -82,7 +76,7 @@ public final class GlobalRenameAction extends GlobalAction {
 
         /*  set the image */
         setImageDescriptor(RENAME_IMAGE);
-        setHoverImageDescriptor(HOVER_RENAME_IMAGE);
+        setHoverImageDescriptor(RENAME_IMAGE);
         setDisabledImageDescriptor(DISABLED_RENAME_IMAGE);
 
         /*  set the context sensitive help */

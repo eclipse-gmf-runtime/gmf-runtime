@@ -41,12 +41,6 @@ public final class GlobalPrintAction extends GlobalAction {
 		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_PRINT_EDIT_DTOOL16);
 		
 	/**
-	 * Imagedescriptor for the print action
-	 */
-	private static final ImageDescriptor HOVER_PRINT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(),CommonUIActionPluginImages.IMG_PRINT_EDIT_CTOOL16);
-		
-	/**
 	 * @param workbenchPage
 	 */
 	public GlobalPrintAction(IWorkbenchPage workbenchPage) {
@@ -74,7 +68,7 @@ public final class GlobalPrintAction extends GlobalAction {
 		/* change the image in case someone tries this from a context menu,
 		 * not needed from the file menu */
 		setImageDescriptor(PRINT_IMAGE);
-		setHoverImageDescriptor(HOVER_PRINT_IMAGE);
+		setHoverImageDescriptor(PRINT_IMAGE);
 		setDisabledImageDescriptor(DISABLED_PRINT_IMAGE);
 
 		/* set the context sensitive help */

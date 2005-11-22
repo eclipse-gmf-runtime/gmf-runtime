@@ -358,6 +358,7 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	 * If an error occurs, returns the default font.
 	 * @param symbolicName java.lang.String the symbolic font name
 	 * @return - the font with the sybolic name
+	 * @deprecated use JFaceResources#getFont(String)
 	 */
 	public Font getFont(String symbolicName) {
 		return getFontRegistry().get(symbolicName);
@@ -407,6 +408,7 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	 * Convience method used to get the URL of a plugin image resource
 	 * @param filename - the filename of the resource
 	 * @return the URL for the resource specified in the filename
+	 * @deprecated does not seemed to be used anywhere
 	 */
 	public URL createImageURL(String filename) {
 		/* 
@@ -434,6 +436,7 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	* @param filename java.lang.String - the file name
 	* @return - the translated image descriptor object if found, otherwise
 	* 			 the untranslated image descriptor
+	* @deprecated use AbstractUIPlugin#imageDescriptorFromPlugin(String, String)
 	*/
 	public ImageDescriptor createImageDescriptor(String filename) {
 		URL url = createImageURL(filename);
@@ -447,7 +450,8 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	* @see org.eclipse.swt.graphics.Image#dispose()
 	* @param filename java.lang.String the file name
 	* @return image object
-	 */
+	* @deprecated use AbstractUIPlugin#imageDescriptorFromPlugin(String, String)#createImage()
+	*/
 	public Image createImage(String filename) {
 		return createImageDescriptor(filename).createImage();
 	}
@@ -461,6 +465,7 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	* @param imageFileSource java.lang.String source image file name
 	* @param imageFileMask   java.lang.String mask image file name
 	* @return  - cursor object
+	* @deprecated does not seem to be used anywhere
 	*/
 	public Cursor createCursor(String imageFileSource, String imageFileMask) {
 		return new Cursor(
@@ -484,6 +489,7 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	 * A convinience method that creates an ImageDescriptor instance fron the file and
 	 * stores it into the image registry
 	 * @param imageName java.lang.String image file name
+	 * @deprecated does not seem to be used anywhere
 	 */
 	public void createCachedImageDescriptor(String imageName) {
 		getImageRegistry().put(imageName, createImageDescriptor(imageName));

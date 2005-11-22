@@ -14,17 +14,15 @@ package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Redo Action
@@ -39,24 +37,6 @@ public final class GlobalRedoAction extends GlobalAction {
      */
     private static final String REDO = "org.eclipse.gmf.runtime.common.ui.actions.global.redo"; //$NON-NLS-1$
 
-    /**
-     * Imagedescriptor for the redo action
-     */
-    private static final ImageDescriptor REDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REDO_EDIT_ETOOL16);
-    	
-    /**
-     * Imagedescriptor for the redo action
-     */
-    private static final ImageDescriptor DISABLED_REDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REDO_EDIT_DTOOL16);
-    
-    /**
-     * Imagedescriptor for the redo action
-     */
-    private static final ImageDescriptor HOVER_REDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REDO_EDIT_CTOOL16);
-    
 	/**
 	 * @param workbenchPage
 	 */
@@ -85,9 +65,10 @@ public final class GlobalRedoAction extends GlobalAction {
         setText(CommonUIActionMessages.GlobalRedoAction_label);
 
         /* Set the image */
-        setImageDescriptor(REDO_IMAGE);
-        setHoverImageDescriptor(HOVER_REDO_IMAGE);
-        setDisabledImageDescriptor(DISABLED_REDO_IMAGE);
+        ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+        setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+        setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO_DISABLED));
 
         /* Set the context sensitive help */
         PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

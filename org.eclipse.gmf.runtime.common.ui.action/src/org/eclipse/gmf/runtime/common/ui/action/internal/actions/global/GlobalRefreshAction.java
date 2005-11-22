@@ -47,12 +47,6 @@ public final class GlobalRefreshAction extends GlobalAction {
     private static final ImageDescriptor DISABLED_REFRESH_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
     	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REFRESH_NAV_DTOOL16);
 
-    /**
-     * Imagedescriptor for the REFRESH action
-     */
-    private static final ImageDescriptor HOVER_REFRESH_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_REFRESH_NAV_CTOOL16);
-    
 	/**
 	 * @param workbenchPage
 	 */
@@ -83,7 +77,7 @@ public final class GlobalRefreshAction extends GlobalAction {
 
         /*  set the image */
         setImageDescriptor(REFRESH_IMAGE);
-        setHoverImageDescriptor(HOVER_REFRESH_IMAGE);
+        setHoverImageDescriptor(REFRESH_IMAGE);
         setDisabledImageDescriptor(DISABLED_REFRESH_IMAGE);
 
         /*  set the context sensitive help */

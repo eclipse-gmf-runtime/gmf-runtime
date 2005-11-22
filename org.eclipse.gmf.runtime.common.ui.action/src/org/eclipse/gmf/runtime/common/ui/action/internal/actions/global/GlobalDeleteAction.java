@@ -11,17 +11,15 @@
 
 package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Delete Action
@@ -35,24 +33,6 @@ public final class GlobalDeleteAction extends GlobalAction {
 	 */
 	private static final String DELETE = "org.eclipse.gmf.runtime.common.ui.actions.global.delete"; //$NON-NLS-1$
 
-	/**
-	 * Imagedescriptor for the delete action
-	 */
-	private static final ImageDescriptor DELETE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_DELETE_EDIT_ETOOL16);
-		
-	/**
-	 * Imagedescriptor for the delete action
-	 */
-	private static final ImageDescriptor DISABLED_DELETE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_DELETE_EDIT_DTOOL16);
-		
-	/**
-	 * Imagedescriptor for the delete action
-	 */
-	private static final ImageDescriptor HOVER_DELETE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_DELETE_EDIT_CTOOL16);
-		
 	/**
 	 * @param workbenchPage
 	 */
@@ -81,9 +61,10 @@ public final class GlobalDeleteAction extends GlobalAction {
 		setText(CommonUIActionMessages.GlobalDeleteAction_label);
 
 		/* Set the image */
-		setImageDescriptor(DELETE_IMAGE);
-		setHoverImageDescriptor(HOVER_DELETE_IMAGE);
-		setDisabledImageDescriptor(DISABLED_DELETE_IMAGE);
+		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
 
 		/* Set the context sensitive help */
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

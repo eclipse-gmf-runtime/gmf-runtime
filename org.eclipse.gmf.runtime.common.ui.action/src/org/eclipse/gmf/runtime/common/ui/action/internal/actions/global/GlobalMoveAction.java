@@ -48,12 +48,6 @@ public final class GlobalMoveAction extends GlobalAction {
 		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_MOVE_EDIT_DTOOL16);
 		
 	/**
-	 * Imagedescriptor for the move action
-	 */
-	private static final ImageDescriptor HOVER_MOVE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_MOVE_EDIT_CTOOL16);
-	
-	/**
 	 * @param workbenchPage
 	 */
 	public GlobalMoveAction(IWorkbenchPage workbenchPage) {
@@ -82,7 +76,7 @@ public final class GlobalMoveAction extends GlobalAction {
 
 		/*  set the image */
 		setImageDescriptor(MOVE_IMAGE);
-		setHoverImageDescriptor(HOVER_MOVE_IMAGE);
+		setHoverImageDescriptor(MOVE_IMAGE);
 		setDisabledImageDescriptor(DISABLED_MOVE_IMAGE);
 
 		/*  set the context sensitive help */

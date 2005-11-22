@@ -14,17 +14,15 @@ package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Undo Action
@@ -39,24 +37,6 @@ public final class GlobalUndoAction extends GlobalAction {
      */
     private static final String UNDO = "org.eclipse.gmf.runtime.common.ui.actions.global.undo"; //$NON-NLS-1$
 
-    /**
-     * Imagedescriptor for the undo action
-     */
-    private static final ImageDescriptor UNDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_UNDO_EDIT_ETOOL16);
-    	
-    /**
-     * Imagedescriptor for the undo action
-     */
-    private static final ImageDescriptor DISABLED_UNDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_UNDO_EDIT_DTOOL16);
-    
-    /**
-     * Imagedescriptor for the undo action
-     */
-    private static final ImageDescriptor HOVER_UNDO_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_UNDO_EDIT_CTOOL16);
-    
 	/**
 	 * @param workbenchPage
 	 */
@@ -86,9 +66,10 @@ public final class GlobalUndoAction extends GlobalAction {
         setText(CommonUIActionMessages.GlobalUndoAction_label);
 
         /* Set the image */
-        setImageDescriptor(UNDO_IMAGE);
-        setHoverImageDescriptor(HOVER_UNDO_IMAGE);
-        setDisabledImageDescriptor(DISABLED_UNDO_IMAGE);
+        ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+        setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+        setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO_DISABLED));
 
         /* Set the context sensitive help */
         PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

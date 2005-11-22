@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -21,10 +21,8 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Copy Action
@@ -37,24 +35,6 @@ public final class GlobalCopyAction extends GlobalAction {
 	 * Action definition id of the copy action.
 	 */
 	private static final String COPY = "org.eclipse.gmf.runtime.common.ui.actions.global.copy"; //$NON-NLS-1$
-
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_ETOOL16); 
-		
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor DISABLED_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_DTOOL16);
-
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor HOVER_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_COPY_EDIT_CTOOL16); //$NON-NLS-1$
 
 	/**
 	 * @param workbenchPage
@@ -86,9 +66,10 @@ public final class GlobalCopyAction extends GlobalAction {
 		setText(CommonUIActionMessages.CopyAction_label);
 
 		/*  set the image */
-		setImageDescriptor(COPY_IMAGE);
-		setHoverImageDescriptor(HOVER_COPY_IMAGE);
-		setDisabledImageDescriptor(DISABLED_COPY_IMAGE);
+		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 
 		/*  set the context sensitive help */
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

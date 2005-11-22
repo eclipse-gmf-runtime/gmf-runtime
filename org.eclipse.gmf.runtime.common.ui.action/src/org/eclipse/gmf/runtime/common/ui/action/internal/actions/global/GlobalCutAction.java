@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -21,10 +21,8 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
-import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
 
 /**
  * Global Cut Action
@@ -37,24 +35,6 @@ public final class GlobalCutAction extends GlobalAction {
      * Action definition id of the cut action.
      */
     private static final String CUT = "org.eclipse.gmf.runtime.common.ui.actions.global.cut"; //$NON-NLS-1$
-
-    /**
-     * Imagedescriptor for the cut action
-     */
-    private static final ImageDescriptor CUT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_CUT_EDIT_ETOOL16);
-
-    /**
-     * Imagedescriptor for the cut action
-     */
-    private static final ImageDescriptor DISABLED_CUT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_CUT_EDIT_DTOOL16);
-
-    /**
-     * Imagedescriptor for the cut action
-     */
-    private static final ImageDescriptor HOVER_CUT_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-    	(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_CUT_EDIT_CTOOL16);
 
 	/**
 	 * @param workbenchPage
@@ -84,9 +64,10 @@ public final class GlobalCutAction extends GlobalAction {
         setText(CommonUIActionMessages.GlobalCutAction_label);
 
         /*  set the image */
-        setImageDescriptor(CUT_IMAGE);
-        setHoverImageDescriptor(HOVER_CUT_IMAGE);
-        setDisabledImageDescriptor(DISABLED_CUT_IMAGE);
+        ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+        setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+        setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
 
         /* set the context sensitive help */
         PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.PX_U_DEFAULT_CS_HELP);

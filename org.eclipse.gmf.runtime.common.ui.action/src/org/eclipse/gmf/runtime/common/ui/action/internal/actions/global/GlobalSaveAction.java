@@ -48,12 +48,6 @@ public final class GlobalSaveAction extends GlobalAction {
 		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_SAVE_EDIT_DTOOL16);
 	
 	/**
-	 * Imagedescriptor for the save action
-	 */
-	private static final ImageDescriptor HOVER_SAVE_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), CommonUIActionPluginImages.IMG_SAVE_EDIT_CTOOL16);
-	
-	/**
 	 * @param workbenchPage
 	 */
 	public GlobalSaveAction(IWorkbenchPage workbenchPage) {
@@ -83,7 +77,7 @@ public final class GlobalSaveAction extends GlobalAction {
 
 		/* Set the image */
 		setImageDescriptor(SAVE_IMAGE);
-		setHoverImageDescriptor(HOVER_SAVE_IMAGE);
+		setHoverImageDescriptor(SAVE_IMAGE);
 		setDisabledImageDescriptor(DISABLED_SAVE_IMAGE);
 
 		/* Set the context sensitive help */
