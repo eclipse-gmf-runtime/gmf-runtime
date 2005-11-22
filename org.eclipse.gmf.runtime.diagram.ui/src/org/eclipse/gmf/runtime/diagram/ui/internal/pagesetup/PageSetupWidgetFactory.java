@@ -63,7 +63,11 @@ public class PageSetupWidgetFactory {
 	 */
 	public static Button createRadioButton(Composite parent, String label) {
 		final Button button = new Button(parent, SWT.RADIO);
+		GridData groupGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_HORIZONTAL);
+		groupGridData.widthHint = 60;
+		button.setLayoutData(groupGridData);
 		button.setText(label);
+		
 		return button;
 	}
 	
@@ -88,18 +92,14 @@ public class PageSetupWidgetFactory {
 	 * @return Group created group
 	 */
 	public static Group createGroup(Composite parent, String label) {
-		int numOfColumns = 2;
 		Group group = new Group(parent, SWT.NULL);
 		group.setText(label);
-		
-		group.setLayoutData(
-			new GridData(
-				GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_BEGINNING));
-		group.setLayout(new GridLayout(numOfColumns, true));
-		
-		GridData sizeGridData = new GridData(GridData.FILL_HORIZONTAL);
-		sizeGridData.horizontalSpan = 6;
-		group.setLayoutData(sizeGridData);
+		GridLayout layout = new GridLayout(2, true);
+		group.setLayout(layout);
+				
+		GridData groupGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_HORIZONTAL);
+		groupGridData.horizontalSpan = 2;
+		group.setLayoutData(groupGridData);
 		
 		return group;
 	}
@@ -214,15 +214,15 @@ public class PageSetupWidgetFactory {
 	 * @return Text created text field
 	 */
 	public static Text createTextMargin(Group group) {
-		int MARGIN_WIDTH_HINT = 40;
+		int MARGIN_HEIGHT_HINT = 40;
 		
-		Text text = new Text(group, SWT.BORDER | SWT.LEFT);
-		
-		GridData gridData = new GridData();
-		gridData.widthHint = MARGIN_WIDTH_HINT;
-		
-		text.setLayoutData(gridData);
-		
+		Text text = new Text(group, SWT.BORDER);
+		GridData phGridData = new GridData(
+			GridData.FILL_HORIZONTAL
+			| GridData.HORIZONTAL_ALIGN_BEGINNING);
+		phGridData.widthHint = MARGIN_HEIGHT_HINT;
+		text.setLayoutData(phGridData);
+				
 		return text;
 	}
 	
@@ -251,13 +251,15 @@ public class PageSetupWidgetFactory {
 	 * @return Text
 	 */
 	public static Text createTextHeight(Group group) {
+		int MARGIN_HEIGHT_HINT = 40;
+		
 		Text text = new Text(group, SWT.BORDER);
 		GridData phGridData = new GridData(
 			GridData.FILL_HORIZONTAL
 			| GridData.HORIZONTAL_ALIGN_BEGINNING);
-		phGridData.widthHint = 40;
+		phGridData.widthHint = MARGIN_HEIGHT_HINT;
 		text.setLayoutData(phGridData);
-		
+				
 		return text;
 	}
 	

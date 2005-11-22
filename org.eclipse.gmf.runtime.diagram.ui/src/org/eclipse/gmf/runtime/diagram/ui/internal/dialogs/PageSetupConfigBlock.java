@@ -146,7 +146,7 @@ public class PageSetupConfigBlock implements ILabels {
 		Composite pageSetupComposite = createPageSetupTabContent(folder);
 	
 		TabItem item = new TabItem(folder, SWT.NONE);
-		item.setText(LABEL_TITLE_PAGE_SETUP_TAB_ITEM); //$NON-NLS-1$
+		item.setText(LABEL_TITLE_PAGE_SETUP_TAB_ITEM);
 		item.setControl(pageSetupComposite);
 			
 		fInitialier.initPrintControls();
@@ -204,8 +204,8 @@ public class PageSetupConfigBlock implements ILabels {
 		Composite composite = new Composite(folder, SWT.NULL);
 		composite.setLayout(new GridLayout(2, false));
 		
-		createGroupUnits(composite);
 		createGroupPageOrientation(composite);
+		createGroupUnits(composite);
 		createGroupPaperSize(composite);
 		createGroupMargin(composite);
 		
@@ -344,7 +344,7 @@ public class PageSetupConfigBlock implements ILabels {
 			}
 			else {
 				fPreferencePage.setValid(false);
-				fPreferencePage.setErrorMessage(LABEL_PRINT_PREFERENCE_PAGE_ERROR_MSG); //$NON-NLS-1$;
+				fPreferencePage.setErrorMessage(LABEL_PRINT_PREFERENCE_PAGE_ERROR_MSG);
 				fButtonInches.setEnabled(false);
 				fButtonMillimetres.setEnabled(false);
 			}
@@ -746,7 +746,7 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		public void widgetSelected(SelectionEvent e) {
 			Button b = (Button) e.getSource();
-			if (b.getSelection()) { //$NON-NLS-1$
+			if (b.getSelection()) {
 				super.widgetSelected(e);
 				if (fCurrentUnit.startsWith("mil")) { //$NON-NLS-1$
 					convertValuesToInches();

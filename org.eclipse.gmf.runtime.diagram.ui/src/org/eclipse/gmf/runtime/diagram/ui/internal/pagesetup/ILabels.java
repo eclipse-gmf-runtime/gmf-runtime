@@ -114,4 +114,7 @@ public interface ILabels {
 	/** Represents an error message appearing in Print Preference Page if one of the user input values is invalid. */
 	public static String LABEL_PRINT_PREFERENCE_PAGE_ERROR_MSG = DiagramResourceManager.getInstance().getString("PrintPreferencePage.message.error"); //$NON-NLS-1$
 
+	/** Represents instructional text appearing at the top of Print Preference Page. */
+	public static String LABEL_PRINT_PREFERENCE_PAGE_INSTRUCTION = DiagramResourceManager.getInstance().getString("PrintPreferencePage.instruction"); //$NON-NLS-1$
+
 }
