@@ -271,10 +271,6 @@ public class DiagramContributionItemProvider
 			return GlobalActionManager.getInstance().createActionHandler(
 				workbenchPage,
 				GlobalActionId.OPEN);
-		if (actionId.equals(ActionFactory.FIND.getId()))
-			return GlobalActionManager.getInstance().createActionHandler(
-				workbenchPage,
-				GlobalActionId.FIND);
 		if (actionId.equals(ActionFactory.PRINT.getId()))
 			return GlobalActionManager.getInstance().createActionHandler(
 				workbenchPage,

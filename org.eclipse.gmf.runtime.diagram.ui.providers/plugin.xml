@@ -367,9 +367,6 @@
           </popupContribution>          
        
         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">            
-            <popupAction path="/findGroup" id="find">
-            </popupAction>
-             
             <popupMenu path="/filterFormatGroup" id="filtersMenu">
             </popupMenu>
             <popupMenuGroup path="/filtersMenu/" id="expandFilterGroup">
