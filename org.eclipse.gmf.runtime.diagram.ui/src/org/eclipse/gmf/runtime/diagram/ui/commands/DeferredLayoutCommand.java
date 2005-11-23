@@ -148,8 +148,13 @@ public class DeferredLayoutCommand
 		if (layoutCmd != null && layoutCmd.canExecute()) {
 			layoutCmd.execute();
 		}
-		containerEP = null;//for garbage collection
 		return newOKCommandResult();
+	}
+
+	protected void cleanup() {
+		containerEP = null;//for garbage collection
+		viewAdapters = null;
+		super.cleanup();
 	}
 
 	/**
