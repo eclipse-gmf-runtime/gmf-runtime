@@ -27,7 +27,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -567,8 +566,7 @@ public class GraphicalNodeEditPolicy
 						(CreateRelationshipRequest) requestAdapter
 								.getAdapter(CreateRelationshipRequest.class)));
 		// if element cannot be created, ignore
-		if (createElementCommand == null
-				|| createElementCommand instanceof UnexecutableCommand)
+		if (createElementCommand == null)
 			return null;
 
 
@@ -670,6 +668,9 @@ public class GraphicalNodeEditPolicy
 								.getAdapter(CreateRelationshipRequest.class)));
 		
 		// create the create semantic element wrapper command
+		if (null == createElementCommand)
+			return null;
+		
 		SemanticCreateCommand semanticCommand = new SemanticCreateCommand(
 			requestAdapter, createElementCommand);
 		// get the view command
