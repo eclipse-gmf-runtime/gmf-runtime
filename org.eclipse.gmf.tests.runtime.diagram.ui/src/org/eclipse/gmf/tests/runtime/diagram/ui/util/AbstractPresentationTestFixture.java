@@ -341,25 +341,7 @@ public abstract class AbstractPresentationTestFixture
 	public ShapeEditPart createShapeUsingTool(IElementType elementType,
 			Point location, IGraphicalEditPart containerEP) {
 
-		class CreationTool
-			extends org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool {
-
-			public CreationTool(IElementType theElementType) {
-				super(theElementType);
-			}
-
-			/** Make public. */
-			public Request createTargetRequest() {
-				return super.createTargetRequest();
-			}
-			
-			protected PreferencesHint getPreferencesHint() {
-				return PreferencesHint.USE_DEFAULTS;
-			}
-		}
-
-		CreationTool tool = new CreationTool(elementType);
-		CreateRequest request = (CreateRequest) tool.createTargetRequest();
+		CreateRequest request = getCreationRequest(elementType);
 		request.setLocation(location);
 		Command cmd = containerEP.getCommand(request);
 
@@ -399,6 +381,36 @@ public abstract class AbstractPresentationTestFixture
 		
 		assertTrue(newShape != null && newShape instanceof ShapeEditPart);
 		return (ShapeEditPart)newShape;
+	}
+
+	/**
+	 * Given an <code>IElementType</code>, gets the creation request that can be used to 
+	 * retrieve the command to creation the element for the type.
+	 * 
+	 * @param elementType
+	 * @return
+	 */
+	public CreateRequest getCreationRequest(IElementType elementType) {
+		class CreationTool
+			extends org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool {
+
+			public CreationTool(IElementType theElementType) {
+				super(theElementType);
+			}
+
+			/** Make public. */
+			public Request createTargetRequest() {
+				return super.createTargetRequest();
+			}
+			
+			protected PreferencesHint getPreferencesHint() {
+				return PreferencesHint.USE_DEFAULTS;
+			}
+		}
+
+		CreationTool tool = new CreationTool(elementType);
+		CreateRequest request = (CreateRequest) tool.createTargetRequest();
+		return request;
 	}
 
 	/**

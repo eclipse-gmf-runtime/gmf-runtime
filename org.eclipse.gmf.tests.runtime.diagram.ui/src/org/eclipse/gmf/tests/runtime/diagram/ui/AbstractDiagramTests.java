@@ -12,6 +12,7 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
@@ -22,12 +23,13 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
-import org.eclipse.jface.viewers.StructuredSelection;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.AlignAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SelectAllAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestActionCallback;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 public abstract class AbstractDiagramTests extends AbstractTestBase {
 
@@ -98,43 +100,51 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 		assertTrue(newZoom < currentZoom);
 	}
 
-//	public void testRATLC00045437() throws Exception {
-//	       ZoomManager zoomManager = getZoomManager();
-//	       // Ensure the zoom manager exists
-//	        assertTrue(zoomManager != null);
-//	        
-//	        this.saveDiagram();
-//	        
-//	        // Change to the another zoom level
-//	        if (zoomManager.canZoomIn()) {
-//	            zoomManager.setZoom(zoomManager.getNextZoomLevel());
-//	        } else {
-//	            zoomManager.setZoom(zoomManager.getPreviousZoomLevel());
-//	        }
-//	        
-//	        assertTrue(false == isDirty());                               
-//		}
-
-	public void testSelect() throws Exception {
+	/** Return the supplied editpart's {@link ShapeNodeEditPart}children. */
+	protected List getSelectableShapesIn(IGraphicalEditPart parent) {
+		assertNotNull(parent);
+		List shapes = new ArrayList();
 		
+		Iterator it = parent.getChildren().iterator();
+		while (it.hasNext()) {
+			Object child = it.next();
+			if (child instanceof ShapeNodeEditPart) {
+				if (((ShapeNodeEditPart)child).isSelectable())
+					shapes.add(child);
+			}
+			shapes.addAll(getSelectableShapesIn((IGraphicalEditPart)child));
+		}
+		return shapes;
+	}
+	
+	public void testSelect() throws Exception {
+		final List connectors = getConnectors();
+		final List shapes = getSelectableShapesIn(getDrawSurfaceEditPart());
+		final List all = new ArrayList();
+		all.addAll(connectors);
+		all.addAll(shapes);
+		
+		selectAll(getDrawSurfaceEditPart(), all);
+	}
+	
+	/**
+	 * @param currentSelection <code>EditPart</code> to that will be given the current
+	 * selection before the action executes.  Can be <code>null</code> indicating no current 
+	 * selection.
+	 * @throws Exception
+	 */
+	protected void selectAll(final IGraphicalEditPart currentSelection, final List shouldSelect) throws Exception {
 		getTestFixture().openDiagram();
 
 		assertNotNull("no drawing surface", getDrawSurfaceEditPart()); //$NON-NLS-1$
 
-		final List connectors = getConnectors();
-		final List shapes = getShapesIn(getDrawSurfaceEditPart());
-		final List all = new ArrayList() {
-			{
-				addAll(connectors);
-				addAll(shapes);
-			}
-		};
-
 		// test select all
 		//
-		// prime the selecttion action to perform the selection within getDrawSurfaceEditPart()
-		getDiagramEditPart().getViewer().setSelection(
-			new StructuredSelection(getDrawSurfaceEditPart()));
+		// prime the selection action to perform the selection within currentSelection
+		if (currentSelection != null) {
+			getDiagramEditPart().getViewer().setSelection(
+				new StructuredSelection(currentSelection));
+		}
 		SelectAllAction selectAction =
 			SelectAllAction.createSelectAllAction(getWorkbenchPage());
 
@@ -143,12 +153,16 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 
 				List selectedParts = getDiagramEditPart().getViewer()
 					.getSelectedEditParts();
-				assertTrue(
-					all.containsAll(selectedParts)
-						&& selectedParts.containsAll(all));
+				if (!shouldSelect.isEmpty()) {
+					assertTrue(
+						shouldSelect.containsAll(selectedParts)
+							&& selectedParts.containsAll(shouldSelect));
+				}
+				else {
+					assertTrue( selectedParts.contains(currentSelection));
+				}
 			}
 		});
-
 	}
 
 	public void testAlignment() throws Exception {

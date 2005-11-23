@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -31,8 +30,8 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsRe
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.ActionFactory;
@@ -89,31 +88,6 @@ public class SelectAllAction extends DiagramAction {
 	}
 
 	/**
-	 * This method searches an edit part for a child that is a border item edit part
-	 * @param parent part needed to search
-	 * @return list of border item edit parts that are direct children of the parent
-	 */
-	private List getBorderItemEditParts(EditPart parent) {
-		List list = new LinkedList();
-		
-		
-		Iterator iter = parent.getChildren().iterator();
-		while(iter.hasNext()) {
-			EditPart child = (EditPart)iter.next();
-			if( child instanceof BorderItemEditPart ) {
-				list.add(child);
-				list.addAll(child.getChildren());
-			}
-			list.addAll( getBorderItemEditParts(child) );
-		}
-		
-		if( list.isEmpty() )
-			return Collections.EMPTY_LIST;
-		
-		return list;
-	}
-
-	/**
 	 * Determines the candidate list of node editparts for selection
 	 * 
 	 * @param editpart
@@ -123,40 +97,73 @@ public class SelectAllAction extends DiagramAction {
 		if (editpart == null) {
 			return Collections.EMPTY_LIST;
 		}
-			
-		if (editpart instanceof DiagramEditPart
-			|| editpart instanceof ShapeCompartmentEditPart
-			|| editpart instanceof ListCompartmentEditPart) {
-			
-			List list = new LinkedList();
-
-			Iterator iter = editpart.getChildren().iterator();
-			while( iter.hasNext() ) {
-				EditPart child = (EditPart)iter.next();
-				list.add( child );
-				if (!(editpart instanceof DiagramEditPart))
-					list.addAll( getBorderItemEditParts( child ) );
-			}
-
-			return list;
-		}
 		
-		if (editpart instanceof ConnectionEditPart) {
-			ConnectionEditPart connection = (ConnectionEditPart) editpart;
-			EditPart source = connection.getSource();
-			EditPart target = connection.getTarget();
-			if (source != null && target != null) {
-				List list = new ArrayList();
-				list.addAll(getSelectableNodes(source));
-				if (target.getParent() != source.getParent())
-					list.addAll(getSelectableNodes(target));
-				return list;
+		List retval = new ArrayList();
+		getSelectableNodesInside(editpart, true, retval);
+		return retval;
+	}
+	
+	/**
+	 * Determines the candidate list of node editparts for selection
+	 * 
+	 * @param editpart
+	 * @param topLevel <code>boolean</code> is this the initial entry point into the recursive method.
+	 * @param retval <code>List</code> to modify
+	 */
+	private void getSelectableNodesInside(EditPart editpart, boolean topLevel, List retval) {
+		
+		if ( editpart instanceof ISurfaceEditPart) {
+			getSelectableChildrenNodes(editpart, retval);
+		}
+		else if (editpart instanceof IPrimaryEditPart) {
+			if (topLevel) {
+				if (editpart instanceof ConnectionEditPart) {
+					ConnectionEditPart connection = (ConnectionEditPart) editpart;
+					EditPart source = connection.getSource();
+					EditPart target = connection.getTarget();
+					if (source != null && target != null) {
+						getSelectableNodesInside(source, true, retval);
+						if (target.getParent() != source.getParent())
+							getSelectableNodesInside(target, true, retval);
+					}
+				}
+				else
+					getSelectableNodesInside(editpart.getParent(), true, retval);
+			}
+			else {
+				if (editpart.isSelectable())
+					retval.add(editpart);
+				getSelectableChildrenNodes(editpart, retval);
 			}
 		}
-
-		return getSelectableNodes(editpart.getParent());
 	}
 
+	private void getSelectableChildrenNodes(EditPart editpart, List retval) {
+		Iterator iter = editpart.getChildren().iterator();
+		while( iter.hasNext() ) {
+			EditPart child = (EditPart)iter.next();
+			getSelectableNodesInside(child, false, retval);
+		}
+	}
+
+	/**
+	 * This method searches an edit part for a child that is a border item edit part
+	 * @param parent part needed to search
+	 * @param set to be modified of border item edit parts that are direct children of the parent
+	 */
+	private void getBorderItemEditParts(EditPart parent, Set retval) {
+		
+		Iterator iter = parent.getChildren().iterator();
+		while(iter.hasNext()) {
+			EditPart child = (EditPart)iter.next();
+			if( child instanceof BorderItemEditPart ) {
+				retval.add(child);
+				retval.addAll(child.getChildren());
+			}
+			getBorderItemEditParts(child, retval);
+		}
+	}
+	
 	/**
 	 * Determines the candidate list of connection edit for selection
 	 * A connection is included if atleast the source or the target is
@@ -170,7 +177,7 @@ public class SelectAllAction extends DiagramAction {
 		Set connnectableEditParts = new HashSet(editparts);
 		ListIterator li = editparts.listIterator();
 		while (li.hasNext()) {
-			connnectableEditParts.addAll(getBorderItemEditParts((EditPart)li.next()));
+			getBorderItemEditParts((EditPart)li.next(), connnectableEditParts);
 		}
 		
 		if (diagramEditPart != null) {

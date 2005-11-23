@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -18,14 +19,19 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
@@ -67,8 +73,8 @@ public class LogicDiagramTests
 		return (LogicTestFixture)getTestFixture();
 	}
 	
-	public void testSelect()
-		throws Exception {
+	protected void setUp() throws Exception {
+		super.setUp();
 		
 		List children = getTestFixture().getDiagramEditPart().getChildren();
 		if (children.isEmpty())
@@ -106,11 +112,70 @@ public class LogicDiagramTests
 						
 			getLogicTestFixture().createConnectorUsingTool(tep1, tep2, typeWire);
 			
-			super.testSelect();
-			return;
+			IGraphicalEditPart logicCompartment = circuitEditPart.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+			
+			Rectangle rect = new Rectangle(logicCompartment.getFigure().getBounds());
+			logicCompartment.getFigure().translateToAbsolute(rect);
+			
+			CreateRequest request = getLogicTestFixture().getCreationRequest(typeLED);
+			request.setLocation(rect.getCenter());
+			Command cmd = logicCompartment.getCommand(request);
+
+			getCommandStack().execute(cmd);
+			
+			assertEquals( "Unexpected LED count.", 1, logicCompartment.getChildren().size() );//$NON-NLS-1$
+		}
+	}
+
+	public void testZoomDoesntDirtyDiagram() throws Exception {
+		getTestFixture().openDiagram();
+
+	       ZoomManager zoomManager = getZoomManager();
+	       // Ensure the zoom manager exists
+	        assertTrue(zoomManager != null);
+	        
+	        this.saveDiagram();
+	        
+	        // Change to the another zoom level
+	        if (zoomManager.canZoomIn()) {
+	            zoomManager.setZoom(zoomManager.getNextZoomLevel());
+	        } else {
+	            zoomManager.setZoom(zoomManager.getPreviousZoomLevel());
+	        }
+	        
+	        assertTrue(false == isDirty());                               
 		}
 
-		assertFalse(true);
+	public void testSelectAllInContext() throws Exception {
+		List children = getTestFixture().getDiagramEditPart().getChildren();
+		if (children.isEmpty())
+			assertFalse(true);
+		
+		CircuitEditPart circuitEP = null;
+		ListIterator li = children.listIterator();
+		while (li.hasNext()) {
+			EditPart ep = (EditPart)li.next();
+			if (ep instanceof CircuitEditPart ) {
+				circuitEP = (CircuitEditPart)ep;
+				
+				// select the logic compartment as a target
+				IGraphicalEditPart logicCompartment = circuitEP.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+				
+				final List shapes = getSelectableShapesIn(logicCompartment);
+				final List all = new ArrayList();
+				all.addAll(shapes);
+				
+				selectAll(logicCompartment, shapes);
+			}
+		}
+		
+		final List connectors = getConnectors();
+		final List shapes = getSelectableShapesIn(getDrawSurfaceEditPart());
+		final List all = new ArrayList();
+		all.addAll(connectors);
+		all.addAll(shapes);
+		
+		selectAll(circuitEP, all);
 	}
 
 	/**
@@ -187,8 +252,8 @@ public class LogicDiagramTests
 		// Verify that the edit part and the semantic element have been deleted.
 		primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
 
-		assertEquals(
-			"Size of primary edit parts should have decreased.", initialCount - 1, primaryEditParts.size()); //$NON-NLS-1$
+		assertTrue(
+			"Size of primary edit parts should have decreased.", primaryEditParts.size() < initialCount); //$NON-NLS-1$
 		
 		assertFalse(
 			"Primary edit part not deleted.", primaryEditParts.contains(editPartToDelete)); //$NON-NLS-1$
