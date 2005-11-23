@@ -32,6 +32,7 @@ import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 /**
@@ -145,11 +146,21 @@ public class TreeEditPart
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
 	public final void notifyChanged(Notification event) {
-		// Receiving an event while a view is deleted could only happen during "undo" of view creation,
-		// However, event handlers should be robust by using the event's value and not trying to read 
-		// the value from the model
-		if ((((View)getModel()).eResource() != null))
-			handleNotificationEvent(event);
+		final Notification eventToHandle = event;
+		Display.getDefault().syncExec(new Runnable() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.lang.Runnable#run()
+			 */
+			public void run() {
+				// Receiving an event while a view is deleted could only happen during "undo" of view creation,
+				// However, event handlers should be robust by using the event's value and not trying to read 
+				// the value from the model
+				if ((((View)getModel()).eResource() != null))
+					handleNotificationEvent(eventToHandle);
+			}
+		});
 	}
 
 	/**
