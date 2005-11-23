@@ -37,7 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ICanonicalShapeCompartmentLayout;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -180,7 +180,7 @@ public abstract class CanonicalConnectionEditPolicy
 			if (viewer instanceof IDiagramGraphicalViewer) {
 				List parts = ((IDiagramGraphicalViewer) viewer)
 					.findEditPartsForElement(EObjectUtil.getID(element),
-						ShapeNodeEditPart.class);
+						INodeEditPart.class);
 
 				if (parts.isEmpty()) {
 					// reach for the container's editpart instead and force it
@@ -191,7 +191,7 @@ public abstract class CanonicalConnectionEditPolicy
 						containerEP.refresh();
 						parts = ((IDiagramGraphicalViewer) viewer)
 							.findEditPartsForElement(EObjectUtil.getID(element),
-								ShapeNodeEditPart.class);
+								INodeEditPart.class);
 					}
 				}
 
@@ -517,7 +517,7 @@ public abstract class CanonicalConnectionEditPolicy
 			semanticChild = (EObject) semanticChildrenIT.next();
 			viewChild = createConnectionView(semanticChild, ViewUtil.APPEND);
 			if (viewChild != null) {
-				viewDescriptors.add(new EObjectAdapter(viewChild)); //$NON-NLS-1$
+				viewDescriptors.add(new EObjectAdapter(viewChild)); 
 			}
 		}
 		//
