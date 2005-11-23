@@ -15,12 +15,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.Request;
-
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -54,14 +51,12 @@ public class TerminalEditPart extends BorderItemEditPart {
 		
 		return null;
 	}
-
-	/**
-	 * Return null indicating that this shape cannot be moved.
-	 * 
-	 * @see org.eclipse.gef.EditPart#getDragTracker(org.eclipse.gef.Request)
+	
+	/* 
+	 * Don't allow terminal editparts to be selectable
 	 */
-	public DragTracker getDragTracker(Request request) {
-		return null;
+	public boolean isSelectable() {
+		return false;
 	}
 	
 	/**
