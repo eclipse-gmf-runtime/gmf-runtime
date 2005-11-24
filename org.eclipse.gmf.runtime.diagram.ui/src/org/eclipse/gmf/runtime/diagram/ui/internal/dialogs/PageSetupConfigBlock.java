@@ -98,6 +98,7 @@ public class PageSetupConfigBlock implements ILabels {
 	private ArrayList fControls = new ArrayList();
 	private IPreferenceStore fStore;
 	private String fCurrentUnit;
+	private NumberFormat fNumberFormat;
 	
 	/**
 	 * Creates an instance of PageSetupConfigBlock.
@@ -109,6 +110,7 @@ public class PageSetupConfigBlock implements ILabels {
 		fPersistor = new Persistor(this);
 		fConvertor = new Convertor(this);
 		fStore = store;
+		fNumberFormat = NumberFormat.getNumberInstance();
 	}
 	
 	/**
@@ -167,8 +169,7 @@ public class PageSetupConfigBlock implements ILabels {
 	 * button in printing preference page.
 	 */
 	public void performDefaults() {
-		NumberFormat nf = NumberFormat.getNumberInstance();
-		
+
 		fButtonInches.setSelection(DefaultValues.DEFAULT_INCHES);
 		fButtonInches.setEnabled(true);
 		fButtonMillimetres.setSelection(DefaultValues.DEFAULT_MILLIM);
@@ -178,13 +179,13 @@ public class PageSetupConfigBlock implements ILabels {
 		fButtonLandscape.setSelection(DefaultValues.DEFAULT_LANDSCAPE);
 		
 		fComboSize.select(DefaultValues.getLocaleSpecificPageType().getIndex());
-		fTextWidth.setText(nf.format(DefaultValues.getLocaleSpecificPageType().getWidth()));
-		fTextHeight.setText(nf.format(DefaultValues.getLocaleSpecificPageType().getHeight()));
+		fTextWidth.setText(fNumberFormat.format(DefaultValues.getLocaleSpecificPageType().getWidth()));
+		fTextHeight.setText(fNumberFormat.format(DefaultValues.getLocaleSpecificPageType().getHeight()));
 		
-		fTextMarginTop.setText(nf.format(DefaultValues.DEFAULT_MARGIN_TOP));
-		fTextMarginBottom.setText(nf.format(DefaultValues.DEFAULT_MARGIN_BOTTOM));
-		fTextMarginLeft.setText(nf.format(DefaultValues.DEFAULT_MARGIN_LEFT));
-		fTextMarginRight.setText(nf.format(DefaultValues.DEFAULT_MARGIN_RIGHT));
+		fTextMarginTop.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_TOP));
+		fTextMarginBottom.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_BOTTOM));
+		fTextMarginLeft.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_LEFT));
+		fTextMarginRight.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_RIGHT));
 		
 		fLabelUnitHeight.setText(LABEL_INCHES);
 		fLabelUnitWidth.setText(LABEL_INCHES);
@@ -262,16 +263,15 @@ public class PageSetupConfigBlock implements ILabels {
 		fComboSize.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				NumberFormat numberFormatter = NumberFormat.getNumberInstance();
-		
+				
 				int index = fComboSize.getSelectionIndex();
 				
 				if (isConversionNeeded()) {
-					fTextHeight.setText(numberFormatter.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getHeight())));
-					fTextHeight.setText(numberFormatter.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getWidth())));
+					fTextHeight.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getHeight())));
+					fTextHeight.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getWidth())));
 				} else {
-					fTextHeight.setText(numberFormatter.format(PageSetupPageType.pages[index].getHeight()));
-					fTextWidth.setText(numberFormatter.format(PageSetupPageType.pages[index].getWidth()));
+					fTextHeight.setText(fNumberFormat.format(PageSetupPageType.pages[index].getHeight()));
+					fTextWidth.setText(fNumberFormat.format(PageSetupPageType.pages[index].getWidth()));
 				}
 			}
 
@@ -560,19 +560,19 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		private void initText(PageSetupConfigBlock block, PageSetupControlType controlType, String key) {
 			Text text = (Text) block.getControl(controlType);
-			NumberFormat numberFormatter = NumberFormat.getNumberInstance();
+			
 			String value = fStore.getString(key);
 			try {
-				Number num = numberFormatter.parse(value);
+				Number num = fNumberFormat.parse(value);
 				
 				//text.setText(numberFormatter.format(Double.parseDouble(fStore.getString(key))));
-				text.setText(numberFormatter.format(num.doubleValue()));
+				text.setText(fNumberFormat.format(num.doubleValue()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			
 			if (isConversionNeeded()) 
-				text.setText(numberFormatter.format(fConvertor.convertToMillimetres(controlType)));
+				text.setText(fNumberFormat.format(fConvertor.convertToMillimetres(controlType)));
 		}
 	
 		private void initCombo(PageSetupConfigBlock block, PageSetupControlType controlType, String key) {
@@ -659,7 +659,6 @@ public class PageSetupConfigBlock implements ILabels {
 	// CONVERTOR
 	private class Convertor {
 
-		private double fConversionFactor = 25.4;
 		PageSetupConfigBlock fBlockPrint;
 		
 		public Convertor(PageSetupConfigBlock configBlock) {
@@ -668,10 +667,10 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		public double convertToInches(PageSetupControlType type) { 
 			Text text = (Text) fBlockPrint.getControl(type);
-			NumberFormat ft = NumberFormat.getInstance();;
+			
 			Number num = null;
 			try {
-				num = ft.parse(text.getText());
+				num = fNumberFormat.parse(text.getText());
 				double valueInMillimetres = num.doubleValue();
 				double valueInInches = convertMilimToInches(valueInMillimetres);
 				return valueInInches;	
@@ -683,10 +682,10 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		public double convertToMillimetres(PageSetupControlType type) { 
 			Text text = (Text) fBlockPrint.getControl(type);
-			NumberFormat ft = NumberFormat.getInstance();;
+			
 			Number num = null;
 			try {
-				num = ft.parse(text.getText());
+				num = fNumberFormat.parse(text.getText());
 				double valueInInches = num.doubleValue();
 				double valueInMillimetres = convertInchesToMilim(valueInInches);
 				return valueInMillimetres;
@@ -698,11 +697,11 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		public double convertInchesToMilim(double inches) {
-			return inches * fConversionFactor; 
+			return inches / 0.0394; 
 		}
 		
 		private double convertMilimToInches(double milim) {
-			return milim / fConversionFactor;
+			return milim * 0.0394;
 		}
 	}
 	
@@ -756,14 +755,12 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		private void convertValuesToInches() {
-			NumberFormat numberFormatter = NumberFormat.getNumberInstance();
-			
-			fTextWidth.setText(numberFormatter.format(fConvertor.convertToInches(PageSetupControlType.TEXT_PAGE_WIDTH)));
-			fTextHeight.setText(numberFormatter.format(fConvertor.convertToInches(PageSetupControlType.TEXT_PAGE_HEIGHT)));
-			fTextMarginTop.setText(numberFormatter.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_TOP)));
-			fTextMarginBottom.setText(numberFormatter.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_BOTTOM)));
-			fTextMarginLeft.setText(numberFormatter.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_LEFT)));
-			fTextMarginRight.setText(numberFormatter.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_RIGHT)));
+			fTextWidth.setText(fNumberFormat.format(fConvertor.convertToInches(PageSetupControlType.TEXT_PAGE_WIDTH)));
+			fTextHeight.setText(fNumberFormat.format(fConvertor.convertToInches(PageSetupControlType.TEXT_PAGE_HEIGHT)));
+			fTextMarginTop.setText(fNumberFormat.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_TOP)));
+			fTextMarginBottom.setText(fNumberFormat.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_BOTTOM)));
+			fTextMarginLeft.setText(fNumberFormat.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_LEFT)));
+			fTextMarginRight.setText(fNumberFormat.format(fConvertor.convertToInches(PageSetupControlType.TEXT_MARGIN_RIGHT)));
 		}
 	}
 	
@@ -785,14 +782,12 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		private void convertValuesToMillimetres() {
-			NumberFormat numberFormatter = NumberFormat.getNumberInstance();
-			
-			fTextWidth.setText(numberFormatter.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_WIDTH)));
-			fTextHeight.setText(numberFormatter.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_HEIGHT)));
-			fTextMarginTop.setText(numberFormatter.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_TOP)));
-			fTextMarginBottom.setText(numberFormatter.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_BOTTOM)));
-			fTextMarginLeft.setText(numberFormatter.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_LEFT)));
-			fTextMarginRight.setText(numberFormatter.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_RIGHT)));
+			fTextWidth.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_WIDTH)));
+			fTextHeight.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_HEIGHT)));
+			fTextMarginTop.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_TOP)));
+			fTextMarginBottom.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_BOTTOM)));
+			fTextMarginLeft.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_LEFT)));
+			fTextMarginRight.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_RIGHT)));
 		}
 	}
 

@@ -103,7 +103,7 @@ public class PageSetupSelectionConfigBlock implements ILabels {
 	 */
 	protected Control createContents(Composite parent) {	
 		Composite selectionComposite = new Composite(parent, SWT.NULL);
-		selectionComposite.setLayout(new GridLayout(2, false));
+		selectionComposite.setLayout(new GridLayout(2, true));
 				
 		createSelectionGroup(selectionComposite);
 		fShell = parent.getShell();
