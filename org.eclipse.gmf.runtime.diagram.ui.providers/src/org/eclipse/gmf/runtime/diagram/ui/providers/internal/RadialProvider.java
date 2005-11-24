@@ -45,13 +45,13 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
-import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutProvider;
-import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
+import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -68,7 +68,7 @@ import org.eclipse.jface.util.Assert;
  * RadialProvider class that provides for LayoutType.RADIAL.
  */
 public class RadialProvider
-	extends AbstractLayoutProvider {
+	extends AbstractLayoutEditPartProvider {
 
 	/**
 	 * @see com.ibm.xtools.common.service.IProvider#provides(IOperation)
@@ -85,9 +85,8 @@ public class RadialProvider
 		return LayoutType.RADIAL.equals(layoutType);		
 	} 
 
-	
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.ILayoutProvider#layout(org.eclipse.gef.GraphicalEditPart, org.eclipse.core.runtime.IAdaptable)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider#layoutEditParts(org.eclipse.gef.GraphicalEditPart, org.eclipse.core.runtime.IAdaptable)
 	 */
 	public Command layoutEditParts(
 		GraphicalEditPart containerEP,
@@ -98,8 +97,8 @@ public class RadialProvider
 	}
 
 	
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.ILayoutProvider#layout(java.util.List, org.eclipse.core.runtime.IAdaptable)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider#layoutEditParts(java.util.List, org.eclipse.core.runtime.IAdaptable)
 	 */
 	public Command layoutEditParts(
 		List selectedObjects,
@@ -312,6 +311,11 @@ public class RadialProvider
 	 */
 	static protected class LayoutEstheticsException extends RuntimeException {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3084395663087786098L;
+
 		/**
 		 * @param message
 		 */

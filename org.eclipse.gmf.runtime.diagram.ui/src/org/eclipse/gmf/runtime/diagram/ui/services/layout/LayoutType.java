@@ -17,12 +17,13 @@ package org.eclipse.gmf.runtime.diagram.ui.services.layout;
  * 
  * @author tmacdoug  
  */
-public class LayoutType {
+final public class LayoutType {
 
 	/**
 	 * the default layout type
 	 */
 	public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
+	
 	/**
 	 * the radial layout type
 	 */

@@ -44,10 +44,10 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNodesOperation;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
-import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutProvider;
-import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutNodesOperation;
+import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -63,7 +63,7 @@ import org.eclipse.jface.util.Assert;
  * 
  */
 public abstract class DefaultProvider
-	extends AbstractLayoutProvider {
+	extends AbstractLayoutEditPartProvider {
 
 	// Minimum sep between icon and bottommost horizontal arc
 	protected int minX = -1;
@@ -100,9 +100,8 @@ public abstract class DefaultProvider
 		return LayoutType.DEFAULT.equals(layoutType);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.ILayoutProvider#layout(org.eclipse.gef.GraphicalEditPart,
-	 *      org.eclipse.core.runtime.IAdaptable)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider#layoutEditParts(org.eclipse.gef.GraphicalEditPart, org.eclipse.core.runtime.IAdaptable)
 	 */
 	public Command layoutEditParts(GraphicalEditPart containerEditPart,
 			IAdaptable layoutHint) {
@@ -129,9 +128,8 @@ public abstract class DefaultProvider
 		return cmd;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.ILayoutProvider#layout(java.util.List,
-	 *      org.eclipse.core.runtime.IAdaptable)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider#layoutEditParts(java.util.List, org.eclipse.core.runtime.IAdaptable)
 	 */
 	public Command layoutEditParts(List selectedObjects, IAdaptable layoutHint) {
 

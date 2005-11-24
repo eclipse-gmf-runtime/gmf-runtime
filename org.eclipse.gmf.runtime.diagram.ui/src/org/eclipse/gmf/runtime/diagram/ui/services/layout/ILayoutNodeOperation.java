@@ -22,11 +22,12 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
  * 
  * This interface can be used in the layout provider implementation class.
  * 
+ * IMPORTANT: This interface is <EM>not</EM> intended to be implemented by clients.
+ * New methods may be added in the future.
+ * 
  * @author sshaw
- * @deprecated use {@link ILayoutNodeOperation} Will be removed on December 16th /
- *             2005
  */
-public interface ILayoutNodesOperation extends IOperation {
+public interface ILayoutNodeOperation extends IOperation {
 
 	/**
 	 * Gets the list of nodes to layout.
