@@ -18,7 +18,7 @@
             extensions="logic2"
             icon="icons/logic.gif"
             id="LogicEditor"
-            matchingStrategy="org.eclipse.gmf.examples.runtime.diagram.logic.internal.ui.parts.LogicDiagramEditorMatchingStrategy"
+            matchingStrategy="org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditorMatchingStrategy"
             name="%Logic_example_graphical_editor_name">
       </editor>
    </extension>

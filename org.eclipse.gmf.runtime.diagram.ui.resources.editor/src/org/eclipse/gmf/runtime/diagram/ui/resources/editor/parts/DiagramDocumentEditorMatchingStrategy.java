@@ -27,11 +27,11 @@ import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
 /**
- * An abstract matching strategy for <code>DiagramDocumentEditor</code>
+ * A matching strategy for <code>DiagramDocumentEditor</code>
  * @author mgoyal
  *
  */
-public abstract class DiagramDocumentEditorMatchingStrategy
+public class DiagramDocumentEditorMatchingStrategy
 	implements IEditorMatchingStrategy {
 
 	/* (non-Javadoc)
@@ -79,5 +79,7 @@ public abstract class DiagramDocumentEditorMatchingStrategy
 	 * Gets the default editing domain for this matching strategy.
 	 * @return <code>MEditingDomain</code>
 	 */
-	public abstract MEditingDomain getDefaultDomain();
+	public MEditingDomain getDefaultDomain() {
+		return MEditingDomain.INSTANCE;
+	}
 }
