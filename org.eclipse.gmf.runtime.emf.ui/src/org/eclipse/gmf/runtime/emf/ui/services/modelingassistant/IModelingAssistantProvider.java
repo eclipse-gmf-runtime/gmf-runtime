@@ -158,26 +158,14 @@ public interface IModelingAssistantProvider
 
 
 	/**
-	 * Gets a list of types to be used in the actionbar to support creating an
+	 * Gets a list of types to be used in the popup bar to support creating an
 	 * shape or element within the context of another.
 	 * 
 	 * @param host
-	 *            the host on which the actionbar will be displayed: adapts to
+	 *            the host on which the popup bar will be displayed: adapts to
 	 *            editpart, view, element, etc.
 	 * @return a list of element types (<code>IElementType</code>)
 	 */
 	List getTypesForPopupBar(IAdaptable host);
-
-	/**
-	 * Gets a list of types to be used in the actionbar to support creating an
-	 * shape or element within the context of another.
-	 * 
-	 * @param host
-	 *            the host on which the actionbar will be displayed: adapts to
-	 *            editpart, view, element, etc.
-	 * @return a list of element types (<code>IElementType</code>)
-	 * @deprecated Renamed to {@link #getTypesForPopupBar(IAdaptable)}
-	 */
-	List getTypesForActionBar(IAdaptable host);
 
 }

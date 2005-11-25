@@ -204,14 +204,4 @@ public abstract class ModelingAssistantProvider
 		return Collections.EMPTY_LIST;
 	}
 
-	/**
-	 * Returns an empty list.
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.IModelingAssistantProvider#getTypesForActionBar(IAdaptable)
-	 * @deprecated Renamed to {@link #getTypesForPopupBar(IAdaptable)}
-	 */
-	public List getTypesForActionBar(IAdaptable host) {
-		return Collections.EMPTY_LIST;
-	}
-
 }
