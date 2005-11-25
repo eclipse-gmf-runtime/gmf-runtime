@@ -464,6 +464,8 @@ public class MSLEditingDomain
 			int options) {
 
 		URI uri = null;
+		
+		boolean wasCreated = false;
 
 		if ((fileNameURI == null)
 			|| (fileNameURI.equals(MSLConstants.EMPTY_STRING)))
@@ -491,8 +493,10 @@ public class MSLEditingDomain
 			if ((resource == null) && (!convertedURI.equals(uri)))
 				resource = resourceSet.getResource(convertedURI, false);
 
-			if (resource == null)
+			if (resource == null) {
 				resource = resourceSet.createResource(convertedURI);
+				wasCreated = true;
+			}
 
 			else if (resource.isLoaded()) {
 
@@ -524,7 +528,8 @@ public class MSLEditingDomain
 					MSLUtil.postProcessResource(resource);
 				}
 
-				eventBroker.addEvent(resource, EventTypes.CREATE);
+				if (wasCreated)
+					eventBroker.addEvent(resource, EventTypes.CREATE);
 
 				return resource;
 			}
@@ -583,9 +588,17 @@ public class MSLEditingDomain
 				resource = resourceSet.createResource(convertedURI);
 
 			if (resource != null) {
-
-				loadResource(resource, options, inputStream);
-
+				
+				try {
+					loadResource(resource, options, inputStream);
+				} catch (RuntimeException e) {
+					// If an exception is thrown then we will try to automatically unload the resource.
+					if (resource.isLoaded()) {
+						resource.unload();
+					}
+					throw e;
+				}
+				
 				return resource;
 			}
 		}
@@ -614,9 +627,7 @@ public class MSLEditingDomain
 	 */
 	public void loadResource(Resource resource, int options,
 			InputStream inputStream) {
-
 		try {
-
 			Map loadOptions = null;
 
 			if (resource instanceof XMLResource) {
@@ -654,11 +665,11 @@ public class MSLEditingDomain
 				resource.load(inputStream, loadOptions);
 
 		} catch (Exception e) {
-
+			// TODO In the next iteration, we will no longer be automatically unloading a resource if there are errors.
 			resource.unload();
-
+			
 			eventBroker.clearEvents();
-
+			
 			RuntimeException newE = null;
 
 			if (e instanceof MSLRuntimeException)
@@ -692,9 +703,8 @@ public class MSLEditingDomain
 			resource.unload();
 
 		} catch (Exception e) {
-
 			eventBroker.clearEvents();
-
+			
 			RuntimeException newE = null;
 
 			if (e instanceof MSLRuntimeException)

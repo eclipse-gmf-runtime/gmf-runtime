@@ -150,27 +150,35 @@ public abstract class MEditingDomain
 	public abstract URI convertURI(URI uri);
 
 	/**
-	 * Creates a resource and object of type rootEClass that becomes the root of
-	 * the resource.
+	 * Produces a resource for a given file name URI. If the
+	 *  resource is already loaded then an exception is thrown. The
+	 *  resource will be in the unloaded state when returned.
 	 * 
 	 * @param fileNameURI
 	 *            Optional file name to be assigned to the resource.
-	 * @return The new resource.
+	 * @return The resource object.
+     *
+	 * @throws IllegalStateException if the resource is already loaded.
+	 * 
 	 */
 	public abstract Resource createResource(String fileNameURI);
 
 	/**
-	 * Creates a resource and object of type rootEClass that becomes the root of
-	 * the resource.
+	 * Produces a resource for a given URI and with the provided
+	 *  options. Unless specified with the appropriate option
+	 *  {@link MResourceOption#URI}, the URI is assumed to be a file path.
 	 * 
-	 * @param fileNameURI
-	 *            Optional file name to be assigned to the resource.
+	 * @param uri
+	 *            Optional uri to be assigned to the resource.
 	 * @param options
 	 *            The create options. This is a bit mask of values from
 	 *            <code>MResourceOption</code>.
-	 * @return The new resource.
+	 *            
+	 * @return The resource object.
+     * 
+	 * @throws IllegalStateException if the resource is already loaded.
 	 */
-	public abstract Resource createResource(String fileNameURI, int options);
+	public abstract Resource createResource(String uri, int options);
 
 	/**
 	 * Creates a resource and object of type rootEClass that becomes the root of
@@ -181,6 +189,7 @@ public abstract class MEditingDomain
 	 * @param rootEClass
 	 *            The root object's type (optional).
 	 * @return The new resource.
+	 * @throws IllegalStateException if the resource is already loaded.
 	 */
 	public abstract Resource createResource(String fileNameURI,
 			EClass rootEClass);
@@ -194,6 +203,7 @@ public abstract class MEditingDomain
 	 * @param rootEClass
 	 *            The root object's type (optional)
 	 * @return The new resource.
+	 * @throws IllegalStateException if the resource is already loaded.
 	 */
 	public abstract Resource createResource(String fileNameURI,
 			EClass rootEClass, int options);
@@ -204,6 +214,9 @@ public abstract class MEditingDomain
 	 * @param fileNameURI
 	 *            The resource's file path.
 	 * @return The loaded resource.
+	 * @deprecated Use {@link #createResource(String)} or
+	 *  {@link findResource(String)} followed by
+	 *  {@link #loadResource(Resource)} to get the same results.
 	 */
 	public abstract Resource loadResource(String fileNameURI);
 
@@ -216,9 +229,12 @@ public abstract class MEditingDomain
 	 *            The load options. This is a bit mask of values from
 	 *            <code>MResourceOption</code>.
 	 * @return The loaded resource.
+	 * @deprecated Use {@link #createResource(String, int)} or
+	 *  {@link #findResource(String, int)} followed by
+	 *  {@link #loadResource(Resource, int)} to get the same results.
 	 */
 	public abstract Resource loadResource(String fileNameURI, int options);
-
+	
 	/**
 	 * Loads a resource with a given file path from the given input stream using
 	 * the given load options.
@@ -231,20 +247,30 @@ public abstract class MEditingDomain
 	 * @param inputStream
 	 *            The input stream from which to load the resource's contents.
 	 * @return The loaded resource.
+	 * @deprecated Use {@link #createResource(String, int)} or
+	 *  {@link #findResource(String, int)} followed by
+	 *  {@link #loadResource(Resource, int, InputStream)} to get the same
+	 *  results.
 	 */
 	public abstract Resource loadResource(String fileNameURI, int options,
 			InputStream inputStream);
 
 	/**
-	 * Loads an unloaded resource.
+	 * Loads an unloaded resource. It is the responsibility of callers to catch
+	 *  any exceptions that will be thrown as a result of the resource being loaded
+	 *  with errors. Note that the state of the resource could be loaded (ie. it could
+	 *  be necessary to unload it) but the {@link Resource#getErrors()} could be non-empty.
 	 * 
 	 * @param resource
 	 *            The resource to load.
 	 */
 	public abstract void loadResource(Resource resource);
-
+	
 	/**
-	 * Loads an unloaded resource.
+	 * Loads an unloaded resource. It is the responsibility of callers to catch
+	 *  any exceptions that will be thrown as a result of the resource being loaded
+	 *  with errors. Note that the state of the resource could be loaded (ie. it could
+	 *  be necessary to unload it) but the {@link Resource#getErrors()} could be non-empty.
 	 * 
 	 * @param resource
 	 *            The resource to load.
@@ -256,7 +282,11 @@ public abstract class MEditingDomain
 
 	/**
 	 * Loads an unloaded resource from the given input stream using the given
-	 * load options.
+	 * load options. It is the responsibility of callers to catch
+	 *  any exceptions that will be thrown as a result of the resource being loaded
+	 *  with errors. Note that the state of the resource could be loaded
+	 *  (ie. it could be necessary to unload it) but the {@link Resource#getErrors()} 
+	 *  could be non-empty.
 	 * 
 	 * @param resource
 	 *            The resource to load.
@@ -274,6 +304,7 @@ public abstract class MEditingDomain
 	 * 
 	 * @param resource
 	 *            The resource to unload.
+	 * @deprecated Use {@link Resource#unload()} instead.
 	 */
 	public abstract void unloadResource(Resource resource);
 
@@ -285,6 +316,7 @@ public abstract class MEditingDomain
 	 * @param options
 	 *            The unload options. This is a bit mask of values from
 	 *            <code>MResourceOption</code>.
+	 * @deprecated Use {@link Resource#unload()} instead.
 	 */
 	public abstract void unloadResource(Resource resource, int options);
 

@@ -61,6 +61,8 @@ public interface IDemuxedMListener {
 
 	/**
 	 * Notifies me of an event indicating that a resource has been loaded.
+	 * It is my responsibility to determine whether the resouce was loaded
+	 * with errors. Also, a resource with errors may have no contents.
 	 * 
 	 * @param notification the raw notification
 	 * @param resource the resource that was loaded

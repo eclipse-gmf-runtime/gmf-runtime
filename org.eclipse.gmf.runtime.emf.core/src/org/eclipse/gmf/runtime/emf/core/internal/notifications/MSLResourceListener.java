@@ -68,6 +68,22 @@ public class MSLResourceListener {
 
 	private Map unloadedResourcesRoot = new HashMap();
 	
+	// TODO Remove this tracking of resources with errors in the next iteration.
+	/*
+	 * This map is here to keep track of which resources were
+	 *  loaded with errors. For now we are not going to be propagating
+	 *  any events associated with loading/unloaded these resources.
+	 *  In the next iteration we will propagate all of these events
+	 *  and listeners will be required to verify whether the resource
+	 *  loaded with errors or not.
+	 *  
+	 *  Look at MEditingDomain.loadResource, MEditingDomain.unloadResource
+	 *   and IDemuxedMListener.handleResourceLoadedEvent for more details.
+	 *   
+	 *  cmcgee
+	 */
+	private Map resourcesWithErrors = new WeakHashMap();
+	
 	/**
 	 * Constructor.
 	 */
@@ -143,7 +159,25 @@ public class MSLResourceListener {
 						loadedResources.put(notifier, Boolean.TRUE);
 
 						MSLUtil.postProcessResource(notifier);
+						
+						// TODO Remove this check for errors in the next iteration.
+						// If the resource loaded with errors, place it into a special
+						//  map indicating that it was loaded with errors so that we
+						//  do not propagate any automated unload events. This is going
+						//  to change in the next iteration where we will propagate all
+						//  resource-level events.
+						//
+						// cmcgee
+						//
+						if (notifier.getErrors().size() > 0) {
+							resourcesWithErrors.put(notifier, Boolean.TRUE);
+						} else {
+							resourcesWithErrors.remove(notifier);
 
+							// forward event to broker.
+							domain.getEventBroker().addEvent(notification);
+						}
+						return;
 					} else if (!newBooleanValue && oldBooleanValue) {
 
 						loadedResources.remove(notifier);
@@ -156,11 +190,25 @@ public class MSLResourceListener {
 						EObject root = null;
 						if ( unloadedResourcesRoot.containsKey(notifier)) {
 							root = (EObject)unloadedResourcesRoot.get(notifier);
-					}
+						}
 						
 						UnloadNotification unloadNotification = new UnloadNotification(root, notification);
 						unloadedResourcesRoot.remove(notifier);
-						domain.getEventBroker().addEvent(unloadNotification);
+						
+						// TODO Remove this check for resources with errors in the next iteration.
+						// We will be checking whether this resource was one that
+						//  loaded with errors in it. If this is the case then we
+						//  do not propagate the event. This is going to change in the
+						//  next iteration.
+						//
+						// cmcgee
+						//
+						if (!resourcesWithErrors.containsKey(notifier)) {
+							domain.getEventBroker().addEvent(unloadNotification);
+						} else {
+							resourcesWithErrors.remove(notifier);
+						}
+						
 						return;
 					}
 				}
@@ -172,7 +220,7 @@ public class MSLResourceListener {
 			//    we received this event
 			domain.getCommandGenerator().generateCommand(notification);
 		}
-		
+
 		// forward event to broker.
 		domain.getEventBroker().addEvent(notification);
 	}

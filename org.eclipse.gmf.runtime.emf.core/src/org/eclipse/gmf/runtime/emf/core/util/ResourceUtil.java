@@ -208,9 +208,31 @@ public class ResourceUtil {
 	 *            The load options. This is a bit mask of values from
 	 *            <code>MResourceOption</code>.
 	 * @return The loaded resource.
+	 * @deprecated Use {@link #create(String, int)} or {@link #findResource(String, int)}
+	 *  followed by {@link #load(Resource, int)} to produce the same result.
 	 */
 	public static Resource load(String path, int options) {
 		return MEditingDomain.INSTANCE.loadResource(path, options);
+	}
+	
+	/**
+	 * Produces a resource for a given file path and with the provided
+	 *  options. Unless specified with the appropriate option
+	 *  {@link MResourceOption#URI}, the path is assumed to be a file path.
+	 * 
+	 * @param uri
+	 *            Optional uri to be assigned to the resource.
+	 * @param options
+	 *            The create options. This is a bit mask of values from
+	 *            <code>MResourceOption</code>.
+	 *            
+	 * @return The resource object.
+	 * 
+	 * @throws IllegalStateException if the resource is already loaded.
+	 */
+	public static Resource create(String path, int options) {
+		return MEditingDomain.INSTANCE
+			.createResource(path, options);
 	}
 
 	/**
@@ -225,6 +247,10 @@ public class ResourceUtil {
 	 * @param inputStream
 	 *            The input stream from which to load the resource's contents.
 	 * @return The loaded resource.
+	 * 
+	 * @deprecated Use {@link #create(String, int)} or (@link #findResource(String)}
+	 *  followed by {@link #load(Resource, int, InputStream)} to produce the same
+	 *  result.
 	 */
 	public static Resource load(String path, int options,
 			InputStream inputStream) {
@@ -232,7 +258,12 @@ public class ResourceUtil {
 	}
 
 	/**
-	 * Loads an unloaded resource.
+	 * Loads an unloaded resource. It is the client's responsibility
+	 *  to catch any exceptions that are thrown because of the loading
+	 *  of the resource. Also, once a resource is loaded, it could have
+	 *  errors (@link Resource#getErrors()}. The resource may be in the
+	 *  loaded state after this method is called. The client must decide
+	 *  whether to unload the resource in this case.
 	 * 
 	 * @param resource
 	 *            The resource to load.
@@ -246,7 +277,12 @@ public class ResourceUtil {
 
 	/**
 	 * Loads an unloaded resource from the given input stream using the given
-	 * load options.
+	 * load options. It is the client's responsibility
+	 *  to catch any exceptions that are thrown because of the loading
+	 *  of the resource. Also, once a resource is loaded, it could have
+	 *  errors (@link Resource#getErrors()}. The resource may be in the
+	 *  loaded state after this method is called. The client must decide
+	 *  whether to unload the resource in this case.
 	 * 
 	 * @param resource
 	 *            The resource to load.
@@ -269,6 +305,7 @@ public class ResourceUtil {
 	 * @param options
 	 *            The unload options. This is a bit mask of values from
 	 *            <code>MResourceOption</code>.
+	 * @deprecated Use {@link Resource#unload()} instead.
 	 */
 	public static void unload(Resource resource, int options) {
 		MEditingDomain.INSTANCE.unloadResource(resource, options);
@@ -316,6 +353,22 @@ public class ResourceUtil {
 	public static Resource create(String path, EClass eClass) {
 		return MEditingDomain.INSTANCE.createResource(path, eClass);
 	}
+	
+	/**
+	 * Produces a resource for a given file path. If the
+	 *  resource is already loaded then an exception is thrown. The
+	 *  resource will be in the unloaded state when returned.
+	 * 
+	 * @param path
+	 *            Optional file name to be assigned to the resource.
+	 * 
+	 * @return The resource object.
+	 * 
+	 * @throws IllegalStateException if the resource is already loaded.
+	 */
+	public static Resource create(String path) {
+		return MEditingDomain.INSTANCE.createResource(path);
+	}
 
 	/**
 	 * Loads a resource from a given file.
@@ -323,13 +376,20 @@ public class ResourceUtil {
 	 * @param path
 	 *            The resource's file path.
 	 * @return The loaded resource.
+	 * @deprecated Use {@link #create(String)} or {@link #findResource(String)} 
+	 *  followed by {@link #load(Resource)} for the same result.
 	 */
 	public static Resource load(String path) {
 		return MEditingDomain.INSTANCE.loadResource(path);
 	}
 
 	/**
-	 * Loads an unloaded resource.
+	 * Loads an unloaded resource. It is the client's responsibility
+	 *  to catch any exceptions that are thrown because of the loading
+	 *  of the resource. Also, once a resource is loaded, it could have
+	 *  errors (@link Resource#getErrors()}. The resource may be in the
+	 *  loaded state after this method is called. The client must decide
+	 *  whether to unload the resource in this case.
 	 * 
 	 * @param resource
 	 *            The resource to load.
@@ -343,6 +403,7 @@ public class ResourceUtil {
 	 * 
 	 * @param resource
 	 *            The resource to unload.
+	 * @deprecated Use {@link Resource#unload()} instead.
 	 */
 	public static void unload(Resource resource) {
 		MEditingDomain.INSTANCE.unloadResource(resource);
