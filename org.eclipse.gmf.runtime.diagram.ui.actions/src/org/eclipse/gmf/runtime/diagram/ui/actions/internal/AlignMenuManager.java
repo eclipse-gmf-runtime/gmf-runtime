@@ -13,7 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 
@@ -30,11 +31,9 @@ public class AlignMenuManager extends ActionMenuManager {
 	 */
 	private static class AlignMenuAction extends Action {
 		public AlignMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("AlignActionMenu.AlignDropDownText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("AlignActionMenu.AlignDropDownTooltip")); //$NON-NLS-1$
-			ImageDescriptor imageDesc = DiagramActionsResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_ALIGN);
+			setText(DiagramUIActionsMessages.AlignActionMenu_AlignDropDownText);
+			setToolTipText(DiagramUIActionsMessages.AlignActionMenu_AlignDropDownTooltip);
+			ImageDescriptor imageDesc = DiagramUIActionsPluginImages.DESC_ALIGN;
 			setImageDescriptor(imageDesc);
 			setHoverImageDescriptor(imageDesc);
 		}

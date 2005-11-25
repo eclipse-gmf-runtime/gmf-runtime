@@ -15,16 +15,15 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Image;
 
 
 /**
@@ -35,15 +34,12 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class DiagramIconProvider extends AbstractProvider
 implements IIconProvider {
-	
-	private static final String ICON_NOTE = "note.gif";  //$NON-NLS-1$
-	private static final String ICON_TEXT = "text.gif"; //$NON-NLS-1$
-	
+		
 	/** map for storing icon images based on type */
 	private static HashMap typeIconMap = new HashMap();
 	static {
-  		typeIconMap.put(DiagramNotationType.NOTE, ICON_NOTE);
-    	typeIconMap.put(DiagramNotationType.TEXT, ICON_TEXT);		
+  		typeIconMap.put(DiagramNotationType.NOTE, SharedImages.IMG_NOTE);
+    	typeIconMap.put(DiagramNotationType.TEXT, SharedImages.IMG_TEXT);		
 	}
 
 
@@ -54,17 +50,17 @@ implements IIconProvider {
 	public Image getIcon(IAdaptable hint, int flags) {
 		
 		if( hint instanceof View && DiagramViewProvider.isTextView((View)hint)) {
-			return DiagramProvidersResourceManager.getInstance().getImage(ICON_TEXT);
+			return SharedImages.get(SharedImages.IMG_TEXT);
 		}
 		
 		else if( hint instanceof View && DiagramViewProvider.isNoteView((View)hint)) {
 			
-			return DiagramProvidersResourceManager.getInstance().getImage(ICON_NOTE);
+			return SharedImages.get(SharedImages.IMG_NOTE);
 		}
 		
 		else if (hint.getAdapter(IElementType.class) != null){
 			String fileName = (String) typeIconMap.get(hint);
-			return DiagramProvidersResourceManager.getInstance().getImage(fileName);
+			return SharedImages.get(fileName);
 		}
 		return null;	
 	}

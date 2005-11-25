@@ -20,6 +20,24 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
+import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterDialog;
+import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterRootPreferenceNode;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.notation.Filtering;
+import org.eclipse.gmf.runtime.notation.FilteringStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Sorting;
+import org.eclipse.gmf.runtime.notation.SortingDirection;
+import org.eclipse.gmf.runtime.notation.SortingStyle;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.util.Assert;
@@ -53,24 +71,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
-import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterDialog;
-import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterRootPreferenceNode;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
-import org.eclipse.gmf.runtime.notation.Filtering;
-import org.eclipse.gmf.runtime.notation.FilteringStyle;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.Sorting;
-import org.eclipse.gmf.runtime.notation.SortingDirection;
-import org.eclipse.gmf.runtime.notation.SortingStyle;
-import org.eclipse.gmf.runtime.notation.View;
-
 /**
  * SortFilterPage extends <code>PropertyPage</code> by adding a Table and 
  * Filter controls for SortFilterPage.CHILD_PAGE types and only a Filter control
@@ -81,21 +81,21 @@ import org.eclipse.gmf.runtime.notation.View;
 public class SortFilterPage extends PropertyPage {
 
 	/** Menu strings */
-	static final private String MOVE_UP_TOOL_TIP = DiagramResourceManager.getI18NString("SortFilter.moveItemUp"); //$NON-NLS-1$
-	static final private String MOVE_DOWN_TOOL_TIP = DiagramResourceManager.getI18NString("SortFilter.moveItemDown"); //$NON-NLS-1$
+	static final private String MOVE_UP_TOOL_TIP = DiagramUIMessages.SortFilter_moveItemUp;
+	static final private String MOVE_DOWN_TOOL_TIP = DiagramUIMessages.SortFilter_moveItemDown;
 
 	/** filter list labels */
-	static private final String FILTER_ITEMS_CONTAINING = DiagramResourceManager.getI18NString("SortFilter.filterItemsListLabel"); //$NON-NLS-1$	
-	static private final String FILTER_ITEMS_LIST = DiagramResourceManager.getI18NString("SortFilter.fitlerListLabel"); //$NON-NLS-1$
+	static private final String FILTER_ITEMS_CONTAINING = DiagramUIMessages.SortFilter_filterItemsListLabel;	
+	static private final String FILTER_ITEMS_LIST = DiagramUIMessages.SortFilter_fitlerListLabel;
 
 	/** Tool tips and labels for the filter buttons */
-	static private final String ADD_TO = DiagramResourceManager.getI18NString("SortFilter.addTo"); //$NON-NLS-1$
+	static private final String ADD_TO = DiagramUIMessages.SortFilter_addTo;
 	private final String ADD_TO_LABEL = "<"; //$NON-NLS-1$
-	static private final String REMOVE_FROM = DiagramResourceManager.getI18NString("SortFilter.removeFrom"); //$NON-NLS-1$
+	static private final String REMOVE_FROM = DiagramUIMessages.SortFilter_removeFrom;
 	private final String REMOVE_FROM_LABEL = ">"; //$NON-NLS-1$	
-	static private final String ADD_ALL = DiagramResourceManager.getI18NString("SortFilter.addAll"); //$NON-NLS-1$
+	static private final String ADD_ALL = DiagramUIMessages.SortFilter_addAll;
 	private final String ADD_ALL_LABEL = "<<"; //$NON-NLS-1$
-	static private final String REMOVE_ALL = DiagramResourceManager.getI18NString("SortFilter.removeAll"); //$NON-NLS-1$
+	static private final String REMOVE_ALL = DiagramUIMessages.SortFilter_removeAll;
 	private final String REMOVE_ALL_LABEL = ">>"; //$NON-NLS-1$	
 
 	/** the collection's elements (rows) */
@@ -122,12 +122,6 @@ public class SortFilterPage extends PropertyPage {
 	private final int REMOVE_FROM_ID = 1;
 	private final int ADD_ALL_TO_ID = 2;
 	private final int REMOVE_ALL_FROM_ID = 3;
-
-	/** Image filenames */
-	static private final String IMAGE_UP_PATH = "CollectionUp.gif"; //$NON-NLS-1$
-	static private final String IMAGE_DOWN_PATH = "CollectionDown.gif"; //$NON-NLS-1$
-	static private final String SORT_ARROW_UP = "sm_arrow_up.gif"; //$NON-NLS-1$
-	static private final String SORT_ARROW_DN = "sm_arrow_dn.gif"; //$NON-NLS-1$
 
 	/** Height (in list items) for the filter items lists */
 	private int LIST_HEIGHT = 8;
@@ -578,16 +572,14 @@ public class SortFilterPage extends PropertyPage {
 						if (SortingDirection.ASCENDING_LITERAL
 							.equals(_sortingDirection)) {
 							// Use the ascending image
-							Image image = DiagramResourceManager
-								.getInstance().createImage(SORT_ARROW_UP);
+							Image image = DiagramUIPluginImages.DESC_SORT_ARROW_UP.createImage();
 							column.setImage(image);
 							column.pack();
 						} else if (SortingDirection.DESCENDING_LITERAL
 							.equals(_sortingDirection)) {
 							sorter.toggleSortingDirection();
 							// Use the descending image
-							Image image = DiagramResourceManager
-								.getInstance().createImage(SORT_ARROW_DN);
+							Image image = DiagramUIPluginImages.DESC_SORT_ARROW_DN.createImage();
 							column.setImage(image);
 							column.pack();
 						}
@@ -651,9 +643,7 @@ public class SortFilterPage extends PropertyPage {
 
 		//to simulate a vertical toolbar (not possible), create a separate toolbar for each button
 		ToolBar toolBar = new ToolBar(parent, SWT.FLAT);
-		Image imageUp =
-			DiagramResourceManager.getInstance().createImage(
-				IMAGE_UP_PATH);
+		Image imageUp = DiagramUIPluginImages.DESC_UP_PATH.createImage();
 		moveUpToolItem = new ToolItem(toolBar, SWT.PUSH);
 		moveUpToolItem.setEnabled(false);
 		moveUpToolItem.setToolTipText(MOVE_UP_TOOL_TIP);
@@ -664,9 +654,7 @@ public class SortFilterPage extends PropertyPage {
 			}
 		});
 		ToolBar toolBarDown = new ToolBar(parent, SWT.FLAT);
-		Image imageDown =
-			DiagramResourceManager.getInstance().createImage(
-				IMAGE_DOWN_PATH);
+		Image imageDown = DiagramUIPluginImages.DESC_DOWN_PATH.createImage();
 		moveDownToolItem = new ToolItem(toolBarDown, SWT.PUSH);
 		moveDownToolItem.setEnabled(false);
 		moveDownToolItem.setToolTipText(MOVE_DOWN_TOOL_TIP);
@@ -987,7 +975,7 @@ public class SortFilterPage extends PropertyPage {
 					.getElements(PreferenceManager.PRE_ORDER)
 					.iterator();
 			SortFilterRootPreferenceNode rootNode = null;
-			CompositeModelCommand cc = new CompositeModelCommand(DiagramResourceManager.getI18NString("Command.SortFilterCommand"));//$NON-NLS-1$
+			CompositeModelCommand cc = new CompositeModelCommand(DiagramUIMessages.Command_SortFilterCommand);
 			while (nodes.hasNext()) {
 				PreferenceNode node = (PreferenceNode) nodes.next();
 				SortFilterPage page = (SortFilterPage) node.getPage();
@@ -1317,12 +1305,12 @@ public class SortFilterPage extends PropertyPage {
 							|| SortingDirection.ASCENDING_LITERAL
 								.equals(newSorter.getSortingDirection())) {
 							// Use the ascending image
-							image = DiagramResourceManager.getInstance()
-								.createImage(SORT_ARROW_UP);
+							image = DiagramUIPluginImages.DESC_SORT_ARROW_UP
+								.createImage();
 						} else {
 							// Use the descending image
-							image = DiagramResourceManager.getInstance()
-								.createImage(SORT_ARROW_DN);
+							image = DiagramUIPluginImages.DESC_SORT_ARROW_DN
+								.createImage();
 						}
 						columns[columnIndex].setImage(image);
 					}

@@ -23,15 +23,15 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.rulers.RulerChangeListener;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.CreateGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.DeleteGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.MoveGuideCommand;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
@@ -186,7 +186,7 @@ public class DiagramRulerProvider extends RulerProvider {
 	 * @see org.eclipse.gef.rulers.RulerProvider#getMoveGuideCommand(java.lang.Object, int)
 	 */
 	public Command getMoveGuideCommand(Object guide, int pDelta) {
-		CompoundCommand cmd = new CompoundCommand(DiagramResourceManager.getInstance().getString( "Command.moveGuide" ));  //$NON-NLS-1$
+		CompoundCommand cmd = new CompoundCommand(DiagramUIMessages.Command_moveGuide);
 
 		// Get the Command to Move the Guide
 		cmd.add( new EtoolsProxyCommand( new MoveGuideCommand((Guide)guide, pDelta) ) );

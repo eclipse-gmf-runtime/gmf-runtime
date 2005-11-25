@@ -16,16 +16,15 @@ import java.util.List;
 
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.swt.dnd.DND;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.dnd.DND;
 
 /**
  * Edit Policy which supports dropping NalDiagramView onto shapes.  The host's 
@@ -54,8 +53,8 @@ public class DiagramLinkDragDropEditPolicy extends DragDropEditPolicy {
 					View view = (View)getHost().getModel();
 			
 					CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
-								DiagramResourceManager.
-									getI18NString("Command.CreateDiagramLink"),//$NON-NLS-1$
+
+						DiagramUIMessages.Command_CreateDiagramLink,
 								view, 
 								diagram);
 

@@ -21,15 +21,14 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
+import org.eclipse.jface.util.Assert;
 
 /**
  * @author melaasar
@@ -44,7 +43,7 @@ public class SetConnectionBendpointsCommand extends AbstractModelCommand {
 	 * @see java.lang.Object#Object()
 	 */
 	public SetConnectionBendpointsCommand() {
-		super(DiagramResourceManager.getI18NString("Commands.SetBendpointsCommand.Label"),  null); //$NON-NLS-1$
+		super(DiagramUIMessages.Commands_SetBendpointsCommand_Label,  null);
 	}
 
 	/**

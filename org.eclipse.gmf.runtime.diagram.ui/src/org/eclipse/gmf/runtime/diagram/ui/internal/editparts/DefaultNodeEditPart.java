@@ -18,7 +18,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -56,8 +56,7 @@ public class DefaultNodeEditPart
 			r.height--;
 			g.drawRectangle(r);
 
-			String txt = DiagramResourceManager
-				.getI18NString("InvalidView"); //$NON-NLS-1$
+			String txt = DiagramUIMessages.InvalidView;
 
 			IMapMode mm = MapModeUtil.getMapMode(this);
 			if (txt != null && txt.length() > 0) {

@@ -14,18 +14,14 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * 
  * @author melaasar
- * @canBeSeenBy %level1
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class AutoSizeAction extends DiagramAction {
 
@@ -35,18 +31,13 @@ public class AutoSizeAction extends DiagramAction {
 	public AutoSizeAction(IWorkbenchPage workbenchPage) {
 		super(workbenchPage);
 
-		setText(DiagramActionsResourceManager.getI18NString("AutoSizeAction.ActionLabelText")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.AutoSizeAction_ActionLabelText);
 		setId(ActionIds.ACTION_AUTOSIZE);
-		setToolTipText(DiagramActionsResourceManager.getI18NString("AutoSizeAction.ActionToolTipText")); //$NON-NLS-1$
+		setToolTipText(DiagramUIActionsMessages.AutoSizeAction_ActionToolTipText);
 		
-		ImageDescriptor enabledImage = DiagramActionsResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_AUTOSIZE);
-		setImageDescriptor(enabledImage);
-		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_AUTOSIZE_DISABLED));
-		setHoverImageDescriptor(enabledImage);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_AUTOSIZE);
+		setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_AUTOSIZE_DISABLED);
+		setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_AUTOSIZE);
 	}
 
 	/**

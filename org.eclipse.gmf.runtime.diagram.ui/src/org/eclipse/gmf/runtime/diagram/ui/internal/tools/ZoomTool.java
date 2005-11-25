@@ -18,7 +18,7 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ZoomableEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Cursor;
@@ -38,12 +38,11 @@ public class ZoomTool
 	static private final int ZOOM_PAN_MODE = 3;
 
 	static final Cursor zoom_out_cursor = new Cursor(null,
-		DiagramResourceManager.getInstance().getImageDescriptor(
-			DiagramResourceManager.IMAGE_ZOOM_OUT).getImageData(), 0, 0); //$NON-NLS-1$
+		DiagramUIPluginImages.DESC_ZOOM_OUT.getImageData(), 0, 0); //$NON-NLS-1$
 
 	static final Cursor zoom_in_cursor = new Cursor(null,
-		DiagramResourceManager.getInstance().getImageDescriptor(
-			DiagramResourceManager.IMAGE_ZOOM_IN).getImageData(), 0, 0); //$NON-NLS-1$
+		DiagramUIPluginImages.DESC_ZOOM_IN.getImageData(), 0, 0);
+
 	static final Cursor zoom_pan_cursor = Cursors.HAND;
 
 	private int zoommode = 1;

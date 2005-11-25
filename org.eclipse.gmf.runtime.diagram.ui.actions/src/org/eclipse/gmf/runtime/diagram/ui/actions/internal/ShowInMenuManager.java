@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -26,8 +26,8 @@ public class ShowInMenuManager extends ActionMenuManager {
 	 */
 	private static class ShowInMenuAction extends Action {
 		public ShowInMenuAction() {			
-			setText(DiagramActionsResourceManager.getI18NString("ShowInMenu.ShowInMenuText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("ShowInMenu.ShowInMenuTooltip")); //$NON-NLS-1$
+			setText(DiagramUIActionsMessages.ShowInMenu_ShowInMenuText);
+			setToolTipText(DiagramUIActionsMessages.ShowInMenu_ShowInMenuTooltip);
 			//setImageDescriptor(Images.DESC_ACTION_SHOW_IN);
 			//setHoverImageDescriptor(Images.DESC_ACTION_SHOW_IN);
 		}

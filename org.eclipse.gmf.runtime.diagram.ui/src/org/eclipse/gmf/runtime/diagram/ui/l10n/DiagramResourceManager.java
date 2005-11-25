@@ -20,7 +20,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.AbstractResourceManager;
  * cursor types of resources for this plug-in
  *
  * @author cmahoney
- *
+ * @deprecated To be removed on: 05/12/26
+ * Use the following instead:
+ * <li>{@link org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages}</li>
+ * <li>{@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages}</li>
+ * <li>{@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry}</li>
  */
 public class DiagramResourceManager extends AbstractResourceManager {
 
@@ -232,14 +236,10 @@ public class DiagramResourceManager extends AbstractResourceManager {
 		return getInstance().getString(key);
 	}
 
-
 	protected void initializeResources() {
 		//do nothing
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager#initializeUIResources()
-	 */
 	protected void initializeUIResources() {
 		initializeMessageResources();
 	}
@@ -247,5 +247,7 @@ public class DiagramResourceManager extends AbstractResourceManager {
     protected Plugin getPlugin() {
         return DiagramUIPlugin.getInstance();
     }
+
+    
 
 }

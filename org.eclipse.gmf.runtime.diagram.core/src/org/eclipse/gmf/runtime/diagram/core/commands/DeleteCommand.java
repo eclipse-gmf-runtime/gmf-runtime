@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.core.commands;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.View;
@@ -32,7 +32,7 @@ public class DeleteCommand extends AbstractModelCommand {
 	 * @param view
 	 */
 	public DeleteCommand(View view) {
-		super(DiagramResourceManager.getI18NString("DeleteCommand.Label"), view); //$NON-NLS-1$
+		super(DiagramCoreMessages.DeleteCommand_Label, view);
 		this.view = view;
 	}
 

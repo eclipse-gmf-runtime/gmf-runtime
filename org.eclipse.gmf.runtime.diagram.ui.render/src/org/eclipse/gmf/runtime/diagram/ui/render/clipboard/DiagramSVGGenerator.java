@@ -29,7 +29,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
@@ -147,9 +147,8 @@ public class DiagramSVGGenerator
 					DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
 					"createAWTImageForParts() failed to generate image", //$NON-NLS-1$
 					e);
-				return ImageConverter
-					.convert(DiagramResourceManager.getInstance().getImage(
-						DiagramResourceManager.IMAGE_ERROR));
+				return ImageConverter.convert(SharedImages
+					.get(SharedImages.IMG_ERROR));
 
 			} catch (Exception ex) {
 				// log the Exception but allow execution to continue
@@ -157,14 +156,12 @@ public class DiagramSVGGenerator
 					DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
 					"createAWTImageForParts() failed to generate image", //$NON-NLS-1$
 					ex);
-				return ImageConverter
-					.convert(DiagramResourceManager.getInstance().getImage(
-						DiagramResourceManager.IMAGE_ERROR));
+				return ImageConverter.convert(SharedImages
+					.get(SharedImages.IMG_ERROR));
 			}
 		}
 
-		return ImageConverter.convert(DiagramResourceManager.getInstance()
-			.getImage(DiagramResourceManager.IMAGE_ERROR));
+		return ImageConverter.convert(SharedImages.get(SharedImages.IMG_ERROR));
 	}
 
 	/**

@@ -13,14 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.ResourceManager;
 
 
 /**
@@ -106,12 +103,4 @@ public class EditorIDEPlugin extends XToolsUIPlugin {
 		super.doStartup();
 	}
 
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
-	}
 }

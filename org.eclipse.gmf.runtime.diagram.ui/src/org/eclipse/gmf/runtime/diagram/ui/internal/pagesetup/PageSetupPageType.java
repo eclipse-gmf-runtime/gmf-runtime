@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup;
 
 import java.awt.geom.Point2D;
 
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 
 /**
  * The following page types are supported by Page Setup Dialog:
@@ -30,39 +30,39 @@ public class PageSetupPageType {
 	
 	/** Represents LETTER page size. */
 	public static PageSetupPageType LETTER = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.letter"), new Point2D.Double(8.5, 11), 0); //$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_letter, new Point2D.Double(8.5, 11), 0); 
 	
 	/** Represents LEGAL page size. */
 	public static PageSetupPageType LEGAL = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.legal"), new Point2D.Double(8.5, 14), 1);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_legal, new Point2D.Double(8.5, 14), 1);
 	
 	/** Represents EXECUTIVE page size. */
 	public static PageSetupPageType EXECUTIVE = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.executive"), new Point2D.Double(7.25, 10.5), 2);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_executive, new Point2D.Double(7.25, 10.5), 2);
 	
 	/** Represents 11x17 page size. */
 	public static PageSetupPageType llX17 = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.11by17"), new Point2D.Double(11, 17), 3);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_11by17, new Point2D.Double(11, 17), 3);
 	
 	/** Represents A3 page size. */
 	public static PageSetupPageType A3 = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.A3"), new Point2D.Double(11.69, 16.54), 4);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_A3, new Point2D.Double(11.69, 16.54), 4);
 	
 	/** Represents A4 page size. */
 	public static PageSetupPageType A4 = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.A4"), new Point2D.Double(8.268, 11.69), 5);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_A4, new Point2D.Double(8.268, 11.69), 5);
 	
 	/** Represents B4 page size. */
 	public static PageSetupPageType B4 = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.B4"), new Point2D.Double(14.33, 10.12), 6);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_B4, new Point2D.Double(14.33, 10.12), 6);
 	
 	/** Represents B5 page size. */
 	public static PageSetupPageType B5 = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.B5"), new Point2D.Double(7.165, 10.12), 7);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_B5, new Point2D.Double(7.165, 10.12), 7);
 	
 	/** Represents USER_DEFINED page size. */
 	public static PageSetupPageType USER_DEFINED = new PageSetupPageType
-		(DiagramResourceManager.getInstance().getString("PageSetupDialog.paper.size.userDefined"), new Point2D.Double(0.0, 0.0), 8);//$NON-NLS-1$
+		(DiagramUIMessages.PageSetupDialog_paper_size_userDefined, new Point2D.Double(0.0, 0.0), 8);
 	
 	/**
 	 * Creates an instance of PageSetupPageType.

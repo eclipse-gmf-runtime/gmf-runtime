@@ -17,21 +17,20 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconOptions;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Name compartment for NalDiagramView elements.  
@@ -127,8 +126,7 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 		 */
 		public Command createDeleteViewCommand(GroupRequest request) {
 			CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
-					DiagramResourceManager.
-					getI18NString("Command.CreateDiagramLink"),//$NON-NLS-1$
+				DiagramUIMessages.Command_CreateDiagramLink,
 					(View)getHost().getParent().getModel(), 
 					null);
 			return new EtoolsProxyCommand(com);

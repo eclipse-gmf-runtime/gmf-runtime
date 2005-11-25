@@ -14,7 +14,6 @@ Export-Package: org.eclipse.gmf.runtime.draw2d.ui.render,
  org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory,
  org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics,
  org.eclipse.gmf.runtime.draw2d.ui.render.internal.image,
- org.eclipse.gmf.runtime.draw2d.ui.render.internal.l10n,
  org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg,
  org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.export,
  org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile

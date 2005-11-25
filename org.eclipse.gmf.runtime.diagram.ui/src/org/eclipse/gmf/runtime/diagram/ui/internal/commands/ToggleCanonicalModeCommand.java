@@ -21,10 +21,9 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 
 /**
  * A command that will enable/disable the canonical editpolicy 
@@ -45,7 +44,7 @@ public class ToggleCanonicalModeCommand extends Command {
 	 * @param enable enablement flag
 	 */
 	public ToggleCanonicalModeCommand(Collection editParts, boolean enable) {
-		super(DiagramResourceManager.getI18NString("ToggleCanonicalModeCommand.Label")); //$NON-NLS-1$
+		super(DiagramUIMessages.ToggleCanonicalModeCommand_Label); 
 		Object[] editparts = new Object[editParts.size()];
 		editParts.toArray(editparts);
 		for ( int i = 0; i < editparts.length; i++ ) {
@@ -66,7 +65,7 @@ public class ToggleCanonicalModeCommand extends Command {
 	 * @param enable enablement flag
 	 */
 	public ToggleCanonicalModeCommand( EObject element, boolean enable ) {
-		super(DiagramResourceManager.getI18NString("ToggleCanonicalModeCommand.Label")); //$NON-NLS-1$
+		super(DiagramUIMessages.ToggleCanonicalModeCommand_Label);
 		_semanticHosts.add( new WeakReference(element) );
 		_enable = enable;
 	}

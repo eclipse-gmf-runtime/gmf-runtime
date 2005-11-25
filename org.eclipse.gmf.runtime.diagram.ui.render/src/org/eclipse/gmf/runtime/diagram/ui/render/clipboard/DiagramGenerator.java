@@ -42,7 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
@@ -175,8 +175,8 @@ abstract public class DiagramGenerator {
 			 * @see org.eclipse.jface.resource.ImageDescriptor#getImageData()
 			 */
 			public ImageData getImageData() {
-				return DiagramResourceManager.getInstance().getImage(
-					DiagramResourceManager.IMAGE_ERROR).getImageData();
+				return SharedImages.get(
+					SharedImages.IMG_ERROR).getImageData();
 			}
 		};
 

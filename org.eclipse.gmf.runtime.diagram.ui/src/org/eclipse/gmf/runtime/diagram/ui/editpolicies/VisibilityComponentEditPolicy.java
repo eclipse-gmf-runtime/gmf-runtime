@@ -15,13 +15,12 @@ import java.util.List;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.GroupRequest;
-
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -44,7 +43,7 @@ public class VisibilityComponentEditPolicy
 		List toDel = deleteRequest.getEditParts();
 		if (toDel == null || toDel.isEmpty()) {
 			SetPropertyCommand c = new SetPropertyCommand(
-				DiagramResourceManager.getInstance().getString("Command.hideLabel.Label"), //$NON-NLS-1$
+				DiagramUIMessages.Command_hideLabel_Label,
 				new EObjectAdapter((View) getHost().getModel()),
 				Properties.ID_ISVISIBLE, Boolean.FALSE);
 			cc.compose(c);
@@ -52,7 +51,7 @@ public class VisibilityComponentEditPolicy
 			for (int i = 0; i < toDel.size(); i++) {
 				IGraphicalEditPart gep = (IGraphicalEditPart) toDel.get(i);
 				SetPropertyCommand c = new SetPropertyCommand(
-					DiagramResourceManager.getInstance().getString("Command.hideLabel.Label"), //$NON-NLS-1$
+					DiagramUIMessages.Command_hideLabel_Label,
 					new EObjectAdapter((View)gep.getModel()),
 					Properties.ID_ISVISIBLE,
 					Boolean.FALSE);

@@ -49,7 +49,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
@@ -83,15 +83,13 @@ import org.eclipse.swt.widgets.Display;
 public class GraphicalNodeEditPolicy
 		extends
 			org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy {
-	
 	/** describes the view to be created. */
 	private IAdaptable _viewAdapter;
 	
 	/**
 	 * The label used for the command to create a new connection.
 	 */
-	private static final String CREATE_CONNECTION_COMMAND_LABEL = DiagramResourceManager.getInstance()
-		.getString("GraphicalNodeEditPolicy.createRelationshipCommand.label"); //$NON-NLS-1$
+	private static final String CREATE_CONNECTION_COMMAND_LABEL = DiagramUIMessages.GraphicalNodeEditPolicy_createRelationshipCommand_label;
 	
 	/**
 	 * Gets a command that pops up a menu which allows the user to select which
@@ -361,7 +359,7 @@ public class GraphicalNodeEditPolicy
 		scaCommand.setNewTargetTerminal(targetEP
 				.mapConnectionAnchorToTerminal(targetAnchor));
 		CompositeCommand cc = new CompositeCommand(
-			DiagramResourceManager.getI18NString("Commands.SetConnectionEndsCommand.Target")); //$NON-NLS-1$
+			DiagramUIMessages.Commands_SetConnectionEndsCommand_Target);
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
 		Command cmd = new EtoolsProxyCommand(cc);
@@ -416,7 +414,7 @@ public class GraphicalNodeEditPolicy
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewSourceTerminal(node.mapConnectionAnchorToTerminal(sourceAnchor));
 		CompositeCommand cc = new CompositeCommand(
-			DiagramResourceManager.getI18NString("Commands.SetConnectionEndsCommand.Source")); //$NON-NLS-1$
+			DiagramUIMessages.Commands_SetConnectionEndsCommand_Source);
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
 		return new EtoolsProxyCommand(cc);
@@ -495,8 +493,8 @@ public class GraphicalNodeEditPolicy
 		if (!(request instanceof CreateConnectionViewRequest))
 			return null;
 		CreateConnectionViewRequest req = (CreateConnectionViewRequest) request;
-		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.
-			getI18NString("Commands.CreateCommand.Connection.Label")); //$NON-NLS-1$
+		CompositeCommand cc = new CompositeCommand(
+			DiagramUIMessages.Commands_CreateCommand_Connection_Label);
 		Diagram diagramView = ((View)getHost().getModel())
 				.getDiagram();
 		CreateCommand createCommand = new CreateCommand(req
@@ -775,33 +773,33 @@ public class GraphicalNodeEditPolicy
 		if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
 			CreateUnspecifiedTypeConnectionRequest unspecifiedRequest = (CreateUnspecifiedTypeConnectionRequest) request;
 			List allRequests = unspecifiedRequest.getAllRequests();
-			if (allRequests.isEmpty()) {
-				return null;
-			}
-			IGraphicalEditPart sourceEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
-				.get(0)).getSourceEditPart();
-			IGraphicalEditPart targetEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
-				.get(0)).getTargetEditPart();
+		if (allRequests.isEmpty()) {
+			return null;
+		}
+		IGraphicalEditPart sourceEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
+			.get(0)).getSourceEditPart();
+		IGraphicalEditPart targetEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
+			.get(0)).getTargetEditPart();
 
 			List allRelTypes = unspecifiedRequest.useModelingAssistantService() ? ModelingAssistantService
-				.getInstance().getRelTypesOnSourceAndTarget(sourceEP, targetEP)
+			.getInstance().getRelTypesOnSourceAndTarget(sourceEP, targetEP)
 				: unspecifiedRequest.getElementTypes();
 
 			for (Iterator iter = allRelTypes.iterator(); iter.hasNext();) {
-				IElementType type = (IElementType) iter.next();
+			IElementType type = (IElementType) iter.next();
 
 				Command individualCmd = null;
 
 				Request createConnectionRequest = unspecifiedRequest
-					.getRequestForType(type);
-				if (createConnectionRequest != null) {
+				.getRequestForType(type);
+			if (createConnectionRequest != null) {
 					individualCmd = getHost().getCommand(
-						createConnectionRequest);
-				} else {
+					createConnectionRequest);
+		} else {
 					// This type may not have been given when the connection
 					// creation occurred. In this case, use the deferred
 					// connection creation mechanism.
-
+				
 					// First, setup the request to initialize the connection
 					// start command.
 					CreateConnectionViewRequest connectionRequest = CreateViewRequestFactory
@@ -822,17 +820,17 @@ public class GraphicalNodeEditPolicy
 					connectionRequest
 						.setType(RequestConstants.REQ_CONNECTION_END);
 					individualCmd = targetEP.getCommand(connectionRequest);
-				}
+					}
 
 				if (individualCmd != null && individualCmd.canExecute()) {
 					validRelTypes.add(type);
 				}
-			}
-
-		}
+					}
+				
+					}
 		return validRelTypes;
-	}
-	
+				}
+				
 	/**
 	 * Gets the command to complete the creation of a new connection and
 	 * relationship (if applicable) for a unspecified type request. This command

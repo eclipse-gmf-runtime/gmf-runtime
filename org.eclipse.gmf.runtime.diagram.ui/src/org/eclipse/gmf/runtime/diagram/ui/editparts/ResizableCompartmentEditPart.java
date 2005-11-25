@@ -18,7 +18,7 @@ import org.eclipse.gef.editparts.ViewportExposeHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Ratio;
@@ -130,7 +130,7 @@ public abstract class ResizableCompartmentEditPart
 			setShowCompartmentTitle(event.getNewBooleanValue());
 		else if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)){
 			Integer c = (Integer) event.getNewValue();
-			setFontColor(DiagramResourceManager.getInstance().getColor(c));
+			setFontColor(DiagramColorRegistry.getInstance().getColor(c));
 		}
 		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(event.getNotifier())){
 			refreshFont();

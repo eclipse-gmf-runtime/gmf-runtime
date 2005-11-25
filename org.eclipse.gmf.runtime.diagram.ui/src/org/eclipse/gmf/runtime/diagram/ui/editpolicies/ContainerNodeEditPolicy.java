@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewA
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
@@ -67,8 +67,7 @@ public class ContainerNodeEditPolicy
 	protected Command getConnectionAndEndCommands(
 			CreateConnectionRequest request) {
 
-		CompoundCommand cc = new CompoundCommand(DiagramResourceManager
-			.getI18NString("Command.CreateRelationship.Label")); //$NON-NLS-1$
+		CompoundCommand cc = new CompoundCommand(DiagramUIMessages.Command_CreateRelationship_Label);
 
 		// Flags the case where the connection is to be created from a known
 		// target

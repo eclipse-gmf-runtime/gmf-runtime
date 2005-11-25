@@ -20,7 +20,8 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ToggleConnectionLabelsRequest;
@@ -44,16 +45,11 @@ public class ShowConnectionLabelsAction extends DiagramAction {
 	 */
 	public void init() {
 		super.init();
-		setText(DiagramActionsResourceManager.getI18NString("ShowConnectionLabelsAction.label")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.ShowConnectionLabelsAction_label);
 		setId(ActionIds.ACTION_SHOW_CONNECTION_LABELS);
-		setToolTipText(DiagramActionsResourceManager.getI18NString("ShowConnectionLabelsAction.toolTip")); //$NON-NLS-1$
-		setImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_SHOW_CONNECTION_LABELS));
-		setDisabledImageDescriptor(DiagramActionsResourceManager
-			.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_SHOW_CONNECTION_LABELS_DISABLED));
+		setToolTipText(DiagramUIActionsMessages.ShowConnectionLabelsAction_toolTip);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_SHOW_CONNECTION_LABELS);
+		setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SHOW_CONNECTION_LABELS_DISABLED);
 	}	
 	
 	/**

@@ -140,25 +140,4 @@ public interface EditPolicyRoles {
 	 */
 	public static final String TETHER_ROLE = "TetherRole"; //$NON-NLS-1$
 	
-	/**
-	 * @deprecated Renamed to CONNECTION_HANDLES_ROLE
-	 */
-	public static final String CONNECTOR_HANDLES_ROLE = "ConnectorHandlesPolicy"; //$NON-NLS-1$
-	
-	/**
-	 * @deprecated Renamed to CONNECTION_LABELS
-	 */
-	public static final String CONNECTOR_LABELS = "ConnectorLabels"; //$NON-NLS-1$
-	
-	/**
-	 * @deprecated Renamed to REFRESH_CONNECTIONS_ROLE
-	 */
-	public static final String REFRESH_CONNECTORS_ROLE = "RefreshConnectorsPolicy"; //$NON-NLS-1$
-	
-	/**
-	 * @deprecated Renamed to POPUPBAR_ROLE
-	 */
-	public static final String ACTIONBAR_ROLE = "ActionBarEditPolicy"; //$NON-NLS-1$
-
-
 }

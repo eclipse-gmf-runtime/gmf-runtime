@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
@@ -46,7 +46,10 @@ public abstract class IndividualCompartmentAction
 	public IndividualCompartmentAction(
 		IWorkbenchPage workbenchPage,
 		String compartmentSemanticHint) {
-		super(workbenchPage, MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()), DiagramActionsResourceManager.getI18NString("ConstrainedFlowLayoutEditPolicy.changeVisibilityCommand.label")); //$NON-NLS-1$);
+		super(
+			workbenchPage,
+			MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
+			DiagramUIActionsMessages.ConstrainedFlowLayoutEditPolicy_changeVisibilityCommand_label);
 		Assert.isNotNull(compartmentSemanticHint);
 		this.compartmentSemanticHint = compartmentSemanticHint;
 	}

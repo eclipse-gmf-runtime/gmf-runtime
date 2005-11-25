@@ -18,6 +18,13 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
+import org.eclipse.gmf.runtime.notation.DescriptionStyle;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FormAttachment;
@@ -28,14 +35,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
 
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.notation.DescriptionStyle;
-import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
-
 /**
  * The general section displayed for diagrams in the properties view
  * 
@@ -45,16 +44,13 @@ public class DiagramGeneralSection
 	extends AbstractBasicTextPropertySection {
 
 	/** Name label for diagram general section. */
-	protected static final String NAME_LABEL = ResourceManager
-		.getI18NString("DiagramGeneralDetails.nameLabel.text"); //$NON-NLS-1$
+	protected static final String NAME_LABEL = DiagramUIPropertiesMessages.DiagramGeneralDetails_nameLabel_text;
 
 	/** Type label. */
-	protected static final String DIAGRAM_TYPE_LABEL = ResourceManager
-		.getI18NString("DiagramGeneralDetails.diagramTypeLabel.text"); //$NON-NLS-1$
+	protected static final String DIAGRAM_TYPE_LABEL = DiagramUIPropertiesMessages.DiagramGeneralDetails_diagramTypeLabel_text;
 
 	/** Description label. */
-	protected static final String DESCRIPTION_LABEL = ResourceManager
-		.getI18NString("DiagramGeneralDetails.diagramDescriptionLabel.text"); //$NON-NLS-1$
+	protected static final String DESCRIPTION_LABEL = DiagramUIPropertiesMessages.DiagramGeneralDetails_diagramDescriptionLabel_text;
 
 	/**
 	 * The labels used by the General Diagram section
@@ -63,12 +59,10 @@ public class DiagramGeneralSection
 		DIAGRAM_TYPE_LABEL, DESCRIPTION_LABEL};
 
 	/** Name label. */
-	protected static final String NAME = ResourceManager
-		.getI18NString("DiagramGeneralDetails.nameChangeCommand.text"); //$NON-NLS-1$
+	protected static final String NAME = DiagramUIPropertiesMessages.DiagramGeneralDetails_nameChangeCommand_text;
 
 	/** Description label. */
-	protected static final String DESCRIPTION = ResourceManager
-		.getI18NString("DiagramGeneralDetails.diagramDescriptionChangeCommand.text"); //$NON-NLS-1$
+	protected static final String DESCRIPTION = DiagramUIPropertiesMessages.DiagramGeneralDetails_diagramDescriptionChangeCommand_text;
 
 	// commads
 	private static final String NAME_PROPERTY_CHANGE_COMMAND_NAME = NAME

@@ -15,7 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -37,15 +38,11 @@ public class ViewPageBreaksAction extends DiagramAction {
 	 */
 	public ViewPageBreaksAction(IWorkbenchPage workbenchPage) {
 		super(workbenchPage);
-		setText(DiagramActionsResourceManager.getI18NString("ViewPageBreaks.textLabel")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.ViewPageBreaks_textLabel);
 		setId(ActionIds.ACTION_VIEW_PAGEBREAKS);
-		setToolTipText(DiagramActionsResourceManager.getI18NString("ViewPageBreaks.toolTip")); //$NON-NLS-1$
-		setImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_VIEWPAGEBREAKS));
-		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_VIEWPAGEBREAKS_DISABLED));
+		setToolTipText(DiagramUIActionsMessages.ViewPageBreaks_toolTip);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_VIEWPAGEBREAKS);
+		setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_VIEWPAGEBREAKS_DISABLED);
 	}
 
 	/**

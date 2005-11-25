@@ -26,14 +26,12 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -41,14 +39,13 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -56,6 +53,8 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * This edit policy returns the command that will create a new notational view
@@ -138,7 +137,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		Iterator editParts = request.getEditParts().iterator();
 		View container = (View)getHost().getAdapter(View.class);
 		EObject context = container == null ? null : ViewUtil.resolveSemanticElement(container);
-		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label);
 		while ( editParts.hasNext() ) {
 			EditPart ep = (EditPart)editParts.next();
 			if ( ep instanceof LabelEditPart ) {
@@ -168,7 +167,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 	 * @return A CompositeCommand that will reparent both the semantic and notation elements.
 	 */
 	protected ICommand getReparentCommand( IGraphicalEditPart gep ) {
-		CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label); 
 		View container = (View)getHost().getModel();
 		EObject context = ViewUtil.resolveSemanticElement(container);
 		View view = (View)gep.getModel();
@@ -219,7 +218,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 	 */
 	protected Command getCreateCommand(CreateViewRequest request) {
 
-		CompositeModelCommand cc = new CompositeModelCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeModelCommand cc = new CompositeModelCommand(DiagramUIMessages.AddCommand_Label);
 		Iterator descriptors = request.getViewDescriptors().iterator();
 
 		while (descriptors.hasNext()) {

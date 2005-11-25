@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.LabelHelper;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -135,8 +135,7 @@ public class NonResizableLabelEditPolicy
 		Point normalPoint = LabelHelper.offsetFromRelativeCoordinate(
 			getHostFigure(), rect, refPoint);
 
-		ICommand moveCommand = new SetBoundsCommand(DiagramResourceManager
-			.getI18NString("MoveLabelCommand.Label.Location"),//$NON-NLS-1$
+		ICommand moveCommand = new SetBoundsCommand(DiagramUIMessages.MoveLabelCommand_Label_Location,
 			new EObjectAdapter((View) editPart.getModel()), normalPoint);
 		return new EtoolsProxyCommand(moveCommand);
 	}

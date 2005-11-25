@@ -14,7 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -42,11 +43,10 @@ public class SnapBackAction extends DiagramAction {
 	 */
 	public void init() {
 		super.init();
-		setText(DiagramActionsResourceManager.getI18NString("SnapBackAction.ActionLabelText")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.SnapBackAction_ActionLabelText);
 		setId(ActionIds.ACTION_SNAP_BACK);
-		setToolTipText(DiagramActionsResourceManager.getI18NString("SnapBackAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_SNAPBACK));
+		setToolTipText(DiagramUIActionsMessages.SnapBackAction_ActionToolTipText);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_SNAPBACK);
 		setHoverImageDescriptor(getImageDescriptor());
 	}
 

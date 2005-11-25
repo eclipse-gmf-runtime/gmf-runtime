@@ -27,8 +27,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.figures.LayoutHelper;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
@@ -62,22 +62,14 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	private static final Point UNDEFINED_POINT = LayoutHelper.UNDEFINED.getLocation();
 	/** the requested element kind */
 	private IElementType elementType =null;
-	
-	static private String SHAPECURSOR_MASK = "elcl16/shapecursor_mask.bmp";//$NON-NLS-1$
-	static private String SHAPECURSOR_SOURCE = "elcl16/shapecursor_source.bmp";//$NON-NLS-1$	
-	
-	static private String NOSHAPECURSOR_MASK = "dlcl16/noshapecursor_mask.bmp";//$NON-NLS-1$
-	static private String NOSHAPECURSOR_SOURCE = "dlcl16/noshapecursor_source.bmp";//$NON-NLS-1$	
 
-	static private Cursor CURSOR_SHAPE = new Cursor(Display.getDefault(), DiagramResourceManager
-		.getInstance().getImageDescriptor(SHAPECURSOR_SOURCE).getImageData(),
-		DiagramResourceManager.getInstance().getImageDescriptor(
-			SHAPECURSOR_MASK).getImageData(), 7, 7);
+	static private Cursor CURSOR_SHAPE = new Cursor(Display.getDefault(),
+		DiagramUIPluginImages.DESC_SHAPECURSOR_SOURCE.getImageData(),
+		DiagramUIPluginImages.DESC_SHAPECURSOR_MASK.getImageData(), 7, 7);
 
-	static private Cursor CURSOR_SHAPE_NOT = new Cursor(Display.getDefault(), DiagramResourceManager
-		.getInstance().getImageDescriptor(NOSHAPECURSOR_SOURCE).getImageData(),
-		DiagramResourceManager.getInstance().getImageDescriptor(
-			NOSHAPECURSOR_MASK).getImageData(), 7, 7);		
+	static private Cursor CURSOR_SHAPE_NOT = new Cursor(Display.getDefault(),
+		DiagramUIPluginImages.DESC_NOSHAPECURSOR_SOURCE.getImageData(),
+		DiagramUIPluginImages.DESC_NOSHAPECURSOR_MASK.getImageData(), 7, 7);		
 
 	/**
 	 * Method CreationTool.
@@ -203,8 +195,8 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	protected void createShapeAt(Point point){
 		
 		setTargetEditPart(getCurrentViewer().getRootEditPart().getContents());
-		getCreateRequest().setLocation(point);
-		setCurrentCommand(getCommand());
+				getCreateRequest().setLocation(point);
+				setCurrentCommand(getCommand());
 		performCreation(0);
 	}
 
@@ -302,8 +294,7 @@ public class CreationTool extends org.eclipse.gef.tools.CreationTool {
 	 */
 	public final Request createCreateRequest() {
 		return createTargetRequest();
-	}
-
+}
 	/**
 	 * Selects the new shapes and puts them in direct edit mode if desired.
 	 * 

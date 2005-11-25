@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
+import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -18,9 +20,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-
-import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 
 /**
@@ -34,25 +33,19 @@ public class DiagramsPreferencePage
 	extends AbstractPreferencePage {
 
 	//	localized labels
-	private String GLOBAL_SETTINGS_GROUP_LABEL = DiagramResourceManager
-		.getI18NString("DiagramsPreferencePage.globalGroup.label"); //$NON-NLS-1$
+	private String GLOBAL_SETTINGS_GROUP_LABEL = DiagramUIMessages.DiagramsPreferencePage_globalGroup_label;
 
-	private String SHOW_CONNECTION_HANDLES_LABEL = DiagramResourceManager
-		.getI18NString("DiagramsPreferencePage.showConnectionHandles.label"); //$NON-NLS-1$
+	private String SHOW_CONNECTION_HANDLES_LABEL = DiagramUIMessages.DiagramsPreferencePage_showConnectionHandles_label;
 
-	private String SHOW_POPUP_BARS_LABEL = DiagramResourceManager
-		.getI18NString("DiagramsPreferencePage.showPopupBars.label"); //$NON-NLS-1$
+	private String SHOW_POPUP_BARS_LABEL = DiagramUIMessages.DiagramsPreferencePage_showPopupBars_label;
 
-	private String ENABLE_ANIMATED_LAYOUT = DiagramResourceManager
-	.getI18NString("DiagramsPreferencePage.enableAnimatedLayout.label"); //$NON-NLS-1$
+	private String ENABLE_ANIMATED_LAYOUT = DiagramUIMessages.DiagramsPreferencePage_enableAnimatedLayout_label;
 
-	private String ENABLE_ANIMATED_ZOOM = DiagramResourceManager
-	.getI18NString("DiagramsPreferencePage.enableAnimatedZoom.label"); //$NON-NLS-1$
+	private String ENABLE_ANIMATED_ZOOM = DiagramUIMessages.DiagramsPreferencePage_enableAnimatedZoom_label;
 
-	private String ENABLE_ANTIALIAS = DiagramResourceManager
-	.getI18NString("DiagramsPreferencePage.enableAntiAlias.label"); //$NON-NLS-1$	
+	private String ENABLE_ANTIALIAS = DiagramUIMessages.DiagramsPreferencePage_enableAntiAlias_label;	
 	
-	//preference page editor controls
+	// preference page editor controls
 	private BooleanFieldEditor showConnectionHandles = null;
 
 	private BooleanFieldEditor showPopupBars = null;

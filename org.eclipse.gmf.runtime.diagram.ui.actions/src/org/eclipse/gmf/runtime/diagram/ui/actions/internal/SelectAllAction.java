@@ -26,7 +26,8 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -97,12 +98,12 @@ public class SelectAllAction extends DiagramAction {
 		if (editpart == null) {
 			return Collections.EMPTY_LIST;
 		}
-		
+			
 		List retval = new ArrayList();
 		getSelectableNodesInside(editpart, true, retval);
 		return retval;
 	}
-	
+			
 	/**
 	 * Determines the candidate list of node editparts for selection
 	 * 
@@ -111,22 +112,22 @@ public class SelectAllAction extends DiagramAction {
 	 * @param retval <code>List</code> to modify
 	 */
 	private void getSelectableNodesInside(EditPart editpart, boolean topLevel, List retval) {
-		
+
 		if ( editpart instanceof ISurfaceEditPart) {
 			getSelectableChildrenNodes(editpart, retval);
-		}
+			}
 		else if (editpart instanceof IPrimaryEditPart) {
 			if (topLevel) {
-				if (editpart instanceof ConnectionEditPart) {
-					ConnectionEditPart connection = (ConnectionEditPart) editpart;
-					EditPart source = connection.getSource();
-					EditPart target = connection.getTarget();
-					if (source != null && target != null) {
+		if (editpart instanceof ConnectionEditPart) {
+			ConnectionEditPart connection = (ConnectionEditPart) editpart;
+			EditPart source = connection.getSource();
+			EditPart target = connection.getTarget();
+			if (source != null && target != null) {
 						getSelectableNodesInside(source, true, retval);
-						if (target.getParent() != source.getParent())
+				if (target.getParent() != source.getParent())
 							getSelectableNodesInside(target, true, retval);
-					}
-				}
+			}
+		}
 				else
 					getSelectableNodesInside(editpart.getParent(), true, retval);
 			}
@@ -143,7 +144,7 @@ public class SelectAllAction extends DiagramAction {
 		while( iter.hasNext() ) {
 			EditPart child = (EditPart)iter.next();
 			getSelectableNodesInside(child, false, retval);
-		}
+	}
 	}
 
 	/**
@@ -228,10 +229,10 @@ public class SelectAllAction extends DiagramAction {
 	public static SelectAllAction createSelectAllAction(IWorkbenchPage partService) {
 		SelectAllAction action = new SelectAllAction(partService, true, true);
 		action.setId(ActionFactory.SELECT_ALL.getId());
-		action.setText(DiagramActionsResourceManager.getI18NString("SelectAllAction.SelectAll")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("SelectAllAction.SelectAll")); //$NON-NLS-1$
-		action.setImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTALL));
-		action.setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTALL_DISABLED));
+		action.setText(DiagramUIActionsMessages.SelectAllAction_SelectAll);
+		action.setToolTipText(DiagramUIActionsMessages.SelectAllAction_SelectAll);
+		action.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL);
+		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL_DISABLED);
 		return action;
 	}
 	
@@ -243,10 +244,10 @@ public class SelectAllAction extends DiagramAction {
 	public static SelectAllAction createToolbarSelectAllAction(IWorkbenchPage partService) {
 		SelectAllAction action = new SelectAllAction(partService, true, true);
 		action.setId(ActionIds.ACTION_TOOLBAR_SELECT_ALL);
-		action.setText(DiagramActionsResourceManager.getI18NString("SelectAllAction.toolbar.SelectAll")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("SelectAllAction.toolbar.SelectAll")); //$NON-NLS-1$
-		action.setImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTALL));
-		action.setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTALL_DISABLED));
+		action.setText(DiagramUIActionsMessages.SelectAllAction_toolbar_SelectAll);
+		action.setToolTipText(DiagramUIActionsMessages.SelectAllAction_toolbar_SelectAll);
+		action.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL);
+		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL_DISABLED);
 		return action;
 	}
 
@@ -258,10 +259,10 @@ public class SelectAllAction extends DiagramAction {
 	public static SelectAllAction createSelectAllShapesAction(IWorkbenchPage partService) {
 		SelectAllAction action = new SelectAllAction(partService, true, false);
 		action.setId(ActionIds.ACTION_SELECT_ALL_SHAPES);
-		action.setText(DiagramActionsResourceManager.getI18NString("SelectAllAction.SelectShapes")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("SelectAllAction.SelectShapes")); //$NON-NLS-1$
-		action.setImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTSHAPES));
-		action.setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTSHAPES_DISABLED));
+		action.setText(DiagramUIActionsMessages.SelectAllAction_SelectShapes);
+		action.setToolTipText(DiagramUIActionsMessages.SelectAllAction_SelectShapes);
+		action.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTSHAPES);
+		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTSHAPES_DISABLED);
 		return action;
 	}
 	
@@ -273,10 +274,10 @@ public class SelectAllAction extends DiagramAction {
 	public static SelectAllAction createToolbarSelectAllShapesAction(IWorkbenchPage partService) {
 		SelectAllAction action = new SelectAllAction(partService, true, false);
 		action.setId(ActionIds.ACTION_TOOLBAR_SELECT_ALL_SHAPES);
-		action.setText(DiagramActionsResourceManager.getI18NString("SelectAllAction.toolbar.SelectShapes")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("SelectAllAction.toolbar.SelectShapes")); //$NON-NLS-1$
-		action.setImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTSHAPES));
-		action.setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTSHAPES_DISABLED));
+		action.setText(DiagramUIActionsMessages.SelectAllAction_toolbar_SelectShapes);
+		action.setToolTipText(DiagramUIActionsMessages.SelectAllAction_toolbar_SelectShapes);
+		action.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTSHAPES);
+		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTSHAPES_DISABLED);
 		return action;
 	}
 
@@ -288,10 +289,10 @@ public class SelectAllAction extends DiagramAction {
 	public static SelectAllAction createSelectAllConnectionsAction(IWorkbenchPage partService) {
 		SelectAllAction action = new SelectAllAction(partService, false, true);
 		action.setId(ActionIds.ACTION_SELECT_ALL_CONNECTIONS);
-		action.setText(DiagramActionsResourceManager.getI18NString("SelectAllAction.SelectConnections")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("SelectAllAction.SelectConnections")); //$NON-NLS-1$
-		action.setImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTCONNECTIONS));
-		action.setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTCONNECTIONS_DISABLED));
+		action.setText(DiagramUIActionsMessages.SelectAllAction_SelectConnections);
+		action.setToolTipText(DiagramUIActionsMessages.SelectAllAction_SelectConnections);
+		action.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTCONNECTIONS);
+		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTCONNECTIONS_DISABLED);
 		return action;
 	}
 	
@@ -303,10 +304,10 @@ public class SelectAllAction extends DiagramAction {
 	public static SelectAllAction createToolbarSelectAllConnectionsAction(IWorkbenchPage partService) {
 		SelectAllAction action = new SelectAllAction(partService, false, true);
 		action.setId(ActionIds.ACTION_TOOLBAR_SELECT_ALL_CONNECTIONS);
-		action.setText(DiagramActionsResourceManager.getI18NString("SelectAllAction.toolbar.SelectConnections")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("SelectAllAction.toolbar.SelectConnections")); //$NON-NLS-1$
-		action.setImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTCONNECTIONS));
-		action.setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance().getImageDescriptor(DiagramActionsResourceManager.IMAGE_SELECTCONNECTIONS_DISABLED));
+		action.setText(DiagramUIActionsMessages.SelectAllAction_toolbar_SelectConnections);
+		action.setToolTipText(DiagramUIActionsMessages.SelectAllAction_toolbar_SelectConnections);
+		action.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTCONNECTIONS);
+		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTCONNECTIONS_DISABLED);
 		return action;
 	}
 

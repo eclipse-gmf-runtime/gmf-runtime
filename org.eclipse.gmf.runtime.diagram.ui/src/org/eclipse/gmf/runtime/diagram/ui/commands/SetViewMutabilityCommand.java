@@ -19,12 +19,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /**
  * Command that sets the view's mutability. if a view is Mutability state is used
@@ -57,7 +56,7 @@ public class SetViewMutabilityCommand extends Command {
 	 * @param immutable immutable state
 	 */
 	public SetViewMutabilityCommand(List viewAdapters, boolean immutable) {
-		super( DiagramResourceManager.getI18NString("SetViewMutabilityCommand.Label"));//$NON-NLS-1$
+		super( DiagramUIMessages.SetViewMutabilityCommand_Label);
 		Assert.isNotNull(viewAdapters);
 		_viewAdapters = viewAdapters;
 		_immutable = immutable;

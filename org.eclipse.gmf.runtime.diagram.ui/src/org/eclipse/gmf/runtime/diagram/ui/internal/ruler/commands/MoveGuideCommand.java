@@ -13,9 +13,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.Guide;
 
@@ -37,7 +36,7 @@ public class MoveGuideCommand extends AbstractModelCommand {
 	 * @param positionDelta the relative distance to move the guide
 	 */
 	public MoveGuideCommand(Guide guide, int positionDelta) {
-		super(DiagramResourceManager.getInstance().getString( "Command.moveGuide" ),  //$NON-NLS-1$
+		super(DiagramUIMessages.Command_moveGuide,
 			guide);
 		theGuide = guide;
 		pDelta = positionDelta;

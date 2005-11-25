@@ -13,9 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author melaasar
@@ -30,19 +30,12 @@ public class CompartmentMenuManager extends ActionMenuManager {
 	 */
 	private static class CompartmentMenuAction extends Action {
 		public CompartmentMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("ShowResizableCompartmentActionMenu.ShowResizeableCompartmentsText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("ShowResizableCompartmentActionMenu.ShowResizeableCompartmentsTooltip")); //$NON-NLS-1$
-			
-			ImageDescriptor enabledImage = DiagramActionsResourceManager
-				.getInstance()
-				.getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_SHOW_HIDE_COMPARTMENTS_GROUP);
-			setImageDescriptor(enabledImage);
-			setDisabledImageDescriptor(DiagramActionsResourceManager
-				.getInstance()
-				.getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_SHOW_HIDE_COMPARTMENTS_GROUP_DISABLED));
-			setHoverImageDescriptor(enabledImage);
+			setText(DiagramUIActionsMessages.ShowResizableCompartmentActionMenu_ShowResizeableCompartmentsText);
+			setToolTipText(DiagramUIActionsMessages.ShowResizableCompartmentActionMenu_ShowResizeableCompartmentsTooltip);
+
+			setImageDescriptor(DiagramUIActionsPluginImages.DESC_SHOW_HIDE_COMPARTMENTS_GROUP);
+			setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SHOW_HIDE_COMPARTMENTS_GROUP_DISABLED);
+			setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_SHOW_HIDE_COMPARTMENTS_GROUP);
 		}
 	}
 

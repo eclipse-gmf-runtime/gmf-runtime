@@ -15,7 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.RecalculatePageBreaksRequest;
@@ -45,15 +46,11 @@ public class RecalculatePageBreaksAction extends DiagramAction {
 	
 	public void init() {
 		super.init();
-		setText(DiagramActionsResourceManager.getI18NString("RecalcPageBreaks.textLabel")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.RecalcPageBreaks_textLabel);
 		setId(ActionIds.ACTION_RECALC_PAGEBREAKS);
-		setToolTipText(DiagramActionsResourceManager.getI18NString("RecalcPageBreaks.toolTip")); //$NON-NLS-1$
-		setImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_RECALCPAGEBREAKS));
-		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_RECALCPAGEBREAKS_DISABLED));	
+		setToolTipText(DiagramUIActionsMessages.RecalcPageBreaks_toolTip);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_RECALCPAGEBREAKS);
+		setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_RECALCPAGEBREAKS_DISABLED);
 	}
 
 	/**

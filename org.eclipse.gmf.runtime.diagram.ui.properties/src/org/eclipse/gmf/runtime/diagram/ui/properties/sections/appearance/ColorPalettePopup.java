@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -165,12 +165,9 @@ public class ColorPalettePopup {
 	/** the inventory color list key: anRGB, value: anImage */
 	private static final HashMap imageColorMap = new HashMap();
 
-	private static final String DEAFULT_COLOR_STRING = ResourceManager
-	.getI18NString("ColorPalettePopup.default"); //$NON-NLS-1$
+	private static final String DEAFULT_COLOR_STRING = DiagramUIPropertiesMessages.ColorPalettePopup_default;
 
-
-	private static final String CUSTOM_COLOR_STRING = ResourceManager
-	.getI18NString("ColorPalettePopup.custom"); //$NON-NLS-1$
+	private static final String CUSTOM_COLOR_STRING = DiagramUIPropertiesMessages.ColorPalettePopup_custom;
 	
 	static {
 

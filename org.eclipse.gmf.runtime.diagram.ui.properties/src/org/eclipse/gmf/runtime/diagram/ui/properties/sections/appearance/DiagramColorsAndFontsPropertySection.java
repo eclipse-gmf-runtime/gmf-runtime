@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesImages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -80,7 +80,7 @@ public class DiagramColorsAndFontsPropertySection
 	
 			executeAsCompositeCommand(FILL_COLOR_COMMAND_NAME, commands);
 			Image overlyedImage = new ColorOverlayImageDescriptor(
-				ResourceManager.getInstance().getImage(FILL_COLOR_IMAGE_NAME)
+				DiagramUIPropertiesImages.DESC_FILL_COLOR
 					.getImageData(), fillColor).createImage();
 			fillColorButton.setImage(overlyedImage);
 		}

@@ -11,23 +11,24 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateConnectionViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateShapeViewAction;
-import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.GeoshapesResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.DiagramUIGeoshapesMessages;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.DiagramUIGeoshapesPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author jschofie
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
- *
+ * 
  * Creates the actions that can be performed on the various Geometric Shapes
  */
-public class GeoshapeContributionItemProvider extends DiagramContributionItemProvider {
+public class GeoshapeContributionItemProvider
+	extends DiagramContributionItemProvider {
 
 	/**
 	 * The constructor
@@ -36,111 +37,107 @@ public class GeoshapeContributionItemProvider extends DiagramContributionItemPro
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.rational.xtools.common.ui.services.contributionitem.AbstractContributionItemProvider#createAction(java.lang.String, com.rational.xtools.common.ui.util.IWorkbenchPartDescriptor)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.rational.xtools.common.ui.services.contributionitem.AbstractContributionItemProvider#createAction(java.lang.String,
+	 *      com.rational.xtools.common.ui.util.IWorkbenchPartDescriptor)
 	 */
-	protected IAction createAction( String actionId, IWorkbenchPartDescriptor partDescriptor ) {
+	protected IAction createAction(String actionId,
+			IWorkbenchPartDescriptor partDescriptor) {
 
 		IWorkbenchPage workbenchPage = partDescriptor.getPartPage();
 
-		if( actionId.equals(ActionIds.ACTION_ADD_LINE) ) {
-			return new CreateConnectionViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_LINE, 
-					GeoshapeConstants.TOOL_LINE,
-					GeoshapesResourceManager.getInstance().getString("geoshape.LineTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconLine.gif")); //$NON-NLS-1$);			
-			
+		if (actionId.equals(ActionIds.ACTION_ADD_LINE)) {
+			return new CreateConnectionViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_LINE, GeoshapeConstants.TOOL_LINE,
+				DiagramUIGeoshapesMessages.geoshape_LineTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_LINE);
+
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_OVAL) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_OVAL, 
-					GeoshapeConstants.TOOL_OVAL,
-					GeoshapesResourceManager.getInstance().getString("geoshape.OvalTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconEllipse.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_OVAL)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_OVAL, GeoshapeConstants.TOOL_OVAL,
+				DiagramUIGeoshapesMessages.geoshape_OvalTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_OVAL);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_TRIANGLE) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_TRIANGLE, 
-					GeoshapeConstants.TOOL_TRIANGLE,
-					GeoshapesResourceManager.getInstance().getString("geoshape.TriangleTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconTriangle.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_TRIANGLE)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_TRIANGLE, GeoshapeConstants.TOOL_TRIANGLE,
+				DiagramUIGeoshapesMessages.geoshape_TriangleTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_TRIANGLE);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_RECTANGLE) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_RECTANGLE, 
-					GeoshapeConstants.TOOL_RECTANGLE,
-					GeoshapesResourceManager.getInstance().getString("geoshape.RectangleTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconRectangle.gif")); //$NON-NLS-1$);			
-		}
-		
-		if( actionId.equals(ActionIds.ACTION_ADD_SHADOWRECTANGLE) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_SHADOWRECTANGLE, 
-					GeoshapeConstants.TOOL_SHADOWRECTANGLE,
-					GeoshapesResourceManager.getInstance().getString("geoshape.ShadowRectangleTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconShadowRectangle.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_RECTANGLE)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_RECTANGLE,
+				GeoshapeConstants.TOOL_RECTANGLE,
+				DiagramUIGeoshapesMessages.geoshape_RectangleTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_RECTANGLE);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_3DRECTANGLE) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_3DRECTANGLE, 
-					GeoshapeConstants.TOOL_3DRECTANGLE,
-					GeoshapesResourceManager.getInstance().getString("geoshape.3DRectangleTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("Icon3DRectangle.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_SHADOWRECTANGLE)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_SHADOWRECTANGLE,
+				GeoshapeConstants.TOOL_SHADOWRECTANGLE,
+				DiagramUIGeoshapesMessages.geoshape_ShadowRectangleTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_SHADOWRECTANGLE);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_ROUNDRECTANGLE) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_ROUNDRECTANGLE, 
-					GeoshapeConstants.TOOL_ROUNDRECTANGLE,
-					GeoshapesResourceManager.getInstance().getString("geoshape.RoundRectangleTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconRoundRectangle.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_3DRECTANGLE)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_3DRECTANGLE,
+				GeoshapeConstants.TOOL_3DRECTANGLE,
+				DiagramUIGeoshapesMessages.geoshape_3DRectangleTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_3DRECTANGLE);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_HEXAGON) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_HEXAGON, 
-					GeoshapeConstants.TOOL_HEXAGON,
-					GeoshapesResourceManager.getInstance().getString("geoshape.HexagonTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconHexagon.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_ROUNDRECTANGLE)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_ROUNDRECTANGLE,
+				GeoshapeConstants.TOOL_ROUNDRECTANGLE,
+				DiagramUIGeoshapesMessages.geoshape_RoundRectangleTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_ROUNDRECTANGLE);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_OCTAGON) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_OCTAGON, 
-					GeoshapeConstants.TOOL_OCTAGON,
-					GeoshapesResourceManager.getInstance().getString("geoshape.OctagonTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconOctagon.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_HEXAGON)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_HEXAGON, GeoshapeConstants.TOOL_HEXAGON,
+				DiagramUIGeoshapesMessages.geoshape_HexagonTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_HEXAGON);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_PENTAGON) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_PENTAGON, 
-					GeoshapeConstants.TOOL_PENTAGON,
-					GeoshapesResourceManager.getInstance().getString("geoshape.PentagonTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconPentagon.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_OCTAGON)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_OCTAGON, GeoshapeConstants.TOOL_OCTAGON,
+				DiagramUIGeoshapesMessages.geoshape_OctagonTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_OCTAGON);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_DIAMOND) ) {
-		return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_DIAMOND,
-					GeoshapeConstants.TOOL_DIAMOND,
-					GeoshapesResourceManager.getInstance().getString("geoshape.DiamondTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconDiamond.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_PENTAGON)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_PENTAGON, GeoshapeConstants.TOOL_PENTAGON,
+				DiagramUIGeoshapesMessages.geoshape_PentagonTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_PENTAGON);
 		}
 
-		if( actionId.equals(ActionIds.ACTION_ADD_CYLINDER) ) {
-			return new CreateShapeViewAction(workbenchPage, 
-					ActionIds.ACTION_ADD_CYLINDER, 
-					GeoshapeConstants.TOOL_CYLINDER,
-					GeoshapesResourceManager.getInstance().getString("geoshape.CylinderTool.Label"), //$NON-NLS-1$
-					GeoshapesResourceManager.getInstance().getImageDescriptor("IconCylinder.gif")); //$NON-NLS-1$);			
+		if (actionId.equals(ActionIds.ACTION_ADD_DIAMOND)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_DIAMOND, GeoshapeConstants.TOOL_DIAMOND,
+				DiagramUIGeoshapesMessages.geoshape_DiamondTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_DIAMOND);
+		}
+
+		if (actionId.equals(ActionIds.ACTION_ADD_CYLINDER)) {
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_CYLINDER, GeoshapeConstants.TOOL_CYLINDER,
+				DiagramUIGeoshapesMessages.geoshape_CylinderTool_Label,
+				DiagramUIGeoshapesPluginImages.DESC_CYLINDER);
 		}
 
 		return super.createAction(actionId, partDescriptor);
 	}
-	
+
 }

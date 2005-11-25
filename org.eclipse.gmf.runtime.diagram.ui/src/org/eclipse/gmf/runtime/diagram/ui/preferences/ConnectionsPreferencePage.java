@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -30,8 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 public class ConnectionsPreferencePage
 	extends AbstractPreferencePage {
 
-	private String LINE_LABEL = DiagramResourceManager
-		.getI18NString("ConnectionsPreferencePage.lineStyle.label"); //$NON-NLS-1$
+	private String LINE_LABEL = DiagramUIMessages.ConnectionsPreferencePage_lineStyle_label;
 
 	private ComboFieldEditor lineStyleFieldEditor = null;
 
@@ -76,11 +75,9 @@ public class ConnectionsPreferencePage
 		addField(lineStyleFieldEditor);
 		Combo lineStyleCombo = lineStyleFieldEditor.getComboControl();
 		lineStyleCombo
-			.add(DiagramResourceManager
-				.getI18NString("ConnectionsPreferencePage.ConnectionView.Manual.text")); //$NON-NLS-1$	
+			.add(DiagramUIMessages.ConnectionsPreferencePage_ConnectionView_Manual_text);
 		lineStyleCombo
-			.add(DiagramResourceManager
-				.getI18NString("ConnectionsPreferencePage.ConnectionView.Rectilinear.text")); //$NON-NLS-1$	
+			.add(DiagramUIMessages.ConnectionsPreferencePage_ConnectionView_Rectilinear_text);	
 	}
 
 	/*

@@ -21,7 +21,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SortFilterCompartmentItemsRequest;
@@ -52,14 +53,10 @@ public class SortFilterAction extends DiagramAction {
 	public void init() {
 		super.init();
 		setId(ActionIds.ACTION_SORT_FILTER);
-		setText(DiagramActionsResourceManager.getI18NString("SortFilterCompartmentsAction.ActionLabelText")); //$NON-NLS-1$
-		setToolTipText(DiagramActionsResourceManager.getI18NString("SortFilterCompartmentsAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(DiagramActionsResourceManager
-			.getInstance()
-			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_SORT_FILTER));
-		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_SORT_FILTER_DISABLED));	
+		setText(DiagramUIActionsMessages.SortFilterCompartmentsAction_ActionLabelText);
+		setToolTipText(DiagramUIActionsMessages.SortFilterCompartmentsAction_ActionToolTipText);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_SORT_FILTER);
+		setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SORT_FILTER_DISABLED);	
 	}
 	/**
 	 * Enable this action if only one shape is selected and that 

@@ -35,17 +35,13 @@ public class Cursors {
     public static final Cursor CURSOR_SEG_MOVE;
 
     static {
-		CURSOR_SEG_ADD = new Cursor(null, GefResourceManager.getInstance()
-			.getImageDescriptor(GefResourceManager.SEG_ADD_MASK_IMAGE)
-			.getImageData(), GefResourceManager.getInstance()
-			.getImageDescriptor(GefResourceManager.SEG_ADD_IMAGE)
-			.getImageData(), 0, 0);
+		CURSOR_SEG_ADD = new Cursor(null, GefUIPluginImages.DESC_SEG_ADD_MASK
+			.getImageData(), GefUIPluginImages.DESC_SEG_ADD.getImageData(), 0,
+			0);
 
-		CURSOR_SEG_MOVE = new Cursor(null, GefResourceManager.getInstance()
-			.getImageDescriptor(GefResourceManager.SEG_MOVE_MASK_IMAGE)
-			.getImageData(), GefResourceManager.getInstance()
-			.getImageDescriptor(GefResourceManager.SEG_MOVE_IMAGE)
-			.getImageData(), 0, 0);
-    }
+		CURSOR_SEG_MOVE = new Cursor(null, GefUIPluginImages.DESC_SEG_MOVE_MASK
+			.getImageData(), GefUIPluginImages.DESC_SEG_MOVE.getImageData(), 0,
+			0);
+	}
 
 }

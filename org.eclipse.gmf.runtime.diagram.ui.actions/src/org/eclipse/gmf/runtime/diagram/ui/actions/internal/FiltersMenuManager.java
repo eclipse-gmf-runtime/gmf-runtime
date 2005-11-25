@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -29,8 +29,8 @@ public class FiltersMenuManager extends ActionMenuManager {
 	 */
 	private static class FiltersMenuAction extends Action {
 		public FiltersMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("FiltersMenuManager.Filters.ActionLabelText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("FiltersMenuManager.Filters.ActionToolTipText")); //$NON-NLS-1$
+			setText(DiagramUIActionsMessages.FiltersMenuManager_Filters_ActionLabelText);
+			setToolTipText(DiagramUIActionsMessages.FiltersMenuManager_Filters_ActionToolTipText);
 		}
 	}
 

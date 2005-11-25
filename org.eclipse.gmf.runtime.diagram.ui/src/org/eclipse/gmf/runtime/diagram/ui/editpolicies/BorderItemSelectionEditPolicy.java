@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure.BorderItemLocator;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -105,9 +105,9 @@ public class BorderItemSelectionEditPolicy
 		Point location = borderItemLocator.getRelativeToBorder(realLocation
 			.getTopLeft());
 
-		ICommand moveCommand = new SetBoundsCommand(DiagramResourceManager
-			.getI18NString("Commands.MoveElement"),//$NON-NLS-1$
-			new EObjectAdapter((View) getHost().getModel()), location);
+		ICommand moveCommand = new SetBoundsCommand(
+			DiagramUIMessages.Commands_MoveElement, new EObjectAdapter(
+				(View) getHost().getModel()), location);
 		return new EtoolsProxyCommand(moveCommand);
 	}
 

@@ -22,7 +22,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -390,7 +389,7 @@ public Color getBackgroundColor() {
 Font getCachedFont(FontKey key) {
 	FontData data = key.font.getFontData()[0];		
 	data.setHeight(key.height);
-	return Draw2dResourceManager.getInstance().getFont(Display.getCurrent(), data);
+	return FontRegistry.getInstance().getFont(Display.getCurrent(), data);
 }
 
 /**
@@ -398,7 +397,7 @@ Font getCachedFont(FontKey key) {
  * order to avoid caching more objects then necessary.
  */
 static public void resetFontCache() {
-	Draw2dResourceManager.getInstance().clearFontCache();
+	FontRegistry.getInstance().clearFontCache();
 }
 
 FontData getCachedFontData(Font f) {

@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -29,8 +29,8 @@ public class FileMenuManager extends ActionMenuManager {
 	 */
 	private static class FileMenuAction extends Action {
 		public FileMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("FileMenuManager.File.ActionLabelText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("FileMenuManager.File.ActionToolTipText")); //$NON-NLS-1$
+			setText(DiagramUIActionsMessages.FileMenuManager_File_ActionLabelText);
+			setToolTipText(DiagramUIActionsMessages.FileMenuManager_File_ActionToolTipText);
 		}
 	}
 

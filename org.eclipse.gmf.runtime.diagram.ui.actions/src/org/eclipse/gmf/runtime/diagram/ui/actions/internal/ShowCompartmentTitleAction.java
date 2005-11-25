@@ -11,12 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.BooleanPropertyAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.ui.IWorkbenchPage;
 
 
 /**
@@ -34,10 +33,13 @@ public class ShowCompartmentTitleAction
 	 * @param propertyName
 	 */
 	public ShowCompartmentTitleAction(IWorkbenchPage workbenchPage) {
-		super(workbenchPage, Properties.ID_SHOWCOMPARTMENTTITLE, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.ShowCompartmentTitle")); //$NON-NLS-1$;
+		super(
+			workbenchPage,
+			Properties.ID_SHOWCOMPARTMENTTITLE,
+			DiagramUIActionsMessages.PropertyDescriptorFactory_ShowCompartmentTitle);
 		setId(ActionIds.ACTION_SHOW_COMPARTMENT_TITLE);
-		setText(DiagramActionsResourceManager.getI18NString("ShowCompartmentTitle.ActionLabelText")); //$NON-NLS-1$
-		setToolTipText(DiagramActionsResourceManager.getI18NString("ShowCompartmentTitle.ActionToolTipText")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.ShowCompartmentTitle_ActionLabelText);
+		setToolTipText(DiagramUIActionsMessages.ShowCompartmentTitle_ActionToolTipText);
 	}
 
 }

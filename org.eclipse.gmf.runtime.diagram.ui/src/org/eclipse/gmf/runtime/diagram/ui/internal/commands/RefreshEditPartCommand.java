@@ -11,20 +11,19 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.EditPartViewer;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
  
 /**
  * Command to refresh and revalidate a given <code>IGraphicalEditPart</code>
@@ -65,9 +64,9 @@ public class RefreshEditPartCommand
 		else {
 			//
 			// problem with editpart registry
-			String eMsg = MessageFormat.format(  
-				DiagramResourceManager.getInstance().getString("RefreshEditPartCompartment.execute.failed_ERROR_"),//$NON-NLS-1$
-				new Object[] {notation});
+			String eMsg = NLS.bind(  
+				DiagramUIMessages.RefreshEditPartCompartment_execute_failed_ERROR_,
+				notation);
 			Log.error( DiagramUIPlugin.getInstance(), IStatus.ERROR, eMsg);
 		}
 

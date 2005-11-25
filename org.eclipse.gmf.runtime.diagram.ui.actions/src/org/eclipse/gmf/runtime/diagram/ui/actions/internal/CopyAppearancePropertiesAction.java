@@ -16,10 +16,10 @@ import java.util.List;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -39,17 +39,12 @@ public class CopyAppearancePropertiesAction extends DiagramAction {
 		super(workbenchPage);
 
 		setId(ActionIds.ACTION_COPY_APPEARANCE_PROPERTIES);
-		setText(DiagramActionsResourceManager.getInstance().getString("CopyAppearancePropertiesAction.text")); //$NON-NLS-1$
-		setToolTipText(DiagramActionsResourceManager.getInstance().getString("CopyAppearancePropertiesAction.toolTip")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.CopyAppearancePropertiesAction_text);
+		setToolTipText(DiagramUIActionsMessages.CopyAppearancePropertiesAction_toolTip);
 
-		ImageDescriptor enabledImage = DiagramActionsResourceManager.getInstance()
-		.getImageDescriptor(
-			DiagramActionsResourceManager.IMAGE_COPY_APPEARANCE);
-		setImageDescriptor(enabledImage); 
-		setDisabledImageDescriptor(DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_COPY_APPEARANCE_DISABLED));
-		setHoverImageDescriptor(enabledImage);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_COPY_APPEARANCE);
+		setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_COPY_APPEARANCE_DISABLED);
+		setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_COPY_APPEARANCE);
 	}
 
 	/**
@@ -89,4 +84,5 @@ public class CopyAppearancePropertiesAction extends DiagramAction {
 			operationSet.remove(0);
 		return operationSet;
 	}
-}
+			}
+

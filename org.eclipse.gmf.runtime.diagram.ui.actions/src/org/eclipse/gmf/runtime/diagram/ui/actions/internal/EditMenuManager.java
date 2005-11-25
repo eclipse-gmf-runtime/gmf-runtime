@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -29,8 +29,8 @@ public class EditMenuManager extends ActionMenuManager {
 	 */
 	private static class EditMenuAction extends Action {
 		public EditMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("EditMenuManager.Edit.ActionLabelText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("EditMenuManager.Edit.ActionToolTipText")); //$NON-NLS-1$
+			setText(DiagramUIActionsMessages.EditMenuManager_Edit_ActionLabelText);
+			setToolTipText(DiagramUIActionsMessages.EditMenuManager_Edit_ActionToolTipText);
 		}
 	}
 

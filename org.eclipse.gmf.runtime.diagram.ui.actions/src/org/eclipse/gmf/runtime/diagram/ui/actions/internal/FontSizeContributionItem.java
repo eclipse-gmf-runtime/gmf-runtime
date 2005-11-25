@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
@@ -46,8 +46,10 @@ public class FontSizeContributionItem
 	 * @see org.eclipse.gmf.runtime.diagram.ui.ui.actions.ActionContribution#ActionContribution(IEditorPart, String)
 	 */
 	public FontSizeContributionItem(IWorkbenchPage workbenchPage) {
-		super(workbenchPage, ActionIds.CUSTOM_FONT_SIZE, Properties.ID_FONTSIZE, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.FontSize")); //$NON-NLS-1$
-		setLabel(DiagramActionsResourceManager.getI18NString("FontSizeContributionItem.tooltip")); //$NON-NLS-1$
+		super(workbenchPage, ActionIds.CUSTOM_FONT_SIZE,
+			Properties.ID_FONTSIZE,
+			DiagramUIActionsMessages.PropertyDescriptorFactory_FontSize);
+		setLabel(DiagramUIActionsMessages.FontSizeContributionItem_tooltip);
 	}
 
 	/**

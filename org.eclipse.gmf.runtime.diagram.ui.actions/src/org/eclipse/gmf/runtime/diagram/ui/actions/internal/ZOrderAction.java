@@ -21,10 +21,10 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ZOrderRequest;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -35,22 +35,6 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class ZOrderAction
 	extends DiagramAction {
-
-	private static final String BRING_TO_FRONT_LABEL_TEXT = "ZOrderAction.BringToFront.ActionLabelText"; //$NON-NLS-1$
-
-	private static final String BRING_TO_FRONT_TOOLTIP = "ZOrderAction.BringToFront.ActionToolTipText"; //$NON-NLS-1$
-
-	private static final String BRING_FORWARD_LABEL_TEXT = "ZOrderAction.BringForward.ActionLabelText"; //$NON-NLS-1$
-
-	private static final String BRING_FORWARD_TOOLTIP = "ZOrderAction.BringForward.ActionToolTipText"; //$NON-NLS-1$
-
-	private static final String SEND_TO_BACK_LABEL_TEXT = "ZOrderAction.SendToBack.ActionLabelText"; //$NON-NLS-1$
-
-	private static final String SEND_TO_BACK_TOOLTIP = "ZOrderAction.SendToBack.ActionToolTipText"; //$NON-NLS-1$
-
-	private static final String SEND_BACKWARD_LABEL_TEXT = "ZOrderAction.SendBackward.ActionLabelText"; //$NON-NLS-1$
-
-	private static final String SEND_BACKWARD_TOOLTIP = "ZOrderAction.SendBackward.ActionToolTipText"; //$NON-NLS-1$
 
 	/**
 	 * Protected constructor so that object can not be instantiated directly the
@@ -72,14 +56,11 @@ public class ZOrderAction
 			IWorkbenchPage workbenchPage) {
 		ZOrderAction theAction = new ZOrderAction(workbenchPage);
 		theAction.setId(ActionIds.ACTION_BRING_TO_FRONT);
-		theAction.setText(DiagramActionsResourceManager.getI18NString(BRING_TO_FRONT_LABEL_TEXT));
-		theAction.setToolTipText(DiagramActionsResourceManager.getI18NString(BRING_TO_FRONT_TOOLTIP));
+		theAction.setText(DiagramUIActionsMessages.ZOrderAction_BringToFront_ActionLabelText);
+		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_BringToFront_ActionToolTipText);
 
-		ImageDescriptor enabledImage = DiagramActionsResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_BRING_TO_FRONT);
-		theAction.setImageDescriptor(enabledImage);
-		theAction.setHoverImageDescriptor(enabledImage);
+		theAction.setImageDescriptor(DiagramUIActionsPluginImages.DESC_BRING_TO_FRONT);
+		theAction.setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_BRING_TO_FRONT);
 		return theAction;
 	}
 
@@ -93,13 +74,11 @@ public class ZOrderAction
 			IWorkbenchPage workbenchPage) {
 		ZOrderAction theAction = new ZOrderAction(workbenchPage);
 		theAction.setId(ActionIds.ACTION_BRING_FORWARD);
-		theAction.setText(DiagramActionsResourceManager.getI18NString(BRING_FORWARD_LABEL_TEXT));
-		theAction.setToolTipText(DiagramActionsResourceManager.getI18NString(BRING_FORWARD_TOOLTIP));
+		theAction.setText(DiagramUIActionsMessages.ZOrderAction_BringForward_ActionLabelText);
+		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_BringForward_ActionToolTipText);
 		
-		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
-			.getImageDescriptor(DiagramResourceManager.IMAGE_BRING_FORWARD);
-		theAction.setImageDescriptor(enabledImage);
-		theAction.setHoverImageDescriptor(enabledImage);
+		theAction.setImageDescriptor(DiagramUIPluginImages.DESC_BRING_FORWARD);
+		theAction.setHoverImageDescriptor(DiagramUIPluginImages.DESC_BRING_FORWARD);
 		return theAction;
 	}
 
@@ -113,12 +92,10 @@ public class ZOrderAction
 			IWorkbenchPage workbenchPage) {
 		ZOrderAction theAction = new ZOrderAction(workbenchPage);
 		theAction.setId(ActionIds.ACTION_SEND_TO_BACK);
-		theAction.setText(DiagramActionsResourceManager.getI18NString(SEND_TO_BACK_LABEL_TEXT));
-		theAction.setToolTipText(DiagramActionsResourceManager.getI18NString(SEND_TO_BACK_TOOLTIP));
-		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
-			.getImageDescriptor(DiagramResourceManager.IMAGE_SEND_TO_BACK);
-		theAction.setImageDescriptor(enabledImage);
-		theAction.setHoverImageDescriptor(enabledImage);
+		theAction.setText(DiagramUIActionsMessages.ZOrderAction_SendToBack_ActionLabelText);
+		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_SendToBack_ActionToolTipText);
+		theAction.setImageDescriptor(DiagramUIPluginImages.DESC_SEND_TO_BACK);
+		theAction.setHoverImageDescriptor(DiagramUIPluginImages.DESC_SEND_TO_BACK);
 		return theAction;
 	}
 
@@ -132,12 +109,10 @@ public class ZOrderAction
 			IWorkbenchPage workbenchPage) {
 		ZOrderAction theAction = new ZOrderAction(workbenchPage);
 		theAction.setId(ActionIds.ACTION_SEND_BACKWARD);
-		theAction.setText(DiagramActionsResourceManager.getI18NString(SEND_BACKWARD_LABEL_TEXT));
-		theAction.setToolTipText(DiagramActionsResourceManager.getI18NString(SEND_BACKWARD_TOOLTIP));
-		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
-		.getImageDescriptor(DiagramResourceManager.IMAGE_SEND_BACWARD);
-		theAction.setImageDescriptor(enabledImage);
-		theAction.setHoverImageDescriptor(enabledImage);
+		theAction.setText(DiagramUIActionsMessages.ZOrderAction_SendBackward_ActionLabelText);
+		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_SendBackward_ActionToolTipText);
+		theAction.setImageDescriptor(DiagramUIPluginImages.DESC_SEND_BACWARD);
+		theAction.setHoverImageDescriptor(DiagramUIPluginImages.DESC_SEND_BACWARD);
 		return theAction;
 	}
 

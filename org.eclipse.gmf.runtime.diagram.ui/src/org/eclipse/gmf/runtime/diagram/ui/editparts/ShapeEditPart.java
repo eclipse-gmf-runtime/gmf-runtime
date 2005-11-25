@@ -24,13 +24,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -99,11 +99,11 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		} 
 		else if (NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {
 			Integer c = (Integer) notification.getNewValue();
-			setBackgroundColor(DiagramResourceManager.getInstance().getColor(c));
+			setBackgroundColor(DiagramColorRegistry.getInstance().getColor(c));
 		} 
 		else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature)) {
 			Integer c = (Integer) notification.getNewValue();
-			setForegroundColor(DiagramResourceManager.getInstance().getColor(c));
+			setForegroundColor(DiagramColorRegistry.getInstance().getColor(c));
 		} 
 		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(notification.getNotifier()))
 			refreshFont();

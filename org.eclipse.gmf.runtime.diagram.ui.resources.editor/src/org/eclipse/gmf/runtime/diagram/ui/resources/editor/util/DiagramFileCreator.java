@@ -16,7 +16,6 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.util;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -33,10 +32,11 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -201,13 +201,16 @@ public abstract class DiagramFileCreator {
 			if (e.getTargetException() instanceof CoreException) {
 				ErrorDialog.openError(shell,
 				// Was Utilities.getFocusShell()
-				EditorResourceManager.getI18NString("Editor.DialogErrorTitle.CreationProblem"), //$NON-NLS-1$
+					EditorMessages.Editor_error_create_file_title,
 				null, // no special message
 				 ((CoreException) e.getTargetException()).getStatus());
 			} else {
 				// CoreExceptions are handled above, but unexpected runtime exceptions and errors may still occur.
-				Log.error(EditorPlugin.getInstance(), EditorStatusCodes.ERROR, MessageFormat.format("Exception in {0}.getNewFile(): {1}", new Object[] { getClass().getName(), e.getTargetException()}), e);//$NON-NLS-1$				
-				MessageDialog.openError(shell, EditorResourceManager.getI18NString("Editor.DialogInternalErrorTitle.CreationProblem"), MessageFormat.format(EditorResourceManager.getI18NString("Editor.DialogInternalErrorMessage"), new Object[] { e.getTargetException().getMessage()})); //$NON-NLS-2$ //$NON-NLS-1$
+				Log.error(EditorPlugin.getInstance(), EditorStatusCodes.ERROR, NLS.bind("Exception in {0}.getNewFile(): {1}", new Object[] { getClass().getName(), e.getTargetException()}), e);//$NON-NLS-1$				
+				MessageDialog.openError(shell,
+					EditorMessages.Editor_error_create_file_title, NLS.bind(
+						EditorMessages.Editor_error_create_file_message, e
+							.getTargetException().getMessage())); 
 			}
 			return null;
 		}

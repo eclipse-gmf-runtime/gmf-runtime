@@ -19,9 +19,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -31,8 +28,10 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ClipboardCommand;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.AWTClipboardHelper;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.Assert;
 
 /**
  * @author sshaw
@@ -123,13 +122,11 @@ public class CopyImageCommand
 			else
 				image = imageGenerator.createAWTImageForParts(editParts);
 		} catch (OutOfMemoryError error) {
-			String eMsg = ResourceManager
-				.getI18NString("CopyAction.UnableToCopyImageMessage");//$NON-NLS-1$
+			String eMsg = DiagramUIRenderMessages.CopyAction_UnableToCopyImageMessage;
 			Log.error(DiagramUIRenderPlugin.getInstance(), IStatus.ERROR, eMsg,
 				error);
-			MessageDialog.openInformation(null, ResourceManager
-				.getI18NString("CopyAction.ErrorDialogTitle"), //$NON-NLS-1$
-				eMsg);
+			MessageDialog.openInformation(null,
+				DiagramUIRenderMessages.CopyAction_ErrorDialogTitle, eMsg);
 		}
 
 		/* Get the view model from the view context */

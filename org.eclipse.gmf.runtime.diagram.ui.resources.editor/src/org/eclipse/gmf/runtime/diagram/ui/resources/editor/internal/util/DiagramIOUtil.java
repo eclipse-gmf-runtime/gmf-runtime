@@ -27,49 +27,42 @@ import org.eclipse.emf.ecore.xmi.ClassNotFoundException;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.ecore.xmi.PackageNotFoundException;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MResourceOption;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 
 public class DiagramIOUtil {
 	
-	//	localized labels
-	private static String TITLE_OPEN = EditorResourceManager
-		.getI18NString("compatibility.title_open"); //$NON-NLS-1$
+	// localized labels
+	private static String TITLE_OPEN = EditorMessages.compatibility_title_open;
 
-	private static String MESSAGE1_OPEN = EditorResourceManager
-		.getI18NString("compatibility.message1_open"); //$NON-NLS-1$
+	private static String MESSAGE1_OPEN = EditorMessages.compatibility_message1_open;
 
-	private static String MESSAGE2_OPEN = EditorResourceManager
-		.getI18NString("compatibility.message2_open"); //$NON-NLS-1$
+	private static String MESSAGE2_OPEN = EditorMessages.compatibility_message2_open;
 
-	private static String MESSAGE3_OPEN = EditorResourceManager
-		.getI18NString("compatibility.message3_open"); //$NON-NLS-1$
-	
-	private static String UNABLE_TO_LOAD_DIAGRAM = EditorResourceManager.getI18NString("Diagram.UNABLE_TO_LOAD_RESOURCE"); //$NON-NLS-1$
-	private static String NO_DIAGRAM_IN_RESOURCE = EditorResourceManager.getI18NString("Diagram.NO_DIAGRAM_IN_RESOURCE"); //$NON-NLS-1$
+	private static String MESSAGE3_OPEN = EditorMessages.compatibility_message3_open;
 
-	private static String TITLE_SAVE = EditorResourceManager
-	.getI18NString("compatibility.title_save"); //$NON-NLS-1$
+	private static String UNABLE_TO_LOAD_DIAGRAM = EditorMessages.Diagram_UNABLE_TO_LOAD_RESOURCE;
 
-	private static String MESSAGE1_SAVE = EditorResourceManager
-	.getI18NString("compatibility.message1_save"); //$NON-NLS-1$
+	private static String NO_DIAGRAM_IN_RESOURCE = EditorMessages.Diagram_NO_DIAGRAM_IN_RESOURCE;
 
-	private static String MESSAGE2_SAVE = EditorResourceManager
-	.getI18NString("compatibility.message2_save"); //$NON-NLS-1$
+	private static String TITLE_SAVE = EditorMessages.compatibility_title_save;
+
+	private static String MESSAGE1_SAVE = EditorMessages.compatibility_message1_save;
+
+	private static String MESSAGE2_SAVE = EditorMessages.compatibility_message2_save;
 
 	private static interface ILoader {
 		public Resource load(MEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException;

@@ -11,15 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.PageSetupDialog;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.PageSetupDialog;
 
 /**
  * This is the action for page setup.  It shows the page setup dialog.
@@ -42,7 +41,7 @@ public class PageSetupAction
 	 */
 	public PageSetupAction() {
 		setId(ID);
-		setText(DiagramActionsResourceManager.getI18NString("PageSetupAction.Label")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.PageSetupAction_Label);
 	}
 
 	/**

@@ -11,10 +11,8 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.provider.SemanticItemProviderAdapterFactory;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
@@ -66,15 +64,6 @@ public class LogicDiagramPlugin
 	 */
 	public static String getPluginId() {
 		return getInstance().getBundle().getSymbolicName();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return LogicResourceManager.getInstance();
 	}
 
 	/**

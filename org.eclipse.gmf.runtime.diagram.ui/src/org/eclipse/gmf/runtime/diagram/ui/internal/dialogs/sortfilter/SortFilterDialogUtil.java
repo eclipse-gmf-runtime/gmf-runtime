@@ -15,13 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter.SortFilterPage;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Utility class that creates and opens the actual dialog with the data the 
@@ -32,7 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
  */
 public class SortFilterDialogUtil {
 	
-	private final static String ROOT_NAME = DiagramResourceManager.getInstance().getString("SortFilterDialog.rootTitle"); //$NON-NLS-1$
+	private final static String ROOT_NAME = DiagramUIMessages.SortFilterDialog_rootTitle;
 
 	/**
 	 * Constructor for CollectionEditorUtil.  No need instantiate this class.

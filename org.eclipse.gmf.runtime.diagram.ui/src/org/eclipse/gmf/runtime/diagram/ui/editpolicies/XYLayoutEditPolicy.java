@@ -28,8 +28,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.rulers.RulerProvider;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
@@ -37,7 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.LayoutHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.ChangeGuideCommand;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -45,6 +43,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /*
  * @canBeSeenBy %partners
@@ -75,7 +74,7 @@ public class XYLayoutEditPolicy
 			
 	 		ICommand boundsCommand = 
 	 			new SetBoundsCommand(
-	 				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+	 				DiagramUIMessages.SetLocationCommand_Label_Resize,
 	 				new EObjectAdapter((View) child.getModel()),
 					rect.getTopLeft()); 
 			return new EtoolsProxyCommand(boundsCommand);
@@ -192,7 +191,7 @@ public class XYLayoutEditPolicy
 
  		ICommand boundsCommand = 
  			new SetBoundsCommand(
- 				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+ 				DiagramUIMessages.SetLocationCommand_Label_Resize,
  				new EObjectAdapter(shapeView),
 				newBounds); 
 		return new EtoolsProxyCommand(boundsCommand);
@@ -224,7 +223,7 @@ public class XYLayoutEditPolicy
 	protected Command getCreateCommand(CreateRequest request) {
 		CreateViewRequest req = (CreateViewRequest) request;
 
-		CompositeModelCommand cc = new CompositeModelCommand(DiagramResourceManager.getInstance().getString("AddCommand.Label")); //$NON-NLS-1$
+		CompositeModelCommand cc = new CompositeModelCommand(DiagramUIMessages.AddCommand_Label);
 		Iterator iter = req.getViewDescriptors().iterator();
 
 		final Rectangle BOUNDS = (Rectangle) getConstraintFor(request);
@@ -235,7 +234,7 @@ public class XYLayoutEditPolicy
 			CreateViewRequest.ViewDescriptor viewDescriptor = (CreateViewRequest.ViewDescriptor)iter.next(); 
 			Rectangle rect = getBoundsOffest(req, BOUNDS,viewDescriptor);
 			cc.compose(new SetBoundsCommand(
-				DiagramResourceManager.getInstance().getString("SetLocationCommand.Label.Resize"),//$NON-NLS-1$
+				DiagramUIMessages.SetLocationCommand_Label_Resize,
 				viewDescriptor,
 				rect));
 		}

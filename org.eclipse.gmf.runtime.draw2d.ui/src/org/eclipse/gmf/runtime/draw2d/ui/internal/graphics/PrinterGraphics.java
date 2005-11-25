@@ -23,7 +23,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.printing.Printer;
 
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
 
 /**
  * Created on May 8, 2003
@@ -163,7 +162,7 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
            int nAdjustedHeight = (int)(((fd.getHeight() - 0.5f) / printScale) * printScale);
            if (fd.getHeight() != nAdjustedHeight) {
                fd.setHeight(nAdjustedHeight);    
-               newFont = Draw2dResourceManager.getInstance().getFont(null, fd);   
+               newFont = FontRegistry.getInstance().getFont(null, fd);   
            }
        }
        

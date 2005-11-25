@@ -21,7 +21,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
@@ -58,12 +59,10 @@ public class AddNoteAction extends AttachShapeAction {
 	 */
 	public void init() {
 		super.init();
-		setText(DiagramActionsResourceManager.getI18NString("AddNoteAction.ActionLabelText")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.AddNoteAction_ActionLabelText);
 		setId(ActionIds.ACTION_ADD_NOTELINK);
-		setToolTipText(DiagramActionsResourceManager.getI18NString("AddNoteAction.ActionToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(
-			DiagramActionsResourceManager.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.DESC_NOTE_ATTACHMENT));
+		setToolTipText(DiagramUIActionsMessages.AddNoteAction_ActionToolTipText);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_NOTE_ATTACHMENT);
 		setHoverImageDescriptor(getImageDescriptor());
 	}
 

@@ -11,23 +11,22 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.common.ui.dialogs.PopupDialog;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.dialogs.AbstractSelectElementDialog;
 import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * <p>
@@ -99,10 +98,10 @@ public class CreateOrSelectElementCommand
 		public String getText(Object object) {
 			String text = super.getText(object);
 			if (object instanceof IElementType) {
-				return MessageFormat
-					.format(
+				return NLS
+					.bind(
 						EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateMenuItem_Text,
-						new Object[] {text});
+						text);
 			}
 			return text;
 		}

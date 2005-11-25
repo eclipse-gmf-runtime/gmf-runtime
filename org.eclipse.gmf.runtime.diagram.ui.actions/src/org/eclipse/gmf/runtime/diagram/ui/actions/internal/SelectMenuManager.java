@@ -13,9 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author melaasar
@@ -30,17 +30,12 @@ public class SelectMenuManager extends ActionMenuManager {
 	 */
 	private static class SelectMenuAction extends Action {
 		public SelectMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("SelectActionMenu.SelectDropDownText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("SelectActionMenu.SelectDropDownTooltip")); //$NON-NLS-1$
-			
-			ImageDescriptor enabledImage = DiagramActionsResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_SELECTALL);
-			setImageDescriptor(enabledImage);
-			setDisabledImageDescriptor(DiagramActionsResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_SELECTALL_DISABLED));
-			setHoverImageDescriptor(enabledImage);			
+			setText(DiagramUIActionsMessages.SelectActionMenu_SelectDropDownText);
+			setToolTipText(DiagramUIActionsMessages.SelectActionMenu_SelectDropDownTooltip);
+
+			setImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL);
+			setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL_DISABLED);
+			setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTALL);			
 
 		}
 	}

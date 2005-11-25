@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,23 +23,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.EditorUtil;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 ;
 
 /**
@@ -174,14 +173,14 @@ public abstract class EditorWizardPage
 			if (e.getTargetException() instanceof CoreException) {
 				ErrorDialog.openError(
 					getContainer().getShell(),
-					ResourceManager.getI18NString("EditorWizardPage.DialogInternalErrorTitle"),//$NON-NLS-1$
+					EditorMessages.EditorWizardPage_DialogInternalErrorTitle,
 					null,	// no special message
 					((CoreException) e.getTargetException()).getStatus());
 			}
 			else {
 				// CoreExceptions are handled above, but unexpected runtime exceptions and errors may still occur.
 				Trace.catching(EditorPlugin.getInstance(), EditorDebugOptions.EXCEPTIONS_CATCHING, getClass(), "finish", e.getTargetException()); //$NON-NLS-1$
-				Log.error(EditorPlugin.getInstance(), EditorStatusCodes.ERROR, ResourceManager.getI18NString("WizardPage.DIAGRAM_CREATION_FAIL_EXC_"), e.getTargetException());//$NON-NLS-1$
+				Log.error(EditorPlugin.getInstance(), EditorStatusCodes.ERROR, EditorMessages.WizardPage_DIAGRAM_CREATION_FAIL_EXC_, e.getTargetException());
 			}
 			return false;
 		}
@@ -253,7 +252,7 @@ public abstract class EditorWizardPage
 			IPath path = getContainerFullPath().append(fileName);
 
 			if (ResourcesPlugin.getWorkspace().getRoot().exists(path)) {
-				setErrorMessage(ResourceManager.getI18NString("WizardPage.Message.FileExists_ERROR_")); //$NON-NLS-1$
+				setErrorMessage(EditorMessages.WizardPage_Message_FileExists_ERROR_);
 				return false;
 			}
 
@@ -266,7 +265,7 @@ public abstract class EditorWizardPage
 				return true;
 			}
 
-			setErrorMessage(MessageFormat.format(ResourceManager.getI18NString("EditorWizardPage.InvalidFilename"), new String[] {fileName}));//$NON-NLS-1$
+			setErrorMessage(NLS.bind(EditorMessages.EditorWizardPage_InvalidFilename, fileName));
 		}
 
 		return false;

@@ -17,14 +17,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dUIPluginImages;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * @author choang
@@ -42,22 +41,20 @@ public class RectangularDropShadow {
 	}
 	
 	//	Images for the border of the shadow border
-	private static ImageData alpha_ilb = Draw2dResourceManager.getInstance()
-		.getImageDescriptor(Draw2dResourceManager.LEFT_BOTTOM_IMAGE)
-		.getImageData();
+	private static ImageData alpha_ilb = 
+		Draw2dUIPluginImages.DESC_LEFT_BOTTOM.getImageData();
 
-	private static ImageData alpha_irb = Draw2dResourceManager.getInstance()
-		.getImageDescriptor(Draw2dResourceManager.RIGHT_BOTTOM_IMAGE)
-		.getImageData();
+	private static ImageData alpha_irb = 
+		Draw2dUIPluginImages.DESC_RIGHT_BOTTOM.getImageData();
 
-	private static ImageData alpha_ir = Draw2dResourceManager.getInstance()
-		.getImageDescriptor(Draw2dResourceManager.RIGHT_IMAGE).getImageData();
+	private static ImageData alpha_ir = 
+		Draw2dUIPluginImages.DESC_RIGHT.getImageData();
 
-	private static ImageData alpha_itr = Draw2dResourceManager.getInstance()
-		.getImageDescriptor(Draw2dResourceManager.TOP_RIGHT_IMAGE).getImageData();
+	private static ImageData alpha_itr = 
+		Draw2dUIPluginImages.DESC_TOP_RIGHT.getImageData();
 
-	private static ImageData alpha_ib = Draw2dResourceManager.getInstance()
-		.getImageDescriptor(Draw2dResourceManager.BOTTOM_IMAGE).getImageData();
+	private static ImageData alpha_ib = 
+		Draw2dUIPluginImages.DESC_BOTTOM.getImageData();
 		 
 	/**
 	 * Method for determining the width of the drop shadow border will take up on the shape.

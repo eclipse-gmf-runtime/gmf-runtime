@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.internal;
 
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 
 /**
@@ -22,14 +20,14 @@ public class Draw2dPlugin
 	extends XToolsUIPlugin {
 
 	/** the plugin singleton */
-	private static Plugin singleton;
+	private static XToolsUIPlugin singleton;
 
 	/**
 	 * Method getInstance.
 	 * 
 	 * @return Plugin
 	 */
-	public static Plugin getInstance() {
+	public static XToolsUIPlugin getInstance() {
 		return singleton;
 	}
 
@@ -58,13 +56,6 @@ public class Draw2dPlugin
 	 */
 	protected void doStartup() {
 		// empty method
-	}
-
-	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null; // TBD
 	}
 
 }

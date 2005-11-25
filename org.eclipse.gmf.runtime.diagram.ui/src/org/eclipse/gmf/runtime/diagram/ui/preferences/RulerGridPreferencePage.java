@@ -16,6 +16,9 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
+import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -30,10 +33,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
-import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 
 /**
@@ -123,27 +122,17 @@ public class RulerGridPreferencePage
 
 	private int oldUnits = -1;
 
-	private String RULER_GROUP_LABEL = DiagramResourceManager
-	.getI18NString("GriRulerPreferencePage.rulerGroup.label"); //$NON-NLS-1$
-	private String SHOW_RULERS_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.showRulers.label"); //$NON-NLS-1$
-	private String RULER_UNITS_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.rulerUnits.label"); //$NON-NLS-1$
-	private String RULER_UNITS_IN_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.rulerUnits.inch.label"); //$NON-NLS-1$
-	private String RULER_UNITS_CM_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.rulerUnits.cm.label"); //$NON-NLS-1$
-	private String RULER_UNITS_PIXEL_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.rulerUnits.pixel.label"); //$NON-NLS-1$
+	private String RULER_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerGroup_label;
+	private String SHOW_RULERS_LABEL = DiagramUIMessages.GridRulerPreferencePage_showRulers_label;
+	private String RULER_UNITS_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_label;
+	private String RULER_UNITS_IN_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_inch_label;
+	private String RULER_UNITS_CM_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_cm_label;
+	private String RULER_UNITS_PIXEL_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_pixel_label;
 
-	private String GRID_GROUP_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.gridGroup.label"); //$NON-NLS-1$
-	private String SHOW_GRID_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.showGrid.label"); //$NON-NLS-1$
-	private String SNAP_TO_GRID_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.snapToGrid.label"); //$NON-NLS-1$
-	private String GRID_SPACING_LABEL = DiagramResourceManager
-	.getI18NString("GridRulerPreferencePage.gridSpacing.label"); //$NON-NLS-1$
+	private String GRID_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_gridGroup_label;
+	private String SHOW_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_showGrid_label;
+	private String SNAP_TO_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_snapToGrid_label;
+	private String GRID_SPACING_LABEL = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label;
 	
 	// Ruler Field Editors
 	private BooleanFieldEditor showRulers = null;

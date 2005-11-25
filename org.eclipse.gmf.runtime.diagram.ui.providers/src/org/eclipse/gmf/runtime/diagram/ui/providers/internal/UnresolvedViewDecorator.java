@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.HashedCircle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -98,7 +98,7 @@ public class UnresolvedViewDecorator
 		if (ViewUtil.isPropertySupported(view,Properties.ID_LINECOLOR)) {
 			LineStyle style = (LineStyle) view.getStyle(NotationPackage.eINSTANCE.getLineStyle());
 			getDecoration().setForegroundColor(
-				DiagramProvidersResourceManager.getInstance().getColor(new Integer(style.getLineColor())));
+				DiagramColorRegistry.getInstance().getColor(new Integer(style.getLineColor())));
 		}
 	}
 

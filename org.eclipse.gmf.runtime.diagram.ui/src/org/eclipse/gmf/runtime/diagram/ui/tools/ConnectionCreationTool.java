@@ -29,8 +29,8 @@ import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -71,24 +71,13 @@ public class ConnectionCreationTool
 	/** Does the user have the ctrl key pressed? */
 	private boolean isCtrlKeyDown;
 
-	static private String CONNECTION_CURSOR_MASK = "elcl16/connectcursor_mask.bmp";//$NON-NLS-1$
-
-	static private String CONNECTION_CURSOR_SOURCE = "elcl16/connectcursor_source.bmp";//$NON-NLS-1$	
-
-	static private String NO_CONNECTION_CURSOR_MASK = "dlcl16/noconnectcursor_mask.bmp";//$NON-NLS-1$
-
-	static private String NO_CONNECTION_CURSOR_SOURCE = "dlcl16/noconnectcursor_source.bmp";//$NON-NLS-1$	
-
 	static private Cursor CURSOR_CONNECTION = new Cursor(Display.getDefault(),
-		DiagramResourceManager.getInstance().getImageDescriptor(
-			CONNECTION_CURSOR_SOURCE).getImageData(), DiagramResourceManager
-			.getInstance().getImageDescriptor(CONNECTION_CURSOR_MASK)
-			.getImageData(), 0, 0);
+		DiagramUIPluginImages.DESC_CONNECTION_CURSOR_SOURCE.getImageData(),
+		DiagramUIPluginImages.DESC_CONNECTION_CURSOR_MASK.getImageData(), 0, 0);
 
 	static private Cursor CURSOR_CONNECTION_NOT = new Cursor(Display
-		.getDefault(), DiagramResourceManager.getInstance().getImageDescriptor(
-		NO_CONNECTION_CURSOR_SOURCE).getImageData(), DiagramResourceManager
-		.getInstance().getImageDescriptor(NO_CONNECTION_CURSOR_MASK)
+		.getDefault(), DiagramUIPluginImages.DESC_NO_CONNECTION_CURSOR_SOURCE
+		.getImageData(), DiagramUIPluginImages.DESC_NO_CONNECTION_CURSOR_MASK
 		.getImageData(), 0, 0);
 
 	/**

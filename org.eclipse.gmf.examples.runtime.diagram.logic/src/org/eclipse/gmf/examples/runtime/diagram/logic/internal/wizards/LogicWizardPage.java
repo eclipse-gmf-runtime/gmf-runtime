@@ -17,7 +17,7 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicDiagramFileCreator;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicEditorUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage;
@@ -33,7 +33,7 @@ import org.eclipse.ui.IWorkbenchWindow;
  *
  * Create Logic Diagram Wizard Page
  */
-public class LogicWizardPage extends EditorWizardPage {
+public class LogicWizardPage extends EditorWizardPage{
 
 	/**
 	 * LogicDiagramWizardPage constructor
@@ -46,10 +46,8 @@ public class LogicWizardPage extends EditorWizardPage {
 	public LogicWizardPage(IWorkbench aWorkbench,
 			IStructuredSelection selection) {
 		super("LogicDiagramPage", aWorkbench, selection); //$NON-NLS-1$
-		this.setTitle(LogicResourceManager
-			.getI18NString("LogicWizardPage.Title")); //$NON-NLS-1$
-		this.setDescription(LogicResourceManager
-			.getI18NString("LogicWizardPage.Description")); //$NON-NLS-1$
+		this.setTitle(ExampleDiagramLogicMessages.LogicWizardPage_Title);
+		this.setDescription(ExampleDiagramLogicMessages.LogicWizardPage_Description);
 	}
 	
 	public IFile createAndOpenDiagram(
@@ -76,8 +74,7 @@ public class LogicWizardPage extends EditorWizardPage {
 	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDefaultFileName()
 	 */
 	protected String getDefaultFileName() {
-		return LogicResourceManager
-			.getI18NString("LogicVisualizer.DefaultLogicDiagramFileName"); //$NON-NLS-1$;
+		return ExampleDiagramLogicMessages.LogicVisualizer_DefaultLogicDiagramFileName;
 	}
 	
 	/* (non-Javadoc)

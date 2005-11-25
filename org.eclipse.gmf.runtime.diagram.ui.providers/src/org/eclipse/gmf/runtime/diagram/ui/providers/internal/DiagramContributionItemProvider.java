@@ -69,7 +69,8 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ZOrderMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.DeleteFromModelAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.OpenAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentUtil;
 import org.eclipse.jface.action.IAction;
@@ -123,13 +124,13 @@ public class DiagramContributionItemProvider
 		IWorkbenchPartDescriptor partDescriptor) {
 
 		if (menuId.equals(ActionIds.MENU_DIAGRAM))
-			return new MenuManager(DiagramProvidersResourceManager.getI18NString("DiagramMainMenu.DiagramMainMenuText"), ActionIds.MENU_DIAGRAM); //$NON-NLS-1$
+			return new MenuManager(DiagramUIProvidersMessages.DiagramMainMenu_DiagramMainMenuText, ActionIds.MENU_DIAGRAM);
 		if (menuId.equals(ActionIds.MENU_DIAGRAM_ADD))
 			return new AddMenuManager(menuId); 
 		if (menuId.equals(ActionIds.MENU_NAVIGATE))
 			// Should use a custom ActionMenuManager, but some actions are
 			// contributed using the org.eclipse.ui.popupMenus causing problems.
-			return new MenuManager(DiagramProvidersResourceManager.getI18NString("NavigateMenuManager.Navigate.ActionLabelText"), ActionIds.MENU_NAVIGATE); //$NON-NLS-1$
+			return new MenuManager(DiagramUIProvidersMessages.NavigateMenuManager_Navigate_ActionLabelText, ActionIds.MENU_NAVIGATE);
 		if (menuId.equals(ActionIds.MENU_FILE))
 			return new FileMenuManager();
 		if (menuId.equals(ActionIds.MENU_EDIT))
@@ -141,7 +142,7 @@ public class DiagramContributionItemProvider
 		if (menuId.equals(ActionIds.MENU_FORMAT))
 			// Should use a custom ActionMenuManager, but the color menu
 			// is causing "out of index" problems.  Will investigate.			
-			return new MenuManager(DiagramProvidersResourceManager.getI18NString("FormatMenuManager.Format.ActionLabelText"), ActionIds.MENU_FORMAT); //$NON-NLS-1$
+			return new MenuManager(DiagramUIProvidersMessages.FormatMenuManager_Format_ActionLabelText, ActionIds.MENU_FORMAT);
 		if (menuId.equals(ActionIds.MENU_ARRANGE))
 			return new ArrangeMenuManager();
 		if (menuId.equals(ActionIds.MENU_SELECT))
@@ -300,13 +301,15 @@ public class DiagramContributionItemProvider
 		if (actionId.equals(ActionIds.ACTION_SHOW_PROPERTIES_VIEW))
 			return new ShowPropertiesViewAction(workbenchPage);
 		if (actionId.equals(ActionIds.ACTION_ADD_NOTE))
-			return new CreateShapeViewAction(workbenchPage, ActionIds.ACTION_ADD_NOTE, ViewType.NOTE, DiagramProvidersResourceManager.getI18NString("Note.menuItem"), //$NON-NLS-1$
-				DiagramProvidersResourceManager.getInstance().getImageDescriptor(
-					DiagramProvidersResourceManager.DESC_NOTE));
+			return new CreateShapeViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_NOTE, ViewType.NOTE,
+				DiagramUIProvidersMessages.Note_menuItem,
+				SharedImages.DESC_NOTE);
 		if (actionId.equals(ActionIds.ACTION_ADD_TEXT))
-			return new CreateViewAction(workbenchPage, ActionIds.ACTION_ADD_TEXT, ViewType.TEXT, DiagramProvidersResourceManager.getI18NString("Text.menuItem"), //$NON-NLS-1$
-				DiagramProvidersResourceManager.getInstance().getImageDescriptor(
-					DiagramProvidersResourceManager.DESC_TEXT));
+			return new CreateViewAction(workbenchPage,
+				ActionIds.ACTION_ADD_TEXT, ViewType.TEXT,
+				DiagramUIProvidersMessages.Text_menuItem,
+				SharedImages.DESC_TEXT);
 		if (actionId.equals(ActionIds.ACTION_ADD_NOTELINK))
 			return new AddNoteAction(workbenchPage);
 		if (actionId.equals(ActionIds.ACTION_SHOW_CONNECTION_LABELS))

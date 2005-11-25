@@ -11,19 +11,18 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance;
 
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesImages;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
-
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * Colors section to represent line, font and fill colors properties of a 2D shape
@@ -84,7 +83,7 @@ public class ShapeColorsAndFontsPropertySection
 	protected void changeFillColor(SelectionEvent event) {
 		fillColor = changeColor(event, fillColorButton,
 			IPreferenceConstants.PREF_FILL_COLOR, Properties.ID_FILLCOLOR,
-			FILL_COLOR_COMMAND_NAME, FILL_COLOR_IMAGE_NAME);
+			FILL_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_FILL_COLOR);
 	}
 
 	/*
@@ -96,8 +95,8 @@ public class ShapeColorsAndFontsPropertySection
 		super.refresh();
 		if(!isDisposed()){
 		Image overlyedImage = new ColorOverlayImageDescriptor(
-			ResourceManager.getInstance().getImage(
-				FILL_COLOR_IMAGE_NAME).getImageData(), fillColor).createImage();
+					DiagramUIPropertiesImages.DESC_FILL_COLOR
+					.getImageData(), fillColor).createImage();
 		fillColorButton.setImage(overlyedImage);
 		}
 	}

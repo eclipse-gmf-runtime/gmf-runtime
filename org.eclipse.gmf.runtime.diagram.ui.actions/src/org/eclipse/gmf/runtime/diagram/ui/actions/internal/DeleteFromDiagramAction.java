@@ -21,19 +21,18 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -67,8 +66,8 @@ public class DeleteFromDiagramAction extends DiagramAction{
 	public void init() {
 		super.init();
 		setId(ActionIds.ACTION_DELETE_FROM_DIAGRAM);
-		setText(DiagramActionsResourceManager.getI18NString("DeleteFromDiagram.ActionLabelText"));//$NON-NLS-1$
-		setToolTipText(DiagramActionsResourceManager.getI18NString("DeleteFromDiagram.ActionToolTipText"));//$NON-NLS-1$
+		setText(DiagramUIActionsMessages.DeleteFromDiagram_ActionLabelText);
+		setToolTipText(DiagramUIActionsMessages.DeleteFromDiagram_ActionToolTipText);
 		ISharedImages workbenchImages = PlatformUI.getWorkbench().getSharedImages();
 		setHoverImageDescriptor(
 			workbenchImages.getImageDescriptor(

@@ -37,7 +37,8 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.HeaderAndFooterHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
@@ -278,41 +279,33 @@ public class PrintPreviewHelper {
 	 * Initialize all toolbar images
 	 */
 	protected void initializeToolbarImages() {
-		printImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_print.gif"); //$NON-NLS-1$
+		printImage = DiagramUIPrintingPluginImages.DESC_PRINT.createImage();
 
-		disabledPrintImage = DiagramPrintingResourceManager.getInstance()
-			.createImage("dtool16/print_preview_print.gif"); //$NON-NLS-1$
+		disabledPrintImage = DiagramUIPrintingPluginImages.DESC_PRINT_DISABLED
+			.createImage();
 
-		pageImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_pages.gif"); //$NON-NLS-1$
+		pageImage = DiagramUIPrintingPluginImages.DESC_PAGE.createImage();
 
-		leftImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_left.gif"); //$NON-NLS-1$
+		leftImage = DiagramUIPrintingPluginImages.DESC_LEFT.createImage();
 
-		disabledLeftImage = DiagramPrintingResourceManager.getInstance()
-			.createImage("dtool16/print_preview_left.gif"); //$NON-NLS-1$
+		disabledLeftImage = DiagramUIPrintingPluginImages.DESC_LEFT_DISABLED
+			.createImage();
 
-		rightImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_right.gif"); //$NON-NLS-1$
+		rightImage = DiagramUIPrintingPluginImages.DESC_RIGHT.createImage();
 
-		disabledRightImage = DiagramPrintingResourceManager.getInstance()
-			.createImage("dtool16/print_preview_right.gif"); //$NON-NLS-1$
+		disabledRightImage = DiagramUIPrintingPluginImages.DESC_RIGHT_DISABLED
+			.createImage();
 
-		upImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_up.gif"); //$NON-NLS-1$
+		upImage = DiagramUIPrintingPluginImages.DESC_UP.createImage();
+		disabledUpImage = DiagramUIPrintingPluginImages.DESC_UP_DISABLED
+			.createImage();
 
-		disabledUpImage = DiagramPrintingResourceManager.getInstance()
-			.createImage("dtool16/print_preview_up.gif"); //$NON-NLS-1$
+		downImage = DiagramUIPrintingPluginImages.DESC_DOWN.createImage();
 
-		downImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_down.gif"); //$NON-NLS-1$
+		disabledDownImage = DiagramUIPrintingPluginImages.DESC_DOWN_DISABLED
+			.createImage();
 
-		disabledDownImage = DiagramPrintingResourceManager.getInstance()
-			.createImage("dtool16/print_preview_down.gif"); //$NON-NLS-1$
-
-		closeImage = DiagramPrintingResourceManager.getInstance().createImage(
-			"etool16/print_preview_close.gif"); //$NON-NLS-1$
+		closeImage = DiagramUIPrintingPluginImages.DESC_CLOSE.createImage();
 	}
 
 	/**
@@ -332,26 +325,22 @@ public class PrintPreviewHelper {
 			MessageDialog
 				.openInformation(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getShell(),
-					DiagramPrintingResourceManager
-						.getI18NString("PrintPreview.Title"), //$NON-NLS-1$
-					DiagramPrintingResourceManager
-						.getI18NString("PrintPreview.NotEnabled")); //$NON-NLS-1$
+					DiagramUIPrintingMessages.PrintPreview_Title, 
+					DiagramUIPrintingMessages.PrintPreview_NotEnabled); 
 			return;
 		}
 
 		if (!isPrinterInstalled()) {
 			WindowUtil
-				.doMessageBox(DiagramPrintingResourceManager
-					.getI18NString("PrintPreview.NoPrinterInstalled"), //$NON-NLS-1$
-					DiagramPrintingResourceManager
-						.getI18NString("PrintPreview.Title"), //$NON-NLS-1$
+				.doMessageBox(DiagramUIPrintingMessages.PrintPreview_NoPrinterInstalled, 
+					DiagramUIPrintingMessages.PrintPreview_Title, 
 					SWT.ICON_ERROR, PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getShell());
 			return;
 		}
 
 		initializeToolbarImages();
-		
+
 		initializeMapMode();
 
 		diagramEditPart = null;
@@ -372,18 +361,17 @@ public class PrintPreviewHelper {
 			numberOfColumnsToDisplay = 2;
 		}
 		else {
-			numberOfRowsToDisplay = 2;
-			numberOfColumnsToDisplay = 2;
+		numberOfRowsToDisplay = 2;
+		numberOfColumnsToDisplay = 2;
 		}
-		
+
 		Display display = Display.getDefault();
 		shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.TITLE
 			| SWT.CLOSE | SWT.BORDER);
 
 		shell.setSize(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 			.getShell().getSize());
-		shell.setText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.Title")); //$NON-NLS-1$
+		shell.setText(DiagramUIPrintingMessages.PrintPreview_Title);
 		shell.setLocation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 			.getShell().getLocation());
 		shell.setLayout(new GridLayout(1, true));
@@ -391,8 +379,7 @@ public class PrintPreviewHelper {
 		ToolBar bar = new ToolBar(shell, SWT.FLAT | SWT.HORIZONTAL);
 
 		printTool = new ToolItem(bar, SWT.NULL);
-		printTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.PrintToolItem")); //$NON-NLS-1$
+		printTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_PrintToolItem);
 		printTool.setImage(printImage);
 		printTool.setDisabledImage(disabledPrintImage);
 		printTool.addSelectionListener(new SelectionListener() {
@@ -426,8 +413,7 @@ public class PrintPreviewHelper {
 		new ToolItem(bar, SWT.SEPARATOR);
 
 		pagesTool = new ToolItem(bar, SWT.DROP_DOWN);
-		pagesTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.PagesToolItem")); //$NON-NLS-1$
+		pagesTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_PagesToolItem);
 		pagesTool.setImage(pageImage);
 
 		pagesTool.addSelectionListener(new SelectionAdapter() {
@@ -476,8 +462,7 @@ public class PrintPreviewHelper {
 					// Lazy create the menu.
 					menu = new Menu(shell);
 					MenuItem menuItem = new MenuItem(menu, SWT.NONE);
-					menuItem.setText(DiagramPrintingResourceManager
-						.getI18NString("PrintPreview.1Up")); //$NON-NLS-1$
+					menuItem.setText(DiagramUIPrintingMessages.PrintPreview_1Up);
 					menuItem.addSelectionListener(new SelectionAdapter() {
 
 						public void widgetSelected(SelectionEvent e) {
@@ -486,8 +471,7 @@ public class PrintPreviewHelper {
 					});
 
 					menuItem = new MenuItem(menu, SWT.NONE);
-					menuItem.setText(DiagramPrintingResourceManager
-						.getI18NString("PrintPreview.2Up")); //$NON-NLS-1$
+					menuItem.setText(DiagramUIPrintingMessages.PrintPreview_2Up);
 					menuItem.addSelectionListener(new SelectionAdapter() {
 
 						public void widgetSelected(SelectionEvent e) {
@@ -496,8 +480,7 @@ public class PrintPreviewHelper {
 					});
 
 					menuItem = new MenuItem(menu, SWT.NONE);
-					menuItem.setText(DiagramPrintingResourceManager
-						.getI18NString("PrintPreview.4Up")); //$NON-NLS-1$
+					menuItem.setText(DiagramUIPrintingMessages.PrintPreview_4Up);
 					menuItem.addSelectionListener(new SelectionAdapter() {
 
 						public void widgetSelected(SelectionEvent e) {
@@ -527,8 +510,7 @@ public class PrintPreviewHelper {
 		new ToolItem(bar, SWT.SEPARATOR);
 
 		leftTool = new ToolItem(bar, SWT.NULL);
-		leftTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.LeftToolItem")); //$NON-NLS-1$
+		leftTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_LeftToolItem);
 		leftTool.setImage(leftImage);
 		leftTool.setDisabledImage(disabledLeftImage);
 		leftTool.addSelectionListener(new SelectionListener() {
@@ -554,8 +536,7 @@ public class PrintPreviewHelper {
 		});
 
 		rightTool = new ToolItem(bar, SWT.NULL);
-		rightTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.RightToolItem")); //$NON-NLS-1$
+		rightTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_RightToolItem);
 		rightTool.setImage(rightImage);
 		rightTool.setDisabledImage(disabledRightImage);
 		rightTool.addSelectionListener(new SelectionListener() {
@@ -582,8 +563,7 @@ public class PrintPreviewHelper {
 		});
 
 		upTool = new ToolItem(bar, SWT.NULL);
-		upTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.UpToolItem")); //$NON-NLS-1$
+		upTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_UpToolItem);
 		upTool.setImage(upImage);
 		upTool.setDisabledImage(disabledUpImage);
 		upTool.addSelectionListener(new SelectionListener() {
@@ -609,8 +589,7 @@ public class PrintPreviewHelper {
 		});
 
 		downTool = new ToolItem(bar, SWT.NULL);
-		downTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.DownToolItem")); //$NON-NLS-1$
+		downTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_DownToolItem);
 		downTool.setImage(downImage);
 		downTool.setDisabledImage(disabledDownImage);
 		downTool.addSelectionListener(new SelectionListener() {
@@ -637,8 +616,7 @@ public class PrintPreviewHelper {
 
 		new ToolItem(bar, SWT.SEPARATOR);
 		closeTool = new ToolItem(bar, SWT.NULL);
-		closeTool.setToolTipText(DiagramPrintingResourceManager
-			.getI18NString("PrintPreview.CloseToolItem")); //$NON-NLS-1$
+		closeTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_CloseToolItem);
 		closeTool.setImage(closeImage);
 		closeTool.addSelectionListener(new SelectionListener() {
 
@@ -701,7 +679,7 @@ public class PrintPreviewHelper {
 	protected IMapMode getMapMode() {
 		return mm;
 	}
-	
+
 	/**
 	 * Initialize the map mode variable
 	 */

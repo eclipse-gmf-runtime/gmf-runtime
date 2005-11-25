@@ -19,12 +19,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ContainerGenerator;
-
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 
 /**
  * A file creator that creates a file in an IDE dependent
@@ -60,7 +59,7 @@ public abstract class IDEEditorFileCreator
 			protected void execute(IProgressMonitor monitor)
 				throws CoreException, InterruptedException {
 				try {
-					monitor.beginTask(ResourceManager.getI18NString("FileCreator.TaskTitle"), 2000);//$NON-NLS-1$
+					monitor.beginTask(EditorMessages.FileCreator_TaskTitle, 2000);
 
 					assert fileHandle.getFullPath().segmentCount() >= 2;
 

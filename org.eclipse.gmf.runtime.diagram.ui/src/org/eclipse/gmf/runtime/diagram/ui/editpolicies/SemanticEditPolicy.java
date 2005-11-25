@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -55,12 +55,11 @@ import org.eclipse.swt.widgets.Display;
 public class SemanticEditPolicy
 	extends AbstractEditPolicy {
 
-	private static final String DELETE_FROM_MODEL_DLG_TITLE = DiagramResourceManager
-	.getI18NString("PromptingDeleteFromModelAction.DeleteFromModelDialog.Title"); //$NON-NLS-1$ 
-	private static final String DELETE_FROM_MODEL_DLG_MESSAGE = DiagramResourceManager
-	.getI18NString("PromptingDeleteFromModelAction.DeleteFromModelDialog.Message"); //$NON-NLS-1$ 	
-	private static final String DELETE_FROM_MODEL_DLG_TOGGLE_LABEL =DiagramResourceManager
-	.getI18NString("MessageDialogWithToggle.DoNotPromptAgainToggle.label"); //$NON-NLS-1$ 	
+	private static final String DELETE_FROM_MODEL_DLG_TITLE = DiagramUIMessages.PromptingDeleteFromModelAction_DeleteFromModelDialog_Title;
+
+	private static final String DELETE_FROM_MODEL_DLG_MESSAGE = DiagramUIMessages.PromptingDeleteFromModelAction_DeleteFromModelDialog_Message;
+
+	private static final String DELETE_FROM_MODEL_DLG_TOGGLE_LABEL = DiagramUIMessages.MessageDialogWithToggle_DoNotPromptAgainToggle_label; 	
 
 	/**
 	 * @see org.eclipse.gef.EditPolicy#getCommand(Request)
@@ -137,6 +136,7 @@ public class SemanticEditPolicy
 
 		if (semanticCommand == null)
 			return null;
+		
 		
 		boolean shouldProceed = true;
 		if (completedRequest instanceof DestroyRequest) {

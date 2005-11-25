@@ -21,6 +21,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.resources.IBookmark;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.util.Assert;
@@ -29,21 +43,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.resources.IBookmark;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Helper class for creating a bookmark for the selected element
@@ -159,8 +158,8 @@ public class AddBookmarkHelper {
 	static private String getDescription(
 		String defaultDescription,
 		IWorkbenchPart part) {
-		String title = DiagramResourceManager.getI18NString("AddBookmarkAction.dialog.title"); //$NON-NLS-1$
-		String message = DiagramResourceManager.getI18NString("AddBookmarkAction.dialog.message"); //$NON-NLS-1$
+		String title = DiagramUIMessages.AddBookmarkAction_dialog_title;
+		String message = DiagramUIMessages.AddBookmarkAction_dialog_message;
 
 		IInputValidator inputValidator = new IInputValidator() {
 			public String isValid(String newText) {

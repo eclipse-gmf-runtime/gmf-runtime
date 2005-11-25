@@ -134,15 +134,6 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 * constants for duplicate  request
 	 */
 	public static final String REQ_DUPLICATE = "duplicate"; //$NON-NLS-1$
-	
-	   /**
-	 * @deprecated use REQ_TOGGLE_CONNECTION_LABELS
-	 */
-	public static final String 	REQ_TOGGLE_CONNECTOR_LABELS = "toggle_connector_label"; //$NON-NLS-1$
-	   /**
-	 * @deprecated use REQ_REFRESH_CONNECTIONS
-	 */
-	public static final String REQ_REFRESH_CONNECTORS = "refresh_connectors"; //$NON-NLS-1$
 
 }
  

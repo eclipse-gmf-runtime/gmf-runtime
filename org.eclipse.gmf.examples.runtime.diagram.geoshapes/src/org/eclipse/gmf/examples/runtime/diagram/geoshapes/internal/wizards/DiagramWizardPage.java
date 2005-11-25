@@ -11,12 +11,14 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards;
 
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
+
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.ExampleDiagramGeoshapeMessages;
 import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.util.GeoShapeDiagramFileCreator;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
+
 
 
 /**
@@ -25,7 +27,7 @@ import org.eclipse.ui.IWorkbench;
  *
  * Create Diagram Wizard Page
  */
-public class DiagramWizardPage extends EditorWizardPage {
+public class DiagramWizardPage extends EditorWizardPage{
 
 	/**
 	 * DiagramWizardPage constructor
@@ -38,18 +40,18 @@ public class DiagramWizardPage extends EditorWizardPage {
 	public DiagramWizardPage(IWorkbench aWorkbench,
 			IStructuredSelection selection) {
 		super("GeoshapeDiagramPage", aWorkbench, selection); //$NON-NLS-1$
-		this.setTitle(DiagramResourceManager
-			.getI18NString("GeoshapeWizardPage.Title")); //$NON-NLS-1$
-		this.setDescription(DiagramResourceManager
-			.getI18NString("GeoshapeWizardPage.Description")); //$NON-NLS-1$
+		this.setTitle(ExampleDiagramGeoshapeMessages.
+			GeoshapeWizardPage_Title);
+		this.setDescription(ExampleDiagramGeoshapeMessages.
+			GeoshapeWizardPage_Description);
 	}
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDefaultFileName()
 	 */
 	protected String getDefaultFileName() {
-		return DiagramResourceManager
-			.getI18NString("GEOVisualizer.DefaultGeoshapeDiagramFileName"); //$NON-NLS-1$;
+		return ExampleDiagramGeoshapeMessages.GEOVisualizer_DefaultGeoshapeDiagramFileName;
 	}
 	
 	/* (non-Javadoc)

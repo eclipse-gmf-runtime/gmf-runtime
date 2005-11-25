@@ -15,14 +15,13 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
-import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.GeoshapesResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.DiagramUIGeoshapesPluginImages;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Provides Geoshape Icons
@@ -38,53 +37,53 @@ public class GeoShapeIconProvider
 	static {
 
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_OVAL,
-			GeoshapeConstants.ICON_OVAL);
+			DiagramUIGeoshapesPluginImages.DESC_OVAL);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_TRIANGLE,
-			GeoshapeConstants.ICON_TRIANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_TRIANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_RECTANGLE,
-			GeoshapeConstants.ICON_RECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_RECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_SHADOWRECTANGLE,
-			GeoshapeConstants.ICON_SHADOWRECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_SHADOWRECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_3DRECTANGLE,
-			GeoshapeConstants.ICON_3DRECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_3DRECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_ROUNDRECTANGLE,
-			GeoshapeConstants.ICON_ROUNDRECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_ROUNDRECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_HEXAGON,
-			GeoshapeConstants.ICON_HEXAGON);
+			DiagramUIGeoshapesPluginImages.DESC_HEXAGON);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_OCTAGON,
-			GeoshapeConstants.ICON_OCTAGON);
+			DiagramUIGeoshapesPluginImages.DESC_OCTAGON);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_PENTAGON,
-			GeoshapeConstants.ICON_PENTAGON);
+			DiagramUIGeoshapesPluginImages.DESC_PENTAGON);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_DIAMOND,
-			GeoshapeConstants.ICON_DIAMOND);
+			DiagramUIGeoshapesPluginImages.DESC_DIAMOND);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_CYLINDER,
-			GeoshapeConstants.ICON_CYLINDER);
+			DiagramUIGeoshapesPluginImages.DESC_CYLINDER);
 
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_LINE,
-			GeoshapeConstants.ICON_LINE);
+			DiagramUIGeoshapesPluginImages.DESC_LINE);
 	}
 
 	/** map for storing icon images based on type */
 	private static HashMap typeIconMap = new HashMap();
 	static {
 
-		typeIconMap.put(GeoshapeType.OVAL, GeoshapeConstants.ICON_OVAL);
-		typeIconMap.put(GeoshapeType.TRIANGLE, GeoshapeConstants.ICON_TRIANGLE);
+		typeIconMap.put(GeoshapeType.OVAL, DiagramUIGeoshapesPluginImages.DESC_OVAL);
+		typeIconMap.put(GeoshapeType.TRIANGLE, DiagramUIGeoshapesPluginImages.DESC_TRIANGLE);
 		typeIconMap.put(GeoshapeType.RECTANGLE,
-			GeoshapeConstants.ICON_RECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_RECTANGLE);
 		typeIconMap.put(GeoshapeType.SHADOWRECTANGLE,
-			GeoshapeConstants.ICON_SHADOWRECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_SHADOWRECTANGLE);
 		typeIconMap.put(GeoshapeType.THREEDRECTANGLE,
-			GeoshapeConstants.ICON_3DRECTANGLE);
+			DiagramUIGeoshapesPluginImages.DESC_3DRECTANGLE);
 		typeIconMap.put(GeoshapeType.ROUNDRECTANGLE,
-			GeoshapeConstants.ICON_ROUNDRECTANGLE);
-		typeIconMap.put(GeoshapeType.HEXAGON, GeoshapeConstants.ICON_HEXAGON);
-		typeIconMap.put(GeoshapeType.OCTAGON, GeoshapeConstants.ICON_OCTAGON);
-		typeIconMap.put(GeoshapeType.PENTAGON, GeoshapeConstants.ICON_PENTAGON);
-		typeIconMap.put(GeoshapeType.DIAMOND, GeoshapeConstants.ICON_DIAMOND);
-		typeIconMap.put(GeoshapeType.CYLINDER, GeoshapeConstants.ICON_CYLINDER);
+			DiagramUIGeoshapesPluginImages.DESC_ROUNDRECTANGLE);
+		typeIconMap.put(GeoshapeType.HEXAGON, DiagramUIGeoshapesPluginImages.DESC_HEXAGON);
+		typeIconMap.put(GeoshapeType.OCTAGON, DiagramUIGeoshapesPluginImages.DESC_OCTAGON);
+		typeIconMap.put(GeoshapeType.PENTAGON, DiagramUIGeoshapesPluginImages.DESC_PENTAGON);
+		typeIconMap.put(GeoshapeType.DIAMOND, DiagramUIGeoshapesPluginImages.DESC_DIAMOND);
+		typeIconMap.put(GeoshapeType.CYLINDER, DiagramUIGeoshapesPluginImages.DESC_CYLINDER);
 
-		typeIconMap.put(GeoshapeType.LINE, GeoshapeConstants.ICON_LINE);
+		typeIconMap.put(GeoshapeType.LINE, DiagramUIGeoshapesPluginImages.DESC_LINE);
 	}
 
 	/*
@@ -105,7 +104,7 @@ public class GeoShapeIconProvider
 				String fileName = (String) typeIconMap.get(hint);
 
 				if (fileName != null) {
-					return GeoshapesResourceManager.getInstance().getImage(
+					return DiagramUIGeoshapesPluginImages.get(
 						fileName);
 				}
 			}
@@ -127,8 +126,7 @@ public class GeoShapeIconProvider
 		String fileName = (String) semanticHintIconMap.get(semanticHint);
 
 		if (fileName != null) {
-			return GeoshapesResourceManager.getInstance().getImage(
-				fileName);
+			return DiagramUIGeoshapesPluginImages.get(fileName);
 		}
 		return null;
 	}

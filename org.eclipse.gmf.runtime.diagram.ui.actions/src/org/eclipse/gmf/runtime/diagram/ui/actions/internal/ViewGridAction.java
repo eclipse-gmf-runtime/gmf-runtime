@@ -14,17 +14,16 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * 
@@ -35,9 +34,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
  */
 public class ViewGridAction extends DiagramAction {
 
-	private static final String MENU_LABEL = "ViewGrid.textLabel"; //$NON-NLS-1$
-	private static final String TOOLTIP_LABEL = "ViewGrid.toolTip"; //$NON-NLS-1$
-	
 			
 	/**
 	 * Create a View Grid Action
@@ -46,9 +42,9 @@ public class ViewGridAction extends DiagramAction {
 	public ViewGridAction(IWorkbenchPage workbenchPage) {
 		
 		super(workbenchPage);
-		setText(DiagramActionsResourceManager.getI18NString(MENU_LABEL));
+		setText(DiagramUIActionsMessages.ViewGrid_textLabel);
 		setId(ActionIds.ACTION_VIEW_GRID);
-		setToolTipText(DiagramActionsResourceManager.getI18NString(TOOLTIP_LABEL));
+		setToolTipText(DiagramUIActionsMessages.ViewGrid_toolTip);
 		//setImageDescriptor(Images.DESC_ACTION_VIEWPAGEBREAKS);		
 		
 	}

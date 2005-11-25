@@ -19,7 +19,7 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.GeoshapesResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.DiagramUIGeoshapesMessages;
 
 /**
  * @author jschofie
@@ -47,25 +47,8 @@ public class GeoshapeConstants {
 	public static final String TOOL_CYLINDER        = "cylinder"; //$NON-NLS-1$
 //	public static final String TOOL_POLYGON         = "polygon"; //$NON-NLS-1$
 
-	// Geometric Shape Icons
-	public static final String ICON_OVAL            = "IconEllipse.gif";  //$NON-NLS-1$
-	public static final String ICON_TRIANGLE        = "IconTriangle.gif"; //$NON-NLS-1$
-	public static final String ICON_RECTANGLE       = "IconRectangle.gif"; //$NON-NLS-1$
-	public static final String ICON_SHADOWRECTANGLE = "IconShadowRectangle.gif"; //$NON-NLS-1$
-	public static final String ICON_3DRECTANGLE     = "Icon3DRectangle.gif"; //$NON-NLS-1$
-	public static final String ICON_ROUNDRECTANGLE  = "IconRoundRectangle.gif"; //$NON-NLS-1$
-	public static final String ICON_HEXAGON         = "IconHexagon.gif"; //$NON-NLS-1$
-	public static final String ICON_OCTAGON         = "IconOctagon.gif"; //$NON-NLS-1$
-	public static final String ICON_PENTAGON        = "IconPentagon.gif"; //$NON-NLS-1$
-	public static final String ICON_DIAMOND         = "IconDiamond.gif"; //$NON-NLS-1$
-	public static final String ICON_CYLINDER        = "IconCylinder.gif"; //$NON-NLS-1$
-
 	// Supported Connections
 	public static final String TOOL_LINE = "line"; //$NON-NLS-1$
-
-	// Connection Icons
-	public static final String ICON_LINE            = "IconLine.gif"; //$NON-NLS-1$
-
 
 	public static List getSupportedShapes() {
 		
@@ -103,31 +86,31 @@ public class GeoshapeConstants {
 		return label.replaceFirst("&", "");//$NON-NLS-2$//$NON-NLS-1$
 	}
 	
-	public static String getShapeLabel( String toGet ) {
-		
-		if( toGet.equals( TOOL_OVAL ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.OvalTool.Label"); //$NON-NLS-1$
-		else if ( toGet.equals( TOOL_TRIANGLE ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.TriangleTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_RECTANGLE ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.RectangleTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_SHADOWRECTANGLE ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.ShadowRectangleTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_3DRECTANGLE ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.3DRectangleTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_ROUNDRECTANGLE ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.RoundRectangleTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_HEXAGON ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.HexagonTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_OCTAGON ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.OctagonTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_PENTAGON ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.PentagonTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_DIAMOND ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.DiamondTool.Label"); //$NON-NLS-1$
-		else if( toGet.equals( TOOL_CYLINDER ) )
-			return GeoshapesResourceManager.getInstance().getString("geoshape.CylinderTool.Label"); //$NON-NLS-1$
+	public static String getShapeLabel(String toGet) {
 
-		return "Geometric shape"; //$NON-NLS-1$
+		if (toGet.equals(TOOL_OVAL))
+			return DiagramUIGeoshapesMessages.geoshape_OvalTool_Label;
+		else if (toGet.equals(TOOL_TRIANGLE))
+			return DiagramUIGeoshapesMessages.geoshape_TriangleTool_Label;
+		else if (toGet.equals(TOOL_RECTANGLE))
+			return DiagramUIGeoshapesMessages.geoshape_RectangleTool_Label;
+		else if (toGet.equals(TOOL_SHADOWRECTANGLE))
+			return DiagramUIGeoshapesMessages.geoshape_ShadowRectangleTool_Label;
+		else if (toGet.equals(TOOL_3DRECTANGLE))
+			return DiagramUIGeoshapesMessages.geoshape_3DRectangleTool_Label;
+		else if (toGet.equals(TOOL_ROUNDRECTANGLE))
+			return DiagramUIGeoshapesMessages.geoshape_RoundRectangleTool_Label;
+		else if (toGet.equals(TOOL_HEXAGON))
+			return DiagramUIGeoshapesMessages.geoshape_HexagonTool_Label;
+		else if (toGet.equals(TOOL_OCTAGON))
+			return DiagramUIGeoshapesMessages.geoshape_OctagonTool_Label;
+		else if (toGet.equals(TOOL_PENTAGON))
+			return DiagramUIGeoshapesMessages.geoshape_PentagonTool_Label;
+		else if (toGet.equals(TOOL_DIAMOND))
+			return DiagramUIGeoshapesMessages.geoshape_DiamondTool_Label;
+		else if (toGet.equals(TOOL_CYLINDER))
+			return DiagramUIGeoshapesMessages.geoshape_CylinderTool_Label;
+
+		return DiagramUIGeoshapesMessages.geoshape_GeometricShapeTool_Label;
 	}
 }

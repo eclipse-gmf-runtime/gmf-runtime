@@ -22,8 +22,9 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.ConnectionHandleTool;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -51,15 +52,13 @@ public class ConnectionHandle extends AbstractHandle {
 	}
 
 	/** the error icon that can be superimposed on the connection handle image */
-	private static final ImageFigure ERROR_IMAGE = new ImageFigure(
-		DiagramResourceManager.getInstance().getImage(
-			DiagramResourceManager.IMAGE_ERROR));
+	private static final ImageFigure ERROR_IMAGE = new ImageFigure(SharedImages
+		.get(SharedImages.IMG_ERROR));
 
 	static {
-		ERROR_IMAGE.setSize(DiagramResourceManager.getInstance().getImage(
-			DiagramResourceManager.IMAGE_ERROR).getBounds().width,
-			DiagramResourceManager.getInstance().getImage(
-				DiagramResourceManager.IMAGE_ERROR).getBounds().height);
+		ERROR_IMAGE.setSize(SharedImages.get(SharedImages.IMG_ERROR)
+			.getBounds().width, SharedImages.get(SharedImages.IMG_ERROR)
+			.getBounds().height);
 	}
 
 	/** direction that the relationship is to be created */
@@ -164,29 +163,25 @@ public class ConnectionHandle extends AbstractHandle {
 			.getBorderSide();
 		Image image = null;
 		if (side == PositionConstants.WEST) {
-			image = isIncoming() ? DiagramResourceManager.getInstance()
-				.getImage(
-					DiagramResourceManager.IMAGE_HANDLE_INCOMING_WEST)
-				: DiagramResourceManager.getInstance().getImage(
-					DiagramResourceManager.IMAGE_HANDLE_OUTGOING_WEST);
+			image = isIncoming() ? DiagramUIPluginImages
+				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_WEST)
+				: DiagramUIPluginImages
+					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_WEST);
 		} else if (side == PositionConstants.EAST) {
-			image = isIncoming() ? DiagramResourceManager.getInstance()
-				.getImage(
-					DiagramResourceManager.IMAGE_HANDLE_INCOMING_EAST)
-				: DiagramResourceManager.getInstance().getImage(
-					DiagramResourceManager.IMAGE_HANDLE_OUTGOING_EAST);
-		} else if (side == PositionConstants.SOUTH){
-			image = isIncoming() ? DiagramResourceManager.getInstance()
-				.getImage(
-					DiagramResourceManager.IMAGE_HANDLE_INCOMING_SOUTH)
-				: DiagramResourceManager.getInstance().getImage(
-					DiagramResourceManager.IMAGE_HANDLE_OUTGOING_SOUTH);
+			image = isIncoming() ? DiagramUIPluginImages
+				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_EAST)
+				: DiagramUIPluginImages
+					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_EAST);
+		} else if (side == PositionConstants.SOUTH) {
+			image = isIncoming() ? DiagramUIPluginImages
+				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_SOUTH)
+				: DiagramUIPluginImages
+					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_SOUTH);
 		} else {
-		image = isIncoming() ? DiagramResourceManager.getInstance()
-			.getImage(
-				DiagramResourceManager.IMAGE_HANDLE_INCOMING_NORTH)
-			: DiagramResourceManager.getInstance().getImage(
-				DiagramResourceManager.IMAGE_HANDLE_OUTGOING_NORTH);
+			image = isIncoming() ? DiagramUIPluginImages
+				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_NORTH)
+				: DiagramUIPluginImages
+					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_NORTH);
 		}
 
 		ImageFigure imageFigure = new ImageFigure(image);

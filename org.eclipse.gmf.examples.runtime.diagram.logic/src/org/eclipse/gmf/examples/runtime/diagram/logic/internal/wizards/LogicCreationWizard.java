@@ -12,11 +12,11 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.wizards;
 
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorCreationWizard;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorCreationWizard;
 
 
 /**
@@ -42,10 +42,8 @@ public class LogicCreationWizard extends EditorCreationWizard{
 	public void init(IWorkbench workbench, IStructuredSelection sel) {
 		super.init(workbench, sel);
 
-		setWindowTitle(LogicResourceManager
-				.getI18NString("CreationWizard.New_Logic_Diagram")); //$NON-NLS-1$
-		setDefaultPageImageDescriptor(LogicResourceManager.getInstance()
-				.getImageDescriptor("wizards/logic_wiz.gif")); //$NON-NLS-1$
+		setWindowTitle(ExampleDiagramLogicMessages.CreationWizard_New_Logic_Diagram);
+		setDefaultPageImageDescriptor(ExampleDiagramLogicPluginImages.DESC_LOGIC_WIZARD);
 		setNeedsProgressMonitor(true);
 	}
 

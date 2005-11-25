@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.tools;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
@@ -42,6 +41,7 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssista
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -182,10 +182,8 @@ public class ConnectionHandleTool
 			public String getText(Object element) {
 				String elementName = super.getText(element);
 				if (element instanceof IElementType) {
-					String theInputStr = DiagramResourceManager
-						.getI18NString("ConnectionHandle.Popup.ShowRelatedXRelationships"); //$NON-NLS-1$
-					String text = MessageFormat.format(theInputStr,
-						new Object[] {elementName});
+					String theInputStr = DiagramUIMessages.ConnectionHandle_Popup_ShowRelatedXRelationships;
+					String text = NLS.bind(theInputStr, elementName);
 					return text;
 				}
 				return elementName;

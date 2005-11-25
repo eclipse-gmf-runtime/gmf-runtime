@@ -25,10 +25,6 @@ import org.eclipse.gef.Tool;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IEditorPart;
-import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration.ObjectDescriptor;
@@ -38,11 +34,14 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteTemplateEntry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IEditorPart;
+import org.osgi.framework.Bundle;
 
 /**
  * The defaul palette provider. It reads XML palette contributions from the
@@ -93,9 +92,6 @@ public class DefaultPaletteProvider
 	private static final String HIDEONLY = "HideOnly"; //$NON-NLS-1$
 	private static final String LIMITED = "limited"; //$NON-NLS-1$
 	private static final String FULL = "full"; //$NON-NLS-1$
-
-	/** default palette entry label */
-	private static final String DEFAULT_ENTRY_LABEL = "PaletteEntry.DefaultLabel"; //$NON-NLS-1$
 
 	/**
 	 * A descriptor for XML-based palette contribution
@@ -180,7 +176,7 @@ public class DefaultPaletteProvider
 
 			label = configElement.getAttribute(LABEL);
 			if (label == null)
-				label = DiagramResourceManager.getI18NString(DEFAULT_ENTRY_LABEL);
+				label = DiagramUIMessages.PaletteEntry_DefaultLabel;
 
 			description = configElement.getAttribute(DESCRIPTION);
 

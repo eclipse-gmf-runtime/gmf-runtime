@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -50,14 +48,4 @@ public class DiagramPlugin
 		return getInstance().getSymbolicName();
 	}
 
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return DiagramResourceManager.getInstance();
-	}
 }

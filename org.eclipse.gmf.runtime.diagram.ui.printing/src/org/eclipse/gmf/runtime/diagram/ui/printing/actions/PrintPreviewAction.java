@@ -11,11 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.actions;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview.PrintPreviewHelper;
+import org.eclipse.jface.action.Action;
 
 /**
  * This is the action for print preview. It opens a dialog showing how the
@@ -58,7 +57,7 @@ public class PrintPreviewAction
 	 */
 	public PrintPreviewAction(IPrintActionHelper printActionHelper, PrintPreviewHelper printPreviewHelper) {
 		setId(ID);
-		setText(DiagramPrintingResourceManager.getI18NString("PrintPreview.ActionLabel")); //$NON-NLS-1$
+		setText(DiagramUIPrintingMessages.PrintPreview_ActionLabel);
 		this.printActionHelper = printActionHelper;
 		this.printPreviewHelper = printPreviewHelper;
 	}

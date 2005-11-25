@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
@@ -44,12 +44,11 @@ import org.eclipse.swt.widgets.Display;
 public class ConnectionEditPolicy
 	extends org.eclipse.gef.editpolicies.ConnectionEditPolicy {
 	
-	private static final String DELETE_FROM_DIAGRAM_DLG_TITLE = DiagramResourceManager
-	.getI18NString("PromptingDeleteAction.DeleteFromDiagramDialog.Title"); //$NON-NLS-1$ 
-	private static final String DELETE_FROM_DIAGRAM_DLG_MESSAGE = DiagramResourceManager
-	.getI18NString("PromptingDeleteAction.DeleteFromDiagramDialog.Message"); //$NON-NLS-1$ 	
-	private static final String DELETE_FROM_MODEL_DLG_TOGGLE_LABEL =DiagramResourceManager
-	.getI18NString("MessageDialogWithToggle.DoNotPromptAgainToggle.label"); //$NON-NLS-1$
+	private static final String DELETE_FROM_DIAGRAM_DLG_TITLE = DiagramUIMessages.PromptingDeleteAction_DeleteFromDiagramDialog_Title;
+
+	private static final String DELETE_FROM_DIAGRAM_DLG_MESSAGE = DiagramUIMessages.PromptingDeleteAction_DeleteFromDiagramDialog_Message;
+
+	private static final String DELETE_FROM_MODEL_DLG_TOGGLE_LABEL = DiagramUIMessages.MessageDialogWithToggle_DoNotPromptAgainToggle_label;
 
 	/**
 	 * Returns a delete command to honour the supplied request. Calls

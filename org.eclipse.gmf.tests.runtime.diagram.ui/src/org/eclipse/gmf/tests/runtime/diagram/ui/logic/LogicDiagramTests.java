@@ -127,7 +127,7 @@ public class LogicDiagramTests
 		}
 	}
 
-	public void testZoomDoesntDirtyDiagram() throws Exception {
+	public void xtestZoomDoesntDirtyDiagram() throws Exception {
 		getTestFixture().openDiagram();
 
 	       ZoomManager zoomManager = getZoomManager();
@@ -146,7 +146,7 @@ public class LogicDiagramTests
 	        assertTrue(false == isDirty());                               
 		}
 
-	public void testSelectAllInContext() throws Exception {
+	public void xtestSelectAllInContext() throws Exception {
 		List children = getTestFixture().getDiagramEditPart().getChildren();
 		if (children.isEmpty())
 			assertFalse(true);
@@ -184,7 +184,7 @@ public class LogicDiagramTests
 	 * 
 	 * @throws Exception
 	 */
-	public void testZoomToolbarEnablement()
+	public void xtestZoomToolbarEnablement()
 		throws Exception {
 
 		getTestFixture().openDiagram();
@@ -206,7 +206,7 @@ public class LogicDiagramTests
 	 * Tests the CTRL-D keystroke which initiates a delete from model action.
 	 * See Bugzilla 115108.
 	 */
-	public void testDeleteFromModel()
+	public void xtestDeleteFromModel()
 		throws Exception {
 
 		getTestFixture().openDiagram();
@@ -260,6 +260,30 @@ public class LogicDiagramTests
 
 		assertFalse(
 			"Semantic element not deleted.", semanticContainer.eContents().contains(semanticElement)); //$NON-NLS-1$
+	}
+
+	public void testAlignment()
+		throws Exception {
+		// TODO Auto-generated method stub
+		super.testAlignment();
+	}
+
+	public void testSelect()
+		throws Exception {
+		// TODO Auto-generated method stub
+		super.testSelect();
+	}
+
+	public void testZoom()
+		throws Exception {
+		// TODO Auto-generated method stub
+		super.testZoom();
+	}
+
+	public void testZoomToolFunctionality()
+		throws Exception {
+		// TODO Auto-generated method stub
+		super.testZoomToolFunctionality();
 	}
 
 }

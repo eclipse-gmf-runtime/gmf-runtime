@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
@@ -45,8 +45,10 @@ public class FontNameContributionItem
 	 * @see org.eclipse.gmf.runtime.diagram.ui.ui.actions.ActionContribution#ActionContribution(IEditorPart, String)
 	 */
 	public FontNameContributionItem(IWorkbenchPage workbenchPage) {
-		super(workbenchPage, ActionIds.CUSTOM_FONT_NAME, Properties.ID_FONTNAME, DiagramActionsResourceManager.getI18NString("PropertyDescriptorFactory.FontName")); //$NON-NLS-1$
-		setLabel(DiagramActionsResourceManager.getI18NString("FontNameContributionItem.tooltip"));//$NON-NLS-1$
+		super(workbenchPage, ActionIds.CUSTOM_FONT_NAME,
+			Properties.ID_FONTNAME,
+			DiagramUIActionsMessages.PropertyDescriptorFactory_FontName);
+		setLabel(DiagramUIActionsMessages.FontNameContributionItem_tooltip);
 	}
 
 	/**

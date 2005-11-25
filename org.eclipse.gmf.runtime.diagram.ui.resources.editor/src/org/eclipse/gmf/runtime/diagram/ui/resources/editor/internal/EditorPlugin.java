@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorResourceManager;
 
 /**
  * Editor Plug-in
@@ -58,12 +56,4 @@ public class EditorPlugin
 		return getInstance().getBundle().getSymbolicName();
 	}
 
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return EditorResourceManager.getInstance();
-	}
 }

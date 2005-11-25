@@ -12,10 +12,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import org.eclipse.jface.action.Action;
-
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.jface.action.Action;
 
 /**
  * @author schafe
@@ -31,8 +30,8 @@ public class AddMenuManager extends ActionMenuManager {
 	 */
 	private static class AddMenuAction extends Action {
 		public AddMenuAction() {
-			setText( DiagramActionsResourceManager.getInstance().getString( "Add.menuItem" ) ); //$NON-NLS-1$
-			setToolTipText( DiagramActionsResourceManager.getInstance().getString( "Add.menuItem" ) ); //$NON-NLS-1$			
+			setText(DiagramUIActionsMessages.Add_menuItem);
+			setToolTipText(DiagramUIActionsMessages.Add_menuItem);	
 		}
 	}
 	

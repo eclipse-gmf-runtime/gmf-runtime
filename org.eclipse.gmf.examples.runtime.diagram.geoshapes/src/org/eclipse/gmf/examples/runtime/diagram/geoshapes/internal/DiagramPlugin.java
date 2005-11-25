@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal;
 
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
@@ -71,10 +69,4 @@ public class DiagramPlugin extends XToolsUIPlugin {
 		MSLMetaModelManager.register(NotationPackage.eINSTANCE, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return DiagramResourceManager.getInstance();
-	}
 }

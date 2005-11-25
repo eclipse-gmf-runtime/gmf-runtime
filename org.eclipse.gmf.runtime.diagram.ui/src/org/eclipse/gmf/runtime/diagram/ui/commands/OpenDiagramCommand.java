@@ -15,8 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -25,11 +23,12 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * Command to open a diagram.
@@ -74,7 +73,7 @@ public class OpenDiagramCommand extends AbstractCommand {
 	 * @param element to be opened.
 	 */
 	public OpenDiagramCommand( EObject element ) {
-		this(DiagramResourceManager.getI18NString("Command.openDiagram"), element);//$NON-NLS-1$
+		this(DiagramUIMessages.Command_openDiagram, element);
 	}
 	
 	/**

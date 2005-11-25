@@ -17,18 +17,17 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.gef.EditPart;
-import org.eclipse.ui.views.properties.IPropertySource;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.properties.GetPropertySourceOperation;
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
 import org.eclipse.gmf.runtime.common.ui.services.properties.IPropertiesProvider;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesService;
 import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertySource;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersMessages;
 import org.eclipse.gmf.runtime.emf.ui.properties.providers.GenericEMFPropertiesProvider;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 /**
  * @author Tauseef A. Israr Created: Nov 15, 2002
@@ -41,8 +40,7 @@ public class DiagramPropertiesProvider
 	extends GenericEMFPropertiesProvider
 	implements IPropertiesProvider {
 
-	public static String VIEW_CATEGORY = DiagramProvidersResourceManager
-		.getI18NString("DiagramPropertiesProvider.viewCategory"); //$NON-NLS-1$
+	public static String VIEW_CATEGORY = DiagramUIProvidersMessages.DiagramPropertiesProvider_viewCategory;
 
 	/**
 	 * @see com.ibm.xtools.common.service.IProvider#provides(IOperation)

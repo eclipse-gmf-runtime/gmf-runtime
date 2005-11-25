@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -22,10 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -33,13 +28,17 @@ import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * A command used to optionally create a new view and new element. This command
@@ -106,7 +105,7 @@ public class CreateViewAndOptionallyElementCommand
 	 */
 	public CreateViewAndOptionallyElementCommand(IAdaptable elementAdapter,
 		IGraphicalEditPart containerEP, Point location, PreferencesHint preferencesHint) {
-		super(DiagramResourceManager.getI18NString("CreateCommand.Label")); //$NON-NLS-1$
+		super(DiagramUIMessages.CreateCommand_Label);
 
 		setElementAdapter(elementAdapter);
 		setContainerEP(containerEP);
@@ -194,10 +193,9 @@ public class CreateViewAndOptionallyElementCommand
 				{
 					MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(), SWT.YES | SWT.NO);
 
-					messageBox.setText(DiagramResourceManager.getI18NString("CreateViewAndOptionallyElementCommand.ViewExists.Title"));//$NON-NLS-1$
-					messageBox.setMessage(MessageFormat.
-						format(DiagramResourceManager.getI18NString("CreateViewAndOptionallyElementCommand.ViewExists.Message"), //$NON-NLS-1$
-						new Object[] {EObjectUtil.getName(element)}));
+					messageBox.setText(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Title);
+					messageBox.setMessage(NLS.bind(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Message,
+						EObjectUtil.getName(element)));
 					int iResult = messageBox.open();
 					if(iResult == SWT.YES)
 					{

@@ -11,13 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter;
 
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
  * Sort/Filter dialog.  The OK button applies all changes from each 
@@ -29,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 public class SortFilterDialog extends PreferenceDialog {
 	
 	/** dialog title prefix */
-	private final String title = DiagramResourceManager.getInstance().getString("SortFilterDialog.title");//$NON-NLS-1$
+	private final String title = DiagramUIMessages.SortFilterDialog_title;
 	
 	/**
 	 * CollectionEditorDialog constructor

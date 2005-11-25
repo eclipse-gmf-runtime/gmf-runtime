@@ -24,7 +24,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesImages;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -34,6 +35,7 @@ import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -67,33 +69,26 @@ public class ColorsAndFontsPropertySection
 	extends AbstractNotationPropertiesSection {
 
 	// properties
-	protected static final String FONT_COLOR_COMMAND_NAME = ResourceManager
-		.getI18NString("FontColor.commandText") + StringStatics.SPACE //$NON-NLS-1$
+	protected static final String FONT_COLOR_COMMAND_NAME = DiagramUIPropertiesMessages.
+		FontColor_commandText + StringStatics.SPACE 
 		+ VALUE_CHANGED_STRING;
 
-	protected static final String LINE_COLOR_COMMAND_NAME = ResourceManager
-		.getI18NString("LineColor.commandText") + StringStatics.SPACE //$NON-NLS-1$
+	protected static final String LINE_COLOR_COMMAND_NAME = DiagramUIPropertiesMessages.
+		LineColor_commandText + StringStatics.SPACE 
 		+ VALUE_CHANGED_STRING;
 
 	// properties
-	protected static final String FONT_COMMAND_NAME = ResourceManager
-		.getI18NString("Font.commandText") + StringStatics.SPACE //$NON-NLS-1$
+	protected static final String FONT_COMMAND_NAME = DiagramUIPropertiesMessages.
+		Font_commandText + StringStatics.SPACE 
 		+ VALUE_CHANGED_STRING;
 
 
-	static protected final String FILL_COLOR_COMMAND_NAME = ResourceManager
-		.getI18NString("FillColor.commandText") + StringStatics.SPACE //$NON-NLS-1$
+	static protected final String FILL_COLOR_COMMAND_NAME = DiagramUIPropertiesMessages.
+		FillColor_commandText + StringStatics.SPACE 
 		+ VALUE_CHANGED_STRING;
-
-	// image names
-	protected static final String FILL_COLOR_IMAGE_NAME = "fill_color.gif"; //$NON-NLS-1$
-
-	protected static final String BOLD_IMAGE_NAME = "bold.gif"; //$NON-NLS-1$
-
-	protected static final String ITALIC_IMAGE_NAME = "italic.gif"; //$NON-NLS-1$
 	
-	protected static final String FONTS_AND_COLORS_LABEL = ResourceManager
-		.getI18NString("FontAndColor.nameLabel"); //$NON-NLS-1$
+	protected static final String FONTS_AND_COLORS_LABEL = DiagramUIPropertiesMessages.
+		FontAndColor_nameLabel;
 
 	protected ToolItem fillColorButton;
 
@@ -166,12 +161,6 @@ public class ColorsAndFontsPropertySection
 
 	/** the default preference color */
 	protected static final RGB DEFAULT_PREF_COLOR = new RGB(0, 0, 0);
-
-	private static final String FONT_COLOR_IMAGE_NAME = "font_color.gif"; //$NON-NLS-1$
-
-	private static final String LINE_COLOR_IMAGE_NAME = "line_color.gif"; //$NON-NLS-1$
-
-	
 
 	protected ToolItem fontColorButton;
 
@@ -277,13 +266,11 @@ public class ColorsAndFontsPropertySection
 		ToolBar toolBar = new ToolBar(coolBar, SWT.FLAT);
 
 		fontBoldButton = new ToolItem(toolBar, SWT.CHECK);
-		fontBoldButton.setImage(ResourceManager.getInstance().getImage(
-			BOLD_IMAGE_NAME));
+		fontBoldButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_BOLD));
 	
 		
 		fontItalicButton = new ToolItem(toolBar, SWT.CHECK );
-		fontItalicButton.setImage(ResourceManager.getInstance().getImage(
-			ITALIC_IMAGE_NAME));
+		fontItalicButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_ITALIC));
 
 		fontBoldButton.addSelectionListener(new SelectionAdapter() {
 
@@ -302,8 +289,7 @@ public class ColorsAndFontsPropertySection
 		new ToolItem(toolBar, SWT.SEPARATOR);
 
 		fontColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
-		fontColorButton.setImage(ResourceManager.getInstance().getImage(
-			FONT_COLOR_IMAGE_NAME));
+		fontColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FONT_COLOR));
 
 		fontColorButton.addSelectionListener(new SelectionAdapter() {
 
@@ -315,8 +301,7 @@ public class ColorsAndFontsPropertySection
 		new ToolItem(toolBar, SWT.SEPARATOR);
 
 		lineColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
-		lineColorButton.setImage(ResourceManager.getInstance().getImage(
-			LINE_COLOR_IMAGE_NAME));
+		lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
 
 		lineColorButton.addSelectionListener(new SelectionAdapter() {
 
@@ -326,8 +311,7 @@ public class ColorsAndFontsPropertySection
 		});
 
 		fillColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
-		fillColorButton.setImage(ResourceManager.getInstance().getImage(
-			FILL_COLOR_IMAGE_NAME));
+		fillColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FILL_COLOR));
 
 		fillColorButton.setEnabled(false);
 
@@ -360,7 +344,7 @@ public class ColorsAndFontsPropertySection
 	protected void changeLineColor(SelectionEvent event) {
 		lineColor = changeColor(event, lineColorButton,
 			IPreferenceConstants.PREF_LINE_COLOR, Properties.ID_LINECOLOR,
-			LINE_COLOR_COMMAND_NAME, LINE_COLOR_IMAGE_NAME);
+			LINE_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_LINE_COLOR);
 	}
 
 	/**
@@ -372,7 +356,7 @@ public class ColorsAndFontsPropertySection
 	protected void changeFontColor(SelectionEvent event) {
 		fontColor = changeColor(event, fontColorButton,
 			IPreferenceConstants.PREF_FONT_COLOR, Properties.ID_FONTCOLOR,
-			FONT_COLOR_COMMAND_NAME, FONT_COLOR_IMAGE_NAME);
+			FONT_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_FONT_COLOR);
 	}
 
 	/**
@@ -391,6 +375,7 @@ public class ColorsAndFontsPropertySection
 	 *            name of the image to draw overlay on the button after the new
 	 *            color is set
 	 * @return - new RGB color, or null if none selected
+	 * @deprecated Use {@link #changeColor(SelectionEvent, ToolItem, String, String, String, ImageDescriptor) instead and pass in the image descriptor itself.  To be removed on: 05/12/26
 	 */
 	protected RGB changeColor(SelectionEvent event, ToolItem button,
 			String preferenceId, final String propertyId, String commandName,
@@ -429,7 +414,7 @@ public class ColorsAndFontsPropertySection
 
 				executeAsCompositeCommand(commandName, commands);
 				Image overlyedImage = new ColorOverlayImageDescriptor(
-					ResourceManager.getInstance().getImage(imageName)
+					DiagramUIPropertiesImages.get(imageName)
 						.getImageData(), color).createImage();
 				button.setImage(overlyedImage);
 			}
@@ -440,6 +425,69 @@ public class ColorsAndFontsPropertySection
 
 	}
 
+	/**
+	 * @param event -
+	 *            selection event
+	 * @param button -
+	 *            event source
+	 * @param preferenceId -
+	 *            id of the preference of the default color value for that
+	 *            property
+	 * @param propertyId -
+	 *            id of the property
+	 * @param commandName -
+	 *            name of the command
+	 * @param imageDescriptor -
+	 *            the image to draw overlay on the button after the new
+	 *            color is set
+	 * @return - new RGB color, or null if none selected
+	 */
+	protected RGB changeColor(SelectionEvent event, ToolItem button,
+			String preferenceId, final String propertyId, String commandName,
+			ImageDescriptor imageDescriptor) {
+
+		ColorPalettePopup popup = new ColorPalettePopup(button.getParent()
+			.getShell(), preferenceId, IDialogConstants.BUTTON_BAR_HEIGHT);
+
+		Rectangle r = button.getBounds();
+		Point location = button.getParent().toDisplay(r.x, r.y);
+		popup.open(new Point(location.x, location.y + r.height));
+		if (popup.getSelectedColor() != null) {
+			final RGB color = popup.getSelectedColor();
+
+			// Update model in response to user
+
+			if (color != null) {
+
+				List commands = new ArrayList();
+				Iterator it = getInputIterator();
+
+				while (it.hasNext()) {
+					final IGraphicalEditPart ep = (IGraphicalEditPart) it
+						.next();
+					commands.add(createCommand(commandName, ((View) ep
+						.getModel()).eResource(), new Runnable() {
+
+						public void run() {
+							ENamedElement element = (EStructuralFeature)MetaModelUtil.getElement(propertyId);
+							if (element instanceof EStructuralFeature)
+								ep.setStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(propertyId), FigureUtilities
+									.RGBToInteger(color));
+						}
+					}));
+				}
+
+				executeAsCompositeCommand(commandName, commands);
+				Image overlyedImage = new ColorOverlayImageDescriptor(
+					imageDescriptor.getImageData(), color).createImage();
+				button.setImage(overlyedImage);
+			}
+
+			return color;
+		}
+		return null;
+
+	}
 	/**
 	 * Update font property
 	 */
@@ -552,14 +600,14 @@ public class ColorsAndFontsPropertySection
 	 */
 	public void refresh() {
 		if(!isDisposed()){
-		Image overlyedImage = new ColorOverlayImageDescriptor(ResourceManager
-			.getInstance().getImage(FONT_COLOR_IMAGE_NAME).getImageData(),
-			fontColor).createImage();
+		Image overlyedImage = new ColorOverlayImageDescriptor(
+				DiagramUIPropertiesImages.DESC_FONT_COLOR.getImageData(),
+				fontColor).createImage();
 		fontColorButton.setImage(overlyedImage);
 
-		overlyedImage = new ColorOverlayImageDescriptor(ResourceManager
-			.getInstance().getImage(LINE_COLOR_IMAGE_NAME).getImageData(),
-			lineColor).createImage();
+		overlyedImage = new ColorOverlayImageDescriptor(
+				DiagramUIPropertiesImages.DESC_LINE_COLOR.getImageData(),
+				lineColor).createImage();
 		lineColorButton.setImage(overlyedImage);
 
 		executeAsReadAction(new MRunnable() {

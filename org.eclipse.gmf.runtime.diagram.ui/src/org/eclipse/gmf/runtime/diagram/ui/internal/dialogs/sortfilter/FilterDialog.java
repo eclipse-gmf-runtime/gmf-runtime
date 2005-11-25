@@ -19,6 +19,18 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterContentEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.notation.Filtering;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -36,19 +48,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterContentEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
-import org.eclipse.gmf.runtime.notation.Filtering;
-
 
 /**
  * Simple dialog that support filtering of list compartment items through visibililty
@@ -60,22 +59,22 @@ public class FilterDialog
 	extends Dialog {
 	
 	/** dialog title prefix */
-	private final String title = DiagramResourceManager.getInstance().getString("SortFilterDialog.title");//$NON-NLS-1$
+	private final String title = DiagramUIMessages.SortFilterDialog_title;
 	
 	/** filter list labels */
-	static private final String FILTER_ITEMS_CONTAINING = DiagramResourceManager.getInstance().getString("SortFilter.filterItemsListLabel"); //$NON-NLS-1$	
-	static private final String FILTER_ITEMS_LIST = DiagramResourceManager.getInstance().getString("SortFilter.fitlerListLabel"); //$NON-NLS-1$
+	static private final String FILTER_ITEMS_CONTAINING = DiagramUIMessages.SortFilter_filterItemsListLabel;	
+	static private final String FILTER_ITEMS_LIST = DiagramUIMessages.SortFilter_fitlerListLabel;
 
 	/** Tool tips and labels for the filter buttons */
-	static private final String ADD_TO = DiagramResourceManager.getInstance().getString("SortFilter.addTo"); //$NON-NLS-1$
+	static private final String ADD_TO = DiagramUIMessages.SortFilter_addTo;
 	private final String ADD_TO_LABEL = "<"; //$NON-NLS-1$
-	static private final String REMOVE_FROM = DiagramResourceManager.getInstance().getString("SortFilter.removeFrom"); //$NON-NLS-1$
+	static private final String REMOVE_FROM = DiagramUIMessages.SortFilter_removeFrom;
 	private final String REMOVE_FROM_LABEL = ">"; //$NON-NLS-1$	
-	static private final String ADD_ALL = DiagramResourceManager.getInstance().getString("SortFilter.addAll"); //$NON-NLS-1$
+	static private final String ADD_ALL = DiagramUIMessages.SortFilter_addAll;
 	private final String ADD_ALL_LABEL = "<<"; //$NON-NLS-1$
-	static private final String REMOVE_ALL = DiagramResourceManager.getInstance().getString("SortFilter.removeAll"); //$NON-NLS-1$
+	static private final String REMOVE_ALL = DiagramUIMessages.SortFilter_removeAll;
 	private final String REMOVE_ALL_LABEL = ">>"; //$NON-NLS-1$
-	static private final String APPLY = DiagramResourceManager.getInstance().getString("SortFilter.apply"); //$NON-NLS-1$
+	static private final String APPLY = DiagramUIMessages.SortFilter_apply;
 
 	/** List item widgets */
 	private org.eclipse.swt.widgets.List filterList = null;
@@ -438,8 +437,7 @@ public class FilterDialog
 
 		// Run the command
 		CompositeModelCommand cc = new CompositeModelCommand(
-			DiagramResourceManager
-				.getI18NString("Command.SortFilterCommand"));//$NON-NLS-1$		
+			DiagramUIMessages.Command_SortFilterCommand);		
 		Iterator iter = selection.iterator();
 		while (iter.hasNext()) {
 			GraphicalEditPart ep = (GraphicalEditPart) iter.next();

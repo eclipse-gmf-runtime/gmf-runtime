@@ -22,14 +22,14 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -39,9 +39,6 @@ import org.eclipse.ui.IWorkbenchPage;
  * @canBeSeenBy %level1
  */
 public class SizeWidthAction extends DiagramAction {
-
-	private static final String ACTION_LABEL   = "SameSizeAction.MakeSameSizeWidth.ActionLabelText"; //$NON-NLS-1$
-	private static final String ACTION_TOOLTIP = "SameSizeAction.MakeSameSizeWidth.ActionToolTipText"; //$NON-NLS-1$
 
 	/**
 	 * Creates the Make Same Size Both Action
@@ -60,13 +57,10 @@ public class SizeWidthAction extends DiagramAction {
 		super.init();
 		
 		setId(ActionIds.ACTION_MAKE_SAME_SIZE_WIDTH);
-		setText(DiagramActionsResourceManager.getI18NString( ACTION_LABEL ) );
-		setToolTipText(DiagramActionsResourceManager.getI18NString( ACTION_TOOLTIP ) );
-		ImageDescriptor enabledImage = DiagramActionsResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_MAKE_SAME_SIZE_WIDTH);
-		setImageDescriptor(enabledImage);
-		setHoverImageDescriptor(enabledImage);
+		setText(DiagramUIActionsMessages.SameSizeAction_MakeSameSizeWidth_ActionLabelText);
+		setToolTipText(DiagramUIActionsMessages.SameSizeAction_MakeSameSizeWidth_ActionToolTipText);
+		setImageDescriptor(DiagramUIActionsPluginImages.DESC_MAKE_SAME_SIZE_WIDTH);
+		setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_MAKE_SAME_SIZE_WIDTH);
 	}
 	
 	/* (non-Javadoc)

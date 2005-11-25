@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -52,8 +52,7 @@ public abstract class IndividualConnectionLabelAction
 		super(
 			workbenchPage,
 			MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
-			DiagramActionsResourceManager
-				.getI18NString("ConstrainedFlowLayoutEditPolicy.changeVisibilityCommand.label")); //$NON-NLS-1$
+			DiagramUIActionsMessages.ConstrainedFlowLayoutEditPolicy_changeVisibilityCommand_label);
 		Assert.isNotNull(labelSemanticHints);
 		this.labelSemanticHints = labelSemanticHints;
 	}

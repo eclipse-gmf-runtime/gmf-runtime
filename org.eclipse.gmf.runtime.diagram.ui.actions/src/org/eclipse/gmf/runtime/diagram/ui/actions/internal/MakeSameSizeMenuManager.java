@@ -14,7 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -24,17 +24,14 @@ import org.eclipse.jface.action.Action;
  * @canBeSeenBy %level1
  */
 public class MakeSameSizeMenuManager extends ActionMenuManager {
-	
-	private static final String MENU_LABEL   = "SameSizeMenuManager.MakeSameSize.ActionLabelText"; //$NON-NLS-1$
-	private static final String MENU_TOOLTIP = "SameSizeMenuManager.MakeSameSize.ActionToolTipText"; //$NON-NLS-1$
 
 	/**
 	 * The order menu action containing the UI for the zorder menu manager
 	 */
 	private static class MakeSameMenuAction extends Action {
 		public MakeSameMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString( MENU_LABEL ));
-			setToolTipText(DiagramActionsResourceManager.getI18NString( MENU_TOOLTIP ));
+			setText(DiagramUIActionsMessages.SameSizeMenuManager_MakeSameSize_ActionLabelText);
+			setToolTipText(DiagramUIActionsMessages.SameSizeMenuManager_MakeSameSize_ActionToolTipText);
 		}
 	}
 

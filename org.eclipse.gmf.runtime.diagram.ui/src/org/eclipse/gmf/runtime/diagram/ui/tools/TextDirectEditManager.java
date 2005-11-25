@@ -19,8 +19,8 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
@@ -156,7 +156,7 @@ public class TextDirectEditManager
 			fontSize.height = data.getHeight();
 
 		data.setHeight(fontSize.height);
-		Font newFont = Draw2dResourceManager.getInstance().getFont(null, data);
+		Font newFont = DiagramFontRegistry.getInstance().getFont(null, data);
 		return newFont;
 	}
 	

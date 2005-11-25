@@ -16,12 +16,11 @@ import java.util.Collections;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
-
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -49,7 +48,7 @@ public class ModifySortFilterEditPolicy
 		if (RequestConstants.REQ_CHANGE_SORT_FILTER.equals(request.getType())) {
 			ChangeSortFilterRequest req = (ChangeSortFilterRequest) request;
 			View view = (View)((ListCompartmentEditPart)getHost()).getModel();
-			CompositeModelCommand command = new CompositeModelCommand(DiagramResourceManager.getI18NString("Command.SortFilterCommand")); //$NON-NLS-1$
+			CompositeModelCommand command = new CompositeModelCommand(DiagramUIMessages.Command_SortFilterCommand);
 			SetPropertyCommand filteringCommand = new SetPropertyCommand(new EObjectAdapter(view), Properties.ID_FILTERING, Properties.ID_FILTERING, req.getFiltering());
 			SetPropertyCommand filterKeyCommand = new SetPropertyCommand(new EObjectAdapter(view), Properties.ID_FILTERING_KEYS, Properties.ID_FILTERING_KEYS, req.getFilterKeys());
 			SetPropertyCommand filteredObjectsCommand = new SetPropertyCommand(new EObjectAdapter(view), Properties.ID_FILTERED_OBJECTS, Properties.ID_FILTERED_OBJECTS, req.getFilteredObjects());

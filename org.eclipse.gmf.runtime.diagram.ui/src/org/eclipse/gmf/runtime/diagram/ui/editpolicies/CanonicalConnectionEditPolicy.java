@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ICanonicalShapeCompartmentLayout;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
@@ -51,6 +50,7 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * A specialized implementation of <code>CanonicalEditPolicy</code>.
@@ -339,11 +339,10 @@ public abstract class CanonicalConnectionEditPolicy
 			SetViewMutabilityCommand.makeMutable(adapter).execute();
 			model = (Edge) adapter.getAdapter(Edge.class);
 			if (model == null) {
-				String eMsg = MessageFormat
-					.format(
-						DiagramResourceManager
-							.getI18NString("CanonicalEditPolicy.create.view.failed_ERROR_"),//$NON-NLS-1$
-						new Object[] {connection});
+				String eMsg = NLS
+					.bind(
+						DiagramUIMessages.CanonicalEditPolicy_create_view_failed_ERROR_,
+						connection);
 				IllegalStateException ise = new IllegalStateException(eMsg);
 				Log.error(DiagramUIPlugin.getInstance(), IStatus.ERROR, eMsg,
 					ise);

@@ -12,12 +12,11 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 
 import org.eclipse.gef.Request;
-import org.eclipse.ui.IWorkbenchPage;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.ui.IWorkbenchPage;
 
 
 
@@ -31,8 +30,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  */
 public class OpenAction
 extends DiagramAction {
-	private static final String ACTION_LABEL   = "Open.ActionLabelText"; //$NON-NLS-1$
-	private static final String ACTION_TOOLTIP = "Open.ActionToolTipText"; //$NON-NLS-1$
 	
 	/**
 	 * @param workbenchPage
@@ -45,8 +42,8 @@ extends DiagramAction {
 		super.init();
 		
 		setId(ActionIds.OPEN);
-		setText(DiagramResourceManager.getI18NString( ACTION_LABEL ) );
-		setToolTipText(DiagramResourceManager.getI18NString( ACTION_TOOLTIP ) );
+		setText(DiagramUIMessages.Open_ActionLabelText);
+		setToolTipText(DiagramUIMessages.Open_ActionToolTipText);
 	}
 
 	protected Request createTargetRequest() {		

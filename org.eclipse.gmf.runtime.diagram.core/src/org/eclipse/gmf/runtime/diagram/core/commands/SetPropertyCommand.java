@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.core.commands;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -19,11 +18,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * A command to a set a property of a view
@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class SetPropertyCommand extends AbstractModelCommand {
 
-	static final private String CHANGE_PROPERTY_PATTERN = DiagramResourceManager.getI18NString("Command.ChangeViewProperty.ChangePropertyPattern"); //$NON-NLS-1$ 
+	static final private String CHANGE_PROPERTY_PATTERN = DiagramCoreMessages.Command_ChangeViewProperty_ChangePropertyPattern; 
 
 	private IAdaptable viewAdapter;
 	private String propertyName;
@@ -82,10 +82,8 @@ public class SetPropertyCommand extends AbstractModelCommand {
 	 */
 	public String getLabel() {
 		String label = super.getLabel();
-		return (label != null)
-			? label
-			: (MessageFormat
-				.format(CHANGE_PROPERTY_PATTERN, new Object[] { propertyName }));
+		return (label != null) ? label
+			: (NLS.bind(CHANGE_PROPERTY_PATTERN, propertyName));
 	}
 
 	/* (non-Javadoc)

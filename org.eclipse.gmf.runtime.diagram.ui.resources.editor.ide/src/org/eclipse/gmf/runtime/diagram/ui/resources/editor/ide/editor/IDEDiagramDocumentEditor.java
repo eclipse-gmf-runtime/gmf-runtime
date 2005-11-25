@@ -1,7 +1,5 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -10,7 +8,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentProvider;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditor;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
@@ -18,6 +15,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorMatchingStrategy;
@@ -67,7 +65,7 @@ public class IDEDiagramDocumentEditor
 		}
 
 		if (provider.isDeleted(input) && original != null) {
-			String message= MessageFormat.format(EditorMessages.Editor_warning_save_delete, new Object[] { original.getName() });
+			String message= NLS.bind(EditorMessages.Editor_warning_save_delete, original.getName());
 			dialog.setErrorMessage(null);
 			dialog.setMessage(message, IMessageProvider.WARNING);
 		}
@@ -95,7 +93,7 @@ public class IDEDiagramDocumentEditor
 		IEditorReference[] editorRefs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 		for (int i=0; i < editorRefs.length; i++) {
 			if (matchingStrategy.matches(editorRefs[i],newInput)) {
-				MessageDialog.openWarning(shell, ResourceManager.getI18NString("FileSaveAs.DialogTitle"), ResourceManager.getI18NString("FileSaveAs.DialogMessageText"));	//$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openWarning(shell, org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages.FileSaveAs_DialogTitle, org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages.FileSaveAs_DialogMessageText);
 				return;
 			}
 		}

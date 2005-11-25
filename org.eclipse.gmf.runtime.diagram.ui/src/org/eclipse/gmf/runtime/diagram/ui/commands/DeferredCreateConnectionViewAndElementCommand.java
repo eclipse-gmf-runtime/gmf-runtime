@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SuppressibleUIRequest;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
@@ -69,8 +69,7 @@ public class DeferredCreateConnectionViewAndElementCommand
 			IAdaptable sourceViewAdapter, IAdaptable targetViewAdapter,
 			EditPartViewer currentViewer) {
 
-		super(DiagramResourceManager
-			.getI18NString("Commands.CreateCommand.Connection.Label")); //$NON-NLS-1$
+		super(DiagramUIMessages.Commands_CreateCommand_Connection_Label);
 		Assert.isNotNull(currentViewer, "currentViewer is null"); //$NON-NLS-1$
 		this.sourceViewAdapter = sourceViewAdapter;
 		this.targetViewAdapter = targetViewAdapter;

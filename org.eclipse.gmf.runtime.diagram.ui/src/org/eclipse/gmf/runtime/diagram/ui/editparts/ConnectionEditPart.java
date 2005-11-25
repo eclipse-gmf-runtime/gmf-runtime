@@ -70,9 +70,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectionBendpointEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
@@ -379,8 +381,7 @@ abstract public class ConnectionEditPart
 						return name.substring(startIndex, endIndex);
 					}
 
-					return DiagramResourceManager.getInstance().getString(
-						"Accessible.Connection.Label"); //$NON-NLS-1$
+					return DiagramUIMessages.Accessible_Connection_Label;
 				}
 
 				public void getName(AccessibleEvent e) {
@@ -400,8 +401,8 @@ abstract public class ConnectionEditPart
 						AccessibleEvent event = new AccessibleEvent(this);
 						aEP.getName(event);
 						msg.append(" "); //$NON-NLS-1$
-						msg.append(DiagramResourceManager.getInstance()
-							.getString("Accessible.Connection.From")); //$NON-NLS-1$
+						msg
+							.append(DiagramUIMessages.Accessible_Connection_From);
 						msg.append(" "); //$NON-NLS-1$
 						msg.append(event.result);
 					}
@@ -413,8 +414,7 @@ abstract public class ConnectionEditPart
 						AccessibleEvent event = new AccessibleEvent(this);
 						aEP.getName(event);
 						msg.append(" "); //$NON-NLS-1$
-						msg.append(DiagramResourceManager.getInstance()
-							.getString("Accessible.Connection.To")); //$NON-NLS-1$
+						msg.append(DiagramUIMessages.Accessible_Connection_To);
 						msg.append(" "); //$NON-NLS-1$
 						msg.append(event.result);
 					}
@@ -717,8 +717,8 @@ abstract public class ConnectionEditPart
 		LineStyle style = (LineStyle) getPrimaryView().getStyle(
 			NotationPackage.eINSTANCE.getLineStyle());
 		if (style != null)
-			setForegroundColor(DiagramResourceManager.getInstance().getColor(
-				new Integer(style.getLineColor())));
+			setForegroundColor(DiagramColorRegistry
+				.getInstance().getColor(new Integer(style.getLineColor())));
 	}
 
 	/**
@@ -1152,7 +1152,7 @@ abstract public class ConnectionEditPart
 	 */
 	protected void setFont(FontData fontData) {
 		getFigure().setFont(
-			DiagramResourceManager.getInstance().getFont(Display.getDefault(),
+			DiagramFontRegistry.getInstance().getFont(Display.getDefault(),
 				fontData));
 		getFigure().repaint();
 	}
@@ -1505,7 +1505,8 @@ abstract public class ConnectionEditPart
 		} else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(
 			feature)) {
 			Integer c = (Integer) event.getNewValue();
-			setForegroundColor(DiagramResourceManager.getInstance().getColor(c));
+			setForegroundColor(DiagramColorRegistry
+				.getInstance().getColor(c));
 		} else if (NotationPackage.eINSTANCE.getRelativeBendpoints_Points()
 			.equals(feature)) {
 			refreshBendpoints();
@@ -1518,18 +1519,20 @@ abstract public class ConnectionEditPart
 			&& event.getNotifier() == ((View) getModel()).getElement())
 			handleMajorSemanticChange();
 	}
-	
+
 	/**
-	 * @return <code>IMapMode</code> that allows for the coordinate mapping from device to
-	 * logical units. 
+	 * @return <code>IMapMode</code> that allows for the coordinate mapping
+	 *         from device to logical units.
 	 */
 	final protected IMapMode getMapMode() {
 		EditPart parent = getParent();
-		if (parent instanceof DiagramRootEditPart) 
-			return ((DiagramRootEditPart)parent).getMapMode();
+		if (parent instanceof DiagramRootEditPart)
+			return ((DiagramRootEditPart) parent).getMapMode();
 		else if (parent instanceof org.eclipse.gef.GraphicalEditPart)
-			return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)parent).getFigure());
-		
+			return MapModeUtil
+				.getMapMode(((org.eclipse.gef.GraphicalEditPart) parent)
+					.getFigure());
+
 		return MapModeUtil.getMapMode();
 	}
 }

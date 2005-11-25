@@ -40,6 +40,18 @@ final public class EditorMessages extends NLS {
 	public static String StorageDocumentProvider_updateCache;
 	public static String StorageDocumentProvider_isReadOnly;
 	public static String StorageDocumentProvider_isModifiable;
+	
+	public static String WizardPage_DIAGRAM_CREATION_FAIL_EXC_;
+
+	public static String WizardPage_Message_FileExists_ERROR_;
+
+	public static String FileCreator_TaskTitle;
+	public static String EditorWizardPage_DialogInternalErrorTitle;
+	public static String EditorWizardPage_InvalidFilename; 
+	
+	public static String FileSaveAs_DialogTitle;
+	public static String FileSaveAs_DialogMessageText;
+
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EditorMessages.class);

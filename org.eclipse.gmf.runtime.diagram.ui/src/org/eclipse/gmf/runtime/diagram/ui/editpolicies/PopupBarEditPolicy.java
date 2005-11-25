@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,14 +36,16 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.AddUMLActionBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.PopupBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
@@ -294,11 +295,11 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 		}
 	}
 
-	private static Image IMAGE_POPUPBAR_PLUS = DiagramResourceManager
-		.getInstance().getImage(DiagramResourceManager.IMAGE_POPUPBAR_PLUS);
+	private static Image IMAGE_POPUPBAR_PLUS = DiagramUIPluginImages
+		.get(DiagramUIPluginImages.IMG_POPUPBAR_PLUS);
 
-	private static Image IMAGE_POPUPBAR = DiagramResourceManager
-		.getInstance().getImage(DiagramResourceManager.IMAGE_POPUPBAR);
+	private static Image IMAGE_POPUPBAR = DiagramUIPluginImages
+		.get(DiagramUIPluginImages.IMG_POPUPBAR);
 	
 	/**
 	 * 
@@ -692,10 +693,10 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 		Image theImage,
 		DragTracker theTracker) {
 
-		String theInputStr = DiagramResourceManager.getI18NString("PopupBar.AddNew"); //$NON-NLS-1$
+		String theInputStr = DiagramUIMessages.PopupBar_AddNew;
 
 
-		String theTip = MessageFormat.format(theInputStr, new Object[] {elementType.getDisplayName()});
+		String theTip = NLS.bind(theInputStr, elementType.getDisplayName());
 	
 		addPopupBarDescriptor(elementType, theImage, theTracker, theTip);
 	}

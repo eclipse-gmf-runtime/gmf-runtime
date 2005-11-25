@@ -19,7 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.LogicFlowEditPolicy;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
@@ -66,7 +66,7 @@ public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
 		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, new DragDropEditPolicy());
 		installEditPolicy(EditPolicy.NODE_ROLE, null);
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, null);
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new LogicFlowEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new LogicFlowEditPolicy());	
 		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE, new PopupBarEditPolicy());
 	}
 	
@@ -76,8 +76,7 @@ public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
 	 * @return The compartment title
 	 */
 	protected String getTitleName(){
-		return LogicResourceManager
-			.getI18NString("LogicFlowCompartmentEditPart.Title"); //$NON-NLS-1$
+		return ExampleDiagramLogicMessages.LogicFlowCompartmentEditPart_Title;
 	}
 
 	/* (non-Javadoc)

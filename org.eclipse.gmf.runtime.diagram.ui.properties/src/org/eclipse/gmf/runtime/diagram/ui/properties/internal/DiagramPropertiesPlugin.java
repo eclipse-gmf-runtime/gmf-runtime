@@ -11,11 +11,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.properties.internal;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCollapser;
 
 /**
@@ -58,17 +56,6 @@ public class DiagramPropertiesPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getBundle().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
 	}
 
 	/**

@@ -12,7 +12,6 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.clipboard,
  org.eclipse.gmf.runtime.diagram.ui.render.internal.commands,
  org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts,
  org.eclipse.gmf.runtime.diagram.ui.render.internal.providers,
- org.eclipse.gmf.runtime.diagram.ui.render.l10n,
  org.eclipse.gmf.runtime.diagram.ui.render.providers,
  org.eclipse.gmf.runtime.diagram.ui.render.util
 Require-Bundle: org.eclipse.ui,

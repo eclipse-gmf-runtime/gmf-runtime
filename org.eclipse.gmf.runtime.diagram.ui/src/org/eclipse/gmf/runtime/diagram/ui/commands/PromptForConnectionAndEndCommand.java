@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,7 +27,7 @@ import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
@@ -39,6 +38,7 @@ import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssista
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.SelectExistingElementForSourceOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.SelectExistingElementForTargetOperation;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -77,14 +77,12 @@ public class PromptForConnectionAndEndCommand
 		public String getText(Object element) {
 			String theInputStr = null;
 			if (isDirectionReversed())
-				theInputStr = DiagramResourceManager
-					.getI18NString("ConnectionHandle.Popup.CreateXFrom"); //$NON-NLS-1$
+				theInputStr = DiagramUIMessages.ConnectionHandle_Popup_CreateXFrom;
 			else
-				theInputStr = DiagramResourceManager
-					.getI18NString("ConnectionHandle.Popup.CreateXTo"); //$NON-NLS-1$
+				theInputStr = DiagramUIMessages.ConnectionHandle_Popup_CreateXTo;
 
-			String text = MessageFormat.format(theInputStr, new Object[] {super
-				.getText(element)});
+			String text = NLS.bind(theInputStr, super
+				.getText(element));
 
 			return text;
 
@@ -105,10 +103,9 @@ public class PromptForConnectionAndEndCommand
 		 */
 		public String getText(Object element) {
 			if (element instanceof IElementType) {
-				String theInputStr = DiagramResourceManager
-					.getI18NString("ConnectionHandle.Popup.NewX"); //$NON-NLS-1$
-				String text = MessageFormat.format(theInputStr,
-					new Object[] {super.getText(element)});
+				String theInputStr = DiagramUIMessages.ConnectionHandle_Popup_NewX;
+				String text = NLS.bind(theInputStr,
+					super.getText(element));
 				return text;
 			} else {
 				return element.toString();
@@ -146,22 +143,18 @@ public class PromptForConnectionAndEndCommand
 			String theInputStr = null;
 			if (element instanceof IElementType) {
 				if (isDirectionReversed())
-					theInputStr = DiagramResourceManager
-						.getI18NString("ConnectionHandle.Popup.CreateXFromNewY"); //$NON-NLS-1$
+					theInputStr = DiagramUIMessages.ConnectionHandle_Popup_CreateXFromNewY;
 				else
-					theInputStr = DiagramResourceManager
-						.getI18NString("ConnectionHandle.Popup.CreateXToNewY"); //$NON-NLS-1$
-				String text = MessageFormat.format(theInputStr, new Object[] {
+					theInputStr = DiagramUIMessages.ConnectionHandle_Popup_CreateXToNewY;
+				String text = NLS.bind(theInputStr, new Object[] {
 					super.getText(connectionItem), super.getText(element)});
 				return text;
 			} else {
 				if (isDirectionReversed())
-					theInputStr = DiagramResourceManager
-						.getI18NString("ConnectionHandle.Popup.CreateXFromY"); //$NON-NLS-1$
+					theInputStr = DiagramUIMessages.ConnectionHandle_Popup_CreateXFromY;
 				else
-					theInputStr = DiagramResourceManager
-						.getI18NString("ConnectionHandle.Popup.CreateXToY"); //$NON-NLS-1$
-				String text = MessageFormat.format(theInputStr, new Object[] {
+					theInputStr = DiagramUIMessages.ConnectionHandle_Popup_CreateXToY;
+				String text = NLS.bind(theInputStr, new Object[] {
 					super.getText(connectionItem), super.getText(element)});
 				return text;
 			}
@@ -181,8 +174,7 @@ public class PromptForConnectionAndEndCommand
 	/**
 	 * This can be added to the content list to add a 'select existing' option.
 	 */
-	private static String EXISTING_ELEMENT = DiagramResourceManager
-		.getI18NString("ConnectionHandle.Popup.ExistingElement"); //$NON-NLS-1$
+	private static String EXISTING_ELEMENT = DiagramUIMessages.ConnectionHandle_Popup_ExistingElement;
 
 	/** Label provider of the popup menu for the connection types. */
 	private static ConnectionLabelProvider connectionLabelProvider;
@@ -220,8 +212,7 @@ public class PromptForConnectionAndEndCommand
 	public PromptForConnectionAndEndCommand(CreateConnectionRequest request,
 			IGraphicalEditPart containerEP) {
 
-		super(DiagramResourceManager
-			.getI18NString("Command.GetRelationshipTypeAndEndFromUser.Label"), //$NON-NLS-1$
+		super(DiagramUIMessages.Command_GetRelationshipTypeAndEndFromUser_Label,
 			Display.getCurrent().getActiveShell());
 		this.request = request;
 		this.containerEP = containerEP;

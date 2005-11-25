@@ -11,11 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter;
 
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
  * @author jcorchis
@@ -24,11 +23,12 @@ public abstract class SortFilterLabelProvider
 	extends LabelProvider
 	implements ITableLabelProvider {
 
-	private static final String CHECKED_IMAGE = "checkboxselected.gif"; //$NON-NLS-1$
-	private static final String UNCHECKED_IMAGE = "checkboxcleared.gif"; //$NON-NLS-1$
-	private static Image checkedImage = DiagramResourceManager.getInstance().createImage(CHECKED_IMAGE);
-	private static Image uncheckedImage = DiagramResourceManager.getInstance().createImage(UNCHECKED_IMAGE);
 
+	private static Image checkedImage = DiagramUIPluginImages.DESC_CHECKBOX_SELECTED
+		.createImage();
+
+	private static Image uncheckedImage = DiagramUIPluginImages.DESC_CHECKBOX_CLEARED
+		.createImage();
 	
 	/**
 	 * constructor

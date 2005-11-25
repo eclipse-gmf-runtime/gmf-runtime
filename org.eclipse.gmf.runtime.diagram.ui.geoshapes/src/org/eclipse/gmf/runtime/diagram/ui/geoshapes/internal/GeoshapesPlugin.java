@@ -10,9 +10,7 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.GeoshapesResourceManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -47,13 +45,6 @@ public class GeoshapesPlugin extends XToolsUIPlugin {
 	 */
 	public static String getPluginId() {
 		return getDefault().getBundle().getSymbolicName();
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.rational.xtools.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return GeoshapesResourceManager.getInstance();
 	}
 
 }

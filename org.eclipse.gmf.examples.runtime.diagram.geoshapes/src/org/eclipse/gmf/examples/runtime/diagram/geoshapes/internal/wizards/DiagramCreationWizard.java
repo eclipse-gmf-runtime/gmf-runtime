@@ -11,11 +11,11 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards;
 
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.ExampleDiagramGeoshapeMessages;
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.ExampleDiagramGeoshapePluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorCreationWizard;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorCreationWizard;
 
 
 /**
@@ -41,10 +41,9 @@ public class DiagramCreationWizard extends EditorCreationWizard{
 	public void init(IWorkbench workbench, IStructuredSelection sel) {
 		super.init(workbench, sel);
 
-		setWindowTitle(DiagramResourceManager
-				.getI18NString("CreationWizard.New_Geoshape_Diagram")); //$NON-NLS-1$
-		setDefaultPageImageDescriptor(DiagramResourceManager.getInstance()
-				.getImageDescriptor("wizards/geoshapes_wiz.gif")); //$NON-NLS-1$
+		setWindowTitle(ExampleDiagramGeoshapeMessages.
+				CreationWizard_New_Geoshape_Diagram);
+		setDefaultPageImageDescriptor(ExampleDiagramGeoshapePluginImages.DESC_GEOSHAPES_WIZARD);
 		setNeedsProgressMonitor(true);
 	}
 

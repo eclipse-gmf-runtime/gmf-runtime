@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.core.providers;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -25,7 +24,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramStatusCodes;
-import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateDiagramViewOperation;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateEdgeViewOperation;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateNodeViewOperation;
@@ -40,6 +39,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Implements of the <code>IViewProvider</code> interface. This
@@ -247,10 +247,10 @@ public class AbstractViewProvider
 			}
 			return (View) method.invoke(factory, constructorParams);
 		} catch (Throwable e) {
-			String eMsg = MessageFormat.format(DiagramResourceManager
-				.getInstance().getString(
-					"AbstractViewProvider.create.view.failed_ERROR_"),//$NON-NLS-1$
-				new Object[] {viewClass.getName()});
+			String eMsg = NLS
+				.bind(
+					DiagramCoreMessages.AbstractViewProvider_create_view_failed_ERROR_,
+					viewClass.getName());
 			Log.warning(DiagramPlugin.getInstance(), IStatus.WARNING, eMsg, e);
 			return null;
 		}

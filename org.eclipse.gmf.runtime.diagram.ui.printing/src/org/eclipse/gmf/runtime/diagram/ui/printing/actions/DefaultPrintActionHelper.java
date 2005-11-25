@@ -13,6 +13,10 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.actions;
 
 import java.util.Collections;
 
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.printing.PrintDialog;
@@ -20,11 +24,6 @@ import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 
 /**
  * Provides basic printing functionality. This does a print from a default print
@@ -54,10 +53,8 @@ public class DefaultPrintActionHelper {
 		}
 
 		boolean isPrintToFit = MessageDialog.openQuestion(null,
-			DiagramResourceManager
-				.getI18NString("Print.MessageDialogTitle"), //$NON-NLS-1$
-			DiagramResourceManager
-				.getI18NString("Print.MessageDialogMessage")); //$NON-NLS-1$
+			DiagramUIPrintingMessages.Print_MessageDialogTitle, 
+			DiagramUIPrintingMessages.Print_MessageDialogMessage); 
 
 		final Printer printer = new Printer(data);
 

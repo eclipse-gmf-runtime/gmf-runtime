@@ -14,7 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -25,16 +25,13 @@ import org.eclipse.jface.action.Action;
  */
 public class ViewMenuManager extends ActionMenuManager {
 
-	private static final String MENU_LABEL   = "ViewMenuManager.View.ActionLabelText"; //$NON-NLS-1$
-	private static final String MENU_TOOLTIP = "ViewMenuManager.View.ActionToolTipText"; //$NON-NLS-1$
-
 	/**
 	 * The align menu action containing the UI for the align menu manager
 	 */
 	private static class ViewMenuAction extends Action {
 		public ViewMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString( MENU_LABEL ));
-			setToolTipText(DiagramActionsResourceManager.getI18NString( MENU_TOOLTIP ));
+			setText(DiagramUIActionsMessages.ViewMenuManager_View_ActionLabelText);
+			setToolTipText(DiagramUIActionsMessages.ViewMenuManager_View_ActionToolTipText);
 		}
 	}
 

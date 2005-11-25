@@ -30,6 +30,12 @@ public final class DiagramProvidersStatusCodes {
 	}
 
 	public static final int OK = 0;	
+	
+	/**
+	 * Status code indicating that an error occurred with internationalization.
+	 */
+	public static final int L10N_FAILURE = 3;
+	
 	/**
 	 * Status code indicating that an error occurred with a resource, such as
 	 * loading an image file.

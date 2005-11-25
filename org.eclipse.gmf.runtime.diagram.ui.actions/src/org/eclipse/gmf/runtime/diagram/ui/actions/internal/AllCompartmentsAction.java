@@ -17,7 +17,8 @@ import java.util.List;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -45,7 +46,10 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 	protected AllCompartmentsAction(
 		IWorkbenchPage workbenchPage,
 		boolean visibility) {
-		super(workbenchPage, Properties.ID_ISVISIBLE, DiagramActionsResourceManager.getI18NString("ConstrainedFlowLayoutEditPolicy.changeVisibilityCommand.label")); //$NON-NLS-1$);
+		super(
+			workbenchPage,
+			Properties.ID_ISVISIBLE,
+			DiagramUIActionsMessages.ConstrainedFlowLayoutEditPolicy_changeVisibilityCommand_label);
 		this.visibility = visibility ? Boolean.TRUE : Boolean.FALSE;
 	}
 
@@ -79,9 +83,9 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 	 */
 	protected String getCommandLabel() {
 		if (((Boolean) getNewPropertyValue()).booleanValue())
-			return DiagramActionsResourceManager.getI18NString("ShowAllResizableCompartmentsAction.ShowAllText"); //$NON-NLS-1$
+			return DiagramUIActionsMessages.ShowAllResizableCompartmentsAction_ShowAllText;
 		else
-			return DiagramActionsResourceManager.getI18NString("ShowAllResizableCompartmentsAction.HideAllText"); //$NON-NLS-1$ 
+			return DiagramUIActionsMessages.ShowAllResizableCompartmentsAction_HideAllText; 
 	}
 
 	/**
@@ -93,13 +97,12 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 		AllCompartmentsAction action =
 			new AllCompartmentsAction(workbenchPage, true);
 		action.setId(ActionIds.ACTION_COMPARTMENT_ALL);
-		action.setText(DiagramActionsResourceManager.getI18NString("ShowAllResizableCompartmentsAction.ShowAllText")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ShowAllResizableCompartmentsAction.ShowAllTooltip")); //$NON-NLS-1$
+		action
+			.setText(DiagramUIActionsMessages.ShowAllResizableCompartmentsAction_ShowAllText);
+		action
+			.setToolTipText(DiagramUIActionsMessages.ShowAllResizableCompartmentsAction_ShowAllTooltip);
 
-		ImageDescriptor imageDesc = DiagramActionsResourceManager
-			.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_SHOW_ALL_RESIZABLE_COMPARTMENTS);
+		ImageDescriptor imageDesc = DiagramUIActionsPluginImages.DESC_SHOW_ALL_RESIZABLE_COMPARTMENTS;
 		action.setImageDescriptor(imageDesc);
 		action.setHoverImageDescriptor(imageDesc);
 		return action;
@@ -114,13 +117,12 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 		AllCompartmentsAction action =
 			new AllCompartmentsAction(workbenchPage, false);
 		action.setId(ActionIds.ACTION_COMPARTMENT_NONE);
-		action.setText(DiagramActionsResourceManager.getI18NString("ShowAllResizableCompartmentsAction.HideAllText")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ShowAllResizableCompartmentsAction.HideAllTooltip")); //$NON-NLS-1$
+		action
+			.setText(DiagramUIActionsMessages.ShowAllResizableCompartmentsAction_HideAllText);
+		action
+			.setToolTipText(DiagramUIActionsMessages.ShowAllResizableCompartmentsAction_HideAllTooltip);
 
-		ImageDescriptor imageDesc = DiagramActionsResourceManager
-			.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_HIDE_ALL_RESIZABLE_COMPARTMENTS);
+		ImageDescriptor imageDesc = DiagramUIActionsPluginImages.DESC_HIDE_ALL_RESIZABLE_COMPARTMENTS;
 		action.setImageDescriptor(imageDesc);
 		action.setHoverImageDescriptor(imageDesc);
 		return action;

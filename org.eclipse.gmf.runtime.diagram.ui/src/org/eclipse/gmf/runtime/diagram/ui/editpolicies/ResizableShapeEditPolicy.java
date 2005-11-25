@@ -40,7 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -99,8 +99,7 @@ public class ResizableShapeEditPolicy
 	 */
 	protected Command getAutoSizeCommand(Request request) {
 		ICommand resizeCommand = new SetBoundsCommand(
-			DiagramResourceManager
-				.getI18NString("SetAutoSizeCommand.Label"),//$NON-NLS-1$
+			DiagramUIMessages.SetAutoSizeCommand_Label,
 			new EObjectAdapter((View) getHost().getModel()), new Dimension(-1,
 				-1));
 		return new EtoolsProxyCommand(resizeCommand);
@@ -153,8 +152,9 @@ public class ResizableShapeEditPolicy
 			}
 		}
 		SetDeferredPropertyCommand cmd = new SetDeferredPropertyCommand(
-			DiagramResourceManager
-				.getI18NString("ResizableShapeEditPolicy.MoveDeferredCommand.label"), new EObjectAdapter((View) getHost().getModel()), request.getLocationAdapter()); //$NON-NLS-1$
+			DiagramUIMessages.ResizableShapeEditPolicy_MoveDeferredCommand_label,
+			new EObjectAdapter((View) getHost().getModel()), request
+				.getLocationAdapter());
 		return new EtoolsProxyCommand(cmd);
 	}
 

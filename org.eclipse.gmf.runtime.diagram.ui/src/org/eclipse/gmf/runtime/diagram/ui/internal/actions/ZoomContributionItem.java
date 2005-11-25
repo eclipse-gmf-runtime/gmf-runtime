@@ -23,11 +23,10 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.Images;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -55,21 +54,21 @@ public class ZoomContributionItem
 	/**
 	 * Custom zoom operations
 	 */
-	private static final String ZOOM_IN = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomIn"); //$NON-NLS-1$
-	private static final String ZOOM_OUT = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomOut"); //$NON-NLS-1$
-	private static final String ZOOM_100 = DiagramResourceManager.getI18NString("ZoomAction.Zoom100"); //$NON-NLS-1$
-	private static final String ZOOM_FIT = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToFit"); //$NON-NLS-1$
-	private static final String ZOOM_WIDTH = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToWidth"); //$NON-NLS-1$
-	private static final String ZOOM_HEIGHT = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToHeight"); //$NON-NLS-1$
-	private static final String ZOOM_SELECTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomCombo.ZoomToSelection"); //$NON-NLS-1$
+	private static final String ZOOM_IN = DiagramUIMessages.ZoomAction_ZoomCombo_ZoomIn;
+	private static final String ZOOM_OUT = DiagramUIMessages.ZoomAction_ZoomCombo_ZoomOut;
+	private static final String ZOOM_100 = DiagramUIMessages.ZoomAction_ZoomCombo_Zoom100;
+	private static final String ZOOM_FIT = DiagramUIMessages.ZoomAction_ZoomCombo_ZoomToFit;
+	private static final String ZOOM_WIDTH = DiagramUIMessages.ZoomAction_ZoomCombo_ZoomToWidth;
+	private static final String ZOOM_HEIGHT = DiagramUIMessages.ZoomAction_ZoomCombo_ZoomToHeight;
+	private static final String ZOOM_SELECTION = DiagramUIMessages.ZoomAction_ZoomCombo_ZoomToSelection;
 	
-	private static final String ZOOM_IN_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomIn"); //$NON-NLS-1$
-	private static final String ZOOM_OUT_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomOut"); //$NON-NLS-1$
-	private static final String ZOOM_100_ACTION = DiagramResourceManager.getI18NString("ZoomAction.Zoom100"); //$NON-NLS-1$
-	private static final String ZOOM_FIT_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToFit"); //$NON-NLS-1$
-	private static final String ZOOM_WIDTH_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToWidth"); //$NON-NLS-1$
-	private static final String ZOOM_HEIGHT_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToHeight"); //$NON-NLS-1$
-	private static final String ZOOM_SELECTION_ACTION = DiagramResourceManager.getI18NString("ZoomAction.ZoomToSelection"); //$NON-NLS-1$
+	private static final String ZOOM_IN_ACTION = DiagramUIMessages.ZoomAction_ZoomIn;
+	private static final String ZOOM_OUT_ACTION = DiagramUIMessages.ZoomAction_ZoomOut;
+	private static final String ZOOM_100_ACTION = DiagramUIMessages.ZoomAction_Zoom100;
+	private static final String ZOOM_FIT_ACTION = DiagramUIMessages.ZoomAction_ZoomToFit;
+	private static final String ZOOM_WIDTH_ACTION = DiagramUIMessages.ZoomAction_ZoomToWidth;
+	private static final String ZOOM_HEIGHT_ACTION = DiagramUIMessages.ZoomAction_ZoomToHeight;
+	private static final String ZOOM_SELECTION_ACTION = DiagramUIMessages.ZoomAction_ZoomToSelection;
 	
 	/**
 	 * The part's zoom manager
@@ -86,7 +85,7 @@ public class ZoomContributionItem
 	 */
 	public ZoomContributionItem(IWorkbenchPage workbenchPage) {
 		super(workbenchPage, ActionIds.CUSTOM_ZOOM);
-		setLabel(DiagramResourceManager.getI18NString("ZoomActionMenu.ZoomLabel")); //$NON-NLS-1$		
+		setLabel(DiagramUIMessages.ZoomActionMenu_ZoomLabel);		
 	}
 
 	/**
@@ -181,7 +180,7 @@ public class ZoomContributionItem
 			? new MenuItem(parent, SWT.CASCADE, index) 
 			: new MenuItem(parent, SWT.CASCADE);
 		createMenu(mi);
-		mi.setImage(DiagramResourceManager.getInstance().getImage(DiagramResourceManager.IMAGE_ZOOM_IN));
+		mi.setImage(DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_ZOOM_IN));
 		return mi;
 	}
 
@@ -192,27 +191,20 @@ public class ZoomContributionItem
 	 */
 	private void createMenu(MenuItem mi) {
 		Menu menu = new Menu(mi.getParent());
-		createMenuItem(menu, ZOOM_IN_ACTION, ZOOM_IN, DiagramResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_IN));
-		createMenuItem(menu, ZOOM_OUT_ACTION, ZOOM_OUT, DiagramResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_OUT));
-		createMenuItem(menu, ZOOM_100_ACTION, ZOOM_100, DiagramResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_100));
-		createMenuItem(menu, ZOOM_FIT_ACTION, ZOOM_FIT, DiagramResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+		createMenuItem(menu, ZOOM_IN_ACTION, ZOOM_IN,
+			DiagramUIPluginImages.DESC_ZOOM_IN);
+		createMenuItem(menu, ZOOM_OUT_ACTION, ZOOM_OUT,
+			DiagramUIPluginImages.DESC_ZOOM_OUT);
+		createMenuItem(menu, ZOOM_100_ACTION, ZOOM_100,
+			DiagramUIPluginImages.DESC_ZOOM_100);
+		createMenuItem(menu, ZOOM_FIT_ACTION, ZOOM_FIT,
+			DiagramUIPluginImages.DESC_ZOOM_TOFIT);
 		createMenuItem(menu, ZOOM_WIDTH_ACTION, ZOOM_WIDTH,
-			DiagramResourceManager.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+			DiagramUIPluginImages.DESC_ZOOM_TOFIT);
 		createMenuItem(menu, ZOOM_HEIGHT_ACTION, ZOOM_HEIGHT,
-			DiagramResourceManager.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+			DiagramUIPluginImages.DESC_ZOOM_TOFIT);
 		createMenuItem(menu, ZOOM_SELECTION_ACTION, ZOOM_SELECTION,
-			DiagramResourceManager.getInstance().getImageDescriptor(
-				DiagramResourceManager.IMAGE_ZOOM_TOFIT));
+			DiagramUIPluginImages.DESC_ZOOM_TOFIT);
 		mi.setMenu(menu);
 	}
 

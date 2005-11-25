@@ -54,7 +54,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNode;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -118,7 +118,7 @@ public class ContainerEditPolicy
 		if (data != null
 			&& viewContext != null
 			&& editPart instanceof ISurfaceEditPart) {
-			return new EtoolsProxyCommand(new PasteCommand(DiagramResourceManager.getI18NString("PasteCommand.Label"), viewContext, data, getPasteOffset())); //$NON-NLS-1$
+			return new EtoolsProxyCommand(new PasteCommand(DiagramUIMessages.PasteCommand_Label, viewContext, data, getPasteOffset())); 
 		}
 
 		return null;
@@ -387,22 +387,19 @@ public class ContainerEditPolicy
 				if (duplicateElementsCommand != null
 					&& duplicateElementsCommand.canExecute()) {
 					CompositeCommand cc = new CompositeCommand(
-						DiagramResourceManager
-							.getI18NString("Commands.Duplicate.Label")); //$NON-NLS-1$
+						DiagramUIMessages.Commands_Duplicate_Label);
 					cc
 						.compose(new XtoolsProxyCommand(
 							duplicateElementsCommand));
 					cc.compose(new DuplicateViewsCommand(
-						DiagramResourceManager
-							.getI18NString("Commands.Duplicate.Label"), //$NON-NLS-1$
+						DiagramUIMessages.Commands_Duplicate_Label,
 						request, notationViewsToDuplicate,
 						duplicateElementsRequest.getAllDuplicatedElementsMap(), getPasteOffset()));
 					return new EtoolsProxyCommand(cc);
 				}
 			} else {
 				return new EtoolsProxyCommand(new DuplicateViewsCommand(
-					DiagramResourceManager
-						.getI18NString("Commands.Duplicate.Label"), //$NON-NLS-1$
+					DiagramUIMessages.Commands_Duplicate_Label,
 					request, notationViewsToDuplicate, getPasteOffset()));
 			}
 		}

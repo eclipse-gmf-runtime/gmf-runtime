@@ -15,6 +15,16 @@ import java.util.ArrayList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.ExampleDiagramGeoshapeMessages;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
+import org.eclipse.gmf.runtime.diagram.ui.properties.views.TextChangeHelper;
+import org.eclipse.gmf.runtime.notation.DescriptionStyle;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FormAttachment;
@@ -25,17 +35,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
 
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
-import org.eclipse.gmf.runtime.diagram.ui.properties.views.TextChangeHelper;
-import org.eclipse.gmf.runtime.notation.DescriptionStyle;
-import org.eclipse.gmf.runtime.notation.Node;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.Style;
-import org.eclipse.gmf.runtime.notation.View;
-
 /**
  * @author Eliza Tworkowska
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.geoshapes.*
@@ -44,14 +43,13 @@ public class GeoShapeGeneralSection
 	extends AbstractModelerPropertySection {
 
 	// Labels
-	protected static final String DESCRIPTION_LABEL = DiagramResourceManager
-		.getI18NString("GeoShapeGeneralDetails.GeoShapeDescriptionLabel.text"); //$NON-NLS-1$
+	protected static final String DESCRIPTION_LABEL = ExampleDiagramGeoshapeMessages.GeoShapeGeneralDetails_GeoShapeDescriptionLabel_text;
 
 	// properties
-	protected static final String DESCRIPTION = DiagramResourceManager
-		.getI18NString("GeoShapeGeneralDetails.GeoShapeDescriptionChangeCommand.text"); //$NON-NLS-1$
+	protected static final String DESCRIPTION = ExampleDiagramGeoshapeMessages.GeoShapeGeneralDetails_GeoShapeDescriptionChangeCommand_text;
 
-	// 	commads - used as a label for Edit -> Undo/Redo, used message format for concatenating strings
+	// commads - used as a label for Edit -> Undo/Redo, used message format for
+	// concatenating strings
 	private static final String DESCRIPTION_PROPERTY_CHANGE_COMMAND_NAME = DESCRIPTION + VALUE_CHANGED_STRING;
 
 	/** Text to be displayed in the description text field. */

@@ -70,13 +70,14 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromMo
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRulerProvider;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
@@ -223,9 +224,7 @@ public abstract class DiagramEditor
 					showPage(ID_OUTLINE);
 				}
 			};
-			showOutlineAction.setImageDescriptor(DiagramResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramResourceManager.IMAGE_OUTLINE));
+			showOutlineAction.setImageDescriptor(DiagramUIPluginImages.DESC_OUTLINE);
 			tbm.add(showOutlineAction);
 			showOverviewAction = new Action() {
 
@@ -233,9 +232,7 @@ public abstract class DiagramEditor
 					showPage(ID_OVERVIEW);
 				}
 			};
-			showOverviewAction.setImageDescriptor(DiagramResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramResourceManager.IMAGE_OVERVIEW));
+			showOverviewAction.setImageDescriptor(DiagramUIPluginImages.DESC_OVERVIEW);
 			tbm.add(showOverviewAction);
 			showPage(getDefaultOutlineViewMode());
 		}
@@ -507,8 +504,7 @@ public abstract class DiagramEditor
 			IAction action;
 
 			action = new PromptingDeleteAction(this);
-			action.setText(DiagramResourceManager
-				.getI18NString("DiagramEditor.Delete_from_Diagram")); //$NON-NLS-1$
+			action.setText(DiagramUIMessages.DiagramEditor_Delete_from_Diagram); 
 			registry.registerAction(action);
 			getSelectionActions().add(action.getId());
 

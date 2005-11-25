@@ -15,7 +15,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OnConnectionLocator;
@@ -54,8 +54,7 @@ public class DefaultConnectionEditPart
 
 		};
 
-		conn.add(new WrapLabel(DiagramResourceManager
-			.getI18NString("InvalidView")), new OnConnectionLocator(conn, 50)); //$NON-NLS-1$
+		conn.add(new WrapLabel(DiagramUIMessages.InvalidView), new OnConnectionLocator(conn, 50));
 		return conn;
 	}
 }

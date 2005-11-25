@@ -38,7 +38,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
@@ -284,8 +284,6 @@ public class BookmarkDecorator
 	 */
 	private static BookmarkObserver fileObserver = null;
 	
-	private static final String BOOKMARK = "bookmark.gif"; //$NON-NLS-1$
-
 	/**
 	 * Attribute for the view id
 	 */
@@ -382,12 +380,11 @@ public class BookmarkDecorator
 		if (editPart instanceof ShapeEditPart) {
 			IMapMode mm = MapModeUtil.getMapMode(((ShapeEditPart)editPart).getFigure());
 			setDecoration(getDecoratorTarget().addShapeDecoration(
-				DiagramProvidersResourceManager.getInstance().getImage(BOOKMARK),
+				DiagramUIProvidersPluginImages.get(DiagramUIProvidersPluginImages.IMG_BOOKMARK),
 				IDecoratorTarget.Direction.NORTH_EAST, mm.DPtoLP(-4), true));
 		} else if (view instanceof Edge) {
 			setDecoration(getDecoratorTarget().addConnectionDecoration(
-				DiagramProvidersResourceManager.getInstance().getImage(
-					BOOKMARK), 50, true));
+				DiagramUIProvidersPluginImages.get(DiagramUIProvidersPluginImages.IMG_BOOKMARK), 50, true));
 		}
 	}
 

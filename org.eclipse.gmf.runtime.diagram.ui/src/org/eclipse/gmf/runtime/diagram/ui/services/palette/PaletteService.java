@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.ContributeTo
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteProviderConfiguration;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteGroup;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
@@ -174,8 +174,8 @@ public class PaletteService extends Service implements IPaletteProvider {
 		Object content,
 		PaletteRoot root) {
 
-		PaletteGroup standardGroup = new PaletteGroup(GROUP_STANDARD, DiagramResourceManager.getI18NString("StandardGroup.Label")); //$NON-NLS-1$
-		standardGroup.setDescription(DiagramResourceManager.getI18NString("StandardGroup.Description")); //$NON-NLS-1$
+		PaletteGroup standardGroup = new PaletteGroup(GROUP_STANDARD, DiagramUIMessages.StandardGroup_Label);
+		standardGroup.setDescription(DiagramUIMessages.StandardGroup_Description);
 		root.add(standardGroup);
 
 		PaletteSeparator standardSeparator = new PaletteSeparator(SEPARATOR_STANDARD);

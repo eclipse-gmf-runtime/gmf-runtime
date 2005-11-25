@@ -24,8 +24,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
 import org.eclipse.gmf.runtime.notation.JumpLinkType;
@@ -50,34 +50,34 @@ import org.eclipse.swt.widgets.Group;
 public class ConnectionAppearancePropertySection
 	extends ColorsAndFontsPropertySection {
 
-	protected static final String REVERSE_JUMP_LINKS_NAME_LABEL = ResourceManager
-	.getI18NString("ConnectionAppearanceDetails.ReverseJumpLinksLabel.Text"); //$NON-NLS-1$
+	protected static final String REVERSE_JUMP_LINKS_NAME_LABEL = DiagramUIPropertiesMessages.
+	ConnectionAppearanceDetails_ReverseJumpLinksLabel_Text;
 	
-	private static final String ROUTER_OPTIONS_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.RouterOptionsLabel.Text"); //$NON-NLS-1$
+	private static final String ROUTER_OPTIONS_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_RouterOptionsLabel_Text;
 
-	protected static final String AVOID_OBSTACLES_NAME_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.AvoidObstaclesLabel.Text"); //$NON-NLS-1$
+	protected static final String AVOID_OBSTACLES_NAME_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_AvoidObstaclesLabel_Text;
 
-	protected static final String CLOSEST_DISTANCE_NAME_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.ClosestDistanceLabel.Text"); //$NON-NLS-1$
+	protected static final String CLOSEST_DISTANCE_NAME_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_ClosestDistanceLabel_Text;
 
-	protected static final String LINE_ROUTER_NAME_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.LineRouterLabel.Text"); //$NON-NLS-1$
+	protected static final String LINE_ROUTER_NAME_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_LineRouterLabel_Text;
 
-	protected static final String SMOOTHNESS_NAME_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.SmoothnessLabel.Text"); //$NON-NLS-1$
+	protected static final String SMOOTHNESS_NAME_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_SmoothnessLabel_Text;
 
-	protected static final String JUMP_LINKS_NAME_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.JumpLinksLabel.Text"); //$NON-NLS-1$
+	protected static final String JUMP_LINKS_NAME_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_JumpLinksLabel_Text;
 
-	protected static final String JUMP_LINK_TYPE_NAME_LABEL = ResourceManager
-		.getI18NString("ConnectionAppearanceDetails.JumpLinkTypeLabel.Text"); //$NON-NLS-1$
+	protected static final String JUMP_LINK_TYPE_NAME_LABEL = DiagramUIPropertiesMessages.
+		ConnectionAppearanceDetails_JumpLinkTypeLabel_Text;
 
 
 
-	private static final String JUMP_LINKS_GROUP_NAME = ResourceManager
-	.getI18NString("ConnectionAppearanceDetails.JumpLinkGroupLabel.Text"); //$NON-NLS-1$
+	private static final String JUMP_LINKS_GROUP_NAME = DiagramUIPropertiesMessages.
+	ConnectionAppearanceDetails_JumpLinkGroupLabel_Text;
 	
 
 	// radio buttonn widgets cache with a button as a value and abstract
@@ -149,18 +149,14 @@ public class ConnectionAppearancePropertySection
 		
 		// smoothness
 		createRadioGroup(groups, Smoothness.VALUES.iterator(),
-			"PropertyDescriptorFactory.Smoothness.Smooth", //$NON-NLS-1$
-			Properties.ID_SMOOTHNESS, ResourceManager
-				.getI18NString("AppearanceDetails.SmoothnessCommand.Text"), //$NON-NLS-1$
+			Properties.ID_SMOOTHNESS, DiagramUIPropertiesMessages.
+				AppearanceDetails_SmoothnessCommand_Text,
 			SMOOTHNESS_NAME_LABEL, 1);
-		
-
 
 		// line router
 		createRadioGroup(routing, Routing.VALUES.iterator(),
-			"ConnectionAppearancePropertySection.Router.", //$NON-NLS-1$
-			Properties.ID_ROUTING, ResourceManager
-				.getI18NString("AppearanceDetails.LineRouterCommand.Text"), //$NON-NLS-1$
+			Properties.ID_ROUTING, DiagramUIPropertiesMessages.
+				AppearanceDetails_LineRouterCommand_Text,
 			LINE_ROUTER_NAME_LABEL, 3);
 
 		// router options
@@ -175,16 +171,14 @@ public class ConnectionAppearancePropertySection
 
 		// jump links status
 		createRadioGroup(jumpLinks, JumpLinkStatus.VALUES.iterator(),
-			"PropertyDescriptorFactory.JumplinksStatus.", //$NON-NLS-1$
-			Properties.ID_JUMPLINKS_STATUS, ResourceManager
-				.getI18NString("AppearanceDetails.JumpLinksCommand.Text"), //$NON-NLS-1$
+			Properties.ID_JUMPLINKS_STATUS, DiagramUIPropertiesMessages.
+				AppearanceDetails_JumpLinksCommand_Text,
 			JUMP_LINKS_NAME_LABEL, 2);
 
 		// jump links type
 		createRadioGroup(jumpLinks, JumpLinkType.VALUES.iterator(),
-			"PropertyDescriptorFactory.JumplinksType.", //$NON-NLS-1$
-			Properties.ID_JUMPLINKS_TYPE, ResourceManager
-				.getI18NString("AppearanceDetails.JumpLinkTypeCommand.Text"), //$NON-NLS-1$
+			Properties.ID_JUMPLINKS_TYPE, DiagramUIPropertiesMessages.
+				AppearanceDetails_JumpLinkTypeCommand_Text,
 			JUMP_LINK_TYPE_NAME_LABEL, 2);
 
 		Composite jumpLinksComposite = getWidgetFactory().createComposite(
@@ -197,8 +191,8 @@ public class ConnectionAppearancePropertySection
 
 			public void widgetSelected(SelectionEvent event) {
 				updateModel(
-					ResourceManager
-						.getI18NString("AppearanceDetails.ReverseJumpLinksCommand.Text"), //$NON-NLS-1$
+					DiagramUIPropertiesMessages.
+						AppearanceDetails_ReverseJumpLinksCommand_Text,
 					Properties.ID_JUMPLINKS_REVERSE, Boolean.valueOf(
 						reverseJumpLinksButton.getSelection()));
 			}
@@ -226,8 +220,8 @@ public class ConnectionAppearancePropertySection
 
 			public void widgetSelected(SelectionEvent event) {
 				updateModel(
-					ResourceManager
-						.getI18NString("AppearanceDetails.AvoidObstaclesCommand.Text"), //$NON-NLS-1$
+					DiagramUIPropertiesMessages.
+						AppearanceDetails_AvoidObstaclesCommand_Text,
 					Properties.ID_AVOIDOBSTRUCTIONS, Boolean.valueOf(
 						avoidObstaclesButton.getSelection()));
 			}
@@ -240,8 +234,8 @@ public class ConnectionAppearancePropertySection
 
 			public void widgetSelected(SelectionEvent event) {
 				updateModel(
-					ResourceManager
-						.getI18NString("AppearanceDetails.ClosestDistanceCommand.Text"), //$NON-NLS-1$
+					DiagramUIPropertiesMessages.
+						AppearanceDetails_ClosestDistanceCommand_Text,
 					Properties.ID_CLOSESTDISTANCE, Boolean.valueOf(
 						closestDistanceButton.getSelection()));
 			}
@@ -256,8 +250,8 @@ public class ConnectionAppearancePropertySection
 	 * @return - a last control created for this group
 	 */
 	protected void createRadioGroup(Composite parent, Iterator iterator,
-			String propertyValueNameKey, final Object propertyId,
-			final String commandName, String propertyName, int rows) {
+			final Object propertyId, final String commandName,
+			String propertyName, int rows) {
 
 		Group group = getWidgetFactory().createGroup(parent, propertyName);
 		group.setLayout(new GridLayout(rows, true));
@@ -267,8 +261,7 @@ public class ConnectionAppearancePropertySection
 		Button radioButton = null;
 		for (Iterator e = iterator; e.hasNext();) {
 			AbstractEnumerator literal = (AbstractEnumerator) e.next();
-			String propertyValueName = translate(propertyId, literal,
-				propertyValueNameKey);
+			String propertyValueName = translate(literal);
 
 			radioButton = getWidgetFactory().createButton(group,
 				propertyValueName, SWT.RADIO);
@@ -288,22 +281,48 @@ public class ConnectionAppearancePropertySection
 	}
 
 	/**
-	 * @param propertyValueNameKey -
-	 *            bundle key prefix
-	 * @param name -
-	 *            bundle key suffix
-	 * @return - translated string
+	 * Returns the translated string representing the connection appearance
+	 * properties. This is not a generic method; it needs to be updated if it is
+	 * to handle a new property.
+	 * 
+	 * @param literal
+	 *            the enumerator of literals
+	 * @return the translated string
 	 */
-	private String translate(Object propertyId, AbstractEnumerator literal,
-			String propertyValueNameKey) {
+	private String translate(AbstractEnumerator literal) {
+		
+		if (JumpLinkType.SEMICIRCLE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksType_SemiCircle;
+		} else if (JumpLinkType.SQUARE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksType_Square;
+		} else if (JumpLinkType.CHAMFERED_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksType_Chamfered;
+		} else if (JumpLinkStatus.NONE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksStatus_None;
+		} else if (JumpLinkStatus.ALL_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksStatus_All;
+		} else if (JumpLinkStatus.BELOW_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksStatus_Below;
+		} else if (JumpLinkStatus.ABOVE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_JumplinksStatus_Above;
+		} else if (Smoothness.NONE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_Smoothness_SmoothNone;
+		} else if (Smoothness.NORMAL_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_Smoothness_SmoothNormal;
+		} else if (Smoothness.LESS_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_Smoothness_SmoothLess;
+		} else if (Smoothness.MORE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.PropertyDescriptorFactory_Smoothness_SmoothMore;
+		} else if (Routing.MANUAL_LITERAL.equals(literal)) {
+			return DiagramUIMessages.ConnectionAppearancePropertySection_Router_Manual;
+		} else if (Routing.RECTILINEAR_LITERAL.equals(literal)) {
+			return DiagramUIMessages.ConnectionAppearancePropertySection_Router_Rectilinear;
+		} else if (Routing.TREE_LITERAL.equals(literal)) {
+			return DiagramUIMessages.ConnectionAppearancePropertySection_Router_Tree;
+		}
 
-		if (propertyId == Properties.ID_JUMPLINKS_TYPE
-			&& literal.getName().equals("Semicircle"))//$NON-NLS-1$
-			return DiagramResourceManager
-				.getI18NString(propertyValueNameKey + "SemiCircle");//$NON-NLS-1$
-
-		return DiagramResourceManager.getI18NString(propertyValueNameKey
-			+ literal.getName());
+		assert false : "No translated string available."; //$NON-NLS-1$
+		return ""; //$NON-NLS-1$
 
 	}
 
@@ -338,9 +357,6 @@ public class ConnectionAppearancePropertySection
 
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.properties.view.ITabbedPropertySection#refresh()
-	 */
 	public void refresh() {
 		super.refresh();
 		try {

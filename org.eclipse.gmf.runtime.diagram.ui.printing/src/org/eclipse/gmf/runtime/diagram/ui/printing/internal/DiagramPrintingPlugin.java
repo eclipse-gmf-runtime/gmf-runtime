@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -51,12 +49,4 @@ public class DiagramPrintingPlugin extends XToolsUIPlugin {
 		return getInstance().getBundle().getSymbolicName();
 	}
 
-	/*
-	 * Retrieves the resource manager for this plug-in.
-	 *
-	 * @return The resource manager for this plug-in.
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return DiagramPrintingResourceManager.getInstance();
-	}
 }

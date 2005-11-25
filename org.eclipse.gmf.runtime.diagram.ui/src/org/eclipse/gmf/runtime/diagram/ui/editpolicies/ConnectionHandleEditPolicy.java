@@ -21,12 +21,11 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandleLocator;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle.HandleDirection;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 
@@ -112,15 +111,12 @@ public class ConnectionHandleEditPolicy extends DiagramAssistantEditPolicy {
 
 		if (supportsSRE) {
 			if (supportsCreation) {
-				return DiagramResourceManager
-					.getI18NString("ConnectionHandle.ToolTip.ShowRelatedElementsAndCreateRelationship"); //$NON-NLS-1$
+				return DiagramUIMessages.ConnectionHandle_ToolTip_ShowRelatedElementsAndCreateRelationship;
 			} else {
-				return DiagramResourceManager
-					.getI18NString("ConnectionHandle.ToolTip.ShowRelatedElementsOnly"); //$NON-NLS-1$
+				return DiagramUIMessages.ConnectionHandle_ToolTip_ShowRelatedElementsOnly;
 			}
 		} else if (supportsCreation) {
-			return DiagramResourceManager
-				.getI18NString("ConnectionHandle.ToolTip.CreateRelationshipOnly"); //$NON-NLS-1$
+			return DiagramUIMessages.ConnectionHandle_ToolTip_CreateRelationshipOnly;
 		}
 		return null;
 	}

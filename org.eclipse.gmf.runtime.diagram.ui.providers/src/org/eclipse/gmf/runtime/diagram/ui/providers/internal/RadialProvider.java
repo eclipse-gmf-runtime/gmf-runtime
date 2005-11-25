@@ -46,7 +46,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNodesOperation;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramProvidersResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -734,7 +734,9 @@ public class RadialProvider
 			if (sep == null)
 				throw new InvalidParameterException();
 
-			ChangePropertyValueRequest cpvr = new ChangePropertyValueRequest(DiagramProvidersResourceManager.getI18NString("RadialProvider.changeFontRequest.label"), Properties.ID_FONTSIZE, new Integer(size)); //$NON-NLS-1$
+			ChangePropertyValueRequest cpvr = new ChangePropertyValueRequest(
+				DiagramUIProvidersMessages.RadialProvider_changeFontRequest_label,
+				Properties.ID_FONTSIZE, new Integer(size));
 		
 			return getCommand(sep, cpvr, true);
 		}
@@ -766,8 +768,8 @@ public class RadialProvider
 
 				if (editpart instanceof ShapeEditPart) {
 					request = new ChangePropertyValueRequest(
-						DiagramProvidersResourceManager
-							.getI18NString("RadialProvider.changeVisibilityRequest.label"), Properties.ID_ISVISIBLE, Boolean.FALSE); //$NON-NLS-1$
+						DiagramUIProvidersMessages.RadialProvider_changeVisibilityRequest_label,
+						Properties.ID_ISVISIBLE, Boolean.FALSE);
 
 					ShapeEditPart shapeEditPart = (ShapeEditPart) editpart;
 					

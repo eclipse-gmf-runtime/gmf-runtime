@@ -14,9 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.GuideStyle;
@@ -36,7 +35,7 @@ public class DeleteGuideCommand extends AbstractModelCommand {
 	 * @param guide the guide to be deleted
 	 */
 	public DeleteGuideCommand(Guide guide) {
-		super(DiagramResourceManager.getInstance().getString( "Command.deleteGuide" ), //$NON-NLS-1$
+		super(DiagramUIMessages.Command_deleteGuide,
 			guide);
 		theGuide = guide;
 	}

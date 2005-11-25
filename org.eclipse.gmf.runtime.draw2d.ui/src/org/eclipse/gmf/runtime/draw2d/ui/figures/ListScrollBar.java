@@ -24,7 +24,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DropShadowButtonBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dResourceManager;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dUIPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -193,50 +193,50 @@ public class ListScrollBar extends ScrollBar {
 			ImageData image;
 
 			// normal images
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.DOWN_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_DOWN_ARROW.getImageData();
 			down = convert(image, palette2);
 
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.UP_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_UP_ARROW.getImageData();
 			up = convert(image, palette2);
 
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.LEFT_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_LEFT_ARROW.getImageData();
 			left = convert(image, palette2);
 
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.RIGHT_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_RIGHT_ARROW.getImageData();
 			right = convert(image, palette2);
 
 			// pressed images
-			upPressed = Draw2dResourceManager.getInstance().getImage(
-				Draw2dResourceManager.UP_PRESSED_ARROW_IMAGE);
+			upPressed = Draw2dUIPluginImages
+				.get(Draw2dUIPluginImages.IMG_UP_PRESSED_ARROW);
 
-			downPressed = Draw2dResourceManager.getInstance().getImage(
-				Draw2dResourceManager.DOWN_PRESSED_ARROW_IMAGE);
+			downPressed = Draw2dUIPluginImages
+				.get(Draw2dUIPluginImages.IMG_DOWN_PRESSED_ARROW);
 
-			leftPressed = Draw2dResourceManager.getInstance().getImage(
-				Draw2dResourceManager.LEFT_PRESSED_ARROW_IMAGE);
+			leftPressed = Draw2dUIPluginImages
+				.get(Draw2dUIPluginImages.IMG_LEFT_PRESSED_ARROW);
 
-			rightPressed = Draw2dResourceManager.getInstance().getImage(
-				Draw2dResourceManager.RIGHT_PRESSED_ARROW_IMAGE);
+			rightPressed = Draw2dUIPluginImages
+				.get(Draw2dUIPluginImages.IMG_RIGHT_PRESSED_ARROW);
 
 			// grayed images
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.UP_GRAY_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_UP_GRAY_ARROW.getImageData();
 			upGrayed = convert(image, palette1);
 
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.DOWN_GRAY_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_DOWN_GRAY_ARROW.getImageData();
 			downGrayed = convert(image, palette1);
 
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.LEFT_GRAY_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_LEFT_GRAY_ARROW.getImageData();
 			leftGrayed = convert(image, palette1);
 
-			image = Draw2dResourceManager.getInstance().getImageDescriptor(
-				Draw2dResourceManager.RIGHT_GRAY_ARROW_IMAGE).getImageData();
+			image = 
+				Draw2dUIPluginImages.DESC_RIGHT_GRAY_ARROW.getImageData();
 			rightGrayed = convert(image, palette1);
 			
 			palette1 = null;

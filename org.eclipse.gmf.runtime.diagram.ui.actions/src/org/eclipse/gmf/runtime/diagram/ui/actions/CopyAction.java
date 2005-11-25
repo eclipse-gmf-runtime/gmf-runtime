@@ -20,13 +20,14 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The copy action that copies the bitmap information on to the clipboard
@@ -42,7 +43,7 @@ abstract public class CopyAction extends DiagramAction {
 	 */
 	private static final ImageDescriptor COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
 		(CommonUIActionPlugin.getPluginId(), ISharedImages.IMG_TOOL_COPY); 
-		
+
 	/**
 	 * Imagedescriptor for the copy action
 	 */
@@ -76,12 +77,14 @@ abstract public class CopyAction extends DiagramAction {
 	public void init(){
 		super.init();
 		/* set the label for the action */
-		setText(DiagramActionsResourceManager.getI18NString("CopyAction.Copy")); //$NON-NLS-1$
+		setText(DiagramUIActionsMessages.CopyAction_Copy);
 
 		/*  set the image */
-		setImageDescriptor(COPY_IMAGE);
-		setHoverImageDescriptor(HOVER_COPY_IMAGE);
-		setDisabledImageDescriptor(DISABLED_COPY_IMAGE);
+		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+		
+		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 
 		/* set the id */
 		setId(ActionIds.ACTION_COPY_BITMAP);

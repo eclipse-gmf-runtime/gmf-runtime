@@ -16,13 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.printing.PrinterData;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorPart;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper;
@@ -32,9 +25,15 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHel
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramPrintingResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.printing.PrinterData;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * Utility for using the DiagramPrinter to print diagrams after displaying
@@ -110,14 +109,14 @@ public class DiagramPrinterUtil {
 				e.getMessage(),
 				e);
 
-			if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), DiagramPrintingResourceManager.getI18NString("DiagramPrinterUtil.DLLErrorTitle"), //$NON-NLS-1$
-				DiagramPrintingResourceManager.getI18NString("DiagramPrinterUtil.DLLErrorMessage.part1") //$NON-NLS-1$
+			if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorTitle, 
+				DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorMessage_part1
 				+"\n" //$NON-NLS-1$
-				+DiagramPrintingResourceManager.getI18NString("DiagramPrinterUtil.DLLErrorMessage.part2") //$NON-NLS-1$
+				+DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorMessage_part2
 				+"\n" //$NON-NLS-1$
-				+DiagramPrintingResourceManager.getI18NString("DiagramPrinterUtil.DLLErrorMessage.part3") //$NON-NLS-1$
+				+DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorMessage_part3
 				+"\n\n" //$NON-NLS-1$
-				+DiagramPrintingResourceManager.getI18NString("DiagramPrinterUtil.DLLErrorMessage.part4"))) { //$NON-NLS-1$
+				+DiagramUIPrintingMessages.DiagramPrinterUtil_DLLErrorMessage_part4)) { 
 					DefaultPrintActionHelper.doRun(editorPart, diagramPrinter);
 				}
 

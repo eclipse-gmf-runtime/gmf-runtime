@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,12 +31,12 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
-
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 
 
 /**
@@ -124,7 +123,7 @@ public class DocumentProviderRegistry {
 		extensionPoint= Platform.getExtensionRegistry().getExtensionPoint(EditorPlugin.getPluginId(), "documentProviders"); //$NON-NLS-1$
 
 		if (extensionPoint == null) {
-			String msg= MessageFormat.format(EditorMessages.DocumentProviderRegistry_error_extension_point_not_found, new Object[] { PlatformUI.PLUGIN_ID });
+			String msg= NLS.bind(EditorMessages.DocumentProviderRegistry_error_extension_point_not_found, PlatformUI.PLUGIN_ID);
 			Bundle bundle = Platform.getBundle(EditorPlugin.getPluginId());
 			ILog log= Platform.getLog(bundle);
 			log.log(new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, 0, msg, null));

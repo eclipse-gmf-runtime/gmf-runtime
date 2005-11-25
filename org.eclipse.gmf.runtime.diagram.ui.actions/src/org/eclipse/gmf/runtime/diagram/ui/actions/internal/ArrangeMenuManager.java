@@ -13,9 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author melaasar
@@ -30,17 +30,12 @@ public class ArrangeMenuManager extends ActionMenuManager {
 	 */
 	private static class ArrangeMenuAction extends Action {
 		public ArrangeMenuAction() {
-			setText(DiagramActionsResourceManager.getI18NString("ArrangeMenuManager.Arrange.ActionLabelText")); //$NON-NLS-1$
-			setToolTipText(DiagramActionsResourceManager.getI18NString("ArrangeMenuManager.Arrange.ActionToolTipText")); //$NON-NLS-1$
+			setText(DiagramUIActionsMessages.ArrangeMenuManager_Arrange_ActionLabelText);
+			setToolTipText(DiagramUIActionsMessages.ArrangeMenuManager_Arrange_ActionToolTipText);
 			
-			ImageDescriptor enabledImage = DiagramActionsResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_ARRANGE_ALL);
-			setImageDescriptor(enabledImage);
-			setDisabledImageDescriptor(DiagramActionsResourceManager
-				.getInstance().getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_ARRANGE_ALL_DISABLED));
-			setHoverImageDescriptor(enabledImage);
+			setImageDescriptor(DiagramUIActionsPluginImages.DESC_ARRANGE_ALL);
+			setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_ARRANGE_ALL_DISABLED);
+			setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_ARRANGE_ALL);
 		}
 	}
 

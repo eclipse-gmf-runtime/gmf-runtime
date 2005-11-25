@@ -24,7 +24,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.AlignmentRequest;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gef.ui.actions.AlignmentAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -108,67 +108,67 @@ public class AlignAction extends DiagramAction {
 			case PositionConstants.LEFT: {
 				
 				if (isToolbarItem){
-					text = DiagramActionsResourceManager.getI18NString("AlignLeftToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignLeftToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignLeftToolbarAction_Label;
+					toolTipText = DiagramUIActionsMessages.AlignLeftToolbarAction_Tooltip;
 				}
 				else{
-					text = DiagramActionsResourceManager.getI18NString("AlignLeft");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignLeft");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignLeft;
+					toolTipText = DiagramUIActionsMessages.AlignLeft;
 				}				
 				break;
 			}
 			case PositionConstants.RIGHT: {
 				if (isToolbarItem){
-					text = DiagramActionsResourceManager.getI18NString("AlignRightToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignRightToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignRightToolbarAction_Label;
+					toolTipText = DiagramUIActionsMessages.AlignRightToolbarAction_Tooltip;
 				}
 				else{
-					text = DiagramActionsResourceManager.getI18NString("AlignRight");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignRight");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignRight;
+					toolTipText = DiagramUIActionsMessages.AlignRight;
 				}					
 				break;
 			}
 			case PositionConstants.TOP: {
 				if (isToolbarItem){
-					text = DiagramActionsResourceManager.getI18NString("AlignTopToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignTopToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignTopToolbarAction_Label;
+					toolTipText = DiagramUIActionsMessages.AlignTopToolbarAction_Tooltip;
 				}
 				else{
-					text = DiagramActionsResourceManager.getI18NString("AlignTop");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignTop");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignTop;
+					toolTipText = DiagramUIActionsMessages.AlignTop;
 				}				
 				break;
 			}
 			case PositionConstants.BOTTOM: {
 				if (isToolbarItem){
-					text = DiagramActionsResourceManager.getI18NString("AlignBottomToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignBottomToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignBottomToolbarAction_Label;
+					toolTipText = DiagramUIActionsMessages.AlignBottomToolbarAction_Tooltip;
 				}
 				else{
-					text = DiagramActionsResourceManager.getI18NString("AlignBottom");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignBottom");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignBottom;
+					toolTipText = DiagramUIActionsMessages.AlignBottom;
 				}		
 				break;
 			}
 			case PositionConstants.CENTER: {
 				if (isToolbarItem){
-					text = DiagramActionsResourceManager.getI18NString("AlignCenterToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignCenterToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignCenterToolbarAction_Label;
+					toolTipText = DiagramUIActionsMessages.AlignCenterToolbarAction_Tooltip;
 				}
 				else{
-					text = DiagramActionsResourceManager.getI18NString("AlignCenter");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignCenter");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignCenter;
+					toolTipText = DiagramUIActionsMessages.AlignCenter;
 				}	
 				break;
 			}
 			case PositionConstants.MIDDLE: {
 				if (isToolbarItem){
-					text = DiagramActionsResourceManager.getI18NString("AlignMiddleToolbarAction.Label");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignMiddleToolbarAction.Tooltip");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignMiddleToolbarAction_Label;
+					toolTipText = DiagramUIActionsMessages.AlignMiddleToolbarAction_Tooltip;
 				}
 				else{
-					text = DiagramActionsResourceManager.getI18NString("AlignMiddle");//$NON-NLS-1$
-					toolTipText = DiagramActionsResourceManager.getI18NString("AlignMiddle");//$NON-NLS-1$
+					text = DiagramUIActionsMessages.AlignMiddle;
+					toolTipText = DiagramUIActionsMessages.AlignMiddle;
 				}	
 				break;
 			}			

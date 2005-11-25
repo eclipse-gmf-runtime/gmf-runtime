@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
  * 
  * @author chmahone
  * @canBeSeenBy %level1
+ * @deprecated Use {@link org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry} or {@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry}.  To be removed on: 05/12/26
  */
 public abstract class AbstractResourceManager
 	extends AbstractUIResourceManager {
@@ -51,6 +52,7 @@ public abstract class AbstractResourceManager
 	 * @param device the device to create the font on
 	 * @param fd FontData from which to find or create a Font
 	 * @return the Font
+	 * @deprecated This is being made internal.  To be removed on: 05/12/26
 	 */
 	public Font getFont(Device device, FontData fd) {
 		if (fonts == null)
@@ -72,6 +74,7 @@ public abstract class AbstractResourceManager
 	 * 
 	 * @param id - the integer representation of a color
 	 * @return Color
+	 * @deprecated Use {@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry#getColor(Integer).  To be removed on: 05/12/26
 	 */
 	public Color getColor(Integer id) {
 		Object value = colorRegistry.get(id);
@@ -90,6 +93,7 @@ public abstract class AbstractResourceManager
 	 * 
 	 * @param RGB 
 	 * @return Color
+	 * @deprecated Use {@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry#getColor(RGB).  To be removed on: 05/12/26
 	 */
 	public Color getColor(RGB rgb) {
 		Integer colorID = FigureUtilities.RGBToInteger(rgb);

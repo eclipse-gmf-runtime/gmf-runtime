@@ -12,7 +12,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,16 +41,16 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
-import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectState;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
@@ -64,6 +63,7 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 
@@ -376,7 +376,7 @@ implements NotificationListener {
 		if ( !isEnabled() ) {
 			return false;
 		}
-		final CompoundCommand cc = new CompoundCommand(DiagramResourceManager.getI18NString("DeleteCommand.Label"));//$NON-NLS-1$
+		final CompoundCommand cc = new CompoundCommand(DiagramUIMessages.DeleteCommand_Label);
 		while (views.hasNext()) {
 			View view = (View)views.next();
 			if ( shouldDeleteView(view) ) {
@@ -502,7 +502,7 @@ implements NotificationListener {
 		Command cmd = host().getCommand(request);
 		if (cmd == null) {
 			assert request instanceof CreateViewRequest;
-			CompositeCommand cc = new CompositeCommand(DiagramResourceManager.getI18NString("AddCommand.Label")); //$NON-NLS-1$
+			CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label);
 			Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
 
 			while (descriptors.hasNext()) {
@@ -926,7 +926,7 @@ implements NotificationListener {
 			}
 		}
 		catch ( Throwable t ) {
-			String eMsg = DiagramResourceManager	.getI18NString("CanonicalEditPolicy.refresh.failed_ERROR_");//$NON-NLS-1$
+			String eMsg = DiagramUIMessages.CanonicalEditPolicy_refresh_failed_ERROR_;
 			Log.error(DiagramUIPlugin.getInstance(), IStatus.WARNING,
 					eMsg, t);
 		}
@@ -1058,10 +1058,10 @@ implements NotificationListener {
 				View createdView = (View)((IAdaptable)createdViews.get(i)).getAdapter(View.class);
 				if (createdView == null) {
 					String eMsg =
-						MessageFormat.format(
-							DiagramResourceManager.getI18NString(
-							"CanonicalEditPolicy.create.view.failed_ERROR_"),//$NON-NLS-1$
-							new Object[] { semanticChildren.get(i)});
+						NLS
+						.bind(
+							DiagramUIMessages.CanonicalEditPolicy_create_view_failed_ERROR_,
+							semanticChildren.get(i));
 					IllegalStateException ise =
 						new IllegalStateException(eMsg);
 					Log.error(

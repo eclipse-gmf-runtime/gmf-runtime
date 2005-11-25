@@ -14,7 +14,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.LogicResourceManager;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
 
 /**
  * @author qili
@@ -86,22 +86,22 @@ public class LogicConstants {
 	public static String getShapeLabel( String toGet ) {
 		
 		if( toGet.equals( TOOL_LED ) )
-			return LogicResourceManager.getInstance().getString("logic.LEDTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_LEDTool_Label;
 		if( toGet.equals( TOOL_FLOWCONTAINER ) )
-			return LogicResourceManager.getInstance().getString("logic.LogicFlowTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_LogicFlowTool_Label;
 		if( toGet.equals( TOOL_CIRCUIT ) )
-			return LogicResourceManager.getInstance().getString("logic.CircuitTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_CircuitTool_Label; 
 		if( toGet.equals( TOOL_ORGATE ) )
-			return LogicResourceManager.getInstance().getString("logic.OrGateTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_OrGateTool_Label; 
 		if( toGet.equals( TOOL_ANDGATE ) )
-			return LogicResourceManager.getInstance().getString("logic.AndGateTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_AndGateTool_Label; 
 		if( toGet.equals( TOOL_XORGATE ) )
-			return LogicResourceManager.getInstance().getString("logic.XORGateTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_XORGateTool_Label; 
 		if( toGet.equals( TOOL_HALFADDER ) )
-			return LogicResourceManager.getInstance().getString("logic.HalfAdderTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_HalfAdderTool_Label; 
 		if( toGet.equals( TOOL_FULLADDER ) )
-			return LogicResourceManager.getInstance().getString("logic.FullAdderTool.Label"); //$NON-NLS-1$
+			return ExampleDiagramLogicMessages.logic_FullAdderTool_Label; 
 		
-		return LogicResourceManager.getInstance().getString("logic.Shape.Label"); //$NON-NLS-1$
+		return ExampleDiagramLogicMessages.logic_Shape_Label;
 	}
 }

@@ -16,10 +16,11 @@ import java.util.ListIterator;
 
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,7 +38,11 @@ public class RouterAction extends CheckedPropertyAction {
 	 * @param routerType
 	 */
 	protected RouterAction(IWorkbenchPage workbenchPage, Routing routerType) {
-		super(workbenchPage, Properties.ID_ROUTING, DiagramActionsResourceManager.getI18NString("ChangeRouterAction.ChangePropertyValueRequest.label"), routerType); //$NON-NLS-1$
+		super(
+			workbenchPage,
+			Properties.ID_ROUTING,
+			DiagramUIActionsMessages.ChangeRouterAction_ChangePropertyValueRequest_label,
+			routerType);
 	}
 
 	/**
@@ -50,20 +55,17 @@ public class RouterAction extends CheckedPropertyAction {
 		RouterAction action =
 			new RouterAction(workbenchPage, Routing.RECTILINEAR_LITERAL);
 		action.setId(ActionIds.ACTION_ROUTER_RECTILINEAR);
-		action.setText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Rectilinear.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Rectilinear.ActionToolTipText")); //$NON-NLS-1$
-		
-		ImageDescriptor enabledImage = DiagramActionsResourceManager
-			.getInstance()
-			.getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_CHANGEROUTERACTION_RECTILINEAR);
-		action.setImageDescriptor(enabledImage);
 		action
-			.setDisabledImageDescriptor(DiagramActionsResourceManager
-				.getInstance()
-				.getImageDescriptor(
-					DiagramActionsResourceManager.IMAGE_CHANGEROUTERACTION_RECTILINEAR_DISABLED));
-		action.setHoverImageDescriptor(enabledImage);
+			.setText(DiagramUIActionsMessages.ChangeRouterAction_Rectilinear_ActionLabelText);
+		action
+			.setToolTipText(DiagramUIActionsMessages.ChangeRouterAction_Rectilinear_ActionToolTipText);
+
+		action
+			.setImageDescriptor(DiagramUIActionsPluginImages.DESC_CHANGEROUTERACTION_RECTILINEAR);
+		action
+			.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_CHANGEROUTERACTION_RECTILINEAR_DISABLED);
+		action
+			.setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_CHANGEROUTERACTION_RECTILINEAR);
 		return action;
 	}
 
@@ -77,18 +79,13 @@ public class RouterAction extends CheckedPropertyAction {
 		RouterAction action =
 			new RouterAction(workbenchPage, Routing.MANUAL_LITERAL);
 		action.setId(ActionIds.ACTION_ROUTER_OBLIQUE);
-		action.setText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Oblique.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Oblique.ActionToolTipText")); //$NON-NLS-1$
+		action.setText(DiagramUIActionsMessages.ChangeRouterAction_Oblique_ActionLabelText);
+		action.setToolTipText(DiagramUIActionsMessages.ChangeRouterAction_Oblique_ActionToolTipText);
 
-		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramResourceManager.IMAGE_CHANGEROUTERACTION_OBLIQUE);
+		ImageDescriptor enabledImage = DiagramUIPluginImages.DESC_CHANGEROUTERACTION_OBLIQUE;
 		action.setImageDescriptor(enabledImage);
 		action
-			.setDisabledImageDescriptor(DiagramResourceManager
-				.getInstance()
-				.getImageDescriptor(
-					DiagramResourceManager.IMAGE_CHANGEROUTERACTION_OBLIQUE_DISABLED));
+			.setDisabledImageDescriptor(DiagramUIPluginImages.DESC_CHANGEROUTERACTION_OBLIQUE_DISABLED);
 		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}
@@ -103,16 +100,13 @@ public class RouterAction extends CheckedPropertyAction {
 		RouterAction action =
 			new RouterAction(workbenchPage, Routing.TREE_LITERAL);
 		action.setId(ActionIds.ACTION_ROUTER_TREE);
-		action.setText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Tree.ActionLabelText")); //$NON-NLS-1$
-		action.setToolTipText(DiagramActionsResourceManager.getI18NString("ChangeRouterAction.Tree.ActionToolTipText")); //$NON-NLS-1$
+		action.setText(DiagramUIActionsMessages.ChangeRouterAction_Tree_ActionLabelText);
+		action.setToolTipText(DiagramUIActionsMessages.ChangeRouterAction_Tree_ActionToolTipText);
 		
-		ImageDescriptor enabledImage = DiagramResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramResourceManager.IMAGE_CHANGEROUTERACTION_TREE);
+		ImageDescriptor enabledImage = DiagramUIPluginImages.DESC_CHANGEROUTERACTION_TREE;
 		action.setImageDescriptor(enabledImage);
-		action.setDisabledImageDescriptor(DiagramResourceManager.getInstance()
-			.getImageDescriptor(
-				DiagramResourceManager.IMAGE_CHANGEROUTERACTION_TREE_DISABLED));
+		action
+			.setDisabledImageDescriptor(DiagramUIPluginImages.DESC_CHANGEROUTERACTION_TREE_DISABLED);
 		action.setHoverImageDescriptor(enabledImage);
 		return action;
 	}

@@ -17,16 +17,15 @@ import java.util.List;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.tools.AbstractTool;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -48,7 +47,9 @@ public class CompartmentCollapseTracker
 	}
 
 	protected Command getCommand(Boolean expand) {
-		ChangePropertyValueRequest request = new ChangePropertyValueRequest(DiagramResourceManager.getI18NString("PropertyDescriptorFactory.CollapseCompartment"), Properties.ID_COLLAPSED, expand); //$NON-NLS-1$
+		ChangePropertyValueRequest request = new ChangePropertyValueRequest(
+			DiagramUIMessages.PropertyDescriptorFactory_CollapseCompartment,
+			Properties.ID_COLLAPSED, expand);
 		return compartmentEditPart.getCommand(request);
 	}
 

@@ -13,9 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 
 /**
  * @author sshaw
@@ -35,9 +34,9 @@ public class CollapseFigure extends RectangleFigure {
 		Image img;
 		
 		if (isCollapsed())
-			img = DiagramResourceManager.getInstance().getImage(DiagramResourceManager.IMAGE_HANDLE_EXPAND);
+			img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_EXPAND);
 		else
-			img = DiagramResourceManager.getInstance().getImage(DiagramResourceManager.IMAGE_HANDLE_COLLAPSE);
+			img = DiagramUIPluginImages.get(DiagramUIPluginImages.IMG_HANDLE_COLLAPSE);
 		
 		graphics.drawImage(img, getBounds().x, getBounds().y);
 	}

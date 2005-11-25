@@ -21,7 +21,7 @@ import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ToggleConnectionLabelsRequest;
@@ -62,7 +62,7 @@ public class ConnectionLabelsEditPolicy extends AbstractEditPolicy {
 				GraphicalEditPart ep = (GraphicalEditPart) iter.next();	
 				if (ep instanceof LabelEditPart) {
 					ChangePropertyValueRequest req = new ChangePropertyValueRequest(
-						DiagramResourceManager.getInstance().getString("Command.hideLabel.Label"), //$NON-NLS-1$
+						DiagramUIMessages.Command_hideLabel_Label,
 						Properties.ID_ISVISIBLE,
 						Boolean.valueOf(showHide));
 					Command setLabelVisCmd = ep.getCommand(req);

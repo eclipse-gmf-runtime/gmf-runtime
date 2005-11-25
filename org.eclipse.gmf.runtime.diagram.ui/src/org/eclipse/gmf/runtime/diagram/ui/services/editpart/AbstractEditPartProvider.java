@@ -12,13 +12,10 @@
 package org.eclipse.gmf.runtime.diagram.ui.services.editpart;
 
 import java.lang.reflect.Constructor;
-import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -26,12 +23,14 @@ import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.osgi.util.NLS;
 
 
 /**
@@ -134,9 +133,9 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 			return (constructor == null)? null : (IGraphicalEditPart) constructor.newInstance(constructorParams);
 		} 
 		catch (Throwable e) {
-			String eMsg = MessageFormat.format(  
-				DiagramResourceManager.getInstance().getString("AbstractEditPartProvider.new.graphicaleditpart.failed_ERROR_"),//$NON-NLS-1$
-				new Object[] {editpartClass});
+			String eMsg = NLS.bind(  
+				DiagramUIMessages.AbstractEditPartProvider_new_graphicaleditpart_failed_ERROR_,
+				editpartClass);
 			Log.warning(DiagramUIPlugin.getInstance(), IStatus.WARNING, eMsg, e);
 			return null;
 		}

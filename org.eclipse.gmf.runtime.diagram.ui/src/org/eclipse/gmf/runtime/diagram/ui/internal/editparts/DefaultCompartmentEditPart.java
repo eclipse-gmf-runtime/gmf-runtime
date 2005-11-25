@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -46,6 +46,6 @@ public class DefaultCompartmentEditPart
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart#getTitleName()
 	 */
 	protected String getTitleName() {
-		return DiagramResourceManager.getI18NString("InvalidView"); //$NON-NLS-1$
+		return DiagramUIMessages.InvalidView;
 	}
 }

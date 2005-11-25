@@ -23,11 +23,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
@@ -84,8 +83,7 @@ public class DeferredLayoutCommand
 	public DeferredLayoutCommand(List viewAdapters,
 		IGraphicalEditPart containerEP, String commandLayoutType) {
 
-		super(DiagramResourceManager
-			.getI18NString("Command.Deferred_Layout"), null); //$NON-NLS-1$
+		super(DiagramUIMessages.Command_Deferred_Layout, null);
 		if (commandLayoutType != null) {
 			this.layoutType = commandLayoutType;
 		} else {

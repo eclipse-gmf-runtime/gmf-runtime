@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.gmf.runtime.common.ui.l10n.AbstractUIResourceManager;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramActionsResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
@@ -155,19 +155,19 @@ public class ColorPropertyContributionItem
 	}
 
 	/** inventory colors */
-	private static final InventoryColorDescriptor WHITE = new InventoryColorDescriptor(new RGB(255, 255, 255), getResources().getString("ColorPropertyChangeAction.white")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor BLACK = new InventoryColorDescriptor(new RGB(0, 0, 0), getResources().getString("ColorPropertyChangeAction.black")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor LIGHT_GRAY = new InventoryColorDescriptor(new RGB(192, 192, 192), getResources().getString("ColorPropertyChangeAction.lightGray")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor GRAY = new InventoryColorDescriptor(new RGB(128, 128, 128), getResources().getString("ColorPropertyChangeAction.gray")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor DARK_GRAY = new InventoryColorDescriptor(new RGB(64, 64, 64), getResources().getString("ColorPropertyChangeAction.darkGray")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor RED = new InventoryColorDescriptor(new RGB(227, 164, 156), getResources().getString("ColorPropertyChangeAction.red")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor GREEN = new InventoryColorDescriptor(new RGB(166, 193, 152), getResources().getString("ColorPropertyChangeAction.green")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor BLUE = new InventoryColorDescriptor(new RGB(152, 168, 191), getResources().getString("ColorPropertyChangeAction.blue")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor YELLOW = new InventoryColorDescriptor(new RGB(225, 225, 135), getResources().getString("ColorPropertyChangeAction.yellow")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor PURPLE = new InventoryColorDescriptor(new RGB(184, 151, 192), getResources().getString("ColorPropertyChangeAction.magenta")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor TEAL = new InventoryColorDescriptor(new RGB(155, 199, 204), getResources().getString("ColorPropertyChangeAction.cyan")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor PINK = new InventoryColorDescriptor(new RGB(228, 179, 229), getResources().getString("ColorPropertyChangeAction.pink")); //$NON-NLS-1$
-	private static final InventoryColorDescriptor ORANGE = new InventoryColorDescriptor(new RGB(237, 201, 122), getResources().getString("ColorPropertyChangeAction.orange")); //$NON-NLS-1$
+	private static final InventoryColorDescriptor WHITE = new InventoryColorDescriptor(new RGB(255, 255, 255), DiagramUIActionsMessages.ColorPropertyChangeAction_white);
+	private static final InventoryColorDescriptor BLACK = new InventoryColorDescriptor(new RGB(0, 0, 0), DiagramUIActionsMessages.ColorPropertyChangeAction_black);
+	private static final InventoryColorDescriptor LIGHT_GRAY = new InventoryColorDescriptor(new RGB(192, 192, 192), DiagramUIActionsMessages.ColorPropertyChangeAction_lightGray);
+	private static final InventoryColorDescriptor GRAY = new InventoryColorDescriptor(new RGB(128, 128, 128), DiagramUIActionsMessages.ColorPropertyChangeAction_gray);
+	private static final InventoryColorDescriptor DARK_GRAY = new InventoryColorDescriptor(new RGB(64, 64, 64), DiagramUIActionsMessages.ColorPropertyChangeAction_darkGray);
+	private static final InventoryColorDescriptor RED = new InventoryColorDescriptor(new RGB(227, 164, 156), DiagramUIActionsMessages.ColorPropertyChangeAction_red);
+	private static final InventoryColorDescriptor GREEN = new InventoryColorDescriptor(new RGB(166, 193, 152), DiagramUIActionsMessages.ColorPropertyChangeAction_green);
+	private static final InventoryColorDescriptor BLUE = new InventoryColorDescriptor(new RGB(152, 168, 191), DiagramUIActionsMessages.ColorPropertyChangeAction_blue);
+	private static final InventoryColorDescriptor YELLOW = new InventoryColorDescriptor(new RGB(225, 225, 135), DiagramUIActionsMessages.ColorPropertyChangeAction_yellow);
+	private static final InventoryColorDescriptor PURPLE = new InventoryColorDescriptor(new RGB(184, 151, 192), DiagramUIActionsMessages.ColorPropertyChangeAction_magenta);
+	private static final InventoryColorDescriptor TEAL = new InventoryColorDescriptor(new RGB(155, 199, 204), DiagramUIActionsMessages.ColorPropertyChangeAction_cyan);
+	private static final InventoryColorDescriptor PINK = new InventoryColorDescriptor(new RGB(228, 179, 229), DiagramUIActionsMessages.ColorPropertyChangeAction_pink);
+	private static final InventoryColorDescriptor ORANGE = new InventoryColorDescriptor(new RGB(237, 201, 122), DiagramUIActionsMessages.ColorPropertyChangeAction_orange);
 	/** default color icon width */
 	private static final Point ICON_SIZE = new Point(16, 16);
 	/** custom color group maximum length */
@@ -442,7 +442,7 @@ public class ColorPropertyContributionItem
 	 * @param theMenu The menu
 	 */
 	private void createDefaultColorMenuItem(Menu theMenu) {
-		String text = getResources().getString("ColorPropertyChangeAction.default"); //$NON-NLS-1$
+		String text = DiagramUIActionsMessages.ColorPropertyChangeAction_default;
 		Image image = null; //new ColorBoxImageDescriptor(color).createImage();
 		MenuItem mi = createMenuItem(theMenu, text, image);
 		mi.setData(DEFAULT);
@@ -454,7 +454,7 @@ public class ColorPropertyContributionItem
 	 * @param theMenu The menu
 	 */
 	private void createChooseColorMenuItem(Menu theMenu) {
-		String text = getResources().getString("ColorPropertyChangeAction.moreColors"); //$NON-NLS-1$
+		String text = DiagramUIActionsMessages.ColorPropertyChangeAction_moreColors;
 		Image image = null; //new ColorBoxImageDescriptor(color).createImage();
 		MenuItem mi = createMenuItem(theMenu, text, image);
 		mi.setData(CHOOSE);
@@ -466,7 +466,7 @@ public class ColorPropertyContributionItem
 	 * @param theMenu The menu
 	 */
 	private void createClearCustomColorMenuItem(Menu theMenu) {
-		String text = getResources().getString("ColorPropertyChangeAction.clearColors"); //$NON-NLS-1$
+		String text = DiagramUIActionsMessages.ColorPropertyChangeAction_clearColors;
 		Image image = null; //new ColorBoxImageDescriptor(color).createImage();
 		MenuItem mi = createMenuItem(theMenu, text, image);
 		mi.setData(CLEAR);
@@ -585,14 +585,11 @@ public class ColorPropertyContributionItem
 	 * @return The FONT color menu
 	 */
 	public static ColorPropertyContributionItem createFontColorContributionItem(IWorkbenchPage workbenchPage) {
-		String propertyName = getResources().getString("PropertyDescriptorFactory.FontColor"); //$NON-NLS-1$
-		String toolTipText = getResources().getString("ColorChangeActionMenu.fontColor"); //$NON-NLS-1$
-		ImageData basicImageData = DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_FONT_COLOR)
+		String propertyName = DiagramUIActionsMessages.PropertyDescriptorFactory_FontColor;
+		String toolTipText = DiagramUIActionsMessages.ColorChangeActionMenu_fontColor;
+		ImageData basicImageData = DiagramUIActionsPluginImages.DESC_FONT_COLOR
 			.getImageData();
-		ImageData disabledBasicImageData = DiagramActionsResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_FONT_COLOR_DISABLED)
+		ImageData disabledBasicImageData = DiagramUIActionsPluginImages.DESC_FONT_COLOR_DISABLED
 			.getImageData();
 
 		return new ColorPropertyContributionItem(
@@ -613,14 +610,11 @@ public class ColorPropertyContributionItem
 	 * @return The LINE color menu
 	 */
 	public static ColorPropertyContributionItem createLineColorContributionItem(IWorkbenchPage workbenchPage) {
-		String propertyName = getResources().getString("PropertyDescriptorFactory.LineColor"); //$NON-NLS-1$
-		String toolTipText = getResources().getString("ColorChangeActionMenu.lineColor"); //$NON-NLS-1$
-		ImageData basicImageData = DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_LINE_COLOR)
-			.getImageData();
-		ImageData disabledBasicImageData = DiagramActionsResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_LINE_COLOR_DISABLED)
+		String propertyName = DiagramUIActionsMessages.PropertyDescriptorFactory_LineColor;
+		String toolTipText = DiagramUIActionsMessages.ColorChangeActionMenu_lineColor;
+		ImageData basicImageData = 
+			DiagramUIActionsPluginImages.DESC_LINE_COLOR.getImageData();
+		ImageData disabledBasicImageData = DiagramUIActionsPluginImages.DESC_LINE_COLOR_DISABLED
 			.getImageData();
 
 		return new ColorPropertyContributionItem(
@@ -641,14 +635,11 @@ public class ColorPropertyContributionItem
 	 * @return The FILL color menu
 	 */
 	public static ColorPropertyContributionItem createFillColorContributionItem(IWorkbenchPage workbenchPage) {
-		String propertyName = getResources().getString("PropertyDescriptorFactory.FillColor"); //$NON-NLS-1$
-		String toolTipText = getResources().getString("ColorChangeActionMenu.fillColor"); //$NON-NLS-1$
-		ImageData basicImageData = DiagramActionsResourceManager.getInstance()
-			.getImageDescriptor(DiagramActionsResourceManager.IMAGE_FILL_COLOR)
-			.getImageData();
-		ImageData disabledBasicImageData = DiagramActionsResourceManager
-			.getInstance().getImageDescriptor(
-				DiagramActionsResourceManager.IMAGE_FILL_COLOR_DISABLED)
+		String propertyName = DiagramUIActionsMessages.PropertyDescriptorFactory_FillColor;
+		String toolTipText = DiagramUIActionsMessages.ColorChangeActionMenu_fillColor;
+		ImageData basicImageData = 
+			DiagramUIActionsPluginImages.DESC_FILL_COLOR.getImageData();
+		ImageData disabledBasicImageData = DiagramUIActionsPluginImages.DESC_FILL_COLOR_DISABLED
 			.getImageData();
 
 		return new ColorPropertyContributionItem(
@@ -662,11 +653,5 @@ public class ColorPropertyContributionItem
 			disabledBasicImageData);
 	}
 
-	/**
-	 * @return a short cut to the resources
-	 */
-	private static AbstractUIResourceManager getResources() {
-		return DiagramActionsResourceManager.getInstance();
-	}
 
 }

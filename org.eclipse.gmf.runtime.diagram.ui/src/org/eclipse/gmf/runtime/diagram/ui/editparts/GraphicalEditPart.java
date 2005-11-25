@@ -61,9 +61,10 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -640,7 +641,7 @@ public abstract class GraphicalEditPart
 	protected void refreshBackgroundColor() {
 		FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFillStyle());
 		if ( style != null ) {
-			setBackgroundColor(DiagramResourceManager.getInstance().getColor(new Integer(style.getFillColor())));
+			setBackgroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor())));
 		}
 	}
 
@@ -660,7 +661,7 @@ public abstract class GraphicalEditPart
 	protected void refreshFontColor() {
 		FontStyle style = (FontStyle)  getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
 		if ( style != null ) {
-			setFontColor(DiagramResourceManager.getInstance().getColor(new Integer(style.getFontColor())));
+			setFontColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFontColor())));
 		}
 	}
 
@@ -668,7 +669,7 @@ public abstract class GraphicalEditPart
 	protected void refreshForegroundColor() {
 		LineStyle style = (LineStyle)  getPrimaryView().getStyle(NotationPackage.eINSTANCE.getLineStyle());
 		if ( style != null ) {
-			setForegroundColor(DiagramResourceManager.getInstance().getColor(new Integer(style.getLineColor())));
+			setForegroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getLineColor())));
 		}
 	}
 
@@ -726,7 +727,7 @@ public abstract class GraphicalEditPart
 	 */
 	protected void setFont(FontData fontData) {
 		getFigure().setFont(
-			DiagramResourceManager.getInstance().getFont(
+			DiagramFontRegistry.getInstance().getFont(
 				Display.getDefault(),
 				fontData));
 		getFigure().repaint();

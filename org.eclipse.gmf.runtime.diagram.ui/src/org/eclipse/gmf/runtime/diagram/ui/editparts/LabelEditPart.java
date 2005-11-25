@@ -39,7 +39,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.LabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.ResizableLabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
@@ -260,7 +260,7 @@ public class LabelEditPart extends TopGraphicEditPart {
 			refreshBounds();
 		}else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature)){
 			Integer c = (Integer) notification.getNewValue();
-			setForegroundColor(DiagramResourceManager.getInstance().getColor(c));
+			setForegroundColor(DiagramColorRegistry.getInstance().getColor(c));
 		}
 		else
 			super.handleNotificationEvent(notification);
