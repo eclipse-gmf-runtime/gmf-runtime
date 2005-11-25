@@ -21,7 +21,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.AbstractResourceManager;
  *
  * @author cmahoney
  * @deprecated To be removed on: 05/12/26
- * Use the following instead:
+ * See {@link http://dev.eclipse.org/mhonarc/lists/gmf-dev/msg00340.html API Change Notification e-mail}
+ * <p>Use the following instead:
  * <li>{@link org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages}</li>
  * <li>{@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages}</li>
  * <li>{@link org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry}</li>
