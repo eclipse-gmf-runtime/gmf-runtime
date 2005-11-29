@@ -11,10 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -32,7 +29,6 @@ import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.dom.util.DOMUtilities;
-import org.apache.batik.ext.awt.image.GraphicsUtil;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory;
@@ -351,38 +347,18 @@ public class ImageTranscoderEx extends ImageTranscoder {
 		gvtRoot = null; // We're done with it...
 
 		try {
-			//TODO there should be some optimization opportunities here - to many buffer copies?
-			// now we are sure that the aoi is the image size
 			Shape raoi = new Rectangle2D.Float(0, 0, width, height);
 			// Warning: the renderer's AOI must be in user space
 			renderer.repaint(Px.createInverse().createTransformedShape(raoi));
 			BufferedImage rend = renderer.getOffScreen();
 			renderer = null; // We're done with it...
 
-			BufferedImage dest = createImage(w, h);
-
-			Graphics2D g2d = GraphicsUtil.createGraphics(dest);
-			if (hints.containsKey(KEY_BACKGROUND_COLOR)) {
-				Paint bgcolor = (Paint)hints.get(KEY_BACKGROUND_COLOR);
-				g2d.setComposite(AlphaComposite.SrcOver);
-				g2d.setPaint(bgcolor);
-				g2d.fillRect(0, 0, w, h);
-			}
-			if (rend != null) { // might be null if the svg document is empty
-				g2d.drawRenderedImage(rend, new AffineTransform());
-			}
-			g2d.dispose();
-			rend = null; // We're done with it...
-			writeImage(dest, output);
+			writeImage(rend, output);
 		} catch (Exception ex) {
 			throw new TranscoderException(ex);
 		}
 		return gvtRoot;
 	}
-
-
-
-
 
 	private BufferedImage bufferedImage = null;
 	

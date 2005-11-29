@@ -48,7 +48,7 @@ public class RenderedPrinterGraphics extends PrinterGraphics
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
 	 */
-	public void drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
 		int nNewWidth = (int)Math.round(width * getPrintScale());
 		int nNewHeight = (int)Math.round(height * getPrintScale());
 		
@@ -61,5 +61,6 @@ public class RenderedPrinterGraphics extends PrinterGraphics
 		
 		Image swtImg = img.getSWTImage();
 		drawImage(swtImg, x, y + height - swtImg.getBounds().height);
+		return img;
 	}
 }

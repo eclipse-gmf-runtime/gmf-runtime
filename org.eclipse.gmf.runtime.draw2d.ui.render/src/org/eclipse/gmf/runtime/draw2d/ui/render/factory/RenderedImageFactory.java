@@ -26,6 +26,7 @@ import java.util.zip.Adler32;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderInfoImpl;
@@ -38,7 +39,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.WMFTransco
 
 /**
  * @author sshaw
- *
+ * 
  * Factory class for generating RenderedImage objects
  */
 public class RenderedImageFactory {
@@ -51,20 +52,26 @@ public class RenderedImageFactory {
 	 *            the width of the rendered image to set
 	 * @param height
 	 *            the height of the rendered image to set
-	 * @param fill the <code>Color</code> of the fill that could instrumented into image formats that
-	 * support dynamic color replacement.  Typically, this would replace colors in the image which are "white"
-	 * i.e. RGB(255,255,255)
-	 * @param outline the <code>Color</code> of the outline that could instrumented into image formats that
-	 * support dynamic color replacement.  Typically, this would replace colors in the image which are "black"
-	 * i.e. RGB(0,0,0)
+	 * @param fill
+	 *            the <code>Color</code> of the fill that could instrumented
+	 *            into image formats that support dynamic color replacement.
+	 *            Typically, this would replace colors in the image which are
+	 *            "white" i.e. RGB(255,255,255)
+	 * @param outline
+	 *            the <code>Color</code> of the outline that could
+	 *            instrumented into image formats that support dynamic color
+	 *            replacement. Typically, this would replace colors in the image
+	 *            which are "black" i.e. RGB(0,0,0)
 	 * @param maintainAspectRatio
-	 *            <code>boolean</code> <code>true</code> if aspect ratio of original vector file is
-	 *            maintained, <code>false</code> otherwise
+	 *            <code>boolean</code> <code>true</code> if aspect ratio of
+	 *            original vector file is maintained, <code>false</code>
+	 *            otherwise
 	 * @param antialias
-	 * 			  <code>boolean</code> <code>true</code> if the image is to be rendered using anti-aliasing
-	 * 			 (removing "jaggies" producing smoother lines), <code>false</code> otherwise
-	 * @return <code>RenderInfo</code> object that contains information about the rendered
-	 *         image.
+	 *            <code>boolean</code> <code>true</code> if the image is to
+	 *            be rendered using anti-aliasing (removing "jaggies" producing
+	 *            smoother lines), <code>false</code> otherwise
+	 * @return <code>RenderInfo</code> object that contains information about
+	 *         the rendered image.
 	 */
 	static public RenderInfo createInfo(
 		int width,
@@ -86,12 +93,13 @@ public class RenderedImageFactory {
 
 	/**
 	 * getInstance static constructor method for retrieving the appropriate
-	 * instance of the immutable class <code>RenderedImage</code>. This method is used to read
-	 * svg images from JARs.
+	 * instance of the immutable class <code>RenderedImage</code>. This
+	 * method is used to read svg images from JARs.
 	 * 
 	 * @param theURL
 	 *            URL of the SVG image. Normally in a JAR
-	 * @return <code>RenderedImage</code> instance with the size dimensions requested.
+	 * @return <code>RenderedImage</code> instance with the size dimensions
+	 *         requested.
 	 */
 	static public RenderedImage getInstance(URL theURL) {
 		return getInstance(theURL, new RenderInfoImpl());
@@ -99,8 +107,8 @@ public class RenderedImageFactory {
 
 	/**
 	 * getInstance static constructor method for retrieving the appropriate
-	 * instance of the immutable class <code>RenderedImage</code>. This method is used to read
-	 * svg images from JARs.
+	 * instance of the immutable class <code>RenderedImage</code>. This
+	 * method is used to read svg images from JARs.
 	 * 
 	 * @param theURL
 	 *            URL of the SVG image.
@@ -108,7 +116,8 @@ public class RenderedImageFactory {
 	 *            object containing information about the size and general data
 	 *            regarding how the image will be rendered.
 	 * 
-	 * @return <code>RenderedImage</code> instance with the size dimensions requested.
+	 * @return <code>RenderedImage</code> instance with the size dimensions
+	 *         requested.
 	 */
 	static public RenderedImage getInstance(URL theURL, RenderInfo info) {
 
@@ -137,7 +146,8 @@ public class RenderedImageFactory {
 	 * 
 	 * @param szFilePath
 	 *            <code>String</code> file path of svg file
-	 * @return <code>RenderedImage</code> instance with the size dimensions requested.
+	 * @return <code>RenderedImage</code> instance with the size dimensions
+	 *         requested.
 	 */
 	static public RenderedImage getInstance(String szFilePath) {
 		return getInstance(szFilePath, new RenderInfoImpl());
@@ -150,9 +160,11 @@ public class RenderedImageFactory {
 	 * @param szFilePath
 	 *            <code>String</code> file path of svg file
 	 * @param info
-	 * 			  <code>RenderInfo</code> object containing information about the size and general data
-	 *            regarding how the image will be rendered.
-	 * @return <code>RenderedImage</code> instance with the size dimensions requested.
+	 *            <code>RenderInfo</code> object containing information about
+	 *            the size and general data regarding how the image will be
+	 *            rendered.
+	 * @return <code>RenderedImage</code> instance with the size dimensions
+	 *         requested.
 	 */
 	static public RenderedImage getInstance(String szFilePath, RenderInfo info) {
 		try {
@@ -178,13 +190,46 @@ public class RenderedImageFactory {
 	 * instance of the immutable class <code>RenderedImage</code>.
 	 * 
 	 * @param buffer
-	 *            <code>byte[]</code> array containing an cached SVG image file.
-	 * @return the <code>RenderedImage</code> that encapsulates the contents of the given byte buffer.
+	 *            <code>byte[]</code> array containing an cached SVG image
+	 *            file.
+	 * @return the <code>RenderedImage</code> that encapsulates the contents
+	 *         of the given byte buffer.
 	 */
 	static public RenderedImage getInstance(byte[] buffer) {
 		return getInstance(buffer, new RenderInfoImpl());
 	}
 
+	/**
+	 * Returns a related instance of the given <code>RenderedImage</code> that
+	 * is based on the same byte stream or file info but instrumented for the
+	 * passed in <code>RenderInfo</code> object
+	 * 
+	 * @param image
+	 *            <code>RenderedImage</code> that is used as a base to
+	 *            retrieve the related instance.
+	 * @param info
+	 *            <code>RenderInfo</code> object containing information about the size 
+	 *            and general data regarding how the image will be rendered.
+	 * @return <code>RenderedImage</code> instance with the size dimensions
+	 *         requested.  May return <code>null</code> if no related instance
+	 *         can be found or if the original buffer cannot be retrieved.
+	 */
+	static public RenderedImage getRelatedInstance(RenderedImage image, RenderInfo info) {
+		if (image instanceof AbstractRenderedImage) {
+			RenderedImageKey oldKey = ((AbstractRenderedImage)image).getKey();
+			RenderedImageKey key = new RenderedImageKey(oldKey.getChecksum(), info, oldKey.getExtraData());
+			WeakReference ref = (WeakReference)instanceMap.get(key);
+			if (ref != null) {
+				return (RenderedImage)ref.get();
+			}
+			else {
+				return autodetectImage(((AbstractRenderedImage)image).getBuffer(), key);
+			}
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * getInstance static constructor method for retrieving the appropriate
 	 * instance of the immutable class <code>RenderedImage</code>.
@@ -194,7 +239,8 @@ public class RenderedImageFactory {
 	 * @param info
 	 *            object containing information about the size and general data
 	 *            regarding how the image will be rendered.
-	 * @return <code>RenderedImage</code> instance with the size dimensions requested.
+	 * @return <code>RenderedImage</code> instance with the size dimensions
+	 *         requested.
 	 */
 	static public RenderedImage getInstance(byte[] buffer, RenderInfo info) {
 		if (buffer == null)
@@ -202,38 +248,45 @@ public class RenderedImageFactory {
 	
 		Adler32 checksum = new Adler32();
 		checksum.update(buffer);
-		final RenderedImageKey key = new RenderedImageKey(checksum.getValue(), info);
+		final RenderedImageKey key = new RenderedImageKey(checksum.getValue(), info, null);
 		WeakReference ref = (WeakReference)instanceMap.get(key);
 		RenderedImage image = null;
 		if (ref != null)
 			image = (RenderedImage)(((WeakReference) instanceMap.get(key)).get());
+		else
+			image = autodetectImage(buffer, key);
+	
+		return image;
+	}
+
+	private static RenderedImage autodetectImage(byte[] buffer, final RenderedImageKey key) {
+		RenderedImage image = null;
 		
-		if (image == null) {
-			if (isSVG(buffer))
-				image = new SVGImage(buffer, key);
-			else {
-				// not a recognizable image format so assume it's an EMF file
-			    try {
-		    	   	WMFTranscoder imageTransformer = new WMFTranscoder();
-	    		   	ByteArrayInputStream input = new ByteArrayInputStream(buffer);
-		    	   	ByteArrayOutputStream output = new ByteArrayOutputStream();
-		    	   	imageTransformer.transcode(input, output);
-		    	   	image = new SVGImage(output.toByteArray(), key);
-		    	} catch (Exception e2) {
-		    		try {
-		    			EMFTranscoder imageTransformer = new EMFTranscoder();
-	    	    	   	ByteArrayInputStream input = new ByteArrayInputStream(buffer);
-		    	       	ByteArrayOutputStream output = new ByteArrayOutputStream();
-		    	       	imageTransformer.transcode(input, output);
-		    	       	image = new SVGImage(output.toByteArray(), key);
-		    	    } catch (Exception e3) {
-		    	    	image = new ImageRenderedImage(buffer, key);
-		    	    }
-			    }
-			}
+		if (isSVG(buffer))
+			image = new SVGImage(buffer, key);
+		else {
+			// not a recognizable image format so assume it's an EMF file
+		    try {
+		   	   	WMFTranscoder imageTransformer = new WMFTranscoder();
+	    	   	ByteArrayInputStream input = new ByteArrayInputStream(buffer);
+		   	   	ByteArrayOutputStream output = new ByteArrayOutputStream();
+		   	   	imageTransformer.transcode(input, output);
+		   	   	image = new SVGImage(output.toByteArray(), key);
+		   	} catch (Exception e2) {
+		   		try {
+		   			EMFTranscoder imageTransformer = new EMFTranscoder();
+	        	   	ByteArrayInputStream input = new ByteArrayInputStream(buffer);
+		   	       	ByteArrayOutputStream output = new ByteArrayOutputStream();
+		   	       	imageTransformer.transcode(input, output);
+		   	       	image = new SVGImage(output.toByteArray(), key);
+		   	    } catch (Exception e3) {
+		   	    	image = new ImageRenderedImage(buffer, key);
+		   	    }
+		    }
+		}
 			 
-			if (image != null)
-				instanceMap.put(key, new WeakReference(image));
+		if (image != null) {
+			instanceMap.put(key, new WeakReference(image));
 		}
 	
 		return image;

@@ -1105,7 +1105,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
 	 */
-	public void drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
 		RenderInfo info = srcImage.getRenderInfo();
 		info.setValues(width, height, 
 						info.getFillColor(), info.getOutlineColor(), 
@@ -1123,6 +1123,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			bufImg,
 			new AffineTransform(1f, 0f, 0f, 1f, x, y),
 			null);
+		
+		return img;
 	}
 
 	

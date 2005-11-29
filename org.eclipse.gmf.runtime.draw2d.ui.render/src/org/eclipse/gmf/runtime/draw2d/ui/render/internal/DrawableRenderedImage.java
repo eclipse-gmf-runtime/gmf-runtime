@@ -29,8 +29,9 @@ public interface DrawableRenderedImage {
 	 * @param y the y coordinate
 	 * @param width the width of the RenderedImage
 	 * @param height the height of the RenderedImage
+	 * @return the <code>RenderedImage</code> that was finally rendered to the device
 	 */
-	public abstract void drawRenderedImage(
+	public abstract RenderedImage drawRenderedImage(
 		RenderedImage srcImage,
 		int x,
 		int y,

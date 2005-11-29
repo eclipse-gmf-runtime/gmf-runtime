@@ -15,16 +15,15 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal.image;
 import java.io.ByteArrayInputStream;
 import java.security.InvalidParameterException;
 
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 
 /**
 * Class that represents a Image image. This is a useful abstraction so that it
@@ -43,7 +42,7 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 	 * @param key
 	 *            ImageKey instance which is unique for the byte array.
 	 */
-	public ImageRenderedImage(byte[] buff, RenderInfo key) { 
+	public ImageRenderedImage(byte[] buff, RenderedImageKey key) { 
 		super(buff, key); 
 	}
 

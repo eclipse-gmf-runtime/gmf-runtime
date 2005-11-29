@@ -19,19 +19,17 @@ import java.io.InputStream;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.w3c.dom.Document;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderStatusCodes;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.w3c.dom.Document;
 
 /**
  * Class that represents a SVG image. This is a useful abstraction so that it
@@ -49,11 +47,12 @@ public final class SVGImage extends AbstractRenderedImage {
 	 * @param key
 	 *            ImageKey instance which is unique for the byte array.
 	 */
-	public SVGImage(byte[] buff, RenderInfo key) { 
+	public SVGImage(byte[] buff, RenderedImageKey key) { 
 		super(buff, key);
+		
+		if (key.getExtraData() == null)
+			key.setExtraData(getDocument());
 	}
-
-	private Document document = null;
 
 	/**
 	 * Accessor for retrieving the default image for the rendered SVG data.
@@ -70,7 +69,7 @@ public final class SVGImage extends AbstractRenderedImage {
 		// otherwise render the image.
 		try {
 			SVGImageConverter converter = new SVGImageConverter();
-			img = converter.renderSVGtoSWTImage(getBuffer(), getRenderInfo());
+			img = converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
 		} catch (Exception e) {
 			Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
 			e);
@@ -92,10 +91,12 @@ public final class SVGImage extends AbstractRenderedImage {
 	 */
 	public Document getDocument() {
 
+		Document document = null;
+		
 		// IF the document has already been created...
-		if (document != null) {
+		if (getKey().getExtraData() != null) {
 			// Return it
-			return document;
+			return (Document)getKey().getExtraData();
 		}
 
 		// Otherwise Parse the buffer can create the document
@@ -106,11 +107,6 @@ public final class SVGImage extends AbstractRenderedImage {
 		try {
 			document =
 				f.createDocument(SVGDOMImplementation.SVG_NAMESPACE_URI, in);
-			if (document instanceof SVGOMDocument) {
-				SVGColorConverter.getInstance().replaceDocumentColors((SVGOMDocument)document, 
-					getRenderInfo().getFillColor(),
-					getRenderInfo().getOutlineColor());
-			}
 
 		} catch (IOException e) {
 			// Log the exception to the Error Log
@@ -132,7 +128,7 @@ public final class SVGImage extends AbstractRenderedImage {
 		// otherwise render the image.
 		try {
 			SVGImageConverter converter = new SVGImageConverter();
-			buffImg = converter.renderSVGToAWTImage(getBuffer(), getRenderInfo());
+			buffImg = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
 		} catch (Exception e) {
 			Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
 			e);

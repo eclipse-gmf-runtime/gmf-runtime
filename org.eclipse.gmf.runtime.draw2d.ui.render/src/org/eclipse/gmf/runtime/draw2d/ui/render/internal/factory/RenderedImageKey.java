@@ -24,13 +24,15 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
  */
 public final class RenderedImageKey implements RenderInfo {
 
-	public RenderedImageKey(long checksum, RenderInfo info) {
+	public RenderedImageKey(long checksum, RenderInfo info, Object extraData) {
 		this.checksum = checksum;
 		this.info = info;
+		this.extraData = extraData;
 	}
 
 	private long checksum;
 	private RenderInfo info;
+	private Object extraData;
 
 	/**
 	 * @return Long value that is the checksum
@@ -47,6 +49,25 @@ public final class RenderedImageKey implements RenderInfo {
 	 */
 	public RenderInfo getRenderInfo() {
 		return info;
+	}
+
+	/**
+	 * @return <code>Object</code> that is extra data to be cached for the rendered image.  The
+	 * extra data is always unique with respect to the checksum so it doesn't have to be
+	 * considered in the hashcode calculation.
+	 */
+	public Object getExtraData() {
+		return extraData;
+	}
+
+	/**
+	 * Sets the extra data to bee cached for the rendered image.  The
+	 * extra data should always unique with respect to the checksum so it doesn't have to be
+	 * considered in the hashcode calculation.
+	 * @param extraData
+	 */
+	public void setExtraData(Object extraData) {
+		this.extraData = extraData;
 	}
 
 	/* (non-Javadoc)

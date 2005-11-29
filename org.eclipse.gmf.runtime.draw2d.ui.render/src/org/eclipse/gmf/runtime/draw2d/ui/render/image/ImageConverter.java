@@ -17,17 +17,57 @@ import java.awt.image.WritableRaster;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * This is a helper class used to convert an SWT Image into an AWT
  * BufferedImage.
  * 
- * @author Jody Schofield
+ * @author Jody Schofield / sshaw
  *
  */
 public class ImageConverter {
 
+	private static final PaletteData PALETTE_DATA = new PaletteData(0xFF0000, 0xFF00, 0xFF);
+	
+	/**
+	 * Converts an AWT based buffered image into an SWT <code>Image</code>.  This will always return an
+	 * <code>Image</code> that has 24 bit depth regardless of the type of AWT buffered image that is 
+	 * passed into the method.
+	 * 
+	 * @param srcImage the {@link java.awt.image.BufferedImage} to be converted to an <code>Image</code>
+	 * @return an <code>Image</code> that represents the same image data as the AWT 
+	 * <code>BufferedImage</code> type.
+	 */
+	public static Image convert( BufferedImage srcImage) {
+		// We can force bitdepth to be 24 bit because BufferedImage getRGB allows us to always
+		// retrieve 24 bit data regardless of source color depth.
+		ImageData swtImageData =
+			new ImageData(srcImage.getWidth(), srcImage.getHeight(), 24, PALETTE_DATA);
+
+		// ensure scansize is aligned on 32 bit.
+		int scansize = (((srcImage.getWidth() * 3) + 3) * 4) / 4;
+		
+		WritableRaster alphaRaster = srcImage.getAlphaRaster();
+		byte[] alphaBytes = new byte[srcImage.getWidth()];
+			
+		for (int y=0; y<srcImage.getHeight(); y++) {
+			int[] buff = srcImage.getRGB(0, y, srcImage.getWidth(), 1, null, 0, scansize);
+			swtImageData.setPixels(0, y, srcImage.getWidth(), buff, 0);
+			
+			// check for alpha channel
+			if (alphaRaster != null) {
+				int[] alpha = alphaRaster.getPixels(0, y, srcImage.getWidth(), 1, (int[])null);
+				for (int i=0; i<srcImage.getWidth(); i++)
+					alphaBytes[i] = (byte)alpha[i];
+				swtImageData.setAlphas(0, y, srcImage.getWidth(), alphaBytes, 0);
+			}
+		}
+	
+		return new Image(PlatformUI.getWorkbench().getDisplay(), swtImageData);
+	}
 	
 	/**
 	 * Converts an swt based image into an AWT <code>BufferedImage</code>.  This will always return a

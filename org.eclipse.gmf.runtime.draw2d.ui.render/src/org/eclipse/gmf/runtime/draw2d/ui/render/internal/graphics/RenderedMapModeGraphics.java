@@ -44,10 +44,10 @@ public class RenderedMapModeGraphics
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
 	 */
-	public void drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
 		if (getGraphics() instanceof DrawableRenderedImage) {
 			Rectangle r = zoomRect(x, y, width, height);
-			((DrawableRenderedImage)getGraphics()).drawRenderedImage(srcImage, r.x, r.y, r.width, r.height);
+			return ((DrawableRenderedImage)getGraphics()).drawRenderedImage(srcImage, r.x, r.y, r.width, r.height);
 		}
 		else {
 			Rectangle r = zoomRect(x, y, width, height);
@@ -61,6 +61,7 @@ public class RenderedMapModeGraphics
 			Image swtImg = img.getSWTImage();
 			if (swtImg!=null)
 				getGraphics().drawImage(swtImg, r.x, r.y + r.height - swtImg.getBounds().height);
+			return img;
 		}
 	}
 }

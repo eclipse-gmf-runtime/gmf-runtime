@@ -12,15 +12,23 @@
 package org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.eclipse.swt.graphics.Image;
-
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
+import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.ImageTranscoderEx;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGImage;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author sshaw
@@ -100,6 +108,117 @@ public class SVGImageTest extends TestCase {
 		assertTrue(info != null);
 		info = RenderedImageFactory.createInfo(NEW_WIDTH, NEW_HEIGHT, null, NEW_OUTLINE, false, false);
 		assertTrue(info != null);
+	}
+	
+	private void performBatikRendering(SVGImage svg1, int width, int height) {
+		InputStream in = new ByteArrayInputStream(svg1.getBuffer());
+		RenderInfo info = svg1.getRenderInfo();
+		ImageTranscoderEx transcoder = new ImageTranscoderEx();
+
+		if (width > 0)
+			transcoder.addTranscodingHint(
+				ImageTranscoderEx.KEY_WIDTH,
+				new Float(width));
+		if (height > 0)
+			transcoder.addTranscodingHint(
+				ImageTranscoderEx.KEY_HEIGHT,
+				new Float(height));
+		
+		transcoder.addTranscodingHint(
+				ImageTranscoderEx.KEY_MAINTAIN_ASPECT_RATIO,
+				Boolean.valueOf(info.shouldMaintainAspectRatio()));
+	
+		transcoder.addTranscodingHint(
+				ImageTranscoderEx.KEY_ANTI_ALIASING,
+				Boolean.valueOf(info.shouldAntiAlias()));
+				
+		if (info.getFillColor() != null) {
+			transcoder.addTranscodingHint(
+				ImageTranscoderEx.KEY_FILL_COLOR,
+				new Color(info.getFillColor().getRed(), 
+						  info.getFillColor().getGreen(),
+						  info.getFillColor().getBlue()));
+		}
+		
+		if (info.getOutlineColor() != null) {
+					transcoder.addTranscodingHint(
+						ImageTranscoderEx.KEY_OUTLINE_COLOR,
+						new Color(info.getOutlineColor().getRed(), 
+								  info.getOutlineColor().getGreen(),
+								  info.getOutlineColor().getBlue()));
+		}
+		
+		TranscoderInput input = new TranscoderInput(in);
+		TranscoderOutput output = new TranscoderOutput();
+		
+		try {
+			transcoder.transcode(input, output);
+		} catch (TranscoderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		BufferedImage bufImg = transcoder.getBufferedImage();
+		Image swtImage = ImageConverter.convert(bufImg);
+		assertNotNull("swtImage fixture 1 Image invalid", swtImage ); //$NON-NLS-1$
+	}
+	
+	private void performRenderedImageRendering(SVGImage svg1, int width, int height) {
+		RenderInfo info = svg1.getRenderInfo();
+		
+		//info.setValues(width, height, info.getFillColor(), info.getOutlineColor(), true, true);
+		info.setValues(width, height, null, null, true, true);
+		
+		RenderedImage ri = svg1.getNewRenderedImage(info);
+		Image img = ri.getSWTImage();
+		assertNotNull("getSWTImage fixture 1 Image invalid", img ); //$NON-NLS-1$
+	}
+	
+	final static int START_DIM = 100;
+	final static int END_DIM = 1000;
+	final static int INC_DIM = 10;
+	
+	public void testRenderedImagePerformance() {
+		
+		SVGImage svg1 = (SVGImage)getFixture1();
+		
+		int width = START_DIM;
+		int height = START_DIM;
+		long batikTime = 0;
+		long renderTime = 0;
+		
+		// do one rendering outside to initialize Batik;
+		performBatikRendering(svg1, width, height);
+		
+		long startTime = System.currentTimeMillis();
+		
+		while (width < END_DIM && height < END_DIM) {
+			performBatikRendering(svg1, width, height);
+			width += INC_DIM;
+			height += INC_DIM;
+		}
+		
+		long endTime = System.currentTimeMillis();
+		batikTime = endTime - startTime;
+		
+		startTime = System.currentTimeMillis();
+		
+		width = START_DIM;
+		height = START_DIM;
+		while (width < END_DIM && height < END_DIM) {
+			performRenderedImageRendering(svg1, width, height);
+			width += INC_DIM;
+			height += INC_DIM;
+		}
+		
+		endTime = System.currentTimeMillis();
+		renderTime = endTime - startTime;
+		
+		System.out.println("Batik rendering time was: " + batikTime); //$NON-NLS-1$
+		System.out.println("RenderedImage rendering time was: " + renderTime); //$NON-NLS-1$
+		System.out.println("Percentage difference: " + (renderTime - batikTime) / (float)batikTime * 100 + "%"); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		assertTrue(renderTime < batikTime);
 	}
 	
 	public void testGetSWTImage() {

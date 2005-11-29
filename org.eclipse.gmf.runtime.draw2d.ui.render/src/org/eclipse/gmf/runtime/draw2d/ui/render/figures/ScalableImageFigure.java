@@ -42,24 +42,25 @@ public class ScalableImageFigure extends ImageFigure {
 	/** The preferred size of the image */
 	private Dimension preferredSize = new Dimension(-1, -1);
 	
-    /** The cached SVGImage */
-    private RenderedImage renderedImage = null;
+	private static final int
+		FLAG_USE_DEFAULT_IMAGESIZE = MAX_FLAG << 1,
+		FLAG_MAINTAIN_ASPECT_RATIO = MAX_FLAG << 2,
+		FLAG_ANTI_ALIAS = MAX_FLAG << 3,
+		FLAG_USE_ORIGINAL_COLORS = MAX_FLAG << 4;
+
+	/** The original <code>RenderedImage</code> at 100% device coordinate size */
+    private RenderedImage origRenderedImage = null;
     
-    private boolean useDefaultImageSize = false;
-    
-    private boolean maintainAspectRatio = true;
-    
-    private boolean antiAlias = true;
-    
-    private boolean useOriginalColors = false;
-    
-	/**
+    /** The cached <code>RenderedImage</code> that was last painted to the graphics context */
+    private RenderedImage lastRenderedImage = null;
+
+    	/**
 	 * Accessor to determine if the rendered image will be anti-aliased (if possible).
 	 * 
 	 * @return <code>boolean</code> <code>true</code> if anti aliasing is on, <code>false</code> otherwise.
 	 */
 	public boolean isAntiAlias() {
-		return antiAlias;
+		return getFlag(FLAG_ANTI_ALIAS);
 	}
 	
 	/**
@@ -69,7 +70,7 @@ public class ScalableImageFigure extends ImageFigure {
 	 * <code>false</code> otherwise
 	 */
 	public void setAntiAlias(boolean antiAlias) {
-		this.antiAlias = antiAlias;
+		setFlag(FLAG_ANTI_ALIAS, antiAlias);
 		invalidate();
 	}
 	
@@ -80,7 +81,7 @@ public class ScalableImageFigure extends ImageFigure {
 	 * @return <code>boolean</code> <code>true</code> if maintain aspect ratio is on, <code>false</code> otherwise.
 	 */
 	public boolean isMaintainAspectRatio() {
-		return maintainAspectRatio;
+		return getFlag(FLAG_MAINTAIN_ASPECT_RATIO);
 	}
 	
 	/**
@@ -91,7 +92,7 @@ public class ScalableImageFigure extends ImageFigure {
 	 * <code>false</code> otherwise
 	 */
 	public void setMaintainAspectRatio(boolean maintainAspectRatio) {
-		this.maintainAspectRatio = maintainAspectRatio;
+		setFlag(FLAG_MAINTAIN_ASPECT_RATIO, maintainAspectRatio);
 		invalidate();
 	}
 
@@ -105,14 +106,19 @@ public class ScalableImageFigure extends ImageFigure {
 		imageLoader.logicalScreenHeight = img.getBounds().width;
 		imageLoader.logicalScreenHeight = img.getBounds().height;
 		imageLoader.save(byteOS, SWT.IMAGE_BMP);
-		this.renderedImage = RenderedImageFactory.getInstance(byteOS.toByteArray());
+		this.origRenderedImage = RenderedImageFactory.getInstance(byteOS.toByteArray());
+		
+		setFlag(FLAG_USE_DEFAULT_IMAGESIZE, false);
+		setFlag(FLAG_USE_ORIGINAL_COLORS, false);
+		setFlag(FLAG_MAINTAIN_ASPECT_RATIO, true);
+		setFlag(FLAG_ANTI_ALIAS, true);
 	}
 	
 	/**
 	 * @param renderedImage
 	 */
 	public ScalableImageFigure(RenderedImage renderedImage) {
-		this.renderedImage = renderedImage;
+		this(renderedImage, false, false, true);
 	}
 	
 	/**
@@ -121,8 +127,7 @@ public class ScalableImageFigure extends ImageFigure {
 	 * @param renderedImage the <code>RenderedImage</code> that is used for rendering the image.
 	 */	
 	public ScalableImageFigure(RenderedImage renderedImage, boolean antiAlias) {
-		this.renderedImage = renderedImage;
-		setAntiAlias(antiAlias);
+		this(renderedImage, false, false, antiAlias);
 	}
 	
 	/**
@@ -136,9 +141,11 @@ public class ScalableImageFigure extends ImageFigure {
 	 */
 	public ScalableImageFigure(RenderedImage renderedImage, 
 				boolean useDefaultImageSize, boolean useOriginalColors, boolean antiAlias) {
-		this(renderedImage, antiAlias);
-		this.useDefaultImageSize = useDefaultImageSize;
-		this.useOriginalColors = useOriginalColors;
+		origRenderedImage = renderedImage;
+		setFlag(FLAG_USE_DEFAULT_IMAGESIZE, useDefaultImageSize);
+		setFlag(FLAG_USE_ORIGINAL_COLORS, useOriginalColors);
+		setFlag(FLAG_MAINTAIN_ASPECT_RATIO, true);
+		setFlag(FLAG_ANTI_ALIAS, antiAlias);
 	}
 	
 	/**
@@ -163,12 +170,12 @@ public class ScalableImageFigure extends ImageFigure {
 			
 			int extent = MapModeUtil.getMapMode(this).DPtoLP(32);
 			preferredSize =  new Dimension(extent,extent);
-			if (useDefaultImageSize) {
+			if (getFlag(FLAG_USE_DEFAULT_IMAGESIZE)) {
 				if (getRenderedImage() != null) {
-					RenderedImage rndImage = getRenderedImage(new Dimension(0, 0));
+					setRenderedImage( getRenderedImage(new Dimension(0, 0)));
 					Image swtImage = null;
-					if (rndImage != null)
-						swtImage = rndImage.getSWTImage();
+					if (getRenderedImage() != null)
+						swtImage = getRenderedImage().getSWTImage();
 					if (swtImage != null) {
 						org.eclipse.swt.graphics.Rectangle imgRect = swtImage.getBounds();
 						preferredSize.width = MapModeUtil.getMapMode(this).DPtoLP(imgRect.width);
@@ -181,6 +188,17 @@ public class ScalableImageFigure extends ImageFigure {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Figure#setBounds(org.eclipse.draw2d.geometry.Rectangle)
+	 */
+	public void setBounds(Rectangle rect) {
+		Dimension devDim = new Dimension(rect.getSize());
+		MapModeUtil.getMapMode(this).LPtoDP(devDim);
+		setRenderedImage( getRenderedImage(devDim) );
+		
+		super.setBounds(rect);
+	}
+
 	/**
 	 * Override to return an image that is scaled to fit the bounds of the figure.
 	 */
@@ -188,15 +206,7 @@ public class ScalableImageFigure extends ImageFigure {
 		if (getRenderedImage() == null)
 			return null;
 
-		Dimension absDim = new Dimension(getBounds().getSize());
-		translateToAbsolute(absDim);
-		
-		RenderedImage rndImage = getRenderedImage(absDim);
-		
-		if (rndImage != null)
-			return rndImage.getSWTImage();
-		
-		return null;
+		return getRenderedImage().getSWTImage();
 	}
 
 	/**
@@ -216,15 +226,7 @@ public class ScalableImageFigure extends ImageFigure {
 				isAntiAlias()); // antialias
 
 		RenderedImage newRenderedImage = getRenderedImage().getNewRenderedImage(newRenderInfo);
-		if (getRenderedImage() != null) {
-			if (getRenderedImage().equals(newRenderedImage)) {
-				newRenderedImage = getRenderedImage();
-			}
-		}
-		
-		setRenderedImage(newRenderedImage);
-		
-		return getRenderedImage();
+		return newRenderedImage;
 	}
 
 	/**
@@ -233,7 +235,7 @@ public class ScalableImageFigure extends ImageFigure {
 	 * and fill colors respectively of the <code>RenderInfo</code>.
 	 */
 	public boolean useOriginalColors() {
-		return useOriginalColors;
+		return getFlag(FLAG_USE_ORIGINAL_COLORS);
 	}
 	
 	/* 
@@ -248,15 +250,11 @@ public class ScalableImageFigure extends ImageFigure {
 		x = (area.width - getBounds().width) / 2 + area.x;		
 		
 		if (graphics instanceof DrawableRenderedImage) {
-           	((DrawableRenderedImage) graphics).drawRenderedImage(getRenderedImage(new Dimension(getBounds().width, getBounds().height)),
+           	lastRenderedImage = ((DrawableRenderedImage) graphics).drawRenderedImage(getRenderedImage(new Dimension(getBounds().width, getBounds().height)),
                        x, y, getBounds().width, getBounds().height);
+           	assert lastRenderedImage != null;
 		} else { 
-		   // translate to device coordinates for rendering
-		   area = (Rectangle)MapModeUtil.getMapMode(this).LPtoDP(area);
-           RenderedImage rndImage = getRenderedImage(new Dimension(area.width, area.height));
-           if (rndImage != null && renderedImage.getSWTImage()!=null)
-           		graphics.drawImage(renderedImage.getSWTImage(), x, y); 
-           	// no need to dispose img since it is managed by the SVGImage object lifetime
+			graphics.drawImage(getRenderedImage().getSWTImage(), x, y); 
         }
 	}	
 	
@@ -278,7 +276,7 @@ public class ScalableImageFigure extends ImageFigure {
 	 * @return <code>RenderedImage</code> that is being displayed by this figure.
 	 */
 	public RenderedImage getRenderedImage() {
-		return renderedImage;
+		return origRenderedImage;
 	}
 	
 	/**
@@ -287,6 +285,6 @@ public class ScalableImageFigure extends ImageFigure {
 	 * @param the <code>RenderedImage</code> that is to being displayed by this figure
 	 */
 	public void setRenderedImage(RenderedImage renderedImage) {
-		this.renderedImage = renderedImage;
+		this.origRenderedImage = renderedImage;
 	}
 }

@@ -13,12 +13,11 @@
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
-
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
+import org.eclipse.swt.graphics.Image;
 
 
 /**
@@ -30,51 +29,36 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 public class RenderedScaledGraphics extends org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics 
 					implements DrawableRenderedImage {
 	
-	private Graphics graphics;
-	
 	/**
 	 * Constructs a new ScaledGraphics based on the given Graphics object.
 	 * @param g the base graphics object
 	 */
 	public RenderedScaledGraphics(Graphics g) {
 		super(g);
-		graphics = g;
 	}
 	
-	private double scale = 1.0;
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Graphics#scale(double)
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
 	 */
-	public void scale(double amount) {
-		scale = amount;
-		super.scale(amount);
-	}
-	
-	/**
-	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(RenderedImage, int, int, int)
-	 */
-	public void drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
-		if (graphics instanceof DrawableRenderedImage) {
-			Point tr = new Point((int)(Math.round(x * scale)), (int)(Math.round(y * scale)));
-			Dimension dim = new Dimension((int)(Math.round(((x + width) * scale))) - tr.x,
-				(int)(Math.round(((y + height) * scale))) - tr.y);
-			
-			((DrawableRenderedImage)graphics).drawRenderedImage(srcImage, tr.x, tr.y, dim.width, dim.height);
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+		if (getGraphics() instanceof DrawableRenderedImage) {
+			Rectangle r = zoomRect(x, y, width, height);
+			return ((DrawableRenderedImage)getGraphics()).drawRenderedImage(srcImage, r.x, r.y, r.width, r.height);
 		}
 		else {
-			int nNewWidth = (int)Math.round(srcImage.getRenderInfo().getWidth() * scale);
-			int nNewHeight = (int)Math.round(srcImage.getRenderInfo().getHeight() * scale);
-				
+			Rectangle r = zoomRect(x, y, width, height);
 			RenderInfo info = srcImage.getRenderInfo();
-			info.setValues(nNewWidth, nNewHeight, 
+			info.setValues(r.width, r.height, 
 							info.getFillColor(), info.getOutlineColor(), 
 							info.shouldMaintainAspectRatio(), info.shouldAntiAlias());
-				
+			
 			RenderedImage img = srcImage.getNewRenderedImage(info);
-				
-			drawImage(img.getSWTImage(), 0, 0, nNewWidth, nNewHeight, 
-					x, y, srcImage.getRenderInfo().getWidth(), srcImage.getRenderInfo().getHeight());
+			
+			Image swtImg = img.getSWTImage();
+			if (swtImg!=null)
+				getGraphics().drawImage(swtImg, r.x, r.y + r.height - swtImg.getBounds().height);
+			return img;
 		}
 	}
 }

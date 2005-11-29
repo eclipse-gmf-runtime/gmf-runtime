@@ -21,9 +21,10 @@ import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
+import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
+import org.eclipse.swt.graphics.Image;
+import org.w3c.dom.Document;
 
 
 /**
@@ -39,6 +40,41 @@ class SVGImageConverter {
 		// empty constructor
 	}
 
+	/**
+	 * renderSVGToAWTImage
+	 * Given a filename, will render the SVG file into an SWT Image
+	 * 
+	 * @param document Document of svg file
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return BufferedImage AWT image containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public BufferedImage renderSVGToAWTImage(Document document, RenderInfo info)
+		throws Exception {
+		ImageTranscoderEx transcoder = new ImageTranscoderEx();
+		setUpTranscoders(document, transcoder, info);
+		
+		return transcoder.getBufferedImage();
+	}
+	
+	/**
+	 * renderSVGtoSWTImage
+	 * Given an InputStream, will render the SVG file into an SWT Image
+	 * 
+	 * @param document Document of svg file
+	 * @param RenderInfo object containing information about the size and 
+	 * general data regarding how the image will be rendered.
+	 * @return Image SWT image containing the rendered SVG file.
+	 * @throws Exception
+	 */
+	public Image renderSVGtoSWTImage(Document document, RenderInfo info)
+		throws Exception {
+		
+		BufferedImage img = renderSVGToAWTImage(document, info);
+		return ImageConverter.convert(img);
+	}
+	
 	/**
 	 * renderSVGToAWTImage
 	 * Given a filename, will render the SVG file into an SWT Image
@@ -81,6 +117,37 @@ class SVGImageConverter {
 	 */
 	private void setUpTranscoders(InputStream in, Transcoder transcoder, RenderInfo info)
 		throws Exception {
+		initializeTranscoderFromInfo(transcoder, info);
+		
+		TranscoderInput input = null;
+		TranscoderOutput output = null;
+
+		input = new TranscoderInput(in);
+		output = new ImageTranscoderOutput(); 
+		transcoder.transcode(input, output);
+	}
+	
+	/**
+	 * setUpTranscoders
+	 * sets up the transcoders with the hints based on the RenderInfo structure.
+	 * 
+	 * @param document
+	 * @param transcoder
+	 * @param info
+	 */
+	private void setUpTranscoders(Document document, Transcoder transcoder, RenderInfo info)
+		throws Exception {
+		initializeTranscoderFromInfo(transcoder, info);
+		
+		TranscoderInput input = null;
+		TranscoderOutput output = null;
+
+		input = new TranscoderInput(document);
+		output = new ImageTranscoderOutput(); 
+		transcoder.transcode(input, output);
+	}
+
+	private void initializeTranscoderFromInfo(Transcoder transcoder, RenderInfo info) {
 		if (info.getWidth() > 0)
 			transcoder.addTranscodingHint(
 				ImageTranscoder.KEY_WIDTH,
@@ -91,16 +158,16 @@ class SVGImageConverter {
 				new Float(info.getHeight()));
 		
 		transcoder.addTranscodingHint(
-				SWTImageTranscoder.KEY_MAINTAIN_ASPECT_RATIO,
+			ImageTranscoderEx.KEY_MAINTAIN_ASPECT_RATIO,
 				Boolean.valueOf(info.shouldMaintainAspectRatio()));
 	
 		transcoder.addTranscodingHint(
-				SWTImageTranscoder.KEY_ANTI_ALIASING,
+			ImageTranscoderEx.KEY_ANTI_ALIASING,
 				Boolean.valueOf(info.shouldAntiAlias()));
 				
 		if (info.getFillColor() != null) {
 			transcoder.addTranscodingHint(
-				SWTImageTranscoder.KEY_FILL_COLOR,
+				ImageTranscoderEx.KEY_FILL_COLOR,
 				new Color(info.getFillColor().getRed(), 
 						  info.getFillColor().getGreen(),
 						  info.getFillColor().getBlue()));
@@ -108,18 +175,11 @@ class SVGImageConverter {
 		
 		if (info.getOutlineColor() != null) {
 					transcoder.addTranscodingHint(
-						SWTImageTranscoder.KEY_OUTLINE_COLOR,
+						ImageTranscoderEx.KEY_OUTLINE_COLOR,
 						new Color(info.getOutlineColor().getRed(), 
 								  info.getOutlineColor().getGreen(),
 								  info.getOutlineColor().getBlue()));
 		}
-		
-		TranscoderInput input = null;
-		TranscoderOutput output = null;
-
-		input = new TranscoderInput(in);
-		output = new ImageTranscoderOutput(); 
-		transcoder.transcode(input, output);
 	}
 	
 	/**
@@ -135,7 +195,6 @@ class SVGImageConverter {
 	public BufferedImage renderSVGToAWTImage(InputStream in, RenderInfo info)
 		throws Exception {
 		ImageTranscoderEx transcoder = new ImageTranscoderEx();
-
 		setUpTranscoders(in, transcoder, info);
 
 		return transcoder.getBufferedImage();
@@ -185,10 +244,8 @@ class SVGImageConverter {
 	 */
 	public Image renderSVGtoSWTImage(InputStream in, RenderInfo info)
 		throws Exception {
-		SWTImageTranscoder transcoder = new SWTImageTranscoder();
-
-		setUpTranscoders(in, transcoder, info);
-
-		return transcoder.getSWTImage();
+		
+		BufferedImage img = renderSVGToAWTImage(in, info);
+		return ImageConverter.convert(img);
 	}
 }

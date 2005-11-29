@@ -15,6 +15,7 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.export;
 import java.awt.Dimension;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.svggen.DOMTreeManager;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.util.SVGConstants;
@@ -23,6 +24,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.GraphicsToGraphics2DAdaptor;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGColorConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGImage;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -122,7 +124,7 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage,
 	 *      int, int, int, int)
 	 */
-	public void drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
 
 		// Check for a change in the state
 		checkState();
@@ -133,6 +135,12 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 	    Point trans = getTranslationOffset();
 	    // Get the Root element of the SVG document to export
 	    if (srcImage instanceof SVGImage) {
+	    	Document document = ((SVGImage)srcImage).getDocument();
+	    	if (document instanceof SVGOMDocument) {
+				SVGColorConverter.getInstance().replaceDocumentColors((SVGOMDocument)document, 
+					srcImage.getRenderInfo().getFillColor(),
+					srcImage.getRenderInfo().getOutlineColor());
+			}
 			Element root = ((SVGImage)srcImage).getDocument().getDocumentElement();
 
 			// Create a "deep" copy of the document
@@ -163,9 +171,10 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 					String.valueOf(height));
 
 			treeManager.appendGroup(toAppend, null);
+			return srcImage;
 	    }
 	    else {
-	    	super.drawRenderedImage(srcImage, x, y, width, height);
+	    	return super.drawRenderedImage(srcImage, x, y, width, height);
 		}
 	}
 	

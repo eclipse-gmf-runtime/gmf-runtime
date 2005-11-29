@@ -15,12 +15,12 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 import java.awt.image.BufferedImage;
 import java.security.InvalidParameterException;
 
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
 import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
+import org.eclipse.swt.graphics.Image;
 
 /**
 * Abstract class for RenderedImage interface.
@@ -38,18 +38,16 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 	 * @param key
 	 *            ImageKey instance which is unique for the byte array.
 	 */
-	public AbstractRenderedImage(byte[] buff, RenderInfo key) { 
+	public AbstractRenderedImage(final byte[] buff, RenderedImageKey key) { 
 		if (buff == null || key == null)
 			throw new InvalidParameterException();
 
-		this.buffer = new byte[buff.length];
+		this.buffer = buff;
 		this.key = key;
-
-		System.arraycopy(buff, 0, this.buffer, 0, buff.length);
 	}
 
 	private byte[] buffer = null;
-	private RenderInfo key = null;
+	private RenderedImageKey key = null;
 
 	protected Image img = null;
 	
@@ -63,7 +61,7 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 	/**
 	 * @return Returns the key.
 	 */
-	public RenderInfo getKey() {
+	public RenderedImageKey getKey() {
 		return key;
 	}
 	
@@ -101,7 +99,12 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 	 */
 	public RenderedImage getNewRenderedImage(RenderInfo info) {
 		if (!getRenderInfo().equals(info)) { 
-			return RenderedImageFactory.getInstance(this.buffer, info);
+			RenderedImage rndImg = RenderedImageFactory.getRelatedInstance(this, info);
+			if (rndImg != null) {
+				return rndImg;
+			} else {
+				return RenderedImageFactory.getInstance(getBuffer(), info);
+			}
 		}
 
 		return this;
