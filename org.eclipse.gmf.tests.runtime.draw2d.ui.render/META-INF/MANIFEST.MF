@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.draw2d,
  org.eclipse.gef,
  org.eclipse.ui,
- org.junit
+ org.junit,
+ org.apache.batik
 Eclipse-AutoStart: false
