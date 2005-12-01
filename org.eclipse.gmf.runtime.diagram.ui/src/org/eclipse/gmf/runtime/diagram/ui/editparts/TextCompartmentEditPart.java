@@ -81,8 +81,8 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 	 * coinstructor
 	 * @param view the view controlled by this edit part
 	 */
-	public TextCompartmentEditPart(View view) {
-		super(view);
+	public TextCompartmentEditPart(EObject model) {
+		super(model);
 	}
 
 	protected void createDefaultEditPolicies() {

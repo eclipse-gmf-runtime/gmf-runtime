@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ExposeHelper;
 import org.eclipse.gef.editparts.ViewportExposeHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -39,10 +40,10 @@ public abstract class ResizableCompartmentEditPart
 	/**
 	 * Constructs a new resizable editpart
 	 * 
-	 * @param view The resizable compartment view
+	 * @param model The resizable compartment view
 	 */
-	public ResizableCompartmentEditPart(View view) {
-		super(view);
+	public ResizableCompartmentEditPart(EObject model) {
+		super(model);
 	}
 
 	/**

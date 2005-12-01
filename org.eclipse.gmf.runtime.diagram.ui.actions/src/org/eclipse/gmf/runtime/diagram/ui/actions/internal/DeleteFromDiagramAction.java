@@ -25,6 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -104,15 +105,14 @@ public class DeleteFromDiagramAction extends DiagramAction{
 	 * @return a command to execute
 	 */
 	protected Command getCommand() {
-		CompoundCommand deleteCC = new CompoundCommand(getLabel());
-
 		/* Get the selected edit parts */
 		List objects = createOperationSet();		
 		
-		if (isCanonical(objects)){
+		if (!supportViews(objects) || isCanonical(objects)){
 			return null;
-		}		
+		}
 		
+		CompoundCommand deleteCC = new CompoundCommand(getLabel());
 		for (Iterator iter = objects.iterator(); iter.hasNext();) {
 			/* Get the next part */
 			EditPart editPart = (EditPart) iter.next();
@@ -122,6 +122,18 @@ public class DeleteFromDiagramAction extends DiagramAction{
 		return deleteCC;
 	}
 	
+	private boolean supportViews(List objects) {
+		for (Iterator iter = objects.iterator(); iter.hasNext();) {
+			Object object = iter.next();
+			if (object instanceof GraphicalEditPart &&
+				!((GraphicalEditPart)object).hasNotationView()){
+				return false;
+			}
+			
+		}
+		return true;
+	}
+
 	/**
 	 * Filters the selected objects and returns only editparts.
 	 * @return a list of editparts selected.

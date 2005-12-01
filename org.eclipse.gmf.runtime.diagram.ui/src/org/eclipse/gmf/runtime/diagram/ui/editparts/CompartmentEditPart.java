@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -21,7 +22,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DelegatingMouseEventsEditPolicy;
 import org.eclipse.gmf.runtime.gef.ui.internal.tools.DelegatingDragEditPartsTracker;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar
@@ -34,8 +34,8 @@ public abstract class CompartmentEditPart extends GraphicalEditPart implements I
 	 * Constructs a new compartment edit part
 	 * @param view
 	 */
-	public CompartmentEditPart(View view) {
-		super(view);
+	public CompartmentEditPart(EObject model) {
+		super(model);
 	}
 
 	protected void createDefaultEditPolicies() {

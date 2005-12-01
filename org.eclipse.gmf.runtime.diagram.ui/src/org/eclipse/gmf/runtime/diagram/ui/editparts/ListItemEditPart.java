@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -21,7 +22,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ListItemComponentEditPoli
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableTextEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar
@@ -34,10 +34,10 @@ public class ListItemEditPart
 	/**
 	 * Creates a new ListItemEditPart
 	 * 
-	 * @param view
+	 * @param model
 	 */
-	public ListItemEditPart(View view) {
-		super(view);
+	public ListItemEditPart(EObject model) {
+		super(model);
 	}
 
 	protected IFigure createFigure() {

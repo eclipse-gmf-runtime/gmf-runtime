@@ -454,6 +454,22 @@ public class ViewUtil{
 	    return element;
 	}
 	
+	/**
+	 * resolves the passed element, and returns it.
+	 * If the element is unresolvable the method will returns <code>null</code>
+	 * @param the element to resolve
+	 * @return the element or null if it is unresolvable
+	 */
+	public static EObject resolve(EObject object){
+		if (object!=null){
+			if (object.eIsProxy())
+				return ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain(object), object);
+			else
+				return object;
+		}
+	    return null;
+	}
+	
 	/** 
 	 * gets the <code>View</code>'s semantic element Class Id, this could be used to
 	 * check the semantic element type

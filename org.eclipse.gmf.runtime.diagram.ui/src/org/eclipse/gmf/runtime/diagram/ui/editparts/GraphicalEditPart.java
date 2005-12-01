@@ -80,6 +80,8 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
@@ -101,24 +103,29 @@ public abstract class GraphicalEditPart
 
 	/** A map of listener filters ids to filter data */
 	private Map listenerFilters;
-
+	
 	/** Used for accessibility. */
 	protected AccessibleEditPart accessibleEP;
 
 	/** Used for registering and unregistering the edit part */
-	private String elementGuid;
+	protected String elementGuid;
 
 	/** Used for handling the editable status of the edit part */
 	private final IEditableEditPart editableEditPart;
 	
+	// temporary object used to make getModel returns a view 
+	// this should be removed after the assumption that getModel
+	// will return a view is removed
+	private static Node dummyNode = null;
+	
 	/**
 	 * Create an instance.
 	 * 
-	 * @param view
+	 * @param model
 	 *            the underlying model.
 	 */
-	public GraphicalEditPart(View view) {
-		setModel(view);
+	public GraphicalEditPart(EObject model) {
+		setModel(model);
 		this.editableEditPart = new DefaultEditableEditPart(this);
 	}
 
@@ -129,8 +136,13 @@ public abstract class GraphicalEditPart
 		}
 		addNotationalListeners();
 		
-		EObject semanticProxy = ((View) getModel()).getElement();
-		EObject semanticElement = ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain((View)getModel()), semanticProxy);
+		EObject semanticProxy = null;
+		if (hasNotationView())
+			semanticProxy = ((View) getModel()).getElement();
+		else
+			semanticProxy = (EObject)basicGetModel();
+		
+		EObject semanticElement = ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain((EObject)getModel()), semanticProxy);
 		
 		if (semanticElement != null)
 			addSemanticListeners();
@@ -182,9 +194,6 @@ public abstract class GraphicalEditPart
 			return;
 		Assert.isNotNull(filterId);
 		Assert.isNotNull(listener);
-		if (listenerFilters == null)
-			listenerFilters = new HashMap();
-		DiagramEventBroker.getInstance().addNotificationListener(element,feature,listener);
 		listenerFilters.put(filterId, new Object[] {element,feature, listener});
 	}
 
@@ -246,26 +255,43 @@ public abstract class GraphicalEditPart
 	protected void executeCommand(Command command) {
 		getViewer().getEditDomain().getCommandStack().execute(command);
 	}
+	
+	/**
+	 * Access the model member variable
+	 * @return
+	 */
+	final protected Object basicGetModel(){
+		return super.getModel();
+	}
 
 	/** Adds the ability to adapt to the edit part's view class. */
 	public Object getAdapter(Class key) {
-		
-		Object model = getModel();
+		Object model = basicGetModel();
 
 		// Adapt to IActionFilter
 		if (key == IActionFilter.class) {
 			return ActionFilterService.getInstance();
 		}
 
-		if ( View.class.isAssignableFrom(key) && model instanceof View) {
-			return model;
+		if ( View.class.isAssignableFrom(key)) {
+			Object _model = getModel();
+			if (_model instanceof View)
+				return _model;
 		}
 		
 		if (model != null &&
-			model instanceof View &&
 			EObject.class.isAssignableFrom(key)) {
 			// Adapt to semantic element
-			EObject semanticObject = ViewUtil.resolveSemanticElement((View)model);
+			EObject semanticObject = null;
+			if (hasNotationView()){
+				semanticObject = ViewUtil.resolveSemanticElement((View)model);
+			}
+			else{
+				EObject element = (EObject)model;
+				if (element.eIsProxy()){
+					semanticObject = ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain(element), element);
+				}
+			}
 			if (key.isInstance(semanticObject)) {
 				return semanticObject;
 			}
@@ -337,7 +363,7 @@ public abstract class GraphicalEditPart
 		try {
 			GETCOMMAND_RECURSIVE_COUNT++;
 			final Request request = _request;
-			cmd =  (Command) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+			cmd =  (Command) MEditingDomainGetter.getMEditingDomain((EObject)getModel()).runAsRead(new MRunnable() {
 				
 				public Object run() {
 					return GraphicalEditPart.super.getCommand(request);
@@ -452,7 +478,7 @@ public abstract class GraphicalEditPart
 	 */
 	public final View getPrimaryView() {
 		for (EditPart parent = this; parent != null; parent = parent.getParent())
-			if (parent instanceof IPrimaryEditPart)
+			if (parent instanceof IPrimaryEditPart && parent.getModel() instanceof View)
 				return (View)parent.getModel();
 		return null;
 	}
@@ -500,7 +526,6 @@ public abstract class GraphicalEditPart
 	protected List getModelChildren() {
 		Object model = getModel();
 		if(model!=null && model instanceof View){
-			//return ((View)model).getVisibleChildren();
 			return ((View)model).getChildren();
 		}
 		return Collections.EMPTY_LIST;
@@ -523,7 +548,10 @@ public abstract class GraphicalEditPart
 	 * <code> ViewUtil.getStructuralFeatureValue(getNotationView(),feature)</code>.
 	 */
 	public Object getStructuralFeatureValue(EStructuralFeature feature) {
-		return ViewUtil.getStructuralFeatureValue((View) getModel(),feature);
+		if (hasNotationView())
+			return ViewUtil.getStructuralFeatureValue((View) getModel(),feature);
+		else
+			return null;
 	}
 
 	
@@ -533,10 +561,20 @@ public abstract class GraphicalEditPart
 	 * <code>null</code> or unresolvable 
 	 */
 	public EObject resolveSemanticElement() {
-		return (EObject) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+		return (EObject) MEditingDomainGetter.getMEditingDomain((EObject)getModel()).runAsRead(new MRunnable() {
 
 			public Object run() {
-				return ViewUtil.resolveSemanticElement((View) getModel());
+				Object model = getModel();
+				if (model instanceof View)
+					return ViewUtil.resolveSemanticElement((View)getModel());
+				else if (model instanceof EObject){
+					EObject element = (EObject)model;
+					if (element.eIsProxy())
+				    	return ProxyUtil.resolve(element); 
+					else
+						return element;
+				}
+				return null;
 			}
 		});
 	}
@@ -621,7 +659,7 @@ public abstract class GraphicalEditPart
 
 	/** Invoke the editpart's refresh mechanism. */
 	public void refresh() {
-		MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+		MEditingDomainGetter.getMEditingDomain((EObject)getModel()).runAsRead(new MRunnable() {
 
 			public Object run() {
 				EditPolicyIterator i = getEditPolicyIterator();
@@ -675,7 +713,14 @@ public abstract class GraphicalEditPart
 
 	/** Refresh the editpart's figure visibility. */
 	protected void refreshVisibility() {
-		setVisibility(((View)getModel()).isVisible());
+		Object model = null;
+		EditPart ep = this;
+		while (!(model instanceof View) && ep!=null){
+			model = ep.getModel();
+			ep = ep.getParent();
+		}
+		if (model instanceof View)
+			setVisibility(((View)model).isVisible());
 	}
 
 	/** Refresh the editpart's figure visual properties. */
@@ -757,7 +802,8 @@ public abstract class GraphicalEditPart
 	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)} instead
 	 */
 	public void setPropertyValue(Object id, Object value) {
-		ViewUtil.setPropertyValue((View) getModel(), id, value);
+		if (hasNotationView())
+			ViewUtil.setPropertyValue((View) getModel(), id, value);
 	}
 	
 	/**
@@ -767,7 +813,8 @@ public abstract class GraphicalEditPart
 	 * @param value  the value of the property being set
 	 */
 	public void setStructuralFeatureValue(EStructuralFeature feature, Object value) {
-		ViewUtil.setStructuralFeatureValue((View) getModel(), feature, value);
+		if (hasNotationView())
+			ViewUtil.setStructuralFeatureValue((View) getModel(), feature, value);
 	}
 
 	/**
@@ -788,7 +835,8 @@ public abstract class GraphicalEditPart
 	 * down the hierarchy
 	 */
 	protected void addNotationalListeners() {
-		addListenerFilter("View", this,(View)getModel()); //$NON-NLS-1$
+		if (hasNotationView())
+			addListenerFilter("View", this,(View)getModel()); //$NON-NLS-1$
 	}
 
 	/**
@@ -868,12 +916,14 @@ public abstract class GraphicalEditPart
 				String prob = getAppearancePropertyIDs()[i];
 				ENamedElement element = MetaModelUtil.getElement(prob);
 				if (element instanceof EStructuralFeature &&
+					hasNotationView()&&
 					ViewUtil.isPropertySupported((View)getModel(), prob))
 					local_properties.put(
 						getAppearancePropertyIDs()[i],
 						getStructuralFeatureValue((EStructuralFeature)element));
 			}
-			properties.put(((View) getModel()).getType(), local_properties);
+			if (hasNotationView())
+				properties.put(((View) getModel()).getType(), local_properties);
 		}
 	}
 
@@ -975,19 +1025,27 @@ public abstract class GraphicalEditPart
 
 	/** Adds a [ref, editpart] mapping to the EditPartForElement map. */
 	protected void registerModel() {
-		super.registerModel();
+		if (hasNotationView()) {
+			super.registerModel();
+		} else {
+			getViewer().getEditPartRegistry().put(basicGetModel(), this);
+		}
 
-		//Save the elements Guid to use during unregister.
-		//If the reference is null, do not register.
-		EObject ref = ((View) getModel()).getElement();
+		// Save the elements Guid to use during unregister.
+		// If the reference is null, do not register.
+		EObject ref = null;
+		if (hasNotationView())
+			ref = getNotationView().getElement();
+		else
+			ref = (EObject) basicGetModel();
 		if (ref == null) {
 			return;
 		}
 		elementGuid = ProxyUtil.getProxyID(ref);
-
 		((IDiagramGraphicalViewer) getViewer()).registerEditPartForElement(
 			elementGuid, this);
 	}
+
 
 	/** Remove this editpart from the EditPartForElement map. */
 	protected void unregisterModel() {
@@ -1226,5 +1284,30 @@ public abstract class GraphicalEditPart
 		
 		return MapModeUtil.getMapMode();
 	}
-
+	
+	/**
+	 * indicates if this edit part's model is a view or not 
+	 * @return <code>true</code> or <code>false</code>
+	 */
+	public boolean hasNotationView(){
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.EditPart#getModel()
+	 */
+	public Object getModel() {
+		if (hasNotationView()){
+			return super.getModel();
+		} else {
+			Object _model = basicGetModel();
+			// this is just temporary, so we do not break the assumption that the model
+			// is always a view
+			if (dummyNode == null){
+				dummyNode = NotationFactory.eINSTANCE.createNode();
+			}
+			dummyNode.setElement((EObject)_model);
+			return dummyNode;
+		}
+	}
 }

@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.GetPropertySourceOp
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
 import org.eclipse.gmf.runtime.common.ui.services.properties.IPropertiesProvider;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesService;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertySource;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersMessages;
 import org.eclipse.gmf.runtime.emf.ui.properties.providers.GenericEMFPropertiesProvider;
@@ -62,7 +63,11 @@ public class DiagramPropertiesProvider
 			
 			if(object instanceof Style)
 				return true;
-
+			
+			if (object instanceof GraphicalEditPart &&
+					!((GraphicalEditPart)object).hasNotationView())
+					return false;
+			
 			return object instanceof EditPart && ((EditPart) object).getModel() instanceof View;
 
 		}

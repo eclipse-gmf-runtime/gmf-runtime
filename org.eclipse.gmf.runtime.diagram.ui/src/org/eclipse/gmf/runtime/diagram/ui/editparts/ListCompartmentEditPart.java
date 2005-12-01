@@ -56,8 +56,8 @@ public abstract class ListCompartmentEditPart
 	/**
 	 * @param view The IResizableCompartmentView compartment view
 	 */
-	public ListCompartmentEditPart(View view) {
-		super(view);
+	public ListCompartmentEditPart(EObject model) {
+		super(model);
 	}
 	
 	protected void createDefaultEditPolicies() {
