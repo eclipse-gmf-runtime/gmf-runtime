@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class SVGImageTest extends TestCase {
 
-	private final String LADY_SVG = "lady.svg"; //$NON-NLS-1$
+	private final String UMLSHAPES_SVG = "uml.svg"; //$NON-NLS-1$
 	private final String SHAPES_SVG = "shapes.svg"; //$NON-NLS-1$
 
 	private final int WIDTH = 200;
@@ -59,7 +59,7 @@ public class SVGImageTest extends TestCase {
 	public SVGImageTest(String name) {
 		super(name);
 
-		PERSON = getURL( LADY_SVG );
+		PERSON = getURL( UMLSHAPES_SVG );
 		SHAPES = getURL( SHAPES_SVG );
 	}
 
@@ -82,7 +82,7 @@ public class SVGImageTest extends TestCase {
 			fixture1 = RenderedImageFactory.getInstance( PERSON );
 			assertNotNull( "Fixture1 shouldn't be null", fixture1 ); //$NON-NLS-1$
 			
-			RenderInfo info = RenderedImageFactory.createInfo(WIDTH, HEIGHT, null, null, false, false);
+			RenderInfo info = RenderedImageFactory.createInfo(WIDTH, HEIGHT, (Color)null, (Color)null, false, false);
 			fixture2 = RenderedImageFactory.getInstance( SHAPES, info );
 			assertNotNull( "Fixture2 shouldn't be null", fixture2 ); //$NON-NLS-1$
 			
@@ -166,8 +166,7 @@ public class SVGImageTest extends TestCase {
 	private void performRenderedImageRendering(SVGImage svg1, int width, int height) {
 		RenderInfo info = svg1.getRenderInfo();
 		
-		//info.setValues(width, height, info.getFillColor(), info.getOutlineColor(), true, true);
-		info.setValues(width, height, null, null, true, true);
+		info.setValues(width, height, info.getFillColor(), info.getOutlineColor(), true, true);
 		
 		RenderedImage ri = svg1.getNewRenderedImage(info);
 		Image img = ri.getSWTImage();
@@ -222,7 +221,6 @@ public class SVGImageTest extends TestCase {
 	}
 	
 	public void testGetSWTImage() {
-
 		Image img = getFixture1().getSWTImage();
 		assertNotNull("getSWTImage fixture 1 Image invalid", img ); //$NON-NLS-1$
 							
