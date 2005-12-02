@@ -1049,7 +1049,13 @@ public abstract class GraphicalEditPart
 
 	/** Remove this editpart from the EditPartForElement map. */
 	protected void unregisterModel() {
-		super.unregisterModel();
+		if (hasNotationView())
+			super.unregisterModel();
+		else {
+			Map registry = getViewer().getEditPartRegistry();
+			if (registry.get(basicGetModel()) == this)
+				registry.remove(basicGetModel());
+		}
 
 		//Do not need to unregister if the guid is null.
 		if (elementGuid == null) {
