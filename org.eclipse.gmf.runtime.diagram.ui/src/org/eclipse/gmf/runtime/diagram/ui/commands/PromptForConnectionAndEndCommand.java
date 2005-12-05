@@ -177,7 +177,7 @@ public class PromptForConnectionAndEndCommand
 	private static String EXISTING_ELEMENT = DiagramUIMessages.ConnectionHandle_Popup_ExistingElement;
 
 	/** Label provider of the popup menu for the connection types. */
-	private static ConnectionLabelProvider connectionLabelProvider;
+	private ConnectionLabelProvider connectionLabelProvider;
 
 	/** Label provider of the submenus for the other end element. */
 	private static EndLabelProvider endLabelProvider;
