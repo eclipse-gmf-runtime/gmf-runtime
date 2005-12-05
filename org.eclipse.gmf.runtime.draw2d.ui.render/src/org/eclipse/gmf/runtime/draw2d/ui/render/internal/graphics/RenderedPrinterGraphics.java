@@ -13,13 +13,15 @@
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.printing.Printer;
-
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.printing.Printer;
 
 /**
  * Created on May 8, 2003
@@ -33,6 +35,14 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
 public class RenderedPrinterGraphics extends PrinterGraphics 
 								implements DrawableRenderedImage {
 	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#allowDelayRender()
+	 */
+	public boolean shouldAllowDelayRender() {
+		return false;
+	}
+	
     /**
 	* Creates a new PrinterGraphics with Graphics g, using Printer p
 	* @param g Graphics object to draw with
@@ -44,23 +54,29 @@ public class RenderedPrinterGraphics extends PrinterGraphics
 		super(g, p, roundFonts);
 	}
 	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, org.eclipse.draw2d.geometry.Rectangle, org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener)
 	 */
-	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
-		int nNewWidth = (int)Math.round(width * getPrintScale());
-		int nNewHeight = (int)Math.round(height * getPrintScale());
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, Rectangle rect, RenderingListener listener) {
+		int nNewWidth = (int)Math.round(rect.width * getPrintScale());
+		int nNewHeight = (int)Math.round(rect.height * getPrintScale());
 		
 		RenderInfo info = srcImage.getRenderInfo();
 		info.setValues(nNewWidth, nNewHeight, 
-						info.getFillColor(), info.getOutlineColor(), 
-						info.shouldMaintainAspectRatio(), true);
+						info.shouldMaintainAspectRatio(), true,
+						info.getBackgroundColor(), info.getForegroundColor());
 		
 		RenderedImage img = srcImage.getNewRenderedImage(info);
 		
 		Image swtImg = img.getSWTImage();
-		drawImage(swtImg, x, y + height - swtImg.getBounds().height);
+		drawImage(swtImg, rect.x, rect.y + rect.height - swtImg.getBounds().height);
 		return img;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#getMaximumRenderSize()
+	 */
+	public Dimension getMaximumRenderSize() {
+		return null;
 	}
 }

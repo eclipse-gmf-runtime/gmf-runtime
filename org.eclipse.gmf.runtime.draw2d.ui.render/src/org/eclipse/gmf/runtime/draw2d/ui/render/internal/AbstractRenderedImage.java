@@ -48,8 +48,7 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 
 	private byte[] buffer = null;
 	private RenderedImageKey key = null;
-
-	protected Image img = null;
+	private Image img = null;
 	
 	/**
 	 * @return Returns the buffer.
@@ -62,7 +61,7 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 	 * @return Returns the key.
 	 */
 	public RenderedImageKey getKey() {
-		return key;
+		return new RenderedImageKey(key, key.getChecksum(), key.getExtraData());
 	}
 	
 	/**
@@ -86,8 +85,7 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage#getRenderInfo()
 	 */
 	public RenderInfo getRenderInfo() {
-		return RenderedImageFactory.createInfo(key.getWidth(), key.getHeight(), key.getFillColor(), key.getOutlineColor(),
-								key.shouldMaintainAspectRatio(), key.shouldAntiAlias());
+		return getKey();
 	} 
 
 	/**
@@ -109,7 +107,52 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 
 		return this;
 	}
+
+	/**
+	 * @return <code>true</code> if image has been fully rendered, <code>false</code> if
+	 * it needs to be rendered.
+	 */
+	public boolean isRendered() {
+		if (img != null)
+			return true;
+		
+		return false;
+	}
+
+	/**
+	 * Accessor for retrieving the default image for the rendered SVG data.
+	 * This method will render the image if it doesn't exist yet. This allows
+	 * for "on-demand" loading. If no-one accesses the image, then it will not
+	 * be rendered.
+	 * 
+	 * @see com.ibm.xtools.gef.figure.svg.ResizableImage#getDefaultImage()
+	 */
+	synchronized final public Image getSWTImage() {
+		if (img != null)
+			return img;
+
+		img = renderImage();
+
+		return img;
+	}
 	
+	/**
+	 * @return the new <code>Image</code> rendered to the specification of the
+	 * <code>RenderInfo</code> structure stored with the this <code>RenderedImage</code>
+	 */
+	abstract protected Image renderImage();
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		if (adapter.equals(Image.class)) {
+			return getSWTImage();
+		}
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage#getBufferedImage()
 	 */

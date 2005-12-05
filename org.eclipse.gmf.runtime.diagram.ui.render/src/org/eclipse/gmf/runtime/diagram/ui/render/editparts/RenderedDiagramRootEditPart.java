@@ -17,6 +17,7 @@ import java.util.ListIterator;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -29,6 +30,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapMod
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatedZoomListener;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A specialized <code>DiagramRootEditPart</code> that supports rendering of
@@ -43,7 +45,9 @@ public class RenderedDiagramRootEditPart
 		extends DiagramScalableFreeformLayeredPane implements AnimatedZoomListener {
 
 		private boolean animatedZoomOn;
-
+		static final private Dimension MAX_RENDER_SIZE = new Dimension(PlatformUI.getWorkbench().getDisplay().getBounds().width, 
+			PlatformUI.getWorkbench().getDisplay().getBounds().height);
+		
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -54,7 +58,7 @@ public class RenderedDiagramRootEditPart
 				return new ScaledGraphics(gMM);
 			}
 
-			return new RenderedScaledGraphics(gMM);
+			return new RenderedScaledGraphics(gMM, true, MAX_RENDER_SIZE);
 		}
 
 		/*
@@ -63,7 +67,7 @@ public class RenderedDiagramRootEditPart
 		 * @see org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane#createMapModeGraphics(org.eclipse.draw2d.Graphics)
 		 */
 		protected MapModeGraphics createMapModeGraphics(Graphics graphics) {
-			MapModeGraphics gMM = new RenderedMapModeGraphics(graphics, getMapMode());
+			MapModeGraphics gMM = new RenderedMapModeGraphics(graphics, getMapMode(), true, MAX_RENDER_SIZE);
 			return gMM;
 		}
 

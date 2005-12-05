@@ -11,10 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory;
 
-import java.awt.Color;
-
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
-
 
 /**
  * @author sshaw
@@ -22,33 +19,30 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
  *
  * This class defines the unique key used to get the appropriate RenderedImage from the map.
  */
-public final class RenderedImageKey implements RenderInfo {
+public final class RenderedImageKey extends RenderInfoImpl {
 
-	public RenderedImageKey(long checksum, RenderInfo info, Object extraData) {
+	public RenderedImageKey() {
+		super();
+	}
+
+	public RenderedImageKey(RenderInfo info) {
+		this(info, 0, null);
+	}
+
+	public RenderedImageKey(RenderInfo info, long checksum, Object extraData) {
+		super(info);
 		this.checksum = checksum;
-		this.info = info;
 		this.extraData = extraData;
 	}
 
-	private long checksum;
-	private RenderInfo info;
-	private Object extraData;
+	private long checksum = 0;
+	private Object extraData = null;
 
 	/**
 	 * @return Long value that is the checksum
 	 */
 	public long getChecksum() {
 		return checksum;
-	}
-
-	/**
-	 * getRenderInfo
-	 * Accessor to return RenderInfo object.
-	 * 
-	 * @return RenderInfo object.
-	 */
-	public RenderInfo getRenderInfo() {
-		return info;
 	}
 
 	/**
@@ -70,60 +64,6 @@ public final class RenderedImageKey implements RenderInfo {
 		this.extraData = extraData;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.gef.figure.svg.RenderInfo#getWidth()
-	 */
-	public int getWidth() {
-		return info.getWidth();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.gef.figure.svg.RenderInfo#getHeight()
-	 */
-	public int getHeight() {
-		return info.getHeight();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#getFillColor()
-	 */
-	public Color getFillColor() {
-		return info.getFillColor();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#getOutlineColor()
-	 */
-	public Color getOutlineColor() {
-		return info.getOutlineColor();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#setValues(int, int, java.awt.Color, java.awt.Color, boolean, boolean)
-	 */
-	public void setValues(int width, int height, Color fill, Color outline,
-							boolean maintainAspectRatio, 
-							boolean antialias) {
-		// Don't do anything - this class implementation is used as a key and as
-		// such should be immutable.  A copy should be made if they wish to 
-		// modify the values.
-		throw new UnsupportedOperationException();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.gef.figure.svg.RenderInfo#shouldMaintainAspectRatio()
-	 */
-	public boolean shouldMaintainAspectRatio() {
-		return info.shouldMaintainAspectRatio();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#shouldAntiAlias()
-	 */
-	public boolean shouldAntiAlias() {
-		return info.shouldAntiAlias();
-	}
-
 	/**
 	 * Retrieves a hash code value for this output operation. This method is 
 	 * supported for the benefit of hashtables such as those provided by 
@@ -134,8 +74,8 @@ public final class RenderedImageKey implements RenderInfo {
 	 * @see Object#hashCode()
 	 */
 	public int hashCode() {
-		int hashCode = new Long(checksum).hashCode();
-		hashCode = hashCode + getRenderInfo().hashCode();
+		int hashCode = new Long(getChecksum()).hashCode();
+		hashCode += super.hashCode();
 
 		return hashCode;
 	}
@@ -152,7 +92,7 @@ public final class RenderedImageKey implements RenderInfo {
 
 		if (imagekey != null
 			&& getChecksum() == imagekey.getChecksum()
-			&& getRenderInfo().equals(imagekey.getRenderInfo())) {
+			&& super.equals(imagekey)) {
 			return true;
 		}
 

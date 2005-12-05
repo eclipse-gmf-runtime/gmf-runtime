@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.render.clipboard;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -140,7 +141,10 @@ public class DiagramSVGGenerator
 		createSWTImageDescriptorForParts(editparts);
 		if (getSVGImage() != null) {
 			try {
-				return getSVGImage().getBufferedImage();
+				BufferedImage bufImg = (BufferedImage)getSVGImage().getAdapter(BufferedImage.class);
+				if (bufImg == null)
+					bufImg = ImageConverter.convert(getSVGImage().getSWTImage());
+				return bufImg;
 			} catch (Error e) {
 				// log the Error but allow execution to continue
 				Trace.catching(DiagramUIRenderPlugin.getInstance(),

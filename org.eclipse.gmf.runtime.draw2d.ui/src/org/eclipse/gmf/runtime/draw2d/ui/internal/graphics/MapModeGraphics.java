@@ -49,13 +49,7 @@ public class MapModeGraphics extends ScaledGraphics {
 	/** @see Graphics#drawImage(Image, int, int) */
 	public void drawImage(Image srcImage, int x, int y) {
 		org.eclipse.swt.graphics.Rectangle size = srcImage.getBounds();
-		drawImage(srcImage, 0, 0, size.width, size.height, x, y, size.width, size.height);
-	}
-
-	/** @see Graphics#drawImage(Image, int, int, int, int, int, int, int, int) */
-	public void drawImage(Image srcImage, int sx, int sy, int sw, int sh,
-											int tx, int ty, int tw, int th) {
-		super.drawImage(srcImage, sx, sy, sw, sh, tx, ty, getMapMode().DPtoLP(tw), getMapMode().DPtoLP(th));
+		drawImage(srcImage, 0, 0, size.width, size.height, x, y, getMapMode().DPtoLP(size.width), getMapMode().DPtoLP(size.height));
 	}
 	
 	/** @see Graphics#scale(double) */

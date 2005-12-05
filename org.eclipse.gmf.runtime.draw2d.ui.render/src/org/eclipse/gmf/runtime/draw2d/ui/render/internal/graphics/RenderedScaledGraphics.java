@@ -9,56 +9,91 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
-import org.eclipse.swt.graphics.Image;
-
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderHelper;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
 
 /**
  * @author sshaw
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.render.*
- *
+ * 
  * Subclass to allow implementation of the DrawableRenderedImage interface
  */
-public class RenderedScaledGraphics extends org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics 
-					implements DrawableRenderedImage {
-	
+public class RenderedScaledGraphics
+	extends org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics
+	implements DrawableRenderedImage {
+
+	boolean allowDelayRender = false;
+	Dimension maximumRenderSize = null;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#allowDelayRender()
+	 */
+	public boolean shouldAllowDelayRender() {
+		return allowDelayRender;
+	}
+
 	/**
 	 * Constructs a new ScaledGraphics based on the given Graphics object.
-	 * @param g the base graphics object
+	 * 
+	 * @param g
+	 *            the base graphics object
 	 */
 	public RenderedScaledGraphics(Graphics g) {
-		super(g);
+		this(g, false, null);
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
+
+	/**
+	 * Constructs a new ScaledGraphics based on the given Graphics object.
+	 * 
+	 * @param g
+	 *            the base graphics object
+	 * @param allowDelayRender
 	 */
-	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
-		if (getGraphics() instanceof DrawableRenderedImage) {
-			Rectangle r = zoomRect(x, y, width, height);
-			return ((DrawableRenderedImage)getGraphics()).drawRenderedImage(srcImage, r.x, r.y, r.width, r.height);
-		}
-		else {
-			Rectangle r = zoomRect(x, y, width, height);
-			RenderInfo info = srcImage.getRenderInfo();
-			info.setValues(r.width, r.height, 
-							info.getFillColor(), info.getOutlineColor(), 
-							info.shouldMaintainAspectRatio(), info.shouldAntiAlias());
-			
-			RenderedImage img = srcImage.getNewRenderedImage(info);
-			
-			Image swtImg = img.getSWTImage();
-			if (swtImg!=null)
-				getGraphics().drawImage(swtImg, r.x, r.y + r.height - swtImg.getBounds().height);
-			return img;
-		}
+	public RenderedScaledGraphics(Graphics g, boolean allowDelayRender, Dimension maximumRenderSize) {
+		super(g);
+		this.allowDelayRender = allowDelayRender;
+		this.maximumRenderSize = maximumRenderSize;
+	}
+
+	private double scale = 1.0;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.draw2d.Graphics#scale(double)
+	 */
+	public void scale(double amount) {
+		scale = amount;
+		super.scale(amount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage,
+	 *      org.eclipse.draw2d.geometry.Rectangle,
+	 *      org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener)
+	 */
+	public RenderedImage drawRenderedImage(RenderedImage srcImage,
+			Rectangle rect, RenderingListener listener) {
+		return RenderHelper.getInstance(scale, true, shouldAllowDelayRender(), getMaximumRenderSize())
+			.drawRenderedImage(getGraphics(), srcImage, rect, listener);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#getMaximumRenderSize()
+	 */
+	public Dimension getMaximumRenderSize() {
+		// TODO Auto-generated method stub
+		return maximumRenderSize;
 	}
 }

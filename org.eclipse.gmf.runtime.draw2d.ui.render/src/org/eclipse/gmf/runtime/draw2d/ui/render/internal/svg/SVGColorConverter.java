@@ -115,7 +115,7 @@ public class SVGColorConverter {
 			if( attributeName.equals(SVGConstants.SVG_STROKE_ATTRIBUTE) ||
 				attributeName.equals(SVGConstants.SVG_FILL_ATTRIBUTE)) {
 				
-				if( (black && isBlack(value)) || (!black && isWhite(value)) ) {  //$NON-NLS-1$//$NON-NLS-2$
+				if( (black && isBlack(value)) || (!black && isWhite(value)) ) {  
 					element.setAttribute(attributeName, svgPD.getPaintValue());
 				}
 			}
@@ -138,7 +138,7 @@ public class SVGColorConverter {
 					postColor = style.substring(nEnd + 1, style.length());
 				
 				String currentColor = style.substring(nStart+attributeName.length() + 1, nEnd);
-				if( (black && isBlack(currentColor)) || (!black && isWhite(currentColor))) {//$NON-NLS-1$ //$NON-NLS-2$
+				if( (black && isBlack(currentColor)) || (!black && isWhite(currentColor))) {
 					if (!currentColor.equals(SVGConstants.SVG_NONE_VALUE)) {				
 						StringBuffer styleBuffer = new StringBuffer(style.length() + 5);
 						styleBuffer.append(preColor);

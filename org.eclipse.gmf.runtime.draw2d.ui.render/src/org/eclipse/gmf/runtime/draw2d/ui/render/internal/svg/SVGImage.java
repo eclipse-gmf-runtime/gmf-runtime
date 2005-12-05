@@ -54,22 +54,14 @@ public final class SVGImage extends AbstractRenderedImage {
 			key.setExtraData(getDocument());
 	}
 
-	/**
-	 * Accessor for retrieving the default image for the rendered SVG data.
-	 * This method will render the image if it doesn't exist yet. This allows
-	 * for "on-demand" loading. If no-one accesses the image, then it will not
-	 * be rendered.
-	 * 
-	 * @see com.ibm.xtools.gef.figure.svg.ResizableImage#getDefaultImage()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage#renderImage()
 	 */
-	public Image getSWTImage() {
-		if (img != null)
-			return img;
-
+	protected Image renderImage() {
 		// otherwise render the image.
 		try {
 			SVGImageConverter converter = new SVGImageConverter();
-			img = converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
+			return converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
 		} catch (Exception e) {
 			Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
 			e);
@@ -77,10 +69,8 @@ public final class SVGImage extends AbstractRenderedImage {
 			// handle failure gracefully - we can't predict all the failures
 			// that
 			// may occur in the 3rd party library.
-			img = new Image(Display.getDefault(), 8, 8);
+			return new Image(Display.getDefault(), 8, 8);
 		}
-
-		return img;
 	}
 
 	/**
@@ -119,26 +109,38 @@ public final class SVGImage extends AbstractRenderedImage {
 		return document;
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		if (adapter.equals(BufferedImage.class)) {
+			BufferedImage buffImg = null;
+			
+			// otherwise render the image.
+			try {
+				SVGImageConverter converter = new SVGImageConverter();
+				buffImg = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
+			} catch (Exception e) {
+				Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
+				e);
+
+				// handle failure gracefully - we can't predict all the failures
+				// that
+				// may occur in the 3rd party library.
+				buffImg = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
+			}
+
+			return buffImg;
+		}
+		
+		return super.getAdapter(adapter);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage#getBufferedImage()
 	 */
 	public BufferedImage getBufferedImage() {
-		BufferedImage buffImg = null;
-		
-		// otherwise render the image.
-		try {
-			SVGImageConverter converter = new SVGImageConverter();
-			buffImg = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
-		} catch (Exception e) {
-			Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
-			e);
-
-			// handle failure gracefully - we can't predict all the failures
-			// that
-			// may occur in the 3rd party library.
-			buffImg = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
-		}
-
-		return buffImg;
+		return (BufferedImage)getAdapter(BufferedImage.class);
 	}
 }

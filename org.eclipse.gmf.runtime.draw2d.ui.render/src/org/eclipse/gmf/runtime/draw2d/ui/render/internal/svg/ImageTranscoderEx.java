@@ -244,7 +244,18 @@ public class ImageTranscoderEx extends ImageTranscoder {
         
 		return curTxf;
 	}
+	
+	private boolean shouldCopyDocument(Document document) {
+		if (!(document.getImplementation() instanceof SVGDOMImplementation))
+			return true;
 		
+		if (hints.containsKey(KEY_FILL_COLOR) ||
+			hints.containsKey(KEY_OUTLINE_COLOR)) {
+			return true;
+		}
+		
+		return false;
+	}
 	/**
 	 * Transcodes the specified Document as an image in the specified output.
 	 *
@@ -258,8 +269,7 @@ public class ImageTranscoderEx extends ImageTranscoder {
 			TranscoderOutput output)
 	throws TranscoderException {
 
-		if ((document != null) &&
-				!(document.getImplementation() instanceof SVGDOMImplementation)) {
+		if (shouldCopyDocument(document)) {
 			DOMImplementation impl;
 			impl = SVGDOMImplementation.getDOMImplementation();
 			document = DOMUtilities.deepCloneDocument(document, impl);

@@ -29,13 +29,12 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderInfoImpl;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.image.ImageRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.EMFTranscoder;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.WMFTranscoder;
-
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author sshaw
@@ -43,8 +42,9 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.WMFTransco
  * Factory class for generating RenderedImage objects
  */
 public class RenderedImageFactory {
+
 	static private Map instanceMap = new WeakHashMap();
- 
+
 	/**
 	 * createInfo static Utility to create a RenderInfo object.
 	 * 
@@ -72,25 +72,53 @@ public class RenderedImageFactory {
 	 *            smoother lines), <code>false</code> otherwise
 	 * @return <code>RenderInfo</code> object that contains information about
 	 *         the rendered image.
+	 * @deprecated use
+	 *             {@link RenderedImageFactory#createInfo(int, int, RGB, RGB, boolean, boolean)}
 	 */
-	static public RenderInfo createInfo(
-		int width,
-		int height,
-		Color fill,
-		Color outline,
-		boolean maintainAspectRatio,
-		boolean antialias) {
-		RenderInfoImpl svgInfo = new RenderInfoImpl();
-		svgInfo.setValues(
-			width,
-			height,
-			fill,
-			outline,
-			maintainAspectRatio,
+	static public RenderInfo createInfo(int width, int height, Color fill,
+			Color outline, boolean maintainAspectRatio, boolean antialias) {
+		RenderedImageKey svgInfo = new RenderedImageKey();
+		svgInfo.setValues(width, height, fill, outline, maintainAspectRatio,
 			antialias);
 		return svgInfo;
 	}
 
+	/**
+	 * createInfo static Utility to create a RenderInfo object.
+	 * 
+	 * @param width
+	 *            the width of the rendered image to set
+	 * @param height
+	 *            the height of the rendered image to set
+	 * @param maintainAspectRatio
+	 *            <code>boolean</code> <code>true</code> if aspect ratio of
+	 *            original vector file is maintained, <code>false</code>
+	 *            otherwise
+	 * @param antialias
+	 *            <code>boolean</code> <code>true</code> if the image is to
+	 *            be rendered using anti-aliasing (removing "jaggies" producing
+	 *            smoother lines), <code>false</code> otherwise
+	 * @param fill
+	 *            the <code>RGB</code> of the fill that could instrumented
+	 *            into image formats that support dynamic color replacement.
+	 *            Typically, this would replace colors in the image which are
+	 *            "white" i.e. RGB(255,255,255)
+	 * @param outline
+	 *            the <code>RGB</code> of the outline that could
+	 *            instrumented into image formats that support dynamic color
+	 *            replacement. Typically, this would replace colors in the image
+	 *            which are "black" i.e. RGB(0,0,0)
+	 * @return <code>RenderInfo</code> object that contains information about
+	 *         the rendered image.
+	 */
+	static public RenderInfo createInfo(int width, int height, boolean maintainAspectRatio, boolean antialias,
+			RGB fill, RGB outline ) {
+		RenderedImageKey svgInfo = new RenderedImageKey();
+		svgInfo.setValues(width, height, maintainAspectRatio,
+			antialias, fill, outline);
+		return svgInfo;
+	}
+	
 	/**
 	 * getInstance static constructor method for retrieving the appropriate
 	 * instance of the immutable class <code>RenderedImage</code>. This
@@ -102,7 +130,7 @@ public class RenderedImageFactory {
 	 *         requested.
 	 */
 	static public RenderedImage getInstance(URL theURL) {
-		return getInstance(theURL, new RenderInfoImpl());
+		return getInstance(theURL, new RenderedImageKey());
 	}
 
 	/**
@@ -126,15 +154,17 @@ public class RenderedImageFactory {
 
 			int size = is.available();
 			byte[] buffer = new byte[size];
-			
+
 			is.read(buffer);
 			is.close();
 
 			return getInstance(buffer, info);
 
 		} catch (Exception e) {
-			Trace.throwing(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, RenderedImage.class, "RenderedImageFactory.getInstance()", //$NON-NLS-1$
-			e);
+			Trace.throwing(Draw2dRenderPlugin.getInstance(),
+				Draw2dRenderDebugOptions.EXCEPTIONS_THROWING,
+				RenderedImage.class, "RenderedImageFactory.getInstance()", //$NON-NLS-1$
+				e);
 		}
 
 		return null;
@@ -150,7 +180,7 @@ public class RenderedImageFactory {
 	 *         requested.
 	 */
 	static public RenderedImage getInstance(String szFilePath) {
-		return getInstance(szFilePath, new RenderInfoImpl());
+		return getInstance(szFilePath, new RenderedImageKey());
 	}
 
 	/**
@@ -171,15 +201,18 @@ public class RenderedImageFactory {
 			FileInputStream fis = new FileInputStream(szFilePath);
 			int size = fis.available();
 			byte[] buffer = new byte[size];
-			
+
 			fis.read(buffer);
 			fis.close();
 
 			return getInstance(buffer, info);
 
 		} catch (Exception e) {
-			Trace.throwing(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, RenderedImageFactory.class, "RenderedImageFactory.getInstance()", //$NON-NLS-1$
-			e);
+			Trace.throwing(Draw2dRenderPlugin.getInstance(),
+				Draw2dRenderDebugOptions.EXCEPTIONS_THROWING,
+				RenderedImageFactory.class,
+				"RenderedImageFactory.getInstance()", //$NON-NLS-1$
+				e);
 		}
 
 		return null;
@@ -196,7 +229,7 @@ public class RenderedImageFactory {
 	 *         of the given byte buffer.
 	 */
 	static public RenderedImage getInstance(byte[] buffer) {
-		return getInstance(buffer, new RenderInfoImpl());
+		return getInstance(buffer, new RenderedImageKey());
 	}
 
 	/**
@@ -208,28 +241,30 @@ public class RenderedImageFactory {
 	 *            <code>RenderedImage</code> that is used as a base to
 	 *            retrieve the related instance.
 	 * @param info
-	 *            <code>RenderInfo</code> object containing information about the size 
-	 *            and general data regarding how the image will be rendered.
+	 *            <code>RenderInfo</code> object containing information about
+	 *            the size and general data regarding how the image will be
+	 *            rendered.
 	 * @return <code>RenderedImage</code> instance with the size dimensions
-	 *         requested.  May return <code>null</code> if no related instance
+	 *         requested. May return <code>null</code> if no related instance
 	 *         can be found or if the original buffer cannot be retrieved.
 	 */
-	static public RenderedImage getRelatedInstance(RenderedImage image, RenderInfo info) {
+	static public RenderedImage getRelatedInstance(RenderedImage image,
+			RenderInfo info) {
 		if (image instanceof AbstractRenderedImage) {
-			RenderedImageKey oldKey = ((AbstractRenderedImage)image).getKey();
-			RenderedImageKey key = new RenderedImageKey(oldKey.getChecksum(), info, oldKey.getExtraData());
-			WeakReference ref = (WeakReference)instanceMap.get(key);
+			RenderedImageKey oldKey = ((AbstractRenderedImage) image).getKey();
+			RenderedImageKey key = new RenderedImageKey(info, oldKey.getChecksum(), oldKey.getExtraData());
+			WeakReference ref = (WeakReference) instanceMap.get(key);
 			if (ref != null) {
-				return (RenderedImage)ref.get();
-			}
-			else {
-				return autodetectImage(((AbstractRenderedImage)image).getBuffer(), key);
+				return (RenderedImage) ref.get();
+			} else {
+				return autodetectImage(((AbstractRenderedImage) image)
+					.getBuffer(), key);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * getInstance static constructor method for retrieving the appropriate
 	 * instance of the immutable class <code>RenderedImage</code>.
@@ -245,65 +280,68 @@ public class RenderedImageFactory {
 	static public RenderedImage getInstance(byte[] buffer, RenderInfo info) {
 		if (buffer == null)
 			throw new InvalidParameterException();
-	
+
 		Adler32 checksum = new Adler32();
 		checksum.update(buffer);
-		final RenderedImageKey key = new RenderedImageKey(checksum.getValue(), info, null);
-		WeakReference ref = (WeakReference)instanceMap.get(key);
+		final RenderedImageKey key = new RenderedImageKey(info, checksum.getValue(), null);
+		WeakReference ref = (WeakReference) instanceMap.get(key);
 		RenderedImage image = null;
 		if (ref != null)
-			image = (RenderedImage)(((WeakReference) instanceMap.get(key)).get());
+			image = (RenderedImage) (((WeakReference) instanceMap.get(key))
+				.get());
 		else
 			image = autodetectImage(buffer, key);
-	
+
 		return image;
 	}
 
-	private static RenderedImage autodetectImage(byte[] buffer, final RenderedImageKey key) {
+	private static RenderedImage autodetectImage(byte[] buffer,
+			final RenderedImageKey key) {
 		RenderedImage image = null;
-		
+
 		if (isSVG(buffer))
 			image = new SVGImage(buffer, key);
 		else {
 			// not a recognizable image format so assume it's an EMF file
-		    try {
-		   	   	WMFTranscoder imageTransformer = new WMFTranscoder();
-	    	   	ByteArrayInputStream input = new ByteArrayInputStream(buffer);
-		   	   	ByteArrayOutputStream output = new ByteArrayOutputStream();
-		   	   	imageTransformer.transcode(input, output);
-		   	   	image = new SVGImage(output.toByteArray(), key);
-		   	} catch (Exception e2) {
-		   		try {
-		   			EMFTranscoder imageTransformer = new EMFTranscoder();
-	        	   	ByteArrayInputStream input = new ByteArrayInputStream(buffer);
-		   	       	ByteArrayOutputStream output = new ByteArrayOutputStream();
-		   	       	imageTransformer.transcode(input, output);
-		   	       	image = new SVGImage(output.toByteArray(), key);
-		   	    } catch (Exception e3) {
-		   	    	image = new ImageRenderedImage(buffer, key);
-		   	    }
-		    }
+			try {
+				WMFTranscoder imageTransformer = new WMFTranscoder();
+				ByteArrayInputStream input = new ByteArrayInputStream(buffer);
+				ByteArrayOutputStream output = new ByteArrayOutputStream();
+				imageTransformer.transcode(input, output);
+				image = new SVGImage(output.toByteArray(), key);
+			} catch (Exception e2) {
+				try {
+					EMFTranscoder imageTransformer = new EMFTranscoder();
+					ByteArrayInputStream input = new ByteArrayInputStream(
+						buffer);
+					ByteArrayOutputStream output = new ByteArrayOutputStream();
+					imageTransformer.transcode(input, output);
+					image = new SVGImage(output.toByteArray(), key);
+				} catch (Exception e3) {
+					image = new ImageRenderedImage(buffer, key);
+				}
+			}
 		}
-			 
+
 		if (image != null) {
 			instanceMap.put(key, new WeakReference(image));
 		}
-	
+
 		return image;
 	}
-	
+
 	private static String getTestString(byte[] buffer) {
 		if (buffer == null)
 			return null;
-		
-		StringBuffer szTestBuf = new StringBuffer(10+1);
-		for (int i=0; i<10; i++)
-			szTestBuf.insert(i, (char)buffer[i]);
+
+		StringBuffer szTestBuf = new StringBuffer(10 + 1);
+		for (int i = 0; i < 10; i++)
+			szTestBuf.insert(i, (char) buffer[i]);
 		String szTest = new String(szTestBuf);
 		szTest = szTest.trim();
 		return szTest;
 	}
-	
+
 	private static boolean isSVG(byte[] buffer) {
 		String szTest = getTestString(buffer);
 		return szTest.startsWith("<?xml"); //$NON-NLS-1$

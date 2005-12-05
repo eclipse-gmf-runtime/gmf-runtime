@@ -165,21 +165,22 @@ class SVGImageConverter {
 			ImageTranscoderEx.KEY_ANTI_ALIASING,
 				Boolean.valueOf(info.shouldAntiAlias()));
 				
-		if (info.getFillColor() != null) {
+		if (info.getBackgroundColor() != null) {
 			transcoder.addTranscodingHint(
 				ImageTranscoderEx.KEY_FILL_COLOR,
-				new Color(info.getFillColor().getRed(), 
-						  info.getFillColor().getGreen(),
-						  info.getFillColor().getBlue()));
+				new Color(info.getBackgroundColor().red, 
+						  info.getBackgroundColor().green,
+						  info.getBackgroundColor().blue));
 		}
 		
-		if (info.getOutlineColor() != null) {
+		if (info.getForegroundColor() != null) {
 					transcoder.addTranscodingHint(
 						ImageTranscoderEx.KEY_OUTLINE_COLOR,
-						new Color(info.getOutlineColor().getRed(), 
-								  info.getOutlineColor().getGreen(),
-								  info.getOutlineColor().getBlue()));
+						new Color(info.getForegroundColor().red, 
+								  info.getForegroundColor().green,
+								  info.getForegroundColor().blue));
 		}
+
 	}
 	
 	/**

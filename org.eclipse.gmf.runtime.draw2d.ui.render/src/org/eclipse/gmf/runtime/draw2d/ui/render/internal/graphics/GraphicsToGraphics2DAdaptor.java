@@ -28,9 +28,16 @@ import java.util.Stack;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.GdiFont;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -39,12 +46,6 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
-import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.GdiFont;
 
 /**
  * Objects of this class can be used with draw2d to render to a Graphics2D object.
@@ -1101,22 +1102,25 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
         getGraphics2D().setPaint(oldPaint);
 	}
 	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, int, int, int, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, org.eclipse.draw2d.geometry.Rectangle, org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener)
 	 */
-	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, Rectangle rect, RenderingListener listener) {
 		RenderInfo info = srcImage.getRenderInfo();
-		info.setValues(width, height, 
-						info.getFillColor(), info.getOutlineColor(), 
-						info.shouldMaintainAspectRatio(), info.shouldAntiAlias());
+		info.setValues(rect.width, rect.height,  
+						info.shouldMaintainAspectRatio(), info.shouldAntiAlias(),
+						info.getBackgroundColor(), info.getForegroundColor());
 		
 		RenderedImage img = srcImage.getNewRenderedImage(info);
-		BufferedImage bufImg = img.getBufferedImage();
+		
+		BufferedImage bufImg = (BufferedImage)srcImage.getAdapter(BufferedImage.class);
+		if (bufImg == null) {
+			bufImg = ImageConverter.convert(srcImage.getSWTImage());
+		}
 		
 		// Translate the Coordinates
-		x += transX;
-		y += transY + height - bufImg.getHeight();
+		int x = rect.x + transX;
+		int y = rect.y + transY + rect.height - bufImg.getHeight();
 
 		checkState();
 		getGraphics2D().drawImage(
@@ -1127,7 +1131,21 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		return img;
 	}
 
-	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#allowDelayRender()
+	 */
+	public boolean shouldAllowDelayRender() {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#getMaximumRenderSize()
+	 */
+	public Dimension getMaximumRenderSize() {
+		return null;
+	}
+
 	/**
 	 * Accessor method to return the translation offset for the graphics object
 	 * 

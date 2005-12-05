@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.export;
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
@@ -21,8 +22,10 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.util.SVGConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.GraphicsToGraphics2DAdaptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGColorConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGImage;
@@ -118,13 +121,10 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 		return getSVGGraphics2D().getRoot();		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage,
-	 *      int, int, int, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.GraphicsToGraphics2DAdaptor#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, org.eclipse.draw2d.geometry.Rectangle, org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener)
 	 */
-	public RenderedImage drawRenderedImage(RenderedImage srcImage, int x, int y, int width, int height) {
+	public RenderedImage drawRenderedImage(RenderedImage srcImage, Rectangle rect, RenderingListener listener) {
 
 		// Check for a change in the state
 		checkState();
@@ -137,9 +137,14 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 	    if (srcImage instanceof SVGImage) {
 	    	Document document = ((SVGImage)srcImage).getDocument();
 	    	if (document instanceof SVGOMDocument) {
+	    		RenderInfo info = srcImage.getRenderInfo();
 				SVGColorConverter.getInstance().replaceDocumentColors((SVGOMDocument)document, 
-					srcImage.getRenderInfo().getFillColor(),
-					srcImage.getRenderInfo().getOutlineColor());
+					new Color(info.getBackgroundColor().red, 
+						  info.getBackgroundColor().green,
+						  info.getBackgroundColor().blue),
+					new Color(info.getForegroundColor().red, 
+						info.getForegroundColor().green,
+						info.getForegroundColor().blue));
 			}
 			Element root = ((SVGImage)srcImage).getDocument().getDocumentElement();
 
@@ -150,31 +155,31 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 			toAppend.setAttributeNS(
 					null,
 					SVGConstants.SVG_X_ATTRIBUTE,
-					String.valueOf(x + trans.x));
+					String.valueOf(rect.x + trans.x));
 
 			// Modify the Y Attribute
 			toAppend.setAttributeNS(
 					null,
 					SVGConstants.SVG_Y_ATTRIBUTE,
-					String.valueOf(y + trans.y));
+					String.valueOf(rect.y + trans.y));
 
 			// Modify the Width Attribute
 			toAppend.setAttributeNS(
 					null,
 					SVGConstants.SVG_WIDTH_ATTRIBUTE,
-					String.valueOf(width));
+					String.valueOf(rect.width));
 
 			// Modify the Height Attribute
 			toAppend.setAttributeNS(
 					null,
 					SVGConstants.SVG_HEIGHT_ATTRIBUTE,
-					String.valueOf(height));
+					String.valueOf(rect.height));
 
 			treeManager.appendGroup(toAppend, null);
 			return srcImage;
 	    }
 	    else {
-	    	return super.drawRenderedImage(srcImage, x, y, width, height);
+	    	return super.drawRenderedImage(srcImage, rect, listener);
 		}
 	}
 	
