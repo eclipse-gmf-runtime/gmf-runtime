@@ -19,7 +19,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.SVGImageTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {
 
@@ -30,7 +29,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite( "All Shapes GEF Tests" ); //$NON-NLS-1$
 
-		suite.addTestSuite( SVGImageTest.class );
+		//suite.addTestSuite( SVGImageTest.class );
 		//suite.addTestSuite( Metafile2SvgTest.class );
 		
         return suite;
