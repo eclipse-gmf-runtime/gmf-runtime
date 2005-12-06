@@ -46,9 +46,9 @@ public class RulerGridPreferencePage
 
 	private class DoubleFieldEditor extends StringFieldEditor {
 		
-		private double minValidValue = 00.001;
+		private double minValidValue = 00.009;
 		private double maxValidValue = 99.999;
-
+		
 		public DoubleFieldEditor(String pref, String label, Composite parent ) {
 			super(pref,label,parent);
 		}
@@ -66,6 +66,7 @@ public class RulerGridPreferencePage
 				NumberFormat numberFormatter = NumberFormat.getInstance();				
 				Double pageHeight = forceDouble(numberFormatter.parse(text.getText()));
 				double number = pageHeight.doubleValue();
+				number = convertToBase(number);
 				if (number >= minValidValue && number <= maxValidValue) {
 					clearErrorMessage();
 					return true;
@@ -122,6 +123,13 @@ public class RulerGridPreferencePage
 
 	private int oldUnits = -1;
 
+	private static final int INCHES = 0;
+	private static final int CENTIMETERS = 1;
+	private static final int PIXELS = 2;
+
+	// Conversion from inch to centimeter
+	private static final double INCH2CM = 2.54;
+	
 	private String RULER_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerGroup_label;
 	private String SHOW_RULERS_LABEL = DiagramUIMessages.GridRulerPreferencePage_showRulers_label;
 	private String RULER_UNITS_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_label;
@@ -161,35 +169,80 @@ public class RulerGridPreferencePage
 		double pixelValue = 0;
 
 		switch( fromUnits ) {
-			// Inches
-			case 0:
+			case INCHES:
 				pixelValue = value.doubleValue() * Display.getDefault().getDPI().x;
 				break;
-			case 1: // cm
-				pixelValue = value.doubleValue() * Display.getDefault().getDPI().x / 2.54;
+			case CENTIMETERS:
+				pixelValue = value.doubleValue() * Display.getDefault().getDPI().x / INCH2CM;
 				break;
-			case 2: // pixels
+			case PIXELS:
 				pixelValue = value.intValue();
 		}
 		
 		double returnValue = 0;
 		
 		switch( toUnits ) {
-			case 0:
+			case INCHES:
 				returnValue = pixelValue / Display.getDefault().getDPI().x;
 				break;
-			case 1:
-				returnValue = pixelValue * 2.54 / Display.getDefault().getDPI().x;
+			case CENTIMETERS:
+				returnValue = pixelValue * INCH2CM / Display.getDefault().getDPI().x;
 				break;
-			case 2:
+			case PIXELS:
 				returnValue = pixelValue;
 		}
 		
 		return numberFormatter.format(returnValue);		
 	}
 
+	
+	/**
+	 * 
+	 * converts the current units used to a base unit value to be used (e.g. in validation)
+	 * 
+	 * @param number Units to be converted to the base unit
+	 * @return
+	 */
+	private double convertToBase(double number) {
+		
+		double returnValue = 0;
+		switch( getUnits() ) {
+			case INCHES:
+				returnValue = number;
+				break;
+			case CENTIMETERS:
+				returnValue = number / INCH2CM;
+				break;
+			case PIXELS:
+				returnValue = number / Display.getDefault().getDPI().x;
+		}
+		return returnValue;
+	}
+
 	private void updateUnits() {
 		
+		int units = getUnits();
+
+		switch( units )
+		{
+			case INCHES:
+				gridUnits.setText(RULER_UNITS_IN_LABEL);
+				break;
+				
+			case CENTIMETERS:
+				gridUnits.setText(RULER_UNITS_CM_LABEL);
+				break;
+
+			case PIXELS:
+				gridUnits.setText(RULER_UNITS_PIXEL_LABEL);
+				break;
+		}
+
+		gridSpacing.setStringValue( convertUnits( oldUnits, units ) );
+		oldUnits = units;
+	}
+
+	private int getUnits() {
 		int units = rulerUnits.getComboControl().getSelectionIndex();
 		
 		// IF no selection has been made
@@ -198,24 +251,7 @@ public class RulerGridPreferencePage
 			units = getPreferenceStore().getInt(IPreferenceConstants.PREF_RULER_UNITS);
 			oldUnits = units;
 		}
-
-		switch( units )
-		{
-			case 0: // Inches
-				gridUnits.setText(RULER_UNITS_IN_LABEL);
-				break;
-				
-			case 1: // CM
-				gridUnits.setText(RULER_UNITS_CM_LABEL);
-				break;
-
-			case 2: // Pixels
-				gridUnits.setText(RULER_UNITS_PIXEL_LABEL);
-				break;
-		}
-
-		gridSpacing.setStringValue( convertUnits( oldUnits, units ) );
-		oldUnits = units;
+		return units;
 	}
 
 	private void addRulerFields( Composite parent ) {
