@@ -14,13 +14,13 @@ package org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URL;
 
 import junit.framework.TestCase;
 
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -39,6 +39,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.Bundle;
 
 /**
  * @author sshaw
@@ -49,11 +50,14 @@ import org.eclipse.ui.PlatformUI;
 public class SVGImageTest
 	extends TestCase {
 
-	private final String UMLSHAPES_SVG = "uml.svg"; //$NON-NLS-1$
+	/**
+	 * The icons root directory.
+	 */
+	private static final String PREFIX_ROOT = "resources/svg/"; //$NON-NLS-1$
 
-	private final String SHAPES_SVG = "shapes.svg"; //$NON-NLS-1$
-
-	private final String BLACKWHITE_SVG = "blackwhite.svg"; //$NON-NLS-1$
+	private static final String SVG_BLACKWHITE = PREFIX_ROOT + "blackwhite.svg"; //$NON-NLS-1$
+	private static final String SVG_SHAPES = PREFIX_ROOT + "shapes.svg";//$NON-NLS-1$
+	private static final String SVG_UMLSHAPES = PREFIX_ROOT + "uml.svg";//$NON-NLS-1$
 
 	private final int WIDTH = 200;
 
@@ -93,19 +97,17 @@ public class SVGImageTest
 		try {
 
 			// Initialize the path the the resources.
-			URL pluginURL = Platform.getBundle("org.eclipse.gmf.tests.runtime.draw2d.ui.render" ).getEntry("/"); //$NON-NLS-1$ //$NON-NLS-2$
-			String pluginPath = Platform.resolve( pluginURL ).getPath().substring(1);
-			String srcPath = pluginPath + "resources//svg//";  //$NON-NLS-1$
+			Bundle bundle = Platform.getBundle("org.eclipse.gmf.tests.runtime.draw2d.ui.render" ); //$NON-NLS-1$
 			
-			fixture1 = RenderedImageFactory.getInstance(srcPath + UMLSHAPES_SVG); 
+			fixture1 = RenderedImageFactory.getInstance(Platform.find(bundle, new Path(SVG_UMLSHAPES))); 
 			assertNotNull("Fixture1 shouldn't be null", fixture1); //$NON-NLS-1$
 
 			RenderInfo info = RenderedImageFactory.createInfo(WIDTH, HEIGHT,
 				false, false, (RGB) null, (RGB) null);
-			fixture2 = RenderedImageFactory.getInstance(srcPath + SHAPES_SVG, info); 
+			fixture2 = RenderedImageFactory.getInstance(Platform.find(bundle, new Path(SVG_SHAPES)), info); 
 			assertNotNull("Fixture2 shouldn't be null", fixture2); //$NON-NLS-1$
 
-			fixture3 = RenderedImageFactory.getInstance(srcPath + BLACKWHITE_SVG);	
+			fixture3 = RenderedImageFactory.getInstance(Platform.find(bundle, new Path(SVG_BLACKWHITE)));	
 			assertNotNull("Fixture3 shouldn't be null", fixture3); //$NON-NLS-1$
 
 		} catch (Exception e) {
