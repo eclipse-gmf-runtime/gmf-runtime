@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -173,7 +174,7 @@ public abstract class GraphicalEditPart
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
 		DiagramEventBroker.getInstance().addNotificationListener(element,listener);
-		listenerFilters.put(filterId, new Object[] {element, listener});
+		listenerFilters.put(filterId.intern(), new Object[] {element, listener});
 	}
 	
 	/**
@@ -194,7 +195,7 @@ public abstract class GraphicalEditPart
 			return;
 		Assert.isNotNull(filterId);
 		Assert.isNotNull(listener);
-		listenerFilters.put(filterId, new Object[] {element,feature, listener});
+		listenerFilters.put(filterId.intern(), new Object[] {element,feature, listener});
 	}
 
 	/** Creates a connection editpart. */
@@ -526,7 +527,7 @@ public abstract class GraphicalEditPart
 	protected List getModelChildren() {
 		Object model = getModel();
 		if(model!=null && model instanceof View){
-			return ((View)model).getChildren();
+			return new ArrayList(((View)model).getChildren());
 		}
 		return Collections.EMPTY_LIST;
 	}
