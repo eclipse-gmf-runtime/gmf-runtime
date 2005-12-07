@@ -42,8 +42,8 @@ public interface ITreeConnection extends Connection {
 			// The default constructor does nothing
 		}
 		
-		static public Orientation VERTICAL = new Orientation();//$NON-NLS-1$
-		static public Orientation HORIZONTAL = new Orientation();//$NON-NLS-1$
+		static public Orientation VERTICAL = new Orientation();
+		static public Orientation HORIZONTAL = new Orientation();
 	}
 	
 	/**

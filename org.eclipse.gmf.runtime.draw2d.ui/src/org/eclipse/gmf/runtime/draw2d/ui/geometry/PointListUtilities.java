@@ -1515,7 +1515,7 @@ public class PointListUtilities {
 
 		long nPolyLength = length(mySegments);
 		long nCenterDistance =
-			(int) Math.round(
+			Math.round(
 				distanceAlong(mySegments, ptCenter)
 					* nPolyLength);
 

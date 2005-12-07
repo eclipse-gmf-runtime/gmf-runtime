@@ -54,22 +54,22 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 		/**
 		 * Constant for the top orientation 
 		 */
-		static public Orientation TOP = new Orientation();//$NON-NLS-1$
+		static public Orientation TOP = new Orientation();
 		
 		/**
 		 * Constant for the bottom orientation 
 		 */
-		static public Orientation BOTTOM = new Orientation();//$NON-NLS-1$
+		static public Orientation BOTTOM = new Orientation();
 		
 		/**
 		 * Constant for the right orientation 
 		 */
-		static public Orientation RIGHT = new Orientation(); //$NON-NLS-1$
+		static public Orientation RIGHT = new Orientation(); 
 		
 		/**
 		 * Constant for the left orientation 
 		 */
-		static public Orientation LEFT = new Orientation(); //$NON-NLS-1$
+		static public Orientation LEFT = new Orientation(); 
 		
 		/**
 		 * getEdge
