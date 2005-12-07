@@ -83,7 +83,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 			final ViewRefactorHelper vrh = new ViewRefactorHelper(gep.getDiagramPreferencesHint());
 			final List exclusions = getStyleExclusionsForCopyAppearance();
 			
-			ICommand viewStyleCommand = new AbstractModelCommand(APPLY_APPEARANCE_PROPERTIES_UNDO_COMMAND_NAME, null) {//$NON-NLS-1$
+			ICommand viewStyleCommand = new AbstractModelCommand(APPLY_APPEARANCE_PROPERTIES_UNDO_COMMAND_NAME, null) {
 				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
 					
 					vrh.copyViewAppearance(aapr.getViewToCopyFrom(), gep.getNotationView(), exclusions);

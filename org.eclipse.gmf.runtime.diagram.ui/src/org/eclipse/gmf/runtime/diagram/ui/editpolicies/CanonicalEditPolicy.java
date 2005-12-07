@@ -604,7 +604,7 @@ implements NotificationListener {
 			addListenerFilter("NotationListener_Visibility", //$NON-NLS-1$
 							  this,
 							  (View)getHost().getModel(),
-							  NotationPackage.eINSTANCE.getView_Visible());//$NON-NLS-1$
+							  NotationPackage.eINSTANCE.getView_Visible());
 			
 			Style style = ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
 			if ( style != null ) {
@@ -1047,7 +1047,13 @@ implements NotificationListener {
 		List semanticChildren = new ArrayList(getSemanticChildrenList());
 
 		List orphaned = cleanCanonicalSemanticChildren(viewChildren, semanticChildren);
-
+		boolean changed = false;
+		//
+		// delete all the remaining oprphaned views
+		if ( !orphaned.isEmpty() ) {
+			changed = deleteViews(orphaned.iterator());
+		}
+		
 		//
 		// create a view for each remaining semantic element.
 		List createdViews = Collections.EMPTY_LIST;
@@ -1072,13 +1078,6 @@ implements NotificationListener {
 					throw ise;
 				}
 			}
-		}
-		
-		boolean changed = false;
-		//
-		// delete all the remaining oprphaned views
-		if ( !orphaned.isEmpty() ) {
-			changed = deleteViews(orphaned.iterator());
 		}
 		
 		if (changed || createdViews.size() > 0)

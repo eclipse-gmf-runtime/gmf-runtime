@@ -38,12 +38,12 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.IPropertyValueDefe
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -140,9 +140,9 @@ public class ResizableShapeEditPolicy
 				View view = (View) viewAdapter.getAdapter(View.class);
 				Point p = (Point) newValue
 					.getAdapter(IPropertyValueDeferred.class);
-				ViewUtil.setPropertyValue(view, Properties.ID_POSITIONX,
+				ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getLocation_X(),
 					new Integer(p.x));
-				ViewUtil.setPropertyValue(view, Properties.ID_POSITIONY,
+				ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getLocation_Y(),
 					new Integer(p.y));
 
 				// clear for garbage collection

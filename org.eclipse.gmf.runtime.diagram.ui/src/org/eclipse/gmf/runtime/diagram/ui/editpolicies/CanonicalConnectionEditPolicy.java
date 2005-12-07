@@ -507,6 +507,9 @@ public abstract class CanonicalConnectionEditPolicy
 
 		List orphaned = cleanCanonicalSemanticChildren(viewChildren,
 			semanticChildren);
+		//
+		// delete all the remaining views
+		deleteViews(orphaned.iterator());
 
 		//
 		// create a view for each remaining semantic element.
@@ -519,10 +522,7 @@ public abstract class CanonicalConnectionEditPolicy
 				viewDescriptors.add(new EObjectAdapter(viewChild)); 
 			}
 		}
-		//
-		// delete all the remaining views
-		deleteViews(orphaned.iterator());
-
+		
 		makeViewsMutable(viewDescriptors);
 
 		// now refresh all the connection containers to update the editparts
