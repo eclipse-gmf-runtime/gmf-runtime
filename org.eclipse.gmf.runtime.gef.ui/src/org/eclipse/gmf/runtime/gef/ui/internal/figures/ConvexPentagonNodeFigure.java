@@ -30,13 +30,6 @@ public class ConvexPentagonNodeFigure
 	extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure{
 
 	private static final double DEFAULT_CONVEX_RATIO = 0.25;
-	
-	/**
-	 * Default constructor
-	 */
-	public ConvexPentagonNodeFigure() {
-		super();
-	}
 
 	/**
 	 * Constructor

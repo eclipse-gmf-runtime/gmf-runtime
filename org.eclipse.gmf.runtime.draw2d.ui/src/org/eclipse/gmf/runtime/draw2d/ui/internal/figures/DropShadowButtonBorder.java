@@ -19,8 +19,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
@@ -33,8 +33,8 @@ protected Insets insets = new Insets(26,26,80,80);
 
 private static final Color
 	highlight   = ColorConstants.menuBackgroundSelected,
-	dropshadow2 = new Color(null, ViewForm.borderMiddleRGB),
-    dropshadow3 = new Color(null, ViewForm.borderOutsideRGB);
+	dropshadow2 = new Color(null, new RGB (143, 141, 138)),
+	dropshadow3 = ColorConstants.buttonDarker;
 
 /**
  * Returns the space used by the border for the 
