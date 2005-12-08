@@ -119,8 +119,6 @@ public abstract class ShapeNodeEditPart
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		if (request instanceof ReconnectRequest) {
 			Point pt = ((DropRequest) request).getLocation().getCopy();
-			((ReconnectRequest) request).getConnectionEditPart().getFigure()
-				.translateToAbsolute(pt);
 			return getNodeFigure().getSourceConnectionAnchorAt(pt);
 		}
 		else if (request instanceof DropRequest){
@@ -154,8 +152,6 @@ public abstract class ShapeNodeEditPart
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		if (request instanceof ReconnectRequest) {
 			Point pt = ((DropRequest) request).getLocation().getCopy();
-			((ReconnectRequest) request).getConnectionEditPart().getFigure()
-				.translateToAbsolute(pt);
 			return getNodeFigure().getTargetConnectionAnchorAt(pt);
 		}
 		else if (request instanceof DropRequest){
@@ -190,26 +186,6 @@ public abstract class ShapeNodeEditPart
 			refreshTargetConnections();
 		else
 			super.handleNotificationEvent(notification);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.EditPart#activate()
-	 */
-	public void activate() {
-		super.activate();
-		//
-		// bad hack - check if really required by sequence diagram plugin.
-		//	if (getParent() instanceof GraphicalEditPart &&
-		// ((GraphicalEditPart)getParent()).isCanonical()){
-		//		EditPolicy editPolicy =
-		// getParent().getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
-		//		if (editPolicy != null){
-		//			editPolicy.deactivate();
-		//			editPolicy.activate();
-		//		}
-		//	}
 	}
 
 	/*

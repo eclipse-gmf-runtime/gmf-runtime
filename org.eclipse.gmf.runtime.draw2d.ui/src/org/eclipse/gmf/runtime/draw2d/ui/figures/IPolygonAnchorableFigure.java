@@ -12,7 +12,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.PointList;
 
 /**
@@ -21,7 +20,7 @@ import org.eclipse.draw2d.geometry.PointList;
  * This interface is used by the Polygon Connection Anchor to obtain
  * the list of points that form a polygon.
  */
-public interface IPolygonAnchorableFigure extends IFigure {
+public interface IPolygonAnchorableFigure extends IAnchorableFigure {
 
 	/**
 	 * This method allows the implementing class to return a

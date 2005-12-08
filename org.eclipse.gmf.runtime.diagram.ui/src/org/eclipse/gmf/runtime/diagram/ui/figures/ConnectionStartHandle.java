@@ -25,6 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionEndpointTracker;
  * The connection handle figure for a connection start.
  * 
  * @author mmuszyns
+ * @deprecated use {@link org.eclipse.gef.handles.ConnectionStartHandle}.  Will be removed on January 17th / 2006.
  * 
  */
 public class ConnectionStartHandle

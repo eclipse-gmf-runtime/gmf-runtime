@@ -20,7 +20,7 @@ import org.eclipse.gef.commands.Command;
  * 
  * @author Wayne Diu, wdiu
  */
-public class UnmovableConnectionEditPolicy extends ConnectionEndpointEditPolicy {
+public class UnmovableConnectionEditPolicy extends org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy {
 	/**
 	 * Just override getCommand to always return null.
 	 * 

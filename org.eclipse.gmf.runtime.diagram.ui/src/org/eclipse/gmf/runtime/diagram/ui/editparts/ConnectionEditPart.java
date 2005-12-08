@@ -58,7 +58,6 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionBendpointEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionLabelsEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -279,7 +278,7 @@ abstract public class ConnectionEditPart
 		installEditPolicy(EditPolicyRoles.PROPERTY_HANDLER_ROLE,
 			new PropertyHandlerEditPolicy());
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
-			new ConnectionEndpointEditPolicy());
+			new org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy());
 		installEditPolicy(EditPolicy.CONNECTION_ROLE,
 			new ConnectionEditPolicy());
 		installBendpointEditPolicy();
@@ -453,7 +452,7 @@ abstract public class ConnectionEditPart
 				return null;
 
 			if (snapStrategies.size() == 1)
-				return (SnapToHelper) snapStrategies.get(0);
+				return snapStrategies.get(0);
 
 			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
 			for (int i = 0; i < snapStrategies.size(); i++)

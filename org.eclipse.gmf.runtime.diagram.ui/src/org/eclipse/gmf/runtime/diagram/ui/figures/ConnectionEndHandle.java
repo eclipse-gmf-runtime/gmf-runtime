@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionEndpointTracker;
  * The connection handle figure for a connection end.
  * 
  * @author mmuszyns
- * 
+ * @deprecated use {@link org.eclipse.gef.handles.ConnectionEndHandle}.  Will be removed on January 17th / 2006.
  */
 public class ConnectionEndHandle
 	extends ConnectionHandle {

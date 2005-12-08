@@ -24,7 +24,7 @@ import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
@@ -95,7 +95,7 @@ abstract public class ConnectionNodeEditPart
 				return ""; //$NON-NLS-1$
 			}
 		});
-		return ((PolylineConnectionEx)getFigure()).getConnectionAnchor(t);
+		return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
 	}
 
 	/*
@@ -103,12 +103,13 @@ abstract public class ConnectionNodeEditPart
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		Point center = getFigure().getBounds().getCenter();
+		getFigure().translateToAbsolute(center);
 		Point pt = ((DropRequest)request).getLocation()==null ? 
 			center : new Point(((DropRequest)request).getLocation()); 
 		if (request instanceof CreateRequest) {
 			getFigure().translateToRelative(pt);
 		}
-		return ((PolylineConnectionEx)getFigure()).getSourceConnectionAnchorAt(pt);
+		return ((IAnchorableFigure)getFigure()).getSourceConnectionAnchorAt(pt);
 	}
 
 	protected ConnectionAnchor getTargetConnectionAnchor() {
@@ -132,7 +133,7 @@ abstract public class ConnectionNodeEditPart
 				return ""; //$NON-NLS-1$
 			}
 		});
-		return ((PolylineConnectionEx)getFigure()).getConnectionAnchor(t);
+		return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
 	}
 	
 	/*
@@ -140,26 +141,27 @@ abstract public class ConnectionNodeEditPart
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		Point center = getFigure().getBounds().getCenter();
+		getFigure().translateToAbsolute(center);
 		Point pt = ((DropRequest)request).getLocation()==null ? 
 			center : new Point(((DropRequest)request).getLocation()); 
 		if (request instanceof CreateRequest) {
 			getFigure().translateToRelative(pt);
 		}
-		return ((PolylineConnectionEx)getFigure()).getTargetConnectionAnchorAt(pt);
+		return ((IAnchorableFigure)getFigure()).getTargetConnectionAnchorAt(pt);
 	}
 	
     /* (non-Javadoc)
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart#mapConnectionAnchorToTerminal(org.eclipse.draw2d.ConnectionAnchor)
      */
     final public String mapConnectionAnchorToTerminal(ConnectionAnchor c) {
-        return ((PolylineConnectionEx) getFigure()).getConnectionAnchorTerminal(c);
+        return ((IAnchorableFigure) getFigure()).getConnectionAnchorTerminal(c);
     }
 
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart#mapTerminalToConnectionAnchor(String)
 	 */
 	final public ConnectionAnchor mapTerminalToConnectionAnchor(String terminal) {
-		return ((PolylineConnectionEx) getFigure()).getConnectionAnchor(terminal);
+		return ((IAnchorableFigure) getFigure()).getConnectionAnchor(terminal);
 	}
 
 	/* (non-Javadoc)

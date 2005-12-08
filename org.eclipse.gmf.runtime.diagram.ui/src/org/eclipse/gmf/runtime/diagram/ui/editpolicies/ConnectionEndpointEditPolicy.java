@@ -11,116 +11,19 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.gef.AccessibleHandleProvider;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.editpolicies.FeedbackHelper;
-import org.eclipse.gef.requests.ReconnectRequest;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.ConnectionEndHandle;
-import org.eclipse.gmf.runtime.diagram.ui.figures.ConnectionStartHandle;
 
 /**
  * connection end point edit policy
  * @author mmostafa
+ * @deprecated use {@link org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy}. Will be removed on January 17th / 2006.
  */
 public class ConnectionEndpointEditPolicy
 	extends org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy {
 
-	private ConnectionAnchor originalAnchor;
-
-	private FeedbackHelper feedbackHelper;
-	
-	protected void addSelectionHandles() {
-		super.addSelectionHandles();
+	public ConnectionEndpointEditPolicy() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * gets the connection figure
-	 * @return <code>PolylineConnection</code>
-	 */
-	protected PolylineConnection getConnectionFigure() {
-		return (PolylineConnection) ((GraphicalEditPart) getHost()).getFigure();
-	}
 
-	protected void removeSelectionHandles() {
-		super.removeSelectionHandles();
-	}
-	
-	protected void eraseConnectionMoveFeedback(ReconnectRequest request){
-		if (originalAnchor == null)
-			return;
-		if (request.isMovingStartAnchor())
-			getConnection().setSourceAnchor(originalAnchor);
-		else
-			getConnection().setTargetAnchor(originalAnchor);
-		originalAnchor = null;
-		feedbackHelper = null;
-	}
-
-	protected void showConnectionMoveFeedback(ReconnectRequest request) {
-		ShapeNodeEditPart node = null;
-		if (request.getTarget() instanceof ShapeNodeEditPart)
-			node = (ShapeNodeEditPart) request.getTarget();
-		if (originalAnchor == null) {
-			if (request.isMovingStartAnchor())
-				originalAnchor = getConnection().getSourceAnchor();
-			else
-				originalAnchor = getConnection().getTargetAnchor();
-		}
-		ConnectionAnchor anchor = null;
-		if (node != null) {
-			if (request.isMovingStartAnchor())
-				anchor = node.getSourceConnectionAnchor(request);
-			else
-				anchor = node.getTargetConnectionAnchor(request);
-		}
-		FeedbackHelper helper = getFeedbackHelper(request);
-		Point p = new Point(request.getLocation());
-		((IGraphicalEditPart)getHost()).getFigure().translateToAbsolute(p);
-		helper.update(anchor, p);
-	}
-
-	protected FeedbackHelper getFeedbackHelper(ReconnectRequest request) {
-		if (feedbackHelper == null) {
-			feedbackHelper = new FeedbackHelper();
-			feedbackHelper.setConnection(getConnection());
-			feedbackHelper.setMovingStartAnchor(request.isMovingStartAnchor());
-		}
-		return feedbackHelper;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#createSelectionHandles()
-	 */
-	protected List createSelectionHandles() {
-		List list = new ArrayList();
-		list.add(new ConnectionEndHandle((ConnectionEditPart)getHost()));
-		list.add(new ConnectionStartHandle((ConnectionEditPart)getHost()));
-		return list;
-	}
-
-	/**
-	 * Override for AccessibleHandleProvider when deactivated
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=69316
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
-		if (key == AccessibleHandleProvider.class)
-			//handles == null when deactivated
-			if (handles == null) {
-				return null;
-			}
-		return super.getAdapter(key);
-	}
-	
 }

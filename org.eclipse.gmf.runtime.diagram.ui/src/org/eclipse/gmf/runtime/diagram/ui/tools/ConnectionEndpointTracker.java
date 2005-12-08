@@ -14,40 +14,21 @@
  */
 package org.eclipse.gmf.runtime.diagram.ui.tools;
 
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.requests.ReconnectRequest;
 
 /**
  * @author mmuszyns
  * 
  * This class overrides its superclass in order to fix a problem with proper
  * tracking feedback for zooming and scrolling.
+ * 
+ * @deprecated use {@link org.eclipse.gef.tools.ConnectionEndpointTracker}. Will be removed on January 17th / 2006.
  */
 public class ConnectionEndpointTracker
 	extends org.eclipse.gef.tools.ConnectionEndpointTracker {
 
-	/**
-	 * constructor
-	 * 
-	 * @param cep
-	 *            the connection edit part to use with this tracker
-	 */
 	public ConnectionEndpointTracker(ConnectionEditPart cep) {
 		super(cep);
+		// TODO Auto-generated constructor stub
 	}
-
-	/*
-	 * @see org.eclipse.gef.tools.TargetingTool#updateTargetRequest()
-	 * 
-	 * superclass implementation is overriden to fix a problem with proper
-	 * tracking feedback for zooming and scrolling
-	 */
-	protected void updateTargetRequest() {
-		ReconnectRequest request = (ReconnectRequest) getTargetRequest();
-		Point p = getLocation();
-		getConnection().translateToRelative(p);
-		request.setLocation(p);
-	}
-
 }

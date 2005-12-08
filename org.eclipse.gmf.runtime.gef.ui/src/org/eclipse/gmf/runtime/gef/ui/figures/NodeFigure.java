@@ -22,7 +22,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
-
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
 
 /**
@@ -32,7 +32,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
  */
 public class NodeFigure 
 	extends Figure
-		implements HandleBounds {
+		implements HandleBounds, IAnchorableFigure {
 
 	private Hashtable connectionAnchors;
 	
@@ -67,11 +67,8 @@ public class NodeFigure
 				getBounds().height - (insets.bottom + insets.top));
 	}
 
-	/**
-	 * Given a string identifier, return the associated anchor for that identifier
-	 * 
-	 * @param terminal <code>String</code> identifier associated with the anchor
-	 * @return <code>ConnectionAnchor</code> that is associated with the given string.
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchor(java.lang.String)
 	 */
 	public ConnectionAnchor getConnectionAnchor(String terminal) {
 
@@ -91,13 +88,8 @@ public class NodeFigure
 		return connectAnchor;
 	}
 
-	/**
-	 * Dynamically allocates a new anchor if needed.  Otherwise, recycles old anchors
-	 * no longer in use.
-	 * 
-	 * @param c the <code>ConnectionAnchor</code> reference to an anchor associated with the 
-	 * given point on the figure
-	 * @return a <code>String</code> that represents the anchor identifier.
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchorTerminal(org.eclipse.draw2d.ConnectionAnchor)
 	 */
 	public String getConnectionAnchorTerminal(ConnectionAnchor c) {
 		if (c instanceof SlidableAnchor) {
@@ -116,23 +108,15 @@ public class NodeFigure
 		return szAnchor;
 	}
 
-	/** 
-	 * Gets the source connection anchor at a given point on the figure.
-	 * 
-	 * @param p <code>Point</code> on the figure that gives a hint which anchor to return.
-	 * @return a <code>ConnectionAnchor</code> reference to an anchor associated with the given 
-	 * point on the figure.
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getSourceConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
 	 */
 	public ConnectionAnchor getSourceConnectionAnchorAt(Point p) {
 		return createConnectionAnchor(p);
 	}
 
-	/** 
-	 * Gets the target connection anchor at a given point on the figure.
-	 * 
-	 * @param p <code>Point</code> on the figure that gives a hint which anchor to return.
-	 * @return <code>ConnectionAnchor</code> reference to an anchor associated with the 
-	 * given point on the figure.
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getTargetConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
 	 */
 	public ConnectionAnchor getTargetConnectionAnchorAt(Point p) {
 		return createConnectionAnchor(p);

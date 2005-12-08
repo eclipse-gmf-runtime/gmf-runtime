@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.Color;
  * @author sshaw
  * @canBeSeenBy %partners
  */
-public class PolylineConnectionEx extends PolylineConnection {
+public class PolylineConnectionEx extends PolylineConnection implements IPolygonAnchorableFigure {
 	
 	private RotatableDecoration startDecoration, endDecoration;
 
@@ -1125,10 +1125,17 @@ public class PolylineConnectionEx extends PolylineConnection {
         return pointInfo;
     }
     
-    /**
-     * Given a string identifier, return the associated anchor for that identifier
-     * @param terminal String identifier associated with the anchor
-     * @return ConnectionAnchor that is associated with the given string.
+    /* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure#getPolygonPoints()
+	 */
+	public PointList getPolygonPoints() {
+		// TODO Auto-generated method stub
+		return getSmoothPoints();
+	}
+
+	/* 
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchor(java.lang.String)
      */
     public ConnectionAnchor getConnectionAnchor(String terminal) {
         ConnectionAnchor connectionAnchor = (ConnectionAnchor)getConnectionAnchors().get(terminal);
@@ -1139,11 +1146,9 @@ public class PolylineConnectionEx extends PolylineConnection {
         return connectionAnchor;
     }
 
-    /**
-     * Dynamically allocates a new anchor if needed.  Otherwise, recycles old anchors
-     * no longer in use.
-     * @param c Point on the figure that gives a hint which anchor to return.
-     * @return ConnectionAnchor reference to an anchor associated with the given point on the figure.
+    /* 
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchorTerminal(org.eclipse.draw2d.ConnectionAnchor)
      */
     public String getConnectionAnchorTerminal(ConnectionAnchor c) {
         if (getConnectionAnchors().containsValue(c)) {
@@ -1158,19 +1163,15 @@ public class PolylineConnectionEx extends PolylineConnection {
         return null;
     }
 
-    /** 
-     * Gets the source connection anchor at a given point on the figure.
-     * @param p Point on the figure that gives a hint which anchor to return.
-     * @return ConnectionAnchor reference to an anchor associated with the given point on the figure.
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getSourceConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
      */
     public ConnectionAnchor getSourceConnectionAnchorAt(Point p) {
         return createConnectionAnchor(p);
     }
 
-    /** 
-     * Gets the target connection anchor at a given point on the figure.
-     * @param p Point on the figure that gives a hint which anchor to return.
-     * @return ConnectionAnchor reference to an anchor associated with the given point on the figure.
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getTargetConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
      */
     public ConnectionAnchor getTargetConnectionAnchorAt(Point p) {
         return createConnectionAnchor(p);
