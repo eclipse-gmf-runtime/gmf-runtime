@@ -77,7 +77,7 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#shouldDeleteView(org.eclipse.gmf.runtime.notation.View)
 	 */
 	protected boolean shouldDeleteView(View view) {
-		return view.getType().equals(LogicConstants.LOGIC_SHAPE_COMPARTMENT) == false; //$NON-NLS-1$
+		return view.getType().equals(LogicConstants.LOGIC_SHAPE_COMPARTMENT) == false; 
 	}
 	
 	
