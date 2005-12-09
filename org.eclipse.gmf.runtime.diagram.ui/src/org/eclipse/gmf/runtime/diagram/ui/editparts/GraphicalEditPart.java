@@ -195,6 +195,7 @@ public abstract class GraphicalEditPart
 			return;
 		Assert.isNotNull(filterId);
 		Assert.isNotNull(listener);
+		DiagramEventBroker.getInstance().addNotificationListener(element,feature,listener);
 		listenerFilters.put(filterId.intern(), new Object[] {element,feature, listener});
 	}
 
