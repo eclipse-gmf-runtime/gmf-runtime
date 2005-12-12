@@ -15,6 +15,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.ui.action.actions.global.ResourceGlobalActionHandler;
+import org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n.CommonUIActionIDEMessages;
+import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWTError;
@@ -26,11 +30,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
-
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.ui.action.actions.global.ResourceGlobalActionHandler;
-import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 
 /**
  * Global action handler that copies resources.
@@ -40,12 +39,15 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionCon
 public class CopyResourceGlobalActionHandler
 	extends ResourceGlobalActionHandler {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#getCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 
-		List selectedResources = getResourceSelection((IStructuredSelection)cntxt.getSelection()).toList();
+		List selectedResources = getResourceSelection(
+			(IStructuredSelection) cntxt.getSelection()).toList();
 		IResource[] resources = (IResource[]) selectedResources
 			.toArray(new IResource[selectedResources.size()]);
 
@@ -56,7 +58,7 @@ public class CopyResourceGlobalActionHandler
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < length; i++) {
 			IPath location = resources[i].getLocation();
-			
+
 			if (location != null)
 				fileNames[actualLength++] = location.toOSString();
 			if (i > 0)
@@ -71,7 +73,8 @@ public class CopyResourceGlobalActionHandler
 				fileNames[i] = tempFileNames[i];
 		}
 
-		setClipboard(resources, fileNames, buf.toString(), cntxt.getActivePart());
+		setClipboard(resources, fileNames, buf.toString(), cntxt
+			.getActivePart());
 		return null;
 	}
 
@@ -105,11 +108,9 @@ public class CopyResourceGlobalActionHandler
 		} catch (SWTError e) {
 			if (e.code != DND.ERROR_CANNOT_SET_CLIPBOARD)
 				throw e;
-			if (MessageDialog
-				.openQuestion(
-					getShell(part),
-					ResourceNavigatorMessages
-						.getString("CopyToClipboardProblemDialog.title"), ResourceNavigatorMessages.getString("CopyToClipboardProblemDialog.message"))) //$NON-NLS-1$ //$NON-NLS-2$
+			if (MessageDialog.openQuestion(getShell(part),
+				CommonUIActionIDEMessages.CopyToClipboardProblemDialog_title,
+				CommonUIActionIDEMessages.CopyToClipboardProblemDialog_message))
 				setClipboard(resources, fileNames, names, part);
 		}
 	}

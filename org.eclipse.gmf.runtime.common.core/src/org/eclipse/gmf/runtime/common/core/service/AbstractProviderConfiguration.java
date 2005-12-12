@@ -308,7 +308,7 @@ public class AbstractProviderConfiguration {
 						}
 					} else {
 						syntaxError = true;
-						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ 
 					}
 				}
 			} 
@@ -335,7 +335,7 @@ public class AbstractProviderConfiguration {
 						}
 					} else {
 						syntaxError = true;
-						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ 
 					}
 				}
 			}else
@@ -538,7 +538,7 @@ public class AbstractProviderConfiguration {
 		protected String parseName(String string) {
 			int index = string.indexOf('(');
 			if (index == -1)
-				throw new IllegalArgumentException(); //$NON-NLS-1$
+				throw new IllegalArgumentException(); 
 			name = string.substring(0, index).trim();
 			return string.substring(index + 1);
 		}
@@ -558,7 +558,7 @@ public class AbstractProviderConfiguration {
 			while (paramStr == null) {
 				index = string.indexOf(')', index + 1);
 				if (index == -1)
-					throw new IllegalArgumentException(); //$NON-NLS-1$
+					throw new IllegalArgumentException(); 
 				if (index == 0 || string.charAt(index - 1) != '\\')
 					paramStr = string.substring(0, index);
 			}
@@ -800,7 +800,7 @@ public class AbstractProviderConfiguration {
 							String value = p.substring(8, p.length());
 							parameterTypes[i] = Object.class;
 							parameterObjects[i] = value;
-						} else if (p.startsWith(contextParam)){// "param" //$NON-NLS-1$
+						} else if (p.startsWith(contextParam)){// "param" 
 							parameterTypes[i] = getParameterType(p);
 							parameterObjects[i] = "%Context"; //$NON-NLS-1$
 						}
@@ -841,12 +841,12 @@ public class AbstractProviderConfiguration {
 			int startIndex = parameter.indexOf("["); //$NON-NLS-1$
 			int endIndex = parameter.indexOf("]"); //$NON-NLS-1$
 			if(startIndex==-1 || endIndex==-1)
-				throw new IllegalArgumentException(); //$NON-NLS-1$
+				throw new IllegalArgumentException(); 
 			String parameterTypeString= parameter.substring(startIndex+1,endIndex).trim();
 			
 			endIndex = parameterTypeString.indexOf('/');
 			if(endIndex==-1 || endIndex==parameterTypeString.length()-1)
-				throw new IllegalArgumentException(); //$NON-NLS-1$
+				throw new IllegalArgumentException(); 
 			String parameterPluginID = parameterTypeString.substring(0,endIndex).trim();
 			String parameterClassName = parameterTypeString.substring(endIndex + 1);
 			Class clazz = loadClass(parameterClassName,parameterPluginID);
@@ -865,7 +865,7 @@ public class AbstractProviderConfiguration {
 		private String parsePluginID(String string) {
 			int index = string.indexOf('/');
 			if (index == -1)
-				throw new IllegalArgumentException(); //$NON-NLS-1$
+				throw new IllegalArgumentException(); 
 			pluginID = string.substring(0, index).trim();
 			return string.substring(index + 1);
 		}
@@ -880,10 +880,10 @@ public class AbstractProviderConfiguration {
 		private String parseClassName(String string) {
 			int index = string.indexOf('(');
 			if (index == -1)
-				throw new IllegalArgumentException(); //$NON-NLS-1$
+				throw new IllegalArgumentException(); 
 			index = string.lastIndexOf('.',index);
 			if (index == -1)
-				throw new IllegalArgumentException(); //$NON-NLS-1$
+				throw new IllegalArgumentException(); 
 			className = string.substring(0, index).trim();
 			return string.substring(index + 1);
 		}

@@ -31,7 +31,7 @@ public class ResourcePropertiesGlobalActionHandler
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 		PropertyDialogAction propertyAction = new PropertyDialogAction(
-			getShell(cntxt.getActivePart()), cntxt.getActivePart().getSite()
+			cntxt.getActivePart().getSite(), cntxt.getActivePart().getSite()
 				.getSelectionProvider());
 		propertyAction.selectionChanged(getResourceSelection((IStructuredSelection)cntxt.getSelection()));
 		propertyAction.run();

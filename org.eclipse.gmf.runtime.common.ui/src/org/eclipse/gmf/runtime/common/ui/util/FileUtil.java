@@ -116,7 +116,7 @@ public class FileUtil {
 		int matchingSegments = urlPath.matchingFirstSegments(modelPath);
 		int backSegments = modelPath.segmentCount() - matchingSegments - 1;
 		while (backSegments > 0) {
-			res.append(RELATIVE_STR); //$NON-NLS-1$
+			res.append(RELATIVE_STR); 
 			res.append(File.separatorChar);
 			backSegments--;
 		}

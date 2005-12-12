@@ -23,7 +23,9 @@ public final class CommonUIActionIDEMessages extends NLS {
 	public static String GlobalBookmarkAction_label;
 	public static String GlobalCloseProjectAction_label;
 	public static String GlobalOpenProjectAction_label;
-
+	public static String CopyToClipboardProblemDialog_title;
+	public static String CopyToClipboardProblemDialog_message;
+	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CommonUIActionIDEMessages.class);
 	}

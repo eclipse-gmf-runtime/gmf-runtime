@@ -315,7 +315,7 @@ public class FileChangeManager
 				CommonUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
 				"refreshResource", e); //$NON-NLS-1$
 			Log.error(CommonUIPlugin.getDefault(),
-				CommonUIStatusCodes.SERVICE_FAILURE, e.getMessage(), e); //$NON-NLS-1$
+				CommonUIStatusCodes.SERVICE_FAILURE, e.getMessage(), e); 
 		}
 
 	}

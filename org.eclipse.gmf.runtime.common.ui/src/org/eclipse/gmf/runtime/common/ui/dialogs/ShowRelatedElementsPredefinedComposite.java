@@ -139,7 +139,7 @@ public class ShowRelatedElementsPredefinedComposite
 		Display.getDefault().getActiveShell(),
 			CommonUIMessages.ShowRelatedElementsPredefinedComposite_SaveAs, 
 			CommonUIMessages.ShowRelatedElementsPredefinedComposite_ChooseName, 
-			StringStatics.BLANK, new IInputValidator() { //$NON-NLS-1$ //$NON-NLS-2$
+			StringStatics.BLANK, new IInputValidator() {  
 
 			public String isValid(String newText) {
 				if (containsSpecialCharacter(newText) || newText.length() == 0) {

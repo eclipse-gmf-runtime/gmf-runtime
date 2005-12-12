@@ -128,7 +128,8 @@ public class ShowRelatedElementsDialog
 
 	static {
 		try {
-			MAX_VIEWER_WIDTH = Integer.parseInt(CommonUIMessages.ShowRelatedElementsDialog_MAX_VIEWER_WIDTH); //$NON-NLS-1$
+			MAX_VIEWER_WIDTH = Integer
+				.parseInt(CommonUIMessages.ShowRelatedElementsDialog_MAX_VIEWER_WIDTH);
 		} catch (NumberFormatException e) {
 			Trace.catching(CommonUIPlugin.getDefault(),
 				CommonUIDebugOptions.EXCEPTIONS_CATCHING, CommonUIPlugin
@@ -143,8 +144,8 @@ public class ShowRelatedElementsDialog
 	}
 
 	/**
-	 * Constructor takes the parent shell and root SelectableElement to add
-	 * into the viewer.
+	 * Constructor takes the parent shell and root SelectableElement to add into
+	 * the viewer.
 	 * 
 	 * @param parentShell
 	 *            the parent Shell
@@ -157,8 +158,8 @@ public class ShowRelatedElementsDialog
 	}
 
 	/**
-	 * Constructor takes the parent shell and root SelectableElement to add
-	 * into the viewer.  It also sets a list of predefined queries.
+	 * Constructor takes the parent shell and root SelectableElement to add into
+	 * the viewer. It also sets a list of predefined queries.
 	 * 
 	 * @param parentShell
 	 *            the parent Shell
@@ -204,7 +205,7 @@ public class ShowRelatedElementsDialog
 	 */
 	protected int getPreferredViewerWidth() {
 		if (preferredViewerWidth == -1) {
-			//viewerWidth is based on the right side's control
+			// viewerWidth is based on the right side's control
 			preferredViewerWidth = SelectableElement
 				.calculateLongestStringLength(rootElement, getShell()) + 96;
 			if (preferredViewerWidth > MAX_VIEWER_WIDTH)
@@ -296,9 +297,10 @@ public class ShowRelatedElementsDialog
 
 		getShell().setText(CommonUIMessages.ShowRelatedElementsDialog_Title);
 
-		//set context sensitive help
+		// set context sensitive help
 		if (helpContextId != null)
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpContextId);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				helpContextId);
 
 		return parent;
 	}
@@ -324,7 +326,7 @@ public class ShowRelatedElementsDialog
 	 * Dialog is not closed if validation fails. Otherwise, the dialog closes.
 	 */
 	protected void okPressed() {
-		//do not continue if levels box is not ok
+		// do not continue if levels box is not ok
 		if (getShowRelatedElementsComposite() != null) {
 			if (getShowRelatedElementsComposite().validate(true) != null)
 				return;
@@ -342,7 +344,7 @@ public class ShowRelatedElementsDialog
 	 * Dialog is not closed if validation fails. Otherwise, the dialog closes.
 	 */
 	protected void cancelPressed() {
-		//dialog settings should be saved even when cancel pressed
+		// dialog settings should be saved even when cancel pressed
 		setReturnCode(Window.CANCEL);
 		close();
 	}
@@ -375,7 +377,7 @@ public class ShowRelatedElementsDialog
 	 * 
 	 * @return true if selected, false if not selected
 	 */
-	public boolean getConsumerToSelection() { //useOutgoingRelationships
+	public boolean getConsumerToSelection() { // useOutgoingRelationships
 		return (cachedExpansionType == ExpansionType.INCOMING.getOrdinal() || cachedExpansionType == ExpansionType.BOTH
 			.getOrdinal());
 	}
@@ -387,7 +389,7 @@ public class ShowRelatedElementsDialog
 	 * 
 	 * @return true if selected, false if not selected
 	 */
-	public boolean getSelectionToSupplier() { //useIncomingRelationships
+	public boolean getSelectionToSupplier() { // useIncomingRelationships
 		return (cachedExpansionType == ExpansionType.OUTGOING.getOrdinal() || cachedExpansionType == ExpansionType.BOTH
 			.getOrdinal());
 	}
@@ -468,7 +470,7 @@ public class ShowRelatedElementsDialog
 			detailsShown = false;
 			saveCachedValues();
 
-			//don't just hide it
+			// don't just hide it
 			showRelatedElementsComposite.dispose();
 
 			showRelatedElementsComposite = makeShowRelatedElementsCompositeInPlaceholder(
@@ -493,18 +495,18 @@ public class ShowRelatedElementsDialog
 	 * 
 	 * @param preset
 	 *            ShowRelatedElementsPreset containing new relationhips.
-	 *  
+	 * 
 	 */
 	public void updateRelationships(ShowRelatedElementsPreset preset) {
 		if (detailsShown) {
 			showRelatedElementsComposite.updateRelationships(preset);
 		} else {
-			//do not change settings if the preset is null,
-			//because that happens when there is a custom setting
+			// do not change settings if the preset is null,
+			// because that happens when there is a custom setting
 			if (preset == null)
 				return;
 
-			//just cache it
+			// just cache it
 			cachedExpandLevels = preset.getLevels();
 			cachedExpansionType = preset.getExpansionType();
 
@@ -551,7 +553,7 @@ public class ShowRelatedElementsDialog
 	 * 
 	 * For now, only take care of the detailsShown instance variable for
 	 * deciding whether or not we should show the details pane.
-	 *  
+	 * 
 	 */
 	protected void initDialogSettings() {
 		detailsShown = dialogSettings.getBoolean(DIALOG_SETTINGS_KEY);
@@ -562,7 +564,7 @@ public class ShowRelatedElementsDialog
 	 * 
 	 * For now, only take care of the detailsShown instance variable for
 	 * deciding whether or not we should show the details pane.
-	 *  
+	 * 
 	 */
 	protected void saveDialogSettings() {
 		dialogSettings.put(DIALOG_SETTINGS_KEY, detailsShown);

@@ -362,7 +362,7 @@ public class FontFieldEditor extends FieldEditor {
 	 */
 	private void updateFont(FontData font[]) {
 		FontData[] bestFont =
-			JFaceResources.getFontRegistry().bestDataArray(
+			JFaceResources.getFontRegistry().filterData(
 				font,
 				valueControl.getDisplay());
 

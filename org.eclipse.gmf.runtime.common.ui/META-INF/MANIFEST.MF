@@ -32,4 +32,4 @@ Require-Bundle: org.eclipse.ui.views;visibility:=reexport,
  org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.ui.editors;visibility:=reexport
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

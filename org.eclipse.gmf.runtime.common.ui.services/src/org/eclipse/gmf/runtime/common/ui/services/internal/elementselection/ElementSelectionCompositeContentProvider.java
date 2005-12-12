@@ -88,7 +88,7 @@ public class ElementSelectionCompositeContentProvider
 		 * Now filter the matching elements using the filter.
 		 */
 		List result = new ArrayList();
-		Pattern pattern = Pattern.compile(filter);//$NON-NLS-1$
+		Pattern pattern = Pattern.compile(filter);
 		for (Iterator iter = matchingObjects.iterator(); iter.hasNext();) {
 			AbstractMatchingObject element = (AbstractMatchingObject) iter
 				.next();

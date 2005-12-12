@@ -128,7 +128,7 @@ public class DelegatingDropTargetAdapter
 				CommonUIServicesDNDDebugOptions.DND)) {
 				String adapterChosen = getChosenAdapter() != null ? getChosenAdapter()
 					.getClass().getName()
-					: "No Adapter"; //$NON-NLS-1$ //$NON-NLS-2$
+					: "No Adapter"; //$NON-NLS-1$ 
 				Trace.trace(CommonUIServicesDNDPlugin.getDefault(),
 					CommonUIServicesDNDDebugOptions.DND,
 					"DragEnter::Event detail is " + event.detail); //$NON-NLS-1$
@@ -161,7 +161,7 @@ public class DelegatingDropTargetAdapter
 				CommonUIServicesDNDDebugOptions.DND)) {
 				String adapterChosen = getChosenAdapter() != null ? getChosenAdapter()
 					.getClass().getName()
-					: "No Adapter"; //$NON-NLS-1$ //$NON-NLS-2$
+					: "No Adapter"; //$NON-NLS-1$ 
 				Trace.trace(CommonUIServicesDNDPlugin.getDefault(),
 					CommonUIServicesDNDDebugOptions.DND,
 					"DragLeave::Event detail is " + event.detail); //$NON-NLS-1$
@@ -202,7 +202,7 @@ public class DelegatingDropTargetAdapter
 				CommonUIServicesDNDDebugOptions.DND)) {
 				String adapterChosen = getChosenAdapter() != null ? getChosenAdapter()
 					.getClass().getName()
-					: "No Adapter"; //$NON-NLS-1$ //$NON-NLS-2$
+					: "No Adapter"; //$NON-NLS-1$ 
 				Trace.trace(CommonUIServicesDNDPlugin.getDefault(),
 					CommonUIServicesDNDDebugOptions.DND,
 					"DragOperationChanged::Event detail is " + event.detail); //$NON-NLS-1$
@@ -249,7 +249,7 @@ public class DelegatingDropTargetAdapter
 				CommonUIServicesDNDDebugOptions.DND)) {
 				String adapterChosen = getChosenAdapter() != null ? getChosenAdapter()
 					.getClass().getName()
-					: "No Adapter"; //$NON-NLS-1$ //$NON-NLS-2$
+					: "No Adapter"; //$NON-NLS-1$ 
 				Trace.trace(CommonUIServicesDNDPlugin.getDefault(),
 					CommonUIServicesDNDDebugOptions.DND,
 					"DragOver::Event detail is " + event.detail); //$NON-NLS-1$
@@ -299,7 +299,7 @@ public class DelegatingDropTargetAdapter
 				CommonUIServicesDNDDebugOptions.DND)) {
 				String adapterChosen = getChosenAdapter() != null ? getChosenAdapter()
 					.getClass().getName()
-					: "No Adapter"; //$NON-NLS-1$ //$NON-NLS-2$
+					: "No Adapter"; //$NON-NLS-1$ 
 				Trace.trace(CommonUIServicesDNDPlugin.getDefault(),
 					CommonUIServicesDNDDebugOptions.DND,
 					"Drop::Event detail is " + event.detail); //$NON-NLS-1$
@@ -354,7 +354,7 @@ public class DelegatingDropTargetAdapter
 				CommonUIServicesDNDDebugOptions.DND)) {
 				String adapterChosen = getChosenAdapter() != null ? getChosenAdapter()
 					.getClass().getName()
-					: "No Adapter"; //$NON-NLS-1$ //$NON-NLS-2$
+					: "No Adapter"; //$NON-NLS-1$ 
 				Trace.trace(CommonUIServicesDNDPlugin.getDefault(),
 					CommonUIServicesDNDDebugOptions.DND,
 					"DropAccept::Event detail is " + event.detail); //$NON-NLS-1$

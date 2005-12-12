@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.common.ui.preferences;
 
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
+import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -18,9 +20,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 
 /**
  * This preference page provides general modeling preferences for the modeling
@@ -55,26 +54,34 @@ public class ModelingPreferencePage
 		addField(openLaterVersion = new RadioGroupFieldEditor(
 			IPreferenceConstants.OPEN_UNRECOGNIZED_VERSIONS,
 			CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_label,
-			3, //$NON-NLS-1$
+			3,
 			new String[][] {
-				{CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_always,
-					MessageDialogWithToggle.ALWAYS}, //$NON-NLS-1$
-				{CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_never, MessageDialogWithToggle.NEVER}, //$NON-NLS-1$
-				{CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_prompt,
-					MessageDialogWithToggle.PROMPT}}, //$NON-NLS-1$
-			getFieldEditorParent(), true));
+				{
+					CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_always,
+					MessageDialogWithToggle.ALWAYS},
+				{
+					CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_never,
+					MessageDialogWithToggle.NEVER},
+				{
+					CommonUIMessages.ModelingPreferencePage_OpenUnrecognizedContent_prompt,
+					MessageDialogWithToggle.PROMPT}}, getFieldEditorParent(),
+			true));
 
 		addField(saveLaterVersion = new RadioGroupFieldEditor(
 			IPreferenceConstants.SAVE_UNRECOGNIZED_VERSIONS,
 			CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_label,
-			3, //$NON-NLS-1$
+			3,
 			new String[][] {
-				{CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_always,
-					MessageDialogWithToggle.ALWAYS}, //$NON-NLS-1$
-				{CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_never, MessageDialogWithToggle.NEVER}, //$NON-NLS-1$
-				{CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_prompt,
-					MessageDialogWithToggle.PROMPT}}, //$NON-NLS-1$
-			getFieldEditorParent(), true));
+				{
+					CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_always,
+					MessageDialogWithToggle.ALWAYS},
+				{
+					CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_never,
+					MessageDialogWithToggle.NEVER},
+				{
+					CommonUIMessages.ModelingPreferencePage_SaveUnrecognizedContent_prompt,
+					MessageDialogWithToggle.PROMPT}}, getFieldEditorParent(),
+			true));
 
 		openLaterVersion.setPreferenceStore(getPreferenceStore());
 		saveLaterVersion.setPreferenceStore(getPreferenceStore());

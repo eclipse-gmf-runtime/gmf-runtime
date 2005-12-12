@@ -132,7 +132,7 @@
             <annotation>
                <documentation>
                   The fully qualified name of a class/interface that is assignable from or adaptable to the object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
-className&lt;(plugin id)&gt;?
+className(plugin id)
                </documentation>
             </annotation>
          </attribute>
@@ -160,14 +160,14 @@ The rules of evaluation are as follows:
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : &lt;func(&lt;param&lt;,param&gt;*&gt;?).&lt;&lt;func(&lt;param&lt;,param&gt;*&gt;?)&gt;*
+                  The name of the method followed by an optional paramter set between paranthesis &quot;()&quot;. The parameter set can contain any number of string parameters (literals). other param types are not supported. The method name could contain nested calling separated by &quot;.&quot; The general format for this method name is : func(param[,param]*)
                </documentation>
             </annotation>
          </attribute>
          <attribute name="value" type="string">
             <annotation>
                <documentation>
-                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value. The string representation of the value is expected to be &quot;one&quot; of those in the list. The syntax to use is the following: string[,string]*
 If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
                </documentation>
             </annotation>
@@ -175,7 +175,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
          <attribute name="notValue" type="string">
             <annotation>
                <documentation>
-                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: &lt;string&gt;&lt;,&lt;string&gt;&gt;*
+                  A comma-separated (&quot;,&quot;) list of string representations of the method return value that is not expected (the execulsion set). The string representation of the value is expected &quot;not&quot; to be &quot;one&quot; of those in the list. The syntax to use is the following: string[,string]*
 If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped by a forward slash (&quot;\&quot;). &quot;null&quot; is accepted as a string and it means (a null object).
                </documentation>
             </annotation>
@@ -197,7 +197,7 @@ If (&quot;,&quot;) is expected to be in one of the strings, it has to be escaped
             <annotation>
                <documentation>
                   The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
-className&lt;(plugin id)&gt;?
+className(plugin id)
                </documentation>
             </annotation>
          </attribute>
@@ -235,7 +235,7 @@ className&lt;(plugin id)&gt;?
             <annotation>
                <documentation>
                   The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
-className&lt;(plugin id)&gt;?
+className(plugin id)
                </documentation>
             </annotation>
          </attribute>
@@ -288,12 +288,11 @@ className&lt;(plugin id)&gt;?
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2003  IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
+         Copyright (c) 2003  IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 
