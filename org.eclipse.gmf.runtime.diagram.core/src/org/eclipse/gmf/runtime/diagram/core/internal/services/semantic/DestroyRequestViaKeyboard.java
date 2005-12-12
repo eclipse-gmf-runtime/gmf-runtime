@@ -14,8 +14,6 @@ package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
-
 
 /**
  * A request to destroy a model element originating from the Keyboard via the 'Ctrl+d' hot/shortcut key

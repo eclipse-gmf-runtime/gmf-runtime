@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
@@ -25,7 +24,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -38,24 +36,6 @@ import org.eclipse.ui.PlatformUI;
  * @author choang refactor to use ActionContribution item service
  */
 abstract public class CopyAction extends DiagramAction {
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), ISharedImages.IMG_TOOL_COPY); 
-
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor DISABLED_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), ISharedImages.IMG_TOOL_COPY);
-
-	/**
-	 * Imagedescriptor for the copy action
-	 */
-	private static final ImageDescriptor HOVER_COPY_IMAGE = CommonUIActionPlugin.imageDescriptorFromPlugin
-		(CommonUIActionPlugin.getPluginId(), ISharedImages.IMG_TOOL_COPY);
-
 	/**
 	 * JRE Version
 	 */

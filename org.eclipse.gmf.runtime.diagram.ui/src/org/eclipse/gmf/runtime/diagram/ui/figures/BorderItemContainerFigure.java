@@ -13,14 +13,12 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 import java.util.ListIterator;
 
-import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.Viewport;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;

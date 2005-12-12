@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.tools;
 
 
 import org.eclipse.draw2d.Cursors;
-import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.tools.ResizeTracker;

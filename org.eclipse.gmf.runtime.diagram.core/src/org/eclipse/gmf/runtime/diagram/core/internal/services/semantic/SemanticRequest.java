@@ -14,10 +14,6 @@ package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
-
-
-
 /**
  * The abstract semantic request
  * 

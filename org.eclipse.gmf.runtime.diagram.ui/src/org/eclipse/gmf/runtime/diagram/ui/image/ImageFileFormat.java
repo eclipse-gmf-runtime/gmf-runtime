@@ -32,7 +32,8 @@ public class ImageFileFormat extends EnumeratedType {
 
 	
 	private static final int IMAGE_SVG = 100;
-
+	static final long serialVersionUID = 1;
+	
 	/**
 	 * supported format Graphics Interchange Format (GIF).
 	 */

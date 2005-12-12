@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 
 /**

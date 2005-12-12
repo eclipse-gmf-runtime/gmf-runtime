@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
-
 /**
  * The request used to duplicate a list of semantic elements. A map that will
  * hold all the duplicated elements after the command is executed can be

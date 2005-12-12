@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * The interface for a semantic provider

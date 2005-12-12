@@ -53,10 +53,11 @@ public class AbstractViewProvider
 	private static String viewCreationMethodName = "createView"; //$NON-NLS-1$
 
 	private static String diagramCreationMethodName = "createDiagram"; //$NON-NLS-1$
-
+	
 	static protected class ClassToCreationMethodMap
 		extends HashMap {
-
+		static final long serialVersionUID = 1;
+		
 		public void addMethod(Class clazz, Method method) {
 			if (get(clazz) == null)
 				put(clazz, method);

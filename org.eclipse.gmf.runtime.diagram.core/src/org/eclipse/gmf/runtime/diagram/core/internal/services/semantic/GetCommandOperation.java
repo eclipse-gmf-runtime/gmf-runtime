@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * @author melaasar

@@ -20,7 +20,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * A provider configuration for the SemanticService. It helps in filtering out

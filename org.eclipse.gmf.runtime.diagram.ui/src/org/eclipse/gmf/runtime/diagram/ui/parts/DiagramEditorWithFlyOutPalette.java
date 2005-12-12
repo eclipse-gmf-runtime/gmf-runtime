@@ -16,7 +16,6 @@ import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.Tool;
-import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
 import org.eclipse.gef.ui.palette.PaletteContextMenuProvider;

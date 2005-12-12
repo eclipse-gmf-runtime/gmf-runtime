@@ -17,6 +17,8 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.notationpro
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.resources.editor.*
  */
 public class EmfNotationException extends Exception {
+	static final long serialVersionUID = 1;
+	
 	/**
 	 * @param cause
 	 * 

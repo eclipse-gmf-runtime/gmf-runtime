@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
-import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * A service for manipulating the semantic model by returning commands

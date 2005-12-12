@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator;
 
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
-import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 
 /**
  * Clients providing an extension to the DecoratorService need to create a

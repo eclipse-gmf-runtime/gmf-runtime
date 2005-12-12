@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator;
 
-import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider;
-
 /**
  * Clients providing an extension to the DecoratorService need to create  
  * a decorator class that implements the IDecorator interface.
