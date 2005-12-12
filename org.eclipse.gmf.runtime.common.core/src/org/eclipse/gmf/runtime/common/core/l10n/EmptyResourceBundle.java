@@ -27,6 +27,9 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
  * 
  * @author Natalia Balaba
  * @canBeSeenBy %partners
+ * @deprecated used by AbstractResourceManager which is deprecated.
+ * This class was deprecated October 28, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=109445
+ * This class will be removed December 19, 2005 before declaration of the M4 milestone.
  */
 public final class EmptyResourceBundle extends ResourceBundle {
 

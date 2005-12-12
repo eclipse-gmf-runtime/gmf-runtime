@@ -89,8 +89,9 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * @see java.util.ResourceBundle
  * @author Natalia Balaba
  * @canBeSeenBy %partners
- * @deprecated ResourceManager is to be replaced with a class that extends NLS.
- * @see org.eclipse.osgi.util.NLS
+ * @deprecated ResourceManager is to be replaced with a class that extends {@link org.eclipse.osgi.util.NLS}.
+ * This class was deprecated October 28, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=109445
+ * This class will be removed December 19, 2005 before declaration of the M4 milestone.
  */
 
 public abstract class AbstractResourceManager {
