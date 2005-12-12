@@ -11,8 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.action.ide.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main class for the plugin.
@@ -20,18 +19,18 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
  * @author Wayne Diu, wdiu
  */
 public class CommonUIActionIDEPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The shared instance.
 	 */
-	private static CommonUIActionIDEPlugin _instance;
+	private static CommonUIActionIDEPlugin INSTANCE;
 
 	/**
 	 * The constructor.
 	 */
 	public CommonUIActionIDEPlugin() {
-		_instance = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -40,16 +39,7 @@ public class CommonUIActionIDEPlugin
 	 * @return the shared instance of <code>CommonUIActionIDEPlugin</code>
 	 */
 	public static CommonUIActionIDEPlugin getDefault() {
-		return _instance;
-	}
-
-	/**
-	 * Returns null because no resource manager is associated with this plugin.
-	 * 
-	 * @return null
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
+		return INSTANCE;
 	}
 
 	/**

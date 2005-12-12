@@ -16,8 +16,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.Platform;
-
-import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.osgi.framework.BundleContext;
 
 /**
  * The common core plug-in.
@@ -25,29 +27,17 @@ import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
  * @author khussey
  */
 public class CommonCorePlugin
-	extends XToolsPlugin {
+	extends Plugin {
 
 	/**
 	 * Extension point name for the log listeners extension point.
 	 */
 	protected static final String LOG_LISTENER_EXT_P_NAME = "logListeners"; //$NON-NLS-1$
-	
+
 	/**
 	 * This plug-in's shared instance.
 	 */
 	private static CommonCorePlugin plugin;
-
-//	/**
-//	 * The navigator category registry for loading and retrieving the navigator
-//	 * category extensions in the workspace.
-//	 */
-//	private NavigatorCategoryRegistry navigatorCategoryRegistry;
-//
-//	/**
-//	 * The navigator content type registry for loading and retrieving the
-//	 * navigator content type extensions in the workspace.
-//	 */
-//	private NavigatorContentTypeRegistry navigatorContentTypeRegistry;
 
 	/**
 	 * Creates a new plug-in runtime object.
@@ -79,101 +69,35 @@ public class CommonCorePlugin
 	/**
 	 * Starts up this plug-in.
 	 */
-	protected void doStartup() {
+	public void start(BundleContext context)
+		throws Exception {
+		super.start(context);
 		configureLogListeners();
-		//configureIconProviders();
-		//configureViewerContentProviders();
-		//configureViewerSorterProviders();
-		//configureViewerFilterProviders();
 	}
-	
+
 	/**
 	 * Configure log listeners for log listeners extension.
 	 */
 	private void configureLogListeners() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = reg.getConfigurationElementsFor(getPluginId(), LOG_LISTENER_EXT_P_NAME);
+		IConfigurationElement[] elements = reg.getConfigurationElementsFor(
+			getPluginId(), LOG_LISTENER_EXT_P_NAME);
 		ILogListener listener = null;
-	
+
 		try {
 			for (int i = 0; i < elements.length; i++) {
-				listener = (ILogListener) elements[i].createExecutableExtension("class"); //$NON-NLS-1$
-				Platform.getLog(getDefault().getBundle()).addLogListener(listener);
+				listener = (ILogListener) elements[i]
+					.createExecutableExtension("class"); //$NON-NLS-1$
+				Platform.getLog(getDefault().getBundle()).addLogListener(
+					listener);
 			}
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Trace.catching(CommonCorePlugin.getDefault(),
+				CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"configureLogListeners", e); //$NON-NLS-1$
+			Log.error(CommonCorePlugin.getDefault(),
+				CommonCoreStatusCodes.SERVICE_FAILURE, e.getMessage());
 		}
 	}
-	
-//	/**
-//	 * Configures icon providers based on icon provider extension
-//	 */
-//	private void configureIconProviders() {
-//		IconService.getInstance().configureProviders(
-//			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-//				ICON_PROVIDERS_EXT_P_NAME).getConfigurationElements());
-//	}
 
-
-//	/**
-//	 * Configures content providers based on content provider extension
-//	 * configurations.
-//	 *  
-//	 */
-//	private void configureViewerContentProviders() {
-//		ViewerContentService.getInstance().configureProviders(
-//			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-//				ViewerContentService.getInstance().getExtensionPointId())
-//				.getConfigurationElements());
-//	}
-//
-//	/**
-//	 * Configures content providers based on sorter provider extension
-//	 * configurations.
-//	 *  
-//	 */
-//	private void configureViewerSorterProviders() {
-//		ViewerSorterService.getInstance().configureProviders(
-//			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-//				ViewerSorterService.getInstance().getExtensionPointId())
-//				.getConfigurationElements());
-//	}
-//
-//	/**
-//	 * Configures content providers based on sorter provider extension
-//	 * configurations.
-//	 *  
-//	 */
-//	private void configureViewerFilterProviders() {
-//		ViewerFilterService.getInstance().configureProviders(
-//			Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-//				ViewerFilterService.getInstance().getExtensionPointId())
-//				.getConfigurationElements());
-//	}
-//
-//	/**
-//	 * Returns the navigator category registry.
-//	 * 
-//	 * @return the navigator category registry.
-//	 */
-//	public NavigatorCategoryRegistry getNavigatorCategoryRegistry() {
-//		if (navigatorCategoryRegistry == null) {
-//			navigatorCategoryRegistry = new NavigatorCategoryRegistry();
-//			navigatorCategoryRegistry.load();
-//		}
-//		return navigatorCategoryRegistry;
-//	}
-//
-//	/**
-//	 * Returns the navigator content type registry.
-//	 * 
-//	 * @return the navigator content type registry.
-//	 */
-//	public NavigatorContentTypeRegistry getNavigatorContentTypeRegistry() {
-//		if (navigatorContentTypeRegistry == null) {
-//			navigatorContentTypeRegistry = new NavigatorContentTypeRegistry();
-//			navigatorContentTypeRegistry.load();
-//		}
-//		return navigatorContentTypeRegistry;
-//	}
 }

@@ -11,32 +11,31 @@
 
 package org.eclipse.gmf.runtime.emf.ui.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The MSL UI plug-in.
  * 
  * @author khussey
- *  
+ * 
  */
 public class MslUIPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * This plug-in's shared instance.
 	 */
-	private static MslUIPlugin plugin;
+	private static MslUIPlugin INSTANCE;
 
 	/**
 	 * Creates a new plug-in runtime object.
 	 */
 	public MslUIPlugin() {
 		super();
-
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -45,7 +44,7 @@ public class MslUIPlugin
 	 * @return This plug-in's shared instance.
 	 */
 	public static MslUIPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**
@@ -54,7 +53,7 @@ public class MslUIPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getSymbolicName();
+		return getDefault().getBundle().getSymbolicName();
 	}
 
 	/**

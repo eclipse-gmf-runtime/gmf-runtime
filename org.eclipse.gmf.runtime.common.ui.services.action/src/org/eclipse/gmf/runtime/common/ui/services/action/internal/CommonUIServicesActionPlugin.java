@@ -11,34 +11,24 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.action.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The Action plugin for Common UI Services.
  */
 public class CommonUIServicesActionPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The singleton instance.
 	 */
-	private static CommonUIServicesActionPlugin _instance;
+	private static CommonUIServicesActionPlugin INSTANCE;
 
 	/**
 	 * Creates a new plug-in runtime object.
 	 */
 	public CommonUIServicesActionPlugin() {
-		_instance = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
+		INSTANCE = this;
 	}
 
 	/**
@@ -47,7 +37,7 @@ public class CommonUIServicesActionPlugin
 	 * @return This plug-in's shared instance.
 	 */
 	public static CommonUIServicesActionPlugin getDefault() {
-		return _instance;
+		return INSTANCE;
 	}
 
 	/**
@@ -56,6 +46,6 @@ public class CommonUIServicesActionPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getSymbolicName();
+		return getDefault().getBundle().getSymbolicName();
 	}
 }

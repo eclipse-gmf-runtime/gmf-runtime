@@ -14,24 +14,23 @@ package org.eclipse.gmf.runtime.emf.ui.properties.internal;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
  */
 public class EMFPropertiesPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
-	//The shared instance.
-	private static EMFPropertiesPlugin plugin;
+	// The shared instance.
+	private static EMFPropertiesPlugin INSTANCE;
 
 	/**
 	 * Creates new plug-in runtime object.
 	 */
 	public EMFPropertiesPlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -40,7 +39,7 @@ public class EMFPropertiesPlugin
 	 * @return This plug-in's shared instance.
 	 */
 	public static EMFPropertiesPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**

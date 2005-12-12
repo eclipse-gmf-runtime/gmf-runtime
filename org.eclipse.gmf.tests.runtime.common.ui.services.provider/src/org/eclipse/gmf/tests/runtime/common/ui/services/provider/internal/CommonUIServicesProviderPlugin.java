@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
 
 /**
@@ -19,7 +20,7 @@ import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
  * @author Wayne Diu, wdiu
  */
 public class CommonUIServicesProviderPlugin
-	extends XToolsPlugin {
+	extends Plugin {
 
 	/**
 	 * This plug-in's shared instance.

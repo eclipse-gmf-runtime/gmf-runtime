@@ -11,8 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The Common UI Services plug-in.
@@ -20,12 +19,12 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
  * @author Wayne Diu, wdiu
  */
 public class CommonUIServicesPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * This plug-in's shared instance.
 	 */
-	private static CommonUIServicesPlugin plugin;
+	private static CommonUIServicesPlugin INSTANCE;
 
 	/**
 	 * Creates a new plug-in runtime object for the given plug-in descriptor.
@@ -33,7 +32,7 @@ public class CommonUIServicesPlugin
 	public CommonUIServicesPlugin() {
 		super();
 
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class CommonUIServicesPlugin
 	 * @return This plug-in's shared instance.
 	 */
 	public static CommonUIServicesPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**
@@ -51,18 +50,7 @@ public class CommonUIServicesPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getSymbolicName();
+		return getDefault().getBundle().getSymbolicName();
 	}
 
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		//TODO ResourceManager.getInstance();
-		return null;
-	}
 }

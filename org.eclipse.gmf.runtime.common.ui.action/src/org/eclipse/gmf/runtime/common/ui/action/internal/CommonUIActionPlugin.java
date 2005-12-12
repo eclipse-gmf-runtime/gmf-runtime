@@ -10,23 +10,24 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.common.ui.action.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class CommonUIActionPlugin extends XToolsUIPlugin {
+public class CommonUIActionPlugin
+	extends AbstractUIPlugin {
+
 	/**
 	 * The shared instance.
 	 */
-	private static CommonUIActionPlugin _instance;
-	
+	private static CommonUIActionPlugin INSTANCE;
+
 	/**
 	 * The constructor.
 	 */
 	public CommonUIActionPlugin() {
-		_instance = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -35,16 +36,9 @@ public class CommonUIActionPlugin extends XToolsUIPlugin {
 	 * @return a shared instance of <code>CommonUIActionPlugin</code>
 	 */
 	public static CommonUIActionPlugin getDefault() {
-		return _instance;
+		return INSTANCE;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
-	}
-	
 	/**
 	 * Retrieves the unique identifier of this plug-in.
 	 * 

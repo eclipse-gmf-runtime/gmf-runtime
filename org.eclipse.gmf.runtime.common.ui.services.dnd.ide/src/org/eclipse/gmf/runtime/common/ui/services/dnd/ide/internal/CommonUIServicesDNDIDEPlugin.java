@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.dnd.ide.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The common UI Services DND IDE plug-in.
@@ -19,20 +19,19 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
  * @author wdiu, Wayne Diu
  */
 public class CommonUIServicesDNDIDEPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * This plug-in's shared instance.
 	 */
-	private static CommonUIServicesDNDIDEPlugin plugin;
+	private static CommonUIServicesDNDIDEPlugin INSTANCE;
 
 	/**
 	 * Creates a new plug-in runtime object.
 	 */
 	public CommonUIServicesDNDIDEPlugin() {
 		super();
-
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -41,7 +40,7 @@ public class CommonUIServicesDNDIDEPlugin
 	 * @return This plug-in's shared instance.
 	 */
 	public static CommonUIServicesDNDIDEPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**

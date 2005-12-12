@@ -10,7 +10,7 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.emf.type.ui.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Plug-in class for the UI portion of the Model Element Type framework.
@@ -20,25 +20,25 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
  * @author ldamus
  */
 public class EMFTypeUIPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The singleton instance.
 	 */
-	private static EMFTypeUIPlugin plugin;
+	private static EMFTypeUIPlugin INSTANCE;
 
 	/**
 	 * Creates new plug-in runtime object.
 	 */
 	public EMFTypeUIPlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
 	 * Returns the shared instance.
 	 */
 	public static EMFTypeUIPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 }

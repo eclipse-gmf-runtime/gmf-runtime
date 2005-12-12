@@ -12,19 +12,18 @@
 package org.eclipse.gmf.runtime.common.ui.internal;
 
 import org.eclipse.gmf.runtime.common.core.command.CMValidator;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.util.UIModificationValidator;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The common UI plug-in.
  * 
  * @author khussey
- *  
+ * 
  */
 public class CommonUIPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * This plug-in's shared instance.
@@ -36,7 +35,6 @@ public class CommonUIPlugin
 	 */
 	public CommonUIPlugin() {
 		super();
-
 		plugin = this;
 	}
 
@@ -59,20 +57,11 @@ public class CommonUIPlugin
 	}
 
 	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#getResourceManager()
+	 * Override to initialize the modification validator.
 	 */
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
-	}
-	
-	/**
-	 * Override to initialize the modification validator. 
-	 */
-	protected void doStartup() {
+	public void start(BundleContext context)
+		throws Exception {
+		super.start(context);
 		CMValidator.setValidator(new UIModificationValidator());
 	}
 

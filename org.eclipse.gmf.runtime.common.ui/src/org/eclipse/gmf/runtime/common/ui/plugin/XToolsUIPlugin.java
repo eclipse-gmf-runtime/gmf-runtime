@@ -39,7 +39,9 @@ import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
  * The abstract parent of all XTools UI plug-ins.
  * 
  * @author nbalaba
- *  
+ * @deprecated extend {@link org.eclipse.ui.plugin.AbstractUIPlugin} directly 
+ * This class was deprecated December 12, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=120387
+ * This class will be removed January 17, 2005 before declaration of the M5 milestone.
  */
 public abstract class XToolsUIPlugin
 	extends AbstractUIPlugin
@@ -76,6 +78,9 @@ public abstract class XToolsUIPlugin
 	 * Retrieves a resource manager instance for this plug-in.
 	 * 
 	 * @return A resource manager instance for this plug-in.
+	 * @deprecated AbstractResourceManager should have been replaced by static class extending NLS
+	 * This method was deprecated October 28, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=109445
+	 * This method will be removed December 19, 2005 before declaration of the M4 milestone.
 	 */
 	public AbstractResourceManager getResourceManager() {
 		return null;
@@ -83,6 +88,7 @@ public abstract class XToolsUIPlugin
 
 	/**
 	 * Starts up this plug-in.
+	 * @deprecated replace with start(BundleContext context)
 	 */
 	protected void doStartup() {
 		/* empty method body */
@@ -90,6 +96,7 @@ public abstract class XToolsUIPlugin
 
 	/**
 	 * Shuts down this plug-in and discards all plug-in state.
+	 * @deprecated replace with stop(BundleContext context)
 	 */
 	protected void doShutdown() {
 		/* empty method body */
@@ -146,6 +153,7 @@ public abstract class XToolsUIPlugin
 	 * Get symbolic name for this plugin.
 	 * 
 	 * @return symbolic name as <code>String</code>
+	 * @deprecated replace with getBundle().getSymbolicName()
 	 */
 	public final String getSymbolicName() {
 		String name = null;
@@ -163,6 +171,7 @@ public abstract class XToolsUIPlugin
 	 * Get plugin name.
 	 * 
 	 * @return plugin name as <code>String</code>
+	 * @deprecated replace with getBundle().getSymbolicName()
 	 */
 	public final String getPluginName() {
 		Object name;

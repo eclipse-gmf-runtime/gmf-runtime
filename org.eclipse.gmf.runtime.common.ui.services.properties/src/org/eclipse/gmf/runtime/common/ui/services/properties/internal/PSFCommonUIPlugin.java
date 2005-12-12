@@ -11,24 +11,25 @@
 
 package org.eclipse.gmf.runtime.common.ui.services.properties.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
+ * 
  * @canBeSeenBy org.eclipse.gmf.runtime.common.ui.services.properties.*
  */
 public class PSFCommonUIPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
-	//The shared instance.
-	private static PSFCommonUIPlugin plugin;
+	// The shared instance.
+	private static PSFCommonUIPlugin INSTANCE;
 
 	/**
 	 * Constructor.
 	 */
 	public PSFCommonUIPlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -37,7 +38,7 @@ public class PSFCommonUIPlugin
 	 * @return This plug-in's shared instance.
 	 */
 	public static PSFCommonUIPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**
@@ -46,6 +47,6 @@ public class PSFCommonUIPlugin
 	 * @return A non-empty string which is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getDefault().getSymbolicName();
+		return getDefault().getBundle().getSymbolicName();
 	}
 }

@@ -33,6 +33,9 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * 
  * @author khussey
  * @canBeSeenBy %partners
+ * @deprecated extend {@link org.eclipse.core.runtime.Plugin} directly. 
+ * This class was deprecated December 12, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=120387
+ * This class will be removed January 17, 2005 before declaration of the M5 milestone.
  */
 public class XToolsPlugin
 	extends Plugin {
@@ -62,6 +65,8 @@ public class XToolsPlugin
 	 * @return A resource manager instance for this plug-in.
 	 * @deprecated ResourceManager is to be replaced with a class that extends NLS.
 	 * @see org.eclipse.osgi.util.NLS
+	 * This method was deprecated October 28, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=109445
+	 * This method will be removed December 19, 2005 before declaration of the M4 milestone.
 	 */
 	public AbstractResourceManager getResourceManager() {
 		return null;
@@ -69,6 +74,7 @@ public class XToolsPlugin
 
 	/**
 	 * Starts up this plug-in.
+	 * @deprecated replace with start(BundleContext context)
 	 */
 	protected void doStartup() {
 		/* empty method body */
@@ -76,6 +82,7 @@ public class XToolsPlugin
 
 	/**
 	 * Shuts down this plug-in and discards all plug-in state.
+	 * @deprecated replace with stop(BundleContext context)
 	 */
 	protected void doShutdown() {
 		/* empty method body */
@@ -110,6 +117,7 @@ public class XToolsPlugin
 	/**
 	 * Retrieves the symbolic name of the plug-in (reverse domain name naming convention).
 	 * @return the symbolic name of the plug-in.
+	 * @deprecated replace with getBundle().getSymbolicName()
 	 */
 	public final String getSymbolicName() {
 		String name = null;
@@ -126,6 +134,7 @@ public class XToolsPlugin
 	/**
 	 * Retrieves the name of the plug-in.
 	 * @return the name of the plug-in.
+	 * @deprecated replace with getBundle().getSymbolicName()
 	 */
 	public final String getPluginName() {
 		Object name;
