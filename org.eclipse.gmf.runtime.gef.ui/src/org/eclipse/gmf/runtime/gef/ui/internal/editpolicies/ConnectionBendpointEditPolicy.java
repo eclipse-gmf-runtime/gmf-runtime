@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.AbsoluteBendpoint;
-import org.eclipse.draw2d.AutomaticRouter;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointLocator;
 import org.eclipse.draw2d.Connection;
@@ -30,7 +29,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy;
-import org.eclipse.gef.handles.BendpointCreationHandle;
 import org.eclipse.gef.handles.BendpointMoveHandle;
 import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;

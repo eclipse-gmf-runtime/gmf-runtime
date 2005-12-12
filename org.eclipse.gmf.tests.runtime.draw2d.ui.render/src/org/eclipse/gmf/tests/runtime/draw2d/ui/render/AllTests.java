@@ -19,7 +19,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.SVGImageTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.SVGTranscoderTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {

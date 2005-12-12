@@ -32,7 +32,8 @@ public class LineSeg
 
 	private Point origin;
 	private Point terminus;
-
+	static final long serialVersionUID = 1;
+	
 	/**
 	 * Enumeration class for defining the keypoint along a line segment.  Can be one
 	 * of <code>ORIGIN</code>, <code>MIDPOINT</code> or <code>TERMINUS</code>.

@@ -20,7 +20,7 @@ public class TranscoderException extends Exception
 {
 	private Exception m_exception	= null;
 	private boolean recoverable = true;
-	
+	static final long serialVersionUID = 1;
 	/**
 	 * Creates a new TranscoderException with the specified message.
 	 * @param detailMessage

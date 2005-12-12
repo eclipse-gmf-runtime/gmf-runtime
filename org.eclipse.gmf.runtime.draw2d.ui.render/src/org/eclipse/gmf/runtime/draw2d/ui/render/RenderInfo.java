@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 /**
