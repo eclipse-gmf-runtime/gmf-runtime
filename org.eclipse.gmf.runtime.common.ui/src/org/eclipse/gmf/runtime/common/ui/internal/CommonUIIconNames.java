@@ -17,14 +17,14 @@ package org.eclipse.gmf.runtime.common.ui.internal;
 public interface CommonUIIconNames {
 	
 	/** Cleared checkbox icon */
-	public static final String IMG_CHECKBOX_CLEARED = "checkboxcleared.gif"; //$NON-NLS-1$
+	public static final String IMG_CHECKBOX_CLEARED = "icons/checkboxcleared.gif"; //$NON-NLS-1$
 	
 	/** Selected checkbox icon */
-	public static final String IMG_CHECKBOX_SELECTED = "checkboxselected.gif"; //$NON-NLS-1$
+	public static final String IMG_CHECKBOX_SELECTED = "icons/checkboxselected.gif"; //$NON-NLS-1$
 
 	/** Unselected checkbox icon */
-	public static final String IMG_CHECKBOX_UNSELECTED = "checkboxunselected.gif"; //$NON-NLS-1$
+	public static final String IMG_CHECKBOX_UNSELECTED = "icons/checkboxunselected.gif"; //$NON-NLS-1$
 
 	/** Greyed checkbox icon */
-	public static final String IMG_CHECKBOX_GREYED = "checkboxgreyed.gif"; //$NON-NLS-1$
+	public static final String IMG_CHECKBOX_GREYED = "icons/checkboxgreyed.gif"; //$NON-NLS-1$
 }

@@ -29,6 +29,9 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
  * 
  * @author Natalia Balaba
  * @canBeSeenBy %partners
+ * @deprecated used by AbstractUIResourceManager which is deprecated.
+ * This class was deprecated November 9, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=114587
+ * This class will be removed December 19, 2005 before declaration of the M4 milestone.
  */
 public final class EmptyFontRegistry extends FontRegistry {
 

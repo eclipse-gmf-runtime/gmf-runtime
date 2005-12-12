@@ -15,6 +15,7 @@ import java.util.Hashtable;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -24,7 +25,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIIconNames;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.common.ui.util.OverlayImageDescriptor;
 
 /**
@@ -56,11 +56,11 @@ public class SelectableElementsTriStateLabelProvider
 	public Image getImage(Object element) {
 		Image image = super.getImage(element);
 
-		//overlay if image is not null
+		// overlay if image is not null
 		if (image != null) {
 
 			SelectableElement selectableElement = (SelectableElement) element;
-			//super asserted on this
+			// super asserted on this
 
 			if ((selectableElement.getNumberOfChildren() > 0 && areAllChildrenOfType(
 				selectableElement, SelectedType.SELECTED))
@@ -72,15 +72,17 @@ public class SelectableElementsTriStateLabelProvider
 
 				if (overlayImage == null) {
 					try {
-						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_SELECTED));
+						overlayImage = overlayImage(image, AbstractUIPlugin
+							.imageDescriptorFromPlugin(CommonUIPlugin
+								.getPluginId(),
+								CommonUIIconNames.IMG_CHECKBOX_SELECTED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
 						Trace.catching(CommonUIPlugin.getDefault(),
 							CommonUIDebugOptions.EXCEPTIONS_CATCHING,
 							getClass(), "getImage", e); //$NON-NLS-1$
-						//don't just return the image,
-						//that will be more confusing in case of failure
+						// don't just return the image,
+						// that will be more confusing in case of failure
 						Log.error(CommonUIPlugin.getDefault(),
 							CommonUIStatusCodes.RESOURCE_FAILURE,
 							"Failed to load SELECTED_ICON overlay", e); //$NON-NLS-1$
@@ -100,12 +102,14 @@ public class SelectableElementsTriStateLabelProvider
 
 				if (overlayImage == null) {
 					try {
-						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_UNSELECTED));
+						overlayImage = overlayImage(image, AbstractUIPlugin
+							.imageDescriptorFromPlugin(CommonUIPlugin
+								.getPluginId(),
+								CommonUIIconNames.IMG_CHECKBOX_UNSELECTED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
-						//don't just return the image,
-						//that will be more confusing in case of failure
+						// don't just return the image,
+						// that will be more confusing in case of failure
 						Trace.catching(CommonUIPlugin.getDefault(),
 							CommonUIDebugOptions.EXCEPTIONS_CATCHING,
 							getClass(), "getImage", e); //$NON-NLS-1$
@@ -129,12 +133,14 @@ public class SelectableElementsTriStateLabelProvider
 
 				if (overlayImage == null) {
 					try {
-						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_CLEARED));
+						overlayImage = overlayImage(image, AbstractUIPlugin
+							.imageDescriptorFromPlugin(CommonUIPlugin
+								.getPluginId(),
+								CommonUIIconNames.IMG_CHECKBOX_CLEARED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
-						//don't just return the image,
-						//that will be more confusing in case of failure
+						// don't just return the image,
+						// that will be more confusing in case of failure
 						Trace.catching(CommonUIPlugin.getDefault(),
 							CommonUIDebugOptions.EXCEPTIONS_CATCHING,
 							getClass(), "getImage", e); //$NON-NLS-1$
@@ -147,7 +153,7 @@ public class SelectableElementsTriStateLabelProvider
 				return overlayImage;
 			}
 
-			else {//mix, since has children
+			else {// mix, since has children
 
 				assert (selectableElement.getNumberOfChildren() > 0);
 
@@ -156,12 +162,14 @@ public class SelectableElementsTriStateLabelProvider
 
 				if (overlayImage == null) {
 					try {
-						overlayImage = overlayImage(image, ResourceManager
-							.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_GREYED));
+						overlayImage = overlayImage(image, AbstractUIPlugin
+							.imageDescriptorFromPlugin(CommonUIPlugin
+								.getPluginId(),
+								CommonUIIconNames.IMG_CHECKBOX_GREYED));
 						imagePool.put(key, overlayImage);
 					} catch (Exception e) {
-						//don't just return the image,
-						//that will be more confusing in case of failure
+						// don't just return the image,
+						// that will be more confusing in case of failure
 						Trace.catching(CommonUIPlugin.getDefault(),
 							CommonUIDebugOptions.EXCEPTIONS_CATCHING,
 							getClass(), "getImage", e); //$NON-NLS-1$
@@ -241,12 +249,15 @@ public class SelectableElementsTriStateLabelProvider
 	 * Constructor that calls its superclass
 	 */
 	public SelectableElementsTriStateLabelProvider() {
-		//randomly select an image, assume they're all the same size
-		//if your icon size is > short, then that would be very strange
-		//change it to int if you think that it will be a problem
+		// randomly select an image, assume they're all the same size
+		// if your icon size is > short, then that would be very strange
+		// change it to int if you think that it will be a problem
 		super(
-			(ResourceManager.getInstance().getImageDescriptor(CommonUIIconNames.IMG_CHECKBOX_SELECTED) == null) ? (short) 0
-				: (short) (ResourceManager.getInstance().getImageDescriptor(
-					CommonUIIconNames.IMG_CHECKBOX_SELECTED).getImageData().width), (short) 0);
+			(AbstractUIPlugin.imageDescriptorFromPlugin(CommonUIPlugin
+				.getPluginId(), CommonUIIconNames.IMG_CHECKBOX_SELECTED) == null) ? (short) 0
+				: (short) (AbstractUIPlugin.imageDescriptorFromPlugin(
+					CommonUIPlugin.getPluginId(),
+					CommonUIIconNames.IMG_CHECKBOX_SELECTED).getImageData().width),
+			(short) 0);
 	}
 }

@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -44,7 +45,6 @@ import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementTreeS
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementsContentProvider;
 import org.eclipse.gmf.runtime.common.ui.internal.dialogs.SelectableElementsTriStateLabelProvider;
 import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
-import org.eclipse.gmf.runtime.common.ui.internal.l10n.ResourceManager;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 
 /**
@@ -108,12 +108,12 @@ public class ShowHideRelationshipsDialog
 
 	static {
 		try {
-			MAX_VIEWER_WIDTH = Integer.parseInt(
-				CommonUIMessages.ShowHideRelationshipsDialog_MAX_VIEWER_WIDTH);
-			MAX_VIEWER_HEIGHT = Integer.parseInt(
-				CommonUIMessages.ShowHideRelationshipsDialog_MAX_VIEWER_HEIGHT);
-			TEXT_AREA_HEIGHT = Integer.parseInt(
-				CommonUIMessages.ShowHideRelationshipsDialog_TEXT_AREA_HEIGHT);
+			MAX_VIEWER_WIDTH = Integer
+				.parseInt(CommonUIMessages.ShowHideRelationshipsDialog_MAX_VIEWER_WIDTH);
+			MAX_VIEWER_HEIGHT = Integer
+				.parseInt(CommonUIMessages.ShowHideRelationshipsDialog_MAX_VIEWER_HEIGHT);
+			TEXT_AREA_HEIGHT = Integer
+				.parseInt(CommonUIMessages.ShowHideRelationshipsDialog_TEXT_AREA_HEIGHT);
 		} catch (NumberFormatException e) {
 			/* already initialized with defaults */
 			Trace.catching(CommonUIPlugin.getDefault(),
@@ -163,12 +163,15 @@ public class ShowHideRelationshipsDialog
 		this.rootElement = aRootElement.makeCopy();
 
 		try {
-			selectedIcon = ResourceManager.getInstance().createImage(
-				CommonUIIconNames.IMG_CHECKBOX_SELECTED); //$NON-NLS-1$
-			unselectedIcon = ResourceManager.getInstance().createImage(
-				CommonUIIconNames.IMG_CHECKBOX_UNSELECTED); //$NON-NLS-1$
-			clearedIcon = ResourceManager.getInstance().createImage(
-				CommonUIIconNames.IMG_CHECKBOX_CLEARED); //$NON-NLS-1$
+			selectedIcon = AbstractUIPlugin.imageDescriptorFromPlugin(
+				CommonUIPlugin.getPluginId(),
+				CommonUIIconNames.IMG_CHECKBOX_SELECTED).createImage(); 
+			unselectedIcon = AbstractUIPlugin.imageDescriptorFromPlugin(
+				CommonUIPlugin.getPluginId(),
+				CommonUIIconNames.IMG_CHECKBOX_UNSELECTED).createImage(); 
+			clearedIcon = AbstractUIPlugin.imageDescriptorFromPlugin(
+				CommonUIPlugin.getPluginId(),
+				CommonUIIconNames.IMG_CHECKBOX_CLEARED).createImage(); 
 		} catch (Exception e) {
 			Trace.catching(CommonUIPlugin.getDefault(),
 				CommonUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
@@ -178,7 +181,7 @@ public class ShowHideRelationshipsDialog
 					CommonUIPlugin.getDefault(),
 					CommonUIStatusCodes.RESOURCE_FAILURE,
 					"Failed to get legend icons for Show Hide Relationships Dialog", e); //$NON-NLS-1$
-			//if even one is bad, then I'm not going to display the legend
+			// if even one is bad, then I'm not going to display the legend
 			disposeImages();
 			selectedIcon = null;
 			/*
@@ -222,12 +225,12 @@ public class ShowHideRelationshipsDialog
 
 		gridData.widthHint = viewerWidth;
 
-		//calculate the tree viewer height
+		// calculate the tree viewer height
 		int viewerHeight = SelectableElement
 			.calculateNumberOfChildren(rootElement);
 		GC gc = new GC(getTreeViewer().getTree());
 		Point size = gc.textExtent(StringStatics.BLANK);
-		//the buffer is 64
+		// the buffer is 64
 		viewerHeight = (viewerHeight * size.y) + 64;
 		gc.dispose();
 		if (viewerHeight > MAX_VIEWER_HEIGHT)
@@ -276,8 +279,7 @@ public class ShowHideRelationshipsDialog
 		right.setLayout(new GridLayout(3, false));
 		right.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		ok = new Button(right, SWT.PUSH);
-		ok.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Button_OK);
+		ok.setText(CommonUIMessages.ShowHideRelationshipsDialog_Button_OK);
 		ok.setLayoutData(WindowUtil.makeFixedButtonData(ok));
 		ok.addSelectionListener(new SelectionAdapter() {
 
@@ -286,8 +288,8 @@ public class ShowHideRelationshipsDialog
 			}
 		});
 		cancel = new Button(right, SWT.PUSH);
-		cancel.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Button_Cancel);
+		cancel
+			.setText(CommonUIMessages.ShowHideRelationshipsDialog_Button_Cancel);
 		cancel.setLayoutData(WindowUtil.makeFixedButtonData(cancel));
 		cancel.addSelectionListener(new SelectionAdapter() {
 
@@ -311,17 +313,17 @@ public class ShowHideRelationshipsDialog
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL);
 
-		//Assume the fonts in the tree control and in the composite are the
+		// Assume the fonts in the tree control and in the composite are the
 		// same.
-		//I calculate viewerWidth by doing
-		//text length in pixels + beginning + buffer
-		//text length in pixels + 32 + 64
+		// I calculate viewerWidth by doing
+		// text length in pixels + beginning + buffer
+		// text length in pixels + 32 + 64
 		viewerWidth = SelectableElement.calculateLongestStringLength(
 			rootElement, top) + 96;
 		if (viewerWidth > MAX_VIEWER_WIDTH)
 			viewerWidth = MAX_VIEWER_WIDTH;
 
-		//the width will be smaller by a little bit, but that's ok
+		// the width will be smaller by a little bit, but that's ok
 		gridData.widthHint = viewerWidth;
 		gridData.heightHint = TEXT_AREA_HEIGHT;
 
@@ -330,8 +332,7 @@ public class ShowHideRelationshipsDialog
 
 		Label label = new Label(top, SWT.WRAP);
 
-		label.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Description);
+		label.setText(CommonUIMessages.ShowHideRelationshipsDialog_Description);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 	}
@@ -361,8 +362,8 @@ public class ShowHideRelationshipsDialog
 		makeBlankBox(parent);
 
 		Label label = new Label(parent, SWT.NULL);
-		label.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Label_Legend);
+		label
+			.setText(CommonUIMessages.ShowHideRelationshipsDialog_Label_Legend);
 
 		Composite legendBox = new Composite(parent, SWT.BORDER);
 
@@ -382,33 +383,33 @@ public class ShowHideRelationshipsDialog
 			elements[i].setLayout(new GridLayout(2, false));
 		}
 
-		//1
+		// 1
 		label = new Label(elements[0], SWT.NULL);
 		label.setImage(selectedIcon);
 
 		label = new Label(elements[0], SWT.NULL);
-		label.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendShow);
+		label
+			.setText(CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendShow);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 
-		//2
+		// 2
 		label = new Label(elements[1], SWT.NULL);
 		label.setImage(unselectedIcon);
 
 		label = new Label(elements[1], SWT.NULL);
-		label.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendHide);
+		label
+			.setText(CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendHide);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 
-		//3
+		// 3
 		label = new Label(elements[2], SWT.NULL);
 		label.setImage(clearedIcon);
 
 		label = new Label(elements[2], SWT.NULL);
-		label.setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendLeave);
+		label
+			.setText(CommonUIMessages.ShowHideRelationshipsDialog_Label_LegendLeave);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
 			| GridData.FILL_VERTICAL));
 
@@ -424,7 +425,7 @@ public class ShowHideRelationshipsDialog
 	 */
 	protected Control createContents(Composite parent) {
 
-		//if you want a line of text at the top of the dialog
+		// if you want a line of text at the top of the dialog
 		createLineOfTextAtTop(parent);
 
 		Composite bottom = new Composite(parent, SWT.NULL);
@@ -450,7 +451,7 @@ public class ShowHideRelationshipsDialog
 
 		Tree tree = getTreeViewer().getTree();
 
-		//I just set the input to the root, so I make these asserts
+		// I just set the input to the root, so I make these asserts
 		TreeItem[] treeItems = tree.getItems();
 		assert null != treeItems : "treeItems cannot be null"; //$NON-NLS-1$
 		assert treeItems.length == 1 : "treeItems cannot be empty"; //$NON-NLS-1$
@@ -462,12 +463,12 @@ public class ShowHideRelationshipsDialog
 
 		viewer.refresh();
 
-		getShell().setText(
-			CommonUIMessages.ShowHideRelationshipsDialog_Title); 
+		getShell().setText(CommonUIMessages.ShowHideRelationshipsDialog_Title);
 
-		//set context sensitive help
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpContextId);
-		
+		// set context sensitive help
+		PlatformUI.getWorkbench().getHelpSystem()
+			.setHelp(parent, helpContextId);
+
 		return parent;
 
 	}

@@ -19,6 +19,12 @@ import java.util.MissingResourceException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
+import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
+import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
+import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -28,13 +34,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
-import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
-import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 
 /**
  * <p>
@@ -87,7 +86,8 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * 
  * @author wdiu, Wayne Diu, refactored from common.core's AbstractResourceManager
  * @canBeSeenBy %partners
- * 
+ * This class was deprecated November 9, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=114587
+ * This class will be removed December 19, 2005 before declaration of the M4 milestone.
  */
 public abstract class AbstractUIResourceManager extends AbstractResourceManager {
 
