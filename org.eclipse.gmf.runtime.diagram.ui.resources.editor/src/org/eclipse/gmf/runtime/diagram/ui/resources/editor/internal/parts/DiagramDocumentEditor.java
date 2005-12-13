@@ -325,6 +325,24 @@ public class DiagramDocumentEditor
 	}
 
 	/**
+	 * Hook method for setting the document provider for the given input.
+	 * This default implementation does nothing. Clients may
+	 * reimplement.
+	 *
+	 * @param input the input of this editor.
+	 * @since 3.0
+	 */
+	protected IDocumentProvider getDocumentProvider(IEditorInput input) {
+		IDocumentProvider provider = DocumentProviderRegistry.getDefault().getDocumentProvider(input, new IDocumentProviderSelector() {
+			public boolean select(String documentType) {
+				// Only checking of the interface name
+				return documentType.equals(IDiagramDocument.class.getName());
+			}
+		});
+		return provider;
+	}
+
+	/**
 	 * If there is no explicit document provider set, the implicit one is
 	 * re-initialized based on the given editor input.
 	 *

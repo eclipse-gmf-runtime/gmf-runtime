@@ -26,8 +26,8 @@ import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 public class EditorInputProxy
 	implements IEditorInput, MEditingDomainElement {
 
-	IEditorInput fProxied = null;
-	MEditingDomain editingDomain = null;
+	protected IEditorInput fProxied = null;
+	protected MEditingDomain editingDomain = null;
 	
 	/**
 	 * @param input IEditorInput

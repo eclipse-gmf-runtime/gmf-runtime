@@ -13,18 +13,16 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IStorageEditorInput;
-
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramModificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.PathEditorInputProxy;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.DiagramIOUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 
 
 /**
@@ -96,8 +94,8 @@ public class StorageDiagramDocumentProvider
 
 	protected boolean setDocumentContent(IDocument document, IEditorInput editorInput)
 		throws CoreException {
-		if(editorInput instanceof PathEditorInputProxy) {
-			PathEditorInputProxy diagramElement = (PathEditorInputProxy)editorInput;
+		if(editorInput instanceof StorageEditorInputProxy) {
+			StorageEditorInputProxy diagramElement = (StorageEditorInputProxy)editorInput;
 
 			((IDiagramDocument)document).setEditingDomain(diagramElement.getEditingDomain());
 			boolean docContentSet = super.setDocumentContent(document, editorInput);

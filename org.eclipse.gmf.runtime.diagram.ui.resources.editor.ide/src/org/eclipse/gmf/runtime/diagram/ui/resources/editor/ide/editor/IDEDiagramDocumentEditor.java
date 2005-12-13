@@ -98,13 +98,10 @@ public class IDEDiagramDocumentEditor
 			}
 		}
 		
-		
-		
 		boolean success= false;		
 		try {
-
 			provider.aboutToChange(newInput);
-			getDocumentProvider().saveDocument(progressMonitor, newInput, getDocumentProvider().getDocument(getEditorInput()), true);
+			getDocumentProvider(newInput).saveDocument(progressMonitor, newInput, getDocumentProvider().getDocument(getEditorInput()), true);
 			success= true;
 
 		} catch (CoreException x) {
