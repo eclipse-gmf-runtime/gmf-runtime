@@ -64,6 +64,8 @@ public class CommandManager {
 	public static class State
 		extends EnumeratedType {
 
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * The command manager is clearing its list of commands.
 		 */

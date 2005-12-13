@@ -39,6 +39,8 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  */
 public class ProviderPriority extends EnumeratedType {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * An internal unique identifier for provider priorities.
 	 */

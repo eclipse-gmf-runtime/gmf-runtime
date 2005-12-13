@@ -121,6 +121,9 @@ public class ServiceTest extends TestCase {
 
     public void test_provides() {
         ExecutionStrategy strategy = new ExecutionStrategy("Dummy") {//$NON-NLS-1$
+        	
+        	private static final long serialVersionUID = 1L;
+
     		public List execute(Service service, IOperation operation) {
                 return Collections.EMPTY_LIST;
             }

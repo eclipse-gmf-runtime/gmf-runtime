@@ -35,6 +35,8 @@ import java.util.EventObject;
 public class ProviderChangeEvent
 	extends EventObject {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs a new provider change event for the specified provider.
 	 * 

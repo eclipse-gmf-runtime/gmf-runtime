@@ -64,6 +64,9 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 	 */
 	public static final ExecutionStrategy FIRST =
 		new ExecutionStrategy("First") { //$NON-NLS-1$
+		
+		private static final long serialVersionUID = 1L;
+
 		public List execute(Service service, IOperation operation) {
 			for (int i = 0; i < PRIORITIES.length; ++i) {
 				List providers = service.getProviders(this, PRIORITIES[i], operation);
@@ -102,6 +105,9 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 	 */
 	public static final ExecutionStrategy LAST =
 		new ExecutionStrategy("Last") { //$NON-NLS-1$
+
+		private static final long serialVersionUID = 1L;
+
 		public List execute(Service service, IOperation operation) {
 			for (int i = PRIORITIES.length; --i >= 0;) {
 				List providers = service.getProviders(this, PRIORITIES[i], operation);
@@ -142,6 +148,9 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 	 */
 	public static final ExecutionStrategy FORWARD =
 		new ExecutionStrategy("Forward") { //$NON-NLS-1$
+		
+		private static final long serialVersionUID = 1L;
+
 		public List execute(Service service, IOperation operation) {
 			List results = new ArrayList();
 
@@ -164,6 +173,9 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 	 */
 	public static final ExecutionStrategy REVERSE =
 		new ExecutionStrategy("Reverse") { //$NON-NLS-1$
+		
+		private static final long serialVersionUID = 1L;
+
 		public List execute(Service service, IOperation operation) {
 			List results = new ArrayList();
 

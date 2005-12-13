@@ -25,6 +25,8 @@ import java.util.EventObject;
  */
 public class CommandManagerChangeEvent extends EventObject {
 
+	private static final long serialVersionUID = 1L;
+
     /**
      * The command that was executed, undone, or redone.
      */

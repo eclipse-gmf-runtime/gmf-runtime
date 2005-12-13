@@ -71,6 +71,8 @@ public abstract class AbstractDropTargetListener
 	public static class WorkIndicatorType
 		extends EnumeratedType {
 
+		private static final long serialVersionUID = 1L;
+
 		private static int nextOrdinal = 0;
 
 		/** None work indicator type. */

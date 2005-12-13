@@ -29,6 +29,8 @@ import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
 public class SelectedType
 	extends EnumeratedType {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * An internal unique identifier for selection of elements.
 	 */

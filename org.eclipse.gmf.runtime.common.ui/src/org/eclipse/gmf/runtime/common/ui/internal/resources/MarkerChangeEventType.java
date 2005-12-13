@@ -25,6 +25,8 @@ import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
 public class MarkerChangeEventType
 	extends EnumeratedType {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * An internal unique identifier for this enumerated type.
 	 */

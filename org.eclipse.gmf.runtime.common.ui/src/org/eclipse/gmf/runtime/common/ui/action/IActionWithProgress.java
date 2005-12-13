@@ -33,6 +33,8 @@ public interface IActionWithProgress {
     public class WorkIndicatorType extends EnumeratedType {
         private static int nextOrdinal = 0;
     
+    	private static final long serialVersionUID = 1L;
+
         /** No work indicator. */
         public static final WorkIndicatorType NONE = new WorkIndicatorType("None"); //$NON-NLS-1$
     

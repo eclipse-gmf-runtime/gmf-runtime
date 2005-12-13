@@ -34,6 +34,8 @@ public class ProviderPriorityTest extends TestCase {
 
     protected static class Fixture extends ProviderPriority {
 
+    	private static final long serialVersionUID = 1L;
+
         protected Fixture() {
             super("Fixture", 0); //$NON-NLS-1$
         }

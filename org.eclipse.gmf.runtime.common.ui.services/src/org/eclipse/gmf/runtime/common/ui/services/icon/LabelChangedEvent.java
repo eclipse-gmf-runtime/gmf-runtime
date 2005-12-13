@@ -22,6 +22,8 @@ import org.eclipse.gmf.runtime.common.core.service.ProviderChangeEvent;
 public class LabelChangedEvent
 	extends ProviderChangeEvent {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Indicates if the event is affecting the children of the affected elements
 	 */

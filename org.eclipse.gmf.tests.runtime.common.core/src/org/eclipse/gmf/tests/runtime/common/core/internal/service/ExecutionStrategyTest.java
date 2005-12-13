@@ -72,6 +72,8 @@ public class ExecutionStrategyTest extends TestCase {
 
     protected static class Fixture extends ExecutionStrategy {
 
+    	private static final long serialVersionUID = 1L;
+
         protected Fixture() {
             super("Fixture", 0); //$NON-NLS-1$
         }
