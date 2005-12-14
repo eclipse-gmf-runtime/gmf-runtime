@@ -84,6 +84,5 @@ public class LogicCreationTests extends AbstractTestBase {
 		
 		getLogicTestFixture().createShapeUsingTool(typeFlowContainer, createPt, getDiagramEditPart());
 	}
-	
 }
 

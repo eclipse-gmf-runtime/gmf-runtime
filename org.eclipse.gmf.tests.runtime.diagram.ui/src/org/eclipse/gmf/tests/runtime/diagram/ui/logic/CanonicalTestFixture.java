@@ -21,16 +21,20 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DestroyEObjectCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.tests.runtime.diagram.ui.editpolicy.CircuitCompartmentCanonicalEditPolicy;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -59,6 +63,16 @@ public class CanonicalTestFixture extends LogicTestFixture {
 		execute(spc);
 		assertEquals(
 				"Enexpected visible value", visible, ((Boolean) gep.getStructuralFeatureValue(NotationPackage.eINSTANCE.getView_Visible())).booleanValue());//$NON-NLS-1$
+	}
+	
+	/** Sets the <tt>IS_VISIBLE</tt> property value. */
+	public void setVisible(View view, boolean visible) {
+		SetPropertyCommand spc = new SetPropertyCommand(new EObjectAdapter(
+				view), Properties.ID_ISVISIBLE,
+				Properties.ID_ISVISIBLE, Boolean.valueOf(visible));
+		execute(spc);
+		assertEquals(
+				"Enexpected visible value", visible, ((Boolean) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getView_Visible())).booleanValue());//$NON-NLS-1$
 	}
 
 	/** Sets the <tt>ID_ISCANONICAL</tt> property value. */
@@ -125,5 +139,19 @@ public class CanonicalTestFixture extends LogicTestFixture {
 			assertNull(
 					"unexpected editor", page.findEditor(new FileEditorInput(getDiagramFile())));//$NON-NLS-1$
 		}
+	}
+	
+	public IGraphicalEditPart getCanonicalCompartment(int index) {
+		List circuits = getShapes( SemanticPackage.eINSTANCE.getCircuit());
+		assertTrue( "Failed to create circuit shapes.", !circuits.isEmpty() );//$NON-NLS-1$
+		
+		IGraphicalEditPart circuitEP = (IGraphicalEditPart)circuits.get(index);
+		IGraphicalEditPart logicCompartment = circuitEP.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+		assertTrue( "unexpected children", logicCompartment.getChildren().isEmpty() );//$NON-NLS-1$
+		
+		logicCompartment.installEditPolicy(EditPolicyRoles.CANONICAL_ROLE,
+			new CircuitCompartmentCanonicalEditPolicy());
+		
+		return logicCompartment;
 	}
 }

@@ -22,11 +22,13 @@ import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.SemanticCreateCommandTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramAssistantTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramEventBrokerTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramGraphicalViewerTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCanonicalTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCreationTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicDiagramTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicShapeTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTransientViewsTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.PaletteTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleLocatorTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleTest;
@@ -63,6 +65,8 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(SemanticCreateCommandTest.suite());
 		suite.addTest(PaletteTests.suite());
 		suite.addTest(GraphicalNodeEditPolicyTests.suite());
+		suite.addTest(DiagramEventBrokerTests.suite());
+		suite.addTest(LogicTransientViewsTests.suite());
 		return suite;
 	}
 
