@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,13 +21,16 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewRefactorHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeChildPropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
@@ -54,25 +58,51 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 			return null;
 		}
 
-		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE)) {
-
-			ChangePropertyValueRequest cpvr =
-				(ChangePropertyValueRequest) request;
+		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE) || 
+			request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)) {
 			EditPart ep = getHost();
-
 			if (ep instanceof IGraphicalEditPart) {
-				View view = (View)((IGraphicalEditPart) ep).getModel();
-
-				if (ViewUtil.isPropertySupported(view,cpvr.getPropertyID())) {
-					return new EtoolsProxyCommand(
-						new SetPropertyCommand(
-							new EObjectAdapter(view),
-							cpvr.getPropertyID(),
-							cpvr.getPropertyName(),
-							((ChangePropertyValueRequest) request).getValue()));
+				View view = ((IGraphicalEditPart) ep).getNotationView();
+				ChangePropertyValueRequest cpvr =
+					(ChangePropertyValueRequest) request;
+				if (request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)){
+					view = ViewUtil.getChildBySemanticHint(view,((ChangeChildPropertyValueRequest)cpvr).getNotationViewType());
+				}
+				if (view !=null){
+					if (ViewUtil.isPropertySupported(view,cpvr.getPropertyID())) {
+						return new EtoolsProxyCommand(
+							new SetPropertyCommand(
+								new EObjectAdapter(view),
+								cpvr.getPropertyID(),
+								cpvr.getPropertyName(),
+								((ChangePropertyValueRequest) request).getValue()));
+					}
 				}
 			}
-		} else if (
+		} else if (request.getType().equals(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS)){
+			EditPart ep = getHost();
+			if (ep instanceof TopGraphicEditPart) {
+				TopGraphicEditPart topEP = (TopGraphicEditPart) ep;
+				List resizableViews = topEP.getResizableNotationViews();
+				if (resizableViews.isEmpty())
+					return null;
+				ChangePropertyValueRequest cpvr =
+					(ChangePropertyValueRequest) request;
+				CompositeCommand compositeCommand = 
+					new CompositeCommand(cpvr.getPropertyName());
+				for (Iterator iter = resizableViews.iterator(); iter.hasNext();) {
+					View childView = (View) iter.next();
+					if (ViewUtil.isPropertySupported(childView,cpvr.getPropertyID())) {
+						compositeCommand.compose(new SetPropertyCommand(
+								new EObjectAdapter(childView),
+								cpvr.getPropertyID(),
+								cpvr.getPropertyName(),
+								((ChangePropertyValueRequest) request).getValue()));
+					}
+				}
+				return new EtoolsProxyCommand(compositeCommand);
+			}
+		}else if (
 			request instanceof ApplyAppearancePropertiesRequest
 				&& getHost() instanceof IGraphicalEditPart) {
 
@@ -112,9 +142,10 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 	 * @see org.eclipse.gef.EditPolicy#understandsRequest(Request)
 	 */
 	public boolean understandsRequest(Request request) {
-		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE))
+		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE)||
+			request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)||
+			request.getType().equals(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS))
 			return true;
-
 		if (request instanceof ApplyAppearancePropertiesRequest
 			&& getHost() instanceof IGraphicalEditPart)
 			return true;
@@ -128,7 +159,10 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 		if (!understandsRequest(request))
 			return null;
 
-		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE)) {
+		if (request.getType().equals(RequestConstants.REQ_PROPERTY_CHANGE) ||
+			request.getType().equals(RequestConstants.REQ_CHILD_PROPERTY_CHANGE)||
+			request.getType().equals(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS)) {
+			
 			return getHost();
 		} else if (request instanceof ApplyAppearancePropertiesRequest) {
 			return getHost();

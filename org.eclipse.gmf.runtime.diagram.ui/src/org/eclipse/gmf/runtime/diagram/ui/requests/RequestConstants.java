@@ -134,6 +134,15 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 * constants for duplicate  request
 	 */
 	public static final String REQ_DUPLICATE = "duplicate"; //$NON-NLS-1$
-
+	
+	/**
+	 * constant for child property change request
+	 */
+	public static final String REQ_CHILD_PROPERTY_CHANGE = "child_property_change"; //$NON-NLS-1$
+	
+	/**
+	 * constant for show all compartments  request
+	 */
+	public static final String REQ_SHOW_ALL_COMPARTMENTS = "show_all_compartments"; //$NON-NLS-1$
 }
  

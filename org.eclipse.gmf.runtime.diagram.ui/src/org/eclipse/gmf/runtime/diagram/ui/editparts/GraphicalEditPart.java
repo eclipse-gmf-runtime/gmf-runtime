@@ -61,6 +61,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PropertyHandlerEditPolicy
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DummyEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
@@ -195,6 +196,8 @@ public abstract class GraphicalEditPart
 			return;
 		Assert.isNotNull(filterId);
 		Assert.isNotNull(listener);
+		if (listenerFilters == null)
+			listenerFilters = new HashMap();
 		DiagramEventBroker.getInstance().addNotificationListener(element,feature,listener);
 		listenerFilters.put(filterId.intern(), new Object[] {element,feature, listener});
 	}
@@ -336,8 +339,29 @@ public abstract class GraphicalEditPart
 	public IGraphicalEditPart getChildBySemanticHint(String semanticHint) {
 		if (getModel()!=null){
 			View view = ViewUtil.getChildBySemanticHint((View)getModel(),semanticHint);
-			if (view != null)
-				return  (IGraphicalEditPart)getViewer().getEditPartRegistry().get(view);
+			if (view != null){
+				IGraphicalEditPart ep =   (IGraphicalEditPart)getViewer().getEditPartRegistry().get(view);
+				// TODO remove this code after the clients change there code to 
+				// be aware of the on demand editpart creation
+				if (ep == null){
+					// the ep had not been created yet, create a dummy one 
+					ep  =  new DummyEditPart(view);
+				}
+				return ep;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Method getChildViewBySemanticHint.
+	 * 
+	 * @param semanticHint
+	 * @return IGraphicalEditPart
+	 */
+	public View getChildViewBySemanticHint(String semanticHint) {
+		if (getModel()!=null){
+			return ViewUtil.getChildBySemanticHint((View)getModel(),semanticHint);
 		}
 		return null;
 	}
@@ -528,7 +552,7 @@ public abstract class GraphicalEditPart
 	protected List getModelChildren() {
 		Object model = getModel();
 		if(model!=null && model instanceof View){
-			return new ArrayList(((View)model).getChildren());
+			return new ArrayList(((View)model).getVisibleChildren());
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -837,10 +861,11 @@ public abstract class GraphicalEditPart
 	 * down the hierarchy
 	 */
 	protected void addNotationalListeners() {
-		if (hasNotationView())
+		if (hasNotationView()){
 			addListenerFilter("View", this,(View)getModel()); //$NON-NLS-1$
+		}
 	}
-
+	
 	/**
 	 * This method adds all listeners to the semantic world (IUMLElement...etc)
 	 * Override this method to add more semantic listeners down the hierarchy
@@ -867,7 +892,7 @@ public abstract class GraphicalEditPart
 	protected void removeSemanticListeners() {
 		removeListenerFilter("SemanticElement"); //$NON-NLS-1$
 	}
-
+	
 	/**
 	 * Return a Map of all the appearance property ids supported by the edit
 	 * part and its children.
@@ -1272,9 +1297,13 @@ public abstract class GraphicalEditPart
 		if (NotationPackage.eINSTANCE.getView_PersistedChildren().equals(event.getFeature())||
 				NotationPackage.eINSTANCE.getView_TransientChildren().equals(event.getFeature())) {
 			refreshChildren();
-		}
-		else if (NotationPackage.eINSTANCE.getView_Visible().equals(event.getFeature())) {
-			refreshVisibility();
+		}else if (NotationPackage.eINSTANCE.getView_Visible().equals(event.getFeature())) {
+			Object notifier = event.getNotifier();
+			if (notifier== getModel())
+				refreshVisibility();
+			else {
+				refreshChildren();
+			}
 		}
 		else if (NotationPackage.eINSTANCE.getView_Element().equals(event.getFeature())) {
 			handleMajorSemanticChange();

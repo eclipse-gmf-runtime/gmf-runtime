@@ -11,18 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.gef.EditPart;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -58,24 +52,6 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 	 */
 	protected Object getNewPropertyValue() {
 		return visibility;
-	}
-
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getTargetEdiParts(org.eclipse.gef.EditPart)
-	 */
-	protected List getTargetEdiParts(EditPart editpart) {
-		List targetEPs = null;
-		if (editpart instanceof TopGraphicEditPart) {
-			final TopGraphicEditPart topEP = (TopGraphicEditPart) editpart;
-			targetEPs = (List) MEditingDomainGetter.getMEditingDomain((View)editpart.getModel()).runAsRead(new MRunnable() {
-				public Object run() {
-					return topEP.getResizableCompartments();
-				}
-			});
-		}
-		return (targetEPs == null || targetEPs.isEmpty())
-			? Collections.EMPTY_LIST
-			: targetEPs;
 	}
 
 	/**
@@ -126,6 +102,15 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 		action.setImageDescriptor(imageDesc);
 		action.setHoverImageDescriptor(imageDesc);
 		return action;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
+	 */
+	protected Request createTargetRequest() {
+		Request request = super.createTargetRequest();
+		request.setType(RequestConstants.REQ_SHOW_ALL_COMPARTMENTS);
+		return request;
 	}
 
 }

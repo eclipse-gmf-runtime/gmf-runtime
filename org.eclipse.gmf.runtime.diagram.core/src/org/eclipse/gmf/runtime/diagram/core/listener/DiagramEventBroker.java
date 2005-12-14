@@ -414,9 +414,14 @@ public class DiagramEventBroker
 		if (c != null) {
 			listenerSet.addAll(c);
 		}
-
+		
 		EObject notifier = (EObject) event.getNotifier();
-		if (notifier instanceof EAnnotation) {
+		//the Visibility Event get fired to all interested listeners in the container
+		if (NotationPackage.eINSTANCE.getView_Visible().equals(event.getFeature()) &&
+			notifier.eContainer()!=null){
+				listenerSet.addAll(getNotificationListeners(notifier.eContainer()));
+		}
+		else if (notifier instanceof EAnnotation) {
 			addListenersOfNotifier(listenerSet, notifier.eContainer(), event);
 		} else if (!(notifier instanceof View)) {
 			while (notifier != null && !(notifier instanceof View)) {

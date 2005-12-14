@@ -24,7 +24,8 @@ import org.eclipse.gmf.runtime.notation.View;
 /**
  * @author melaasar
  *
- * The interface of all editparts with IView as a model
+ * The interface of all editparts with <code>EObject</code> as a model
+ * <B>Not indended to be implemented by clients</B>, Clients should extends GraphicalEditPart
  */
 public interface IGraphicalEditPart
 	extends org.eclipse.gef.GraphicalEditPart, IEditableEditPart {

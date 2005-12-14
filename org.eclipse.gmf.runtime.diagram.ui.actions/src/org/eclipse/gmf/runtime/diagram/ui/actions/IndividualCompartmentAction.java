@@ -11,13 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.gef.EditPart;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeChildPropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -54,24 +55,15 @@ public abstract class IndividualCompartmentAction
 		this.compartmentSemanticHint = compartmentSemanticHint;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getTargetEdiParts(org.eclipse.gef.EditPart)
-	 */
-	protected List getTargetEdiParts(EditPart editpart) {
-		EditPart targetEP = null;
-		if (editpart instanceof TopGraphicEditPart) {
-			final TopGraphicEditPart topEP = (TopGraphicEditPart) editpart;
-			targetEP = (EditPart) MEditingDomainGetter.getMEditingDomain((View)editpart.getModel()).runAsRead( new MRunnable() {
-				public Object run() { 
-					return topEP.getChildBySemanticHint(
-							getCompartmentSemanticHint());
-				}
-			});
-		}
-		return (targetEP == null)
-			? Collections.EMPTY_LIST
-			: Collections.singletonList(targetEP);
+	
+	protected Request createTargetRequest() {
+		return new ChangeChildPropertyValueRequest(
+			getPropertyName(),
+			getPropertyId(),
+			getCompartmentSemanticHint());
+		
 	}
+
 
 	/**
 	 * Returns the request compartment semantic hint
@@ -81,5 +73,28 @@ public abstract class IndividualCompartmentAction
 	protected String getCompartmentSemanticHint() {
 		return compartmentSemanticHint;
 	}
-
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.internal.PropertyChangeAction#getPropertyValue(org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart, java.lang.String)
+	 */
+	protected Object getPropertyValue(
+		final IGraphicalEditPart editPart,
+		final String thePropertyId) {
+		return MEditingDomainGetter.getMEditingDomain((View)editPart.getModel()).runAsRead( new MRunnable() {
+			public Object run() {
+				ENamedElement element = MetaModelUtil.getElement(thePropertyId);
+				if (element instanceof EStructuralFeature){
+					View view  = editPart.getNotationView();
+					if (view !=null){
+						View childView = ViewUtil.getChildBySemanticHint(view,getCompartmentSemanticHint());
+						if (childView!=null){
+							return ViewUtil.getStructuralFeatureValue(childView,(EStructuralFeature)element);
+						}
+					}
+				}
+				return null;
+			}
+		});
+	}
 }

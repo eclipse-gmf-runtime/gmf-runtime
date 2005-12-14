@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConstrainedToolbarLayoutE
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /*
@@ -55,8 +58,10 @@ public abstract class TopGraphicEditPart extends GraphicalEditPart implements IC
 	}
 
 	/**
+	 * Return a list of all resizable Compartment edit parts that exist in the
+	 * children list of this edit part
 	 * getResizableCompartments()
-	 * @return List
+	 * @return List of <code>EditPart<code>
 	 */
 	public List getResizableCompartments() {
 		List resizableChildren = new ArrayList();
@@ -69,6 +74,28 @@ public abstract class TopGraphicEditPart extends GraphicalEditPart implements IC
 	    }
 	    
 		return resizableChildren;
+	}
+	
+	/**
+	 * Gets all children, of this <code>EditPart<code>'s model, that had a 
+	 * <code>DrawerStyle</code> installed on them 
+	 * @return List of <code>View<code>s
+	 */
+	public List getResizableNotationViews() {
+		View view = getNotationView();
+		if (view!=null){
+			List resizableChildren = new ArrayList();
+			Iterator childrenIterator = view.getChildren().iterator();
+			while (childrenIterator.hasNext()){
+				View child = (View)childrenIterator.next();
+				if (child instanceof Node &&
+					((Node)child).getStyle(NotationPackage.eINSTANCE.getDrawerStyle())!=null){
+					resizableChildren.add(child);
+				}
+			}
+			return resizableChildren;
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 	/**
