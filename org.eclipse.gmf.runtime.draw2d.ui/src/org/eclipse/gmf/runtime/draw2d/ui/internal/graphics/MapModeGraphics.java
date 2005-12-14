@@ -16,7 +16,10 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -67,4 +70,11 @@ public class MapModeGraphics extends ScaledGraphics {
 	Point zoomTextPoint(int x, int y) {
 		return zoomRect(x, y, 0, 0).getTopLeft();
 	}
+	
+	Font zoomFont(Font f) {
+		if (f == null)
+			f = Display.getCurrent().getSystemFont();
+		return f;
+	}
+		
 }
