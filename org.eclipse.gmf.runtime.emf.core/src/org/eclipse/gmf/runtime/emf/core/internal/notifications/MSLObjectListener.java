@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
@@ -58,28 +57,6 @@ public class MSLObjectListener {
 
 			if (!domain.getResouceListener().resourceFinishedLoading(resource))
 				return;
-			// set resource dirty flag.
-			switch (eventType) {
-				case Notification.SET:
-				case Notification.UNSET:
-				case Notification.MOVE: {
-					if (!notification.isTouch() && !resource.isModified()) {
-						if (!isTransient(notifier, feature))
-							resource.setModified(true);
-					}
-					break;
-				}
-	
-				case Notification.ADD:
-				case Notification.REMOVE:
-				case Notification.ADD_MANY:
-				case Notification.REMOVE_MANY: {
-					if (!resource.isModified() && !isTransient(notifier, feature))
-						resource.setModified(true);
-					break;
-				}
-			}
-
 		}
 
 		Object newValue = notification.getNewValue();
@@ -125,42 +102,6 @@ public class MSLObjectListener {
 
 		// forward event to broker.
 		domain.getEventBroker().addEvent(notification);
-	}
-
-	/**
-	 * check if the feature or one of its containers is transient
-	 * 
-	 * @param notifier
-	 * @param feature
-	 * @param transientChange
-	 * @return
-	 */
-	private boolean isTransient(EObject notifier, Object feature) {
-		if (feature instanceof EStructuralFeature) {
-			if (((EStructuralFeature) feature).isTransient())
-				return true;
-			else
-				// calling isTransient could be a lengthy operation
-				return isTransient(notifier);
-		}
-		return false;
-	}
-
-	/**
-	 * Is object transient?
-	 */
-	private boolean isTransient(EObject eObject) {
-		EStructuralFeature containmentFeature = eObject.eContainmentFeature();
-		while (containmentFeature != null) {
-			if (containmentFeature.isTransient())
-				return true;
-			eObject = eObject.eContainer();
-			if (eObject != null)
-				containmentFeature = eObject.eContainmentFeature();
-			else
-				break;
-		}
-		return false;
 	}
 
 	/**
