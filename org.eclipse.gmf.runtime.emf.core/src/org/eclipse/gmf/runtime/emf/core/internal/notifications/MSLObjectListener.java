@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MResource;
@@ -56,7 +55,7 @@ public class MSLObjectListener {
 		Object feature = notification.getFeature();
 
 		if (resource != null) {
-			
+
 			if (!domain.getResouceListener().resourceFinishedLoading(resource))
 				return;
 			// set resource dirty flag.
@@ -64,13 +63,13 @@ public class MSLObjectListener {
 				case Notification.SET:
 				case Notification.UNSET:
 				case Notification.MOVE: {
-					if (!notification.isTouch() && !resource.isModified()){
-						if(!isTransient(notifier, feature))
+					if (!notification.isTouch() && !resource.isModified()) {
+						if (!isTransient(notifier, feature))
 							resource.setModified(true);
 					}
 					break;
 				}
-
+	
 				case Notification.ADD:
 				case Notification.REMOVE:
 				case Notification.ADD_MANY:
@@ -80,6 +79,7 @@ public class MSLObjectListener {
 					break;
 				}
 			}
+
 		}
 
 		Object newValue = notification.getNewValue();
@@ -104,9 +104,9 @@ public class MSLObjectListener {
 
 			if (newValue == oldValue)
 				return;
-			
+
 			// ignore idempotent changes to data types that we know to be
-			//    immutable in Java
+			// immutable in Java
 			if ((newValue instanceof Number) && newValue.equals(oldValue))
 				return;
 			if ((newValue instanceof String) && newValue.equals(oldValue))
@@ -121,7 +121,7 @@ public class MSLObjectListener {
 
 		// process references.
 		processReferences(notifier, eventType, newValue, oldValue, feature,
-			resource);
+				resource);
 
 		// forward event to broker.
 		domain.getEventBroker().addEvent(notification);
@@ -129,6 +129,7 @@ public class MSLObjectListener {
 
 	/**
 	 * check if the feature or one of its containers is transient
+	 * 
 	 * @param notifier
 	 * @param feature
 	 * @param transientChange
@@ -139,12 +140,12 @@ public class MSLObjectListener {
 			if (((EStructuralFeature) feature).isTransient())
 				return true;
 			else
-				// calling isTransient could be a lengthy operation  
+				// calling isTransient could be a lengthy operation
 				return isTransient(notifier);
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Is object transient?
 	 */
@@ -155,7 +156,7 @@ public class MSLObjectListener {
 				return true;
 			eObject = eObject.eContainer();
 			if (eObject != null)
-				containmentFeature =  eObject.eContainmentFeature();
+				containmentFeature = eObject.eContainmentFeature();
 			else
 				break;
 		}
@@ -177,12 +178,12 @@ public class MSLObjectListener {
 			List oldObjects = new ArrayList();
 
 			if ((eventType == Notification.SET)
-				|| (eventType == Notification.UNSET)
-				|| (eventType == Notification.ADD)
-				|| (eventType == Notification.REMOVE)
-				|| (eventType == Notification.ADD_MANY)
-				|| (eventType == Notification.REMOVE_MANY)
-				|| (eventType == Notification.RESOLVE)) {
+					|| (eventType == Notification.UNSET)
+					|| (eventType == Notification.ADD)
+					|| (eventType == Notification.REMOVE)
+					|| (eventType == Notification.ADD_MANY)
+					|| (eventType == Notification.REMOVE_MANY)
+					|| (eventType == Notification.RESOLVE)) {
 
 				if (newValue instanceof EObject)
 					newObjects.add(newValue);
@@ -219,10 +220,10 @@ public class MSLObjectListener {
 
 			if (resource instanceof MResource)
 				((MResource) resource).getHelper().registerReferences(domain,
-					notifier, reference, newObjects, oldObjects);
+						notifier, reference, newObjects, oldObjects);
 			else
 				MSLUtil.registerReferences(domain, notifier, reference,
-					newObjects, oldObjects);
+						newObjects, oldObjects);
 		}
 	}
 }

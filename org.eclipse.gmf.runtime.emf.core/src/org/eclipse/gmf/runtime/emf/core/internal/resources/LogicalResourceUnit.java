@@ -525,7 +525,7 @@ public class LogicalResourceUnit
 	public void setModified(boolean isModified) {
 		super.setModified(isModified);
 		
-		if (isModified) {
+		if (isModified && getLogicalResource().isTrackingModification()) {
 			// propagate modified state to the root
 			getLogicalResource().setModified(isModified);
 		}

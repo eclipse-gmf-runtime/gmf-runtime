@@ -11,8 +11,11 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.resources;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
@@ -26,13 +29,15 @@ public class MSLResource
 	extends LogicalResource {
 
 	private boolean useIDAttributes = false;
-
+	
 	/**
 	 * Constructor.
 	 */
 	public MSLResource(URI uri) {
 
 		super(MEditingDomain.INSTANCE.convertURI(uri));
+		
+		setTrackingModification(true);
 	}
 
 	protected LogicalResourceUnit createUnit(URI unitUri) {
@@ -97,5 +102,65 @@ public class MSLResource
 			return;
 
 		super.setURI(uri);
+	}
+	
+	/**
+	 * The inherited implementation creates an adapter that <em>always</em> sets
+	 * the modified state.  We prefer to check, first, whether the resource
+	 * is already modified so that we don't generate redundant notifications.
+	 * Moreover, we additionally set modified state only for changes that are
+	 * in non-transient features of objects contained (recursively) by
+	 * non-transient references.
+	 */
+	protected Adapter createModificationTrackingAdapter() {
+		return new ModificationTrackingAdapter() {
+			public void notifyChanged(Notification notification) {
+				if (!isModified() && !isTransient(
+						notification.getNotifier(), notification.getFeature())) {
+					
+					super.notifyChanged(notification);
+				}
+			}
+
+			/**
+			 * Check if the feature or one of the notifier's containers is
+			 * transient.
+			 * 
+			 * @param notifier a notifier
+			 * @param feature the feature that changed
+			 * 
+			 * @return <code>true</code> if the feature is transient or if the
+			 *    notifier or any of its ancestors is contained by a transient
+			 *    reference; <code>false</code>, otherwise
+			 */
+			private boolean isTransient(Object notifier, Object feature) {
+				if (feature instanceof EStructuralFeature) {
+					if (((EStructuralFeature) feature).isTransient())
+						return true;
+					else
+						// calling isTransient could be a lengthy operation.
+						//   It is safe to cast because the adapter is only
+						//   attached to EObjects, not to the resource
+						return isTransient((EObject) notifier);
+				}
+				return false;
+			}
+			
+			/**
+			 * Is object transient?
+			 */
+			private boolean isTransient(EObject eObject) {
+				EStructuralFeature containmentFeature = eObject.eContainmentFeature();
+				while (containmentFeature != null) {
+					if (containmentFeature.isTransient())
+						return true;
+					eObject = eObject.eContainer();
+					if (eObject != null)
+						containmentFeature =  eObject.eContainmentFeature();
+					else
+						break;
+				}
+				return false;
+			}};
 	}
 }
