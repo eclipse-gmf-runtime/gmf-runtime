@@ -104,9 +104,16 @@ public class MSLObjectListener {
 
 			if (newValue == oldValue)
 				return;
-			if ((newValue instanceof Number) && (newValue.equals(oldValue)))
+			
+			// ignore idempotent changes to data types that we know to be
+			//    immutable in Java
+			if ((newValue instanceof Number) && newValue.equals(oldValue))
 				return;
-			if ((newValue instanceof Character) && (newValue.equals(oldValue)))
+			if ((newValue instanceof String) && newValue.equals(oldValue))
+				return;
+			if ((newValue instanceof Boolean) && newValue.equals(oldValue))
+				return;
+			if ((newValue instanceof Character) && newValue.equals(oldValue))
 				return;
 		}
 		// populate undo stack.
