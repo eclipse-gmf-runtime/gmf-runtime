@@ -450,6 +450,11 @@ public class FileObserverFilterTest
 		public URI getRawLocationURI() {
 			return null;
 		}
+
+		public boolean isLinked(int options) {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 	protected class Folder
@@ -1125,6 +1130,11 @@ public class FileObserverFilterTest
 
 		public URI getRawLocationURI() {
 			return null;
+		}
+
+		public boolean isLinked(int options) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 

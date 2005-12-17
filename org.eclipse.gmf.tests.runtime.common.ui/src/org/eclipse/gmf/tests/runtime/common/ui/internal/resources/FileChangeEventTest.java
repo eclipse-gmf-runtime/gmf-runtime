@@ -486,6 +486,11 @@ public class FileChangeEventTest extends TestCase {
 		public URI getRawLocationURI() {
 			return null;
 		}
+
+		public boolean isLinked(int options) {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 	
 	public static void main(String[] args) {
