@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.diagram.ui.properties,
- org.eclipse.gmf.runtime.diagram.ui.properties.descriptors,
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.properties.descriptors,
  org.eclipse.gmf.runtime.diagram.ui.properties.filters,
  org.eclipse.gmf.runtime.diagram.ui.properties.internal,
  org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n,
