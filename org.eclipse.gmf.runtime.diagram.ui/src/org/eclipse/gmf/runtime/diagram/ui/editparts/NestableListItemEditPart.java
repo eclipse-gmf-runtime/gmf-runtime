@@ -86,6 +86,14 @@ public class NestableListItemEditPart
 		}
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart#getCompartmentName()
+	 */
+	public String getCompartmentName() {
+		return getLabel().getText();
+	}
+	
 	/**
 	 * Override to create a figure that will create a figure that contains a
 	 * text compartment and a pane to store the child figures of the text

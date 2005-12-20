@@ -14,10 +14,16 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 
 /**
- * Marker Interface to let us know that is a Compartment Edit Part that
+ * Interface to let us know that is a Compartment Edit Part that
  * is resizable
  * @author choang@ca.ibm.com
  */
 public interface IResizableCompartmentEditPart extends IGraphicalEditPart {
-	// market interface
+	
+	/**
+	 * @return the <code>String</code> that is the title header typically
+	 * displayed at the top of the compartment.  It is used to identity a meaningful
+	 * description of the contents of the compartment.
+	 */
+	public String getCompartmentName();
 }

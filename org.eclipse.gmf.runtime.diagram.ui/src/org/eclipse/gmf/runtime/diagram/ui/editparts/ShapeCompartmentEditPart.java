@@ -51,6 +51,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
@@ -392,7 +393,8 @@ public abstract class ShapeCompartmentEditPart
 	 * drawn. The factory hint property is used to set this compartments label.
 	 */
 	protected IFigure createFigure() {
-		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getTitleName());
+		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getCompartmentName(),
+			getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
 		scf.getContentPane().setLayoutManager(getLayoutManager());
 		scf.addLayoutListener(new AnimatableLayoutListener());
 
@@ -585,11 +587,6 @@ public abstract class ShapeCompartmentEditPart
 		};
 	}
 
-	/** Return null. */
-	protected String getTitleName() {
-		return null;
-	}
-
 	/** Adds the ability to adapt to {@link SnapToHelper}. */
 	public Object getAdapter(Class adapter) {
 
@@ -612,7 +609,7 @@ public abstract class ShapeCompartmentEditPart
 				return null;
 
 			if (snapStrategies.size() == 1)
-				return (SnapToHelper) snapStrategies.get(0);
+				return snapStrategies.get(0);
 
 			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
 			for (int i = 0; i < snapStrategies.size(); i++)

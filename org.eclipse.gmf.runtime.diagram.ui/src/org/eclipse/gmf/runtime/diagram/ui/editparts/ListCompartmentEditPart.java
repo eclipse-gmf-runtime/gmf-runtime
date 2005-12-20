@@ -300,13 +300,11 @@ public abstract class ListCompartmentEditPart
 		return Collections.EMPTY_LIST;
 	}
 
-	
-	/**
-	 * Returns the compartment name.
-	 * @return the compartment name.
-	 */	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart#getCompartmentName()
+	 */
 	public String getCompartmentName() {
-		return getTitleName();
+		return null;
 	}
 	
 	/**
@@ -321,11 +319,6 @@ public abstract class ListCompartmentEditPart
 			if (eObject.equals(e))
 				return view;
 		}
-		return null;
-	}
-
-	/** Return <tt>null</tt> */
-	protected String getTitleName() {
 		return null;
 	}
 	

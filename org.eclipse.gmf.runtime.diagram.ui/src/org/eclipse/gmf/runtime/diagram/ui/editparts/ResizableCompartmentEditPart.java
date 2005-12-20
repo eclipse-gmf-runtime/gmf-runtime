@@ -98,13 +98,25 @@ public abstract class ResizableCompartmentEditPart
 		}
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart#getCompartmentName()
+	 */
+	public String getCompartmentName() {
+		return new String();
+	}
+	
 	/**
 	 * Subclasses should override to return the compartment title
 	 * 
 	 * @return The compartment title
+	 * @deprecated use {@link ResizableCompartmentEditPart#getCompartmentName()} instead
+	 * 		deprecated on Dec 20th / 2005
+	 * 		will be removed on Jan 30th / 2006
 	 */
-	protected abstract String getTitleName();
-
+	protected String getTitleName() {
+		return getCompartmentName();
+	}
 		
 	/**
 	 * Handles the following properties: <BR>
@@ -189,11 +201,6 @@ public abstract class ResizableCompartmentEditPart
 			}
 		}
 	}
-	
-	
-	
-
-	
 	
 	/**
 	 * Sets the ratio of the resizable compartment
