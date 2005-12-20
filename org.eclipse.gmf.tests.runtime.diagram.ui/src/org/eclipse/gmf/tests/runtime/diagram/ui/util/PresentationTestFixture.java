@@ -18,9 +18,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
@@ -64,9 +64,8 @@ public class PresentationTestFixture
 					MEditingDomain.INSTANCE.runAsWrite(new MRunnable() {
 
 						public Object run() {
-							setDiagram(DiagramUtil
+							setDiagram(ViewService
 								.createDiagram(
-									null,
 									PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND,
 									getPreferencesHint()));
 							return null;

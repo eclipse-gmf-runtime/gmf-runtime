@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Interface defining the basic View Factory APIs; a view factory is responsible for creating a view.
  * The <code>createView</code> will be called by the <code>ViewService<code> (using reflection) during
  * a view creation process. 
- * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService
+ * @see org.eclipse.gmf.runtime.diagram.core.services.ViewService
  * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewOperation
  * @author mmostafa
  */

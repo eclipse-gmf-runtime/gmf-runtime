@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
@@ -58,7 +58,7 @@ public class DiagramCreator {
 					OperationUtil.runAsWrite(new MRunnable() {
 
 						public Object run() {
-							Diagram diagram = DiagramUtil.createDiagram(null, "logic", preferencesHint); //$NON-NLS-1$
+							Diagram diagram = ViewService.createDiagram("logic", preferencesHint); //$NON-NLS-1$
 							Assert.isNotNull(diagram);
 							dgmContainer[0] = diagram;
 							return null;
@@ -85,20 +85,20 @@ public class DiagramCreator {
 					OperationUtil.runAsWrite(new MRunnable() {
 
 						public Object run() {
-							Node note1 = DiagramUtil.createNode(diagram,
-								null, ViewType.NOTE, preferencesHint); //$NON-NLS-1$
+							Node note1 = ViewService.createNode(diagram,
+								ViewType.NOTE, preferencesHint);
 							Assert.isNotNull(note1, "Note1 creation failed"); //$NON-NLS-1$
 							Assert.isTrue(diagram.getChildren().get(0) == note1,
 								"Note1 is not inserted in diagram"); //$NON-NLS-1$
 
-							Node note2 = DiagramUtil.createNode(diagram,
-								null, ViewType.NOTE, preferencesHint); //$NON-NLS-1$
+							Node note2 = ViewService.createNode(diagram,
+								ViewType.NOTE, preferencesHint);
 							Assert.isNotNull(note2, "Note2 creation failed"); //$NON-NLS-1$
 							Assert.isTrue(diagram.getChildren().get(1) == note2,
 								"Note2 is not inserted in diagram"); //$NON-NLS-1$
 
-							Edge noteAttachment = DiagramUtil.createEdge(
-								note1, note2, null, ViewType.NOTEATTACHMENT, preferencesHint); //$NON-NLS-1$
+							Edge noteAttachment = ViewService.createEdge(
+								note1, note2, ViewType.NOTEATTACHMENT, preferencesHint);
 							Assert.isNotNull(noteAttachment,
 								"NoteAttachment creation failed"); //$NON-NLS-1$
 							Assert.isTrue(diagram.getEdges().get(0) == noteAttachment,

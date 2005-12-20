@@ -20,10 +20,10 @@ import junit.framework.TestCase;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
@@ -88,8 +88,8 @@ extends TestCase {
 						runAsWrite(new MRunnable() {
 
 						public Object run() {
-							Node note1 = DiagramUtil.createNode(diagram,
-								null, ViewType.NOTE, getPreferenceHint()); //$NON-NLS-1$
+							Node note1 = ViewService.createNode(diagram,
+								ViewType.NOTE, getPreferenceHint());
 							assertNotNull("Note1 creation failed", note1); //$NON-NLS-1$
 							list.add(note1);
 							return note1;

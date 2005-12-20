@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.core.internal.services.view;
+package org.eclipse.gmf.runtime.diagram.core.services;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,22 +17,31 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest;
+import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateChildViewOperation;
+import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateDiagramViewOperation;
+import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateEdgeViewOperation;
+import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateNodeViewOperation;
+import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewForKindOperation;
+import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewOperation;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider;
 import org.eclipse.gmf.runtime.diagram.core.providers.ViewProviderConfiguration;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- *
- * A service for manipulating the notational models
+ ** A service for manipulating the notational models
  * @author melaasar, mmostafa
  */
 final public class ViewService
@@ -138,7 +147,7 @@ final public class ViewService
 	}
 
 	/**
-	 * 
+	 * creates an instance
 	 */
 	protected ViewService() {
 		super(true, false);
@@ -259,13 +268,173 @@ final public class ViewService
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider#createDiagram(org.eclipse.core.runtime.IAdaptable, java.lang.String, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
+	 */
 	public final Diagram createDiagram(IAdaptable semanticAdapter,
 		String diagramKindType, PreferencesHint preferencesHint) {
 		Diagram view = (Diagram) execute(new CreateDiagramViewOperation(
 			semanticAdapter, diagramKindType, preferencesHint));
 		return view;
 	}
+	
+	/**
+	 * Creates a diagram with the given context and kind
+	 * 
+	 * @param context
+	 *            The diagram element context
+	 * @param kind
+	 *            diagram kind, check {@link ViewType} for predefined values
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Diagram</code>
+	 */
+	public static Diagram createDiagram(EObject context, String kind,
+			PreferencesHint preferencesHint) {
+		IAdaptable viewModel = (context != null) ? new EObjectAdapter(context)
+				: null;
+		String viewType = (kind != null) ? kind : ""; //$NON-NLS-1$
+		return ViewService.getInstance().createDiagram(viewModel, viewType,
+				preferencesHint);
+	}
+	
+	/**
+	 * Creates a diagram with a kind
+	 * @param kind
+	 *            diagram kind, check {@link ViewType} for predefined values
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Diagram</code>
+	 */
+	public static Diagram createDiagram(String kind,
+			PreferencesHint preferencesHint) {
+		return ViewService.createDiagram((EObject)null, kind,
+				preferencesHint);
+	}
+	
+	/**
+	 * Creates a node for a given eObject and with a given type and inserts it
+	 * into a given container
+	 * 
+	 * @param container
+	 *            The node view container
+	 * @param eObject
+	 *            The node view object context
+	 * @param type
+	 *            The node view type, check {@link ViewType} for predefined
+	 *            values
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Node</code>
+	 */
+	public static Node createNode(View container, EObject eObject, String type,
+			PreferencesHint preferencesHint) {
+		assert null != container : "The container is null";//$NON-NLS-1$
+		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject)
+				: null;
+		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
+		View view = ViewService.getInstance().createNode(viewModel, container,
+				viewType, ViewUtil.APPEND, preferencesHint);
+		return (view != null) ? (Node) view : null;
+	}
+	
+	/**
+	 * Creates a node for a with a given type and inserts it thegiven container
+	 * 
+	 * @param container
+	 *            The node view container
+	 * @param type
+	 *            The node view type, check {@link ViewType} for predefined
+	 *            values
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Node</code>
+	 */
+	public static Node createNode(View container,String type,
+			PreferencesHint preferencesHint) {
+		return ViewService.createNode(container,(EObject)null,type,
+			 preferencesHint);
+	}
+	
+	
+	/**
+	 * Creates an edge for a given eObject and with a given type and connects it
+	 * between a given source and a given target
+	 * 
+	 * @param source
+	 *            The edge's source view
+	 * @param target
+	 *            The edge's target view
+	 * @param eObject
+	 *            The edge view object context
+	 * @param type
+	 *            The edge view type, check {@link ViewType} for predefined
+	 *            values
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Edge</code>
+	 */
+	public static Edge createEdge(View source, View target, EObject eObject,
+			String type, PreferencesHint preferencesHint) {
+		assert source != null : "The source is null"; //$NON-NLS-1$
+		assert target != null : "The target is null"; //$NON-NLS-1$
+		assert source.getDiagram() !=null : "The source is detached"; //$NON-NLS-1$
+		assert target.getDiagram() !=null : "The target is detached"; //$NON-NLS-1$
+		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject)
+				: null;
+		Edge edge = (Edge)ViewService.getInstance().createEdge(viewModel,source.getDiagram(),
+				type, ViewUtil.APPEND, preferencesHint);
+		if (edge != null) {
+			edge.setSource(source);
+			edge.setTarget(target);
+		}
+		return edge;
+	}
+	
+	/**
+	 * Creates an edge with a given type and connects it between the given 
+	 * source and  target
+	 * 
+	 * @param source
+	 *            The edge's source view
+	 * @param target
+	 *            The edge's target view
+	 * @param type
+	 *            The edge view type, check {@link ViewType} for predefined
+	 *            values
+	 * @param preferencesHint
+	 *            The preference hint that is to be used to find the appropriate
+	 *            preference store from which to retrieve diagram preference
+	 *            values. The preference hint is mapped to a preference store in
+	 *            the preference registry <@link DiagramPreferencesRegistry>.
+	 * @return A newly created <code>Edge</code>
+	 */
+	public static Edge createEdge(View source, View target,
+			String type, PreferencesHint preferencesHint) {
+		return ViewService.createEdge(source,target,(EObject)null,
+			type,preferencesHint);
+	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider#createEdge(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
+	 */
 	public final Edge createEdge(IAdaptable semanticAdapter,
 		View containerView, String semanticHint, int index,
 		boolean persisted, PreferencesHint preferencesHint) {

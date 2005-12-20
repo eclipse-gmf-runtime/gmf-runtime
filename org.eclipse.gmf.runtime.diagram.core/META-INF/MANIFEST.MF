@@ -20,6 +20,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.core.commands,
  org.eclipse.gmf.runtime.diagram.core.listener,
  org.eclipse.gmf.runtime.diagram.core.preferences,
  org.eclipse.gmf.runtime.diagram.core.providers,
+ org.eclipse.gmf.runtime.diagram.core.services,
  org.eclipse.gmf.runtime.diagram.core.util
 Require-Bundle: org.eclipse.gmf.runtime.common.core,
  org.eclipse.emf.ecore,
@@ -27,4 +28,4 @@ Require-Bundle: org.eclipse.gmf.runtime.common.core,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.gmf.runtime.emf.core;visibility:=reexport,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

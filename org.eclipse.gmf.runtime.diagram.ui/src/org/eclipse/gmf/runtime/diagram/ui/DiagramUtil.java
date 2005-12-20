@@ -17,8 +17,9 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
@@ -57,6 +58,10 @@ public class DiagramUtil {
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 * @return A newly created <code>Diagram</code>
+	 * @deprecated if there is a context EObject use @link ViewService#createDiagram(EObject, String, PreferencesHint)
+	 *             if there is no context EObject use   @link ViewService#createDiagram(String, PreferencesHint)
+  	 *				deprectaion date:  Dec 19 , 05
+	 * 				removal date:	   Jan 31 , 06	     	
 	 */
 	public static Diagram createDiagram(EObject context, String kind,
 			PreferencesHint preferencesHint) {
@@ -84,6 +89,10 @@ public class DiagramUtil {
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 * @return A newly created <code>Node</code>
+	 * @deprecated if there is a context EObject use @link ViewService#createNode(View, EObject, String, PreferencesHint)
+	 *             if there is no context EObject use   @link ViewService#createNode(View, String, PreferencesHint)
+	 *          	deprectaion date:  Dec 19 , 05
+	 * 				removal date:	   Jan 31 , 06	     	
 	 */
 	public static Node createNode(View container, EObject eObject, String type,
 			PreferencesHint preferencesHint) {
@@ -113,6 +122,9 @@ public class DiagramUtil {
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 * @return A newly created <code>Edge</code>
+	 * @deprecated use {@link ViewService#createEdge(View, View, EObject, String, PreferencesHint)}
+	 *           		deprectaion date:  Dec 19 , 05
+	 * 					removal date:	   Jan 31 , 06	     	
 	 */
 	public static Edge createEdge(Diagram diagram, EObject eObject,
 			String type, PreferencesHint preferencesHint) {
@@ -144,20 +156,15 @@ public class DiagramUtil {
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 * @return A newly created <code>Edge</code>
+	 * @deprecated if there is a context EObject use @link ViewService#createEdge(View, View, EObject, String, PreferencesHint)
+	 *             if there is no context EObject use  @link ViewService#createEdge(View, View, String, PreferencesHint)
+	 *           		deprectaion date:  Dec 19 , 05
+	 * 					removal date:	   Jan 31 , 06	     	
 	 */
 	public static Edge createEdge(View source, View target, EObject eObject,
 			String type, PreferencesHint preferencesHint) {
-		Assert.isNotNull(source, "The source is null"); //$NON-NLS-1$
-		Assert.isNotNull(target, "The target is null"); //$NON-NLS-1$
-		Assert.isNotNull(source.getDiagram(), "The source is detached"); //$NON-NLS-1$
-		Assert.isNotNull(target.getDiagram(), "The target is detached"); //$NON-NLS-1$
-		Edge edge = createEdge(source.getDiagram(), eObject, type,
+		return  ViewService.createEdge(source,target, eObject, type,
 				preferencesHint);
-		if (edge != null) {
-			edge.setSource(source);
-			edge.setTarget(target);
-		}
-		return edge;
 	}
 
 	/**
@@ -165,6 +172,8 @@ public class DiagramUtil {
 	 * 
 	 * @param view
 	 *            The view to be destroyed
+ 	 *			deprectaion date:  Dec 19 , 05
+	 * 			removal date:	   Jan 31 , 06	     	
 	 */
 	public static void destroyView(View view) {
 		EObjectUtil.destroy(view);
@@ -297,7 +306,6 @@ public class DiagramUtil {
 					return de;
 			}
 		}
-
 		return null;
 	}
 

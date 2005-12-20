@@ -14,9 +14,8 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -54,8 +53,8 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
 
 			public Object run() {
-				Diagram diagram = DiagramUtil.createDiagram(null,
-					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+				Diagram diagram = ViewService.createDiagram(
+					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
 				diagramView = diagram;
 				return null;
 			}

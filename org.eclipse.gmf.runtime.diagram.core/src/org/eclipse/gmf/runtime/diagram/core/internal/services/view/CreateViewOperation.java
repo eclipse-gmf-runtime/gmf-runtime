@@ -138,7 +138,7 @@ public abstract class CreateViewOperation implements IOperation {
 	private String cachingKey;
 	private static final String dummyHiny = "dummy";  //$NON-NLS-1$
 
-	String getCachingKey() {
+	public String getCachingKey() {
 		if (cachingKey == null)
 			cachingKey = determineCachingKey();
 		return cachingKey;

@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * The <code>createDiagram</code> will be called by the <code>ViewService<code> (using reflection) during
  * a diagram creation process. The Diagram Factory implementation class is provided to the <code>ViewService</code>
  * by the <code>CreateDiagramViewOperation<code>
- * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.ViewService
+ * @see org.eclipse.gmf.runtime.diagram.core.services.ViewService
  * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateDiagramViewOperation
  * @author mmostafa
  */

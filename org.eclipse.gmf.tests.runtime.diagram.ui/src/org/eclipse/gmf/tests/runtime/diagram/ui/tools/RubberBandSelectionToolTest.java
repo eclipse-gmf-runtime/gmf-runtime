@@ -23,7 +23,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandSelectionTool;
@@ -242,8 +242,8 @@ public class RubberBandSelectionToolTest
 		AbstractTestBase.println("Creating diagram"); //$NON-NLS-1$
 		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
 			public Object run() {
-				diagramView = DiagramUtil.createDiagram(null,
-					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+				diagramView = ViewService.createDiagram(
+					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
 				return null;
 			}});
 		

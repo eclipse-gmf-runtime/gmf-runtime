@@ -38,7 +38,7 @@ public class CreateEdgeViewOperation extends CreateChildViewOperation {
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 */
-	protected CreateEdgeViewOperation(
+	public CreateEdgeViewOperation(
 		IAdaptable semanticAdapter,
 		View containerView,
 		String semanticHint,

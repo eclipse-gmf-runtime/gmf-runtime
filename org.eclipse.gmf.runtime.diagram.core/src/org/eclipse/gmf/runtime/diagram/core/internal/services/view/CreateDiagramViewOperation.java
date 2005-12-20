@@ -36,7 +36,7 @@ public class CreateDiagramViewOperation extends CreateViewOperation {
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 */
-	protected CreateDiagramViewOperation(IAdaptable semanticAdapter, String diagramKindType, PreferencesHint preferencesHint) {
+	public CreateDiagramViewOperation(IAdaptable semanticAdapter, String diagramKindType, PreferencesHint preferencesHint) {
 		super(semanticAdapter, diagramKindType, preferencesHint);
 	}
 
