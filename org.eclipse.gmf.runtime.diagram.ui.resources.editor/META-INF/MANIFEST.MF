@@ -25,4 +25,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.diagram.ui.properties,
  org.eclipse.gmf.runtime.notation.edit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

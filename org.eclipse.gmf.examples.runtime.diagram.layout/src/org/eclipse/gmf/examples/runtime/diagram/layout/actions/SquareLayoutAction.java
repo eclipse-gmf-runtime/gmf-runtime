@@ -17,20 +17,19 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.gmf.examples.runtime.diagram.layout.LayoutPlugin;
+import org.eclipse.gmf.examples.runtime.diagram.layout.provider.SquareLayoutProvider;
+import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutService;
+import org.eclipse.gmf.runtime.emf.core.ResourceSetModifyOperation;
+import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.gmf.examples.runtime.diagram.layout.LayoutPlugin;
-import org.eclipse.gmf.examples.runtime.diagram.layout.provider.SquareLayoutProvider;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUtil;
-import org.eclipse.gmf.runtime.emf.core.ResourceSetModifyOperation;
-import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.View;
 
 
 /**
@@ -93,7 +92,7 @@ public class SquareLayoutAction	implements IWorkbenchWindowActionDelegate {
 									
 									Diagram diag = ((View)object).getDiagram();
 									if (diag != null) {
-										DiagramUtil.layout(diag, SquareLayoutProvider.SQUARE_LAYOUT);
+										LayoutService.getInstance().layout(diag, SquareLayoutProvider.SQUARE_LAYOUT);
 			 						}
 								}
 							}

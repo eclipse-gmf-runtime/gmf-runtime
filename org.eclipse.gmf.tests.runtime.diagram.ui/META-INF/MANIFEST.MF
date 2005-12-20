@@ -38,4 +38,4 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.gmf.examples.runtime.diagram.logic,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
  org.eclipse.gmf.examples.runtime.diagram.logic.model
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
