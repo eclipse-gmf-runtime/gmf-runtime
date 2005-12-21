@@ -22,6 +22,9 @@
          <propertyCategory
                category="Appearance">
          </propertyCategory>
+          <propertyCategory
+               category="Grid">
+         </propertyCategory>
          <propertyCategory
                category="Advanced">
          </propertyCategory>
@@ -75,8 +78,33 @@
   </propertySections>
 </extension>
  
+ <extension 
+    	point="org.eclipse.wst.common.ui.properties.propertyTabs">
+      <propertyTabs 
+      		contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">   
+ 	     <propertyTab 
+ 	     label="%RulersAndGrid" 
+ 	     category="Grid" 
+ 	     id="property.tab.RulerGridPropertySection">           
+         </propertyTab>
+    </propertyTabs>
+ </extension>
  
-   
+ <extension point="org.eclipse.wst.common.ui.properties.propertySections">
+   <propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
+	 
+	 <propertySection tab="property.tab.RulerGridPropertySection" 
+	 	filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter" 
+	 	class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.grid.RulerGridPropertySection" 
+	 	id="property.section.DiagramColorsAndFontsPropertySection">
+	    <input type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart"/>
+	 </propertySection>     
+
+  </propertySections>
+</extension> 
+ 
+ 
+    
  <extension
          point="org.eclipse.wst.common.ui.properties.propertyTabs">
       <propertyTabs

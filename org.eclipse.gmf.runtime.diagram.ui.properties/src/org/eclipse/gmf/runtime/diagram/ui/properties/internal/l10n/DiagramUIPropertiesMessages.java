@@ -53,7 +53,29 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String AppearanceDetails_SmoothnessCommand_Text;
 	public static String ColorPalettePopup_default;
 	public static String ColorPalettePopup_custom;
-
+	public static String Grid_On_Label_Text;
+	public static String Grid_Level_Label_Text;
+	public static String Snap_To_Grid_Label_Text;
+	public static String Grid_Spacing_Label_Text;
+	public static String Ruler_On_Label_Text;
+	public static String Ruler_Units_Label_Text;
+	public static String Display_Group_Label_Text;
+	public static String Measurement_Group_Label_Text;
+	public static String Gridline_Group_Label_Text;
+	public static String Line_Color_Label_Text;
+	public static String Line_Style_Label_Text;
+	public static String Inches_Label_Text;
+	public static String Centimeters_Label_Text;
+	public static String Pixel_Label_Text;
+	public static String Solid_Label_Text;
+	public static String Dash_Label_Text;
+	public static String Dot_Label_Text;
+	public static String Dash_Dot_Label_Text;
+	public static String Dash_Dot_Dot_Label_Text;
+	public static String Restore_Defaults_Label_Text;	
+	
+	
+	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIPropertiesMessages.class);
 	}

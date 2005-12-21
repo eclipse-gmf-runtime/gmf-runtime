@@ -33,10 +33,16 @@ public interface WorkspaceViewerProperties {
 	public final String PAGEBREAK_X ="pagebreak.x";//$NON-NLS-1$	
 	public final String PAGEBREAK_Y ="pagebreak.y";//$NON-NLS-1$
 	
-	public final String VIEWGRID = "viewgrid"; //$NON-NLS-1$
-	public final String SNAPTOGRID = "snaptogrid"; //$NON-NLS-1$
+	// Ruler and grid properties
+	public final String VIEWGRID = "rulergrid.viewgrid"; //$NON-NLS-1$
+	public final String GRIDLINESTYLE = "rulergrid.gridlinestyle"; //$NON-NLS-1$
+	public final String GRIDLINECOLOR = "rulergrid.gridlinecolor"; //$NON-NLS-1$
+	public final String SNAPTOGRID = "rulergrid.snaptogrid"; //$NON-NLS-1$
+	public final String GRIDORDER = "rulergrid.gridlevel"; //$NON-NLS-1$
+	public final String GRIDSPACING = "rulergrid.gridspacing"; //$NON-NLS-1$
 
-	public final String VIEWRULERS = "viewrulers"; //$NON-NLS-1$
+	public final String RULERUNIT = "rulergrid.rulerunit"; //$NON-NLS-1$
+	public final String VIEWRULERS = "rulergrid.viewrulers"; //$NON-NLS-1$
 	
 	// PRINTING PREFERENCES
 	public static String PREF_USE_WORKSPACE_SETTINGS = "print.useWorkspaceSettings"; //$NON-NLS-1$

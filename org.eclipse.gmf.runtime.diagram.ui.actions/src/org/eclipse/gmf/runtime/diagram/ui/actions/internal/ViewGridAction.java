@@ -100,7 +100,7 @@ public class ViewGridAction extends DiagramAction {
 	/**
 	 * Override setWorkbenchPart to reset checked value based on
 	 * preference store of currently selected IDiagramWorkbenchPart.
-	 * Sets the current workbencgPart
+	 * Sets the current workbenchPart
 	 * 
 	 * @param workbenchPart
 	 *            The current workbenchPart

@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
@@ -31,6 +32,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.GridLayerEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ZoomableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
@@ -40,6 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -47,6 +50,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -58,7 +63,7 @@ import org.eclipse.swt.widgets.Display;
 public class DiagramRootEditPart
 	extends ScalableFreeformRootEditPart
 	implements ZoomableEditPart, IDiagramPreferenceSupport {
-
+	
 	/**
 	 * GEF does not scale the FEEDBACK_LAYER but we do.
 	 */
@@ -112,6 +117,8 @@ public class DiagramRootEditPart
 	 * the {@link DiagramPreferencesRegistry}.
 	 */
 	private PreferencesHint preferencesHint = PreferencesHint.USE_DEFAULTS;
+	private int printableLayerIndex;
+	private GridLayer gridLayer;
 	
 	/**
 	 * Initializes the preferenceStore property change
@@ -162,17 +169,33 @@ public class DiagramRootEditPart
         return layeredPane;        
     }
 
+    protected void moveGridLayer(boolean inFront) {
+    	if (layers.getChildren().indexOf(gridLayer) > printableLayerIndex && (! inFront)) {    	
+    		layers.remove(gridLayer);
+    		layers.add(gridLayer,GRID_LAYER, printableLayerIndex);
+    	} else if (layers.getChildren().indexOf(gridLayer) <= printableLayerIndex && inFront) {
+    		layers.remove(gridLayer);
+    		layers.add(gridLayer,GRID_LAYER, printableLayerIndex+1);
+    	}
+    }
+    
 	/**
     * Creates and returns the scalable layers of this EditPart
     * 
     * @return ScalableFreeformLayeredPane Pane that contains the scalable layers
     */
     protected ScalableFreeformLayeredPane createScaledLayers() {
-        layers = createScalableFreeformLayeredPane();
+    	
+    	layers = createScalableFreeformLayeredPane();
 
-        layers.add(createGridLayer(), GRID_LAYER);
         layers.add(new FreeformLayer(), PAGE_BREAKS_LAYER);
+        printableLayerIndex = layers.getChildren().size();
         layers.add(getPrintableLayers(), PRINTABLE_LAYERS);
+                
+        gridLayer = createGridLayer();
+        
+        layers.add(gridLayer, GRID_LAYER);
+        
         layers.add(new FreeformLayer(), DECORATION_UNPRINTABLE_LAYER);
         return layers;
     }
@@ -247,7 +270,8 @@ public class DiagramRootEditPart
      * @return PreferenceStore the workspace viewer preference store
      */
     protected IPreferenceStore getWorkspaceViewerPreferences() {
-		return ((DiagramGraphicalViewer) getViewer())
+		if (getViewer() == null) return null;
+    	return ((DiagramGraphicalViewer) getViewer())
 			.getWorkspaceViewerPreferenceStore();
 	}
 
@@ -258,8 +282,40 @@ public class DiagramRootEditPart
 	 * @return grid spacing value.
 	 */
 	public double getGridSpacing() {
-		IPreferenceStore pluginStore = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
-		return pluginStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING);
+		
+		// Check the workspace properties
+		double gridSpacing = getWorkspaceViewerPreferences().getDouble(WorkspaceViewerProperties.GRIDSPACING);
+		
+		// If the workspace property is not set then get the global preference value
+		if (gridSpacing == 0) {
+			IPreferenceStore pluginStore = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
+			gridSpacing = pluginStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING);
+		}
+		return gridSpacing;
+	}
+
+	/**
+	 * Sets the grid line style.  
+	 * @param color 
+	 * 
+	 * @param style
+	 */
+	public void setGridStyle(int style) {
+		if (gridLayer instanceof GridLayerEx) {
+			((GridLayerEx) gridLayer).setLineStyle(style);
+		}
+		gridLayer.repaint();
+	}
+
+	
+	/**
+	 * Sets the grid line color.  
+	 * @param color 
+	 * 
+	 * @param gridSpacing
+	 */
+	public void setGridColor(Integer rgbValue) {
+		gridLayer.setForegroundColor(FigureUtilities.integerToColor(rgbValue));
 	}
 
 	/**
@@ -270,16 +326,14 @@ public class DiagramRootEditPart
 	 */
 	public void setGridSpacing(double gridSpacing) {
 		
-		// Get the Ruler Units from the Plug-in Preference Store
-		IPreferenceStore preferenceStore = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
-		int rulerUnits = preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS);
-
+		int rulerUnits = getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT);
+		
 		// Get the Displays DPIs
 		double dotsPerInch = Display.getDefault().getDPI().x;
 		int spacingInPixels = 0;
 
 		// Evaluate the Grid Spacing based on the ruler units
-		switch( rulerUnits ) {
+		switch( rulerUnits) {
 			case RulerProvider.UNIT_INCHES:
 				spacingInPixels = (int)Math.round(dotsPerInch * gridSpacing);
 				break;
@@ -360,22 +414,24 @@ public class DiagramRootEditPart
 		} else if (isPageSizeChange(event.getProperty())) {
 			getPageBreakEditPart().calculatePageBreakFigureBounds(false);
 			refreshPageBreaks();			
-		} else if (WorkspaceViewerProperties.VIEWGRID.equals(event.getProperty())) {
-			
+		} else if (WorkspaceViewerProperties.VIEWGRID.equals(event.getProperty())) {		
 			// Set the state of the Grid Enabled Property
-			getViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
-				event.getNewValue());
-		} else if (WorkspaceViewerProperties.SNAPTOGRID.equals(event.getProperty())) {
-			
+			getViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, event.getNewValue());
+		} else if (WorkspaceViewerProperties.SNAPTOGRID.equals(event.getProperty())) {			
 			// Set the state of the Snap to Grid Property
-			getViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
-					event.getNewValue());
-		} else if (WorkspaceViewerProperties.VIEWRULERS.equals(event.getProperty())) {
-			
+			getViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, event.getNewValue());
+		} else if (WorkspaceViewerProperties.GRIDORDER.equals(event.getProperty())) {
+			// Set the grid level
+			moveGridLayer(((Boolean) event.getNewValue()).booleanValue());
+		} else if (WorkspaceViewerProperties.GRIDSPACING.equals(event.getProperty())) {
+			// Set the grid spacing			
+			Double spacing = (Double) event.getNewValue();
+			setGridSpacing(spacing.doubleValue());
+		} else if (WorkspaceViewerProperties.VIEWRULERS.equals(event.getProperty())) {			
 			// Set the state of the Ruler Enabled Property
 			getViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
 				event.getNewValue()); 
-		} else if (IPreferenceConstants.PREF_RULER_UNITS.equals(event.getProperty())) { 
+		} else if (WorkspaceViewerProperties.RULERUNIT.equals(event.getProperty())) { 
 			Object newValue = event.getNewValue();
 			int rulerUnits;
 			
@@ -388,10 +444,8 @@ public class DiagramRootEditPart
 					setRulers(rulerUnits);
 				} catch (NumberFormatException e) {
 					  Log.error( DiagramUIPlugin.getInstance(),
-					  	DiagramUIStatusCodes.RESOURCE_FAILURE,
-					  	e.toString() );
-				}
-				
+					  	DiagramUIStatusCodes.RESOURCE_FAILURE, e.toString() );
+				}				
 			} else {
 				Log.error( DiagramUIPlugin.getInstance(),
 				  	DiagramUIStatusCodes.RESOURCE_FAILURE,
@@ -407,26 +461,14 @@ public class DiagramRootEditPart
 			double spacing = getGridSpacing();
 			setGridSpacing(spacing);			
 			
-		} else if (IPreferenceConstants.PREF_GRID_SPACING.equals(event.getProperty())) {
-			Object newValue = event.getNewValue();
-			double gridSpacing;
-			try {
-				if (newValue.getClass() == Double.class) {
-					gridSpacing = ((Double) newValue).doubleValue();
-					setGridSpacing(gridSpacing);
-				} else if (newValue.getClass() == String.class) {
-					gridSpacing = Double.parseDouble((String) newValue);
-					setGridSpacing(gridSpacing);
-				} else {
-					Log.error( DiagramUIPlugin.getInstance(),
-					  	DiagramUIStatusCodes.RESOURCE_FAILURE,
-						newValue.getClass().getName());
-				}
-			} catch (NumberFormatException ex ) {
-			  Log.error( DiagramUIPlugin.getInstance(),
-			  	DiagramUIStatusCodes.RESOURCE_FAILURE,
-			  	ex.toString() );	
-			}
+		} else if (WorkspaceViewerProperties.GRIDLINECOLOR.equals(event.getProperty())) {
+			Integer newValue = (Integer) event.getNewValue();
+			// Set the grid line color
+			setGridColor(newValue);
+		}  else if (WorkspaceViewerProperties.GRIDLINESTYLE.equals(event.getProperty())) {
+			Integer newValue = (Integer) event.getNewValue();
+			// Set the grid line style
+			setGridStyle(newValue.intValue());
 		} else if (event.getProperty().equals(IPreferenceConstants.PREF_ENABLE_ANIMATED_ZOOM)){
 			refreshEnableZoomAnimation(getZoomManager());
 		} else if (event.getProperty().equals(IPreferenceConstants.PREF_ENABLE_ANTIALIAS)){
@@ -485,11 +527,7 @@ public class DiagramRootEditPart
 	 * Refreshes ruler units on the diagram
 	 */
 	protected void refreshRulerUnits() {
-		IPreferenceStore preferenceStore =
-			(IPreferenceStore) getPreferencesHint().getPreferenceStore();
-		int rulerUnits = preferenceStore.getInt(
-			IPreferenceConstants.PREF_RULER_UNITS);
-		setRulers(rulerUnits);
+		setRulers(getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT));
 	}
 	
 	/**
@@ -517,6 +555,8 @@ public class DiagramRootEditPart
 		
 		refreshEnableAntiAlias();
 		
+		initWorkspaceViewerProperties();
+		
 		refreshRulerUnits();
 		
 		if (pane instanceof ZoomListener) {
@@ -524,6 +564,37 @@ public class DiagramRootEditPart
 		}
 	}
 	
+	private static final int LIGHT_GRAY_RGB = 12632256;
+	
+	/**
+	 * Initializes the workspace viewer property that are stored per diagram
+	 */
+	private void initWorkspaceViewerProperties() {		
+		IPreferenceStore wsPrefStore = getWorkspaceViewerPreferences();
+		
+		if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDORDER)) {
+			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDORDER, true);			
+		} 
+		if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINECOLOR)) {
+			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
+		} else {
+			setGridColor(new Integer(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR)));
+		}
+		if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINESTYLE)) {
+			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_DOT);			
+		} else {
+			setGridStyle(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE));
+		}
+		
+		if ((! wsPrefStore.contains(WorkspaceViewerProperties.RULERUNIT)) || 
+				(! wsPrefStore.contains(WorkspaceViewerProperties.GRIDSPACING))) {
+			IPreferenceStore preferenceStore =
+				(IPreferenceStore) getPreferencesHint().getPreferenceStore();			
+			wsPrefStore.setValue(WorkspaceViewerProperties.RULERUNIT, preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS));						
+			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDSPACING, preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING));			
+		}
+	}
+
 	/**
 	 * 
 	 */
@@ -620,6 +691,14 @@ public class DiagramRootEditPart
 	
 	private void setVerticalRuler(DiagramRuler verticalRuler) {
 		this.verticalRuler = verticalRuler;
+	}
+
+	protected GridLayer createGridLayer() {
+		return new GridLayerEx();
+	}
+
+	protected GridLayer createGridLayer(int r, int g, int b) {
+		return new GridLayerEx(new Color(null,r,g,b));
 	}
 
 }
