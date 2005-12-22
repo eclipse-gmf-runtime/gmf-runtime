@@ -95,6 +95,30 @@
          </constraints>
       </constraintProvider>
    </extension>
+
+   <extension
+         point="org.eclipse.emf.validation.constraintProviders">
+      <constraintProvider>
+         <package namespaceUri="*"/>
+         <constraints categories="org.eclipse.gmf.runtime.emf.core.references">
+            <constraint
+                  lang="Java"
+                  class="org.eclipse.gmf.runtime.emf.core.internal.validation.UUIDConstraint"
+                  severity="ERROR"
+                  mode="Batch"
+                  name="%UUIDConstraint.name"
+                  id="UUIDConstraint"
+                  statusCode="1">
+               <description>
+                  %UUIDConstraint.description
+               </description>
+               <message>
+                 %UUIDConstraint.message
+               </message>
+            </constraint>
+         </constraints>
+      </constraintProvider>
+   </extension>
    
    <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
         <elementTypeFactory
