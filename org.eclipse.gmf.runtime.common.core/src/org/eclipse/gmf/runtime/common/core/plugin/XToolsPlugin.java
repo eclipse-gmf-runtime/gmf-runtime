@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
 import org.eclipse.gmf.runtime.common.core.internal.l10n.CommonCoreMessages;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 
@@ -57,19 +56,6 @@ public class XToolsPlugin
 	 */
 	protected XToolsPlugin(org.eclipse.core.runtime.IPluginDescriptor descriptor) {
 		super(descriptor);
-	}
-
-	/**
-	 * Retrieves a resource manager instance for this plug-in.
-	 * 
-	 * @return A resource manager instance for this plug-in.
-	 * @deprecated ResourceManager is to be replaced with a class that extends NLS.
-	 * @see org.eclipse.osgi.util.NLS
-	 * This method was deprecated October 28, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=109445
-	 * This method will be removed December 19, 2005 before declaration of the M4 milestone.
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
 	}
 
 	/**

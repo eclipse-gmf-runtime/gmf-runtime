@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 
 /**
@@ -49,17 +48,6 @@ public class DiagramProvidersIDEPlugin
 	 */
 	public static String getPluginId() {
 		return getInstance().getBundle().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return null. There is no resource manager required for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
 	}
 
 }

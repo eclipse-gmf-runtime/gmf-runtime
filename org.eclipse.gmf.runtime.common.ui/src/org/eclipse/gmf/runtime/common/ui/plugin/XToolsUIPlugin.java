@@ -27,7 +27,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
@@ -72,18 +71,6 @@ public abstract class XToolsUIPlugin
 	protected XToolsUIPlugin(
 			org.eclipse.core.runtime.IPluginDescriptor descriptor) {
 		super(descriptor);
-	}
-
-	/**
-	 * Retrieves a resource manager instance for this plug-in.
-	 * 
-	 * @return A resource manager instance for this plug-in.
-	 * @deprecated AbstractResourceManager should have been replaced by static class extending NLS
-	 * This method was deprecated October 28, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=109445
-	 * This method will be removed December 19, 2005 before declaration of the M4 milestone.
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null;
 	}
 
 	/**

@@ -11,8 +11,16 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.l10n;
 
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.AbstractResourceManager;
 
 /**
@@ -217,6 +225,7 @@ public class DiagramResourceManager extends AbstractResourceManager {
 	 */
 	private DiagramResourceManager() {
 		super();
+		initializeUIResources();
 	}
 
 	/**
@@ -234,7 +243,7 @@ public class DiagramResourceManager extends AbstractResourceManager {
 	 * 			  this entry
 	 */
 	public static String getI18NString(String key) {
-		return getInstance().getString(key);
+		return ((DiagramResourceManager)resourceManager).getString(key);
 	}
 
 	protected void initializeResources() {
@@ -249,6 +258,77 @@ public class DiagramResourceManager extends AbstractResourceManager {
         return DiagramUIPlugin.getInstance();
     }
 
-    
+	protected void initializeMessageResources() {
+		messagesBundle = createMessagesBundle();
+	}
 
+	/**
+	 * Returns the messageBundle. Resource bundles contain locale-specific
+	 * objects - text, numbers, etc.
+	 * 
+	 * @return the message bundle
+	 */
+	protected ResourceBundle getMessagesBundle() {
+		return messagesBundle;
+	}
+
+	/**
+	 * Returns the string from the plugin's resource bundle, or defaultValue if
+	 * not found.
+	 * 
+	 * @return - value for the given key or the suuplied default if value was
+	 *         not found
+	 * @param key
+	 *            java.lang.String the key to retrieve the value
+	 * @param defaultValue
+	 *            java.lang.String the default value to return if no value by
+	 *            the given key was found
+	 */
+	public String getString(String key) {
+		try {
+			return getMessagesBundle().getString(key);
+		} catch (MissingResourceException mre) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getString", mre); //$NON-NLS-1$
+			Log.warning(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.RESOURCE_FAILURE, "getString", //$NON-NLS-1$
+				mre);
+
+			return "getString"; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * a resource bundle that stores I18N message resources
+	 */
+	private ResourceBundle messagesBundle = null;
+
+	private static final String MESSAGES = ".messages"; //$NON-NLS-1$
+	
+	/**
+	 * Load messages resource bundle.
+	 * 
+	 * If resource bundle is missing creates an instance of EmptyResourceBundle
+	 * and returns that as a default value
+	 * 
+	 * @return - messages resource bundle
+	 */
+
+	protected ResourceBundle createMessagesBundle() {
+		try {
+			return ResourceBundle.getBundle(getClass().getPackage().getName() + MESSAGES, Locale
+				.getDefault(), getClass().getClassLoader());
+		} catch (MissingResourceException mre) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"createMessagesBundle", mre); //$NON-NLS-1$
+			Log
+				.error(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.RESOURCE_FAILURE,
+					"createMessagesBundle", mre); //$NON-NLS-1$
+			return null;
+		}
+
+	}
 }

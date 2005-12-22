@@ -19,10 +19,10 @@ import java.util.MissingResourceException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.jface.resource.FontRegistry;
@@ -86,10 +86,13 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author wdiu, Wayne Diu, refactored from common.core's AbstractResourceManager
  * @canBeSeenBy %partners
+ * @deprecated
+ * Use JFace ResourceManager to manage fonts.
+ * Use Image handling methods from AbstractUIPlugin (imageDescriptorFromPlugin and getImageRegisty).
  * This class was deprecated November 9, 2005 for https://bugs.eclipse.org/bugs/show_bug.cgi?id=114587
- * This class will be removed December 19, 2005 before declaration of the M4 milestone.
+ * This class will be removed January 31, 2005 before declaration of the M5 milestone.
  */
-public abstract class AbstractUIResourceManager extends AbstractResourceManager {
+public abstract class AbstractUIResourceManager {
 
 	private static final String IMAGES = "icons"; //$NON-NLS-1$
 
@@ -523,7 +526,7 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	 * @return - default name for the font registry
 	 */
 	protected String getFontRegistryDefaultName() {
-		return getPackageName() + FONTS;
+		return getClass().getPackage().getName() + FONTS;
 	}
 	
 	/**
@@ -607,4 +610,10 @@ public abstract class AbstractUIResourceManager extends AbstractResourceManager 
 	 * particular resource types. 
 	 */
 	protected abstract void initializeUIResources();
+
+	/**
+	 * Returns the plugin that hosts the resource manager
+	 * @return Plugin the plugin that hosts the resource manager
+	 */
+	protected abstract Plugin getPlugin();
 }

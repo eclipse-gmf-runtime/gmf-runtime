@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.notation.providers.internal.util;
 
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
-import org.eclipse.gmf.runtime.notation.providers.internal.l10n.ResourceManager;
 
 /**
  * The plug-in for EMF implementation of UML.
@@ -62,17 +60,6 @@ public class NotationMSLPlugin
 	 */
 	public static String getPluginId() {
 		return getDefault().getBundle().getSymbolicName();
-	}
-
-	/**
-	 * Retrieves the resource manager for this plug-in.
-	 * 
-	 * @return The resource manager for this plug-in.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return ResourceManager.getInstance();
 	}
 
 	/**

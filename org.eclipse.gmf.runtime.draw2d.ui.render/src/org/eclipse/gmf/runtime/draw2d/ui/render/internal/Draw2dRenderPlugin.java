@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 
 /**
@@ -53,10 +52,6 @@ public class Draw2dRenderPlugin
 	 */
 	protected void doStartup() {
 		// empty method
-	}
-
-	public AbstractResourceManager getResourceManager() {
-		return null; // TBD
 	}
 
 }

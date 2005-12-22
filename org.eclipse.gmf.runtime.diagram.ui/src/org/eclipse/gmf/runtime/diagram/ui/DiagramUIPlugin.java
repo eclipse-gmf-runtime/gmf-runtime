@@ -12,10 +12,10 @@
 package org.eclipse.gmf.runtime.diagram.ui;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.gmf.runtime.common.core.l10n.AbstractResourceManager;
 import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
@@ -85,13 +85,6 @@ public class DiagramUIPlugin
 	protected void doShutdown() {
 		DiagramEventBroker.getInstance().stopListening();
 		super.doShutdown();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#getResourceManager()
-	 */
-	public AbstractResourceManager getResourceManager() {
-		return null; // TBD
 	}
 
 	/**
