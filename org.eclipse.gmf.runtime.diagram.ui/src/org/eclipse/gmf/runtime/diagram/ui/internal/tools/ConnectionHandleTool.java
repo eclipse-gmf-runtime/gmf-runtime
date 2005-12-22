@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,12 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.dialogs.ExpansionType;
-import org.eclipse.gmf.runtime.common.ui.util.DispatchingProgressDialogUtil;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.commands.PopupMenuCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -39,6 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.osgi.util.NLS;
@@ -248,14 +253,27 @@ public class ConnectionHandleTool
 		final DiagramCommandStack commandStack = ((IGraphicalEditPart) getTargetEditPart())
 			.getDiagramEditDomain().getDiagramCommandStack();
 
-		DispatchingProgressDialogUtil
-			.runWithDispatchingProgressDialog(new IRunnableWithProgress() {
-
+		try {
+			new ProgressMonitorDialog(null).run(false, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor)
 					throws InvocationTargetException, InterruptedException {
 					commandStack.execute(command, monitor);
 				}
 			});
+		} catch (InvocationTargetException ite) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
+				ConnectionHandleTool.class,
+				"executeWithProgressMonitor", ite); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"executeWithProgressMonitor", ite); //$NON-NLS-1$
+		} catch (InterruptedException ie) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
+				ConnectionHandleTool.class,
+				"executeWithProgressMonitor", ie); //$NON-NLS-1$
+		}
 	}
 
 	/**

@@ -255,10 +255,10 @@ public class ActionManager {
 		boolean cancelable) {
 
 		try {
-			if (System.getProperty("RUN_PROGRESS_IN_THREAD") != null) { //$NON-NLS-1$
-				new ProgressMonitorDialog(null).run(true, cancelable, runnable);
-			} else {
+			if (System.getProperty("RUN_PROGRESS_IN_UI_HACK") != null) { //$NON-NLS-1$
 				new ProgressMonitorDialog(null).run(false, cancelable, runnable);
+			} else {
+				new ProgressMonitorDialog(null).run(true, cancelable, runnable);
 			}
 
 		} catch (InvocationTargetException ite) {

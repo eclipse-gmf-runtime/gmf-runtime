@@ -35,7 +35,6 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
-		//run ProviderPolicyTest before ProviderPolicyExceptionsTest
 		suite.addTest(ActionManagerTest.suite());
 		suite.addTest(RemoveMnemonicTests.suite());
 //		suite.addTest(ExtendedPropertyDescriptorTest.suite());
@@ -47,10 +46,10 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(FileObserverFilterTypeTest.suite());
 		suite.addTest(FileObserverFilterTest.suite());
         suite.addTest(SelectableElementTest.suite());
-//        suite.addTest(DispatchingProgressMonitorDialogTest.suite());
         /**
          * waiting for resolution of Bugzilla 115843
          */
+		//run ProviderPolicyTest before ProviderPolicyExceptionsTest
 //		suite.addTest(ProviderPolicyTest.suite());
 //		suite.addTest(ProviderPolicyExceptionsTest.suite());
 		return suite;
