@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Request to move a model element from one container to another or from one
@@ -144,7 +144,7 @@ public class MoveRequest
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditCommandRequest#getDefaultLabel()
 	 */
 	protected String getDefaultLabel() {
-		return ResourceManager.getInstance().getString("Request.Label.Move"); //$NON-NLS-1$
+		return EMFTypeCoreMessages.Request_Label_Move;
 	}
 
 	/*

@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Request to create a new model element.
@@ -273,11 +273,9 @@ public class CreateElementRequest
 	 */
 	protected String getDefaultLabel() {
 
-		String createString = ResourceManager.getInstance().getString(
-			"Request.Label.Create"); //$NON-NLS-1$
-
-		String label = MessageFormat.format(createString,
-			new Object[] {getElementType().getDisplayName()});
+		String label = MessageFormat.format(
+				EMFTypeCoreMessages.Request_Label_Create,
+				new Object[] { getElementType().getDisplayName() });
 
 		return label;
 	}

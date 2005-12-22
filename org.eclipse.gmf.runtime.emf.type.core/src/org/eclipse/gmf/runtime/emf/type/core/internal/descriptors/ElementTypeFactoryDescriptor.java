@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeFactory;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for an element type factory. Used to delay loading of the plugin
@@ -80,7 +80,7 @@ public class ElementTypeFactoryDescriptor {
 		if (factoryName == null) {
 			throw EMFTypePluginStatusCodes.getFactoryInitException(
 				StringStatics.BLANK,
-				EMFTypePluginStatusCodes.ELEMENT_TYPE_FACTORY_NO_FACTORY_KEY);
+				EMFTypeCoreMessages.elementTypeFactory_reason_no_factory_WARN_);
 		}
 
 		// KIND NAME
@@ -88,7 +88,7 @@ public class ElementTypeFactoryDescriptor {
 		if (kindName == null) {
 			throw EMFTypePluginStatusCodes.getFactoryInitException(
 				factoryName,
-				EMFTypePluginStatusCodes.ELEMENT_TYPE_FACTORY_NO_KIND_KEY);
+				EMFTypeCoreMessages.elementTypeFactory_reason_no_kind_WARN_);
 		}
 
 		// CUSTOM PARAMETERS
@@ -127,14 +127,13 @@ public class ElementTypeFactoryDescriptor {
 
 				} catch (CoreException e) {
 					Log
-						.error(
-							EMFTypePlugin.getPlugin(),
-							EMFTypePluginStatusCodes.ELEMENT_TYPE_FACTORY_CLASS_NOT_FOUND,
-							ResourceManager
-								.getMessage(
-									EMFTypePluginStatusCodes.ELEMENT_TYPE_FACTORY_CLASS_NOT_FOUND_KEY,
-									new Object[] {factoryName}),
-							e);
+							.error(
+									EMFTypePlugin.getPlugin(),
+									EMFTypePluginStatusCodes.ELEMENT_TYPE_FACTORY_CLASS_NOT_FOUND,
+									EMFTypeCoreMessages
+											.bind(
+													EMFTypeCoreMessages.elementTypeFactory_class_not_found_ERROR_,
+													factoryName), e);
 					// Don't recompute the factory if is has failed once.
 					factoryName = null;
 				}

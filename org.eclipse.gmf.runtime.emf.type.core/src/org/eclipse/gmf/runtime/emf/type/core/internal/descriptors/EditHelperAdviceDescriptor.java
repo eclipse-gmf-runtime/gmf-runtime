@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for edit helper advice.
@@ -104,13 +104,13 @@ public class EditHelperAdviceDescriptor
 
 				} catch (CoreException e) {
 					Log
-						.error(
-							EMFTypePlugin.getPlugin(),
-							EMFTypePluginStatusCodes.EDIT_HELPER_ADVICE_CLASS_NOT_FOUND,
-							ResourceManager
-								.getMessage(
-									EMFTypePluginStatusCodes.EDIT_HELPER_ADVICE_CLASS_NOT_FOUND_KEY,
-									new Object[] {editHelperAdviceName}), e);
+							.error(
+									EMFTypePlugin.getPlugin(),
+									EMFTypePluginStatusCodes.EDIT_HELPER_ADVICE_CLASS_NOT_FOUND,
+									EMFTypeCoreMessages
+											.bind(
+													EMFTypeCoreMessages.editHelperAdvice_class_not_found_ERROR_,
+													editHelperAdviceName), e);
 
 					// Don't recompute the advice class if it has failed once.
 					editHelperAdviceName = null;

@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Element matcher that matches model elements using an XML expression.
@@ -63,8 +63,11 @@ public class XMLExpressionMatcher
 			xmlExpression = ExpressionConverter.getDefault().perform(config);
 
 		} catch (CoreException e) {
-			throw EMFTypePluginStatusCodes.getInitException(id,
-				EMFTypePluginStatusCodes.ENABLEMENT_INVALID_EXPRESSION_KEY, e);
+			throw EMFTypePluginStatusCodes
+					.getInitException(
+							id,
+							EMFTypeCoreMessages.element_reason_invalid_enablement_expression_WARN_,
+							e);
 		}
 	}
 
@@ -91,11 +94,14 @@ public class XMLExpressionMatcher
 			}
 
 		} catch (CoreException e) {
-			Log.error(EMFTypePlugin.getPlugin(),
-				EMFTypePluginStatusCodes.EXPRESSION_EVALUATION_FAILURE,
-				ResourceManager.getMessage(
-					EMFTypePluginStatusCodes.EXPRESSION_EVALUATION_FAILURE_KEY,
-					new Object[] {id}), e);
+			Log
+					.error(
+							EMFTypePlugin.getPlugin(),
+							EMFTypePluginStatusCodes.EXPRESSION_EVALUATION_FAILURE,
+							EMFTypeCoreMessages
+									.bind(
+											EMFTypeCoreMessages.expression_evaluation_failure_ERROR_,
+											id), e);
 		}
 
 		return false;

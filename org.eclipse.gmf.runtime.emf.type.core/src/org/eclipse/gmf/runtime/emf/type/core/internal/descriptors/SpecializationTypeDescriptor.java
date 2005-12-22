@@ -31,7 +31,7 @@ import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.XMLExpressionMatcher;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for a specialization element type that has been defined in XML
@@ -146,7 +146,7 @@ public class SpecializationTypeDescriptor
 
 			if (specializedId == null) {
 				throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-					EMFTypePluginStatusCodes.TYPE_NO_SPECIALIZED_ID_KEY, null);
+						EMFTypeCoreMessages.type_reason_no_specialized_id_WARN_, null);
 			}
 
 			specializes.add(specializedId);
@@ -155,7 +155,7 @@ public class SpecializationTypeDescriptor
 
 		if (specializedTypeIds.length < 1) {
 			throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-				EMFTypePluginStatusCodes.TYPE_NO_SPECIALIZED_KEY, null);
+				EMFTypeCoreMessages.type_reason_no_specialized_WARN_, null);
 		}
 
 		// ECONTAINER
@@ -185,8 +185,11 @@ public class SpecializationTypeDescriptor
 					.getAttribute(ElementTypeXmlConfig.A_CLASS);
 
 				if (matcherClassName == null) {
-					throw EMFTypePluginStatusCodes.getInitException(getId(),
-						EMFTypePluginStatusCodes.MATCHER_NO_CLASS_KEY, null);
+					throw EMFTypePluginStatusCodes
+							.getInitException(
+									getId(),
+									EMFTypeCoreMessages.element_reason_matcher_no_class_WARN_,
+									null);
 				}
 				matcherConfig = matcherConfigs[0];
 			}
@@ -284,11 +287,14 @@ public class SpecializationTypeDescriptor
 					.createExecutableExtension(ElementTypeXmlConfig.A_CLASS);
 
 			} catch (CoreException e) {
-				Log.error(EMFTypePlugin.getPlugin(),
-					EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND,
-					ResourceManager.getMessage(
-						EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND_KEY,
-						new Object[] {matcherClassName}), e);
+				Log
+						.error(
+								EMFTypePlugin.getPlugin(),
+								EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND,
+								EMFTypeCoreMessages
+										.bind(
+												EMFTypeCoreMessages.matcher_class_not_found_ERROR_,
+												matcherClassName), e);
 
 				// Don't try to recompute the matcher class if it has failed.
 				matcherClassName = null;

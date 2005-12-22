@@ -45,7 +45,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.IEditHelperAdv
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Registry of specialization types populated by the
@@ -777,11 +777,15 @@ public class SpecializationTypeRegistry {
 	 */
 	private boolean checkForDuplicate(ElementTypeDescriptor typeDescriptor) {
 		if (specializationTypeDescriptors.containsKey(typeDescriptor.getId())) {
-			Log.error(EMFTypePlugin.getPlugin(),
-				EMFTypePluginStatusCodes.TYPE_NOT_INITED, ResourceManager
-					.getMessage(EMFTypePluginStatusCodes.TYPE_NOT_INITED_KEY,
-						new String[] {typeDescriptor.getId(),
-							EMFTypePluginStatusCodes.TYPE_DUPLICATE_KEY}));
+			Log
+					.error(
+							EMFTypePlugin.getPlugin(),
+							EMFTypePluginStatusCodes.TYPE_NOT_INITED,
+							EMFTypeCoreMessages
+									.bind(
+											EMFTypeCoreMessages.type_not_init_WARN_,
+											typeDescriptor.getId(),
+											EMFTypeCoreMessages.type_reason_duplicate_id_WARN_));
 			return true;
 		}
 		return false;

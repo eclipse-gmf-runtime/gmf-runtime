@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for an element type that has been defined in XML using the
@@ -98,7 +99,7 @@ public abstract class ElementTypeDescriptor implements IElementTypeDescriptor {
 		this.id = configElement.getAttribute(ElementTypeXmlConfig.A_ID);
 		if (id == null) {
 			throw EMFTypePluginStatusCodes.getTypeInitException(StringStatics.BLANK,
-				EMFTypePluginStatusCodes.TYPE_NO_ID_KEY, null);
+				EMFTypeCoreMessages.type_reason_no_id_WARN_, null);
 		}
 
 		// NAME
@@ -132,14 +133,14 @@ public abstract class ElementTypeDescriptor implements IElementTypeDescriptor {
 
 			if (paramName == null) {
 				throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-					EMFTypePluginStatusCodes.TYPE_NO_PARAM_NAME_KEY, null);
+					EMFTypeCoreMessages.type_reason_no_param_name_WARN_, null);
 			}
 
 			String paramValue = nextParamConfig
 				.getAttribute(ElementTypeXmlConfig.A_VALUE);
 			if (paramValue == null) {
 				throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-					EMFTypePluginStatusCodes.TYPE_NO_PARAM_VALUE_KEY, null);
+						EMFTypeCoreMessages.type_reason_no_param_value_WARN_, null);
 			}
 			params.put(paramName, paramValue);
 

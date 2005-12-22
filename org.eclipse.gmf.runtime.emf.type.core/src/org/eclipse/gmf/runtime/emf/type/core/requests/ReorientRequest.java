@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.emf.type.core.requests;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Abstract request for changing the source or target of a relationship.
@@ -26,12 +26,12 @@ public abstract class ReorientRequest
 	/**
 	 * Indicates that the source of the relationship will be changed.
 	 */
-	public final static int REORIENT_SOURCE = 1; //$NON-NLS-1$
+	public final static int REORIENT_SOURCE = 1;
 
 	/**
 	 * Indicates that the target of the relationship will be changed.
 	 */
-	public final static int REORIENT_TARGET = 2; //$NON-NLS-1$
+	public final static int REORIENT_TARGET = 2;
 
 	/**
 	 * Indicates whether or not the source of the target of the relationship
@@ -108,12 +108,10 @@ public abstract class ReorientRequest
 	protected String getDefaultLabel() {
 
 		if (getDirection() == REORIENT_SOURCE) {
-			return ResourceManager.getInstance().getString(
-				"Request.Label.ReorientSource"); //$NON-NLS-1$
+			return EMFTypeCoreMessages.Request_Label_ReorientSource;
 
 		} else if (getDirection() == REORIENT_TARGET) {
-			return ResourceManager.getInstance().getString(
-				"Request.Label.ReorientTarget"); //$NON-NLS-1$
+			return EMFTypeCoreMessages.Request_Label_ReorientTarget;
 		}
 		return super.getDefaultLabel();
 	}

@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.XMLExpressionMatcher;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for an advice binding. Advice can be bound to any element type.
@@ -106,23 +106,26 @@ public class AdviceBindingDescriptor
 		// ID
 		this.id = config.getAttribute(ElementTypeXmlConfig.A_ID);
 		if (id == null) {
-			throw EMFTypePluginStatusCodes.getAdviceBindingInitException(StringStatics.BLANK,
-				EMFTypePluginStatusCodes.ADVICE_BINDING_NO_ID_KEY);
+			throw EMFTypePluginStatusCodes.getAdviceBindingInitException(
+					StringStatics.BLANK,
+					EMFTypeCoreMessages.adviceBinding_reason_no_id_WARN_);
 		}
 		
 		// EDIT HELPER ADVICE CLASS
 		editHelperAdviceName = config
 			.getAttribute(ElementTypeXmlConfig.A_CLASS);
 		if (editHelperAdviceName == null) {
-			throw EMFTypePluginStatusCodes.getAdviceBindingInitException(id,
-				EMFTypePluginStatusCodes.ADVICE_BINDING_NO_EDIT_HELPER_ADVICE_KEY);
+			throw EMFTypePluginStatusCodes
+					.getAdviceBindingInitException(
+							id,
+							EMFTypeCoreMessages.adviceBinding_reason_no_edit_helper_advice_id_WARN_);
 		}
 
 		// TYPE ID
 		this.typeId = config.getAttribute(ElementTypeXmlConfig.A_TYPE_ID);
 		if (typeId == null) {
 			throw EMFTypePluginStatusCodes.getAdviceBindingInitException(id,
-				EMFTypePluginStatusCodes.ADVICE_BINDING_NO_TYPE_ID_KEY);
+					EMFTypeCoreMessages.adviceBinding_reason_no_type_id_WARN_);
 		}
 		
 		// ECONTAINER
@@ -144,7 +147,7 @@ public class AdviceBindingDescriptor
 			if (inheritanceString != null) {
 				// Invalid inheritance value
 				throw EMFTypePluginStatusCodes.getAdviceBindingInitException(id,
-						EMFTypePluginStatusCodes.ADVICE_BINDING_INVALID_INHERITANCE);
+						EMFTypeCoreMessages.adviceBinding_reason_invalid_inheritance_WARN_);
 			}
 			// Default inheritance is NONE
 			declaredInheritance = AdviceBindingInheritance.NONE;
@@ -170,7 +173,7 @@ public class AdviceBindingDescriptor
 				
 				if (matcherClassName == null) {
 					throw EMFTypePluginStatusCodes.getInitException(id,
-						EMFTypePluginStatusCodes.MATCHER_NO_CLASS_KEY, null);
+							EMFTypeCoreMessages.element_reason_matcher_no_class_WARN_, null);
 				}
 				matcherConfig = matcherConfigs[0];
 				
@@ -209,14 +212,13 @@ public class AdviceBindingDescriptor
 
 			} catch (CoreException e) {
 				Log
-					.error(
-						EMFTypePlugin.getPlugin(),
-						EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND,
-						ResourceManager
-							.getMessage(
-								EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND_KEY,
-								new Object[] {matcherClassName}),
-						e);
+						.error(
+								EMFTypePlugin.getPlugin(),
+								EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND,
+								EMFTypeCoreMessages
+										.bind(
+												EMFTypeCoreMessages.matcher_class_not_found_ERROR_,
+												matcherClassName), e);
 
 				// Don't try to recompute the matcher class if it has failed.
 				matcherClassName = null;
@@ -241,13 +243,13 @@ public class AdviceBindingDescriptor
 
 				} catch (CoreException e) {
 					Log
-						.error(
-							EMFTypePlugin.getPlugin(),
-							EMFTypePluginStatusCodes.EDIT_HELPER_ADVICE_CLASS_NOT_FOUND,
-							ResourceManager
-								.getMessage(
-									EMFTypePluginStatusCodes.EDIT_HELPER_ADVICE_CLASS_NOT_FOUND_KEY,
-									new Object[] {editHelperAdviceName}), e);
+							.error(
+									EMFTypePlugin.getPlugin(),
+									EMFTypePluginStatusCodes.EDIT_HELPER_ADVICE_CLASS_NOT_FOUND,
+									EMFTypeCoreMessages
+											.bind(
+													EMFTypeCoreMessages.editHelperAdvice_class_not_found_ERROR_,
+													editHelperAdviceName), e);
 					// Don't recompute the edit helper advice after it has
 					// failed once.
 					editHelperAdviceName = null;

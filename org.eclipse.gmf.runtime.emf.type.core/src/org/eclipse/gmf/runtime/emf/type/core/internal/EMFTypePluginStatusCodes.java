@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Status codes for errors and warnings logged by the Element Type framework.
@@ -61,87 +61,6 @@ public class EMFTypePluginStatusCodes {
 	
 	public static final int CONTAINMENT_FEATURE_NO_METAMODEL = 29;
 
-	//
-	// XML loading failure messages
-	//
-	public static final String ERROR_PARSING_XML_KEY = "xml.parsing_ERROR_"; //$NON-NLS-1$
-
-	public static final String TYPE_NOT_INITED_KEY = "type.not-init_WARN_"; //$NON-NLS-1$
-
-	public static final String ADVICE_BINDING_NOT_INITED_KEY = "adviceBinding.not-init_WARN_"; //$NON-NLS-1$
-
-	public static final String ELEMENT_NOT_INITED_KEY = "element.not-init_WARN_"; //$NON-NLS-1$
-
-	public static final String FACTORY_NOT_INITED_KEY = "elementTypeFactory.not-init_WARN_"; //$NON-NLS-1$
-
-	public static final String METAMODEL_NOT_INITED_KEY = "metamodel.not-init_WARN_"; //$NON-NLS-1$
-
-	//
-	// Reasons for XML loading failure
-	//
-	public static final String TYPE_DUPLICATE_KEY = "type.reason.duplicate-id_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_NO_ID_KEY = "type.reason.no-id_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_NO_ECLASS_KEY = "type.reason.no-eclass_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_ECLASS_NOT_FOUND_KEY = "type.reason.eclass-not-found_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_NO_SPECIALIZED_KEY = "type.reason.no-specialized_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_NO_SPECIALIZED_ID_KEY = "type.reason.no-specialized-id_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_NO_PARAM_NAME_KEY = "type.reason.no-param-name_WARN_"; //$NON-NLS-1$
-
-	public static final String TYPE_NO_PARAM_VALUE_KEY = "type.reason.no-param-value_WARN_"; //$NON-NLS-1$
-
-	public static final String ADVICE_BINDING_NO_ID_KEY = "adviceBinding.reason.no-id_WARN_"; //$NON-NLS-1$
-
-	public static final String ADVICE_BINDING_NO_TYPE_ID_KEY = "adviceBinding.reason.no-type-id_WARN_"; //$NON-NLS-1$
-
-	public static final String ADVICE_BINDING_NO_EDIT_HELPER_ADVICE_KEY = "adviceBinding.reason.no-edit-helper-advice-id_WARN_"; //$NON-NLS-1$
-
-	public static final String ADVICE_BINDING_INVALID_INHERITANCE = "adviceBinding.reason.invalid-inheritance_WARN_"; //$NON-NLS-1$
-	
-	public static final String CONTAINMENT_FEATURE_NO_QNAME_KEY = "element.reason.no-econtainmentfeature-qname_WARN_"; //$NON-NLS-1$
-	
-	public static final String CONTAINMENT_FEATURE_NO_METAMODEL_KEY = "element.reason.no-econtainmentfeature-metamodel_WARN_"; //$NON-NLS-1$
-
-	public static final String ENABLEMENT_INVALID_EXPRESSION_KEY = "element.reason.invalid-enablement-expression_WARN_"; //$NON-NLS-1$
-
-	public static final String MATCHER_NO_CLASS_KEY = "element.reason.matcher-no-class_WARN_"; //$NON-NLS-1$
-
-	public static final String ELEMENT_TYPE_FACTORY_NO_FACTORY_KEY = "elementTypeFactory.reason.no-factory_WARN_"; //$NON-NLS-1$
-
-	public static final String ELEMENT_TYPE_FACTORY_NO_KIND_KEY = "elementTypeFactory.reason.no-kind_WARN_"; //$NON-NLS-1$
-
-	public static final String METAMODEL_NO_NSURI_KEY = "metamodel.reason.no-nsURI_WARN_"; //$NON-NLS-1$
-
-	public static final String METAMODEL_NSURI_NOT_FOUND_KEY = "metamodel.reason.nsURI-not-found_WARN_"; //$NON-NLS-1$
-
-	
-	//
-	// Errors
-	//
-	public static final String EDIT_HELPER_ADVICE_CLASS_NOT_FOUND_KEY = "editHelperAdvice.class-not-found_ERROR_"; //$NON-NLS-1$
-
-	public static final String MATCHER_CLASS_NOT_FOUND_KEY = "matcher.class-not-found_ERROR_"; //$NON-NLS-1$
-
-	public static final String EDIT_HELPER_CLASS_NOT_FOUND_KEY = "editHelper.class-not-found_ERROR_"; //$NON-NLS-1$
-
-	public static final String EXPRESSION_EVALUATION_FAILURE_KEY = "expression.evaluation-failure_ERROR_"; //$NON-NLS-1$
-
-	public static final String ELEMENT_TYPE_FACTORY_CLASS_NOT_FOUND_KEY = "elementTypeFactory.class-not-found_ERROR_"; //$NON-NLS-1$
-
-	public static final String CONTAINMENT_FEATURE_NOT_REFERENCE_FEATURE_KEY = "eContainmentFeature.not-reference-feature_ERROR_"; //$NON-NLS-1$
-
-	public static final String CONTAINMENT_FEATURE_NO_SUCH_FEATURE_KEY = "eContainmentFeature.no-such-feature_ERROR_"; //$NON-NLS-1$
-
-	public static final String SPECIALIZATION_TYPE_SPECIALIZES_MULTIPLE_METAMODEL_TYPES_KEY = "specializationType.specializes-multiple-metamodel-types_ERROR_"; //$NON-NLS-1$
-
-	public static final String SPECIALIZATION_TYPE_SPECIALIZES_INVALID_ID_KEY = "specializationType.specializes-invalid-id_ERROR_"; //$NON-NLS-1$
-
-	
 	/**
 	 * Cannot be instantiated by clients.
 	 */
@@ -155,18 +74,18 @@ public class EMFTypePluginStatusCodes {
 	 * 
 	 * @param adviceId
 	 *            the advice binding ID
-	 * @param argKey
-	 *            resource bundle key of the reason why the advice binding was
+	 * @param reason
+	 *            the localized reason why the advice binding was
 	 *            not initialized
 	 * @return the new CoreException
 	 */
 	public static CoreException getAdviceBindingInitException(String adviceId,
-			String argKey) {
+			String reason) {
 
 		return new CoreException(new Status(IStatus.WARNING, EMFTypePlugin
-			.getPluginId(), ADVICE_BINDING_NOT_INITED, ResourceManager
-			.getMessage(ADVICE_BINDING_NOT_INITED_KEY, new Object[] {adviceId,
-				ResourceManager.getLocalizedString(argKey)}), null));
+				.getPluginId(), ADVICE_BINDING_NOT_INITED, EMFTypeCoreMessages
+				.bind(EMFTypeCoreMessages.adviceBinding_not_init_WARN_,
+						adviceId, reason), null));
 	}
 
 	/**
@@ -175,20 +94,19 @@ public class EMFTypePluginStatusCodes {
 	 * 
 	 * @param typeId
 	 *            the element type ID
-	 * @param argKey
-	 *            resource bundle key of the reason why the element type was not
+	 * @param reason
+	 *            the localized reason why the element type was not
 	 *            initialized
 	 * @param e
 	 *            an exception, if the failure was due to an exception
 	 * @return the new CoreException
 	 */
 	public static CoreException getTypeInitException(String typeId,
-			String argKey, Exception e) {
+			String reason, Exception e) {
 
 		return new CoreException(new Status(IStatus.WARNING, EMFTypePlugin
-			.getPluginId(), TYPE_NOT_INITED, ResourceManager.getMessage(
-			TYPE_NOT_INITED_KEY, new Object[] {typeId,
-				ResourceManager.getLocalizedString(argKey)}), e));
+				.getPluginId(), TYPE_NOT_INITED, EMFTypeCoreMessages.bind(
+				EMFTypeCoreMessages.type_not_init_WARN_, typeId, reason), e));
 	}
 
 	/**
@@ -197,20 +115,20 @@ public class EMFTypePluginStatusCodes {
 	 * 
 	 * @param elementId
 	 *            the element ID
-	 * @param argKey
-	 *            resource bundle key of the reason why the element was not
+	 * @param reason
+	 *            the localized reason why the element was not
 	 *            initialized
 	 * @param e
 	 *            an exception, if the failure was due to an exception
 	 * @return the new CoreException
 	 */
 	public static CoreException getInitException(String elementId,
-			String argKey, Exception e) {
+			String reason, Exception e) {
 
 		return new CoreException(new Status(IStatus.WARNING, EMFTypePlugin
-			.getPluginId(), ELEMENT_NOT_INITED, ResourceManager.getMessage(
-			ELEMENT_NOT_INITED_KEY, new Object[] {elementId,
-				ResourceManager.getLocalizedString(argKey)}), e));
+				.getPluginId(), ELEMENT_NOT_INITED, EMFTypeCoreMessages.bind(
+				EMFTypeCoreMessages.elment_not_init_WARN_, elementId, reason),
+				e));
 	}
 
 	/**
@@ -219,18 +137,18 @@ public class EMFTypePluginStatusCodes {
 	 * 
 	 * @param factoryName
 	 *            the factory name
-	 * @param argKey
-	 *            resource bundle key of the reason why the element type factory
+	 * @param reason
+	 *            the localized reason why the element type factory
 	 *            was not initialized
 	 * @return the new CoreException
 	 */
 	public static CoreException getFactoryInitException(String factoryName,
-			String argKey) {
+			String reason) {
 
 		return new CoreException(new Status(IStatus.WARNING, EMFTypePlugin
-			.getPluginId(), FACTORY_NOT_INITED, ResourceManager.getMessage(
-			FACTORY_NOT_INITED_KEY, new Object[] {factoryName,
-				ResourceManager.getLocalizedString(argKey)}), null));
+				.getPluginId(), FACTORY_NOT_INITED, EMFTypeCoreMessages.bind(
+				EMFTypeCoreMessages.elementTypeFactory_not_init_WARN_,
+				factoryName, reason), null));
 	}
 
 	/**
@@ -239,18 +157,18 @@ public class EMFTypePluginStatusCodes {
 	 * 
 	 * @param nsURI
 	 *            the namespace URI
-	 * @param argKey
-	 *            resource bundle key of the reason why the metamodel element
+	 * @param reason
+	 *            the localized reason why the metamodel element
 	 *            was not initialized
 	 * @return the new CoreException
 	 */
 	public static CoreException getMetamodelInitException(String nsURI,
-			String argKey) {
+			String reason) {
 
 		return new CoreException(new Status(IStatus.WARNING, EMFTypePlugin
-			.getPluginId(), METAMODEL_NOT_INITED, ResourceManager.getMessage(
-			METAMODEL_NOT_INITED_KEY, new Object[] {nsURI,
-				ResourceManager.getLocalizedString(argKey)}), null));
+				.getPluginId(), METAMODEL_NOT_INITED, EMFTypeCoreMessages.bind(
+				EMFTypeCoreMessages.metamodel_not_init_WARN_, nsURI, reason),
+				null));
 	}
 }
 

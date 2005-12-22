@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Describes a metamodel.
@@ -45,7 +46,7 @@ public class MetamodelDescriptor {
 		String nsURI = configElement.getAttribute(ElementTypeXmlConfig.A_NSURI);
 		if (nsURI == null) {
 			throw EMFTypePluginStatusCodes.getMetamodelInitException(
-				StringStatics.BLANK, EMFTypePluginStatusCodes.METAMODEL_NO_NSURI_KEY);
+				StringStatics.BLANK, EMFTypeCoreMessages.metamodel_reason_no_nsURI_WARN_);
 		}
 		ePackage = (nsURI != null) ? EPackage.Registry.INSTANCE
 			.getEPackage(nsURI)
@@ -53,7 +54,7 @@ public class MetamodelDescriptor {
 
 		if (ePackage == null) {
 			throw EMFTypePluginStatusCodes.getMetamodelInitException(
-				nsURI, EMFTypePluginStatusCodes.METAMODEL_NSURI_NOT_FOUND_KEY);
+				nsURI, EMFTypeCoreMessages.metamodel_reason_nsURI_not_found_WARN_);
 		}
 	}
 

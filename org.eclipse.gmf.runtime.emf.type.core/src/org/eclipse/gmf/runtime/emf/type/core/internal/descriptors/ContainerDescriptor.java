@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.XMLExpressionMatcher;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for a model element container.
@@ -93,12 +93,12 @@ class ContainerDescriptor
 			// Containment features can only be specified if a metamodel is
 			// specified.
 			throw EMFTypePluginStatusCodes
-				.getInitException(
-					id,
-					ResourceManager
-						.getMessage(
-							EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NO_METAMODEL_KEY,
-							new Object[] {featureConfigs[0]}), null);
+					.getInitException(
+							id,
+							EMFTypeCoreMessages
+									.bind(
+											EMFTypeCoreMessages.element_reason_no_econtainmentfeature_metamodel_WARN_,
+											featureConfigs[0]), null);
 		}
 
 		for (int i = 0; i < featureConfigs.length; i++) {
@@ -107,9 +107,11 @@ class ContainerDescriptor
 				.getAttribute(ElementTypeXmlConfig.A_QNAME);
 
 			if (qname == null) {
-				throw EMFTypePluginStatusCodes.getInitException(id,
-					EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NO_QNAME_KEY,
-					null);
+				throw EMFTypePluginStatusCodes
+						.getInitException(
+								id,
+								EMFTypeCoreMessages.element_reason_no_econtainmentfeature_qname_WARN_,
+								null);
 			}
 			featureNames.add(qname);
 		}
@@ -132,8 +134,11 @@ class ContainerDescriptor
 					.getAttribute(ElementTypeXmlConfig.A_CLASS);
 
 				if (matcherClassName == null) {
-					throw EMFTypePluginStatusCodes.getInitException(id,
-						EMFTypePluginStatusCodes.MATCHER_NO_CLASS_KEY, null);
+					throw EMFTypePluginStatusCodes
+							.getInitException(
+									id,
+									EMFTypeCoreMessages.element_reason_matcher_no_class_WARN_,
+									null);
 				}
 				matcherConfig = matcherConfigs[0];
 			}
@@ -154,11 +159,14 @@ class ContainerDescriptor
 					.createExecutableExtension(ElementTypeXmlConfig.A_CLASS);
 
 			} catch (CoreException e) {
-				Log.error(EMFTypePlugin.getPlugin(),
-					EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND,
-					ResourceManager.getMessage(
-						EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND_KEY,
-						new Object[] {matcherClassName}), e);
+				Log
+						.error(
+								EMFTypePlugin.getPlugin(),
+								EMFTypePluginStatusCodes.MATCHER_CLASS_NOT_FOUND,
+								EMFTypeCoreMessages
+										.bind(
+												EMFTypeCoreMessages.matcher_class_not_found_ERROR_,
+												matcherClassName), e);
 				// Don't recompute the matcher class if it has failed once.
 				matcherClassName = null;
 			}
@@ -204,24 +212,23 @@ class ContainerDescriptor
 
 						} else {
 							Log
-								.error(
-									EMFTypePlugin.getPlugin(),
-									EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NOT_REFERENCE_FEATURE,
-									ResourceManager
-										.getMessage(
-											EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NOT_REFERENCE_FEATURE_KEY,
-											new Object[] {nextFeatureName}),
-									null);
+									.error(
+											EMFTypePlugin.getPlugin(),
+											EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NOT_REFERENCE_FEATURE,
+											EMFTypeCoreMessages
+													.bind(
+															EMFTypeCoreMessages.eContainmentFeature_not_reference_feature_ERROR_,
+															nextFeatureName),
+											null);
 						}
-					} else {
 						Log
-							.error(
-								EMFTypePlugin.getPlugin(),
-								EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NO_SUCH_FEATURE,
-								ResourceManager
-									.getMessage(
-										EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NO_SUCH_FEATURE_KEY,
-										new Object[] {nextFeatureName}), null);
+								.error(
+										EMFTypePlugin.getPlugin(),
+										EMFTypePluginStatusCodes.CONTAINMENT_FEATURE_NO_SUCH_FEATURE,
+										EMFTypeCoreMessages
+												.bind(
+														EMFTypeCoreMessages.eContainmentFeature_no_such_feature_ERROR_,
+														nextFeatureName), null);
 					}
 				}
 			}

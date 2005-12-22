@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IMetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Descriptor for a metamodel element type that has been defined in XML using
@@ -93,7 +93,7 @@ public class MetamodelTypeDescriptor
 
 		if (eClassName == null) {
 			throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-				EMFTypePluginStatusCodes.TYPE_NO_ECLASS_KEY, null);
+				EMFTypeCoreMessages.type_reason_no_eclass_WARN_, null);
 		}
 
 		EPackage ePackage = metamodelDescriptor.getEPackage();
@@ -105,7 +105,7 @@ public class MetamodelTypeDescriptor
 
 		if (eClass == null) {
 			throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-				EMFTypePluginStatusCodes.TYPE_ECLASS_NOT_FOUND_KEY, null);
+				EMFTypeCoreMessages.type_reason_eclass_not_found_WARN_, null);
 		}
 
 		// NAME
@@ -165,13 +165,13 @@ public class MetamodelTypeDescriptor
 
 				} catch (CoreException e) {
 					Log
-						.error(
-							EMFTypePlugin.getPlugin(),
-							EMFTypePluginStatusCodes.EDIT_HELPER_CLASS_NOT_FOUND,
-							ResourceManager
-								.getMessage(
-									EMFTypePluginStatusCodes.EDIT_HELPER_CLASS_NOT_FOUND_KEY,
-									new Object[] {editHelperName}), e);
+							.error(
+									EMFTypePlugin.getPlugin(),
+									EMFTypePluginStatusCodes.EDIT_HELPER_CLASS_NOT_FOUND,
+									EMFTypeCoreMessages
+											.bind(
+													EMFTypeCoreMessages.editHelper_class_not_found_ERROR_,
+													editHelperName), e);
 					// Don't recompute the edit helper class after it has failed
 					// once.
 					editHelperName = null;

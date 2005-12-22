@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Abstract superclass for reuqests to destroy a model element.
@@ -88,7 +88,7 @@ public abstract class DestroyRequest
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditCommandRequest#getDefaultLabel()
 	 */
 	protected String getDefaultLabel() {
-		return ResourceManager.getInstance().getString("Request.Label.Destroy"); //$NON-NLS-1$
+		return EMFTypeCoreMessages.Request_Label_Destroy;
 	}
 
 	/*

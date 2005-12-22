@@ -42,7 +42,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelDescr
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.SpecializationTypeRegistry;
-import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.ResourceManager;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * The registry of application element types, contributed by the
@@ -717,16 +717,14 @@ public class ElementTypeRegistry {
 
 		if (metamodelTypeDescriptorsById.containsKey(typeDescriptor.getId())) {
 			Log
-				.error(
-					EMFTypePlugin.getPlugin(),
-					EMFTypePluginStatusCodes.TYPE_NOT_INITED,
-					ResourceManager
-						.getMessage(
-							EMFTypePluginStatusCodes.TYPE_NOT_INITED_KEY,
-							new Object[] {
-								typeDescriptor.getId(),
-								ResourceManager
-									.getLocalizedString(EMFTypePluginStatusCodes.TYPE_DUPLICATE_KEY)}));
+					.error(
+							EMFTypePlugin.getPlugin(),
+							EMFTypePluginStatusCodes.TYPE_NOT_INITED,
+							EMFTypeCoreMessages
+									.bind(
+											EMFTypeCoreMessages.type_not_init_WARN_,
+											typeDescriptor.getId(),
+											EMFTypeCoreMessages.type_reason_duplicate_id_WARN_));
 			return true;
 		}
 		return false;
@@ -801,13 +799,15 @@ public class ElementTypeRegistry {
 
 			if (nextSpecializedType == null) {
 				Log
-				.error(
-					EMFTypePlugin.getPlugin(),
-					EMFTypePluginStatusCodes.SPECIALIZATION_TYPE_SPECIALIZES_INVALID_ID,
-					ResourceManager
-						.getMessage(
-							EMFTypePluginStatusCodes.SPECIALIZATION_TYPE_SPECIALIZES_INVALID_ID_KEY,
-							new Object[] {specializationTypeDescriptor.getId(), specializedTypeIds[j]}));
+						.error(
+								EMFTypePlugin.getPlugin(),
+								EMFTypePluginStatusCodes.SPECIALIZATION_TYPE_SPECIALIZES_INVALID_ID,
+								EMFTypeCoreMessages
+										.bind(
+												EMFTypeCoreMessages.specializationType_specializes_invalid_id_ERROR_,
+												specializationTypeDescriptor
+														.getId(),
+												specializedTypeIds[j]));
 				return null;
 			}
 			
@@ -840,13 +840,14 @@ public class ElementTypeRegistry {
 		
 		if (metamodelTypeDescriptor == null) {
 			Log
-			.error(
-				EMFTypePlugin.getPlugin(),
-				EMFTypePluginStatusCodes.SPECIALIZATION_TYPE_SPECIALIZES_MULTIPLE_METAMODEL_TYPES,
-				ResourceManager
-					.getMessage(
-						EMFTypePluginStatusCodes.SPECIALIZATION_TYPE_SPECIALIZES_MULTIPLE_METAMODEL_TYPES_KEY,
-						new Object[] {specializationTypeDescriptor.getId()}));
+					.error(
+							EMFTypePlugin.getPlugin(),
+							EMFTypePluginStatusCodes.SPECIALIZATION_TYPE_SPECIALIZES_MULTIPLE_METAMODEL_TYPES,
+							EMFTypeCoreMessages
+									.bind(
+											EMFTypeCoreMessages.specializationType_specializes_multiple_metamodel_types_ERROR_,
+											specializationTypeDescriptor
+													.getId()));
 		}
 		return metamodelTypeDescriptor;
 	}
@@ -882,10 +883,10 @@ public class ElementTypeRegistry {
 				String sourcePluginId = next.getDeclaringExtension()
 					.getNamespace();
 				Log.error(EMFTypePlugin.getPlugin(), ce.getStatus().getCode(),
-					ResourceManager.getMessage(
-						EMFTypePluginStatusCodes.ERROR_PARSING_XML_KEY,
-						new Object[] {sourcePluginId,
-							ce.getStatus().getMessage()}), null);
+						EMFTypeCoreMessages.bind(
+								EMFTypeCoreMessages.xml_parsing_ERROR_,
+								sourcePluginId, ce.getStatus().getMessage()),
+						null);
 
 			} catch (Exception e) {
 
@@ -893,10 +894,10 @@ public class ElementTypeRegistry {
 					.getNamespace();
 
 				Log.error(EMFTypePlugin.getPlugin(),
-					EMFTypePluginStatusCodes.ERROR_PARSING_XML, ResourceManager
-						.getMessage(
-							EMFTypePluginStatusCodes.ERROR_PARSING_XML_KEY,
-							new Object[] {sourcePluginId, e.getMessage()}), e);
+						EMFTypePluginStatusCodes.ERROR_PARSING_XML,
+						EMFTypeCoreMessages.bind(
+								EMFTypeCoreMessages.xml_parsing_ERROR_,
+								sourcePluginId, e.getMessage()), e);
 			}
 		}
 

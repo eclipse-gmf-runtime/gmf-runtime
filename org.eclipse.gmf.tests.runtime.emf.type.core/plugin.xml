@@ -33,28 +33,24 @@
            <!-- Test metamodel types -->
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.department"     
-                   icon="icons/department.gif"
                    name="Department"
                    eclass="Department"
                    edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.DepartmentEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.employee"     
-                   icon="icons/employee.gif"
                    name="Employee"
                    eclass="Employee"
                    edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.student"     
-                   icon="icons/student.gif"
                    name="Student"
                    eclass="Student"
                    edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.StudentEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.office"     
-                   icon="icons/office.gif"
                    name="Office"
                    eclass="Office"
                    edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.OfficeEditHelper"> 
@@ -139,7 +135,7 @@
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.multipleMetamodelTypes"
                    name="MultipleMetamodelTypes"
-                   edithelperadvice="org.eclipse.gmf.tests.runtime.emf.type.core.internal.MultipleMetamodelTypesEditHelperAdvice"> 
+                   edithelperadvice="org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice"> 
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.core.student"/>
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.core.department"/>
            </specializationType>
@@ -159,7 +155,7 @@
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.noMetamodel"     
                    name="NoMetamodel"
                    eclass="None"
-                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.NoEditHelper"> 
+                   edithelper="org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice"> 
            </metamodelType>
         </metamodel>
         
