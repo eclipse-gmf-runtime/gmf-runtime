@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -23,6 +24,10 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.zip.Adler32;
 
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+import org.apache.batik.util.XMLResourceDescriptor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
@@ -330,20 +335,17 @@ public class RenderedImageFactory {
 		return image;
 	}
 
-	private static String getTestString(byte[] buffer) {
-		if (buffer == null)
-			return null;
-
-		StringBuffer szTestBuf = new StringBuffer(10 + 1);
-		for (int i = 0; i < 10; i++)
-			szTestBuf.insert(i, (char) buffer[i]);
-		String szTest = new String(szTestBuf);
-		szTest = szTest.trim();
-		return szTest;
-	}
-
 	private static boolean isSVG(byte[] buffer) {
-		String szTest = getTestString(buffer);
-		return szTest.startsWith("<?xml"); //$NON-NLS-1$
+		ByteArrayInputStream bIS = new ByteArrayInputStream(buffer);
+		String parserName = XMLResourceDescriptor.getXMLParserClassName();
+		SAXSVGDocumentFactory svgFactory = new SAXSVGDocumentFactory(parserName);
+		
+		try {
+			svgFactory.createDocument(null,bIS);
+			return true;
+		} catch (IOException e) {
+			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e.getMessage(), e);
+		}
+		return false;
 	}
 }
