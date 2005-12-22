@@ -138,8 +138,7 @@ Note that the value attribute is optional. When available in the provider&apos;s
       <annotation>
          <documentation>
             This element can be used to specify a policy used to determine whether or not this provider should be asked to test an action filter attribute. The policy is only used if there are no attribute elements defined for the provider.
-&lt;BR&gt;
-To delay plugin loading, the recommended strategy for policies is to define them in a separate fragment that targets &lt;tt&gt;org.eclipse.gmf.runtime.common.core.provider&lt;/tt&gt;.
+			To delay plugin loading, the recommended strategy for policies is to define them in a separate package and add the package to the Eclipse-LazyStart in the Manifest.MF so that loading the policy class does not load the plug-in.
          </documentation>
       </annotation>
       <complexType>
@@ -149,15 +148,8 @@ To delay plugin loading, the recommended strategy for policies is to define them
                   the fully qualified name of the class that implements &lt;TT&gt;org.eclipse.gmf.runtime.common.core.service.IProviderPolicy&lt;/TT&gt;
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.core.service.IProviderPolicy" deprecated="true"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.core.service.IProviderPolicy"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="plugin" type="string" use="required">
-            <annotation>
-               <documentation>
-                  the name of the plug-in that contains the provider policy
-               </documentation>
             </annotation>
          </attribute>
       </complexType>

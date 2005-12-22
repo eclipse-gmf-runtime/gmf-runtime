@@ -96,16 +96,6 @@ A policy may be specified to delay loading the modifier until it is applicable
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="plugin" type="string">
-            <annotation>
-               <documentation>
-                  Plug-in containing the provider policy.
-               </documentation>
-               <appInfo>
-                  <meta.attribute deprecated="true"/>
-               </appInfo>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 

@@ -172,8 +172,7 @@ allows different handlers to be used depending on the nature of the element(s) s
       <annotation>
          <documentation>
             This element is used to optionally specify a policy to use to further determine if this provider should be considered to provide a handler for a global action, given that the view, element type and action ID all match the specified criteria.
-&lt;P&gt;
-To delay plugin loading, the recommended strategy for policies is to define them in a separate fragment that targets &lt;tt&gt;org.eclipse.gmf.runtime.common.core.provider&lt;/tt&gt;.
+			To delay plugin loading, the recommended strategy for policies is to define them in a separate package and add the package to the Eclipse-LazyStart in the Manifest.MF so that loading the policy class does not load the plug-in.
          </documentation>
       </annotation>
       <complexType>
@@ -184,16 +183,6 @@ To delay plugin loading, the recommended strategy for policies is to define them
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.common.core.service.IProviderPolicy"/>
-               </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="plugin" type="string">
-            <annotation>
-               <documentation>
-                  the name of the plug-in that contains the provider policy
-               </documentation>
-               <appInfo>
-                  <meta.attribute deprecated="true"/>
                </appInfo>
             </annotation>
          </attribute>

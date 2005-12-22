@@ -98,16 +98,6 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="plugin" type="string">
-            <annotation>
-               <documentation>
-                  The name of the plug-in containing the provider policy.
-               </documentation>
-               <appInfo>
-                  <meta.attribute deprecated="true"/>
-               </appInfo>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 
