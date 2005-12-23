@@ -462,7 +462,7 @@ abstract public class ConnectionEditPart
 
 		Object model = getModel();
 
-		if (View.class.isAssignableFrom(key) && model instanceof View) {
+		if (View.class.isAssignableFrom(key) && key.isInstance(model) ) {
 			return getModel();
 		}
 
@@ -1404,54 +1404,6 @@ abstract public class ConnectionEditPart
 			return ((IDiagramPreferenceSupport) getRoot()).getPreferencesHint();
 		}
 		return PreferencesHint.USE_DEFAULTS;
-	}
-
-	/*
-	 * ATTENTION!!!!: Do not remove, see below. Only update based on newer GEF
-	 * framework
-	 * 
-	 * This function is "copied" from GEF for the following reason: GEF does not
-	 * check if the connection's source or target are the same as the editpart
-	 * before setting them to <code>null</code> which causes the following
-	 * usecase to currently fail:
-	 * 
-	 * "in a model transaction, view's source connections are detached, a new
-	 * view is created, and the connections are attached to it, then the old
-	 * view is destroyed"
-	 * 
-	 * The reason for the problem is the filtering of Deleted/Uncreated object's
-	 * events in the DiagramEventBroker which prevents the first connection
-	 * detach event from coming and avoiding the problem
-	 * 
-	 * TODO: Remove this override as soon as the bugzilla <Bug 110476> is
-	 * resolved or the event filtering is removed
-	 * 
-	 * @see org.eclipse.gef.EditPart#removeNotify()
-	 */
-	public void removeNotify() {
-		deactivateFigure();
-		if (getSelected() != SELECTED_NONE)
-			getViewer().deselect(this);
-		if (hasFocus())
-			getViewer().setFocus(null);
-
-		List _children = getChildren();
-		for (int i = 0; i < _children.size(); i++)
-			((EditPart) _children.get(i)).removeNotify();
-		unregister();
-		List conns;
-		conns = getSourceConnections();
-		for (int i = 0; i < conns.size(); i++) {
-			ConnectionEditPart conn = (ConnectionEditPart) conns.get(i);
-			if (conn.getSource() == this)
-				conn.setSource(null);
-		}
-		conns = getTargetConnections();
-		for (int i = 0; i < conns.size(); i++) {
-			ConnectionEditPart conn = (ConnectionEditPart) conns.get(i);
-			if (conn.getTarget() == this)
-				conn.setTarget(null);
-		}
 	}
 
 	/*
