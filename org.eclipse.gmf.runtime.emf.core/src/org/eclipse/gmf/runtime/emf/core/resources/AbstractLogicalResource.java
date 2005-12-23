@@ -16,18 +16,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.AbstractResourceWrapper;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourcePolicyManager;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourceUtil;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.UnmodifiableResourceView;
-import org.eclipse.gmf.runtime.emf.core.internal.util.Trace;
 
 
 /**
@@ -60,21 +53,16 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.Trace;
  * @see ILogicalResourcePolicy
  * 
  * @author Christian W. Damus (cdamus)
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public abstract class AbstractLogicalResource
 	extends XMIResourceImpl
 	implements ILogicalResource {
 
 	private final Map resourceMap = new java.util.HashMap();
-	private final Map unmodifiableResourceMap = new java.util.HashMap();
-	
-	/**
-	 * A map remembering the resource that used to store a separate object
-	 * after that object has been detached (in the hope that it will be
-	 * re-attached soon).
-	 * Maps {@link String} element ID to resource {@link URI}
-	 */
-	private final Map detachedIdToResourceMap = new java.util.HashMap(); 
 	
 	/**
 	 * Initializes me.
@@ -93,97 +81,47 @@ public abstract class AbstractLogicalResource
 	}
 	
 	/**
-	 * Implements the interface method by delegation to the registered logical
-	 * resource policies, with the additional constraint that the
-	 * <code>eObject</code> must not already be
-	 * {@linkplain ILogicalResource#isSeparate(EObject) separate}.
+	 * I cannot separate any elements.
 	 * 
-	 * @see ILogicalResource#isSeparate(EObject)
+	 * @return <code>false</code>, always
 	 */
-	public final boolean canSeparate(EObject eObject) {
-		assert eObject.eResource() == this : "eObject is not in receiver" ; //$NON-NLS-1$
-		
-		// the logical resource roots are not considered as separate or
-		//   as separable
-		return !isSeparate(eObject) && customCanSeparate(eObject)
-			&& LogicalResourcePolicyManager.getInstance().canSeparate(this, eObject);
+	public boolean canSeparate(EObject eObject) {
+		return false;
+	}
+
+	/**
+	 * I cannot separate any elements.
+	 * 
+	 * @return <code>false</code>, always
+	 */
+	public boolean isSeparate(EObject eObject) {
+		return false;
+	}
+
+	public void separate(EObject eObject, URI uri) {
+		throw new IllegalArgumentException("cannot separate eObject"); //$NON-NLS-1$
+	}
+
+	public void absorb(EObject eObject) {
+		throw new IllegalArgumentException("eObject is not separate"); //$NON-NLS-1$
 	}
 	
-	/**
-	 * Applies additional criteria to the question of whether an element
-	 * can be separated.  May be overridden by subclasses to provide custom
-	 * behaviour.
-	 * <p>
-	 * This default implementation just returns <code>true</code>.
-	 * </p>
-	 * 
-	 * @param eObject the element that is proposed for separation
-	 * @return whether it meets the resource implementation's additional criteria
-	 */
-	protected boolean customCanSeparate(EObject eObject) {
-		return true;
+	public boolean isLoaded(EObject eObject) {
+		return true;  // no object in a non-logical-resource can be unloaded
 	}
 	
-	/**
-	 * Implementation of the element separation operation, which does the
-	 * following:
-	 * <ul>
-	 *   <li>enforces the preconditions declared by the interface</li>
-	 *   <li>consults the registered {@linkplain ILogicalResourcePolicy}
-	 *       policies before and after separation</li>
-	 *   <li>fires the {@link org.eclipse.gmf.runtime.emf.core.EventTypes#SEPARATE}
-	 *       notification when (and if) separation succeeds</li>
-	 *   <li>delegates the actual separation implementation to the
-	 *       {@link #doSeparate(EObject, URI)} method implemented by the
-	 *       subclass</li>
-	 * </ul> 
-	 * 
-	 * @see #doSeparate(EObject, URI)
-	 * @see ILogicalResourcePolicy
-	 */
-	public final void separate(EObject eObject, URI physUri) throws CannotSeparateException {
-		assert eObject.eResource() == this : "eObject is not in receiver" ; //$NON-NLS-1$
+	public void load(EObject eObject)
+		throws IOException {
 		
-		if (isSeparate(eObject)) {
-			throw new IllegalArgumentException("eObject is already separate"); //$NON-NLS-1$
-		}
-		
-		physUri = LogicalResourcePolicyManager.getInstance().preSeparate(this, eObject, physUri);
-		
-		Resource oldUnit = getPhysicalResource(eObject);
-		
-		if (Trace.isEnabled(MSLDebugOptions.RESOURCES)) {
-			Trace.trace(
-				MSLDebugOptions.RESOURCES,
-				"Separating: " + oldUnit.getURI() + " ==> " + physUri + ": " + eObject);  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		}
-		
-		if (physUri == null) {
-			// not provided by user and no policy had a suggestion
-			CannotSeparateException e = new CannotSeparateException(
-				EMFCoreMessages.separate_noUri_ERROR_);
-			Trace.throwing(LogicalResourceUtil.class, "separate", e); //$NON-NLS-1$
-			throw e;
-		}
-		
-		if (physUri.equals(oldUnit.getURI())) {
-			// not allowed to separate into current storage unit
-			CannotSeparateException e = new CannotSeparateException(
-				EMFCoreMessages.separate_sameUnit_ERROR_);
-			Trace.throwing(LogicalResourceUtil.class, "separate", e); //$NON-NLS-1$
-			throw e;
-		}
-		
-		doSeparate(eObject, physUri);
-		
-		Resource newUnit = getPhysicalResource(eObject);
-		
-		LogicalResourcePolicyManager.getInstance().postSeparate(this, eObject, physUri);
-		
-		// notify listeners
-		LogicalResourceUtil.fireSeparationEvent(eObject, oldUnit, newUnit);
-		
-		setModified(true);
+		throw new IllegalArgumentException("eObject is not separate"); //$NON-NLS-1$
+	}
+
+	public Map getMappedResources() {
+		return Collections.EMPTY_MAP;
+	}
+
+	public Object getAdapter(Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 	
 	/**
@@ -199,100 +137,12 @@ public abstract class AbstractLogicalResource
 	protected abstract void doSeparate(EObject eObject, URI physUri) throws CannotSeparateException;
 	
 	/**
-	 * Implementation of the element absorption operation, which does the
-	 * following:
-	 * <ul>
-	 *   <li>enforces the preconditions declared by the interface</li>
-	 *   <li>consults the registered {@linkplain ILogicalResourcePolicy}
-	 *       policies before and after absorption</li>
-	 *   <li>fires the {@link org.eclipse.gmf.runtime.emf.core.EventTypes#ABSORB}
-	 *       notification when (and if) absorption succeeds</li>
-	 *   <li>delegates the actual absorption implementation to the
-	 *       {@link #doAbsorb(EObject)} method implemented by the subclass</li>
-	 * </ul> 
-	 * 
-	 * @see #doAbsorb(EObject)
-	 * @see ILogicalResourcePolicy
-	 */
-	public final void absorb(EObject eObject) throws CannotAbsorbException {
-		assert eObject.eResource() == this : "eObject is not in receiver" ; //$NON-NLS-1$
-		
-		if (!isSeparate(eObject)) {
-			throw new IllegalArgumentException("eObject is not separate"); //$NON-NLS-1$
-		}
-		
-		if (!isLoaded(eObject)) {
-			throw new IllegalArgumentException("eObject is not loaded"); //$NON-NLS-1$
-		}
-		
-		Resource oldUnit = getPhysicalResource(eObject);
-		EObject parent = eObject.eContainer();
-		
-		Resource newUnit;
-		if (parent == null) {
-			// the parent unit of a separate root must be to physical root unit
-			newUnit = getPhysicalResource(getURI());
-		} else {
-			newUnit = getPhysicalResource(eObject.eContainer());
-		}
-		
-		if (Trace.isEnabled(MSLDebugOptions.RESOURCES)) {
-			Trace.trace(
-				MSLDebugOptions.RESOURCES,
-				"Absorbing: " + oldUnit.getURI() //$NON-NLS-1$
-				+ " ==> " + newUnit.getURI() + ": " + eObject);  //$NON-NLS-1$//$NON-NLS-2$
-		}
-		
-		LogicalResourcePolicyManager.getInstance().preAbsorb(this, eObject);
-		
-		doAbsorb(eObject);
-		
-		LogicalResourcePolicyManager.getInstance().postAbsorb(this, eObject);
-		
-		// notify listeners
-		LogicalResourceUtil.fireAbsorptionEvent(eObject, oldUnit, newUnit);
-		
-		setModified(true);
-	}
-	
-	/**
 	 * Implemented by the subclass to perform the absorption operation.
 	 * 
 	 * @param eObject the element to be absorbed
 	 * @throws CannotAbsorbException if the absorption could not be performed
 	 */
 	protected abstract void doAbsorb(EObject eObject) throws CannotAbsorbException;
-	
-	/**
-	 * Implementation of the element load operation, which does the
-	 * following:
-	 * <ul>
-	 *   <li>enforces the preconditions declared by the interface</li>
-	 *   <li>delegates the actual load implementation to the
-	 *       {@link #doLoad(EObject)} method implemented by the subclass, if
-	 *       the element is not already loaded</li>
-	 * </ul> 
-	 * <p>
-	 * <b>Note</b> that, because loading an object may also load other objects
-	 * from the same sub-unit, this template method does not fire the
-	 * {@link EventTypes#LOAD} notification, as it would not know how many
-	 * to fire for which objects.  This is the responsibility of the subclass's
-	 * {@link #doLoad(EObject)} implementation.
-	 * </p>
-	 * 
-	 * @see #doLoad(EObject)
-	 */
-	public final void load(EObject eObject) throws IOException {
-		assert eObject.eResource() == this : "eObject is not in receiver" ; //$NON-NLS-1$
-		
-		if (!isSeparate(eObject)) {
-			throw new IllegalArgumentException("eObject is not separate"); //$NON-NLS-1$
-		}
-		
-		if (!isLoaded(eObject)) {
-			doLoad(eObject);
-		}
-	}
 	
 	/**
 	 * Implemented by the subclass to perform the load operation.  This method
@@ -302,10 +152,6 @@ public abstract class AbstractLogicalResource
 	 * @throws IOException if the load failed on an I/O problem
 	 */
 	protected abstract void doLoad(EObject eObject) throws IOException;
-	
-	public final Map getMappedResources() {
-		return Collections.unmodifiableMap(unmodifiableResourceMap);
-	}
 	
 	/**
 	 * Adds the specified <code>subunit</code> resource to the map.
@@ -317,23 +163,7 @@ public abstract class AbstractLogicalResource
 	 *     was detached
 	 */
 	protected void addMappedResource(EObject object, Resource unit) {
-		if (unit == null) {
-			// look to see whether this object was previously a separate element
-			//    that was detached from me
-			URI unitUri = (URI) detachedIdToResourceMap.remove(getID(object));
-			
-			if ((unitUri != null) && !uri.equals(getURI())) {
-				unit = getPhysicalResource(unitUri);
-			}
-		}
-		
-		if (unit != null) {
-			// unwrap just in case
-			resourceMap.put(object, AbstractResourceWrapper.unwrap(unit));
-			
-			// wrap just in case
-			unmodifiableResourceMap.put(object, UnmodifiableResourceView.get(unit));
-		}
+		// no need to do anything any longer
 	}
 	
 	/**
@@ -343,17 +173,7 @@ public abstract class AbstractLogicalResource
 	 * @param object the (formerly) separate element
 	 */
 	protected void removeMappedResource(EObject object) {
-		// this element has been now detached.  Preserve the physical mapping
-		//    in case it is re-attached later
-		Resource unit = (Resource) getMappedResources().get(object);
-		
-		if (unit != null) {
-			// the object's ID is retained by the detached object ID map
-			detachedIdToResourceMap.put(getID(object), unit.getURI());
-		}
-		
-		resourceMap.remove(object);
-		unmodifiableResourceMap.remove(object);
+		// no need to do anything any longer
 	}
 	
 	/**
@@ -361,9 +181,7 @@ public abstract class AbstractLogicalResource
 	 * Subclasses implementing this method must invoke <code>super</code>.
 	 */
 	protected void clearMappedResources() {
-		resourceMap.clear();
-		unmodifiableResourceMap.clear();
-		detachedIdToResourceMap.clear();
+		// no need to do anything any longer
 	}
 	
 	/**
@@ -389,7 +207,7 @@ public abstract class AbstractLogicalResource
 	protected final Resource getPhysicalResource(EObject eObject) {
 		assert eObject.eResource() == this : "eObject is not in receiver" ; //$NON-NLS-1$
 		
-		return LogicalResourceUtil.getPhysicalResource(this, eObject);
+		return eObject.eResource();
 	}
 
 	/**

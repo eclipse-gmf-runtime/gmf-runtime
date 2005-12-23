@@ -181,6 +181,10 @@ public final class EventTypes {
 	 * {@link Notification#getNewValue()}.
 	 * 
 	 * @see org.eclipse.emf.common.notify.Notification#getEventType
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public static final int SEPARATE = 1006;
 
@@ -193,6 +197,10 @@ public final class EventTypes {
 	 * {@link Notification#getOldValue()}.
 	 * 
 	 * @see org.eclipse.emf.common.notify.Notification#getEventType
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public static final int ABSORB = 1007;
 
@@ -205,6 +213,10 @@ public final class EventTypes {
 	 * {@link Notification#getNewValue()} of the notification.
 	 * 
 	 * @see org.eclipse.emf.common.notify.Notification#getEventType
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public static final int LOAD = 1008;
 

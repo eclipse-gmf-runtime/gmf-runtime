@@ -20,6 +20,10 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLCheckedException;
  * resource in a logical resource.
  *
  * @author Christian W. Damus (cdamus)
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public class CannotAbsorbException
 	extends MSLCheckedException {

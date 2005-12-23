@@ -11,14 +11,23 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.resources;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
+import org.eclipse.emf.ecore.xmi.XMLHelper;
+import org.eclipse.emf.ecore.xmi.XMLLoad;
+import org.eclipse.emf.ecore.xmi.XMLSave;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
+import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 /**
  * Custom implementation of an XMIResource.
@@ -26,7 +35,8 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
  * @author rafikj
  */
 public class MSLResource
-	extends LogicalResource {
+	extends XMIResourceImpl
+	implements ILogicalResource {
 
 	private boolean useIDAttributes = false;
 	
@@ -40,8 +50,8 @@ public class MSLResource
 		setTrackingModification(true);
 	}
 
-	protected LogicalResourceUnit createUnit(URI unitUri) {
-		return new MSLResourceUnit(unitUri, this);
+	protected boolean useUUIDs() {
+		return true;
 	}
 	
 	/**
@@ -56,6 +66,18 @@ public class MSLResource
 	 */
 	protected boolean useIDAttributes() {
 		return useIDAttributes;
+	}
+
+	protected XMLHelper createXMLHelper() {
+		return new MSLHelper(this);
+	}
+
+	protected XMLLoad createXMLLoad() {
+		return new MSLLoad(createXMLHelper());
+	}
+
+	protected XMLSave createXMLSave() {
+		return new MSLSave(createXMLHelper());
 	}
 
 	/**
@@ -162,5 +184,53 @@ public class MSLResource
 				}
 				return false;
 			}};
+	}
+
+	//
+	// ILogicalResource methods
+	//
+	
+	/**
+	 * I cannot separate any elements.
+	 * 
+	 * @return <code>false</code>, always
+	 */
+	public boolean canSeparate(EObject eObject) {
+		return false;
+	}
+
+	/**
+	 * I cannot separate any elements.
+	 * 
+	 * @return <code>false</code>, always
+	 */
+	public boolean isSeparate(EObject eObject) {
+		return false;
+	}
+
+	public void separate(EObject eObject, URI uri) {
+		throw new IllegalArgumentException("cannot separate eObject"); //$NON-NLS-1$
+	}
+
+	public void absorb(EObject eObject) {
+		throw new IllegalArgumentException("eObject is not separate"); //$NON-NLS-1$
+	}
+	
+	public boolean isLoaded(EObject eObject) {
+		return true;  // no object in a non-logical-resource can be unloaded
+	}
+	
+	public void load(EObject eObject)
+		throws IOException {
+		
+		throw new IllegalArgumentException("eObject is not separate"); //$NON-NLS-1$
+	}
+
+	public Map getMappedResources() {
+		return Collections.EMPTY_MAP;
+	}
+
+	public Object getAdapter(Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 }

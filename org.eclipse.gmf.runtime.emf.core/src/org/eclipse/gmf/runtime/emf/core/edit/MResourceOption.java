@@ -48,6 +48,10 @@ public final class MResourceOption {
 	 * {@linkplain org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource logical resource}.
 	 * 
 	 * @see #DONT_AUTO_LOAD_SUBUNITS
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public static final int LOAD_ALL_SUBUNITS = 16;
 
@@ -57,6 +61,10 @@ public final class MResourceOption {
 	 * This option is ignored if all units are loaded initially.
 	 * 
 	 * @see #LOAD_ALL_SUBUNITS
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public static final int DONT_AUTO_LOAD_SUBUNITS = 32;
 	

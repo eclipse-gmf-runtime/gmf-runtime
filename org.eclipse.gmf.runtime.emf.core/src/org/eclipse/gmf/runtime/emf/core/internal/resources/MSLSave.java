@@ -17,6 +17,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl;
 
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
@@ -28,7 +29,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
  * @author rafikj
  */
 public class MSLSave
-	extends LogicalSave {
+	extends XMISaveImpl {
 
 	/**
 	 * Discards control characters 0x00 - 0x1F except for TAB, CR, and LF, which
@@ -120,6 +121,7 @@ public class MSLSave
 	public Object writeTopObjects(List contents) {
 
 		writeCCToken();
+		writeArtifactVersionToken();
 		return super.writeTopObjects(contents);
 	}
 

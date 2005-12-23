@@ -129,6 +129,10 @@ public abstract class MFilter {
 
 	/**
 	 * Filter for element separated or absorbed events.
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public final static MFilter SEPARATED_ABSORBED_FILTER = new MFilter.Or(
 			new MFilter.EventType(EventTypes.SEPARATE), new MFilter.EventType(
@@ -168,6 +172,10 @@ public abstract class MFilter {
 
 	/**
 	 * Filter for element loaded events.
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public final static MFilter ELEMENT_LOADED_FILTER = 
 			new MFilter.EventType(EventTypes.LOAD);

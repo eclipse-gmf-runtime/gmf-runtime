@@ -79,6 +79,10 @@ public class ResourceUtil {
 	 * @return whether the <code>resource</code> is a logical resource
 	 * 
 	 * @see ILogicalResource
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public static boolean isLogicalResource(Resource resource) {
 		return MEditingDomain.INSTANCE.isLogicalResource(resource);
@@ -93,7 +97,11 @@ public class ResourceUtil {
 	 * 
 	 * @param resource a resource for which we want to obtain a logical view
 	 * @return the logical view of the resource
-	 */
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
+s	 */
 	public static ILogicalResource asLogicalResource(Resource resource) {
 		return MEditingDomain.INSTANCE.asLogicalResource(resource);
 	}

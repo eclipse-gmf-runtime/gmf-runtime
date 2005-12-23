@@ -28,20 +28,26 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
  *   <dt>objectType</dt>
  *     <dd>string-valued property denoting an <code>EObject</code>'s
  *         {@linkplain org.eclipse.gmf.runtime.emf.core.internal.MObjectType object type}</dd>
- *   <dt>canSeparate</dt>
- *     <dd>boolean-valued property indicating whether an <code>EObject</code>
- *         can be
- *         {@linkplain org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource#canSeparate(EObject) separated}</dd>
- *   <dt>isSeparate</dt>
- *     <dd>boolean-valued property indicating whether an <code>EObject</code> is
- *         {@linkplain org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource#isSeparate(EObject) separate}</dd>
  * </dl>
  *
  * @author Christian W. Damus (cdamus)
  */
 public class EObjectPropertyTester extends PropertyTester {
 	private static final String OBJECT_TYPE_PROPERTY = "objectType"; //$NON-NLS-1$
+	
+	/**
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
+	 */
 	private static final String CAN_SEPARATE_PROPERTY = "canSeparate"; //$NON-NLS-1$
+	/**
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
+	 */
 	private static final String IS_SEPARATE_PROPERTY = "isSeparate"; //$NON-NLS-1$
 	
 	/**
@@ -98,19 +104,9 @@ public class EObjectPropertyTester extends PropertyTester {
 		if (property.equals(OBJECT_TYPE_PROPERTY)) {
 			result = EObjectUtil.getType(eObject).getName().equals(expectedValue);
 		} else if (property.equals(CAN_SEPARATE_PROPERTY)) {
-			Resource res = eObject.eResource();
-			MEditingDomain domain = MEditingDomain.getEditingDomain(res);
-			
-			if (domain != null) {
-				result = domain.asLogicalResource(res).canSeparate(eObject);
-			}
+			return Boolean.FALSE;
 		} else if (property.equals(IS_SEPARATE_PROPERTY)) {
-			Resource res = eObject.eResource();
-			MEditingDomain domain = MEditingDomain.getEditingDomain(res);
-			
-			if (domain != null) {
-				result = domain.asLogicalResource(res).isSeparate(eObject);
-			}
+			return Boolean.FALSE;
 		}
 		
 		return Boolean.valueOf(result);

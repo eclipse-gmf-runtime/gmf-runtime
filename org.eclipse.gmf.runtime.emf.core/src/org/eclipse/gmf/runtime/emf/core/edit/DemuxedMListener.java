@@ -173,6 +173,10 @@ public class DemuxedMListener
 
 	/**
 	 * Does nothing.
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public void handleElementSeparatedEvent(Notification notification,
 			ILogicalResource resource, EObject eObject, Resource newResource) {
@@ -181,6 +185,10 @@ public class DemuxedMListener
 	
 	/**
 	 * Does nothing.
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public void handleElementAbsorbedEvent(Notification notification,
 			ILogicalResource resource, EObject eObject, Resource oldResource) {
@@ -189,6 +197,10 @@ public class DemuxedMListener
 	
 	/**
 	 * Does nothing.
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public void handleElementLoadedEvent(Notification notification,
 			ILogicalResource resource, EObject eObject) {

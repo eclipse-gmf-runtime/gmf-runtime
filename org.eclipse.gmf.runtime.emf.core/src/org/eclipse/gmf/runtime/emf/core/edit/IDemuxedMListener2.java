@@ -39,6 +39,10 @@ public interface IDemuxedMListener2
 	 *     separated into a subordinate resource with the specified <code>uri</code>
 	 * @param newResource the new subordinate resource (within the logical
 	 *     <code>resource</code>) that stores the <code>eObject</code>
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public void handleElementSeparatedEvent(Notification notification,
 		ILogicalResource resource, EObject eObject, Resource newResource);
@@ -53,6 +57,10 @@ public interface IDemuxedMListener2
 	 *     absorbed from a subordinate resource with the specified <code>uri</code>
 	 * @param oldResource the subordinate resource (within the logical
 	 *     <code>resource</code>) that formerly stored the <code>eObject</code>
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public void handleElementAbsorbedEvent(Notification notification,
 			ILogicalResource resource, EObject eObject, Resource oldResource);
@@ -65,6 +73,10 @@ public interface IDemuxedMListener2
 	 * @param resource the logical resource into which the object was loaded
 	 * @param eObject an object in the <code>resource</code>, which is
 	 *     newly loaded from a previously unloaded physical resource
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public void handleElementLoadedEvent(Notification notification,
 			ILogicalResource resource, EObject eObject);

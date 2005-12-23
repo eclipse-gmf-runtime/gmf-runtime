@@ -371,6 +371,10 @@ public abstract class MEditingDomain
 	 * @return whether the <code>resource</code> is a logical resource
 	 * 
 	 * @see ILogicalResource
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public abstract boolean isLogicalResource(Resource resource);
 
@@ -383,6 +387,10 @@ public abstract class MEditingDomain
 	 * 
 	 * @param resource a resource for which we want to obtain a logical view
 	 * @return the logical view of the resource
+	 * 
+	 * @deprecated Use the cross-resource containment support provided by EMF,
+	 *     instead, by defining containment features that are capable of storing
+	 *     proxies.
 	 */
 	public abstract ILogicalResource asLogicalResource(Resource resource);
 

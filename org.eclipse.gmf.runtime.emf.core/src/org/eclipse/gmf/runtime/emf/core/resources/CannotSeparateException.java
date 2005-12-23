@@ -21,6 +21,10 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLCheckedException;
  * some reason (such as being read-only).
  *
  * @author Christian W. Damus (cdamus)
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public class CannotSeparateException
 	extends MSLCheckedException {

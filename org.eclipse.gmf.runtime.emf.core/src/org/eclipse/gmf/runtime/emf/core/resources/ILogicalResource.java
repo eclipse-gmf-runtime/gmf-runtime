@@ -50,6 +50,10 @@ import org.eclipse.emf.ecore.resource.Resource;
  * 
  * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#asLogicalResource(Resource)
  * @see org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public interface ILogicalResource
 	extends Resource, IAdaptable {

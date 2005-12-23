@@ -51,6 +51,9 @@ This extension point also allows metamodel providers to define custom &lt;code&g
 
    <element name="policy">
       <annotation>
+         <appInfo>
+            <meta.element deprecated="true"/>
+         </appInfo>
          <documentation>
             A policy applies certain metamodel- or application-specific constraints on the management of logical resources.  The policy implements a callback interface defining hooks for these constraints and for insertion of additional behaviour.
          </documentation>
@@ -74,6 +77,9 @@ This extension point also allows metamodel providers to define custom &lt;code&g
 
    <element name="efactory">
       <annotation>
+         <appInfo>
+            <meta.element deprecated="true"/>
+         </appInfo>
          <documentation>
             A custom &lt;code&gt;EFactory&lt;/code&gt; implementation that the logical resource may use to create model elements that will automatically load their children.  This is commonly done by defining subclasses of the metamodel&apos;s basic &quot;Impl&quot; classes that substitute special containment lists for the default implementations.  These containment lists are defined in the &lt;code&gt;org.eclipse.gmf.runtime.emf.core.util&lt;/code&gt; package.
          </documentation>
@@ -185,12 +191,11 @@ The &lt;code&gt;EFactory&lt;/code&gt; registered on this extension point can cre
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
+         Copyright (c) 2005  IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

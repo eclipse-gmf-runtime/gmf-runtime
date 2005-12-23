@@ -16,14 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLResourceListener;
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 
 /**
@@ -146,39 +143,6 @@ public class DemuxingMListener
 					Resource resource = (Resource) notifier;
 					eventListener
 						.handleResourceExportedEvent(notification, resource);
-				} else if (notification.getEventType() == EventTypes.SEPARATE) {
-					int featureID = notification.getFeatureID(Resource.class);
-					if ((featureID == Resource.RESOURCE__CONTENTS) && (eventListener2 != null)) {
-						ILogicalResource res = (ILogicalResource) notifier;
-						Resource newRes = (Resource) notification.getNewValue();
-						int position = notification.getPosition();
-						
-						EObject element = (EObject) res.getContents().get(position);
-						
-						eventListener2.handleElementSeparatedEvent(
-							notification, res, element, newRes);
-					}
-				} else if (notification.getEventType() == EventTypes.ABSORB) {
-					int featureID = notification.getFeatureID(Resource.class);
-					if ((featureID == Resource.RESOURCE__CONTENTS) && (eventListener2 != null)) {
-						ILogicalResource res = (ILogicalResource) notifier;
-						Resource oldRes = (Resource) notification.getOldValue();
-						int position = notification.getPosition();
-						
-						EObject element = (EObject) res.getContents().get(position);
-						
-						eventListener2.handleElementAbsorbedEvent(
-							notification, res, element, oldRes);
-					}
-				} else if (notification.getEventType() == EventTypes.LOAD) {
-					int featureID = notification.getFeatureID(Resource.class);
-					if ((featureID == Resource.RESOURCE__CONTENTS) && (eventListener2 != null)) {
-						EObject element = (EObject) notification.getNewValue();
-						ILogicalResource res = (ILogicalResource) notifier;
-						
-						eventListener2.handleElementLoadedEvent(
-							notification, res, element);
-					}
 				}
 			} else if (notifier instanceof EObject) {
 				if (notification.getEventType() == EventTypes.ADD) {
@@ -265,50 +229,6 @@ public class DemuxingMListener
 					EObject element = (EObject) notifier;
 					eventListener.handleElementModifiedEvent(notification,
 						element);
-				} else if (notification.getEventType() == EventTypes.SEPARATE) {
-					if (eventListener2 != null) {
-						EObject element = (EObject) notifier;
-						ILogicalResource res = (ILogicalResource) element.eResource();
-						EReference feature = (EReference) notification.getFeature();
-						Resource newRes = (Resource) notification.getNewValue();
-						int position = notification.getPosition();
-						
-						if (position < 0) {
-							// scalar reference
-							element = (EObject) element.eGet(feature);
-						} else {
-							element = (EObject) ((EList) element.eGet(feature)).get(position);
-						}
-						
-						eventListener2.handleElementSeparatedEvent(
-							notification, res, element, newRes);
-					}
-				} else if (notification.getEventType() == EventTypes.ABSORB) {
-					if (eventListener2 != null) {
-						EObject element = (EObject) notifier;
-						ILogicalResource res = (ILogicalResource) element.eResource();
-						EReference feature = (EReference) notification.getFeature();
-						Resource oldRes = (Resource) notification.getOldValue();
-						int position = notification.getPosition();
-						
-						if (position < 0) {
-							// scalar reference
-							element = (EObject) element.eGet(feature);
-						} else {
-							element = (EObject) ((EList) element.eGet(feature)).get(position);
-						}
-						
-						eventListener2.handleElementAbsorbedEvent(
-							notification, res, element, oldRes);
-					}
-				} else if (notification.getEventType() == EventTypes.LOAD) {
-					if (eventListener2 != null) {
-						EObject element = (EObject) notification.getNewValue();
-						ILogicalResource res = (ILogicalResource) element.eResource();
-						
-						eventListener2.handleElementLoadedEvent(
-							notification, res, element);
-					}
 				}
 			} else if (notifier instanceof MUndoInterval) {
 				MUndoInterval undoInterval = (MUndoInterval) notifier;

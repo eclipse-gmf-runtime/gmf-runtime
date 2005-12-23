@@ -14,7 +14,8 @@ package org.eclipse.gmf.runtime.emf.core.internal.resources;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIHelperImpl;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
@@ -26,12 +27,12 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
  * @author rafikj
  */
 public class MSLHelper
-	extends LogicalHelper {
+	extends XMIHelperImpl {
 
 	/**
 	 * Constructor.
 	 */
-	public MSLHelper(MSLResourceUnit resource) {
+	public MSLHelper(XMLResource resource) {
 		super(resource);
 	}
 

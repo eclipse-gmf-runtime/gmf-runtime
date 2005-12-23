@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.xmi.UnresolvedReferenceException;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.SAXWrapper;
+import org.eclipse.emf.ecore.xmi.impl.XMILoadImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -29,7 +30,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author rafikj
  */
 public class MSLLoad
-	extends LogicalLoad {
+	extends XMILoadImpl {
 
 	/**
 	 * Constructor.
@@ -60,6 +61,6 @@ public class MSLLoad
 	 * @see org.eclipse.emf.ecore.xmi.impl.XMLLoadImpl#makeDefaultHandler()
 	 */
 	protected DefaultHandler makeDefaultHandler() {
-		return new SAXWrapper(new MSLHandler((MSLResourceUnit) resource, helper, options));
+		return new SAXWrapper(new MSLHandler(resource, helper, options));
 	}
 }

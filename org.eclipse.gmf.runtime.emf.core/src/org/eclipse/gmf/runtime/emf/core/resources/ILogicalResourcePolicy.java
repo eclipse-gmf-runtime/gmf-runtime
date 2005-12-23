@@ -36,6 +36,10 @@ import org.eclipse.emf.ecore.EObject;
  * @author Christian W. Damus (cdamus)
  * 
  * @see AbstractLogicalResourcePolicy
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public interface ILogicalResourcePolicy {
 	

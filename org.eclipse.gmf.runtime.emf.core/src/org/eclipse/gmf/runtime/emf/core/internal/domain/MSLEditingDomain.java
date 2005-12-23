@@ -650,14 +650,6 @@ public class MSLEditingDomain
 				loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA,
 					extendedMetaData);
 			}
-
-			if ((options & MResourceOption.LOAD_ALL_SUBUNITS) != 0) {
-				loadOptions.put(ILogicalResource.OPTION_LOAD_ALL_UNITS,
-					Boolean.TRUE);
-			} else if ((options & MResourceOption.DONT_AUTO_LOAD_SUBUNITS) != 0) {
-				loadOptions.put(ILogicalResource.OPTION_AUTO_LOAD_UNITS,
-					Boolean.FALSE);
-			}
 			
 			if (null == inputStream)
 				resource.load(loadOptions);
@@ -1967,10 +1959,12 @@ public class MSLEditingDomain
 		}
 	}
 
+	/** @deprecated */
 	public boolean isLogicalResource(Resource resource) {
 		return resource instanceof ILogicalResource;
 	}
 	
+	/** @deprecated */
 	public ILogicalResource asLogicalResource(Resource resource) {
 		ILogicalResource result = null;
 		

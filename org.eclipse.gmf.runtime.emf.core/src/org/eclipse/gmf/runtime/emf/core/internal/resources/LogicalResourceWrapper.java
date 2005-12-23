@@ -13,18 +13,13 @@
 package org.eclipse.gmf.runtime.emf.core.internal.resources;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 
@@ -35,6 +30,10 @@ import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
  * @author Christian W. Damus (cdamus)
  * 
  * @see #canSeparate(EObject)
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public class LogicalResourceWrapper
 	extends AbstractResourceWrapper
@@ -44,8 +43,6 @@ public class LogicalResourceWrapper
 		protected AbstractResourceWrapper createWrapper(Resource resource) {
 			return new LogicalResourceWrapper(resource);
 		}};
-	
-	private Map resourceMap;
 	
 	/**
 	 * Initializes me with the delegate that I wrap.
@@ -117,55 +114,7 @@ public class LogicalResourceWrapper
 	}
 
 	public Map getMappedResources() {
-		if (resourceMap == null) {
-			resourceMap = new java.util.HashMap() {
-				{
-					eAdapters().add(new AdapterImpl() {
-						public void notifyChanged(Notification msg) {
-							if (msg.getFeatureID(null) == RESOURCE__CONTENTS) {
-								switch (msg.getEventType()) {
-								case Notification.ADD:
-									add(msg.getNewValue());
-									break;
-								case Notification.ADD_MANY:
-									addAll((Collection) msg.getNewValue());
-									break;
-								case Notification.REMOVE:
-									remove(msg.getOldValue());
-									break;
-								case Notification.REMOVE_MANY:
-									removeAll((Collection) msg.getOldValue());
-									break;
-								case Notification.SET:
-									remove(msg.getOldValue());
-									add(msg.getNewValue());
-								}
-							}
-						}});
-					
-					addAll(getContents());
-				}
-				
-				void add(Object o) {
-					put(o, UnmodifiableResourceView.get(getWrappedResource()));
-				}
-				
-				void addAll(Collection c) {
-					for (Iterator iter = c.iterator(); iter.hasNext();) {
-						add(iter.next());
-					}
-				}
-				
-				void removeAll(Collection c) {
-					for (Iterator iter = c.iterator(); iter.hasNext();) {
-						remove(c);
-					}
-				}};
-			
-			resourceMap = Collections.unmodifiableMap(resourceMap);
-		}
-		
-		return resourceMap;
+		return Collections.EMPTY_MAP;
 	}
 
 	public Object getAdapter(Class adapter) {

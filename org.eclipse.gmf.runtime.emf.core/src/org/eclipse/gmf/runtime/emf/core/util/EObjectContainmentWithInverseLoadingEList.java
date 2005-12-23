@@ -12,12 +12,8 @@
 
 package org.eclipse.gmf.runtime.emf.core.util;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
-
-import org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourceUtil;
 
 
 /**
@@ -25,6 +21,10 @@ import org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourceUtil;
  * loads sub-unit objects when they are retrieved from the list.
  *
  * @author Christian W. Damus (cdamus)
+ * 
+ * @deprecated Use the cross-resource containment support provided by EMF,
+ *     instead, by defining containment features that are capable of storing
+ *     proxies.
  */
 public class EObjectContainmentWithInverseLoadingEList
 	extends EObjectContainmentWithInverseEList {
@@ -44,16 +44,4 @@ public class EObjectContainmentWithInverseLoadingEList
 			InternalEObject owner, int featureID, int inverseFeatureID) {
 		super(dataClass, owner, featureID, inverseFeatureID);
 	}
-
-	protected Object resolve(int index, Object object) {
-		EObject eObject = (EObject) object;
-		Resource res = getEObject().eResource();
-		
-		if (res != null) {
-			LogicalResourceUtil.autoload(res, eObject);
-		}
-		
-		return eObject;
-	}
-
 }

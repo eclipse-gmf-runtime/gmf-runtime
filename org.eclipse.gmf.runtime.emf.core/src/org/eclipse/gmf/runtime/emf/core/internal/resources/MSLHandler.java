@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.SAXXMIHandler;
 import org.eclipse.emf.ecore.xml.type.AnyType;
 
 /**
@@ -33,7 +35,7 @@ import org.eclipse.emf.ecore.xml.type.AnyType;
  * @author khussey
  */
 public class MSLHandler
-	extends LogicalHandler {
+	extends SAXXMIHandler {
 
 	protected final Map urisToProxies;
 
@@ -48,7 +50,7 @@ public class MSLHandler
 	 * @param options
 	 *            The load options for the new handler.
 	 */
-	public MSLHandler(MSLResourceUnit xmiResource, XMLHelper helper, Map options) {
+	public MSLHandler(XMLResource xmiResource, XMLHelper helper, Map options) {
 		super(xmiResource, helper, options);
 
 		urisToProxies = new HashMap();

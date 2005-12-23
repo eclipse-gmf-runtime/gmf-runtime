@@ -143,20 +143,6 @@ public class MSLCommandGenerator {
 
 					break;
 				}
-				
-				case EventTypes.SEPARATE: {
-					MSLUtil.execute(domain, new MSLSeparateCommand(domain,
-						notifier, structuralFeature, position, (Resource) newValue));
-					
-					break;
-				}
-				
-				case EventTypes.ABSORB: {
-					MSLUtil.execute(domain, new MSLAbsorbCommand(domain,
-						notifier, structuralFeature, position, (Resource) oldValue));
-					
-					break;
-				}
 			}
 		}
 	}

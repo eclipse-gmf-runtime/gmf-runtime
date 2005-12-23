@@ -127,11 +127,4 @@
         </elementTypeFactory>
    </extension>
    
-   <extension
-         point="org.eclipse.emf.ecore.generated_package">
-      <package
-            class="org.eclipse.gmf.runtime.emf.core.internal.resourcemap.ResourceMapPackage"
-            uri="http://www.ibm.com/RMP-MSL/7.0.0/ResourceMap"/>
-   </extension>
-   
  </plugin>
