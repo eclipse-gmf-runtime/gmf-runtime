@@ -157,6 +157,7 @@ public class RectangularDropShadowLineBorder
 		// will not paint line border if width is 0
 		if (getWidth() > 0) { 
 			tempRect.setBounds(getPaintRectangle(figure, insets));
+			g.setLineWidth(getWidth());
 			g.drawRectangle(tempRect);
 		}
 	}

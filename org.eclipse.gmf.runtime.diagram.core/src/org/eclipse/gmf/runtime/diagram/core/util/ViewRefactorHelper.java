@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
@@ -54,6 +53,13 @@ public class ViewRefactorHelper {
 	
 	/**
 	 * Constructs a new <code>ViewRefactorHelper</code> with a given preferences hint 
+	 */
+	public ViewRefactorHelper() {
+		this(PreferencesHint.USE_DEFAULTS);
+	}
+
+	/**
+	 * Constructs a new <code>ViewRefactorHelper</code> with a given preferences hint 
 	 * 
 	 * @param preferencesHint The preferences hint to be used to perform refactoring
 	 */
@@ -69,7 +75,7 @@ public class ViewRefactorHelper {
 	public PreferencesHint getPreferencesHint() {
 		return preferencesHint;
 	}
-	
+
 	/**
 	 * Refactors the notations associated with the old element to make them
 	 * consistent with the new element.
@@ -97,7 +103,8 @@ public class ViewRefactorHelper {
 		Collection filterStyles = EObjectUtil.getReferencers(oldElement, new EReference[]{NotationPackage.eINSTANCE.getFilteringStyle_FilteredObjects()});
 		for (Iterator i = filterStyles.iterator(); i.hasNext();) {
 			List filteredObjects = ((FilteringStyle) i.next()).getFilteredObjects();
-			filteredObjects.add(filteredObjects.indexOf(oldElement), newElement);
+			if (!filteredObjects.contains(oldElement))
+				filteredObjects.add(filteredObjects.indexOf(oldElement), newElement);
 			filteredObjects.remove(oldElement);
 		}
 		
@@ -105,7 +112,8 @@ public class ViewRefactorHelper {
 		Collection sortingStyles = EObjectUtil.getReferencers(oldElement, new EReference[]{NotationPackage.eINSTANCE.getSortingStyle_SortedObjects()});
 		for (Iterator i = sortingStyles.iterator(); i.hasNext();) {
 			List sortingObjects = ((SortingStyle) i.next()).getSortedObjects();
-			sortingObjects.add(sortingObjects.indexOf(oldElement), newElement);
+			if (!sortingObjects.contains(oldElement))
+				sortingObjects.add(sortingObjects.indexOf(oldElement), newElement);
 			sortingObjects.remove(oldElement);
 		}
 	}
@@ -129,7 +137,7 @@ public class ViewRefactorHelper {
 				return newNode;
 			}
 		}
-		throw new RuntimeException("could not refactor a node for the morphed element"); //$NON-NLS-1$
+		return null;
 	}
 
 	/**
@@ -150,7 +158,7 @@ public class ViewRefactorHelper {
 				return newEdge;
 			}
 		}
-		throw new RuntimeException("could not refactor an edge for the morphed element"); //$NON-NLS-1$
+		return null;
 	}
 
 	/**
@@ -168,12 +176,21 @@ public class ViewRefactorHelper {
 				copyDiagramFeatures(oldDiagram, newDiagram);
 				EAnnotation container = (EAnnotation) oldDiagram.eContainer(); 
 				container.getContents().add(container.getContents().indexOf(oldDiagram), newDiagram);
+				refactorDiagramLinks(oldDiagram, newDiagram);
 				return newDiagram;
 			}
 		}
-		throw new RuntimeException("could not refactor a diagram for the morphed element"); //$NON-NLS-1$
+		return null;
 	}
 
+	protected void refactorDiagramLinks(Diagram oldDiagram, Diagram newDiagram) {
+		Collection links = EObjectUtil.getReferencers(oldDiagram, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+		for (Iterator i = links.iterator(); i.hasNext();) {
+			View view = (View) i.next();
+			view.setElement(newDiagram);
+		}
+	}
+	
 	/**
 	 * Copies the notational features of the old node to the new node
 	 * 
@@ -258,38 +275,49 @@ public class ViewRefactorHelper {
 	}
 	
 	/**
-	 * Copies the style features of the old view to the new view
+	 * Copies all styles feature from the old view to the new view
 	 * 
 	 * @param oldView The old view to copy style features from
 	 * @param newView The new view to copy style features to
 	 * @param excludeStyles the <code>List</code> of <code>Style.eClass</code> types to exclude
 	 * from the copy operation.
 	 */
-	protected void copyViewStyles(View oldView, View newView, final List excludeStyles) {
+	protected void copyViewStyles(View oldView, View newView, List excludeStyles) {
 		for (Iterator i = oldView.getStyles().iterator(); i.hasNext();) {
 			Style oldStyle = (Style) i.next();
-
-			// since the same structural feature may appear in styles with different eClass(s)
-			// we really need to get the new style that has the feature; which could be of different 
-			// eClass than the source style
+			copyViewStyle(oldView, newView, oldStyle, excludeStyles);
+		}
+	}
+	
+	/**
+	 * Copies the given style features of the old view to the new view
+	 * 
+	 * @param oldView The old view to copy style features from
+	 * @param newView The new view to copy style features to
+	 * @param oldStyle The old style to copy
+	 * @param excludeStyles the list of <code>Style.eClass</code> types to exclude
+	 */
+	protected void copyViewStyle(View oldView, View newView, Style oldStyle, List excludeStyles) {
+		// since the same structural feature may appear in styles with different eClass(s)
+		// we really need to get the new style that has the feature; which could be of different 
+		// eClass than the source style
+		
+		Map eClassMap = new HashMap();
+		for (Iterator j = oldStyle.eClass().getEAllStructuralFeatures().iterator(); j.hasNext();) {
+			EStructuralFeature feature = (EStructuralFeature) j.next();
+			Style newStyle;
 			
-			Map eClassMap = new HashMap();
-			for (Iterator j = oldStyle.eClass().getEAllStructuralFeatures().iterator(); j.hasNext();) {
-				EStructuralFeature feature = (EStructuralFeature) j.next();
-				Style newStyle;
-				
-				EClass containingStyleEClass = feature.getEContainingClass();
-				if (excludeStyles.contains(containingStyleEClass))
-					continue;
-				
-				if (eClassMap.containsKey(feature.getEContainingClass())) {
-					newStyle = (Style) eClassMap.get(feature.getEContainingClass());
-				} else {
-					eClassMap.put(feature.getEContainingClass(), newStyle = newView.getStyle(feature.getEContainingClass()));
-				}
-				if (newStyle != null) {
-					newStyle.eSet(feature, oldStyle.eGet(feature));
-				}
+			EClass containingStyleEClass = feature.getEContainingClass();
+			if (excludeStyles.contains(containingStyleEClass))
+				continue;
+			
+			if (eClassMap.containsKey(feature.getEContainingClass())) {
+				newStyle = (Style) eClassMap.get(feature.getEContainingClass());
+			} else {
+				eClassMap.put(feature.getEContainingClass(), newStyle = newView.getStyle(feature.getEContainingClass()));
+			}
+			if (newStyle != null) {
+				newStyle.eSet(feature, oldStyle.eGet(feature));
 			}
 		}
 	}
@@ -308,7 +336,9 @@ public class ViewRefactorHelper {
 	}
 	
 	/**
-	 * Copies the notational properties of the old child node to a corresponding one on under the new view
+	 * If the child view has the same element as the parent and also has a type, it is considered a subview
+	 * and therefore only its properties are copied to matching subviews (if any) of the new parent.
+	 * Otherwise, the default behavior is for the child view to be moved to the new parent
 	 * 
 	 * @param oldView The old view to copy children notational features from
 	 * @param newView The new view to copy children notational features to
@@ -348,7 +378,22 @@ public class ViewRefactorHelper {
 	 * @return A collection of views that reference the given element to refactor
 	 */
 	protected Collection getReferencingViews(EObject element) {
-		return EObjectUtil.getReferencers(element, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+		Collection views = EObjectUtil.getReferencers(element, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+
+		// remove subviews since they will be refactored with their parent
+		for (Iterator i = views.iterator(); i.hasNext();) {
+			View view = (View) i.next();
+			
+			EObject parent = null;
+			while ((parent = view.eContainer()) instanceof View) { 
+				if (views.contains(parent)) {
+					i.remove();
+					break;
+				}
+				view = (View) parent;
+			}
+		}
+		return views;
 	}
 
 	/**
@@ -361,7 +406,12 @@ public class ViewRefactorHelper {
 	 * @return A new node that references the given new element
 	 */
 	protected Node createNode(Node oldNode, EObject newElement) {
-		return createNode(ViewUtil.getContainerView(oldNode), newElement, getNewViewType(oldNode, newElement));	
+		return ViewService.getInstance().createNode(
+			new EObjectAdapter(newElement), 
+			(View)oldNode.eContainer(), 
+			getNewViewType(oldNode, newElement), 
+			ViewUtil.APPEND, 
+			preferencesHint);
 	}
 	
 	/**
@@ -374,7 +424,17 @@ public class ViewRefactorHelper {
 	 * @return A new edge that references the given new element
 	 */
 	protected Edge createEdge(Edge oldEdge, EObject newElement) {
-		return createEdge(oldEdge.getSource(), oldEdge.getTarget(), newElement, getNewViewType(oldEdge, newElement));	
+		Edge edge = (Edge) ViewService.getInstance().createEdge(
+			new EObjectAdapter(newElement), 
+			oldEdge.getDiagram(), 
+			getNewViewType(oldEdge, newElement), 
+			ViewUtil.APPEND, 
+			preferencesHint);
+		if (edge != null) {
+			edge.setSource(oldEdge.getSource());
+			edge.setTarget(oldEdge.getTarget());
+		}
+		return edge;
 	}
 
 	/**
@@ -387,9 +447,12 @@ public class ViewRefactorHelper {
 	 * @return A new diagram that references the given new element
 	 */
 	protected Diagram createDiagram(Diagram oldDiagram, EObject newElement) {
-		return createDiagram(newElement, getNewViewType(oldDiagram, newElement));	
+		return ViewService.getInstance().createDiagram(
+			new EObjectAdapter(newElement), 
+			getNewViewType(oldDiagram, newElement),
+			preferencesHint);
 	}
-	
+
 	/**
 	 * Returns the type of the new view that replaces the old one 
 	 * 
@@ -398,89 +461,7 @@ public class ViewRefactorHelper {
 	 * @return The type of the new view
 	 */
 	protected String getNewViewType(View oldView, EObject newElement) {
-		if (oldView instanceof Diagram)
-			return ((Diagram)oldView).getType();
-		return null;
+		return oldView.getType();
 	}
 	
-	/**
-	 * Creates a diagram with the given context and kind
-	 * 
-	 * @param context The diagram element context
-	 * @param kind diagram kind
-	 * @param preferencesHint
-	 *            The preference hint that is to be used to find the appropriate
-	 *            preference store from which to retrieve diagram preference
-	 *            values. The preference hint is mapped to a preference store in
-	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 * @return A newly created <code>Diagram</code>
-	 */
-	private Diagram createDiagram(EObject context, String kind) {
-		IAdaptable viewModel = (context != null) ? new EObjectAdapter(context) : null;
-		String viewType = (kind != null) ? kind : ""; //$NON-NLS-1$
-		return ViewService.getInstance().createDiagram(viewModel, viewType, preferencesHint);
-	}
-	
-	/**
-	 * Creates a node for a given eObject and with a given type and inserts it into a given container
-	 * 
-	 * @param container The node view container
-	 * @param eObject The node view object context
-	 * @param type The node view type
-	 * @param preferencesHint
-	 *            The preference hint that is to be used to find the appropriate
-	 *            preference store from which to retrieve diagram preference
-	 *            values. The preference hint is mapped to a preference store in
-	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 * @return A newly created <code>Node</code>
-	 */
-	private Node createNode(View container, EObject eObject, String type) {
-		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
-		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
-		View view = ViewService.getInstance().createNode(viewModel, container, viewType, ViewUtil.APPEND, preferencesHint);
-		return (view != null) ? (Node)view : null;
-	}
-	
-	/**
-	 * Creates an edge for a given eObject and with a given type in the given diagram
-	 *
-	 * @param diagram The container diagram 
-	 * @param eObject The edge view object context
-	 * @param type The edge view type
-	 * @param preferencesHint
-	 *            The preference hint that is to be used to find the appropriate
-	 *            preference store from which to retrieve diagram preference
-	 *            values. The preference hint is mapped to a preference store in
-	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 * @return A newly created <code>Edge</code>
-	 */
-	private Edge createEdge(Diagram diagram, EObject eObject, String type) {
-		IAdaptable viewModel = (eObject != null) ? new EObjectAdapter(eObject) : null;
-		String viewType = (type != null) ? type : ""; //$NON-NLS-1$
-		View view = ViewService.getInstance().createEdge(viewModel, diagram, viewType, ViewUtil.APPEND, preferencesHint);
-		return (view != null) ? (Edge) view : null;
-	}
-	
-	/**
-	 * Creates an edge for a given eObject and with a given type and connects it between a given source and a given target
-	 * 
-	 * @param source The edge's source view
-	 * @param target The edge's target view
-	 * @param eObject The edge view object context
-	 * @param type The edge view type
-	 * @param preferencesHint
-	 *            The preference hint that is to be used to find the appropriate
-	 *            preference store from which to retrieve diagram preference
-	 *            values. The preference hint is mapped to a preference store in
-	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 * @return A newly created <code>Edge</code>
-	 */
-	private Edge createEdge(View source, View target, EObject eObject, String type) {
-		Edge edge = createEdge(source.getDiagram(), eObject, type);
-		if (edge != null) {
-			edge.setSource(source);
-			edge.setTarget(target);
-		}
-		return edge;
-	}
 }

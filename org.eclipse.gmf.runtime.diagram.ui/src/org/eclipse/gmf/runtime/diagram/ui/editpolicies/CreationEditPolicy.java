@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
@@ -280,6 +281,9 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				new EditCommandRequestWrapper(
 					(CreateElementRequest)requestAdapter.getAdapter(
 						CreateElementRequest.class), request.getExtendedData()));
+
+		if (createElementCommand == null)
+			return UnexecutableCommand.INSTANCE;
 
 		// create the semantic create wrapper command
 		SemanticCreateCommand semanticCommand =
