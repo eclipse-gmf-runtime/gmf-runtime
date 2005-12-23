@@ -25,8 +25,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.ExtendedMetaData;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin;
 
@@ -129,6 +132,32 @@ public final class ClipboardSupportUtil {
 	}
 
 	/**
+	 * Queries whether a reference is mutable.  A reference is considered
+	 * mutable if and only if it is changeable and it is either not derived
+	 * or it is a member of a feature map (though not itself a feature map).
+	 * 
+	 * @param reference the reference to test
+	 * 
+	 * @return <code>true</code> if the reference is mutable;
+	 *     <code>false</code>, otherwise
+	 */
+	static boolean isMutable(EReference reference) {
+		boolean result = reference.isChangeable();
+		
+		if (result) {
+			if (reference.isDerived()) {
+				// check whether it is a feature-map member that is not, itself,
+				//    a feature map
+				EStructuralFeature group = ExtendedMetaData.INSTANCE.getGroup(reference);
+				
+				result = (group != null) && !FeatureMapUtil.isFeatureMap(reference);
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Queries whether a many reference may be replaced with an entirely new
 	 * list of {@link EObject}s.
 	 * 
@@ -138,7 +167,7 @@ public final class ClipboardSupportUtil {
 	 *     and is not derived; <code>false</code>, otherwise
 	 */
 	public static boolean isOkToSetEList(EObject eObject, EReference reference) {
-		if (reference.isChangeable() && (reference.isDerived() == false)) {
+		if (isMutable(reference)) {
 			return true;
 		}
 		return false;
@@ -387,7 +416,7 @@ public final class ClipboardSupportUtil {
 	 */
 	public static boolean isOkToAppendEObjectAt(EObject eObject,
 			EReference reference, EObject referencedObject) {
-		if (reference.isChangeable() && (reference.isDerived() == false)) {
+		if (isMutable(reference)) {
 			int lowerBound = reference.getLowerBound();
 			int upperBound = reference.getUpperBound();
 			if (lowerBound != upperBound) {
@@ -418,7 +447,7 @@ public final class ClipboardSupportUtil {
 	 */
 	public static boolean isOkToSetEObject(EObject eObject,
 			EReference reference, EObject referencedObject) {
-		if (reference.isChangeable() && (reference.isDerived() == false)) {
+		if (isMutable(reference)) {
 			Object value = eObject.eGet(reference);
 			return ((referencedObject != null) && (value != referencedObject));
 		}
@@ -456,7 +485,7 @@ public final class ClipboardSupportUtil {
 	 */
 	public static boolean isOkToDestroyEObjectInCollection(EObject eObject,
 			EReference reference) {
-		if (reference.isChangeable() && (reference.isDerived() == false)) {
+		if (isMutable(reference)) {
 			int lowerBound = reference.getLowerBound();
 			int upperBound = reference.getUpperBound();
 			if ((lowerBound != upperBound) && (eObject.eIsSet(reference))) {
@@ -790,8 +819,7 @@ public final class ClipboardSupportUtil {
 					//perfect match...return it
 					return parentReference;
 				}
-				if ((parentReference.isChangeable())
-					&& (parentReference.isDerived() == false)) {
+				if (isMutable(parentReference)) {
 					if (createClipboardSupport(parentEObject).canContain(
 							parentEObject, parentReference, childEClass)) {
 						//holds same eObject type, collect it
