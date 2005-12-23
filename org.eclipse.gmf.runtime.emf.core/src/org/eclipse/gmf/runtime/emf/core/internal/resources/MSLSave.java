@@ -55,33 +55,33 @@ public class MSLSave
 
 				switch (value[pos]) {
 					case '&':
-						pos = append(pos, AMP, inputLength);
+						pos = replaceChars(pos, AMP, inputLength);
 						changed = true;
 						break;
 					case '<':
-						pos = append(pos, LESS, inputLength);
+						pos = replaceChars(pos, LESS, inputLength);
 						changed = true;
 						break;
 					case '"':
-						pos = append(pos, QUOTE, inputLength);
+						pos = replaceChars(pos, QUOTE, inputLength);
 						changed = true;
 						break;
 					case '\n':
-						pos = append(pos, LF, inputLength);
+						pos = replaceChars(pos, LF, inputLength);
 						changed = true;
 						break;
 					case '\r':
-						pos = append(pos, CR, inputLength);
+						pos = replaceChars(pos, CR, inputLength);
 						changed = true;
 						break;
 					case '\t':
-						pos = append(pos, TAB, inputLength);
+						pos = replaceChars(pos, TAB, inputLength);
 						changed = true;
 						break;
 					default:
 						if (value[pos] < 0x20) {
 							// these characters are illegal in XML
-							pos = append(pos, NOTHING, inputLength);
+							pos = replaceChars(pos, NOTHING, inputLength);
 							changed = true;
 						} else {
 							pos++;
