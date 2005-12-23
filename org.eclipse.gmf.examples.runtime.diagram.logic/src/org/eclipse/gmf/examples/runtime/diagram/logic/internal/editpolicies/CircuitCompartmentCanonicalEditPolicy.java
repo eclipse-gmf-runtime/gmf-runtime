@@ -8,8 +8,7 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-
-package org.eclipse.gmf.tests.runtime.diagram.ui.editpolicy;
+package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,18 +18,25 @@ import java.util.ListIterator;
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Element;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Wire;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * Canonical edit policy for the Circuit compartment
+ * CanonicalConnectionEditPolic implementation that synchronizes with the semantic 
+ * contents of the Circuit element.
+ * 
  * @author sshaw
+ *
  */
-
 public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEditPolicy {
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#getSemanticChildrenList()
+	 */
 	protected List getSemanticChildrenList() {
 		EObject modelRef = resolveSemanticElement();
 		
@@ -43,13 +49,16 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 		ListIterator li = allChildren.listIterator();
 		while (li.hasNext()) {
 			Object obj = li.next();
-			if (obj instanceof LED)
+			if (obj instanceof Element && !(obj instanceof Wire))
 				ledElements.add(obj);
 		}
 		
 		return ledElements;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy#getSemanticConnectionsList()
+	 */
 	protected List getSemanticConnectionsList() {
 		EObject modelRef = resolveSemanticElement();
 		
@@ -63,22 +72,38 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 			Object obj = li.next();
 			if (obj instanceof Wire) {
 				Wire wire = (Wire)obj;
-				wires.add(wire);
+				if (EObjectUtil.contains(circuitElement, wire.getSource()) &&
+					EObjectUtil.contains(circuitElement, wire.getTarget())) {
+					wires.add(wire);
+				}
 			}
 		}
 		
 		return wires;
 	}
 
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#shouldDeleteView(org.eclipse.gmf.runtime.notation.View)
+	 */
 	protected boolean shouldDeleteView(View view) {
 		return true;
 	}
 	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy#getSourceElement(org.eclipse.emf.ecore.EObject)
+	 */
 	protected EObject getSourceElement(EObject relationship) {
 		Wire wire = (Wire)relationship;
 		return wire.getSource();
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy#getTargetElement(org.eclipse.emf.ecore.EObject)
+	 */
 	protected EObject getTargetElement(EObject relationship) {
 		Wire wire = (Wire)relationship;
 		return wire.getTarget();

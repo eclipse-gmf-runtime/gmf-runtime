@@ -44,6 +44,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
  * @author mhanner
  */
 public class LogicCanonicalTests extends AbstractTestBase {
+	
 	/**
 	 * Defines the statechart diagram test suite.
 	 * 

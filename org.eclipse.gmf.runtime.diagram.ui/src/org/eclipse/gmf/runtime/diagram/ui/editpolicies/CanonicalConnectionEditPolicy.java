@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -49,6 +50,7 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
 
@@ -107,13 +109,6 @@ public abstract class CanonicalConnectionEditPolicy
 	 *            semantic connection
 	 */
 	abstract protected EObject getTargetElement(EObject relationship);
-
-	/** Returns the diagram's connection views. */
-	private List getDiagramConnections() {
-		Diagram dView = ((View) host().getModel()).getDiagram();
-		return dView == null ? Collections.EMPTY_LIST
-			: new ArrayList(dView.getEdges());
-	}
 
 	/** Return an empty list. */
 	protected List getSemanticChildrenList() {
@@ -598,26 +593,78 @@ public abstract class CanonicalConnectionEditPolicy
 
 	/**
 	 * Return the list of connections between elements contained within the host
-	 * compartment. Subclasses should override
-	 * {@link #shouldIncludeConnection(Edge, List)} to modify the returned
-	 * collection's contents.
+	 * compartment. 
 	 * 
-	 * @return list of <code>IConnectionView</code>s.
+	 * @return list of <code>Edge</code>s.
 	 */
 	protected Collection getConnectionViews() {
-		Collection retval = new HashSet();
-		List children = getViewChildren();
-		Iterator connections = getDiagramConnections().iterator();
-		while (connections.hasNext()) {
-			Edge connection = (Edge) connections.next();
-			if (connection.getSource() != null && connection.getTarget() != null
-				&& shouldIncludeConnection(connection, children)) {
-				retval.add(connection);
+		Collection children = getViewChildren();
+		Set connections = new HashSet();
+		if (getHost() instanceof IGraphicalEditPart) {
+			IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
+			Node node = (Node)gep.getNotationView();
+			getConnectionViews(connections, node, children);
+		}
+		
+		return connections;
+	}
+	
+	/**
+	 * Add all connections that are attached to the given node and any of it's
+	 * children.
+	 * 
+	 * @param connections
+	 * @param node
+	 */
+	private void getConnectionViews(Set connections, Node node, Collection viewChildren ) {
+		IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
+		View hostView = gep.getNotationView();
+		if (hostView != node) {
+			if (!shouldCheckForConnections(node, viewChildren))
+				return;
+		}
+		
+		Iterator sourceIter = node.getSourceEdges().listIterator();
+		while (sourceIter.hasNext()) {
+			Edge sourceEdge = (Edge)sourceIter.next();
+			if (shouldIncludeConnection(sourceEdge, (List)viewChildren))
+				connections.add(sourceEdge);
+		}
+		
+		Iterator targetIter = node.getTargetEdges().listIterator();
+		while (targetIter.hasNext()) {
+			Edge targetEdge = (Edge)targetIter.next();
+			if (shouldIncludeConnection(targetEdge, (List)viewChildren))
+				connections.add(targetEdge);
+		}
+		
+		List children = node.getChildren();
+		Iterator iter = children.listIterator();
+		while (iter.hasNext()) {
+			View viewChild = (View)iter.next();
+			if (viewChild instanceof Node) {
+				getConnectionViews(connections, (Node)viewChild, viewChildren );
 			}
 		}
-		return retval;
 	}
 
+	/**
+	 * Determines if a given view should be checked to see if any attached connections should be considered
+	 * by the canonical synchronization routine.  By default it will consider views that are 2 levels deep from the
+	 * container in order to allow for connections that are attached to border items on children views in the 
+	 * container.
+	 * 
+	 * @param view a <code>View</code> to check to see if attached connections should be considered.
+	 * @param viewChildren a <code>Collection</code> of view children of the host notation view, that can be used
+	 * as a context to determine if the given view's attached connections should be considered.
+	 * @return a <code>boolean</code> <code>true</code> if connections on the view are used as part of the 
+	 * canonical synchronization.  <code>false</code> if the view's attached connections are to be ignored.
+	 */
+	protected boolean shouldCheckForConnections(View view, Collection viewChildren) {
+		return (view != null && 
+			(viewChildren.contains(view) || viewChildren.contains(view.eContainer())));
+	}
+	
 	/**
 	 * Called by {@link #getConnectionViews()} to determine if the underlying
 	 * shape compartment is responsible for the supplied connection. By default,
@@ -637,17 +684,37 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return <tt>false</tt> if supplied connection should be ignored;
 	 *         otherwise <tt>true</tt>.
 	 */
-	protected boolean shouldIncludeConnection(Edge connection, List children) {
-		View src = connection.getSource();
-		View target = connection.getTarget();
-		//
-		// testing the src/tgt containerview in case the src/tgt are
-		// some type of gate view.
-		return ((src != null && target != null) && (children.contains(src)
-			|| children.contains(src.eContainer()) || children.contains(target) || children
-			.contains(target.eContainer())));
+	protected boolean shouldIncludeConnection(Edge connection, Collection children) {
+		return shouldCheckForConnections(connection.getSource(), children) ||
+				shouldCheckForConnections(connection.getTarget(), children);
 	}
-
+	
+	/**
+	 * Called by {@link #getConnectionViews()} to determine if the underlying
+	 * shape compartment is responsible for the supplied connection. By default,
+	 * the following conditition must be met for the connection to be accepted:
+	 * <UL>
+	 * <LI> its source must not be null.
+	 * <LI> its target must not be null.
+	 * <LI> the shape compartment contains the source (or the source's container
+	 * view).
+	 * <LI> the shape compartment contains the target (or the target's container
+	 * view). </LI>
+	 * 
+	 * @param connection
+	 *            the connection view
+	 * @param children
+	 *            underlying shape compartment's children.
+	 * @return <tt>false</tt> if supplied connection should be ignored;
+	 *         otherwise <tt>true</tt>.
+	 * @deprecated clients should override {@link CanonicalConnectionEditPolicy#shouldIncludeConnection(Edge, Collection) instead
+	 * 				deprecated on Dec 22nd / 2005
+	 * 				to be deleted on Jan 30th / 2006
+	 */
+	protected boolean shouldIncludeConnection(Edge connection, List children) {
+		return shouldIncludeConnection(connection, (Collection)children);
+	}
+	
 	/**
 	 * Return {@link UnexecutableCommand} if the editpolicy is enabled and a
 	 * {@link DropObjectsRequest} is passed as an argument and its objects are

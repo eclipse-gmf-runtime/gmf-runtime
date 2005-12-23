@@ -28,13 +28,11 @@ import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DestroyEObjectCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.gmf.tests.runtime.diagram.ui.editpolicy.CircuitCompartmentCanonicalEditPolicy;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -147,10 +145,6 @@ public class CanonicalTestFixture extends LogicTestFixture {
 		
 		IGraphicalEditPart circuitEP = (IGraphicalEditPart)circuits.get(index);
 		IGraphicalEditPart logicCompartment = circuitEP.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
-		assertTrue( "unexpected children", logicCompartment.getChildren().isEmpty() );//$NON-NLS-1$
-		
-		logicCompartment.installEditPolicy(EditPolicyRoles.CANONICAL_ROLE,
-			new CircuitCompartmentCanonicalEditPolicy());
 		
 		return logicCompartment;
 	}

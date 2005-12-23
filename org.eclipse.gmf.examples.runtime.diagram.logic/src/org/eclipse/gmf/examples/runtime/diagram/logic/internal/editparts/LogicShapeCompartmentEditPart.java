@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.CircuitCompartmentCanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -34,5 +36,11 @@ public class LogicShapeCompartmentEditPart extends ShapeCompartmentEditPart{
 	 */
 	protected boolean supportsDragSelection() {
 		return false;
+	}
+	
+	//install ContainerHighlightEditPolicy to highlight circuit figure
+	protected void createDefaultEditPolicies(){
+		super.createDefaultEditPolicies();
+		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, new CircuitCompartmentCanonicalEditPolicy ());
 	}
 }
