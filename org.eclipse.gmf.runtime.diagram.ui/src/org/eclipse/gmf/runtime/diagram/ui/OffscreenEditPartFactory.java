@@ -11,16 +11,17 @@
 
 package org.eclipse.gmf.runtime.diagram.ui;
 
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.swt.widgets.Shell;
-
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.widgets.Shell;
 
 
 /**
@@ -52,7 +53,7 @@ public class OffscreenEditPartFactory {
 		Diagram diagram) {		
 
 		Shell shell = new Shell();
-		GraphicalViewer customViewer = new DiagramGraphicalViewer();
+		DiagramGraphicalViewer customViewer = new DiagramGraphicalViewer();
 		customViewer.createControl(shell);
 
 		DiagramEditDomain editDomain = new DiagramEditDomain(null);
@@ -61,8 +62,17 @@ public class OffscreenEditPartFactory {
 
 		customViewer.setEditDomain(editDomain);
 
-		customViewer.setRootEditPart(EditPartService.getInstance()
-			.createRootEditPart(diagram));
+		// hook in preferences
+		RootEditPart rep = EditPartService.getInstance()
+		.createRootEditPart(diagram);
+		if (rep instanceof DiagramRootEditPart) {
+			DiagramRootEditPart drep = (DiagramRootEditPart)rep;
+			IPreferenceStore fPreferences = (IPreferenceStore) drep.getPreferencesHint().getPreferenceStore();
+
+			customViewer.hookWorkspacePreferenceStore(fPreferences);
+		}
+		
+		customViewer.setRootEditPart(rep);
 
 		customViewer.setEditPartFactory(EditPartService.getInstance());
 
@@ -70,6 +80,7 @@ public class OffscreenEditPartFactory {
 		customViewer.flush();
 
 		Assert.isTrue(customViewer.getContents() instanceof DiagramEditPart);
+		
 		return (DiagramEditPart) customViewer.getContents();
 	}
 }
