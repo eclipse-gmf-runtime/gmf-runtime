@@ -602,8 +602,7 @@ public abstract class CanonicalConnectionEditPolicy
 		Set connections = new HashSet();
 		if (getHost() instanceof IGraphicalEditPart) {
 			IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
-			Node node = (Node)gep.getNotationView();
-			getConnectionViews(connections, node, children);
+			getConnectionViews(connections, gep.getNotationView(), children);
 		}
 		
 		return connections;
@@ -616,34 +615,34 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @param connections
 	 * @param node
 	 */
-	private void getConnectionViews(Set connections, Node node, Collection viewChildren ) {
+	private void getConnectionViews(Set connections, View view, Collection viewChildren ) {
 		IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
 		View hostView = gep.getNotationView();
-		if (hostView != node) {
-			if (!shouldCheckForConnections(node, viewChildren))
+		if (hostView != view) {
+			if (!shouldCheckForConnections(view, viewChildren))
 				return;
 		}
 		
-		Iterator sourceIter = node.getSourceEdges().listIterator();
+		Iterator sourceIter = view.getSourceEdges().listIterator();
 		while (sourceIter.hasNext()) {
 			Edge sourceEdge = (Edge)sourceIter.next();
 			if (shouldIncludeConnection(sourceEdge, (List)viewChildren))
 				connections.add(sourceEdge);
 		}
 		
-		Iterator targetIter = node.getTargetEdges().listIterator();
+		Iterator targetIter = view.getTargetEdges().listIterator();
 		while (targetIter.hasNext()) {
 			Edge targetEdge = (Edge)targetIter.next();
 			if (shouldIncludeConnection(targetEdge, (List)viewChildren))
 				connections.add(targetEdge);
 		}
 		
-		List children = node.getChildren();
+		List children = view.getChildren();
 		Iterator iter = children.listIterator();
 		while (iter.hasNext()) {
 			View viewChild = (View)iter.next();
 			if (viewChild instanceof Node) {
-				getConnectionViews(connections, (Node)viewChild, viewChildren );
+				getConnectionViews(connections, viewChild, viewChildren );
 			}
 		}
 	}
