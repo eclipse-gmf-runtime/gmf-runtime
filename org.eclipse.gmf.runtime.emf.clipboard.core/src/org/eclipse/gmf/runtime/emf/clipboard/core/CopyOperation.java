@@ -440,6 +440,8 @@ public class CopyOperation
 	private class CopyParentsCopier
 		extends EcoreUtil.Copier {
 
+		private static final long serialVersionUID = 6178429496879264655L;
+
 		private Map copyToObjectMap = new HashMap();
 
 		private Collection doNotCopyEObjects;

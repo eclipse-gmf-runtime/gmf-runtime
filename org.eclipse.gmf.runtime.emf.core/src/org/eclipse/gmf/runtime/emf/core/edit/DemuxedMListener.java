@@ -16,8 +16,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
-
 
 
 /**
@@ -179,7 +177,8 @@ public class DemuxedMListener
 	 *     proxies.
 	 */
 	public void handleElementSeparatedEvent(Notification notification,
-			ILogicalResource resource, EObject eObject, Resource newResource) {
+			org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource resource,
+			EObject eObject, Resource newResource) {
 		// nothing to do
 	}
 	
@@ -191,7 +190,8 @@ public class DemuxedMListener
 	 *     proxies.
 	 */
 	public void handleElementAbsorbedEvent(Notification notification,
-			ILogicalResource resource, EObject eObject, Resource oldResource) {
+			org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource resource,
+			EObject eObject, Resource oldResource) {
 		// nothing to do
 	}
 	
@@ -203,7 +203,8 @@ public class DemuxedMListener
 	 *     proxies.
 	 */
 	public void handleElementLoadedEvent(Notification notification,
-			ILogicalResource resource, EObject eObject) {
+			org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource resource,
+			EObject eObject) {
 		// nothing to do
 	}
 

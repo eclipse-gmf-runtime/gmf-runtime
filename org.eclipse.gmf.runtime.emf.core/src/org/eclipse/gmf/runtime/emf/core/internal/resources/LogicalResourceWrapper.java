@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 
 /**
@@ -37,7 +36,7 @@ import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
  */
 public class LogicalResourceWrapper
 	extends AbstractResourceWrapper
-	implements ILogicalResource {
+	implements org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource {
 	
 	private static final CanonicalMap instances = new CanonicalMap() {
 		protected AbstractResourceWrapper createWrapper(Resource resource) {
@@ -61,13 +60,14 @@ public class LogicalResourceWrapper
 	 * @param resource the resource to get an unmodifiable view of
 	 * @return its unmodifiable view
 	 */
-	public static ILogicalResource get(Resource resource) {
-		ILogicalResource result = null;
+	public static org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource get(
+			Resource resource) {
+		org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource result = null;
 		
 		if (resource instanceof LogicalResourceWrapper) {
-			result = (ILogicalResource) resource;
+			result = (org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource) resource;
 		} else {
-			result = (ILogicalResource) instances.get(resource);
+			result = (org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource) instances.get(resource);
 		}
 		
 		return result;

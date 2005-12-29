@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IStatus;
 public class MSLActionAbandonedException
 	extends MSLCheckedException {
 
+	private static final long serialVersionUID = 6054386644313187147L;
+	
 	private final IStatus status;
 
 	/**

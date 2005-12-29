@@ -318,6 +318,8 @@ public class SavingEMFResource
 		extends EcoreEList.UnmodifiableEList
 		implements InternalEList {
 
+		private static final long serialVersionUID = -2551747854798104709L;
+
 		ContentBasicEList(Set contentSet) {
 			super(null, null, contentSet.size(), contentSet.toArray());
 		}

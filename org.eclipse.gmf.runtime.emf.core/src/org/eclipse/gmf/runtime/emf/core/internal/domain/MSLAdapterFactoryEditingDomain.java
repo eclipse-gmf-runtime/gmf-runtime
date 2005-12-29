@@ -108,6 +108,8 @@ public class MSLAdapterFactoryEditingDomain
 				//    the EPackage for some namespace in one of my resources.
 				//    Take this opportunity also to clean out proxies
 				resources = new ResourcesEList() {
+					private static final long serialVersionUID = 401816160908753449L;
+
 					protected void didRemove(int index, Object oldObject) {
 						EPackage.Registry registry = getPackageRegistry();
 						

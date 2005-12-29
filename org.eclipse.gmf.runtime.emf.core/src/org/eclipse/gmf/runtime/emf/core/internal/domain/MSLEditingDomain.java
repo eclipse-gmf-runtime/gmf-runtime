@@ -81,7 +81,6 @@ import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLResourceSetLis
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLStatusCodes;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourceWrapper;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MResource;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLExtendedMetaData;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLPathmap;
@@ -89,7 +88,6 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLComposedAdapterFactory;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 /**
  * This is the implementation of the MSL editing domain interface. The
@@ -1961,17 +1959,17 @@ public class MSLEditingDomain
 
 	/** @deprecated */
 	public boolean isLogicalResource(Resource resource) {
-		return resource instanceof ILogicalResource;
+		return resource instanceof org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 	}
 	
 	/** @deprecated */
-	public ILogicalResource asLogicalResource(Resource resource) {
-		ILogicalResource result = null;
+	public org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource asLogicalResource(Resource resource) {
+		org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource result = null;
 		
-		if (resource instanceof ILogicalResource) {
-			result = (ILogicalResource) resource;
+		if (resource instanceof org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource) {
+			result = (org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource) resource;
 		} else {
-			result = LogicalResourceWrapper.get(resource);
+			result = org.eclipse.gmf.runtime.emf.core.internal.resources.LogicalResourceWrapper.get(resource);
 		}
 		
 		return result;

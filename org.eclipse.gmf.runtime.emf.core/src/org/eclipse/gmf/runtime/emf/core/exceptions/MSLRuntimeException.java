@@ -19,6 +19,8 @@ package org.eclipse.gmf.runtime.emf.core.exceptions;
 public class MSLRuntimeException
 	extends RuntimeException {
 
+	private static final long serialVersionUID = 4756697463399265322L;
+
 	/**
 	 * Initializes me without any details.
 	 */

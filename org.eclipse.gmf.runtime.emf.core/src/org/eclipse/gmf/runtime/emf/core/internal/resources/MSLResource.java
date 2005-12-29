@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 /**
  * Custom implementation of an XMIResource.
@@ -36,7 +35,7 @@ import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
  */
 public class MSLResource
 	extends XMIResourceImpl
-	implements ILogicalResource {
+	implements org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource {
 
 	private boolean useIDAttributes = false;
 	

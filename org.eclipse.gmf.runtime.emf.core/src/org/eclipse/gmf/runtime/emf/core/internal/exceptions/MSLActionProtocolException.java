@@ -21,6 +21,8 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 public class MSLActionProtocolException
 	extends MSLRuntimeException {
 
+	private static final long serialVersionUID = 6373560684111580870L;
+
 	/**
 	 * Initializes me without any details.
 	 */

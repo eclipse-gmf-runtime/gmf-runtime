@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 /**
  * <p>
@@ -392,7 +391,8 @@ public abstract class MEditingDomain
 	 *     instead, by defining containment features that are capable of storing
 	 *     proxies.
 	 */
-	public abstract ILogicalResource asLogicalResource(Resource resource);
+	public abstract org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource
+			asLogicalResource(Resource resource);
 
 	/**
 	 * Opens an undo interval. An undo interval must be open before starting a

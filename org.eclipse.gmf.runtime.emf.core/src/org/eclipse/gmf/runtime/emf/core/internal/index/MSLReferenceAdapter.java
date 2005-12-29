@@ -27,6 +27,8 @@ public class MSLReferenceAdapter
 	extends HashMap
 	implements Adapter {
 
+	private static final long serialVersionUID = 1989964645244552123L;
+
 	/**
 	 * Constructor.
 	 */

@@ -16,8 +16,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
-
 
 /**
  * An optional extension to the {@link IDemuxedListener} interface for listeners
@@ -45,7 +43,8 @@ public interface IDemuxedMListener2
 	 *     proxies.
 	 */
 	public void handleElementSeparatedEvent(Notification notification,
-		ILogicalResource resource, EObject eObject, Resource newResource);
+			org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource resource,
+			EObject eObject, Resource newResource);
 	
 	/**
 	 * Notifies me of an event indicating that an element in a logical resource
@@ -63,7 +62,8 @@ public interface IDemuxedMListener2
 	 *     proxies.
 	 */
 	public void handleElementAbsorbedEvent(Notification notification,
-			ILogicalResource resource, EObject eObject, Resource oldResource);
+			org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource resource,
+			EObject eObject, Resource oldResource);
 	
 	/**
 	 * Notifies me of an event indicating that an element in a logical resource
@@ -79,7 +79,8 @@ public interface IDemuxedMListener2
 	 *     proxies.
 	 */
 	public void handleElementLoadedEvent(Notification notification,
-			ILogicalResource resource, EObject eObject);
+			org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource resource,
+			EObject eObject);
 	
 	/**
 	 * Notifies me of an event indicating that a root has been added to the resource

@@ -27,6 +27,8 @@ public class MSLImportsAdapter
 	extends HashMap
 	implements Adapter {
 
+	private static final long serialVersionUID = 7770242431763053066L;
+
 	/**
 	 * Constructor.
 	 */

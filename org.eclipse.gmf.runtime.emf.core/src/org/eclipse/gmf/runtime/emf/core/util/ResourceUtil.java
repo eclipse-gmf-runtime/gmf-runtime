@@ -33,7 +33,6 @@ import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
-import org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource;
 
 /**
  * This class contains a set of <code>Resource</code> related utility methods.
@@ -102,7 +101,8 @@ public class ResourceUtil {
 	 *     instead, by defining containment features that are capable of storing
 	 *     proxies.
 s	 */
-	public static ILogicalResource asLogicalResource(Resource resource) {
+	public static org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource asLogicalResource(
+			Resource resource) {
 		return MEditingDomain.INSTANCE.asLogicalResource(resource);
 	}
 	

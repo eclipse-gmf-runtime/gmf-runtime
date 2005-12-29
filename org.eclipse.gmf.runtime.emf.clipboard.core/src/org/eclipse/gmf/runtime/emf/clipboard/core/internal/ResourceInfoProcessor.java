@@ -52,7 +52,7 @@ public class ResourceInfoProcessor {
 
 	private static final String COMMA = ","; //$NON-NLS-1$	
 
-	private static final String PROPERTY_DELIM = SEPARATOR + PLUS; //$NON-NLS-1$	
+	private static final String PROPERTY_DELIM = SEPARATOR + PLUS;	
 
 	private static final String VERSION = "VERSION"; //$NON-NLS-1$
 

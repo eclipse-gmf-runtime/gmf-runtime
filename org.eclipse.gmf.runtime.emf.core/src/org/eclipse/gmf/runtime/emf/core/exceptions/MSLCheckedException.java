@@ -19,6 +19,8 @@ package org.eclipse.gmf.runtime.emf.core.exceptions;
 public class MSLCheckedException
 	extends Exception {
 
+	private static final long serialVersionUID = 7693613568779908246L;
+
 	/**
 	 * Initializes me without any details.
 	 */

@@ -19,7 +19,6 @@ import org.eclipse.emf.examples.extlibrary.Library;
 import org.eclipse.emf.examples.extlibrary.Writer;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MResourceOption;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack.ActionLockMode;
@@ -103,10 +102,11 @@ public abstract class BaseClipboardTest extends TestCase {
 					domain.runAsWrite(new MRunnable() {
 						public Object run() {
 							try {
-								Resource originalRes = domain.loadResource(URI
-									.createURI(CLIPBOARD_TESTS_BUNDLE.getEntry(
-										"/test_models/clipboard_test.extlibrary") //$NON-NLS-1$
-										.toString()).toString(), MResourceOption.URI);
+								Resource originalRes = domain.getResourceSet().getResource(
+										URI.createURI(
+												CLIPBOARD_TESTS_BUNDLE.getEntry(
+													"/test_models/clipboard_test.extlibrary") //$NON-NLS-1$
+										.toString()), true);
 								originalRes.setURI(URI.createPlatformResourceURI(RESOURCE_NAME));
 								originalRes.save(Collections.EMPTY_MAP);
 								testResource = originalRes;

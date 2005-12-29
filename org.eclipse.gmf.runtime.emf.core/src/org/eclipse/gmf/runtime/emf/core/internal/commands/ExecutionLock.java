@@ -133,8 +133,8 @@ class ExecutionLock {
 			// MSLPlugin.getDefault().getSymbolicName(), IStatus.OK, "", null);
 			// //$NON-NLS-1$
 			//			else
-			return new Status(IStatus.OK, MSLPlugin.getDefault()
-				.getSymbolicName(), IStatus.OK, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, MSLPlugin.getPluginId(),
+				IStatus.OK, "", null); //$NON-NLS-1$
 		}
 
 		/**

@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.plugin;
 
-import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 
@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
  * @author rafikj
  */
 public class MSLPlugin
-	extends XToolsPlugin {
+	extends Plugin {
 
 	private static MSLPlugin plugin;
 		
@@ -44,7 +44,7 @@ public class MSLPlugin
 	 * Get plugin ID.
 	 */
 	public static String getPluginId() {
-		return getDefault().getSymbolicName();
+		return getDefault().getBundle().getSymbolicName();
 	}
 
 	/**
