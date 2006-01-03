@@ -283,8 +283,10 @@ public class DiagramRootEditPart
 	 */
 	public double getGridSpacing() {
 		
+		double gridSpacing = 0;
 		// Check the workspace properties
-		double gridSpacing = getWorkspaceViewerPreferences().getDouble(WorkspaceViewerProperties.GRIDSPACING);
+		if (getWorkspaceViewerPreferences() != null)
+			gridSpacing = getWorkspaceViewerPreferences().getDouble(WorkspaceViewerProperties.GRIDSPACING);
 		
 		// If the workspace property is not set then get the global preference value
 		if (gridSpacing == 0) {
@@ -326,7 +328,9 @@ public class DiagramRootEditPart
 	 */
 	public void setGridSpacing(double gridSpacing) {
 		
-		int rulerUnits = getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT);
+		int rulerUnits = RulerProvider.UNIT_INCHES;
+		if (getWorkspaceViewerPreferences() != null)
+			rulerUnits = getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT);
 		
 		// Get the Displays DPIs
 		double dotsPerInch = Display.getDefault().getDPI().x;
@@ -527,7 +531,8 @@ public class DiagramRootEditPart
 	 * Refreshes ruler units on the diagram
 	 */
 	protected void refreshRulerUnits() {
-		setRulers(getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT));
+		if (getWorkspaceViewerPreferences() != null)
+			setRulers(getWorkspaceViewerPreferences().getInt(WorkspaceViewerProperties.RULERUNIT));
 	}
 	
 	/**
@@ -547,8 +552,10 @@ public class DiagramRootEditPart
 	 */
 	public void activate() {
 		super.activate();	
+		
 		if (getWorkspaceViewerPreferences() != null)
 			getWorkspaceViewerPreferences().addPropertyChangeListener(listener);	
+		
 		initPreferenceStoreListener();
 		
 		ScalableFreeformLayeredPane pane = getLayers();
@@ -572,26 +579,28 @@ public class DiagramRootEditPart
 	private void initWorkspaceViewerProperties() {		
 		IPreferenceStore wsPrefStore = getWorkspaceViewerPreferences();
 		
-		if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDORDER)) {
-			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDORDER, true);			
-		} 
-		if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINECOLOR)) {
-			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
-		} else {
-			setGridColor(new Integer(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR)));
-		}
-		if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINESTYLE)) {
-			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_DOT);			
-		} else {
-			setGridStyle(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE));
-		}
-		
-		if ((! wsPrefStore.contains(WorkspaceViewerProperties.RULERUNIT)) || 
-				(! wsPrefStore.contains(WorkspaceViewerProperties.GRIDSPACING))) {
-			IPreferenceStore preferenceStore =
-				(IPreferenceStore) getPreferencesHint().getPreferenceStore();			
-			wsPrefStore.setValue(WorkspaceViewerProperties.RULERUNIT, preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS));						
-			wsPrefStore.setValue(WorkspaceViewerProperties.GRIDSPACING, preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING));			
+		if (wsPrefStore != null) {
+			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDORDER)) {
+				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDORDER, true);			
+			} 
+			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINECOLOR)) {
+				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
+			} else {
+				setGridColor(new Integer(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR)));
+			}
+			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINESTYLE)) {
+				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_DOT);			
+			} else {
+				setGridStyle(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE));
+			}
+			
+			if ((! wsPrefStore.contains(WorkspaceViewerProperties.RULERUNIT)) || 
+					(! wsPrefStore.contains(WorkspaceViewerProperties.GRIDSPACING))) {
+				IPreferenceStore preferenceStore =
+					(IPreferenceStore) getPreferencesHint().getPreferenceStore();			
+				wsPrefStore.setValue(WorkspaceViewerProperties.RULERUNIT, preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS));						
+				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDSPACING, preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING));			
+			}
 		}
 	}
 
