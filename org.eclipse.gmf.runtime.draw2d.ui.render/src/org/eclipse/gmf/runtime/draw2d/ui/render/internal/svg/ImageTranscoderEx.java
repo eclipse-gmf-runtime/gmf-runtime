@@ -12,8 +12,8 @@
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
@@ -29,11 +29,9 @@ import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.dom.util.DOMUtilities;
+import org.apache.batik.ext.awt.RenderingHintsKeyExt;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.GraphicsNode;
-import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory;
-import org.apache.batik.gvt.renderer.ImageRendererFactory;
-import org.apache.batik.gvt.renderer.StaticRenderer;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscodingHints;
@@ -334,42 +332,50 @@ public class ImageTranscoderEx extends ImageTranscoder {
 	private GraphicsNode renderImage(TranscoderOutput output, GraphicsNode gvtRoot, AffineTransform Px, int w, int h)
 		throws TranscoderException {
 		
-		// paint the SVG document using the bridge package
-		// create the appropriate renderer
-		ImageRendererFactory rendFactory = new ConcreteImageRendererFactory();
-		StaticRenderer renderer = (StaticRenderer)rendFactory.createStaticImageRenderer();
-		
-		boolean antialias = true;
-		if (hints.containsKey(KEY_ANTI_ALIASING)) {
-			antialias = ((Boolean)hints.get(KEY_ANTI_ALIASING)).booleanValue();
+		Graphics2D g2d = createGraphics(w, h);
+
+		// Check anti-aliasing preference
+		if (hints.containsKey(KEY_ANTI_ALIASING)) {	
+			boolean antialias = ((Boolean)hints.get(KEY_ANTI_ALIASING)).booleanValue();
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				antialias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+		} else {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		
-		RenderingHints renderHints = renderer.getRenderingHints();
-		renderHints.put(RenderingHints.KEY_ANTIALIASING,
-				antialias ? RenderingHints.VALUE_ANTIALIAS_ON : 
-					RenderingHints.VALUE_ANTIALIAS_OFF);
-		renderer.setRenderingHints(renderHints);
+		// needed to avoid eroneous error being dumped to console
+		g2d.setRenderingHint(RenderingHintsKeyExt.KEY_TRANSCODING,
+            RenderingHintsKeyExt.VALUE_TRANSCODING_PRINTING);
 		
-		renderer.updateOffScreen(w, h);
-		renderer.setTransform(Px);
-		renderer.setTree(gvtRoot);
+		g2d.clip(new java.awt.Rectangle(0, 0, w, h));
 		
-		gvtRoot = null; // We're done with it...
-
-		try {
-			Shape raoi = new Rectangle2D.Float(0, 0, width, height);
-			// Warning: the renderer's AOI must be in user space
-			renderer.repaint(Px.createInverse().createTransformedShape(raoi));
-			BufferedImage rend = renderer.getOffScreen();
-			renderer = null; // We're done with it...
-
-			writeImage(rend, output);
-		} catch (Exception ex) {
-			throw new TranscoderException(ex);
-		}
-		return gvtRoot;
+		g2d.transform(Px);
+		
+		gvtRoot.paint(g2d);
+		
+		postRenderImage(g2d);
+		
+		return null;
 	}
 
+	/**
+	 * @param w
+	 * @param h
+	 * @return
+	 */
+	protected Graphics2D createGraphics(int w, int h) {
+		bufferedImage = createImage(w, h);
+		Graphics2D g2d = bufferedImage.createGraphics();
+		g2d.setColor(Color.white);
+		g2d.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+		return g2d;
+	}
+
+	protected void postRenderImage(Graphics2D g2d) {
+		g2d.dispose();
+	}
+	
 	private BufferedImage bufferedImage = null;
 	
 	/**

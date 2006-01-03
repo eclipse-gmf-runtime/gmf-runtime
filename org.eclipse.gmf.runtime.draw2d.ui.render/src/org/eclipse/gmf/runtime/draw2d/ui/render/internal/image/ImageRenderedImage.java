@@ -97,6 +97,7 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 				GC gc = new GC(image);
 				SWTGraphics swtG = new SWTGraphics(gc);
 				swtG.drawImage(origImage, 0, 0, origWidth, origHeight, (bufferWidth - newWidth) / 2, (bufferHeight - newHeight) / 2, newWidth, newHeight);
+				swtG.dispose();
 				gc.dispose();
 				origImage.dispose();
 				

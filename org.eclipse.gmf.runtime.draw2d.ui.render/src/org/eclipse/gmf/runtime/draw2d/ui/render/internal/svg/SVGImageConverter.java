@@ -22,7 +22,6 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
-import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
 import org.eclipse.swt.graphics.Image;
 import org.w3c.dom.Document;
 
@@ -71,8 +70,10 @@ class SVGImageConverter {
 	public Image renderSVGtoSWTImage(Document document, RenderInfo info)
 		throws Exception {
 		
-		BufferedImage img = renderSVGToAWTImage(document, info);
-		return ImageConverter.convert(img);
+		SWTImageTranscoder transcoder = new SWTImageTranscoder();
+		setUpTranscoders(document, transcoder, info);
+		
+		return transcoder.getSWTImage();
 	}
 	
 	/**
@@ -246,7 +247,9 @@ class SVGImageConverter {
 	public Image renderSVGtoSWTImage(InputStream in, RenderInfo info)
 		throws Exception {
 		
-		BufferedImage img = renderSVGToAWTImage(in, info);
-		return ImageConverter.convert(img);
+		SWTImageTranscoder transcoder = new SWTImageTranscoder();
+		setUpTranscoders(in, transcoder, info);
+		
+		return transcoder.getSWTImage();
 	}
 }

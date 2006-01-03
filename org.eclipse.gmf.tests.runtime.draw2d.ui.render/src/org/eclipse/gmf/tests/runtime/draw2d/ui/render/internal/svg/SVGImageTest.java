@@ -408,28 +408,49 @@ public class SVGImageTest
 	private static RGB GREEN = new RGB(0, 255, 0);
 
 	public void testChangeColors() {
-		RenderInfo info = getFixture3().getRenderInfo();
-		Image swtImg1 = getFixture3().getSWTImage();
+		RenderedImage fixture = getFixture3();
+		RenderInfo info = fixture.getRenderInfo();
+		Image swtImg1 = fixture.getSWTImage();
 		assertTrue(findColor(swtImg1, BLACK));
 		assertTrue(findColor(swtImg1, WHITE));
 		assertFalse(findColor(swtImg1, RED));
 		assertFalse(findColor(swtImg1, GREEN));
-
+		
+//		ImageLoader imageLoader = new ImageLoader();
+//		imageLoader.data = new ImageData[] {swtImg1.getImageData()};
+//		imageLoader.logicalScreenHeight = swtImg1.getBounds().width;
+//		imageLoader.logicalScreenHeight = swtImg1.getBounds().height;
+//		imageLoader.save("C:\\originalImg.bmp", SWT.IMAGE_BMP);
+		
 		// set color first time - red fill, red outline
 		info.setValues(info.getWidth(), info.getHeight(), true, true, RED, RED);
-		RenderedImage colorImg1 = getFixture3().getNewRenderedImage(info);
+		RenderedImage colorImg1 = fixture.getNewRenderedImage(info);
 		Image swtImg2 = colorImg1.getSWTImage();
 		assertNotNull("getSWTImage colorImg1 Image invalid", swtImg1); //$NON-NLS-1$
+		
+//		imageLoader = new ImageLoader();
+//		imageLoader.data = new ImageData[] {swtImg2.getImageData()};
+//		imageLoader.logicalScreenHeight = swtImg2.getBounds().width;
+//		imageLoader.logicalScreenHeight = swtImg2.getBounds().height;
+//		imageLoader.save("C:\\redImg.bmp", SWT.IMAGE_BMP);
+		
 		assertTrue(findColor(swtImg2, RED));
 		assertFalse(findColor(swtImg2, GREEN));
 
 		// set color second time - green fill, green outline
 		info.setValues(info.getWidth(), info.getHeight(), true,
 			true, GREEN, GREEN);
-		RenderedImage colorImg2 = getFixture3().getNewRenderedImage(info);
+		RenderedImage colorImg2 = fixture.getNewRenderedImage(info);
 		Image swtImg3 = colorImg2.getSWTImage();
 		assertNotNull("getSWTImage colorImg1 Image invalid", swtImg1); //$NON-NLS-1$
 		assertNotNull("getSWTImage colorImg2 Image invalid", swtImg2); //$NON-NLS-1$
+		
+//		imageLoader = new ImageLoader();
+//		imageLoader.data = new ImageData[] {swtImg3.getImageData()};
+//		imageLoader.logicalScreenHeight = swtImg3.getBounds().width;
+//		imageLoader.logicalScreenHeight = swtImg3.getBounds().height;
+//		imageLoader.save("C:\\greenImg.bmp", SWT.IMAGE_BMP);
+		
 		assertTrue(colorImg1 != colorImg2);
 		assertTrue(findColor(swtImg3, GREEN));
 		assertFalse(findColor(swtImg3, RED));

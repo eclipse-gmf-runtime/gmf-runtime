@@ -22,6 +22,7 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
@@ -63,13 +64,20 @@ public final class SVGImage extends AbstractRenderedImage {
 			SVGImageConverter converter = new SVGImageConverter();
 			return converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
 		} catch (Exception e) {
-			Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
-			e);
+			try {
+				// try rendering to awt since the SWT renderered may not support the SVG image capabilities
+				SVGImageConverter converter = new SVGImageConverter();
+				BufferedImage img = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
+				return ImageConverter.convert(img);
+			} catch (Exception e1) {
+				Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
+					e1);
 
-			// handle failure gracefully - we can't predict all the failures
-			// that
-			// may occur in the 3rd party library.
-			return new Image(Display.getDefault(), 8, 8);
+				// handle failure gracefully - we can't predict all the failures
+				// that
+				// may occur in the 3rd party library.
+				return new Image(Display.getDefault(), 8, 8);
+			}
 		}
 	}
 
