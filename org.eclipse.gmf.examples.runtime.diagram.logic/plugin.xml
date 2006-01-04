@@ -299,6 +299,15 @@
                    eclass="InputOutputTerminal"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.LogicElementEditHelper"> 
            </metamodelType>
+           <specializationType
+                   id="logic.halfAdder"     
+                   icon="icons/halfadder16.gif"
+                   name="%HalfAdderTool.Label"
+                   edithelperadvice="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.HalfAdderAdvice"
+                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+               <specializes id="logic.circuit"/>
+               <param name="semanticHint" value="circuit"/>
+           </specializationType>
         </metamodel>
     </extension>
    
@@ -345,4 +354,57 @@
       </MetaModelProvider>
    </extension>
    
+   <!-- Context Menu Items -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="LogicContainerElementObjectContribution"
+            objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+         <visibility>
+            <and>
+               <!-- For now, we use the ActionFilterService in a 'visibility' element to calculate enablement. -->
+               <objectState name="org.eclipse.gmf.examples.runtime.diagram.logic.isContainerElement" value=""/>
+               <!-- Once Bugzilla 111778 is fixed, the following enablement criteria can be used: -->
+               <!-- <adapt type="org.eclipse.emf.ecore.EObject"> 
+                       <instanceof value="ContainerElement"/>    
+                    </adapt> -->    
+               <or>
+                  <objectClass name="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart"/>
+                  <objectClass name="org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicShapeCompartmentEditPart"/>
+                  <objectClass name="org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicFlowCompartmentEditPart"/>
+               </or>
+            </and>
+         </visibility>
+         <action
+               id="logic.circuit"
+               label="%CreateCircuit.ActionLabel"
+               icon="icons/circuit16.gif"
+               menubarPath="addGroup"
+               class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.CreateLogicElementActionDelegate"
+               enablesFor="1">
+         </action>
+         <action
+               id="logic.halfAdder"
+               label="%CreateHalfAdder.ActionLabel"
+               icon="icons/halfadder16.gif"
+               menubarPath="addGroup"
+               class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.CreateLogicElementActionDelegate"
+               enablesFor="1">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   <!-- Action Filter Provider -->
+   <extension 
+        id="logicActionFilterProviders" 
+        name="%ext.actionFilterProviders" 
+        point="org.eclipse.gmf.runtime.common.ui.services.action.actionFilterProviders">
+     <ActionFilterProvider 
+           class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.LogicActionFilterProvider">
+        <Priority name="Lowest"/>
+        <Attribute 
+              name="org.eclipse.gmf.examples.runtime.diagram.logic.isContainerElement" 
+              value=""/>
+     </ActionFilterProvider>
+  </extension>
 </plugin>

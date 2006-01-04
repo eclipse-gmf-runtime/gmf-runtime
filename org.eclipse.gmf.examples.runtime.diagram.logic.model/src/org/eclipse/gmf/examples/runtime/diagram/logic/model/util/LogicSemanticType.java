@@ -46,4 +46,6 @@ public class LogicSemanticType
 
 	public static final IElementType INPUT_OUTPUT_TERMINAL = getElementType("logic.inputoutputterminal"); //$NON-NLS-1$
 
+	public static final IElementType HALF_ADDER = getElementType("logic.halfAdder"); //$NON-NLS-1$
+
 }

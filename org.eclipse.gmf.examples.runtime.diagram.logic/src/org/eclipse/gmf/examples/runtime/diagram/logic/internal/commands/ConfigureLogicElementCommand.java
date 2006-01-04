@@ -14,17 +14,24 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.ContainerElement;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Element;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Gate;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputOutputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.OutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Wire;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 
 /**
@@ -33,14 +40,14 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
  * 
  * @author ldamus
  */
-public abstract class ConfigureLogicElementCommand
-	extends ConfigureElementCommand {
+public abstract class ConfigureLogicElementCommand extends
+		ConfigureElementCommand {
 
 	/**
 	 * The input terminal feature.
 	 */
 	private static final EReference TERMINALS = SemanticPackage.eINSTANCE
-		.getElement_Terminals();
+			.getElement_Terminals();
 
 	/**
 	 * Constructs a new configure command for logic elements.
@@ -68,12 +75,13 @@ public abstract class ConfigureLogicElementCommand
 	 * @param progressMonitor
 	 *            the monitor to measure progress through long-running
 	 *            operations
+	 * @return the new terminal
 	 */
-	protected void createInputTerminal(Element logicElement, String id,
-			IProgressMonitor progressMonitor) {
+	protected InputTerminal createInputTerminal(Element logicElement,
+			String id, IProgressMonitor progressMonitor) {
 
-		createTerminal(LogicSemanticType.INPUT_TERMINAL, logicElement, id,
-			progressMonitor);
+		return (InputTerminal) createTerminal(LogicSemanticType.INPUT_TERMINAL,
+				logicElement, id, progressMonitor);
 	}
 
 	/**
@@ -86,12 +94,14 @@ public abstract class ConfigureLogicElementCommand
 	 * @param progressMonitor
 	 *            the monitor to measure progress through long-running
 	 *            operations
+	 * @return the new terminal
 	 */
-	protected void createOutputTerminal(Element logicElement, String id,
-			IProgressMonitor progressMonitor) {
+	protected OutputTerminal createOutputTerminal(Element logicElement,
+			String id, IProgressMonitor progressMonitor) {
 
-		createTerminal(LogicSemanticType.OUTPUT_TERMINAL, logicElement, id,
-			progressMonitor);
+		return (OutputTerminal) createTerminal(
+				LogicSemanticType.OUTPUT_TERMINAL, logicElement, id,
+				progressMonitor);
 	}
 
 	/**
@@ -104,12 +114,14 @@ public abstract class ConfigureLogicElementCommand
 	 * @param progressMonitor
 	 *            the monitor to measure progress through long-running
 	 *            operations
+	 * @return the new terminal
 	 */
-	protected void createInputOutputTerminal(Element logicElement, String id,
-			IProgressMonitor progressMonitor) {
+	protected InputOutputTerminal createInputOutputTerminal(
+			Element logicElement, String id, IProgressMonitor progressMonitor) {
 
-		createTerminal(LogicSemanticType.INPUT_OUTPUT_TERMINAL, logicElement,
-			id, progressMonitor);
+		return (InputOutputTerminal) createTerminal(
+				LogicSemanticType.INPUT_OUTPUT_TERMINAL, logicElement, id,
+				progressMonitor);
 	}
 
 	/**
@@ -125,16 +137,18 @@ public abstract class ConfigureLogicElementCommand
 	 * @param progressMonitor
 	 *            the monitor to measure progress through long-running
 	 *            operations
+	 * @return the new terminal
 	 */
-	private void createTerminal(IElementType elementType, Element logicElement,
-			String id, IProgressMonitor progressMonitor) {
+	private Terminal createTerminal(IElementType elementType,
+			Element logicElement, String id, IProgressMonitor progressMonitor) {
 
 		Terminal terminal = createTerminal(elementType, logicElement,
-			progressMonitor);
+				progressMonitor);
 
 		if (terminal != null) {
 			setTerminalId(elementType, terminal, id, progressMonitor);
 		}
+		return terminal;
 	}
 
 	/**
@@ -153,23 +167,123 @@ public abstract class ConfigureLogicElementCommand
 	 * @return the new terminal element, or <code>null</code> if it wasn't
 	 *         created
 	 */
-	private Terminal createTerminal(IElementType elementType,
+	private Terminal createTerminal(IElementType terminalType,
 			Element logicElement, IProgressMonitor progressMonitor) {
 
+		Element result = createElement(logicElement, terminalType, TERMINALS,
+				progressMonitor);
+
+		if (result instanceof Terminal) {
+			return (Terminal) result;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Creates a <code>Wire</code> from <code>source</code> to
+	 * <code>target</code>.
+	 * 
+	 * @param source
+	 *            the source terminal
+	 * @param target
+	 *            the target terminal
+	 * @param progressMonitor
+	 *            the monitor to measure progress through long-running
+	 *            operations
+	 * @return the new <code>Wire</code>, or <code>null</code> if none was
+	 *         created
+	 */
+	protected Wire createWire(OutputTerminal source, InputTerminal target,
+			IProgressMonitor progressMonitor) {
+
+		CreateRelationshipRequest createRequest = new CreateRelationshipRequest(
+				source, target, LogicSemanticType.WIRE);
+
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(createRequest.getEditHelperContext());
+
+		if (elementType != null) {
+			ICommand createCommand = elementType.getEditCommand(createRequest);
+
+			if (createCommand != null && createCommand.isExecutable()) {
+				createCommand.execute(progressMonitor);
+				CommandResult commandResult = createCommand.getCommandResult();
+
+				if (isOK(commandResult)) {
+					Object result = commandResult.getReturnValue();
+
+					if (result instanceof Wire) {
+						return (Wire) result;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a <code>Gate</code> in the <code>container</code>.
+	 * 
+	 * @param container
+	 *            the conainer element
+	 * @param gateType
+	 *            the kind of gate to create
+	 * @param progressMonitor
+	 *            progressMonitor the monitor to measure progress through
+	 *            long-running operations
+	 * @return the new <code>Gate</code>, or <code>null</code> if none was
+	 *         created
+	 */
+	protected Gate createGate(ContainerElement container,
+			IElementType gateType, IProgressMonitor progressMonitor) {
+
+		Element result = createElement(container, gateType, null,
+				progressMonitor);
+
+		if (result instanceof Gate) {
+			return (Gate) result;
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a new element.
+	 * 
+	 * @param container
+	 *            the container for the new element
+	 * @param type
+	 *            the kind of new element to create
+	 * @param containmentFeature
+	 *            the feature in which to put the new element
+	 * @param progressMonitor
+	 *            progressMonitor the monitor to measure progress through
+	 *            long-running operations
+	 * @return the new <code>Element</code>, or <code>null</code> if none
+	 *         was created
+	 */
+	private Element createElement(Element container, IElementType type,
+			EReference containmentFeature, IProgressMonitor progressMonitor) {
+
 		CreateElementRequest createRequest = new CreateElementRequest(
-			logicElement, elementType, TERMINALS);
+				container, type, containmentFeature);
 
-		ICommand createCommand = getElementType().getEditCommand(createRequest);
+		IElementType elementType = ElementTypeRegistry.getInstance()
+				.getElementType(createRequest.getEditHelperContext());
 
-		if (createCommand != null && createCommand.isExecutable()) {
-			createCommand.execute(progressMonitor);
-			CommandResult commandResult = createCommand.getCommandResult();
+		if (elementType != null) {
+			ICommand createCommand = elementType.getEditCommand(createRequest);
 
-			if (isOK(commandResult)) {
-				Object result = commandResult.getReturnValue();
+			if (createCommand != null && createCommand.isExecutable()) {
+				createCommand.execute(progressMonitor);
+				CommandResult commandResult = createCommand.getCommandResult();
 
-				if (result  instanceof Terminal) {
-					return (Terminal) result;
+				if (isOK(commandResult)) {
+					Object result = commandResult.getReturnValue();
+
+					if (result instanceof Element) {
+						return (Element) result;
+					}
 				}
 			}
 		}
@@ -193,7 +307,7 @@ public abstract class ConfigureLogicElementCommand
 			String id, IProgressMonitor progressMonitor) {
 
 		SetRequest setRequest = new SetRequest(terminal,
-			SemanticPackage.eINSTANCE.getTerminal_Id(), id);
+				SemanticPackage.eINSTANCE.getTerminal_Id(), id);
 
 		ICommand setCommand = elementType.getEditCommand(setRequest);
 
