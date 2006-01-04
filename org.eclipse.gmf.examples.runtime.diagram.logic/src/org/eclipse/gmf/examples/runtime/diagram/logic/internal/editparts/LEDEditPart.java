@@ -31,7 +31,6 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -121,7 +120,7 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 	final private Dimension ledSizeDP = new Dimension(61, 44);
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedShapeEditPart#createMainFigure()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart#createMainFigure()
 	 */
 	protected NodeFigure createMainFigure() {
 		Dimension ledSizeLP = new Dimension(ledSizeDP);
@@ -145,20 +144,29 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 		return boundMap;
 	}
 	
-	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
-		BorderItemFigure theFigure = null;
+	public NodeFigure createOwnedTerminalFigure(TerminalEditPart terminalEP) {
+		Terminal terminal = (Terminal) ViewUtil
+			.resolveSemanticElement((View) terminalEP.getModel());
+		if (terminal == null) {
+			return null;
+		}
+
+		NodeFigure theFigure = null;
+		DrawConstant side = DrawConstant.NORTH;
 		if (terminal instanceof InputTerminal) {
-			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId(), 
+			theFigure = new TopTerminalFigure(terminal.getId(), 
 								new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
-			theFigure = new BottomTerminalFigure(DrawConstant.SOUTH, terminal.getId(), 
+			theFigure = new BottomTerminalFigure(terminal.getId(), 
 								new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
+			side = DrawConstant.SOUTH;
 		}
 		
 		Dimension ledSizeLP = new Dimension(ledSizeDP);
 		getMapMode().DPtoLP(ledSizeLP);
 		
-		theFigure.setLocator(new TerminalFigure.FixedGateLocation(theFigure, getFigure(), ledSizeLP));
+		terminalEP.setLocator(new TerminalFigure.TerminalLocator(getFigure(), ledSizeLP, side));
+
 		return theFigure;
 	}
 }

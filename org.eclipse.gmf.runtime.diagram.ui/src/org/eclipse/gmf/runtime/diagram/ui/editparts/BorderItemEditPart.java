@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemContainerFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
@@ -41,9 +42,11 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author tisrar
  * @author jbruck
+ * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+ *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
  */
 public class BorderItemEditPart
-	extends ShapeNodeEditPart { // inherit from BorderedShapeEditPart eventually
+	extends ShapeNodeEditPart implements IBorderItemEditPart { // inherit from BorderedShapeEditPart eventually
 
 	/**
 	 * Create an instance.
@@ -116,6 +119,14 @@ public class BorderItemEditPart
 		return ((BorderItemFigure) getFigure()).getLocator();
 	}
 
+	public IBorderItemLocator getBorderItemLocator() {
+		Locator locator = getLocator();
+		if (locator instanceof IBorderItemLocator) {
+			return (IBorderItemLocator) locator;
+		}
+		return null;
+	}
+	
 	/**
 	 * Return the editpolicy to be installed as an
 	 * <code>EditPolicy#PRIMARY_DRAG_ROLE</code> role. This method is

@@ -30,6 +30,8 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author tisrar
  * @author jbruck
+ * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+ *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
  */
 public abstract class BorderedShapeEditPart
 	extends ShapeNodeEditPart {

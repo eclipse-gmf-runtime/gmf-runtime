@@ -16,16 +16,16 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
+import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
  * @author qili
  *
  * To manage fixed connection anchors
  */
-public class TerminalFigure extends BorderItemFigure{
+public class TerminalFigure extends NodeFigure{
 	
 	protected FixedConnectionAnchor fixedAnchor;
 	protected Dimension prefSize;
@@ -37,7 +37,7 @@ public class TerminalFigure extends BorderItemFigure{
 	 * an initial position.  This locator will also scale the location of the connection if the
 	 * parent figure changes.
 	 */
-	static public class FixedGateLocation extends BorderItemLocator {
+	static public class TerminalLocator extends BorderItemLocator {
 		 
 		private Dimension initDim; 
 		public void relocate(IFigure target) {
@@ -46,7 +46,7 @@ public class TerminalFigure extends BorderItemFigure{
 			float yRatio = parentRect.height / (float)initDim.height;
 			
 			Rectangle targetRect = target.getBounds();
-			Point ptLoc = this.getAbsoluteToBorder(getConstraintLocation());
+			Point ptLoc = this.getAbsoluteToBorder(getConstraint().getLocation());
 			ptLoc = ptLoc.getTranslated(-parentRect.x, -parentRect.y);
 			ptLoc.scale(xRatio, yRatio);
 			ptLoc = ptLoc.getTranslated(parentRect.x, parentRect.y);
@@ -58,8 +58,8 @@ public class TerminalFigure extends BorderItemFigure{
 		 * @param gate
 		 * @param parentFigure
 		 */
-		public FixedGateLocation(BorderItemFigure gate, IFigure parentFigure, Dimension initDim) {
-			super(gate, parentFigure);
+		public TerminalLocator(IFigure parentFigure, Dimension initDim, DrawConstant side) {
+			super(parentFigure, side);
 			this.initDim = initDim;
 		}
 	}
@@ -67,8 +67,8 @@ public class TerminalFigure extends BorderItemFigure{
 	/**
 	 * @param preferredSide
 	 */
-	public TerminalFigure(DrawConstant preferredSide, Dimension prefSize) {
-		super(preferredSide);
+	public TerminalFigure(Dimension prefSize) {
+		super();
 		this.prefSize = new Dimension(prefSize);
 	}
 	

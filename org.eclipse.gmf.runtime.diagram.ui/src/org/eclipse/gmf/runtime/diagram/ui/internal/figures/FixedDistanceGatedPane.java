@@ -20,10 +20,12 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 
 /**
- * Transitionary class.  We will eventually move GatedPaneFigures to this class.
+ * Transitionary class. We will eventually move GatedPaneFigures to this class.
  * 
  * @author jbruck
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
+ * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+ *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
  */
 // TODO: Hide this class .. make private class of BorderedFigure
 public class FixedDistanceGatedPane extends NodeFigure {

@@ -18,48 +18,42 @@ import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
- * Wrapper that contains the real figure and the border items. This is required
- * to allow the main figure's layout manager to ignore the border items. The
- * border item container applies a delegating layout manager to allow border
- * item children to lay themselves out.
+ * Wrapper figure that contains the main figure and the border item figures.
+ * This is required to allow the main figure's layout manager to ignore the
+ * border items. The border item container applies a delegating layout manager
+ * to allow border item children to lay themselves out.
  * 
- * @author jbruck
- * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
- *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
+ * @author jbruck, cmahoney
  */
-public class BorderedFigure
-	extends BorderItemFigure {
+public class BorderedNodeFigure
+	extends NodeFigure {
 
 	private BorderItemContainerFigure borderItemContainer;
 
-	private IFigure elementFigure;
+	private IFigure mainFigure;
 
 	/**
-	 * Creates a new ClassiferNodeFigire figure.
+	 * Creates a new BorderedNodeFigure figure.
 	 * 
-	 * @param elementFig
+	 * @param mainFigure
 	 *            the figure to use with this figure
 	 */
-	public BorderedFigure(IFigure elementFig) {
-		super(DrawConstant.INVALID);
-		if (elementFig instanceof BorderItemFigure) {
-			setPreferredSide(((BorderItemFigure) elementFig).getPreferredSide());
-		}
-
+	public BorderedNodeFigure(IFigure mainFigure) {
+		super();
 		setOpaque(false); // set transparent by default
 		setBorder(null);
 		setLayoutManager(null);
-		this.elementFigure = elementFig;
+		this.mainFigure = mainFigure;
 
-		add(getElementPane());
+		add(getMainFigure());
 		add(getBorderItemContainer());
 
-		setBounds(elementFig.getBounds().getCopy());
+		setBounds(getMainFigure().getBounds().getCopy());
 		getBorderItemContainer().setBounds(new Rectangle(0, 0, 1, 1));
 	}
 
@@ -68,7 +62,7 @@ public class BorderedFigure
 	 * 
 	 * @author jbruck
 	 */
-	public class AnimatableDelegatingLayout
+	private class AnimatableDelegatingLayout
 		extends DelegatingLayout {
 
 		public void layout(IFigure container) {
@@ -80,10 +74,13 @@ public class BorderedFigure
 	}
 
 	/**
+	 * Gets the border item container figure to which border item figures can be
+	 * added with a {@link IBorderItemLocator} as the constraint and then later
+	 * removed.
 	 * 
 	 * @return The border item container figure
 	 */
-	public BorderItemContainerFigure getBorderItemContainer() {
+	public IFigure getBorderItemContainer() {
 		if (borderItemContainer == null) {
 			borderItemContainer = new BorderItemContainerFigure();
 			borderItemContainer
@@ -94,16 +91,17 @@ public class BorderedFigure
 	}
 
 	/**
+	 * Gets the main figure of this bordered figure.
 	 * 
 	 * @return The "main" figure
 	 */
-	public IFigure getElementPane() {
-		return elementFigure;
+	public IFigure getMainFigure() {
+		return mainFigure;
 	}
 
 	public Rectangle getClientArea(Rectangle rect) {
-		if (elementFigure != null) {
-			return elementFigure.getClientArea(rect);
+		if (getMainFigure() != null) {
+			return getMainFigure().getClientArea(rect);
 		}
 		return super.getClientArea(rect);
 	}
@@ -114,10 +112,10 @@ public class BorderedFigure
 	 * @return the hnalde bounds
 	 */
 	public Rectangle getHandleBounds() {
-		if (elementFigure instanceof NodeFigure) {
-			return ((NodeFigure) elementFigure).getHandleBounds().getCopy();
+		if (getMainFigure() instanceof NodeFigure) {
+			return ((NodeFigure) getMainFigure()).getHandleBounds().getCopy();
 		} else {
-			return elementFigure.getBounds().getCopy();
+			return getMainFigure().getBounds().getCopy();
 		}
 	}
 
@@ -125,8 +123,8 @@ public class BorderedFigure
 	 * Give the main figure the entire bounds of the wrapper.
 	 */
 	protected void layout() {
-		if (!this.getBounds().equals(elementFigure.getBounds())) {
-			elementFigure.setBounds(this.getBounds().getCopy());
+		if (!this.getBounds().equals(getMainFigure().getBounds())) {
+			getMainFigure().setBounds(this.getBounds().getCopy());
 		}
 		// When parent resizes, cause the border items to be relocated.
 		getBorderItemContainer().invalidateTree();
@@ -168,7 +166,7 @@ public class BorderedFigure
 		if (result != null) {
 			return result;
 		}
-		return elementFigure.findFigureAt(x, y, search);
+		return getMainFigure().findFigureAt(x, y, search);
 	}
 
 	public IFigure findMouseEventTargetAt(int x, int y) {
@@ -187,60 +185,68 @@ public class BorderedFigure
 	}
 
 	public Dimension getMinimumSize(int wHint, int hHint) {
-		return elementFigure.getMinimumSize(wHint, hHint);
+		return getMainFigure().getMinimumSize(wHint, hHint);
 	}
 
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return elementFigure.getPreferredSize(wHint, hHint);
+		return getMainFigure().getPreferredSize(wHint, hHint);
 	}
 
 	public IFigure getToolTip() {
-		return elementFigure.getToolTip();
+		return getMainFigure().getToolTip();
 	}
 
 	public void setToolTip(IFigure f) {
-		elementFigure.setToolTip(f);
+		getMainFigure().setToolTip(f);
 	}
 
-	/**
-	 * Returns a new anchor for this node figure.
-	 * 
-	 * @param p
-	 *            Point on the figure that gives a hint which anchor to return.
-	 * @return ConnectionAnchor reference to an anchor associated with the given
-	 *         point on the figure.
-	 */
 	public ConnectionAnchor getSourceConnectionAnchorAt(Point p) {
-		if (elementFigure instanceof NodeFigure)
-			return ((NodeFigure) elementFigure).getSourceConnectionAnchorAt(p);
+		if (getMainFigure() instanceof NodeFigure)
+			return ((NodeFigure) getMainFigure())
+				.getSourceConnectionAnchorAt(p);
 		return super.getSourceConnectionAnchorAt(p);
 	}
 
-	/*
-	 * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getTargetConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
-	 */
 	public ConnectionAnchor getTargetConnectionAnchorAt(Point p) {
-		if (elementFigure instanceof NodeFigure)
-			return ((NodeFigure) elementFigure).getTargetConnectionAnchorAt(p);
+		if (getMainFigure() instanceof NodeFigure)
+			return ((NodeFigure) getMainFigure())
+				.getTargetConnectionAnchorAt(p);
 		return super.getTargetConnectionAnchorAt(p);
 	}
 
-	/*
-	 * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getConnectionAnchor(java.lang.String)
-	 */
 	public ConnectionAnchor getConnectionAnchor(String terminal) {
-		if (elementFigure instanceof NodeFigure)
-			return ((NodeFigure) elementFigure).getConnectionAnchor(terminal);
+		if (getMainFigure() instanceof NodeFigure)
+			return ((NodeFigure) getMainFigure()).getConnectionAnchor(terminal);
 		return super.getConnectionAnchor(terminal);
 	}
 
-	/*
-	 * @see org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure#getConnectionAnchorTerminal(org.eclipse.draw2d.ConnectionAnchor)
-	 */
 	public String getConnectionAnchorTerminal(ConnectionAnchor c) {
-		if (elementFigure instanceof NodeFigure)
-			return ((NodeFigure) elementFigure).getConnectionAnchorTerminal(c);
+		if (getMainFigure() instanceof NodeFigure)
+			return ((NodeFigure) getMainFigure())
+				.getConnectionAnchorTerminal(c);
 		return super.getConnectionAnchorTerminal(c);
+	}
+
+	/**
+	 * This method provides a generic way to get a target figure's parent's main
+	 * figure where if the target figure is a border item figure, then its
+	 * parent is considered the figure on which it borders.It is not possible to
+	 * get a target figure's parent using <code>IFigure#getParent()</code> if
+	 * the target figure is a border item figure, since this would return the
+	 * border item container figure.
+	 * 
+	 * @param target
+	 *            the target figure, may or may not be acting as a border item
+	 *            figure
+	 * @return the parent figure or if the target figure was on a border item
+	 *         container figure, then the main figure that it borders.
+	 */
+	public static IFigure getParentFigure(IFigure target) {
+		IFigure parent = target.getParent();
+		if (parent instanceof BorderItemContainerFigure) {
+			return ((BorderedNodeFigure) parent.getParent()).getMainFigure();
+		}
+		return parent;
 	}
 
 }

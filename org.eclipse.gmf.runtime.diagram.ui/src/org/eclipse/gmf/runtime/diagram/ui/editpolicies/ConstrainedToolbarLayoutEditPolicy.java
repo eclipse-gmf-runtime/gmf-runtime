@@ -27,7 +27,7 @@ import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
@@ -96,7 +96,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 				return new ResizableCompartmentEditPolicy(isHorizontal());
 			else if (child instanceof TextCompartmentEditPart)
 				return new TextSelectionEditPolicy();
-			else if ( child instanceof BorderItemEditPart)
+			else if ( child instanceof IBorderItemEditPart)
 				return new BorderItemSelectionEditPolicy();
 			else if ( child instanceof FixedLocationResizableEditPart)
 				return  child.getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);

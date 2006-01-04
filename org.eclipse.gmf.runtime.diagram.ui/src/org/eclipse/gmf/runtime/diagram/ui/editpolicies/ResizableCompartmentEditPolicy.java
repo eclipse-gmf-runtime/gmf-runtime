@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHandle;
@@ -113,12 +113,12 @@ public class ResizableCompartmentEditPolicy
 		}
 		// TODO: remove later. this is a temporary fix for defect
 		// RATLC00522565
-		// eventually we will put the BorderedFigure inside the resizable
+		// eventually we will put the BorderedNodeFigure inside the resizable
 		// compartment
-		else if (getGraphicalEditPart().getFigure() instanceof BorderedFigure) {
-			BorderedFigure gpf = (BorderedFigure) getGraphicalEditPart()
+		else if (getGraphicalEditPart().getFigure() instanceof BorderedNodeFigure) {
+			BorderedNodeFigure gpf = (BorderedNodeFigure) getGraphicalEditPart()
 				.getFigure();
-			IFigure f = gpf.getElementPane();
+			IFigure f = gpf.getMainFigure();
 			if (f instanceof ResizableCompartmentFigure) {
 				compartmentFigure = (ResizableCompartmentFigure) f;
 			}

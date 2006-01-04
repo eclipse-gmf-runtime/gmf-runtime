@@ -9,18 +9,20 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.figures;
+package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 
 import java.util.ListIterator;
 
+import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -34,10 +36,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * implementation kept border items in a separate list ( not as children ) and
  * painted them after, requiring explicit moving of children.
  * 
- * @author tisrar
- * @author jbruck
- * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
- *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
+ * @author tisrar, jbruck, cmahoney
  */
 public class BorderItemContainerFigure
 	extends NodeFigure {
@@ -71,25 +70,6 @@ public class BorderItemContainerFigure
 	}
 
 	/**
-	 * Adds a border item figure to this figure. It is different than adding
-	 * border item as a "child" because border items are not affected by the
-	 * layout manager of this figure. This method also keep account of the
-	 * largest border item size added so that the client area and the border are
-	 * shrinked accoringly.
-	 * 
-	 * @param figure
-	 *            The BorderItemFigure.
-	 * @param constraint
-	 *            the locator to associate with this figure
-	 */
-	public void addBorderItem(BorderItemFigure figure, Object constraint) {
-		add(figure, constraint);
-		// TODO: remove this unecessary call.
-		figure.setLocator((Locator) constraint);
-
-	}
-
-	/**
 	 * gets the handle bounds of the main figure
 	 * 
 	 * @return the handle bounds of the main figure
@@ -116,20 +96,7 @@ public class BorderItemContainerFigure
 	}
 
 	/**
-	 * Removes a border item from this figure. This method also sets the new
-	 * valid max padding from the sides if the existing are equal to this border
-	 * items dimension.
-	 * 
-	 * @param figure
-	 *            The BorderItemFigure.
-	 */
-	public void removeBorderItem(BorderItemFigure figure) {
-		remove(figure);
-	}
-
-	/**
-	 * @see org.eclipse.draw2d.IFigure#containsPoint(int, int) We need to
-	 *      override this for smooth painting of border item items.
+	 * We need to override this for smooth painting of border item items.
 	 */
 	public boolean containsPoint(int x, int y) {
 		for (int i = getChildren().size(); i > 0;) {
@@ -173,10 +140,6 @@ public class BorderItemContainerFigure
 		return null;
 	}
 
-	/**
-	 * @see org.eclipse.draw2d.IFigure#findFigureAt(int, int,
-	 *      org.eclipse.draw2d.TreeSearch)
-	 */
 	public IFigure findFigureAt(int x, int y, TreeSearch search) {
 		if (search.prune(this))
 			return null;
@@ -245,7 +208,7 @@ public class BorderItemContainerFigure
 	/**
 	 * @see org.eclipse.draw2d.IFigure#intersects(Rectangle)
 	 */
-	public boolean intersects(Rectangle rect) {
+	public boolean intersects(Rectangle rect) {		
 		Rectangle rectangle = getParentRectangle();
 		return rectangle.intersects(rect);
 	}
@@ -265,11 +228,12 @@ public class BorderItemContainerFigure
 			}
 		}
 		return rect;
+//		return getHandleBounds().getCopy();
 	}
 
 	private IFigure getMainFigure(BorderItemContainerFigure gf) {
-		BorderedFigure gpf = (BorderedFigure) gf.getParent();
-		return gpf.getElementPane();
+		BorderedNodeFigure gpf = (BorderedNodeFigure) gf.getParent();
+		return gpf.getMainFigure();
 	}
 
 	/**
@@ -294,9 +258,6 @@ public class BorderItemContainerFigure
 		return null;
 	}
 
-	/**
-	 * @see org.eclipse.draw2d.IFigure#erase()
-	 */
 	public void erase() {
 		if (getChildren().isEmpty()) {
 			super.erase();

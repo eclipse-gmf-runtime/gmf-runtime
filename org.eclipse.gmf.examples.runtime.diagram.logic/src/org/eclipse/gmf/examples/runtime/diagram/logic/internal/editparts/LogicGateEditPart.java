@@ -31,8 +31,9 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.AndGate;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -124,23 +125,35 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		return boundMap;
 	}
 	
-	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
-		BorderItemFigure theFigure = null;
+	public NodeFigure createOwnedTerminalFigure(TerminalEditPart terminalEP) {
+		Terminal terminal = (Terminal) ViewUtil
+			.resolveSemanticElement((View) terminalEP.getModel());
+		if (terminal == null) {
+			return null;
+		}
 		
+		NodeFigure theFigure = null;
+
+		DrawConstant side = DrawConstant.NORTH;
 		if (terminal instanceof InputTerminal) {
 			if (terminal.eContainer() instanceof AndGate) {
-				theFigure = new AndGateTerminalFigure(DrawConstant.NORTH, terminal.getId(), 
-					new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(2)));
+				theFigure = new AndGateTerminalFigure(terminal.getId(),
+					new Dimension(getMapMode().DPtoLP(4), getMapMode()
+						.DPtoLP(2)));
 			} else {
-				theFigure = new OrGateTerminalFigure(DrawConstant.NORTH, terminal.getId(),
-					new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(4)));
+				theFigure = new OrGateTerminalFigure(terminal.getId(),
+					new Dimension(getMapMode().DPtoLP(4), getMapMode()
+						.DPtoLP(4)));
 			}
-		}
-		else {
-			theFigure = new OutputTerminalFigure(DrawConstant.SOUTH, terminal.getId(),
+		} else {
+			theFigure = new OutputTerminalFigure(terminal.getId(),
 				new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(5)));
+			side = DrawConstant.SOUTH;
 		}
-		
+
+		terminalEP.setLocator(new BorderItemLocator(getFigure(),
+			side));
+
 		return theFigure;
 	}
 }

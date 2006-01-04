@@ -24,7 +24,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalF
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -85,19 +85,29 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 	}
 	
 	/**
-	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createOwnedTerminalFigure(org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal)
+	 * @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart#createOwnedTerminalFigure(TerminalEditPart)
 	 */
-	public NodeFigure createOwnedTerminalFigure(Terminal terminal) {
-		BorderItemFigure theFigure = null;
+	public NodeFigure createOwnedTerminalFigure(TerminalEditPart terminalEP) {
+		Terminal terminal = (Terminal) ViewUtil
+			.resolveSemanticElement((View) terminalEP.getModel());
+		if (terminal == null) {
+			return null;
+		}
+
+		NodeFigure theFigure = null;
+		DrawConstant side = DrawConstant.NORTH;
 		if (terminal instanceof InputTerminal) {
-			theFigure = new TopTerminalFigure(DrawConstant.NORTH, terminal.getId(), 
+			theFigure = new TopTerminalFigure(terminal.getId(), 
 				new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
-			theFigure = new BottomTerminalFigure(DrawConstant.SOUTH, terminal.getId(),
+			theFigure = new BottomTerminalFigure(terminal.getId(),
 				new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
+			side = DrawConstant.SOUTH;
 		}
 		
-		theFigure.setLocator(new TerminalFigure.FixedGateLocation(theFigure, getFigure(), new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(100))));
+		terminalEP.setLocator(new TerminalFigure.TerminalLocator(
+			getFigure(), new Dimension(getMapMode().DPtoLP(100), getMapMode()
+				.DPtoLP(100)), side));		
 		return theFigure;
 	}
 }

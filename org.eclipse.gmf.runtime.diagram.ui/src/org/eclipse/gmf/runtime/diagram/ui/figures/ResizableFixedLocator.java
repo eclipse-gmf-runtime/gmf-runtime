@@ -20,11 +20,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.FixedDistanceGatedPan
 
 
 /**
- * A locator that locates a child centered on it's parent.  The locator assume
+ * A locator that locates a child centered on it's parent. The locator assume
  * the parent figure is a BorderedFigure and the target is a child of the
  * GatePane.
  * 
  * @author jcorchis
+ * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+ *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
  */
 public class ResizableFixedLocator
 	extends LabelLocator {

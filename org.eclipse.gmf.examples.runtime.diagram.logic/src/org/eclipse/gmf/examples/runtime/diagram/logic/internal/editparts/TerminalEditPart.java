@@ -16,10 +16,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
+import org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -29,8 +28,10 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author qili
  */
-public class TerminalEditPart extends BorderItemEditPart {
-	
+public class TerminalEditPart extends AbstractBorderItemEditPart {
+
+	private BorderItemLocator locator;
+
 	/**
 	 * @param view
 	 */
@@ -38,17 +39,12 @@ public class TerminalEditPart extends BorderItemEditPart {
 		super(view);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart#createNodeFigure()
-	 */
 	protected NodeFigure createNodeFigure() {
-		
-		Terminal terminal = (Terminal)ViewUtil.resolveSemanticElement((View)getModel());
 		EditPart host = getParent();
-		if (host instanceof ITerminalOwnerEditPart && terminal != null) {
-			return ((ITerminalOwnerEditPart)host).createOwnedTerminalFigure(terminal);
+		if (host instanceof ITerminalOwnerEditPart) {
+			return ((ITerminalOwnerEditPart) host)
+				.createOwnedTerminalFigure(this);
 		}
-		
 		return null;
 	}
 	
@@ -59,18 +55,32 @@ public class TerminalEditPart extends BorderItemEditPart {
 		return false;
 	}
 	
-	/**
-	 * @see org.eclipse.gef.EditPart#activate()
-	 */
 	public void activate() {
 		super.activate();
 		Insets parentInset = new Insets(0);
-		IFigure fig =  ((BorderItemFigure)getFigure()).getBoundaryFigure();
-		if( fig != null ){
+		IFigure fig = ((BorderItemLocator)getLocator()).getParentFigure();
+		if (fig != null) {
 			parentInset = fig.getInsets();
 		}
 		Rectangle rBounds = ((NodeFigure) getFigure()).getHandleBounds();
-		((BorderItemFigure) getFigure()).setBorderItemOffset(new Dimension(rBounds.width
-			/ 2 + parentInset.getWidth() / 2, rBounds.height / 2 + parentInset.getHeight() / 2));
+		((BorderItemLocator)getLocator()).setBorderItemOffset(new Dimension(
+			rBounds.width / 2 + parentInset.getWidth() / 2, rBounds.height / 2
+				+ parentInset.getHeight() / 2));
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart#getLocator()
+	 */
+	public IBorderItemLocator getLocator() {
+		return locator;
+	}
+
+	
+	/**
+	 * Sets the locator.
+	 * @param locator The locator to set.
+	 */
+	public void setLocator(BorderItemLocator locator) {
+		this.locator = locator;
 	}
 }

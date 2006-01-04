@@ -15,7 +15,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
@@ -46,8 +45,8 @@ public class OutputTerminalFigure extends TerminalFigure {
 	 * Constructor
 	 * @param edge
 	 */
-	public OutputTerminalFigure(DrawConstant side, String ID, Dimension prefSize) {
-		super(side, prefSize);
+	public OutputTerminalFigure(String ID, Dimension prefSize) {
+		super(prefSize);
 		setSize(prefSize);
 		
 		fixedAnchor = new FixedConnectionAnchor(this);

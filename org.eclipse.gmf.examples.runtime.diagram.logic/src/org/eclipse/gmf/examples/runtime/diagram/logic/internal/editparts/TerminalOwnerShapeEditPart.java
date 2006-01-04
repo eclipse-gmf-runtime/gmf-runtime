@@ -11,8 +11,10 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.TerminalCanonicalEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedShapeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -23,7 +25,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Abstract editpart class for logic shapes
  */
 public abstract class TerminalOwnerShapeEditPart 
-	extends BorderedShapeEditPart 
+	extends AbstractBorderedShapeEditPart 
 	implements ITerminalOwnerEditPart
 {
 		
@@ -32,7 +34,6 @@ public abstract class TerminalOwnerShapeEditPart
 	 */
 	public TerminalOwnerShapeEditPart(View view) {
 		super(view);
-		// TODO Auto-generated constructor stub
 	}
 	
 	protected void createDefaultEditPolicies(){
@@ -41,5 +42,19 @@ public abstract class TerminalOwnerShapeEditPart
 		installEditPolicy(EditPolicyRoles.CANONICAL_ROLE, 
 			new TerminalCanonicalEditPolicy());
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderedShapeEditPart#addBorderItem(org.eclipse.draw2d.IFigure, org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart)
+	 */
+	protected void addBorderItem(IFigure borderItemContainer,
+			IBorderItemEditPart borderItemEditPart) {
+		if (borderItemEditPart instanceof TerminalEditPart) {
+			borderItemContainer.add(borderItemEditPart.getFigure(),
+				((TerminalEditPart) borderItemEditPart).getLocator());
+		} else {
+			super.addBorderItem(borderItemContainer, borderItemEditPart);
+		}
+	}
+
 
 }

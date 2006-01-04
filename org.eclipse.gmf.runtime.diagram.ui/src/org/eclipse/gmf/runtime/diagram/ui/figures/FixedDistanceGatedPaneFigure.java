@@ -33,6 +33,8 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * This will have to be changed to be made more generic.
  * 
  * @author jbruck
+ * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+ *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
  */
 public class FixedDistanceGatedPaneFigure extends BorderItemFigure {
 	

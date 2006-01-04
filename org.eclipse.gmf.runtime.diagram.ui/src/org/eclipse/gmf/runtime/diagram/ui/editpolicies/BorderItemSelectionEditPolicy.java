@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -22,18 +23,18 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemFigure.BorderItemLocator;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * Edit policy to restrict border item movement along border of bordered item.
+ * Edit policy to restrict border item movement.
  * 
- * @author jbruck
+ * @author jbruck, cmahoney
  */
 public class BorderItemSelectionEditPolicy
 	extends NonResizableEditPolicyEx {
@@ -64,21 +65,23 @@ public class BorderItemSelectionEditPolicy
 	 *            the request
 	 */
 	protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
-		BorderItemEditPart borderItemEP = (BorderItemEditPart) getHost();
-		BorderItemLocator borderItemLocator = (BorderItemFigure.BorderItemLocator) borderItemEP
-			.getLocator();
-		IFigure feedback = getDragSourceFeedbackFigure();
-		PrecisionRectangle rect = new PrecisionRectangle(
-			getInitialFeedbackBounds().getCopy());
-		getHostFigure().translateToAbsolute(rect);
-		rect.translate(request.getMoveDelta());
-		rect.resize(request.getSizeDelta());
-		getHostFigure().translateToRelative(rect);
-		Rectangle realLocation = borderItemLocator.locateOnBorder(rect
-			.getCopy());
-		getHostFigure().translateToAbsolute(realLocation);
-		feedback.translateToRelative(realLocation);
-		feedback.setBounds(realLocation);
+		IBorderItemEditPart borderItemEP = (IBorderItemEditPart) getHost();
+		IBorderItemLocator borderItemLocator = borderItemEP.getBorderItemLocator();
+		
+		if (borderItemLocator != null) {
+			IFigure feedback = getDragSourceFeedbackFigure();
+			PrecisionRectangle rect = new PrecisionRectangle(
+				getInitialFeedbackBounds().getCopy());
+			getHostFigure().translateToAbsolute(rect);
+			rect.translate(request.getMoveDelta());
+			rect.resize(request.getSizeDelta());
+			getHostFigure().translateToRelative(rect);
+			Rectangle realLocation = borderItemLocator.getValidLocation(rect
+				.getCopy(), borderItemEP.getFigure());
+			getHostFigure().translateToAbsolute(realLocation);
+			feedback.translateToRelative(realLocation);
+			feedback.setBounds(realLocation);
+		}
 	}
 
 	/**
@@ -89,30 +92,36 @@ public class BorderItemSelectionEditPolicy
 	 * @return the command contribution to the request
 	 */
 	protected Command getMoveCommand(ChangeBoundsRequest request) {
-		BorderItemEditPart borderItemEP = (BorderItemEditPart) getHost();
-		BorderItemLocator borderItemLocator = (BorderItemFigure.BorderItemLocator) borderItemEP
-			.getLocator();
+		IBorderItemEditPart borderItemEP = (IBorderItemEditPart) getHost();
+		IBorderItemLocator borderItemLocator = borderItemEP.getBorderItemLocator();
+		
+		if (borderItemLocator != null) {
+			PrecisionRectangle rect = new PrecisionRectangle(
+				getInitialFeedbackBounds().getCopy());
+			getHostFigure().translateToAbsolute(rect);
+			rect.translate(request.getMoveDelta());
+			rect.resize(request.getSizeDelta());
 
-		PrecisionRectangle rect = new PrecisionRectangle(
-			getInitialFeedbackBounds().getCopy());
-		getHostFigure().translateToAbsolute(rect);
-		rect.translate(request.getMoveDelta());
-		rect.resize(request.getSizeDelta());
+			getHostFigure().translateToRelative(rect);
+			Rectangle realLocation = borderItemLocator.getValidLocation(rect
+				.getCopy(), borderItemEP.getFigure());
 
-		getHostFigure().translateToRelative(rect);
-		Rectangle realLocation = borderItemLocator.locateOnBorder(rect
-			.getCopy());
-		Point location = borderItemLocator.getRelativeToBorder(realLocation
-			.getTopLeft());
+			Point parentOrigin = ((IGraphicalEditPart) borderItemEP.getParent())
+				.getFigure().getBounds().getTopLeft();
+			Dimension d = realLocation.getTopLeft().getDifference(parentOrigin);
+			Point location = new Point(d.width, d.height);
 
-		ICommand moveCommand = new SetBoundsCommand(
-			DiagramUIMessages.Commands_MoveElement, new EObjectAdapter(
-				(View) getHost().getModel()), location);
-		return new EtoolsProxyCommand(moveCommand);
+			ICommand moveCommand = new SetBoundsCommand(
+				DiagramUIMessages.Commands_MoveElement, new EObjectAdapter(
+					(View) getHost().getModel()), location);
+			return new EtoolsProxyCommand(moveCommand);
+		}
+		return null;
 	}
 
 	/** Return <tt>null</tt> to avoid handling the request. */
 	protected Command getAlignCommand(AlignmentRequest request) {
 		return null;
 	}
+
 }

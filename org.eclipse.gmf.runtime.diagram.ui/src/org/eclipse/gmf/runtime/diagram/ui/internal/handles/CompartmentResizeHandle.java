@@ -25,7 +25,7 @@ import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
@@ -83,8 +83,8 @@ public class CompartmentResizeHandle extends AbstractHandle {
 		if (getOwner() instanceof ResizableCompartmentEditPart) {
 			return ((ResizableCompartmentEditPart)getOwner()).getCompartmentFigure();
 		}
-		else if( getOwner().getFigure() instanceof BorderedFigure ){
-			return ((BorderedFigure)getOwner().getFigure()).getElementPane();
+		else if( getOwner().getFigure() instanceof BorderedNodeFigure ){
+			return ((BorderedNodeFigure)getOwner().getFigure()).getMainFigure();
 		}
 		
 		return getOwner().getFigure();

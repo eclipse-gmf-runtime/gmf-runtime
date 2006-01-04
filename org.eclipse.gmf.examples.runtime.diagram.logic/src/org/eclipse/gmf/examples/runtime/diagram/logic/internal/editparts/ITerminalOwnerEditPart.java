@@ -13,7 +13,6 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 import java.util.Map;
 
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 
@@ -33,9 +32,9 @@ public interface ITerminalOwnerEditPart {
 	/**
 	 * Method for returning the owned terminal figure based on an ID value.
 	 * 
-	 * @param terminal <code>Terminal</code> to create a figure of
+	 * @param terminalEP <code>Terminal</code> to create a figure of
 	 * @return <code>NodeFigure</code> that is the figure for the terminal.
 	 */
-	public NodeFigure createOwnedTerminalFigure(Terminal terminal);
+	public NodeFigure createOwnedTerminalFigure(TerminalEditPart terminalEP);
 
 }

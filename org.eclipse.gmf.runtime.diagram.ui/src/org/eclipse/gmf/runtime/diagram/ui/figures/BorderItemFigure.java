@@ -19,6 +19,7 @@ import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
 import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -32,7 +33,8 @@ import org.eclipse.jface.util.Assert;
  * 
  * @author tisrar
  * @author jbruck
- * 
+ * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+ *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
  */
 public class BorderItemFigure
 	extends NodeFigure {
@@ -71,14 +73,15 @@ public class BorderItemFigure
 	 * conjunction with BorderItemSelectionEditPolicy for feedback.
 	 * 
 	 * Collision detection is provided so that border items cannot overlap and
-	 * therfore be hidden.
-	 *  ( this class re-written from orginal by Tauseef ).
+	 * therfore be hidden. ( this class re-written from orginal by Tauseef ).
 	 * 
 	 * @author tisrar
 	 * @author jbruck
+	 * @deprecated 01/04/2006 See API change documentation in bugzilla 111935
+	 *             (https://bugs.eclipse.org/bugs/show_bug.cgi?id=111935)
 	 */
 	public static class BorderItemLocator
-		implements Locator {
+		implements IBorderItemLocator {
 
 		//private final static int VERTICAL_GAP = MapMode.DPtoLP(8);
 
@@ -532,6 +535,27 @@ public class BorderItemFigure
 		 */
 		public void setGate(BorderItemFigure figure) {
 			borderItemFigure = figure;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator#setConstraint(org.eclipse.draw2d.geometry.Rectangle)
+		 */
+		public void setConstraint(Rectangle constraint) {
+			constraintLocation = constraint.getLocation();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator#getValidLocation(org.eclipse.draw2d.geometry.Rectangle, org.eclipse.draw2d.IFigure)
+		 */
+		public Rectangle getValidLocation(Rectangle proposedLocation, IFigure borderItem) {
+			return locateOnBorder(proposedLocation);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator#getCurrentSide()
+		 */
+		public DrawConstant getCurrentSide() {
+			return borderItemFigure.getCurrentSide();
 		}
 	} // BorderItemLocator
 

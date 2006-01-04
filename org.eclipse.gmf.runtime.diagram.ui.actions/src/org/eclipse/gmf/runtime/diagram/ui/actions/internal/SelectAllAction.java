@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
@@ -157,7 +157,7 @@ public class SelectAllAction extends DiagramAction {
 		Iterator iter = parent.getChildren().iterator();
 		while(iter.hasNext()) {
 			EditPart child = (EditPart)iter.next();
-			if( child instanceof BorderItemEditPart ) {
+			if( child instanceof IBorderItemEditPart ) {
 				retval.add(child);
 				retval.addAll(child.getChildren());
 			}
