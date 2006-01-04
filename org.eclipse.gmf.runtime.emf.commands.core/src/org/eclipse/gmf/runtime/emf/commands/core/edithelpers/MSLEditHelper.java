@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.emf.commands.core.edithelpers;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -22,7 +21,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.MSLCreateElementCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.MSLCreateRelationshipCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.MSLDestroyElementCommand;
-import org.eclipse.gmf.runtime.emf.commands.core.commands.MSLMoveElementCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.commands.MSLMoveElementsCommand;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
@@ -85,7 +84,7 @@ public class MSLEditHelper
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper#getMoveCommand(org.eclipse.gmf.runtime.emf.type.core.edithelper.MoveRequest)
 	 */
 	protected ICommand getMoveCommand(MoveRequest req) {
-		return new MSLMoveElementCommand(req);
+		return new MSLMoveElementsCommand(req);
 	}
 
 	/*

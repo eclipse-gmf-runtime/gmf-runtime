@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 
@@ -27,6 +26,10 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
  * the targetcontainer that can contain the new kind of element will be used.
  * 
  * @author ldamus
+ * 
+ * @deprecated Use {@link MoveElementsCommand} instead. Deprecated
+ *             on 12/22/2005 as per bugzilla
+ *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
  */
 public class MoveElementCommand
 	extends EditElementCommand {

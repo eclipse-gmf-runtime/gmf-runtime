@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.emf.commands.core.commands;
 
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementCommand;
@@ -25,6 +24,10 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
  * the target container that can contain the new kind of element will be used.
  * 
  * @author ldamus
+ * 
+ * @deprecated Use {@link MSLMoveElementsCommand} instead. Deprecated
+ *             on 12/22/2005 as per bugzilla
+ *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
  */
 public class MSLMoveElementCommand
 	extends MoveElementCommand {

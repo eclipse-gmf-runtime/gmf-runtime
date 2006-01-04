@@ -62,6 +62,7 @@ public final class EMFTypeCoreMessages extends NLS {
 	public static String eContainmentFeature_no_such_feature_ERROR_;
 	public static String specializationType_specializes_multiple_metamodel_types_ERROR_;
 	public static String specializationType_specializes_invalid_id_ERROR_;
+	public static String moveElementsCommand_noTargetFeature;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EMFTypeCoreMessages.class);

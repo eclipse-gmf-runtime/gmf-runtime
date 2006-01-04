@@ -35,6 +35,7 @@ public class AllTests
 		suite.addTest(CreateElementCommandTest.suite());
 		suite.addTest(CreateElementRequestTest.suite());
 		suite.addTest(MetamodelTypeDescriptorTest.suite());
+		suite.addTest(MoveRequestTest.suite());
 		suite.addTest(SpecializationTypeDescriptorTest.suite());
 		return suite;
 	}

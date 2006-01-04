@@ -12,36 +12,47 @@
 package org.eclipse.gmf.runtime.emf.type.core.requests;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
- * Request to move a model element from one container to another or from one
- * reference feature to another.
+ * Request to move a collections of model elements from one location to another.
+ * The request can specify the target features that should be used to contain
+ * each of the elements being moved.
+ * <P>
+ * If the target feature is not specified for a given element being moved, then
+ * a default feature is found in the target according to the following rules:
+ * <UL>
+ * <LI>If the feature fomerly containing the moved element exists in the target
+ * element, it will be used.</LI>
+ * <LI>Otherwise, the first feature in the target that can contain the moved
+ * element will be used.</LI>
+ * </UL>
  * 
  * @author ldamus
  */
-public class MoveRequest
-	extends AbstractEditCommandRequest {
+public class MoveRequest extends AbstractEditCommandRequest {
 
 	/**
-	 * The element to be moved.
+	 * The map of <code>EObject</code>s to be moved. Keyed on
+	 * <code>EObject</code>. Each value is the <code>EReference</code>
+	 * feature in the target element into which the element should be moved.
+	 * <P>
+	 * If the feature is not specified for a given element, then a default
+	 * feature is found in the target.
 	 */
-	private EObject elementToMove;
+	private final Map elementsToMove;
 
 	/**
 	 * The new container for the element to be moved.
 	 */
 	private EObject targetContainer;
-
-	/**
-	 * The new reference feature into which the element should be moved.
-	 */
-	private EReference targetFeature;
 
 	/**
 	 * Constructs a new request to move a model element from one container to
@@ -58,9 +69,9 @@ public class MoveRequest
 			EObject elementToMove) {
 
 		super();
-		this.elementToMove = elementToMove;
 		this.targetContainer = targetContainer;
-		this.targetFeature = targetFeature;
+		this.elementsToMove = new HashMap();
+		elementsToMove.put(elementToMove, targetFeature);
 	}
 
 	/**
@@ -78,12 +89,80 @@ public class MoveRequest
 	}
 
 	/**
+	 * Constructs a new request to move a collection of model element into a new
+	 * container. The features in the target used to contain the moved elements
+	 * will be derived as follows:
+	 * <UL>
+	 * <LI>If the feature fomerly containing the moved element exists in the
+	 * target element, it will be used.</LI>
+	 * <LI>Otherwise, the first feature in the target that can contain the
+	 * moved element will be used.</LI>
+	 * </UL>
+	 * 
+	 * @param targetContainer
+	 *            the target container
+	 * @param elementsToMove
+	 *            the list of <code>EObjects</code> to be moved.
+	 */
+	public MoveRequest(EObject targetContainer, List elementsToMove) {
+
+		super();
+		this.targetContainer = targetContainer;
+		this.elementsToMove = new HashMap();
+
+		for (Iterator i = elementsToMove.iterator(); i.hasNext();) {
+			this.elementsToMove.put(i.next(), null);
+		}
+	}
+
+	/**
+	 * Constructs a new request to move a collection of model element into
+	 * specific features of a new container.
+	 * 
+	 * @param targetContainer
+	 *            the target container
+	 * @param elementsToMove
+	 *            the map of <code>EObjects</code> to <code>EReference</code>
+	 *            features to be moved.
+	 */
+	public MoveRequest(EObject targetContainer, Map elementsToMove) {
+
+		super();
+		this.targetContainer = targetContainer;
+		this.elementsToMove = elementsToMove;
+	}
+
+	/**
 	 * Gets the element to be moved.
 	 * 
-	 * @return the element to be moved
+	 * @return the element to be moved *
+	 * @deprecated The move request is now used to move more than one element at
+	 *             a time. Use {@link #getElementsToMove()} instead. Deprecated
+	 *             on 12/22/2005 as per bugzilla
+	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
 	 */
 	public EObject getElementToMove() {
-		return elementToMove;
+		// Assume that anyone using the deprecated API is using this request to
+		// move a single element. Get the first (and presumed only) element in
+		// the map.
+		Iterator i = getElementsToMove().keySet().iterator();
+
+		if (i.hasNext()) {
+			return (EObject) i.next();
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the map of elements to be moved. Each entry in the map consists of
+	 * an <code>EObject</code> key, which is the element to be moved to the
+	 * new target, and an <code>EReference</code> value, which is the feature
+	 * in the new target that should contain the moved element.
+	 * 
+	 * @return the map of elements to be moved
+	 */
+	public Map getElementsToMove() {
+		return elementsToMove;
 	}
 
 	/**
@@ -110,18 +189,66 @@ public class MoveRequest
 	 * 
 	 * @param targetFeature
 	 *            the target feature
+	 * @deprecated The move request is now used to move more than one element at
+	 *             a time. Use {@link #setTargetFeature(EObject, EReference)}
+	 *             instead. Deprecated on 12/22/2005 as per bugzilla
+	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
 	 */
 	public void setTargetFeature(EReference targetFeature) {
-		this.targetFeature = targetFeature;
+		// Assume that anyone using the deprecated API is using this request to
+		// move a single element. Set the first (and presumed only) feature in
+		// the map.
+		Iterator i = getElementsToMove().keySet().iterator();
+
+		if (i.hasNext()) {
+			Object key = i.next();
+			getElementsToMove().put(key, targetFeature);
+		}
+	}
+
+	/**
+	 * Sets the reference feature into which an element should be moved.
+	 * 
+	 * @param element
+	 *            the element to be moved
+	 * @param targetFeature
+	 *            the target feature
+	 */
+	public void setTargetFeature(EObject element, EReference targetFeature) {
+		getElementsToMove().put(element, targetFeature);
 	}
 
 	/**
 	 * Gets the reference feature into which the element should be moved.
 	 * 
 	 * @return the target feature
+	 * @deprecated The move request is now used to move more than one element at
+	 *             a time. Use {@link #getTargetFeature(EObject)} instead.
+	 *             Deprecated on 12/22/2005 as per bugzilla
+	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
 	 */
 	public EReference getTargetFeature() {
-		return targetFeature;
+		// Assume that anyone using the deprecated API is using this request to
+		// move a single element. Return the first (and presumed only) feature
+		// in the map.
+		Iterator i = getElementsToMove().values().iterator();
+
+		if (i.hasNext()) {
+			return (EReference) i.next();
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the feature in the target element that should contain
+	 * <code>element</code> after it is moved.
+	 * 
+	 * @param element
+	 *            the element to be moved
+	 * @return the feature that will contain the element in the target
+	 */
+	public EReference getTargetFeature(EObject element) {
+		return (EReference) getElementsToMove().get(element);
 	}
 
 	/*
