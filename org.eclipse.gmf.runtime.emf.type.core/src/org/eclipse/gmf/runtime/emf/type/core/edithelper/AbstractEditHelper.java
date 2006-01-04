@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -37,7 +36,7 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.CreateRelationshipCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
-import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementCommand;
+import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -108,17 +107,23 @@ public abstract class AbstractEditHelper
 			}
 		}
 		
-		// Get 'instead' command from this edit helper
-		ICommand insteadCommand = getInsteadCommand(req);
-		
-		if (insteadCommand == UnexecutableCommand.INSTANCE) {
-			// The operation is not permitted
-			return null;
-			
-		} else if (insteadCommand != null) {
-			command.compose(insteadCommand);	
-		}
+		// Check if the parameter has been set to ignore the default edit command.
+		Object replaceParam = req
+				.getParameter(IEditCommandRequest.REPLACE_DEFAULT_COMMAND);
 
+		if (replaceParam != Boolean.TRUE) {
+			// Get 'instead' command from this edit helper
+			ICommand insteadCommand = getInsteadCommand(req);
+
+			if (insteadCommand == UnexecutableCommand.INSTANCE) {
+				// The operation is not permitted
+				return null;
+
+			} else if (insteadCommand != null) {
+				command.compose(insteadCommand);
+			}
+		}
+		
 		// Get 'after' commands from matching element type
 		// specializations
 		if (advice != null) {
@@ -461,7 +466,7 @@ public abstract class AbstractEditHelper
 	 * @return the move command
 	 */
 	protected ICommand getMoveCommand(MoveRequest req) {
-		return new MoveElementCommand(req);
+		return new MoveElementsCommand(req);
 	}
 
 	/**

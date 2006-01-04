@@ -17,7 +17,9 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
@@ -79,5 +81,20 @@ public class AbstractEditHelperTest
 		EmployeeType.DEPARTMENT.getEditCommand(request);
 		assertSame(employeePkg.getDepartment_Manager(), request
 			.getContainmentFeature());
+	}
+	
+	public void test_replaceDefaultEditCommand() {
+		
+		CreateElementRequest request = new CreateElementRequest(department,
+				EmployeeType.MANAGER);
+		
+		// Get the default command
+		ICommand command = EmployeeType.DEPARTMENT.getEditCommand(request);
+		assertNotNull(command);
+
+		// Replace the default command
+		request.setParameter(IEditCommandRequest.REPLACE_DEFAULT_COMMAND, Boolean.TRUE);
+		command = EmployeeType.DEPARTMENT.getEditCommand(request);
+		assertNull(command);
 	}
 }

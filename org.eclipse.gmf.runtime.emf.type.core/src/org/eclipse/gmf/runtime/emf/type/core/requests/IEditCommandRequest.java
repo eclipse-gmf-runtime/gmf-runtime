@@ -28,6 +28,13 @@ import java.util.Map;
 public interface IEditCommandRequest {
 
 	/**
+	 * Name of the request parameter used to indicate that the default edit
+	 * command should not be considered. Edit advice will completely replace the
+	 * default edit behaviour if the parameter value is <code>Boolean.TRUE</code>.
+	 */
+	public static String REPLACE_DEFAULT_COMMAND = "IEditCommandRequest.replaceDefaultCommand"; //$NON-NLS-1$
+
+	/**
 	 * Gets the request label.
 	 * 
 	 * @return the request label
