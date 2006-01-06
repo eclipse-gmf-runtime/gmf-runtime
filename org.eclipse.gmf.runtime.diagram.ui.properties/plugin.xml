@@ -96,7 +96,7 @@
 	 <propertySection tab="property.tab.RulerGridPropertySection" 
 	 	filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter" 
 	 	class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.grid.RulerGridPropertySection" 
-	 	id="property.section.DiagramColorsAndFontsPropertySection">
+	 	id="property.section.RulerGridPropertySection">
 	    <input type="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart"/>
 	 </propertySection>     
 
