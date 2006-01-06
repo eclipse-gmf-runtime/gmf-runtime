@@ -113,6 +113,8 @@ public class RulerGridPropertySection
 	// Listener for workspace property changes
 	private PropertyStoreListener propertyListener = new PropertyStoreListener();
 	
+	private IPreferenceStore workspaceViewerProperties = null;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage)
 	 */
@@ -173,6 +175,8 @@ public class RulerGridPropertySection
 				IPreferenceStore preferenceStore =
 					(IPreferenceStore) ((DiagramEditor) getPart()).getDiagramEditPart().getDiagramPreferencesHint().getPreferenceStore();
 				
+				// The workspace properties will always exist because it is set 
+				// 
 				IPreferenceStore wsPrefStore = getWorkspaceViewerProperties();
 				
 				if (wsPrefStore.getBoolean(WorkspaceViewerProperties.GRIDORDER) == false) {
@@ -649,9 +653,7 @@ public class RulerGridPropertySection
 	}
 
 	private IPreferenceStore getWorkspaceViewerProperties() {
-		DiagramEditor editor = (DiagramEditor) getPart();
-		DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
-		return viewer.getWorkspaceViewerPreferenceStore();
+		return workspaceViewerProperties;
 	}
 
 	
@@ -720,7 +722,11 @@ public class RulerGridPropertySection
 	 * listener.
 	 */
 	private void initWorkspacePropertyListener() {
-		getWorkspaceViewerProperties().addPropertyChangeListener(propertyListener);
+		DiagramEditor editor = (DiagramEditor) getPart();
+		if (editor == null) return;
+		DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
+		workspaceViewerProperties = viewer.getWorkspaceViewerPreferenceStore();
+		workspaceViewerProperties.addPropertyChangeListener(propertyListener);
 	}
 	
 	/**
@@ -728,7 +734,10 @@ public class RulerGridPropertySection
 	 * Override this method to remove notational listeners down the hierarchy
 	 */
 	private void removeWorkspacePropertyListener() {
-		getWorkspaceViewerProperties().removePropertyChangeListener(propertyListener);
+		if (getWorkspaceViewerProperties() != null ) {
+			getWorkspaceViewerProperties().removePropertyChangeListener(propertyListener);
+			workspaceViewerProperties = null;
+		}
 		propertyListener = null;
 	}
 
