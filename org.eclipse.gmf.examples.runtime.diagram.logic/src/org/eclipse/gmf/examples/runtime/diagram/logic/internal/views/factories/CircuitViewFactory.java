@@ -59,6 +59,6 @@ public class CircuitViewFactory
 			index, persisted);
 
 		getViewService().createNode(semanticAdapter, view,
-			LogicConstants.LOGIC_SHAPE_COMPARTMENT, ViewUtil.APPEND, getPreferencesHint()); //$NON-NLS-1$
+			LogicConstants.LOGIC_SHAPE_COMPARTMENT, ViewUtil.APPEND, persisted, getPreferencesHint()); 
 	}
 }

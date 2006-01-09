@@ -28,6 +28,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicDiagramFileCreator;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicEditorUtil;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -146,6 +147,12 @@ public class LogicTestFixture
 	public LED createLED(EObject parent) {
 		IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$
 		return (LED)createElement(typeLED, parent, SemanticPackage.eINSTANCE.getContainerElement_Children());
+	}
+	
+	/** Creates an operation in the supplied class. */
+	public Circuit createCircuit(EObject parent) {
+		IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
+		return (Circuit)createElement(typeCircuit, parent, SemanticPackage.eINSTANCE.getContainerElement_Children());
 	}
 
 }

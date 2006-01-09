@@ -70,11 +70,12 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView,node,index, persisted);
 		int options = MRunOption.UNCHECKED | MRunOption.SILENT;
+		final boolean childPersisted = persisted;
 		MEditingDomainGetter.getMEditingDomain(containerView).runWithOptions(new MRunnable() {
 			public Object run() {
 				// decorate view had to run as a silent operation other wise
 				//it will generate too many events 
-				decorateView(containerView,node, semanticAdapter, semanticHint, index, true);
+				decorateView(containerView,node, semanticAdapter, semanticHint, index, childPersisted);
 				return null;
 			}
 		},options);

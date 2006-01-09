@@ -26,6 +26,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -160,17 +161,58 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 					}
 				}
 				
-			}
-			
-			
-			
-			
+			}	
 		}
 		finally {
 			println("test_TransientViewsCreation() complete.");//$NON-NLS-1$
 		}
 	}
 
+	public void testTransientCircuitsCreation(){
+		try {
+			println("test_TransientViewsCreation() starting ...");//$NON-NLS-1$
+			CanonicalTestFixture _testFixture = getCanonicalTestFixture();
+			IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
+			
+			List properties = new ArrayList();
+			int size = logicCompartment.getChildren().size();
+			int count = 5;
+			for ( int i = 0; i < count; i++ ) {
+				properties.add( _testFixture.createCircuit(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView())));
+				size++;
+				assertEquals( "Unexpected Circuit count.", size, logicCompartment.getChildren().size() );//$NON-NLS-1$
+			}
+			
+			assertTransient(logicCompartment.getChildren());
+			
+			Rectangle rect = new Rectangle(logicCompartment.getFigure().getBounds());
+			logicCompartment.getFigure().translateToAbsolute(rect);
+			IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
+			getCanonicalTestFixture().createShapeUsingTool(typeCircuit, rect.getCenter(), logicCompartment);
+			assertPersisted(logicCompartment.getChildren());
+			
+			Circuit circuit  = _testFixture.createCircuit(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView()));
+			List children = logicCompartment.getChildren();
+			for (Iterator iter = children.iterator(); iter.hasNext();) {
+				GraphicalEditPart element = (GraphicalEditPart) iter.next();
+				View view = element.getNotationView();
+				if (view !=null){
+					Object _circuit = view.getElement();
+					if (_circuit == circuit){
+						assertTransient(view);
+						assertTransient(element.getChildren());
+					} else {
+						assertPersisted(view);
+					}
+				}
+				
+			}	
+		}
+		finally {
+			println("test_TransientViewsCreation() complete.");//$NON-NLS-1$
+		}
+	}
+	
 	private void assertPersisted(View view) {
 		if (view != null){
 			EStructuralFeature feature = view.eContainingFeature();
