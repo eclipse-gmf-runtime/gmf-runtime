@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.render.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The Diagram UI Render plug-in.
@@ -18,7 +18,7 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
  * @author cmahoney
  */
 public class DiagramUIRenderPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The shared instance.

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,19 +13,19 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.provider.SemanticItemProviderAdapterFactory;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * Logic Diagram Plug-in
  * 
  * @author qili
- * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 public class LogicDiagramPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The logic diagram editor ID. This matches the id used in this plugin's
@@ -69,8 +69,9 @@ public class LogicDiagramPlugin
 	/**
 	 * Starts up this wizards plug-in.
 	 */
-	public void doStartup() {
-		super.doStartup();
+	public void start(BundleContext context)
+		throws Exception {
+		super.start(context);
 
 		MSLAdapterFactoryManager
 			.register(new SemanticItemProviderAdapterFactory());

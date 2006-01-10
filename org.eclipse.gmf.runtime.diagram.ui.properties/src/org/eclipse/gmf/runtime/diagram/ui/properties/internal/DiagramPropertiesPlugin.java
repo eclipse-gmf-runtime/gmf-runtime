@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,17 @@
 package org.eclipse.gmf.runtime.diagram.ui.properties.internal;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCollapser;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
 public class DiagramPropertiesPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	// The shared instance.
 	private static DiagramPropertiesPlugin plugin;
@@ -61,7 +62,8 @@ public class DiagramPropertiesPlugin
 	/**
 	 * Starts up this plug-in.
 	 */
-	protected void doStartup() {
+	public void start(BundleContext context)
+		throws Exception {
 		configurePropertiesAdapter();
 		updateRequestCollapser = new SectionUpdateRequestCollapser();
 		updateRequestCollapser.start();
@@ -71,7 +73,8 @@ public class DiagramPropertiesPlugin
 	/**
 	 * Shuts down this plug-in and discards all plug-in state.
 	 */
-	protected void doShutdown() {
+	public void stop(BundleContext context)
+		throws Exception {
 
 		updateRequestCollapser.stop();
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,7 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-/*
- * Created on Mar 13, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
 import junit.framework.Test;
@@ -25,6 +20,7 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ReconnectRequest;
+import org.eclipse.gef.tools.ConnectionEndpointTracker;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
@@ -35,7 +31,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionEndpointTracker;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;

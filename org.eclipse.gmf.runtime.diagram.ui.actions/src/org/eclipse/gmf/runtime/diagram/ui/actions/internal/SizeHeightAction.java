@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,8 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActions
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -92,8 +92,10 @@ public class SizeHeightAction extends DiagramAction {
 		int last = getSelectedObjects().size() - 1;
 		IGraphicalEditPart primary = (IGraphicalEditPart)getSelectedObjects().get(last);
 		View primaryView = (View)primary.getModel();
-		Integer width = (Integer) ViewUtil.getPropertyValue(primaryView,Properties.ID_EXTENTX);
-		Integer height = (Integer)ViewUtil.getPropertyValue(primaryView,Properties.ID_EXTENTY);
+		Integer width = (Integer) ViewUtil.getStructuralFeatureValue(
+			primaryView, NotationPackage.eINSTANCE.getSize_Width());
+		Integer height = (Integer) ViewUtil.getStructuralFeatureValue(
+			primaryView, NotationPackage.eINSTANCE.getSize_Height());
 
 		Dimension primarySize;
 		if( width.intValue() == -1 || height.intValue() == -1 )
@@ -107,7 +109,9 @@ public class SizeHeightAction extends DiagramAction {
 
 			// Make a copy of the primary view so the width doesn't change
 			Dimension size = primarySize.getCopy();
-			size.width = ((Integer)ViewUtil.getPropertyValue(resizeView,Properties.ID_EXTENTX)).intValue();
+			size.width = ((Integer) ViewUtil.getStructuralFeatureValue(
+				resizeView, NotationPackage.eINSTANCE.getSize_Width()))
+				.intValue();
 
 			doResizeCmd.add( 
 				new EtoolsProxyCommand(

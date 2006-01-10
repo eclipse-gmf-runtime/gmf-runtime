@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
  * @author Wayne Diu, wdiu
  */
 public class DiagramProvidersIDEPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The shared plugin instance.

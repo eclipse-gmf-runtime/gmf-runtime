@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal;
 
-import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
+import org.eclipse.core.runtime.Plugin;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
  * @author Yasser Lulu
  */
 public class DiagramPlugin
-	extends XToolsPlugin {
+	extends Plugin {
 
 	//The shared instance.
 	private static DiagramPlugin plugin;
@@ -45,7 +45,7 @@ public class DiagramPlugin
 	 * @return A non-empty string and is unique within the plug-in registry.
 	 */
 	public static String getPluginId() {
-		return getInstance().getSymbolicName();
+		return getInstance().getBundle().getSymbolicName();
 	}
 
 }

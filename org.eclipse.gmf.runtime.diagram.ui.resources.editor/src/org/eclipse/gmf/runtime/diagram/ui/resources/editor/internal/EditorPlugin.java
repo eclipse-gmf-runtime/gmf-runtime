@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,17 +11,16 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal;
 
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Editor Plug-in
  * 
  * @author qili
  * @author mgoyal
- * @canBeSeenBy %level1
  */
 public class EditorPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * The shared instance.

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramResourceManager;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
@@ -23,6 +21,8 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.RulerGridPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The DiagramUI  plugin defines all the artifacts needed for the
@@ -31,7 +31,7 @@ import org.eclipse.jface.preference.PreferenceStore;
  * @author melaasar
  */
 public class DiagramUIPlugin
-	extends XToolsUIPlugin {
+	extends AbstractUIPlugin {
 
 	/**
 	 * the plugin singleton
@@ -43,8 +43,8 @@ public class DiagramUIPlugin
 	 * 
 	 * @return the plugin singleton
 	 */
-	public static XToolsUIPlugin getInstance() {
-		return (XToolsUIPlugin) singleton;
+	public static DiagramUIPlugin getInstance() {
+		return (DiagramUIPlugin) singleton;
 	}
 
 	/**
@@ -68,23 +68,19 @@ public class DiagramUIPlugin
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#doStartup()
-	 */
-	protected void doStartup() {
-		super.doStartup();
+	public void start(BundleContext context)
+	throws Exception {
+		super.start(context);
 
 		DiagramEventBroker.getInstance().startListening();
 		
 		initializeDefaultDiagramPreferenceStore();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin#doShutdown()
-	 */
-	protected void doShutdown() {
+	public void stop(BundleContext context)
+		throws Exception {
 		DiagramEventBroker.getInstance().stopListening();
-		super.doShutdown();
+		super.stop(context);
 	}
 
 	/**

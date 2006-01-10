@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.gmf.runtime.common.ui.plugin.XToolsUIPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 
 /**
@@ -25,7 +25,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Wayne Diu, wdiu
  */
-public class EditorIDEPlugin extends XToolsUIPlugin {
+public class EditorIDEPlugin extends AbstractUIPlugin {
 
 	/**
 	 * The shared instance.
@@ -94,13 +94,6 @@ public class EditorIDEPlugin extends XToolsUIPlugin {
 	 */
 	public static IEditorPart getActiveEditor() {
 		return getActivePage().getActiveEditor();
-	}
-
-	/**
-	 * Starts up this wizards plug-in.
-	 */
-	public void doStartup() {
-		super.doStartup();
 	}
 
 }

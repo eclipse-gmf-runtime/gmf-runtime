@@ -75,7 +75,7 @@ public class LogicFlowCompartmentEditPart extends ListCompartmentEditPart{
 	 * 
 	 * @return The compartment title
 	 */
-	protected String getTitleName(){
+	public String getCompartmentName() {
 		return ExampleDiagramLogicMessages.LogicFlowCompartmentEditPart_Title;
 	}
 
