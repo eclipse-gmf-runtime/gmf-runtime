@@ -94,7 +94,8 @@ public class Graphics2DToGraphicsAdaptor
 			currentTransform.dispose();
 		currentTransform = null;
 		
-		swtGraphics.dispose();
+		if (swtGraphics != null)
+			swtGraphics.dispose();
 		swtGraphics = null;
 	}
 
@@ -105,12 +106,12 @@ public class Graphics2DToGraphicsAdaptor
 		swtGraphics.pushState();
 
 		boolean supported = true;
-
+		
+		supported &= configureStroke(getStroke());
 		supported &= configureTransformation(getTransform());
 		supported &= configureClipping(getClip());
 		supported &= configureComposite(getComposite());
 		supported &= configurePaintMode(getPaint());
-		supported &= configureStroke(getStroke());
 		supported &= configureRenderingHints();
 
 		return supported;
@@ -197,6 +198,13 @@ public class Graphics2DToGraphicsAdaptor
 					return false;
 			}
 
+			// since we don't have precision of less then 1 pixel in
+			// swt, if the image is defined as very small in the original
+			// file, then the linewidth gets scaled out of proportion.
+			if (basicStroke.getLineWidth() < 1 &&
+				basicStroke.getLineWidth() > 0)
+				throw new UnsupportedOperationException();
+			
 			swtGC.setLineWidth(Math.round(basicStroke.getLineWidth()));
 			return true;
 		}
