@@ -22,17 +22,7 @@ public final class CommonCoreMessages extends NLS {
 
 	public static String XToolsPlugin__ERROR__startupErrorMessage;
 	public static String XToolsPlugin__ERROR__shutdownErrorMessage;
-	public static String ComboDirectoryFieldEditor_SpecifyLocation_label;
-	public static String ComboDirectoryFieldEditor_BrowseButton_label;
 	public static String AbstractCommand__INFO__cancelOperation;
-	public static String list_separator;
-	public static String list_separator_only;
-	public static String list_separator_first;
-	public static String list_separator_last;
-	public static String list_prefix;
-	public static String list_suffix;
-	public static String NavigatorCategoryDescriptor__ERROR__invalidXML;
-	public static String NavigatorContentTypeDescriptor__ERROR__invalidXML;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CommonCoreMessages.class);

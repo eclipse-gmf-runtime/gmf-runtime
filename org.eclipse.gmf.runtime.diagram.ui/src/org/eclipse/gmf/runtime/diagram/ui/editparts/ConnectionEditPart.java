@@ -103,6 +103,7 @@ import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.Smoothness;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
@@ -366,7 +367,6 @@ abstract public class ConnectionEditPart
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getAccessibleEditPart()
 	 */
 	protected AccessibleEditPart getAccessibleEditPart() {
-
 		if (accessibleEP == null) {
 			accessibleEP = new AccessibleGraphicalEditPart() {
 
@@ -385,40 +385,50 @@ abstract public class ConnectionEditPart
 
 				public void getName(AccessibleEvent e) {
 
-					StringBuffer msg = new StringBuffer();
-
 					EditPart sourceEP = getSource();
 					EditPart targetEP = getTarget();
 
 					// Get the Connection Name
-					msg.append(getSemanticName());
+					String connectionName = getSemanticName();
 
 					// Get the Source Name
+					String sourceName = null;
 					if (sourceEP != null) {
 						AccessibleEditPart aEP = (AccessibleEditPart) sourceEP
 							.getAdapter(AccessibleEditPart.class);
 						AccessibleEvent event = new AccessibleEvent(this);
 						aEP.getName(event);
-						msg.append(" "); //$NON-NLS-1$
-						msg
-							.append(DiagramUIMessages.Accessible_Connection_From);
-						msg.append(" "); //$NON-NLS-1$
-						msg.append(event.result);
+						sourceName = event.result;
 					}
 
 					// Get the Target Name
+					String targetName = null;
 					if (targetEP != null) {
 						AccessibleEditPart aEP = (AccessibleEditPart) targetEP
 							.getAdapter(AccessibleEditPart.class);
 						AccessibleEvent event = new AccessibleEvent(this);
 						aEP.getName(event);
-						msg.append(" "); //$NON-NLS-1$
-						msg.append(DiagramUIMessages.Accessible_Connection_To);
-						msg.append(" "); //$NON-NLS-1$
-						msg.append(event.result);
+						targetName = event.result;
 					}
-
-					e.result = msg.toString();
+					
+					if (sourceName != null && targetName != null) {
+						e.result = NLS
+							.bind(
+								DiagramUIMessages.Accessible_Connection_From_Source_To_Target,
+								new Object[] {connectionName, sourceName,
+									targetName});
+					} else if (sourceName != null) {
+						e.result = NLS
+							.bind(
+								DiagramUIMessages.Accessible_Connection_From_Source,
+								new Object[] {connectionName, sourceName});
+					} else if (targetName != null) {
+						e.result = NLS.bind(
+							DiagramUIMessages.Accessible_Connection_To_Target,
+							new Object[] {connectionName, targetName});
+					} else {
+						e.result = connectionName;
+					}
 				}
 			};
 		}
