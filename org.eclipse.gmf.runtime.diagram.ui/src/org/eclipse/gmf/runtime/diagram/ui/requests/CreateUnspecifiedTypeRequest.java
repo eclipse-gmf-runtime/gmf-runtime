@@ -18,9 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.CreationFactory;
 
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -152,9 +154,6 @@ public class CreateUnspecifiedTypeRequest
 		return preferencesHint;
 	}
 
-	/**
-	 * @see org.eclipse.gef.requests.CreateRequest#setLocation(org.eclipse.draw2d.geometry.Point)
-	 */
 	public void setLocation(Point location) {
 		if (requests != null) {
 			for (Iterator iter = requests.values().iterator(); iter.hasNext();) {
@@ -165,9 +164,6 @@ public class CreateUnspecifiedTypeRequest
 		super.setLocation(location);
 	}
 
-	/**
-	 * @see org.eclipse.gef.Request#setType(java.lang.Object)
-	 */
 	public void setType(Object type) {
 		if (requests != null) {
 			for (Iterator iter = requests.values().iterator(); iter.hasNext();) {
@@ -176,6 +172,36 @@ public class CreateUnspecifiedTypeRequest
 			}
 		}
 		super.setType(type);
+	}
+
+	public void setSize(Dimension size) {
+		if (requests != null) {
+			for (Iterator iter = requests.values().iterator(); iter.hasNext();) {
+				CreateRequest request = (CreateRequest) iter.next();
+				request.setSize(size);
+			}
+		}
+		super.setSize(size);
+	}
+
+	public void setFactory(CreationFactory factory) {
+		if (requests != null) {
+			for (Iterator iter = requests.values().iterator(); iter.hasNext();) {
+				CreateRequest request = (CreateRequest) iter.next();
+				request.setFactory(factory);
+			}
+		}
+		super.setFactory(factory);
+	}
+
+	public void setExtendedData(Map map) {
+		if (requests != null) {
+			for (Iterator iter = requests.values().iterator(); iter.hasNext();) {
+				CreateRequest request = (CreateRequest) iter.next();
+				request.setExtendedData(map);
+			}
+		}
+		super.setExtendedData(map);
 	}
 
 	/**
@@ -187,16 +213,10 @@ public class CreateUnspecifiedTypeRequest
 		newObjectList.addAll(theNewObjects);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest#getNewObject()
-	 */
 	public Object getNewObject() {
 		return newObjectList;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest#getNewObjectType()
-	 */
 	public Object getNewObjectType() {
 		return List.class;
 	}

@@ -34,6 +34,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleLocatorTes
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.DiagramCommandStackTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.GraphicalNodeEditPolicyTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.requests.RequestTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.RubberBandSelectionToolTest;
 
@@ -67,6 +68,8 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(GraphicalNodeEditPolicyTests.suite());
 		suite.addTest(DiagramEventBrokerTests.suite());
 		suite.addTest(LogicTransientViewsTests.suite());
+		suite.addTest(RequestTests.suite());
+		
 		return suite;
 	}
 
