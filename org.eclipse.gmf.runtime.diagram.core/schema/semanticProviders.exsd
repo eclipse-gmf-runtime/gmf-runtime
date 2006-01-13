@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.gmf.runtime.diagram.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.gmf.runtime.diagram.core" id="semanticProviders" name="%extPoint.semanticProviders"/>
+         <meta.schema plugin="org.eclipse.gmf.runtime.diagram.core" id="semanticProviders" name="Presentation Semantic Providers"/>
       </appInfo>
       <documentation>
          The Semantic service is a factory for semantic commands based on semantic requests. A Semantic provider extends the service by handling new or existing semantic requests in different contexts by returning different semantic commands.
@@ -280,13 +280,11 @@ className&lt;(plugin id)&gt;?
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
-         
+         Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

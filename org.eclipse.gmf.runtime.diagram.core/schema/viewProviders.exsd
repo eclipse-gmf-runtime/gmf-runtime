@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.gmf.runtime.diagram.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.gmf.runtime.diagram.core" id="viewProviders" name="%extPoint.viewProviders"/>
+         <meta.schema plugin="org.eclipse.gmf.runtime.diagram.core" id="viewProviders" name="Presentation View Providers"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -70,9 +70,9 @@
       <complexType>
          <attribute name="name" use="required">
             <annotation>
-                <documentation>
-               The priority of the provider. It can be one of the following values:
-&#x3e;Lowest, Low, Medium, High, Highest&#x3e;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
+               <documentation>
+                  The priority of the provider. It can be one of the following values:
+&gt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
                </documentation>
             </annotation>
             <simpleType>
