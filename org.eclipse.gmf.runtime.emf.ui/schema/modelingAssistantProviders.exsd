@@ -3,7 +3,7 @@
 <schema targetNamespace="com.ibm.xtools.bml.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.ibm.xtools.bml.ui" id="modelingAssistantProviders" name="%modelingAssistantProvidersExtensionPointName"/>
+         <meta.schema plugin="com.ibm.xtools.bml.ui" id="modelingAssistantProviders" name="Modeling Assistant Providers"/>
       </appInfo>
       <documentation>
          This extension point is used to define modeling assistant providers for the modeling assistant service.  The modeling assistant service allows plug-ins to modify or contribute to the modeling assistant behavior (e.g. connector handles).
@@ -252,31 +252,31 @@ className&lt;(plugin id)&gt;?
       <documentation>
          Here is an example for a modeling assistant provider that provides types for all outgoing connector handle gestures on classes and interfaces.
 
-&lt;extension id=&quot;ClassModelingAssistantProvider&quot; name=&quot;%ClassModelingAssistantProvider.name&quot; 	point=&quot;com.ibm.xtools.bml.ui.modelingAssistantProviders&quot;&gt;
+&lt;extension id=&quot;ClassModelingAssistantProvider&quot; name=&quot;%ClassModelingAssistantProvider.name&quot;  point=&quot;com.ibm.xtools.bml.ui.modelingAssistantProviders&quot;&gt;
   &lt;modelingAssistantProvider class=&quot;com.ibm.xtools.uml.ui.diagrams.clazz.internal.providers.ClassModelingAssistantProvider&quot;&gt;
      &lt;Priority name=&quot;Low&quot;&gt;
      &lt;/Priority&gt;    
      &lt;object class=&quot;com.ibm.xtools.uml2.model.internal.IUML2Class&quot; 
-     	id=&quot;CLASS&quot;&gt;
+      id=&quot;CLASS&quot;&gt;
      &lt;/object&gt;
      &lt;object class=&quot;com.ibm.xtools.uml2.model.internal.IUML2Interface&quot; 
-     	id=&quot;INTERFACE&quot;&gt;
+      id=&quot;INTERFACE&quot;&gt;
      &lt;/object&gt;
      &lt;context 
         operationId=&quot;GetRelTypesOnSource&quot;
-     	elements=&quot;CLASS, INTERFACE&quot;&gt;
+      elements=&quot;CLASS, INTERFACE&quot;&gt;
      &lt;/context&gt;  
      &lt;context
-     	operationId=&quot;GetRelTypesOnSourceAndTarget&quot;
-     	elements=&quot;CLASS, INTERFACE&quot;&gt;
+      operationId=&quot;GetRelTypesOnSourceAndTarget&quot;
+      elements=&quot;CLASS, INTERFACE&quot;&gt;
      &lt;/context&gt;  
      &lt;context 
         operationId=&quot;GetTypesForTarget&quot;
-     	elements=&quot;CLASS, INTERFACE&quot;&gt;
+      elements=&quot;CLASS, INTERFACE&quot;&gt;
      &lt;/context&gt;  
      &lt;context
-     	operationId=&quot;GetRelTypesForSREOnSource&quot;
-     	elements=&quot;CLASS, INTERFACE&quot;&gt;
+      operationId=&quot;GetRelTypesForSREOnSource&quot;
+      elements=&quot;CLASS, INTERFACE&quot;&gt;
      &lt;/context&gt;      
   &lt;/modelingAssistantProvider&gt;
 &lt;/extension&gt;
@@ -306,13 +306,11 @@ className&lt;(plugin id)&gt;?
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-        Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
-	All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the Eclipse Public License v1.0 
-	which accompanies this distribution, and is available at 
-	&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-
-         
+         Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 
