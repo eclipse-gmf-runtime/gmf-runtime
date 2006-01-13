@@ -953,8 +953,7 @@ public abstract class DiagramEditor
 		}
 
 		// Get the Ruler Units properties
-		int rulerUnits = ((IPreferenceStore) ((DiagramRootEditPart) getRootEditPart()).getPreferencesHint().getPreferenceStore())
-			.getInt(IPreferenceConstants.PREF_RULER_UNITS);
+		int rulerUnits = getWorkspaceViewerPreferenceStore().getInt(WorkspaceViewerProperties.RULERUNIT);
 
 		// Get the Guide Style
 		GuideStyle guideStyle = (GuideStyle) getDiagram().getStyle(

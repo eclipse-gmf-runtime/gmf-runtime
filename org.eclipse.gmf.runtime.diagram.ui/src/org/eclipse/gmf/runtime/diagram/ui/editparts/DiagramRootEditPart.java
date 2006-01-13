@@ -598,6 +598,9 @@ public class DiagramRootEditPart
 					(! wsPrefStore.contains(WorkspaceViewerProperties.GRIDSPACING))) {
 				IPreferenceStore preferenceStore =
 					(IPreferenceStore) getPreferencesHint().getPreferenceStore();			
+				// Set the ruler unit to 999 in order to force the setting 
+				// and then change it to the appropriate value
+				wsPrefStore.setValue(WorkspaceViewerProperties.RULERUNIT, 999);						
 				wsPrefStore.setValue(WorkspaceViewerProperties.RULERUNIT, preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS));						
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDSPACING, preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING));			
 			}
