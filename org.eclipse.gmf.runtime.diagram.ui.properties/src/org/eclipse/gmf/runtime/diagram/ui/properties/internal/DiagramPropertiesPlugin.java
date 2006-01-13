@@ -64,6 +64,7 @@ public class DiagramPropertiesPlugin
 	 */
 	public void start(BundleContext context)
 		throws Exception {
+		super.start(context);
 		configurePropertiesAdapter();
 		updateRequestCollapser = new SectionUpdateRequestCollapser();
 		updateRequestCollapser.start();
@@ -75,7 +76,7 @@ public class DiagramPropertiesPlugin
 	 */
 	public void stop(BundleContext context)
 		throws Exception {
-
+		super.stop(context);
 		updateRequestCollapser.stop();
 
 	}
