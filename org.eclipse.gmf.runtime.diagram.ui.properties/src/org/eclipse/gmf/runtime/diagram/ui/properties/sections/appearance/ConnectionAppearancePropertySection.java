@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
@@ -186,7 +187,7 @@ public class ConnectionAppearancePropertySection
 		jumpLinksComposite.setLayout(new GridLayout(2, false));
 
 		reverseJumpLinksButton = getWidgetFactory().createButton(
-			jumpLinksComposite, REVERSE_JUMP_LINKS_NAME_LABEL, SWT.CHECK);//$NON-NLS-1$
+			jumpLinksComposite, REVERSE_JUMP_LINKS_NAME_LABEL, SWT.CHECK);
 		reverseJumpLinksButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -228,7 +229,7 @@ public class ConnectionAppearancePropertySection
 		});
 
 		closestDistanceButton = getWidgetFactory().createButton(
-			routerOptionsGroup, CLOSEST_DISTANCE_NAME_LABEL, SWT.CHECK);//$NON-NLS-1$
+			routerOptionsGroup, CLOSEST_DISTANCE_NAME_LABEL, SWT.CHECK);
 
 		closestDistanceButton.addSelectionListener(new SelectionAdapter() {
 
@@ -270,7 +271,7 @@ public class ConnectionAppearancePropertySection
 			radioButton.addSelectionListener(new SelectionAdapter() {
 
 				public void widgetSelected(SelectionEvent event) {
-					setPropertyValue(event, propertyId, commandName); //$NON-NLS-1$
+					setPropertyValue(event, propertyId, commandName); 
 				}
 			});
 
@@ -402,6 +403,11 @@ public class ConnectionAppearancePropertySection
 					if (button != null)
 						button.setSelection(true);
 
+					// determine if tree routing is supported
+					Button treeRoutingButton = (Button)buttons.get(Routing.TREE_LITERAL);
+					if (treeRoutingButton != null)
+						treeRoutingButton.setEnabled(obj instanceof ITreeBranchEditPart);
+					
 					button = (Button) buttons.get(obj
 						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_Routing()));
 					if (button != null)
