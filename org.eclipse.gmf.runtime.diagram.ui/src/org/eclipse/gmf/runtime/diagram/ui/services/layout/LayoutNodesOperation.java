@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IAdaptable;
 /**
  * @author sshaw
  * @deprecated use
- *             {@link org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNodesOperation}
+ *             {@link org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodeOperation }
  *             Will be removed on December 16th / 2005
  */
 public class LayoutNodesOperation
