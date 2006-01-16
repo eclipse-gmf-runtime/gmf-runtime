@@ -318,7 +318,7 @@ public class ColorsAndFontsPropertySection
 		if (isReadOnly()) {
 			lineColorButton.setEnabled(false);
 			fontFamilyCombo.setEnabled(false);
-			fontSizeCombo.setEditable(false);
+			fontSizeCombo.setEnabled(false);
 			fontBoldButton.setEnabled(false);
 			fontItalicButton.setEnabled(false);
 			fontColorButton.setEnabled(false);
@@ -404,7 +404,7 @@ public class ColorsAndFontsPropertySection
 						.getModel()).eResource(), new Runnable() {
 
 						public void run() {
-							ENamedElement element = (EStructuralFeature)MetaModelUtil.getElement(propertyId);
+							ENamedElement element = MetaModelUtil.getElement(propertyId);
 							if (element instanceof EStructuralFeature)
 								ep.setStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(propertyId), FigureUtilities
 									.RGBToInteger(color));
@@ -469,7 +469,7 @@ public class ColorsAndFontsPropertySection
 						.getModel()).eResource(), new Runnable() {
 
 						public void run() {
-							ENamedElement element = (EStructuralFeature)MetaModelUtil.getElement(propertyId);
+							ENamedElement element = MetaModelUtil.getElement(propertyId);
 							if (element instanceof EStructuralFeature)
 								ep.setStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(propertyId), FigureUtilities
 									.RGBToInteger(color));
@@ -621,7 +621,7 @@ public class ColorsAndFontsPropertySection
 					boolean enableFontWidgets = style != null;
 					
 					fontFamilyCombo.setEnabled(enableFontWidgets);
-					fontSizeCombo.setEditable(enableFontWidgets);
+					fontSizeCombo.setEnabled(enableFontWidgets);
 					fontBoldButton.setEnabled(enableFontWidgets);
 					fontItalicButton.setEnabled(enableFontWidgets);
 					fontColorButton.setEnabled(enableFontWidgets);
