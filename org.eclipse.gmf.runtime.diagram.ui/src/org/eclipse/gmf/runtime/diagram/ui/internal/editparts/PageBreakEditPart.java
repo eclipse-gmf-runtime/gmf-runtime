@@ -61,32 +61,72 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 		if (bounds.x < location.x || bounds.y < location.y) {
 			// Figure's have been moved to the left or above the 
 			// the page breaks figure's location
-			calculatePageBreakFigureBounds();
+			calculatePageBreakFigureBounds(true, bounds.getSize());
 		} else {
 			// Calculate the number of pages needed to contain
 			// the diagram
 			int width = Math.abs(bounds.right() - location.x);
 			int height = Math.abs(bounds.bottom() - location.y);
 			
-			Point printerPageSize = getPageSize();
-			float numCols = ((float) width) / printerPageSize.x;
-			int cols = Math.max(1, (int) Math.ceil(numCols));
-			float numRows = ((float) height) / printerPageSize.y;
-			int rows = Math.max(1, (int) Math.ceil(numRows));
-
-			int xInc = printerPageSize.x * cols;
-			int yInc = printerPageSize.y * rows;
-
-			getPageBreaksFigure().setSize(new Dimension(xInc, yInc));
-			getPageBreaksFigure().setLocation(location);
-			getPageBreaksFigure().setPageCount(rows, cols);			
-					
+			updatePageCount(width, height);			
 			
-		}
-		//diagramBounds = bounds;
-		//calculatePageBreakFigureSize();	
+			getPageBreaksFigure().setLocation(location);
+			
+			
+		}	
 	}
 
+	private void updatePageCount(int width, int height) {
+		Point printerPageSize = getPageSize();
+		float numCols = ((float) width) / printerPageSize.x;
+		int cols = Math.max(1, (int) Math.ceil(numCols));
+		float numRows = ((float) height) / printerPageSize.y;
+		int rows = Math.max(1, (int) Math.ceil(numRows));
+
+		int xInc = printerPageSize.x * cols;
+		int yInc = printerPageSize.y * rows;
+
+		getPageBreaksFigure().setSize(new Dimension(xInc, yInc));
+		getPageBreaksFigure().setPageCount(rows, cols);
+	}
+	
+	/**
+	 * Calculates the size of the page breaks figure and the
+	 * number of rows and columns based on the print page size.
+	 * This method updates the page breaks figure bounds directly.
+	 * 
+	 * @param center true to center the page breaks figure,
+	 * false to not center it.
+	 */
+	public void calculatePageBreakFigureBounds(boolean center) {
+		calculatePageBreakFigureBounds(center, diagramBounds.getSize());
+	}
+	
+	/**
+	 * Calculates the size of the page breaks figure and the
+	 * number of rows and columns based on the print page size.
+	 * This method will also center the page breaks figure.
+	 */
+	public void calculatePageBreakFigureBounds() {
+		calculatePageBreakFigureBounds(true, diagramBounds.getSize());
+	}	
+	
+	/**
+	 * Calculates the size of the page breaks figure and the
+	 * number of rows and columns based on the print page size.
+	 * This method updates the page breaks figure bounds directly.
+	 * 
+	 * @param center true to center the page breaks figure,
+	 * false to not center it.
+	 */
+	private void calculatePageBreakFigureBounds(boolean center, Dimension bounds) {
+		updatePageCount(bounds.width, bounds.height);
+		
+		if (center) {
+			centerPageBreaksFigure();
+		}
+	}
+	
 	/**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractGraphicEditPart#createFigure()
 	 */
@@ -111,42 +151,6 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 			EditPolicy.PRIMARY_DRAG_ROLE,
 			new PageBreakNonResizableEditPolicy());
 	}
-
-	/**
-	 * Calculates the size of the page breaks figure and the
-	 * number of rows and columns based on the print page size.
-	 * This method updates the page breaks figure bounds directly.
-	 * 
-	 * @param center true to center the page breaks figure,
-	 * false to not center it.
-	 */
-	public void calculatePageBreakFigureBounds(boolean center) {
-		Point printerPageSize = getPageSize();
-		float numCols = ((float) diagramBounds.width) / printerPageSize.x;
-		int cols = Math.max(1, (int) Math.ceil(numCols));
-		float numRows = ((float) diagramBounds.height) / printerPageSize.y;
-		int rows = Math.max(1, (int) Math.ceil(numRows));
-
-		int xInc = printerPageSize.x * cols;
-		int yInc = printerPageSize.y * rows;
-
-		getPageBreaksFigure().setSize(new Dimension(xInc, yInc));
-		getPageBreaksFigure().setPageCount(rows, cols);
-		if (center) {
-			centerPageBreaksFigure();
-			//setSize won't affect x and y, just width and height
-			updatePreferenceStore();
-		}
-	}
-	
-	/**
-	 * Calculates the size of the page breaks figure and the
-	 * number of rows and columns based on the print page size.
-	 * This method will also center the page breaks figure.
-	 */
-	public void calculatePageBreakFigureBounds() {
-		calculatePageBreakFigureBounds(true);
-	}	
 	
 	/**
 	 * Utility method that calculate the printer page size.      
@@ -363,16 +367,15 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 		}
 
 		this.diagramBounds = newBounds;
-//		this.pageBreakBounds = getPageBreaksFigure().getBounds();
 	}
 	
 	/**
 	 * Updates the workspace viewer's prefence store values for
 	 * the page breaks figure location.
 	 */
-	private void updatePreferenceStore() {
+	public void updatePreferenceStore() {
 		Rectangle r = getPageBreaksFigure().getBounds();
-
+		
 		//don't use the workspace one
 		IPreferenceStore s = ((DiagramGraphicalViewer) getRoot().getViewer())
 		.getWorkspaceViewerPreferenceStore();

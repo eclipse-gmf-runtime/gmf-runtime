@@ -51,7 +51,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -284,18 +283,6 @@ public class DiagramEditPart
 
 		((DiagramRootEditPart) getRoot())
 				.getPageBreakEditPart().resize(getChildrenBounds());
-		
-		Rectangle r =
-			((DiagramRootEditPart) getRoot())
-				.getPageBreakEditPart()
-				.getFigure()
-				.getBounds();
-		((DiagramGraphicalViewer) getViewer())
-			.getWorkspaceViewerPreferenceStore()
-			.setValue(WorkspaceViewerProperties.PAGEBREAK_X, r.x);
-		((DiagramGraphicalViewer) getViewer())
-			.getWorkspaceViewerPreferenceStore()
-			.setValue(WorkspaceViewerProperties.PAGEBREAK_Y, r.y);
 	}
 
 	/**
@@ -327,7 +314,7 @@ public class DiagramEditPart
 				return null;
 
 			if (snapStrategies.size() == 1)
-				return (SnapToHelper)snapStrategies.get(0);
+				return snapStrategies.get(0);
 
 			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
 			for (int i = 0; i < snapStrategies.size(); i++)

@@ -868,7 +868,7 @@ public abstract class DiagramEditor
 			return workspaceViewerPreferenceStore;
 		} else {
 			// Try to load it
-			IPath path = ((DiagramUIPlugin) DiagramUIPlugin.getInstance())
+			IPath path = DiagramUIPlugin.getInstance()
 				.getStateLocation();
 			String id = ViewUtil.getIdStr(getDiagram());
 
@@ -937,6 +937,10 @@ public abstract class DiagramEditor
 			getWorkspaceViewerPreferenceStore().getDouble(
 				WorkspaceViewerProperties.ZOOM));
 
+		if (getWorkspaceViewerPreferenceStore().getBoolean(WorkspaceViewerProperties.VIEWPAGEBREAKS)) {
+			getDiagramEditPart().getFigure().invalidate();
+			getDiagramEditPart().getFigure().validate();
+		}
 		getDiagramEditPart().refreshPageBreaks();
 		
 		// Update the range model of the viewport

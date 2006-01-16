@@ -402,9 +402,12 @@ public class DiagramRootEditPart
 	private void hidePageBreaks() {
 		if (getLayer(PAGE_BREAKS_LAYER)
 			.getChildren()
-			.contains(getPageBreakEditPart().getFigure()))
+			.contains(getPageBreakEditPart().getFigure())) {
 			getLayer(PAGE_BREAKS_LAYER).remove(
 				getPageBreakEditPart().getFigure());
+
+			getPageBreakEditPart().updatePreferenceStore();
+		}
 	}	
 	
 	/**
@@ -611,6 +614,9 @@ public class DiagramRootEditPart
 	 * 
 	 */
 	public void deactivate() {
+		if (getPageBreakEditPart() != null)
+			getPageBreakEditPart().updatePreferenceStore();
+		
 		if (getWorkspaceViewerPreferences() != null)
 			getWorkspaceViewerPreferences().removePropertyChangeListener(listener);
 		removePreferenceStoreListener();
