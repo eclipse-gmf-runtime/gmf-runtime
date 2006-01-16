@@ -194,6 +194,9 @@ public class RulerGridPropertySection
 				if (wsPrefStore.getBoolean(WorkspaceViewerProperties.VIEWGRID) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_GRID)) {
 					wsPrefStore.setValue(WorkspaceViewerProperties.VIEWGRID, preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_GRID));
 				}
+				if (wsPrefStore.getBoolean(WorkspaceViewerProperties.SNAPTOGRID) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SNAP_TO_GRID)) {
+					wsPrefStore.setValue(WorkspaceViewerProperties.SNAPTOGRID, preferenceStore.getBoolean(IPreferenceConstants.PREF_SNAP_TO_GRID));			
+				} 
 				
 				if ((wsPrefStore.getInt(WorkspaceViewerProperties.RULERUNIT) != preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS)) || 
 						(wsPrefStore.getDouble(WorkspaceViewerProperties.GRIDSPACING) != preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING))) {
