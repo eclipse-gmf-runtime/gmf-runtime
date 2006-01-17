@@ -72,8 +72,9 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String Dot_Label_Text;
 	public static String Dash_Dot_Label_Text;
 	public static String Dash_Dot_Dot_Label_Text;
+	public static String Spaced_Dot_Label_Text;
 	public static String Restore_Defaults_Label_Text;	
-	
+	public static String Positive_Number_Error;
 	
 	
 	static {

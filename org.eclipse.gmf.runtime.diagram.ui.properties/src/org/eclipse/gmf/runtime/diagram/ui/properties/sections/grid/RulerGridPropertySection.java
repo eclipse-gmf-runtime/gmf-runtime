@@ -86,6 +86,7 @@ public class RulerGridPropertySection
 	private static final String  DOT_LABEL = DiagramUIPropertiesMessages.Dot_Label_Text;
 	private static final String  DASH_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Label_Text;
 	private static final String  DASH_DOT_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Dot_Label_Text;
+	private static final String  SPACED_DOT_LABEL = DiagramUIPropertiesMessages.Spaced_Dot_Label_Text;
 	
 	// Ruler unit drop down
 	private CCombo rulerUnitCombo;
@@ -185,8 +186,8 @@ public class RulerGridPropertySection
 				if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR) != LIGHT_GRAY_RGB) {
 					wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
 				} 
-				if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE) != SWT.LINE_DOT) {
-					wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_DOT);			
+				if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE) != SWT.LINE_CUSTOM) {
+					wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_CUSTOM);			
 				}
 				if (wsPrefStore.getBoolean(WorkspaceViewerProperties.VIEWRULERS) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_RULERS)) {
 					wsPrefStore.setValue(WorkspaceViewerProperties.VIEWRULERS, preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_RULERS));
@@ -252,7 +253,7 @@ public class RulerGridPropertySection
 			}
 
 			private void updateLineStyle() {
-				int style = lineStyleCombo.getSelectionIndex();
+				int style = lineStyleCombo.getSelectionIndex(); 
 				setWorkspaceProperty(WorkspaceViewerProperties.GRIDLINESTYLE, style + SWT.LINE_SOLID);
 			}
 		});
@@ -512,7 +513,7 @@ public class RulerGridPropertySection
 	}
 
 	private String[] getStyles() {		
-		return new String[]{SOLID_LABEL,DASH_LABEL,DOT_LABEL,DASH_DOT_LABEL,DASH_DOT_DOT_LABEL};
+		return new String[]{SOLID_LABEL,DASH_LABEL,DOT_LABEL,DASH_DOT_LABEL,DASH_DOT_DOT_LABEL,SPACED_DOT_LABEL};
 	}
 	
 	/* (non-Javadoc)

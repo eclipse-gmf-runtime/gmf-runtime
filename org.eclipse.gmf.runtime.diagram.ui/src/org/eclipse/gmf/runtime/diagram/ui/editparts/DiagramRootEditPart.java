@@ -304,7 +304,7 @@ public class DiagramRootEditPart
 	 */
 	public void setGridStyle(int style) {
 		if (gridLayer instanceof GridLayerEx) {
-			((GridLayerEx) gridLayer).setLineStyle(style);
+			((GridLayerEx) gridLayer).setLineStyle(style);			
 		}
 		gridLayer.repaint();
 	}
@@ -592,7 +592,7 @@ public class DiagramRootEditPart
 				setGridColor(new Integer(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR)));
 			}
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINESTYLE)) {
-				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_DOT);			
+				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_CUSTOM);			
 			} else {
 				setGridStyle(wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE));
 			}

@@ -19,7 +19,8 @@ public class GridLayerEx
 	extends GridLayer {
 
 	// Grid line style (for example dotted, dashed, solid, etc.)
-	private int lineStyle = SWT.LINE_DOT;
+	private int lineStyle = SWT.LINE_CUSTOM;
+	private int[] dashes = new int[]{1,5};
 	
 	public GridLayerEx() {
 		super();
@@ -50,6 +51,7 @@ public class GridLayerEx
 	 */
 	protected void paintGrid(Graphics g) {
 		g.setLineStyle(lineStyle);
+		if ((dashes != null) && (lineStyle == SWT.LINE_CUSTOM)) g.setLineDash(dashes);		
 		FigureUtilities.paintGrid(g, this, origin, gridX, gridY);
 	}
 
@@ -58,5 +60,9 @@ public class GridLayerEx
 		this.lineStyle = lineStyle;
 	}	
 	
+	public void setLineDash(int[] dashSet) {
+		this.dashes = dashSet;
+	}	
+
 	
 }
