@@ -1244,10 +1244,18 @@ public abstract class GraphicalEditPart
 	}
 
 	/**
-	 * Handles the property changed event
+	 * Handles the property changed event.  Clients should override to
+	 * respond to the specific notification events they are interested.
+	 * 
+	 * Note: This method may get called on a non-UI thread.  Clients should
+	 * either ensure that their code is thread safe and/or doesn't make
+	 * unsupported calls (i.e. Display.getCurrent() ) assuming they are on
+	 * the main thread.  Alternatively if this is not possible, then the
+	 * client can wrap their handler within the Display.synchExec runnable
+	 * to ensure synchronization and subsequent execution on the main thread.
 	 * 
 	 * @param event
-	 *            the property changed event
+	 *            the <code>Notification</code> object that is the property changed event
 	 */
 	protected void handleNotificationEvent(Notification event) {
 		if (NotationPackage.eINSTANCE.getView_PersistedChildren().equals(event.getFeature())||
