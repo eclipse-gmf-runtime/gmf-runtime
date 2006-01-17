@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EMFCompositeSourcePropertyDescriptor;
 import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EObjectContainmentListPropertyValue;
@@ -70,11 +72,45 @@ public class NotationPropertyDescriptor extends
 
         if (isColor())
             return new ColorCellEditor(composite);
-
-        return super.createDataTypeCellEditor(composite);
+        
+        CellEditor cellEditor = super.createDataTypeCellEditor(composite);
+        
+        if (isFontHeight()) {
+        	cellEditor.setValidator(getPositiveIntegerValidator());
+        }
+        	
+        return cellEditor;
     }
 
     /**
+     * Create a cell validator that ensures positive integers
+     * @return positive integer cell editor validator
+     */
+    private ICellEditorValidator getPositiveIntegerValidator() {
+		ICellEditorValidator cellValidator = new ICellEditorValidator() {
+			public String isValid(Object value) {
+				String error = null;
+				if (value instanceof String) {
+					String strValue = (String) value;
+					try {
+						if (Integer.parseInt(strValue) <= 0) {
+								throw new NumberFormatException();
+						}
+					} catch (NumberFormatException e) {
+							error = DiagramUIPropertiesMessages.Positive_Number_Error;
+					}
+				}
+				return error;
+			}
+		};
+		return cellValidator;
+    }
+    
+    private boolean isFontHeight() {
+        return getFeature() == NotationPackage.eINSTANCE.getFontStyle_FontHeight();
+	}
+
+	/**
      * Create combo box cell editor
      * 
      * @param composite - parent composite @return - cell editor to edit
