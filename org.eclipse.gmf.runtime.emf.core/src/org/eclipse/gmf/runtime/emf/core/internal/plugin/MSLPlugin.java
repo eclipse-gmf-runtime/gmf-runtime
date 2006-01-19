@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.emf.core.internal.plugin;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
+import org.osgi.framework.BundleContext;
 
 /**
  * MSL plugin class.
@@ -47,10 +48,8 @@ public class MSLPlugin
 		return getDefault().getBundle().getSymbolicName();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin#doStartup()
-	 */
-	protected void doStartup() {
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		MSLAdapterFactoryManager.init();
 
 		// This event listener must be registered _after_ all of the rest of
