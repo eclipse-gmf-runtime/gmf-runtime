@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.CompoundSnapToHelper;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -649,6 +651,61 @@ public abstract class ShapeCompartmentEditPart
 	public final void propertyChange(PropertyChangeEvent event) {
 		if (isActive())
 			handlePropertyChangeEvent(event);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart#getPrimaryEditParts()
+	 */
+	public List getPrimaryEditParts() {
+		List connections = new ArrayList();
+
+		Object diagramEditPart = getViewer().getEditPartRegistry().get(
+			getDiagramView());
+
+		List shapes = getChildren();
+		Set connectableEditParts = new HashSet(shapes);
+		Iterator iter = shapes.iterator();
+		while (iter.hasNext()) {
+			getBorderItemEditParts((EditPart) iter.next(), connectableEditParts);
+		}
+
+		if (diagramEditPart instanceof DiagramEditPart) {
+			Iterator diagramConnections = ((DiagramEditPart) diagramEditPart)
+				.getConnections().iterator();
+			while (diagramConnections.hasNext()) {
+				ConnectionEditPart connection = (ConnectionEditPart) diagramConnections
+					.next();
+				if (connectableEditParts.contains(connection.getSource())
+					|| connectableEditParts.contains(connection.getTarget()))
+					connections.add(connection);
+			}
+		}
+
+		if (connections.size() > 0 || shapes.size() > 0) {
+			List primaryEditParts = new ArrayList();
+			primaryEditParts.addAll(shapes);
+			primaryEditParts.addAll(connections);
+			return primaryEditParts;
+		}
+		return Collections.EMPTY_LIST;
+	}
+	
+	/**
+	 * This method searches an edit part for a child that is a border item edit part
+	 * @param parent part needed to search
+	 * @param set to be modified of border item edit parts that are direct children of the parent
+	 */
+	private void getBorderItemEditParts(EditPart parent, Set retval) {
+		
+		Iterator iter = parent.getChildren().iterator();
+		while(iter.hasNext()) {
+			EditPart child = (EditPart)iter.next();
+			if( child instanceof IBorderItemEditPart ) {
+				retval.add(child);
+				retval.addAll(child.getChildren());
+			}
+			getBorderItemEditParts(child, retval);
+		}
 	}
 
 }

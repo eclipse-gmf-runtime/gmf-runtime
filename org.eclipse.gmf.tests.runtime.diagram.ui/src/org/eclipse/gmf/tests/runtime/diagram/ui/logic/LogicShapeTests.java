@@ -18,9 +18,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
@@ -101,5 +104,29 @@ public class LogicShapeTests extends AbstractShapeTests {
 				return null;
 			}
 		});
+	}
+	
+	/**
+	 * Tests <code>ISurfaceEditPart.getPrimaryEditParts()</code> by creating a
+	 * half-adder.
+	 * 
+	 * @throws Exception
+	 */
+	public void testGetPrimaryEditParts()
+		throws Exception {
+
+		Rectangle rect = new Rectangle(getDiagramEditPart().getFigure()
+			.getBounds());
+		getDiagramEditPart().getFigure().translateToAbsolute(rect);
+		IElementType typeHalfAdder = ElementTypeRegistry.getInstance().getType(
+			"logic.halfAdder"); //$NON-NLS-1$
+
+		Point createPt = new Point(100, 100);
+		CircuitEditPart circuitEP = (CircuitEditPart) getLogicTestFixture()
+			.createShapeUsingTool(typeHalfAdder, createPt, getDiagramEditPart());
+
+		ISurfaceEditPart logicCompartmentEP = (ISurfaceEditPart) circuitEP
+			.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+		assertEquals(8, logicCompartmentEP.getPrimaryEditParts().size());
 	}
 }

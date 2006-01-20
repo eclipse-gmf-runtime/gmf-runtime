@@ -38,5 +38,11 @@ public final class DiagramUIRenderStatusCodes {
 	 * Set to 5 to be consistent with CommonUIStatusCodes.
 	 */
 	public static final int RESOURCE_FAILURE = 5;
+	
+	/**
+	 * Status code warning that an exception was ignored.
+	 * Set to 9 to be consistent with CommonUIStatusCodes.
+	 */
+	public static final int IGNORED_EXCEPTION_WARNING = 9;
 
 }

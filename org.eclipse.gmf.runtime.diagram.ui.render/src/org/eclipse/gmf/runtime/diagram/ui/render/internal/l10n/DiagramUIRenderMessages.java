@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,15 @@ public final class DiagramUIRenderMessages extends NLS {
 
 	public static String CopyAction_ErrorDialogTitle;
 	public static String CopyAction_UnableToCopyImageMessage;
+	public static String CopyToImageAction_Label;
+	public static String CopyToImageAction_copyToImageErrorDialogTitle;
+	public static String CopyToImageAction_copyToImageErrorDialogMessage;
+	public static String CopyToImageAction_copyingDiagramToImageFileMessage;
+	public static String CopyToImageAction_copyingSelectedElementsToImageFileMessage;
+	public static String CopyToImageAction_outOfMemoryMessage;
+	public static String CopyToImageAction_overwriteExistingConfirmDialogTitle;
+	public static String CopyToImageAction_overwriteExistingConfirmDialogMessage;
+
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIRenderMessages.class);

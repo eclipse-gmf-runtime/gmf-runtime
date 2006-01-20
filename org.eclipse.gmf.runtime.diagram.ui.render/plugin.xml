@@ -22,4 +22,16 @@
          <context providesRootEditPart="true"/>
       </editpartProvider>
    </extension>
+   
+   <extension id="DiagramUIRenderContributionItemProvider" name="%ContributionItemProvider.name" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.render.internal.providers.DiagramUIRenderContributionItemProvider">
+         <Priority name="Low">
+         </Priority>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart"/>
+            <popupAction path="/fileMenu/saveGroup" id="CopyToImageAction">
+            </popupAction>
+         </popupContribution>
+      </contributionItemProvider>
+   </extension>
 </plugin>

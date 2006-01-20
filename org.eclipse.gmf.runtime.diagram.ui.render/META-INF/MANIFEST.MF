@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.clipboard,
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.actions,
+ org.eclipse.gmf.runtime.diagram.ui.render.clipboard,
  org.eclipse.gmf.runtime.diagram.ui.render.editparts,
  org.eclipse.gmf.runtime.diagram.ui.render.internal,
  org.eclipse.gmf.runtime.diagram.ui.render.internal.commands,

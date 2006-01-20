@@ -38,6 +38,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.render.actions.CopyToImageAction;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractDiagramTests;
@@ -285,5 +286,39 @@ public class LogicDiagramTests
 		// TODO Auto-generated method stub
 		super.testZoomToolFunctionality();
 	}
+
+	public void testCopyToImageActionEnablement()
+		throws Exception {
+
+		getTestFixture().openDiagram();
+
+		List children = getTestFixture().getDiagramEditPart().getChildren();
+
+		CircuitEditPart circuitEP = null;
+		ListIterator li = children.listIterator();
+		while (li.hasNext()) {
+			Object ep = li.next();
+			if (ep instanceof CircuitEditPart) {
+				circuitEP = (CircuitEditPart) ep;
+			}
+		}
+
+		assertNotNull(circuitEP);
+
+		CopyToImageAction action = new CopyToImageAction(getWorkbenchPage());
+		action.init();
+		EditPartViewer viewer = getDiagramEditPart().getRoot().getViewer();
+		viewer.deselectAll();
+		viewer.select(getDiagramEditPart());
+		flushEventQueue();
+		assertTrue(action.isEnabled());
+
+		viewer.deselectAll();
+		viewer.select(circuitEP);
+		flushEventQueue();
+		assertTrue(action.isEnabled());
+
+	}
+
 
 }

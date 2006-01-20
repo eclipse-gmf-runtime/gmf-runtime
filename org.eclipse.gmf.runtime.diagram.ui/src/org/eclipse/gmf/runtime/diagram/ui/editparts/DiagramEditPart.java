@@ -237,9 +237,8 @@ public class DiagramEditPart
 		return connections;
 	}
 
-	/**
-	 * @return List of primary edit parts.  If there are none then it returns
-	 * a Collections.EMPTY_LIST, which is immutable
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart#getPrimaryEditParts()
 	 */
 	public List getPrimaryEditParts() {
 		List connections = getConnections();
