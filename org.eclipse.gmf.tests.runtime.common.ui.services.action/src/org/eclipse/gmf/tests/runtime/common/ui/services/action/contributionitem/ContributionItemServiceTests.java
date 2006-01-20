@@ -32,6 +32,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * Tests for the Contribution Item Service.
@@ -45,6 +46,14 @@ public class ContributionItemServiceTests
 
 	class MyActionBars
 		implements IActionBars {
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.ui.IActionBars#getServiceLocator()
+		 */
+		public IServiceLocator getServiceLocator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 		IToolBarManager myToolBarManager = new ToolBarManager();
 
