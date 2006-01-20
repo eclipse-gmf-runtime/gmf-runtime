@@ -15,7 +15,6 @@
    <extension-point id="paletteProviders" name="%extPoint.paletteProviders" schema="schema/paletteProviders.exsd"/>
    <extension-point id="layoutProviders" name="%extPoint.layoutProviders" schema="schema/layoutProviders.exsd"/>
    <extension-point id="decoratorProviders" name="%extPoint.decoratorProviders" schema="schema/decoratorProviders.exsd"/>
-   <extension-point id="diagramPreferenceStores" name="%extPoint.diagramPreferenceStores" schema="schema/diagramPreferenceStores.exsd"/>
 
 <!-- Icon Provider -->
    
