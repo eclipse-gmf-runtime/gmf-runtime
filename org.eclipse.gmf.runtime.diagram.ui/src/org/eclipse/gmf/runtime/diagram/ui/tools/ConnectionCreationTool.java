@@ -25,6 +25,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
+import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
@@ -32,7 +33,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -266,7 +266,7 @@ public class ConnectionCreationTool
 				.get(1)
 				: sourceEditPart;
 
-			CreateConnectionViewRequest connectionRequest = (CreateConnectionViewRequest) createTargetRequest();
+			CreateConnectionRequest connectionRequest = (CreateConnectionRequest) createTargetRequest();
 
 			connectionRequest.setTargetEditPart(sourceEditPart);
 			connectionRequest.setType(RequestConstants.REQ_CONNECTION_START);

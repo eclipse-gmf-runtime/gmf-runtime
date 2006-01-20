@@ -36,6 +36,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.parts.DiagramCommandStackTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.GraphicalNodeEditPolicyTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.requests.RequestTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.tools.ConnectionToolTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.RubberBandSelectionToolTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {
@@ -69,6 +70,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(DiagramEventBrokerTests.suite());
 		suite.addTest(LogicTransientViewsTests.suite());
 		suite.addTest(RequestTests.suite());
+		suite.addTest(ConnectionToolTests.suite());
 		
 		return suite;
 	}

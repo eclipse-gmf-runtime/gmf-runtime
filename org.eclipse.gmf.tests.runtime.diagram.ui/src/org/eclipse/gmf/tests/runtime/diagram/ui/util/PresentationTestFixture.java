@@ -16,19 +16,21 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 
 /**
@@ -72,14 +74,30 @@ public class PresentationTestFixture
 						}
 					});
 				} catch (MSLActionAbandonedException e) {
-					Trace.trace(DiagramUIPlugin.getInstance(),
-						DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
-						"MSLActionAbandonedException"); //$NON-NLS-1$
+					e.printStackTrace();
 					assertFalse(false);
 				}
 			}
 		});
 	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture#openDiagram()
+	 */
+	public void openDiagram()
+		throws Exception {
+		IWorkbenchPage page =
+			PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage();
+
+		setDiagramWorkbenchPart((IDiagramWorkbenchPart)IDE.openEditor(
+			page,
+			new DiagramEditorInput(getDiagram()),
+			DiagramTestEditor.ID,
+			true));	}
 
 	/**
 	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture#createShapesAndConnectors()
@@ -114,4 +132,5 @@ public class PresentationTestFixture
 				((IAdaptable) ((List) createRequest.getNewObject()).get(0))
 					.getAdapter(View.class));
 	}
+	
 }
