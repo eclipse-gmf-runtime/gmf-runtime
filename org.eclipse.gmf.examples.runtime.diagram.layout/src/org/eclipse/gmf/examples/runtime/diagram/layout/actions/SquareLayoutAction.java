@@ -82,7 +82,7 @@ public class SquareLayoutAction	implements IWorkbenchWindowActionDelegate {
 							// Walk selection
 							for (Iterator i = structuredSelection.iterator(); i.hasNext();) {
 
-								// Try to adapt the selection to a modeling element or a view
+								// Try to adapt the selection to a view
 								Object selectedObject = i.next();
 								if (selectedObject instanceof IAdaptable) {
 

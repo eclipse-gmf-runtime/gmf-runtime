@@ -24,8 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
 
 /**
  * PrintingPreferencePage enables the user to specify printing settings such as
- * measurement units, page size, page orientation and margins. It is visible
- * after following path Windows > Preferences > Modeling > Printing.
+ * measurement units, page size, page orientation and margins. 
  * 
  * @author etworkow
  */

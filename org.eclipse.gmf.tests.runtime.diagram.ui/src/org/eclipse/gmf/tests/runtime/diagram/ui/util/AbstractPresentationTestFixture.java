@@ -30,7 +30,6 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -216,10 +215,10 @@ public abstract class AbstractPresentationTestFixture
 			setConnectorView(null);
 			flushEventQueue();
 			if ( !diagramClosed ) {
-				Log.error( DiagramUIPlugin.getInstance(), IStatus.ERROR, "FAILED TO CLOSE DIAGRAM", cde);//$NON-NLS-1$
+				Log.error( TestsPlugin.getDefault(), IStatus.ERROR, "FAILED TO CLOSE DIAGRAM", cde);//$NON-NLS-1$
 			}
 			if ( pde != null ) {
-				Log.error( DiagramUIPlugin.getInstance(), IStatus.ERROR, "FAILED TO DELETE PROJECT", pde);//$NON-NLS-1$
+				Log.error( TestsPlugin.getDefault(), IStatus.ERROR, "FAILED TO DELETE PROJECT", pde);//$NON-NLS-1$
 			}
 		}
 	}
@@ -249,8 +248,6 @@ public abstract class AbstractPresentationTestFixture
 			// empty block
 		}
 	}
-
-
 
 	public void openDiagram() throws Exception {
 		if (getDiagramFile() == null) {
@@ -369,7 +366,7 @@ public abstract class AbstractPresentationTestFixture
 			while (li.hasNext()) {
 				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
 				if (gep.getNotationView().getElement().equals(element)) {
-					newShape = (ShapeEditPart)gep;
+					newShape = gep;
 				}
 			}
 		}
