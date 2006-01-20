@@ -29,12 +29,12 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration.ObjectDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteTemplateEntry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
@@ -164,15 +164,15 @@ public class DefaultPaletteProvider
 			else if (TOOL.equals(kindStr))
 				kind = new Integer(ENUM_TOOL);
 			else
-				Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
+				Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
 
 			id = configElement.getAttribute(ID);
 			if (id == null)
-				Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
+				Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
 
 			path = configElement.getAttribute(PATH);
 			if (path == null)
-				Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
+				Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
 
 			label = configElement.getAttribute(LABEL);
 			if (label == null)
@@ -275,7 +275,7 @@ public class DefaultPaletteProvider
 
 				PaletteEntry fEntry = findPaletteEntry(root, path);
 				if (fEntry == null)
-					Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "Invalid palette entry path"); //$NON-NLS-1$				
+					Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "Invalid palette entry path"); //$NON-NLS-1$				
 				else if (fEntry instanceof PaletteContainer)
 					 ((PaletteContainer) fEntry).add(paletteEntry);
 				else if (fEntry instanceof PaletteSeparator)
@@ -366,13 +366,13 @@ public class DefaultPaletteProvider
 						configElement.createExecutableExtension(FACTORY_CLASS);
 					factory = (PaletteFactory) ext;
 				} catch (CoreException e) {
-					Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$					 
+					Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$					 
 				}
 			}
 			if (factory != null) {
 				Object template = factory.getTemplate(templateId);
 				if (template == null)
-					Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
+					Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
 				return template;
 			}
 			return null;
@@ -388,13 +388,13 @@ public class DefaultPaletteProvider
 						configElement.createExecutableExtension(FACTORY_CLASS);
 					factory = (PaletteFactory) ext;
 				} catch (CoreException e) {
-					Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$					 
+					Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$					 
 				}
 			}
 			if (factory != null) {
 				Tool tool = factory.createTool(toolId);
 				if (tool == null)
-					Log.info(DiagramUIPlugin.getInstance(), DiagramUIStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
+					Log.info(DiagramProvidersPlugin.getInstance(), DiagramProvidersStatusCodes.SERVICE_FAILURE, "No factory class name is provided"); //$NON-NLS-1$
 				return tool;
 			}
 			return null;

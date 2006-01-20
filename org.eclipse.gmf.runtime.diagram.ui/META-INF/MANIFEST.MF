@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin
+Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.diagram.ui,
@@ -16,6 +16,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.diagram.ui.handles,
  org.eclipse.gmf.runtime.diagram.ui.help,
  org.eclipse.gmf.runtime.diagram.ui.image,
+ org.eclipse.gmf.runtime.diagram.ui.internal,
  org.eclipse.gmf.runtime.diagram.ui.internal.actions,
  org.eclipse.gmf.runtime.diagram.ui.internal.commands,
  org.eclipse.gmf.runtime.diagram.ui.internal.dialogs,
@@ -47,6 +48,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.diagram.ui.parts,
  org.eclipse.gmf.runtime.diagram.ui.preferences,
  org.eclipse.gmf.runtime.diagram.ui.properties,
+ org.eclipse.gmf.runtime.diagram.ui.providers,
  org.eclipse.gmf.runtime.diagram.ui.requests,
  org.eclipse.gmf.runtime.diagram.ui.services.decorator,
  org.eclipse.gmf.runtime.diagram.ui.services.editpart,
@@ -55,7 +57,6 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.diagram.ui.services.palette,
  org.eclipse.gmf.runtime.diagram.ui.tools,
  org.eclipse.gmf.runtime.diagram.ui.util,
- org.eclipse.gmf.runtime.diagram.ui.providers,
  org.eclipse.gmf.runtime.diagram.ui.view.factories
 Require-Bundle: org.eclipse.ui.views,
  org.eclipse.ui,

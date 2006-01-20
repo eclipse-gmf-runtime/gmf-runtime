@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,14 +9,13 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui;
+package org.eclipse.gmf.runtime.diagram.ui.internal;
 
 /**
  * A list of debug options for the Diagram UI Plugin.
  * 
  * @author khussey
- * @deprecated Made internal. Use your own plugin's class. See
- *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=123313.
+ *
  */
 public final class DiagramUIDebugOptions {
 

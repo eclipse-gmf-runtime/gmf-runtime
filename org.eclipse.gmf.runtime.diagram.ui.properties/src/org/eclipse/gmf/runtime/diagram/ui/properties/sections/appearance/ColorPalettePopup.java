@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -254,7 +254,7 @@ public class ColorPalettePopup {
 
 			public void widgetSelected(SelectionEvent event) {
 
-				IPreferenceStore store = DiagramUIPlugin.getInstance()
+				IPreferenceStore store = DiagramPropertiesPlugin.getDefault()
 					.getPreferenceStore();
 				if (preferenceId != null)
 					selectedColor = PreferenceConverter.getColor(store,

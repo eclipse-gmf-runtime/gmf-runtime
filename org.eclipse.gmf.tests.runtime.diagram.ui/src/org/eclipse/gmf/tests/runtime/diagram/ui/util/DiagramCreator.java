@@ -19,12 +19,9 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
@@ -65,9 +62,7 @@ public class DiagramCreator {
 						}
 					});
 				} catch (MSLActionAbandonedException e) {
-					Trace.trace(DiagramUIPlugin.getInstance(),
-						DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
-						"MSLActionAbandonedException"); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 			}
 		});
@@ -118,9 +113,7 @@ public class DiagramCreator {
 						}
 					});
 				} catch (MSLActionAbandonedException e) {
-					Trace.trace(DiagramUIPlugin.getInstance(),
-						DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
-						"MSLActionAbandonedException"); //$NON-NLS-1$
+					e.printStackTrace();
 				}
 			}
 		});

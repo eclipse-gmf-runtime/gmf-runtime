@@ -17,13 +17,10 @@ import java.util.ListIterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
@@ -96,9 +93,7 @@ extends TestCase {
 						}
 					});
 				} catch (MSLActionAbandonedException e) {
-					Trace.trace(DiagramUIPlugin.getInstance(),
-						DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
-						"MSLActionAbandonedException"); //$NON-NLS-1$
+					e.printStackTrace();
 					assertFalse(false);
 				}
 			}

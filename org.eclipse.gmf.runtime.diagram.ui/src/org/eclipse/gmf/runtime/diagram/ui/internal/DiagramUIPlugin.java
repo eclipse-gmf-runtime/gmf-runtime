@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui;
+package org.eclipse.gmf.runtime.diagram.ui.internal;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
@@ -25,17 +25,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The DiagramUI plugin defines all the artifacts needed for the visualization
- * of modelling diagrams
+ * The DiagramUI  plugin defines all the artifacts needed for the
+ * visualization of modelling diagrams
  * 
  * @author melaasar
- * @deprecated Made internal. Use your own plugin's class. See
- *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=123313. If you are
- *             using this plugin to get the preference store, the diagram
- *             preferences are no longer stored in the diagram layer's
- *             preference store. They need to be stored in the client's
- *             preference store. See
- *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112864.
  */
 public class DiagramUIPlugin
 	extends AbstractUIPlugin {

@@ -15,6 +15,8 @@ package org.eclipse.gmf.runtime.diagram.ui;
  * A list of status codes for the Diagram UI plugin
  * 
  * @author khussey
+ * @deprecated Made internal. Use your own plugin's class. See
+ *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=123313.
  *
  */
 public final class DiagramUIStatusCodes {
