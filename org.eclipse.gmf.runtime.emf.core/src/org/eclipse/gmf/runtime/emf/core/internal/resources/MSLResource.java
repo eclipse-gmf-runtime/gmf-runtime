@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,12 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 public class MSLResource
 	extends XMIResourceImpl
 	implements org.eclipse.gmf.runtime.emf.core.resources.ILogicalResource {
+
+	/**
+	 * Use this option to abort loading a resource immediately when an error occurs.
+	 * The default is <code>Boolean.FALSE</code> unless set to <code>Boolean.TRUE</code> explicitly.
+	 */
+	public static final String OPTION_ABORT_ON_ERROR = "ABORT_ON_ERROR"; //$NON-NLS-1$
 
 	private boolean useIDAttributes = false;
 	

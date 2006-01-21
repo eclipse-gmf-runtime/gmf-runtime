@@ -23,10 +23,12 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.emf.ecore.xmi.XMIException;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.SAXXMIHandler;
 import org.eclipse.emf.ecore.xml.type.AnyType;
+import org.eclipse.gmf.runtime.emf.core.internal.exceptions.AbortResourceLoadException;
 
 /**
  * The SAX handler for MSL resources. Updates demand-created packages with their
@@ -38,6 +40,8 @@ public class MSLHandler
 	extends SAXXMIHandler {
 
 	protected final Map urisToProxies;
+	
+	protected boolean abortOnError;
 
 	/**
 	 * Constructs a new MSL handler for the specified resource with the
@@ -54,6 +58,9 @@ public class MSLHandler
 		super(xmiResource, helper, options);
 
 		urisToProxies = new HashMap();
+		if (Boolean.TRUE.equals(options.get(MSLResource.OPTION_ABORT_ON_ERROR))) {
+			abortOnError = true;
+		}
 	}
 
 	/**
@@ -130,4 +137,18 @@ public class MSLHandler
 		return super.validateCreateObjectFromFactory(factory, typeName,
 			newObject, feature);
 	}
+
+	/**
+	 * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#error(org.eclipse.emf.ecore.xmi.XMIException)
+	 */
+	public void error(XMIException e) {
+		super.error(e);
+		if (abortOnError) {
+			if (e.getWrappedException() != null) {
+				throw new AbortResourceLoadException(e.getWrappedException());
+			}
+			throw new AbortResourceLoadException(e);
+		}
+	}
+
 }

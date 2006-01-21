@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.SAXWrapper;
 import org.eclipse.emf.ecore.xmi.impl.XMILoadImpl;
+import org.eclipse.gmf.runtime.emf.core.internal.exceptions.AbortResourceLoadException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -51,9 +52,10 @@ public class MSLLoad
 			super.load(r, s, o);
 
 		} catch (Resource.IOWrappedException e) {
-
 			if (!(e.getWrappedException() instanceof UnresolvedReferenceException))
 				throw e;
+		} catch (AbortResourceLoadException arle) {
+			throw new Resource.IOWrappedException((Exception)arle.getCause());
 		}
 	}
 

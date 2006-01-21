@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,6 +84,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLStatusCodes;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MResource;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLExtendedMetaData;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLPathmap;
+import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLComposedAdapterFactory;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
@@ -647,6 +648,9 @@ public class MSLEditingDomain
 
 				loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA,
 					extendedMetaData);
+			} else {
+				loadOptions.put(MSLResource.OPTION_ABORT_ON_ERROR,
+					Boolean.TRUE);
 			}
 			
 			if (null == inputStream)
