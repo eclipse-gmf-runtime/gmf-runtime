@@ -16,6 +16,7 @@ import java.util.ListIterator;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -557,6 +558,45 @@ public class BorderItemFigure
 		public DrawConstant getCurrentSide() {
 			return borderItemFigure.getCurrentSide();
 		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator#getSide()
+		 */
+		public int getCurrentSideOfParent() {
+			if (getCurrentSide().equals(DrawConstant.BOTTOM)) {
+				return PositionConstants.BOTTOM;
+			} else if (getCurrentSide().equals(DrawConstant.CENTER)) {
+				return PositionConstants.CENTER;
+			} else if (getCurrentSide().equals(DrawConstant.EAST)) {
+				return PositionConstants.EAST;
+			} else if (getCurrentSide().equals(DrawConstant.HORIZONTAL)) {
+				return PositionConstants.HORIZONTAL;
+			} else if (getCurrentSide().equals(DrawConstant.LEFT)) {
+				return PositionConstants.LEFT;
+			} else if (getCurrentSide().equals(DrawConstant.NORTH)) {
+				return PositionConstants.NORTH;
+			} else if (getCurrentSide().equals(DrawConstant.NORTH_EAST)) {
+				return PositionConstants.NORTH_EAST;
+			} else if (getCurrentSide().equals(DrawConstant.NORTH_WEST)) {
+				return PositionConstants.NORTH_WEST;
+			} else if (getCurrentSide().equals(DrawConstant.RIGHT)) {
+				return PositionConstants.RIGHT;
+			} else if (getCurrentSide().equals(DrawConstant.SOUTH)) {
+				return PositionConstants.SOUTH;
+			} else if (getCurrentSide().equals(DrawConstant.SOUTH_EAST)) {
+				return PositionConstants.SOUTH_EAST;
+			} else if (getCurrentSide().equals(DrawConstant.SOUTH_WEST)) {
+				return PositionConstants.SOUTH_WEST;
+			} else if (getCurrentSide().equals(DrawConstant.TOP)) {
+				return PositionConstants.TOP;
+			} else if (getCurrentSide().equals(DrawConstant.VERTICAL)) {
+				return PositionConstants.VERTICAL;
+			} else if (getCurrentSide().equals(DrawConstant.WEST)) {
+				return PositionConstants.WEST;
+			}
+			return PositionConstants.WEST;
+		}
+
 	} // BorderItemLocator
 
 	/**
@@ -617,7 +657,7 @@ public class BorderItemFigure
 	public DrawConstant getCurrentSide() {
 		return currentSide;
 	}
-
+	
 	/**
 	 * @param currentSide
 	 *            The currentSide to set.

@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
-import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -58,7 +57,7 @@ public class TerminalFigure extends NodeFigure{
 		 * @param gate
 		 * @param parentFigure
 		 */
-		public TerminalLocator(IFigure parentFigure, Dimension initDim, DrawConstant side) {
+		public TerminalLocator(IFigure parentFigure, Dimension initDim, int side) {
 			super(parentFigure, side);
 			this.initDim = initDim;
 		}

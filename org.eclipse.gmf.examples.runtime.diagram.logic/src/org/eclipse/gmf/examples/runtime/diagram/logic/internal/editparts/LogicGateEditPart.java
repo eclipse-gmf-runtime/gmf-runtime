@@ -14,6 +14,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -34,7 +35,6 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
-import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -134,7 +134,7 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		
 		NodeFigure theFigure = null;
 
-		DrawConstant side = DrawConstant.NORTH;
+		int side = PositionConstants.NORTH;
 		if (terminal instanceof InputTerminal) {
 			if (terminal.eContainer() instanceof AndGate) {
 				theFigure = new AndGateTerminalFigure(terminal.getId(),
@@ -148,7 +148,7 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 		} else {
 			theFigure = new OutputTerminalFigure(terminal.getId(),
 				new Dimension(getMapMode().DPtoLP(4), getMapMode().DPtoLP(5)));
-			side = DrawConstant.SOUTH;
+			side = PositionConstants.SOUTH;
 		}
 
 		terminalEP.setLocator(new BorderItemLocator(getFigure(),

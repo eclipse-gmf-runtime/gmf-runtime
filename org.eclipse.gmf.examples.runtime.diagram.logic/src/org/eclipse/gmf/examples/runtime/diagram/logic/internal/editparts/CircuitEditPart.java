@@ -14,6 +14,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPolicy;
@@ -25,7 +26,6 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTermin
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -95,14 +95,14 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 		}
 
 		NodeFigure theFigure = null;
-		DrawConstant side = DrawConstant.NORTH;
+		int side = PositionConstants.NORTH;
 		if (terminal instanceof InputTerminal) {
 			theFigure = new TopTerminalFigure(terminal.getId(), 
 				new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
 		} else {
 			theFigure = new BottomTerminalFigure(terminal.getId(),
 				new Dimension(getMapMode().DPtoLP(6), getMapMode().DPtoLP(7)));
-			side = DrawConstant.SOUTH;
+			side = PositionConstants.SOUTH;
 		}
 		
 		terminalEP.setLocator(new TerminalFigure.TerminalLocator(

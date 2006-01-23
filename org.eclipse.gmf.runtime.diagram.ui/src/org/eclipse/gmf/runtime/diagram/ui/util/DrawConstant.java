@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.util;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.jface.util.Assert;
 
 /**
@@ -19,7 +20,10 @@ import org.eclipse.jface.util.Assert;
  * Ordinal based typesafe enum for drawing constants
  * 
  * Created On: Jun 9, 2003
+ * 
  * @author tisrar
+ * @deprecated 06/01/23 Use {@link PositionConstants}. See
+ *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=121457
  */
 public final class DrawConstant implements Comparable {
 
