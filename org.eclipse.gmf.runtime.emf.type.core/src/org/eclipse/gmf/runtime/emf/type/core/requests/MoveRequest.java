@@ -133,27 +133,6 @@ public class MoveRequest extends AbstractEditCommandRequest {
 	}
 
 	/**
-	 * Gets the element to be moved.
-	 * 
-	 * @return the element to be moved *
-	 * @deprecated The move request is now used to move more than one element at
-	 *             a time. Use {@link #getElementsToMove()} instead. Deprecated
-	 *             on 12/22/2005 as per bugzilla
-	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
-	 */
-	public EObject getElementToMove() {
-		// Assume that anyone using the deprecated API is using this request to
-		// move a single element. Get the first (and presumed only) element in
-		// the map.
-		Iterator i = getElementsToMove().keySet().iterator();
-
-		if (i.hasNext()) {
-			return (EObject) i.next();
-		}
-		return null;
-	}
-
-	/**
 	 * Gets the map of elements to be moved. Each entry in the map consists of
 	 * an <code>EObject</code> key, which is the element to be moved to the
 	 * new target, and an <code>EReference</code> value, which is the feature
@@ -185,28 +164,6 @@ public class MoveRequest extends AbstractEditCommandRequest {
 	}
 
 	/**
-	 * Sets the reference feature into which the element should be moved.
-	 * 
-	 * @param targetFeature
-	 *            the target feature
-	 * @deprecated The move request is now used to move more than one element at
-	 *             a time. Use {@link #setTargetFeature(EObject, EReference)}
-	 *             instead. Deprecated on 12/22/2005 as per bugzilla
-	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
-	 */
-	public void setTargetFeature(EReference targetFeature) {
-		// Assume that anyone using the deprecated API is using this request to
-		// move a single element. Set the first (and presumed only) feature in
-		// the map.
-		Iterator i = getElementsToMove().keySet().iterator();
-
-		if (i.hasNext()) {
-			Object key = i.next();
-			getElementsToMove().put(key, targetFeature);
-		}
-	}
-
-	/**
 	 * Sets the reference feature into which an element should be moved.
 	 * 
 	 * @param element
@@ -216,27 +173,6 @@ public class MoveRequest extends AbstractEditCommandRequest {
 	 */
 	public void setTargetFeature(EObject element, EReference targetFeature) {
 		getElementsToMove().put(element, targetFeature);
-	}
-
-	/**
-	 * Gets the reference feature into which the element should be moved.
-	 * 
-	 * @return the target feature
-	 * @deprecated The move request is now used to move more than one element at
-	 *             a time. Use {@link #getTargetFeature(EObject)} instead.
-	 *             Deprecated on 12/22/2005 as per bugzilla
-	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=112662.
-	 */
-	public EReference getTargetFeature() {
-		// Assume that anyone using the deprecated API is using this request to
-		// move a single element. Return the first (and presumed only) feature
-		// in the map.
-		Iterator i = getElementsToMove().values().iterator();
-
-		if (i.hasNext()) {
-			return (EReference) i.next();
-		}
-		return null;
 	}
 
 	/**

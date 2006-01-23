@@ -11,12 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal.util;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateComponentElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateRelationshipElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.DestroyElementRequest;
@@ -496,8 +496,17 @@ public class SemanticRequestTranslator {
 
 	public static MoveElementRequest translate(MoveRequest editCommandRequest) {
 		EObject targetContainer = editCommandRequest.getTargetContainer();
-		EObject elementToMove = editCommandRequest.getElementToMove();
+		EObject elementToMove = null;
+		Map elementsToMove = editCommandRequest.getElementsToMove();
+		
+		if (elementsToMove != null) {
+			Iterator i = elementsToMove.keySet().iterator();
 
+			if (i.hasNext()) {
+				elementToMove = (EObject) i.next();
+			}
+		}
+		
 		return new MoveElementRequest(elementToMove, targetContainer);
 	}
 
