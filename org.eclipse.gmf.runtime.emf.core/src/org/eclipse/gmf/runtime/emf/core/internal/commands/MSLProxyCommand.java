@@ -23,10 +23,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 
 /**
@@ -81,106 +79,100 @@ public class MSLProxyCommand
 	 * @see org.eclipse.emf.common.command.Command#undo()
 	 */
 	public void undo() {
+		if (eObject.eIsProxy()) {
 
-		if (MSLConstants.PROXY_HACK) {
+			// attempt a resolve.
+			final EObject resolved = EcoreUtil.resolve(eObject, domain
+				.getResourceSet());
 
-			if (eObject.eIsProxy()) {
+			if ((resolved != null) && (!resolved.eIsProxy())
+				&& (resolved != eObject)) {
 
-				// attempt a resolve.
-				final EObject resolved = EcoreUtil.resolve(eObject, domain
-					.getResourceSet());
+				final EClass eClass = resolved.eClass();
 
-				if ((resolved != null) && (!resolved.eIsProxy())
-					&& (resolved != eObject)) {
+				assert eClass == eObject.eClass();
 
-					final EClass eClass = resolved.eClass();
+				if (eClass == eObject.eClass()) {
 
-					assert eClass == eObject.eClass();
+					// copy the guts of the resolved object to the proxy
+					// object.
+					domain.runSilent(new MRunnable() {
 
-					if (eClass == eObject.eClass()) {
+						public Object run() {
 
-						// copy the guts of the resolved object to the proxy
-						// object.
-						domain.runSilent(new MRunnable() {
+							for (Iterator i = eClass
+								.getEAllStructuralFeatures().iterator(); i
+								.hasNext();) {
 
-							public Object run() {
+								EStructuralFeature feature = (EStructuralFeature) i
+									.next();
 
-								for (Iterator i = eClass
-									.getEAllStructuralFeatures().iterator(); i
-									.hasNext();) {
+								if ((!feature.isChangeable())
+									|| (feature.isDerived()))
+									continue;
 
-									EStructuralFeature feature = (EStructuralFeature) i
-										.next();
+								if ((feature instanceof EReference)
+									&& (((EReference) feature)
+										.isContainer()))
+									continue;
 
-									if ((!feature.isChangeable())
-										|| (feature.isDerived()))
-										continue;
+								if (feature.isMany()) {
 
-									if ((feature instanceof EReference)
-										&& (((EReference) feature)
-											.isContainer()))
-										continue;
+									if (resolved.eIsSet(feature)) {
 
-									if (feature.isMany()) {
+										Collection list = (Collection) resolved
+											.eGet(feature);
 
-										if (resolved.eIsSet(feature)) {
+										Collection newList = (Collection) eObject
+											.eGet(feature);
 
-											Collection list = (Collection) resolved
-												.eGet(feature);
+										newList.clear();
+										newList.addAll(list);
 
-											Collection newList = (Collection) eObject
-												.eGet(feature);
+									} else if (eObject.eIsSet(feature)) {
 
-											newList.clear();
-											newList.addAll(list);
-
-										} else if (eObject.eIsSet(feature)) {
-
-											eObject.eUnset(feature);
-										}
-
-									} else if (resolved.eIsSet(feature)) {
-
-										Object object = resolved.eGet(feature);
-
-										eObject.eSet(feature, object);
-
-									} else
 										eObject.eUnset(feature);
-								}
+									}
 
-								// make the proxy object non proxy.
-								((InternalEObject) eObject).eSetProxyURI(null);
+								} else if (resolved.eIsSet(feature)) {
 
-								// remove the resolved object from its
-								// container.
-								EObject container = resolved.eContainer();
+									Object object = resolved.eGet(feature);
 
-								if (container != null) {
+									eObject.eSet(feature, object);
 
-									EReference reference = resolved
-										.eContainmentFeature();
-
-									if (reference.isMany())
-										((Collection) container.eGet(reference))
-											.remove(resolved);
-									else
-										container.eSet(reference, null);
-								}
-
-								// make the resolved object a proxy.
-								((InternalEObject) resolved)
-									.eSetProxyURI(proxyURI);
-
-								return null;
+								} else
+									eObject.eUnset(feature);
 							}
-						});
-					}
+
+							// make the proxy object non proxy.
+							((InternalEObject) eObject).eSetProxyURI(null);
+
+							// remove the resolved object from its
+							// container.
+							EObject container = resolved.eContainer();
+
+							if (container != null) {
+
+								EReference reference = resolved
+									.eContainmentFeature();
+
+								if (reference.isMany())
+									((Collection) container.eGet(reference))
+										.remove(resolved);
+								else
+									container.eSet(reference, null);
+							}
+
+							// make the resolved object a proxy.
+							((InternalEObject) resolved)
+								.eSetProxyURI(proxyURI);
+
+							return null;
+						}
+					});
 				}
 			}
-
-		} else
-			eObject = EcoreUtil.resolve(eObject, domain.getResourceSet());
+		}
 	}
 
 	/**

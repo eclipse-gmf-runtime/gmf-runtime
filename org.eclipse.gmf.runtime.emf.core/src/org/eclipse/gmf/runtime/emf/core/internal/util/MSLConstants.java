@@ -66,11 +66,6 @@ public class MSLConstants {
 
 	public final static Integer OUTPUT_BUFFER_SIZE = new Integer(256 * 1024);
 
-	// The viz proxy hack tries to fix undo/redo viz scenarios.
-	// If issues are uncovered, a better less hacky solution should be
-	// developed. Setting the flag to false, will disable the hack.
-	public static final boolean PROXY_HACK = true;
-
 	// annotations
 	public static final String SHORTCUT_ANNOTATION = "eObjectShortcut"; //$NON-NLS-1$
 }

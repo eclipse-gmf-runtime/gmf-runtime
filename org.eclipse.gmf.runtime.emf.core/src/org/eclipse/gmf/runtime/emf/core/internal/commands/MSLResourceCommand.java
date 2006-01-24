@@ -16,13 +16,10 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 
 /**
@@ -88,20 +85,7 @@ public abstract class MSLResourceCommand
 	 * resolve some EObject.
 	 */
 	protected EObject resolve(EObject eObject) {
-
-		if (MSLConstants.PROXY_HACK)
-			return eObject;
-
-		else {
-
-			if (eObject == null)
-				return null;
-
-			if (!eObject.eIsProxy())
-				return eObject;
-
-			return EcoreUtil.resolve(eObject, domain.getResourceSet());
-		}
+		return eObject;
 	}
 	
 	public final int getFeatureID() {
