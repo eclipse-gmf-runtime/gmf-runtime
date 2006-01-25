@@ -296,7 +296,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
             
             denominator = v1x * v1x + v1y * v1y;
     
-            result = (int)(numerator * numerator / denominator);
+            result = numerator * numerator / denominator;
         }
         
         // if it is the same point, and it passes the bounding box test,
