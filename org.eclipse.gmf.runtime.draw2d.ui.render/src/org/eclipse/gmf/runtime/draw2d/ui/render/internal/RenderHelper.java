@@ -14,13 +14,11 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
@@ -167,17 +165,7 @@ public class RenderHelper {
 					return srcImage;
 				} 
 				else {
-					g.pushState();
-					g.setBackgroundColor(ColorConstants.white);
-					g.fillRectangle(targetRect.x, targetRect.y, targetRect.width - 1, targetRect.height - 1);
-					g.setForegroundColor(ColorConstants.red);
-					g.drawRectangle(targetRect.x, targetRect.y, targetRect.width - 1, targetRect.height - 1);
-					g.setLineStyle(SWT.LINE_DOT);
-					g.drawLine(targetRect.x, targetRect.y, targetRect.x + targetRect.width, targetRect.y
-						+ targetRect.height);
-					g.drawLine(targetRect.x + targetRect.width, targetRect.y, targetRect.x, targetRect.y
-						+ targetRect.height);
-					g.popState();
+					listener.paintFigureWhileRendering(g);
 				}
 			}
 

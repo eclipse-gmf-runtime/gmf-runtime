@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.figures;
 
 import java.io.ByteArrayOutputStream;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -46,24 +47,20 @@ import org.eclipse.swt.graphics.RGB;
 public class ScalableImageFigure
 	extends ImageFigure {
 
-	private RenderingListenerImpl renderingListener = new RenderingListenerImpl(
-		this);
+	private RenderingListenerImpl renderingListener = new RenderingListenerImpl();
 
-	static private class RenderingListenerImpl
+	private class RenderingListenerImpl
 		implements RenderingListener {
 
-		private ScalableImageFigure fig;
-
-		public RenderingListenerImpl(ScalableImageFigure fig) {
+		public RenderingListenerImpl() {
 			super();
-			this.fig = fig;
 		}
 
-		/**
-		 * @return <code>IFigure</code> that the listener wraps
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener#paintFigureWhileRendering(org.eclipse.draw2d.Graphics)
 		 */
-		public ScalableImageFigure getFigure() {
-			return fig;
+		public void paintFigureWhileRendering(Graphics g) {
+			ScalableImageFigure.this.paintFigureWhileRendering(g);
 		}
 
 		/*
@@ -72,12 +69,19 @@ public class ScalableImageFigure
 		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener#imageRendered(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage)
 		 */
 		public void imageRendered(RenderedImage rndImg) {
-			if (getFigure().getParent() != null) {
-				getFigure().setRenderedImage(rndImg);
-				getFigure().repaint();
+			if (ScalableImageFigure.this.getParent() != null) {
+				ScalableImageFigure.this.setRenderedImage(rndImg);
+				ScalableImageFigure.this.repaint();
 			}
 		}
 
+		/**
+		 * @return <code>IFigure</code> that the listener wraps
+		 */
+		public ScalableImageFigure getFigure() {
+			return ScalableImageFigure.this;
+		}
+		
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -98,7 +102,7 @@ public class ScalableImageFigure
 		 * @see java.lang.Object#hashCode()
 		 */
 		public int hashCode() {
-			return getFigure().hashCode();
+			return ScalableImageFigure.this.hashCode();
 		}
 
 	}
@@ -325,6 +329,28 @@ private RenderedImage getRenderedImage(Dimension dim) {
 		return getFlag(FLAG_USE_ORIGINAL_COLORS);
 	}
 
+	/**
+	 * If the rendering is occuring on a separate thread, this method is a hook to draw a temporary
+	 * image onto the drawing surface.
+	 * 
+	 * @param g the <code>Graphics</code> object to paint the temporary image to
+	 */
+	protected void paintFigureWhileRendering(Graphics g) {
+		Rectangle area = getClientArea().getCopy();
+		
+		g.pushState();
+		g.setBackgroundColor(ColorConstants.white);
+		g.fillRectangle(area.x, area.y, area.width - 1, area.height - 1);
+		g.setForegroundColor(ColorConstants.red);
+		g.drawRectangle(area.x, area.y, area.width - 1, area.height - 1);
+		g.setLineStyle(SWT.LINE_DOT);
+		g.drawLine(area.x, area.y, area.x + area.width, area.y
+			+ area.height);
+		g.drawLine(area.x + area.width, area.y, area.x, area.y
+			+ area.height);
+		g.popState();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

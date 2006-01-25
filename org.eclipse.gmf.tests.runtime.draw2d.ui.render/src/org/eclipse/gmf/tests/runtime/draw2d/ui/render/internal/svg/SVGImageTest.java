@@ -22,6 +22,7 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
@@ -259,6 +260,13 @@ public class SVGImageTest
 
 		boolean isDone() {
 			return done;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener#paintFigureWhileRendering(org.eclipse.draw2d.Graphics)
+		 */
+		public void paintFigureWhileRendering(Graphics g) {
+			// do nothing
 		}
 
 		/*

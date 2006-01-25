@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 
 /**
@@ -19,6 +20,14 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
  */
 public interface RenderingListener {
 
+	/**
+	 * While the rendering is occuring on a separate thread, this method is a hook to draw a temporary
+	 * image onto the drawing surface.
+	 * 
+	 * @param g the <code>Graphics</code> object to paint the temporary image to
+	 */
+	public void paintFigureWhileRendering(Graphics g);
+	
 	/**
 	 * Called when the given <code>RenderedImage</code> has completed rendering
 	 * to the swt image.
