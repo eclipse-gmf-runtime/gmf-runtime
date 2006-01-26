@@ -13,8 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.parts;
 
 import java.util.List;
 
+import org.eclipse.draw2d.DeferredUpdateManager;
+import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ElementToEditPartsMap;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
@@ -23,8 +26,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ElementToEditPartsMap;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -43,8 +45,114 @@ public class DiagramGraphicalViewer
 		super();
 	}
 	
+	/**
+	 * @param enable <code>boolean</code> <code>true</code> if client wishes to disable
+	 * updates on the figure canvas, <code>false</code> indicates normal updates are
+	 * to take place.
+	 */
+	public void enableUpdates(boolean enable) {
+		if (enable)
+			getLightweightSystemWithUpdateToggle().enableUpdates();
+		else
+			getLightweightSystemWithUpdateToggle().disableUpdates();	
+	}
+	
+	private class ToggleUpdateManager extends DeferredUpdateManager {
 
-    /**
+		private boolean disableUpdates = false;
+		
+		/**
+		 * @return the disableUpdates
+		 */
+		public boolean shouldDisableUpdates() {
+			return disableUpdates;
+		}
+
+		/**
+		 * @param disableUpdates the disableUpdates to set
+		 */
+		public void setDisableUpdates(boolean disableUpdates) {
+			this.disableUpdates = disableUpdates;
+			if (!disableUpdates) {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see java.lang.Runnable#run()
+					 */
+					public void run() {
+						queueWork();
+					}
+				});
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.draw2d.DeferredUpdateManager#performUpdate()
+		 */
+		public synchronized void performUpdate() {
+			if (!shouldDisableUpdates())
+				super.performUpdate();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.draw2d.DeferredUpdateManager#performValidation()
+		 */
+		public void performValidation() {
+			if (!shouldDisableUpdates())
+				super.performValidation();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.draw2d.DeferredUpdateManager#queueWork()
+		 */
+		public void queueWork() {
+			if (!shouldDisableUpdates())
+				super.queueWork();
+		}
+	}
+
+	private class LightweightSystemWithUpdateToggle extends LightweightSystem {
+		
+		/* 
+		 * (non-Javadoc)
+		 * @see org.eclipse.draw2d.LightweightSystem#getUpdateManager()
+		 */
+		public ToggleUpdateManager getToggleUpdateManager() {
+			return (ToggleUpdateManager)getUpdateManager();
+		}
+		
+		/**
+		 * disable updates on the figure canvas
+		 */
+		public void disableUpdates() {
+			getToggleUpdateManager().setDisableUpdates(true);
+		}
+		
+		/**
+		 * allow updates on the figure canvas to occcur
+		 */
+		public void enableUpdates() {
+			getToggleUpdateManager().setDisableUpdates(false);
+		}
+	}
+	
+	private LightweightSystemWithUpdateToggle getLightweightSystemWithUpdateToggle() {
+		return (LightweightSystemWithUpdateToggle)getLightweightSystem();
+	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gef.ui.parts.GraphicalViewerImpl#createLightweightSystem()
+	 */
+	protected LightweightSystem createLightweightSystem() {
+		LightweightSystem lws = new LightweightSystemWithUpdateToggle();
+		lws.setUpdateManager(new ToggleUpdateManager());
+		return lws;
+	}
+
+
+	/**
      * A selection event pending flag (for asynchronous firing)
      */
     private boolean selectionEventPending = false;

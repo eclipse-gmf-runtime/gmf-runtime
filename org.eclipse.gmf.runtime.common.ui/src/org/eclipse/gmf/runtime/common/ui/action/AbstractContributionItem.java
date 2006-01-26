@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent;
@@ -595,7 +596,16 @@ public abstract class AbstractContributionItem
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener#commandManagerChanged(org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent)
 	 */
 	public final void commandManagerChanged(CommandManagerChangeEvent event) {
-		update();
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.lang.Runnable#run()
+			 */
+			public void run() {
+				update();
+			}
+		});
 	}
 
 	/**

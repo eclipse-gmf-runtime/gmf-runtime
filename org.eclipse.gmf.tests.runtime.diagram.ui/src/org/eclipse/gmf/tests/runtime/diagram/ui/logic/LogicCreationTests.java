@@ -11,18 +11,37 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicGateEditPart;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Tests the canonical editpolicies installed on the class attribute and 
@@ -83,6 +102,66 @@ public class LogicCreationTests extends AbstractTestBase {
 		createPt.getTranslated(xorGateEP.getFigure().getSize().getExpanded(100, 100));
 		
 		getLogicTestFixture().createShapeUsingTool(typeFlowContainer, createPt, getDiagramEditPart());
+	}
+	
+	public void test_bugzilla124678() {
+		final Command cc = getLongProgressCommand();
+		
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+
+			public void run(final IProgressMonitor monitor)
+				throws InvocationTargetException, InterruptedException {
+				
+				((DiagramCommandStack)getCommandStack()).execute(cc, monitor);
+			}
+
+		};
+		ProgressMonitorDialog dialog = new ProgressMonitorDialog(PlatformUI
+			.getWorkbench().getActiveWorkbenchWindow().getShell());
+		try {
+			dialog.run(true, true, runnable);
+		} catch (InvocationTargetException e) {
+			assertTrue(false);
+		} catch (InterruptedException e) {
+			assertTrue(false);
+		}
+	}
+	
+	private Command getLongProgressCommand() {
+		CompoundCommand cc = new CompoundCommand("Add Multiple Octagons"); //$NON-NLS-1$
+		ArrayList newViews = new ArrayList();
+
+		EditPart containerEditPart = getDiagramEditPart();
+		
+		for (int x = 0; x < 500; x = x + 55) {
+			for (int y = 0; y < 500; y = y + 55) {
+				CreateViewRequest createOctagon = CreateViewRequestFactory
+					.getCreateShapeRequest(GeoshapeType.OCTAGON,
+						PreferencesHint.USE_DEFAULTS);
+
+				createOctagon.setLocation(new Point(x, y));
+				Command createCmd = containerEditPart.getCommand(createOctagon);
+				cc.add(createCmd);
+
+				Object obj = createOctagon.getNewObject();
+				if (obj instanceof Collection) {
+					Iterator iter = ((Collection)obj).iterator();
+					while (iter.hasNext()) {
+						newViews.add(iter.next());
+					}
+				}
+				else
+					newViews.add(createOctagon.getNewObject());
+			}
+		}
+
+		ArrangeRequest arrangeRequest = new ArrangeRequest(
+		RequestConstants.REQ_ARRANGE_DEFERRED);
+		arrangeRequest.setViewAdaptersToArrange(newViews);
+		Command arrangeCommand = containerEditPart.getCommand(arrangeRequest);
+		cc.add(arrangeCommand);
+
+		return cc;
 	}
 }
 

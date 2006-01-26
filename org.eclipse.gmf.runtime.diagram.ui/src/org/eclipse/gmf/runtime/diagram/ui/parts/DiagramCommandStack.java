@@ -24,7 +24,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.commands.CompoundCommand;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -34,6 +33,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author sshaw
@@ -140,10 +140,36 @@ public class DiagramCommandStack
 	 * @param progressMonitor
 	 */
 	protected void execute(ICommand command, IProgressMonitor progressMonitor) {
-		if (progressMonitor != null)
-			getCommandManager().execute(command, progressMonitor);
+		if (progressMonitor != null) {
+			DiagramGraphicalViewer viewer = getDiagramGraphicalViewer();
+			
+			if (viewer != null && Display.getCurrent() == null)
+				viewer.enableUpdates(false);
+			
+			try {
+				getCommandManager().execute(command, progressMonitor);
+			} finally {
+				if (viewer != null)
+					viewer.enableUpdates(true);
+			}
+		}
 		else
 			getCommandManager().execute(command);
+	}
+
+	private DiagramGraphicalViewer getDiagramGraphicalViewer() {
+		IDiagramEditDomain ded = getDiagramEditDomain();
+		DiagramGraphicalViewer viewer = null;
+		
+		if (ded instanceof DiagramEditDomain) {
+			IDiagramWorkbenchPart dgrmWP = ((DiagramEditDomain)ded).getDiagramEditorPart();
+			if (dgrmWP != null) {
+				IDiagramGraphicalViewer dgv = ((DiagramEditDomain)ded).getDiagramEditorPart().getDiagramGraphicalViewer();
+				if (dgv instanceof DiagramGraphicalViewer)
+					viewer = (DiagramGraphicalViewer)dgv;
+			}
+		}
+		return viewer;
 	}
 
 	/**
