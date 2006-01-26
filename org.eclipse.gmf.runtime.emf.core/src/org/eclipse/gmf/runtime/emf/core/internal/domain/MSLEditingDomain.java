@@ -2051,4 +2051,9 @@ public class MSLEditingDomain
 			startRead();
 		}
 	}
+
+	public boolean isControllable(Object object) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
