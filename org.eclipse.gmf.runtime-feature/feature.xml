@@ -30,6 +30,7 @@ http://www.eclipse.org/legal/epl-v10.html
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="com.ibm.icu"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.eclipse.jface.text"/>
@@ -49,12 +50,19 @@ http://www.eclipse.org/legal/epl-v10.html
       <import plugin="org.eclipse.emf.ecore.change"/>
       <import plugin="org.eclipse.emf.ecore.change.edit"/>
       <import plugin="org.eclipse.core.expressions"/>
+      <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.core.runtime.compatibility"/>
-      <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.swt"/>
+      <import feature="org.eclipse.gef" version="3.1.0"/>
+      <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import feature="org.eclipse.gef" version="3.1.0"/>
       <import feature="org.eclipse.emf" version="2.1.0"/>
+      <import feature="org.eclipse.emf.ocl" version="1.0.0"/>
+      <import feature="org.eclipse.emf.query" version="1.0.0"/>
+      <import feature="org.eclipse.emf.validation" version="1.0.0"/>
+      <import feature="org.eclipse.emf.transaction" version="1.0.0"/>
    </requires>
 
    <plugin
@@ -275,13 +283,6 @@ http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.validation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.gmf.runtime.notation"
          download-size="0"
          install-size="0"
@@ -317,54 +318,6 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.eclipse.wst.common.ui.properties"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="antlr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.emf.ocl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.query"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.query.ocl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.validation.ocl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.validation.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.validation.ui.ide"
          download-size="0"
          install-size="0"
          version="0.0.0"
