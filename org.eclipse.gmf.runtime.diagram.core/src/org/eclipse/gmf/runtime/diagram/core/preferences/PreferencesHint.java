@@ -34,15 +34,6 @@ public class PreferencesHint {
 		"UseDefaults"); //$NON-NLS-1$
 
 	/**
-	 * The hint that indicates that the preferences under the "Modeling"
-	 * category should be used for the diagramming preferences. 
-	 * @deprecated If you were using this and need assistance ask Cherie (cmahoney@ca.ibm.com).
-     * To be deleted after Dec 21, 2005.
-	 */
-	public static final PreferencesHint MODELING = new PreferencesHint(
-		"MODELING"); //$NON-NLS-1$
-
-	/**
 	 * A map of preference hints to preference stores
 	 * {@link org.eclipse.jface.preference.IPreferenceStore}.
 	 */
