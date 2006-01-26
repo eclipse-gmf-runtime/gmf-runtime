@@ -24,8 +24,8 @@
    </extension>
   
    <extension point="org.eclipse.ui.newWizards">
-  	  <category name="%Geoshape_example_wizard_category_name" parentCategory="org.eclipse.ui.Examples" id="org.eclipse.gmf.examples.runtime.diagram.geoshapes"/> 
-  	  <wizard name="Geoshape Diagram" icon="icons/geoshape.gif" category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime.diagram.geoshapes" class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards.DiagramCreationWizard" id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.wizard.new.file">
+  	  <category name="%GMF_example_wizard_category_name" parentCategory="org.eclipse.ui.Examples" id="org.eclipse.gmf.examples"/> 
+  	  <wizard name="Geoshape Diagram" icon="icons/geoshape.gif" category="org.eclipse.ui.Examples/org.eclipse.gmf.examples" class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards.DiagramCreationWizard" id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.wizard.new.file">
   	  	 <description>
   	  		%Geoshape_example_wizard_description
   	  	 </description>  
