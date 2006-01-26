@@ -23,5 +23,6 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.ui.properties;visibility:=reexport,
  org.eclipse.gmf.runtime.diagram.ui;visibility:=reexport,
  org.eclipse.gef,
- org.eclipse.gmf.runtime.common.ui.services.properties;visibility:=reexport
+ org.eclipse.gmf.runtime.common.ui.services.properties;visibility:=reexport,
+ com.ibm.icu
 Eclipse-LazyStart: true

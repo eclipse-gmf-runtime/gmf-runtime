@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,6 +29,8 @@ import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.osgi.framework.Bundle;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Concrete subclasses can be used to assist in parsing service provider

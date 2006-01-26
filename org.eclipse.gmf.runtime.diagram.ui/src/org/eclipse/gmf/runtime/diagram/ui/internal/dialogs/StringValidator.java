@@ -10,8 +10,9 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+
+import com.ibm.icu.text.NumberFormat;
 
 /**
  * StringValidator verifies the integrity of the user input.  It is used by

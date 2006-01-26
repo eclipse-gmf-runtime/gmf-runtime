@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.emf.ui.properties.actions;
 
-import java.text.Collator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,6 +44,8 @@ import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesPlugin;
 import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
+
+import com.ibm.icu.text.Collator;
 
 /**
  * Action responsible for showing the properties page dialog when the it is

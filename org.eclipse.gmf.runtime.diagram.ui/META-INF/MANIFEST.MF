@@ -74,5 +74,6 @@ Require-Bundle: org.eclipse.ui.views,
  org.eclipse.gmf.runtime.notation;visibility:=reexport,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
- org.eclipse.gmf.runtime.diagram.core;visibility:=reexport
+ org.eclipse.gmf.runtime.diagram.core;visibility:=reexport,
+ com.ibm.icu
 Eclipse-LazyStart: true

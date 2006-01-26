@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.internal.util;
 
-import java.text.DateFormat;
+
 import java.util.GregorianCalendar;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -19,6 +19,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.jface.preference.IPreferenceStore;
+
+import com.ibm.icu.text.DateFormat;
 
 /**
  * Helper for header and footers. 

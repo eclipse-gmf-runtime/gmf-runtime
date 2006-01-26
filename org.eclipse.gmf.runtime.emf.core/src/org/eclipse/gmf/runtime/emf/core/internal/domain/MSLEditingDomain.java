@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
+
 import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -89,6 +89,8 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLComposedAdapterFactory;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * This is the implementation of the MSL editing domain interface. The

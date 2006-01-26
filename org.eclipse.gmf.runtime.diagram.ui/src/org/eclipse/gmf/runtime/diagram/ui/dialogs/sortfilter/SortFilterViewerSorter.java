@@ -11,12 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter;
 
-import java.text.Collator;
+
 import java.util.Locale;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import org.eclipse.gmf.runtime.notation.SortingDirection;
+
+import com.ibm.icu.text.Collator;
 
 /**
  * Provides a <code>ViewerSorter</code> which tracks the type 

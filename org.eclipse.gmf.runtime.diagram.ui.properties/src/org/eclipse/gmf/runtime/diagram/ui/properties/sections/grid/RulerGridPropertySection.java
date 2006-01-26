@@ -1,6 +1,5 @@
 package org.eclipse.gmf.runtime.diagram.ui.properties.sections.grid;
 
-import java.text.NumberFormat;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
@@ -41,6 +40,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.common.ui.properties.internal.provisional.AbstractPropertySection;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
+
+import com.ibm.icu.text.NumberFormat;
 
 
 public class RulerGridPropertySection

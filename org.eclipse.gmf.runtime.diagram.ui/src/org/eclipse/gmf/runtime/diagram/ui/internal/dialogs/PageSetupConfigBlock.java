@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs;
 
-import java.text.NumberFormat;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -39,6 +39,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupWidgetFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
+
+import com.ibm.icu.text.NumberFormat;
 
 /**
  * PSConfigurationBlock implements part of PSDialog allowing the user to configure

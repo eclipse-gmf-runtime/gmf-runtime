@@ -38,5 +38,6 @@ Require-Bundle: org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.core.expressions,
  org.eclipse.gmf.runtime.emf.type.core;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.clipboard.core;visibility:=reexport,
- org.eclipse.emf.validation;visibility:=reexport
+ org.eclipse.emf.validation;visibility:=reexport,
+ com.ibm.icu
 Eclipse-LazyStart: true

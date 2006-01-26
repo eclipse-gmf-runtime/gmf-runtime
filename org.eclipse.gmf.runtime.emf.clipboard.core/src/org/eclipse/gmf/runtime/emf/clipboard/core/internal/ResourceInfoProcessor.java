@@ -20,10 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 /**

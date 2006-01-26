@@ -24,5 +24,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gmf.runtime.emf.core,
  org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.diagram.ui.properties,
- org.eclipse.gmf.runtime.notation.edit
+ org.eclipse.gmf.runtime.notation.edit,
+ com.ibm.icu
 Eclipse-LazyStart: true

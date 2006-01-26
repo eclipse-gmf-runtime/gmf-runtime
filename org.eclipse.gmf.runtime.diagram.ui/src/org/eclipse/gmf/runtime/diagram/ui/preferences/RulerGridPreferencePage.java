@@ -12,7 +12,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 
 import org.eclipse.gef.rulers.RulerProvider;
@@ -33,6 +32,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
+import com.ibm.icu.text.NumberFormat;
 
 
 /**

@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
@@ -27,6 +25,9 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+
+import com.ibm.icu.text.BreakIterator;
+import com.ibm.icu.util.StringTokenizer;
 
 
 /**
