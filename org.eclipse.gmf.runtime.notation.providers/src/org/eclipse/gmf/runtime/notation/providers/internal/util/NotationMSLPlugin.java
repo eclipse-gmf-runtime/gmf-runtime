@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,8 @@
 
 package org.eclipse.gmf.runtime.notation.providers.internal.util;
 
-import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
+import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The plug-in for EMF implementation of UML.
@@ -19,7 +20,7 @@ import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
  * @author mgoyal
  */
 public class NotationMSLPlugin
-	extends XToolsPlugin {
+	extends Plugin {
 
 	/**
 	 * Extension point names.
@@ -65,7 +66,9 @@ public class NotationMSLPlugin
 	/**
 	 * Starts up this plug-in.
 	 */
-	protected void doStartup() {
+	public void start(BundleContext context)
+		throws Exception {
+		super.start(context);
 		NotationAdapterFactoryManager.init();
 	}
 }

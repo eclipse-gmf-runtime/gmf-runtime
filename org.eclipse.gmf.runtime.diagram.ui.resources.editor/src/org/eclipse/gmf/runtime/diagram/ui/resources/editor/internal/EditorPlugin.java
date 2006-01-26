@@ -29,8 +29,6 @@ public class EditorPlugin
 
 	/**
 	 * The constructor.
-	 * 
-	 * @see XToolsUIPlugin#XToolsUIPlugin()
 	 */
 	public EditorPlugin() {
 		super();

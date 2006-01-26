@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,17 @@
 
 package org.eclipse.gmf.runtime.emf.commands.core.internal;
 
-import org.eclipse.gmf.runtime.common.core.plugin.XToolsPlugin;
+import org.eclipse.core.runtime.Plugin;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class MSLCommandsPlugin extends XToolsPlugin {
-	//The shared instance.
+public class MSLCommandsPlugin
+	extends Plugin {
+
+	// The shared instance.
 	private static MSLCommandsPlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */

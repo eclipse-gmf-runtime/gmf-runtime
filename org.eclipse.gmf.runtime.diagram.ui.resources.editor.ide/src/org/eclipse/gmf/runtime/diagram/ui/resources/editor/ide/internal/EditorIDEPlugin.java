@@ -34,8 +34,6 @@ public class EditorIDEPlugin extends AbstractUIPlugin {
 
 	/**
 	 * The constructor.
-	 *
-	 * @see XToolsUIPlugin#XToolsUIPlugin()
 	 */
 	public EditorIDEPlugin() {
 		super();

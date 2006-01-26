@@ -40,8 +40,6 @@ public class LogicDiagramPlugin
 
 	/**
 	 * The constructor.
-	 * 
-	 * @see XToolsUIPlugin#XToolsUIPlugin()
 	 */
 	public LogicDiagramPlugin() {
 		super();
