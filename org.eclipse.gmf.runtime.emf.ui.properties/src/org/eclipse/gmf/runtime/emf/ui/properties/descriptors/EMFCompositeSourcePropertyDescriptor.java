@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.ui.celleditor.ExtendedComboBoxCellEditor;
-import org.eclipse.emf.common.ui.celleditor.ExtendedDialogCellEditor;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EReference;
@@ -27,7 +26,6 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.ui.celleditor.FeatureEditorDialog;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.emf.edit.ui.provider.PropertyDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -36,7 +34,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
@@ -202,24 +199,8 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
                             break;
                         }
                     }
-                    if (valid) {
-                        result = new ExtendedDialogCellEditor(composite, getEditLabelProvider()) 
-                        {
-                          protected Object openDialogBox(Control cellEditorWindow)
-                          {
-                            FeatureEditorDialog dialog = new FeatureEditorDialog(
-                              cellEditorWindow.getShell(),
-                              getEditLabelProvider(),
-                              object,
-                              feature.getEType(),
-                              (List)((IItemPropertySource)itemPropertyDescriptor.getPropertyValue(object)).getEditableValue(object),
-                              getDisplayName(),
-                              new ArrayList(choiceOfValues));
-                            dialog.open();
-                            return dialog.getResult();
-                          }
-                        };
-                    }
+                    if (valid)
+                        result = createComboBoxCellEditor(composite);
                 }
                 if (result == null)
                     result = createComboBoxCellEditor(composite);
