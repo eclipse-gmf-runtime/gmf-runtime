@@ -19,13 +19,20 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * Tests for the Contribution Item Service.
@@ -37,50 +44,46 @@ public class ContributionItemServiceTests
 
 	private static final String MY_ACTIVITY_ID = "MyActivityID"; //$NON-NLS-1$
 
-//	class MyActionBars
-//		implements IActionBars {
-//
-//		/* (non-Javadoc)
-//		 * @see org.eclipse.ui.IActionBars#getServiceLocator()
-//		 */
-//		public IServiceLocator getServiceLocator() {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		IToolBarManager myToolBarManager = new ToolBarManager();
-//
-//		IMenuManager myMenuManager = new MenuManager();
-//
-//		public void clearGlobalActionHandlers() {
-//			// do nothing
-//		}
-//
-//		public IAction getGlobalActionHandler(String actionId) {
-//			return null;
-//		}
-//
-//		public IMenuManager getMenuManager() {
-//			return myMenuManager;
-//		}
-//
-//		public IStatusLineManager getStatusLineManager() {
-//			return null;
-//		}
-//
-//		public IToolBarManager getToolBarManager() {
-//			return myToolBarManager;
-//		}
-//
-//		public void setGlobalActionHandler(String actionId, IAction handler) {
-//			// do nothing
-//		}
-//
-//		public void updateActionBars() {
-//			// do nothing
-//		}
-//
-//	}
+	class MyActionBars
+		implements IActionBars {
+
+		IToolBarManager myToolBarManager = new ToolBarManager();
+
+		IMenuManager myMenuManager = new MenuManager();
+
+		public void clearGlobalActionHandlers() {
+			// do nothing
+		}
+
+		public IAction getGlobalActionHandler(String actionId) {
+			return null;
+		}
+
+		public IMenuManager getMenuManager() {
+			return myMenuManager;
+		}
+
+		public IStatusLineManager getStatusLineManager() {
+			return null;
+		}
+
+		public IToolBarManager getToolBarManager() {
+			return myToolBarManager;
+		}
+
+		public void setGlobalActionHandler(String actionId, IAction handler) {
+			// do nothing
+		}
+
+		public void updateActionBars() {
+			// do nothing
+		}
+        
+        public IServiceLocator getServiceLocator() {
+            return null;
+        }
+
+	}
 
 	class MyWorkbenchPartDescriptor
 		implements IWorkbenchPartDescriptor {
@@ -116,85 +119,85 @@ public class ContributionItemServiceTests
 		return new TestSuite(ContributionItemServiceTests.class);
 	}
 
-//	/**
-//	 * Tests the filtering of contribution items given a disabled
-//	 * capability/activity.
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public void testActivityFiltering()
-//		throws Exception {
-//
-//		String EDITOR1 = "editor1"; //$NON-NLS-1$
-//		String EDITOR2 = "editor2"; //$NON-NLS-1$
-//
-//		IWorkbenchPartDescriptor editor1Descriptor = new MyWorkbenchPartDescriptor(
-//			EDITOR1);
-//		IWorkbenchPartDescriptor editor2Descriptor = new MyWorkbenchPartDescriptor(
-//			EDITOR2);
-//
-//		MyActionBars editor1ActionBars = new MyActionBars();
-//		MyActionBars editor2ActionBars = new MyActionBars();
-//
-//		// test contributing with provider2 disabled at the start
-//		toggleActivity(false);
-//
-//		ContributionItemService.getInstance().contributeToActionBars(
-//			editor1ActionBars, editor1Descriptor);
-//
-//		validateActionBars(editor1ActionBars, false, false);
-//
-//		ContributionItemService.getInstance().contributeToActionBars(
-//			editor2ActionBars, editor2Descriptor);
-//
-//		validateActionBars(editor2ActionBars, false, false);
-//
-//		// now enable provider2 and update editor 1 only
-//		toggleActivity(true);
-//		ContributionItemService.getInstance().updateActionBars(
-//			editor1ActionBars, editor1Descriptor);
-//
-//		validateActionBars(editor1ActionBars, true, true);
-//		validateActionBars(editor2ActionBars, false, true);
-//
-//		// now update editor 2
-//		ContributionItemService.getInstance().updateActionBars(
-//			editor2ActionBars, editor2Descriptor);
-//
-//		validateActionBars(editor1ActionBars, true, true);
-//		validateActionBars(editor2ActionBars, true, true);
-//
-//		// try a double update to make sure nothing changes
-//		int expectedLength = editor2ActionBars.getToolBarManager().getItems().length;
-//		IContributionItem expectedItem0 = editor2ActionBars.getToolBarManager().getItems()[0];
-//		IContributionItem expectedItem2 = editor2ActionBars.getToolBarManager().getItems()[2];
-//		
-//		ContributionItemService.getInstance().updateActionBars(
-//			editor2ActionBars, editor2Descriptor);
-//		
-//		assertEquals(expectedLength, editor2ActionBars.getToolBarManager()
-//			.getItems().length);
-//		assertEquals(expectedItem0, editor2ActionBars.getToolBarManager()
-//			.getItems()[0]);
-//		assertEquals(expectedItem2, editor2ActionBars.getToolBarManager()
-//			.getItems()[2]);
-//
-//		validateActionBars(editor1ActionBars, true, true);
-//		validateActionBars(editor2ActionBars, true, true);
-//
-//		// now disable provider2
-//		toggleActivity(false);
-//
-//		validateActionBars(editor1ActionBars, true, false);
-//		validateActionBars(editor2ActionBars, true, false);
-//
-//		// now enable provider2
-//		toggleActivity(true);
-//
-//		validateActionBars(editor1ActionBars, true, true);
-//		validateActionBars(editor2ActionBars, true, true);
-//
-//	}
+	/**
+	 * Tests the filtering of contribution items given a disabled
+	 * capability/activity.
+	 * 
+	 * @throws Exception
+	 */
+	public void testActivityFiltering()
+		throws Exception {
+
+		String EDITOR1 = "editor1"; //$NON-NLS-1$
+		String EDITOR2 = "editor2"; //$NON-NLS-1$
+
+		IWorkbenchPartDescriptor editor1Descriptor = new MyWorkbenchPartDescriptor(
+			EDITOR1);
+		IWorkbenchPartDescriptor editor2Descriptor = new MyWorkbenchPartDescriptor(
+			EDITOR2);
+
+		MyActionBars editor1ActionBars = new MyActionBars();
+		MyActionBars editor2ActionBars = new MyActionBars();
+
+		// test contributing with provider2 disabled at the start
+		toggleActivity(false);
+
+		ContributionItemService.getInstance().contributeToActionBars(
+			editor1ActionBars, editor1Descriptor);
+
+		validateActionBars(editor1ActionBars, false, false);
+
+		ContributionItemService.getInstance().contributeToActionBars(
+			editor2ActionBars, editor2Descriptor);
+
+		validateActionBars(editor2ActionBars, false, false);
+
+		// now enable provider2 and update editor 1 only
+		toggleActivity(true);
+		ContributionItemService.getInstance().updateActionBars(
+			editor1ActionBars, editor1Descriptor);
+
+		validateActionBars(editor1ActionBars, true, true);
+		validateActionBars(editor2ActionBars, false, true);
+
+		// now update editor 2
+		ContributionItemService.getInstance().updateActionBars(
+			editor2ActionBars, editor2Descriptor);
+
+		validateActionBars(editor1ActionBars, true, true);
+		validateActionBars(editor2ActionBars, true, true);
+
+		// try a double update to make sure nothing changes
+		int expectedLength = editor2ActionBars.getToolBarManager().getItems().length;
+		IContributionItem expectedItem0 = editor2ActionBars.getToolBarManager().getItems()[0];
+		IContributionItem expectedItem2 = editor2ActionBars.getToolBarManager().getItems()[2];
+		
+		ContributionItemService.getInstance().updateActionBars(
+			editor2ActionBars, editor2Descriptor);
+		
+		assertEquals(expectedLength, editor2ActionBars.getToolBarManager()
+			.getItems().length);
+		assertEquals(expectedItem0, editor2ActionBars.getToolBarManager()
+			.getItems()[0]);
+		assertEquals(expectedItem2, editor2ActionBars.getToolBarManager()
+			.getItems()[2]);
+
+		validateActionBars(editor1ActionBars, true, true);
+		validateActionBars(editor2ActionBars, true, true);
+
+		// now disable provider2
+		toggleActivity(false);
+
+		validateActionBars(editor1ActionBars, true, false);
+		validateActionBars(editor2ActionBars, true, false);
+
+		// now enable provider2
+		toggleActivity(true);
+
+		validateActionBars(editor1ActionBars, true, true);
+		validateActionBars(editor2ActionBars, true, true);
+
+	}
 
 	/**
 	 * Toggles the enablement of the activity <code>MY_ACTIVITY_ID</code>
