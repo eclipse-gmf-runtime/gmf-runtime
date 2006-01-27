@@ -105,6 +105,6 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider#createDiagramRootEditPart()
 	 */
 	public RootEditPart createRootEditPart(Diagram diagram) {
-		return new DiagramRootEditPart();
+		return new DiagramRootEditPart(diagram.getMeasurementUnit());
 	}
 }

@@ -14,8 +14,8 @@ package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factories.GeoshapesDiagramViewFactory;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
 
 /**
  * 
@@ -28,7 +28,7 @@ public class DiagramViewProvider extends AbstractViewProvider {
 
 	HashMap diagramMap = new HashMap(); 
 	{
-		diagramMap.put("Geoshape", DiagramViewFactory.class);//$NON-NLS-1$
+		diagramMap.put("Geoshape", GeoshapesDiagramViewFactory.class);//$NON-NLS-1$
 	}
 	
 	/**

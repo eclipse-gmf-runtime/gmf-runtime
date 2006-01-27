@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.core.view.factories.DiagramFactory;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -84,10 +85,27 @@ public class DiagramViewFactory implements DiagramFactory{
 			// enforce a set to NULL
 			diagram.setElement(null);
 
+		initializeMeasurementUnit(diagram);
+		
 		// do the necessary initializations (creating children, setting properties...etc)
 		decorateView(diagram,semanticAdapter, diagramKind);
 		
 		return diagram;
+	}
+	
+	/**
+	 * Clients should override if they wish to initialize their <code>Diagram</code>
+	 * to have a different coordinate system then the default <code>Himetric</code>.
+	 * 
+	 * @return the <code>MeasurementUnit</code> that will be used to initialize the
+	 * <code>Diagram</code> object that is being created by the factory.
+	 */
+	protected MeasurementUnit getMeasurementUnit() {
+		return MeasurementUnit.HIMETRIC_LITERAL;
+	}
+	
+	private void initializeMeasurementUnit(Diagram diagram) {
+		diagram.initializeMeasurementUnit(getMeasurementUnit());
 	}
 
 	/**

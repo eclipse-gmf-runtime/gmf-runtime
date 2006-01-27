@@ -40,6 +40,6 @@ public class DiagramUIRenderEditPartProvider
 	 * Creates a diagram root editpart that supports rendering of images.
 	 */
 	public RootEditPart createRootEditPart(Diagram diagram) {
-		return new RenderedDiagramRootEditPart();
+		return new RenderedDiagramRootEditPart(diagram.getMeasurementUnit());
 	}
 }

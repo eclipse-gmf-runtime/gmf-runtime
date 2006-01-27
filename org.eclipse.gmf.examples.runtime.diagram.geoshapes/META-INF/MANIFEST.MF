@@ -12,7 +12,6 @@ Export-Package: org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal,
  org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers,
  org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.section,
  org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.util,
- org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views,
  org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.views.factories,
  org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.wizards
 Require-Bundle: org.eclipse.core.runtime.compatibility,
@@ -35,6 +34,7 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
  org.eclipse.gmf.runtime.diagram.ui.providers,
- org.eclipse.gmf.runtime.diagram.ui.providers.ide
+ org.eclipse.gmf.runtime.diagram.ui.providers.ide,
+ org.eclipse.gmf.runtime.diagram.ui.render
 Eclipse-LazyStart: true
 

@@ -20,6 +20,7 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -39,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.MeasurementUnitHelper;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -48,6 +50,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
+import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
@@ -64,6 +67,75 @@ public class DiagramRootEditPart
 	extends ScalableFreeformRootEditPart
 	implements ZoomableEditPart, IDiagramPreferenceSupport {
 	
+	private WrapperMapMode mm;
+	
+	/**
+	 * @author sshaw
+	 * This pattern is necessary because, the constructor of the ScalableFreeformRootEditPart forces
+	 * the scalable layered pane class to be instantiated where it gets initialized with the MapMode
+	 * of the this root editpart.  However, we haven't had a chance to initialize the mapmode value yet since
+	 * super must be called first.  So, this pattern allows us to set the mapmode into this container after
+	 * super is called, but still have the scalable layered pane initialized with the mapmode value.
+	 */
+	private class WrapperMapMode implements IMapMode {
+
+		public WrapperMapMode() {
+			super();
+		}
+
+		IMapMode containedMM = MapModeTypes.DEFAULT_MM;
+		public void setContainedMapMode(IMapMode mm) {
+			this.containedMM = mm;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#DPtoLP(int)
+		 */
+		public int DPtoLP(int deviceUnit) {
+			return containedMM.DPtoLP(deviceUnit);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#DPtoLP(org.eclipse.draw2d.geometry.Translatable)
+		 */
+		public Translatable DPtoLP(Translatable t) {
+			return containedMM.DPtoLP(t);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#LPtoDP(int)
+		 */
+		public int LPtoDP(int logicalUnit) {
+			return containedMM.LPtoDP(logicalUnit);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode#LPtoDP(org.eclipse.draw2d.geometry.Translatable)
+		 */
+		public Translatable LPtoDP(Translatable t) {
+			return containedMM.LPtoDP(t);
+		}
+		
+	}
+	
+	/**
+	 * Default constructor
+	 */
+	public DiagramRootEditPart() {
+		super();
+	}
+	
+	/**
+	 * @param mu the <code>MeasurementUnit</code> that is used to display all contents
+	 * within the root edit part.
+	 */
+	public DiagramRootEditPart(MeasurementUnit mu) {
+		super();
+		
+		if (getMapMode() != null)
+			mm.setContainedMapMode(MeasurementUnitHelper.getMapMode(mu));
+	}
+
 	/**
 	 * GEF does not scale the FEEDBACK_LAYER but we do.
 	 */
@@ -684,13 +756,16 @@ public class DiagramRootEditPart
 	}
 	
 	/**
-	 * Override this if the Editor wishes to support a coordinate system other then the default 
-	 * (usually HiMetric coordinates).  
+	 * Clients must define the measurement unit in the <code>Diagram</code> notation
+	 * object for their editor to affect this mapping mode object value.
+	 * 
 	 * @return <code>IMapMode</code> that is the coordinate mapping for the Editor from device to
 	 * logical coordinates.
 	 */
-	public IMapMode getMapMode() {
-		return MapModeTypes.DEFAULT_MM;
+	final public IMapMode getMapMode() {
+		if (mm == null)
+			mm = new WrapperMapMode();
+		return mm;
 	}
 
 	public DiagramRuler getHorizontalRuler() {

@@ -38,6 +38,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -1279,10 +1280,12 @@ public abstract class GraphicalEditPart
 	 * logical units. 
 	 */
 	final protected IMapMode getMapMode() {
-		EditPart parent = getParent();
-		if (parent instanceof org.eclipse.gef.GraphicalEditPart)
-			return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)parent).getFigure());
-		
+		RootEditPart root = getRoot();
+		if (root instanceof DiagramRootEditPart) {
+			DiagramRootEditPart dgrmRoot = (DiagramRootEditPart)root;
+			return dgrmRoot.getMapMode();
+		}
+				
 		return MapModeUtil.getMapMode();
 	}
 	

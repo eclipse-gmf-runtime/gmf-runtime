@@ -13,18 +13,34 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.MeasurementUnitHelper;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.notation.Bendpoints;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.Location;
+import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 import org.eclipse.jface.util.Assert;
 
 /**
@@ -40,39 +56,27 @@ public final class PasteCommand extends ClipboardCommand {
     private final ICustomData[] data; 
     
     private int offset = 0;
-
-    /**
-     * Constructor for PasteCommand.
-     * @param viewContext
-     * @param data
-     * @param offset
-	 * 			the <code>int</code> that is the offset from the original views that
-	 * 			the new views will be placed in logical coordinates
-     */
-    public PasteCommand(
-        View viewContext,
-        ICustomData[] data, int offset) {
-        this(null, viewContext, data, offset);
-    }
+    private IMapMode mm;
 
     /**
      * Constructor for PasteCommand.
      * @param label
      * @param viewContext
      * @param data
-     * @param offset
-	 * 			the <code>int</code> that is the offset from the original views that
-	 * 			the new views will be placed in logical coordinates
+     * @param mm
+	 * 			the <code>IMapMode</code> that is used to convert the layout constraint
+	 * 			and calculate the offset in logical coordinates
      */
     public PasteCommand(
         String label,
         View viewContext,
-        ICustomData[] data, int offset) {
+        ICustomData[] data, IMapMode mm) {
         super(label, viewContext);
 
         Assert.isNotNull(data);
         this.data = data;
-        this.offset = offset;
+        this.offset = mm.DPtoLP(10);
+        this.mm = mm;
     }
 
 	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
@@ -86,18 +90,6 @@ public final class PasteCommand extends ClipboardCommand {
 	            /* Paste the xml on to the target view's diagram */
 	            List views = pasteFromString(getViewContext(),xml);
 	            allViews.addAll(views);
-	            
-	            /* Set the new bounds for the pasted IShapeView views */
-                for (Iterator i = views.iterator(); i.hasNext();) {
-                    View view = (View) i.next();
-                    if (view instanceof Node &&
-                    	((Node)view).getLayoutConstraint() instanceof Location/*view instanceof IShapeView*/) {
-                    	Integer x = (Integer) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X());
-                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), new Integer(x.intValue() + offset));
-                        Integer y = (Integer) ViewUtil.getStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y());
-                        ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(y.intValue() + offset));
-                    }
-                }
 	        }
 	        return newOKCommandResult(allViews);
 	    }
@@ -113,13 +105,124 @@ public final class PasteCommand extends ClipboardCommand {
 	 private List pasteFromString(View view, String clipboard) {
 	    ArrayList retval = new ArrayList();
 	    Iterator pastedElements = EObjectUtil.deserialize(view, clipboard, Collections.EMPTY_MAP).iterator();
-        while( pastedElements.hasNext() ) {
+        
+	    // get the measurement unit
+	    MeasurementUnit mu = MeasurementUnit.HIMETRIC_LITERAL;
+	    
+	    while( pastedElements.hasNext() ) {
             Object element = pastedElements.next();
             if (element instanceof View) {
 	            retval.add(element);
 	        }
+            else if (element instanceof EAnnotation) {
+            	EAnnotation measureUnitAnnotation  = (EAnnotation)element;
+        		String unitName = measureUnitAnnotation.getSource();
+        		mu = MeasurementUnit.get(unitName);
+            }
         }
+	    
+        /* Set the new bounds for the pasted IShapeView views */
+	    Set edges = convertNodesConstraint(retval, mu);
+        
+        // now go through all associated edges and adjust the bendpoints
+        convertEdgeBendpoints(mu, edges);
+        
         return retval;
+	}
+
+	/**
+	 * @param mu the <code>MeasurementUnit</code> for the notation diagram.
+	 * @param edges the <code>Set</code> of edges to convert the bendpoints of.
+	 */
+	private void convertEdgeBendpoints(MeasurementUnit mu, Set edges) {
+		for (Iterator i = edges.iterator(); i.hasNext();) {
+        	Edge nextEdge = (Edge)i.next();
+        	Bendpoints bendpoints = nextEdge.getBendpoints();
+        	
+        	if (bendpoints instanceof RelativeBendpoints) {
+    			RelativeBendpoints relBendpoints = (RelativeBendpoints)bendpoints;
+        		List points = relBendpoints.getPoints();
+        		List newpoints = new ArrayList(points.size());
+        		ListIterator li = points.listIterator();
+        		
+        		IMapMode viewMapMode = MeasurementUnitHelper.getMapMode(mu);
+        		
+        		while (li.hasNext()) {
+        			RelativeBendpoint rb = (RelativeBendpoint)li.next();
+        			
+        			Dimension source = new Dimension(rb.getSourceX(), rb.getSourceY());
+        			Dimension target = new Dimension(rb.getTargetX(), rb.getTargetY());
+        			if (!viewMapMode.equals(mm)) {
+        				source = (Dimension)viewMapMode.LPtoDP(source);
+        				source = (Dimension)mm.DPtoLP(source);
+        				
+        				target = (Dimension)viewMapMode.LPtoDP(target);
+        				target = (Dimension)mm.DPtoLP(target);
+        			}
+        			
+        			newpoints.add(new RelativeBendpoint(source.width, source.height, 
+        							target.width, target.height));
+        		}
+        		
+        		relBendpoints.setPoints(newpoints);
+        	}
+        	
+        }
+	}
+
+	/**
+	 * @param retval the <code>List</code> of <code>Node</code> objects to convert the constraint of.
+	 * @param mu the <code>MeasurementUnit</code> for the notation diagram.
+	 * @return the <code>Set</code> of <code>Edge</code> views that are attached to the list of nodes 
+	 */
+	private Set convertNodesConstraint(List retval, MeasurementUnit mu) {
+		Set edges = new HashSet();
+        for (Iterator i = retval.iterator(); i.hasNext();) {
+            View nextView = (View) i.next();
+            if (nextView instanceof Node) {
+            	Node node = (Node)nextView;
+        		Point loc = new Point(0, 0);
+        		LayoutConstraint lc = node.getLayoutConstraint();
+        		if (lc instanceof Location) {
+        			Location locC = (Location)lc;
+        			loc = new Point(locC.getX(), locC.getY());
+        		}
+        			
+        		Dimension size = new Dimension(0, 0);
+        		if (lc instanceof Size) {
+        			Size sizeC = (Size)lc;
+        			size = new Dimension(sizeC.getWidth(), sizeC.getHeight());
+        		}
+        		
+        		IMapMode viewMapMode = MeasurementUnitHelper.getMapMode(mu);
+        				
+        		if (!viewMapMode.equals(mm)) {
+        			// convert location to native coordinates
+        			loc = (Point)viewMapMode.LPtoDP(loc);
+        			loc = (Point)mm.DPtoLP(loc);
+        			
+        			// convert size to native coordinates
+        			Dimension origSize = new Dimension(size);
+        			size = (Dimension)viewMapMode.LPtoDP(size);
+        			size = (Dimension)mm.DPtoLP(size);
+        			if (origSize.width == -1)
+        				size.width = -1;
+        			if (origSize.height == -1)
+        				size.height = -1;
+        		}
+        		
+        		Rectangle constraintRect = new Rectangle(loc, size);
+        		constraintRect = constraintRect.getTranslated(offset, offset);
+    			ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_X(), new Integer(constraintRect.x));
+                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(constraintRect.y));
+                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Width(), new Integer(constraintRect.width));
+                ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Height(), new Integer(constraintRect.height));
+                
+                edges.addAll(((Node)nextView).getTargetEdges());
+                edges.addAll(((Node)nextView).getSourceEdges());
+            }
+        }
+		return edges;
 	}
 
 }

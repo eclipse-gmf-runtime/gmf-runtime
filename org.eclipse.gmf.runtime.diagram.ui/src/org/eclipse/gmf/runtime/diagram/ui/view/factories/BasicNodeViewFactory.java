@@ -56,12 +56,12 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		node.getStyles().addAll(createStyles(node));
 		node.setLayoutConstraint(createLayoutConstraint());
 
-		if (requiresElement(semanticAdapter,containerView)){
-			if (semanticAdapter==null)
-				// enforce a set to NULL
-				node.setElement(null);
-			else
-				node.setElement((EObject)semanticAdapter.getAdapter(EObject.class));
+		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
+		if (semanticEl==null)
+			// enforce a set to NULL
+			node.setElement(null);
+		else if (requiresElement(semanticAdapter,containerView)){
+			node.setElement(semanticEl);
 		}
 		
 		node.setType(semanticHint);

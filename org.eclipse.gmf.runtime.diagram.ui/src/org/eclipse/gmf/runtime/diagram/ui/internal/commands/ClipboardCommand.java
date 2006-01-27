@@ -16,16 +16,18 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.util.Assert;
-
+import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 
 /**
  * Abstract parent for all concrete clipboard commands used for IViews
@@ -119,11 +121,19 @@ public abstract class ClipboardCommand extends AbstractModelCommand {
 		/* views iterator */
 		Iterator iter = views.iterator();
 
+		// add the measurement unit in a annotation
+		View firstView = (View)views.get(0);
+		Diagram dgrm = firstView.getDiagram();
+		EAnnotation measureUnitAnnotation  = EcoreFactory.eINSTANCE.createEAnnotation();
+		measureUnitAnnotation.setSource(dgrm.getMeasurementUnit().getName());
+		selection.add(measureUnitAnnotation);
+		
 		/* Add the elements to the selection */
 		while (iter.hasNext()) {
 			EObject viewElement =(View)iter.next();
-			if (viewElement != null)
+			if (viewElement != null) {
 				selection.add(viewElement);
+			}
 		}
 
 		/* Copy the selection to the string */

@@ -118,14 +118,10 @@ public class ContainerEditPolicy
 		if (data != null
 			&& viewContext != null
 			&& editPart instanceof ISurfaceEditPart) {
-			return new EtoolsProxyCommand(new PasteCommand(DiagramUIMessages.PasteCommand_Label, viewContext, data, getPasteOffset())); 
+			return new EtoolsProxyCommand(new PasteCommand(DiagramUIMessages.PasteCommand_Label, viewContext, data, MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)getHost()).getFigure()))); 
 		}
 
 		return null;
-	}
-
-	private int getPasteOffset() {
-		return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)getHost()).getFigure()).DPtoLP(10);
 	}
 	
 	private class EditPartComparator implements Comparator {
@@ -404,6 +400,10 @@ public class ContainerEditPolicy
 			}
 		}
 		return null;
+	}
+	
+	private int getPasteOffset() {
+		return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)getHost()).getFigure()).DPtoLP(10);
 	}
 	
 	/**

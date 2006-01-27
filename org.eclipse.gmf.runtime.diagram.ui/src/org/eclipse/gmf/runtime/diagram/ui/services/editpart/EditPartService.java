@@ -237,7 +237,7 @@ final public class EditPartService
 		result = (RootEditPart) execute(createRootEditPartOperation);
 
 		// provide default implementation
-		return (result == null) ? new DiagramRootEditPart()
+		return (result == null) ? new DiagramRootEditPart(diagram.getMeasurementUnit())
 			: result;
 	}
 	

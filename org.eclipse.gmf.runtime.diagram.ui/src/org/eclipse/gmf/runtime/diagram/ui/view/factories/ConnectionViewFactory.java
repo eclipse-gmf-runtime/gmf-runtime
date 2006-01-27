@@ -63,13 +63,12 @@ public class ConnectionViewFactory
 		edge.getStyles().addAll(createStyles(edge));
 		edge.setBendpoints(createBendpoints());
 
-		if (requiresElement(semanticAdapter, containerView)) {
-			if (semanticAdapter == null)
-				// enforce a set to NULL
-				edge.setElement(null);
-			else
-				edge.setElement((EObject) semanticAdapter
-					.getAdapter(EObject.class));
+		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
+		if (semanticEl==null)
+			// enforce a set to NULL
+			edge.setElement(null);
+		else if (requiresElement(semanticAdapter,containerView)){
+			edge.setElement(semanticEl);
 		}
 
 		edge.setType(semanticHint);

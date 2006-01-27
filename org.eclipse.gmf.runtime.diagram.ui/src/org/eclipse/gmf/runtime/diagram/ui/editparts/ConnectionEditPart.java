@@ -42,6 +42,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.SnapToGuides;
@@ -1490,18 +1491,16 @@ abstract public class ConnectionEditPart
 	}
 
 	/**
-	 * @return <code>IMapMode</code> that allows for the coordinate mapping
-	 *         from device to logical units.
+	 * @return <code>IMapMode</code> that allows for the coordinate mapping from device to
+	 * logical units. 
 	 */
 	final protected IMapMode getMapMode() {
-		EditPart parent = getParent();
-		if (parent instanceof DiagramRootEditPart)
-			return ((DiagramRootEditPart) parent).getMapMode();
-		else if (parent instanceof org.eclipse.gef.GraphicalEditPart)
-			return MapModeUtil
-				.getMapMode(((org.eclipse.gef.GraphicalEditPart) parent)
-					.getFigure());
-
+		RootEditPart root = getRoot();
+		if (root instanceof DiagramRootEditPart) {
+			DiagramRootEditPart dgrmRoot = (DiagramRootEditPart)root;
+			return dgrmRoot.getMapMode();
+		}
+				
 		return MapModeUtil.getMapMode();
 	}
 }

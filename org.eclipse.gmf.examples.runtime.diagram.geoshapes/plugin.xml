@@ -34,7 +34,7 @@
   
   <extension point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
       <viewProvider class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers.DiagramViewProvider">
-         <Priority name="Lowest">
+         <Priority name="Low">
          </Priority>
          <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="">
          </context>         
@@ -119,7 +119,7 @@
   	name="%ext.globalActionHandlerProviders" 
   	point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders">
       <GlobalActionHandlerProvider 
-      	class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider" 
+      	class="org.eclipse.gmf.runtime.diagram.ui.render.providers.DiagramUIRenderGlobalActionHandlerProvider" 
       	id="geoshapesGlobalActionHandlerProvider">
          <Priority name="Lowest">
          </Priority>

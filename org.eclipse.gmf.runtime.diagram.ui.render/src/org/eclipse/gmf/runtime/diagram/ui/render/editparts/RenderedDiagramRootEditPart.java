@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.figures.ScalableImageFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatedZoomListener;
+import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
@@ -40,6 +41,21 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RenderedDiagramRootEditPart
 	extends DiagramRootEditPart {
+
+	/**
+	 * Default constructor
+	 */
+	public RenderedDiagramRootEditPart() {
+		super();
+	}
+	
+	/**
+	 * @param mu the <code>MeasurementUnit</code> that is the native coordinate system
+	 * for this root edit part.
+	 */
+	public RenderedDiagramRootEditPart(MeasurementUnit mu) {
+		super(mu);
+	}
 
 	static protected class DiagramRenderedScalableFreeformLayeredPane
 		extends DiagramScalableFreeformLayeredPane implements AnimatedZoomListener {
