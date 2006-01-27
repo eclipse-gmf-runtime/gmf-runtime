@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,12 +14,12 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.DelegatingLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -58,22 +58,6 @@ public class BorderedNodeFigure
 	}
 
 	/**
-	 * For animated layout.
-	 * 
-	 * @author jbruck
-	 */
-	private class AnimatableDelegatingLayout
-		extends DelegatingLayout {
-
-		public void layout(IFigure container) {
-			if (!AnimationFigureHelper.getInstance().layoutManagerHook(
-				container)) {
-				super.layout(container);
-			}
-		}
-	}
-
-	/**
 	 * Gets the border item container figure to which border item figures can be
 	 * added with a {@link IBorderItemLocator} as the constraint and then later
 	 * removed.
@@ -84,7 +68,8 @@ public class BorderedNodeFigure
 		if (borderItemContainer == null) {
 			borderItemContainer = new BorderItemContainerFigure();
 			borderItemContainer
-				.setLayoutManager(new AnimatableDelegatingLayout());
+				.setLayoutManager(new DelegatingLayout());
+			borderItemContainer.addLayoutListener(LayoutAnimator.getDefault());
 			borderItemContainer.setVisible(true);
 		}
 		return borderItemContainer;

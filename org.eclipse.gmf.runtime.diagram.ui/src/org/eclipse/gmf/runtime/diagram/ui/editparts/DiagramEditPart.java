@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.Viewport;
@@ -51,7 +52,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -165,7 +165,7 @@ public class DiagramEditPart
 			}
 		};
 		f.setLayoutManager(new FreeformLayout());
-		f.addLayoutListener(new AnimatableLayoutListener());
+		f.addLayoutListener(LayoutAnimator.getDefault());
 		f.addLayoutListener(new PageBreaksLayoutListener());
 		return f;
 	}

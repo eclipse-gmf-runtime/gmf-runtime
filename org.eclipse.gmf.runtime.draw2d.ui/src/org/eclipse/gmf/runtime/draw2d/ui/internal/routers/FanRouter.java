@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
@@ -37,8 +36,7 @@ public class FanRouter extends org.eclipse.draw2d.FanRouter {
 	 * @see org.eclipse.draw2d.ConnectionRouter#route(org.eclipse.draw2d.Connection)
 	 */
 	public void route(Connection conn) {
-		if (!AnimationFigureHelper.getInstance().layoutManagerHook(conn))
-			routeBendpoints(conn);
+		routeBendpoints(conn);
 	}
 	
 	/**

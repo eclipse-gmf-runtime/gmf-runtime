@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
@@ -59,7 +60,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ShapeCompartmentDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.AnimatableLayoutListener;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -398,7 +398,7 @@ public abstract class ShapeCompartmentEditPart
 		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getCompartmentName(),
 			getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
 		scf.getContentPane().setLayoutManager(getLayoutManager());
-		scf.addLayoutListener(new AnimatableLayoutListener());
+		scf.addLayoutListener(LayoutAnimator.getDefault());
 
 		return scf;
 	}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.eclipse.draw2d.Bendpoint;
+import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FreeformLayout;
@@ -40,7 +41,7 @@ import org.eclipse.jface.util.Assert;
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
  */
-public class ObliqueRouter extends AnimatableConnectionRouter {
+public class ObliqueRouter extends BendpointConnectionRouter {
 
 	static public class ArrayListMap {
 		private HashMap map = new HashMap();
@@ -184,6 +185,14 @@ public class ObliqueRouter extends AnimatableConnectionRouter {
 		return false;
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.draw2d.ConnectionRouter#route(org.eclipse.draw2d.Connection)
+	 */
+	final public void route(Connection conn) {
+		routeBendpoints(conn);
+	}
+	
 	/**
 	 * Route the connection accordingly to the router paradigm.
 	 */

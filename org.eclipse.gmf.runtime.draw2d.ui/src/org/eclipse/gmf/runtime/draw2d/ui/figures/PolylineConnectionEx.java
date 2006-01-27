@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.RotatableDecoration;
+import org.eclipse.draw2d.RoutingAnimator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -150,6 +151,7 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
                 | JUMPLINK_FLAG_SMOOTH
                 | JUMPLINK_FLAG_ANGLEIN;            
         setLayoutManager(new DelegatingLayout());
+        addRoutingListener(RoutingAnimator.getDefault());
     }
     
 	/**

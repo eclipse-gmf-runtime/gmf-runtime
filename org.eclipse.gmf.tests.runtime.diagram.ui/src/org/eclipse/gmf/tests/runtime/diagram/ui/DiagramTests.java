@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005 - 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,11 +21,10 @@ import java.util.Date;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.draw2d.Animation;
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 
 
 /**
@@ -67,14 +66,15 @@ public class DiagramTests extends AbstractDiagramTests {
 			ActionIds.ACTION_ARRANGE_ALL);
 		Command layoutCmd = getDiagramEditPart().getCommand(request);
 		
+		Animation.markBegin();
+		
 		assertTrue((layoutCmd != null && layoutCmd.canExecute()));
 		getCommandStack().execute(layoutCmd);
 		
 		long startTime = new Date().getTime();
-		AnimationFigureHelper animationFigureHelper = AnimationFigureHelper.getInstance();
-		animationFigureHelper.animate(getDiagramEditPart().getFigure());
+		Animation.run(800);
 		long endTime = new Date().getTime();
 		
-		assertTrue((endTime - startTime) >= animationFigureHelper.getTotalDuration());
+		assertTrue((endTime - startTime) >= 800);
 	}
 }

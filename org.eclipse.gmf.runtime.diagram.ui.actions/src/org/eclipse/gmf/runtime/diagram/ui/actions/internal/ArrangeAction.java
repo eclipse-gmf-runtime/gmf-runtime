@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.Animation;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -38,7 +39,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimationFigureHelper;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -275,24 +275,36 @@ public class ArrangeAction extends DiagramAction {
 	}
 	
 	protected void doRun(IProgressMonitor progressMonitor) {
-		super.doRun(progressMonitor);
-		
 		IPreferenceStore preferenceStore = (IPreferenceStore) getDiagramEditPart().getDiagramPreferencesHint().getPreferenceStore();
 		boolean animatedLayout = preferenceStore.getBoolean(
 			IPreferenceConstants.PREF_ENABLE_ANIMATED_LAYOUT);
 		
+		if (animatedLayout)
+			Animation.markBegin();
+			
+		super.doRun(progressMonitor);
+		
 		if (animatedLayout) {
+			int durationInc = 800;
+			int factor = 10;
+			int size = 0;
+			
 			List operationSet = getOperationSet();
 			if (isArrangeAll()){
 				for (Iterator iter = operationSet.iterator(); iter.hasNext();) {
 					IGraphicalEditPart element = (IGraphicalEditPart) iter.next();
-					AnimationFigureHelper.getInstance().animate(element.getFigure());
+					size += element.getFigure().getChildren().size();
 				}
 			}
 			else if (operationSet != null && !operationSet.isEmpty()) {
 				IGraphicalEditPart container = (IGraphicalEditPart)getSelectionParent(operationSet);
-				AnimationFigureHelper.getInstance().animate(container.getFigure());
+				size += container.getFigure().getChildren().size();
 			}
+			
+			int totalDuration = Math.min(durationInc * factor / 2, Math.max(durationInc, (size / 
+					factor) * durationInc));
+			
+			Animation.run(totalDuration);
 		}
 	}
 	
