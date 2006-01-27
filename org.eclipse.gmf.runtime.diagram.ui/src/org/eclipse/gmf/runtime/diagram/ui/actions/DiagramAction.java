@@ -263,26 +263,40 @@ public abstract class DiagramAction
 		List targetedEPs = new ArrayList();
 		while (selectedEPs.hasNext()) {
 			EditPart selectedEP = (EditPart) selectedEPs.next();
-			targetedEPs.addAll(getTargetEdiParts(selectedEP));
+			targetedEPs.addAll(getTargetEditParts(selectedEP));
 		}
 		return targetedEPs.isEmpty() ? Collections.EMPTY_LIST
 			: targetedEPs;
 	}
 
-	/**
-	 * Given an editpart, returns a list of target editparts to the current
-	 * request If no targets could be found, an empty list is returned
-	 * 
-	 * @param editpart
-	 *            The given editpart
-	 * @return a list of target editparts, or Empty list if none
-	 */
-	protected List getTargetEdiParts(EditPart editpart) {
-		EditPart targetEP = editpart.getTargetEditPart(getTargetRequest());
-		return (targetEP == null) ? Collections.EMPTY_LIST
-			: Collections.singletonList(targetEP);
-	}
+    /**
+     * Given an editpart, returns a list of target editparts to the current
+     * request If no targets could be found, an empty list is returned
+     * 
+     * @param editpart
+     *            The given editpart
+     * @return a list of target editparts, or Empty list if none
+     * @deprecated Use {@link #getTargetEditParts(EditPart)} instead
+     * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=125233.
+     */
+    protected List getTargetEdiParts(EditPart editpart) {
+        return getTargetEditParts(editpart);
+    }
 
+    /**
+     * Given an editpart, returns a list of target editparts to the current
+     * request If no targets could be found, an empty list is returned
+     * 
+     * @param editpart
+     *            The given editpart
+     * @return a list of target editparts, or Empty list if none
+     */
+    protected List getTargetEditParts(EditPart editpart) {
+        EditPart targetEP = editpart.getTargetEditPart(getTargetRequest());
+        return (targetEP == null) ? Collections.EMPTY_LIST
+            : Collections.singletonList(targetEP);
+    }
+    
 	/**
 	 * A utility method to get the <code>IDiagramEditDomain</code> from the
 	 * current part if it adapts to it

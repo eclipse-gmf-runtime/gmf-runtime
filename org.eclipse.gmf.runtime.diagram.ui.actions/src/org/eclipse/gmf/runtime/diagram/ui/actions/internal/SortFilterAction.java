@@ -107,7 +107,7 @@ public class SortFilterAction extends DiagramAction {
 		List targetedEPs = new ArrayList();
 		while (selectedEPs.hasNext()) {
 			EditPart selectedEP = (EditPart) selectedEPs.next();
-			targetedEPs.addAll(getTargetEdiParts(selectedEP));
+			targetedEPs.addAll(getTargetEditParts(selectedEP));
 			if (targetedEPs.size() > 0) {
 				EditPart ep = (EditPart)targetedEPs.get(0);
 				targetedEPs.clear();

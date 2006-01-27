@@ -214,7 +214,7 @@ public abstract class CustomContributionItem
 		List targetedEPs = new ArrayList();
 		while (selectedEPs.hasNext()) {
 			EditPart selectedEP = (EditPart) selectedEPs.next();
-			targetedEPs.addAll(getTargetEdiParts(selectedEP));
+			targetedEPs.addAll(getTargetEditParts(selectedEP));
 		}
 		return targetedEPs.isEmpty() ? Collections.EMPTY_LIST : targetedEPs;
 	}
@@ -226,7 +226,7 @@ public abstract class CustomContributionItem
 	 * @param editpart The given editpart
 	 * @return a list of target editparts, or Empty list if none
 	 */
-	protected List getTargetEdiParts(EditPart editpart) {
+	protected List getTargetEditParts(EditPart editpart) {
 		EditPart targetEP = editpart.getTargetEditPart(getTargetRequest());
 		return (targetEP == null)
 			? Collections.EMPTY_LIST

@@ -57,12 +57,12 @@ public abstract class IndividualConnectionLabelAction
 		this.labelSemanticHints = labelSemanticHints;
 	}
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getTargetEdiParts(org.eclipse.gef.EditPart)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getTargetEditParts(org.eclipse.gef.EditPart)
 	 */
-	protected List getTargetEdiParts(EditPart editpart) {
+	protected List getTargetEditParts(EditPart editpart) {
 		EditPart targetEP = null;
 		List editParts = new ArrayList();
 		if (editpart instanceof ConnectionNodeEditPart) {

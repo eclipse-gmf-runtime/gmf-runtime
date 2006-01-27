@@ -93,7 +93,7 @@ public class ShowConnectionLabelsAction extends DiagramAction {
 		List targetedEPs = new ArrayList();
 		while (selectedEPs.hasNext()) {
 		    EditPart selectedEP = (EditPart)selectedEPs.next();
-		    targetedEPs.addAll(getTargetEdiParts(selectedEP));
+		    targetedEPs.addAll(getTargetEditParts(selectedEP));
 		}
 		return targetedEPs.isEmpty() ? Collections.EMPTY_LIST : targetedEPs;
 	}	
