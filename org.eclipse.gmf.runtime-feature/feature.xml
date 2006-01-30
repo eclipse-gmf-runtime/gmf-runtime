@@ -25,6 +25,7 @@ http://www.eclipse.org/legal/epl-v10.html
    <url>
       <update label="%updateSiteName" url="http://download.eclipse.org/technology/gmf/update-site/site.xml"/>
       <discovery label="%updateSiteName" url="http://download.eclipse.org/technology/gmf/update-site/site.xml"/>
+      <discovery label="%updateSiteName" url="http://download.eclipse.org/technology/gmf/update-site/site-interim.xml"/>
    </url>
 
    <requires>
