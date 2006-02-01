@@ -39,7 +39,7 @@ import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -105,7 +105,7 @@ public class DiagramGlobalActionHandler
 			CompoundCommand deleteCC = getDeleteCommand(cntxt);
 			/* Set the command */
 			if (deleteCC != null && deleteCC.canExecute())
-				command = new XtoolsProxyCommand(deleteCC);
+				command = new CommandProxy(deleteCC);
 		} else if (actionId.equals(GlobalActionId.COPY)) {
 			command = getCopyCommand(cntxt, diagramPart, false);
 		} else if (actionId.equals(GlobalActionId.CUT)) {
@@ -221,7 +221,7 @@ public class DiagramGlobalActionHandler
 
 			/* Add to the compound command */
 			if (deleteCommand != null) {
-				cut.compose(new XtoolsProxyCommand(deleteCommand));
+				cut.compose(new CommandProxy(deleteCommand));
 			}
 		}
 
@@ -280,7 +280,7 @@ public class DiagramGlobalActionHandler
 			/* Send the request to the edit part */
 			Command command = editPart.getCommand(deleteReq);
 			if (command != null)
-				compositeCommand.compose(new XtoolsProxyCommand(command));
+				compositeCommand.compose(new CommandProxy(command));
 			// deleteCC.add(editPart.getCommand(deleteReq));
 		}
 		if (compositeCommand.getCommands().size() > 0) {
@@ -428,7 +428,7 @@ public class DiagramGlobalActionHandler
 
 				// else add the command to the composite command.
 				else {
-					openCommand.compose(new XtoolsProxyCommand(cmd));
+					openCommand.compose(new CommandProxy(cmd));
 				}
 			}
 

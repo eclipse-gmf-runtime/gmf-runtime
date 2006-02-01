@@ -37,7 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -182,7 +182,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 					new EditCommandRequestWrapper(
 						new MoveRequest(context, element)));
 			
-			cc.compose ( new XtoolsProxyCommand(moveSemanticCmd) );
+			cc.compose ( new CommandProxy(moveSemanticCmd) );
 		}
 		//
 		// notation
@@ -298,9 +298,9 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		// form the compound command and return
 		CompositeCommand cc = new CompositeCommand(semanticCommand.getLabel());
 		cc.compose(semanticCommand);
-		cc.compose(new XtoolsProxyCommand(viewCommand));
+		cc.compose(new CommandProxy(viewCommand));
 		if ( refreshConnectionCommand != null ) {
-			cc.compose(new XtoolsProxyCommand(refreshConnectionCommand));
+			cc.compose(new CommandProxy(refreshConnectionCommand));
 		}
 
 		return new EtoolsProxyCommand(cc);

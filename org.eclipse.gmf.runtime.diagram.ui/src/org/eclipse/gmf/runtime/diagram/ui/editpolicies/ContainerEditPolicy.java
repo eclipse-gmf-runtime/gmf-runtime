@@ -41,7 +41,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart;
@@ -385,7 +385,7 @@ public class ContainerEditPolicy
 					CompositeCommand cc = new CompositeCommand(
 						DiagramUIMessages.Commands_Duplicate_Label);
 					cc
-						.compose(new XtoolsProxyCommand(
+						.compose(new CommandProxy(
 							duplicateElementsCommand));
 					cc.compose(new DuplicateViewsCommand(
 						DiagramUIMessages.Commands_Duplicate_Label,

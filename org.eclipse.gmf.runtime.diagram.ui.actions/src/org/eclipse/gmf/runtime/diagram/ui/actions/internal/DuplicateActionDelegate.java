@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.DuplicateElementsRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SemanticService;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -162,7 +162,7 @@ public class DuplicateActionDelegate
 			Command cmd = ((IDiagramWorkbenchPart) workbenchPart)
 				.getDiagramEditPart().getCommand(request);
 			if (cmd != null && cmd.canExecute()) {
-				return new XtoolsProxyCommand(cmd);
+				return new CommandProxy(cmd);
 			}
 		}
 		return null;

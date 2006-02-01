@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AbstractDeleteFromAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -108,7 +108,7 @@ public class DeleteFromModelAction
 			}
 			Command curCommand = editPart.getCommand(request);
 			if (curCommand != null) {
-				command.compose(new XtoolsProxyCommand(curCommand));				
+				command.compose(new CommandProxy(curCommand));				
 			}
 		}
 		

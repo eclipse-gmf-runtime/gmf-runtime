@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
@@ -448,9 +448,9 @@ public class FilterDialog
 						.get(i);
 					
 					if (filterMap != null && filterMap.equals(getFilterMapFromEditPart(editPart))) {					
-						cc.compose(new XtoolsProxyCommand(editPart
+						cc.compose(new CommandProxy(editPart
 							.getCommand(filterTypeRequest)));
-						cc.compose(new XtoolsProxyCommand(editPart
+						cc.compose(new CommandProxy(editPart
 							.getCommand(filterKeysRequest)));
 					}
 				}

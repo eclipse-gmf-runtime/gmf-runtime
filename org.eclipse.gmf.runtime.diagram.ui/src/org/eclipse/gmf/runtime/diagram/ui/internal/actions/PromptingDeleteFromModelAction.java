@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
@@ -96,7 +96,7 @@ public class PromptingDeleteFromModelAction
 			CompoundCommand compoundCommand = (CompoundCommand)command;
 			Iterator iterator = compoundCommand.getCommands().iterator();
 			while (iterator.hasNext()){
-				compositeModelActionCommand.compose(new XtoolsProxyCommand((Command)iterator.next()));				
+				compositeModelActionCommand.compose(new CommandProxy((Command)iterator.next()));				
 			}
 			command = new EtoolsProxyCommand(compositeModelActionCommand); 
 		}

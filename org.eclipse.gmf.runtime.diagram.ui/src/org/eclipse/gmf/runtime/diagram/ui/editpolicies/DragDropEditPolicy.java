@@ -27,7 +27,7 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -147,7 +147,7 @@ public class DragDropEditPolicy extends GraphicalEditPolicy {
 		if (cm.isEmpty())
 			return null;
 		
-		return new EtoolsProxyCommand(new XtoolsProxyCommand(cm.unwrap()));
+		return new EtoolsProxyCommand(new CommandProxy(cm.unwrap()));
 	}
 
 	/**

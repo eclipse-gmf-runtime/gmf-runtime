@@ -31,6 +31,7 @@ import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.XtoolsProxyCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.swt.widgets.Display;
@@ -190,7 +191,7 @@ public class DiagramCommandStack
 		if (command instanceof EtoolsProxyCommand) {
 			return getICommand(((EtoolsProxyCommand) command).getICommand());
 		}
-		return new XtoolsProxyCommand(command);
+		return new CommandProxy(command);
 	}
 
 	/**
@@ -230,7 +231,10 @@ public class DiagramCommandStack
 		}
 		if (command instanceof XtoolsProxyCommand) {
 			return getICommand(((XtoolsProxyCommand) command).getCommand());
-		}
+		}else if (command instanceof CommandProxy) {
+            return getICommand(((CommandProxy) command).getCommand());
+        }
+        
 		return command;
 	}
 
@@ -389,6 +393,17 @@ public class DiagramCommandStack
 	public static Collection getReturnValues( XtoolsProxyCommand cmd ) {
 		return getReturnValues( cmd.getCommand() );
 	}
+    
+    /**
+     * gets the return the values for the supplied command.
+     * @param cmd command to use
+     * @return a collection of return values
+     */
+    public static Collection getReturnValues( CommandProxy cmd ) {
+        return getReturnValues( cmd.getCommand() );
+    }
+    
+    
 
 	/**
 	 * gets the return the values for the supplied command.
@@ -405,11 +420,18 @@ public class DiagramCommandStack
 		}
 		else if ( cmd instanceof XtoolsProxyCommand ) {	//
 			// Need to recurse into the proxy command(s) since they
-			// will not have set the XtoolsProxyCommand result
-			// This Could be moved into XtoolsProxyCommand but
+			// will not have set the CommandProxy result
+			// This Could be moved into CommandProxy but
 			// #getCommandResult() can no longer be final.
 			return getReturnValues((XtoolsProxyCommand)cmd);
 		}
+        else if ( cmd instanceof CommandProxy ) { //
+            // Need to recurse into the proxy command(s) since they
+            // will not have set the CommandProxy result
+            // This Could be moved into CommandProxy but
+            // #getCommandResult() can no longer be final.
+            return getReturnValues((CommandProxy)cmd);
+        }
 		else {
 			CommandResult r = cmd.getCommandResult(); 
 			Object o = r != null ? r.getReturnValue() : null;
