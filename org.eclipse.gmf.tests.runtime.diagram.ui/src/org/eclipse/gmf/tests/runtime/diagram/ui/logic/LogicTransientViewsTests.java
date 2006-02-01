@@ -70,9 +70,9 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 		return (CanonicalTestFixture)getTestFixture();
 	}
 	
-	public void testTransientWiresCreation(){
+	public void testTransientWiresCreation_AcrossTransientLeds(){
 		try {
-			println("testTransientWiresCreation() starting ...");//$NON-NLS-1$
+			println("testTransientWiresCreation_AcrossTransientLeds() starting ...");//$NON-NLS-1$
 			CanonicalTestFixture _testFixture = getCanonicalTestFixture();
 			IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
 			
@@ -120,13 +120,84 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			
 		}
 		finally {
-			println("testTransientWiresCreation() complete.");//$NON-NLS-1$
+			println("testTransientWiresCreation_AcrossTransientLeds() complete.");//$NON-NLS-1$
 		}
 	}
+    
+    private GraphicalEditPart _editPartForSemanticElement(GraphicalEditPart container, Object element){
+        List children = container.getChildren();
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
+            GraphicalEditPart ep = (GraphicalEditPart) iter.next();
+            if (ep.getNotationView().getElement()==element){
+                return ep;
+            }else {
+                ep  = _editPartForSemanticElement(ep,element);
+                if (ep !=null)
+                    return ep;
+            }
+        }
+        return null;
+    }
+       
+    public void testTransientWiresCreation_AcrossPersistedLeds(){
+        try {
+            println("testTransientWiresCreation_AcrossPersistedLeds() starting ...");//$NON-NLS-1$
+            CanonicalTestFixture _testFixture = getCanonicalTestFixture();
+            IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
+            
+            LED led1 = _testFixture.createLED(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView()));
+            LED led2 = _testFixture.createLED(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView()));
+            
+            GraphicalEditPart ledEditPart = (GraphicalEditPart)getDiagramEditPart().getChildren().get(0);
+            Terminal term1 = (Terminal)led1.getOutputTerminals().get(0);
+            Terminal term2 = (Terminal)led2.getInputTerminals().get(0);
+            
+            flushEventQueue();
+            
+            final GraphicalEditPart ep1 = _editPartForSemanticElement(ledEditPart,term1);
+            
+            
+            // force the led to be persisted
+            final MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain((EObject)ledEditPart.getModel());
+            
+            //start read action here 
+            editingDomain.runInUndoInterval(new Runnable() {
+                public void run() {
+                    try {
+                        editingDomain.runAsWrite(new MRunnable() {
+                            public Object run() {
+                                ((View)((View)ep1.getModel()).eContainer()).persistChildren();
+                                return null;
+                            }});
+                    } catch (MSLActionAbandonedException e) {
+                        // do nothing
+                    }
+                }});
+                
+            assertPersisted((View)ep1.getModel());
+            
+            IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
+            IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
+            
+            CreateRelationshipRequest crr = new CreateRelationshipRequest(term1, term2, typeWire);
+            ICommand createWire = typeCircuit.getEditHelper().getEditCommand(crr);
+            _testFixture.execute(createWire);
+            flushEventQueue();
+            
+            List connectorEPs = getDiagramEditPart().getConnections();
+            
+            assertEquals( "Unexpected Wire count.", 1, connectorEPs.size()); //$NON-NLS-1$
+            final ConnectionEditPart ep = (ConnectionEditPart)connectorEPs.get(0);
+            assertTransient((View)ep.getModel());
+        }
+        finally {
+            println("testTransientWiresCreation_AcrossPersistedLeds() complete.");//$NON-NLS-1$
+        }
+    }
 	
 	public void testTransientLEDsCreation(){
 		try {
-			println("test_TransientViewsCreation() starting ...");//$NON-NLS-1$
+			println("testTransientLEDsCreation() starting ...");//$NON-NLS-1$
 			CanonicalTestFixture _testFixture = getCanonicalTestFixture();
 			IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
 			
@@ -164,13 +235,13 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			}	
 		}
 		finally {
-			println("test_TransientViewsCreation() complete.");//$NON-NLS-1$
+			println("testTransientLEDsCreation() complete.");//$NON-NLS-1$
 		}
 	}
 
 	public void testTransientCircuitsCreation(){
 		try {
-			println("test_TransientViewsCreation() starting ...");//$NON-NLS-1$
+			println("testTransientCircuitsCreation() starting ...");//$NON-NLS-1$
 			CanonicalTestFixture _testFixture = getCanonicalTestFixture();
 			IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
 			
@@ -209,7 +280,7 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			}	
 		}
 		finally {
-			println("test_TransientViewsCreation() complete.");//$NON-NLS-1$
+			println("testTransientCircuitsCreation() complete.");//$NON-NLS-1$
 		}
 	}
 	

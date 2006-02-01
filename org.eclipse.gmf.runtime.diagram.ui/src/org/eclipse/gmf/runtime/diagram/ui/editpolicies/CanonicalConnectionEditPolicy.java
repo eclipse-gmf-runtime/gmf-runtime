@@ -295,25 +295,6 @@ public abstract class CanonicalConnectionEditPolicy
 		CreateConnectionViewRequest ccr = getCreateConnectionViewRequest(
 			elementAdapter, getFactoryHint(elementAdapter, factoryHint), index);
 
-		//
-		// I do not think that the following hack is necessary. The root
-		// of the problem is that AbstractConnectorView#setSourceView() and
-		// #setTargetView() are not persisting the source and target views
-		// It used to but it was removed during a refactoring wave
-		// TODO - remove hack.
-		/*
-		 * This is a temporary fix to the problem that if the source or the
-		 * targetedit part is persisted the set connection ends command will
-		 * modify the source and targets notational element by adding an edge
-		 * there. For Now if either the source or the target is persisted this
-		 * will create a persisted connection view.
-		 */
-		if (!ViewUtil.isTransient(sView) || !ViewUtil.isTransient(tView)) {
-			CreateConnectionViewRequest.ConnectionViewDescriptor descriptor = ccr
-				.getConnectionViewDescriptor();
-			descriptor.setPersisted(true);
-		}
-
 		ccr.setType(RequestConstants.REQ_CONNECTION_START);
 		ccr.setSourceEditPart(sep);
 		getCreateViewCommand(ccr); // sep.getCommand(ccr); //prime the command
