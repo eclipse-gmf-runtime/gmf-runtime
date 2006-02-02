@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <!--extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.eclipse.gmf.tests.runtime.common.ui.services.actionSet"
+            label="Sample Action Set"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="Sample &amp;Menu">
+            <separator name="sampleGroup"/>
+         </menu>
+         <action
+               class="org.eclipse.gmf.tests.runtime.common.ui.services.actions.TestSelectElementDialogActionDelegate"
+               icon="icons/sample.gif"
+               id="org.eclipse.gmf.tests.runtime.common.ui.services.actions.SampleAction"
+               label="&amp;Sample Action"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Hello, Eclipse world"/>
+      </actionSet>
+   </extension-->
+   <extension
+         id="org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.RedTestElementSectionProvider"
+         name="RedTestElementSectionProvider"
+         point="org.eclipse.gmf.runtime.common.ui.services.elementSelectionProviders">
+      <ElementSelectionProvider class="org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.RedTestElementSectionProvider">
+         <Priority name="Lowest"/>
+      </ElementSelectionProvider>
+   </extension>
+   <extension
+         id="org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.BlueTestElementSectionProvider"
+         name="BlueTestElementSectionProvider"
+         point="org.eclipse.gmf.runtime.common.ui.services.elementSelectionProviders">
+      <ElementSelectionProvider class="org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.BlueTestElementSectionProvider">
+         <Priority name="Lowest"/>
+      </ElementSelectionProvider>
+   </extension>
+   <extension
+         id="org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.YellowTestElementSectionProvider"
+         name="YellowTestElementSectionProvider"
+         point="org.eclipse.gmf.runtime.common.ui.services.elementSelectionProviders">
+      <ElementSelectionProvider class="org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.YellowTestElementSectionProvider">
+         <Priority name="Lowest"/>
+      </ElementSelectionProvider>
+   </extension>
+
+</plugin>

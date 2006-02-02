@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Services Plug-in
+Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.common.ui.services;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.gmf.tests.runtime.common.ui.services.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.gmf.runtime.common.ui.services
+Eclipse-LazyStart: true
