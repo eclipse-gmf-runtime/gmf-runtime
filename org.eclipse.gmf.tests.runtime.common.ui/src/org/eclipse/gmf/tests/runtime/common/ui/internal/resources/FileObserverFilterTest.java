@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
@@ -454,6 +455,11 @@ public class FileObserverFilterTest
 		public boolean isLinked(int options) {
 			// TODO Auto-generated method stub
 			return false;
+		}
+
+		public IResourceProxy createProxy() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 
@@ -1135,6 +1141,11 @@ public class FileObserverFilterTest
 		public boolean isLinked(int options) {
 			// TODO Auto-generated method stub
 			return false;
+		}
+
+		public IResourceProxy createProxy() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 
