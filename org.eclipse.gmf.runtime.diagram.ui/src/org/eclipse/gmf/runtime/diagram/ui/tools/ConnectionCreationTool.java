@@ -202,7 +202,7 @@ public class ConnectionCreationTool
 	/**
 	 * Method selectAddedObject. Select the newly added connection
 	 */
-	private void selectAddedObject(EditPartViewer viewer, Collection objects) {
+	protected void selectAddedObject(EditPartViewer viewer, Collection objects) {
 		final List editparts = new ArrayList();
 		for (Iterator i = objects.iterator(); i.hasNext();) {
 			Object object = i.next();
