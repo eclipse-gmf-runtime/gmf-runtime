@@ -109,7 +109,12 @@ public class DragDropEditPolicy extends GraphicalEditPolicy {
 		req.setSizeDelta(request.getSizeDelta());
 		req.setLocation(request.getLocation());
 		req.setResizeDirection(request.getResizeDirection());
-		return getHost().getCommand(req);
+		Command cmd = getHost().getCommand(req);
+		if (cmd == null || !cmd.canExecute()) {
+			return getDropObjectsCommand(castToDropObjectsRequest(request));
+		}
+		
+		return cmd;
 	}
 
 	/**
