@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,23 +18,22 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 /**
  * Abstract implementation of an IElementSelectionProvider.
  * 
- * @author Anthony Hunter <a href="mailto:anthonyh@ca.ibm.com">
- *         anthonyh@ca.ibm.com </a>
+ * @author Anthony Hunter
  */
 public abstract class AbstractElementSelectionProvider
-	extends AbstractProvider
-	implements IElementSelectionProvider {
+    extends AbstractProvider
+    implements IElementSelectionProvider {
 
-	/**
-	 * @inheritDoc
-	 */
-	public boolean provides(IOperation operation) {
-		return true;
-	}
+    /**
+     * @inheritDoc
+     */
+    public boolean provides(IOperation operation) {
+        return true;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public abstract List getMatchingObjects(IElementSelectionInput input);
+    /**
+     * @inheritDoc
+     */
+    public abstract List getMatchingObjects(IElementSelectionInput input);
 
 }
