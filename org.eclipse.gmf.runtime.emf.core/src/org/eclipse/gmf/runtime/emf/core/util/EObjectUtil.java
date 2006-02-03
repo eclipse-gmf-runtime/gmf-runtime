@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.emf.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
@@ -39,6 +41,7 @@ import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.internal.index.MSLCrossReferenceAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.index.MSLReferenceVisitor;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
@@ -563,7 +566,7 @@ public class EObjectUtil {
 
 						for (int j = 0; j < list.length; j++) {
 
-							Object object = (EObject) list[j];
+							Object object = list[j];
 
 							newList.add(object);
 						}
@@ -636,6 +639,13 @@ public class EObjectUtil {
 		if (domain == null)
 			domain = (MSLEditingDomain) MEditingDomain.INSTANCE;
 
+		MSLCrossReferenceAdapter crossReferenceAdapter =
+				MSLCrossReferenceAdapter.getCrossReferenceAdapter(eObject);
+
+		if (crossReferenceAdapter == null) {
+			return Collections.EMPTY_LIST;
+		}
+
 		if ((features != null) && (features.length != 0)) {
 
 			Collection referencers = new ArrayList();
@@ -644,8 +654,8 @@ public class EObjectUtil {
 
 				EReference feature = features[i];
 
-				Iterator j = domain.getObjectIndexer().getReferencers(eObject,
-					feature).iterator();
+				Iterator j = crossReferenceAdapter.getInverseReferencers(eObject,
+						feature, null).iterator();
 
 				while (j.hasNext()) {
 
@@ -658,7 +668,7 @@ public class EObjectUtil {
 			return referencers;
 
 		} else
-			return domain.getObjectIndexer().getAllReferencers(eObject);
+			return crossReferenceAdapter.getInverseReferencers(eObject, null, null);
 	}
 
 	/**

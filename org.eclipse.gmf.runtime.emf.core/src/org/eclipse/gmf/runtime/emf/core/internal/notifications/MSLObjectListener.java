@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,18 +11,11 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.notifications;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.MResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
 
 /**
@@ -50,8 +43,6 @@ public class MSLObjectListener {
 		Resource resource = notifier.eResource();
 
 		int eventType = notification.getEventType();
-
-		Object feature = notification.getFeature();
 
 		if (resource != null) {
 
@@ -96,75 +87,7 @@ public class MSLObjectListener {
 		// populate undo stack.
 		domain.getCommandGenerator().generateCommand(notification);
 
-		// process references.
-		processReferences(notifier, eventType, newValue, oldValue, feature,
-				resource);
-
 		// forward event to broker.
 		domain.getEventBroker().addEvent(notification);
-	}
-
-	/**
-	 * Process references and update reference maps.
-	 */
-	private void processReferences(EObject notifier, int eventType,
-			Object newValue, Object oldValue, Object feature, Resource resource) {
-
-		if (feature instanceof EReference) {
-
-			// maintain the reverese reference map.
-			EReference reference = (EReference) feature;
-
-			List newObjects = new ArrayList();
-			List oldObjects = new ArrayList();
-
-			if ((eventType == Notification.SET)
-					|| (eventType == Notification.UNSET)
-					|| (eventType == Notification.ADD)
-					|| (eventType == Notification.REMOVE)
-					|| (eventType == Notification.ADD_MANY)
-					|| (eventType == Notification.REMOVE_MANY)
-					|| (eventType == Notification.RESOLVE)) {
-
-				if (newValue instanceof EObject)
-					newObjects.add(newValue);
-
-				else if (newValue instanceof Collection) {
-
-					Iterator i = ((Collection) newValue).iterator();
-
-					while (i.hasNext()) {
-
-						Object newObject = i.next();
-
-						if (newObject instanceof EObject)
-							newObjects.add(newObject);
-					}
-				}
-
-				if (oldValue instanceof EObject)
-					oldObjects.add(oldValue);
-
-				else if (oldValue instanceof Collection) {
-
-					Iterator i = ((Collection) oldValue).iterator();
-
-					while (i.hasNext()) {
-
-						Object oldObject = i.next();
-
-						if (oldObject instanceof EObject)
-							oldObjects.add(oldObject);
-					}
-				}
-			}
-
-			if (resource instanceof MResource)
-				((MResource) resource).getHelper().registerReferences(domain,
-						notifier, reference, newObjects, oldObjects);
-			else
-				MSLUtil.registerReferences(domain, notifier, reference,
-						newObjects, oldObjects);
-		}
 	}
 }

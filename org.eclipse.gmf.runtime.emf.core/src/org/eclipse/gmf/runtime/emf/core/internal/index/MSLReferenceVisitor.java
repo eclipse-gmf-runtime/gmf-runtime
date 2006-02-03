@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,18 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.index;
 
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 
 /**
@@ -32,33 +37,21 @@ public abstract class MSLReferenceVisitor {
 
 	protected EObject referencedObject = null;
 
-	private boolean resolve = true;
-
 	/**
 	 * Constructor.
 	 */
 	public MSLReferenceVisitor(MSLEditingDomain domain, EObject eObject) {
-		this(domain, eObject, true);
-	}
-
-	/**
-	 * Constructor.
-	 */
-	public MSLReferenceVisitor(MSLEditingDomain domain, EObject eObject,
-			boolean resolve) {
-
 		this.domain = domain;
 		this.referencedObject = eObject;
-		this.resolve = resolve;
 	}
+
 
 	/**
 	 * Visit all the referencers.
 	 */
 	public void visitReferencers() {
 
-		Map featureMap = domain.getObjectIndexer().getGroupedReferencers(
-			referencedObject, resolve);
+		Map featureMap = getGroupedReferencers(referencedObject);
 
 		// operate on a clone to prevent concurrent access exceptions.
 		Object[] references = featureMap.keySet().toArray();
@@ -67,39 +60,15 @@ public abstract class MSLReferenceVisitor {
 
 			EReference reference = (EReference) references[i];
 
-			Object value = featureMap.get(reference);
+			List referencerList = (List)featureMap.get(reference);
 
-			if (value instanceof List) {
+			// operate on a clone to prevent concurrent access exceptions.
+			Object[] referencers = referencerList.toArray();
 
-				List referencerList = (List) value;
+			for (int j = 0; j < referencers.length; j++) {
+				EObject referencer = (EObject) referencerList.get(j);
 
-				// operate on a clone to prevent concurrent access exceptions.
-				Object[] referencers = referencerList.toArray();
-
-				for (int j = 0; j < referencers.length; j++) {
-
-					WeakReference r = (WeakReference) referencerList.get(j);
-
-					if (r != null) {
-
-						EObject referencer = (EObject) r.get();
-
-						if (referencer != null)
-							visitedReferencer(reference, referencer);
-					}
-				}
-
-			} else if (value instanceof WeakReference) {
-
-				WeakReference r = (WeakReference) value;
-
-				if (r != null) {
-
-					EObject referencer = (EObject) r.get();
-
-					if (referencer != null)
-						visitedReferencer(reference, referencer);
-				}
+				visitedReferencer(reference, referencer);
 			}
 		}
 	}
@@ -109,4 +78,67 @@ public abstract class MSLReferenceVisitor {
 	 */
 	protected abstract void visitedReferencer(EReference reference,
 			EObject referencer);
+
+	/**
+	 * For the given referenced EObject, returns a Map whose keys are EReferences
+	 * and values are EObjects that reference the referenced EObject with the key
+	 * EReference.
+	 * 
+	 * @param referenced the referenced EObject
+	 * @return a Map of referencers
+	 */
+	private Map getGroupedReferencers(EObject referenced) {
+
+		Map newMap = new HashMap();
+
+		MSLCrossReferenceAdapter crossReferenceAdapter = domain.getCrossReferenceAdapter();
+
+		// first group all the inverse referencers
+		Collection nonNavigableInverseReferences = 
+			crossReferenceAdapter.getNonNavigableInverseReferences(referenced);
+
+		if (nonNavigableInverseReferences != null &&
+				!nonNavigableInverseReferences.isEmpty()) {
+			for (Iterator iter = nonNavigableInverseReferences.iterator(); iter
+					.hasNext();) {
+				Setting setting = (Setting) iter.next();
+				List list = (List)newMap.get(setting.getEStructuralFeature());
+				if (list == null) {
+					list = new ArrayList();
+					list.add(setting.getEObject());
+					newMap.put(setting.getEStructuralFeature(), list);
+				} else {
+					list.add(setting.getEObject());
+				}
+			}
+		}
+
+		// next loop through all the EReferences to find referencers
+		// for those EReferences with opposites
+		List features = referenced.eClass().getEAllReferences();
+
+		for (Iterator i = features.iterator(); i.hasNext();) {
+
+			EReference reference = (EReference) i.next();
+
+			EReference opposite = reference.getEOpposite();
+
+			if (opposite != null && reference.isChangeable()
+					&& !reference.isContainer() && !reference.isContainment()) {
+
+				Set referencers = crossReferenceAdapter.getInverseReferencers(referenced, opposite, null);
+
+				if (!referencers.isEmpty()) {
+
+					newMap.put(opposite, new ArrayList(referencers));
+				}
+			}
+		}
+
+		if (newMap != null) {
+			return Collections.unmodifiableMap(newMap);
+		} else {
+			return Collections.EMPTY_MAP;
+		}
+	}
 }

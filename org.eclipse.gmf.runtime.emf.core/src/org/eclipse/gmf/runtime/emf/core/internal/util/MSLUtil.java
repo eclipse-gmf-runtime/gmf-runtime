@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002-2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,8 +44,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.osgi.framework.Bundle;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.EventTypes;
 import org.eclipse.gmf.runtime.emf.core.IValidationStatus;
@@ -65,6 +63,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.services.metamodel.MetamodelSup
 import org.eclipse.gmf.runtime.emf.core.services.metamodel.IMetamodelSupport;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.osgi.framework.Bundle;
 
 import com.ibm.icu.util.StringTokenizer;
 
@@ -154,6 +153,8 @@ public class MSLUtil {
 			eClass);
 
 		domain.getContentAdapter().listenToModifications(eObject);
+		
+		eObject.eAdapters().add(domain.getCrossReferenceAdapter());
 
 		if (sendEvents)
 			sendCreateEvent(domain, eObject);
@@ -724,80 +725,9 @@ public class MSLUtil {
 							}
 						}
 
-						domain.getResourceIndexer()
-							.registerReferences(resource);
-
 						return null;
 					}
 				});
-			}
-		}
-	}
-
-	/**
-	 * Process references and update reference maps.
-	 */
-	public static void registerReferences(MSLEditingDomain domain,
-			EObject eObject, EReference reference, List newObjects,
-			List oldObjects) {
-
-		if (reference.isContainment()) {
-
-			if (!newObjects.isEmpty()) {
-
-				Iterator i = newObjects.iterator();
-
-				while (i.hasNext()) {
-
-					EObject newObject = (EObject) i.next();
-
-					domain.getObjectIndexer().registerReferences(eObject,
-						newObject);
-				}
-			}
-
-			if (!oldObjects.isEmpty()) {
-
-				Iterator i = oldObjects.iterator();
-
-				while (i.hasNext()) {
-
-					EObject oldObject = (EObject) i.next();
-
-					domain.getObjectIndexer().deregisterReferences(eObject,
-						oldObject);
-				}
-			}
-
-		} else {
-
-			if (!newObjects.isEmpty()) {
-
-				Iterator i = newObjects.iterator();
-
-				while (i.hasNext()) {
-
-					EObject newObject = (EObject) i.next();
-
-					// registers reference in reverse reference map.
-					domain.getObjectIndexer().registerReference(eObject,
-						newObject, reference);
-				}
-			}
-
-			if (!oldObjects.isEmpty()) {
-
-				Iterator i = oldObjects.iterator();
-
-				while (i.hasNext()) {
-
-					EObject oldObject = (EObject) i.next();
-
-					// deregisters reference in reverse reference
-					// map.
-					domain.getObjectIndexer().deregisterReference(eObject,
-						oldObject, reference);
-				}
 			}
 		}
 	}

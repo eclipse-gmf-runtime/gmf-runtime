@@ -70,8 +70,7 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLCommandGenerator;
 import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack;
-import org.eclipse.gmf.runtime.emf.core.internal.index.MSLObjectIndexer;
-import org.eclipse.gmf.runtime.emf.core.internal.index.MSLResourceIndexer;
+import org.eclipse.gmf.runtime.emf.core.internal.index.MSLCrossReferenceAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.l10n.EMFCoreMessages;
 import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLContentAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.notifications.MSLEventBroker;
@@ -130,9 +129,7 @@ public class MSLEditingDomain
 
 	private MSLPathmap pathmap = null;
 
-	private MSLObjectIndexer objectIndexer = null;
-
-	private MSLResourceIndexer resourceIndexer = null;
+	private MSLCrossReferenceAdapter crossReferenceAdapter = null;
 
 	private static Map resourceSets = new WeakHashMap();
 
@@ -187,12 +184,12 @@ public class MSLEditingDomain
 
 		pathmap = new MSLPathmap(this);
 
-		objectIndexer = new MSLObjectIndexer(this);
-
-		resourceIndexer = new MSLResourceIndexer(this);
+		crossReferenceAdapter = new MSLCrossReferenceAdapter(this);
 
 		ResourceSet resourceSet = getResourceSet();
 
+		resourceSet.eAdapters().add(crossReferenceAdapter);
+		
 		extendedMetaData = new MSLExtendedMetaData();
 
 		contentAdapter.listenToModifications(resourceSet);
@@ -268,17 +265,10 @@ public class MSLEditingDomain
 	}
 
 	/**
-	 * Returns the object indexer.
+	 * Returns the cross reference adapter.
 	 */
-	public MSLObjectIndexer getObjectIndexer() {
-		return objectIndexer;
-	}
-
-	/**
-	 * Returns the resource indexer.
-	 */
-	public MSLResourceIndexer getResourceIndexer() {
-		return resourceIndexer;
+	public MSLCrossReferenceAdapter getCrossReferenceAdapter() {
+		return crossReferenceAdapter;
 	}
 
 	/**
@@ -1672,14 +1662,14 @@ public class MSLEditingDomain
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#getImports(org.eclipse.emf.ecore.resource.Resource)
 	 */
 	public Collection getImports(Resource resource) {
-		return resourceIndexer.getImports(resource);
+		return crossReferenceAdapter.getImports(resource);
 	}
 
 	/**
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain#getExports(org.eclipse.emf.ecore.resource.Resource)
 	 */
 	public Collection getExports(Resource resource) {
-		return resourceIndexer.getExports(resource);
+		return crossReferenceAdapter.getExports(resource);
 	}
 	
 	/**
@@ -1789,7 +1779,7 @@ public class MSLEditingDomain
 
 			if (!exports.contains(directExport)) {
 
-				directExports.add(directExport);
+				exports.add(directExport);
 
 				getAllExports(directExport, exports, unload);
 			}
@@ -1830,6 +1820,9 @@ public class MSLEditingDomain
 			if (currentDomain instanceof MSLEditingDomain) {
 				// remove current content adapter
 				rset.eAdapters().remove(((MSLEditingDomain) currentDomain).getContentAdapter());
+				
+				// remove cross reference adapter
+				rset.eAdapters().remove(((MSLEditingDomain) currentDomain).getCrossReferenceAdapter());
 			}
 			
 			if (domain instanceof MSLEditingDomain) {
@@ -1837,6 +1830,9 @@ public class MSLEditingDomain
 				
 				// attach new content adapter
 				rset.eAdapters().add(newDomain.getContentAdapter());
+				
+				// attach new cross reference adapter
+				rset.eAdapters().add(newDomain.getCrossReferenceAdapter());
 				
 				// for each resource that is loaded, ensure that the new domain
 				//   know that it has finished loading
