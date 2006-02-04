@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
@@ -640,7 +639,7 @@ public class EObjectUtil {
 			domain = (MSLEditingDomain) MEditingDomain.INSTANCE;
 
 		MSLCrossReferenceAdapter crossReferenceAdapter =
-				MSLCrossReferenceAdapter.getCrossReferenceAdapter(eObject);
+				MSLCrossReferenceAdapter.getMSLCrossReferenceAdapter(eObject);
 
 		if (crossReferenceAdapter == null) {
 			return Collections.EMPTY_LIST;

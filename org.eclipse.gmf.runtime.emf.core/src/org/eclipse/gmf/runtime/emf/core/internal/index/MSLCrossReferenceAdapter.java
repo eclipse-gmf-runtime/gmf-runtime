@@ -549,7 +549,7 @@ public class MSLCrossReferenceAdapter extends ECrossReferenceAdapter {
 	 * @param notifier the notifier to search
 	 * @return MSLCrossReferenceAdapter if found, otherwise null
 	 */
-	public static MSLCrossReferenceAdapter getCrossReferenceAdapter(Notifier notifier) {
+	public static MSLCrossReferenceAdapter getMSLCrossReferenceAdapter(Notifier notifier) {
 		List adapters = notifier.eAdapters();
 		
 		for (int i = 0, size = adapters.size(); i < size; ++i) {
