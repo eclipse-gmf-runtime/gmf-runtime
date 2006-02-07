@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.PrintPreviewAction;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.EnhancedPrintActionHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview.RenderedPrintPreviewHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.RenderedPrintPreviewAction;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider;
 import org.eclipse.jface.action.IAction;
 
@@ -41,8 +41,7 @@ public class GeoshapesContributionItemProvider
 			IWorkbenchPartDescriptor partDescriptor) {
 
 		if (actionId.equals(PrintPreviewAction.ID)) {
-			return new PrintPreviewAction(new EnhancedPrintActionHelper(),
-				new RenderedPrintPreviewHelper());
+			return new RenderedPrintPreviewAction(new EnhancedPrintActionHelper());
 		}
 
 		return super.createAction(actionId, partDescriptor);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,12 +37,12 @@ public class PrintPreviewAction
 	/**
 	 * Print action helper used if the user does a print from within the print preview dialog.
 	 */
-	IPrintActionHelper printActionHelper;
+	private IPrintActionHelper printActionHelper;
 	
 	/**
 	 * The <code>PrintPreviewHelper</code> on which <code>doPrintPreview()</code> is called.
 	 */
-	PrintPreviewHelper printPreviewHelper;
+	private PrintPreviewHelper printPreviewHelper;
 
 	/**
 	 * Creates a new instance.
@@ -54,20 +54,69 @@ public class PrintPreviewAction
 	 * @param printPreviewHelper
 	 *            the helper class that creates that creates the print preview
 	 *            dialog
+	 * @deprecated please use the other constructor as this will be protected
 	 */
 	public PrintPreviewAction(IPrintActionHelper printActionHelper, PrintPreviewHelper printPreviewHelper) {
 		setId(ID);
 		setText(DiagramUIPrintingMessages.PrintPreview_ActionLabel);
-		this.printActionHelper = printActionHelper;
-		this.printPreviewHelper = printPreviewHelper;
+		setPrintActionHelper(printActionHelper);
+		setPrintPreviewHelper(printPreviewHelper);
 	}
-
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param printActionHelper
+	 *            the helper class used to show the print settings dialog and
+	 *            perform the actual printing if the user were to print from
+	 *            within the print preview dialog.
+	 */
+	public PrintPreviewAction(IPrintActionHelper printActionHelper) {
+		this(printActionHelper, new PrintPreviewHelper());
+	}
+	
 	/**
 	 * Opens a dialog showing how the diagram will look when printed. Uses the
 	 * print preview helper and optionally the print action helper.
 	 */
 	public void run() {
-		printPreviewHelper.doPrintPreview(printActionHelper);
+		getPrintPreviewHelper().doPrintPreview(getPrintActionHelper());
+	}
+
+	/**
+	 * Return the print action helper that helps perform the print action in
+	 * the print preview dialog.
+	 * @return IPrintActionHelper the print action helper.
+	 */
+	private IPrintActionHelper getPrintActionHelper() {
+		return printActionHelper;
+	}
+
+	/**
+	 * Set the print action helper that helps perform the print action in the
+	 * print preview dialog.
+	 * @param printActionHelper the IPrintActionHelper
+	 */
+	protected void setPrintActionHelper(IPrintActionHelper printActionHelper) {
+		this.printActionHelper = printActionHelper;
+	}
+
+	/**
+	 * Return the print preview helper responsible for performing the print
+	 * preview.
+	 * @return PrintPreviewHelper the print preview helper.
+	 */
+	private PrintPreviewHelper getPrintPreviewHelper() {
+		return printPreviewHelper;
+	}
+
+	/**
+	 * Set the print preview helper responsible for performing the print
+	 * preview.
+	 * @return printPreviewHelper the PrintPreviewHelper
+	 */
+	protected void setPrintPreviewHelper(PrintPreviewHelper printPreviewHelper) {
+		this.printPreviewHelper = printPreviewHelper;
 	}
 
 }

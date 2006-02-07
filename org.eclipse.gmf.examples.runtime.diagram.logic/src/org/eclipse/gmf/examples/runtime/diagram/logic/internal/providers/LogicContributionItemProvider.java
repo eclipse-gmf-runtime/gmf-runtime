@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.Abstra
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.PrintPreviewAction;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.EnhancedPrintActionHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview.RenderedPrintPreviewHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.RenderedPrintPreviewAction;
 import org.eclipse.jface.action.IAction;
 
 /**
@@ -43,8 +43,7 @@ public class LogicContributionItemProvider
 		} else if (actionId.equals(DELETE_SEMANTIC_VALUE)) {
 			return new DeleteSemanticAction(partDescriptor.getPartPage());
 		} else if (actionId.equals(PrintPreviewAction.ID)) {
-			return new PrintPreviewAction(new EnhancedPrintActionHelper(),
-				new RenderedPrintPreviewHelper());
+			return new RenderedPrintPreviewAction(new EnhancedPrintActionHelper());
 		}
 
 		return super.createAction(actionId, partDescriptor);
