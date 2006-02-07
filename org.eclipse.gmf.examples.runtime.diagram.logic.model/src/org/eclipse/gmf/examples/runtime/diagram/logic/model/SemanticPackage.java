@@ -45,7 +45,7 @@ public interface SemanticPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.ibm.com/xtools/1.5.0/logicsemantic"; //$NON-NLS-1$
+	String eNS_URI = "http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.

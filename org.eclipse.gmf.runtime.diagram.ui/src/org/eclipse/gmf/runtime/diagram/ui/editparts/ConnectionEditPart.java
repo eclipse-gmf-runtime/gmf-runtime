@@ -833,7 +833,7 @@ abstract public class ConnectionEditPart
 	}
 
 	/**
-	 * This method adds all listeners to the semantic world (IUMLElement...etc)
+	 * This method adds all listeners to the semantic element behind this EditPart 
 	 * Override this method to add more semantic listeners down the hierarchy
 	 * This method is called only if the semantic element is resolvable
 	 */
@@ -854,8 +854,8 @@ abstract public class ConnectionEditPart
 	}
 
 	/**
-	 * This method removes all listeners to the semantic world
-	 * (IUMLElement...etc) Override this method to remove semantic listeners
+	 * This method removes all listeners to the semantic element behind this EditPart
+	 * Override this method to remove semantic listeners
 	 * down the hierarchy
 	 */
 	protected void removeSemanticListeners() {
@@ -1454,8 +1454,6 @@ abstract public class ConnectionEditPart
 			// Reactivating in response to semantic model reference change
 			// However, we need to verify that the event belongs to this
 			// editpart's view
-			// cannot do it now since property's source is (IView for RMS) and
-			// (IUMLView for EMF)
 		} else if (NotationPackage.eINSTANCE.getRoutingStyle_Routing().equals(
 			feature)) {
 			installRouter();

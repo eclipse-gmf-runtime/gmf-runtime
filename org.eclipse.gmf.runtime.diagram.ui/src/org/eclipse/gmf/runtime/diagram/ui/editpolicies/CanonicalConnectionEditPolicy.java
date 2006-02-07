@@ -67,46 +67,23 @@ public abstract class CanonicalConnectionEditPolicy
 	/**
 	 * Return a list of semantic relationships contained inside this
 	 * compartment.
-	 * <P>
-	 * Sample implementation - Region.
-	 * 
-	 * <pre>
-	 *   IUML2Region regions = (IUML2Region)resolveSemanticElement();
-	 *   return regions == null
-	 *   ? Collections.EMPTY_LIST
-	 *   : regions.getTransitions();
-	 *   @return IElements list
+	 * @return EObject list
 	 * 
 	 */
 	abstract protected List getSemanticConnectionsList();
 
 	/**
-	 * Return the supplied relationship's source connection.
-	 * <P>
-	 * Sample implementation - a transition element <BR>
-	 * 
-	 * <pre>
-	 * return ProxyUtil.resolve((InternalEObject) ((IUML2Transition) relationship)
-	 * 	.getSource());
-	 * </pre>
-	 * 
-	 * @param relationship
-	 *            semantic connection
+	 * Return the supplied relationship's source element
+	 * @param relationship semantic connection
+     * @return EObject the source EObject
 	 */
 	abstract protected EObject getSourceElement(EObject relationship);
 
 	/**
-	 * Return the supplied relationship's target connection.
-	 * <P>
-	 * Sample implementation - a transition element <BR>
+	 * Return the supplied relationship's target element.
 	 * 
-	 * <pre>
-	 * return ProxyUtil.resolve((InternalEObject) ((IUML2Transition) relationship)
-	 * 	.getTarget());
-	 * </pre>
-	 * 
-	 * @param relationship
-	 *            semantic connection
+	 * @param relationship semantic connection
+     * @return EObject the target EObject
 	 */
 	abstract protected EObject getTargetElement(EObject relationship);
 

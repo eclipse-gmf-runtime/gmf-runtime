@@ -45,24 +45,24 @@ public class DiagramWizardPage extends EditorWizardPage{
 		this.setDescription(ExampleDiagramGeoshapeMessages.
 			GeoshapeWizardPage_Description);
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDefaultFileName()
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDefaultFileName()
 	 */
 	protected String getDefaultFileName() {
 		return ExampleDiagramGeoshapeMessages.GEOVisualizer_DefaultGeoshapeDiagramFileName;
 	}
 	
+
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramFileCreator()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDiagramFileCreator()
 	 */
 	public DiagramFileCreator getDiagramFileCreator() {
 		return GeoShapeDiagramFileCreator.getInstance();
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramKind()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDiagramKind()
 	 */
 	protected String getDiagramKind() {
 		return "Geoshape"; //$NON-NLS-1$

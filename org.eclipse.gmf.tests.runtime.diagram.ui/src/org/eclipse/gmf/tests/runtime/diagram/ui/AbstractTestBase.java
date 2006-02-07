@@ -73,7 +73,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * 		the diagram manager will use that as a hint to determine which DiagramEditor class to use to manuipulate the diagram.
  * 	<p>c.  public static suite() - to return the Test that will be our Action Menus will run.  Note this is not defined as an abstract
  * 		method here because it needs to be a static method in your test class.
- *     d.   setTestFixtureLogic() - which sets the <code>com.ibm.xtools.presentation.util.IPresentataionTestFixtureLogic</code> class
+ *     d.   setTestFixtureLogic() - which sets the <code>org.eclipse.gmf.tests.runtime.diagram.ui.util.IPresentataionTestFixtureLogic</code> class
  * 			that will be responsible for creating the fixture(i.e test data) for this test.
  * <p>2.  Add your tests methods
  *		You need to name your tests method like test*.  The Junit framework will  run all the methods that start with test*.  For each test

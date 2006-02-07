@@ -35,7 +35,7 @@ public class DiagramIDEGlobalActionHandler
 	extends AbstractGlobalActionHandler {
 
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.common.clipboard.AbstractGlobalActionHandler#getCommand()
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler#getCommand(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	public ICommand getCommand(IGlobalActionContext cntxt) {
 		String actionId = cntxt.getActionId();

@@ -34,7 +34,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.ITestCommandCallback;
  * 
  * <p>What's left for you to do</p>
  * <br> 1.  Implement all the abstract methods and the suite() as described in the javadoc for </br>
- * <br> @see com.ibmxtools.presentation.tests.AbstractTestBase
+ * <br> @see org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase
  */
 public abstract class AbstractShapeTests extends AbstractTestBase {
 

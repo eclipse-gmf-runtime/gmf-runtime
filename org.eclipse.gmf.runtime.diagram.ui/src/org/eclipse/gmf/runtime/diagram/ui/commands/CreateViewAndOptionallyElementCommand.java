@@ -205,12 +205,12 @@ public class CreateViewAndOptionallyElementCommand
 				}
 				// Fall-thru and create a new view
 				if (getCommand().canExecute()) {
-					ICommand xtoolsCommand = DiagramCommandStack.getICommand(getCommand());
-					xtoolsCommand.execute(progressMonitor);					
+					ICommand cmd = DiagramCommandStack.getICommand(getCommand());
+					cmd.execute(progressMonitor);					
 					if (progressMonitor.isCanceled()) {
 						return newCancelledCommandResult();
-					}else if (!(xtoolsCommand.getCommandResult().getStatus().isOK())){
-						return xtoolsCommand.getCommandResult();
+					}else if (!(cmd.getCommandResult().getStatus().isOK())){
+						return cmd.getCommandResult();
 					}				
 					Object obj = ((List) createRequest.getNewObject()).get(0);										
 					setResult((IAdaptable) obj);

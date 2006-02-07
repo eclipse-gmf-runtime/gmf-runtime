@@ -48,18 +48,15 @@ abstract public class AbstractForestRouterTest extends TestCase {
 			// Empty Constructor
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.ibm.xtools.gef.internal.figures.routers.ITreeConnection#getHint()
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ITreeConnection#getHint()
 		 */
 		public String getHint() {
 			return hint;
 		}
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.ibm.xtools.gef.internal.figures.routers.ITreeConnection#getOrientation()
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ITreeConnection#getOrientation()
 		 */
 		public Orientation getOrientation() {
 			return orientation;

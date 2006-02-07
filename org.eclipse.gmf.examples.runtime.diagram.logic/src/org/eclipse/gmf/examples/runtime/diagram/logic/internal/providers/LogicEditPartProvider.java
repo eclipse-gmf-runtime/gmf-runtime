@@ -61,13 +61,13 @@ public class LogicEditPartProvider extends AbstractEditPartProvider {
 	/** list of supported shape compartment editparts */
 	private Map shapeCompartmentMap = new HashMap();
 	{
-		shapeCompartmentMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentEditPart.class); //$NON-NLS-1$
+		shapeCompartmentMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentEditPart.class); 
 	}
 	
 	/** list of supported list compartment editparts */
 	private Map listCompartmentMap = new HashMap();
 	{
-		listCompartmentMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, LogicFlowCompartmentEditPart.class); //$NON-NLS-1$
+		listCompartmentMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, LogicFlowCompartmentEditPart.class); 
 	}
 
 	/**

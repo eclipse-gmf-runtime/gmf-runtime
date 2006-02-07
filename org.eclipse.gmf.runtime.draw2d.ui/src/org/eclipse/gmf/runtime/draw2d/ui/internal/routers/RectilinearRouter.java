@@ -229,12 +229,11 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		return retVal;
 	}
 
-	/* 
+	/**
      * resetEndPointsToEdge
      * Resets both of the end points in the polyline to be anchored properly on the
      * edge of the start and end figures.
-     * 
-	 * @see com.ibm.xtools.draw2d.ObliqueRouter#resetEndPointsToEdge(org.eclipse.draw2d.Connection, org.eclipse.draw2d.geometry.PointList)
+     * @see org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter#resetEndPointsToEdge(org.eclipse.draw2d.Connection, org.eclipse.draw2d.geometry.PointList)
 	 */
 	protected void resetEndPointsToEdge(Connection conn, PointList newLine) {
 
@@ -479,11 +478,10 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 
 	private static final int maxRoutingDepth = 10;
 
-	/* 
+	/**
      * Overridden method from ObliqueRouter that will perform the conversion of the
      * polyline to a rectilinear version.
-     * 
-	 * @see com.ibm.xtools.draw2d.ObliqueRouter#routeLine(org.eclipse.draw2d.Connection, int, org.eclipse.draw2d.geometry.PointList)
+     * @see org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter#routeLine(org.eclipse.draw2d.Connection, int, org.eclipse.draw2d.geometry.PointList)
 	 */
 	public void routeLine(
 		Connection conn,

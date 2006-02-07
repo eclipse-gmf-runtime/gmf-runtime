@@ -41,8 +41,8 @@ public class PositionalGeneralViewPasteOperation
 		this.shouldPasteAlwaysCopyObject = shouldPasteAlwaysCopyObject;
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.emf.internal.copypaste.BasePasteOperation#paste()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation#paste()
 	 */
 	public void paste()
 		throws Exception {

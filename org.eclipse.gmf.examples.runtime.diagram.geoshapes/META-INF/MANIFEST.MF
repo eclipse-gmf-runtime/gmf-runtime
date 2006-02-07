@@ -35,6 +35,7 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
  org.eclipse.gmf.runtime.diagram.ui.providers,
  org.eclipse.gmf.runtime.diagram.ui.providers.ide,
- org.eclipse.gmf.runtime.diagram.ui.render
+ org.eclipse.gmf.runtime.diagram.ui.render,
+ org.eclipse.gmf.runtime.diagram.ui.geoshapes
 Eclipse-LazyStart: true
 

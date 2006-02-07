@@ -32,7 +32,7 @@ public class CreateRelationshipElementRequest extends CreateElementRequest imple
 
 	/**
 	 * @return true if the command will suppress all ui prompting and just use default data
-	 * @see com.ibm.xtools.uml.ui.internal.commands.SuppressibleUICommand#isUISupressed()
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SuppressibleUIRequest#isUISupressed()
 	 */
 	public boolean isUISupressed() {
 		
@@ -42,7 +42,7 @@ public class CreateRelationshipElementRequest extends CreateElementRequest imple
 	/**
 	 * @param suppressUI true if you do not wish the command to prompt with UI but instead
 	 * take the default value that it would have prompt for.
-	 * @see com.ibm.xtools.uml.ui.internal.commands.SuppressibleUICommand#setSuppressibleUI(boolean)
+	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SuppressibleUIRequest#setSuppressibleUI(boolean)
 	 */
 	public void setSuppressibleUI(boolean suppressUI) {
 		this.suppressUI = suppressUI; 

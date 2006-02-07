@@ -59,9 +59,9 @@ public class LogicViewProvider extends AbstractViewProvider {
 		nodeMap.put( SemanticPackage.eINSTANCE.getInputOutputTerminal(), ConnectionPointViewFactory.class );
 		
 		// Shape Compartments
-		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentViewFactory.class); //$NON-NLS-1$
+		nodeMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentViewFactory.class); 
 		// List Compartments
-		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class); //$NON-NLS-1$
+		nodeMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, ListCompartmentViewFactory.class); 
 	}
 	
 	// Map to hold the Line/Connector Views

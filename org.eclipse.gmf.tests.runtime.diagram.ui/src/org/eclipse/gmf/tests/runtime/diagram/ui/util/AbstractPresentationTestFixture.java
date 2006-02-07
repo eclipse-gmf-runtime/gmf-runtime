@@ -56,7 +56,7 @@ import org.eclipse.ui.part.EditorPart;
  * Most fixture should extend fromthis Abstract class.  The only things that are left to do is to implement the following
  * abstract methods
  * 1.  createProject,createDiagram,craeteShapesAndConnectors
- * 2.  Implement you test class which should extend from org.junit.org or @see com.ibm.xtools.presentation.AbstractTestBase
+ * 2.  Implement you test class which should extend from org.junit.org or @see org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase
  * 
  */
 public abstract class AbstractPresentationTestFixture

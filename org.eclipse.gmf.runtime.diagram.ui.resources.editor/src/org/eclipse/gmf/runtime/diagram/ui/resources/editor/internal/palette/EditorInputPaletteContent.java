@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocu
  * The default palette content. 
  * An instance of this class is passed to 
  * <code>org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService</code>
- * when creating a palette for <code>com.ibm.xtools.uml.ui.diagram.internal.parts.UMLDiagramEditor</code>.
+ * when creating a palette for an Editor
  * <p>
  * This palette content is based on the kind of project for which this
  * content is created. It allows the Palette items to check on Nature

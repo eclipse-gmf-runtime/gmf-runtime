@@ -43,7 +43,7 @@ public class DecoratorPlugin
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle
-				.getBundle("com.ibm.xtools.modeler.ui.pde.examples.diagram.DiagramPluginResources"); //$NON-NLS-1$
+				.getBundle("org.eclipse.gmf.examples.runtime.diagram.decorator.DiagramPluginResources"); //$NON-NLS-1$
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

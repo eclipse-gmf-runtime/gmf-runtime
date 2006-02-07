@@ -105,7 +105,9 @@ public class DiagramViewFactory implements DiagramFactory{
 	}
 	
 	private void initializeMeasurementUnit(Diagram diagram) {
-		diagram.initializeMeasurementUnit(getMeasurementUnit());
+        if (!diagram.isSetMeasurementUnit()){
+            diagram.setMeasurementUnit(getMeasurementUnit());
+        }
 	}
 
 	/**

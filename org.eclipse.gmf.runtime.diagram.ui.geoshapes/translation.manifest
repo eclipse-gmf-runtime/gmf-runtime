@@ -1,2 +1,2 @@
 plugin.properties
-src/com/ibm/xtools/presentation/geoshapes/internal/l10n/messages.properties
+src/org/eclipse/gmf/runtime/diagram/ui/geoshapes/internal/l10n/DiagramUIGeoshapesMessages.properties

@@ -195,20 +195,20 @@ public abstract class EditorWizardPage
 		return diagramFile;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDefaultFileName()
+	/**
+	 * @return the default file name
 	 */
 	protected String getDefaultFileName() {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramFileCreator()
+	/**
+	 * @return the diagram file creator
 	 */
 	public abstract DiagramFileCreator getDiagramFileCreator();
 
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramKind()
+	/**
+	 * @return the diagram kind
 	 */
 	protected String getDiagramKind() {
 		return null;
@@ -258,7 +258,7 @@ public abstract class EditorWizardPage
 
 			// Some characters reserved in URI should be checked here. :,#,\,/
 			URI fileURI = URI.createFileURI(path.toString());
-			String ext = fileURI.fileExtension(); //$NON-NLS-1$
+			String ext = fileURI.fileExtension(); 
 
 			if (ext != null
 				&& getDiagramFileCreator().getExtension().equals("." + ext)) { //$NON-NLS-1$

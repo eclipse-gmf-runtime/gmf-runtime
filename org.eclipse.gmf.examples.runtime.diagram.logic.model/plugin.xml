@@ -14,7 +14,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: plugin.xml,v 1.2 2005/09/12 21:26:07 sshaw Exp $
+ * $Id: plugin.xml,v 1.3 2006/02/07 15:18:57 mmostafa Exp $
  */
 -->
 
@@ -22,7 +22,7 @@
 
     <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
-       uri = "http://www.ibm.com/xtools/1.5.0/logicsemantic" 
+       uri = "http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic" 
        class = "org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage" />
   </extension>
 

@@ -57,6 +57,6 @@ public class LogicFlowContainerViewFactory
 		super.decorateView(containerView, view, semanticAdapter, semanticHint,
 			index, persisted);
 		getViewService().createNode(semanticAdapter, view,
-			LogicConstants.LOGIC_FLOW_COMPARTMENT, ViewUtil.APPEND, getPreferencesHint()); //$NON-NLS-1$	
+			LogicConstants.LOGIC_FLOW_COMPARTMENT, ViewUtil.APPEND, getPreferencesHint());	
 	}
 }

@@ -56,7 +56,7 @@ public class ShowRelatedElementsRequest extends Request {
 	 * Constructor for ShowRelatedElementsRequest.
 	 * @param shapes List of IShapeView objects that were selected
 	 * @param relationshipTypesToShow  List of relationship type hints
-	 * to show.  Use CoreUMLTypeInfo.
+	 * to show.  
 	 * @param isExpandIndefinite true to expand indefinitely, false not to.
 	 * @param expandLevel specify an int level here for the number of
 	 * levels to expand if you set isExpandIndefinite to false.

@@ -62,8 +62,10 @@ class ConnectorViewPostPasteChildOperation
 
 	}
 
+
 	/**
-	 * @see com.ibm.xtools.bml.emf.internal.copypaste.PasteChildOperation#paste()
+	 * @return
+	 * @throws Exception
 	 */
 	private EObject doPaste()
 		throws Exception {

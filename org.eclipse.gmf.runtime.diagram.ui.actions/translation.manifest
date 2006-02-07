@@ -1,2 +1,2 @@
 plugin.properties
-src/com/ibm/xtools/diagram/ui/actions/internal/l10n/messages.properties
+src/org/eclipse/gmf/runtime/diagram/ui/actions/internal/l10n/DiagramUIActionsMessages.properties

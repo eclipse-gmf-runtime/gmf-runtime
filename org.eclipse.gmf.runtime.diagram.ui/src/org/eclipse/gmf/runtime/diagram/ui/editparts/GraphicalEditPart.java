@@ -868,7 +868,7 @@ public abstract class GraphicalEditPart
 	}
 	
 	/**
-	 * This method adds all listeners to the semantic world (IUMLElement...etc)
+	 * This method adds all listeners to the semantic element behind this EditPart
 	 * Override this method to add more semantic listeners down the hierarchy
 	 * This method is called only if the semantic element is resolvable
 	 */
@@ -886,8 +886,8 @@ public abstract class GraphicalEditPart
 	}
 
 	/**
-	 * This method removes all listeners to the semantic world
-	 * (IUMLElement...etc) Override this method to remove semantic listeners
+	 * This method removes all listeners to the semantic element behind this EditPart
+	 * Override this method to remove semantic listeners
 	 * down the hierarchy
 	 */
 	protected void removeSemanticListeners() {

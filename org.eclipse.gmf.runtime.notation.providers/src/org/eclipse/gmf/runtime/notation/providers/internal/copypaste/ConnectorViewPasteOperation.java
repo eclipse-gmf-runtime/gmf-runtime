@@ -46,8 +46,8 @@ public class ConnectorViewPasteOperation
 		super(overriddenChildPasteOperation);
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.emf.internal.copypaste.PasteChildOperation#paste()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation#paste()
 	 */
 	public void paste() throws Exception {
 		//basically delay...
@@ -76,8 +76,8 @@ public class ConnectorViewPasteOperation
 		return null;
 	}
 
-	/**
-	 * @see com.ibm.xtools.bml.emf.internal.copypaste.PasteChildOperation#getPostPasteOperation()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation#getPostPasteOperation()
 	 */
 	public PasteChildOperation getPostPasteOperation() {
 		return new PostPasteChildOperation(this, EMPTY_ARRAY) {

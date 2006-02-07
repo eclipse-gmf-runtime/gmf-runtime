@@ -33,8 +33,8 @@ public class LogicDiagramFileCreator extends IDEEditorFileCreator {
 		return INSTANCE;
 	}
 	
-	/**
-	 * @see com.ibm.xtools.uml.ui.diagram.internal.util.AbstractUMLDiagramFileCreator#getExtension()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator#getExtension()
 	 */
 	public String getExtension() {
 		return ".logic2"; //$NON-NLS-1$

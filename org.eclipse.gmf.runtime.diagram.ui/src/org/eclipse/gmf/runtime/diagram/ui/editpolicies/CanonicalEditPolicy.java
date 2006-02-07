@@ -311,21 +311,6 @@ implements NotificationListener {
 
 	/**
 	 * Return the host's semantic children. <BR>
-	 * Sample useage:<BR>
-	 * Composite State (Shape): <br>
-	 * <pre>
-	 *		IUML2State state =  (IUML2State)resolveSemanticElement() 
-	 *      return state == null 
-	 *			? Collections.EMPTY_LIST
-	 *			: state.getRegions();
-	 * </pre><BR>
-	 * Region (ShapeCompartment): <BR>
-	 *		IUML2Region regions = (IUML2Region)resolveSemanticElement();
-	 *		return regions == null 
-	 *			? Collections.EMPTY_LIST
-	 *			: regions.getSubvertices();
-	 * </pre><BR>
-	 * 
 	 * @return a list of semantic children.
 	 */
 	abstract protected List getSemanticChildrenList();

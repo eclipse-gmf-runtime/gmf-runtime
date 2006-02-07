@@ -231,7 +231,7 @@ public class LineSegTest extends TestCase {
 
 		first = PointListUtilities.pickClosestPoint(intersections, p2);
 		second = PointListUtilities.pickFarestPoint(intersections, p2);
-		assertTrue(second.x == first.x && second.y == first.y); //$NON-NLS-1$
+		assertTrue(second.x == first.x && second.y == first.y); 
 		assertTrue(
 			"Incorrect value for intersection point", first.x == 10 && first.y == 0); //$NON-NLS-1$
 
@@ -290,7 +290,7 @@ public class LineSegTest extends TestCase {
 
 		first = PointListUtilities.pickClosestPoint(intersections, p2);
 		second = PointListUtilities.pickFarestPoint(intersections, p2);
-		assertTrue(second.x == first.x && second.y == first.y); //$NON-NLS-1$
+		assertTrue(second.x == first.x && second.y == first.y); 
 		assertTrue(
 			"Incorrect value for intersection point", first.x == 2 && first.y == 0); //$NON-NLS-1$
 

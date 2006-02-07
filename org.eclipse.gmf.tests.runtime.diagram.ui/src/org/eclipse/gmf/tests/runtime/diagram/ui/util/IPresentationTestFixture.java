@@ -24,8 +24,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
 /**
  * @author choang
  *
- * All fixture should implement this interface.  See com.ibm.xtools.presentation.umlvisualizer.util.UmlVisualizerTestFixture for and example 
- * example
+ * All fixture should implement this interface.  
  */
 
 public interface IPresentationTestFixture

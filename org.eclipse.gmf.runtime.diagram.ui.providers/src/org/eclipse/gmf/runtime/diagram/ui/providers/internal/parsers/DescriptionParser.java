@@ -55,15 +55,15 @@ public class DescriptionParser implements IParser {
 		return instance;
 	}
 
-	/**
-	 * @see com.ibm.xtools.common.services.parser.IParser#getEditString(IAdaptable, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.parser.IParser#getEditString(org.eclipse.core.runtime.IAdaptable, int)
 	 */
 	public String getEditString(IAdaptable adapter, int flags) {
 		return getPrintString(adapter, flags);
 	}
 
-	/**
-	 * @see com.ibm.xtools.common.services.parser.IParser#getParseCommand(IAdaptable, String, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.parser.IParser#getParseCommand(org.eclipse.core.runtime.IAdaptable, java.lang.String, int)
 	 */
 	public ICommand getParseCommand(
 		IAdaptable adapter,
@@ -72,8 +72,8 @@ public class DescriptionParser implements IParser {
 		return new SetPropertyCommand(adapter, Properties.ID_DESCRIPTION, ViewType.TEXT, newString);
 	}
 
-	/**
-	 * @see com.ibm.xtools.common.services.parser.IParser#getPrintString(IAdaptable, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.parser.IParser#getPrintString(org.eclipse.core.runtime.IAdaptable, int)
 	 */
 	public String getPrintString(IAdaptable adapter, int flags) {
 		final View view = (View) adapter.getAdapter(View.class);

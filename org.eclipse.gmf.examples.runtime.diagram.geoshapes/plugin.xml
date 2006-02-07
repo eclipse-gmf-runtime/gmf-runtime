@@ -55,7 +55,7 @@
    
    
   <extension point="org.eclipse.wst.common.ui.properties.propertyContributor">
-     <propertyContributor contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes" labelProvider="com.ibm.xtools.modeler.ui.properties.internal.views.ElementLabelProvider">
+     <propertyContributor contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes" labelProvider="org.eclipse.gmf.runtime.common.ui.services.util.CommonLabelProvider">
         <propertyCategory category="General"/>
         <propertyCategory category="Advanced"/>
         <propertyCategory category="Appearance"/>
@@ -82,8 +82,8 @@
         </propertySection>
         
         <propertySection
-              class="section.GeoShapeGeneralSection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.EditPartPropertySectionFilter"
+              class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.section.GeoShapeGeneralSection"
+              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
               id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.GeoShapeGeneralSection"
               tab="geoshapes.tab.General">
            <input type="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.GeoShapeEditPart"/>
@@ -91,7 +91,7 @@
         
         <propertySection
               class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ShapeColorsAndFontsPropertySection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.EditPartPropertySectionFilter"
+              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
               id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.GeoShapeColorsAndFontsPropertySection"
               tab="geoshapes.tab.Appearance">
            <input type="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.GeoShapeEditPart"/>
@@ -99,7 +99,7 @@
 
         <propertySection
               class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectionAppearancePropertySection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.EditPartPropertySectionFilter"
+              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
               id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.ConnectorAppearancePropertySection"
               tab="geoshapes.tab.Appearance">
            <input type="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart"/>           

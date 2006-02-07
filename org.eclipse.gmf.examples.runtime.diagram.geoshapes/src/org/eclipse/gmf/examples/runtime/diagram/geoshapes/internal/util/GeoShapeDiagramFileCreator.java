@@ -32,8 +32,8 @@ public class GeoShapeDiagramFileCreator extends IDEEditorFileCreator {
 		return INSTANCE;
 	}
 	
-	/**
-	 * @see com.ibm.xtools.uml.ui.diagram.internal.util.AbstractUMLDiagramFileCreator#getExtension()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator#getExtension()
 	 */
 	public String getExtension() {
 		return ".geo"; //$NON-NLS-1$

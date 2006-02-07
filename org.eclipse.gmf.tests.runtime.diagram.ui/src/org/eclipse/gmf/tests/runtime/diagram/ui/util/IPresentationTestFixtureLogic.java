@@ -25,11 +25,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * <p>Interface to define what a Test Fixture Logic methods.  Used
  * <br>by @see org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase to setup
  * </br> the fixture for the tests.
- * <br>  For an example @see com.ibm.xtools.umlvisualizer.util.UmlvisualerFixtureLogic
- * which has the logic to craete the fixture data for uml visualizer tests.  Typically there is more then just one
- * FixtureLogic class per diagram type.  All test suites that use the same test data (i.e fixture) should
- * use the same FixtureLogic class. 
- */
+  */
 public interface IPresentationTestFixtureLogic
 {
 	

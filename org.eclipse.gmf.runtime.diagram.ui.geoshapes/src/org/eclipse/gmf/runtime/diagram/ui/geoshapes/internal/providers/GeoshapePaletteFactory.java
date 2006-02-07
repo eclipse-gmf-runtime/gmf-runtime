@@ -30,10 +30,8 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
 public class GeoshapePaletteFactory
 	extends PaletteFactory.Adapter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.rational.xtools.gef.ui.palette.PaletteFactory#createTool(java.lang.String)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory.Adapter#createTool(java.lang.String)
 	 */
 	public Tool createTool(String toolId) {
 

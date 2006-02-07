@@ -1,7 +1,7 @@
 
 (object Petal
-    version    	47
-    _written   	"Rose 8.0.0303.1400"
+    version    	46
+    _written   	"Rose 7.7.0204.3001"
     charSet    	0)
 
 (object Design "Logical View"
@@ -107,7 +107,7 @@
 		    (object Attribute
 			tool       	"Ecore"
 			name       	"nsURI"
-			value      	(value Text "http://www.ibm.com/xtools/1.5.0/logicsemantic"))
+			value      	(value Text "http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"))
 		    (object Attribute
 			tool       	"Ecore"
 			name       	"packageName"
@@ -566,23 +566,6 @@
 				line_color 	3342489
 				fill_color 	13434879
 				quidu      	"41EEBF4900C6"
-				compartment 	(object Compartment
-				    Parent_View 	@6
-				    location   	(1292, 1180)
-				    font       	(object Font
-					size       	10
-					face       	"Arial"
-					bold       	FALSE
-					italics    	FALSE
-					underline  	FALSE
-					strike     	FALSE
-					color      	0
-					default_color 	TRUE)
-				    icon_style 	"Icon"
-				    fill_color 	16777215
-				    anchor     	2
-				    nlines     	2
-				    max_width  	303)
 				width      	378
 				height     	192
 				annotation 	8
@@ -685,67 +668,7 @@
 				origin_attachment 	(2427, 1744)
 				terminal_attachment 	(2427, 1506)
 				drawSupplier 	@9)
-			    (object ClassView "Class" "Logical View::semantic::OutputTerminal" @13
-				ShowCompartmentStereotypes 	TRUE
-				IncludeAttribute 	TRUE
-				IncludeOperation 	TRUE
-				location   	(2704, 1072)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				label      	(object ItemLabel
-				    Parent_View 	@13
-				    location   	(2522, 1019)
-				    fill_color 	13434879
-				    nlines     	1
-				    max_width  	364
-				    justify    	0
-				    label      	"OutputTerminal")
-				icon_style 	"Icon"
-				line_color 	3342489
-				fill_color 	13434879
-				quidu      	"425EBA7A0118"
-				width      	382
-				height     	130
-				annotation 	8
-				autoResize 	TRUE)
-			    (object ClassView "Class" "Logical View::semantic::InputTerminal" @14
-				ShowCompartmentStereotypes 	TRUE
-				IncludeAttribute 	TRUE
-				IncludeOperation 	TRUE
-				location   	(3840, 1072)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				label      	(object ItemLabel
-				    Parent_View 	@14
-				    location   	(3675, 1019)
-				    fill_color 	13434879
-				    nlines     	1
-				    max_width  	330
-				    justify    	0
-				    label      	"InputTerminal")
-				icon_style 	"Icon"
-				line_color 	3342489
-				fill_color 	13434879
-				quidu      	"425EBA8800EA"
-				width      	348
-				height     	130
-				annotation 	8
-				autoResize 	TRUE)
-			    (object ClassView "Class" "Logical View::semantic::InputOutputTerminal" @15
+			    (object ClassView "Class" "Logical View::semantic::InputOutputTerminal" @13
 				ShowCompartmentStereotypes 	TRUE
 				IncludeAttribute 	TRUE
 				IncludeOperation 	TRUE
@@ -760,7 +683,7 @@
 				    color      	0
 				    default_color 	TRUE)
 				label      	(object ItemLabel
-				    Parent_View 	@15
+				    Parent_View 	@13
 				    location   	(3043, 1356)
 				    fill_color 	13434879
 				    nlines     	1
@@ -775,7 +698,37 @@
 				height     	128
 				annotation 	8
 				autoResize 	TRUE)
-			    (object InheritView "" @16
+			    (object ClassView "Class" "Logical View::semantic::OutputTerminal" @14
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				IncludeOperation 	TRUE
+				location   	(2704, 1072)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				label      	(object ItemLabel
+				    Parent_View 	@14
+				    location   	(2522, 1019)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	364
+				    justify    	0
+				    label      	"OutputTerminal")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"425EBA7A0118"
+				width      	382
+				height     	130
+				annotation 	8
+				autoResize 	TRUE)
+			    (object InheritView "" @15
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -788,15 +741,45 @@
 				stereotype 	FALSE
 				line_color 	3342489
 				quidu      	"4263C1FA028E"
-				client     	@15
-				supplier   	@13
+				client     	@13
+				supplier   	@14
 				line_style 	0)
+			    (object ClassView "Class" "Logical View::semantic::InputTerminal" @16
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				IncludeOperation 	TRUE
+				location   	(3840, 1072)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				label      	(object ItemLabel
+				    Parent_View 	@16
+				    location   	(3675, 1019)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	330
+				    justify    	0
+				    label      	"InputTerminal")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"425EBA8800EA"
+				width      	348
+				height     	130
+				annotation 	8
+				autoResize 	TRUE)
 			    (object InheritView "" @17
 				stereotype 	TRUE
 				line_color 	3342489
 				quidu      	"4263C20B01E2"
-				client     	@15
-				supplier   	@14
+				client     	@13
+				supplier   	@16
 				line_style 	0)
 			    (object ClassView "Class" "Logical View::semantic::Wire" @18
 				ShowCompartmentStereotypes 	TRUE
@@ -880,7 +863,7 @@
 					line_color 	3342489
 					quidu      	"420D1AA70328"
 					client     	@19
-					supplier   	@13
+					supplier   	@14
 					line_style 	0
 					label      	(object SegLabel @22
 					    Parent_View 	@20
@@ -968,7 +951,7 @@
 					line_color 	3342489
 					quidu      	"420D1AE90069"
 					client     	@24
-					supplier   	@14
+					supplier   	@16
 					vertices   	(list Points
 					    (3762, 1727)
 					    (3855, 1725)
@@ -1107,23 +1090,6 @@
 				line_color 	3342489
 				fill_color 	13434879
 				quidu      	"420B84B502C3"
-				compartment 	(object Compartment
-				    Parent_View 	@34
-				    location   	(2906, 396)
-				    font       	(object Font
-					size       	10
-					face       	"Arial"
-					bold       	FALSE
-					italics    	TRUE
-					underline  	FALSE
-					strike     	FALSE
-					color      	0
-					default_color 	TRUE)
-				    icon_style 	"Icon"
-				    fill_color 	16777215
-				    anchor     	2
-				    nlines     	2
-				    max_width  	315)
 				width      	382
 				height     	192
 				annotation 	8
@@ -1132,7 +1098,7 @@
 				stereotype 	TRUE
 				line_color 	3342489
 				quidu      	"425EBBB70114"
-				client     	@13
+				client     	@14
 				supplier   	@34
 				vertices   	(list Points
 				    (2895, 1069)
@@ -1143,7 +1109,7 @@
 				stereotype 	TRUE
 				line_color 	3342489
 				quidu      	"425EBBC501A1"
-				client     	@14
+				client     	@16
 				supplier   	@34
 				vertices   	(list Points
 				    (3665, 1071)
@@ -5082,7 +5048,7 @@
 		    (object Attribute
 			tool       	"Java"
 			name       	"ClassPath"
-			value      	"")
+			value      	".;C:\\Program Files\\Rational\\RUPBuilder;C:\\Program Files\\Rational\\common\\java\\swingall.jar;C:\\Program Files\\Rational\\common\\java\\javahelp\\jh.jar;C:\\jdk1.3.1_05\\src.jar;C:\\jdk1.3.1_05\\jre\\lib\\i18n.jar;C:\\jdk1.3.1_05\\jre\\lib\\jaws.jar;C:\\jdk1.3.1_05\\jre\\lib\\rt.jar;C:\\jdk1.3.1_05\\jre\\lib\\sunrsasign.jar;C:\\jdk1.3.1_05\\lib\\dt.jar;C:\\jdk1.3.1_05\\lib\\htmlconverter.jar;C:\\jdk1.3.1_05\\lib\\tools.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\charsets.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\jce.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\jsse.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\rt.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\sunrsasign.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\ext\\dnsns.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\ext\\ldapsec.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\ext\\localedata.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\ext\\sunjce_provider.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\security\\local_policy.jar;C:\\j2sdk1.4.2_03\\jre\\lib\\security\\US_export_policy.jar;C:\\j2sdk1.4.2_03\\lib\\dt.jar;C:\\j2sdk1.4.2_03\\lib\\htmlconverter.jar;C:\\j2sdk1.4.2_03\\lib\\tools.jar")
 		    (object Attribute
 			tool       	"Java"
 			name       	"ReferenceClasspath"

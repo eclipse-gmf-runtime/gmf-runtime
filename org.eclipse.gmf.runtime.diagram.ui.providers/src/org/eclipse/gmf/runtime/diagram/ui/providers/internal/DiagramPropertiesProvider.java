@@ -43,8 +43,8 @@ public class DiagramPropertiesProvider
 
 	public static String VIEW_CATEGORY = DiagramUIProvidersMessages.DiagramPropertiesProvider_viewCategory;
 
-	/**
-	 * @see com.ibm.xtools.common.service.IProvider#provides(IOperation)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.emf.ui.properties.providers.GenericEMFPropertiesProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
 	public boolean provides(IOperation operation) {
 

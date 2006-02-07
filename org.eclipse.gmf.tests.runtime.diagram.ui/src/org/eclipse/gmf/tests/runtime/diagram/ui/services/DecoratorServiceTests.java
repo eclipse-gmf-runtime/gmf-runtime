@@ -98,10 +98,8 @@ public class DecoratorServiceTests
 			myNoteDecorator = null;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.ibm.xtools.presentation.services.decorator.IDecoratorProvider#createDecorators(com.ibm.xtools.presentation.services.decorator.IDecoratorTarget)
+		/* (non-Javadoc)
+		 * @see org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider#createDecorators(org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget)
 		 */
 		public void createDecorators(IDecoratorTarget decoratorTarget) {
 			NoteEditPart noteEP = (NoteEditPart) decoratorTarget

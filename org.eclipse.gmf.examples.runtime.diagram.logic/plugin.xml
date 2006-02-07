@@ -210,7 +210,7 @@
   
   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
         <metamodel
-                nsURI="http://www.ibm.com/xtools/1.5.0/logicsemantic">
+                nsURI="http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic">
            <metamodelType
                    id="logic.model" 
                    eclass="Model"

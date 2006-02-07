@@ -70,8 +70,8 @@ import org.eclipse.jface.util.Assert;
 public class RadialProvider
 	extends AbstractLayoutEditPartProvider {
 
-	/**
-	 * @see com.ibm.xtools.common.service.IProvider#provides(IOperation)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
 	public boolean provides(IOperation operation) {
 		Assert.isNotNull(operation);

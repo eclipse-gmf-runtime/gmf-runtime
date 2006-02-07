@@ -105,7 +105,7 @@ public abstract class AbstractLabeledCheckboxPropertySection
 
 		// Create checkbox
 		checkbox = getWidgetFactory().createButton(composite, getNameLabel(),
-			SWT.CHECK); //$NON-NLS-1$
+			SWT.CHECK);
 		data = new FormData();
 		data.left = new FormAttachment(0, getStandardLabelWidth(parent));
 		data.top = new FormAttachment(0, 0);
@@ -155,7 +155,7 @@ public abstract class AbstractLabeledCheckboxPropertySection
 
 		// Create label
 		leftLabel = getWidgetFactory()
-			.createCLabel(composite, getPrefixLabel()); //$NON-NLS-1$
+			.createCLabel(composite, getPrefixLabel()); 
 		data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(checkbox, 0, SWT.CENTER);

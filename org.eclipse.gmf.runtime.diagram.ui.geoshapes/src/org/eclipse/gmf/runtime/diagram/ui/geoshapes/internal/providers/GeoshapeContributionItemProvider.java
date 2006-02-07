@@ -40,8 +40,8 @@ public class GeoshapeContributionItemProvider
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.rational.xtools.common.ui.services.contributionitem.AbstractContributionItemProvider#createAction(java.lang.String,
-	 *      com.rational.xtools.common.ui.util.IWorkbenchPartDescriptor)
+	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider#createAction(java.lang.String,
+	 *      org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
 	 */
 	protected IAction createAction(String actionId,
 			IWorkbenchPartDescriptor partDescriptor) {

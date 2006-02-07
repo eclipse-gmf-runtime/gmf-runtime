@@ -1,2 +1,2 @@
 plugin.properties
-src\com\ibm\xtools\diagram\ui\render\l10n\messages.properties
+src\org\eclipse\gmf\runtime\diagram\ui\render\internal\l10n\DiagramUIRenderMessages.properties

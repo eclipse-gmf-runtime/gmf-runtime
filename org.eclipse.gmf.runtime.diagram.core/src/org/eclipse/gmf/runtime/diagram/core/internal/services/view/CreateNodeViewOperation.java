@@ -67,8 +67,8 @@ public class CreateNodeViewOperation extends CreateChildViewOperation
 		return Node.class;
 	}
 
-	/**
-	 * @see com.ibm.xtools.common.service.IOperation#execute(IProvider)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(org.eclipse.gmf.runtime.common.core.service.IProvider)
 	 */
 	public Object execute(IProvider provider) {
 		return ((IViewProvider) provider).createNode(

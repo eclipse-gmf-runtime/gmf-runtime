@@ -70,22 +70,23 @@ public class LogicWizardPage extends EditorWizardPage{
 				saveDiagram);
 	}
 	
+
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDefaultFileName()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDefaultFileName()
 	 */
 	protected String getDefaultFileName() {
 		return ExampleDiagramLogicMessages.LogicVisualizer_DefaultLogicDiagramFileName;
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramFileCreator()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDiagramFileCreator()
 	 */
 	public DiagramFileCreator getDiagramFileCreator() {
 		return LogicDiagramFileCreator.getInstance();
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.ibm.xtools.viz.ui.internal.wizards.DiagramWizardPage#getDiagramKind()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards.EditorWizardPage#getDiagramKind()
 	 */
 	protected String getDiagramKind() {
 		return "logic"; //$NON-NLS-1$
