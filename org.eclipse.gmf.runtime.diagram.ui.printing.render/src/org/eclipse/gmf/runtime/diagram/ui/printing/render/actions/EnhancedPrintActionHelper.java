@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,9 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.validation.internal.util.Trace;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.DiagramUIPrintingRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.DiagramUIPrintingRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.util.RenderedDiagramPrinter;
 import org.eclipse.gmf.runtime.diagram.ui.printing.util.DiagramPrinterUtil;
@@ -66,7 +67,7 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 		else {
 			Log.error(DiagramUIPrintingRenderPlugin.getInstance(), IStatus.ERROR, "Invalid IWorkbenchPart"); //$NON-NLS-1$
 			IllegalArgumentException e = new IllegalArgumentException("Invalid IWorkbenchPart."); //$NON-NLS-1$
-			Trace.throwing(EnhancedPrintActionHelper.class, "doPrint()", e); //$NON-NLS-1$
+			Trace.throwing(DiagramUIPrintingRenderPlugin.getInstance(), DiagramUIPrintingRenderDebugOptions.EXCEPTIONS_THROWING,  EnhancedPrintActionHelper.class, "doPrint()", e); //$NON-NLS-1$
 			throw e;
 		}
 		
