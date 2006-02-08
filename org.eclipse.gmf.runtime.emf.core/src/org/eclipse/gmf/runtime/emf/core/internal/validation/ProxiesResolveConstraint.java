@@ -21,10 +21,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 /**
  * Implements a validator that collects model reference errors and forwards them on to
@@ -40,7 +40,7 @@ public class ProxiesResolveConstraint
 	/** The rule ID for element ID errors */
 	public static final String	ELEMENT_RULE_ID		= "org.eclipse.gmf.runtime.emf.core.IdFixup"; //$NON-NLS-1$
 
-	public static final String DIAGNOSTIC_SOURCE = MSLPlugin.getPluginId();
+	public static final String DIAGNOSTIC_SOURCE = EMFCorePlugin.getPluginId();
 	
 	/**
 	 * Initializes me.
@@ -51,7 +51,7 @@ public class ProxiesResolveConstraint
 
 	private String getObjectLabel(EObject eObject)
 	{
-		return EObjectUtil.getQName(eObject,true);
+		return EMFCoreUtil.getQualifiedName(eObject,true);
 	}
 	
 	private String getFeatureLabel(EStructuralFeature eStructuralFeature)

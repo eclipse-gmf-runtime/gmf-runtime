@@ -11,10 +11,11 @@ Export-Package: org.eclipse.gmf.tests.runtime.emf.commands.core.command,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.runtime.compatibility,
  org.junit,
- org.eclipse.gmf.runtime.emf.core,
+ org.eclipse.gmf.runtime.emf.core.compatibility,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.gmf.runtime.common.core,
  org.eclipse.gmf.tests.runtime.common.core,
  org.eclipse.gmf.tests.runtime.emf.core,
+ org.eclipse.emf.examples.library,
  org.eclipse.pde.runtime
 Eclipse-LazyStart: false

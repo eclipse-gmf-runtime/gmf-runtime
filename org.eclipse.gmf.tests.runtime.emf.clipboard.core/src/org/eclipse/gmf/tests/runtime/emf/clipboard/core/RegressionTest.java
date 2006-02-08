@@ -28,21 +28,23 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * Tests copying root elements to the clipboard.
 	 */
 	public void test_copyRoot_bugzilla107880() {
-		List objects = new ArrayList();
-		
-		// copy root1
-		objects.add(root1);
-		String result = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(result);
-		assertFalse(result.length() == 0);
-		
-		int length = result.length();
-		
-		// copy root2
-		objects.add(root2);
-		result = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(result);
-		assertTrue(result.length() > length);
+		if (writing()) {
+			List objects = new ArrayList();
+			
+			// copy root1
+			objects.add(root1);
+			String result = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(result);
+			assertFalse(result.length() == 0);
+			
+			int length = result.length();
+			
+			// copy root2
+			objects.add(root2);
+			result = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(result);
+			assertTrue(result.length() > length);
+		}
 	}
 	
 	/**
@@ -50,23 +52,25 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * this element into another element.
 	 */
 	public void test_copyPasteRoot_bugzilla107880() {
-		List objects = new ArrayList();
-
-		// level12 has no branches
-		assertTrue(level12.getBranches().size() == 0);
-
-		// copy root3
-		objects.add(root3);
-		String copyStr = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(copyStr);
-		assertFalse(copyStr.length() == 0);
-		
-		// paste into level1
-		Collection eObjects = paste(copyStr, level12, Collections.EMPTY_MAP);
-		assertEquals(eObjects.size(), objects.size());
-
-		// check that the library was copied into the branches containment list
-		assertTrue(level12.getBranches().size() == 1);
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			// level12 has no branches
+			assertTrue(level12.getBranches().size() == 0);
+	
+			// copy root3
+			objects.add(root3);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into level1
+			Collection eObjects = paste(copyStr, level12, Collections.EMPTY_MAP);
+			assertEquals(eObjects.size(), objects.size());
+	
+			// check that the library was copied into the branches containment list
+			assertTrue(level12.getBranches().size() == 1);
+		}
 	}
 
 	/**
@@ -74,23 +78,25 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * to itself.
 	 */
 	public void test_copyPasteRootToItself_bugzilla107880() {
-		List objects = new ArrayList();
-
-		// root3 has no branches
-		assertEquals(root3.getBranches().size(), 0);
-
-		// copy root3
-		objects.add(root3);
-		String copyStr = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(copyStr);
-		assertFalse(copyStr.length() == 0);
-		
-		// paste into root3
-		Collection eObjects = paste(copyStr, root3, Collections.EMPTY_MAP);
-		assertTrue(eObjects.size() == objects.size());
-
-		// check that the library was copied into the branches containment list
-		assertTrue(root3.getBranches().size() == 1);
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			// root3 has no branches
+			assertEquals(root3.getBranches().size(), 0);
+	
+			// copy root3
+			objects.add(root3);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into root3
+			Collection eObjects = paste(copyStr, root3, Collections.EMPTY_MAP);
+			assertTrue(eObjects.size() == objects.size());
+	
+			// check that the library was copied into the branches containment list
+			assertTrue(root3.getBranches().size() == 1);
+		}
 	}
 	
 	/**
@@ -98,28 +104,30 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * and pasting them into and element.
 	 */
 	public void test_copyPasteMultipleRoots_bugzilla107880() {
-		List objects = new ArrayList();
-
-		// root3 has no branches
-		assertTrue(root3.getBranches().size() == 0);
-
-		// copy root1, level2writer, level2book, and root3
-		objects.add(root1);
-		objects.add(level2writer);
-		objects.add(level2book);
-		objects.add(root3);
-		String copyStr = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(copyStr);
-		assertFalse(copyStr.length() == 0);
-		
-		// paste into root3
-		Collection eObjects = paste(copyStr, root3, Collections.EMPTY_MAP);
-		assertTrue(eObjects.size() == objects.size());
-
-		// check that the items were copied into acceptable containment features
-		assertTrue(root3.getWriters().size() == 1);
-		assertTrue(root3.getBooks().size() == 1);
-		assertTrue(root3.getBranches().size() == 2);
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			// root3 has no branches
+			assertTrue(root3.getBranches().size() == 0);
+	
+			// copy root1, level2writer, level2book, and root3
+			objects.add(root1);
+			objects.add(level2writer);
+			objects.add(level2book);
+			objects.add(root3);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into root3
+			Collection eObjects = paste(copyStr, root3, Collections.EMPTY_MAP);
+			assertTrue(eObjects.size() == objects.size());
+	
+			// check that the items were copied into acceptable containment features
+			assertTrue(root3.getWriters().size() == 1);
+			assertTrue(root3.getBooks().size() == 1);
+			assertTrue(root3.getBranches().size() == 2);
+		}
 	}
 	
 	/**
@@ -128,41 +136,45 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * a feature capable of containing the copied element).
 	 */
 	public void test_pasteRootToInvalidTarget_bugzilla107880() {
-		List objects = new ArrayList();
-
-		// copy root3
-		objects.add(root3);
-		String copyStr = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(copyStr);
-		assertFalse(copyStr.length() == 0);
-		
-		// paste into level1writer
-		Collection eObjects = paste(copyStr, level1writer, Collections.EMPTY_MAP);
-		assertTrue(eObjects.size() == 0);
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			// copy root3
+			objects.add(root3);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into level1writer
+			Collection eObjects = paste(copyStr, level1writer, Collections.EMPTY_MAP);
+			assertTrue(eObjects.size() == 0);
+		}
 	}
 	
 	/**
 	 * Tests pasting elements into the resource.
 	 */
 	public void test_pasteToResource_bugzilla107880() {
-		List objects = new ArrayList();
-
-		// testResource has 3 contents
-		assertTrue(testResource.getContents().size() == 3);
-
-		// copy root3 and level1book
-		objects.add(root3);
-		objects.add(level1book);
-		String copyStr = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(copyStr);
-		assertFalse(copyStr.length() == 0);
-		
-		// paste into testResource
-		Collection eObjects = paste(copyStr, testResource, Collections.EMPTY_MAP);
-		assertEquals(eObjects.size(), objects.size());
-
-		// check that the library and book were copied into the resource
-		assertTrue(testResource.getContents().size() == 5);
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			// testResource has 3 contents
+			assertTrue(testResource.getContents().size() == 3);
+	
+			// copy root3 and level1book
+			objects.add(root3);
+			objects.add(level1book);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into testResource
+			Collection eObjects = paste(copyStr, testResource, Collections.EMPTY_MAP);
+			assertEquals(eObjects.size(), objects.size());
+	
+			// check that the library and book were copied into the resource
+			assertTrue(testResource.getContents().size() == 5);
+		}
 	}
 	
 	/**
@@ -171,22 +183,24 @@ public class RegressionTest	extends BaseClipboardTest {
 	 * the type of the copied element.
 	 */
 	public void test_pasteIntoNonContainmentFeature() {
-		List objects = new ArrayList();
-
-		// level2book has no author
-		assertNull(level2book.getAuthor());
-
-		// copy level2writer
-		objects.add(level2writer);
-		String copyStr = copy(objects, Collections.EMPTY_MAP);
-		assertNotNull(copyStr);
-		assertFalse(copyStr.length() == 0);
-		
-		// paste into level2book
-		Collection eObjects = paste(copyStr, level2book, Collections.EMPTY_MAP);
-		assertTrue(eObjects.size() == 0);
-		
-		// level2book has no author
-		assertNull(level2book.getAuthor());
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			// level2book has no author
+			assertNull(level2book.getAuthor());
+	
+			// copy level2writer
+			objects.add(level2writer);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into level2book
+			Collection eObjects = paste(copyStr, level2book, Collections.EMPTY_MAP);
+			assertTrue(eObjects.size() == 0);
+			
+			// level2book has no author
+			assertNull(level2book.getAuthor());
+		}
 	}
 }

@@ -12,8 +12,9 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.util;
 
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
+
 
 
 public class Trace {
@@ -30,7 +31,7 @@ public class Trace {
 	 */
 	public static boolean isEnabled(String option) {
 		return org.eclipse.gmf.runtime.common.core.util.Trace.shouldTrace(
-			MSLPlugin.getDefault(),
+			EMFCorePlugin.getDefault(),
 			option);
 	}
 	
@@ -45,7 +46,7 @@ public class Trace {
 	 */
 	public static void trace(String option, String message) {
 		org.eclipse.gmf.runtime.common.core.util.Trace.trace(
-			MSLPlugin.getDefault(),
+			EMFCorePlugin.getDefault(),
 			option,
 			message);
 	}
@@ -59,8 +60,8 @@ public class Trace {
 	 */
 	public static void catching(Class clazz, String methodName, Throwable t) {
 		org.eclipse.gmf.runtime.common.core.util.Trace.catching(
-			MSLPlugin.getDefault(),
-			MSLDebugOptions.EXCEPTIONS_CATCHING,
+			EMFCorePlugin.getDefault(),
+			EMFCoreDebugOptions.EXCEPTIONS_CATCHING,
 			clazz,
 			methodName,
 			t);
@@ -75,8 +76,8 @@ public class Trace {
 	 */
 	public static void throwing(Class clazz, String methodName, Throwable t) {
 		org.eclipse.gmf.runtime.common.core.util.Trace.throwing(
-			MSLPlugin.getDefault(),
-			MSLDebugOptions.EXCEPTIONS_THROWING,
+			EMFCorePlugin.getDefault(),
+			EMFCoreDebugOptions.EXCEPTIONS_THROWING,
 			clazz,
 			methodName,
 			t);

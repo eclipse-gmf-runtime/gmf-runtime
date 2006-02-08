@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
@@ -97,7 +97,7 @@ public abstract class ElementType extends EnumeratedType implements IElementType
 	 * @see org.eclipse.gmf.runtime.emf.core.internal.util.IElementType#getEClassName()
 	 */
 	public String getEClassName() {
-		return MetaModelUtil.getID(getEClass());
+		return PackageUtil.getID(getEClass());
 	}
 
 	/**

@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.exceptions;
 
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
-
 /**
  * This exception is intended to be thrown during Resource load when an
  * error occurs. This RuntimeException wrapper is required in order to
@@ -20,7 +18,7 @@ import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
  * 
  * @author Christian Vogt (cvogt)
  */
-public class AbortResourceLoadException extends MSLRuntimeException {
+public class AbortResourceLoadException extends RuntimeException {
 
 	/**
 	 * Initializes me without any details.

@@ -13,7 +13,7 @@
    <extension
          id="NotationMetaModelProvider"
          name="Notation MetaModel Provider"
-         point="org.eclipse.gmf.runtime.emf.core.MetaModelProviders">
+         point="org.eclipse.gmf.runtime.emf.core.compatibility.MetaModelProviders">
       <MetaModelProvider
             class="org.eclipse.gmf.runtime.notation.providers.internal.NotationMetaModelProvider">
          <Priority name="Low" />

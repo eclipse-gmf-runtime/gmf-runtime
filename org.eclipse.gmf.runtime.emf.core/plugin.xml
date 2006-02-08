@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005  IBM Corporation and others.                       -->
+<!-- Copyright (c) 2005, 2006  IBM Corporation and others.                 -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -10,28 +10,16 @@
 <!--    IBM Corporation - initial API and implementation                   -->
 <plugin>
 
-   <extension-point id="MetaModelProviders" name="MetaModel Providers" schema="schema/MetaModelProviders.exsd"/>
    <extension-point id="Pathmaps" name="Path Maps" schema="schema/Pathmaps.exsd"/>
-   <extension-point id="resourcePolicies" name="Logical Resource Policies" schema="schema/resourcePolicies.exsd"/>
    
    <extension point="org.eclipse.emf.ecore.extension_parser">
-      <parser type="@@@@@InvalidExtension@@@@@" class="org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory">
+      <parser type="@@@@@InvalidExtension@@@@@" class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
       </parser>
    </extension>
    
    <extension point="org.eclipse.emf.ecore.extension_parser">
-      <parser type="@@@@@EphemeralInvalidExtension@@@@@" class="org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory">
+      <parser type="@@@@@EphemeralInvalidExtension@@@@@" class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
       </parser>
-   </extension>
-   
-   
-   <extension point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-             id="org.eclipse.gmf.runtime.emf.core.EObjectPropertyTester"
-             type="org.eclipse.emf.ecore.EObject"
-             namespace="org.eclipse.gmf.runtime.emf.core"
-             properties="objectType,canSeparate,isSeparate"
-             class="org.eclipse.gmf.runtime.emf.core.internal.expressions.EObjectPropertyTester"/>
    </extension>
    
    <extension

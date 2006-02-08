@@ -62,10 +62,15 @@ public class EObjectAdapter extends Proxy implements IAdaptable, IProxyEObject {
 	}
 	
     public final Object getProxyClassID() {
-        return ProxyUtil.getProxyClassID( (EObject)getRealObject() );
+        return PackageUtil.getID(EMFCoreUtil.getProxyClass((EObject)getRealObject()));
     }	
 	
     public final EObject resolve() {
-        return ProxyUtil.resolve((EObject)getRealObject());
+    	// there is no editing domain or resource set context available in
+    	//    which to attempt to resolve the proxy, so if it wasn't already
+    	//    resolved, we can only return null
+    	EObject eObject = (EObject) getRealObject();
+    	
+        return eObject.eIsProxy()? null : eObject;
     }
 }

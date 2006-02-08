@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,20 +16,14 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
-import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.commands.MCommand;
-import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLEventCommand;
-import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 
 
 /**
@@ -53,14 +47,14 @@ public abstract class AbstractClipboardSupport implements IClipboardSupport {
 	 * names.
 	 */
 	public boolean isNameable(EObject eObject) {
-		return MetaModelUtil.getNameAttribute(eObject.eClass()) != null;
+		return PackageUtil.getNameAttribute(eObject.eClass()) != null;
 	}
 	
 	/**
 	 * MSL has extensions for metamodels to get object names.
 	 */
 	public String getName(EObject eObject) {
-		return EObjectUtil.getName(eObject);
+		return EMFCoreUtil.getName(eObject);
 	}
 	
 	/**
@@ -71,14 +65,14 @@ public abstract class AbstractClipboardSupport implements IClipboardSupport {
 			throw new IllegalArgumentException("eObject not nameable"); //$NON-NLS-1$
 		}
 		
-		EObjectUtil.setName(eObject, name);
+		EMFCoreUtil.setName(eObject, name);
 	}
 	
 	/**
 	 * MSL implements rich object destruction semantics.
 	 */
 	public void destroy(EObject eObject) {
-		EObjectUtil.destroy(eObject);
+		EMFCoreUtil.destroy(eObject);
 	}
 
 	public XMLResource getResource(EObject eObject) {
@@ -92,33 +86,11 @@ public abstract class AbstractClipboardSupport implements IClipboardSupport {
 		Resource res = eObject.eResource();
 		
 		if (res != null) {
-			MSLEditingDomain domain =
-				(MSLEditingDomain) MEditingDomain.getEditingDomain(res);
+			Notification createNotification = new ENotificationImpl(
+				(InternalEObject) eObject, 0, // classical CREATE event type
+				(EStructuralFeature) null, (Object) null, (Object) null, -1);
 			
-			if (domain != null) {
-				Notification doNotification = new ENotificationImpl(
-					(InternalEObject) eObject,
-					EventTypes.CREATE,
-					null,
-					(Object) null,
-					(Object) null,
-					-1);
-	
-				Notification undoNotification = new ENotificationImpl(
-					(InternalEObject) eObject,
-					EventTypes.UNCREATE,
-					null,
-					(Object) null,
-					(Object) null,
-					-1);
-		
-				MCommand command = MSLEventCommand.create(
-					domain,
-					doNotification,
-					undoNotification);
-		
-				MSLUtil.execute(domain, command);
-			}
+			eObject.eNotify(createNotification);
 		}
 	}
 	
@@ -127,7 +99,7 @@ public abstract class AbstractClipboardSupport implements IClipboardSupport {
 	 */
 	public boolean canContain(EObject container, EReference reference,
 			EClass containedType) {
-		return MetaModelUtil.canContain(
+		return PackageUtil.canContain(
 			container.eClass(),
 			reference,
 			containedType,

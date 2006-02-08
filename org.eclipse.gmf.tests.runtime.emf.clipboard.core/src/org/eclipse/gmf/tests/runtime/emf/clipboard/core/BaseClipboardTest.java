@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
@@ -20,9 +21,8 @@ import org.eclipse.emf.examples.extlibrary.Writer;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
 import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.internal.commands.MSLUndoStack.ActionLockMode;
-import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
 import org.osgi.framework.Bundle;
 
@@ -39,6 +39,9 @@ public abstract class BaseClipboardTest extends TestCase {
 	protected static final String PROJECT_NAME = "clipboardTests"; //$NON-NLS-1$
 	protected static final String RESOURCE_NAME = "/" + PROJECT_NAME + "/logres.extlibrary";  //$NON-NLS-1$//$NON-NLS-2$
 
+	private MRunnable mrun;
+	private MUndoInterval lastUndo;
+	
 	protected MEditingDomain domain;
 
 	protected IProject project;
@@ -208,10 +211,6 @@ public abstract class BaseClipboardTest extends TestCase {
 	protected Collection paste(final String str, final Object target, final Map hints) {
 		assert (target instanceof Resource || target instanceof EObject);
 		
-		((MSLEditingDomain) MEditingDomain.INSTANCE).getUndoStack().openUndoInterval("", "");//$NON-NLS-2$//$NON-NLS-1$
-
-		((MSLEditingDomain) MEditingDomain.INSTANCE).getUndoStack().startAction(ActionLockMode.WRITE);
-
 		Collection result = (Collection) OperationUtil.runWithNoSemProcs(new MRunnable() {
 			public Object run() {
 				try {
@@ -228,14 +227,85 @@ public abstract class BaseClipboardTest extends TestCase {
 			}
 		});
 
-		try {
-			((MSLEditingDomain) MEditingDomain.INSTANCE).getUndoStack().completeAndValidateAction();
-		} catch (MSLActionAbandonedException e) {
-			fail("Action abandoned: " + e.getStatus()); //$NON-NLS-1$
-		} finally {
-			((MSLEditingDomain) MEditingDomain.INSTANCE).getUndoStack().closeUndoInterval();
-		}
-
 		return result;
+	}
+	
+	/**
+	 * Must be called first in every test method that needs to run in a write
+	 * action.  If we are not in a write action, we return <code>false</code>.
+	 * However, in this case, we do also re-execute the original test method
+	 * inside of a new write action, in which nested execution this method will
+	 * return <code>true</code>.  Therefore, the entire test method should be
+	 * in an <code>if</code> block conditional on this result.  Following this
+	 * <code>if</code> block, it is safe to access the undo interval created
+	 * during the test via the {@link #getLastUndo()} method in an
+	 * <code>else</code> block.
+	 * <p>
+	 * Example:
+	 * </p>
+	 * <pre>
+	 *     if (writing()) {
+	 *        // ... do stuff in a write action ...
+	 *     }
+	 * </pre>
+	 * 
+	 * @return whether we are in a write action or not
+	 * 
+	 * @see #getLastUndo()
+	 */
+	protected boolean writing() {
+		boolean result = (mrun != null);
+		
+		if (!result) {
+			mrun = new MRunnable() {
+				public Object run() {
+					try {
+						runTest();
+					} catch (AssertionFailedError e) {
+						throw e;
+					} catch (Exception e) {
+						e.printStackTrace();
+						fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+					} catch (Throwable t) {
+						throw (Error) t;
+					} finally {
+						mrun = null;
+					}
+					
+					return null;
+				}};
+				
+			lastUndo = domain.runInUndoInterval(new Runnable() {
+				public void run() {
+					try {
+						domain.runAsWrite(mrun);
+					} catch (MSLActionAbandonedException e) {
+						fail("Write action abandoned: " + e.getLocalizedMessage()); //$NON-NLS-1$
+					}
+				}});
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gets the undo interval created by the test within its
+	 * <pre>
+	 *     if (writing()) {
+	 *        // ... do stuff in a write action ...
+	 *     } else {
+	 *         MUndoInterval undo = getLastUndo();
+	 *         
+	 *         // ... do stuff with the undo interval ...
+	 *     }
+	 * </pre>
+	 * block.
+	 * 
+	 * @return the test's undo interval
+	 * 
+	 * @see #writing()
+	 */
+	protected MUndoInterval getLastUndo() {
+		return lastUndo;
 	}
 }

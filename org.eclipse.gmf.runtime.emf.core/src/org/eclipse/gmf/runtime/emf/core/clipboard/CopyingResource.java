@@ -31,17 +31,14 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMIHelperImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLResource;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.MSLSave;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLConstants;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLUtil;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
+import org.eclipse.gmf.runtime.emf.core.internal.resources.GMFResource;
+import org.eclipse.gmf.runtime.emf.core.internal.resources.GMFSave;
+import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
+import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 /**
  * @author Yasser Lulu
@@ -104,7 +101,7 @@ public class CopyingResource
 				// if this both target and container are within a platform resource and
 				// projects
 				// or plugins are different then do not deresolve.
-				if (((MSLConstants.PLATFORM_SCHEME.equals(anUri.scheme())) && (MSLConstants.PLATFORM_SCHEME
+				if (((EMFCoreConstants.PLATFORM_SCHEME.equals(anUri.scheme())) && (EMFCoreConstants.PLATFORM_SCHEME
 					.equals(resourceURI.scheme())))
 					&& ((anUri.segmentCount() > 2) && (resourceURI.segmentCount() > 2))
 					&& ((!anUri.segments()[0].equals(resourceURI.segments()[0])) || (!anUri
@@ -120,8 +117,15 @@ public class CopyingResource
 			 * @see org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl#getHREF(org.eclipse.emf.ecore.EObject)
 			 */
 			public String getHREF(EObject obj) {
-				EObject eObj = MSLUtil.resolve((MSLEditingDomain)MEditingDomain.getEditingDomain(xmlResource),
-					obj, true);
+				EObject eObj = obj;
+				
+				if (obj.eIsProxy()) {
+					eObj = EcoreUtil.resolve(obj, xmlResource);
+					if (eObj == null) {
+						eObj = null;
+					}
+				}
+				
 				if ((eObj != null) && (eObj.eResource() != null)) {
 					URI objectURI = getHREF(eObj.eResource(), eObj);
 					objectURI = deresolve(objectURI);
@@ -138,13 +142,13 @@ public class CopyingResource
 						otherResource = copyingResource;
 					}
 				}
-				if (otherResource instanceof MSLResource) {
-					String qName = EObjectUtil.getQName(obj, true);
+				if (otherResource instanceof GMFResource) {
+					String qName = EMFCoreUtil.getQualifiedName(obj, true);
 					if (qName.length() > 0) {
 						StringBuffer buffer = new StringBuffer(otherResource
 							.getURIFragment(obj));
-						buffer.append(MSLConstants.FRAGMENT_SEPARATOR);
-						buffer.append(MSLUtil.encodeQName(qName));
+						buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
+						buffer.append(Util.encodeQualifiedName(qName));
 						return otherResource.getURI().appendFragment(
 							buffer.toString());
 					}
@@ -168,8 +172,8 @@ public class CopyingResource
 
 	private void throwUnsupportedOperationException(String methodName,
 			UnsupportedOperationException ex) {
-		Trace.throwing(MSLPlugin.getDefault(),
-			MSLDebugOptions.EXCEPTIONS_THROWING, getClass(), methodName, ex);
+		Trace.throwing(EMFCorePlugin.getDefault(),
+			EMFCoreDebugOptions.EXCEPTIONS_THROWING, getClass(), methodName, ex);
 		throw ex;
 	}
 
@@ -188,7 +192,7 @@ public class CopyingResource
 	}
 
 	protected XMLSave createXMLSave() {
-		return new MSLSave(createXMLHelper()) {
+		return new GMFSave(createXMLHelper()) {
 
 			/**
 			 * @see org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl#sameDocMany(org.eclipse.emf.ecore.EObject,
@@ -318,8 +322,8 @@ public class CopyingResource
 	private void copyIDs() {
 		for (Iterator iter = xmlResource.getAllContents(); iter.hasNext(); ) {
 			EObject eObject = (EObject)iter.next();
-			getEObjectToIDMap().put(eObject, EObjectUtil.getID(eObject));
-			getIDToEObjectMap().put(EObjectUtil.getID(eObject), eObject);
+			getEObjectToIDMap().put(eObject, xmlResource.getID(eObject));
+			getIDToEObjectMap().put(xmlResource.getID(eObject), eObject);
 		}
 	}
 }

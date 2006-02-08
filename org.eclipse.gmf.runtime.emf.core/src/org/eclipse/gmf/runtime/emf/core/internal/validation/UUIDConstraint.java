@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 /**
  * A constraint that enforces universally unique IDs (UUIDs), that is, it fails
@@ -43,7 +43,7 @@ public class UUIDConstraint
 	 * @return a label
 	 */
 	private String getEObjectLabel(EObject eObject) {
-		return EObjectUtil.getQName(eObject, true);
+		return EMFCoreUtil.getQualifiedName(eObject, true);
 	}
 
 	/*

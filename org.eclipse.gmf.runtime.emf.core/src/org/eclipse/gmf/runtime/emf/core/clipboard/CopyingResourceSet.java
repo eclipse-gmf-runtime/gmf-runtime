@@ -24,8 +24,8 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLDebugOptions;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.MSLPlugin;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
+import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 
 
 /**
@@ -102,8 +102,8 @@ public class CopyingResourceSet
 
 	private void throwUnsupportedOperationException(String methodName,
 		UnsupportedOperationException ex) {
-		Trace.throwing(MSLPlugin.getDefault(),
-			MSLDebugOptions.EXCEPTIONS_THROWING, getClass(), methodName, ex);
+		Trace.throwing(EMFCorePlugin.getDefault(),
+			EMFCoreDebugOptions.EXCEPTIONS_THROWING, getClass(), methodName, ex);
 		throw ex;
 	}
 

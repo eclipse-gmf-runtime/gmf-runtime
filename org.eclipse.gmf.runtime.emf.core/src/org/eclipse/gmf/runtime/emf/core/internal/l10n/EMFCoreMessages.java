@@ -33,20 +33,6 @@ public class EMFCoreMessages extends NLS {
 	public static String MultiplicityValue_zeroOrOne_text;
 	public static String MultiplicityValue_one_text;
 	public static String MultiplicityValue_oneOrMore_text;
-	public static String missing_nsUri_ERROR_;
-	public static String unresolved_nsUri_ERROR_;
-	public static String missing_class_ERROR_;
-	public static String factory_failed_ERROR_;
-	public static String separation_failed_EXC_;
-	public static String absorption_failed_EXC_;
-	public static String separate_noUri_ERROR_;
-	public static String separate_sameUnit_ERROR_;
-	public static String resource_policy_EXC_;
-	public static String load_failed_EXC_;
-	public static String autoload_failed_EXC_;
-	public static String setUri_unloaded_failed_EXC_;
-	public static String resourcePolicy_element_WARN_;
-	public static String resourcePolicy_nsUris_WARN_;
 	public static String logError_badListener;
 
 	static {
