@@ -184,10 +184,4 @@ public class TestingConfigurationElement implements IConfigurationElement {
 		return false;
 	}
 
-
-	public org.eclipse.equinox.registry.IConfigurationElement toEquinox() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
