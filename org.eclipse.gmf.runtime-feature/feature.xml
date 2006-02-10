@@ -225,6 +225,13 @@ http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.gmf.runtime.draw2d.ui.render.awt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
          id="org.eclipse.gmf.runtime.emf.clipboard.core"
          download-size="0"
          install-size="0"

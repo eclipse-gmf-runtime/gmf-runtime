@@ -118,6 +118,8 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 	}
 	
 	public void testSelect() throws Exception {
+		getTestFixture().openDiagram();
+
 		final List connectors = getConnectors();
 		final List shapes = getSelectableShapesIn(getDrawSurfaceEditPart());
 		final List all = new ArrayList();
@@ -134,8 +136,6 @@ public abstract class AbstractDiagramTests extends AbstractTestBase {
 	 * @throws Exception
 	 */
 	protected void selectAll(final IGraphicalEditPart currentSelection, final List shouldSelect) throws Exception {
-		getTestFixture().openDiagram();
-
 		assertNotNull("no drawing surface", getDrawSurfaceEditPart()); //$NON-NLS-1$
 
 		// test select all

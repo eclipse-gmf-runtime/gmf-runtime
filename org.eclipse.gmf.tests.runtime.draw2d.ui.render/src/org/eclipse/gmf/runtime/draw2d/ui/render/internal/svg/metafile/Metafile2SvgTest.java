@@ -28,6 +28,9 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.AbstractTranscoder;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.EMFTranscoder;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.WMFTranscoder;
 
 
 

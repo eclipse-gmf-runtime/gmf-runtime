@@ -110,45 +110,6 @@ class RenderInfoImpl
 		this.antialias = antialias;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#getFillColor()
-	 */
-	public java.awt.Color getFillColor() {
-		if (fill != null)
-			return new java.awt.Color(fill.red, fill.green, fill.blue);
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#getOutlineColor()
-	 */
-	public java.awt.Color getOutlineColor() {
-		if (outline != null)
-			return new java.awt.Color(outline.red, outline.green, outline.blue);
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderInfo#setValues(int,
-	 *      int, boolean)
-	 */
-	public void setValues(int width, int height, java.awt.Color fill,
-			java.awt.Color outline, boolean maintainAspectRatio,
-			boolean antialias) {
-		this.width = width;
-		this.height = height;
-		this.fill = fill == null ? null : new RGB(fill.getRed(), fill.getGreen(), fill.getBlue());
-		this.outline = outline == null ? null : new RGB(outline.getRed(), outline.getGreen(), outline.getBlue());
-		this.maintainAspectRatio = maintainAspectRatio;
-		this.antialias = antialias;
-	}
-
 	/**
 	 * Default Constructor for the SVGInfo class
 	 */

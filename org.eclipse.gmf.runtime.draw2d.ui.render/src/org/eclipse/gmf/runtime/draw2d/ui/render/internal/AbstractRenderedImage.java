@@ -12,13 +12,11 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.internal;
 
-import java.awt.image.BufferedImage;
 import java.security.InvalidParameterException;
 
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
-import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
 import org.eclipse.swt.graphics.Image;
 
@@ -149,12 +147,5 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 			return getSWTImage();
 		}
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.internal.render.RenderedImage#getBufferedImage()
-	 */
-	public BufferedImage getBufferedImage() {
-		return ImageConverter.convert(getSWTImage());
 	}
 }

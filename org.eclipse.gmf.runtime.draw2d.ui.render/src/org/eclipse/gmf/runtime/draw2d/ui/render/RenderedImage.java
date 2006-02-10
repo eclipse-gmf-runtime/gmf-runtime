@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render;
 
-import java.awt.image.BufferedImage;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.graphics.Image;
 
@@ -50,14 +48,6 @@ public interface RenderedImage extends IAdaptable {
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo
 	 */
 	public RenderedImage getNewRenderedImage(RenderInfo info);
-	
-	/**
-	 * Accessor for retrieving the AWT Buffered image for this ResizableImage
-	 * 
-	 * @return AWT Image that this resizable image represents.
-	 * @deprecated use (#link IAdapatable#getAdapter(BufferedImage.class)}
-	 */
-	public BufferedImage getBufferedImage();
 
 	/**
 	 * Accessor for retrieving the SWT image for this ResizableImage. Typically,

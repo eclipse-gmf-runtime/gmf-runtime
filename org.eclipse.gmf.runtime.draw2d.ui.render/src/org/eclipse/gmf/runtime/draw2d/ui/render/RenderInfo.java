@@ -60,28 +60,6 @@ public interface RenderInfo {
 	public abstract RGB getForegroundColor();
 
 	/**
-	 * Accessor method to return the fill color of the rendered image.
-	 * 
-	 * @return <code>Color</code> value that is the fill color of the rendered
-	 *         image. Note: a <code>null</code> return value is valid and
-	 *         means that the fill color defaults to the values stored in the
-	 *         vector graphics file.
-	 * @deprecated use {@link RenderInfo#getBackgroundColor()}
-	 */
-	public abstract java.awt.Color getFillColor();
-
-	/**
-	 * Accessor method to return the outline color of the rendered image.
-	 * 
-	 * @return <code>Color</code> value that is the outline color of the
-	 *         rendered image. Note: a <code>null</code> return value is valid
-	 *         and means that the outline color defaults to the values stored in
-	 *         the vector graphics file.
-	 * @deprecated use {@link RenderInfo#getForegroundColor()}
-	 */
-	public abstract java.awt.Color getOutlineColor();
-
-	/**
 	 * Accessor method to return whether or not the aspect ratio is maintained.
 	 * 
 	 * @return <code>boolean</code> <code>true</code> if aspect ratio of
@@ -127,36 +105,4 @@ public interface RenderInfo {
 	public abstract void setValues(int width, int height,
 			boolean maintainAspectRatio, boolean antialias, RGB background,
 			RGB foreground);
-
-	/**
-	 * Generic setter to set values in the RenderInfo data structure. This is
-	 * useful when retrieving a RenderInfo structure from a RenderedImage object
-	 * and then wishing to re-render the image with new values.
-	 * 
-	 * @param width
-	 *            the width of the rendered image to set
-	 * @param height
-	 *            the height of the rendered image to set
-	 * @param fill
-	 *            <code>Color</code> fill color for the whole image: null
-	 *            value defaults to stored values for each element in the vector
-	 *            file.
-	 * @param outline
-	 *            <code>Color</code> outline color for the whole image: null
-	 *            value defaults to stored values for each element in the vector
-	 *            file.
-	 * @param maintainAspectRatio
-	 *            <code>boolean</code> <code>true</code> if aspect ratio of
-	 *            original vector file is maintained, <code>false</code>
-	 *            otherwise
-	 * @param antialias
-	 *            <code>boolean</code> <code>true</code> if vector graphic
-	 *            is to be rendered wih anti-aliasing, <code>false</code>
-	 *            otherwise.
-	 * @deprecated use
-	 *             {@link RenderInfo#setValues(int, int, Color, Color, boolean, boolean)}
-	 */
-	public abstract void setValues(int width, int height, java.awt.Color fill,
-			java.awt.Color outline, boolean maintainAspectRatio,
-			boolean antialias);
 }

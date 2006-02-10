@@ -11,23 +11,22 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.factory;
 
-import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.zip.Adler32;
 
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.util.XMLResourceDescriptor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
@@ -36,9 +35,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOption
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.image.ImageRenderedImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.SVGImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.EMFTranscoder;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.WMFTranscoder;
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -49,44 +45,6 @@ import org.eclipse.swt.graphics.RGB;
 public class RenderedImageFactory {
 
 	static private Map instanceMap = new WeakHashMap();
-
-	/**
-	 * createInfo static Utility to create a RenderInfo object.
-	 * 
-	 * @param width
-	 *            the width of the rendered image to set
-	 * @param height
-	 *            the height of the rendered image to set
-	 * @param fill
-	 *            the <code>Color</code> of the fill that could instrumented
-	 *            into image formats that support dynamic color replacement.
-	 *            Typically, this would replace colors in the image which are
-	 *            "white" i.e. RGB(255,255,255)
-	 * @param outline
-	 *            the <code>Color</code> of the outline that could
-	 *            instrumented into image formats that support dynamic color
-	 *            replacement. Typically, this would replace colors in the image
-	 *            which are "black" i.e. RGB(0,0,0)
-	 * @param maintainAspectRatio
-	 *            <code>boolean</code> <code>true</code> if aspect ratio of
-	 *            original vector file is maintained, <code>false</code>
-	 *            otherwise
-	 * @param antialias
-	 *            <code>boolean</code> <code>true</code> if the image is to
-	 *            be rendered using anti-aliasing (removing "jaggies" producing
-	 *            smoother lines), <code>false</code> otherwise
-	 * @return <code>RenderInfo</code> object that contains information about
-	 *         the rendered image.
-	 * @deprecated use
-	 *             {@link RenderedImageFactory#createInfo(int, int, RGB, RGB, boolean, boolean)}
-	 */
-	static public RenderInfo createInfo(int width, int height, Color fill,
-			Color outline, boolean maintainAspectRatio, boolean antialias) {
-		RenderedImageKey svgInfo = new RenderedImageKey();
-		svgInfo.setValues(width, height, fill, outline, maintainAspectRatio,
-			antialias);
-		return svgInfo;
-	}
 
 	/**
 	 * createInfo static Utility to create a RenderInfo object.
@@ -300,52 +258,47 @@ public class RenderedImageFactory {
 		return image;
 	}
 
-	private static RenderedImage autodetectImage(byte[] buffer,
-			final RenderedImageKey key) {
-		RenderedImage image = null;
+	private static final String E_MODIFIER_FACTORY = "factory"; //$NON-NLS-1$
+	private static final String A_CLASS = "class"; //$NON-NLS-1$
 
-		if (isSVG(buffer))
-			image = new SVGImage(buffer, key);
-		else {
-			// not a recognizable image format so assume it's an EMF file
-			try {
-				WMFTranscoder imageTransformer = new WMFTranscoder();
-				ByteArrayInputStream input = new ByteArrayInputStream(buffer);
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
-				imageTransformer.transcode(input, output);
-				image = new SVGImage(output.toByteArray(), key);
-			} catch (Exception e2) {
-				try {
-					EMFTranscoder imageTransformer = new EMFTranscoder();
-					ByteArrayInputStream input = new ByteArrayInputStream(
-						buffer);
-					ByteArrayOutputStream output = new ByteArrayOutputStream();
-					imageTransformer.transcode(input, output);
-					image = new SVGImage(output.toByteArray(), key);
-				} catch (Exception e3) {
-					image = new ImageRenderedImage(buffer, key);
+	static private List imageTypes = null;
+	
+	static private RenderedImage autodetectImage(byte[] buffer,
+			final RenderedImageKey key) {
+		
+		if (imageTypes == null) {
+			imageTypes = new ArrayList();
+			
+			IExtensionPoint riExtensionPt = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.gmf.runtime.draw2d.ui.render", //$NON-NLS-1$
+															"renderedImageFactory");  //$NON-NLS-1$
+			IConfigurationElement[] configEls = riExtensionPt.getConfigurationElements();
+			for (int i = 0; i < configEls.length; i++) {
+				IConfigurationElement element = configEls[i];
+	
+				if (element.getName().equals(E_MODIFIER_FACTORY)) {
+					RenderedImageType imageType = null;
+					try {
+						imageType = (RenderedImageType)element.createExecutableExtension(A_CLASS);
+						if (imageType != null)
+							imageTypes.add(imageType);
+					} catch (CoreException e) {
+						continue;
+					}
 				}
 			}
 		}
-
-		if (image != null) {
-			instanceMap.put(key, new WeakReference(image));
-		}
-
-		return image;
-	}
-
-	private static boolean isSVG(byte[] buffer) {
-		ByteArrayInputStream bIS = new ByteArrayInputStream(buffer);
-		String parserName = XMLResourceDescriptor.getXMLParserClassName();
-		SAXSVGDocumentFactory svgFactory = new SAXSVGDocumentFactory(parserName);
 		
-		try {
-			svgFactory.createDocument(null,bIS);
-			return true;
-		} catch (IOException e) {
-			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e.getMessage(), e);
+		RenderedImage image = null;
+		ListIterator li = imageTypes.listIterator();
+		while (li.hasNext()) {
+			RenderedImageType imageType = (RenderedImageType)li.next();
+			image = imageType.autoDetect(buffer, key);
+			if (image != null)
+				return image;
 		}
-		return false;
+
+		// can't create a RenderedImageType for image files until bugzilla 116227 is resolved.  Until then,
+		// assume, the fall through type is ImageRenderedImage.
+		return new ImageRenderedImage(buffer, key);
 	}
 }

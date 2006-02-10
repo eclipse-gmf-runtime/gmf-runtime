@@ -26,7 +26,9 @@ import org.eclipse.ui.PlatformUI;
  * BufferedImage.
  * 
  * @author Jody Schofield / sshaw
- *
+ * @deprecated Will be removed from public api.  GMF shouldn't have AWT based classes exposed in it's public api.
+ * This class will move to internal package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.
+ * Clients of <code>RenderedImage</code> can use the <code>IAdapter</code> interface
  */
 public class ImageConverter {
 

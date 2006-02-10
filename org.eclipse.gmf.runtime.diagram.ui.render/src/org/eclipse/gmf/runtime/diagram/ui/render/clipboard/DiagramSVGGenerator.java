@@ -34,10 +34,10 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverter;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.export.GraphicsSVG;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
-import org.eclipse.gmf.runtime.draw2d.ui.render.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderedImageDescriptor;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.export.GraphicsSVG;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.w3c.dom.Element;
 
