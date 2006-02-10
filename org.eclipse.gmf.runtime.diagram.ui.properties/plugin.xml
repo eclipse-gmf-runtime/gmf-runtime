@@ -11,7 +11,7 @@
 <plugin>
 
      <extension
-         point="org.eclipse.wst.common.ui.properties.propertyContributor">
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
             typeMapper="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ModelElementTypeMapper"
             contributorId="org.eclipse.gmf.runtime.diagram.ui.properties"
@@ -32,7 +32,7 @@
    </extension>
  
  <extension 
-    	point="org.eclipse.wst.common.ui.properties.propertyTabs">
+    	point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
       <propertyTabs 
       		contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">   
  	     <propertyTab 
@@ -43,7 +43,7 @@
     </propertyTabs>
  </extension>
  
- <extension point="org.eclipse.wst.common.ui.properties.propertySections">
+ <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
    <propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
 	 <propertySection tab="property.tab.AppearancePropertySection" 
 	 	filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter" 
@@ -79,7 +79,7 @@
 </extension>
  
  <extension 
-    	point="org.eclipse.wst.common.ui.properties.propertyTabs">
+    	point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
       <propertyTabs 
       		contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">   
  	     <propertyTab 
@@ -90,7 +90,7 @@
     </propertyTabs>
  </extension>
  
- <extension point="org.eclipse.wst.common.ui.properties.propertySections">
+ <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
    <propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
 	 
 	 <propertySection tab="property.tab.RulerGridPropertySection" 
@@ -106,7 +106,7 @@
  
     
  <extension
-         point="org.eclipse.wst.common.ui.properties.propertyTabs">
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
       <propertyTabs
             contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">   
  	<propertyTab

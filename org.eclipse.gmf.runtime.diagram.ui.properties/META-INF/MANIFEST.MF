@@ -17,7 +17,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.properties.descriptors,
  org.eclipse.gmf.runtime.diagram.ui.properties.views
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui;visibility:=reexport,
- org.eclipse.wst.common.ui.properties;visibility:=reexport,
+ org.eclipse.ui.views.properties.tabbed;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.commands.core,
  org.eclipse.gmf.runtime.emf.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.emf.ui.properties;visibility:=reexport,

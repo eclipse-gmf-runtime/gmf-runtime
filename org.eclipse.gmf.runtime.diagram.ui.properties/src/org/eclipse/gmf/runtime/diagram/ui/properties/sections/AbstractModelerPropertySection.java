@@ -26,9 +26,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.common.ui.properties.internal.provisional.AbstractPropertySection;
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
-import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -94,7 +94,7 @@ public abstract class AbstractModelerPropertySection
 
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
@@ -287,7 +287,7 @@ public abstract class AbstractModelerPropertySection
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#aboutToBeHidden()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#aboutToBeHidden()
 	 */
 	public void aboutToBeHidden() {
 		super.aboutToBeHidden();
@@ -295,7 +295,7 @@ public abstract class AbstractModelerPropertySection
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#aboutToBeShown()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#aboutToBeShown()
 	 */
 	public void aboutToBeShown() {
 		super.aboutToBeShown();
@@ -303,7 +303,7 @@ public abstract class AbstractModelerPropertySection
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#dispose()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
 	 */
 	public void dispose() {
 		super.dispose();
@@ -580,7 +580,7 @@ public abstract class AbstractModelerPropertySection
 
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage)
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
 	public void createControls(Composite parent,
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {

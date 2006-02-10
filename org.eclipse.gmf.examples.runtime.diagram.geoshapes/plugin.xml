@@ -54,7 +54,7 @@
    </extension>
    
    
-  <extension point="org.eclipse.wst.common.ui.properties.propertyContributor">
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
      <propertyContributor contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes" labelProvider="org.eclipse.gmf.runtime.common.ui.services.util.CommonLabelProvider">
         <propertyCategory category="General"/>
         <propertyCategory category="Advanced"/>
@@ -62,7 +62,7 @@
      </propertyContributor>
   </extension>
   
-  <extension point="org.eclipse.wst.common.ui.properties.propertyTabs">
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
      <propertyTabs contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes">
         <propertyTab label="%General" category="General" id="geoshapes.tab.General"/>
         <propertyTab label="%Advanced" category="Advanced" id="geoshapes.tab.Advanced"/>
@@ -70,7 +70,7 @@
      </propertyTabs>
   </extension>
 
-  <extension point="org.eclipse.wst.common.ui.properties.propertySections">
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
      <propertySections contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes">
         
         <propertySection

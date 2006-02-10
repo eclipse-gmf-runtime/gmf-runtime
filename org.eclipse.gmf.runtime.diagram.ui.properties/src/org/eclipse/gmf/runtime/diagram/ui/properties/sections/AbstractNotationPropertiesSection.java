@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
-import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertyDescriptor;
@@ -97,8 +97,8 @@ public abstract class AbstractNotationPropertiesSection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#createControls(org.eclipse.swt.widgets.Composite,
-	 *      org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage)
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite,
+	 *      org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
 	public void createControls(Composite parent,
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -136,7 +136,7 @@ public abstract class AbstractNotationPropertiesSection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#dispose()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
 	 */
 	public void dispose() {
 		if (composite != null && ! composite.isDisposed() && painter != null)

@@ -13,10 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.filters;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITypeMapper;
-
 import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.ui.views.properties.tabbed.AbstractTypeMapper;
 
 /**
  * Create a filter that is used assist in input filtering for the
@@ -27,7 +26,7 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
  * @author nbalaba
  */
 public class GenericModelElementFilter
-	implements ITypeMapper {
+	extends AbstractTypeMapper {
 
 	/**
 	 * Converts the input into an EObject, if it can be adapted. Otherwise
@@ -54,16 +53,16 @@ public class GenericModelElementFilter
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITypeMapper#remapType(java.lang.Object, java.lang.Class)
+	/**
+	 * @inheritDoc
 	 */
-	public Class remapType(Object input, Class effectiveType) {
+	public Class mapType(Object input) {
 		EObject object = getEObject(input);
 
 		if (isApplicableToEObject(object))
 			return object.getClass();
 
-		return effectiveType;
+		return super.mapType(object);
 	}
 
 	/**

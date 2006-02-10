@@ -11,9 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.properties.filters;
 
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITypeMapper;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.jface.viewers.IFilter;
 
 /**
  * Filter to retain edit part properties
@@ -21,16 +20,12 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
  * @author Natalia Balaba
  */
 public class EditPartPropertySectionFilter
-	implements ITypeMapper {
+	implements IFilter {
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.properties.ITypeMapper#remapType(java.lang.Object,
-	 *      java.lang.Class)
-	 */
-	public Class remapType(Object object, Class effectiveType) {
-		if (object instanceof IGraphicalEditPart)
-			return effectiveType;
+    public boolean select(Object object) {
+        if (object instanceof IGraphicalEditPart)
+            return true;
 
-		return null;
-	}
+        return false;
+    }
 }

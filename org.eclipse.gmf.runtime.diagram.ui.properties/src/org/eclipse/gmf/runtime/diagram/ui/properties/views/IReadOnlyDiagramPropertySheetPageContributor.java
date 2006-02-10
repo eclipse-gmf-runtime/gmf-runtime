@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.properties.views;
 
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 
 /**
  * A interface to indicate that the property sheet pages should be read only

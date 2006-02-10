@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.filters;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITypeMapper;
+import org.eclipse.ui.views.properties.tabbed.AbstractTypeMapper;
 
 /**
  * Create a filter that is used assist in input filtering for the
@@ -24,7 +24,7 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.ITypeMapper;
  *         href="mailto:anthonyh@ca.ibm.com">anthonyh@ca.ibm.com </a>
  */
 public class ModelElementTypeMapper
-	implements ITypeMapper {
+	extends AbstractTypeMapper {
 
 	/**
 	 * Constructor for ModelElementTypeMapper.
@@ -34,24 +34,24 @@ public class ModelElementTypeMapper
 	}
 
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITypeMapper#remapType(java.lang.Object, java.lang.Class)
-	 */
-	public Class remapType(Object input, Class effectiveType) {
-		Class type = effectiveType;
-		if (input instanceof EditPart) {
-			Object tmpObj = ((EditPart) input).getModel();
-			if (tmpObj instanceof EObject) {
-				type = getEObjectType((EObject) tmpObj);
-			} else {
-				type = tmpObj.getClass();
-			}
-		} else if (input instanceof EObject) {
-			return getEObjectType((EObject) input);
-		}
+    /**
+     * @inheritDoc
+     */
+    public Class mapType(Object input) {
+        Class type = super.mapType(input);
+        if (input instanceof EditPart) {
+            Object tmpObj = ((EditPart) input).getModel();
+            if (tmpObj instanceof EObject) {
+                type = getEObjectType((EObject) tmpObj);
+            } else {
+                type = tmpObj.getClass();
+            }
+        } else if (input instanceof EObject) {
+            return getEObjectType((EObject) input);
+        }
 
-		return type;
-	}
+        return type;
+    }
 
 	/**
 	 * Returns the type of the EObject. Subclasses may override.

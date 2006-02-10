@@ -89,7 +89,7 @@ public class ShapeColorsAndFontsPropertySection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#refresh()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#refresh()
 	 */
 	public void refresh() {
 		super.refresh();

@@ -23,7 +23,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
@@ -46,7 +46,7 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
 
   
     /* (non-Javadoc)
-     * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage)
+     * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
      */
     public void createControls(final Composite parent,
             TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -133,14 +133,14 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
 
    
     /* (non-Javadoc)
-     * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+     * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void setInput(IWorkbenchPart part, ISelection selection) {
         page.selectionChanged(part, selection);
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#dispose()
+     * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
      */
     public void dispose() {
         super.dispose();
@@ -154,7 +154,7 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
 
  
     /* (non-Javadoc)
-     * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#refresh()
+     * @see org.eclipse.ui.views.properties.tabbed.ISection#refresh()
      */
     public void refresh() {
 
@@ -163,7 +163,7 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
 
    
     /* (non-Javadoc)
-     * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#shouldUseExtraSpace()
+     * @see org.eclipse.ui.views.properties.tabbed.ISection#shouldUseExtraSpace()
      */
     public boolean shouldUseExtraSpace() {
         return true;

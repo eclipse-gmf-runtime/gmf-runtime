@@ -530,7 +530,7 @@ public class ColorsAndFontsPropertySection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#refresh()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#refresh()
 	 */
 	public void refresh() {
 		if(!isDisposed()){
@@ -643,7 +643,7 @@ public class ColorsAndFontsPropertySection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#setInput(org.eclipse.ui.IWorkbenchPart,
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void setInput(IWorkbenchPart part, ISelection selection) {

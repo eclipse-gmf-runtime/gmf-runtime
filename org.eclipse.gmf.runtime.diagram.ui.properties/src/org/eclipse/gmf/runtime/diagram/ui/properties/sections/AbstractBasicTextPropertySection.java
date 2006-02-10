@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
-import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
@@ -111,7 +111,7 @@ public abstract class AbstractBasicTextPropertySection
 
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage)
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
 	public void createControls(Composite parent,
 			TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -240,7 +240,7 @@ public abstract class AbstractBasicTextPropertySection
 
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#dispose()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
 	 */
 	public void dispose() {
 		stopTextWidgetEventListener();
@@ -248,7 +248,7 @@ public abstract class AbstractBasicTextPropertySection
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#refresh()
+	 * @see org.eclipse.ui.views.properties.tabbed.ISection#refresh()
 	 */
 	public void refresh() {
 		getListener().startNonUserChange();
