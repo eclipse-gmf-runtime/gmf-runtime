@@ -26,6 +26,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 /**
  * This command duplicates a list of <code>EObjects</code> and adds each
@@ -92,6 +93,27 @@ public abstract class DuplicateEObjectsCommand
 		this.objectsToBeDuplicated = eObjectsToBeDuplicated;
 		this.allDuplicatedObjects = allDuplicatedObjectsMap;
 	}
+    
+    /**
+     * Constructs a new duplicate EObjects command with the specified label and
+     * list of EObjects.
+     * 
+     * @param label
+     *            The label for the new command.
+     * @param eObjectsToBeDuplicated
+     *            The list of <code>EObjects</code> to be duplicated.
+     * @param allDuplicatedObjectsMap
+     *            An empty map to be populated with the duplicated objects.
+     * @deprecated Use
+     *             {@link #DuplicateEObjectsCommand(TransactionalEditingDomain, String, List, Map)}
+     *             instead. This constructor assumed the singleton editing
+     *             domain.
+     */
+    public DuplicateEObjectsCommand(String label, List eObjectsToBeDuplicated,
+            Map allDuplicatedObjectsMap) {
+        this(MEditingDomain.INSTANCE, label, eObjectsToBeDuplicated,
+            allDuplicatedObjectsMap);
+    }
 	
 	/**
 	 * Returns a map which contains all the <code>EObjects</code> that were

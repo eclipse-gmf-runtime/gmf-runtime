@@ -15,6 +15,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -41,6 +42,16 @@ public class DeleteCommand extends AbstractTransactionalCommand {
             getWorkspaceFiles(view));
         this.view = view;
 	}
+    
+    /**
+     * Creates a new Delete command. Derives the editing domain from the
+     * <code>view</code>.
+     * 
+     * @param view
+     */
+    public DeleteCommand(View view) {
+        this(TransactionUtil.getEditingDomain(view), view);
+    }
 
 	/**
 	 * getter for the View that will be deleted
