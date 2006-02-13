@@ -15,7 +15,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -198,7 +200,23 @@ public class ConnectionHandleTool
 		PopupMenu popupMenu = new PopupMenu(popupContent, labelProvider);
 		PopupMenuCommand popupCmd = new PopupMenuCommand("", Display //$NON-NLS-1$
 			.getCurrent().getActiveShell(), popupMenu);
-		popupCmd.execute(null);
+       
+        try {
+            popupCmd.execute(new NullProgressMonitor(), null);
+            
+        } catch (ExecutionException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
+                ConnectionHandleTool.class,
+                "executeShowRelatedElementsCommand", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+                "executeShowRelatedElementsCommand", e); //$NON-NLS-1$
+            
+            // cancel the gesture
+            return null;
+        }
+        
 		if (!popupCmd.getCommandResult().getStatus().isOK()) {
 			// user cancelled gesture
 			return null;

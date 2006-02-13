@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -31,7 +32,7 @@ public class SendBackwardCommandTest
 	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#createCommand()
 	 */
 	protected ICommand createCommand() {
-		return new SendBackwardCommand(noteView);
+		return new SendBackwardCommand(getEditingDomain(), noteView);
 	}
 
 	/* (non-Javadoc)
@@ -41,8 +42,13 @@ public class SendBackwardCommandTest
 		assertEquals(getDiagram().getChildren().size(), 1);
 		View firstNote  = (View)getDiagram().getChildren().get(0);
 
-		ICommand zorderCommand = new SendBackwardCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new SendBackwardCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 	}
@@ -53,8 +59,13 @@ public class SendBackwardCommandTest
 		View firstNote  = (View)getDiagram().getChildren().get(0);
 		View secondNote = (View)getDiagram().getChildren().get(1);
 
-		ICommand zorderCommand = new SendBackwardCommand(secondNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new SendBackwardCommand(getEditingDomain(), secondNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);
@@ -68,8 +79,13 @@ public class SendBackwardCommandTest
 		View secondNote = (View)getDiagram().getChildren().get(1);
 		View thirdNote  = (View)getDiagram().getChildren().get(2);
 
-		ICommand zorderCommand = new SendBackwardCommand(secondNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new SendBackwardCommand(getEditingDomain(), secondNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);
@@ -84,15 +100,24 @@ public class SendBackwardCommandTest
 		View secondNote = (View)getDiagram().getChildren().get(1);
 		View thirdNote  = (View)getDiagram().getChildren().get(2);
 
-		ICommand zorderCommand = new SendBackwardCommand(thirdNote);
-		zorderCommand.execute(new NullProgressMonitor());
-
+		ICommand zorderCommand = new SendBackwardCommand(getEditingDomain(), thirdNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 		assertEquals(getDiagram().getChildren().get(1), thirdNote);
 		assertEquals(getDiagram().getChildren().get(2), secondNote);
 		
-		zorderCommand = new SendBackwardCommand(thirdNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		zorderCommand = new SendBackwardCommand(getEditingDomain(), thirdNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 		
 		assertEquals(getDiagram().getChildren().get(0), thirdNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,12 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
-import java.util.Collection;
-
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 
 /**
@@ -44,19 +43,14 @@ public class DestroyElementCommand
 		super(request.getLabel(), request.getContainer(), request);
 		this.elementToDestroy = request.getElementToDestroy();
 	}
+	
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-
-		EReference reference = getElementToDestroy().eContainmentFeature();
-
-		if (reference.isMany()) {
-			((Collection) getElementToEdit().eGet(reference))
-				.remove(getElementToDestroy());
-			
-		} else {
-			getElementToEdit().eSet(reference, null);
+		if (getElementToDestroy().eResource() != null) {
+			EMFCoreUtil.destroy(getElementToDestroy());
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 	
 	/**
@@ -67,12 +61,7 @@ public class DestroyElementCommand
 		return elementToDestroy;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.commands.core.internal.commands.EditElementCommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		return elementToDestroy != null;
 	}
 

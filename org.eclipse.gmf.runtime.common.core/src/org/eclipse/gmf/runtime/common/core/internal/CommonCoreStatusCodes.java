@@ -74,4 +74,22 @@ public final class CommonCoreStatusCodes {
 	 */
 	public static final int ENCODING_FAILURE = 8;
 	
+	/**
+	 * Error status code indicating that the recovery of a failed execution also
+	 * failed.
+	 */
+	public static final int EXECUTE_RECOVERY_FAILED = 20;
+
+	/**
+	 * Error status code indicating that the recovery of a failed undo also
+	 * failed.
+	 */
+	public static final int UNDO_RECOVERY_FAILED = 21;
+
+	/**
+	 * Error status code indicating that the recovery of a failed redo also
+	 * failed.
+	 */
+	public static final int REDO_RECOVERY_FAILED = 22;
+	
 }

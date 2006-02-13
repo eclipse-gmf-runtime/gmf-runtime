@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,13 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.util.Assert;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Assert;
 /**
  * Copy Command used to copy the list of <code>IView</code> to the system
  * clipboard
@@ -33,35 +35,42 @@ public class CopyCommand extends ClipboardCommand {
 
     /**
      * Constructor for CopyCommand.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
      * @param viewContext
      * @param source
      */
-    public CopyCommand(
+    public CopyCommand(TransactionalEditingDomain editingDomain, 
         View viewContext,
         List source) {
-        this(null, viewContext, source);
+        this(editingDomain, null, viewContext, source);
     }
 
     /**
      * Constructor for CopyCommand.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
      * @param label
      * @param viewContext
      * @param source
      */
-    public CopyCommand(
+    public CopyCommand(TransactionalEditingDomain editingDomain, 
         String label,
         View viewContext,
         List source) {
-        super(label, viewContext);
+        super(editingDomain, label, viewContext);
 
         Assert.isNotNull(source);
         this.source = source;
     }
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
         /* Copy all the views */
         copyToClipboard(getSource());
-        return newOKCommandResult();
+        return CommandResult.newOKCommandResult();
     }
 
     /**

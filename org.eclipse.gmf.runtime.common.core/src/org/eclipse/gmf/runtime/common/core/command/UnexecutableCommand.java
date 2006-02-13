@@ -10,8 +10,9 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.common.core.command;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-
 
 /**
  * A command that cannot be executed. This is an implementation of the Null
@@ -20,6 +21,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * {@link org.eclipse.gmf.runtime.common.core.command.ICommand}.
  * 
  * @author melaasar
+ * @author ldamus
+ * 
  * @canBeSeenBy %partners
  */
 public class UnexecutableCommand extends AbstractCommand {
@@ -28,39 +31,56 @@ public class UnexecutableCommand extends AbstractCommand {
 	 * The singleton instance.
 	 */
 	public static final UnexecutableCommand INSTANCE = new UnexecutableCommand();
-	
+
 	/**
 	 * Creates an instance of an unexecutable command.
 	 */
 	protected UnexecutableCommand() {
-		super(null);
+		super(null, null);
 	}
-	
+
 	/**
 	 * Does nothing.
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
+			IAdaptable info) throws ExecutionException {
 		return null;
 	}
-	
+
+	/**
+	 * Does nothing.
+	 */
+	protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor,
+			IAdaptable info) throws ExecutionException {
+		return null;
+	}
+
+	/**
+	 * Does nothing.
+	 */
+	protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor,
+			IAdaptable info) throws ExecutionException {
+		return null;
+	}
+
 	/**
 	 * @return false.
 	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		return false;
 	}
-	
+
 	/**
 	 * @return false.
 	 */
-	public boolean isRedoable() {
+	public boolean canRedo() {
 		return false;
 	}
-	
+
 	/**
 	 * @return false.
 	 */
-	public boolean isUndoable() {
+	public boolean canUndo() {
 		return false;
 	}
 }

@@ -122,7 +122,7 @@ public class DiagramGraphicalViewerTests
 		assertEquals("Number of ShapeEditParts for led2ID incorrect", 2, viewer//$NON-NLS-1$
 			.findEditPartsForElement(led2ID, ShapeEditPart.class).size());
 
-		DeleteCommand delete = new DeleteCommand(shape3);
+		DeleteCommand delete = new DeleteCommand(getLogicTestFixture().getEditingDomain(), shape3);
 		testCommand(delete, new ITestCommandCallback() {
 
 			public void onCommandExecution() {

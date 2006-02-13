@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.Connection;
@@ -23,6 +24,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
@@ -134,8 +136,11 @@ public class GraphicalNodeEditPolicy
 		 * Pops up the dialog with the content provided, gets the command to be
 		 * executed based on the user selection, and then executes the command.
 		 */
-		protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-			CommandResult cmdResult = super.doExecute(progressMonitor);
+		protected CommandResult doExecuteWithResult(
+                IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+            
+			CommandResult cmdResult = super.doExecuteWithResult(progressMonitor, info);
 			if (!cmdResult.getStatus().isOK()) {
 				return cmdResult;
 			}
@@ -146,21 +151,21 @@ public class GraphicalNodeEditPolicy
 			cmd.execute();
 			createCommand = cmd;
 
-			return newOKCommandResult();
+			return CommandResult.newOKCommandResult();
 		}
 
-		protected CommandResult doUndo() {
+		protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
 			if (createCommand != null) {
 				createCommand.undo();
 			}
-			return super.doUndo();
+			return super.doUndoWithResult(progressMonitor, info);
 		}
 
-		protected CommandResult doRedo() {
+		protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
 			if (createCommand != null) {
 				createCommand.redo();
 			}
-			return super.doRedo();
+			return super.doRedoWithResult(progressMonitor, info);
 		}
 
 		/**
@@ -323,9 +328,11 @@ public class GraphicalNodeEditPolicy
 			}
 		}
 		if (newRouterType != null) {
+
 			// add commands for line routing. Convert the new connection and
 			// also the targeted connection.
-			ICommand spc = new SetPropertyCommand(connection,
+			ICommand spc = new SetPropertyCommand(
+                getEditingDomain(), connection,
 				Properties.ID_ROUTING, StringStatics.BLANK, newRouterType);
 			Command cmdRouter = new EtoolsProxyCommand(spc);
 			if (cmdRouter != null) {
@@ -343,17 +350,19 @@ public class GraphicalNodeEditPolicy
 		INodeEditPart node = getConnectableEditPart();
 		if (node == null)
 			return null;
+   
+        TransactionalEditingDomain editingDomain = getEditingDomain();
 		
 		ConnectionAnchor targetAnchor = getConnectionTargetAnchor(request);
 		INodeEditPart targetEP = getConnectionCompleteEditPart(request);
 		if (targetEP == null) {
 			return null;
 		}
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(null);
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, null);
 		sceCommand.setEdgeAdaptor(new EObjectAdapter((EObject)request
 				.getConnectionEditPart().getModel()));
 		sceCommand.setNewTargetAdaptor(targetEP);
-		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(null);
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, null);
 		scaCommand.setEdgeAdaptor(new EObjectAdapter((EObject) request
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewTargetTerminal(targetEP
@@ -382,7 +391,8 @@ public class GraphicalNodeEditPolicy
 					.getReferencePoint()));
 			pointList.addPoint(targetAnchor.getLocation(sourceAnchor
 					.getReferencePoint()));
-			SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+            
+			SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand(editingDomain);
 			sbbCommand.setEdgeAdapter(request.getConnectionEditPart());
 			sbbCommand.setNewPointList(pointList, sourceAnchor
 					.getReferencePoint(), targetAnchor.getReferencePoint());
@@ -403,13 +413,15 @@ public class GraphicalNodeEditPolicy
 		if (node == null)
 			return null;
 		
+        TransactionalEditingDomain editingDomain = getEditingDomain();
+        
 		ConnectionAnchor sourceAnchor = node.getSourceConnectionAnchor(request);
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(null);
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, null);
 		sceCommand.setEdgeAdaptor(new EObjectAdapter((View) request
 				.getConnectionEditPart().getModel()));
 		sceCommand.setNewSourceAdaptor(new EObjectAdapter((View)node
 				.getModel()));
-		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(null);
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, null);
 		scaCommand.setEdgeAdaptor(new EObjectAdapter((View) request
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewSourceTerminal(node.mapConnectionAnchorToTerminal(sourceAnchor));
@@ -444,11 +456,11 @@ public class GraphicalNodeEditPolicy
 		CompositeCommand cc = (CompositeCommand) proxy.getICommand();
 		ConnectionAnchor targetAnchor = targetEP
 			.getTargetConnectionAnchor(request);
-		SetConnectionEndsCommand sceCommand = (SetConnectionEndsCommand) cc
-			.getCommands().get(1);
+        Iterator commandItr = cc.iterator();
+        commandItr.next(); //0
+		SetConnectionEndsCommand sceCommand = (SetConnectionEndsCommand) commandItr.next(); //1
 		sceCommand.setNewTargetAdaptor(new EObjectAdapter(((IGraphicalEditPart) targetEP).getNotationView()));
-		SetConnectionAnchorsCommand scaCommand = (SetConnectionAnchorsCommand) cc
-		.getCommands().get(2);
+		SetConnectionAnchorsCommand scaCommand = (SetConnectionAnchorsCommand) commandItr.next(); //2
 		scaCommand.setNewTargetTerminal(targetEP
 			.mapConnectionAnchorToTerminal(targetAnchor));
 		setViewAdapter(sceCommand.getEdgeAdaptor());
@@ -465,8 +477,7 @@ public class GraphicalNodeEditPolicy
 			pointList.addPoint(sourceAnchor.getLocation(request.getLocation()));
 			pointList.addPoint(targetAnchor.getLocation(request.getLocation()));
 		}
-		SetConnectionBendpointsCommand sbbCommand = (SetConnectionBendpointsCommand) cc
-			.getCommands().get(3);
+		SetConnectionBendpointsCommand sbbCommand = (SetConnectionBendpointsCommand) commandItr.next(); //3
 		sbbCommand.setNewPointList(pointList, sourceAnchor.getReferencePoint(),
 			targetAnchor.getReferencePoint());
 		return request.getStartCommand();
@@ -497,20 +508,23 @@ public class GraphicalNodeEditPolicy
 			DiagramUIMessages.Commands_CreateCommand_Connection_Label);
 		Diagram diagramView = ((View)getHost().getModel())
 				.getDiagram();
-		CreateCommand createCommand = new CreateCommand(req
+        TransactionalEditingDomain editingDomain = getEditingDomain();
+        CreateCommand createCommand = new CreateCommand(editingDomain, req
 				.getConnectionViewDescriptor(), diagramView.getDiagram());
 		setViewAdapter((IAdaptable) createCommand.getCommandResult()
 				.getReturnValue());
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(null);
+        
+        
+        SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, null);
 		sceCommand.setEdgeAdaptor(getViewAdapter());
 		sceCommand.setNewSourceAdaptor(new EObjectAdapter(getView()));
 		ConnectionAnchor sourceAnchor = getConnectableEditPart()
 				.getSourceConnectionAnchor(request);
-		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(null);
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, null);
 		scaCommand.setEdgeAdaptor(getViewAdapter());
 		scaCommand.setNewSourceTerminal(getConnectableEditPart()
 				.mapConnectionAnchorToTerminal(sourceAnchor));
-		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand(editingDomain);
 		sbbCommand.setEdgeAdapter(getViewAdapter());
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
@@ -870,5 +884,9 @@ public class GraphicalNodeEditPolicy
 		Command command = realTargetEP.getCommand(request);
 		return command;
 	}
+    
+    private TransactionalEditingDomain getEditingDomain() {
+        return ((IGraphicalEditPart) getHost()).getEditingDomain();
+    }
 
 }

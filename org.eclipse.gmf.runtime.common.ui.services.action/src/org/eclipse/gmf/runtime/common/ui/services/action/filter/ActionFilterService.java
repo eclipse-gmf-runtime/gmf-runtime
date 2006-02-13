@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,10 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent;
-import org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
@@ -33,7 +34,6 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServic
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.IActionFilterProvider;
-import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.TestAttributeOperation;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -48,7 +48,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ActionFilterService
 	extends Service
-	implements IActionFilterProvider, ICommandManagerChangeListener {
+	implements IActionFilterProvider, IOperationHistoryListener {
 
 	/**
 	 * A descriptor for action filter providers defined by a configuration
@@ -182,7 +182,7 @@ public class ActionFilterService
 	protected ActionFilterService() {
 		super(true);
 
-		getCommandManager().addCommandManagerChangeListener(this);
+        getOperationHistory().addOperationHistoryListener(this);
 	}
 
 	/**
@@ -245,16 +245,25 @@ public class ActionFilterService
 	protected ActionManager getActionManager() {
 		return ActionManager.getDefault();
 	}
-
+	
 	/**
 	 * Retrieves the command manager for this action filter service.
 	 * 
 	 * @return The command manager for this action filter service.
-	 *  
+	 * @deprecated Use {@link #getOperationHistory()} instead.
 	 */
 	protected CommandManager getCommandManager() {
-		return getActionManager().getCommandManager();
+		return CommandManager.getDefault();
 	}
+    
+    /**
+     * Returns the operation history from my action manager.
+     * 
+     * @return the operation history
+     */
+    protected IOperationHistory getOperationHistory() {
+        return getActionManager().getOperationHistory();
+    }
 
 	/**
 	 * Creates a new action filter provider descriptor for the specified
@@ -353,18 +362,12 @@ public class ActionFilterService
 
 		return result.booleanValue();
 	}
-
-	/**
-	 * Handles an event indicating that a command manager has changed.
-	 * 
-	 * @param event
-	 *            The command manager change event to be handled.
-	 * 
-	 * @see ICommandManagerChangeListener#commandManagerChanged(CommandManagerChangeEvent)
-	 *  
-	 */
-	public void commandManagerChanged(CommandManagerChangeEvent event) {
-		clearCachedResults();
-		setCachedSelection(StructuredSelection.EMPTY);
-	}
+    
+    /**
+     * Clears my cache when my operation history changes.
+     */
+    public void historyNotification(OperationHistoryEvent event) {
+        clearCachedResults();
+        setCachedSelection(StructuredSelection.EMPTY);
+    }
 }

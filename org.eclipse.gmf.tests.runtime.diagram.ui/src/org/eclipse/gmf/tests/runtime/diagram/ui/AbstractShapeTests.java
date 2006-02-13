@@ -94,7 +94,8 @@ public abstract class AbstractShapeTests extends AbstractTestBase {
         final Dimension newDim = new Dimension(400, 400);
         final Dimension oldDim = editPart.getFigure().getSize();
 
-        SetBoundsCommand cmd = new SetBoundsCommand(null, new EObjectAdapter(shapeView), newDim);
+        SetBoundsCommand cmd = new SetBoundsCommand(getTestFixture()
+            .getEditingDomain(), "testRATLC00046844", new EObjectAdapter(shapeView), newDim); //$NON-NLS-1$
         
         testCommand(cmd, new ITestCommandCallback() {
             public void onCommandExecution() {

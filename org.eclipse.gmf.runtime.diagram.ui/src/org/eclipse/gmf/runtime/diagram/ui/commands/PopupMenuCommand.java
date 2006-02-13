@@ -11,14 +11,15 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.dialogs.PopupDialog;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * A command that pops up a <code>PopupMenu</code> or a
@@ -62,7 +63,7 @@ public class PopupMenuCommand
 	 */
 	public PopupMenuCommand(String label, Shell parentShell) {
 
-		super(label);
+		super(label, null);
 		setParentShell(parentShell);
 	}
 
@@ -74,23 +75,22 @@ public class PopupMenuCommand
 	 */
 	public PopupMenuCommand(String label, Shell parentShell, PopupMenu popupMenu) {
 
-		super(label);
+		super(label, null);
 		setParentShell(parentShell);
 		setPopupMenu(popupMenu);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 
 		if (getPopupMenu() != null) {
 			if (getPopupMenu().show(getParentShell()) == false) {
 				// user cancelled gesture
 				progressMonitor.setCanceled(true);
-				return newCancelledCommandResult();
+				return CommandResult.newCancelledCommandResult();
 			}
-			return newOKCommandResult(getPopupMenu().getResult());
+			return CommandResult.newOKCommandResult(getPopupMenu().getResult());
 			
 		} else if (getPopupDialog() != null) {
 			if (getPopupDialog().open() == Dialog.CANCEL
@@ -99,40 +99,34 @@ public class PopupMenuCommand
 				
 				// user cancelled dialog
 				progressMonitor.setCanceled(true);
-				return newCancelledCommandResult();
+				return CommandResult.newCancelledCommandResult();
 			}
-			return newOKCommandResult(getPopupDialog().getResult()[0]);
+			return CommandResult.newOKCommandResult(getPopupDialog().getResult()[0]);
 		}
 		
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-	 */
-	protected CommandResult doRedo() {
-		return newOKCommandResult();
+    
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+		return CommandResult.newOKCommandResult();
 
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-	 */
-	protected CommandResult doUndo() {
-		return newOKCommandResult();
+    
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+		return CommandResult.newOKCommandResult();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
+    public boolean canRedo() {
 		return true;
 	}
-
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
-	 */
-	public boolean isUndoable() {
+    
+    public boolean canUndo() {
 		return true;
 	}
 

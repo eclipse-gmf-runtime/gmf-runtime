@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,16 +13,26 @@ package org.eclipse.gmf.runtime.emf.ui.properties.sections;
 
 import java.text.MessageFormat;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.views.properties.IPropertySource;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.ui.properties.commands.RestoreDefaultPropertyValueCommand;
 import org.eclipse.gmf.runtime.emf.ui.properties.commands.SetModelPropertyValueCommand;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesDebugOptions;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesPlugin;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesStatusCodes;
 import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 /**
  * An property sheet entry for elements in the model. The changes to the model
@@ -36,25 +46,54 @@ import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMe
 public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
 
     /**
-     * Constructs a new instance with a command manager for executing property
-     * change commands. This instance must be the root entry because only the
-     * root entry keeps track of the command manager.
-     * 
-     * @param manager
-     *            the command manager with which this entry will execute
-     *            property change commands.
-     */
-    public UndoableModelPropertySheetEntry(CommandManager manager) {
-        commandManager = manager;
-    }
-
-    /**
-     * The command manager used by this entry to execute property change
+     * The operation history used by this entry to execute property change
      * commands. <code>Null</code> if I am not the root entry. Only the root
-     * entry keeps track of the command manager on behalf of all of the child
+     * entry keeps track of the history on behalf of all of the child
      * entries.
      */
-    private CommandManager commandManager;
+    private final IOperationHistory operationHistory;
+    
+    /**
+     * My editing domain.
+     */
+    private TransactionalEditingDomain editingDomain;
+    
+    /**
+     * Intializes me with an operation history through
+     * which property change commands will be executed, undone and redone.
+     * 
+     * @param operationHistory
+     *            my operation history
+     */
+    public UndoableModelPropertySheetEntry(IOperationHistory operationHistory) {
+        this.operationHistory = operationHistory;
+    }
+    
+    /**
+     * Sets my editing domain.
+     * 
+     * @param editingDomain
+     *            my editing domain
+     */
+    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+        this.editingDomain = editingDomain;
+    }
+    
+    /**
+     * Gets my editing domain. The root entry stores the editing domain.
+     * 
+     * @return my editing domain
+     */
+    public TransactionalEditingDomain getEditingDomain() {
+
+        UndoableModelPropertySheetEntry parentEntry = getParentEntry();
+
+        if (parentEntry == null || editingDomain != null) {
+            return editingDomain;
+        }
+
+        return parentEntry.getEditingDomain();
+    }
 
     /*
      * (non-Javadoc) Method declared on IPropertySheetEntry.
@@ -120,7 +159,7 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
             IPropertySource source = getPropertySource(parentValues[i]);
 
             if (source.isPropertySet(propertyId)) {
-                restoreCommand = new RestoreDefaultPropertyValueCommand(
+                restoreCommand = new RestoreDefaultPropertyValueCommand(getEditingDomain(), 
                         propertyName, parentValues[i], source, propertyId);
                 cc.compose(restoreCommand);
                 executeCommand = true;
@@ -129,7 +168,18 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
 
         if (executeCommand) {
             /* status is ok, can edit the storage units */
-            getCommandManager().execute(cc);
+            try {
+                getOperationHistory().execute(cc, new NullProgressMonitor(), null);
+                
+            } catch (ExecutionException e) {
+                Trace.catching(EMFPropertiesPlugin.getDefault(),
+                    EMFPropertiesDebugOptions.EXCEPTIONS_CATCHING,
+                    UndoableModelPropertySheetEntry.class,
+                    "resetPropertyValue", e); //$NON-NLS-1$
+                Log.error(EMFPropertiesPlugin.getDefault(),
+                    EMFPropertiesStatusCodes.COMMAND_FAILURE, e
+                        .getLocalizedMessage(), e);
+            }
             refreshValues();
         }
     }
@@ -157,7 +207,10 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
                 getCompositeCommand(MessageFormat.format(
                 		EMFUIPropertiesMessages.UndoablePropertySheetEntry_commandName,
                         new String[] { getDescriptor().getDisplayName() })));
-
+        
+        // Remember the new value so that we don't apply this same value more
+        // than once.
+        editValue = newValue;
     }
 
     /**
@@ -172,9 +225,11 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
      * 
      * @param child
      *            the child entry that changed its value
+     * @param command
+     *            the command into which to compose my property chnage command
      */
     protected void valueChanged(UndoableModelPropertySheetEntry child,
-            CompositeCommand command) {
+            ICommand command) {
 
         String propertyName = child.getDescriptor().getDisplayName();
 
@@ -189,17 +244,55 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
             getParentEntry().valueChanged(this, command);
         } else {
             //I am the root entry
-            command.execute(new NullProgressMonitor());
+            try {
+                getOperationHistory().execute(command, new NullProgressMonitor(), null);
+          
+            } catch (ExecutionException e) {
+                Trace.catching(EMFPropertiesPlugin.getDefault(),
+                    EMFPropertiesDebugOptions.EXCEPTIONS_CATCHING,
+                    UndoableModelPropertySheetEntry.class,
+                    "valueChanged", e); //$NON-NLS-1$
+                Log.error(EMFPropertiesPlugin.getDefault(),
+                    EMFPropertiesStatusCodes.COMMAND_FAILURE, e
+                        .getLocalizedMessage(), e);
+            }
         }
     }
-
+    
     /**
-     * Gets the command manager used to execute property change commands.
-     * 
-     * @return <code>CommandManager</code> used to execute property change commands.
+     * Extracts the editing domain from the <code>objects</code> if I am the
+     * root entry.
      */
-    protected CommandManager getCommandManager() {
-        return commandManager;
+    public void setValues(Object[] objects) {
+        super.setValues(objects);
+
+        if (getParentEntry() == null) {
+            // I'm the root
+            for (int i = 0; i < objects.length; i++) {
+                EObject eObject = null;
+
+                if (objects[i] instanceof EObject) {
+                    eObject = (EObject) objects[i];
+
+                } else if (objects[i] instanceof IAdaptable) {
+                    eObject = (EObject) ((IAdaptable) objects[i])
+                        .getAdapter(EObject.class);
+                }
+
+                if (eObject != null) {
+                    setEditingDomain(TransactionUtil.getEditingDomain(eObject));
+                }
+            }
+        }
+    }
+    
+    /**
+     * Gets my operation history.
+     * 
+     * @return my operation history
+     */
+    protected final IOperationHistory getOperationHistory() {
+        return operationHistory;
     }
 
     /**
@@ -220,17 +313,12 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
     protected ICommand getPropertyCommand(String propertyName, Object object,
             Object propertyId, Object value) {
 
-        return new SetModelPropertyValueCommand(propertyName, object,
+        return new SetModelPropertyValueCommand(getEditingDomain(), propertyName, object,
                 getPropertySource(object), propertyId, value);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.common.ui.internal.views.properties.UndoablePropertySheetEntry#getCompositeCommand(java.lang.String)
-     */
-    protected CompositeCommand getCompositeCommand(String propertyName) {
-        return new CompositeModelCommand(propertyName);
+    protected ICompositeCommand getCompositeCommand(String propertyName) {
+        return new CompositeTransactionalCommand(getEditingDomain(), propertyName);
     }
 
     /*
@@ -248,7 +336,7 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
      * @see org.eclipse.gmf.runtime.common.ui.internal.views.properties.UndoablePropertySheetEntry#createChildEntry()
      */
     protected PropertySheetEntry createChildEntry() {
-        return new UndoableModelPropertySheetEntry(getCommandManager());
+        return new UndoableModelPropertySheetEntry(getOperationHistory());
 
     }
 

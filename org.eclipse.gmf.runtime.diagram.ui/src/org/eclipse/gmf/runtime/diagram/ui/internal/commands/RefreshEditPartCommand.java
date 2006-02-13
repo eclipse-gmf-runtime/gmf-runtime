@@ -13,6 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.EditPartViewer;
@@ -43,13 +45,16 @@ public class RefreshEditPartCommand
 	 * @param revalidate revalidate flag
 	 */
 	public RefreshEditPartCommand(IGraphicalEditPart editPart, boolean revalidate) {
-		super(null);
+		super(null, null);
 		this.revalidate = revalidate;
 		notation = (View)editPart.getModel();
 		viewer = editPart.getRoot().getViewer();
 	}
 	
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
 		Map epRegistry = viewer.getEditPartRegistry();
 		IGraphicalEditPart editPart = (IGraphicalEditPart)epRegistry.get(notation);
 
@@ -72,36 +77,27 @@ public class RefreshEditPartCommand
 
 		notation = null; // for garbage collection
 		viewer = null; // for garbage collection
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
+    public boolean canRedo() {
 		return true;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
-	 */
-	public boolean isUndoable() {
+    public boolean canUndo() {
 		return true;
 	}
 
-
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-	 */
-	protected CommandResult doRedo() {
-		return newOKCommandResult();
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
+		return CommandResult.newOKCommandResult();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-	 */
-	protected CommandResult doUndo() {
-		return newOKCommandResult();
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+		return CommandResult.newOKCommandResult();
 	}
 
 }

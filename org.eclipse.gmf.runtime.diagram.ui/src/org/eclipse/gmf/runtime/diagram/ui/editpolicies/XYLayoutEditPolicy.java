@@ -18,6 +18,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
@@ -31,6 +32,7 @@ import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.LayoutHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
@@ -39,7 +41,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.View;
@@ -73,7 +75,7 @@ public class XYLayoutEditPolicy
 			Rectangle rect = (Rectangle) constraint;
 			
 	 		ICommand boundsCommand = 
-	 			new SetBoundsCommand(
+	 			new SetBoundsCommand(((ShapeEditPart) child).getEditingDomain(),
 	 				DiagramUIMessages.SetLocationCommand_Label_Resize,
 	 				new EObjectAdapter((View) child.getModel()),
 					rect.getTopLeft()); 
@@ -91,6 +93,10 @@ public class XYLayoutEditPolicy
 	protected Command createChangeConstraintCommand(
 			ChangeBoundsRequest request, EditPart child, Object constraint) {
 		
+
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
 		Command cmd = createChangeConstraintCommand(child, constraint);
 		View view = (View)child.getModel();
 		if ((request.getResizeDirection() & PositionConstants.NORTH_SOUTH) != 0) {
@@ -99,7 +105,7 @@ public class XYLayoutEditPolicy
 			if (guidePos != null) {
 				int hAlignment = ((Integer)request.getExtendedData()
 						.get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
-				ChangeGuideCommand cgm = new ChangeGuideCommand(view, true);
+				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, true);
 				cgm.setNewGuide(findGuideAt(guidePos.intValue(), true), hAlignment);
 				cmd = cmd.chain(new EtoolsProxyCommand(cgm));
 			} else if (DiagramGuide.getInstance().getHorizontalGuide(view) != null) {
@@ -114,7 +120,7 @@ public class XYLayoutEditPolicy
 				else
 					edgeBeingResized = 1;
 				if (alignment == edgeBeingResized) {
-					ChangeGuideCommand cgm = new ChangeGuideCommand(view, true);
+					ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, true);
 					cmd = cmd.chain(new EtoolsProxyCommand(cgm));
 				}
 			}
@@ -126,7 +132,7 @@ public class XYLayoutEditPolicy
 			if (guidePos != null) {
 				int vAlignment = ((Integer)request.getExtendedData()
 						.get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
-				ChangeGuideCommand cgm = new ChangeGuideCommand(view, false);
+				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, false);
 				cgm.setNewGuide(findGuideAt(guidePos.intValue(), false), vAlignment);
 				cmd = cmd.chain(new EtoolsProxyCommand(cgm));
 			} else if (DiagramGuide.getInstance().getVerticalGuide(view) != null) {
@@ -137,7 +143,7 @@ public class XYLayoutEditPolicy
 				else
 					edgeBeingResized = 1;
 				if (alignment == edgeBeingResized) {
-					ChangeGuideCommand cgm = new ChangeGuideCommand(view, false);
+					ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, false);
 					cmd = cmd.chain(new EtoolsProxyCommand(cgm));
 				}
 			}
@@ -147,7 +153,7 @@ public class XYLayoutEditPolicy
 				|| request.getType().equals(REQ_ALIGN_CHILDREN)) {
 			Integer guidePos = (Integer)request.getExtendedData()
 					.get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
-			ChangeGuideCommand cgm = new ChangeGuideCommand(view, true);
+			ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, true);
 			if (guidePos != null) {
 				int hAlignment = ((Integer)request.getExtendedData()
 						.get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
@@ -159,7 +165,7 @@ public class XYLayoutEditPolicy
 			
 			guidePos = (Integer)request.getExtendedData()
 					.get(SnapToGuides.KEY_VERTICAL_GUIDE);
-			cgm = new ChangeGuideCommand(view, false);
+			cgm = new ChangeGuideCommand(editingDomain, view, false);
 			if (guidePos != null) {
 				int vAlignment = ((Integer)request.getExtendedData()
 						.get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
@@ -189,8 +195,11 @@ public class XYLayoutEditPolicy
 		Rectangle newBounds = (Rectangle) constraint;
 		View shapeView = (View) child.getModel();
 
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
  		ICommand boundsCommand = 
- 			new SetBoundsCommand(
+ 			new SetBoundsCommand(editingDomain,
  				DiagramUIMessages.SetLocationCommand_Label_Resize,
  				new EObjectAdapter(shapeView),
 				newBounds); 
@@ -222,9 +231,14 @@ public class XYLayoutEditPolicy
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
 		CreateViewRequest req = (CreateViewRequest) request;
+        
 
-		CompositeModelCommand cc = new CompositeModelCommand(DiagramUIMessages.AddCommand_Label);
-		Iterator iter = req.getViewDescriptors().iterator();
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+
+		CompositeTransactionalCommand cc = new CompositeTransactionalCommand(
+            editingDomain, DiagramUIMessages.AddCommand_Label);
+        Iterator iter = req.getViewDescriptors().iterator();
 
 		final Rectangle BOUNDS = (Rectangle) getConstraintFor(request);
 
@@ -233,17 +247,17 @@ public class XYLayoutEditPolicy
 		while (iter.hasNext()) {
 			CreateViewRequest.ViewDescriptor viewDescriptor = (CreateViewRequest.ViewDescriptor)iter.next(); 
 			Rectangle rect = getBoundsOffest(req, BOUNDS,viewDescriptor);
-			cc.compose(new SetBoundsCommand(
+			cc.compose(new SetBoundsCommand(editingDomain, 
 				DiagramUIMessages.SetLocationCommand_Label_Resize,
 				viewDescriptor,
 				rect));
 		}
 		
-		if( cc.unwrap() == null )
+		if( cc.reduce() == null )
 			return null;
 
 		return chainGuideAttachmentCommands( request,
-			new EtoolsProxyCommand(cc.unwrap()));
+			new EtoolsProxyCommand(cc.reduce()));
 	}
 
 	/**
@@ -352,6 +366,9 @@ public class XYLayoutEditPolicy
 		Command result = cmd;
 
 		CreateViewRequest req = (CreateViewRequest) request;
+        
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
 
 		// Attach to horizontal guide, if one is given
 		Integer guidePos = (Integer)request.getExtendedData()
@@ -366,8 +383,8 @@ public class XYLayoutEditPolicy
 
 			while (iter.hasNext()) {
 				IAdaptable desc = (IAdaptable)iter.next();
-				ChangeGuideCommand cgm = new ChangeGuideCommand(editPartViewer,
-					desc, true);
+				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain,
+                    editPartViewer, desc, true);
 				cgm.setNewGuide(guide, hAlignment);
 				result = result.chain(new EtoolsProxyCommand(cgm));
 			}
@@ -387,8 +404,8 @@ public class XYLayoutEditPolicy
 			while (iter.hasNext()) {
 				IAdaptable desc = (IAdaptable)iter.next();
 
-				ChangeGuideCommand cgm = new ChangeGuideCommand(editPartViewer,
-					desc, false);
+				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain,
+                    editPartViewer, desc, false);
 				cgm.setNewGuide(guide, vAlignment);
 				result = result.chain(new EtoolsProxyCommand(cgm));
 			}

@@ -77,8 +77,8 @@ public class CreateRelationshipCommand
 		return result;
 	}
 
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		return getSource() != null && getTarget() != null
-			&& super.isExecutable();
+			&& super.canExecute();
 	}
 }

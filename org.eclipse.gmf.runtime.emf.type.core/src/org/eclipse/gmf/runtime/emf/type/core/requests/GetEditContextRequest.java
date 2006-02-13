@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.emf.type.core.requests;
+
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
  * Request to get the context for editing a model element.
@@ -30,7 +32,7 @@ public class GetEditContextRequest extends AbstractEditCommandRequest {
 	 * The edit helper context for this request.
 	 */
 	private final Object editHelperContext;
-	
+
 	/**
 	 * The resulting edit context.
 	 */
@@ -39,15 +41,33 @@ public class GetEditContextRequest extends AbstractEditCommandRequest {
 	/**
 	 * Constructs a new request.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param editRequest
 	 *            the edit request whose context is being requested
 	 */
-	public GetEditContextRequest(IEditCommandRequest editRequest,
-			Object editHelperContext) {
+	public GetEditContextRequest(TransactionalEditingDomain editingDomain,
+			IEditCommandRequest editRequest, Object editHelperContext) {
+
+		super(editingDomain);
 		this.editRequest = editRequest;
 		this.editHelperContext = editHelperContext;
 		addParameters(editRequest.getParameters());
 	}
+    
+    /**
+     * Constructs a new request. The editing domain is derived from the
+     * <code>editRequest</code>.
+     * 
+     * @param editRequest
+     *            the edit request whose context is being requested
+     */
+    public GetEditContextRequest(IEditCommandRequest editRequest,
+            Object editHelperContext) {
+
+        this(editRequest.getEditingDomain(), editRequest, editHelperContext);
+    }
+        
 
 	/**
 	 * Gets the edit helper context for this request, which is always
@@ -65,7 +85,7 @@ public class GetEditContextRequest extends AbstractEditCommandRequest {
 	public IEditCommandRequest getEditCommandRequest() {
 		return editRequest;
 	}
-	
+
 	/**
 	 * Gets the requested edit context.
 	 * 
@@ -74,7 +94,7 @@ public class GetEditContextRequest extends AbstractEditCommandRequest {
 	public Object getEditContext() {
 		return editContext;
 	}
-	
+
 	/**
 	 * Sets the requested edit context. Clients asked to get a command for this
 	 * request should also set the edit context if the command they will return

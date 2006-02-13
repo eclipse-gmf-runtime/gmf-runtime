@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,23 +15,32 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypeDebugOptions;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * Request to create a new model element.
+ * <P>
+ * If the request is not constructed with the editing domain through which to
+ * create the new model element, it will be derived from the container element.
  * 
  * @author ldamus
  */
-public class CreateElementRequest
-	extends AbstractEditCommandRequest {
+public class CreateElementRequest extends AbstractEditCommandRequest {
 
 	/**
 	 * The container for the new model element.
@@ -69,30 +78,67 @@ public class CreateElementRequest
 	/**
 	 * Creates a request to create a new model element.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
+	 *            changes.
 	 * @param container
 	 *            the container for the new model element
 	 * @param elementType
 	 *            the element type of the new model element
 	 */
-	public CreateElementRequest(EObject container, IElementType elementType) {
+	public CreateElementRequest(TransactionalEditingDomain editingDomain,
+			EObject container, IElementType elementType) {
 
-		this(container, elementType, null);
+		this(editingDomain, container, elementType, null);
 	}
+    
+    /**
+     * Creates a request to create a new model element. The editing domain will
+     * be derived from the <code>container</code>.
+     * 
+     * @param container
+     *            the container for the new model element
+     * @param elementType
+     *            the element type of the new model element
+     */
+    public CreateElementRequest(EObject container, IElementType elementType) {
+        
+        this(TransactionUtil.getEditingDomain(container), container, elementType, null);
+    }
+    
+	/**
+     * Creates a request to create a new model element. The editing domain will
+     * be derived from the result of {@link #getContainer()}.
+     * 
+     * @param elementType
+     *            the element type of the new model element
+     */
+    public CreateElementRequest(IElementType elementType) {
+
+        this(null, null, elementType, null);
+    }
+    
+    /**
+     * Creates a request to create a new model element.
+     * 
+     * @param editingDomain
+     *            the editing domain in which I am requesting to make model
+     *            changes.
+     * @param elementType
+     *            the element type of the new model element
+     */
+    public CreateElementRequest(TransactionalEditingDomain editingDomain,
+            IElementType elementType) {
+
+        this(editingDomain, null, elementType, null);
+    }
 
 	/**
 	 * Creates a request to create a new model element.
 	 * 
-	 * @param elementType
-	 *            the element type of the new model element
-	 */
-	public CreateElementRequest(IElementType elementType) {
-
-		this(null, elementType, null);
-	}
-
-	/**
-	 * Creates a request to create a new model element.
-	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
+	 *            changes.
 	 * @param container
 	 *            the container for the new model element
 	 * @param elementType
@@ -102,14 +148,35 @@ public class CreateElementRequest
 	 *            element. Can be <code>null</code>, in which case a default
 	 *            feature will be used.
 	 */
-	public CreateElementRequest(EObject container, IElementType elementType,
+	public CreateElementRequest(TransactionalEditingDomain editingDomain,
+			EObject container, IElementType elementType,
 			EReference containmentFeature) {
 
-		super();
+		super(editingDomain);
 		this.container = container;
 		this.elementType = elementType;
 		this.containmentFeature = containmentFeature;
 	}
+    
+    /**
+     * Creates a request to create a new model element.  The editing domain will
+     * be derived from the <code>container</code>.
+     * 
+     * @param container
+     *            the container for the new model element
+     * @param elementType
+     *            the element type of the new model element
+     * @param containmentFeature
+     *            The feature in the container which will hold the new model
+     *            element. Can be <code>null</code>, in which case a default
+     *            feature will be used.
+     */
+    public CreateElementRequest(EObject container, IElementType elementType,
+            EReference containmentFeature) {
+
+        this(TransactionUtil.getEditingDomain(container), container,
+            elementType, containmentFeature);
+    }
 
 	/**
 	 * Gets the new element that has been created by this request.
@@ -184,13 +251,23 @@ public class CreateElementRequest
 
 		ICommand contextCommand = getEditContextCommand();
 
-		if (contextCommand != null && contextCommand.isExecutable()) {
-			contextCommand.execute(new NullProgressMonitor());
-			CommandResult commandResult = contextCommand.getCommandResult();
+		if (contextCommand != null && contextCommand.canExecute()) {
+            try {
+                contextCommand.execute(new NullProgressMonitor(), null);
 
-			if (commandResult.getStatus().getCode() == IStatus.OK) {
-				result = commandResult.getReturnValue();
-			}
+                CommandResult commandResult = contextCommand.getCommandResult();
+
+                if (commandResult.getStatus().getCode() == IStatus.OK) {
+                    result = commandResult.getReturnValue();
+                }
+            } catch (ExecutionException e) {
+                Trace.catching(EMFTypePlugin.getPlugin(),
+                    EMFTypeDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "createContainer", e); //$NON-NLS-1$
+                Log.error(EMFTypePlugin.getPlugin(),
+                    EMFTypePluginStatusCodes.COMMAND_FAILURE, e
+                        .getLocalizedMessage(), e);
+            }
 		}
 		if (result == null || result instanceof EObject) {
 			container = (EObject) result;
@@ -207,7 +284,7 @@ public class CreateElementRequest
 
 		if (editContextCommand == null) {
 			editContextCommand = getElementType().getEditCommand(
-				getEditContextRequest());
+					getEditContextRequest());
 		}
 		return editContextCommand;
 	}
@@ -220,8 +297,8 @@ public class CreateElementRequest
 	private GetEditContextRequest getEditContextRequest() {
 
 		if (editContextRequest == null) {
-			editContextRequest = new GetEditContextRequest(this,
-				getElementType());
+			editContextRequest = new GetEditContextRequest(getEditingDomain(), this,
+					getElementType());
 			// Initialize the context with the container
 			editContextRequest.setEditContext(getContainer());
 		}
@@ -299,7 +376,7 @@ public class CreateElementRequest
 		ICommand contextCommand = getEditContextCommand();
 
 		// The request should now have the correct edit context.
-		if (contextCommand != null && contextCommand.isExecutable()) {
+		if (contextCommand != null && contextCommand.canExecute()) {
 			return getEditContextRequest().getEditContext();
 		}
 		return null;
@@ -316,11 +393,20 @@ public class CreateElementRequest
 		editContextCommand = null;
 		editContextRequest = null;
 	}
-	
+
 	/**
 	 * Invalidates the cached containment feature.
 	 */
 	protected void invalidateContainmentFeature() {
 		containmentFeature = null;
 	}
+    
+    public TransactionalEditingDomain getEditingDomain() {
+        TransactionalEditingDomain result = super.getEditingDomain();
+
+        if (result == null) {
+            result = TransactionUtil.getEditingDomain(getContainer());
+        }
+        return result;
+    }
 }

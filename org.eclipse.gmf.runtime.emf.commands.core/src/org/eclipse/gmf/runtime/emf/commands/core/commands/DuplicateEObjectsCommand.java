@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 
 /**
  * This command duplicates a list of <code>EObjects</code> and adds each
@@ -41,7 +43,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
  * @author cmahoney
  */
 public abstract class DuplicateEObjectsCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	/**
 	 * The list of <code>EObjects</code> to be duplicated.
@@ -57,14 +59,17 @@ public abstract class DuplicateEObjectsCommand
 	 * Constructs a new duplicate EObjects command with the specified label and
 	 * list of EObjects.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label
 	 *            The label for the new command.
 	 * @param eObjectsToBeDuplicated
 	 *            The list of <code>EObjects</code> to be duplicated.
 	 */
-	public DuplicateEObjectsCommand(String label, List eObjectsToBeDuplicated) {
-		super(label, eObjectsToBeDuplicated);
-		this.objectsToBeDuplicated = eObjectsToBeDuplicated;
+	public DuplicateEObjectsCommand(TransactionalEditingDomain editingDomain, String label, List eObjectsToBeDuplicated) {
+		super(editingDomain, label,
+            getWorkspaceFiles(eObjectsToBeDuplicated));
+        this.objectsToBeDuplicated = eObjectsToBeDuplicated;
 		allDuplicatedObjects = new HashMap();
 	}
 
@@ -72,6 +77,8 @@ public abstract class DuplicateEObjectsCommand
 	 * Constructs a new duplicate EObjects command with the specified label and
 	 * list of EObjects.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label
 	 *            The label for the new command.
 	 * @param eObjectsToBeDuplicated
@@ -79,8 +86,9 @@ public abstract class DuplicateEObjectsCommand
 	 * @param allDuplicatedObjectsMap
 	 * 			An empty map to be populated with the duplicated objects.
 	 */
-	public DuplicateEObjectsCommand(String label, List eObjectsToBeDuplicated, Map allDuplicatedObjectsMap) {
-		super(label, eObjectsToBeDuplicated);
+	public DuplicateEObjectsCommand(TransactionalEditingDomain editingDomain, String label, List eObjectsToBeDuplicated, Map allDuplicatedObjectsMap) {
+        super(editingDomain, label,
+            getWorkspaceFiles(eObjectsToBeDuplicated));
 		this.objectsToBeDuplicated = eObjectsToBeDuplicated;
 		this.allDuplicatedObjects = allDuplicatedObjectsMap;
 	}
@@ -112,9 +120,8 @@ public abstract class DuplicateEObjectsCommand
 	 * Verifies that the container of all the original objects can contain
 	 * multiple objects.
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
 	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		for (Iterator iter = objectsToBeDuplicated.iterator(); iter.hasNext();) {
 			EObject original = (EObject) iter.next();
 
@@ -131,9 +138,10 @@ public abstract class DuplicateEObjectsCommand
 	 * duplicates to the original's container, and populating the map of
 	 * duplicates to be returned.
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.internal.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 		
 		// Remove elements whose container is getting copied.
 		ClipboardSupportUtil.getCopyElements(getObjectsToBeDuplicated());
@@ -161,7 +169,7 @@ public abstract class DuplicateEObjectsCommand
 					reference, duplicate);
 			}
 		}
-		return newOKCommandResult(getAllDuplicatedObjectsMap());
+		return CommandResult.newOKCommandResult(getAllDuplicatedObjectsMap());
 	}
 
 }

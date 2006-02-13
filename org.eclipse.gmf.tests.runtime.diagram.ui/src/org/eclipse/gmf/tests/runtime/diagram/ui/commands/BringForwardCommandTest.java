@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -21,9 +22,6 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author jschofie
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class BringForwardCommandTest
 	extends CommandTestFixture {
@@ -32,7 +30,7 @@ public class BringForwardCommandTest
 	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#createCommand()
 	 */
 	protected ICommand createCommand() {
-		return new BringForwardCommand(noteView);
+		return new BringForwardCommand(getEditingDomain(), noteView);
 	}
 
 	/* (non-Javadoc)
@@ -42,8 +40,13 @@ public class BringForwardCommandTest
 		assertEquals(getDiagram().getChildren().size(), 1);
 		View firstNote  = (View)getDiagram().getChildren().get(0);
 
-		ICommand zorderCommand = new BringForwardCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringForwardCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 	}
@@ -54,8 +57,13 @@ public class BringForwardCommandTest
 		View firstNote  = (View)getDiagram().getChildren().get(0);
 		View secondNote = (View)getDiagram().getChildren().get(1);
 
-		ICommand zorderCommand = new BringForwardCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringForwardCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);
@@ -69,8 +77,13 @@ public class BringForwardCommandTest
 		View secondNote = (View)getDiagram().getChildren().get(1);
 		View thirdNote  = (View)getDiagram().getChildren().get(2);
 
-		ICommand zorderCommand = new BringForwardCommand(secondNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringForwardCommand(getEditingDomain(), secondNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 		assertEquals(getDiagram().getChildren().get(1), thirdNote);
@@ -85,15 +98,25 @@ public class BringForwardCommandTest
 		View secondNote = (View)getDiagram().getChildren().get(1);
 		View thirdNote  = (View)getDiagram().getChildren().get(2);
 
-		ICommand zorderCommand = new BringForwardCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringForwardCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);
 		assertEquals(getDiagram().getChildren().get(2), thirdNote);
 		
-		zorderCommand = new BringForwardCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		zorderCommand = new BringForwardCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 		
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), thirdNote);

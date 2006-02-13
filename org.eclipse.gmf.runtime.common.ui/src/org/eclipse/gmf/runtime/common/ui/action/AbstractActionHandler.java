@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,23 @@
 
 package org.eclipse.gmf.runtime.common.ui.action;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.command.CommandManager;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
+import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
+import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,18 +41,6 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent;
-import org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
-import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
 
 /**
  * The abstract parent of all concrete action handlers that execute commands.
@@ -62,7 +64,7 @@ import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
 public abstract class AbstractActionHandler
 	extends Action
 	implements IDisposableAction, IActionWithProgress, ISelectionChangedListener,
-	ICommandManagerChangeListener, IPropertyListener {
+	IOperationHistoryListener, IPropertyListener {
 
 	/**
 	 * Flag to indicate whether or not this action has been set up.
@@ -205,8 +207,8 @@ public abstract class AbstractActionHandler
 			if (isPropertyListener()) {
 				getWorkbenchPart().removePropertyListener(this);
 			}
-			if (isCommandStackListener()) {
-				getCommandManager().removeCommandManagerChangeListener(this);
+			if (isOperationHistoryListener()) {
+                getOperationHistory().removeOperationHistoryListener(this);
 			}
 		}
 
@@ -223,8 +225,8 @@ public abstract class AbstractActionHandler
 			if (isPropertyListener()) {
 				getWorkbenchPart().addPropertyListener(this);
 			}
-			if (isCommandStackListener()) {
-				getCommandManager().addCommandManagerChangeListener(this);
+			if (isOperationHistoryListener()) {
+                getOperationHistory().addOperationHistoryListener(this);
 			}
 		}
 	}
@@ -262,10 +264,21 @@ public abstract class AbstractActionHandler
 	 * manager.
 	 * 
 	 * @return The command manager for this action handler.
+     * @deprecated Use {@link #getOperationHistory()} instead.
 	 */
 	protected CommandManager getCommandManager() {
-		return getActionManager().getCommandManager();
+		return CommandManager.getDefault();
 	}
+	
+    /**
+     * Returns the operation history for this action handler from its action
+     * manager.
+     * 
+     * @return the operation history
+     */
+    protected IOperationHistory getOperationHistory() {
+        return getActionManager().getOperationHistory();
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IAction#run()
@@ -404,17 +417,29 @@ public abstract class AbstractActionHandler
 	protected boolean isPropertyListener() {
 		return false;
 	}
-	
+    	
 	/**
 	 * Retrieves a Boolean indicating whether this action handler is interested
 	 * in commnd stack changed events.
 	 * 
 	 * @return <code>true</code> if this action handler is interested;
 	 *         <code>false</code> otherwise.
+     * @deprecated Subclasses must implement {@link #isOperationHistoryListener()}.
 	 */
 	protected boolean isCommandStackListener() {
 		return false;
 	}
+	
+    /**
+     * Retrieves a Boolean indicating whether this action handler is interested
+     * in operation history changed events.
+     * 
+     * @return <code>true</code> if this action handler is interested;
+     *         <code>false</code> otherwise.
+     */
+    protected boolean isOperationHistoryListener() {
+        return false;
+    }
 
 	/**
 	 * Handles the specified exception.
@@ -482,22 +507,43 @@ public abstract class AbstractActionHandler
 	protected IWorkbenchPage getWorkbenchPage() {
 		return workbenchPage;
 	}
+    
+    /**
+     * Refreshes me if the history event has my workbench part's context.
+     */
+    public void historyNotification(OperationHistoryEvent event) {
 
-	/**
-	 * Handles an event indicating that a command manager has changed.
-	 * 
-	 * @param event
-	 *            The command manager change event to be handled.
-	 */
-	public final void commandManagerChanged(CommandManagerChangeEvent event) {
-		refresh();
-	}
+        IUndoableOperation operation = event.getOperation();
+
+        if (operation != null) {
+            IUndoContext partContext = getUndoContext();
+
+            if (partContext != null && operation.hasContext(partContext)) {
+                refresh();
+            }
+        }
+    }
+    
+    /**
+     * Gets the undo context from my workbench part.
+     * 
+     * @return the undo context
+     */
+    protected IUndoContext getUndoContext() {
+        IWorkbenchPart part = getWorkbenchPart();
+
+        if (part != null) {
+            return (IUndoContext) part.getAdapter(IUndoContext.class);
+        }
+
+        return null;
+    }
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.ui.action.IDisposableAction#isDisposed()
-	 */
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.common.ui.action.IDisposableAction#isDisposed()
+     */
 	public boolean isDisposed() {
 		return disposed;
 	}

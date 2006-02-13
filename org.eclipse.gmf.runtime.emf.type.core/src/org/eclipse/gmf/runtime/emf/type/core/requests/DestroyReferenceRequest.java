@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,15 @@ package org.eclipse.gmf.runtime.emf.type.core.requests;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 
 /**
  * Request to destroy a reference from one model element to another.
  * 
  * @author ldamus
  */
-public class DestroyReferenceRequest
-	extends DestroyRequest {
+public class DestroyReferenceRequest extends DestroyRequest {
 
 	/**
 	 * The element that contains the reference.
@@ -41,6 +42,8 @@ public class DestroyReferenceRequest
 	 * Constructs a new request to destroy a reference from one model element to
 	 * another.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param container
 	 *            the element that contains the reference
 	 * @param containingFeature
@@ -52,15 +55,38 @@ public class DestroyReferenceRequest
 	 *            <code>true</code> if the user should be prompted to confirm
 	 *            the element deletion, <code>false</code> otherwise.
 	 */
-	public DestroyReferenceRequest(EObject container,
-			EReference containingFeature, EObject referencedObject,
-			boolean confirmationRequired) {
+	public DestroyReferenceRequest(TransactionalEditingDomain editingDomain,
+			EObject container, EReference containingFeature,
+			EObject referencedObject, boolean confirmationRequired) {
 
-		super(confirmationRequired);
+		super(editingDomain, confirmationRequired);
 		this.container = container;
 		this.containingFeature = containingFeature;
 		this.referencedObject = referencedObject;
 	}
+    
+    /**
+     * Constructs a new request to destroy a reference from one model element to
+     * another. The editing domain is derived from the <code>container</code>.
+     * 
+     * @param container
+     *            the element that contains the reference
+     * @param containingFeature
+     *            the feature in <code>container</code> that contains the
+     *            reference
+     * @param referencedObject
+     *            the referenced object
+     * @param confirmationRequired
+     *            <code>true</code> if the user should be prompted to confirm
+     *            the element deletion, <code>false</code> otherwise.
+     */
+    public DestroyReferenceRequest(EObject container,
+            EReference containingFeature, EObject referencedObject,
+            boolean confirmationRequired) {
+
+        this(TransactionUtil.getEditingDomain(container), container,
+                containingFeature, referencedObject, confirmationRequired);
+    }
 
 	/*
 	 * (non-Javadoc)

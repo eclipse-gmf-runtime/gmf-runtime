@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,16 +17,20 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ClipboardCommand;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.AWTClipboardHelper;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
 import org.eclipse.gmf.runtime.notation.View;
@@ -34,10 +38,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.Assert;
 
 /**
+ * Command for copying an image to the clipboard
+ * 
  * @author sshaw
  * @canBeSeenBy %level1
- * 
- * Command for copying an image to the clipboard
  */
 public class CopyImageCommand
 	extends AbstractCommand {
@@ -83,7 +87,7 @@ public class CopyImageCommand
 	 */
 	public CopyImageCommand(String label, View viewContext, List source,
 			DiagramEditPart diagramEP) {
-		super(label);
+		super(label, null);
 
 		Assert.isNotNull(source);
 		Assert.isNotNull(viewContext);
@@ -93,12 +97,11 @@ public class CopyImageCommand
 		this.diagramEP = diagramEP;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+    // Documentation copied from interface
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
 		/* Check if the source has elements */
 		boolean imageCopyDiagram = false;
 		if (getSource() == null || getSource().size() == 0) {
@@ -140,8 +143,37 @@ public class CopyImageCommand
 
 		AWTClipboardHelper.getInstance().copyToClipboard(data, image);
 		diagramEP = null; // we don't want this to end up on the undo stack
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
+    
+    /**
+     * @throws UnsupportedOperationException because redo not supported
+     */
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+
+        UnsupportedOperationException uoe = new UnsupportedOperationException();
+        Trace.throwing(DiagramUIRenderPlugin.getInstance(),
+            DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
+            "doRedoWithResult", uoe); //$NON-NLS-1$
+        throw uoe;
+    }
+    
+    /**
+     * @throws UnsupportedOperationException
+     *             undo not supported
+     */
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+
+        UnsupportedOperationException uoe = new UnsupportedOperationException();
+        Trace.throwing(DiagramUIRenderPlugin.getInstance(),
+            DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
+            "doUndoWithResult", uoe); //$NON-NLS-1$
+        throw uoe;
+    }
 
 	/**
 	 * @return Returns the diagramEP.
@@ -165,4 +197,12 @@ public class CopyImageCommand
 	private View getViewContext() {
 		return viewContext;
 	}
+    
+    public boolean canRedo() {
+        return false;
+    }
+    
+    public boolean canUndo() {
+        return false;
+    }
 }

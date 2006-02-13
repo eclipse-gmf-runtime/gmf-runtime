@@ -173,7 +173,7 @@ public class ConnectorTests
 			Point r2 = new Point(pointList.getLastPoint());
 
 			SetConnectionBendpointsCommand bendpointsChanged =
-				new SetConnectionBendpointsCommand();
+				new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
 			bendpointsChanged.setEdgeAdapter(new EObjectAdapter(line.getNotationView()));
 			bendpointsChanged.setNewPointList(newpts, r1, r2);
 			

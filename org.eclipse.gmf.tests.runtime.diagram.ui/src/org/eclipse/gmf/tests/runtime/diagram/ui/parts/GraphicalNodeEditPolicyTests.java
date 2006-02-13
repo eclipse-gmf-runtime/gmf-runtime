@@ -30,6 +30,7 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
@@ -105,6 +106,7 @@ public class GraphicalNodeEditPolicyTests
 					cc
 						.add(new EtoolsProxyCommand(
 							new SetPropertyCommand(
+                                ((IGraphicalEditPart) getHost()).getEditingDomain(),
 								((CreateConnectionViewRequest) ((CreateUnspecifiedTypeConnectionRequest) request)
 									.getRequestForType(DiagramNotationType.NOTE_ATTACHMENT))
 									.getConnectionViewDescriptor(),

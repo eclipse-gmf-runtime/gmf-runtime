@@ -16,8 +16,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManagerChangeEvent;
 import org.eclipse.gmf.runtime.common.ui.action.IActionManagerChangeListener;
@@ -70,7 +70,7 @@ public class ActionManagerTest extends TestCase {
     protected static class Fixture extends ActionManager {
 
         public Fixture() {
-            super(new CommandManager());
+            super(OperationHistoryFactory.getOperationHistory());
         }
 
         protected IActionWithProgress getFixtureAction() {

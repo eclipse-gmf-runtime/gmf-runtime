@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -19,6 +20,7 @@ import org.eclipse.gef.requests.CreateRequest;
 
 import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -34,7 +36,8 @@ public class LogicFlowEditPolicy
 
 protected Command createAddCommand(EditPart child, EditPart after) {
 	int index = getHost().getChildren().indexOf(after);
-	AddCommand command = new AddCommand(new EObjectAdapter((View)getHost().getModel()),
+    TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+	AddCommand command = new AddCommand(editingDomain, new EObjectAdapter((View)getHost().getModel()),
 										new EObjectAdapter((View)child.getModel()), index);
 	return new EtoolsProxyCommand(command);
 }

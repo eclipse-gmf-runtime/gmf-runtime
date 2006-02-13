@@ -15,11 +15,13 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
@@ -99,8 +101,12 @@ public class ConnectionBendpointEditPolicy
 		Point ptRef2 = connection.getTargetAnchor().getReferencePoint();
 		getConnection().translateToRelative(ptRef2);
 
-		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
-		sbbCommand.setEdgeAdapter(new EObjectAdapter(edge));
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
+        SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand(
+            editingDomain);
+        sbbCommand.setEdgeAdapter(new EObjectAdapter(edge));
 		sbbCommand.setNewPointList(connection.getPoints(), ptRef1, ptRef2);
 
 		return new EtoolsProxyCommand(sbbCommand);
@@ -116,7 +122,9 @@ public class ConnectionBendpointEditPolicy
 		Connection connection = getConnection();
 		PointList newPoints = request.getPoints();
 
-		SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand();
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        SetConnectionBendpointsCommand sbbCommand = new SetConnectionBendpointsCommand(editingDomain);
 		sbbCommand.setEdgeAdapter(new EObjectAdapter((Edge)getHost().getModel()));
 		
 		if (request.getSourceReference() != null && request.getTargetReference() != null) {

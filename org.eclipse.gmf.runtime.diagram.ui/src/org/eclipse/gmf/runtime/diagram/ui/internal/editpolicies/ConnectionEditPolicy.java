@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -124,8 +125,12 @@ public class ConnectionEditPolicy
 	 *            the original delete request.
 	 */
 	protected Command createDeleteViewCommand(GroupRequest deleteRequest) {
+        
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
 		return new EtoolsProxyCommand(
-			new DeleteCommand((View) getHost().getModel()));
+			new DeleteCommand(editingDomain, (View) getHost().getModel()));
 	}
 	/**
 	 * Return a command to delete the host's semantic element. This method is
@@ -136,8 +141,12 @@ public class ConnectionEditPolicy
 	 *            the original delete request.
 	 */
 	protected Command createDeleteSemanticCommand(GroupRequest deleteRequest) {
+
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
 		EditCommandRequestWrapper semReq =
-			new EditCommandRequestWrapper(new DestroyElementRequest(false));
+			new EditCommandRequestWrapper(new DestroyElementRequest(editingDomain, false));
 		Command semanticCmd = getHost().getCommand(semReq);
 		if (semanticCmd != null && semanticCmd.canExecute()) {
 			CompoundCommand cc = new CompoundCommand();

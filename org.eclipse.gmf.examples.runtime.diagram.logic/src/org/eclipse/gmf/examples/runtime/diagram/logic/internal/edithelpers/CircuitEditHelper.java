@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IAdaptable;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -37,21 +39,23 @@ public class CircuitEditHelper
 		return new ConfigureLogicElementCommand(req, SemanticPackage.eINSTANCE
 			.getCircuit()) {
 
-			protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+			protected CommandResult doExecuteWithResult(
+                    IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
 
 				Circuit oCircuit = (Circuit) req.getElementToConfigure();
 
-				createInputOutputTerminal(oCircuit, "A", progressMonitor); //$NON-NLS-1$
-				createInputOutputTerminal(oCircuit, "B", progressMonitor); //$NON-NLS-1$
-				createInputOutputTerminal(oCircuit, "C", progressMonitor); //$NON-NLS-1$
-				createInputOutputTerminal(oCircuit, "D", progressMonitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "A", monitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "B", monitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "C", monitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "D", monitor); //$NON-NLS-1$
 
-				createInputOutputTerminal(oCircuit, "1", progressMonitor); //$NON-NLS-1$
-				createInputOutputTerminal(oCircuit, "2", progressMonitor); //$NON-NLS-1$
-				createInputOutputTerminal(oCircuit, "3", progressMonitor); //$NON-NLS-1$
-				createInputOutputTerminal(oCircuit, "4", progressMonitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "1", monitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "2", monitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "3", monitor); //$NON-NLS-1$
+				createInputOutputTerminal(oCircuit, "4", monitor); //$NON-NLS-1$
 
-				return newOKCommandResult(oCircuit);
+				return CommandResult.newOKCommandResult(oCircuit);
 			}
 		};
 	}

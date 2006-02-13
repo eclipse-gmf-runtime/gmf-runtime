@@ -129,7 +129,7 @@ public class LiveValidationListener
                 	String message = event.getSeverity() >= IStatus.ERROR
 						? EMFUIMessages.Validation_liveError
 						: EMFUIMessages.Validation_liveWarning_part1
-			    		+ "\n\n"	+ EMFUIMessages.Validation_liveWarning_part2;;
+			    		+ "\n\n"	+ EMFUIMessages.Validation_liveWarning_part2; //$NON-NLS-1$
                 	
                 	// the dialog should show INFO severity for errors because
                 	//   the corrective action has already been taken by the

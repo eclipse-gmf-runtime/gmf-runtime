@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -145,7 +146,7 @@ public class SemanticEditPolicy
 		if (shouldProceed) {
 			Command c = new EtoolsProxyCommand(semanticCommand);
 			if (completedRequest instanceof DestroyRequest) {
-				ICommand ic = new DeleteCommand(
+				ICommand ic = new DeleteCommand(request.getEditingDomain(),
 					(View)getHost().getModel());
 				CompositeCommand cc = new CompositeCommand(semanticCommand
 					.getLabel());
@@ -212,9 +213,10 @@ public class SemanticEditPolicy
 						.setElementToDestroy(getHostElement());
 
 				} else {
-					result = new DestroyElementRequest(getHostElement(),
-						destroyRequest.isConfirmationRequired());
-				}
+					result = new DestroyElementRequest(request
+                        .getEditingDomain(), getHostElement(), destroyRequest
+                        .isConfirmationRequired());
+                }
 
 				
 			} else if (getHost() instanceof ConnectionEditPart) {
@@ -236,9 +238,9 @@ public class SemanticEditPolicy
 						.setReferencedObject(referenceObject);
 
 				} else {
-					result = new DestroyReferenceRequest(container, null,
-						referenceObject, destroyRequest
-							.isConfirmationRequired());
+					result = new DestroyReferenceRequest(request
+                        .getEditingDomain(), container, null, referenceObject,
+                        destroyRequest.isConfirmationRequired());
 				}
 			}
 		}
@@ -259,9 +261,11 @@ public class SemanticEditPolicy
 		EObject oldSemElement = ViewUtil.resolveSemanticElement(((View) request.getConnectionEditPart()
 				.getSource().getModel())); 
 
-		ReorientRelationshipRequest semRequest = new ReorientRelationshipRequest(
-			connectionSemElement, targetSemElement, oldSemElement,
-			ReorientRelationshipRequest.REORIENT_SOURCE);
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        ReorientRelationshipRequest semRequest = new ReorientRelationshipRequest(
+            editingDomain, connectionSemElement, targetSemElement,
+            oldSemElement, ReorientRelationshipRequest.REORIENT_SOURCE);
 		
 		return getSemanticCommand(semRequest);
 	}
@@ -298,9 +302,11 @@ public class SemanticEditPolicy
 			}
 		}
 
-		ReorientRelationshipRequest semRequest = new ReorientRelationshipRequest(
-			connectionSemElement, targetSemElement, oldSemElement,
-			ReorientRelationshipRequest.REORIENT_TARGET);
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        ReorientRelationshipRequest semRequest = new ReorientRelationshipRequest(
+            editingDomain, connectionSemElement, targetSemElement,
+            oldSemElement, ReorientRelationshipRequest.REORIENT_TARGET);
 		
 		return getSemanticCommand(semRequest);
 	}
@@ -337,9 +343,12 @@ public class SemanticEditPolicy
 		EObject newTarget = ViewUtil
 			.resolveSemanticElement((View) request.getTarget().getModel());
 
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
 		ReorientReferenceRelationshipRequest semRequest = new ReorientReferenceRelationshipRequest(
-			referenceOwner, newTarget, oldTarget,
-			ReorientReferenceRelationshipRequest.REORIENT_SOURCE);
+            editingDomain, referenceOwner, newTarget, oldTarget,
+            ReorientReferenceRelationshipRequest.REORIENT_SOURCE);
 
 		return getSemanticCommand(semRequest);
 	}
@@ -363,9 +372,12 @@ public class SemanticEditPolicy
 		EObject newTarget = ViewUtil
 			.resolveSemanticElement((View) request.getTarget().getModel());
 
-		ReorientReferenceRelationshipRequest semRequest = new ReorientReferenceRelationshipRequest(
-			referenceOwner, newTarget, oldTarget,
-			ReorientReferenceRelationshipRequest.REORIENT_TARGET);
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+
+        ReorientReferenceRelationshipRequest semRequest = new ReorientReferenceRelationshipRequest(
+            editingDomain, referenceOwner, newTarget, oldTarget,
+            ReorientReferenceRelationshipRequest.REORIENT_TARGET);
 
 		return getSemanticCommand(semRequest);
 	}

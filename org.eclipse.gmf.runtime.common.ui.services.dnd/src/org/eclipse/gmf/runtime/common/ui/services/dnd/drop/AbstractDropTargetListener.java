@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -27,7 +29,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.EnumeratedType;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -233,8 +234,8 @@ public abstract class AbstractDropTargetListener
 		final ICommand command = getExecutableContext(event);
 
 		/* Get the command manager */
-		final CommandManager manager = (CommandManager) getContext()
-			.getActivePart().getAdapter(CommandManager.class);
+		final IOperationHistory manager = (IOperationHistory) getContext()
+			.getActivePart().getAdapter(IOperationHistory.class);
 
 		/* Check the manager and command */
 		if (manager == null || command == null) {
@@ -251,17 +252,37 @@ public abstract class AbstractDropTargetListener
 			runCommandInProgressMonitorDialog(command, true);
 
 		} else if (type == WorkIndicatorType.BUSY) {
-			/* display hour glass cursor */
-			BusyIndicator.showWhile(null, new Runnable() {
+            /* display hour glass cursor */
+            BusyIndicator.showWhile(null, new Runnable() {
 
-				public void run() {
-					manager.execute(command, new NullProgressMonitor());
+                public void run() {
+                    try {
+                        manager.execute(command, new NullProgressMonitor(),
+                            null);
+                    } catch (ExecutionException e) {
+                        Trace
+                            .catching(
+                                CommonUIServicesDNDPlugin.getDefault(),
+                                CommonUIServicesDNDDebugOptions.EXCEPTIONS_CATCHING,
+                                getClass(), "drop", e); //$NON-NLS-1$
+                        Log.error(CommonUIServicesDNDPlugin.getDefault(),
+                            CommonUIServicesDNDStatusCodes.SERVICE_FAILURE,
+                            "drop", e); //$NON-NLS-1$
+                    }
 
-				}
-			});
-		} else {
-			manager.execute(command, new NullProgressMonitor());
-		}
+                }
+            });
+        } else {
+            try {
+                manager.execute(command, new NullProgressMonitor(), null);
+            } catch (ExecutionException e) {
+                Trace.catching(CommonUIServicesDNDPlugin.getDefault(),
+                    CommonUIServicesDNDDebugOptions.EXCEPTIONS_CATCHING,
+                    getClass(), "drop", e); //$NON-NLS-1$
+                Log.error(CommonUIServicesDNDPlugin.getDefault(),
+                    CommonUIServicesDNDStatusCodes.SERVICE_FAILURE, "drop", e); //$NON-NLS-1$
+            }
+        }
 
 		/* Set the event detail */
 		event.detail = (command.getCommandResult().getStatus().isOK()) ? event.detail
@@ -403,14 +424,30 @@ public abstract class AbstractDropTargetListener
 	private void runCommandInProgressMonitorDialog(final ICommand command,
 			boolean cancelable) {
 
-		/* Get the command manager */
-		final CommandManager manager = (CommandManager) getContext()
-			.getActivePart().getAdapter(CommandManager.class);
+		/* Get the operation history */
+		final IOperationHistory manager = (IOperationHistory) getContext()
+			.getActivePart().getAdapter(IOperationHistory.class);
 
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
 			public void run(IProgressMonitor monitor) {
-				manager.execute(command, monitor);
+                try {
+                    manager.execute(command, monitor, null);
+                    
+                } catch (ExecutionException e) {
+                    Trace.catching(CommonUIServicesDNDPlugin.getDefault(),
+                        CommonUIServicesDNDDebugOptions.EXCEPTIONS_CATCHING,
+                        getClass(), "drop", e); //$NON-NLS-1$
+                    Log.error(CommonUIServicesDNDPlugin.getDefault(),
+                        CommonUIServicesDNDStatusCodes.SERVICE_FAILURE, "drop", e); //$NON-NLS-1$
+                    
+                    RuntimeException re = new RuntimeException(e);
+
+                    Trace.throwing(CommonUIServicesDNDPlugin.getDefault(),
+                        CommonUIServicesDNDDebugOptions.EXCEPTIONS_THROWING,
+                        getClass(), "runCommandInProgressMonitorDialog", re); //$NON-NLS-1$
+                    throw re;
+                }
 
 			}
 		};

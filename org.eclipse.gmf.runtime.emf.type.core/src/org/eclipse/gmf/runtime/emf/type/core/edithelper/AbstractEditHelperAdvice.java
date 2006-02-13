@@ -13,12 +13,19 @@ package org.eclipse.gmf.runtime.emf.type.core.edithelper;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypeDebugOptions;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
@@ -41,12 +48,12 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
  * methods all return <code>null</code> by default.
  * <P>
  * Edit helper advice can be registered against one or more element types using
- * the <code>org.eclipse.gmf.runtime.emf.type.core.elementTypes</code> extension point.
+ * the <code>org.eclipse.gmf.runtime.emf.type.core.elementTypes</code>
+ * extension point.
  * 
  * @author ldamus
  */
-public class AbstractEditHelperAdvice
-	implements IEditHelperAdvice {
+public class AbstractEditHelperAdvice implements IEditHelperAdvice {
 
 	/*
 	 * (non-Javadoc)
@@ -259,7 +266,8 @@ public class AbstractEditHelperAdvice
 	 *            the request
 	 * @return the command to execute before the edit helper work is done
 	 */
-	protected ICommand getBeforeDuplicateCommand(DuplicateElementsRequest request) {
+	protected ICommand getBeforeDuplicateCommand(
+			DuplicateElementsRequest request) {
 		return null;
 	}
 
@@ -275,8 +283,7 @@ public class AbstractEditHelperAdvice
 	}
 
 	/**
-	 * Gets my 'before' advice for getting the edit context for
-	 * an edit request.
+	 * Gets my 'before' advice for getting the edit context for an edit request.
 	 * 
 	 * @param request
 	 *            the request
@@ -392,7 +399,7 @@ public class AbstractEditHelperAdvice
 	protected ICommand getAfterSetCommand(SetRequest request) {
 		return null;
 	}
-	
+
 	/**
 	 * Convenience method to create a new element of kind <codeO>typeToCreate</code>
 	 * in the context of <code>container</code>.
@@ -405,11 +412,11 @@ public class AbstractEditHelperAdvice
 	 *         created
 	 */
 	protected EObject createType(EObject container, IElementType typeToCreate,
-			IProgressMonitor progressMonitor) {
-		
-		return createType(container, typeToCreate, null, progressMonitor);
-	}
-	
+            IProgressMonitor progressMonitor) {
+        
+        return createType(container, typeToCreate, null, progressMonitor);
+    }
+
 	/**
 	 * Convenience method to create a new element of kind <codeO>typeToCreate</code>
 	 * in the context of <code>container</code>.
@@ -418,38 +425,54 @@ public class AbstractEditHelperAdvice
 	 *            the container element
 	 * @param typeToCreate
 	 *            the kind of element to create
-	 * @param requestParameters parameters to be set in the creation request
+	 * @param requestParameters
+	 *            parameters to be set in the creation request
 	 * @return the newly created element, or <code>null</code> if it wasn't
 	 *         created
 	 */
-	protected EObject createType(EObject container, IElementType typeToCreate, Map requestParameters,
-			IProgressMonitor progressMonitor) {
-		
+	protected EObject createType(EObject container, IElementType typeToCreate,
+            Map requestParameters, IProgressMonitor progressMonitor) {
+
 		if (typeToCreate.getEClass().isAbstract()) {
 			return null;
 		}
+        
+        TransactionalEditingDomain editingDomain = TransactionUtil
+            .getEditingDomain(container);
 
-		CreateElementRequest request = new CreateElementRequest(container,
-			typeToCreate);
-		
+		CreateElementRequest request = new CreateElementRequest(editingDomain,
+				container, typeToCreate);
+
 		if (requestParameters != null) {
 			// Set the request parameters
 			request.addParameters(requestParameters);
 		}
-		
+
 		IElementType containerElementType = ElementTypeRegistry.getInstance()
-			.getElementType(request.getEditHelperContext());
+				.getElementType(request.getEditHelperContext());
 		ICommand createTypeCommand = containerElementType
-			.getEditCommand(request);
+				.getEditCommand(request);
 
-		if (createTypeCommand != null && createTypeCommand.isExecutable()) {
-			createTypeCommand.execute(progressMonitor);
+		if (createTypeCommand != null && createTypeCommand.canExecute()) {
+            
+            try {
+                createTypeCommand.execute(progressMonitor, null);
+                
+            } catch (ExecutionException e) {
+                Trace.catching(EMFTypePlugin.getPlugin(),
+                    EMFTypeDebugOptions.EXCEPTIONS_CATCHING,
+                    AbstractEditHelperAdvice.class, "createType", e); //$NON-NLS-1$
+                Log.error(EMFTypePlugin.getPlugin(),
+                    EMFTypePluginStatusCodes.COMMAND_FAILURE, e
+                        .getMessage(), e);
+                return null;
+            }
 
-			if (createTypeCommand.getCommandResult().getStatus().isOK()) {
-				return (EObject) createTypeCommand.getCommandResult()
-					.getReturnValue();
-			}
-		}
+            if (createTypeCommand.getCommandResult().getStatus().isOK()) {
+                return (EObject) createTypeCommand.getCommandResult()
+                    .getReturnValue();
+            }
+        }
 		return null;
 	}
 }

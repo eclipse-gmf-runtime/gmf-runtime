@@ -18,6 +18,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -38,7 +39,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TextSelectionEdi
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -135,22 +136,24 @@ public class ConstrainedToolbarLayoutEditPolicy
 	 * @return command
 	 */
 	protected Command getAutoSizeCommand(Request request) {
-		CompositeModelCommand cmc = new CompositeModelCommand(DiagramUIMessages.Command_AdjustRatioCommand_Label);
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+		CompositeTransactionalCommand cmc = new CompositeTransactionalCommand(editingDomain, DiagramUIMessages.Command_AdjustRatioCommand_Label);
 		Iterator children = getHost().getChildren().iterator();
 		while (children.hasNext()) {
 			IGraphicalEditPart child = (IGraphicalEditPart) children.next();
 			if (child instanceof ResizableCompartmentEditPart) {
-				cmc.compose(new SetCompartmentRatioCommand(new EObjectAdapter((View)child.getModel()), NULL_CONSTRAINT));
+				cmc.compose(new SetCompartmentRatioCommand(editingDomain, new EObjectAdapter((View)child.getModel()), NULL_CONSTRAINT));
 			}
 		}
-		return cmc.isEmpty() ? null : new EtoolsProxyCommand(cmc.unwrap());
+		return cmc.isEmpty() ? null : new EtoolsProxyCommand(cmc.reduce());
 	}
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
 	 */
 	protected Command getResizeChildrenCommand(ChangeBoundsRequest req) {
-		CompositeModelCommand cmc = new CompositeModelCommand(DiagramUIMessages.Command_AdjustRatioCommand_Label);
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+        CompositeTransactionalCommand cmc = new CompositeTransactionalCommand(editingDomain, DiagramUIMessages.Command_AdjustRatioCommand_Label);
 		
 		boolean before = transposer.t(req.getMoveDelta()).y != 0;
 		GraphicalEditPart c = (GraphicalEditPart) req.getEditParts().get(0);
@@ -179,7 +182,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 					else
 						r = height / parentHeight;
 				}
-				cmc.compose(new SetCompartmentRatioCommand(new EObjectAdapter((View)part.getModel()), r));
+				cmc.compose(new SetCompartmentRatioCommand(editingDomain, new EObjectAdapter((View)part.getModel()), r));
 			}
 		}
 		return new EtoolsProxyCommand(cmc);

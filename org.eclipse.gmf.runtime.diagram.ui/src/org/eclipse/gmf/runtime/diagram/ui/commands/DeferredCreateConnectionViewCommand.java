@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,16 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.commands.Command;
@@ -27,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
@@ -43,7 +45,7 @@ import org.eclipse.jface.util.Assert;
  * @author cmahoney
  */
 public class DeferredCreateConnectionViewCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	/** the element for the connection's semantic element */
 	protected EObject element = null;
@@ -76,6 +78,8 @@ public class DeferredCreateConnectionViewCommand
 	/**
 	 * Constructor for <code>DeferredCreateConnectionViewCommand</code>.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param element
 	 *            the connection's semantic element
 	 * @param sourceViewAdapter
@@ -85,12 +89,13 @@ public class DeferredCreateConnectionViewCommand
 	 * @param viewer
 	 *            the viewer used to get the editpart registry
 	 */
-	public DeferredCreateConnectionViewCommand(EObject element,
+	public DeferredCreateConnectionViewCommand(TransactionalEditingDomain editingDomain, EObject element,
 			IAdaptable sourceViewAdapter, IAdaptable targetViewAdapter,
 			EditPartViewer viewer, PreferencesHint preferencesHint) {
 
-		super("Deferred Create Connection View Command", null); //$NON-NLS-1$
-		this.element = element;
+		super(editingDomain,
+            "Deferred Create Connection View Command", null); //$NON-NLS-1$
+        this.element = element;
 		this.sourceViewAdapter = sourceViewAdapter;
 		this.targetViewAdapter = targetViewAdapter;
 		this.viewer = viewer;
@@ -102,6 +107,8 @@ public class DeferredCreateConnectionViewCommand
 	 * Passing in the semanticHint allows for the creation of a connection view
 	 * without a semantic element.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param semanticHint
 	 *            the connection's semantic hint
 	 * @param sourceViewAdapter
@@ -111,22 +118,20 @@ public class DeferredCreateConnectionViewCommand
 	 * @param viewer
 	 *            the viewer used to get the editpart registry
 	 */
-	public DeferredCreateConnectionViewCommand(String semanticHint,
+	public DeferredCreateConnectionViewCommand(TransactionalEditingDomain editingDomain, String semanticHint,
 			IAdaptable sourceViewAdapter, IAdaptable targetViewAdapter,
 			EditPartViewer viewer, PreferencesHint preferencesHint) {
 
-		super("Deferred Create Connection View Command", null); //$NON-NLS-1$
-		this.semanticHint = semanticHint;
+		super(editingDomain,
+            "Deferred Create Connection View Command", null); //$NON-NLS-1$
+        this.semanticHint = semanticHint;
 		this.sourceViewAdapter = sourceViewAdapter;
 		this.targetViewAdapter = targetViewAdapter;
 		this.viewer = viewer;
 		this.preferencesHint = preferencesHint;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
+	public List getAffectedFiles() {
 		if (viewer != null) {
 			EditPart editpart = viewer.getRootEditPart().getContents();
 			if (editpart instanceof IGraphicalEditPart) {
@@ -138,7 +143,7 @@ public class DeferredCreateConnectionViewCommand
 				}
 			}
 		}
-		return super.getAffectedObjects();
+		return super.getAffectedFiles();
 	}
 
 	/**
@@ -146,9 +151,10 @@ public class DeferredCreateConnectionViewCommand
 	 * view adapaters and searching in the editpart viewer. Creates a connection
 	 * view between the source and target.
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 		Map epRegistry = viewer.getEditPartRegistry();
 		IGraphicalEditPart sourceEP = (IGraphicalEditPart) epRegistry
 			.get(sourceViewAdapter.getAdapter(View.class));
@@ -180,7 +186,7 @@ public class DeferredCreateConnectionViewCommand
 			createConnectionCmd.execute();
 		}
 		viewer = null;// for garbage collection
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 }

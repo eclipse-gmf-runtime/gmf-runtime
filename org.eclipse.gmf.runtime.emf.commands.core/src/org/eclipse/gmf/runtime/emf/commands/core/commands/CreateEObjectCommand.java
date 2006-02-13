@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,16 @@
 
 package org.eclipse.gmf.runtime.emf.commands.core.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 /**
  * A command that creates model elements given a parent collection,
@@ -30,7 +32,7 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
  * @author khussey
  */
 public class CreateEObjectCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	/**
 	 * The feature to contain the new element.
@@ -98,16 +100,19 @@ public class CreateEObjectCommand
 	 * Constructs a new create object command with the specified label,
 	 * container, feature, name, and element kind.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label The label for the new command.
 	 * @param container The parent in which the new object should be created.
 	 * @param feature The feature of the container that will hold the new object.
 	 * @param name The name of the object to be created.
 	 * @param elementKind The kind of the element to be created.
 	 */
-	public CreateEObjectCommand(String label, EObject container,
-		EReference feature, String name, EClass elementKind) {
+	public CreateEObjectCommand(TransactionalEditingDomain editingDomain, String label,
+            EObject container, EReference feature, String name,
+            EClass elementKind) {
 
-		super(label, container);
+		super(editingDomain, label, getWorkspaceFiles(container));
 
 		this.name = name;
 		this.container = container;
@@ -119,40 +124,43 @@ public class CreateEObjectCommand
 	 * Constructs a new create element command with the specified label,
 	 * container, feature and element kind.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label The label for the new command.
 	 * @param container The parent collection for element to be
 	 *                           created.
 	 * @param feature The feature of the container that will hold the new object.
 	 * @param elementKind The kind of the element to be created.
 	 */
-	public CreateEObjectCommand(String label, EObject container,
+	public CreateEObjectCommand(TransactionalEditingDomain editingDomain, String label, EObject container,
 		EReference feature, EClass elementKind) {
 
-		this(label, container, feature, null, elementKind);
+		this(editingDomain, label, container, feature, null, elementKind);
 	}
 
 	/**
 	 * Executes this create object command by creating the specified kind of
 	 * object with the specified name and adding it to the specified parent
 	 * feature.
-	 * 
-	 * @see AbstractCommand#doExecute(IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
 
 		EObject element = null;
 
 		if (getName() != null) {
 			// Create the element with a name
-			element = EObjectUtil.create(getContainer(), getFeature(),
-				getElementKind(), getName());
+			element = EMFCoreUtil.create(getContainer(), getFeature(),
+				getElementKind());
+            EMFCoreUtil.setName(element, getName());
 
 		} else {
 			// Create the element without a name
-			element = EObjectUtil.create(getContainer(), getFeature(),
+			element = EMFCoreUtil.create(getContainer(), getFeature(),
 				getElementKind());
 		}
 
-		return newOKCommandResult(element);
+		return CommandResult.newOKCommandResult(element);
 	}
 }

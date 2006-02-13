@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -54,7 +56,9 @@ public class ReorientWireCommand
 	/**
 	 * Reorients the wire.
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+            IAdaptable info)
+        throws ExecutionException {
 
 		Wire wire = (Wire) getElementToEdit();
 		if (reorientDirection == ReorientRelationshipRequest.REORIENT_SOURCE) {
@@ -63,14 +67,14 @@ public class ReorientWireCommand
 		} else if (reorientDirection == ReorientRelationshipRequest.REORIENT_TARGET) {
 			wire.setTarget((InputTerminal) newEnd);
 		}
-		return newOKCommandResult(wire);
+		return CommandResult.newOKCommandResult(wire);
 	}
 
 	/**
 	 * The source can be changed to a new output terminal. The target can be
 	 * changed to a new target terminal.
 	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 
 		if (reorientDirection == ReorientRelationshipRequest.REORIENT_SOURCE
 			&& !(newEnd instanceof OutputTerminal)) {
@@ -81,6 +85,6 @@ public class ReorientWireCommand
 			&& !(newEnd instanceof InputTerminal)) {
 			return false;
 		}
-		return super.isExecutable();
+		return super.canExecute();
 	}
 }

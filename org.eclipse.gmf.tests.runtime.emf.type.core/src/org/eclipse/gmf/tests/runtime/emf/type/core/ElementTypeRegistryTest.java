@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,15 +15,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.RollbackException;
+import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeAddedEvent;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
@@ -54,7 +56,7 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.internal.SecurityClearedEleme
  * @author ldamus
  */
 public class ElementTypeRegistryTest
-	extends TestCase {
+	extends AbstractEMFTypeTest {
 	
 	private class MySpecializationAdvice extends AbstractEditHelperAdvice {
 		public MySpecializationAdvice() {
@@ -66,10 +68,6 @@ public class ElementTypeRegistryTest
 	}
 
 	private ElementTypeRegistry fixture = null;
-
-	private EmployeePackage employeePkg;
-
-	private EFactory employeeFactory;
 
 	// Model elements
 	private Department department;
@@ -115,87 +113,73 @@ public class ElementTypeRegistryTest
 		return new TestSuite(ElementTypeRegistryTest.class);
 	}
 
-	/**
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp()
-		throws Exception {
-		super.setUp();
-
+    protected void doModelSetup() {
 		setFixture(ElementTypeRegistry.getInstance());
 
-		employeePkg = EmployeePackage.eINSTANCE;
-		employeeFactory = employeePkg.getEFactoryInstance();
-
-		department = (Department) employeeFactory.create(employeePkg
+		department = (Department) getEmployeeFactory().create(getEmployeePackage()
 			.getDepartment());
 		department.setName("Department"); //$NON-NLS-1$
+        getResource().getContents().add(department);
 
-		executiveDepartment = (Department) employeeFactory.create(employeePkg
+		executiveDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
 			.getDepartment());
 		executiveDepartment.setName("ExecutiveDepartment"); //$NON-NLS-1$
+        getResource().getContents().add(executiveDepartment);
 
-		financeDepartment = (Department) employeeFactory.create(employeePkg
+		financeDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
 			.getDepartment());
 		financeDepartment.setName("Finance"); //$NON-NLS-1$
+        getResource().getContents().add(financeDepartment);
 
-		employee = (Employee) employeeFactory.create(employeePkg.getEmployee());
+		employee = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
 		employee.setNumber(1);
 		department.getMembers().add(employee);
 
-		employeeOffice = (Office) employeeFactory.create(employeePkg
+		employeeOffice = (Office) getEmployeeFactory().create(getEmployeePackage()
 			.getOffice());
 		employee.setOffice(employeeOffice);
 
-		financeEmployee = (Employee) employeeFactory.create(employeePkg
+		financeEmployee = (Employee) getEmployeeFactory().create(getEmployeePackage()
 			.getEmployee());
 		financeEmployee.setDepartment(financeDepartment);
 
-		financeManager = (Employee) employeeFactory.create(employeePkg
+		financeManager = (Employee) getEmployeeFactory().create(getEmployeePackage()
 			.getEmployee());
 		financeDepartment.setManager(financeManager);
 
-		Office financeManagerOffice = (Office) employeeFactory
-			.create(employeePkg.getOffice());
+		Office financeManagerOffice = (Office) getEmployeeFactory()
+			.create(getEmployeePackage().getOffice());
 		financeManagerOffice.setNumberOfWindows(1);
 		financeManagerOffice.setHasDoor(false);
 		financeManager.setOffice(financeManagerOffice);
 
-		student = (Student) employeeFactory.create(employeePkg.getStudent());
+		student = (Student) getEmployeeFactory().create(getEmployeePackage().getStudent());
 		student.setNumber(2);
 		department.getMembers().add(student);
 
-		studentOffice = (Office) employeeFactory
-			.create(employeePkg.getOffice());
+		studentOffice = (Office) getEmployeeFactory()
+			.create(getEmployeePackage().getOffice());
 		student.setOffice(studentOffice);
 
-		manager = (Employee) employeeFactory.create(employeePkg.getEmployee());
+		manager = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
 		department.setManager(manager);
 
-		managerOffice = (Office) employeeFactory
-			.create(employeePkg.getOffice());
+		managerOffice = (Office) getEmployeeFactory()
+			.create(getEmployeePackage().getOffice());
 		managerOffice.setNumberOfWindows(1);
 		managerOffice.setHasDoor(false);
 		manager.setOffice(managerOffice);
 
-		executive = (Employee) employeeFactory
-			.create(employeePkg.getEmployee());
+		executive = (Employee) getEmployeeFactory()
+			.create(getEmployeePackage().getEmployee());
 		executiveDepartment.setManager(executive);
 
-		executiveOffice = (Office) employeeFactory.create(employeePkg
+		executiveOffice = (Office) getEmployeeFactory().create(getEmployeePackage()
 			.getOffice());
 		executiveOffice.setNumberOfWindows(1);
 		executiveOffice.setHasDoor(true);
 		executive.setOffice(executiveOffice);
 		
-	}
-
-	/**
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown()
-		throws Exception {
-		super.tearDown();
 	}
 
 	protected ElementTypeRegistry getFixture() {
@@ -361,7 +345,7 @@ public class ElementTypeRegistryTest
 	public void test_getElementType_eClass() {
 		
 		IElementType metamodelType = getFixture().getElementType(
-			employeePkg.getDepartment());
+			getEmployeePackage().getDepartment());
 		
 		assertNotNull(metamodelType);
 		assertEquals(EmployeeType.DEPARTMENT, metamodelType);
@@ -532,10 +516,25 @@ public class ElementTypeRegistryTest
 			"org.eclipse.gmf.tests.runtime.emf.type.core.nullSpecialization"); //$NON-NLS-1$
 		assertNotNull(nullSpecialization);
 		
-		department.setManager(null);
+        RecordingCommand recordingCommand = new RecordingCommand(getEditingDomain()) {
+            protected void doExecute() {
+                department.setManager(null);
+            };
+        };
+        
+        try {
+            ((TransactionalCommandStack) getEditingDomain().getCommandStack()).execute(recordingCommand,
+                null);
+
+        } catch (RollbackException re) {
+            fail("setUp() failed:" + re.getLocalizedMessage()); //$NON-NLS-1$
+        } catch (InterruptedException ie) {
+            fail("setUp() failed:" + ie.getLocalizedMessage()); //$NON-NLS-1$
+        }
+		
 		assertNull(department.getManager());
 		
-		CreateElementRequest createRequest = new CreateElementRequest(
+		CreateElementRequest createRequest = new CreateElementRequest(getEditingDomain(),
 			department, nullSpecialization);
 		
 		createRequest.setParameter("MANAGER", manager); //$NON-NLS-1$
@@ -546,9 +545,13 @@ public class ElementTypeRegistryTest
 		ICommand command = elementType.getEditCommand(createRequest);
 		
 		assertNotNull(command);
-		assertTrue(command.isExecutable());
+		assertTrue(command.canExecute());
 		
-		command.execute(new NullProgressMonitor());
+        try {
+            command.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e.getLocalizedMessage());
+        }
 		assertSame(manager, department.getManager());
 		
 		assertNull(command.getCommandResult().getReturnValue());

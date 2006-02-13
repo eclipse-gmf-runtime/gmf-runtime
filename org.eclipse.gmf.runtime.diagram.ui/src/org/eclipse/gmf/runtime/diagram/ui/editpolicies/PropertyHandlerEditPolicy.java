@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -33,7 +36,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePrope
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeChildPropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -71,7 +74,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 				if (view !=null){
 					if (ViewUtil.isPropertySupported(view,cpvr.getPropertyID())) {
 						return new EtoolsProxyCommand(
-							new SetPropertyCommand(
+							new SetPropertyCommand(getEditingDomain(),
 								new EObjectAdapter(view),
 								cpvr.getPropertyID(),
 								cpvr.getPropertyName(),
@@ -93,7 +96,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 				for (Iterator iter = resizableViews.iterator(); iter.hasNext();) {
 					View childView = (View) iter.next();
 					if (ViewUtil.isPropertySupported(childView,cpvr.getPropertyID())) {
-						compositeCommand.compose(new SetPropertyCommand(
+						compositeCommand.compose(new SetPropertyCommand(getEditingDomain(),
 								new EObjectAdapter(childView),
 								cpvr.getPropertyID(),
 								cpvr.getPropertyName(),
@@ -113,11 +116,14 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 			final ViewRefactorHelper vrh = new ViewRefactorHelper(gep.getDiagramPreferencesHint());
 			final List exclusions = getStyleExclusionsForCopyAppearance();
 			
-			ICommand viewStyleCommand = new AbstractModelCommand(APPLY_APPEARANCE_PROPERTIES_UNDO_COMMAND_NAME, null) {
-				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+            ICommand viewStyleCommand = new AbstractTransactionalCommand(getEditingDomain(),
+                APPLY_APPEARANCE_PROPERTIES_UNDO_COMMAND_NAME, null) {
+				protected CommandResult doExecuteWithResult(
+                        IProgressMonitor progressMonitor, IAdaptable info)
+                    throws ExecutionException {
 					
 					vrh.copyViewAppearance(aapr.getViewToCopyFrom(), gep.getNotationView(), exclusions);
-					return newOKCommandResult();
+					return CommandResult.newOKCommandResult();
 				}
 			};
 			
@@ -169,5 +175,9 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 		}
 		return super.getTargetEditPart(request);
 	}
+    
+    protected TransactionalEditingDomain getEditingDomain() {
+        return ((IGraphicalEditPart) getHost()).getEditingDomain();
+    }
 
 }

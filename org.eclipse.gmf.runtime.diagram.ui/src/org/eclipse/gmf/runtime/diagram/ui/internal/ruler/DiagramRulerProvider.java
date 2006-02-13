@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.rulers.RulerChangeListener;
@@ -115,10 +116,12 @@ public class DiagramRulerProvider extends RulerProvider {
 	
 	private DiagramRuler theRuler;
 	private IMapMode mm;
+    private final TransactionalEditingDomain editingDomain;
 	
-	public DiagramRulerProvider( DiagramRuler ruler, IMapMode mm ) {
+	public DiagramRulerProvider(TransactionalEditingDomain editingDomain, DiagramRuler ruler, IMapMode mm ) {
 		theRuler = ruler;
 		this.mm = mm;
+        this.editingDomain = editingDomain;
 	}
 	
 	private IMapMode getMapMode() {
@@ -172,14 +175,15 @@ public class DiagramRulerProvider extends RulerProvider {
 	 * @see org.eclipse.gef.rulers.RulerProvider#getCreateGuideCommand(int)
 	 */
 	public Command getCreateGuideCommand(int position) {
-		return new EtoolsProxyCommand( new CreateGuideCommand(theRuler, position) );
-	}
+        return new EtoolsProxyCommand(new CreateGuideCommand(
+            editingDomain, theRuler, position));
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.rulers.RulerProvider#getDeleteGuideCommand(java.lang.Object)
 	 */
 	public Command getDeleteGuideCommand(Object guide) {
-		return new EtoolsProxyCommand( new DeleteGuideCommand((Guide)guide) );
+		return new EtoolsProxyCommand( new DeleteGuideCommand(editingDomain, (Guide)guide) );
 	}
 
 	/* (non-Javadoc)
@@ -189,7 +193,7 @@ public class DiagramRulerProvider extends RulerProvider {
 		CompoundCommand cmd = new CompoundCommand(DiagramUIMessages.Command_moveGuide);
 
 		// Get the Command to Move the Guide
-		cmd.add( new EtoolsProxyCommand( new MoveGuideCommand((Guide)guide, pDelta) ) );
+		cmd.add( new EtoolsProxyCommand( new MoveGuideCommand(editingDomain, (Guide)guide, pDelta) ) );
 		
 		// Get the Commands to Remove attached model objects
 		Iterator iter = getAttachedModelObjects(guide).iterator();
@@ -200,13 +204,13 @@ public class DiagramRulerProvider extends RulerProvider {
 			int y = ((Integer) ViewUtil.getStructuralFeatureValue(part,NotationPackage.eINSTANCE.getLocation_Y())).intValue();
 
 			SetPropertyCommand spc;
-
+            
 			if( ((DiagramRuler)getRuler()).isHorizontal()) {
 				x += getMapMode().DPtoLP(pDelta);
-				spc = new SetPropertyCommand(new EObjectAdapter(part), Properties.ID_POSITIONX, Properties.ID_POSITIONX, new Integer(x));
+				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONX, Properties.ID_POSITIONX, new Integer(x));
 			} else {
 				y += getMapMode().DPtoLP(pDelta);
-				spc = new SetPropertyCommand(new EObjectAdapter(part), Properties.ID_POSITIONY, Properties.ID_POSITIONY, new Integer(y));
+				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONY, Properties.ID_POSITIONY, new Integer(y));
 			}
 
 			cmd.add( new EtoolsProxyCommand(spc) );

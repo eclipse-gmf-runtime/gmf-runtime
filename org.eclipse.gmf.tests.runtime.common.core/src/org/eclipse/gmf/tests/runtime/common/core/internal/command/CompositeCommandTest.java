@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,635 +13,1047 @@ package org.eclipse.gmf.tests.runtime.common.core.internal.command;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.commands.operations.UndoContext;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-
-import org.eclipse.gmf.runtime.common.core.command.CMValidator;
+import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
-import org.eclipse.gmf.tests.runtime.common.core.CommonCoreTestsStatusCodes;
 
 /**
- * @author khussey
- *
+ * Tests the {@link AbstractCommand}.
+ * 
+ * @author ldamus
  */
-public class CompositeCommandTest extends TestCase {
-
-	protected static class ProgressMonitor implements IProgressMonitor {
-
-		private int totalWorked = 0;
-
-		public void beginTask(String name, int totalWork) {
-			setTaskName(name);
-		}
-
-		public void done() {
-			// Do nothing here.
-		}
-
-		public void setTaskName(String name) {
-			// Do nothing here.
-		}
-
-		public boolean isCanceled() {
-			return false;
-		}
-
-		public void setCanceled(boolean b) {
-			// Do nothing here.
-		}
-
-		public void subTask(String name) {
-			// Do nothing here.
-		}
-
-		public void worked(int work) {
-			internalWorked(work);
-		}
-
-		public void internalWorked(double work) {
-			totalWorked = totalWorked + 1;
-		}
-		public int getTotalWorked() {
-			return totalWorked;
-		}
-	}
-
-	protected static class CanceledProgressMonitor
-		implements IProgressMonitor {
-
-		private int totalWorked = 0;
-		
-		private int commandCount = 0;
-		
-		public CanceledProgressMonitor() {
-			super();
-		}
-
-		public void beginTask(String name, int totalWork) {
-			setTaskName(name);
-		}
-
-		public void done() {
-			// Do nothing here.
-		}
-
-		public void setTaskName(String name) {
-			// Do nothing here.
-		}
-
-		public boolean isCanceled() {
-			if (commandCount == 2) {
-				return true;
-			}
-			commandCount++;
-			return false;
-		}
-
-		public void setCanceled(boolean b) {
-			// Do nothing here.
-		}
-
-		public void subTask(String name) {
-			// Do nothing here.
-		}
-
-		public void worked(int work) {
-			internalWorked(work);
-		}
-
-		public void internalWorked(double work) {
-			totalWorked = totalWorked + 1;
-		}
-
-		public int getTotalWorked() {
-			return totalWorked;
-		}
-	}
-
-	protected static class Command implements ICommand {
-
-		private final String label;
-
-		private final Collection affectedObjects;
-
-		private CommandResult commandResult = null;
-
-		private final boolean executable;
-
-		private final boolean redoable;
-
-		private final boolean undoable;
-
-		private boolean undone = false;
-
-		public Command(
-			String label,
-			Collection affectedObjects,
-			CommandResult commandResult) {
-
-			this(label, affectedObjects, commandResult, true, true, true);
-		}
-
-		public Command(
-			String label,
-			Collection affectedObjects,
-			CommandResult commandResult,
-			boolean executable,
-			boolean redoable,
-			boolean undoable) {
-
-			super();
-
-			this.label = label;
-			this.affectedObjects = affectedObjects;
-			this.commandResult = commandResult;
-			this.executable = executable;
-			this.redoable = redoable;
-			this.undoable = undoable;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public Collection getAffectedObjects() {
-			return affectedObjects;
-		}
-
-
-		public boolean involvesReadOnlyNonWorkSpaceFiles() {
-			return false;
-		}
-
-		public CMValidator getValidator() {
-			return new CMValidator();
-		}		
-		
-		public CommandResult getCommandResult() {
-			return commandResult;
-		}
-
-		protected void setCommandResult(CommandResult commandResult) {
-			this.commandResult = commandResult;
-		}
-
-		public ICommand compose(ICommand command) {
-			return this;
-		}
-
-		public boolean isExecutable() {
-			return executable;
-		}
-
-		public boolean isRedoable() {
-			return redoable;
-		}
-
-		public boolean isUndoable() {
-			return undoable;
-		}
-
-		protected void setCommandResult() {
-			setCommandResult(
-				new CommandResult(
-					new Status(
-						IStatus.OK,
-						CommonCorePlugin.getPluginId(),
-						CommonCoreTestsStatusCodes.OK,
-						getLabel(),
-						null),
-					new Date()));
-
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ie) {
-				// Do nothing here.
-			}
-		}
-
-		public void execute(IProgressMonitor progressMonitor) {
-			if (!progressMonitor.isCanceled()) {
-				setCommandResult();
-			}
-		}
-
-		public void redo() {
-			setCommandResult();
-		}
-
-		public void undo() {
-			setUndone(true);
-			setCommandResult();
-		}
-
-		public boolean isUndone() {
-			return undone;
-		}
-
-		private void setUndone(boolean b) {
-			undone = b;
-		}
-	}
-
-	protected interface IFixtureCompositeCommand {
-
-		List getFixtureCommands();
-
-	}
-
-	protected static class Fixture
-		extends CompositeCommand
-		implements IFixtureCompositeCommand {
-
-		public Fixture(String label) {
-			super(label);
-		}
-
-		public List getFixtureCommands() {
-			return getCommands();
-		}
-
-	}
-
-	private CompositeCommand fixture = null;
-
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(CompositeCommandTest.class);
-	}
-
-	public CompositeCommandTest(String name) {
-		super(name);
-	}
-
-	protected CompositeCommand getFixture() {
-		return fixture;
-	}
-
-	protected void setFixture(CompositeCommand fixture) {
-		this.fixture = fixture;
-	}
-
-	protected void setUp() {
-		setFixture(new Fixture(getName()));
-	}
-
-	public void test_getAffectedObjects() {
-		assertEquals(0, getFixture().getAffectedObjects().size());
-
-		Integer zero = new Integer(0);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(
-				getName(),
-				Arrays.asList(new Integer[] { zero }),
-				null));
-
-		assertEquals(1, getFixture().getAffectedObjects().size());
-		assertTrue(getFixture().getAffectedObjects().contains(zero));
-
-		Integer one = new Integer(1);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), Arrays.asList(new Integer[] { one }), null));
-
-		assertEquals(2, getFixture().getAffectedObjects().size());
-		assertTrue(getFixture().getAffectedObjects().contains(zero));
-		assertTrue(getFixture().getAffectedObjects().contains(one));
-	}
-
-	public void test_getCommandResult() {
-		assertEquals(
-			IStatus.OK,
-			getFixture().getCommandResult().getStatus().getSeverity());
-		assertEquals(
-			CommonCorePlugin.getPluginId(),
-			getFixture().getCommandResult().getStatus().getPlugin());
-		assertEquals(
-			CommonCoreTestsStatusCodes.OK,
-			getFixture().getCommandResult().getStatus().getCode());
-		assertEquals(
-			0,
-			getFixture().getCommandResult().getStatus().getMessage().length());
-		assertNull(getFixture().getCommandResult().getStatus().getException());
-
-		assertEquals(
-			0,
-			((Collection)getFixture().getCommandResult().getReturnValue()).size());
-
-		IStatus ok =
-			new Status(
-				IStatus.OK,
-				CommonCorePlugin.getPluginId(),
-				CommonCoreTestsStatusCodes.OK,
-				getName(),
-				null);
-		Integer zero = new Integer(0);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, new CommandResult(ok, zero)));
-
-		assertEquals(
-			IStatus.OK,
-			getFixture().getCommandResult().getStatus().getSeverity());
-		assertEquals(
-			CommonCorePlugin.getPluginId(),
-			getFixture().getCommandResult().getStatus().getPlugin());
-		assertEquals(
-			CommonCoreTestsStatusCodes.OK,
-			getFixture().getCommandResult().getStatus().getCode());
-		assertEquals(
-			0,
-			getFixture().getCommandResult().getStatus().getMessage().length());
-		assertNull(getFixture().getCommandResult().getStatus().getException());
-
-		assertEquals(
-			1,
-			((Collection)getFixture().getCommandResult().getReturnValue()).size());
-		assertEquals(
-			zero,
-			((List)getFixture().getCommandResult().getReturnValue()).get(0));
-
-		IStatus info =
-			new Status(
-				IStatus.INFO,
-				CommonCorePlugin.getPluginId(),
-				CommonCoreTestsStatusCodes.OK,
-				getName(),
-				null);
-		Integer one = new Integer(1);
-
-		((Fixture) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, new CommandResult(info, one)));
-
-		assertEquals(
-			IStatus.INFO,
-			getFixture().getCommandResult().getStatus().getSeverity());
-		assertEquals(
-			CommonCorePlugin.getPluginId(),
-			getFixture().getCommandResult().getStatus().getPlugin());
-		assertEquals(
-			CommonCoreTestsStatusCodes.OK,
-			getFixture().getCommandResult().getStatus().getCode());
-		assertEquals(
-			getName(),
-			getFixture().getCommandResult().getStatus().getMessage());
-		assertNull(getFixture().getCommandResult().getStatus().getException());
-
-		assertEquals(
-			2,
-			((Collection)getFixture().getCommandResult().getReturnValue()).size());
-		assertEquals(
-			zero,
-			((List)getFixture().getCommandResult().getReturnValue()).get(0));
-		assertEquals(
-			one,
-			((List)getFixture().getCommandResult().getReturnValue()).get(1));
-
-		IStatus warning =
-			new Status(
-				IStatus.WARNING,
-				CommonCorePlugin.getPluginId(),
-				CommonCoreTestsStatusCodes.COMMAND_FAILURE,
-				getName(),
-				null);
-		Integer two = new Integer(2);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, new CommandResult(warning, two)));
-
-		assertEquals(
-			IStatus.WARNING,
-			getFixture().getCommandResult().getStatus().getSeverity());
-		assertEquals(
-			CommonCorePlugin.getPluginId(),
-			getFixture().getCommandResult().getStatus().getPlugin());
-		assertEquals(
-			CommonCoreTestsStatusCodes.COMMAND_FAILURE,
-			getFixture().getCommandResult().getStatus().getCode());
-		assertEquals(
-			getName(),
-			getFixture().getCommandResult().getStatus().getMessage());
-		assertNull(getFixture().getCommandResult().getStatus().getException());
-
-		assertEquals(
-			3,
-			((Collection)getFixture().getCommandResult().getReturnValue()).size());
-		assertEquals(
-			zero,
-			((List)getFixture().getCommandResult().getReturnValue()).get(0));
-		assertEquals(
-			one,
-			((List)getFixture().getCommandResult().getReturnValue()).get(1));
-		assertEquals(
-			two,
-			((List)getFixture().getCommandResult().getReturnValue()).get(2));
-
-		IStatus error =
-			new Status(
-				IStatus.ERROR,
-				CommonCorePlugin.getPluginId(),
-				CommonCoreTestsStatusCodes.COMMAND_FAILURE,
-				getName(),
-				new Exception());
-		Integer three = new Integer(3);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, new CommandResult(error, three)));
-
-		assertEquals(
-			IStatus.ERROR,
-			getFixture().getCommandResult().getStatus().getSeverity());
-		assertEquals(
-			CommonCorePlugin.getPluginId(),
-			getFixture().getCommandResult().getStatus().getPlugin());
-		assertEquals(
-			CommonCoreTestsStatusCodes.COMMAND_FAILURE,
-			getFixture().getCommandResult().getStatus().getCode());
-		assertEquals(
-			getName(),
-			getFixture().getCommandResult().getStatus().getMessage());
-		assertNotNull(
-			getFixture().getCommandResult().getStatus().getException());
-
-		assertEquals(
-			4,
-			((Collection)getFixture().getCommandResult().getReturnValue()).size());
-		assertEquals(
-			zero,
-			((List)getFixture().getCommandResult().getReturnValue()).get(0));
-		assertEquals(
-			one,
-			((List)getFixture().getCommandResult().getReturnValue()).get(1));
-		assertEquals(
-			two,
-			((List)getFixture().getCommandResult().getReturnValue()).get(2));
-		assertEquals(
-			three,
-			((List)getFixture().getCommandResult().getReturnValue()).get(3));
-	}
-
-	public void test_compose() {
-		assertEquals(0, ((IFixtureCompositeCommand) getFixture()).getFixtureCommands().size());
-
-		ICommand command0 = new Command(getName(), null, null);
-		ICommand composite = getFixture().compose(command0);
-
-		assertSame(getFixture(), composite);
-		assertEquals(1, ((IFixtureCompositeCommand) getFixture()).getFixtureCommands().size());
-		assertSame(
-			command0,
-			((IFixtureCompositeCommand) getFixture()).getFixtureCommands().get(
-				0));
-
-		ICommand command1 = new Command(getName(), null, null);
-		composite = composite.compose(command1);
-
-		assertSame(getFixture(), composite);
-		assertEquals(2, ((IFixtureCompositeCommand) getFixture()).getFixtureCommands().size());
-		assertSame(
-			command1,
-			((IFixtureCompositeCommand) getFixture()).getFixtureCommands().get(
-				1));
-	}
-
-	public void test_isExecutable() {
-		assertFalse(getFixture().isExecutable());
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, null, true, true, true));
-
-		assertTrue(getFixture().isExecutable());
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, null, false, true, true));
-
-		assertTrue(!getFixture().isExecutable());
-	}
-
-	public void test_isRedoable() {
-		assertFalse(getFixture().isRedoable());
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, null, true, true, true));
-
-		assertTrue(getFixture().isRedoable());
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, null, true, false, true));
-
-		assertTrue(!getFixture().isRedoable());
-	}
-
-	public void test_isUndoable() {
-		assertFalse(getFixture().isUndoable());
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, null, true, true, true));
-
-		assertTrue(getFixture().isUndoable());
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			new Command(getName(), null, null, true, true, false));
-
-		assertTrue(!getFixture().isUndoable());
-	}
-
-	public void test_execute() {
-
-		// Test a non-canceled command execution
-
-		ICommand command0 = new Command(getName(), null, null);
-		ICommand command1 = new Command(getName(), null, null);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			command0);
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			command1);
-
-		ProgressMonitor progressMonitor = new ProgressMonitor();
-
-		getFixture().execute(progressMonitor);
-
-		// Verify that the subprogress monitor caused the parent progress monitor's
-		// work to increase by 2
-		assertEquals(2, progressMonitor.getTotalWorked());
-
-		// Verify that both commands were executed
-		assertEquals(
-			2,
-			((Collection)getFixture().getCommandResult().getReturnValue()).size());
-
-		assertTrue(
-			((Date) command0.getCommandResult().getReturnValue()).getTime()
-				< ((Date) command1.getCommandResult().getReturnValue())
-					.getTime());
-
-	}
-
-	public void test_redo() {
-		ICommand command0 = new Command(getName(), null, null);
-		ICommand command1 = new Command(getName(), null, null);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			command1);
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			command0);
-
-		getFixture().redo();
-
-		assertTrue(
-			((Date) command0.getCommandResult().getReturnValue()).getTime()
-				< ((Date) command1.getCommandResult().getReturnValue())
-					.getTime());
-
-		assertSame(
-			command0,
-			((IFixtureCompositeCommand) getFixture()).getFixtureCommands().get(0));
-		assertSame(
-			command1,
-			((IFixtureCompositeCommand) getFixture()).getFixtureCommands().get(1));
-	}
-
-	public void test_undo() {
-		ICommand command0 = new Command(getName(), null, null);
-		ICommand command1 = new Command(getName(), null, null);
-
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			command0);
-		((IFixtureCompositeCommand) getFixture()).getFixtureCommands().add(
-			command1);
-
-		getFixture().undo();
-
-		assertTrue(
-			((Date) command0.getCommandResult().getReturnValue()).getTime()
-				> ((Date) command1.getCommandResult().getReturnValue())
-					.getTime());
-
-		assertSame(
-			command0,
-			((IFixtureCompositeCommand) getFixture()).getFixtureCommands().get(
-				1));
-		assertSame(
-			command1,
-			((IFixtureCompositeCommand) getFixture()).getFixtureCommands().get(
-				0));
-	}
-
+public class CompositeCommandTest
+    extends TestCase {
+
+    private IOperationHistory history;
+
+    public static void main(String[] args) {
+        TestRunner.run(suite());
+    }
+
+    public static Test suite() {
+        return new TestSuite(CompositeCommandTest.class);
+    }
+
+    public CompositeCommandTest(String name) {
+        super(name);
+    }
+
+    protected void setUp()
+        throws Exception {
+        super.setUp();
+        history = OperationHistoryFactory.getOperationHistory();
+    }
+
+    /**
+     * Records a failure due to an exception that should not have been thrown.
+     * 
+     * @param e
+     *            the exception
+     */
+    protected void fail(Exception e) {
+        e.printStackTrace();
+        fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+    }
+
+    /**
+     * Tests that the undo contexts of the composite correctly aggregate the
+     * contexts of the children that it contains.
+     */
+    public void test_contexts() {
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        IUndoContext ctx1 = new UndoContext();
+        IUndoContext ctx2 = new UndoContext();
+        IUndoContext ctx3 = new UndoContext();
+
+        ICommand child1 = new TestCommand();
+        ICommand child2 = new TestCommand();
+        ICommand child3 = new TestCommand();
+
+        // configure some contexts
+        child1.addContext(ctx1);
+        child2.addContext(ctx2);
+        child2.addContext(ctx1);
+        child3.addContext(ctx3);
+
+        // no contexts, yet
+        assertEquals(Collections.EMPTY_LIST, Arrays.asList(composite
+            .getContexts()));
+
+        composite.add(child1);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1}), Arrays
+            .asList(composite.getContexts()));
+
+        // note that we don't get ctx1 twice
+        composite.add(child2);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1, ctx2}), Arrays
+            .asList(composite.getContexts()));
+
+        composite.add(child3);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1, ctx2, ctx3}),
+            Arrays.asList(composite.getContexts()));
+
+        // still have ctx1, but not ctx2
+        composite.remove(child2);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1, ctx3}), Arrays
+            .asList(composite.getContexts()));
+
+        composite.remove(child1);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx3}), Arrays
+            .asList(composite.getContexts()));
+
+        composite.remove(child3);
+        assertEquals(Collections.EMPTY_LIST, Arrays.asList(composite
+            .getContexts()));
+    }
+
+    /**
+     * Tests that the undo contexts of the composite correctly aggregate the
+     * contexts of the children that it contains, when manipulating the children
+     * using a list iterator.
+     */
+    public void test_contexts_listIterator() {
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        IUndoContext ctx1 = new UndoContext();
+        IUndoContext ctx2 = new UndoContext();
+        IUndoContext ctx3 = new UndoContext();
+
+        ICommand child1 = new TestCommand();
+        ICommand child2 = new TestCommand();
+        ICommand child3 = new TestCommand();
+
+        // configure some contexts
+        child1.addContext(ctx1);
+        child2.addContext(ctx2);
+        child2.addContext(ctx1);
+        child3.addContext(ctx3);
+
+        ListIterator iter = composite.listIterator();
+
+        // no contexts, yet
+        assertEquals(Collections.EMPTY_LIST, Arrays.asList(composite
+            .getContexts()));
+
+        iter.add(child1);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1}), Arrays
+            .asList(composite.getContexts()));
+
+        // note that we don't get ctx1 twice
+        iter.add(child2);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1, ctx2}), Arrays
+            .asList(composite.getContexts()));
+
+        iter.add(child3);
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1, ctx2, ctx3}),
+            Arrays.asList(composite.getContexts()));
+
+        // still have ctx1, but not ctx2 when we remove child2
+        iter.previous();
+        iter.previous();
+        iter.remove();
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx1, ctx3}), Arrays
+            .asList(composite.getContexts()));
+
+        // removing child1
+        iter.previous();
+        iter.remove();
+        assertEquals(Arrays.asList(new IUndoContext[] {ctx3}), Arrays
+            .asList(composite.getContexts()));
+
+        // removing child3
+        iter.next();
+        iter.remove();
+        assertEquals(Collections.EMPTY_LIST, Arrays.asList(composite
+            .getContexts()));
+    }
+
+    /**
+     * Tests the aggregation of canUndo() from child operations.
+     */
+    public void test_canUndo() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+        CompositeCommand composite2 = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        composite.add(new TestCommand());
+        composite.add(new TestCommand());
+        composite.add(composite2);
+        composite.add(new TestCommand());
+
+        composite2.add(new TestCommand());
+        composite2.add(new TestCommand(true, false)); // can't undo this one
+        composite2.add(new TestCommand());
+
+        composite.addContext(ctx);
+        assertTrue(composite.canExecute());
+
+        try {
+            history.execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        assertFalse(composite.canUndo());
+        assertFalse(history.canUndo(ctx));
+    }
+
+    /**
+     * Tests the aggregation of canRedo() from child operations.
+     */
+    public void test_canRedo() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+        CompositeCommand composite2 = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        composite.add(new TestCommand());
+        composite.add(new TestCommand());
+        composite.add(composite2);
+        composite.add(new TestCommand());
+
+        composite2.add(new TestCommand());
+        composite2.add(new TestCommand(true, true, false)); // can undo but not
+        // redo
+        composite2.add(new TestCommand());
+
+        composite.addContext(ctx);
+        assertTrue(composite.canExecute());
+
+        try {
+            history.execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        assertTrue(composite.canUndo());
+        assertTrue(history.canUndo(ctx));
+
+        try {
+            history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        assertFalse(composite.canRedo());
+        assertFalse(history.canRedo(ctx));
+    }
+
+    public void test_execute_undo_redo() {
+
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        TestCommand child1 = new TestCommand();
+        TestCommand child2 = new TestCommand();
+        TestCommand child3 = new TestCommand();
+
+        composite.add(child1);
+        composite.add(child2);
+        composite.add(child3);
+
+        try {
+            composite.addContext(ctx);
+            history.execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        child1.assertExecuted();
+        child2.assertExecuted();
+        child3.assertExecuted();
+
+        CommandResult result = composite.getCommandResult();
+
+        IStatus status = result.getStatus();
+        assertTrue(status.isOK());
+
+        Object returnValue = result.getReturnValue();
+        assertTrue(returnValue instanceof Collection);
+
+        Collection collection = (Collection) returnValue;
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(child1.getCommandResult()
+            .getReturnValue()));
+        assertTrue(collection.contains(child2.getCommandResult()
+            .getReturnValue()));
+        assertTrue(collection.contains(child3.getCommandResult()
+            .getReturnValue()));
+
+        try {
+            assertTrue(history.canUndo(ctx));
+            history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        child1.assertUndone();
+        child2.assertUndone();
+        child3.assertUndone();
+
+        result = composite.getCommandResult();
+
+        status = result.getStatus();
+        assertTrue(status.isOK());
+
+        returnValue = result.getReturnValue();
+        assertTrue(returnValue instanceof Collection);
+
+        collection = (Collection) returnValue;
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(child1.getCommandResult()
+            .getReturnValue()));
+        assertTrue(collection.contains(child2.getCommandResult()
+            .getReturnValue()));
+        assertTrue(collection.contains(child3.getCommandResult()
+            .getReturnValue()));
+
+        try {
+            assertTrue(history.canRedo(ctx));
+            history.redo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        child1.assertRedone();
+        child2.assertRedone();
+        child3.assertRedone();
+
+        result = composite.getCommandResult();
+
+        status = result.getStatus();
+        assertTrue(status.isOK());
+
+        returnValue = result.getReturnValue();
+        assertTrue(returnValue instanceof Collection);
+
+        collection = (Collection) returnValue;
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(child1.getCommandResult()
+            .getReturnValue()));
+        assertTrue(collection.contains(child2.getCommandResult()
+            .getReturnValue()));
+        assertTrue(collection.contains(child3.getCommandResult()
+            .getReturnValue()));
+    }
+
+    /**
+     * Tests error detection during execution.
+     */
+    public void test_execute_error() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation c = new FailCancelOperation(ERROR_STATUS,
+            Status.OK_STATUS, Status.OK_STATUS, false);
+        composite.add(c);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertFalse(marker2.wasExecuted);
+        assertTrue(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.ERROR, status.getSeverity());
+    }
+
+    /**
+     * Tests cancel-status detection during execution.
+     */
+    public void test_execute_cancel() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.CANCEL_STATUS,
+            Status.OK_STATUS, Status.OK_STATUS, false);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertFalse(marker2.wasExecuted);
+        assertTrue(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.CANCEL, status.getSeverity());
+    }
+
+    /**
+     * Tests monitor-cancel detection during execution.
+     */
+    public void test_execute_cancelMonitor() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.CANCEL_STATUS,
+            Status.OK_STATUS, Status.OK_STATUS, true);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertFalse(marker2.wasExecuted);
+        assertTrue(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.CANCEL, status.getSeverity());
+    }
+
+    /**
+     * Tests error detection during undo.
+     */
+    public void test_undo_error() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.OK_STATUS,
+            ERROR_STATUS, Status.OK_STATUS, false);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertTrue(marker2.wasExecuted);
+        assertFalse(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertFalse(marker1.wasUndone);
+        assertTrue(marker2.wasUndone);
+        assertTrue(marker2.wasRedone);
+
+        // check overall operation status
+        assertEquals(IStatus.ERROR, status.getSeverity());
+    }
+
+    /**
+     * Tests cancel-status detection during undo.
+     */
+    public void test_undo_cancel() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.OK_STATUS,
+            Status.CANCEL_STATUS, Status.OK_STATUS, false);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertTrue(marker2.wasExecuted);
+        assertFalse(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertFalse(marker1.wasUndone);
+        assertTrue(marker2.wasUndone);
+        assertTrue(marker2.wasRedone);
+
+        // check overall operation status
+        assertEquals(IStatus.CANCEL, status.getSeverity());
+    }
+
+    /**
+     * Tests monitor-cancel detection during undo.
+     */
+    public void test_undo_cancelMonitor() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.OK_STATUS,
+            Status.CANCEL_STATUS, Status.OK_STATUS, true);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertTrue(marker2.wasExecuted);
+        assertFalse(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertFalse(marker1.wasUndone);
+        assertTrue(marker2.wasUndone);
+        assertTrue(marker2.wasRedone);
+
+        // check overall operation status
+        assertEquals(IStatus.CANCEL, status.getSeverity());
+    }
+
+    /**
+     * Tests error detection during redo.
+     */
+    public void test_redo_error() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.OK_STATUS,
+            Status.OK_STATUS, ERROR_STATUS, false);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertTrue(marker2.wasExecuted);
+        assertFalse(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertTrue(marker1.wasUndone);
+        assertTrue(marker2.wasUndone);
+        assertFalse(marker2.wasRedone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.redo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertTrue(marker1.wasRedone);
+        assertFalse(marker2.wasRedone);
+        assertTrue(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.ERROR, status.getSeverity());
+    }
+
+    /**
+     * Tests cancel-status detection during redo.
+     */
+    public void test_redo_cancel() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.OK_STATUS,
+            Status.OK_STATUS, Status.CANCEL_STATUS, false);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertTrue(marker2.wasExecuted);
+        assertFalse(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertTrue(marker1.wasUndone);
+        assertTrue(marker2.wasUndone);
+        assertFalse(marker2.wasRedone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.redo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertTrue(marker1.wasRedone);
+        assertFalse(marker2.wasRedone);
+        assertTrue(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.CANCEL, status.getSeverity());
+    }
+
+    /**
+     * Tests monitor-cancel detection during redo.
+     */
+    public void test_redo_cancelMonitor() {
+        IUndoContext ctx = new UndoContext();
+
+        CompositeCommand composite = new CompositeCommand("Composite"); //$NON-NLS-1$
+
+        MarkerOperation marker1 = new MarkerOperation();
+        composite.add(marker1);
+
+        FailCancelOperation op = new FailCancelOperation(Status.OK_STATUS,
+            Status.OK_STATUS, Status.CANCEL_STATUS, true);
+        composite.add(op);
+
+        MarkerOperation marker2 = new MarkerOperation();
+        composite.add(marker2);
+
+        IStatus status = null;
+
+        try {
+            composite.addContext(ctx);
+            status = history
+                .execute(composite, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were executed and which rolled back
+        assertTrue(marker1.wasExecuted);
+        assertTrue(marker2.wasExecuted);
+        assertFalse(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.undo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertTrue(marker1.wasUndone);
+        assertTrue(marker2.wasUndone);
+        assertFalse(marker2.wasRedone);
+
+        // check overall operation status
+        assertEquals(IStatus.OK, status.getSeverity());
+
+        marker1.reset();
+        marker2.reset();
+
+        try {
+            status = history.redo(ctx, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e);
+        }
+
+        // check which markers were undone and which were redone
+        assertTrue(marker1.wasRedone);
+        assertFalse(marker2.wasRedone);
+        assertTrue(marker1.wasUndone);
+
+        // check overall operation status
+        assertEquals(IStatus.CANCEL, status.getSeverity());
+    }
+
+    //
+    // TEST FIXTURES
+    //
+
+    private static IStatus ERROR_STATUS = new Status(IStatus.ERROR,
+        "error", 1, "no message", null); //$NON-NLS-1$ //$NON-NLS-2$
+
+    protected static class TestCommand
+        extends AbstractCommand {
+
+        private boolean executed;
+
+        private boolean undone;
+
+        private boolean redone;
+
+        private final boolean isExecutable;
+
+        private final boolean isUndoable;
+
+        private final boolean isRedoable;
+
+        public TestCommand() {
+            this(true, true, true, null);
+        }
+
+        public TestCommand(List affectedFiles) {
+            this(true, true, true, affectedFiles);
+        }
+
+        public TestCommand(boolean isExecutable) {
+            this(isExecutable, true, true, null);
+        }
+
+        public TestCommand(boolean isExecutable, boolean isUndoable) {
+            this(isExecutable, isUndoable, true, null);
+        }
+
+        public TestCommand(boolean isExecutable, boolean isUndoable,
+                boolean isRedoable) {
+            this(isExecutable, isUndoable, isRedoable, null);
+        }
+
+        public TestCommand(boolean isExecutable, boolean isUndoable,
+                boolean isRedoable, List affectedFiles) {
+            super("TestCommand", affectedFiles); //$NON-NLS-1$
+
+            this.isExecutable = isExecutable;
+            this.isUndoable = isUndoable;
+            this.isRedoable = isRedoable;
+        }
+
+        public boolean canExecute() {
+            return isExecutable;
+        }
+
+        public boolean canUndo() {
+            return isUndoable;
+        }
+
+        public boolean canRedo() {
+            return isRedoable;
+        }
+
+        protected CommandResult doExecuteWithResult(
+                IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+            executed = true;
+            undone = false;
+            redone = false;
+            return CommandResult.newOKCommandResult(this);
+        }
+
+        protected CommandResult doRedoWithResult(
+                IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+            executed = false;
+            undone = false;
+            redone = true;
+            return CommandResult.newOKCommandResult(this);
+        }
+
+        protected CommandResult doUndoWithResult(
+                IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+            executed = false;
+            undone = true;
+            redone = false;
+            return CommandResult.newOKCommandResult(this);
+        }
+
+        public void assertExecuted() {
+            assertTrue(executed);
+            assertFalse(undone);
+            assertFalse(redone);
+            assertEquals(IStatus.OK, getCommandResult().getStatus()
+                .getSeverity());
+            assertSame(this, getCommandResult().getReturnValue());
+        }
+
+        public void assertUndone() {
+            assertTrue(undone);
+            assertFalse(executed);
+            assertFalse(redone);
+            assertEquals(IStatus.OK, getCommandResult().getStatus()
+                .getSeverity());
+            assertSame(this, getCommandResult().getReturnValue());
+        }
+
+        public void assertRedone() {
+            assertTrue(redone);
+            assertFalse(undone);
+            assertFalse(executed);
+            assertEquals(IStatus.OK, getCommandResult().getStatus()
+                .getSeverity());
+            assertSame(this, getCommandResult().getReturnValue());
+        }
+
+    }
+
+    private static class FailCancelOperation
+        extends AbstractOperation {
+
+        private IStatus executeStatus;
+
+        private IStatus undoStatus;
+
+        private IStatus redoStatus;
+
+        private boolean cancelMonitor;
+
+        FailCancelOperation(IStatus exec, IStatus undo, IStatus redo,
+                boolean cancel) {
+            super("Fail/Cancel Operation"); //$NON-NLS-1$
+            this.executeStatus = exec;
+            this.undoStatus = undo;
+            this.redoStatus = redo;
+            this.cancelMonitor = cancel;
+        }
+
+        public IStatus execute(IProgressMonitor monitor, IAdaptable info)
+            throws ExecutionException {
+            if ((executeStatus.getSeverity() == IStatus.CANCEL)
+                && cancelMonitor) {
+                monitor.setCanceled(true);
+                return Status.OK_STATUS;
+            }
+
+            return executeStatus;
+        }
+
+        public IStatus undo(IProgressMonitor monitor, IAdaptable info)
+            throws ExecutionException {
+            if ((undoStatus.getSeverity() == IStatus.CANCEL) && cancelMonitor) {
+                monitor.setCanceled(true);
+                return Status.OK_STATUS;
+            }
+
+            return undoStatus;
+        }
+
+        public IStatus redo(IProgressMonitor monitor, IAdaptable info)
+            throws ExecutionException {
+            if ((redoStatus.getSeverity() == IStatus.CANCEL) && cancelMonitor) {
+                monitor.setCanceled(true);
+                return Status.OK_STATUS;
+            }
+
+            return redoStatus;
+        }
+    }
+
+    static class MarkerOperation
+        extends AbstractOperation {
+
+        boolean wasExecuted;
+
+        boolean wasUndone;
+
+        boolean wasRedone;
+
+        MarkerOperation() {
+            super("Marker operation"); //$NON-NLS-1$
+        }
+
+        void reset() {
+            wasExecuted = false;
+            wasUndone = false;
+            wasRedone = false;
+        }
+
+        public IStatus execute(IProgressMonitor monitor, IAdaptable info)
+            throws ExecutionException {
+            wasExecuted = true;
+            return Status.OK_STATUS;
+        }
+
+        public IStatus undo(IProgressMonitor monitor, IAdaptable info)
+            throws ExecutionException {
+            wasUndone = true;
+            return Status.OK_STATUS;
+        }
+
+        public IStatus redo(IProgressMonitor monitor, IAdaptable info)
+            throws ExecutionException {
+            wasRedone = true;
+            return Status.OK_STATUS;
+        }
+    }
 }

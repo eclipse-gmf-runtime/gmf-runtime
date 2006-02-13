@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,14 @@
 
 package org.eclipse.gmf.runtime.emf.commands.core.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 
 /**
  * This command is there to reposition elements in a list.
@@ -24,7 +26,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
  * @author tisrar
  */
 public class RepositionEObjectCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	/**
 	 * the element to operate on
@@ -44,24 +46,25 @@ public class RepositionEObjectCommand
 	/**
 	 * Constructs a runtime instance of <code>RepositionEObjectCommand</code>.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label label for command
 	 * @param elements the list of elements in which reposition will take place
 	 * @param element target element
 	 * @param displacement amount of movement
 	 */
-	public RepositionEObjectCommand(String label, EList elements, EObject element,
+	public RepositionEObjectCommand(TransactionalEditingDomain editingDomain, String label, EList elements, EObject element,
 		int displacement) {
 
-		super(label, element);
+		super(editingDomain, label, getWorkspaceFiles(element));
 		this.element = element;
 		this.displacement = displacement;
 		this.elements = elements;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 
 		CommandResult commandResult = null;
 
@@ -69,7 +72,7 @@ public class RepositionEObjectCommand
 		
 		elements.move(currentPosition + displacement, element);
 
-		return (commandResult == null) ? newCancelledCommandResult()
+		return (commandResult == null) ? CommandResult.newCancelledCommandResult()
 			: commandResult;
 	}
 

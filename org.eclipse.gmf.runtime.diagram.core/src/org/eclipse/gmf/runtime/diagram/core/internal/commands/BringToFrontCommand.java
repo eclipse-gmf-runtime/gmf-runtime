@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,10 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.View;
@@ -27,16 +29,23 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class BringToFrontCommand extends ZOrderCommand {
 
-	public BringToFrontCommand(View toMove ) {
-		super( "BringToFrontCommand", toMove ); //$NON-NLS-1$
+    /**
+     * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
+     * @param toMove
+     */
+	public BringToFrontCommand(TransactionalEditingDomain editingDomain, View toMove ) {
+		super(editingDomain, "BringToFrontCommand", toMove ); //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
 		ViewUtil.repositionChildAt(containerView,toMove, containerView.getChildren().size()-1);
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 }

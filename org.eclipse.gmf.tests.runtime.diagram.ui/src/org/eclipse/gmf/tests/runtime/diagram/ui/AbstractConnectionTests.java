@@ -13,6 +13,7 @@ package org.eclipse.gmf.tests.runtime.diagram.ui;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -71,7 +72,8 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 		final int dgrmSize = ((Integer) diagramValues[1]).intValue();
 
 		DeleteCommand delete =
-			new DeleteCommand(getTestFixture().getConnectorView());
+			new DeleteCommand(getTestFixture()
+            .getEditingDomain(), getTestFixture().getConnectorView());
 
 		testCommand(delete, new ITestCommandCallback() {
 			public void onCommandExecution() {
@@ -82,8 +84,6 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 	}
 
 	public void testAddBendpoints() throws Exception {
-		MEditingDomain.INSTANCE.runAsRead(  new MRunnable() {
-			public Object run() {
 
 				// moved to setup of super class 
 				final Edge connectorView =
@@ -101,7 +101,7 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 				Point r2 = new Point(ptEnd);
 
 				SetConnectionBendpointsCommand bendpointsChanged =
-					new SetConnectionBendpointsCommand();
+					new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
 				bendpointsChanged.setEdgeAdapter(new EObjectAdapter(connectorView));
 				bendpointsChanged.setNewPointList(newpts, r1, r2);
 				testCommand(bendpointsChanged, new ITestCommandCallback() {
@@ -115,7 +115,7 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 				// now test smooth connector
 				final Smoothness s1 = Smoothness.NORMAL_LITERAL;
 				SetPropertyCommand c =
-					new SetPropertyCommand(new EObjectAdapter(connectorView),
+					new SetPropertyCommand(getTestFixture().getEditingDomain(), new EObjectAdapter(connectorView),
 						Properties.ID_SMOOTHNESS,
 						"", //$NON-NLS-1$
 						s1);
@@ -139,7 +139,7 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 							.getBottomRight()));
 				newpts.addPoint(new Point(ptEnd));
 
-				bendpointsChanged = new SetConnectionBendpointsCommand();
+				bendpointsChanged = new SetConnectionBendpointsCommand(getTestFixture().getEditingDomain());
 				bendpointsChanged.setEdgeAdapter(new EObjectAdapter(connectorView));
 				bendpointsChanged.setNewPointList(newpts, r1, r2);
 				testCommand(bendpointsChanged, new ITestCommandCallback() {
@@ -149,9 +149,6 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 					}
 				});
 				flushEventQueue();
-				return null;
-			}
-		});
 	}
 
 	/**
@@ -159,8 +156,8 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 	 * @throws Exception
 	 */
 	public void testConnectionProperties() throws Exception {
-		MEditingDomain.INSTANCE.runAsRead(  new MRunnable() {
-			public Object run() {
+/*		MEditingDomain.INSTANCE.runAsRead(  new MRunnable() {
+			public Object run() {*/
 				final Edge connectorView =
 					getTestFixture().getConnectorView();
 
@@ -217,9 +214,9 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 					Properties.ID_ROUTING,
 					Routing.MANUAL_LITERAL);
 				flushEventQueue();
-				return null;
+/*				return null;
 			}
-		});
+		});*/
 	}
 
 }

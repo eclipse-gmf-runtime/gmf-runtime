@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,15 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal.services.semantic;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * Abstract semantic provider implementation
@@ -41,12 +43,27 @@ public class AbstractSemanticProvider
 		 * @param label
 		 */
 		public EmptyCommand() {
-			super(null);
+			super(null, null);
 		}
 
-		protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-			return null;
-		}
+        protected CommandResult doExecuteWithResult(
+                IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+
+            return null;
+        }
+        
+        protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+
+            return null;
+        }
+        
+        protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+
+            return null;
+        }
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -39,6 +37,10 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.GlobalActionHand
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandlerProvider;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * The abstract parent of all concrete global actions. A concrete global action
@@ -114,14 +116,24 @@ public abstract class GlobalAction
 			return;
 		}
 
-		/* Create the compound command */
-		CompositeCommand compositeCommand = createCompositeCommand(list);
-		getCommandManager().execute(compositeCommand, progressMonitor);
-		IStatus status = compositeCommand.getCommandResult().getStatus();
-		if (!status.isOK()) {
-			/* log status error */
-			Log.log(CommonUIActionPlugin.getDefault(), status);
-		}
+		/* Create the composite operation */
+		IUndoableOperation operation = createCompositeCommand(list);
+        try {
+            IStatus status = getOperationHistory()
+                .execute(operation, progressMonitor, null);
+            
+    		if (!status.isOK()) {
+    			/* log status error */
+    			Log.log(CommonUIActionPlugin.getDefault(), status);
+    		}
+        } catch (ExecutionException e) {
+            Trace.catching(CommonUIActionPlugin.getDefault(),
+                CommonUIActionDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "doRun", e); //$NON-NLS-1$
+            Log.error(CommonUIActionPlugin.getDefault(),
+                CommonUIActionStatusCodes.ACTION_FAILURE, e
+                    .getLocalizedMessage(), e);
+        }
 
 	}
 
@@ -185,22 +197,44 @@ public abstract class GlobalAction
 	 */
 	public abstract String getActionId();
 
-	/**
-	 * Returns a <code>CompositeCommand</code>
-	 * 
-	 * @param commands a list of commands to compose into a <code>CompositeCommand</code>
-	 * @return CompositeCommand
-	 */
-	protected CompositeCommand createCompositeCommand(List commands) {
-		assert null != commands;
-		return new CompositeCommand(getLabel(), commands);
-	}
+    /**
+     * Returns a <code>CompositeCommand</code> whose undo context is derived from my workbench part.
+     * 
+     * @param commands a list of commands to compose into a <code>CompositeCommand</code>
+     * @return the CompositeCommand
+     */
+    protected CompositeCommand createCompositeCommand(List commands) {
+        assert null != commands;
+        
+        CompositeCommand result = new CompositeCommand(getLabel(), commands);
+        IUndoContext undoContext = getUndoContext();
+        
+        if (undoContext != null) {
+            result.addContext(undoContext);
+        }
+        return result;
+    }
+    
+    /**
+     * Gets the undo context from my workbench part. May be <code>null</code>.
+     * 
+     * @return my undo context
+     */
+    protected IUndoContext getUndoContext() {
+        IWorkbenchPart part = getWorkbenchPart();
+
+        if (part != null) {
+            return (IUndoContext) part.getAdapter(IUndoContext.class);
+        }
+        return null;
+    }
+
 
 	/**
-	 * Returns a <code>IGlobalActionContext</code>
-	 * 
-	 * @return IGlobalActionContext
-	 */
+     * Returns a <code>IGlobalActionContext</code>
+     * 
+     * @return IGlobalActionContext
+     */
 	protected IGlobalActionContext createContext() {
 		/* Create the global action context */
 		return new GlobalActionContext(getWorkbenchPart(), getSelection(),

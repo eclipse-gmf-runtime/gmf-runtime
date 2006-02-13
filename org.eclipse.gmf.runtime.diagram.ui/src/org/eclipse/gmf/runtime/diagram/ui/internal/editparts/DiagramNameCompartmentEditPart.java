@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.GroupRequest;
@@ -23,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkC
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -125,7 +127,11 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 		 * Returns a command to set the model to null. 
 		 */
 		public Command createDeleteViewCommand(GroupRequest request) {
-			CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
+            
+            TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+                .getEditingDomain();
+            
+			CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(editingDomain,
 				DiagramUIMessages.Command_CreateDiagramLink,
 					(View)getHost().getParent().getModel(), 
 					null);

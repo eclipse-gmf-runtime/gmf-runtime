@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,7 +129,7 @@ public class LiveValidationListener
                 	String message = event.getSeverity() >= IStatus.ERROR
 						? EMFUIMessages.Validation_liveError
 						: EMFUIMessages.Validation_liveWarning_part1
-			    		+ "\n\n"	+ EMFUIMessages.Validation_liveWarning_part2;
+			    		+ "\n\n"	+ EMFUIMessages.Validation_liveWarning_part2; //$NON-NLS-1$
                 	
                 	// the dialog should show INFO severity for errors because
                 	//   the corrective action has already been taken by the

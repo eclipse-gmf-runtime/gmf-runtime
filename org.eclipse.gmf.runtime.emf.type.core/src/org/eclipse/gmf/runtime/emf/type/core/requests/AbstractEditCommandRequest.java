@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
@@ -39,6 +40,28 @@ public abstract class AbstractEditCommandRequest
 	 * Used to pass additional information from the client to the edit helpers.
 	 */
 	private Map parameters = new HashMap();
+	
+	/**
+	 * The editing domain in which I am requesting to make model changes.
+	 */
+	private TransactionalEditingDomain editingDomain;
+	
+	/**
+	 * Initializes me with the editing domain in which I am requesting to make
+	 * model changes.
+	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
+	 *            changes.
+	 */
+	protected AbstractEditCommandRequest(TransactionalEditingDomain editingDomain) {
+		this.editingDomain = editingDomain;
+	}
+	
+	// Documentation copied from the interface
+	public TransactionalEditingDomain getEditingDomain() {
+		return editingDomain;
+	}
 
 	/**
 	 * Gets the edit command label. If the label has not been specified, the

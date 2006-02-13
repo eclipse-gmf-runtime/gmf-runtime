@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
@@ -29,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterContentEditPoli
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Filtering;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -435,12 +436,17 @@ public class FilterDialog
 			Properties.ID_FILTERING_KEYS, Properties.ID_FILTERING_KEYS,
 			_filteringKeys);
 
-		// Run the command
-		CompositeModelCommand cc = new CompositeModelCommand(
-			DiagramUIMessages.Command_SortFilterCommand);		
+		// Run the command	
+        TransactionalEditingDomain editingDomain = null;
+        List childCommands = new ArrayList();
 		Iterator iter = selection.iterator();
 		while (iter.hasNext()) {
 			GraphicalEditPart ep = (GraphicalEditPart) iter.next();
+            
+            if (editingDomain == null) {
+                editingDomain = ep.getEditingDomain();
+            }
+            
 			List children = ep.getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				if (children.get(i) instanceof ListCompartmentEditPart) {
@@ -448,14 +454,18 @@ public class FilterDialog
 						.get(i);
 					
 					if (filterMap != null && filterMap.equals(getFilterMapFromEditPart(editPart))) {					
-						cc.compose(new CommandProxy(editPart
+                        childCommands.add(new CommandProxy(editPart
 							.getCommand(filterTypeRequest)));
-						cc.compose(new CommandProxy(editPart
+                        childCommands.add(new CommandProxy(editPart
 							.getCommand(filterKeysRequest)));
 					}
 				}
 			}
 		}
+        
+        CompositeTransactionalCommand cc = new CompositeTransactionalCommand(editingDomain, 
+            DiagramUIMessages.Command_SortFilterCommand, childCommands);   
+        
 		((IGraphicalEditPart) selection.get(0)).getRoot().getViewer()
 			.getEditDomain().getCommandStack().execute(
 				new EtoolsProxyCommand(cc));	

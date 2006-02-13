@@ -12,11 +12,13 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -60,8 +62,12 @@ public class LabelSnapBackEditPolicy
 			Point offset = LabelEditPart.getSnapBackPosition(hint);
 			if (offset == null)
 				return null;
+            
+            TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+                .getEditingDomain();
+            
 	 		ICommand moveCommand = 
-	 			new SetBoundsCommand(
+	 			new SetBoundsCommand(editingDomain,
 	 				DiagramUIMessages.SetLocationCommand_Label_Resize,
 	 				new EObjectAdapter(view),
 					offset); 

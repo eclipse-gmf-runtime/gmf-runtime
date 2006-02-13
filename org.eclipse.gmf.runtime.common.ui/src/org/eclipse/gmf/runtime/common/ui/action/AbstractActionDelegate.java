@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,16 @@
 
 package org.eclipse.gmf.runtime.common.ui.action;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.command.CommandManager;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -28,13 +35,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
 
 /**
  * The abstract parent of all concrete action delegates that execute commands.
@@ -175,10 +175,21 @@ public abstract class AbstractActionDelegate implements IPartListener, IActionWi
 	 * manager.
 	 * 
 	 * @return The command manager for this action delegate.
+     * @deprecated Use {@link #getOperationHistory()} instead.
 	 */
 	protected CommandManager getCommandManager() {
-		return getActionManager().getCommandManager();
+		return CommandManager.getDefault();
 	}
+    
+    /**
+     * Gets the operation history for this action delegate from its action
+     * manager.
+     * 
+     * @return the operation history
+     */
+    protected IOperationHistory getOperationHistory() {
+        return getActionManager().getOperationHistory();
+    }
 
 	/**
 	 * Retrieves the current selection.

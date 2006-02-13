@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,12 +16,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.ObjectUndoContext;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
@@ -44,7 +48,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * A command manager has a state, which is one of CLEARING, EXECUTING, IDLE,
  * REDOING or UNDOING. When the command manager transitions from one state to
  * another, it will notify any registered
- * {@link org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener}s 
+ * {@link org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener}s
  * of the operation that just occurred which caused it to change state.
  * <P>
  * The command manager does not support nested command execution. Clients should
@@ -52,6 +56,11 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
  * process of executing a command. An exception will occur in this case.
  * 
  * @author khussey
+ * @author ldamus
+ * 
+ * @deprecated Use the {@link OperationHistoryFactory#getOperationHistory()}
+ *             instead.
+ * 
  * @canBeSeenBy %partners
  */
 public class CommandManager {
@@ -61,8 +70,7 @@ public class CommandManager {
 	 * 
 	 * @author khussey
 	 */
-	public static class State
-		extends EnumeratedType {
+	public static class State extends EnumeratedType {
 
 		private static final long serialVersionUID = 1L;
 
@@ -99,8 +107,8 @@ public class CommandManager {
 		/**
 		 * The list of values for this enumerated type.
 		 */
-		private static final State[] VALUES = {CLEARING, EXECUTING, IDLE,
-			REDOING, UNDOING, FLUSHING};
+		private static final State[] VALUES = { CLEARING, EXECUTING, IDLE,
+				REDOING, UNDOING, FLUSHING };
 
 		/**
 		 * An internal unique identifier for command manager states.
@@ -141,22 +149,17 @@ public class CommandManager {
 	 * from this command manager's memory when the flush threshold is exceeded.
 	 */
 	protected static int DEFAULT_FLUSH_COUNT = 1;
-	
+
 	/**
 	 * The default command manager.
 	 */
 	private static CommandManager commandManager = null;
 
 	/**
-	 * The list of commands being managed.
-	 */
-	private final List commands = new ArrayList();
-
-	/**
 	 * The command manager change listeners.
 	 */
 	private final List listeners = Collections
-		.synchronizedList(new ArrayList());
+			.synchronizedList(new ArrayList());
 
 	/**
 	 * The state of this command manager.
@@ -164,31 +167,40 @@ public class CommandManager {
 	private State state = State.IDLE;
 
 	/**
-	 * The index of the command that can be undone.
-	 */
-	private int undoIndex = -1;
-
-	/**
-	 * The maximum size of the undo stack.
-	 */
-	protected int flushThreshold = Integer.MAX_VALUE;
-
-	/**
-	 * The number of commands to flush from the undo stack.
-	 */
-	protected int flushCount = 0;
-
-	/**
 	 * The currently executing command.
 	 */
 	private ICommand currentlyExecutingCommand = null;
+
+	/**
+	 * My undo context.
+	 */
+	private IUndoContext undoContext;
+
+	/**
+	 * My operation history delegate.
+	 */
+	private final IOperationHistory delegate;
+    
+    /**
+     * The number of commands to flush from the undo stack.
+     */
+    protected int flushCount = 0;
 
 	/**
 	 * Constructs a new command manager.
 	 */
 	public CommandManager() {
 		super();
+		delegate = OperationHistoryFactory.getOperationHistory();
 	}
+    
+    /**
+     * Initializes me with an operation history.
+     */
+    public CommandManager(IOperationHistory operationHistory) {
+        super();
+        delegate = operationHistory;
+    }
 
 	/**
 	 * Retrieves the default command manager.
@@ -204,6 +216,15 @@ public class CommandManager {
 
 		return commandManager;
 	}
+    
+    /**
+     * Returns my delegate operation history.
+     * 
+     * @return my delegate operation history
+     */
+    public final IOperationHistory getOperationHistory() {
+        return delegate;
+    }
 
 	/**
 	 * Retrieves the list of commands being managed.
@@ -211,7 +232,20 @@ public class CommandManager {
 	 * @return The list of commands being managed.
 	 */
 	protected final List getCommands() {
-		return commands;
+
+		List result = new ArrayList();
+
+		IUndoableOperation[] undoHistory = delegate
+				.getUndoHistory(getUndoContext());
+
+		result.addAll(Arrays.asList(undoHistory));
+
+		IUndoableOperation[] redoHistory = delegate
+				.getRedoHistory(getUndoContext());
+
+		result.addAll(Arrays.asList(redoHistory));
+
+		return result;
 	}
 
 	/**
@@ -247,9 +281,11 @@ public class CommandManager {
 	 * Retrieves the index of the command that can be undone.
 	 * 
 	 * @return The index of the command that can be undone.
+	 * 
+	 * @deprecated Undo index no longer maintained. Returns 0.
 	 */
 	protected final int getUndoIndex() {
-		return undoIndex;
+		return 0;
 	}
 
 	/**
@@ -257,9 +293,10 @@ public class CommandManager {
 	 * 
 	 * @param undoIndex
 	 *            The new index of the command that can be undone.
+	 * @deprecated Undo index no longer maintained. Does nothing.
 	 */
 	protected final void setUndoIndex(int undoIndex) {
-		this.undoIndex = undoIndex;
+		// does nothing
 	}
 
 	/**
@@ -270,7 +307,7 @@ public class CommandManager {
 	 *         by this command manager.
 	 */
 	public final int getFlushThreshold() {
-		return flushThreshold;
+		return delegate.getLimit(getUndoContext());
 	}
 
 	/**
@@ -284,14 +321,14 @@ public class CommandManager {
 	public final void setFlushThreshold(int flushThreshold) {
 		assert (0 < flushThreshold);
 
-		this.flushThreshold = flushThreshold;
+		delegate.setLimit(getUndoContext(), flushThreshold);
 
 		fireCommandManagerChange(new CommandManagerChangeEvent(this));
 		Trace
-			.trace(
-				CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.COMMANDS_ADMIN,
-				"Command manager flush threshold set to " + String.valueOf(flushThreshold) + "."); //$NON-NLS-1$ //$NON-NLS-2$
+				.trace(
+						CommonCorePlugin.getDefault(),
+						CommonCoreDebugOptions.COMMANDS_ADMIN,
+						"Command manager flush threshold set to " + String.valueOf(flushThreshold) + "."); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -300,9 +337,10 @@ public class CommandManager {
 	 * 
 	 * @return The number of undoable commands that are flushed from this
 	 *         command manager's memory when the flush threshold is exceeded.
+	 * @deprecated Flush count is fixed at 1.
 	 */
 	public final int getFlushCount() {
-		return flushCount;
+        return flushCount;
 	}
 
 	/**
@@ -312,18 +350,19 @@ public class CommandManager {
 	 * @param flushCount
 	 *            The new number of undoable commands that are flushed from this
 	 *            command manager's memory when the flush threshold is exceeded.
+	 * @deprecated Flush count is fixed at 1. This method has no effect.
 	 */
 	public final void setFlushCount(int flushCount) {
-		assert (0 <= flushCount);
-
-		this.flushCount = flushCount;
-
-		fireCommandManagerChange(new CommandManagerChangeEvent(this));
-		Trace
-			.trace(
-				CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.COMMANDS_ADMIN,
-				"Command manager flush count set to " + String.valueOf(flushCount) + "."); //$NON-NLS-1$ //$NON-NLS-2$
+        assert (0 <= flushCount);
+        
+        this.flushCount = flushCount;
+        
+        fireCommandManagerChange(new CommandManagerChangeEvent(this));
+        Trace
+            .trace(
+                CommonCorePlugin.getDefault(),
+                CommonCoreDebugOptions.COMMANDS_ADMIN,
+                "Command manager flush count set to " + String.valueOf(flushCount) + "."); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -335,7 +374,7 @@ public class CommandManager {
 	 */
 	public void addCommandManagerChangeListener(
 			ICommandManagerChangeListener listener) {
-		
+
 		assert null != listener : "null listener"; //$NON-NLS-1$
 		getListeners().add(listener);
 	}
@@ -349,7 +388,7 @@ public class CommandManager {
 	 */
 	public void removeCommandManagerChangeListener(
 			ICommandManagerChangeListener listener) {
-		
+
 		assert null != listener : "null listener"; //$NON-NLS-1$
 		getListeners().remove(listener);
 	}
@@ -371,26 +410,19 @@ public class CommandManager {
 
 		for (Iterator i = targets.iterator(); i.hasNext();) {
 			((ICommandManagerChangeListener) i.next())
-				.commandManagerChanged(event);
+					.commandManagerChanged(event);
 		}
 	}
 
 	/**
-	 * Adds the specified command to the list of commands managed by this
-	 * command manager.
-	 * 
-	 * @param command
-	 *            The command to be added.
+	 * Delegates to the operation history.
 	 */
 	protected void addCommand(ICommand command) {
-		assert (getCommands().size() - 1 == getUndoIndex());
-
-		getCommands().add(command);
-		setUndoIndex(getUndoIndex() + 1);
-
-		if (getUndoIndex() >= getFlushThreshold()) {
-			flush();
-		}
+        
+	    // Add the command manager context
+        command.addContext(getUndoContext());
+        
+		delegate.add(command);
 	}
 
 	/**
@@ -400,19 +432,23 @@ public class CommandManager {
 
 		if (canRedo()) {
 			State originalState = getState();
-			
-			try {
-				
-				setState(State.CLEARING);
-				
-				int redoIndex = getUndoIndex() + 1;
-				ICommand firstCleared = (ICommand) getCommands().get(redoIndex);
-				clearRedo(redoIndex);
 
-				fireCommandManagerChange(new CommandManagerChangeEvent(this, firstCleared));
+			try {
+
+				setState(State.CLEARING);
+
+				IUndoableOperation firstCleared = delegate
+						.getRedoOperation(getUndoContext());
+				clearRedo();
+
+				if (firstCleared instanceof ICommand) {
+					fireCommandManagerChange(new CommandManagerChangeEvent(
+							this, (ICommand) firstCleared));
+				}
+
 				Trace.trace(CommonCorePlugin.getDefault(),
-					CommonCoreDebugOptions.COMMANDS_ADMIN,
-					"Command manager redo cleared."); //$NON-NLS-1$
+						CommonCoreDebugOptions.COMMANDS_ADMIN,
+						"Command manager redo cleared."); //$NON-NLS-1$
 
 			} finally {
 				setState(originalState);
@@ -428,18 +464,8 @@ public class CommandManager {
 	 */
 	protected void clearRedoCommands(ICommand command) {
 
-		int index = getCommands().indexOf(command);
-
-		if (index < 0) {
-			// Could not find the command, so clear the entire redo stack to be safe
-			if (canRedo()) {
-				index = getUndoIndex() + 1;
-			} else {
-				return;
-			}
-		}
-
-		clearRedo(index);
+		// clear the entire redo stack
+		delegate.dispose(getUndoContext(), false, true, false);
 	}
 
 	/**
@@ -448,28 +474,17 @@ public class CommandManager {
 	 * 
 	 * @param index
 	 *            the starting index
+	 * @deprecated Clears the entire redo stack.
 	 */
 	protected void clearRedo(int index) {
-
-		if (index <= getUndoIndex()) {
-			setUndoIndex(-1);
-		}
-
-		for (ListIterator li = getCommands().listIterator(index); li.hasNext(); li
-			.remove()) {
-			
-			li.next();
-		}
+		delegate.dispose(getUndoContext(), false, true, false);
 	}
 
 	/**
 	 * Clears the redo stack.
 	 */
 	public void clearRedo() {
-		if (canRedo()) {
-			ICommand command = (ICommand) getCommands().get(getUndoIndex() + 1);
-			clearRedoCommand(command);
-		}
+		delegate.dispose(getUndoContext(), false, true, false);
 	}
 
 	/**
@@ -478,6 +493,7 @@ public class CommandManager {
 	 * 
 	 * @param command
 	 *            the command to be cleared
+	 * @deprecated Clears the entire redo stack.
 	 */
 	public void clearRedoCommand(ICommand command) {
 		State originalState = getState();
@@ -486,10 +502,11 @@ public class CommandManager {
 
 			clearRedoCommands(command);
 
-			fireCommandManagerChange(new CommandManagerChangeEvent(this, command));
+			fireCommandManagerChange(new CommandManagerChangeEvent(this,
+					command));
 			Trace.trace(CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.COMMANDS_ADMIN,
-				"Command manager redo cleared."); //$NON-NLS-1$
+					CommonCoreDebugOptions.COMMANDS_ADMIN,
+					"Command manager redo cleared."); //$NON-NLS-1$
 
 		} finally {
 			setState(originalState);
@@ -500,17 +517,7 @@ public class CommandManager {
 	 * Clears the undo stack.
 	 */
 	protected void clearUndoCommands() {
-		if (canUndo()) {
-			int redoIndex = getUndoIndex() + 1;
-
-			for (ListIterator li = getCommands().listIterator(); 0 < redoIndex; li
-				.remove(), redoIndex--) {
-
-				li.next();
-			}
-
-			setUndoIndex(-1);
-		}
+		delegate.dispose(getUndoContext(), true, false, false);
 	}
 
 	/**
@@ -519,16 +526,11 @@ public class CommandManager {
 	 * 
 	 * @param command
 	 *            the command to flush down to
+	 * @deprecated Flushes the entire undo stack.
 	 */
 	protected void flushCommands(ICommand command) {
 
-		int index = getCommands().indexOf(command);
-
-		if (index < 0) {
-			return;
-		}
-
-		flush(index + 1);
+		flush(1);
 	}
 
 	/**
@@ -544,8 +546,8 @@ public class CommandManager {
 
 			fireCommandManagerChange(new CommandManagerChangeEvent(this));
 			Trace.trace(CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.COMMANDS_ADMIN,
-				"Command manager cleared."); //$NON-NLS-1$
+					CommonCoreDebugOptions.COMMANDS_ADMIN,
+					"Command manager cleared."); //$NON-NLS-1$
 
 		} finally {
 			setState(State.IDLE);
@@ -558,6 +560,7 @@ public class CommandManager {
 	 * 
 	 * @param command
 	 *            the command to flush down to
+	 * @deprecated Flushes the entire undo stack.
 	 */
 	public final void flush(ICommand command) {
 
@@ -567,6 +570,8 @@ public class CommandManager {
 	/**
 	 * Removes <code>flushCount</code> commands from the bottom of the undo
 	 * stack.
+	 * 
+	 * @deprecated Flushes the entire undo stack.
 	 */
 	protected void flush() {
 		flush(getFlushCount());
@@ -575,7 +580,9 @@ public class CommandManager {
 	/**
 	 * Removes <code>count</code> commands from the bottom of the undo stack.
 	 * 
-	 * @param count number of commands to remove from the bottom of the undo stack
+	 * @param count
+	 *            number of commands to remove from the bottom of the undo stack
+	 * @deprecated Flushes the entire undo stack.
 	 */
 	protected void flush(int count) {
 
@@ -588,24 +595,19 @@ public class CommandManager {
 		try {
 			setState(State.FLUSHING);
 
-			int numberToFlush = count;
-			ICommand command = (ICommand) getCommands().get(numberToFlush - 1);
+			IUndoableOperation command = delegate
+					.getUndoOperation(getUndoContext());
 
-			for (ListIterator li = getCommands().listIterator(); 0 < count; li
-				.remove(), count--) {
-				li.next();
-			}
-			int newUndoIdx = getUndoIndex() - numberToFlush;
-			if (newUndoIdx < -1) {
-				newUndoIdx = -1;
-			}
-			setUndoIndex(newUndoIdx);
+			delegate.dispose(getUndoContext(), true, false, false);
 
-			fireCommandManagerChange(new CommandManagerChangeEvent(this,
-				command));
+			if (command instanceof ICommand) {
+				fireCommandManagerChange(new CommandManagerChangeEvent(this,
+						(ICommand) command));
+			}
+
 			Trace.trace(CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.COMMANDS_ADMIN,
-				"Command manager flushed up to " + command.getLabel()); //$NON-NLS-1$
+					CommonCoreDebugOptions.COMMANDS_ADMIN,
+					"Command manager flushed up to " + command.getLabel()); //$NON-NLS-1$
 
 		} finally {
 			setState(originalState);
@@ -613,23 +615,17 @@ public class CommandManager {
 	}
 
 	/**
-	 * Answers whether a command can be redone.
-	 * 
-	 * @return <code>true</code> is a command can be redone;
-	 *         <code>false</code> otherwise.
+	 * Delegates to the operation history.
 	 */
 	public boolean canRedo() {
-		return getUndoIndex() < getCommands().size() - 1;
+		return delegate.canRedo(getUndoContext());
 	}
 
 	/**
-	 * Answers whether a command can be undone.
-	 * 
-	 * @return <code>true</code> is a command can be undone;
-	 *         <code>false</code> otherwise.
+	 * Delegates to the operation history.
 	 */
 	public boolean canUndo() {
-		return getUndoIndex() > -1;
+		return delegate.canUndo(getUndoContext());
 	}
 
 	/**
@@ -638,11 +634,12 @@ public class CommandManager {
 	 * @return A label for the command that can be redone.
 	 */
 	public String getRedoLabel() {
-		if (canRedo()) {
-			return ((ICommand) getCommands().get(
-				getUndoIndex() + 1)).getLabel();
-		}
+		IUndoableOperation redoOperation = delegate
+				.getRedoOperation(getUndoContext());
 
+		if (redoOperation != null) {
+			return redoOperation.getLabel();
+		}
 		return null;
 	}
 
@@ -652,11 +649,12 @@ public class CommandManager {
 	 * @return A label for the command that can be undone.
 	 */
 	public String getUndoLabel() {
-		if (canUndo()) {
-			return ((ICommand) getCommands().get(getUndoIndex()))
-				.getLabel();
-		}
+		IUndoableOperation undoOperation = delegate
+				.getUndoOperation(getUndoContext());
 
+		if (undoOperation != null) {
+			return undoOperation.getLabel();
+		}
 		return null;
 	}
 
@@ -707,24 +705,27 @@ public class CommandManager {
 	public CommandResult execute(ICommand command,
 			IProgressMonitor progressMonitor) {
 
-		assert null!=progressMonitor;
+		assert null != progressMonitor;
 
 		if (getState() == State.EXECUTING) {
 			throw new IllegalStateException(
-				"Command Manager cannot perform the nested command execution while it is already in the process of executing a command."); //$NON-NLS-1$
+					"Command Manager cannot perform the nested command execution while it is already in the process of executing a command."); //$NON-NLS-1$
 		}
+        
+        // Add the command manager context
+        command.addContext(getUndoContext());
 
-		if (!command.isExecutable()) {
+		if (!command.canExecute()) {
 			UnsupportedOperationException uoe = new UnsupportedOperationException(
-				"Trying to execute an unexecutable command (" + command.getLabel() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+					"Trying to execute an unexecutable command (" + command.getLabel() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			Trace.throwing(CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"execute", uoe); //$NON-NLS-1$
+					CommonCoreDebugOptions.EXCEPTIONS_THROWING, getClass(),
+					"execute", uoe); //$NON-NLS-1$
 			throw uoe;
 		}
 
 		Log.info(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.OK,
-			"Executing command '" + command.getLabel() + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
+				"Executing command '" + command.getLabel() + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
 
 		CommandResult result = null;
 
@@ -732,30 +733,35 @@ public class CommandManager {
 			setState(State.EXECUTING);
 			setCurrentlyExecutingCommand(command);
 
-			command.execute(progressMonitor);
+			delegate.execute(command, progressMonitor, null);
+
 			result = command.getCommandResult();
 
 			if (IStatus.ERROR != result.getStatus().getSeverity()) {
 
-				if (command.isUndoable()) {
-					// RATLC00524872 - only clear redo if the command is
-					// undoable
-					clearRedoCommands();
-					addCommand(command);
-				} else {
+				if (!command.canUndo()) {
 
-					if (!command.getAffectedObjects().isEmpty()) {
+					if (!command.getAffectedFiles().isEmpty()) {
 						clearUndoCommands();
 					}
 				}
 
 				fireCommandManagerChange(new CommandManagerChangeEvent(this,
-					command));
-				
-			} else if (CommonCoreStatusCodes.CANCELLED == result.getStatus().getCode()) {
-				// RATLC00529649 - temporary fix - clear redo command when a command is cancelled
+						command));
+
+			} else if (CommonCoreStatusCodes.CANCELLED == result.getStatus()
+					.getCode()) {
+				// RATLC00529649 - temporary fix - clear redo command when a
+				// command is cancelled
 				clearRedoCommand(command);
 			}
+
+		} catch (ExecutionException e) {
+			Log
+					.error(
+							CommonCorePlugin.getDefault(),
+							CommonCoreStatusCodes.COMMAND_FAILURE,
+							"Command execution failed: '" + command.getLabel() + "'.", e); //$NON-NLS-1$ //$NON-NLS-2$
 
 		} finally {
 			setCurrentlyExecutingCommand(null);
@@ -763,8 +769,8 @@ public class CommandManager {
 		}
 
 		Trace.trace(CommonCorePlugin.getDefault(),
-			CommonCoreDebugOptions.COMMANDS_EXECUTE,
-			"Command '" + String.valueOf(command) + "' executed."); //$NON-NLS-1$ //$NON-NLS-2$
+				CommonCoreDebugOptions.COMMANDS_EXECUTE,
+				"Command '" + String.valueOf(command) + "' executed."); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result;
 	}
@@ -813,8 +819,8 @@ public class CommandManager {
 		if (!canRedo()) {
 			UnsupportedOperationException uoe = new UnsupportedOperationException();
 			Trace.throwing(CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"redo", uoe); //$NON-NLS-1$
+					CommonCoreDebugOptions.EXCEPTIONS_THROWING, getClass(),
+					"redo", uoe); //$NON-NLS-1$
 			throw uoe;
 		}
 
@@ -824,34 +830,36 @@ public class CommandManager {
 		try {
 			setState(State.REDOING);
 
-			command = (ICommand) getCommands().get(getUndoIndex() + 1);
+			command = (ICommand) delegate.getRedoOperation(getUndoContext());
 			Log.info(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.OK,
-				"Redoing command '" + command.getLabel() + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
-			command.redo();
+					"Redoing command '" + command.getLabel() + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
+			delegate.redo(getUndoContext(), new NullProgressMonitor(), null);
 			result = command.getCommandResult();
+
 			if (IStatus.ERROR != result.getStatus().getSeverity()) {
 
-				if (command.isUndoable()) {
-					setUndoIndex(getUndoIndex() + 1);
-				} else {
-					clearRedoCommands();
+				if (!command.canUndo()) {
 
-					if (!command.getAffectedObjects().isEmpty()) {
+					if (!command.getAffectedFiles().isEmpty()) {
 						clearUndoCommands();
 					}
 				}
 
 				fireCommandManagerChange(new CommandManagerChangeEvent(this,
-					command));
+						command));
 			}
+		} catch (ExecutionException e) {
+			Log.error(CommonCorePlugin.getDefault(),
+					CommonCoreStatusCodes.COMMAND_FAILURE,
+					"Command redo failed: '" + command.getLabel() + "'.", e); //$NON-NLS-1$ //$NON-NLS-2$
 
 		} finally {
 			setState(State.IDLE);
 		}
 
 		Trace.trace(CommonCorePlugin.getDefault(),
-			CommonCoreDebugOptions.COMMANDS_REDO,
-			"Command '" + String.valueOf(command) + "' redone."); //$NON-NLS-1$ //$NON-NLS-2$
+				CommonCoreDebugOptions.COMMANDS_REDO,
+				"Command '" + String.valueOf(command) + "' redone."); //$NON-NLS-1$ //$NON-NLS-2$
 		return result;
 	}
 
@@ -873,8 +881,8 @@ public class CommandManager {
 		if (!canUndo()) {
 			UnsupportedOperationException uoe = new UnsupportedOperationException();
 			Trace.throwing(CommonCorePlugin.getDefault(),
-				CommonCoreDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"undo", uoe); //$NON-NLS-1$
+					CommonCoreDebugOptions.EXCEPTIONS_THROWING, getClass(),
+					"undo", uoe); //$NON-NLS-1$
 			throw uoe;
 		}
 
@@ -884,34 +892,39 @@ public class CommandManager {
 		try {
 			setState(State.UNDOING);
 
-			command = (ICommand) getCommands().get(getUndoIndex());
+			command = (ICommand) delegate.getUndoOperation(getUndoContext());
 			Log.info(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.OK,
-				"Undoing command '" + command.getLabel() + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
-			command.undo();
+					"Undoing command '" + command.getLabel() + "'..."); //$NON-NLS-1$ //$NON-NLS-2$
+
+			delegate.undo(getUndoContext(), new NullProgressMonitor(), null);
+
 			result = command.getCommandResult();
 
 			if (IStatus.ERROR != result.getStatus().getSeverity()) {
-				setUndoIndex(getUndoIndex() - 1);
 
-				if (!command.isRedoable()) {
-					clearRedoCommands();
+				if (!command.canRedo()) {
 
-					if (!command.getAffectedObjects().isEmpty()) {
-						clearUndoCommands();
+					if (!command.getAffectedFiles().isEmpty()) {
+						clearRedoCommands();
 					}
 				}
 
 				fireCommandManagerChange(new CommandManagerChangeEvent(this,
-					command));
+						command));
 			}
+
+		} catch (ExecutionException e) {
+			Log.error(CommonCorePlugin.getDefault(),
+					CommonCoreStatusCodes.COMMAND_FAILURE,
+					"Command undo failed: '" + command.getLabel() + "'.", e); //$NON-NLS-1$ //$NON-NLS-2$
 
 		} finally {
 			setState(State.IDLE);
 		}
 
 		Trace.trace(CommonCorePlugin.getDefault(),
-			CommonCoreDebugOptions.COMMANDS_UNDO,
-			"Command '" + String.valueOf(command) + "' undone."); //$NON-NLS-1$ //$NON-NLS-2$
+				CommonCoreDebugOptions.COMMANDS_UNDO,
+				"Command '" + String.valueOf(command) + "' undone."); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result;
 	}
@@ -923,13 +936,15 @@ public class CommandManager {
 	 *            the command to undo to
 	 */
 	public void undo(ICommand command) {
-		int index = getCommands().indexOf(command);
+
+		List undoHistory = Arrays.asList(delegate
+				.getUndoHistory(getUndoContext()));
+
+		int index = undoHistory.indexOf(command);
 		assert (index != -1);
 
-		if (index <= getUndoIndex()) {
-			for (int i = getUndoIndex(); i >= index; i--) {
-				undo();
-			}
+		for (int i = 0; i <= index; i++) {
+			undo();
 		}
 	}
 
@@ -940,14 +955,29 @@ public class CommandManager {
 	 *            the command to redo to
 	 */
 	public void redo(ICommand command) {
-		int index = getCommands().indexOf(command);
+
+		List redoHistory = Arrays.asList(delegate
+				.getRedoHistory(getUndoContext()));
+
+		int index = redoHistory.indexOf(command);
 		assert (index != -1);
 
-		if (index > getUndoIndex()) {
-			for (int i = getUndoIndex() + 1; i <= index; i++) {
-				redo();
-			}
+		for (int i = 0; i <= index; i++) {
+			redo();
 		}
+	}
+
+	/**
+	 * Gets my undo context. I add my context to all commands executed through
+	 * me.
+	 * 
+	 * @return my undo context
+	 */
+	public IUndoContext getUndoContext() {
+		if (undoContext == null) {
+			undoContext = new ObjectUndoContext(this);
+		}
+		return undoContext;
 	}
 
 }

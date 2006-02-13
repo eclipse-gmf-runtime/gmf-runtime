@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,13 @@
 
 package org.eclipse.gmf.runtime.emf.ui.services.action;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.common.ui.services.action.filter.TestAttributeOperation;
 import org.eclipse.gmf.runtime.emf.ui.internal.MslUIDebugOptions;
 import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
 import org.eclipse.gmf.runtime.emf.ui.internal.MslUIStatusCodes;
@@ -107,53 +108,75 @@ public abstract class AbstractModelActionFilterProvider
 	public final boolean testAttribute(final Object target, final String name,
 		final String value) {
 
-		try {
-			OperationUtil.runAsRead(new Runnable() {
+        TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(target);
 
-				public void run() {
-					try {
-						setResult(doTestAttribute(target, name, value));
-					} catch (Exception e) {
-						Trace.catching(MslUIPlugin.getDefault(),
-							MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-							"testAttribute", e); //$NON-NLS-1$
-						Log.warning(MslUIPlugin.getDefault(),
-							MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
-								.getMessage(), e);
-						RuntimeException cre = new RuntimeException(
-							e);
-						Trace.throwing(MslUIPlugin.getDefault(),
-							MslUIDebugOptions.EXCEPTIONS_THROWING, getClass(),
-							"testAttribute", cre); //$NON-NLS-1$
-						throw cre;
-					}
-				}
-			});
-		} catch (MSLActionAbandonedException e) {
-			// This is not expected to happen.
-			Trace.trace(MslUIPlugin.getDefault(),
-				MslUIDebugOptions.MODEL_OPERATIONS,
-				"MSLActionAbandonedException"); //$NON-NLS-1$
-		}
+        if (domain == null) {
+            return false;
+        }
+            
+        try {
+            domain.runExclusive(new Runnable() {
 
-		return getResult();
+                public void run() {
+                    try {
+                        setResult(doTestAttribute(target, name, value));
+                    } catch (Exception e) {
+                        Trace.catching(MslUIPlugin.getDefault(),
+                            MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                            "testAttribute", e); //$NON-NLS-1$
+                        Log.warning(MslUIPlugin.getDefault(),
+                            MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                                .getMessage(), e);
+                        RuntimeException cre = new RuntimeException(e);
+                        Trace.throwing(MslUIPlugin.getDefault(),
+                            MslUIDebugOptions.EXCEPTIONS_THROWING, getClass(),
+                            "testAttribute", cre); //$NON-NLS-1$
+                        throw cre;
+                    }
+                }
+            });
+        } catch (InterruptedException e) {
+            Trace.catching(MslUIPlugin.getDefault(),
+                MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "testAttribute", e); //$NON-NLS-1$
+            Log.error(MslUIPlugin.getDefault(),
+                MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                    .getLocalizedMessage(), e);
+        }
+
+        return getResult();
 	}
 
 	/**
-	 * Tests whether this provider provides the specified operation, as a read
-	 * action.
-	 * 
-	 * @return <code>true</code> if this provider provides the operation;
-	 *          <code>false</code> otherwise.
-	 * @param operation The operation in question.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(IOperation)
-	 * 
-	 */
+     * Tests whether this provider provides the specified operation, as a read
+     * action.
+     * 
+     * @return <code>true</code> if this provider provides the operation;
+     *         <code>false</code> otherwise.
+     * @param operation
+     *            The operation in question.
+     * 
+     * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(IOperation)
+     * 
+     */
 	public final boolean provides(final IOperation operation) {
 
+        TransactionalEditingDomain domain = null;
+
+        if (operation instanceof TestAttributeOperation) {
+            Object target = ((TestAttributeOperation) operation).getTarget();
+
+            if (target != null) {
+                domain = TransactionUtil.getEditingDomain(target);
+            }
+        }
+
+        if (domain == null) {
+            return false;
+        }
+        
 		try {
-			OperationUtil.runAsRead(new Runnable() {
+			domain.runExclusive(new Runnable() {
 
 				public void run() {
 					try {
@@ -174,11 +197,13 @@ public abstract class AbstractModelActionFilterProvider
 					}
 				}
 			});
-		} catch (MSLActionAbandonedException e) {
-			// This is not expected to happen.
-			Trace.trace(MslUIPlugin.getDefault(),
-				MslUIDebugOptions.MODEL_OPERATIONS,
-				"MSLActionAbandonedException"); //$NON-NLS-1$
+		} catch (InterruptedException e) {
+            Trace.catching(MslUIPlugin.getDefault(),
+                MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "provides", e); //$NON-NLS-1$
+            Log.error(MslUIPlugin.getDefault(),
+                MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                    .getLocalizedMessage(), e);
 		}
 
 		return getResult();

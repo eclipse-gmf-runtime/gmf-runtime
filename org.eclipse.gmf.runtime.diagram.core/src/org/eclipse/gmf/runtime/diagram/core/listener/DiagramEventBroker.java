@@ -26,6 +26,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramDebugOptions;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
@@ -474,7 +475,9 @@ public class DiagramEventBroker
 				element = element.eContainer();
 			}
 			if (element != null) {
-				ViewUtil.persistElement((View) element);
+                if (!NotificationFilter.READ.matches(event)) {
+                    ViewUtil.persistElement((View) element);
+                }
 			}
 		}
 		EObject element = (EObject) event.getNotifier();

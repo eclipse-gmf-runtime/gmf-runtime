@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.tools;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -116,7 +117,8 @@ public class AddPopupBarTool extends AbstractPopupBarTool implements DragTracker
 
 		if (hostElement != null && getElementType() != null) {
 			CreateElementRequest theReq = new CreateElementRequest(
-				hostElement, getElementType());
+                TransactionUtil.getEditingDomain(hostElement), hostElement,
+                getElementType());
 			EditCommandRequestWrapper semReq = new EditCommandRequestWrapper(theReq);
 
 			// an EtoolsProxyCommand that wraps the ICommand of the from the

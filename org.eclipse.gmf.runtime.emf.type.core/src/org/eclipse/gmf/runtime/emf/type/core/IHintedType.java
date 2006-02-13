@@ -1,10 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<html>
-<head>
-<!--
-
 /******************************************************************************
- * Copyright (c) 2004,2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,17 +9,21 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
--->
-</head>
-<body>
+ package org.eclipse.gmf.runtime.emf.type.core;
 
-Hinted type support.
 
-<h2>Package Specification</h2>
-<p>
-</p>
+ /**
+  * A type that requires a semantic hint for view creation. 
+  * 
+  * @author cmahoney
+  */
+ public interface IHintedType
+ 	extends IElementType {
 
-@canBeSeenBy org.eclipse.gmf.runtime.emf.core.*
-
-</body>
-</html>
+ 	/**
+ 	 * Gets the semantic hint required for view creation.
+ 	 * 
+ 	 * @return the semantic hint.
+ 	 */
+ 	String getSemanticHint();
+ }

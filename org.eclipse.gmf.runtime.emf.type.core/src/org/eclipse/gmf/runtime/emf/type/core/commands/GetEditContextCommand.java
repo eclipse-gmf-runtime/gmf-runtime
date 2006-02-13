@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -40,8 +42,10 @@ public class GetEditContextCommand extends EditElementCommand {
 		setEditContext(request.getEditContext());
 	}
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		return newOKCommandResult(getEditContext());
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
+
+		return CommandResult.newOKCommandResult(getEditContext());
 	}
 
 	/**

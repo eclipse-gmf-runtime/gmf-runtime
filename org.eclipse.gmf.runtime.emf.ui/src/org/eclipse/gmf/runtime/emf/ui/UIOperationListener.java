@@ -25,6 +25,13 @@ import org.eclipse.gmf.runtime.emf.core.ResourceSetOperation;
  * {@link org.eclipse.gmf.runtime.emf.core.EditingDomain#addOperationListener(OperationListener) EditingDomain.addOperationListener}
  * and unregister through
  * {@link org.eclipse.gmf.runtime.emf.core.EditingDomain#removeOperationListener(OperationListener) EditingDomain.removeOperationListener}
+ * 
+ * @deprecated Attach a {@link org.eclipse.emf.transaction.ResourceSetListener}
+ *     to the {@link org.eclipse.emf.transaction.TXEditingDomain}, instead.
+ *     The most common usage of <code>OperationListener</code> is for post-commit
+ *     events (after a write action closes); implement the
+ *     {@link org.eclipse.emf.transaction.ResourceSetListener#resourceSetChanged(org.eclipse.emf.transaction.ResourceSetChangeEvent)}
+ *     callback for this purpose. 
  */
 public abstract class UIOperationListener
 	extends OperationListener {

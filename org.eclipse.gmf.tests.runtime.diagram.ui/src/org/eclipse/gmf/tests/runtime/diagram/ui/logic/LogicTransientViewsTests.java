@@ -84,7 +84,7 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
 			IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
 			
-			CreateRelationshipRequest crr = new CreateRelationshipRequest(term1, term2, typeWire);
+			CreateRelationshipRequest crr = new CreateRelationshipRequest(getTestFixture().getEditingDomain(), term1, term2, typeWire);
 			ICommand createWire = typeCircuit.getEditHelper().getEditCommand(crr);
 			_testFixture.execute(createWire);
 			flushEventQueue();
@@ -179,7 +179,7 @@ public class LogicTransientViewsTests extends AbstractTestBase{
             IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
             IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
             
-            CreateRelationshipRequest crr = new CreateRelationshipRequest(term1, term2, typeWire);
+            CreateRelationshipRequest crr = new CreateRelationshipRequest(editingDomain, term1, term2, typeWire);
             ICommand createWire = typeCircuit.getEditHelper().getEditCommand(crr);
             _testFixture.execute(createWire);
             flushEventQueue();

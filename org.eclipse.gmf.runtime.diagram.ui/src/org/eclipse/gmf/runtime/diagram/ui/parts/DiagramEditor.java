@@ -17,7 +17,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.ObjectUndoContext;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -29,7 +37,15 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.parts.ScrollableThumbnail;
 import org.eclipse.draw2d.parts.Thumbnail;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.ResourceUndoContext;
 import org.eclipse.gef.ContextMenuProvider;
+import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.EditPartViewer;
@@ -39,6 +55,7 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.ui.actions.ActionRegistry;
@@ -49,7 +66,6 @@ import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.rulers.RulerComposite;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
@@ -81,6 +97,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
+import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.GuideStyle;
@@ -352,6 +369,16 @@ public abstract class DiagramEditor
 		}
 
 	}
+    
+    /**
+     * My editing domain provider.
+     */
+    private IEditingDomainProvider domainProvider = new IEditingDomainProvider() {
+
+        public EditingDomain getEditingDomain() {
+            return DiagramEditor.this.getEditingDomain();
+        }
+    };
 
 	/** The key handler */
 	private KeyHandler keyHandler;
@@ -367,6 +394,18 @@ public abstract class DiagramEditor
 	 *  rulers
 	 */
 	private RulerComposite rulerComposite;
+    
+    /**
+     * My undo context.
+     */
+    private IUndoContext undoContext;
+    
+    /**
+     * My operation history listener. By default it adds my undo context to
+     * operations that have affected my editing domain. Subclasses may override
+     * {@link #createHistoryListener()} to do something different.
+     */
+    private IOperationHistoryListener historyListener;
 
 	/**
 	 * Returns this editor's outline-page default display mode. 
@@ -394,11 +433,86 @@ public abstract class DiagramEditor
 	 */
 	public DiagramEditor() {
 		createDiagramEditDomain();
+        
+        // add my operation history listener, if I have one
+        historyListener = createHistoryListener();
+        if (historyListener != null) {
+            getOperationHistory().addOperationHistoryListener(historyListener);
+        }
 	}
+    
+    /**
+     * Gets my operation history listener. By default it adds my undo context to
+     * operations that have affected my editing domain.
+     * <P>
+     * Subclasses may override this method to return a different history
+     * listener, or to return <code>null</code> if they do not want to listen
+     * to the operation history.
+     * 
+     * @return my operation history listener
+     */
+    protected IOperationHistoryListener createHistoryListener() {
+
+        return new IOperationHistoryListener() {
+
+            public void historyNotification(final OperationHistoryEvent event) {
+
+                if (event.getEventType() == OperationHistoryEvent.DONE) {
+                    IUndoableOperation operation = event.getOperation();
+                    
+                    if (shouldAddUndoContext(operation)) {
+                        // add my undo context to populate my undo
+                        // menu
+                        operation.addContext(getUndoContext());
+                    }
+                }
+            }
+        };
+    }
+        
+    /**
+     * Answers whether or not I should add my undo context to the undoable
+     * <code>operation</code>, thereby making the operation available from my
+     * undo menu.
+     * <P>
+     * The default implementation adds my context to any operation that affected
+     * the same editing domain that has loaded the resource that contains my
+     * diagram element. Subclasses can override this method if they wish to add
+     * their context to operations for different reasons.
+     * 
+     * @param operation
+     *            the operation
+     * @return <code>true</code> if the operation should appear on my undo
+     *         menu, <code>false</code> otherwise.
+     */
+    protected boolean shouldAddUndoContext(IUndoableOperation operation) {
+        EditingDomain domain = getEditingDomain();
+
+        if (domain != null) {
+            Set affectedResources = ResourceUndoContext
+                .getAffectedResources(operation);
+
+            for (Iterator i = affectedResources.iterator(); i.hasNext();) {
+                Resource nextResource = (Resource) i.next();
+
+                ResourceSet resourceSet = nextResource.getResourceSet();
+
+                if (resourceSet != null) {
+                    TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
+                        .getEditingDomain(resourceSet);
+
+                    if (domain.equals(editingDomain)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart#getDiagramEditDomain()
-	 */
+     * @see org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart#getDiagramEditDomain()
+     */
 	public IDiagramEditDomain getDiagramEditDomain() {
 		return (IDiagramEditDomain) getEditDomain();
 	}
@@ -429,20 +543,30 @@ public abstract class DiagramEditor
 	/**
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(Class)
 	 */
-	public Object getAdapter(Class type) {		
+	public Object getAdapter(Class type) {	
 		if (type == IContentOutlinePage.class) {
 			TreeViewer viewer = new TreeViewer();
 			viewer.setRootEditPart(new DiagramRootTreeEditPart());
 			return new DiagramOutlinePage(viewer);
 		}
-		if (type == CommandManager.class)
-			return getCommandManager();
 		if (ActionManager.class == type)
 			return getActionManager();
 		if (IDiagramEditDomain.class == type)
 			return getDiagramEditDomain();
 		if (type == ZoomManager.class)
 			return getZoomManager();
+        
+        if (type == IUndoContext.class) {
+            return getUndoContext();
+        }
+        if (type == IOperationHistory.class) {
+            return getOperationHistory();
+        }
+        if (type == IEditingDomainProvider.class) {
+            return domainProvider;
+        }
+        
+        
 		return super.getAdapter(type);
 
 	}
@@ -488,6 +612,18 @@ public abstract class DiagramEditor
 			.getProperty(RulerProvider.PROPERTY_HORIZONTAL_RULER);
 		if (horzProvider != null)
 			horzProvider.uninit();
+        
+        // Dispose my GEF command stack
+        getEditDomain().getCommandStack().dispose();
+
+        // stop listening to the history
+        if (historyListener != null) {
+            getOperationHistory().removeOperationHistoryListener(
+                historyListener);
+        }
+        // dispose my undo context
+        getOperationHistory().dispose(getUndoContext(), true, true, true);
+
 		super.dispose();
 	}
 
@@ -619,17 +755,52 @@ public abstract class DiagramEditor
 	 * Creates a diagram edit domain
 	 */
 	protected void createDiagramEditDomain() {
-		setEditDomain(new DiagramEditDomain(this));
-		configureDiagramEditDomain();
+        DiagramEditDomain editDomain = new DiagramEditDomain(this);
+        editDomain.setActionManager(createActionManager());
+		setEditDomain(editDomain);
 	}
 
 	/**
-	 * Configures a diagram edit domain
-	 */
-	protected void configureDiagramEditDomain() {
-		getEditDomain().setCommandStack(
-			new DiagramCommandStack(getDiagramEditDomain()));
-	}
+     * Configures my diagram edit domain with its command stack.
+     */
+    protected void configureDiagramEditDomain() {
+
+        DefaultEditDomain editDomain = getEditDomain();
+
+        if (editDomain != null) {
+            CommandStack stack = editDomain.getCommandStack();
+
+            if (stack != null) {
+                // dispose the old stack
+                stack.dispose();
+            }
+
+            // create and assign the new stack
+            DiagramCommandStack diagramStack = new DiagramCommandStack(getDiagramEditDomain());
+            diagramStack.setOperationHistory(getOperationHistory());
+
+            // changes made on the stack can be undone from this editor
+            diagramStack.setUndoContext(getUndoContext());
+
+            editDomain.setCommandStack(diagramStack);
+        }
+    }
+    
+    /**
+     * @overridable
+     */
+    protected ActionManager createActionManager() {
+        return new ActionManager(createOperationHistory());
+    }
+    
+    /**
+     * Create my operation history.
+     * 
+     * @return my operation history
+     */
+    protected IOperationHistory createOperationHistory() {
+        return OperationHistoryFactory.getOperationHistory();
+    }
 
 	/**
 	 * @see org.eclipse.ui.part.EditorPart#setInput(IEditorInput)
@@ -642,7 +813,9 @@ public abstract class DiagramEditor
 		}
 		startListening();
 
-	}
+        // dispose the old command stack and create a new one
+        configureDiagramEditDomain();
+    }
 
 	/** 
 	 * Do nothing
@@ -725,22 +898,66 @@ public abstract class DiagramEditor
 	private RootEditPart getRootEditPart() {
 		return getGraphicalViewer().getRootEditPart();		
 	}
-	
-	/**
-	 * Convenience method to access the command manager associated with my
-	 * action manager. This command manager is used by my edit domain's 
-	 * command stack when executing commands.
-	 * 
-	 * @return the command manager
-	 */
-	protected CommandManager getCommandManager() {
-		return getActionManager().getCommandManager();
-	}
+    
+    /**
+     * Returns the operation history from my action manager.
+     * 
+     * @return the operation history
+     */
+    protected IOperationHistory getOperationHistory() {
+        return getActionManager().getOperationHistory();
+    }
+    
+    /**
+     * Gets my editing domain derived from my diagram editor input.
+     * <P>
+     * If subclasses have a known editing domain, they should override this method
+     * to return that editing domain as that will be more efficient that the
+     * generic implementation provided here.
+     * 
+     * @return my editing domain
+     */
+    protected EditingDomain getEditingDomain() {
+        return TransactionUtil.getEditingDomain(getDiagram());
+    }
+    
+    /**
+     * Gets my undo context. Lazily initializes my undo context if it has not
+     * been set.
+     * 
+     * @return my undo context
+     */
+    protected IUndoContext getUndoContext() {
+
+        if (undoContext == null) {
+            TransactionalEditingDomain domain = (TransactionalEditingDomain) getEditingDomain();
+
+            if (domain != null) {
+                undoContext = new EditingDomainUndoContext(domain);
+
+            } else {
+                undoContext = new ObjectUndoContext(this);
+            }
+        }
+        return undoContext;
+    }
+    
+    /**
+     * Sets my undo context
+     * 
+     * @param context
+     *            the undo context
+     */
+    protected void setUndoContext(IUndoContext context) {
+        this.undoContext = context;
+    }
 
 	/**
-	 * go to a specific marker
-	 * @param marker marker to use
-	 */
+     * go to a specific marker
+     * 
+     * @param marker
+     *            marker to use
+     */
 	public final void gotoMarker(IMarker marker) {
 		MarkerNavigationService.getInstance().gotoMarker(this, marker);
 	}
@@ -973,7 +1190,7 @@ public abstract class DiagramEditor
 			DiagramRuler verticalRuler = ((DiagramRootEditPart) getRootEditPart()).getVerticalRuler();
 			verticalRuler.setGuideStyle(guideStyle);
 			verticalRuler.setUnit(rulerUnits);
-			DiagramRulerProvider vertProvider = new DiagramRulerProvider(
+			DiagramRulerProvider vertProvider = new DiagramRulerProvider((TransactionalEditingDomain) getEditingDomain(),
 				verticalRuler, root.getMapMode());
 			vertProvider.init();
 			getDiagramGraphicalViewer().setProperty(
@@ -983,7 +1200,7 @@ public abstract class DiagramEditor
 			DiagramRuler horizontalRuler = ((DiagramRootEditPart) getRootEditPart()).getHorizontalRuler();
 			horizontalRuler.setGuideStyle(guideStyle);
 			horizontalRuler.setUnit(rulerUnits);
-			DiagramRulerProvider horzProvider = new DiagramRulerProvider(
+			DiagramRulerProvider horzProvider = new DiagramRulerProvider((TransactionalEditingDomain) getEditingDomain(),
 				horizontalRuler, root.getMapMode());
 			horzProvider.init();
 			getDiagramGraphicalViewer().setProperty(
@@ -1090,4 +1307,5 @@ public abstract class DiagramEditor
 	protected PreferencesHint getPreferencesHint() {
 		return new PreferencesHint(getEditorSite().getId());
 	};
+   
 }

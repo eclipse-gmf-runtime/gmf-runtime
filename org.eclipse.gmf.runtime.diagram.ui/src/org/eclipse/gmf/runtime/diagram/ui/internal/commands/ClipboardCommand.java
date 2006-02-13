@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,12 @@ import java.util.List;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -35,7 +36,7 @@ import org.eclipse.jface.util.Assert;
  * @author Vishy Ramaswamy
  * @canBeSeenBy %level1
  */
-public abstract class ClipboardCommand extends AbstractModelCommand {
+public abstract class ClipboardCommand extends AbstractTransactionalCommand {
     /**
      * String constant for the clipboard format
      */
@@ -50,21 +51,25 @@ public abstract class ClipboardCommand extends AbstractModelCommand {
 
     /**
      * Constructor for ClipboardCommand.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
      * @param viewContext The target view used as a context for the clipboard operations
      */
-    public ClipboardCommand(View viewContext) {
-        this(null, viewContext);
+    public ClipboardCommand(TransactionalEditingDomain editingDomain, View viewContext) {
+        this(editingDomain, null, viewContext);
     }
 
     /**
      * Constructor for ClipboardCommand.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
      * @param label The label for the command
      * @param viewContext The target view used as a context for the clipboard operations
      */
-    public ClipboardCommand(
+    public ClipboardCommand(TransactionalEditingDomain editingDomain, 
         String label,
         View viewContext) {
-        super(label, viewContext);
+        super(editingDomain, label, getWorkspaceFiles(viewContext));
 
         Assert.isNotNull(viewContext);
 

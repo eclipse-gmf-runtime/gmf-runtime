@@ -4,7 +4,7 @@
 <!--
 
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,30 +18,22 @@
 </head>
 <body>
 
+<P>
 Provides a set of classes for executing, undoing and redoing units of
 work, known as
-<i>Commands</i>
-. This API is an implementation of the Command design pattern. Using
-this API, application operations can be done, undone, redone and
-canceled without any dependency on UI components.
-<p>The intent of the Command design pattern is to divide the
-responsibility for performing application operations among different
-objects. The Command object encapsulates the knowledge to perform an
-operation, as well as the knowledge to undo and redo that operation. It
-is different from the object that makes the request to perform the
-operation.</p>
-
-<p>Modeling platform command implementations should subclass the {@link
-org.eclipse.gmf.runtime.common.core.command.AbstractCommand} class in
-this package. Two or more commands can be composed together into a
-single {@link
-org.eclipse.gmf.runtime.common.core.command.CompositeCommand}, which can
-be undone and redone in a single step.</p>
+<i>Commands</i>. 
+</P>
+<P>
+Extends the Eclipse undoable operations framework with the following
+behaviour:
+<UL>
+<LI> self-composing operations </LI>
+<LI> return results from operations </LI>
+<LI> file modification approval for operations </LI>
+</P>
 
 <p>Commands should be executed, undone and redone through an instance of
-the {@link org.eclipse.gmf.runtime.common.core.command.CommandManager}
-class. The command manager will maintain a history of the commands that
-it has executed that are eligible to be undone and redone.</p>
+the {@link org.eclipse.core.commands.operations.IOperationHistory}. </p>
 
 @canBeSeenBy %partners
 

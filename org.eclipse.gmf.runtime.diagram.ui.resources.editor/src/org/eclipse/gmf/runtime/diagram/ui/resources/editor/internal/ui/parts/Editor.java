@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -34,7 +35,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
@@ -304,8 +304,9 @@ public abstract class Editor
 		super.configureDiagramEditDomain();
 		DiagramEditDomain editDomain =
 			(DiagramEditDomain) getDiagramEditDomain();
-		editDomain.setActionManager(new ActionManager(CommandManager.getDefault()));
-	}
+		editDomain.setActionManager(new ActionManager(OperationHistoryFactory
+            .getOperationHistory()));
+    }
 
 	public IProject getProject() {
 		return project;

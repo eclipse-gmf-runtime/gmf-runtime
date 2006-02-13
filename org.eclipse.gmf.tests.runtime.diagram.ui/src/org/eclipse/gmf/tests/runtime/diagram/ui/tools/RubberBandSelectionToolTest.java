@@ -244,7 +244,8 @@ public class RubberBandSelectionToolTest
 			public Object run() {
 				diagramView = ViewService.createDiagram(
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
-				return null;
+				setDiagram(diagramView);
+                return null;
 			}});
 		
 		return null;

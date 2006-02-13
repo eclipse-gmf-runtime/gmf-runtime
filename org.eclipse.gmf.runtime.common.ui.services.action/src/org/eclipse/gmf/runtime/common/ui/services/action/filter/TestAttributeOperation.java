@@ -9,11 +9,12 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.common.ui.services.action.internal.filter;
+package org.eclipse.gmf.runtime.common.ui.services.action.filter;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.util.HashUtil;
+import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.IActionFilterProvider;
 
 /**
  * An operation that performs attribute tests by determining whether a specific

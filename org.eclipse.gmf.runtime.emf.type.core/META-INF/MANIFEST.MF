@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.emf.type.core,
+Export-Package: org.eclipse.gmf.runtime.emf.commands.core.edithelpers,
+ org.eclipse.gmf.runtime.emf.type.core,
  org.eclipse.gmf.runtime.emf.type.core.commands,
  org.eclipse.gmf.runtime.emf.type.core.edithelper,
  org.eclipse.gmf.runtime.emf.type.core.internal,
@@ -18,5 +19,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.gmf.runtime.common.core,
+ org.eclipse.gmf.runtime.emf.commands.core;visibility:=reexport,
  com.ibm.icu
 Eclipse-LazyStart: true

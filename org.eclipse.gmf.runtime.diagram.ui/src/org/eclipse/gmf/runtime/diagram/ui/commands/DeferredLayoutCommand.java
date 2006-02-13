@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,17 @@
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
@@ -29,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -43,7 +44,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author cmahoney
  */
 public class DeferredLayoutCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	/** the type of layout to be performed */
 	protected String layoutType;
@@ -60,19 +61,23 @@ public class DeferredLayoutCommand
 	/**
 	 * Constructor for <code>DeferredLayoutCommand</code>.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param viewAdapters
 	 *            the IAdaptables from which an IView can be retrieved
 	 * @param containerEP
 	 *            the container editpart used to get the editpart registry
 	 */
-	public DeferredLayoutCommand(List viewAdapters,
+	public DeferredLayoutCommand(TransactionalEditingDomain editingDomain, List viewAdapters,
 		IGraphicalEditPart containerEP) {
-		this(viewAdapters, containerEP, LayoutType.DEFAULT);
+		this(editingDomain, viewAdapters, containerEP, LayoutType.DEFAULT);
 	}
 
 	/**
 	 * Constructor for <code>DeferredLayoutCommand</code>.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param viewAdapters
 	 *            the IAdaptables from which an IView can be retrieved
 	 * @param containerEP
@@ -80,11 +85,12 @@ public class DeferredLayoutCommand
 	 * @param commandLayoutType
 	 *            the type of layout to be performed
 	 */
-	public DeferredLayoutCommand(List viewAdapters,
+	public DeferredLayoutCommand(TransactionalEditingDomain editingDomain, List viewAdapters,
 		IGraphicalEditPart containerEP, String commandLayoutType) {
 
-		super(DiagramUIMessages.Command_Deferred_Layout, null);
-		if (commandLayoutType != null) {
+		super(editingDomain,
+            DiagramUIMessages.Command_Deferred_Layout, null);
+        if (commandLayoutType != null) {
 			this.layoutType = commandLayoutType;
 		} else {
 			this.layoutType = LayoutType.DEFAULT;
@@ -93,10 +99,7 @@ public class DeferredLayoutCommand
 		this.containerEP = containerEP;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
+	public List getAffectedFiles() {
 		if (containerEP != null) {
 			View view = (View)containerEP.getModel();
 			if (view != null) {
@@ -105,15 +108,16 @@ public class DeferredLayoutCommand
 					: Collections.EMPTY_LIST;
 			}
 		}
-		return super.getAffectedObjects();
+		return super.getAffectedFiles();
 	}
 
 	/**
 	 * Executes a layout command with all the editparts for the view adapters.
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 
 		containerEP.refresh();
 		
@@ -134,7 +138,7 @@ public class DeferredLayoutCommand
 		}
 
 		if (editParts.isEmpty()) {
-			return newOKCommandResult();
+			return CommandResult.newOKCommandResult();
 		}
 
 		//	add an arrange command, to layout the related shapes
@@ -146,7 +150,7 @@ public class DeferredLayoutCommand
 		if (layoutCmd != null && layoutCmd.canExecute()) {
 			layoutCmd.execute();
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 	protected void cleanup() {

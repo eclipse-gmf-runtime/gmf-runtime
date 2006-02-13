@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.emf.ui.UIOperationListener;
  * Tests for Operation Listener
  * 
  * @author mgoyal
+ * @deprecated Tests obsolete UIOperationListener.
  */
 public class UIOperationListenerTestCase
 	extends BaseTestCase {

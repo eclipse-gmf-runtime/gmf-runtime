@@ -15,19 +15,19 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 
 /**
@@ -68,13 +68,16 @@ public class PromptingDeleteFromModelAction
 		boolean shouldPrompt = ((IPreferenceStore) getPreferencesHint()
 			.getPreferenceStore())
 			.getBoolean(IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_MODEL);
-		
-		DestroyElementRequest destroyRequest = new DestroyElementRequest(shouldPrompt);
-
-		return 	new EditCommandRequestWrapper(destroyRequest);
+        
+		TransactionalEditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            DestroyElementRequest destroyRequest = new DestroyElementRequest(
+                editingDomain, shouldPrompt);
+            return new EditCommandRequestWrapper(destroyRequest);
+        }
+        return null;
 	}
-	
-	
+
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
@@ -91,8 +94,8 @@ public class PromptingDeleteFromModelAction
 		setTargetRequest(null);
 		Command command = getCommand();
 		if ((command instanceof CompoundCommand)&&(((CompoundCommand)command).getChildren().length > 0)){
-			CompositeModelCommand compositeModelActionCommand = new CompositeModelCommand(
-				getCommandLabel());
+			CompositeTransactionalCommand compositeModelActionCommand = new CompositeTransactionalCommand(getEditingDomain(),
+                getCommandLabel());
 			CompoundCommand compoundCommand = (CompoundCommand)command;
 			Iterator iterator = compoundCommand.getCommands().iterator();
 			while (iterator.hasNext()){

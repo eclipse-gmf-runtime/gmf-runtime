@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -31,7 +32,7 @@ public class BringToFrontCommandTest
 	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#createCommand()
 	 */
 	protected ICommand createCommand() {
-		return new BringToFrontCommand(noteView);
+		return new BringToFrontCommand(getEditingDomain(), noteView);
 	}
 
 	/* (non-Javadoc)
@@ -41,8 +42,13 @@ public class BringToFrontCommandTest
 		assertEquals(getDiagram().getChildren().size(), 1);
 		View firstNote  = (View)getDiagram().getChildren().get(0);
 
-		ICommand zorderCommand = new BringToFrontCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringToFrontCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 	}
@@ -53,8 +59,13 @@ public class BringToFrontCommandTest
 		View firstNote  = (View)getDiagram().getChildren().get(0);
 		View secondNote = (View)getDiagram().getChildren().get(1);
 
-		ICommand zorderCommand = new BringToFrontCommand(firstNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringToFrontCommand(getEditingDomain(), firstNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), secondNote);
 		assertEquals(getDiagram().getChildren().get(1), firstNote);
@@ -68,8 +79,13 @@ public class BringToFrontCommandTest
 		View secondNote = (View)getDiagram().getChildren().get(1);
 		View thirdNote  = (View)getDiagram().getChildren().get(2);
 
-		ICommand zorderCommand = new BringToFrontCommand(secondNote);
-		zorderCommand.execute(new NullProgressMonitor());
+		ICommand zorderCommand = new BringToFrontCommand(getEditingDomain(), secondNote);
+		
+        try {
+            zorderCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failure: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
 
 		assertEquals(getDiagram().getChildren().get(0), firstNote);
 		assertEquals(getDiagram().getChildren().get(1), thirdNote);

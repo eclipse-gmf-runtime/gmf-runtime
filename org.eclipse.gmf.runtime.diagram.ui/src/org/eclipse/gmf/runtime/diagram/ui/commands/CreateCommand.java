@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,17 +11,18 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gmf.runtime.common.core.command.CMValidator;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 
@@ -35,17 +36,7 @@ import org.eclipse.jface.util.Assert;
 /*
  * @canBeSeenBy %partners
  */
-public class CreateCommand extends AbstractModelCommand {
-
-	// Create a custom validator which considers persistance.
-	private class CreateValidator extends CMValidator {
-		public boolean okToEdit(ICommand command) {
-			return ((CreateCommand) command).isPersisted() 
-			? super.okToEdit(command)
-				: true;
-
-		}
-	}
+public class CreateCommand extends AbstractTransactionalCommand {
 	
 	/** the view descriptor */
 	protected final CreateViewRequest.ViewDescriptor viewDescriptor;
@@ -54,14 +45,16 @@ public class CreateCommand extends AbstractModelCommand {
 	
 	/**
 	 * Creates a new CreateCommand
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param viewDescriptor the view descriptor associated with this command
 	 * @param containerView the view that will containe the new view
 	 */
-	public CreateCommand(
+	public CreateCommand(TransactionalEditingDomain editingDomain, 
 		CreateViewRequest.ViewDescriptor viewDescriptor,
 		View containerView) {
 
-		super(DiagramUIMessages.CreateCommand_Label,  containerView); 
+		super(editingDomain, DiagramUIMessages.CreateCommand_Label, getWorkspaceFiles(containerView)); 
 
 		Assert.isNotNull(viewDescriptor);
 		Assert.isNotNull(containerView);
@@ -70,13 +63,14 @@ public class CreateCommand extends AbstractModelCommand {
 		this.containerView = containerView;
 				
 		// make sure the return object is available even before executing/undoing/redoing
-		setResult(newOKCommandResult(viewDescriptor));
+		setResult(CommandResult.newOKCommandResult(viewDescriptor));
 	}
 
 	/**
-	 * Return the cached view descriprot.
-	 * @return view descriprot
-	 */
+     * Return the cached view descriprot.
+     * 
+     * @return view descriprot
+     */
 	protected CreateViewRequest.ViewDescriptor getViewDescriptor() {
 		return viewDescriptor;
 	}
@@ -90,11 +84,9 @@ public class CreateCommand extends AbstractModelCommand {
 		return containerView;
 	}
 
+    protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+        throws ExecutionException {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
 		View view =
 			ViewService.getInstance().createView(
 				viewDescriptor.getViewKind(),
@@ -106,13 +98,11 @@ public class CreateCommand extends AbstractModelCommand {
 				viewDescriptor.getPreferencesHint());
 		Assert.isNotNull(view, "failed to create a view"); //$NON-NLS-1$
 		viewDescriptor.setView(view);
-		return newOKCommandResult(viewDescriptor);
+        
+        return CommandResult.newOKCommandResult(viewDescriptor);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+    public boolean canExecute() {
 		return ViewService.getInstance().provides(
 			viewDescriptor.getViewKind(),
 			viewDescriptor.getElementAdapter(),
@@ -131,21 +121,11 @@ public class CreateCommand extends AbstractModelCommand {
 	public boolean isPersisted() {
 	 	return getViewDescriptor().isPersisted(); 
 	 }
-	 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getValidator()
-	 */
-	public CMValidator getValidator() {
-		return new CreateValidator();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
-		if (isPersisted())
-			return super.getAffectedObjects();
-		else
-			return Collections.EMPTY_LIST;
-	}
+    
+    public List getAffectedFiles() {
+        if (isPersisted())
+            return super.getAffectedFiles();
+        else
+            return Collections.EMPTY_LIST;
+    }
 }

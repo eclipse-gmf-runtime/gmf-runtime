@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,14 +14,15 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPartViewer;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Alignment;
 import org.eclipse.gmf.runtime.notation.Guide;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -31,7 +32,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * This command is used to change a guide's attached part
  * @author Jody Schofield
  */
-public class ChangeGuideCommand extends AbstractModelCommand {
+public class ChangeGuideCommand extends AbstractTransactionalCommand {
 
 	private EditPartViewer editPartViewer;
 	private IAdaptable adapterPart = null;
@@ -42,20 +43,35 @@ public class ChangeGuideCommand extends AbstractModelCommand {
 
 	private boolean horizontal;
 
-	public ChangeGuideCommand(EditPartViewer viewer, IAdaptable part, boolean horizontalGuide) {
-		super(null, null);
+    /**
+     * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
+     * @param viewer
+     * @param part
+     * @param horizontalGuide
+     */
+	public ChangeGuideCommand(TransactionalEditingDomain editingDomain, EditPartViewer viewer, IAdaptable part, boolean horizontalGuide) {
+		super(editingDomain, null, null);
 		editPartViewer = viewer;
 		adapterPart = part;
 		horizontal = horizontalGuide;
 	}
 
-	public ChangeGuideCommand(View part, boolean horizontalGuide) {
-		super(null, null);
+    /**
+     * @param editingDomain
+     *            the editing domain through which model changes are made
+     * @param part
+     * @param horizontalGuide
+     */
+	public ChangeGuideCommand(TransactionalEditingDomain editingDomain, View part, boolean horizontalGuide) {
+		super(editingDomain, null, null);
 		attachedPart = part;
 		horizontal = horizontalGuide;
 	}
 
-	public CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
 
 		// Detach the part from it's old guide
 		Guide theOldGuide = horizontal ? DiagramGuide.getInstance().getHorizontalGuide(attachedPart) :
@@ -76,7 +92,7 @@ public class ChangeGuideCommand extends AbstractModelCommand {
 		theNewGuide    = null;
 		theNewAlign    = null;
 		
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 	public void setNewGuide(Guide guide, int alignment) {

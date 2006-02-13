@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,15 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 
 /**
  * Request to set the value of a structural feature in a model element.
  * 
  * @author ldamus
  */
-public class SetRequest
-	extends AbstractEditCommandRequest {
+public class SetRequest extends AbstractEditCommandRequest {
 
 	/**
 	 * The structural feature whose value will be set.
@@ -44,6 +45,8 @@ public class SetRequest
 	 * Constructs a new request to set the value of a structural feature in a
 	 * model element.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param elementToEdit
 	 *            the owner of the structural feature
 	 * @param feature
@@ -51,14 +54,32 @@ public class SetRequest
 	 * @param value
 	 *            the new value
 	 */
-	public SetRequest(EObject elementToEdit, EStructuralFeature feature,
-			Object value) {
+	public SetRequest(TransactionalEditingDomain editingDomain, EObject elementToEdit,
+			EStructuralFeature feature, Object value) {
 
-		super();
+		super(editingDomain);
 		this.elementToEdit = elementToEdit;
 		this.feature = feature;
 		this.value = value;
 	}
+    
+    /**
+     * Constructs a new request to set the value of a structural feature in a
+     * model element. The editing domain will be derived from the
+     * <code>elementToEdit</code>.
+     * 
+     * @param elementToEdit
+     *            the owner of the structural feature
+     * @param feature
+     *            the structural feature whose value is to be set
+     * @param value
+     *            the new value
+     */
+    public SetRequest(EObject elementToEdit,
+            EStructuralFeature feature, Object value) {
+
+        this(TransactionUtil.getEditingDomain(elementToEdit), elementToEdit, feature, value);
+    }
 
 	/**
 	 * Gets the structural feature.

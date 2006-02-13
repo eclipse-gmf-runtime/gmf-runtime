@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.common.ui.internal;
 
 import org.eclipse.gmf.runtime.common.core.command.CMValidator;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.ui.util.UIModificationValidator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -62,7 +63,14 @@ public class CommonUIPlugin
 	public void start(BundleContext context)
 		throws Exception {
 		super.start(context);
+		
+		// TODO remove when CMValidator is removed
 		CMValidator.setValidator(new UIModificationValidator());
+		
+		// Make sure validateEdit for resources affected by GMF operations is
+		// done with UI context.
+		UIModificationValidator uiValidator = new UIModificationValidator();
+		FileModificationValidator.setModificationValidator(uiValidator);
 	}
 
 }

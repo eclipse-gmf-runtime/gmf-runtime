@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -124,16 +125,17 @@ public class ComponentEditPolicy
 	protected Command createDeleteViewCommand(GroupRequest deleteRequest) {
 		CompositeCommand cc = new CompositeCommand(null);
 
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
 		List toDel = deleteRequest.getEditParts();
 		if (toDel == null || toDel.isEmpty()) {
-			cc.compose(new DeleteCommand((View)getHost().getModel()));
+			cc.compose(new DeleteCommand(editingDomain, (View)getHost().getModel()));
 		} else {
 			for (int i = 0; i < toDel.size(); i++) {
 				IGraphicalEditPart gep = (IGraphicalEditPart) toDel.get(i);
-				cc.compose(new DeleteCommand((View)gep.getModel()));
+				cc.compose(new DeleteCommand(editingDomain, (View)gep.getModel()));
 			}
 		}
-		return new EtoolsProxyCommand(cc.unwrap());
+		return new EtoolsProxyCommand(cc.reduce());
 	}
 
 	/** 
@@ -144,8 +146,10 @@ public class ComponentEditPolicy
 	 * @return Command
 	 */
 	protected Command createDeleteSemanticCommand(GroupRequest deleteRequest) {
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+        
 		EditCommandRequestWrapper editCommandRequest =
-			new EditCommandRequestWrapper(new DestroyElementRequest(false));
+			new EditCommandRequestWrapper(new DestroyElementRequest(editingDomain, false));
 		Command semanticCmd = getHost().getCommand(editCommandRequest);
 		if (semanticCmd != null && semanticCmd.canExecute()) {
 			CompoundCommand cc = new CompoundCommand();
@@ -238,8 +242,10 @@ public class ComponentEditPolicy
 			
 			MObjectType theMType = EObjectUtil.getType(hostElement);
 			if (theMType.equals(MObjectType.MODELING)) {
+                TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+                
 				CreateElementRequest theReq =
-						new CreateElementRequest(hostElement, insertEP.getElementType());
+						new CreateElementRequest(editingDomain, hostElement, insertEP.getElementType());
 					
 				EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(theReq);
 				Command cmd =

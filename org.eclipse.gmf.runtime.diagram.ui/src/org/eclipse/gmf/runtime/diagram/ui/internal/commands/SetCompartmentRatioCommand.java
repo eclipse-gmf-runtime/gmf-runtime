@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,18 +8,15 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-/*
- * Created on Sep 17, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -46,17 +43,19 @@ public class SetCompartmentRatioCommand extends SetPropertyCommand {
 
 	/**
 	 * constructor
+     * @param editingDomain the editing domain
 	 * @param viewAdapter adapter that can adapt to <code>View.class</code>
 	 * @param newValue the new value of the ratio
 	 */
-	public SetCompartmentRatioCommand(IAdaptable viewAdapter, double newValue) {
-		super(viewAdapter, Properties.ID_RATIO, Properties.ID_RATIO, new Double(newValue));
+	public SetCompartmentRatioCommand(TransactionalEditingDomain editingDomain,
+            IAdaptable viewAdapter, double newValue) {
+		super(editingDomain, viewAdapter, Properties.ID_RATIO, Properties.ID_RATIO, new Double(newValue));
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
 		View view = (View)getViewAdapter().getAdapter(View.class);
 		if (view != null) {
 			Node node = (Node)view;
@@ -78,7 +77,7 @@ public class SetCompartmentRatioCommand extends SetPropertyCommand {
 				
 			}
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 }

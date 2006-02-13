@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateComponentElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateRelationshipElementRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.DestroyElementRequest;
@@ -27,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.ReorientR
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.ReorientRelationshipRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SemanticRequest;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SemanticRequestTypes;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.AbstractEditCommandRequest;
@@ -63,7 +66,8 @@ public class SemanticRequestTranslator {
 
 		private SemanticRequest semanticRequest;
 
-		public RequestWrapper(SemanticRequest semanticRequest) {
+		public RequestWrapper(TransactionalEditingDomain editingDomain, SemanticRequest semanticRequest) {
+			super(editingDomain);
 			this.semanticRequest = semanticRequest;
 		}
 
@@ -87,8 +91,9 @@ public class SemanticRequestTranslator {
 
 		public CreateElementRequestWrapper(
 				org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.CreateElementRequest semanticRequest) {
-			super(semanticRequest
-				.getElementType());
+			super(TransactionUtil
+                .getEditingDomain(semanticRequest.getContext()),
+                semanticRequest.getElementType());
 			this.semanticRequest = semanticRequest;
 		}
 
@@ -112,8 +117,9 @@ public class SemanticRequestTranslator {
 
 		public CreateComponentElementRequestWrapper(
 				CreateComponentElementRequest semanticRequest) {
-			super(semanticRequest.getContextObject(), semanticRequest
-				.getElementType());
+			super(TransactionUtil.getEditingDomain(semanticRequest
+                .getContextObject()), semanticRequest.getContextObject(),
+                semanticRequest.getElementType());
 			this.semanticRequest = semanticRequest;
 		}
 
@@ -144,9 +150,9 @@ public class SemanticRequestTranslator {
 
 		private CreateRelationshipElementRequest semanticRequest;
 
-		public CreateRelationshipElementRequestWrapper(
+		public CreateRelationshipElementRequestWrapper(TransactionalEditingDomain editingDomain,
 				CreateRelationshipElementRequest semanticRequest) {
-			super(null, null, null, semanticRequest.getElementType());
+			super(editingDomain, null, null, null, semanticRequest.getElementType());
 			this.semanticRequest = semanticRequest;
 		}
 
@@ -229,7 +235,7 @@ public class SemanticRequestTranslator {
 		} else {
 			// This is a custom request subclass not defined in the diagram domain.
 			// Return a wrapper for the request.
-			result = new RequestWrapper(semanticRequest);
+			result = new RequestWrapper(MEditingDomain.INSTANCE, semanticRequest);
 		}
 		result.addParameters(semanticRequest.getParameters());
 		return result;
@@ -249,7 +255,8 @@ public class SemanticRequestTranslator {
 		} else if (semanticRequest instanceof CreateRelationshipElementRequest) {
 			// Return a wrapper for the request
 			return new CreateRelationshipElementRequestWrapper(
-				(CreateRelationshipElementRequest) semanticRequest);
+					(TransactionalEditingDomain) MEditingDomain.INSTANCE,
+					(CreateRelationshipElementRequest) semanticRequest);
 
 		} else if (semanticRequest instanceof CreateComponentElementRequest) {
 			// Return a wrapper for the request
@@ -266,8 +273,8 @@ public class SemanticRequestTranslator {
 
 		EObject container = semanticRequest.getContextObject();
 		IElementType elementType = semanticRequest.getElementType();
-		CreateElementRequest result = new CreateElementRequest(container,
-			elementType);
+		CreateElementRequest result = new CreateElementRequest(TransactionUtil
+            .getEditingDomain(container), container, elementType);
 
 		return result;
 	}
@@ -280,7 +287,7 @@ public class SemanticRequestTranslator {
 		IElementType elementType = semanticRequest.getElementType();
 
 		CreateRelationshipRequest createRelationshipRequest = new CreateRelationshipRequest(
-			source, target, elementType);
+			TransactionUtil.getEditingDomain(source), source, target, elementType);
 		createRelationshipRequest.setPrompt(!semanticRequest.isUISupressed());
 		return createRelationshipRequest;
 	}
@@ -300,14 +307,16 @@ public class SemanticRequestTranslator {
 		EObject referenceObject = semanticRequest.getReferenceObject();
 
 		if (referenceOwner != null && referenceObject != null) {
-			request = new DestroyReferenceRequest(referenceOwner, null,
-				referenceObject, confirmationRequired);
+			request = new DestroyReferenceRequest(TransactionUtil
+                .getEditingDomain(referenceOwner), referenceOwner, null,
+                referenceObject, confirmationRequired);
 
 		} else {
 			EObject elementToDestroy = semanticRequest.getObject();
-			request = new org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest(
-				elementToDestroy, confirmationRequired);
-		}
+            request = new org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest(
+                TransactionUtil.getEditingDomain(referenceOwner),
+                elementToDestroy, confirmationRequired);
+        }
 
 		return request;
 	}
@@ -317,9 +326,15 @@ public class SemanticRequestTranslator {
 
 		List elementsToDuplicate = semanticRequest.getElementsToBeDuplicated();
 		Map duplicatedElementsMap = semanticRequest.getAllDuplicatedElementsMap();
+        
+        TransactionalEditingDomain editingDomain = null;
+        if (elementsToDuplicate != null && elementsToDuplicate.size() > 0) {
+            editingDomain = TransactionUtil
+                .getEditingDomain(elementsToDuplicate.get(0));
+        }
 
 		org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest result = new org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest(
-			elementsToDuplicate);
+            editingDomain, elementsToDuplicate);
 		result.setAllDuplicatedElementsMap(duplicatedElementsMap);
 		return result;
 	}
@@ -329,8 +344,9 @@ public class SemanticRequestTranslator {
 		EObject targetContainer = semanticRequest.getNewContainerElement();
 		EObject elementToMove = semanticRequest.getMoveElement();
 
-		MoveRequest request = new MoveRequest(targetContainer, elementToMove);
-		return request;
+		MoveRequest request = new MoveRequest(TransactionUtil
+            .getEditingDomain(targetContainer), targetContainer, elementToMove);
+        return request;
 	}
 
 	public static org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipRequest translate(
@@ -348,7 +364,8 @@ public class SemanticRequestTranslator {
 		}
 
 		org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipRequest request = new org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipRequest(
-			relationship, newRelationshipEnd, oldRelationshiEnd, direction);
+            TransactionUtil.getEditingDomain(relationship), relationship,
+            newRelationshipEnd, oldRelationshiEnd, direction);
 
 		return request;
 	}
@@ -367,7 +384,8 @@ public class SemanticRequestTranslator {
 		}
 
 		org.eclipse.gmf.runtime.emf.type.core.requests.ReorientReferenceRelationshipRequest request = new org.eclipse.gmf.runtime.emf.type.core.requests.ReorientReferenceRelationshipRequest(
-			referenceOwner, newRelationshipEnd, oldRelationshiEnd, direction);
+            TransactionUtil.getEditingDomain(referenceOwner), referenceOwner,
+            newRelationshipEnd, oldRelationshiEnd, direction);
 
 		return request;
 	}

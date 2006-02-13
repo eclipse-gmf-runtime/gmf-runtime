@@ -115,7 +115,7 @@ public class SizeHeightAction extends DiagramAction {
 
 			doResizeCmd.add( 
 				new EtoolsProxyCommand(
-					new SetBoundsCommand( "", new EObjectAdapter(resizeView), size ) ) ); //$NON-NLS-1$
+					new SetBoundsCommand(toResize.getEditingDomain(), "", new EObjectAdapter(resizeView), size ) ) ); //$NON-NLS-1$
 		}
 
 		return doResizeCmd.unwrap();

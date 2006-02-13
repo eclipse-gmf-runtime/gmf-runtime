@@ -21,8 +21,8 @@ Require-Bundle: org.eclipse.ui.views;visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui.action;visibility:=reexport,
  org.eclipse.gmf.runtime.common.core;visibility:=reexport,
- org.eclipse.gmf.runtime.emf.core.compatibility;visibility:=reexport,
  org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui.services;visibility:=reexport
+ org.eclipse.gmf.runtime.common.ui.services;visibility:=reexport,
+ org.eclipse.gmf.runtime.emf.type.core;visibility:=reexport
 Eclipse-LazyStart: true

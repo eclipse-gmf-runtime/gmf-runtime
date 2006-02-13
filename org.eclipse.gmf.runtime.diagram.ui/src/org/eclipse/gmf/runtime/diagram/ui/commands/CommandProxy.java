@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,84 +11,80 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.jface.util.Assert;
 
 /**
+ * {@link ICommand} that delegates to a GEF {@link Command}.
+ * 
  * @author sshaw
- *
- * An Xtools Command Wrapper for an Etools Command
  */
-public class CommandProxy extends AbstractCommand {
+public class CommandProxy
+    extends AbstractCommand {
 
-	/** The wrapped command */
-	private Command command;
-	
-	/**
-	 * Method CommandProxy.
-	 * @param command
-	 */
-	public CommandProxy(Command command) {
-		super(command.getLabel());
-		Assert.isNotNull(command);
-		this.command = command;
-	}
+    /** The wrapped command */
+    private Command command;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		command.execute();
-		return newOKCommandResult();
-	}
-	 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-	 */
-	protected CommandResult doRedo() {
-		command.redo();
-		return newOKCommandResult();
-	}
+    /**
+     * Method CommandProxy.
+     * 
+     * @param command
+     */
+    public CommandProxy(Command command) {
+        super(command.getLabel(), null);
+        Assert.isNotNull(command);
+        this.command = command;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-	 */
-	protected CommandResult doUndo() {
-		command.undo();
-		return newOKCommandResult();
-	}
+    protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 
-	/**
-	 * Returns the wrapped command.
-	 * @return Command
-	 */
-	public Command getCommand() {
-		return command;
-	}
+        command.execute();
+        return CommandResult.newOKCommandResult();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
-	 */
-	public boolean isUndoable() {
-		return command.canUndo();
-	}
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
-		return command.canUndo();
-	}
+        command.redo();
+        return CommandResult.newOKCommandResult();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-	 */
-	public boolean isExecutable() {
-		return command.canExecute();
-	}
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+
+        command.undo();
+        return CommandResult.newOKCommandResult();
+    }
+
+    /**
+     * Returns the wrapped command.
+     * 
+     * @return Command
+     */
+    public Command getCommand() {
+        return command;
+    }
+
+    public boolean canUndo() {
+        return command.canUndo();
+    }
+
+    public boolean canRedo() {
+        return command.canUndo();
+    }
+
+    public boolean canExecute() {
+        return command.canExecute();
+    }
 
 }

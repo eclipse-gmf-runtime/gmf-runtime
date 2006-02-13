@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,8 @@ public class NullElementTypeAdvice
 
 	protected ICommand getBeforeCreateCommand(CreateElementRequest request) {
 		EObject manager = (EObject) request.getParameter("MANAGER"); //$NON-NLS-1$
-		SetRequest setRequest = new SetRequest(request.getContainer(),
+        
+		SetRequest setRequest = new SetRequest(request.getEditingDomain(), request.getContainer(),
 			EmployeePackage.eINSTANCE.getDepartment_Manager(), manager);
 		return new SetValueCommand(setRequest);
 	}

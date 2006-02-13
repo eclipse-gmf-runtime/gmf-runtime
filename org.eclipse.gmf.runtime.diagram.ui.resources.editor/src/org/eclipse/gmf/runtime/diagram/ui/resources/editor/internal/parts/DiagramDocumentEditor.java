@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
@@ -22,8 +24,8 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
@@ -41,6 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProv
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
+import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -94,6 +97,7 @@ public class DiagramDocumentEditor
 	public DiagramDocumentEditor(MEditingDomain domain, boolean hasFlyoutPalette) {
 		super(hasFlyoutPalette);
 		fEditingDomain = domain;
+        setUndoContext(new EditingDomainUndoContext(domain));
 	}
 
 	/**
@@ -254,15 +258,17 @@ public class DiagramDocumentEditor
 	 * @overridable
 	 */
 	protected ActionManager createActionManager() {
-		return new ActionManager(createCommandManager());
+		return new ActionManager(createOperationHistory());
 	}
-	
-	/**
-	 * @overridable
-	 */
-	protected CommandManager createCommandManager() {
-		return CommandManager.getDefault();
-	}
+    
+    /**
+     * Create my operation history.
+     * 
+     * @return my operation history
+     */
+    protected IOperationHistory createOperationHistory() {
+        return OperationHistoryFactory.getOperationHistory();
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette#getDefaultPaletteContent()
@@ -1447,4 +1453,9 @@ public class DiagramDocumentEditor
 			throw new RuntimeException(new CoreException(status));
 		super.createPartControl(parent);
 	}
+    
+    // Documentation copied from superclass
+    public EditingDomain getEditingDomain() {
+        return fEditingDomain;
+    }
 }

@@ -196,8 +196,10 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			IElementType typeWire = ElementTypeRegistry.getInstance().getType("logic.wire"); //$NON-NLS-1$
 			IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
 			
-			CreateRelationshipRequest crr = new CreateRelationshipRequest(term1, term2, typeWire);
-			ICommand createWire = typeCircuit.getEditHelper().getEditCommand(crr);
+			CreateRelationshipRequest crr = new CreateRelationshipRequest(
+                getCanonicalTestFixture().getEditingDomain(), term1, term2,
+                typeWire);
+            ICommand createWire = typeCircuit.getEditHelper().getEditCommand(crr);
 			_testFixture.execute(createWire);
 			flushEventQueue();
 			
@@ -240,8 +242,9 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			flushEventQueue();
 			assertEquals( "Unexpected LED count.", 1, logicCompartment.getChildren().size() );//$NON-NLS-1$
 			
-			MoveRequest mr = new MoveRequest(circuit2, movingLED);
-			IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
+			MoveRequest mr = new MoveRequest(getTestFixture()
+                .getEditingDomain(), circuit2, movingLED);
+            IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
 			ICommand reparentCmd = typeCircuit.getEditHelper().getEditCommand(mr);
 			fixture.execute(reparentCmd);
 			flushEventQueue();
@@ -249,8 +252,9 @@ public class LogicCanonicalTests extends AbstractTestBase {
 			assertTrue( "unexpected LED", logicCompartment.getChildren().isEmpty() );//$NON-NLS-1$
 			assertEquals( "Unexpected LED count.", 1, logicCompartment2.getChildren().size() );//$NON-NLS-1$
 			
-			mr = new MoveRequest(circuit1, movingLED);
-			reparentCmd = typeCircuit.getEditHelper().getEditCommand(mr);
+			mr = new MoveRequest(getTestFixture().getEditingDomain(), circuit1,
+                movingLED);
+            reparentCmd = typeCircuit.getEditHelper().getEditCommand(mr);
 			fixture.execute(reparentCmd);
 			flushEventQueue();
 			

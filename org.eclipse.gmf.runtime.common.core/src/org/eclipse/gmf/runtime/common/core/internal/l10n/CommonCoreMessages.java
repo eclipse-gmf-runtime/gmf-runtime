@@ -24,6 +24,15 @@ public final class CommonCoreMessages extends NLS {
 	public static String XToolsPlugin__ERROR__shutdownErrorMessage;
 	public static String AbstractCommand__INFO__cancelOperation;
 
+    public static String workspaceCommandInterrupted;
+    public static String workspaceCommandFailed;
+	public static String executeRecoveryFailed;
+	public static String cannotUndoExecuted;
+	public static String undoRecoveryFailed;
+	public static String cannotRedo;
+	public static String redoRecoveryFailed;
+	public static String cannotUndo;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CommonCoreMessages.class);
 	}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.properties.sections;
 
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
+import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.gmf.runtime.emf.ui.properties.sections.UndoableModelPropertySheetEntry;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -24,11 +28,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.ui.properties.sections.UndoableModelPropertySheetEntry;
 
 /**
  * The advanced property section displayed the "original" tabular property sheet
@@ -43,7 +42,6 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
      * the property sheet page for this section
      */
     protected PropertySheetPage page;
-
   
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
@@ -67,8 +65,10 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
         }
 
         page = new PropertySheetPage();
+        
         UndoableModelPropertySheetEntry root = new UndoableModelPropertySheetEntry(
-                CommandManager.getDefault());
+            OperationHistoryFactory.getOperationHistory());
+        
         root.setPropertySourceProvider(getPropertySourceProvider());
         page.setRootEntry(root);
 

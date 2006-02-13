@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,12 +40,12 @@ import org.eclipse.ui.part.FileEditorInput;
 public class CanonicalTestFixture extends LogicTestFixture {
 
 	public void destroy(EObject eObject) {
-		execute(new DestroyEObjectCommand(StringStatics.BLANK, eObject));
+		execute(new DestroyEObjectCommand(getEditingDomain(), StringStatics.BLANK, eObject));
 	}
 
 	/** Sets the <tt>COLLAPSED</tt> property value. */
 	public void setCollapsed(IResizableCompartmentEditPart rep, boolean collapse) {
-		SetPropertyCommand spc = new SetPropertyCommand(new EObjectAdapter(
+		SetPropertyCommand spc = new SetPropertyCommand(getEditingDomain(), new EObjectAdapter(
 				(View) rep.getModel()), Properties.ID_COLLAPSED,
 				Properties.ID_COLLAPSED, Boolean.valueOf(collapse));
 		execute(spc);
@@ -55,7 +55,7 @@ public class CanonicalTestFixture extends LogicTestFixture {
 
 	/** Sets the <tt>IS_VISIBLE</tt> property value. */
 	public void setVisible(IGraphicalEditPart gep, boolean visible) {
-		SetPropertyCommand spc = new SetPropertyCommand(new EObjectAdapter(
+		SetPropertyCommand spc = new SetPropertyCommand(getEditingDomain(), new EObjectAdapter(
 				(View) gep.getModel()), Properties.ID_ISVISIBLE,
 				Properties.ID_ISVISIBLE, Boolean.valueOf(visible));
 		execute(spc);
@@ -65,7 +65,7 @@ public class CanonicalTestFixture extends LogicTestFixture {
 	
 	/** Sets the <tt>IS_VISIBLE</tt> property value. */
 	public void setVisible(View view, boolean visible) {
-		SetPropertyCommand spc = new SetPropertyCommand(new EObjectAdapter(
+		SetPropertyCommand spc = new SetPropertyCommand(getEditingDomain(), new EObjectAdapter(
 				view), Properties.ID_ISVISIBLE,
 				Properties.ID_ISVISIBLE, Boolean.valueOf(visible));
 		execute(spc);
@@ -75,7 +75,7 @@ public class CanonicalTestFixture extends LogicTestFixture {
 
 	/** Sets the <tt>ID_ISCANONICAL</tt> property value. */
 	public void enableCanonical(IGraphicalEditPart gep, boolean enabled) {
-		SetPropertyCommand spc = new SetPropertyCommand(new EObjectAdapter(
+		SetPropertyCommand spc = new SetPropertyCommand(getEditingDomain(), new EObjectAdapter(
 				(View) gep.getModel()), Properties.ID_ISCANONICAL,
 				Properties.ID_ISCANONICAL, Boolean.valueOf(enabled));
 		execute(spc);

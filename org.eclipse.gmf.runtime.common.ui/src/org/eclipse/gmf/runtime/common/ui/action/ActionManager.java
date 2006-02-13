@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandManager;
@@ -52,11 +54,8 @@ public class ActionManager {
 	 * The default action manager.
 	 */
 	private static ActionManager actionManager = null;
-
-	/**
-	 * The command manager with which this action manager is associated.
-	 */
-	private final CommandManager commandManager;
+    
+    private final IOperationHistory operationHistory;
 
 	/**
 	 * The last action that was run.
@@ -68,18 +67,27 @@ public class ActionManager {
 	 */
 	private final List listeners =
 		Collections.synchronizedList(new ArrayList());
+    
+    /**
+     * Intializes me with an operation history.
+     * 
+     * @param operationHistory The operation history for this action manager.
+     */
+    public ActionManager(IOperationHistory operationHistory) {
+        super();
 
-	/**
+        assert null != operationHistory;
+        this.operationHistory = operationHistory;
+    }
+    	
+   	/**
 	 * Constructs a new action manager for the specified command manager.
 	 * 
 	 * @param commandManager The command manager for this action manager.
+     * @deprecated Use {@link #ActionManager(IOperationHistory)} instead.
 	 */
 	public ActionManager(CommandManager commandManager) {
-		super();
-
-		assert null != commandManager;
-
-		this.commandManager = commandManager;
+		this(OperationHistoryFactory.getOperationHistory());
 	}
 
 	/**
@@ -89,21 +97,31 @@ public class ActionManager {
 	 */
 	public static ActionManager getDefault() {
 		if (null == actionManager) {
-			actionManager = new ActionManager(CommandManager.getDefault());
+			actionManager = new ActionManager(OperationHistoryFactory.getOperationHistory());
 		}
 
 		return actionManager;
 	}
+    
+    /**
+     * Gets my operation history.
+     * 
+     * @return my operation history
+     */
+    public final IOperationHistory getOperationHistory() {
+        return operationHistory;
+    }
 
 	/**
 	 * Retrieves the value of the <code>commandManager</code> instance variable.
 	 * 
 	 * @return The value of the <code>commandManager</code> instance variable.
+     * @deprecated Use {@link #getOperationHistory()} instead.
 	 */
 	public final CommandManager getCommandManager() {
-		return commandManager;
+		return CommandManager.getDefault();
 	}
-
+	
 	/**
 	 * Retrieves the value of the <code>action</code> instance variable.
 	 * 

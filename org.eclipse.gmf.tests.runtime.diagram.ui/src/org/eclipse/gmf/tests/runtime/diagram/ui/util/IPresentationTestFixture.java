@@ -13,6 +13,7 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.CommandStack;
 
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -113,5 +114,13 @@ public interface IPresentationTestFixture
 	 * @return the preferences hint
 	 */
 	public PreferencesHint getPreferencesHint();
+    
+    /**
+     * Gets the transactional editing domain through which model changes will be
+     * made.
+     * 
+     * @return the editing domain
+     */
+    public TransactionalEditingDomain getEditingDomain();
 
 }

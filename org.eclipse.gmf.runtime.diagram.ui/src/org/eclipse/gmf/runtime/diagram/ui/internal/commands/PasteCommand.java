@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -60,6 +63,8 @@ public final class PasteCommand extends ClipboardCommand {
 
     /**
      * Constructor for PasteCommand.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
      * @param label
      * @param viewContext
      * @param data
@@ -67,11 +72,11 @@ public final class PasteCommand extends ClipboardCommand {
 	 * 			the <code>IMapMode</code> that is used to convert the layout constraint
 	 * 			and calculate the offset in logical coordinates
      */
-    public PasteCommand(
+    public PasteCommand(TransactionalEditingDomain editingDomain, 
         String label,
         View viewContext,
         ICustomData[] data, IMapMode mm) {
-        super(label, viewContext);
+        super(editingDomain, label, viewContext);
 
         Assert.isNotNull(data);
         this.data = data;
@@ -79,7 +84,9 @@ public final class PasteCommand extends ClipboardCommand {
         this.mm = mm;
     }
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
+
 	    /* Paste on the target */
 	    if (data != null && data.length > 0) {
 	        List allViews = new ArrayList();
@@ -91,9 +98,9 @@ public final class PasteCommand extends ClipboardCommand {
 	            List views = pasteFromString(getViewContext(),xml);
 	            allViews.addAll(views);
 	        }
-	        return newOKCommandResult(allViews);
+	        return CommandResult.newOKCommandResult(allViews);
 	    }
-	    return newOKCommandResult();
+	    return CommandResult.newOKCommandResult();
 	}
 	
 	/**

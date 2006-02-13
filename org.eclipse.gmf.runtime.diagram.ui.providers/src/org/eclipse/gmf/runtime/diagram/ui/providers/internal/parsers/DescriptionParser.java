@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.internal.parsers;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
@@ -69,8 +71,20 @@ public class DescriptionParser implements IParser {
 		IAdaptable adapter,
 		String newString,
 		int flags) {
-		return new SetPropertyCommand(adapter, Properties.ID_DESCRIPTION, ViewType.TEXT, newString);
-	}
+        
+        final View view = (View) adapter.getAdapter(View.class);
+        
+        if (view != null) {
+            TransactionalEditingDomain domain = TransactionUtil
+            .getEditingDomain(view);
+            
+            if (domain != null) {
+                return new SetPropertyCommand(domain, adapter,
+                    Properties.ID_DESCRIPTION, ViewType.TEXT, newString);
+            }
+        }
+        return null;
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.services.parser.IParser#getPrintString(org.eclipse.core.runtime.IAdaptable, int)

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,45 @@
 package org.eclipse.gmf.runtime.diagram.ui.properties.sections;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
+import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCollapser;
+import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
+import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.core.edit.DemuxingMListener;
+import org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener;
+import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
+import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
+import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.graphics.GC;
@@ -29,29 +59,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCollapser;
-import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
-import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
-import org.eclipse.gmf.runtime.emf.core.edit.DemuxingMListener;
-import org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener;
-import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 
 /**
  * An abstract implementation of a section in a tab in the tabbed property sheet
@@ -263,17 +270,30 @@ public abstract class AbstractModelerPropertySection
 			return null;
 
 		bIsCommandInProgress = true;
+        
+        CompositeCommand command = new CompositeCommand(actionName, commands);
+        IOperationHistory history = OperationHistoryFactory.getOperationHistory();
+       
+        try {
+            IStatus status = history.execute(command,
+                new NullProgressMonitor(), null);
 
-		CompositeCommand compCmd = new CompositeCommand(actionName, commands);
+            if (status.getCode() == DiagramPropertiesStatusCodes.CANCELLED) {
+                refresh();
+            }
 
-		CommandResult result = CommandManager.getDefault().execute(compCmd);
-
-		if (result.getStatus().getCode() == DiagramPropertiesStatusCodes.CANCELLED)
-			refresh();
+        } catch (ExecutionException e) {
+            Trace.catching(DiagramPropertiesPlugin.getDefault(),
+                DiagramPropertiesDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "executeAsCompositeCommand", e); //$NON-NLS-1$
+            Log.error(DiagramPropertiesPlugin.getDefault(),
+                DiagramPropertiesStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                    .getLocalizedMessage(), e);
+        }
 
 		bIsCommandInProgress = false;
 
-		return result;
+		return command.getCommandResult();
 
 	}
 
@@ -557,26 +577,46 @@ public abstract class AbstractModelerPropertySection
 	protected ICommand createCommand(String name, EObject res,
 			final Runnable runnable) {
 
-		return createCommandInternal(name, res, runnable);
+		return createCommandInternal(name, res.eResource(), runnable);
 	}
 
 	/**
 	 * @return Returns a command
 	 */
-	private ICommand createCommandInternal(String name, Object res,
-			final Runnable runnable) {
+	private ICommand createCommandInternal(String name, Resource res,
+            final Runnable runnable) {
 
-		ICommand command = new AbstractModelCommand(name, res) {
+        ICommand command = new AbstractTransactionalCommand(getEditingDomain(), name,
+            Collections.singletonList(WorkspaceSynchronizer.getFile(res))) {
 
-			protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-				runnable.run();
+            protected CommandResult doExecuteWithResult(
+                    IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
 
-				return newOKCommandResult();
-			}
-		};
+                runnable.run();
 
-		return command;
-	}
+                return CommandResult.newOKCommandResult();
+            }
+        };
+
+        return command;
+    }
+    
+    /**
+     * Gets the editing domain from my EObject input.
+     * 
+     * @return my editing domain
+     */
+    protected TransactionalEditingDomain getEditingDomain() {
+
+        EObject eObjectInput = getEObject();
+
+        if (eObjectInput != null) {
+            return TransactionUtil.getEditingDomain(eObjectInput);
+        }
+
+        return null;
+    }
 
 	
 	/* (non-Javadoc)

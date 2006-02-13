@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.Connection;
@@ -28,6 +29,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
@@ -55,7 +57,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPart
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -186,8 +188,9 @@ public class RadialProvider
 			cc.add(cmd);
 		
 		// position the entire radial circle
-		OffsetRadialPartsCommand orpc = new OffsetRadialPartsCommand(parts); 
-		cmd = new EtoolsProxyCommand(orpc);
+		OffsetRadialPartsCommand orpc = new OffsetRadialPartsCommand(
+            rootEditPart.getEditingDomain(), parts);
+        cmd = new EtoolsProxyCommand(orpc);
 		if (cmd != null)
 			cc.add(cmd);
 		
@@ -199,7 +202,7 @@ public class RadialProvider
 	 *
 	 * Command to update the entire position of the Radial circle.
 	 */
-	static protected class OffsetRadialPartsCommand extends AbstractModelCommand {
+	static protected class OffsetRadialPartsCommand extends AbstractTransactionalCommand {
 		private List editParts;
 		private Rectangle origRect;
 		
@@ -207,18 +210,18 @@ public class RadialProvider
 		 * @param editParts
 		 * @param ptRoot
 		 */
-		public OffsetRadialPartsCommand(List editParts) {
-			super("", null); //$NON-NLS-1$
+		public OffsetRadialPartsCommand(TransactionalEditingDomain editingDomain, List editParts) {
+			super(editingDomain, "", null); //$NON-NLS-1$
 			this.editParts = editParts;
 			origRect = calcBoundBox();
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.commands.Command#execute()
-		 */
-		protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+		protected CommandResult doExecuteWithResult(
+                IProgressMonitor progressMonitor, IAdaptable info)
+            throws ExecutionException {
+            
 			if (null == editParts)
-				return newCancelledCommandResult();
+				return CommandResult.newCancelledCommandResult();
 			
 			Rectangle radialRect = calcBoundBox();
 			
@@ -253,7 +256,7 @@ public class RadialProvider
 			
 			// clear for garbage collection;
 			editParts = null;
-			return newOKCommandResult();
+			return CommandResult.newOKCommandResult();
 		}
 
 		/**

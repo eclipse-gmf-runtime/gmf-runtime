@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.ISharedImages;
@@ -44,8 +44,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DeleteFromModelAction
 	extends AbstractDeleteFromAction {
-	
-	
+    
+    
 	/**
 	 * Creates a <code>DeleteFromModelAction</code> with a default label.
 	 *
@@ -93,8 +93,8 @@ public class DeleteFromModelAction
 	protected Command getCommand(Request request) {	
 		List operationSet = getOperationSet();
 		Iterator editParts = operationSet.iterator();
-		CompositeModelCommand command =
-			new CompositeModelCommand(getCommandLabel());
+		CompositeTransactionalCommand command =
+			new CompositeTransactionalCommand(getEditingDomain(), getCommandLabel());
 		while (editParts.hasNext()) {
 			EditPart editPart = (EditPart) editParts.next();
 			// disable on diagram links 
@@ -113,9 +113,13 @@ public class DeleteFromModelAction
 		}
 		
 		if ((command.isEmpty())
-			|| (command.getCommands().size() != operationSet.size())){
+			|| (command.size() != operationSet.size())){
 			return UnexecutableCommand.INSTANCE;
 		}
 		return new EtoolsProxyCommand(command);
 	}
+    
+    protected String getCommandLabel() {
+        return DiagramUIMessages.DiagramEditor_Delete_from_Model;
+    };
 }

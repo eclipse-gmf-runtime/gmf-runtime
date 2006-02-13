@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,10 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -91,9 +93,14 @@ public class ResizableShapeLabelEditPolicy
 		Point normalPoint = LabelHelper.offsetFromRelativeCoordinate(
 			getHostFigure(), rect, refPoint);
 
-		ICommand moveCommand = new SetBoundsCommand(DiagramUIMessages.MoveLabelCommand_Label_Location,
-			new EObjectAdapter((View) getHost().getModel()), normalPoint);
-		return new EtoolsProxyCommand(moveCommand);
+
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
+		ICommand moveCommand = new SetBoundsCommand(editingDomain,
+            DiagramUIMessages.MoveLabelCommand_Label_Location,
+            new EObjectAdapter((View) getHost().getModel()), normalPoint);
+        return new EtoolsProxyCommand(moveCommand);
 	}
 
 	/**
@@ -169,8 +176,11 @@ public class ResizableShapeLabelEditPolicy
 		rect.resize(request.getSizeDelta());
 		getHostFigure().translateToRelative(rect);
 		View shapeView = (View) getHost().getModel();
+        
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
 
-		ICommand resizeCommand = new SetBoundsCommand(
+		ICommand resizeCommand = new SetBoundsCommand(editingDomain,
 			DiagramUIMessages.SetLocationCommand_Label_Resize,
 			new EObjectAdapter(shapeView), rect.getSize());
 		return new EtoolsProxyCommand(resizeCommand);

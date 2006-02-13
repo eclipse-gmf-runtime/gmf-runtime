@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -56,4 +57,12 @@ public class ShowInViewActionDelegate
 		}
 		Trace.trace(DiagramActionsPlugin.getInstance(), DiagramActionsDebugOptions.METHODS_EXITING, "ShowInViewActionDelegate.doRun Exiting"); //$NON-NLS-1$
 	}
+    
+    protected TransactionalEditingDomain getEditingDomain() {
+        return null;
+    }
+    
+    protected boolean isReadOnly() {
+        return true;
+    }
 }

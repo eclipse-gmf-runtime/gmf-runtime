@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.EditPart;
@@ -414,12 +415,7 @@ public class PromptForConnectionAndEndCommand
 		return validTypes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+    public boolean canExecute() {
 		return createPopupMenu() != null;
 	}
 
@@ -427,16 +423,19 @@ public class PromptForConnectionAndEndCommand
 	 * Pops up the dialog with the content provided. If the user selects 'select
 	 * existing', then the select elements dialog also appears.
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+        
 		PopupMenu popup = createPopupMenu();
 
 		if (popup == null) {
-			return newErrorCommandResult(getLabel());
+			return CommandResult.newErrorCommandResult(getLabel());
 		}
 
 		setPopupMenu(popup);
 
-		CommandResult cmdResult = super.doExecute(progressMonitor);
+		CommandResult cmdResult = super.doExecuteWithResult(progressMonitor, info);
 		if (!cmdResult.getStatus().isOK()) {
 			return cmdResult;
 		}
@@ -457,14 +456,14 @@ public class PromptForConnectionAndEndCommand
 							.selectExistingElementForTarget(getKnownEnd(),
 								(IElementType) resultList.get(0));
 					if (targetResult == null) {
-						return newCancelledCommandResult();
+						return CommandResult.newCancelledCommandResult();
 					}
 				}
 				endAdapter.setObject(targetResult);
-				return newOKCommandResult();
+				return CommandResult.newOKCommandResult();
 			}
 		}
-		return newErrorCommandResult(getLabel());
+		return CommandResult.newErrorCommandResult(getLabel());
 	}
 
 	/**

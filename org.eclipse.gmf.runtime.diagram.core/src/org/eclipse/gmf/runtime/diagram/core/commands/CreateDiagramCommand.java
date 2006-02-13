@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,17 +11,20 @@
 
 package org.eclipse.gmf.runtime.diagram.core.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramStatusCodes;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
@@ -31,7 +34,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * @author schafe
  */
 public class CreateDiagramCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	private final String _diagramType;
 
@@ -41,6 +44,8 @@ public class CreateDiagramCommand
 
 	/**
 	 * creates a create diagram command.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label command label
 	 * @param anElementContext semantic element to contain the diagram
 	 * @param aDiagramKindType diagram type ID
@@ -50,19 +55,17 @@ public class CreateDiagramCommand
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 */
-	public CreateDiagramCommand(String label, EObject anElementContext,
+	public CreateDiagramCommand(TransactionalEditingDomain editingDomain, String label, EObject anElementContext,
 		String aDiagramKindType, PreferencesHint preferencesHint) {
-		super(label, null);
+		super(editingDomain, label, null);
 		assert null != anElementContext: "Null element context in CreateDiagramCommand";//$NON-NLS-1$		
 		_semanticContext = anElementContext;
 		_diagramType = aDiagramKindType;
 		_preferencesHint = preferencesHint;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
 
 		// Create the new diagram element
 		//IElementCollection contents = getOwnedDiagramCollection(createOwningElement(progressMonitor));
@@ -70,11 +73,11 @@ public class CreateDiagramCommand
 			new EObjectAdapter(getSemanticContext()), getDiagramType(), getPreferencesHint());
 
 		return new CommandResult(new Status(IStatus.OK, getPluginId(),
-			DiagramStatusCodes.OK, EMPTY_STRING, null), diagram);
+			DiagramStatusCodes.OK, StringStatics.BLANK, null), diagram);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#getPluginId()
+	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand2#getPluginId()
 	 */
 	protected String getPluginId() {
 		return DiagramPlugin.getPluginId();

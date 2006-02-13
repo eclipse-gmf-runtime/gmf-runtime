@@ -43,8 +43,9 @@ public class NonSemanticEditPolicy extends SemanticEditPolicy {
 
 		if ( editRequest instanceof DestroyElementRequest ) {
 			if (getHost() instanceof GraphicalEditPart){
-				return new EtoolsProxyCommand( new DeleteCommand(
-					((GraphicalEditPart)getHost()).getPrimaryView()));
+				return new EtoolsProxyCommand(new DeleteCommand(editRequest
+                    .getEditingDomain(), ((GraphicalEditPart) getHost())
+                    .getPrimaryView()));
 			}
 		}
 		return super.getSemanticCommand( editRequest );

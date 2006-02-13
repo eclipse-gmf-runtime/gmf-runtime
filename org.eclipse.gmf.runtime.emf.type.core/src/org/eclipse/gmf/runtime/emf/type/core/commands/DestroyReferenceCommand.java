@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -60,7 +62,8 @@ public class DestroyReferenceCommand
 		this.referencedObject = request.getReferencedObject();
 	}
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+    protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+        throws ExecutionException {
 
 		List features = new ArrayList();
 
@@ -86,7 +89,7 @@ public class DestroyReferenceCommand
 				getContainer().eSet(nextReference, null);
 			}
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 	/**
@@ -118,12 +121,7 @@ public class DestroyReferenceCommand
 		return referencedObject;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.commands.core.internal.commands.EditElementCommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		return getReferencedObject() != null && getContainer() != null;
 	}
 

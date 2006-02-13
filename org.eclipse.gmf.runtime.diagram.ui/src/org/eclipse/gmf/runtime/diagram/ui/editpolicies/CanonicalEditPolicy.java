@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -382,7 +383,8 @@ implements NotificationListener {
 	 * @return command
 	 */
 	protected Command getDeleteViewCommand(View view) {
-		return new EtoolsProxyCommand(new DeleteCommand(view));
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+		return new EtoolsProxyCommand(new DeleteCommand(editingDomain, view));
 	}
 
 	/**
@@ -498,23 +500,24 @@ implements NotificationListener {
 
 				cc.compose(createCommand);
 			}
-			cmd = new EtoolsProxyCommand(cc.unwrap());
+			cmd = new EtoolsProxyCommand(cc.reduce());
 		}
 		
 		return cmd;
 	}
 	
-	/**
-	 * @param descriptor 
-	 * @return ICommand to create a view given a descriptor
-	 */
-	protected ICommand getCreateViewCommand(CreateViewRequest.ViewDescriptor descriptor) {
-		CreateCommand createCommand =
-			new CreateCommand(
-				descriptor, 
-				(View)getHost().getModel());
-		return createCommand;
-	}
+    /**
+     * @param descriptor 
+     * @return ICommand to create a view given a descriptor
+     */
+    protected ICommand getCreateViewCommand(CreateViewRequest.ViewDescriptor descriptor) {
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+        CreateCommand createCommand =
+            new CreateCommand(editingDomain,
+                descriptor, 
+                (View)getHost().getModel());
+        return createCommand;
+    }
 	
 	/**
 	 * Return a create view request.  

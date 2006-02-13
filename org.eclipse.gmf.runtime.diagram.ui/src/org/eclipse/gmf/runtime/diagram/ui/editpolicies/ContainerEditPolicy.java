@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -63,7 +65,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutService;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
@@ -118,8 +120,12 @@ public class ContainerEditPolicy
 		if (data != null
 			&& viewContext != null
 			&& editPart instanceof ISurfaceEditPart) {
-			return new EtoolsProxyCommand(new PasteCommand(DiagramUIMessages.PasteCommand_Label, viewContext, data, MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)getHost()).getFigure()))); 
-		}
+			return new EtoolsProxyCommand(new PasteCommand(editPart
+                .getEditingDomain(), DiagramUIMessages.PasteCommand_Label,
+                viewContext, data, MapModeUtil
+                    .getMapMode(((org.eclipse.gef.GraphicalEditPart) getHost())
+                        .getFigure())));
+        }
 
 		return null;
 	}
@@ -173,15 +179,16 @@ public class ContainerEditPolicy
 	 */
 	protected Command getBringToFrontCommand( ZOrderRequest request ) {
 		
-		CompositeCommand toReturn = new CompositeCommand( "" ); //$NON-NLS-1$
+        CompositeCommand toReturn = new CompositeCommand( "" ); //$NON-NLS-1$
 		
 		// Create commands for each view to move
 		for (Iterator iter = sortSelection( request.getPartsToOrder() ).iterator();
 			iter.hasNext(); ) {
 			
 			IGraphicalEditPart element = (IGraphicalEditPart) iter.next();
-			toReturn.compose( new BringToFrontCommand((View) element.getModel() ));
-		}
+			toReturn.compose(new BringToFrontCommand(
+                element.getEditingDomain(), (View) element.getModel()));
+        }
 		
 		return new EtoolsProxyCommand( toReturn );
 	}
@@ -199,8 +206,9 @@ public class ContainerEditPolicy
 		for (Iterator iter = reverseSortSelection( request.getPartsToOrder() ).iterator(); iter.hasNext();) {
 			IGraphicalEditPart toOrder = (IGraphicalEditPart) iter.next();
 			
-			toReturn.compose(new BringForwardCommand((View)toOrder.getModel() ));
-		}
+			toReturn.compose(new BringForwardCommand(
+                toOrder.getEditingDomain(), (View) toOrder.getModel()));
+        }
 		
 		return new EtoolsProxyCommand( toReturn );
 	}
@@ -212,14 +220,15 @@ public class ContainerEditPolicy
 	 */
 	protected Command getSendToBackCommand( ZOrderRequest request ) {
 		
-		CompositeCommand toReturn = new CompositeCommand( "" ); //$NON-NLS-1$
+        CompositeCommand toReturn = new CompositeCommand( "" ); //$NON-NLS-1$
 		
 		// Create commands for each view to move
 		for (Iterator iter = reverseSortSelection(request.getPartsToOrder()).iterator(); iter.hasNext();) {
 			IGraphicalEditPart toOrder = (IGraphicalEditPart) iter.next();
 			
-			toReturn.compose(new SendToBackCommand((View)toOrder.getModel() ));
-		}
+			toReturn.compose(new SendToBackCommand(toOrder.getEditingDomain(),
+                (View) toOrder.getModel()));
+        }
 		
 		return new EtoolsProxyCommand( toReturn );
 	}
@@ -231,14 +240,15 @@ public class ContainerEditPolicy
 	 */
 	protected Command getSendBackwardCommand( ZOrderRequest request ) {
 
-		CompositeCommand toReturn = new CompositeCommand( "" ); //$NON-NLS-1$
+        CompositeCommand toReturn = new CompositeCommand( "" ); //$NON-NLS-1$
 		
 		// Create commands for each view to move
 		for (Iterator iter = sortSelection(request.getPartsToOrder()).iterator(); iter.hasNext();) {
 			IGraphicalEditPart toOrder = (IGraphicalEditPart) iter.next();
 			
-			toReturn.compose(new SendBackwardCommand((View)toOrder.getModel() ));
-		}
+			toReturn.compose(new SendBackwardCommand(
+                toOrder.getEditingDomain(), (View) toOrder.getModel()));
+        }
 		
 		return new EtoolsProxyCommand( toReturn );
 	}
@@ -252,8 +262,10 @@ public class ContainerEditPolicy
 		
 		if (RequestConstants.REQ_ARRANGE_DEFERRED.equals(request.getType())) {
 			String layoutType = request.getLayoutType();
-			return new EtoolsProxyCommand(
-				new DeferredLayoutCommand(
+            TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+                .getEditingDomain();
+            return new EtoolsProxyCommand(
+				new DeferredLayoutCommand(editingDomain,
 					request.getViewAdaptersToArrange(),
 					(IGraphicalEditPart) getHost(),
 					layoutType));
@@ -299,10 +311,15 @@ public class ContainerEditPolicy
 			return ((IInternalLayoutRunnable)layoutRun).getCommand();
 		}
 		else {
-			return new EtoolsProxyCommand(new AbstractModelCommand("", null) {//$NON-NLS-1$
-				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+            TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+                .getEditingDomain();
+            
+			return new EtoolsProxyCommand(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+				protected CommandResult doExecuteWithResult(
+                            IProgressMonitor progressMonitor, IAdaptable info)
+                        throws ExecutionException {
 					layoutRun.run();
-					return newOKCommandResult();
+					return CommandResult.newOKCommandResult();
 				}
 			});
 		}
@@ -376,25 +393,26 @@ public class ContainerEditPolicy
 
 		if (!notationViewsToDuplicate.isEmpty()) {
 			if (!elementsToDuplicate.isEmpty()) {
-				org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest duplicateElementsRequest = new DuplicateElementsRequest(
-					new ArrayList(elementsToDuplicate));
+                org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest duplicateElementsRequest = new DuplicateElementsRequest(
+                    editingDomain, new ArrayList(elementsToDuplicate));
 				Command duplicateElementsCommand = getHost().getCommand(
 					new EditCommandRequestWrapper(duplicateElementsRequest));
 				if (duplicateElementsCommand != null
 					&& duplicateElementsCommand.canExecute()) {
-					CompositeCommand cc = new CompositeCommand(
+                    CompositeCommand cc = new CompositeCommand(
 						DiagramUIMessages.Commands_Duplicate_Label);
 					cc
 						.compose(new CommandProxy(
 							duplicateElementsCommand));
-					cc.compose(new DuplicateViewsCommand(
+                    
+					cc.compose(new DuplicateViewsCommand(editingDomain,
 						DiagramUIMessages.Commands_Duplicate_Label,
 						request, notationViewsToDuplicate,
 						duplicateElementsRequest.getAllDuplicatedElementsMap(), getPasteOffset()));
 					return new EtoolsProxyCommand(cc);
 				}
 			} else {
-				return new EtoolsProxyCommand(new DuplicateViewsCommand(
+				return new EtoolsProxyCommand(new DuplicateViewsCommand(editingDomain,
 					DiagramUIMessages.Commands_Duplicate_Label,
 					request, notationViewsToDuplicate, getPasteOffset()));
 			}
@@ -418,7 +436,7 @@ public class ContainerEditPolicy
 		if (RequestConstants.REQ_REFRESH.equals(request.getType())) {
 			IGraphicalEditPart containerEP = (IGraphicalEditPart) getHost();
 
-			CompositeCommand cc = new CompositeCommand(""); //$NON-NLS-1$
+            CompositeCommand cc = new CompositeCommand(""); //$NON-NLS-1$
 			ListIterator li = containerEP.getChildren().listIterator();
 			while (li.hasNext()) {
 				cc.compose(

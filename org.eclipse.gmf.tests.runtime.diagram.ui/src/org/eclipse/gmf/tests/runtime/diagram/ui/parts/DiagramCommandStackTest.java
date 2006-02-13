@@ -16,8 +16,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -98,11 +99,19 @@ public class DiagramCommandStackTest extends TestCase {
 		// EtoolsProxyCommand to the execute method of the ICommand
 
 		final IProgressMonitor progressMonitor = new MyProgressMonitor();
-		ICommand iCommand = new AbstractCommand(getLabel()) {
-			protected CommandResult doExecute(IProgressMonitor pm) {
-				assertEquals(progressMonitor, pm);
-				return newOKCommandResult();
+		ICommand iCommand = new AbstractCommand(getLabel(), null) {
+			protected CommandResult doExecuteWithResult(IProgressMonitor pm, IAdaptable info) throws ExecutionException {
+				assertEquals(progressMonitor, progressMonitor);
+				return CommandResult.newOKCommandResult();
 			}
+            protected CommandResult doRedoWithResult(IProgressMonitor pm, IAdaptable info)
+                throws ExecutionException {
+                return null;
+            }
+            protected CommandResult doUndoWithResult(IProgressMonitor pm, IAdaptable info)
+                throws ExecutionException {
+                return null;
+            }
 		};
 		EtoolsProxyCommand proxyCommand = new EtoolsProxyCommand(iCommand);
 

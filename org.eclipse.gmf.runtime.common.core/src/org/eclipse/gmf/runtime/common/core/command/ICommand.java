@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,42 +12,39 @@
 package org.eclipse.gmf.runtime.common.core.command;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.eclipse.core.commands.operations.IOperationApprover;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * A unit of work that can potentially be undone and redone. {@link ICommand}s
- * can be executed by the
- * {@link org.eclipse.gmf.runtime.common.core.command.CommandManager}, which
- * will maintain a history of the commands that it has executed that are
- * eligible to be undone and redone.
- * <P>
- * Commands have a label that can be used to provide information to a client.
- * For example, the command label could be used as the text in an undo or redo
- * menu item.
- * <P>
- * Progress through the work done by a command is monitored by an
- * {@link org.eclipse.core.runtime.IProgressMonitor} with which the command is
- * executed.
+ * A self-composing undoable operation that has a {@link CommandResult} and a
+ * list of affected {@link IFile}s.
  * <P>
  * Executing, undoing or redoing a command can have a result which clients can
  * obtain by using the {@link #getCommandResult()} method. For example,
  * executing a command that create a new entity may wish to make the new entity
  * accessible to clients through the {@link #getCommandResult()} method.
+ * <P>
+ * The command provides a list of {@link IFile}s that are expected to be
+ * modified when the it is executed, undone or redone. An
+ * {@link IOperationApprover} is registered with the
+ * {@link OperationHistoryFactory#getOperationHistory()} to validate the
+ * modification to these resources.
+ * <P>
+ * If an error occurs, or the progress monitor is canceled during execute, undo
+ * or redo, the command should make every effort to roll back the changes it has
+ * made up to that point.
  * 
  * @author khussey
+ * @author ldamus
+ * 
  * @canBeSeenBy %partners
  */
-public interface ICommand {
-
-	/**
-	 * Retrieves the label for this command. The label is typically a very brief
-	 * description (suitable for display in a menu item) of what this command
-	 * does when it is executed.
-	 * 
-	 * @return The label for this command.
-	 */
-	public String getLabel();
+public interface ICommand extends IUndoableOperation {
 
 	/**
 	 * Retrieves the result of executing, undoing, or redoing this command,
@@ -59,87 +56,134 @@ public interface ICommand {
 	 * 
 	 * @return The result of executing, undoing or redoing this command.
 	 */
-	public CommandResult getCommandResult();
+	public abstract CommandResult getCommandResult();
 
 	/**
-	 * Retrieves the collection of objects that would be affected if this
-	 * command were executed, undone, or redone.
+	 * Returns the list of {@link IFile}s that are expected to be modified by
+	 * this command.
 	 * 
-	 * @return The collection of objects affected by this command.
+	 * @return the list of {@link IFile}s that will be modified
 	 */
-	public Collection getAffectedObjects();
+	public abstract List getAffectedFiles();
 
-	/**
-	 * Indicates whether non workspace files are involved in executing, undoing
-	 * or redoing this command.
-	 * 
-	 * @return boolean
-	 */	
-	public boolean involvesReadOnlyNonWorkSpaceFiles();
-
-	/**
-	 * Return a validator which can be used to check whether the units being
-	 * modified by a command are writable.
-	 * 
-	 * @return the validator
-	 */		
-	public CMValidator getValidator();
-	
 	/**
 	 * Returns a new command object that represents a composition of this
 	 * command with the specified <code>command</code> parameter.
 	 * 
-	 * @param command
-	 *            The command that is to be composed with this command.
+	 * @param operation
+	 *            The operation that is to be composed with this command.
 	 * @return A command that represents a composition of this command with the
 	 *         specified command.
 	 */
-	ICommand compose(ICommand command);
+	public abstract ICommand compose(IUndoableOperation operation);
+    
+    /**
+     * Returns the simplest form of this command that is equivalent. Use this
+     * method to remove unnecessary nesting of commands.
+     * 
+     * @return the simplest form of this command that is equivalent
+     */
+    public abstract ICommand reduce();
 
-	/**
-	 * Answers whether this command can be executed.
-	 * 
-	 * @return <code>true</code> if the command can be executed;
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isExecutable();
+    
+    /**
+     * Retrieves the collection of objects that would be affected if this
+     * command were executed, undone, or redone.
+     * 
+     * @return The collection of objects affected by this command.
+     * 
+     * @deprecated Commands that will modify resources and wish to have these
+     *             resources validated should implement the
+     *             {@link #getAffectedFiles()} interface.
+     */
+    public Collection getAffectedObjects();
 
-	/**
-	 * Answers whether this command can be redone.
-	 * 
-	 * @return <code>true</code> if the command can be redone;
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isRedoable();
+    /**
+     * Indicates whether non workspace files are involved in executing, undoing
+     * or redoing this command.
+     * 
+     * @return boolean
+     * 
+     * @deprecated No replacement. File validation is now done through a
+     *             {@link IOperationApprover} registered with with the
+     *             {@link OperationHistoryFactory#getOperationHistory()}.
+     */
+    public boolean involvesReadOnlyNonWorkSpaceFiles();
 
-	/**
-	 * Answers whether this command can be undone.
-	 * 
-	 * @return <code>true</code> if the command can be undone;
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isUndoable();
+    /**
+     * Return a validator which can be used to check whether the units being
+     * modified by a command are writable.
+     * 
+     * @return the validator
+     * 
+     * @deprecated No replacement. File validation is now done through a
+     *             {@link IOperationApprover} registered with with the
+     *             {@link OperationHistoryFactory#getOperationHistory()}.
+     */
+    public CMValidator getValidator();
 
-	/**
-	 * Executes this command. A progress monitor is supplied so that the
-	 * progress of executing the command may be tracked.
-	 * 
-	 * @param progressMonitor
-	 *            The object that monitors the progress of this command
-	 *            execution. May be
-	 *            {@link org.eclipse.core.runtime.NullProgressMonitor}if the
-	 *            command should be executed without monitoring its progress.
-	 */
-	public void execute(IProgressMonitor progressMonitor);
+    /**
+     * Answers whether this command can be executed.
+     * 
+     * @return <code>true</code> if the command can be executed;
+     *         <code>false</code> otherwise.
+     * 
+     * @deprecated Use {@link IUndoableOperation#canExecute()} instead.
+     */
+    public boolean isExecutable();
 
-	/**
-	 * Redoes this command.
-	 */
-	public void redo();
+    /**
+     * Answers whether this command can be redone.
+     * 
+     * @return <code>true</code> if the command can be redone;
+     *         <code>false</code> otherwise.
+     * 
+     * @deprecated Use {@link IUndoableOperation#canRedo()} instead.
+     */
+    public boolean isRedoable();
 
-	/**
-	 * Undoes this command.
-	 */
-	public void undo();
+    /**
+     * Answers whether this command can be undone.
+     * 
+     * @return <code>true</code> if the command can be undone;
+     *         <code>false</code> otherwise.
+     * 
+     * @deprecated Use {@link IUndoableOperation#canUndo()()} instead.
+     */
+    public boolean isUndoable();
+
+    /**
+     * Executes this command. A progress monitor is supplied so that the
+     * progress of executing the command may be tracked.
+     * 
+     * @param progressMonitor
+     *            The object that monitors the progress of this command
+     *            execution. May be
+     *            {@link org.eclipse.core.runtime.NullProgressMonitor}if the
+     *            command should be executed without monitoring its progress.
+     * 
+     * @deprecated Use
+     *             {@link IUndoableOperation#execute(IProgressMonitor, org.eclipse.core.runtime.IAdaptable)}
+     *             instead.
+     */
+    public void execute(IProgressMonitor progressMonitor);
+
+    /**
+     * Redoes this command.
+     * 
+     * @deprecated Use
+     *             {@link IUndoableOperation#redo(IProgressMonitor, org.eclipse.core.runtime.IAdaptable)}
+     *             instead.
+     */
+    public void redo();
+
+    /**
+     * Undoes this command.
+     * 
+     * @deprecated Use
+     *             {@link IUndoableOperation#undo(IProgressMonitor, org.eclipse.core.runtime.IAdaptable)}
+     *             instead.
+     */
+    public void undo();
 
 }

@@ -12,17 +12,19 @@
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.jface.util.Assert;
 
 /**
  * A Wrapper around a real element creation command
@@ -47,7 +49,7 @@ public class SemanticCreateCommand extends AbstractCommand {
 		CreateElementRequestAdapter requestAdapter,
 		Command realSemanticCommand) {
 
-		super(realSemanticCommand.getLabel());
+		super(realSemanticCommand.getLabel(), null);
 
 		Assert.isNotNull(requestAdapter);
 		Assert.isNotNull(realSemanticCommand);
@@ -57,11 +59,11 @@ public class SemanticCreateCommand extends AbstractCommand {
 			DiagramCommandStack.getICommand(realSemanticCommand);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		realSemanticCommand.execute(progressMonitor); 
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+		realSemanticCommand.execute(progressMonitor, info); 
 		CommandResult result = realSemanticCommand.getCommandResult();
 		if (result.getStatus().isOK()) {
 			Object object =	result.getReturnValue();
@@ -74,53 +76,39 @@ public class SemanticCreateCommand extends AbstractCommand {
 				EObject element = (EObject) object;
 				requestAdapter.setNewElement(element);
 			}
-			return newOKCommandResult(requestAdapter);
+			return CommandResult.newOKCommandResult(requestAdapter);
 		}
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-	 */
-	protected CommandResult doRedo() {
-		realSemanticCommand.redo();
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+		realSemanticCommand.redo(progressMonitor, info);
 		return realSemanticCommand.getCommandResult();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-	 */
-	protected CommandResult doUndo() {
-		realSemanticCommand.undo();
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+		realSemanticCommand.undo(progressMonitor, info);
 		return realSemanticCommand.getCommandResult();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-	 */
-	public boolean isExecutable() {
-		return realSemanticCommand.isExecutable();
+    public boolean canExecute() {
+		return realSemanticCommand.canExecute();
 	}
 
-	/*
-	 * @see org.eclipse.gef.commands.Command#canUndo()
-	 */
-	public boolean isUndoable() {
-		return realSemanticCommand.isUndoable();
+    public boolean canUndo() {
+		return realSemanticCommand.canUndo();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
-		return realSemanticCommand.isUndoable();
+    public boolean canRedo() {
+		return realSemanticCommand.canRedo();
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
-		return realSemanticCommand.getAffectedObjects();
-	}
+    
+    public List getAffectedFiles() {
+        return realSemanticCommand.getAffectedFiles();
+    }
 
 }

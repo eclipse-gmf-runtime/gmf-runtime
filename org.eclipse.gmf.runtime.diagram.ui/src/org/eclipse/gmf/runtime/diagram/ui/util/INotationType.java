@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.util;
 
-import org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType;
+import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 
 
 /**

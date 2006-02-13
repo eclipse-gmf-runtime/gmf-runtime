@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,18 +12,19 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.View;
@@ -33,27 +34,26 @@ import org.eclipse.jface.util.Assert;
 /**
  * @author melaasar
  */
-public class SetConnectionBendpointsCommand extends AbstractModelCommand {
+public class SetConnectionBendpointsCommand extends AbstractTransactionalCommand {
 	private IAdaptable edgeAdapter;
 	private PointList newPointList;
 	private Point sourceRefPoint;
 	private Point targetRefPoint;
 	
 	/**
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @see java.lang.Object#Object()
 	 */
-	public SetConnectionBendpointsCommand() {
-		super(DiagramUIMessages.Commands_SetBendpointsCommand_Label,  null);
+	public SetConnectionBendpointsCommand(TransactionalEditingDomain editingDomain) {
+		super(editingDomain, DiagramUIMessages.Commands_SetBendpointsCommand_Label,  null);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
+	public List getAffectedFiles() {
 		View view = (View) edgeAdapter.getAdapter(View.class);
 		if (view != null)
-			return getWorkspaceFilesFor(view);
-		return super.getAffectedObjects();
+			return getWorkspaceFiles(view);
+		return super.getAffectedFiles();
 	}
 
 	/**
@@ -140,7 +140,10 @@ public class SetConnectionBendpointsCommand extends AbstractModelCommand {
 		}
 	}
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
 		Assert.isNotNull(newPointList);
 		Assert.isNotNull(sourceRefPoint);
 		Assert.isNotNull(targetRefPoint);
@@ -159,7 +162,7 @@ public class SetConnectionBendpointsCommand extends AbstractModelCommand {
 
 		RelativeBendpoints points = (RelativeBendpoints) edge.getBendpoints();
 		points.setPoints(newBendpoints);
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 

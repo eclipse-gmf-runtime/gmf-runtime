@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -23,8 +23,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
  * 
  * @author ldamus
  */
-public abstract class DestroyRequest
-	extends AbstractEditCommandRequest {
+public abstract class DestroyRequest extends AbstractEditCommandRequest {
 
 	/**
 	 * Flag to indicate whether or not confirmation is required when destoying a
@@ -35,12 +34,15 @@ public abstract class DestroyRequest
 	/**
 	 * Constructs a new request to destroy a model element.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param confirmationRequired
 	 *            <code>true</code> if the user should be prompted to confirm
 	 *            the element deletion, <code>false</code> otherwise.
 	 */
-	public DestroyRequest(boolean confirmationRequired) {
-		super();
+	public DestroyRequest(TransactionalEditingDomain editingDomain,
+			boolean confirmationRequired) {
+		super(editingDomain);
 		this.confirmationRequired = confirmationRequired;
 	}
 
@@ -56,9 +58,12 @@ public abstract class DestroyRequest
 	}
 
 	/**
-	 * Sets the flag that indicates whether or not confirmation of the deletion is required.
-	 * @param confirmationRequired <code>true</code> if the user should be prompted to confirm the
-	 *         element deletion, <code>false</code> otherwise
+	 * Sets the flag that indicates whether or not confirmation of the deletion
+	 * is required.
+	 * 
+	 * @param confirmationRequired
+	 *            <code>true</code> if the user should be prompted to confirm
+	 *            the element deletion, <code>false</code> otherwise
 	 */
 	public void setConfirm(boolean confirmationRequired) {
 		this.confirmationRequired = confirmationRequired;
@@ -66,6 +71,7 @@ public abstract class DestroyRequest
 
 	/**
 	 * Gets the container of the element to be destroyed.
+	 * 
 	 * @return the container of the element to be destroyed
 	 */
 	public abstract EObject getContainer();

@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.emf.type.core.edithelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +27,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -88,7 +91,7 @@ public abstract class AbstractEditHelper
 	 */
 	public ICommand getEditCommand(IEditCommandRequest req) {
 
-		CompositeCommand command = createCompositeCommand(req);
+		ICompositeCommand command = createCommand(req);
 		
 		// Get 'before' commands from matching element type
 		// specializations
@@ -155,38 +158,68 @@ public abstract class AbstractEditHelper
 		return ElementTypeRegistry.getInstance().getEditHelperAdvice(
 			editHelperContext);
 	}
+    
+    /**
+     * Creates a new composite command.
+     * <P>
+     * Subclasses may override to provide their own kind of composite command.
+     * 
+     * @param label
+     *            the command label
+     * @return a new composite command
+     * @deprecated Subclasses must implement
+     *             {@link #createComposite(IEditCommandRequest)} instead.
+     */
+    protected CompositeCommand createCompositeCommand(IEditCommandRequest req) {
+        return null;
+    }
 
 	/**
 	 * Creates a new composite command.
 	 * <P>
 	 * Subclasses may override to provide their own kind of composite command.
 	 * 
-	 * @param label
-	 *            the command label
+	 * @param req the edit request
 	 * @return a new composite command
 	 */
-	protected CompositeCommand createCompositeCommand(IEditCommandRequest req) {
+	protected ICompositeCommand createCommand(IEditCommandRequest req) {
+        
+        // Delegate to the old API first
+        // TODO remove this with deprecated method
+        CompositeCommand command = createCompositeCommand(req);
+        if (command != null) {
+            return command;
+        }
 		
-		return new CompositeCommand(req.getLabel()) {
+		return new CompositeTransactionalCommand(req.getEditingDomain(), req.getLabel()) {
 			
+			/**
+			 * Extracts the first return value out of the collection of return
+			 * values from the superclass command result.
+			 */
 			public CommandResult getCommandResult() {
 				CommandResult result = super.getCommandResult();
 				
-				if (result.getStatus().getSeverity() == IStatus.OK) {
+				IStatus status = result.getStatus();
+				
+				if (status.getSeverity() == IStatus.OK) {
 					Object returnObject = null;
 					
-					if (result.getReturnValue() instanceof List) {
-						List returnValue = (List) result.getReturnValue();
+					Object returnValue = result.getReturnValue();
+					
+					if (returnValue instanceof Collection) {
+						Collection collection = (Collection) returnValue;
 						
-						if (returnValue.size() > 0) {
-							returnObject = returnValue.get(0);
+						if (!collection.isEmpty()) {
+							returnObject = collection.iterator().next();
 						}
 						
 					} else {
-						returnObject = result.getReturnValue();
+						returnObject = returnValue;
 					}
-					result = new CommandResult(result.getStatus(), returnObject);
+					result = new CommandResult(status, returnObject);
 				}
+				
 				return result;
 			};
 		};

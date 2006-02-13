@@ -16,12 +16,19 @@ import java.util.ListIterator;
 
 import junit.framework.Assert;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
@@ -37,6 +44,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -66,6 +74,8 @@ public abstract class AbstractPresentationTestFixture
 	private IProject project = null;
 	private IDiagramWorkbenchPart diagramWorkbenchPart = null;
 	private IFile diagramFile = null;
+    private TransactionalEditingDomain editingDomain;
+    private Resource resource;
 	
 	private Diagram diagram;
 	private DiagramEditPart diagramEditPart;
@@ -176,6 +186,7 @@ public abstract class AbstractPresentationTestFixture
 	public void setup() throws Exception {
 		createProject();
 		createDiagram();
+        createResource();
 		createDiagramEditPart();
 		
 		flushEventQueue(); // so that all editor related events are fired
@@ -210,6 +221,11 @@ public abstract class AbstractPresentationTestFixture
 		finally {
 			// erasing all the data
 			setDiagramWorkbenchPart(null);
+            // unload resource
+            if (resource != null) {
+                resource.unload();
+                resource = null;
+            }
 			setDiagramFile(null);
 			setProject(null);
 			setConnectorView(null);
@@ -262,6 +278,7 @@ public abstract class AbstractPresentationTestFixture
 
 		setDiagramWorkbenchPart((IDiagramWorkbenchPart)IDE.openEditor(page, getDiagramFile(), true));
 		setDiagramEditPart(getDiagramWorkbenchPart().getDiagramEditPart());
+        setDiagram(getDiagramEditPart().getDiagramView());
 	}
 
 	public boolean closeDiagram() {
@@ -311,6 +328,47 @@ public abstract class AbstractPresentationTestFixture
 	 * the test should run under.  Please set the diagramFile variable.
 	 */
 	protected abstract void createDiagram() throws Exception;
+    
+    /**
+     * Creates the editing domain and resource and adds the diagram to
+     * that resource.
+     */
+    protected void createResource() {
+        editingDomain = MEditingDomain.INSTANCE;
+        
+        IFile file = getDiagramFile();
+        
+        if (file != null) {
+            String filePath = file.getLocation().toOSString();
+            resource = editingDomain.loadResource(filePath);
+
+        } else {
+            resource = editingDomain
+                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+        }
+
+        if (getDiagram() != null) {
+            
+            AbstractEMFOperation operation = new AbstractEMFOperation(
+                editingDomain, "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
+
+                protected IStatus doExecute(IProgressMonitor monitor,
+                        IAdaptable info)
+                    throws ExecutionException {
+                    
+                    resource.getContents().add(getDiagram());
+                    return Status.OK_STATUS;
+                };
+            };
+
+    
+            try {
+                operation.execute(new NullProgressMonitor(), null);
+            } catch (ExecutionException ie) {
+                fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
+            }
+        }
+    }
 
 	/**
 	 * Creates and sets the diagram editpart using the offscreen rendering
@@ -501,4 +559,8 @@ public abstract class AbstractPresentationTestFixture
 	 */
 	protected abstract void createShapesAndConnectors() throws Exception;
 
+    
+    public TransactionalEditingDomain getEditingDomain() {
+        return editingDomain;
+    }
 }

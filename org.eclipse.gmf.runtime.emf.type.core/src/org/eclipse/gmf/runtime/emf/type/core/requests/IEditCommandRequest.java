@@ -14,6 +14,8 @@ package org.eclipse.gmf.runtime.emf.type.core.requests;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+
 
 /**
  * Request for a command to edit a model element. These requests are passed to
@@ -94,5 +96,12 @@ public interface IEditCommandRequest {
 	 *            the parameters to be added
 	 */
 	public abstract void addParameters(Map newParameters);
+	
+	/**
+	 * Gets the editing domain in which I am requesting to make model changes.
+	 * 
+	 * @return the editing domain
+	 */
+	public abstract TransactionalEditingDomain getEditingDomain();
 	
 }

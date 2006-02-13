@@ -15,9 +15,13 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.core.commands.operations.IOperationApprover;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,11 +29,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.command.compatibility.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.commands.core.internal.MSLCommandsDebugOptions;
 import org.eclipse.gmf.runtime.emf.commands.core.internal.MSLCommandsPlugin;
@@ -62,6 +64,7 @@ import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
  * @author khussey
  * 
  * @see org.eclipse.gmf.runtime.emf.core.internal.MUndoInterval
+ * @deprecated Clients should subclass {@link AbstractTransactionalCommand} instead.
  */
 public abstract class AbstractModelCommand
 	extends AbstractCommand
@@ -81,19 +84,24 @@ public abstract class AbstractModelCommand
 
 	/**
 	 * The undo interval for this model command.
+     * @deprecated No undo intervals in transaction API
 	 */
 	private MUndoInterval undoInterval = null;
 
 	/**
-	 * Constructs a new model command with the specified label and model
-	 * operation context.
-	 * 
-	 * @param label The label for the new model command.
-	 * @param affectedObjects The model operation context for the new model command.
-	 */
+     * Constructs a new model command with the specified label and model
+     * operation context.
+     * 
+     * @param label
+     *            The label for the new model command.
+     * @param affectedObjects
+     *            The model operation context for the new model command.
+     * @deprecated Use
+     *             {@link AbstractTransactionalCommand} instead.
+     */
 	protected AbstractModelCommand(String label, Object affectedObjects) {
 
-		super(label);
+		super(label, null);
 
 		this.affectedObjects = affectedObjects;
 	}
@@ -103,20 +111,10 @@ public abstract class AbstractModelCommand
 	 * 
 	 * @return The value of the <code>undoInterval</code> instance variable.
 	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.IUndoIntervalCommand#getUndoInterval()
-	 */
+	 * @deprecated No undo intervals in transaction API.
+     */
 	public final MUndoInterval getUndoInterval() {
 		return undoInterval;
-	}
-
-	/**
-	 * Retrieves the plug-in identifier to be used in command results produced
-	 * by this model command.
-	 * 
-	 * @return The plug-in identifier to be used in command results produced by
-	 *          this model command.
-	 */
-	protected String getPluginId() {
-		return MSLCommandsPlugin.getPluginId();
 	}
 
 	/**
@@ -125,6 +123,7 @@ public abstract class AbstractModelCommand
 	 * 
 	 * @param undoInterval The new value for the <code>undoIntervalId</code>
 	 *                        instance variable.
+     * @deprecated No undo intervals in transaction API.
 	 */
 	protected final void setUndoInterval(MUndoInterval undoInterval) {
 		this.undoInterval = undoInterval;
@@ -135,27 +134,10 @@ public abstract class AbstractModelCommand
 	 * label for this command is used as the undo interval title.
 	 * 
 	 * @return The undo interval title for this model command.
+     * @deprecated No undo intervals in transaction API.
 	 */
 	protected String getUndoIntervalTitle() {
 		return getLabel();
-	}
-
-	/**
-	 * Handles the specified exception.
-	 * 
-	 * @param exception The exception to be handled.
-	 * 
-	 */
-	protected void handle(Exception exception) {
-		Trace.catching(MSLCommandsPlugin.getDefault(),
-			MSLCommandsDebugOptions.EXCEPTIONS_CATCHING, getClass(), "handle", //$NON-NLS-1$
-			exception);
-
-		setResult(new CommandResult(new Status(IStatus.ERROR, getPluginId(),
-			MSLCommandsStatusCodes.MODEL_COMMAND_FAILURE, String.valueOf(exception
-				.getMessage()), exception)));
-
-		Log.log(MSLCommandsPlugin.getDefault(), getCommandResult().getStatus());
 	}
 
 	/**
@@ -170,23 +152,20 @@ public abstract class AbstractModelCommand
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#compose(ICommand)
 	 * 
 	 */
-	public final ICommand compose(ICommand command) {
+	public final ICommand compose(IUndoableOperation command) {
 		assert command != null: "command is null"; //$NON-NLS-1$
 
 		return new CompositeModelCommand(getLabel(), getUndoIntervalTitle())
 			.compose(this).compose(command);
 	}
-
-	/**
-	 * Retrieves a Boolean indicating whether this model command can be redone.
-	 * 
-	 * @return <code>true</code>.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
-		return true;
-	}
+    
+    /**
+     * @deprecated Implemented for backwards compatibility. Use
+     *             {@link #canRedo()} instead.
+     */
+    public boolean isRedoable() {
+        return true;
+    }
 
 	/**
 	 * Retrieves a Boolean indicating whether this model command can be undone.
@@ -194,6 +173,8 @@ public abstract class AbstractModelCommand
 	 * @return <code>true</code>.
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
+     * @deprecated Implemented for backwards compatibility. Use
+     *             {@link #canUndo()} instead.
 	 */
 	public boolean isUndoable() {
 		return true;
@@ -203,12 +184,14 @@ public abstract class AbstractModelCommand
 	 * Executes this model command as a write action (in an undo interval).
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#execute(IProgressMonitor)
+     * @deprecated Implemented for backwards compatibility. Use
+     *             {@link #execute(IProgressMonitor, IAdaptable)} instead.
 	 */
 	public final void execute(final IProgressMonitor progressMonitor) {
 		
 		if (OperationUtil.isUncheckedInProgress()) {
 
-			AbstractModelCommand.super.execute(progressMonitor);
+            AbstractModelCommand.super.execute(progressMonitor);
 
 		} else {
 
@@ -240,11 +223,22 @@ public abstract class AbstractModelCommand
 
 		cleanup();
 	}
+    
+    /**
+     * Use this method to cleanup any cache in the command.
+     * 
+     * This method is invoked at the end of execute.
+     */
+    protected void cleanup() {
+        // overriding classes can use this to cleanup 
+    }
 
 	/**
 	 * Redoes this model command via its client.
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#redo()
+     * @deprecated Implemented for backwards compatibility. Use
+     *             {@link #redo(IProgressMonitor, IAdaptable)} instead.
 	 */
 	public void redo() {
 		if (!getValidator().okToEdit(this)) {
@@ -269,6 +263,8 @@ public abstract class AbstractModelCommand
 	 * Undoes this model command via its client.
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#undo()
+     * @deprecated Implemented for backwards compatibility. Use
+     *             {@link #undo(IProgressMonitor, IAdaptable)} instead.
 	 */
 	public void undo() {
 		if (!getValidator().okToEdit(this)) {
@@ -296,7 +292,8 @@ public abstract class AbstractModelCommand
 	 * @return An empty collection by default.
 	 * 
 	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 * 
+	 * @deprecated Implemented for backwards compatibility. Use
+     *             {@link #getAffectedFiles()} instead.
 	 */
 	public Collection getAffectedObjects() {
 		if (null != affectedObjects)
@@ -308,6 +305,10 @@ public abstract class AbstractModelCommand
 	 * Check if the affected objects involves non-workspace files.
 	 * 
 	 * @return true if the command involves non-workspace files, false otherwise 
+     * @deprecated File validation is now done through a
+     *             {@link IOperationApprover} registered with with the
+     *             {@link OperationHistoryFactory#getOperationHistory()}. No
+     *             need to calculate the answer for backwards compatilibity.
 	 */
 	public boolean involvesReadOnlyNonWorkSpaceFiles()
 	{
@@ -324,6 +325,10 @@ public abstract class AbstractModelCommand
 	 * return false.
 	 * 
 	 * @return true if the command involves non-workspace files, false otherwise
+     * @deprecated File validation is now done through a
+     *             {@link IOperationApprover} registered with with the
+     *             {@link OperationHistoryFactory#getOperationHistory()}. No
+     *             need to calculate the answer for backwards compatilibity.
 	 */
 	private boolean involvesReadOnlyNonWorkSpaceFiles(Object obj)
 	{
@@ -369,11 +374,14 @@ public abstract class AbstractModelCommand
 	
 	
 	/**
-	 * Returns the file for specified object.
-	 * 
-	 * @param obj the object for which a file is to be retrieved
-	 * @return collection of workspace files
-	 */
+     * Returns the file for specified object.
+     * 
+     * @param obj
+     *            the object for which a file is to be retrieved
+     * @return collection of workspace files
+     * @deprecated Use {@link #getWorkspaceFiles(EObject)} or
+     *             {@link #getWorkspaceFiles(java.util.List)} instead.
+     */
 	protected static Collection getWorkspaceFilesFor(Object obj) {
 		IFile file = null;
 		
@@ -405,6 +413,7 @@ public abstract class AbstractModelCommand
 	 * Handles the action abandoned exception by setting an error result.
 	 * 
 	 * @param e an exception that is to be handled 
+     * @deprecated EMF-T transaction API has no action abandoned exception.
 	 */
 	protected void handleActionAbandoned(MSLActionAbandonedException e) {
 		// No need to consider a null undo interval here because
@@ -418,12 +427,4 @@ public abstract class AbstractModelCommand
 		Trace.trace(MSLCommandsPlugin.getDefault(), MSLCommandsDebugOptions.MODEL_OPERATIONS, "MSLActionAbandonedException"); //$NON-NLS-1$
 	}
 
-	/**
-	 * Use this method to cleanup any cache in the command.
-	 * 
-	 * This method is invoked at the end of execute.
-	 */
-	protected void cleanup() {
-		// overriding classes can use this to cleanup 
-	}
 }

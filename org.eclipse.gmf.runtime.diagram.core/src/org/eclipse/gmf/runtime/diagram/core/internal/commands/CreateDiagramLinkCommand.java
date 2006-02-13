@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 /**
@@ -25,38 +27,37 @@ import org.eclipse.gmf.runtime.notation.View;
  * @canBeSeenBy %level1
  */
 
-public class CreateDiagramLinkCommand extends AbstractModelCommand {
+public class CreateDiagramLinkCommand extends AbstractTransactionalCommand {
 
 	private View view = null;
 	private Diagram diagram = null;
 
 	/**
 	 * Constructor for SetDiagramLinkCommand.
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label
 	 * @param context
 	 */
-	public CreateDiagramLinkCommand(
+	public CreateDiagramLinkCommand(TransactionalEditingDomain editingDomain, 
 		String label,
 		View view,
 		Diagram diagram) {
-		super(label, view);
+		super(editingDomain, label, getWorkspaceFiles(view));
 
 		this.view = view;
 		this.diagram = diagram;
 	}
 	
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
 		view.setElement(diagram);
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		if (view == null) {
 			return false;
 		}

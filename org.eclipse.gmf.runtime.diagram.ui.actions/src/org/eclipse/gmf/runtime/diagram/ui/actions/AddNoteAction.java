@@ -124,7 +124,7 @@ public class AddNoteAction extends AttachShapeAction {
 				(IGraphicalEditPart) iter.next();
 
 			noteAttachmentCC.compose(
-				new DeferredCreateConnectionViewCommand(
+				new DeferredCreateConnectionViewCommand(targetEditPart.getEditingDomain(),
 					ViewType.NOTEATTACHMENT,
 					noteViewAdapter,
 					new EObjectAdapter((EObject)targetEditPart.getModel()),

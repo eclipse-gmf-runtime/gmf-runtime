@@ -111,7 +111,7 @@ public class BorderItemSelectionEditPolicy
 			Dimension d = realLocation.getTopLeft().getDifference(parentOrigin);
 			Point location = new Point(d.width, d.height);
 
-			ICommand moveCommand = new SetBoundsCommand(
+			ICommand moveCommand = new SetBoundsCommand(borderItemEP.getEditingDomain(),
 				DiagramUIMessages.Commands_MoveElement, new EObjectAdapter(
 					(View) getHost().getModel()), location);
 			return new EtoolsProxyCommand(moveCommand);

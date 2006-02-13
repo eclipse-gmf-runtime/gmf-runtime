@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilter
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Filtering;
 import org.eclipse.gmf.runtime.notation.FilteringStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -975,8 +975,10 @@ public class SortFilterPage extends PropertyPage {
 					.getElements(PreferenceManager.PRE_ORDER)
 					.iterator();
 			SortFilterRootPreferenceNode rootNode = null;
-			CompositeModelCommand cc = new CompositeModelCommand(DiagramUIMessages.Command_SortFilterCommand);
-			while (nodes.hasNext()) {
+			CompositeTransactionalCommand cc = new CompositeTransactionalCommand(
+                editPart.getEditingDomain(),
+                DiagramUIMessages.Command_SortFilterCommand);
+            while (nodes.hasNext()) {
 				PreferenceNode node = (PreferenceNode) nodes.next();
 				SortFilterPage page = (SortFilterPage) node.getPage();
 				if (page == this) {

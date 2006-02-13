@@ -16,6 +16,15 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.IProviderPolicy;
@@ -24,7 +33,7 @@ import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
-import org.eclipse.gmf.runtime.common.ui.services.action.internal.filter.TestAttributeOperation;
+import org.eclipse.gmf.runtime.common.ui.services.action.filter.TestAttributeOperation;
 
 /**
  * @author khussey
@@ -142,6 +151,7 @@ public class ActionFilterServiceTest extends TestCase {
 	}
 
 	public void test_testAttribute() {
+        
 		String prefix = "@"; //$NON-NLS-1$
 
 		String zero = "zero"; //$NON-NLS-1$
@@ -149,6 +159,27 @@ public class ActionFilterServiceTest extends TestCase {
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), zero));
 
+
+        IOperationHistory history = ActionManager.getDefault().getOperationHistory();
+        IUndoableOperation operation = new AbstractOperation(
+            "ActionFilterServiceTest") { //$NON-NLS-1$
+
+            public IStatus execute(IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
+                return Status.OK_STATUS;
+            }
+
+            public IStatus redo(IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
+                return Status.OK_STATUS;
+            }
+
+            public IStatus undo(IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
+                return Status.OK_STATUS;
+            }
+        };
+        
 		ActionFilterProvider provider0 =
 			new ActionFilterProvider(getName(), zero);
 		Fixture.ProviderDescriptor providerDescriptor0 =
@@ -159,12 +190,25 @@ public class ActionFilterServiceTest extends TestCase {
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), zero));
 
-		ActionManager.getDefault().getCommandManager().clear();
+        try {
+            history.execute(operation, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
+        history.dispose(
+            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), zero));
 		assertTrue(getFixture().testAttribute(one, prefix + getName(), zero));
 
-		ActionManager.getDefault().getCommandManager().clear();
+        try {
+            history.execute(operation, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
+        
+        history.dispose(
+            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(!getFixture().testAttribute(one, prefix + getName(), zero));
 		assertTrue(!getFixture().testAttribute(one, prefix + getName(), one));
@@ -179,12 +223,24 @@ public class ActionFilterServiceTest extends TestCase {
 
 		assertTrue(!getFixture().testAttribute(one, prefix + getName(), one));
 
-		ActionManager.getDefault().getCommandManager().clear();
+        try {
+            history.execute(operation, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
+        history.dispose(
+            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(getFixture().testAttribute(one, prefix + getName(), one));
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), one));
 
-		ActionManager.getDefault().getCommandManager().clear();
+        try {
+            history.execute(operation, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
+        history.dispose(
+            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), one));
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), zero));
@@ -193,7 +249,13 @@ public class ActionFilterServiceTest extends TestCase {
 
 		assertTrue(getFixture().testAttribute(zero, prefix + getName(), zero));
 
-		ActionManager.getDefault().getCommandManager().clear();
+        try {
+            history.execute(operation, new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail("command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }
+        history.dispose(
+            IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, false);
 
 		assertTrue(!getFixture().testAttribute(zero, prefix + getName(), zero));
 

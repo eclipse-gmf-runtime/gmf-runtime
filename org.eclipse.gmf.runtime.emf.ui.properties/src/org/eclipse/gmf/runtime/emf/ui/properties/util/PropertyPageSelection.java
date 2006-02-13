@@ -18,6 +18,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
+import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,11 +29,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.views.properties.IPropertySource;
-
-import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
-import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 
 /**
  * A structured selection for use in the property page dialog.  It
@@ -92,8 +91,7 @@ public class PropertyPageSelection
      * Gets my workbench adapter. If I contain more than a
      * single selection, the label will be "Selected Elements". If
      * I contain a single selection, the label will be my IElement
-     * name. This label is used in the title of the
-     * {@link org.eclipse.ui.internal.dialogs.PropertyDialog}.
+     * name. This label is used in the title of the <code>PropertyDialog</code>.
      * 
      * @return my workbench adapter
      */

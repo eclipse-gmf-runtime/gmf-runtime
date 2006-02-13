@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.core.commands;
 
-import java.util.Collection;
+import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -27,7 +29,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  */
 public class SetConnectionEndsCommand
-	extends AbstractModelCommand {
+	extends AbstractTransactionalCommand {
 
 	private IAdaptable edgeAdaptor;
 
@@ -38,23 +40,20 @@ public class SetConnectionEndsCommand
 	/**
 	 * constructor
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label
 	 *            the command label
 	 */
-	public SetConnectionEndsCommand(String label) {
-		super(label, null);
+	public SetConnectionEndsCommand(TransactionalEditingDomain editingDomain, String label) {
+		super(editingDomain, label, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
+	public List getAffectedFiles() {
 		View view = (View) edgeAdaptor.getAdapter(View.class);
 		if (view != null)
-			return getWorkspaceFilesFor(view);
-		return super.getAffectedObjects();
+			return getWorkspaceFiles(view);
+		return super.getAffectedFiles();
 	}
 
 	/**
@@ -114,12 +113,10 @@ public class SetConnectionEndsCommand
 		this.newTargetAdaptor = newTargetAdaptor;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
 		assert null != edgeAdaptor : "Null child in SetConnectionEndsCommand";//$NON-NLS-1$
 
 		Edge edge = (Edge) getEdgeAdaptor().getAdapter(Edge.class);
@@ -135,7 +132,7 @@ public class SetConnectionEndsCommand
 				View.class);
 			edge.setTarget(newTargetView);
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 }

@@ -25,7 +25,6 @@ Export-Package: org.eclipse.gmf.runtime.diagram.core.commands,
 Require-Bundle: org.eclipse.gmf.runtime.common.core,
  org.eclipse.emf.ecore,
  org.eclipse.gmf.runtime.notation;visibility:=reexport,
- org.eclipse.gmf.runtime.emf.commands.core,
- org.eclipse.gmf.runtime.emf.core.compatibility;visibility:=reexport,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.gmf.runtime.emf.type.core;visibility:=reexport
 Eclipse-LazyStart: true

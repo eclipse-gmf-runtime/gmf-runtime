@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,18 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIDebugOptions;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIStatusCodes;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,38 +43,47 @@ public abstract class AbstractDiagramModelActionDelegate
 	 * @return a list of <code>EObject</code>
 	 */
 	protected List getElements(final ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			return (List) MEditingDomainGetter.getMEditingDomain(
-				((IStructuredSelection) selection).toList()).runAsRead(
-				new MRunnable() {
+        final List result = new ArrayList();
 
-					public Object run() {
-						List retval = new ArrayList();
-						if (selection instanceof IStructuredSelection) {
-							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+        if (selection instanceof IStructuredSelection) {
+            try {
 
-							for (Iterator i = structuredSelection.iterator(); i
-								.hasNext();) {
-								Object next = i.next();
+                getEditingDomain().runExclusive(new Runnable() {
 
-								View view = (View) ((IAdaptable) next)
-									.getAdapter(View.class);
-								if (view != null) {
-									EObject eObject = ViewUtil
-										.resolveSemanticElement(view);
-									if (eObject != null) {
-										retval.add(eObject);
-									} else {
-										retval.add(view);
-									}
-								}
-							}
-						}
-						return retval;
-					}
-				});
-		}
-		return Collections.EMPTY_LIST;
-	}
+                    public void run() {
+                        if (selection instanceof IStructuredSelection) {
+                            IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+
+                            for (Iterator i = structuredSelection.iterator(); i
+                                .hasNext();) {
+                                Object next = i.next();
+
+                                View view = (View) ((IAdaptable) next)
+                                    .getAdapter(View.class);
+                                if (view != null) {
+                                    EObject eObject = ViewUtil
+                                        .resolveSemanticElement(view);
+                                    if (eObject != null) {
+                                        result.add(eObject);
+                                    } else {
+                                        result.add(view);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (InterruptedException e) {
+                Trace.catching(MslUIPlugin.getDefault(),
+                    MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "getElements", e); //$NON-NLS-1$
+
+                Log.error(MslUIPlugin.getDefault(),
+                    MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                        .getLocalizedMessage(), e);
+            }
+        }
+        return result;
+    }
 
 }

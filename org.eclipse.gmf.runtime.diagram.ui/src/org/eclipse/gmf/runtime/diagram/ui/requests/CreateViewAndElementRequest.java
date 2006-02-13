@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.requests;
  
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -132,8 +133,9 @@ public class CreateViewAndElementRequest extends CreateViewRequest {
 		super(
 			new ViewAndElementDescriptor(
 				new CreateElementRequestAdapter(
-					new CreateElementRequest(context, type)), preferencesHint));		
-	}
+					new CreateElementRequest(TransactionUtil.getEditingDomain(context),
+                context, type)), preferencesHint));
+    }
 
 	/**
 	 * Method getViewAndElementDescriptor.

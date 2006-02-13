@@ -16,27 +16,36 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
+import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.DuplicateElementsRequest;
-import org.eclipse.gmf.runtime.diagram.core.internal.services.semantic.SemanticService;
-import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An action delegate that handles duplication of selected model elements and
@@ -63,44 +72,58 @@ public class DuplicateActionDelegate
 			cmd = getDuplicateViewCommand(getStructuredSelection(),
 				getWorkbenchPart(), (DuplicateRequest) request);
 		} else {
-			request = new DuplicateElementsRequest();
+			request = new DuplicateElementsRequest(getEditingDomain(getStructuredSelection()));
 			cmd = getDuplicateElementsCommand(getStructuredSelection(),
 				(DuplicateElementsRequest) request);
 		}
-		if (cmd != null && cmd.isExecutable())
-			;
-		{
-			CommandResult result = getCommandManager().execute(cmd);
+		if (cmd != null && cmd.canExecute()) {
+            try {
+                IStatus status = cmd.execute(progressMonitor, null);
+                setStatus(status);
 
-			if (result.getStatus().isOK()) {
-				if (request instanceof DuplicateRequest) {
-					selectViews(((DuplicateRequest) request)
-						.getDuplicatedViews());
-				} else {
-					// This should select the new elements in ME. Once
-					// RATLC00533879 is fixed, this can be implemented.
-				}
-			}
+    			if (status.isOK()) {
+    				if (request instanceof DuplicateRequest) {
+    					selectViews(((DuplicateRequest) request)
+    						.getDuplicatedViews());
+    				} else {
+    					// This should select the new elements in ME. Once
+    					// RATLC00533879 is fixed, this can be implemented.
+    				}
+    			}
+            } catch (ExecutionException e) {
+                IStatus status = new Status(Status.ERROR, DiagramUIPlugin
+                    .getPluginId(), DiagramUIStatusCodes.COMMAND_FAILURE, e
+                    .getLocalizedMessage(), e);
+                setStatus(status);
+
+                Trace.catching(DiagramUIPlugin.getInstance(),
+                    DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "doRun", e); //$NON-NLS-1$
+
+                Log.error(DiagramUIPlugin.getInstance(),
+                    DiagramUIStatusCodes.COMMAND_FAILURE, e
+                        .getLocalizedMessage(), e);
+            }
 		}
 	}
 
 	/**
-	 * Determines if the selection can be duplicated by trying to get a command
-	 * to do so.
-	 * 
-	 * @param selection
-	 * @param workbenchPart
-	 * @return true if the selection can be duplicated; false otherwise.
-	 */
+     * Determines if the selection can be duplicated by trying to get a command
+     * to do so.
+     * 
+     * @param selection
+     * @param workbenchPart
+     * @return true if the selection can be duplicated; false otherwise.
+     */
 	static boolean canDuplicate(IStructuredSelection selection,
 			IWorkbenchPart workbenchPart) {
 
 		ICommand cmd = (workbenchPart instanceof IDiagramWorkbenchPart) ? getDuplicateViewCommand(
 			selection, workbenchPart, new DuplicateRequest())
 			: getDuplicateElementsCommand(selection,
-				new DuplicateElementsRequest());
+				new DuplicateElementsRequest(getEditingDomain(selection)));
 
-		return (cmd != null && cmd.isExecutable());
+		return (cmd != null && cmd.canExecute());
 	}
 
 	/**
@@ -127,7 +150,13 @@ public class DuplicateActionDelegate
 
 		if (!elements.isEmpty()) {
 			request.setElementsToBeDuplicated(new ArrayList(elements));
-			return SemanticService.getInstance().getCommand(request);
+            
+            IElementType elementType = ElementTypeRegistry.getInstance()
+                .getElementType(request.getEditHelperContext());
+            
+            if (elementType != null) {
+                return elementType.getEditCommand(request);
+            }
 		}
 		return null;
 	}
@@ -192,5 +221,29 @@ public class DuplicateActionDelegate
 			}
 		}
 	}
+    
+    public static TransactionalEditingDomain getEditingDomain(
+            IStructuredSelection selection) {
+
+        for (Iterator i = selection.iterator(); i.hasNext();) {
+            EObject element = (EObject) ((IAdaptable) i.next())
+                .getAdapter(EObject.class);
+
+            if (element != null) {
+                TransactionalEditingDomain editingDomain = TransactionUtil
+                    .getEditingDomain(element);
+
+                if (editingDomain != null) {
+                    return editingDomain;
+                }
+            }
+        }
+        return null;
+    }
+    
+    // Documentation copied from superclass
+    protected TransactionalEditingDomain getEditingDomain() {
+        return getEditingDomain(getStructuredSelection());
+    }
 
 }

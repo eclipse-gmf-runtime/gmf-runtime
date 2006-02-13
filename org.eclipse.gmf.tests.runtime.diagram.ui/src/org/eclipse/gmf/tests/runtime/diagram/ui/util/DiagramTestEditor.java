@@ -13,7 +13,6 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 
@@ -28,6 +27,7 @@ public class DiagramTestEditor
 	/** The editor ID for use in opening the editor. */
 	public static final String ID = "org.eclipse.gmf.tests.runtime.diagram.ui.DiagramTestEditor"; //$NON-NLS-1$
 	
+    
 	public void doSave(IProgressMonitor monitor) {
 		// no need to implement this
 	}

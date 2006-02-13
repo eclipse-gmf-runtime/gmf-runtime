@@ -13,6 +13,8 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
@@ -56,6 +58,7 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 				Diagram diagram = ViewService.createDiagram(
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
 				diagramView = diagram;
+                setDiagram(diagram);
 				return null;
 			}
 		});
@@ -97,16 +100,12 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 	protected abstract ICommand createCommand();
 
 	public abstract void testDoExecute();
-
-	public void testIsUndoable() {
-		assertTrue(getCommand().isUndoable());
-	}
-
-	public void testIsRedoable() {
-		assertTrue(getCommand().isRedoable());
-	}
 	
 	protected Diagram getDiagram() {
 		return diagramView;
 	}
+    
+    public TransactionalEditingDomain getEditingDomain() {
+        return TransactionUtil.getEditingDomain(diagramView);
+    }
 }

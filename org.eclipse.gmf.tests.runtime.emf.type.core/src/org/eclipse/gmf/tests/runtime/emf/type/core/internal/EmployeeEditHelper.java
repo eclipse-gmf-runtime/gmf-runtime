@@ -13,9 +13,11 @@ package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
@@ -40,28 +42,24 @@ public class EmployeeEditHelper
 			super(req);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+		    throws ExecutionException {
 			return null;
 		}
 	}
 	
-	public static Office createOffice(Employee employee,
-			IProgressMonitor progressMonitor) {
+	public static Office createOffice(TransactionalEditingDomain editingDomain, Employee employee,
+			IProgressMonitor progressMonitor) throws ExecutionException {
 		
 		Office office = null;
-		CreateElementRequest request = new CreateElementRequest(employee,
+		CreateElementRequest request = new CreateElementRequest(editingDomain, employee,
 			EmployeeType.OFFICE);
 		IElementType type = ElementTypeRegistry.getInstance()
 			.getElementType(employee);
 		ICommand command = type.getEditCommand(request);
 		
-		if (command != null && command.isExecutable()) {
-			command.execute(progressMonitor);
+		if (command != null && command.canExecute()) {
+		    command.execute(progressMonitor, null);
 		}
 
 		CommandResult officeResult = command.getCommandResult();

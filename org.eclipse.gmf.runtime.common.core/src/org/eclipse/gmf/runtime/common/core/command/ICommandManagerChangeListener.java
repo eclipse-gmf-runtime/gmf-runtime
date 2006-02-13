@@ -13,6 +13,9 @@ package org.eclipse.gmf.runtime.common.core.command;
 
 import java.util.EventListener;
 
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+
 /**
  * The interface for all objects that are interested in command manager change
  * events. To be such a listener, a class would have to implement this interface
@@ -28,6 +31,9 @@ import java.util.EventListener;
  * @see org.eclipse.gmf.runtime.common.core.command.CommandManager
  * @see org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent
  * @canBeSeenBy %partners
+ * 
+ * @deprecated Register an {@link IOperationHistoryListener} with the
+ *             {@link OperationHistoryFactory#getOperationHistory()} instead.
  */
 public interface ICommandManagerChangeListener extends EventListener {
 

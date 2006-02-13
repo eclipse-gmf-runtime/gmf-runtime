@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,17 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
-import java.util.Collection;
-
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
@@ -31,8 +32,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
  * 
  * @author ldamus
  */
-public class CreateElementCommand
-	extends EditElementCommand {
+public class CreateElementCommand extends EditElementCommand {
 
 	/**
 	 * The newly created element.
@@ -64,26 +64,29 @@ public class CreateElementCommand
 		containmentFeature = request.getContainmentFeature();
 	}
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		// Do the default element creation
-		newElement = doDefaultElementCreation();
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+            IAdaptable info)
+        throws ExecutionException {
 
-		// Configure the new element
-		ConfigureRequest configureRequest = createConfigureRequest();
+        // Do the default element creation
+        newElement = doDefaultElementCreation();
 
-		ICommand configureCommand = elementType
-			.getEditCommand(configureRequest);
+        // Configure the new element
+        ConfigureRequest configureRequest = createConfigureRequest();
 
-		if (configureCommand != null && configureCommand.isExecutable()) {
-			configureCommand.execute(progressMonitor);
-		}
+        ICommand configureCommand = elementType
+            .getEditCommand(configureRequest);
 
-		// Put the newly created element in the request so that the
-		// 'after' commands have access to it.
-		getCreateRequest().setNewElement(newElement);
+        if (configureCommand != null && configureCommand.canExecute()) {
+            configureCommand.execute(monitor, info);
+        }
 
-		return newOKCommandResult(newElement);
-	}
+        // Put the newly created element in the request so that the
+        // 'after' commands have access to it.
+        getCreateRequest().setNewElement(newElement);
+
+        return CommandResult.newOKCommandResult(newElement);
+    }
 
 	/**
 	 * Creates the request to configure the new element.
@@ -92,9 +95,10 @@ public class CreateElementCommand
 	 */
 	protected ConfigureRequest createConfigureRequest() {
 
-		ConfigureRequest configureRequest = new ConfigureRequest(newElement,
-			getElementType());
-		configureRequest.addParameters(getRequest().getParameters());
+		ConfigureRequest configureRequest = new ConfigureRequest(
+            getEditingDomain(), newElement, getElementType());
+        
+        configureRequest.addParameters(getRequest().getParameters());
 
 		return configureRequest;
 	}
@@ -105,27 +109,17 @@ public class CreateElementCommand
 	 * @return the new model element that has been created
 	 */
 	protected EObject doDefaultElementCreation() {
-
+		EReference containment = getContainmentFeature();
 		EClass eClass = getElementType().getEClass();
 
-		EObject element = eClass.getEPackage().getEFactoryInstance().create(
-			eClass);
+		if (containment != null) {
+			EObject element = getElementToEdit();
 
-		if (getContainmentFeature() != null) {
-			EObject container = getElementToEdit();
-
-			if (container != null) {
-				if (getContainmentFeature().isMany()) {
-					((Collection) container.eGet(getContainmentFeature()))
-						.add(element);
-
-				} else {
-					container.eSet(getContainmentFeature(), element);
-				}
-			}
+			if (element != null)
+				return EMFCoreUtil.create(element, containment, eClass);
 		}
 
-		return element;
+		return null;
 	}
 
 	/**
@@ -157,7 +151,7 @@ public class CreateElementCommand
 
 		} else {
 			IElementType type = ElementTypeRegistry.getInstance()
-				.getElementType(context);
+					.getElementType(context);
 
 			if (type != null) {
 				return type.getEClass();
@@ -172,6 +166,20 @@ public class CreateElementCommand
 	 * @return the containment feature
 	 */
 	protected EReference getContainmentFeature() {
+
+		if (containmentFeature == null) {
+			EClass classToEdit = getEClassToEdit();
+
+			if (classToEdit != null) {
+				IElementType type = getElementType();
+
+				if (type != null) {
+					containmentFeature = PackageUtil.findFeature(classToEdit,
+							type.getEClass());
+				}
+			}
+		}
+
 		return containmentFeature;
 	}
 
@@ -203,26 +211,27 @@ public class CreateElementCommand
 		return (CreateElementRequest) getRequest();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 
 		if (getEClassToEdit() == null) {
 			return false;
 		}
-		
+
 		if (getContainmentFeature() != null) {
 			EClassifier eClassifier = getContainmentFeature().getEType();
 			boolean result = true;
-			
+
 			if (eClassifier instanceof EClass) {
 				result = ((EClass) eClassifier).isSuperTypeOf(getElementType()
-					.getEClass());
+						.getEClass());
 			}
-			return result && super.isExecutable();
+
+			result = result
+					&& PackageUtil.canContain(getEClassToEdit(),
+							getContainmentFeature(), getElementType()
+									.getEClass(), false);
+
+			return result && super.canExecute();
 		}
 		return false;
 	}

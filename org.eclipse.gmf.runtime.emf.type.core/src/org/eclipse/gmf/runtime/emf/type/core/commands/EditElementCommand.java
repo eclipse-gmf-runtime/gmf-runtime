@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,19 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
-import java.util.Collection;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
@@ -27,7 +32,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
  * @author ldamus
  */
 public abstract class EditElementCommand
-	extends AbstractCommand {
+	extends AbstractTransactionalCommand {
 
 	/**
 	 * The element to be modified.
@@ -57,28 +62,42 @@ public abstract class EditElementCommand
 	protected EditElementCommand(String label, EObject elementToEdit,
 			IEditCommandRequest request) {
 
-		super(label);
+		super(request.getEditingDomain(), label, getAffectedFiles(request));
 		this.elementToEdit = elementToEdit;
 		this.request = request;
 	}
+    
+    protected static List getAffectedFiles(IEditCommandRequest request) {
+        
+        List result = new ArrayList();
+        List elements = request.getElementsToEdit();
+        
+        if (elements != null) {
+            
+            for (Iterator i = elements.iterator(); i.hasNext();) {
+                Resource resource = ((EObject) i.next()).eResource();
+                
+                if (resource != null) {
+                    IFile file = WorkspaceSynchronizer.getFile(resource);
+                    
+                    if (file != null) {
+                        result.add(file);
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
 	/**
 	 * Checks that the element to be modified by this command is of the correct
 	 * kind.
 	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 
 		if (getEClass() != null) {
 			return getEClass().isSuperTypeOf(getEClassToEdit());
 		}
-		return true;
-	}
-	
-	public boolean isUndoable() {
-		return true;
-	}
-	
-	public boolean isRedoable() {
 		return true;
 	}
 
@@ -142,13 +161,5 @@ public abstract class EditElementCommand
 	 */
 	protected boolean isOK(CommandResult commandResult) {
 		return commandResult.getStatus().getCode() == IStatus.OK;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
-		return request.getElementsToEdit();
 	}
 }

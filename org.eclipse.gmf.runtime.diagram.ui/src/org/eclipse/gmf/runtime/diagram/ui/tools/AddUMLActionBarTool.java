@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.tools;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -117,7 +118,9 @@ public class AddUMLActionBarTool extends AbstractPopupBarTool implements DragTra
 			hostElement = ViewUtil.resolveSemanticElement(theView);
 			
 			CreateElementRequest theReq =
-				new CreateElementRequest(hostElement, getElementType());
+				new CreateElementRequest(
+                TransactionUtil.getEditingDomain(hostElement), hostElement,
+                getElementType());
 			
 			EditCommandRequestWrapper semReq = new EditCommandRequestWrapper(theReq);
 

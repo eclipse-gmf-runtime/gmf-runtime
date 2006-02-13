@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,17 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.util.Assert;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 
 /**
  * @author melaasar
@@ -45,39 +51,51 @@ public class EtoolsProxyCommand extends Command {
 		return iCommand;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.commands.Command#canExecute()
-	 */
 	public boolean canExecute() {
-		return getICommand().isExecutable();
+		return getICommand().canExecute();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.commands.Command#canUndo()
-	 */
 	public boolean canUndo() {
-		return getICommand().isUndoable();
+		return getICommand().canUndo();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.commands.Command#execute()
-	 */
 	public void execute() {
-		getICommand().execute(new NullProgressMonitor());
+        try {
+            getICommand().execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "execute", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.COMMAND_FAILURE, e.getLocalizedMessage(),
+                e);
+        }
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.commands.Command#redo()
-	 */
 	public void redo() {
-		getICommand().redo();
+        try {
+            getICommand().redo(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "redo", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.COMMAND_FAILURE, e.getLocalizedMessage(),
+                e);
+        }
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.commands.Command#undo()
-	 */
+    
 	public void undo() {
-		getICommand().undo();
+        try {
+            getICommand().undo(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "undo", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.COMMAND_FAILURE, e.getLocalizedMessage(),
+                e);
+        }
 	}
 
 }

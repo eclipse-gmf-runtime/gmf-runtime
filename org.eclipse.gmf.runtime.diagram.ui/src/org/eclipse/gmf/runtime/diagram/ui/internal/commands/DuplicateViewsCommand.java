@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DuplicateEObjectsCommand;
@@ -63,6 +66,8 @@ public class DuplicateViewsCommand
 	/**
 	 * Creates a new <code>DuplicateViewsCommand</code>.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label
 	 *            the command label
 	 * @param request
@@ -78,9 +83,9 @@ public class DuplicateViewsCommand
 	 * 			the <code>int</code> that is the offset from the original views that
 	 * 			the new views will be placed in logical coordinates
 	 */
-	public DuplicateViewsCommand(String label, DuplicateRequest request,
+	public DuplicateViewsCommand(TransactionalEditingDomain editingDomain, String label, DuplicateRequest request,
 			List viewsToDuplicate, Map duplicatedElements, int offset) {
-		super(label, viewsToDuplicate);
+		super(editingDomain, label, viewsToDuplicate);
 		this.duplicatedElements = duplicatedElements;
 		duplicatedViewsToBeReturned = request.getDuplicatedViews();
 		this.offset = offset;
@@ -89,6 +94,8 @@ public class DuplicateViewsCommand
 	/**
 	 * Creates a new <code>DuplicateViewsCommand</code>.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label
 	 *            the command label
 	 * @param request
@@ -100,17 +107,20 @@ public class DuplicateViewsCommand
 	 * 			the <code>int</code> that is the offset from the original views that
 	 * 			the new views will be placed in logical coordinates
 	 */
-	public DuplicateViewsCommand(String label, DuplicateRequest request,
+	public DuplicateViewsCommand(TransactionalEditingDomain editingDomain, String label, DuplicateRequest request,
 			List viewsToDuplicate, int offset) {
-		this(label, request, viewsToDuplicate, null, offset);
+		this(editingDomain, label, request, viewsToDuplicate, null, offset);
 	}
 
 	/**
 	 * Overridden to association the duplicated views with the duplicated
 	 * elements.
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		CommandResult result = super.doExecute(progressMonitor);
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
+		CommandResult result = super.doExecuteWithResult(progressMonitor, info);
 
 		if (!result.getStatus().isOK()) {
 			return result;
@@ -164,7 +174,7 @@ public class DuplicateViewsCommand
 			}
 		}
 
-		return newOKCommandResult(duplicatedViewsToBeReturned);
+		return CommandResult.newOKCommandResult(duplicatedViewsToBeReturned);
 
 	}
 }

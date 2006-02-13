@@ -14,10 +14,12 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
@@ -51,12 +53,15 @@ public class DiagramLinkDragDropEditPolicy extends DragDropEditPolicy {
 
 					Diagram diagram = (Diagram) element;
 					View view = (View)getHost().getModel();
+                    
+
+                    TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+                        .getEditingDomain();
 			
 					CreateDiagramLinkCommand com = new CreateDiagramLinkCommand(
-
-						DiagramUIMessages.Command_CreateDiagramLink,
-								view, 
-								diagram);
+                        editingDomain,
+                        DiagramUIMessages.Command_CreateDiagramLink, view,
+                        diagram);
 
 					return new EtoolsProxyCommand(com);
 				}

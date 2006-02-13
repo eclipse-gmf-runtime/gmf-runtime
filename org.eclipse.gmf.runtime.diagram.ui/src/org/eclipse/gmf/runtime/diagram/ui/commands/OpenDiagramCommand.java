@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +49,7 @@ public class OpenDiagramCommand extends AbstractCommand {
 	 * @param element to be opened.
 	 */
 	public OpenDiagramCommand( String label, EObject element ) {
-		super(label);
+		super(label, null);
 		setElement( element );
 	}
 	
@@ -76,21 +78,25 @@ public class OpenDiagramCommand extends AbstractCommand {
 		this(DiagramUIMessages.Command_openDiagram, element);
 	}
 	
-	/**
-	 * This command can only be executed if the element is a diagram.
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-	*/
-	public boolean isExecutable() {
+    /**
+     * This command can only be executed if the element is a diagram.
+     * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
+    */
+    public boolean canExecute() {
 		return getElement() instanceof Diagram;
 	}
 
 	/**
 	 * Create a new editor to display the corresponding diagram.
 	 * <p>
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.gmf.runtime.common.core.sandbox.AbstractCommand2#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		try {
+
+    protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+        
+        try {
 			MEditingDomainGetter.getMEditingDomain(getElement()).runAsRead(new MRunnable() {
 				public Object run() {
 					Diagram diagram = null;
@@ -118,26 +124,33 @@ public class OpenDiagramCommand extends AbstractCommand {
 			return new CommandResult(
 					new Status(
 						IStatus.ERROR,
-						getPluginId(),
+						DiagramUIPlugin.getPluginId(),
 						DiagramUIStatusCodes.COMMAND_FAILURE,
 						e.getMessage(),
 						e));
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
-	 */
-	public boolean isUndoable() {
+    
+    public boolean canUndo() {
 		return false;
 	}
+    
+    public boolean canRedo() {
+		return false;
+	}
+    
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
-		return false;
-	}
+        return null;
+    }
+    
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+        return null;
+    }
 
 }

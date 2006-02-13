@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,11 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.OutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Wire;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.CreateRelationshipCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 
@@ -44,7 +43,7 @@ public class CreateWireCommand
 	 * Creates a wire and sets its source and target.
 	 */
 	protected EObject doDefaultElementCreation() {
-		Wire oWire = (Wire) EObjectUtil.create(getElementToEdit(),
+		Wire oWire = (Wire) EMFCoreUtil.create(getElementToEdit(),
 			getContainmentFeature(), getElementType().getEClass());
 
 		oWire.setSource((OutputTerminal) getSource());
@@ -57,11 +56,11 @@ public class CreateWireCommand
 	 * A wire can only be created when the source is an output terminal and the
 	 * target is an input terminal.
 	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 
 		if ((getSource() instanceof OutputTerminal &&
 			getTarget() instanceof InputTerminal)) {
-			return super.isExecutable();
+			return super.canExecute();
 		}
 		
 		return false;

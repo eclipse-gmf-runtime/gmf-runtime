@@ -6,10 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.core.internal.compatibility.PluginActivator
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.tests.runtime.common.core.internal.command,
+Export-Package: org.eclipse.gmf.tests.runtime.common.core,
+ org.eclipse.gmf.tests.runtime.common.core.internal.command,
+ org.eclipse.gmf.tests.runtime.common.core.internal.command.compatibility,
  org.eclipse.gmf.tests.runtime.common.core.internal.service,
- org.eclipse.gmf.tests.runtime.common.core.internal.util,
- org.eclipse.gmf.tests.runtime.common.core
+ org.eclipse.gmf.tests.runtime.common.core.internal.util
 Require-Bundle: org.eclipse.gmf.runtime.common.core,
  org.eclipse.core.runtime.compatibility,
  org.junit

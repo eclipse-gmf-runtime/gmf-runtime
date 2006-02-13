@@ -4,7 +4,7 @@
 <!--
 
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,9 @@
 </head>
 <body>
 
-Specification of the abstract API for commands that interact with the MSL.
-These commands follow the {@link org.eclipse.gmf.runtime.common.core}
-framework.
+Specification of the command API for operations that modify EMF models.
+These commands implement the interfaces from {@link org.eclipse.gmf.runtime.common.core} and
+extend the undoable operations from {@link org.eclipse.emf.workspace}.
 
 
 <h2>Package Specification</h2>

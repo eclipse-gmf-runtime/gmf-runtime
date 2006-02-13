@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -37,19 +38,23 @@ public class SetBoundsCommandTest
 	 * @see org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTestFixture#createCommand()
 	 */
 	protected ICommand createCommand() {
-		return new SetBoundsCommand(
+		return new SetBoundsCommand(getEditingDomain(), 
 			"SetBounds", new EObjectAdapter(noteView), new Rectangle(0, 0, WIDTH, HEIGHT)); //$NON-NLS-1$
 	}
 
 	public void testDoExecute() {
-		assertTrue(getCommand().isExecutable());
+		assertTrue(getCommand().canExecute());
 	
 		assertEquals( new Integer(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 		
-		getCommand().execute(new NullProgressMonitor());
+        try {
+            getCommand().execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e.getLocalizedMessage());
+        }
 		
 		assertEquals( new Integer(WIDTH),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
@@ -58,17 +63,21 @@ public class SetBoundsCommandTest
 	}
 	
 	public void testMove() {
-		ICommand moveCommand = new SetBoundsCommand(
+		ICommand moveCommand = new SetBoundsCommand(getEditingDomain(),
 			"SetBounds Move Test",new EObjectAdapter(noteView), new Point(XPOS, YPOS)); //$NON-NLS-1$
 		
-		assertTrue(moveCommand.isExecutable());
+		assertTrue(moveCommand.canExecute());
 		
 		assertEquals( new Integer(0),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
 		assertEquals( new Integer(0),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_Y()));
 			
-		moveCommand.execute(new NullProgressMonitor());
+        try {
+            moveCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e.getLocalizedMessage());
+        }
 			
 		assertEquals( new Integer(XPOS),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getLocation_X()));
@@ -81,17 +90,21 @@ public class SetBoundsCommandTest
 	}
 	
 	public void testResize() {
-		ICommand resizeCommand = new SetBoundsCommand(
+		ICommand resizeCommand = new SetBoundsCommand(getEditingDomain(), 
 			"SetBounds Move Test",new EObjectAdapter(noteView), new Dimension(WIDTH, HEIGHT)); //$NON-NLS-1$
 		
-		assertTrue(resizeCommand.isExecutable());
+		assertTrue(resizeCommand.canExecute());
 		
 		assertEquals( new Integer(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));
 		assertEquals( new Integer(-1),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Height()));
 			
-		resizeCommand.execute(new NullProgressMonitor());
+        try {
+            resizeCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e.getLocalizedMessage());
+        }
 			
 		assertEquals( new Integer(WIDTH),
 			ViewUtil.getStructuralFeatureValue(noteView,NotationPackage.eINSTANCE.getSize_Width()));

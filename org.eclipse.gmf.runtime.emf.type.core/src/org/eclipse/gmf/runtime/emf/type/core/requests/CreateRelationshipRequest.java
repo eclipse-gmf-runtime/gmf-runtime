@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,8 @@ package org.eclipse.gmf.runtime.emf.type.core.requests;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
@@ -21,8 +22,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  * 
  * @author ldamus
  */
-public class CreateRelationshipRequest
-	extends CreateElementRequest {
+public class CreateRelationshipRequest extends CreateElementRequest {
 
 	/**
 	 * The parameter name for the relationship source.
@@ -54,6 +54,8 @@ public class CreateRelationshipRequest
 	/**
 	 * Constructs a new request to create a new relationship.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param container
 	 *            the container for the new relationship
 	 * @param source
@@ -65,11 +67,11 @@ public class CreateRelationshipRequest
 	 * @param containmentFeature
 	 *            the feature that will contain the new relationship
 	 */
-	public CreateRelationshipRequest(EObject container, EObject source,
-			EObject target, IElementType elementType,
-			EReference containmentFeature) {
+	public CreateRelationshipRequest(TransactionalEditingDomain editingDomain,
+			EObject container, EObject source, EObject target,
+			IElementType elementType, EReference containmentFeature) {
 
-		super(container, elementType, containmentFeature);
+		super(editingDomain, container, elementType, containmentFeature);
 
 		this.source = source;
 		this.target = target;
@@ -78,6 +80,8 @@ public class CreateRelationshipRequest
 	/**
 	 * Constructs a new request to create a new relationship.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param container
 	 *            the container for the new relationship
 	 * @param source
@@ -87,15 +91,18 @@ public class CreateRelationshipRequest
 	 * @param elementType
 	 *            the element type of the new relationship
 	 */
-	public CreateRelationshipRequest(EObject container, EObject source,
-			EObject target, IElementType elementType) {
+	public CreateRelationshipRequest(TransactionalEditingDomain editingDomain,
+			EObject container, EObject source, EObject target,
+			IElementType elementType) {
 
-		this(container, source, target, elementType, null);
+		this(editingDomain, container, source, target, elementType, null);
 	}
 
 	/**
 	 * Constructs a new request to create a new relationship.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param source
 	 *            the source of the new relationship
 	 * @param target
@@ -103,22 +110,98 @@ public class CreateRelationshipRequest
 	 * @param elementType
 	 *            the element type of the new relationship
 	 */
-	public CreateRelationshipRequest(EObject source, EObject target,
-			IElementType elementType) {
+	public CreateRelationshipRequest(TransactionalEditingDomain editingDomain,
+			EObject source, EObject target, IElementType elementType) {
 
-		this(null, source, target, elementType, null);
+		this(editingDomain, null, source, target, elementType, null);
 	}
+
+    /**
+     * Constructs a new request to create a new relationship. The editing domain
+     * will be derived from the result of {@link #getContainer()}.
+     * 
+     * @param source
+     *            the source of the new relationship
+     * @param target
+     *            the target of the new relationship
+     * @param elementType
+     *            the element type of the new relationship
+     */
+    public CreateRelationshipRequest(EObject source, EObject target,
+            IElementType elementType) {
+
+        this(null, null, source, target, elementType, null);
+    }
 
 	/**
 	 * Constructs a new request to create a new relationship.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param elementType
 	 *            the element type of the new relationship
 	 */
-	public CreateRelationshipRequest(IElementType elementType) {
+	public CreateRelationshipRequest(TransactionalEditingDomain editingDomain,
+			IElementType elementType) {
 
-		this(null, null, null, elementType, null);
+		this(editingDomain, null, null, null, elementType, null);
 	}
+
+    /**
+     * Constructs a new request to create a new relationship. The editing domain will
+     * be derived from the result of {@link #getContainer()}.
+     * 
+     * @param elementType
+     *            the element type of the new relationship
+     */
+    public CreateRelationshipRequest(
+            IElementType elementType) {
+
+        this(null, null, null, null, elementType, null);
+    }
+    
+    /**
+     * Constructs a new request to create a new relationship.  The
+     * editing domain will be derived from <code>container</code>.
+     * 
+     * @param container
+     *            the container for the new relationship
+     * @param source
+     *            the source of the new relationship
+     * @param target
+     *            the target of the new relationship
+     * @param elementType
+     *            the element type of the new relationship
+     * @param containmentFeature
+     *            the feature that will contain the new relationship
+     */
+    public CreateRelationshipRequest(EObject container, EObject source,
+            EObject target, IElementType elementType,
+            EReference containmentFeature) {
+
+        this(TransactionUtil.getEditingDomain(container), container, source,
+                target, elementType, containmentFeature);
+    }
+    
+    /**
+     * Constructs a new request to create a new relationship.  The
+     * editing domain will be derived from <code>container</code>.
+     * 
+     * @param container
+     *            the container for the new relationship
+     * @param source
+     *            the source of the new relationship
+     * @param target
+     *            the target of the new relationship
+     * @param elementType
+     *            the element type of the new relationship
+     */
+    public CreateRelationshipRequest(EObject container, EObject source,
+            EObject target, IElementType elementType) {
+
+        this(TransactionUtil.getEditingDomain(container), container, source,
+                target, elementType);
+    }
 
 	/**
 	 * Gets the source of the new relationship.

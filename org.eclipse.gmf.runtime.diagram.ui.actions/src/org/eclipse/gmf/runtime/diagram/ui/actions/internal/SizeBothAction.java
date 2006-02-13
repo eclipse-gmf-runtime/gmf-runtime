@@ -109,7 +109,7 @@ public class SizeBothAction extends DiagramAction {
 
 			doResizeCmd.add( 
 				new EtoolsProxyCommand(
-					new SetBoundsCommand( "", new EObjectAdapter(resizeView), primarySize ) ) ); //$NON-NLS-1$
+					new SetBoundsCommand(toResize.getEditingDomain(), "", new EObjectAdapter(resizeView), primarySize ) ) ); //$NON-NLS-1$
 		}
 
 		return doResizeCmd.unwrap();

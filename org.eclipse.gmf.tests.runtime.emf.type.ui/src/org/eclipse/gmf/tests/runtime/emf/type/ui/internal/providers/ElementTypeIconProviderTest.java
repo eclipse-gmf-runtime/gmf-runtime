@@ -11,6 +11,7 @@
 package org.eclipse.gmf.tests.runtime.emf.type.ui.internal.providers;
 
 import java.net.URL;
+import java.util.Arrays;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -21,7 +22,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.ui.internal.providers.ElementTypeIconProvider;
-import org.eclipse.gmf.tests.runtime.emf.type.core.MetamodelTypeDescriptorTest;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
@@ -40,7 +40,7 @@ public class ElementTypeIconProviderTest
 	}
 
 	public static Test suite() {
-		return new TestSuite(MetamodelTypeDescriptorTest.class);
+		return new TestSuite(ElementTypeIconProviderTest.class);
 	}
 
 	protected ElementTypeIconProvider getFixture() {
@@ -51,20 +51,24 @@ public class ElementTypeIconProviderTest
 		this.fixture = fixture;
 	}
 
-	public void test_metamodelTypeConstructor() {
+	public void test_getIcon() {
 
 		Bundle bundle = Platform
 			.getBundle("org.eclipse.gmf.tests.runtime.emf.type.ui"); //$NON-NLS-1$
 		URL iconURL = bundle.getEntry("icons/icon.gif"); //$NON-NLS-1$
 		ImageDescriptor iconImageDescriptor = ImageDescriptor
 			.createFromURL(iconURL);
+        Image icon = iconImageDescriptor.createImage();
+        byte[] iconData = icon.getImageData().data;
 
 		setFixture(new ElementTypeIconProvider());
 
 		IElementType iconType = ElementTypeRegistry.getInstance().getType(
 			"org.eclipse.gmf.tests.runtime.emf.type.ui.iconType"); //$NON-NLS-1$
-		Image icon = getFixture().getIcon(iconType, 0);
-
-		assertEquals(iconImageDescriptor.getImageData(), icon.getImageData());
+		byte[] providerIconData = getFixture().getIcon(iconType, 0).getImageData().data;
+ 
+		assertTrue(Arrays.equals(iconData, providerIconData));
+        
+        icon.dispose();
 	}
 }

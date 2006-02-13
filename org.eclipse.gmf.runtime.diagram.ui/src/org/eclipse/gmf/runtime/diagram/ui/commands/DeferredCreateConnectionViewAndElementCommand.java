@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,7 +70,7 @@ public class DeferredCreateConnectionViewAndElementCommand
 			IAdaptable sourceViewAdapter, IAdaptable targetViewAdapter,
 			EditPartViewer currentViewer) {
 
-		super(DiagramUIMessages.Commands_CreateCommand_Connection_Label);
+		super(DiagramUIMessages.Commands_CreateCommand_Connection_Label, null);
 		Assert.isNotNull(currentViewer, "currentViewer is null"); //$NON-NLS-1$
 		this.sourceViewAdapter = sourceViewAdapter;
 		this.targetViewAdapter = targetViewAdapter;
@@ -139,36 +140,27 @@ public class DeferredCreateConnectionViewAndElementCommand
 		this.request = request;
 		this.typeInfoAdapter = typeInfoAdapter;
 	}
+    
+    public List getAffectedFiles() {
+        if (viewer != null) {
+            EditPart editpart = viewer.getRootEditPart().getContents();
+            if (editpart instanceof IGraphicalEditPart) {
+                View view = (View) editpart.getModel();
+                if (view != null) {
+                    IFile f = EObjectUtil.getWorkspaceFile(view);
+                    return f != null ? Collections.singletonList(f)
+                        : Collections.EMPTY_LIST;
+                }
+            }
+        }
+        return super.getAffectedFiles();
+    }
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
-		if (viewer != null) {
-			EditPart editpart = viewer.getRootEditPart().getContents();
-			if (editpart instanceof IGraphicalEditPart) {
-				View view = (View) editpart.getModel();
-				if (view != null) {
-					IFile f = EObjectUtil.getWorkspaceFile(view);
-					return f != null ? Collections.singletonList(f)
-						: Collections.EMPTY_LIST;
-				}
-			}
-		}
-		return super.getAffectedObjects();
-	}
-
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
-	 */
-	public boolean isUndoable() {
+	public boolean canUndo() {
 		return command != null && command.canUndo();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
+	public boolean canRedo() {
 		return command != null && command.canExecute();
 	}
 
@@ -199,22 +191,24 @@ public class DeferredCreateConnectionViewAndElementCommand
 	 * view adapaters and searching in the editpart viewer. Creates a connection
 	 * view and element using the request.
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+    
 		CreateConnectionViewRequest req = null;
 		if (request != null) {
 			if (request instanceof CreateConnectionViewRequest) {
 				req = (CreateConnectionViewRequest) request;
 			}
 		} else {
-			return newErrorCommandResult(getLabel());
+			return CommandResult.newErrorCommandResult(getLabel());
 		}
 		if (typeInfoAdapter != null) {
 			IElementType typeInfo = (IElementType) typeInfoAdapter
 				.getAdapter(IElementType.class);
 			if (typeInfo == null) {
-				newErrorCommandResult(getLabel());
+				CommandResult.newErrorCommandResult(getLabel());
 			}
 
 			if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
@@ -264,9 +258,9 @@ public class DeferredCreateConnectionViewAndElementCommand
 		View view = (View) req.getConnectionViewDescriptor().getAdapter(
 			View.class);
 		if (null == view) {
-			return newCancelledCommandResult();
+			return CommandResult.newCancelledCommandResult();
 		}
-		return newOKCommandResult(req.getNewObject());
+		return CommandResult.newOKCommandResult(req.getNewObject());
 	}
 
 	/**
@@ -279,24 +273,23 @@ public class DeferredCreateConnectionViewAndElementCommand
 		return null;
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-	 */
-	protected CommandResult doRedo() {
+    
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+ 
 		if (command != null) {
 			command.redo();
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-	 */
-	protected CommandResult doUndo() {
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
 		if (command != null) {
 			command.undo();
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 }

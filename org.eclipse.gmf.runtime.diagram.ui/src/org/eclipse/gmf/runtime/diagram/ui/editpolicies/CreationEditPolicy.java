@@ -18,8 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -47,7 +50,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -138,7 +141,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		Iterator editParts = request.getEditParts().iterator();
 		View container = (View)getHost().getAdapter(View.class);
 		EObject context = container == null ? null : ViewUtil.resolveSemanticElement(container);
-		CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label);
+        CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label);
 		while ( editParts.hasNext() ) {
 			EditPart ep = (EditPart)editParts.next();
 			if ( ep instanceof LabelEditPart ) {
@@ -158,29 +161,32 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				cc.compose(getReparentCommand((IGraphicalEditPart)ep));
 			}
 		}
-		return cc.isEmpty() ? null : new EtoolsProxyCommand(cc.unwrap());
+		return cc.isEmpty() ? null : new EtoolsProxyCommand(cc.reduce());
 	}
 	
 	/** 
 	 * Return the command to reparent the supplied editpart's semantic and notation
 	 * elements.
 	 * @param gep the editpart being reparented
-	 * @return A CompositeCommand that will reparent both the semantic and notation elements.
+	 * @return A CompositeCommand2 that will reparent both the semantic and notation elements.
 	 */
 	protected ICommand getReparentCommand( IGraphicalEditPart gep ) {
-		CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label); 
+        CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label); 
 		View container = (View)getHost().getModel();
 		EObject context = ViewUtil.resolveSemanticElement(container);
 		View view = (View)gep.getModel();
 		EObject element = ViewUtil.resolveSemanticElement(view);
 
-		//
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
+        //
 		// semantic
 		if ( element != null ) {
 			Command moveSemanticCmd =
 				getHost().getCommand(
 					new EditCommandRequestWrapper(
-						new MoveRequest(context, element)));
+						new MoveRequest(editingDomain, context, element)));
 			
 			cc.compose ( new CommandProxy(moveSemanticCmd) );
 		}
@@ -198,7 +204,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 	protected ICommand getReparentViewCommand( IGraphicalEditPart gep ) {
 		View container = (View)getHost().getModel();
 		View view = (View)gep.getModel();
-		return new AddCommand(new EObjectAdapter(container),
+		return new AddCommand(gep.getEditingDomain(), new EObjectAdapter(container),
 							  new EObjectAdapter(view));
 	}
 	
@@ -219,21 +225,25 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 	 */
 	protected Command getCreateCommand(CreateViewRequest request) {
 
-		CompositeModelCommand cc = new CompositeModelCommand(DiagramUIMessages.AddCommand_Label);
-		Iterator descriptors = request.getViewDescriptors().iterator();
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        CompositeTransactionalCommand cc = new CompositeTransactionalCommand(
+            editingDomain, DiagramUIMessages.AddCommand_Label);
+        
+        Iterator descriptors = request.getViewDescriptors().iterator();
 
 		while (descriptors.hasNext()) {
 			CreateViewRequest.ViewDescriptor descriptor =
 				(CreateViewRequest.ViewDescriptor)descriptors.next();
 
 			CreateCommand createCommand =
-				new CreateCommand(
+				new CreateCommand(editingDomain,
 					descriptor, 
 					(View)(getHost().getModel()));
 
 			cc.compose(createCommand);
 		}
-		return new EtoolsProxyCommand(cc.unwrap());
+		return new EtoolsProxyCommand(cc.reduce());
 
 	}
 
@@ -296,7 +306,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 
 
 		// form the compound command and return
-		CompositeCommand cc = new CompositeCommand(semanticCommand.getLabel());
+        CompositeCommand cc = new CompositeCommand(semanticCommand.getLabel());
 		cc.compose(semanticCommand);
 		cc.compose(new CommandProxy(viewCommand));
 		if ( refreshConnectionCommand != null ) {
@@ -351,12 +361,12 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				 * Execute the command that prompts the user with the popup
 				 * menu, then executes the command prepared for the relationship
 				 * type that the user selected.
-				 * 
-				 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 				 */
-				protected CommandResult doExecute(
-						IProgressMonitor progressMonitor) {
-					CommandResult cmdResult = super.doExecute(progressMonitor);
+				protected CommandResult doExecuteWithResult(
+                        IProgressMonitor progressMonitor, IAdaptable info)
+                    throws ExecutionException {
+                    
+					CommandResult cmdResult = super.doExecuteWithResult(progressMonitor, info);
 					if (!cmdResult.getStatus().isOK()) {
 						return cmdResult;
 					}
@@ -374,21 +384,27 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 					request.setNewObject(((Collection) createRequest
 						.getNewObject()));
 
-					return newOKCommandResult();
+					return CommandResult.newOKCommandResult();
 				}
 				
-				protected CommandResult doUndo() {
+				protected CommandResult doUndoWithResult(
+                        IProgressMonitor progressMonitor, IAdaptable info)
+                    throws ExecutionException {
+                    
 					if (_createCmd != null && _createCmd.canUndo() ) {
 						_createCmd.undo();
 					}
-					return super.doUndo();
+					return super.doUndoWithResult(progressMonitor, info);
 				}
 				
-				protected CommandResult doRedo() {
+				protected CommandResult doRedoWithResult(
+                        IProgressMonitor progressMonitor, IAdaptable info)
+                    throws ExecutionException {
+                    
 					if (_createCmd != null && _createCmd.canExecute() ) {
 						_createCmd.redo();
 					}
-					return super.doRedo();
+					return super.doRedoWithResult(progressMonitor, info);
 				}
 			};
 

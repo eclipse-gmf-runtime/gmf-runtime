@@ -29,6 +29,9 @@ public class EMFTypePluginStatusCodes {
 	//
 	// Integer-valued error codes
 	//
+
+    public static final int COMMAND_FAILURE = 4;
+    
 	public static final int ERROR_PARSING_XML = 10;
 
 	public static final int TYPE_NOT_INITED = 11;

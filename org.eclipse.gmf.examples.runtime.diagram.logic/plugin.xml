@@ -222,7 +222,7 @@
                    name="%LEDTool.Label"
                    eclass="LED"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.LEDEditHelper"
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="LED"/>
            </metamodelType>
            <metamodelType
@@ -231,7 +231,7 @@
                    name="%ConnectionTool.Label"
                    eclass="Wire"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.WireEditHelper" 
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="wire"/>
            </metamodelType>
            <metamodelType
@@ -240,7 +240,7 @@
                    name="%CircuitTool.Label"
                    eclass="Circuit"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.CircuitEditHelper" 
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="circuit"/>
            </metamodelType>
            <metamodelType
@@ -249,7 +249,7 @@
                    name="%LogicFlowTool.Label"
                    eclass="FlowContainer"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.ContainerElementEditHelper" 
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="FlowContainer"/>
            </metamodelType>
            <metamodelType
@@ -258,7 +258,7 @@
                    name="%AndGateTool.Label"
                    eclass="AndGate"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.GateEditHelper" 
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="AndGate"/>
            </metamodelType>
            <metamodelType
@@ -267,7 +267,7 @@
                    name="%OrGateTool.Label"
                    eclass="OrGate"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.GateEditHelper" 
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="OrGate"/>
            </metamodelType>
            <metamodelType
@@ -276,7 +276,7 @@
                    name="%XORGateTool.Label"
                    eclass="XORGate"
                    edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.GateEditHelper" 
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <param name="semanticHint" value="XORGate"/>
            </metamodelType>
            <metamodelType
@@ -304,7 +304,7 @@
                    icon="icons/halfadder16.gif"
                    name="%HalfAdderTool.Label"
                    edithelperadvice="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.HalfAdderAdvice"
-                   kind="org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType"> 
+                   kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"> 
                <specializes id="logic.circuit"/>
                <param name="semanticHint" value="circuit"/>
            </specializationType>

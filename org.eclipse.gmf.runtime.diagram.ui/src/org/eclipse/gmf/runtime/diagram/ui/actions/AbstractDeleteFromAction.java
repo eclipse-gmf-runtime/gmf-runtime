@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -29,6 +31,10 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 public abstract class AbstractDeleteFromAction
 	extends DiagramAction {
 	
+    /**
+     * The editing domain used by this action to make changes to the model.
+     */
+    private TransactionalEditingDomain editingDomain;
 	
 	/**
 	 * Creates an <code>AbstractDeleteFromAction</code> with a default label.
@@ -55,7 +61,7 @@ public abstract class AbstractDeleteFromAction
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
 	 */
 	protected Request createTargetRequest() {
-		return 	new EditCommandRequestWrapper(new DestroyElementRequest(false));
+		return 	new EditCommandRequestWrapper(new DestroyElementRequest(getEditingDomain(), false));
 	}
 
 	/* (non-Javadoc)
@@ -91,5 +97,29 @@ public abstract class AbstractDeleteFromAction
 
 		return theRequest;
 	}
+    
+     /**
+     * Gets my editing domain from my workbench part.
+     * 
+     * @return my editing domain
+     */
+    protected TransactionalEditingDomain getEditingDomain() {
+        
+        if (editingDomain == null) {
+            // try adapting the workbench part
+            IWorkbenchPart part = getWorkbenchPart();
+
+            if (part != null) {
+                IEditingDomainProvider edProvider = (IEditingDomainProvider) part
+                    .getAdapter(IEditingDomainProvider.class);
+
+                if (edProvider != null) {
+                    editingDomain = (TransactionalEditingDomain) edProvider
+                        .getEditingDomain();
+                }
+            }
+        }
+        return editingDomain;
+    }
 
 }

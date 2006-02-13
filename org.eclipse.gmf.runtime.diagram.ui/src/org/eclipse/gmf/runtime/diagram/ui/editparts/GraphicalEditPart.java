@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,10 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditDomain;
@@ -1314,4 +1318,12 @@ public abstract class GraphicalEditPart
 			return dummyNode;
 		}
 	}
+    
+    /**
+     * Derives my editing domain from my diagram view element. Subclasses may
+     * override.
+     */
+    public TransactionalEditingDomain getEditingDomain() {
+        return TransactionUtil.getEditingDomain(getDiagramView());
+    }
 }

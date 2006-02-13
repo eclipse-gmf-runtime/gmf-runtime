@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.requests;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
@@ -27,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.jface.util.Assert;
 
@@ -261,14 +263,17 @@ public class CreateConnectionViewRequest
 			IAdaptable sourceViewAdapter, IAdaptable targetViewAdapter,
 			DiagramEditPart diagramEditPart, PreferencesHint preferencesHint) {
 
-		CreateCommand createCommand = new CreateCommand(
+        Diagram diagram = diagramEditPart.getDiagramView().getDiagram();
+		CreateCommand createCommand = new CreateCommand(diagramEditPart.getEditingDomain(),
 			new ConnectionViewDescriptor(elementAdapter, preferencesHint),
-			diagramEditPart.getDiagramView().getDiagram());
+            diagram);
 
 		IAdaptable viewAdapter = (IAdaptable) createCommand.getCommandResult()
 			.getReturnValue();
+        
+        TransactionalEditingDomain editingDomain = diagramEditPart.getEditingDomain();
 
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, 
 			DiagramUIMessages.Commands_SetConnectionEndsCommand_Source);
 		sceCommand.setEdgeAdaptor(viewAdapter);
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);
@@ -293,13 +298,16 @@ public class CreateConnectionViewRequest
 			IAdaptable sourceViewAdapter, IAdaptable targetViewAdapter,
 			DiagramEditPart diagramEditPart) {
 
-		CreateCommand createCommand = new CreateCommand(viewDescriptor,
-			diagramEditPart.getDiagramView().getDiagram());
+        Diagram diagram = diagramEditPart.getDiagramView().getDiagram();
+		CreateCommand createCommand = new CreateCommand(diagramEditPart.getEditingDomain(), viewDescriptor,
+            diagram);
 
 		IAdaptable viewAdapter = (IAdaptable) createCommand.getCommandResult()
 			.getReturnValue();
+        
+        TransactionalEditingDomain editingDomain = diagramEditPart.getEditingDomain();
 
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, 
 			DiagramUIMessages.Commands_SetConnectionEndsCommand_Source);
 		sceCommand.setEdgeAdaptor(viewAdapter);
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);

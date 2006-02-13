@@ -84,7 +84,7 @@ public class ElementTypeSemanticProvider
 			result = containerType.getEditCommand(editCommandRequest);
 		}
 		
-		if (result == null || !result.isExecutable()) {
+		if (result == null || !result.canExecute()) {
 			editCommandRequest.setParameter("USE_EDIT_HELPERS", null); //$NON-NLS-1$
 		}
 		

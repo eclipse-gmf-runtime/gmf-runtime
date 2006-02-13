@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 
@@ -61,7 +65,8 @@ public class MoveElementsCommand extends EditElementCommand {
 		this.targetContainer = request.getTargetContainer();
 	}
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
 
 		for (Iterator i = getElementsToMove().keySet().iterator(); i.hasNext();) {
 			EObject element = (EObject) i.next();
@@ -70,16 +75,16 @@ public class MoveElementsCommand extends EditElementCommand {
 			if (feature != null) {
 				if (feature.isMany()) {
 					((Collection) targetContainer.eGet(feature)).add(element);
-	
+
 				} else {
 					targetContainer.eSet(feature, element);
 				}
 			} else {
-				return newErrorCommandResult(EMFTypeCoreMessages.moveElementsCommand_noTargetFeature);
+				return CommandResult.newErrorCommandResult(EMFTypeCoreMessages.moveElementsCommand_noTargetFeature);
 			}
 		}
 
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 	/**
@@ -88,13 +93,16 @@ public class MoveElementsCommand extends EditElementCommand {
 	 * <P>
 	 * Looks for the feature first in the elements map. If none is specified,
 	 * tries to use the same feature that contained the element in its old
-	 * location.
+	 * location. If the old containment feature doesn't exist in the new target,
+	 * uses the MSL utility to find the first feature in the target that can
+	 * contain the element being moved.
 	 * 
 	 * @param element
 	 *            the element to be moved
 	 * @return the feature that will contain the element in the target
 	 */
 	protected EReference getTargetFeature(EObject element) {
+
 		EReference feature = (EReference) getElementsToMove().get(element);
 
 		if (feature == null) {
@@ -106,6 +114,13 @@ public class MoveElementsCommand extends EditElementCommand {
 				feature = oldContainmentFeature;
 			}
 		}
+
+		if (feature == null) {
+			feature = PackageUtil.findFeature(getTargetContainer().eClass(),
+					element.eClass());
+			setTargetFeature(element, feature);
+		}
+
 		return feature;
 	}
 
@@ -142,12 +157,7 @@ public class MoveElementsCommand extends EditElementCommand {
 		getElementsToMove().put(element, targetFeature);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.commands.core.internal.commands.EditElementCommand#isExecutable()
-	 */
-	public boolean isExecutable() {
+	public boolean canExecute() {
 
 		EObject container = getTargetContainer();
 
@@ -159,7 +169,7 @@ public class MoveElementsCommand extends EditElementCommand {
 		for (Iterator i = getElementsToMove().keySet().iterator(); i.hasNext();) {
 			EObject element = (EObject) i.next();
 			EReference feature = getTargetFeature(element);
-			
+
 			if (feature == null
 					|| !container.eClass().getEAllReferences()
 							.contains(feature)) {
@@ -171,6 +181,19 @@ public class MoveElementsCommand extends EditElementCommand {
 			// IF the element is already in the target container...
 			if (container.equals(element.eContainer())
 					&& feature == element.eContainmentFeature()) {
+				// Don't allow the reparenting
+				return false;
+			}
+
+			// IF the element is the parent of the target container...
+			if (EcoreUtil.isAncestor(element, getTargetContainer())) {
+				// Don't allow the reparenting
+				return false;
+			}
+
+			// IF the container can not contain the element...
+			if (!PackageUtil.canContain(getTargetContainer().eClass(),
+					feature, element.eClass(), false)) {
 				// Don't allow the reparenting
 				return false;
 			}

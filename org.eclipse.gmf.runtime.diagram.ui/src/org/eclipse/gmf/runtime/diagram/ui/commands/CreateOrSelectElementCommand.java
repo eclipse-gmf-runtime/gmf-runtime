@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
@@ -216,10 +217,13 @@ public class CreateOrSelectElementCommand
 	 * Pops up the dialog with the content provided. If the user selects 'select
 	 * existing', then the select elements dialog also appears.
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.gmf.runtime.common.core.sandbox.AbstractCommand2#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-		CommandResult cmdResult = super.doExecute(progressMonitor);
+	protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
+            org.eclipse.core.runtime.IAdaptable info)
+        throws ExecutionException {
+        
+		CommandResult cmdResult = super.doExecuteWithResult(progressMonitor, info);
 		if (!cmdResult.getStatus().isOK()) {
 			return cmdResult;
 		}
@@ -232,19 +236,19 @@ public class CreateOrSelectElementCommand
 
 				if (dialog.open() != Window.OK) {
 					// user cancelled gesture
-					return newCancelledCommandResult();
+					return CommandResult.newCancelledCommandResult();
 				}
 				List selectedElements = dialog.getSelectedElements();
 				if (selectedElements == null) {
 					// user cancelled gesture
 					progressMonitor.setCanceled(true);
-					return newCancelledCommandResult();
+					return CommandResult.newCancelledCommandResult();
 				} else if (dialog.isMultiSelectable()) {
 					resultAdapter.setObject(selectedElements);
-					return newOKCommandResult(selectedElements);
+					return CommandResult.newOKCommandResult(selectedElements);
 				} else {
 					resultAdapter.setObject(selectedElements.get(0));
-					return newOKCommandResult(selectedElements.get(0));
+					return CommandResult.newOKCommandResult(selectedElements.get(0));
 				}
 			} else {
 				resultAdapter.setObject(result);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,25 +11,27 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 
 
 /**
- * @author melaasar
- *
  * A command to set the bounds (location/size) of a <code>View</code>
+ * 
+ * @author melaasar
  */
-public class SetBoundsCommand extends AbstractModelCommand {
+public class SetBoundsCommand extends AbstractTransactionalCommand {
 
 	private IAdaptable  adapter;
 	private Point location;
@@ -38,12 +40,15 @@ public class SetBoundsCommand extends AbstractModelCommand {
 	/**
 	 * Creates a <code>SetBoundsCommand</code> for the given view adapter with a given bounds.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label The command label
 	 * @param adapter An adapter to the <code>View</code>
 	 * @param bounds The new bounds
 	 */
-	public SetBoundsCommand(String label,IAdaptable adapter, Rectangle bounds) {
-		super(label,adapter);
+	public SetBoundsCommand(TransactionalEditingDomain editingDomain, String label,IAdaptable adapter, Rectangle bounds) {
+        super(editingDomain, label,
+            getWorkspaceFiles((View) adapter.getAdapter(View.class)));
 		Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(bounds, "bounds cannot be null"); //$NON-NLS-1$
 		this.adapter = adapter;
@@ -54,12 +59,15 @@ public class SetBoundsCommand extends AbstractModelCommand {
 	/**
 	 * Creates a <code>SetBoundsCommand</code> for the given view adapter with a given location.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label The command label
 	 * @param adapter An adapter to the <code>View</code>
 	 * @param location The new location
 	 */
-	public SetBoundsCommand (String label,IAdaptable adapter, Point location) {
-		super(label,adapter);
+	public SetBoundsCommand (TransactionalEditingDomain editingDomain, String label,IAdaptable adapter, Point location) {
+        super(editingDomain, label,
+            getWorkspaceFiles((View) adapter.getAdapter(View.class)));
 		Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(location, "location cannot be null"); //$NON-NLS-1$
 		this.adapter = adapter;
@@ -69,24 +77,26 @@ public class SetBoundsCommand extends AbstractModelCommand {
 	/**
 	 * Creates a <code>SetBoundsCommand</code> for the given view adapter with a given size.
 	 * 
+     * @param editingDomain
+     *            the editing domain through which model changes are made
 	 * @param label The command label
 	 * @param adapter An adapter to the <code>View</code>
 	 * @param size The new size
 	 */
-	public SetBoundsCommand (String label, IAdaptable adapter, Dimension size) {
-		super(label, adapter);
-		Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
+	public SetBoundsCommand (TransactionalEditingDomain editingDomain, String label, IAdaptable adapter, Dimension size) {
+		super(editingDomain, label,
+            getWorkspaceFiles((View) adapter.getAdapter(View.class)));
+        Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(size, "size cannot be null"); //$NON-NLS-1$
 		this.adapter = adapter;
 		this.size = size;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
+
 		if (adapter == null)
-			return newErrorCommandResult("SetBoundsCommand: viewAdapter does not adapt to IView.class"); //$NON-NLS-1$
+			return CommandResult.newErrorCommandResult("SetBoundsCommand: viewAdapter does not adapt to IView.class"); //$NON-NLS-1$
 		
 		View view  = (View)adapter.getAdapter(View.class);
 		
@@ -98,6 +108,6 @@ public class SetBoundsCommand extends AbstractModelCommand {
 			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Width(), new Integer(size.width));
 			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getSize_Height(), new Integer(size.height));
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 }

@@ -14,6 +14,8 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -26,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -75,15 +77,17 @@ public class LogicShapeTests extends AbstractShapeTests {
 		final Color red = new Color(null, 255, 0, 0);
 		final int fontHeight = 10;
 		
-		getLogicTestFixture().execute(new AbstractModelCommand("", null) { //$NON-NLS-1$
-			protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+		getLogicTestFixture().execute(new AbstractTransactionalCommand(getLogicTestFixture().getEditingDomain(), "", null) { //$NON-NLS-1$
+			protected CommandResult doExecuteWithResult(
+                        IProgressMonitor progressMonitor, IAdaptable info)
+                    throws ExecutionException {
 				View ledView = ledEP2.getNotationView();
 				ShapeStyle shapeStyle = (ShapeStyle)ledView.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
 				shapeStyle.setFillColor((FigureUtilities.colorToInteger(red)).intValue());
 				shapeStyle.setLineColor((FigureUtilities.colorToInteger(red)).intValue());
 				shapeStyle.setFontColor((FigureUtilities.colorToInteger(red)).intValue());
 				shapeStyle.setFontHeight(fontHeight);
-				return newOKCommandResult();
+				return CommandResult.newOKCommandResult();
 			}
 		});
 		

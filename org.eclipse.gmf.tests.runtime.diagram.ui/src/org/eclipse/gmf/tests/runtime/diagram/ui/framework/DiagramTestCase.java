@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.framework;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -21,12 +22,20 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.ui.util.FileUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -45,6 +54,9 @@ public abstract class DiagramTestCase extends TestCase {
 	private IProject project = null;
 	private IDiagramWorkbenchPart diagramWorkbenchPart = null;
 	private IFile diagramFile = null;
+    private Diagram diagramView;
+    private TransactionalEditingDomain editingDomain;
+    private Resource resource;
 
 
 	/**
@@ -73,6 +85,7 @@ public abstract class DiagramTestCase extends TestCase {
 
 		// Create and open a diagram
 		setDiagramFile(createDiagram());
+        createResource();
 		openDiagram();
 
 		// Allow the OS to process editor related events
@@ -92,6 +105,11 @@ public abstract class DiagramTestCase extends TestCase {
 
 		// Close the diagram
 		closeDiagram();
+        diagramView = null;
+        
+        // unload the resource
+        resource.unload();
+        resource = null;
 
 		// Close and delete the project
 		closeProject();		
@@ -100,6 +118,14 @@ public abstract class DiagramTestCase extends TestCase {
 	protected IFile getDiagramFile() {
 		return diagramFile;
 	}
+    
+    protected Diagram getDiagram() {
+        return diagramView;
+    }
+    
+    protected void setDiagram(Diagram diagram) {
+        this.diagramView = diagram;
+    }
 	
 	protected void setDiagramFile(IFile theFile) {
 		diagramFile = theFile;
@@ -146,10 +172,52 @@ public abstract class DiagramTestCase extends TestCase {
 			project.open(null);
 		}
 	}
+    
+    /**
+     * Creates the editing domain and resource and adds the diagram to
+     * that resource.
+     */
+    protected void createResource() {
+        editingDomain = MEditingDomain.INSTANCE;
+        
+        IFile file = getDiagramFile();
+        
+        if (file != null) {
+            String filePath = file.getLocation().toOSString();
+            resource = editingDomain.loadResource(filePath);
+
+        } else {
+            resource = editingDomain
+                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+        }
+
+        final Diagram d = getDiagram();  
+        
+        if (d != null) {
+
+            AbstractEMFOperation operation = new AbstractEMFOperation(
+                editingDomain, "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
+
+                protected IStatus doExecute(IProgressMonitor monitor,
+                        IAdaptable info)
+                    throws ExecutionException {
+
+                    resource.getContents().add(getDiagram());
+                    return Status.OK_STATUS;
+                };
+            };
+
+            try {
+                operation.execute(new NullProgressMonitor(), null);
+            } catch (ExecutionException ie) {
+                fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
+            }
+        }
+    }
 
 	/**
-	 * Close and delete the project
-	 */
+     * Close and delete the project
+     */
 	protected void closeProject() {
 	
 		try {

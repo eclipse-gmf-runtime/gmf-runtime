@@ -17,11 +17,11 @@ import java.util.ListIterator;
 
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Element;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Wire;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -72,8 +72,8 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 			Object obj = li.next();
 			if (obj instanceof Wire) {
 				Wire wire = (Wire)obj;
-				if (EObjectUtil.contains(circuitElement, wire.getSource()) &&
-					EObjectUtil.contains(circuitElement, wire.getTarget())) {
+				if (EcoreUtil.isAncestor(circuitElement, wire.getSource()) &&
+                    EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
 					wires.add(wire);
 				}
 			}

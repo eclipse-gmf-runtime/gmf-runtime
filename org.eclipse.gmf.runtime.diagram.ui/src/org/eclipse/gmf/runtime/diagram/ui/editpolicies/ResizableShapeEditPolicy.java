@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
@@ -24,6 +25,7 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.AccessibleHandleProvider;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
@@ -38,10 +40,11 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.IPropertyValueDefe
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -98,7 +101,8 @@ public class ResizableShapeEditPolicy
 	 * @return command
 	 */
 	protected Command getAutoSizeCommand(Request request) {
-		ICommand resizeCommand = new SetBoundsCommand(
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+		ICommand resizeCommand = new SetBoundsCommand(editingDomain, 
 			DiagramUIMessages.SetAutoSizeCommand_Label,
 			new EObjectAdapter((View) getHost().getModel()), new Dimension(-1,
 				-1));
@@ -113,7 +117,7 @@ public class ResizableShapeEditPolicy
 	 */
 	protected Command getMoveDeferredCommand(ChangeBoundsDeferredRequest request) {
 		final class SetDeferredPropertyCommand
-			extends AbstractModelCommand {
+			extends AbstractTransactionalCommand {
 
 			private IAdaptable newValue;
 
@@ -122,20 +126,25 @@ public class ResizableShapeEditPolicy
 			/**
 			 * constructor
 			 * 
+             * @param editingDomain
+             * the editing domain through which model changes are made
 			 * @param label
 			 * @param viewAdapter
 			 * @param newValue
 			 */
-			public SetDeferredPropertyCommand(String label,
+			public SetDeferredPropertyCommand(TransactionalEditingDomain editingDomain, String label,
 					IAdaptable viewAdapter, IAdaptable newValue) {
-				super(label, null);
+				super(editingDomain, label, null);
 				this.viewAdapter = viewAdapter;
 				this.newValue = newValue;
 			}
 
-			protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+			protected CommandResult doExecuteWithResult(
+                    IProgressMonitor progressMonitor, IAdaptable info)
+                throws ExecutionException {
+                
 				if (null == viewAdapter || null == newValue)
-					return newCancelledCommandResult();
+					return CommandResult.newCancelledCommandResult();
 
 				View view = (View) viewAdapter.getAdapter(View.class);
 				Point p = (Point) newValue
@@ -148,12 +157,17 @@ public class ResizableShapeEditPolicy
 				// clear for garbage collection
 				viewAdapter = null;
 				newValue = null;
-				return newOKCommandResult();
+				return CommandResult.newOKCommandResult();
 			}
 		}
-		SetDeferredPropertyCommand cmd = new SetDeferredPropertyCommand(
+        View view = (View) getHost().getModel();
+        
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        
+        SetDeferredPropertyCommand cmd = new SetDeferredPropertyCommand(editingDomain,
 			DiagramUIMessages.ResizableShapeEditPolicy_MoveDeferredCommand_label,
-			new EObjectAdapter((View) getHost().getModel()), request
+			new EObjectAdapter(view), request
 				.getLocationAdapter());
 		return new EtoolsProxyCommand(cmd);
 	}

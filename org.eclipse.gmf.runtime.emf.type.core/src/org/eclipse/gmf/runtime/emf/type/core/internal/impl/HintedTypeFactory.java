@@ -9,10 +9,10 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.core.internal.type;
+package org.eclipse.gmf.runtime.emf.type.core.internal.impl;
 
-import org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType;
 import org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeFactory;
+import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.IMetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationType;

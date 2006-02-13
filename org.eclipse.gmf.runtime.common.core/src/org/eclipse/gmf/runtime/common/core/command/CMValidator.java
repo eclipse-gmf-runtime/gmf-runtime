@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,17 +15,27 @@ package org.eclipse.gmf.runtime.common.core.command;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.gmf.runtime.common.core.internal.command.BaseModificationValidator;
+import org.eclipse.gmf.runtime.common.core.internal.command.FileModificationApprover;
 
 
 /**
- * A validator that verifies if the files being modified by a particular command 
- * are editable.  Calls validateedit() to bring up source control dialogs as applicable.
+ * A validator that verifies if the files being modified by a particular command
+ * are editable. Calls validateedit() to bring up source control dialogs as
+ * applicable.
  * 
  * @author dlander
+ * @author ldamus
+ * 
+ * @deprecated Each GMF operation provides a list of {@link IFile}s that are expected to
+ *             be modified when the operation is executed, undone or redone. An
+ *             {@link FileModificationApprover} is registered with the
+ *             {@link OperationHistoryFactory#getOperationHistory()} to validate
+ *             the modification to these resources.
+ * 
  * @canBeSeenBy %partners
  */
 public class CMValidator {

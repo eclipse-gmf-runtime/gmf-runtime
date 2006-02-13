@@ -11,12 +11,15 @@
 
 package org.eclipse.gmf.runtime.common.core.internal;
 
+import org.eclipse.core.commands.operations.IOperationApprover;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.gmf.runtime.common.core.internal.command.FileModificationApprover;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.osgi.framework.BundleContext;
@@ -73,7 +76,14 @@ public class CommonCorePlugin
 		throws Exception {
 		super.start(context);
 		configureLogListeners();
+		
+		// Register the file modification approver with the operation history.
+		IOperationApprover approver = new FileModificationApprover();
+		OperationHistoryFactory.getOperationHistory().addOperationApprover(
+				approver);
 	}
+    
+    
 
 	/**
 	 * Configure log listeners for log listeners extension.

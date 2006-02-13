@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
@@ -27,6 +28,7 @@ import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
@@ -102,8 +104,10 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 		}
 		Terminal element = (Terminal)adapter.getAdapter(Terminal.class);
 	
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+        
 		ICommand boundsCommand = 
-			new SetBoundsCommand(
+			new SetBoundsCommand(editingDomain, 
 				ExampleDiagramLogicMessages.SetLocationCommand_Label_Resize,
 				descriptor,
 				(Point)((ITerminalOwnerEditPart)getHost()).createBoundsMap().get(element.getId()));

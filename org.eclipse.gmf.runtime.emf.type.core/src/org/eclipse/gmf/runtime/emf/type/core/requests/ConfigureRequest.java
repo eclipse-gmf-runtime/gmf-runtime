@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
@@ -24,8 +25,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  * 
  * @author ldamus
  */
-public class ConfigureRequest
-	extends AbstractEditCommandRequest {
+public class ConfigureRequest extends AbstractEditCommandRequest {
 
 	/**
 	 * The element to be configured.
@@ -41,17 +41,38 @@ public class ConfigureRequest
 	/**
 	 * Constructs a new configure request.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param elementToConfigure
 	 *            the new element to be configured
 	 * @param typeToConfigure
 	 *            the element type defining the attributes that the new element
 	 *            should have
 	 */
-	public ConfigureRequest(EObject elementToConfigure,
-			IElementType typeToConfigure) {
+	public ConfigureRequest(TransactionalEditingDomain editingDomain,
+			EObject elementToConfigure, IElementType typeToConfigure) {
+
+		super(editingDomain);
 		this.elementToConfigure = elementToConfigure;
 		this.typeToConfigure = typeToConfigure;
 	}
+    
+    /**
+     * Constructs a new configure request. The editing domain will be derived
+     * from <code>elementToConfigure</code>.
+     * 
+     * @param elementToConfigure
+     *            the new element to be configured
+     * @param typeToConfigure
+     *            the element type defining the attributes that the new element
+     *            should have
+     */
+    public ConfigureRequest(EObject elementToConfigure,
+            IElementType typeToConfigure) {
+
+        this(TransactionUtil.getEditingDomain(elementToConfigure),
+            elementToConfigure, typeToConfigure);
+    }
 
 	/**
 	 * Gets the element to be configured

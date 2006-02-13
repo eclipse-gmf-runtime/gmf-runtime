@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.gmf.runtime.emf.type.core.commands;
 
 import java.util.Collection;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -51,14 +53,16 @@ public class SetValueCommand
 		this.value = request.getValue();
 	}
 
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+	    throws ExecutionException {
+
 		if (feature.isMany()) {
 			((Collection) getElementToEdit().eGet(feature)).add(value);
 
 		} else {
 			getElementToEdit().eSet(feature, value);
 		}
-		return newOKCommandResult();
+		return CommandResult.newOKCommandResult();
 	}
 
 }

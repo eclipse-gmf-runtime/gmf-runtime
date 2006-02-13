@@ -23,12 +23,16 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.ui.IEditorPart;
-
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.marker.AbstractMarkerNavigationProvider;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIDebugOptions;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIStatusCodes;
+import org.eclipse.ui.IEditorPart;
 
 /** 
  * Abstract Model Marker Navigation Provider this abstract class provides 
@@ -45,6 +49,8 @@ import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 public abstract class AbstractModelMarkerNavigationProvider
     extends AbstractMarkerNavigationProvider {
 
+    private TransactionalEditingDomain editingDomain;
+    
     /**
      * Perform the feedback for navigating to the given marker within a
      * model read action.
@@ -56,15 +62,39 @@ public abstract class AbstractModelMarkerNavigationProvider
         // Must save the editor first since it will probably be used in 
         // the logic to obtain the model operation context.
         setEditor(editor);
+        
+        // Remember the editing domain associated with this editor
+        IEditingDomainProvider domainProvider = (IEditingDomainProvider) getEditor().getAdapter(IEditingDomainProvider.class);
+        
+        if (domainProvider != null) {
+            EditingDomain domain = domainProvider.getEditingDomain();
+            
+            if (domain instanceof TransactionalEditingDomain) {
+                editingDomain = (TransactionalEditingDomain) domain;
+            }
+        }
+        
+        if (editingDomain != null) {
 
-        // Perform the "goto" in a read operation.
-        OperationUtil.runAsRead(new MRunnable() {
-            public Object run() {
-                AbstractModelMarkerNavigationProvider.super.gotoMarker(
-                    editor,
-                    marker);
-                return null;
-            }});
+            // Perform the "goto" in a read operation.
+            try {
+                editingDomain.runExclusive(new Runnable() {
+    
+                    public void run() {
+                        AbstractModelMarkerNavigationProvider.super.gotoMarker(
+                            editor, marker);
+                    }
+                });
+                
+            } catch (InterruptedException e) {
+                Trace.catching(MslUIPlugin.getDefault(),
+                    MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "gotoMarker", e); //$NON-NLS-1$
+                Log.error(MslUIPlugin.getDefault(),
+                    MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                        .getLocalizedMessage(), e);
+            }
+        }
     }
     
     /**
@@ -86,8 +116,10 @@ public abstract class AbstractModelMarkerNavigationProvider
 	        if (resourcePath != null) {
 	        	// if the resource path is null, then I can't locate any objects
 	        	// referenced in this marker on that non-existent resource
-	        	
-		        result = ResourceUtil.load(resourcePath.toOSString());
+	        	 
+                ResourceSet resourceSet = editingDomain.getResourceSet();
+                URI uri = URI.createFileURI(resourcePath.toOSString());
+                result = resourceSet.getResource(uri, true);
 	        }
     	}
         
@@ -179,4 +211,5 @@ public abstract class AbstractModelMarkerNavigationProvider
     	
     	return result;
     }
+
 }

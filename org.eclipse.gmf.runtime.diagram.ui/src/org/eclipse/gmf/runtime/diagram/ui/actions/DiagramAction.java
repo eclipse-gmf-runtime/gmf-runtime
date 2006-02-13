@@ -25,6 +25,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -186,7 +187,7 @@ public abstract class DiagramAction
 	 * @return An optional label for the action's executed command
 	 */
 	protected String getCommandLabel() {
-		return null;
+		return StringStatics.BLANK;
 	}
 
 	/**

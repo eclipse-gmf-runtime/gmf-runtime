@@ -11,9 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.internal.providers;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
-
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
@@ -25,6 +25,8 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.AWTClipboardHelper;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.commands.CopyImageCommand;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * Concrete class that implements the <code>IGlobalActionHandler</code>
@@ -116,22 +118,28 @@ public class ImageSupportGlobalActionHandler
 			getSelectedViews(cntxt.getSelection()), diagramPart
 				.getDiagramEditPart()) {
 
-			public boolean isUndoable() {
+			public boolean canUndo() {
 				return isUndoable;
 			}
 
-			public boolean isRedoable() {
+			public boolean canRedo() {
 				return isUndoable;
 			}
 
-			protected CommandResult doUndo() {
-				return isUndoable ? newOKCommandResult()
-					: super.doUndo();
+			protected CommandResult doUndoWithResult(
+                    IProgressMonitor progressMonitor, IAdaptable info)
+                throws ExecutionException {
+                
+				return isUndoable ? CommandResult.newOKCommandResult()
+					: super.doUndoWithResult(progressMonitor, info);
 			}
 
-			protected CommandResult doRedo() {
-				return isUndoable ? newOKCommandResult()
-					: super.doRedo();
+			protected CommandResult doRedoWithResult(
+                    IProgressMonitor progressMonitor, IAdaptable info)
+                throws ExecutionException {
+                
+				return isUndoable ? CommandResult.newOKCommandResult()
+					: super.doRedoWithResult(progressMonitor, info);
 			}
 		};
 	}

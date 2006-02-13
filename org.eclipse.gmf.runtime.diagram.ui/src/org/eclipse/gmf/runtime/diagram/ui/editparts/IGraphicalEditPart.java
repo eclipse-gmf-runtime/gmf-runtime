@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
@@ -138,4 +139,11 @@ public interface IGraphicalEditPart
 	 * <code>null</code> or unresolvable 
 	 */
 	public EObject resolveSemanticElement();
+    
+    /**
+     * Gets my transactional EMF editing domain.
+     * 
+     * @return my transactional EMF editing domain
+     */
+    public TransactionalEditingDomain getEditingDomain();
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,24 @@
 
 package org.eclipse.gmf.runtime.common.ui.action;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.command.CommandManager;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
+import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
+import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -37,17 +52,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
-import org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
-
 /**
  * A custom contribution item that goes into a workbenchpart's toolbar
  * 
@@ -55,7 +59,7 @@ import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
  */
 public abstract class AbstractContributionItem
 	extends ContributionItem
-	implements ISelectionChangedListener, ICommandManagerChangeListener,
+	implements ISelectionChangedListener, IOperationHistoryListener,
 	IActionWithProgress {
 
 	/**
@@ -157,12 +161,27 @@ public abstract class AbstractContributionItem
 	protected IWorkbenchPart getWorkbenchPart() {
 		return workbenchPart;
 	}
+    
+    /**
+     * Gets the undo context from my workbench part.
+     * 
+     * @return the undo context
+     */
+    protected IUndoContext getUndoContext() {
+        IWorkbenchPart part = getWorkbenchPart();
+
+        if (part != null) {
+            return (IUndoContext) part.getAdapter(IUndoContext.class);
+        }
+
+        return null;
+    }
 
 	/**
-	 * Gets the item control
-	 * 
-	 * @return The item control
-	 */
+     * Gets the item control
+     * 
+     * @return The item control
+     */
 	protected Control getControl() {
 		return control;
 	}
@@ -238,8 +257,8 @@ public abstract class AbstractContributionItem
 					provider.removeSelectionChangedListener(this);
 				}
 			}
-			if (isCommandStackListener()) {
-				getCommandManager().removeCommandManagerChangeListener(this);
+			if (isOperationHistoryListener()) {
+                getOperationHistory().removeOperationHistoryListener(this);
 			}
 		}
 
@@ -253,8 +272,8 @@ public abstract class AbstractContributionItem
 					provider.addSelectionChangedListener(this);
 				}
 			}
-			if (isCommandStackListener()) {
-				getCommandManager().addCommandManagerChangeListener(this);
+			if (isOperationHistoryListener()) {
+                getOperationHistory().addOperationHistoryListener(this);
 			}
 		}
 	}
@@ -457,11 +476,22 @@ public abstract class AbstractContributionItem
 	 * @param command <code>ICommand</code> to be executed
 	 */
 	protected void execute(ICommand command) {
-		if (command == null || !command.isExecutable())
+		if (command == null || !command.canExecute())
 			return;
 
-		getCommandManager().execute(command);
+        command.addContext(getUndoContext());
+        
+        try {
+            getOperationHistory().execute(command, new NullProgressMonitor(), null);
+        
+        } catch (ExecutionException e) {
+            Trace.catching(CommonUIPlugin.getDefault(),
+                CommonUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "execute", e); //$NON-NLS-1$
 
+            Log.error(CommonUIPlugin.getDefault(),
+                CommonUIStatusCodes.ACTION_FAILURE, e.getLocalizedMessage(), e);
+        }
 		return;
 	}
 
@@ -484,10 +514,21 @@ public abstract class AbstractContributionItem
 	 * manager.
 	 * 
 	 * @return The command manager for this action delegate.
+     * @deprecated Use {@link #getOperationHistory()} instead.
 	 */
 	protected CommandManager getCommandManager() {
-		return getActionManager().getCommandManager();
+		return CommandManager.getDefault();
 	}
+	
+    /**
+     * Returns the operation history for this contribution item from its action
+     * manager.
+     * 
+     * @return the operation history
+     */
+    protected IOperationHistory getOperationHistory() {
+        return getActionManager().getOperationHistory();
+    }
 
 	/**
 	 * A generalized convinience method. Should be called by subclasses whenever
@@ -573,17 +614,29 @@ public abstract class AbstractContributionItem
 	protected boolean isSelectionListener() {
 		return false;
 	}
-
+	
 	/**
 	 * Retrieves a Boolean indicating whether this action handler is interested
 	 * in commnd stack changed events.
 	 * 
 	 * @return <code>true</code> if this action handler is interested;
 	 *         <code>false</code> otherwise.
+     * @deprecated Subclasses must implement {@link #isOperationHistoryListener()}.
 	 */
 	protected boolean isCommandStackListener() {
 		return false;
 	}
+    
+    /**
+     * Retrieves a Boolean indicating whether this contribution item is interested
+     * in operation history changed events.
+     * 
+     * @return <code>true</code> if this action handler is interested;
+     *         <code>false</code> otherwise.
+     */
+    protected boolean isOperationHistoryListener() {
+        return false;
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -591,28 +644,33 @@ public abstract class AbstractContributionItem
 	public final void selectionChanged(SelectionChangedEvent event) {
 		update();
 	}
+    
+    /**
+     * Refreshes me if the history event has my workbench part's context.
+     */
+    public void historyNotification(OperationHistoryEvent event) {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener#commandManagerChanged(org.eclipse.gmf.runtime.common.core.command.CommandManagerChangeEvent)
-	 */
-	public final void commandManagerChanged(CommandManagerChangeEvent event) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.lang.Runnable#run()
-			 */
-			public void run() {
-				update();
-			}
-		});
-	}
+        IUndoableOperation operation = event.getOperation();
+
+        if (operation != null) {
+            IUndoContext partContext = getUndoContext();
+
+            if (partContext != null && operation.hasContext(partContext)) {
+                PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+                    public void run() {
+                        update();
+                    }
+                });
+            }
+        }
+    }
 
 	/**
-	 * Retrieves the current selection.
-	 * 
-	 * @return The current selection.
-	 */
+     * Retrieves the current selection.
+     * 
+     * @return The current selection.
+     */
 	protected ISelection getSelection() {
 		ISelection selection = null;
 		ISelectionProvider selectionProvider = getWorkbenchPart().getSite()

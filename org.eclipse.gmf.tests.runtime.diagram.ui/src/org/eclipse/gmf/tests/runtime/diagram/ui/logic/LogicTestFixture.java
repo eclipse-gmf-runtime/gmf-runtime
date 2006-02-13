@@ -131,7 +131,7 @@ public class LogicTestFixture
 	 */
 	public EObject createElement(IElementType type, EObject parent, EReference ref) {
 	
-		CreateElementRequest cer = new CreateElementRequest(parent, type, ref);
+		CreateElementRequest cer = new CreateElementRequest(getEditingDomain(), parent, type, ref);
 		ICommand cmd = type.getEditHelper().getEditCommand(cer);
 		print("\tcreating semantic " + type.getDisplayName() + " element... ");//$NON-NLS-2$//$NON-NLS-1$
 	

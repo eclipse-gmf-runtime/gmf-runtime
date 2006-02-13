@@ -15,11 +15,13 @@ import java.util.Collection;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
@@ -33,6 +35,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.model.OrGate;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.XORGate;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewRefactorHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -41,7 +44,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -223,17 +226,24 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			final IGraphicalEditPart andEP = getLogicRefactorTestFixture().getAndEP();
 			
 			final int color = FigureUtilities.RGBToInteger(new RGB(255, 0, 255)).intValue();
-			
+            
+            TransactionalEditingDomain editingDomain = getLogicRefactorTestFixture().getEditingDomain();
+            
 			// do notational changes to the And gate
-			getLogicRefactorTestFixture().execute(new AbstractModelCommand("", null) { //$NON-NLS-1$
-				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+			getLogicRefactorTestFixture().execute(
+                new AbstractTransactionalCommand(editingDomain, "", null) { //$NON-NLS-1$
+                    
+				protected CommandResult doExecuteWithResult(
+                            IProgressMonitor progressMonitor, IAdaptable info)
+                        throws ExecutionException {
+                    
 					Node node = (Node) andEP.getNotationView();
 					Bounds bounds = (Bounds) node.getLayoutConstraint();
 					bounds.setX(800);
 					bounds.setY(3000);
 					FillStyle fStyle = (FillStyle) node.getStyle(NotationPackage.eINSTANCE.getFillStyle());
 					fStyle.setFillColor(color);
-					return newOKCommandResult();
+					return CommandResult.newOKCommandResult();
 				}
 			});
 			
@@ -242,13 +252,16 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			final IElementType typeXor = ElementTypeRegistry.getInstance().getType("logic.xorgate"); //$NON-NLS-1$
 	
 			final Circuit circuit = (Circuit) ViewUtil.getContainerView(andEP.getNotationView()).getElement();
-			CreateElementRequest createRequest = new CreateElementRequest(circuit, typeXor);
-			getLogicRefactorTestFixture().execute(typeXor.getEditHelper().getEditCommand(createRequest));
+			CreateElementRequest createRequest = new CreateElementRequest(editingDomain, circuit, typeXor);
+            ICommand command = typeXor.getEditHelper().getEditCommand(createRequest);
+			getLogicRefactorTestFixture().execute(command);
 			assertTrue("Xor creation failed", circuit.getChildren().size() == 6); //$NON-NLS-1$
 
 			// do the notation morphing
-			Collection results = getLogicRefactorTestFixture().execute(new AbstractModelCommand("", null) {//$NON-NLS-1$
-				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+			Collection results = getLogicRefactorTestFixture().execute(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+				protected CommandResult doExecuteWithResult(
+                            IProgressMonitor progressMonitor, IAdaptable info)
+                        throws ExecutionException {
 					AndGate oldObject = (AndGate) circuit.getChildren().get(1);
 					XORGate newObject = (XORGate) circuit.getChildren().get(5);
 
@@ -256,9 +269,10 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 					newObject.getTerminals().addAll(oldObject.getTerminals());
 
 					new ViewRefactorHelper(PreferencesHint.USE_DEFAULTS).refactor(oldObject, newObject);
+
 					EObjectUtil.destroy(oldObject);
-					
-					return newOKCommandResult(newObject);
+
+					return CommandResult.newOKCommandResult(newObject);
 				}
 			});
 			
@@ -288,18 +302,20 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 		try {
 			final IGraphicalEditPart circuitEP = (IGraphicalEditPart) getLogicRefactorTestFixture().getAndEP().getParent().getParent();
 			
+            TransactionalEditingDomain editingDomain = getLogicRefactorTestFixture().getEditingDomain();
+            
 			final int color = FigureUtilities.RGBToInteger(new RGB(255, 0, 255)).intValue();
 			
 			// do notational changes to the And gate
-			getLogicRefactorTestFixture().execute(new AbstractModelCommand("", null) {//$NON-NLS-1$
-				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+			getLogicRefactorTestFixture().execute(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+				protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
 					Node node = (Node) circuitEP.getNotationView();
 					Bounds bounds = (Bounds) node.getLayoutConstraint();
 					bounds.setX(1000);
 					bounds.setY(1000);
 					FillStyle fStyle = (FillStyle) node.getStyle(NotationPackage.eINSTANCE.getFillStyle());
 					fStyle.setFillColor(color);
-					return newOKCommandResult();
+					return CommandResult.newOKCommandResult();
 				}
 			});
 			
@@ -307,13 +323,13 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			final IElementType typeFlowContainer = ElementTypeRegistry.getInstance().getType("logic.flowcontainer"); //$NON-NLS-1$
 	
 			final Model model = (Model) ViewUtil.getContainerView(circuitEP.getNotationView()).getElement();
-			CreateElementRequest createRequest = new CreateElementRequest(model, typeFlowContainer);
+			CreateElementRequest createRequest = new CreateElementRequest(editingDomain, model, typeFlowContainer);
 			getLogicRefactorTestFixture().execute(typeFlowContainer.getEditHelper().getEditCommand(createRequest));
 			assertTrue("Flow Container creation failed", model.getChildren().size() == 2);//$NON-NLS-1$
 
 			// do the notation morphing
-			Collection results = getLogicRefactorTestFixture().execute(new AbstractModelCommand("", null) {//$NON-NLS-1$
-				protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+			Collection results = getLogicRefactorTestFixture().execute(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+				protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
 					final Circuit oldObject = (Circuit) model.getChildren().get(0);
 					FlowContainer newObject = (FlowContainer) model.getChildren().get(1);
 
@@ -334,7 +350,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 					}.refactor(oldObject, newObject);
 					EObjectUtil.destroy(oldObject);
 					
-					return newOKCommandResult(newObject);
+					return CommandResult.newOKCommandResult(newObject);
 				}
 			});
 			

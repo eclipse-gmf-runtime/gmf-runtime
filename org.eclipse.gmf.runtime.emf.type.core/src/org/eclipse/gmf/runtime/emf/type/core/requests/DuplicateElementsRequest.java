@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -27,9 +28,8 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
  * 
  * @author ldamus
  */
-public class DuplicateElementsRequest
-	extends AbstractEditCommandRequest {
-	
+public class DuplicateElementsRequest extends AbstractEditCommandRequest {
+
 	/**
 	 * The common container of all of the elements to be duplicated.
 	 */
@@ -57,24 +57,52 @@ public class DuplicateElementsRequest
 
 	/**
 	 * Constructs a new request to duplicate a model element.
+	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 */
-	public DuplicateElementsRequest() {
+	public DuplicateElementsRequest(TransactionalEditingDomain editingDomain) {
 
-		this(null);
+		this(editingDomain, null);
 	}
 
 	/**
 	 * Constructs a new request to duplicate a model element.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param elementToDuplicate
 	 *            the element to be duplicated
 	 */
-	public DuplicateElementsRequest(List elementsToDuplicate) {
+	public DuplicateElementsRequest(TransactionalEditingDomain editingDomain,
+			List elementsToDuplicate) {
 
-		super();
+		super(editingDomain);
 		this.elementsToDuplicate = elementsToDuplicate;
 	}
-	
+    
+    /**
+     * Constructs a new request to duplicate a model element.  The editing domain will be
+     * derived from the elements in {@link #getElementsToBeDuplicated()}.
+     * 
+     */
+    public DuplicateElementsRequest() {
+
+        this(null, null);
+    }
+    
+    /**
+     * Constructs a new request to duplicate a model element. The editing domain will be
+     * derived from the elements in {@link #getElementsToBeDuplicated()}.
+     * 
+     * @param elementToDuplicate
+     *            the element to be duplicated
+     */
+    public DuplicateElementsRequest(List elementsToDuplicate) {
+
+        this(null, elementsToDuplicate);
+    }
+
 	/**
 	 * Returns a map of all duplicated elements. This will be populated with all
 	 * the elements that are duplicated after the command executes. The key is
@@ -96,6 +124,7 @@ public class DuplicateElementsRequest
 	public List getElementsToBeDuplicated() {
 		return elementsToDuplicate;
 	}
+
 	/**
 	 * Gets the duplicate. Will return <code>null</code> until the request has
 	 * been answered.
@@ -115,6 +144,16 @@ public class DuplicateElementsRequest
 	public void setAllDuplicatedElementsMap(Map duplicatedElementsMap) {
 		this.allDuplicatedElementsMap = duplicatedElementsMap;
 	}
+    
+    /**
+     * Sets the primary elements to be duplicated.
+     * 
+     * @param elements
+     *            The elements to be duplicated.
+     */
+    public void setElementsToBeDuplicated(List elements) {
+        this.elementsToDuplicate = elements;
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -140,21 +179,22 @@ public class DuplicateElementsRequest
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditCommandRequest#getEditHelperContext()
 	 */
 	public Object getEditHelperContext() {
-		
+
 		if (commonContainer == null) {
 			commonContainer = getLeastCommonContainer(getElementsToBeDuplicated());
 		}
 		return commonContainer;
 	}
-	
+
 	/**
-	 * Finds the first common container of a collection of objects, or <code>null</code> if
-	 * there is not common container.
+	 * Finds the first common container of a collection of objects, or
+	 * <code>null</code> if there is not common container.
 	 * 
 	 * @param objects
 	 *            the elements
-	 * @return the least common container that containes all of the <code>objects</code>, or
-	 * <code>null</code> if there is no common container.
+	 * @return the least common container that containes all of the
+	 *         <code>objects</code>, or <code>null</code> if there is no
+	 *         common container.
 	 */
 	private static EObject getLeastCommonContainer(Collection objects) {
 
@@ -163,11 +203,11 @@ public class DuplicateElementsRequest
 
 		for (Iterator i = objects.iterator(); i.hasNext();) {
 			EObject nextElement = (EObject) i.next();
-			
+
 			boolean found = false;
 			List containers = new ArrayList();
 			EObject container = nextElement;
-			
+
 			// Construct the list of containers for this next element.
 			while (container != null) {
 				containers.add(container);
@@ -179,7 +219,7 @@ public class DuplicateElementsRequest
 						found = true;
 
 					} else if ((prevContainers.contains(container))
-						&& (contains(container, commonContainer))) {
+							&& (contains(container, commonContainer))) {
 
 						commonContainer = container;
 						found = true;
@@ -211,12 +251,32 @@ public class DuplicateElementsRequest
 
 		if (container == eObject) {
 			return true;
-			
+
 		} else if ((container == null) || (eObject == null)) {
 			return false;
-			
+
 		} else {
 			return contains(container, eObject.eContainer());
 		}
 	}
+    
+
+    /**
+     * Derives the editing domain from the elements to be duplicated, if it hasn't
+     * already been specified.
+     */
+    public TransactionalEditingDomain getEditingDomain() {
+        TransactionalEditingDomain result = super.getEditingDomain();
+
+        if (result == null) {
+            EObject eObject = (EObject) ((getElementsToBeDuplicated().size() > 0) ? getElementsToBeDuplicated()
+                .get(0)
+                : null);
+            
+            if (eObject != null) {
+                result = TransactionUtil.getEditingDomain(eObject); 
+            }
+        }
+        return result;
+    }
 }

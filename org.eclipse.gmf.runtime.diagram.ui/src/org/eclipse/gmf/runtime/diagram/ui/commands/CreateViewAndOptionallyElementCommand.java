@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -105,7 +105,7 @@ public class CreateViewAndOptionallyElementCommand
 	 */
 	public CreateViewAndOptionallyElementCommand(IAdaptable elementAdapter,
 		IGraphicalEditPart containerEP, Point location, PreferencesHint preferencesHint) {
-		super(DiagramUIMessages.CreateCommand_Label);
+		super(DiagramUIMessages.CreateCommand_Label, null);
 
 		setElementAdapter(elementAdapter);
 		setContainerEP(containerEP);
@@ -118,19 +118,17 @@ public class CreateViewAndOptionallyElementCommand
 		setPreferencesHint(preferencesHint);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getAffectedObjects()
-	 */
-	public Collection getAffectedObjects() {
-		if (containerEP != null) {
-			View view = (View)containerEP.getModel();
-			if (view != null) {
-				IFile f = EObjectUtil.getWorkspaceFile(view);
-				return f != null ? Collections.singletonList(f) : Collections.EMPTY_LIST;
-			}
-		}
-		return super.getAffectedObjects();
-	}
+    public List getAffectedFiles() {
+        if (containerEP != null) {
+            View view = (View)containerEP.getModel();
+            if (view != null) {
+                IFile f = EObjectUtil.getWorkspaceFile(view);
+                return f != null ? Collections.singletonList(f) : Collections.EMPTY_LIST;
+            }
+        }
+
+        return super.getAffectedFiles();
+    }
 	
 	/**
 	 * Searches the container editpart to see if the element passed in already
@@ -159,9 +157,11 @@ public class CreateViewAndOptionallyElementCommand
 	 * does not exist in the container, this command will create a new element
 	 * and view.</li>
 	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+    protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
 		CreateViewRequest createRequest;
 
 		// Create the element first, if one does not exist.
@@ -171,7 +171,7 @@ public class CreateViewAndOptionallyElementCommand
 			IElementType type = (IElementType) getElementAdapter()
 				.getAdapter(IElementType.class);
 			if (type == null) {
-				return newErrorCommandResult(getLabel());
+				return CommandResult.newErrorCommandResult(getLabel());
 			}
 			createRequest = CreateViewRequestFactory
 				.getCreateShapeRequest(type, getPreferencesHint());
@@ -200,61 +200,54 @@ public class CreateViewAndOptionallyElementCommand
 					if(iResult == SWT.YES)
 					{
 						setResult(new EObjectAdapter(theExistingView));
-						return newOKCommandResult(getResult());
+						return CommandResult.newOKCommandResult(getResult());
 					}
 				}
 				// Fall-thru and create a new view
 				if (getCommand().canExecute()) {
 					ICommand cmd = DiagramCommandStack.getICommand(getCommand());
-					cmd.execute(progressMonitor);					
+					cmd.execute(progressMonitor, info);					
 					if (progressMonitor.isCanceled()) {
-						return newCancelledCommandResult();
+						return CommandResult.newCancelledCommandResult();
 					}else if (!(cmd.getCommandResult().getStatus().isOK())){
 						return cmd.getCommandResult();
 					}				
 					Object obj = ((List) createRequest.getNewObject()).get(0);										
 					setResult((IAdaptable) obj);
-					return newOKCommandResult(getResult());
+					return CommandResult.newOKCommandResult(getResult());
 				}
 			}
 		}
 		containerEP = null;// to allow garbage collection
-		return newErrorCommandResult(getLabel());
+		return CommandResult.newErrorCommandResult(getLabel());
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isUndoable()
-	 */
-	public boolean isUndoable() {
-		return getCommand() != null && getCommand().canUndo();
-	}
+    public boolean canUndo() {
+        return getCommand() != null && getCommand().canUndo();
+    }
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isRedoable()
-	 */
-	public boolean isRedoable() {
-		return getCommand() != null && getCommand().canExecute();
-	}
+    public boolean canRedo() {
+        return getCommand() != null && getCommand().canExecute();
+    }
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-	 */
-	protected CommandResult doRedo() {
-		if (getCommand() != null) {
-			getCommand().redo();
-		}
-		return newOKCommandResult();
-	}
+    
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+        
+        if (getCommand() != null) {
+            getCommand().redo();
+        }
+        return CommandResult.newOKCommandResult();
+    }
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-	 */
-	protected CommandResult doUndo() {
-		if (getCommand() != null) {
-			getCommand().undo();
-		}
-		return newOKCommandResult();
-	}
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
+
+        if (getCommand() != null) {
+            getCommand().undo();
+        }
+        return CommandResult.newOKCommandResult();
+    }
 
 	/**
 	 * @return the adapter from which the view can be retrieved.

@@ -18,11 +18,18 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.core.internal.DiagramDebugOptions;
+import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
+import org.eclipse.gmf.runtime.diagram.core.internal.DiagramStatusCodes;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistElementCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
@@ -80,15 +87,27 @@ public class ViewUtil{
 	public static void persistElement(View view) {
 		assert null != view: "null view in ViewUtil.persistElement";//$NON-NLS-1$
 		MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain(view);
-		if (editingDomain.isUndoIntervalOpen() &&
-			!view.isMutable()) {
+        
+		if (!view.isMutable()) {
 			// get first view needs to get persisted
 			View viewToPersist = getViewToPersist(view);
 			if (viewToPersist!=null){
 				// now create a command to persisted the view and exectue it
 				PersistElementCommand pvc = 
-					new PersistElementCommand(viewToPersist);
-				pvc.execute( new NullProgressMonitor() );
+					new PersistElementCommand(editingDomain, viewToPersist);
+                
+                try {
+                    pvc.execute( new NullProgressMonitor(), null );
+                    
+                } catch (ExecutionException e) {
+                    Trace.catching(DiagramPlugin.getInstance(),
+                        DiagramDebugOptions.EXCEPTIONS_CATCHING,
+                        ViewUtil.class, "persistElement", e); //$NON-NLS-1$
+                    Log.error(DiagramPlugin.getInstance(),
+                        DiagramStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                            .getLocalizedMessage(), e);
+                }
+                
 				editingDomain.setCanRedoCurrentInterval( false );
 				CommandResult result = pvc.getCommandResult();
 				view = (View)result.getReturnValue();

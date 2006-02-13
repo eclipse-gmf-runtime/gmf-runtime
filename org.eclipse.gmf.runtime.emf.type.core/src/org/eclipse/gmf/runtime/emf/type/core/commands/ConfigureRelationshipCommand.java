@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,13 +35,13 @@ public abstract class ConfigureRelationshipCommand
 		super(request);
 	}
 
-	public boolean isExecutable() {
+	public boolean canExecute() {
 		Object source = ((ConfigureRequest) getRequest())
 			.getParameter(CreateRelationshipRequest.SOURCE);
 
 		Object target = ((ConfigureRequest) getRequest())
 			.getParameter(CreateRelationshipRequest.TARGET);
-		return source != null && target != null && super.isExecutable();
+		return source != null && target != null && super.canExecute();
 	}
 
 }

@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.internal;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -33,12 +35,8 @@ public class ExecutiveEditHelperAdvice
 			super(req);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+		    throws ExecutionException {
 			return null;
 		}
 	}
@@ -50,12 +48,9 @@ public class ExecutiveEditHelperAdvice
 			super(req);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+		    throws ExecutionException {
+            
 			Employee employee = (Employee) getRequest().getEditHelperContext();
 			Office office = employee.getOffice();
 			office.setHasDoor(true);

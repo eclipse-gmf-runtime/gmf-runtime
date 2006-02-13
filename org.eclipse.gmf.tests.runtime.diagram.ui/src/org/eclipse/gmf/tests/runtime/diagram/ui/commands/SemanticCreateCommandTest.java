@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,11 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -24,7 +27,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 
 /**
@@ -60,16 +63,34 @@ public class SemanticCreateCommandTest
 		String commandLabel = "test_wrapCompositeModelCommand"; //$NON-NLS-1$
 
 		// Create:
-		// EtoolsProxyCommand(CompositeModelCommand(AbstractCommand))
-		ICommand command = new AbstractCommand(commandLabel) {
+		// EtoolsProxyCommand(CompositeModelCommand(AbstractCommand2))
+		ICommand command = new AbstractCommand(commandLabel, null) {
 
-			protected CommandResult doExecute(IProgressMonitor progressMonitor) {
-				return newOKCommandResult();
-			};
+			protected CommandResult doExecuteWithResult(
+                    IProgressMonitor progressMonitor, IAdaptable info)
+                throws ExecutionException {
+
+                return CommandResult.newOKCommandResult();
+            };
+            
+            protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+                throws ExecutionException {
+
+                return null;
+            }
+            
+            protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
+                throws ExecutionException {
+
+                return null;
+            }
 		};
 
-		CompositeModelCommand compositeModelCommand = new CompositeModelCommand(
+        TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
+            .createEditingDomain();
+		CompositeTransactionalCommand compositeModelCommand = new CompositeTransactionalCommand(editingDomain, 
 			commandLabel);
+        
 		compositeModelCommand.compose(command);
 		EtoolsProxyCommand proxyCommand = new EtoolsProxyCommand(
 			compositeModelCommand);
@@ -79,15 +100,19 @@ public class SemanticCreateCommandTest
 		compoundCommand.add(proxyCommand);
 
 		// Create the test fixture
-		CreateElementRequest createRequest = new CreateElementRequest(null,
-			null);
+		CreateElementRequest createRequest = new CreateElementRequest(
+            editingDomain, null, null);
 		CreateElementRequestAdapter requestAdapter = new CreateElementRequestAdapter(
 			createRequest);
 		
 		setFixture(new SemanticCreateCommand(requestAdapter, compoundCommand));
 		
 		// Execute the test fixture
-		getFixture().execute(new NullProgressMonitor());
+        try {
+            getFixture().execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e.getLocalizedMessage());
+        }
 		
 		CommandResult result = getFixture().getCommandResult();
 		assertTrue(result.getStatus().isOK());

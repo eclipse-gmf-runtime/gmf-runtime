@@ -21,7 +21,8 @@ public final class EMFCommandsCoreMessages extends NLS {
 	}
 
 	public static String AbstractModelCommand__ERROR__abandonedActionErrorMessage;
-
+	public static String editingDomainContext;
+    
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EMFCommandsCoreMessages.class);
 	}

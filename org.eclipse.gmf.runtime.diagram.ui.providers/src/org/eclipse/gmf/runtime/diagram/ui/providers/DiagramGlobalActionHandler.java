@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -26,7 +33,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -38,8 +44,8 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionCon
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -51,7 +57,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.properties.actions.PropertyPageViewAction;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -102,7 +108,7 @@ public class DiagramGlobalActionHandler
 		/* Check the action id */
 		String actionId = cntxt.getActionId();
 		if (actionId.equals(GlobalActionId.DELETE)) {
-			CompoundCommand deleteCC = getDeleteCommand(cntxt);
+			CompoundCommand deleteCC = getDeleteCommand(diagramPart, cntxt);
 			/* Set the command */
 			if (deleteCC != null && deleteCC.canExecute())
 				command = new CommandProxy(deleteCC);
@@ -163,26 +169,41 @@ public class DiagramGlobalActionHandler
 	protected ICommand getCopyCommand(IGlobalActionContext cntxt,
 			IDiagramWorkbenchPart diagramPart, final boolean isUndoable) {
 
-		return new CopyCommand(cntxt.getLabel(), diagramPart.getDiagram(),
+        TransactionalEditingDomain editingDomain = getEditingDomain(diagramPart);
+        
+        if (editingDomain == null) {
+            return null;
+        }
+        
+        return new CopyCommand(editingDomain, cntxt.getLabel(), diagramPart.getDiagram(),
 			getSelectedViews(cntxt.getSelection())) {
 
-			public boolean isUndoable() {
+			public boolean canUndo() {
 				return isUndoable;
 			}
 
-			public boolean isRedoable() {
+			public boolean canRedo() {
 				return isUndoable;
 			}
 
-			protected CommandResult doUndo() {
-				return isUndoable ? newOKCommandResult()
-					: super.doUndo();
-			}
+		
+            protected IStatus doUndo(IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
 
-			protected CommandResult doRedo() {
-				return isUndoable ? newOKCommandResult()
-					: super.doRedo();
-			}
+                if (isUndoable) {
+                    return Status.OK_STATUS;
+                }
+                return super.doUndo(monitor, info);
+            }
+
+			protected IStatus doRedo(IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
+
+                if (isUndoable) {
+                    return Status.OK_STATUS;
+                }
+                return super.doRedo(monitor, info);
+            }
 		};
 	}
 
@@ -200,7 +221,15 @@ public class DiagramGlobalActionHandler
 	 */
 	protected ICommand getCutCommand(IGlobalActionContext cntxt,
 			IDiagramWorkbenchPart diagramPart) {
-		CompositeModelCommand cut = new CompositeModelCommand(cntxt.getLabel());
+        
+        TransactionalEditingDomain editingDomain = getEditingDomain(diagramPart);
+
+        if (editingDomain == null) {
+            return null;
+        }
+        
+        CompositeTransactionalCommand cut = new CompositeTransactionalCommand(editingDomain, cntxt
+            .getLabel());
 
 		// Add a copy command - the cut must be undoable/redoable
 		cut.compose(getCopyCommand(cntxt, diagramPart, true));
@@ -225,7 +254,7 @@ public class DiagramGlobalActionHandler
 			}
 		}
 
-		if (!cut.isEmpty() && cut.isExecutable())
+		if (!cut.isEmpty() && cut.canExecute())
 			return cut;
 
 		return null;
@@ -257,19 +286,28 @@ public class DiagramGlobalActionHandler
 	/**
 	 * Returns appropriate delete command for this context.
 	 * 
+     * @param part the workbench part
 	 * @param cntxt
 	 *            the <code>IGlobalActionContext</code> holding the necessary
 	 *            information needed by this action handler
 	 * @return CompoundCommand command
 	 */
-	private CompoundCommand getDeleteCommand(IGlobalActionContext cntxt) {
+	private CompoundCommand getDeleteCommand(IDiagramWorkbenchPart part,
+            IGlobalActionContext cntxt) {
 		/* Create the delete request */
 		GroupRequest deleteReq = new GroupRequest(RequestConstants.REQ_DELETE);
 
 		CompoundCommand deleteCC = new CompoundCommand(cntxt.getLabel());
 
-		CompositeModelCommand compositeCommand = new CompositeModelCommand(
+        TransactionalEditingDomain editingDomain = getEditingDomain(part);
+        
+        if (editingDomain == null) {
+            return deleteCC;
+        }
+
+		CompositeTransactionalCommand compositeCommand = new CompositeTransactionalCommand(editingDomain, 
 			cntxt.getLabel());
+        
 		/* Get the selected edit parts */
 		Object[] objects = ((IStructuredSelection) cntxt.getSelection())
 			.toArray();
@@ -283,7 +321,7 @@ public class DiagramGlobalActionHandler
 				compositeCommand.compose(new CommandProxy(command));
 			// deleteCC.add(editPart.getCommand(deleteReq));
 		}
-		if (compositeCommand.getCommands().size() > 0) {
+		if (!compositeCommand.isEmpty()) {
 			deleteCC.add(new EtoolsProxyCommand(compositeCommand));
 		}
 
@@ -486,7 +524,7 @@ public class DiagramGlobalActionHandler
 		String actionId = cntxt.getActionId();
 		if (actionId.equals(GlobalActionId.CUT)) {
 			ICommand command = getCommand(cntxt);
-			if (command != null && command.isExecutable()) {
+			if (command != null && command.canExecute()) {
 				return canCopy(cntxt);
 			}
 		}
@@ -639,4 +677,31 @@ public class DiagramGlobalActionHandler
 
 		return MapModeUtil.getMapMode();
 	}
+    
+    /**
+     * Gets the transactional editing domain associated with the workbench
+     * <code>part</code>.
+     * 
+     * @param part
+     *            the diagram workbench part
+     * @return the editing domain, or <code>null</code> if there is none.
+     */
+    private TransactionalEditingDomain getEditingDomain(
+            IDiagramWorkbenchPart part) {
+
+        TransactionalEditingDomain result = null;
+
+        IEditingDomainProvider provider = (IEditingDomainProvider) part
+            .getAdapter(IEditingDomainProvider.class);
+
+        if (provider != null) {
+            EditingDomain domain = provider.getEditingDomain();
+
+            if (domain != null && domain instanceof TransactionalEditingDomain) {
+                result = (TransactionalEditingDomain) domain;
+            }
+        }
+
+        return result;
+    }
 }

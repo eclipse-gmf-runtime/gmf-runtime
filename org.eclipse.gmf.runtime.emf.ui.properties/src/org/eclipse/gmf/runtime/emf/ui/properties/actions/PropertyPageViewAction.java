@@ -21,12 +21,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.dialogs.PropertiesDialog;
+import org.eclipse.gmf.runtime.common.ui.services.properties.extended.PropertyPagePropertyDescriptor;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesDebugOptions;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesPlugin;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesStatusCodes;
+import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -34,16 +45,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.dialogs.PropertiesDialog;
-import org.eclipse.gmf.runtime.common.ui.services.properties.extended.PropertyPagePropertyDescriptor;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesDebugOptions;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.EMFPropertiesPlugin;
-import org.eclipse.gmf.runtime.emf.ui.properties.internal.l10n.EMFUIPropertiesMessages;
 
 import com.ibm.icu.text.Collator;
 
@@ -65,7 +66,7 @@ public class PropertyPageViewAction
 	 */
 	public PropertyPageViewAction() {
 		super(EMFUIPropertiesMessages.PropertyPageViewAction_label, 
-				AbstractUIPlugin.imageDescriptorFromPlugin(EMFPropertiesPlugin.getPluginId(), "icons/property_page.gif"));
+				AbstractUIPlugin.imageDescriptorFromPlugin(EMFPropertiesPlugin.getPluginId(), "icons/property_page.gif")); //$NON-NLS-1$
 		setToolTipText(EMFUIPropertiesMessages.PropertyPageViewAction_tooltip);
 	}
 
@@ -82,56 +83,72 @@ public class PropertyPageViewAction
 		if (page != null) {
 			final ISelection selection = page.getSelection();
 			if (selection != null && selection instanceof IStructuredSelection) {
-				try {
-					OperationUtil.runAsRead(new Runnable() {
+				TransactionalEditingDomain domain = getEditingDomain((IStructuredSelection) selection);
 
-						public void run() {
+                if (domain != null) {
+                    try {
+                        domain.runExclusive(new Runnable() {
 
-							// build the pages for the property dialog
-							List propertyPages = getMergedPropertyPages((IStructuredSelection) selection);
+                            public void run() {
 
-							if (!propertyPages.isEmpty()) {
-								// sort the pages
-								Collections.sort(propertyPages,
-									new Comparator() {
+                                // build the pages for the property dialog
+                                List propertyPages = getMergedPropertyPages((IStructuredSelection) selection);
 
-										public int compare(Object o1, Object o2) {
-											IPreferencePage p1 = (IPreferencePage) o1;
-											IPreferencePage p2 = (IPreferencePage) o2;
-											String s1 = p1.getTitle();
-											String s2 = p2.getTitle();
-											return Collator.getInstance()
-												.compare(s1, s2);
-										}
-									});
+                                if (!propertyPages.isEmpty()) {
+                                    // sort the pages
+                                    Collections.sort(propertyPages,
+                                        new Comparator() {
 
-								// add the pages and invoke the property dialog
-								PropertiesDialog dialog = new PropertiesDialog(
-									Display.getCurrent().getActiveShell(),
-									new PreferenceManager());
+                                            public int compare(Object o1,
+                                                    Object o2) {
+                                                IPreferencePage p1 = (IPreferencePage) o1;
+                                                IPreferencePage p2 = (IPreferencePage) o2;
+                                                String s1 = p1.getTitle();
+                                                String s2 = p2.getTitle();
+                                                return Collator.getInstance()
+                                                    .compare(s1, s2);
+                                            }
+                                        });
 
-								for (Iterator iter = propertyPages.iterator(); iter
-									.hasNext();) {
-									dialog.getPreferenceManager().addToRoot(
-										new PreferenceNode(StringStatics.BLANK,
-											(IPreferencePage) iter.next()));
-								}
+                                    // add the pages and invoke the property
+                                    // dialog
+                                    PropertiesDialog dialog = new PropertiesDialog(
+                                        Display.getCurrent().getActiveShell(),
+                                        new PreferenceManager());
 
-								dialog.create();
-								dialog.open();
-							} else {
-								MessageDialog.openInformation(Display
-									.getCurrent().getActiveShell(),
-									EMFUIPropertiesMessages.PropertyPageViewAction_NoPropertiesMessageBox_Title, 
-									EMFUIPropertiesMessages.PropertyPageViewAction_NoPropertiesMessageBox_Message);
-							}
-						}
-					});
-				} catch (MSLActionAbandonedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+                                    for (Iterator iter = propertyPages
+                                        .iterator(); iter.hasNext();) {
+                                        dialog.getPreferenceManager()
+                                            .addToRoot(
+                                                new PreferenceNode(
+                                                    StringStatics.BLANK,
+                                                    (IPreferencePage) iter
+                                                        .next()));
+                                    }
+
+                                    dialog.create();
+                                    dialog.open();
+                                } else {
+                                    MessageDialog
+                                        .openInformation(
+                                            Display.getCurrent()
+                                                .getActiveShell(),
+                                            EMFUIPropertiesMessages.PropertyPageViewAction_NoPropertiesMessageBox_Title,
+                                            EMFUIPropertiesMessages.PropertyPageViewAction_NoPropertiesMessageBox_Message);
+                                }
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        Trace.catching(EMFPropertiesPlugin.getDefault(),
+                            EMFPropertiesDebugOptions.EXCEPTIONS_CATCHING,
+                            getClass(), "run", e); //$NON-NLS-1$
+                        Log.error(EMFPropertiesPlugin.getDefault(),
+                            EMFPropertiesStatusCodes.ACTION_FAILURE, e
+                                .getLocalizedMessage(), e);
+                    }
+                }
+            }
+        }
 		Trace.trace(EMFPropertiesPlugin.getDefault(),
 			EMFPropertiesDebugOptions.METHODS_EXITING,
 			"PropertyPageViewActionDelegate.doRun Exiting"); //$NON-NLS-1$
@@ -225,4 +242,26 @@ public class PropertyPageViewAction
 		}
 		return result;
 	}
+    
+    private TransactionalEditingDomain getEditingDomain(IStructuredSelection s) {
+
+        TransactionalEditingDomain result = null;
+
+        for (Iterator i = s.iterator(); i.hasNext();) {
+            Object next = i.next();
+
+            result = TransactionUtil.getEditingDomain(next);
+
+            if (result == null && next instanceof IAdaptable) {
+                EObject eObject = (EObject) ((IAdaptable) next)
+                    .getAdapter(EObject.class);
+                result = TransactionUtil.getEditingDomain(eObject);
+            }
+
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
+    }
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@
 package org.eclipse.gmf.runtime.emf.type.core.requests;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -20,8 +20,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
  * 
  * @author ldamus
  */
-public abstract class ReorientRequest
-	extends AbstractEditCommandRequest {
+public abstract class ReorientRequest extends AbstractEditCommandRequest {
 
 	/**
 	 * Indicates that the source of the relationship will be changed.
@@ -54,6 +53,8 @@ public abstract class ReorientRequest
 	 * Constructs a new request tof changing the source or target of a
 	 * relationship.
 	 * 
+	 * @param editingDomain
+	 *            the editing domain in which I am requesting to make model
 	 * @param direction
 	 *            Indicates whether or not the source of the target of the
 	 *            relationship will be changed. One of {@link #REORIENT_SOURCE}
@@ -63,9 +64,9 @@ public abstract class ReorientRequest
 	 * @param oldRelationshipEnd
 	 *            the old source or target
 	 */
-	protected ReorientRequest(int direction, EObject newRelationshipEnd,
-			EObject oldRelationshipEnd) {
-		super();
+	protected ReorientRequest(TransactionalEditingDomain editingDomain, int direction,
+			EObject newRelationshipEnd, EObject oldRelationshipEnd) {
+		super(editingDomain);
 		this.direction = direction;
 		this.newRelationshipEnd = newRelationshipEnd;
 		this.oldRelationshipEnd = oldRelationshipEnd;

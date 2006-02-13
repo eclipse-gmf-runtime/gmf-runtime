@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
 import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
 import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import org.eclipse.gmf.tests.runtime.common.core.internal.command.AbstractCommandTest;
+import org.eclipse.gmf.tests.runtime.common.core.internal.command.compatibility.AbstractCommandTest;
 
 /**
  * @author khussey

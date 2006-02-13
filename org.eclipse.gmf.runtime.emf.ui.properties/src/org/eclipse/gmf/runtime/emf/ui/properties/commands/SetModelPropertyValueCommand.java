@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,15 @@
 
 package org.eclipse.gmf.runtime.emf.ui.properties.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.views.properties.IPropertySource;
-
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 /**
  * Command to set a property value in the model in an undo interval. Delegates
@@ -25,7 +28,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractModelCommand;
  * 
  * @author ldamus
  */
-public class SetModelPropertyValueCommand extends AbstractModelCommand {
+public class SetModelPropertyValueCommand extends AbstractTransactionalCommand {
 
     /**
      * Flag to indicate that the property value had never before been set, so a
@@ -58,6 +61,7 @@ public class SetModelPropertyValueCommand extends AbstractModelCommand {
      * Constructs a new command with the property source and the id of the
      * property to be reset.
      * 
+     * @param editingDomain the editing domain in which to make this change
      * @param label
      *            The label for the command. Appears in the Edit menu items.
      * @param affectedObjects
@@ -70,11 +74,15 @@ public class SetModelPropertyValueCommand extends AbstractModelCommand {
      * @param propertyValue
      * 			  The new property value which will be set by this command.
      */
-    public SetModelPropertyValueCommand(String label, Object affectedObjects,
+    public SetModelPropertyValueCommand(TransactionalEditingDomain editingDomain, String label, Object affectedObjects,
             IPropertySource propertySource, Object propertyId,
             Object propertyValue) {
 
-        super(label, affectedObjects);
+        super(
+            editingDomain,
+            label,
+            (affectedObjects instanceof EObject) ? getWorkspaceFiles((EObject) affectedObjects)
+                : null);
 
         this.propertySource = propertySource;
         this.propertyId = propertyId;
@@ -82,30 +90,9 @@ public class SetModelPropertyValueCommand extends AbstractModelCommand {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#isRedoable()
-     */
-    public boolean isRedoable() {
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#isUndoable()
-     */
-    public boolean isUndoable() {
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    protected CommandResult doExecute(IProgressMonitor progressMonitor) {
+    protected CommandResult doExecuteWithResult(
+            IProgressMonitor progressMonitor, IAdaptable info)
+        throws ExecutionException {
 
         setValueResetOnUndo(!getPropertySource().isPropertySet(getPropertyId()));
 
@@ -116,24 +103,17 @@ public class SetModelPropertyValueCommand extends AbstractModelCommand {
         }
         getPropertySource().setPropertyValue(getPropertyId(),
                 getPropertyValue());
-        return newOKCommandResult(getPropertyValue());
+        return CommandResult.newOKCommandResult(getPropertyValue());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doRedo()
-     */
-    protected CommandResult doRedo() {
-        return doExecute(new NullProgressMonitor());
+    protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+        
+        return doExecuteWithResult(new NullProgressMonitor(), info);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doUndo()
-     */
-    protected CommandResult doUndo() {
+    protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
 
         if (isValueResetOnUndo()) {
             getPropertySource().resetPropertyValue(getPropertyId());
@@ -142,7 +122,7 @@ public class SetModelPropertyValueCommand extends AbstractModelCommand {
             getPropertySource().setPropertyValue(getPropertyId(),
                     getUndoValue());
         }
-        return newOKCommandResult(getPropertySource().getPropertyValue(
+        return CommandResult.newOKCommandResult(getPropertySource().getPropertyValue(
                 getPropertyId()));
     }
 

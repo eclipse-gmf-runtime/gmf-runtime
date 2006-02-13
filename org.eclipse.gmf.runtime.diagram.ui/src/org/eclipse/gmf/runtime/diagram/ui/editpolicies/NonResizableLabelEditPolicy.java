@@ -135,7 +135,7 @@ public class NonResizableLabelEditPolicy
 		Point normalPoint = LabelHelper.offsetFromRelativeCoordinate(
 			getHostFigure(), rect, refPoint);
 
-		ICommand moveCommand = new SetBoundsCommand(DiagramUIMessages.MoveLabelCommand_Label_Location,
+		ICommand moveCommand = new SetBoundsCommand(editPart.getEditingDomain(), DiagramUIMessages.MoveLabelCommand_Label_Location,
 			new EObjectAdapter((View) editPart.getModel()), normalPoint);
 		return new EtoolsProxyCommand(moveCommand);
 	}

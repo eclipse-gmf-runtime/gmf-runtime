@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand;
+import org.eclipse.gmf.runtime.common.core.command.compatibility.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.commands.core.internal.MSLCommandsDebugOptions;
@@ -42,7 +42,7 @@ import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
  * through which they can be undone or redone.
  * 
  * @author khussey
- *  
+ * @deprecated Use {@link CompositeTransactionalCommand} instead.
  */
 public class CompositeModelCommand
 	extends CompositeCommand
@@ -59,12 +59,6 @@ public class CompositeModelCommand
 	 *  
 	 */
 	private MUndoInterval undoInterval = null;
-
-	/**
-	 * The result of executing/undoing/redoing this composite model command.
-	 *  
-	 */
-	private CommandResult result = null;
 
 	/**
 	 * Constructs a new composite model command with the specified label and
@@ -159,40 +153,6 @@ public class CompositeModelCommand
 	 */
 	protected final void setUndoInterval(MUndoInterval undoInterval) {
 		this.undoInterval = undoInterval;
-	}
-
-	/**
-	 * Retrieves the value of the <code>result</code> instance variable.
-	 * 
-	 * @return The value of the <code>result</code> instance variable.
-	 * 
-	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#getCommandResult()
-	 *  
-	 */
-	public CommandResult getCommandResult() {
-		return result;
-	}
-
-	/**
-	 * Sets the <code>result</code> instance variable to the specified value.
-	 * 
-	 * @param result
-	 *            The new value for the <code>result</code> instance variable.
-	 *  
-	 */
-	protected final void setResult(CommandResult result) {
-		this.result = result;
-	}
-
-	/**
-	 * Creates a new command result with an OK status.
-	 * 
-	 * @return A new command result with an OK status.
-	 *  
-	 */
-	protected CommandResult newOKCommandResult() {
-		return new CommandResult(new Status(IStatus.OK, MSLCommandsPlugin
-			.getPluginId(), MSLCommandsStatusCodes.OK, EMPTY_STRING, null));
 	}
 
 	/**

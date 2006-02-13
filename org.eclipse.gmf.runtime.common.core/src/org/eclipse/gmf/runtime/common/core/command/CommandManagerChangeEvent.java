@@ -13,6 +13,10 @@ package org.eclipse.gmf.runtime.common.core.command;
 
 import java.util.EventObject;
 
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+
 /**
  * Represents an event that is fired when a command manager changes. Instances
  * of this class have an associated command manager (the source of the event)
@@ -22,59 +26,66 @@ import java.util.EventObject;
  * 
  * @see org.eclipse.gmf.runtime.common.core.command.ICommandManagerChangeListener
  * @canBeSeenBy %partners
+ * 
+ * @deprecated Use {@link OperationHistoryEvent} instead. Register an
+ *             {@link IOperationHistoryListener} with the
+ *             {@link OperationHistoryFactory#getOperationHistory()} instead.
  */
 public class CommandManagerChangeEvent extends EventObject {
 
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * The command that was executed, undone, or redone.
-     */
-    private final ICommand command;
+	/**
+	 * The command that was executed, undone, or redone.
+	 */
+	private final ICommand command;
 
-    /**
-     * Constructs a new command manager change event for the specified command
-     * manager.
-     * 
-     * @param source The command manager that changed.
-     */
-    public CommandManagerChangeEvent(CommandManager source) {
-        this(source, null);
-    }
+	/**
+	 * Constructs a new command manager change event for the specified command
+	 * manager.
+	 * 
+	 * @param source
+	 *            The command manager that changed.
+	 */
+	public CommandManagerChangeEvent(CommandManager source) {
+		this(source, null);
+	}
 
-    /**
-     * Constructs a new command manager change event for the specified command
-     * manager and command.
-     * 
-     * @param source The command manager that changed.
-     * @param command The command that has been executed, undone, or redone.
-     */
-    public CommandManagerChangeEvent(CommandManager source, ICommand command) {
-        super(source);
+	/**
+	 * Constructs a new command manager change event for the specified command
+	 * manager and command.
+	 * 
+	 * @param source
+	 *            The command manager that changed.
+	 * @param command
+	 *            The command that has been executed, undone, or redone.
+	 */
+	public CommandManagerChangeEvent(CommandManager source, ICommand command) {
+		super(source);
 
-        this.command = command;
-    }
+		this.command = command;
+	}
 
-    /**
-     * Retrieves the command that was executed, undone or redone.
-     * 
-     * @return the command that was executed, undone or redone.
-     */
-    public ICommand getCommand() {
-        return command;
-    }
+	/**
+	 * Retrieves the command that was executed, undone or redone.
+	 * 
+	 * @return the command that was executed, undone or redone.
+	 */
+	public ICommand getCommand() {
+		return command;
+	}
 
-    /**
+	/**
 	 * Sets the command manager that changed and that is the source of this
 	 * event.
 	 * 
 	 * @param source
 	 *            The command manager.
 	 */
-    protected void setSource(CommandManager source) {
-        assert null != source : "null source"; //$NON-NLS-1$
+	protected void setSource(CommandManager source) {
+		assert null != source : "null source"; //$NON-NLS-1$
 
-        this.source = source;
-    }
+		this.source = source;
+	}
 
 }

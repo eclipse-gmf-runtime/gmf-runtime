@@ -12,10 +12,9 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.emf.commands.core.edithelpers.MSLEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
+import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.GetEditContextRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
@@ -28,7 +27,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 public class LogicElementEditHelper
-	extends MSLEditHelper {
+	extends AbstractEditHelper {
 
 	
 	/* (non-Javadoc)

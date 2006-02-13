@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 
 import java.util.List;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
@@ -27,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeModelCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -78,12 +79,16 @@ public class PromptingDeleteAction
 
 		deleteReq.setShowInformationDialog(false);
 		boolean containsSemanticElement = false;
-		CompositeModelCommand command = null;
+		CompositeTransactionalCommand command = null;
+        TransactionalEditingDomain editingDomain = null;
 		for (int i = 0; i < objects.size(); i++) {			
 			if(objects.get(i) instanceof EditPart){
 				/* Get the next part */
 				EditPart editPart = (EditPart) objects.get(i);
 				if (editPart instanceof IGraphicalEditPart){
+                    if (editingDomain == null) {
+                        editingDomain = ((IGraphicalEditPart) editPart).getEditingDomain();
+                    }
 					if (!containsSemanticElement&&
 						ViewUtil.resolveSemanticElement((View)editPart.getModel()) != null){
 						containsSemanticElement = true;
@@ -93,16 +98,16 @@ public class PromptingDeleteAction
 
 				/* Send the request to the edit part */
 				Command command2 = editPart.getCommand(deleteReq);
-				if (command2 != null) {
+				if (command2 != null && editingDomain != null) {
 					if (command == null)
-						command = new CompositeModelCommand(command2.getLabel());
+						command = new CompositeTransactionalCommand(editingDomain, command2.getLabel());
 					command.compose(new CommandProxy(command2));
 				}
 			}
 		}		
 		
 		
-		if ((command != null)&&(command.getCommands().size() > 0))
+		if ((command != null)&&(command.size() > 0))
 			deleteCC.add(new EtoolsProxyCommand(command));
 		return deleteCC;
 	}	

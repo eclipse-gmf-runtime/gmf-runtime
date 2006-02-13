@@ -11,13 +11,12 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.ReorientWireCommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.OutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentUtil;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.GetEditContextRequest;
@@ -46,10 +45,9 @@ public class WireEditHelper
 			if (hasValidSourceAndTarget(createRelationshipRequest)) {
 
 				// Get the nearest container element to own the new wire.
-				EObject container = EObjectContainmentUtil
-					.findContainerOfAnySubtype(createRelationshipRequest
-						.getSource(), SemanticPackage.eINSTANCE
-						.getContainerElement());
+				EObject container = EMFCoreUtil.getContainer(
+					createRelationshipRequest.getSource(),
+					SemanticPackage.eINSTANCE.getContainerElement());
 
 				GetEditContextCommand result = new GetEditContextCommand(req);
 				result.setEditContext(container);
