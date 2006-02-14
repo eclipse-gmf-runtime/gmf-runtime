@@ -366,14 +366,16 @@ public class ElementTypeRegistryTest
 			"org.eclipse.gmf.tests.runtime.emf.type.core.eclass", null, null, //$NON-NLS-1$
 			EcorePackage.eINSTANCE.getEClass(), null);
 
-		getFixture().register(eClassType);
-
-		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
-
-		IElementType metamodelType = getFixture().getElementType(
-			myEClassInstance);
-		assertNotNull(metamodelType);
-		assertSame(eClassType, metamodelType);
+		boolean wasRegistered = getFixture().register(eClassType);
+        
+        if (wasRegistered) {
+    		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
+    
+    		IElementType metamodelType = getFixture().getElementType(
+    			myEClassInstance);
+    		assertNotNull(metamodelType);
+    		assertSame(eClassType, metamodelType);
+        }
 	}
 	
 
