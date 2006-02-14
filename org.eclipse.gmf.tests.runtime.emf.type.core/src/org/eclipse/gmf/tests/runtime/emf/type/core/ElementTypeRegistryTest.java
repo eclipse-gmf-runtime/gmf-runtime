@@ -367,16 +367,16 @@ public class ElementTypeRegistryTest
 			EcorePackage.eINSTANCE.getEClass(), null);
 
 		boolean wasRegistered = getFixture().register(eClassType);
+        EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
+        
+        IElementType metamodelType = getFixture().getElementType(
+            myEClassInstance);
+        assertNotNull(metamodelType);
         
         if (wasRegistered) {
-    		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
-    
-    		IElementType metamodelType = getFixture().getElementType(
-    			myEClassInstance);
-    		assertNotNull(metamodelType);
     		assertSame(eClassType, metamodelType);
         }
-	}
+    }
 	
 
 	public void test_getElementType_overridesEditHelper() {
