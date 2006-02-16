@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -64,5 +65,27 @@ public class SetValueCommand
 		}
 		return CommandResult.newOKCommandResult();
 	}
+    
+    /**
+     * Checks that the feature is a modifiable feature of the element whose
+     * value will be set by this command. Also checks that the new value is of
+     * the correct type for the feature.
+     */
+    public boolean canExecute() {
+
+        if (!super.canExecute()) {
+            return false;
+        }
+
+        if (value == null && feature.isMany()) {
+            return false;
+        }
+
+        List allFeatures = getElementToEdit().eClass()
+            .getEAllStructuralFeatures();
+
+        return allFeatures.contains(feature) && feature.isChangeable()
+            && (value == null || feature.getEType().isInstance(value));
+    }
 
 }

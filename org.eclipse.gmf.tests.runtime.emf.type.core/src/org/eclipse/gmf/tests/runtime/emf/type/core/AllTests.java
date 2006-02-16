@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,8 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.emf.type.core.commands.CreateElementCommandTest;
+import org.eclipse.gmf.tests.runtime.emf.type.core.commands.SetValueCommandTest;
 
 public class AllTests
 	extends TestCase
@@ -36,6 +38,7 @@ public class AllTests
 		suite.addTest(CreateElementRequestTest.suite());
 		suite.addTest(MetamodelTypeDescriptorTest.suite());
 		suite.addTest(MoveRequestTest.suite());
+        suite.addTest(SetValueCommandTest.suite());
 		suite.addTest(SpecializationTypeDescriptorTest.suite());
 		return suite;
 	}
