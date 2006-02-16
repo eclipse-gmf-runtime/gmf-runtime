@@ -31,7 +31,6 @@ import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
-import org.eclipse.draw2d.internal.graph.BreakCycles;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
@@ -381,8 +380,8 @@ public abstract class DefaultProvider
 		List affectingChildren = getAffectingChildren(connectionEP);
 		
 		// set the padding based on the extent of the children.
-		edge.padding = Math.max(edge.padding, calculateEdgePadding(connectionEP, affectingChildren));
-		edge.delta = Math.max(edge.delta, affectingChildren.size() / 2);
+		edge.setPadding(Math.max(edge.getPadding(), calculateEdgePadding(connectionEP, affectingChildren)));
+		edge.setDelta(Math.max(edge.getDelta(), affectingChildren.size() / 2));
 	}
 		
 	/**
@@ -471,42 +470,6 @@ public abstract class DefaultProvider
 	}
 
 	/**
-	 * connectNonConnectedSubgraphs Since the GEF algorithm only handles fully
-	 * connected graphs, we have to simulate this when there are nodes that
-	 * aren't connected. This routine will create a "ghost" node that serves as
-	 * a parent for all nodes that don't have any incoming connections.
-	 * 
-	 * @param nodes
-	 *            List of Nodes that are to be contained in the graph.
-	 * @param edges
-	 *            List of Edges that are to be contained in the graph.
-	 */
-	private void connectNonConnectedSubgraphs(List nodes, List edges) {
-		Node ghostNode = new Node();
-		ghostNode.width = 1;
-		ghostNode.height = 1;
-		ghostNode.setPadding(new Insets(0));
-
-		nodes.add(ghostNode);
-
-		ListIterator ni = nodes.listIterator();
-		while (ni.hasNext()) {
-			Node n = (Node) ni.next();
-
-			if (n == ghostNode)
-				continue;
-
-			// if node has no incoming connections then assume it is
-			// not-connected to the main graph.
-			if (n.incoming.isEmpty()) {
-				Edge e = new Edge(ghostNode, n);
-				e.weight = 0;
-				edges.add(e);
-			}
-		}
-	}
-
-	/**
 	 * Method build_graph. This method will build the proxy graph that the
 	 * layout is based on.
 	 * 
@@ -535,11 +498,11 @@ public abstract class DefaultProvider
 		g.nodes = nodes;
 		g.edges = edges;
 
-		new BreakCycles().visit(g);
+		//new BreakCycles().visit(g);
 				
 		// this has to be called after - BreakCycles to ensure we are fully
 		// connected.
-		connectNonConnectedSubgraphs(nodes, edges);
+		//connectNonConnectedSubgraphs(nodes, edges);
 	}
 
 	/**
@@ -696,7 +659,8 @@ public abstract class DefaultProvider
 	}
 
 	private void collectPoints(PointList points, Edge edge) {
-		Rectangle start = translateFromGraph(new Rectangle(edge.start.x, edge.start.y, 0, 0));
+		Point startpt = edge.getPoints().getFirstPoint();
+		Rectangle start = translateFromGraph(new Rectangle(startpt.x, startpt.y, 0, 0));
 		points.addPoint(start.getTopLeft());
 
 		NodeList vnodes = edge.vNodes;
@@ -711,7 +675,8 @@ public abstract class DefaultProvider
 			}
 		}
 
-		Rectangle end = translateFromGraph(new Rectangle(edge.end.x, edge.end.y, 0, 0));
+		Point endpt = edge.getPoints().getLastPoint();
+		Rectangle end = translateFromGraph(new Rectangle(endpt.x, endpt.y, 0, 0));
 		points.addPoint(end.getTopLeft());
 	}
 
