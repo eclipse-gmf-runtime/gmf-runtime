@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
@@ -83,5 +84,30 @@ public class AbstractEditHelperTest
             Boolean.TRUE);
         command = EmployeeType.DEPARTMENT.getEditCommand(request);
         assertNull(command);
+    }
+    
+    /**
+     * Tests that the command returned by an edit helper to create a new
+     * relationship is executable if the source or target has not yet been
+     * specified.
+     */
+    public void test_incompleteCreateRelationshipRequest_117922() {
+
+        // no target
+        CreateRelationshipRequest request = new CreateRelationshipRequest(
+            getEditingDomain(), department, department, null,
+            EmployeeType.MANAGER);
+
+        ICommand command = EmployeeType.DEPARTMENT.getEditCommand(request);
+        assertNotNull(command);
+        assertTrue(command.canExecute());
+        
+        // no source AND no target
+        request = new CreateRelationshipRequest(
+            getEditingDomain(), department, null, null,
+            EmployeeType.MANAGER);
+
+        command = EmployeeType.DEPARTMENT.getEditCommand(request);
+        assertTrue(command == null || !command.canExecute());
     }
 }

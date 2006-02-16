@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
-import org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand;
+import org.eclipse.gmf.runtime.common.core.command.IdentityCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
@@ -103,8 +103,13 @@ public abstract class AbstractEditHelper
 
 				// Before commands
 				ICommand beforeAdvice = nextAdvice.getBeforeEditCommand(req);
-
+                
 				if (beforeAdvice != null) {
+
+                    if (!beforeAdvice.canExecute()) {
+                        // The operation is not permitted
+                        return null;
+                    }
 					command.compose(beforeAdvice);
 				}
 			}
@@ -118,11 +123,12 @@ public abstract class AbstractEditHelper
 			// Get 'instead' command from this edit helper
 			ICommand insteadCommand = getInsteadCommand(req);
 
-			if (insteadCommand == UnexecutableCommand.INSTANCE) {
-				// The operation is not permitted
-				return null;
-
-			} else if (insteadCommand != null) {
+			if (insteadCommand != null) {
+                
+                if (!insteadCommand.canExecute()) {
+                    // The operation is not permitted
+                    return null;
+                }
 				command.compose(insteadCommand);
 			}
 		}
@@ -137,6 +143,11 @@ public abstract class AbstractEditHelper
 				ICommand afterAdvice = nextAdvice.getAfterEditCommand(req);
 
 				if (afterAdvice != null) {
+                    
+                    if (!afterAdvice.canExecute()) {
+                        // The operation is not permitted
+                        return null;
+                    }
 					command.compose(afterAdvice);
 				}
 			}
@@ -302,16 +313,33 @@ public abstract class AbstractEditHelper
 	}
 
 	/**
-	 * Gets the command to create a new relationship in an element of my kind.
-	 * By default, returns <code>null</code>. Subclasses may override to
-	 * provide their command.
-	 * 
-	 * @param req
-	 *            the create relationship request
-	 * @return the create relationship command
-	 */
+     * Gets the command to create a new relationship in an element of my kind.
+     * <P>
+     * Returns the {@link IdentityCommand} if the request does not have a source
+     * or a target. This ensures that the create relationship gesture is enabled
+     * until the request can be completely specified.
+     * <P>
+     * Subclasses may override to provide their own command.
+     * 
+     * @param req
+     *            the create relationship request
+     * @return the create relationship command
+     */
 	protected ICommand getCreateRelationshipCommand(
 			CreateRelationshipRequest req) {
+        
+        EObject source = req.getSource();
+        EObject target = req.getTarget();
+
+        boolean noSourceOrTarget = (source == null || target == null);
+        boolean noSourceAndTarget = (source == null && target == null);
+
+        if (noSourceOrTarget && !noSourceAndTarget) {
+            // The request isn't complete yet. Return the identity command so
+            // that the create relationship gesture is enabled.
+            return IdentityCommand.INSTANCE;
+        }
+        
 		return new CreateRelationshipCommand(req);
 	}
 
