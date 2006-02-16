@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,8 @@
 
 package org.eclipse.gmf.runtime.common.core.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +20,12 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
+import org.osgi.framework.Bundle;
 
 /**
  * Manages the properties files declared in the textConfiguration extensions
@@ -118,36 +118,47 @@ public class PropertiesConfigurationManager {
 
 			// get the relative path of the properties file
 			String relativePath = element.getAttribute(PATH_ATTRIBUTE);
-
-			// get the file
-			URL installURL = Platform.getBundle(
-				element.getDeclaringExtension().getNamespace()).getEntry("/");//$NON-NLS-1$
-			URL resolveURL = null;
-			try {
-				resolveURL = Platform.resolve(installURL);
-			} catch (IOException e1) {
-				// shouldn't happen
-				assert (false);
+			
+			Bundle bundle = Platform.getBundle(
+					element.getDeclaringExtension().getNamespace());
+			
+			assert bundle != null;
+			
+			URL url = Platform.find(bundle, new Path(relativePath));
+			
+			if (url == null) {
+				Log.error(CommonCorePlugin.getDefault(),
+					CommonCoreStatusCodes.SERVICE_FAILURE,
+					"Couldn't find relative path " + relativePath + " in " //$NON-NLS-1$ //$NON-NLS-2$
+						+ element.getDeclaringExtension().getNamespace());
 			}
-			String fullPath = resolveURL.getFile() + relativePath;
-
-			// load the properties file
-			Properties properties = new Properties();
+			
+			InputStream is = null;
+			// get the file
 			try {
-				FileInputStream stream = new FileInputStream(fullPath);
-				properties.load(stream);
-			} catch (FileNotFoundException e) {
-				handleException(e);
-				continue;
+				is = url.openStream();
+				Properties properties = new Properties();
+				properties.load(is);
+				propertiesMap.putAll(properties);
+				
 			} catch (IOException e) {
 				handleException(e);
-				continue;
+			}
+			finally {
+				
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						handleException(e);
+					}
+					
+				}
+				
 			}
 
-			// add the properties map
-			propertiesMap.putAll(properties);
 		}
-	}
+	}	
 
 	/**
 	 * Log and trace the exception
