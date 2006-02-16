@@ -13,9 +13,11 @@ package org.eclipse.gmf.runtime.common.core.command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
  * A command that is always executable, undoable and redoable, but does nothing.
+ * It always returns the same OK command result.
  * 
  * @author ldamus
  */
@@ -31,7 +33,8 @@ public final class IdentityCommand
      * Initilizes me.
      */
     private IdentityCommand() {
-        super(null, null);
+        super(StringStatics.BLANK, null);
+        setResult(CommandResult.newOKCommandResult());
     }
 
     /**
@@ -41,7 +44,7 @@ public final class IdentityCommand
             IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
 
-        return CommandResult.newOKCommandResult();
+        return getCommandResult();
     }
 
     /**
@@ -51,7 +54,7 @@ public final class IdentityCommand
             IAdaptable info)
         throws ExecutionException {
 
-        return CommandResult.newOKCommandResult();
+        return getCommandResult();
     }
 
     /**
@@ -61,7 +64,7 @@ public final class IdentityCommand
             IAdaptable info)
         throws ExecutionException {
 
-        return CommandResult.newOKCommandResult();
+        return getCommandResult();
     }
 
 }
