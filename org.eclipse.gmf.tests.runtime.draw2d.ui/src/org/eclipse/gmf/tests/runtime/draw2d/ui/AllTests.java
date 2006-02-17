@@ -40,7 +40,6 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTestSuite( TopDownForestRouterTest.class );
 		suite.addTestSuite( TreeRouterTest.class );
 		suite.addTestSuite( RectilinearRouterTest.class );
-//		suite.addTestSuite( PolylineAnchorTest.class );
 		
         return suite;
 	}
