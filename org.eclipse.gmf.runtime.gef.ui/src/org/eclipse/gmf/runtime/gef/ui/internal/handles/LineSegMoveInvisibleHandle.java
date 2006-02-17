@@ -12,6 +12,9 @@
 package org.eclipse.gmf.runtime.gef.ui.internal.handles;
 
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.tools.ConnectionBendpointTracker;
 
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
 
@@ -37,6 +40,30 @@ public class LineSegMoveInvisibleHandle extends BendpointCreationInvisibleHandle
 		super(owner, index);
 		
 		setCursor(Cursors.CURSOR_SEG_MOVE);
+	}
+
+	/**
+	 * Creates and returns a new {@link ConnectionBendpointTracker}.
+	 * @return the new ConnectionBendpointTracker
+	 */
+	protected DragTracker createDragTracker() {
+		ConnectionBendpointTracker tracker;
+		tracker = new ConnectionBendpointTracker(
+			(ConnectionEditPart)getOwner(),
+			getIndex()) {
+			
+			/**
+			 * Called once the drag has been interpreted.  This is where the real work of the drag is
+			 * carried out.  By default, the current command is executed.
+			 */
+			protected void performDrag() {
+				setCurrentCommand(getCommand());
+				executeCurrentCommand();
+			}
+		};
+		tracker.setType(RequestConstants.REQ_CREATE_BENDPOINT);
+		tracker.setDefaultCursor(getCursor());
+		return tracker;
 	}
 
 }
