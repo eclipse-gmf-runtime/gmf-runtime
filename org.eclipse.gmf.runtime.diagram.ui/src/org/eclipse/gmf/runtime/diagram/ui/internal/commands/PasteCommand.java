@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +31,7 @@ import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.MeasurementUnitHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.notation.Bendpoints;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
@@ -111,8 +110,8 @@ public final class PasteCommand extends ClipboardCommand {
      */
 	 private List pasteFromString(View view, String clipboard) {
 	    ArrayList retval = new ArrayList();
-	    Iterator pastedElements = EObjectUtil.deserialize(view, clipboard, Collections.EMPTY_MAP).iterator();
-        
+	    Iterator pastedElements = ClipboardUtil.pasteElementsFromString(clipboard, view, null, null).iterator();
+	    
 	    // get the measurement unit
 	    MeasurementUnit mu = MeasurementUnit.HIMETRIC_LITERAL;
 	    
@@ -129,7 +128,7 @@ public final class PasteCommand extends ClipboardCommand {
         }
 	    
         /* Set the new bounds for the pasted IShapeView views */
-	    Set edges = convertNodesConstraint(retval, mu);
+	    Set edges = convertNodesConstraint(retval, mu, new Point(offset, offset));
         
         // now go through all associated edges and adjust the bendpoints
         convertEdgeBendpoints(mu, edges);
@@ -182,7 +181,7 @@ public final class PasteCommand extends ClipboardCommand {
 	 * @param mu the <code>MeasurementUnit</code> for the notation diagram.
 	 * @return the <code>Set</code> of <code>Edge</code> views that are attached to the list of nodes 
 	 */
-	private Set convertNodesConstraint(List retval, MeasurementUnit mu) {
+	private Set convertNodesConstraint(List retval, MeasurementUnit mu, Point ptOffset) {
 		Set edges = new HashSet();
         for (Iterator i = retval.iterator(); i.hasNext();) {
             View nextView = (View) i.next();
@@ -219,7 +218,7 @@ public final class PasteCommand extends ClipboardCommand {
         		}
         		
         		Rectangle constraintRect = new Rectangle(loc, size);
-        		constraintRect = constraintRect.getTranslated(offset, offset);
+        		constraintRect = constraintRect.getTranslated(ptOffset.x, ptOffset.y);
     			ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_X(), new Integer(constraintRect.x));
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(constraintRect.y));
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Width(), new Integer(constraintRect.width));
@@ -227,6 +226,9 @@ public final class PasteCommand extends ClipboardCommand {
                 
                 edges.addAll(((Node)nextView).getTargetEdges());
                 edges.addAll(((Node)nextView).getSourceEdges());
+                
+                // recursively perform the same operation on children of the node
+                edges.addAll(convertNodesConstraint(node.getPersistedChildren(), mu, new Point(0, 0)));
             }
         }
 		return edges;
