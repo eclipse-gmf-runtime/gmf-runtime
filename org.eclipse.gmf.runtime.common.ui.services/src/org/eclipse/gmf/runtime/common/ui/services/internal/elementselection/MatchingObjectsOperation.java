@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,17 +10,16 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.common.ui.services.internal.elementselection;
 
-import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IElementSelectionInput;
+import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObjectsOperation;
 
 /**
  * The matching objects operation used by the element selection service.
  * 
- * @author Anthony Hunter <a href="mailto:anthonyh@ca.ibm.com">
- *         anthonyh@ca.ibm.com </a>
+ * @author Anthony Hunter
  */
 public abstract class MatchingObjectsOperation
-	implements IOperation {
+	implements IMatchingObjectsOperation {
 
 	/**
 	 * the element selection input.
@@ -38,11 +37,9 @@ public abstract class MatchingObjectsOperation
 		this.input = input;
 	}
 
-	/**
-	 * Retreive the element selection input.
-	 * 
-	 * @return the element selection input.
-	 */
+    /**
+     * @inheritDoc
+     */
 	public IElementSelectionInput getElementSelectionInput() {
 		return input;
 	}

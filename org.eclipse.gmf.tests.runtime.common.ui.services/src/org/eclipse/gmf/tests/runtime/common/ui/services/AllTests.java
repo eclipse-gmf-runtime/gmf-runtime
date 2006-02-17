@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import junit.textui.TestRunner;
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.ElementSelectionFilterTest;
 import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.ElementSelectionScopeTest;
+import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.ElementSelectionUserInputTest;
 
 /**
  * All tests for the plug-in.
@@ -38,6 +39,7 @@ public class AllTests
         TestSuite suite = new TestSuite();
         suite.addTest(ElementSelectionScopeTest.suite());
         suite.addTest(ElementSelectionFilterTest.suite());
+        suite.addTest(ElementSelectionUserInputTest.suite());
         return suite;
     }
 

@@ -10,9 +10,8 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.common.ui.services.elementselection;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.viewers.IFilter;
 
 /**
  * Abstract implementation of an IElementSelectionInput.
@@ -30,7 +29,7 @@ public class AbstractElementSelectionInput
     /**
      * A list of the input types.
      */
-    private List types;
+    private IFilter filter;
 
     /**
      * A context for the input.
@@ -38,9 +37,9 @@ public class AbstractElementSelectionInput
     private IAdaptable context;
 
     /**
-     * A filter for the input.
+     * A input filter for the input.
      */
-    private String filter;
+    private String input;
 
     /**
      * Constructor for an AbstractElementSelectionInput
@@ -54,10 +53,10 @@ public class AbstractElementSelectionInput
      * @param filter
      *            The filter used for the search for matching objects.
      */
-    public AbstractElementSelectionInput(List types, IAdaptable context,
-            ElementSelectionScope scope, String filter) {
+    public AbstractElementSelectionInput(IFilter filter, IAdaptable context,
+            ElementSelectionScope scope, String input) {
         super();
-        this.types = types;
+        this.input = input;
         this.context = context;
         this.scope = scope;
         this.filter = filter;
@@ -73,8 +72,8 @@ public class AbstractElementSelectionInput
     /**
      * @inheritDoc
      */
-    public List getTypes() {
-        return types;
+    public IFilter getFilter() {
+        return filter;
     }
 
     /**
@@ -87,8 +86,8 @@ public class AbstractElementSelectionInput
     /**
      * @inheritDoc
      */
-    public String getFilter() {
-        return filter;
+    public String getInput() {
+        return input;
     }
 
     /**
@@ -107,7 +106,7 @@ public class AbstractElementSelectionInput
      * @param filter
      *            the filter for the element selection input.
      */
-    public void setFilter(String filter) {
+    public void setFilter(IFilter filter) {
         this.filter = filter;
     }
 
@@ -122,13 +121,13 @@ public class AbstractElementSelectionInput
     }
 
     /**
-     * Set the list of types for the element selection input.
+     * Set the input filter for the element selection input.
      * 
-     * @param types
-     *            the list of types for the element selection input.
+     * @param input
+     *            the input filter for the element selection input.
      */
-    public void setTypes(List types) {
-        this.types = types;
+    public void setInput(String input) {
+        this.input = input;
     }
 
 }

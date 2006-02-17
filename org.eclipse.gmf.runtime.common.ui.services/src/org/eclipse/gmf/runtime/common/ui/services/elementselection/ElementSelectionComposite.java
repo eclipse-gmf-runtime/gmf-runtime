@@ -193,7 +193,7 @@ public abstract class ElementSelectionComposite {
      * Handles a filter change.
      */
     private void handleFilterChange() {
-        input.setFilter(filterText.getText());
+        input.setInput(filterText.getText());
         tableViewer.setInput(input);
         Object element = tableViewer.getElementAt(0);
         if (element != null) {

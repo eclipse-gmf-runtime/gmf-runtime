@@ -10,9 +10,8 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.common.ui.services.elementselection;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.viewers.IFilter;
 
 /**
  * Interface describing the input for the element selection service.
@@ -22,33 +21,37 @@ import org.eclipse.core.runtime.IAdaptable;
 public interface IElementSelectionInput {
 
     /**
-     * Retrieves the scope of the search for input types.
+     * Retrieves the scope of the search.
      * 
-     * @return ElementSelectionScope the scope of the search for input types.
+     * @return ElementSelectionScope the scope of the search.
      */
     public ElementSelectionScope getScope();
 
     /**
-     * Retrieves the list of the input types. Each input type should implement
-     * the <code>IElementType</code> interface.
+     * Retrieves the filter provided for the input. The filter is used to give
+     * the user of the element selection service control over what types are
+     * selected by the providers.
+     * <p>
+     * Most frequently, the filter will select an object if it matches a
+     * specific list of types (<code>IElementType</code>).
+     * </p>
      * 
      * @return List the list of the input types.
      */
-    public List getTypes();
+    public IFilter getFilter();
 
     /**
-     * Retrieves the context for the input. Most frequently the context is an
-     * EMF EObject.
+     * Retrieves the context for the input.
      * 
      * @return IAdaptable the context for the input.
      */
     public IAdaptable getContext();
 
     /**
-     * Retrieves a filter for the input. The filter is used to match objects
-     * based on a string (? = any character, * = any string).
+     * Retrieves a string input filter for the input. The filter is used to
+     * match objects based on a string (? = any character, * = any string).
      * 
-     * @return IAdaptable the filter for the input.
+     * @return String the string input filter.
      */
-    public String getFilter();
+    public String getInput();
 }

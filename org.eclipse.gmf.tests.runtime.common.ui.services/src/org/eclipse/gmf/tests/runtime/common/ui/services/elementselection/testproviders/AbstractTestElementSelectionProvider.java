@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,9 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.AbstractElementSelectionProvider;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.AbstractMatchingObject;
-import org.eclipse.gmf.runtime.common.ui.services.elementselection.GetMatchingObjectsOperation;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IElementSelectionInput;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObject;
+import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObjectsOperation;
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
 import org.eclipse.swt.graphics.Image;
 
@@ -48,8 +48,8 @@ public abstract class AbstractTestElementSelectionProvider
         Image image = getTestElementImage();
         for (int i = 0; i < names.length; i++) {
             TestMatchingObject testMatchingObject = new TestMatchingObject(
-                names[i], names[i] + TestMatchingObject.DASHES + component,
-                image, this);
+                names[i], component, names[i] + TestMatchingObject.DASHES
+                    + component, image, this);
             elements.add(testMatchingObject);
         }
     }
@@ -60,17 +60,25 @@ public abstract class AbstractTestElementSelectionProvider
 
     public List getMatchingObjects(IElementSelectionInput input) {
         /**
-         * filter the matching elements using the filter.
+         * filter the matching elements using the user input and filter.
          */
-        String filter = validatePattern(input.getFilter());
+        String filter = validatePattern(input.getInput());
         List result = new ArrayList();
         Pattern pattern = Pattern.compile(filter);
         for (Iterator iter = elements.iterator(); iter.hasNext();) {
             AbstractMatchingObject element = (AbstractMatchingObject) iter
                 .next();
             Matcher matcher = pattern.matcher(element.getName().toLowerCase());
+            /**
+             * If element matches user input.
+             */
             if (matcher.matches()) {
-                result.add(element);
+                /**
+                 * If element matches input filter.
+                 */
+                if (input.getFilter().select(element)) {
+                    result.add(element);
+                }
             }
         }
 
@@ -78,8 +86,8 @@ public abstract class AbstractTestElementSelectionProvider
     }
 
     public boolean provides(IOperation operation) {
-        assert operation instanceof GetMatchingObjectsOperation;
-        Object context = ((GetMatchingObjectsOperation) operation)
+        assert operation instanceof IMatchingObjectsOperation;
+        Object context = ((IMatchingObjectsOperation) operation)
             .getElementSelectionInput().getContext();
         if (context instanceof TestElementSelectionProviderContext) {
             return true;

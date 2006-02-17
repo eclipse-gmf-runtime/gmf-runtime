@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelect
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,12 +47,6 @@ public class TestSelectElementDialog
     private ElementSelectionScope scope = ElementSelectionScope.VISIBLE;
 
     /**
-     * The list of <code>IElementType</code> objects that an element must
-     * match to be displayed in the dialog as a user choice.
-     */
-    private List types;
-
-    /**
      * The context for the input.
      */
     private IAdaptable context = new TestElementSelectionProviderContext();
@@ -70,10 +65,18 @@ public class TestSelectElementDialog
     protected Control createDialogArea(Composite parent) {
         getShell().setText("Select Element"); //$NON-NLS-1$
 
+        IFilter filter = new IFilter() {
+
+            public boolean select(Object toTest) {
+                return true;
+            }
+            
+        };
+        
         /*
          *  The input for the element selection service.
          */
-        AbstractElementSelectionInput input = new AbstractElementSelectionInput(types,
+        AbstractElementSelectionInput input = new AbstractElementSelectionInput(filter,
             context, scope, StringStatics.BLANK);
 
         selectElementComposite = new ElementSelectionComposite(

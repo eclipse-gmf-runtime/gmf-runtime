@@ -20,21 +20,19 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.AbstractElementSelectionInput;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionScope;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.ElementSelectionService;
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
-import org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders.TestMatchingObject;
 import org.eclipse.jface.viewers.IFilter;
 
 /**
- * Test cases for the filter for the element selection service, the filter being
- * the programatic filter at the application level to filter specific element
- * types.
+ * Test cases for the user input for the element selection service.
  * 
  * @author Anthony Hunter
  */
-public class ElementSelectionFilterTest
+public class ElementSelectionUserInputTest
     extends TestCase {
 
     private AbstractElementSelectionInput input;
@@ -49,9 +47,10 @@ public class ElementSelectionFilterTest
             public boolean select(Object toTest) {
                 return true;
             }
-
+            
         };
-        input = new AbstractElementSelectionInput(filter, context, scope, "t");//$NON-NLS-1$
+        input = new AbstractElementSelectionInput(filter, context,
+            scope, StringStatics.BLANK);
     }
 
     protected void tearDown()
@@ -65,29 +64,43 @@ public class ElementSelectionFilterTest
     }
 
     public static Test suite() {
-        return new TestSuite(ElementSelectionFilterTest.class);
+        return new TestSuite(ElementSelectionUserInputTest.class);
     }
 
-    public void testAllElementsFilter() {
+    public void testBlankUserInput() {
+        input.setInput(StringStatics.BLANK);
+        List matches = getMatchingObjects();
+        assertTrue(matches.size() == 0);
+    }
+
+    public void testFullNameUserInput() {
+        input.setInput("one");//$NON-NLS-1$
+        List matches = getMatchingObjects();
+        assertTrue(matches.size() == 3);
+    }
+
+    public void testNamePrefixUserInput() {
+        input.setInput("t");//$NON-NLS-1$
         List matches = getMatchingObjects();
         assertTrue(matches.size() == 6);
     }
 
-    public void testBlueElementsFilter() {
-        input.setFilter(new IFilter() {
-
-            public boolean select(Object element) {
-                if (element instanceof TestMatchingObject) {
-                    if (((TestMatchingObject) element).getComponent().equals(
-                        "Blue")) {//$NON-NLS-1$
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+    public void testAnotherNamePrefixUserInput() {
+        input.setInput("th");//$NON-NLS-1$
         List matches = getMatchingObjects();
-        assertTrue(matches.size() == 2);
+        assertTrue(matches.size() == 3);
+    }
+
+    public void testAnyStringUserInput() {
+        input.setInput("t*ee");//$NON-NLS-1$
+        List matches = getMatchingObjects();
+        assertTrue(matches.size() == 3);
+    }
+
+    public void testOnCharacterUserInput() {
+        input.setInput("t?ree");//$NON-NLS-1$
+        List matches = getMatchingObjects();
+        assertTrue(matches.size() == 3);
     }
 
     /**
