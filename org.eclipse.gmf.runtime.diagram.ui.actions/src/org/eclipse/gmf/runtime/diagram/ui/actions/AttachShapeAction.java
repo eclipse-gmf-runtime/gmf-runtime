@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -132,13 +131,11 @@ public abstract class AttachShapeAction
 		referenceLocation = new Point(
 			(compoundBounds.x1 + compoundBounds.x2) / 2, compoundBounds.y1);
 
-		Dimension noteSize = new Dimension(0, 0);
-
 		GraphicalEditPart part = (GraphicalEditPart) editParts.get(0);
-		int vertOffset = MapModeUtil.getMapMode(part.getFigure()).DPtoLP(60);
+		int vertOffset = MapModeUtil.getMapMode(part.getFigure()).DPtoLP(100);
 		Point location = new Point();
 		location.x = referenceLocation.x;
-		location.y = referenceLocation.y - noteSize.height - vertOffset;
+		location.y = referenceLocation.y - vertOffset;
 
 		// convert the location to screen coordinates as that is what the
 		// creation command expects

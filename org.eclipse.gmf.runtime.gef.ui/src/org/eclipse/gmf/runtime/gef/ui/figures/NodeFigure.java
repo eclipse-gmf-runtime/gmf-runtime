@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
 
 /**
@@ -136,7 +137,7 @@ public class NodeFigure
 		else {
 			Point temp = p.getCopy();
 			translateToRelative(temp);
-			PrecisionPoint pt = getAnchorRelativeLocation(temp);
+			PrecisionPoint pt = BaseSlidableAnchor.getAnchorRelativeLocation(temp, getBounds());
 			if (isDefaultAnchorArea(pt))
 				return getConnectionAnchor(szAnchor);
 			return createAnchor(pt);
@@ -183,40 +184,7 @@ public class NodeFigure
 		return connectionAnchors;
 	}
 		
-	/**
-	 * Calculates the relative location of the reference point with respect to the bounds
-	 * of the figure. If point p is not inside of the figure's bounds then the point
-	 * is mapped on the bounds and the point relative location is calculated 
-	 * 
-	 * @param p the <code>Point</code> that is relative coordinates of the point
-	 * @return <Code>PrecisionPoint</Code>, i.e. the relative reference for
-	 * <Code>SlidableAnchor</Code>
-	 */
-	protected PrecisionPoint getAnchorRelativeLocation(Point p) {
-		PrecisionPoint relLocation;
-		Point temp = new Point(p);
-		if (p.x < getBounds().x || p.x > getBounds().x + getBounds().width
-			|| p.y < getBounds().y || p.y > getBounds().y + getBounds().height) {
-			if (p.x < getBounds().x || p.x > getBounds().x + getBounds().width) {
-				temp.x = p.x < getBounds().x ? getBounds().x
-					: getBounds().x + getBounds().width;
-			}
-			if (p.y < getBounds().y || p.y > getBounds().y + getBounds().height) {
-				temp.y = p.y < getBounds().y ? getBounds().y
-					: getBounds().y + getBounds().height;
-			}
-			relLocation = new PrecisionPoint((double) (temp.x - getBounds().x)
-				/ getBounds().width, (double) (temp.y - getBounds().y)
-				/ getBounds().height);
-		} else {
 
-		relLocation = new PrecisionPoint((double) (temp.x - getBounds().x)
-				/ getBounds().width, (double) (temp.y - getBounds().y)
-				/ getBounds().height);
-		}
-		return relLocation;
-	}
-	
 	/**
 	 * Specifies how large the area of the figure's bounds where <Code>SlidableAnchor</Code>
 	 * will be created. The result number: 0<=result<=1

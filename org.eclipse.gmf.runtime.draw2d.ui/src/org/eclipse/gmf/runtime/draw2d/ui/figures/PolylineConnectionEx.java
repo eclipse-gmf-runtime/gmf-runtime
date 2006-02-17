@@ -14,11 +14,10 @@ package org.eclipse.gmf.runtime.draw2d.ui.figures;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 import org.eclipse.draw2d.ArrowLocator;
 import org.eclipse.draw2d.Connection;
@@ -32,12 +31,13 @@ import org.eclipse.draw2d.RoutingAnimator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.PolylineAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -118,7 +118,8 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     
     private long styleBits;
     private JumpLinkSet jumpLinkSet;
-    private Map connectionAnchors;
+    private Hashtable connectionAnchors;
+	
     static private final String szAnchor = ""; //$NON-NLS-1$
     
     /**
@@ -153,16 +154,6 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         setLayoutManager(new DelegatingLayout());
         addRoutingListener(RoutingAnimator.getDefault());
     }
-    
-	/**
-	 * Returns the connectionAnchors.
-	 * @return Hashtable
-	 */
-	protected Map getConnectionAnchors() {
-		if (connectionAnchors == null)
-			connectionAnchors = new HashMap(1);
-		return connectionAnchors;
-	}
     
     /**
      * Provides a utility function for dirtying the jump links and repainting the line.
@@ -995,138 +986,6 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
         return jumpLinkSet;
     }
     
-    /**
-     * Contains location data about a point in relation
-     * with the polyline.
-     * See getPointInfo for more information.
-     */
-    static public class PointInfo {
-        /**
-         * orthogonal distance from line
-         */
-        public int      fromLine;
-        
-        /**
-         * distance from the end of the line
-         */
-        public int      fromEnd;
-        
-        /**
-         * are the values stored as a percentage value instead of relative coordinates.
-         */
-        public boolean  isPercentage = true;
-        
-        /**
-         * Defines a sign which encodes the positive or negative position of the point
-         * as defined in {@link LineSeg#positionRelativeTo}
-         */
-        public double   proj = 0.0;
-    }
-
-
-    private static boolean projIn( double proj ) {
-        return proj > 0 && proj < 1;
-    }
-    
-    /**
-     * returns a measure of how much proj is away from 0
-     * when negative of from 1 when positive
-     * returns 0 when proj is between 0 and 1
-     * intended to be called when proj is not between 0 and 1
-     */
-    private static double projFactor(double proj) {
-        if (proj < 0 )
-            return -proj;
-        else if (proj > 1.0)
-            return proj - 1.0;
-        else
-            return 0;
-    }
-    
-    private boolean atLeastOneProjectionCovers(Point p) {
-        boolean oneProjIn = false;
-        
-        List segments = PointListUtilities.getLineSegments(getPoints());
-        
-        ListIterator segIter = segments.listIterator();
-        while (segIter.hasNext() && !oneProjIn) {
-            LineSeg segment = (LineSeg) segIter.next();
-            double proj = segment.projection( p.x, p.y );
-            if (projIn(proj)) {
-                oneProjIn = true;
-            }
-        }
-        
-        return oneProjIn;
-    }
-
-    /**
-     * Returns a structure PointInfo that contains the following information:
-     * 1) perpendicular distance from the point p to the nearest segment 
-     * 2) percentage distance from the projection of point p to the nearest segment
-     * to the beginning of the polyline
-     * NOTE:
-     * 1) has a sign which encodes the positive or negative position of the point
-     * as defined in LineSeg.positionRelativeTo()
-     */
-    private PointInfo getPointInfo( Point p ) {
-        
-        PointInfo pointInfo = new PointInfo();
-        pointInfo.fromLine = Integer.MAX_VALUE;
-        pointInfo.fromEnd  = 0;
-        pointInfo.proj = Double.NEGATIVE_INFINITY;// so that initially projFactor is maximal
-        
-        List segments = PointListUtilities.getLineSegments(getPoints());
-        
-        int accumulatedLength = 0;
-        
-        boolean isCovered = atLeastOneProjectionCovers(p);
-        
-        ListIterator segIter = segments.listIterator();
-        while (segIter.hasNext()) {
-            LineSeg segment = (LineSeg) segIter.next();
-            double proj = segment.projection( p.x, p.y );
-            Point pt = segment.perpIntersect( p.x, p.y );
-            int perpDist = (int)Math.round(p.getDistance(pt));
-            if (isCovered) {
-                // when covered we pick the smallest perpendicular distance
-                if (perpDist < Math.abs(pointInfo.fromLine)) {
-                    if (proj > 0 && proj < 1 ) {
-                        pointInfo.fromLine = (segment.positionRelativeTo(p) == LineSeg.Sign.POSITIVE ? perpDist : -perpDist);
-                        Point origin = segment.getOrigin();             
-                        int inSegmentDistance = (int)Math.round(origin.getDistance(pt));
-                        double fractionDistance = ((double)(accumulatedLength + inSegmentDistance))/((double)PointListUtilities.getPointsLength(getPoints()));
-                        pointInfo.fromEnd = (int)Math.round(100*fractionDistance);
-                    }
-                }
-            }
-            else {
-                // when not covered we pick the smallest projFactor
-                if (projFactor(proj) < projFactor(pointInfo.proj)) {
-                    pointInfo.fromLine = (segment.positionRelativeTo(p) == LineSeg.Sign.POSITIVE ? perpDist : -perpDist);
-                    Point origin = segment.getOrigin();             
-                    // we enforce the point to stay on a perpendicular position with regard to the segment
-                    int inSegmentDistance = proj>0 ? 
-                        Math.min((int)Math.round(origin.getDistance(pt)), (int)segment.length()) 
-                        : 0;
-                        
-                    double fractionDistance = ((double)(accumulatedLength + inSegmentDistance))/((double)PointListUtilities.getPointsLength(getPoints()));
-                    pointInfo.fromEnd = (int)Math.round(100*fractionDistance);
-                    if (pointInfo.fromEnd > 0 && pointInfo.fromEnd < 100)
-                        pointInfo.fromEnd += ((inSegmentDistance == (int)segment.length()) ? -1 : 1);// to avoid corners
-                    pointInfo.proj = proj;
-                }
-            }
-            accumulatedLength += segment.length();
-        }
-            
-        // sanity check
-        if (pointInfo.fromLine == Integer.MAX_VALUE)
-            pointInfo.fromLine = 0;// we should never get here 
-                
-        return pointInfo;
-    }
-    
     /* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure#getPolygonPoints()
 	 */
@@ -1135,75 +994,138 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 		return getSmoothPoints();
 	}
 
-	/* 
-     * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchor(java.lang.String)
-     */
-    public ConnectionAnchor getConnectionAnchor(String terminal) {
-        ConnectionAnchor connectionAnchor = (ConnectionAnchor)getConnectionAnchors().get(terminal);
-        
-        if (connectionAnchor == null)
-            connectionAnchor = new PolylineAnchor(this, terminal);
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchor(java.lang.String)
+	 */
+	public ConnectionAnchor getConnectionAnchor(String terminal) {
 
-        return connectionAnchor;
-    }
+		ConnectionAnchor connectAnchor =
+			(ConnectionAnchor) getConnectionAnchors().get(terminal);
+		if (connectAnchor == null) {
+			if (terminal.equals(szAnchor)) {
+				// get a new one - this figure doesn't support static anchors
+				connectAnchor = createDefaultAnchor();
+				getConnectionAnchors().put(terminal,connectAnchor);
+			}
+			else {
+				connectAnchor = createAnchor(BaseSlidableAnchor.parseTerminalString(terminal));
+			}
+		}
 
-    /* 
-     * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchorTerminal(org.eclipse.draw2d.ConnectionAnchor)
-     */
-    public String getConnectionAnchorTerminal(ConnectionAnchor c) {
-        if (getConnectionAnchors().containsValue(c)) {
-            Iterator iter = getConnectionAnchors().keySet().iterator();
-            String key;
-            while (iter.hasNext()) {
-                key = (String) iter.next();
-                if (getConnectionAnchors().get(key).equals(c))
-                    return key;
-            }
-        }
-        return null;
-    }
+		return connectAnchor;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getSourceConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
-     */
-    public ConnectionAnchor getSourceConnectionAnchorAt(Point p) {
-        return createConnectionAnchor(p);
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getConnectionAnchorTerminal(org.eclipse.draw2d.ConnectionAnchor)
+	 */
+	public String getConnectionAnchorTerminal(ConnectionAnchor c) {
+		if (c instanceof BaseSlidableAnchor) {
+			return ((BaseSlidableAnchor) c).getTerminal();
+		}
+		if (getConnectionAnchors().containsValue(c)) {
+			Iterator iter = getConnectionAnchors().keySet().iterator();
+			String key;
+			while (iter.hasNext()) {
+				key = (String) iter.next();
+				if (getConnectionAnchors().get(key).equals(c))
+					return key;
+			}
+		}
+		getConnectionAnchor(szAnchor);
+		return szAnchor;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getTargetConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
-     */
-    public ConnectionAnchor getTargetConnectionAnchorAt(Point p) {
-        return createConnectionAnchor(p);
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getSourceConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
+	 */
+	public ConnectionAnchor getSourceConnectionAnchorAt(Point p) {
+		return createConnectionAnchor(p);
+	}
 
-    /**
-     * Returns a new anchor for this node figure.
-     * @param p Point on the figure that gives a hint which anchor to return.
-     * @return ConnectionAnchor reference to an anchor associated with the given point on the figure.
-     */
-    protected ConnectionAnchor createConnectionAnchor(Point p) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure#getTargetConnectionAnchorAt(org.eclipse.draw2d.geometry.Point)
+	 */
+	public ConnectionAnchor getTargetConnectionAnchorAt(Point p) {
+		return createConnectionAnchor(p);
+	}
+	
+	/**
+	 * Creates the default Slidable anchor with a reference point at the center
+	 * of the figure's bounds
+	 * 
+	 * @return - default SlidableAnchor, relative reference the center of the figure
+	 */
+	protected ConnectionAnchor createDefaultAnchor() {
+		return new BaseSlidableAnchor(this);
+	}
+	
+	/**
+	 * Creates a slidable anchor at the specified point (from the ratio of the
+	 * reference's coordinates and bounds of the figure
+	 * 
+	 * @param p - relative reference for the <Code>SlidableAnchor</Code>
+	 * @return a <code>SlidableAnchor</code> for this figure with relative reference at p
+	 */
+	protected ConnectionAnchor createAnchor(PrecisionPoint p) {
+		if (p==null)
+			// If the old terminal for the connection anchor cannot be resolved (by SlidableAnchor) a null
+			// PrecisionPoint will passed in - this is handled here
+			return createDefaultAnchor();
+		return new BaseSlidableAnchor(this, p);
+	}
 
-        ConnectionAnchor connectionAnchor = null;
-        int fromEnd = 0;
-        
-        if (p.x < 0) {  // if negative - return an anchor at the center
-            connectionAnchor = new PolylineAnchor(this, fromEnd = 50);
-        }
-        else {
-            PointInfo pInfo = getPointInfo(p);
-            connectionAnchor = new PolylineAnchor(this, fromEnd = pInfo.fromEnd);
-        }
-        
-        if (connectionAnchor != null) {
-            String szKey = szAnchor + fromEnd;
-            getConnectionAnchors().put(szKey, connectionAnchor);
-        }
-        
-        return connectionAnchor;
-    }
+	/**
+	 * Returns a new anchor for this node figure.
+	 * 
+	 * @param p <code>Point</code> on the figure that gives a hint which anchor to return.
+	 * @return <code>ConnectionAnchor</code> reference to an anchor associated with the 
+	 * given point on the figure.
+	 */
+	protected ConnectionAnchor createConnectionAnchor(Point p) {
+		if (p == null) {
+			return getConnectionAnchor(szAnchor);
+		}
+		else {
+			Point temp = p.getCopy();
+			translateToRelative(temp);
+			PrecisionPoint pt = BaseSlidableAnchor.getAnchorRelativeLocation(temp, getBounds());
+			return createAnchor(pt);
+		}
+	} 
+	
+	/**
+	 * Checks whether the <PrecisionPoint> p which is a candidate for a relative reference
+	 * for the <Code>SlidableAnchor</Code> belongs to the area where the default anchor
+	 * must be created
+	 * 
+	 * @param p
+	 * @return <code>boolean</code> <code>true</code> if <PrecisionPoint> belongs to the area where the default anchor must be 
+	 * created, <code>false</code> otherwise
+	 */
+	protected boolean isDefaultAnchorArea(PrecisionPoint p) {
+		return p.preciseX >= getSlidableAnchorArea()/2 && p.preciseX <= 1 - getSlidableAnchorArea()/2 &&
+			p.preciseY >= getSlidableAnchorArea()/2 && p.preciseY <= 1 - getSlidableAnchorArea()/2;
+	}
+	
+	/**
+	 * Returns the connectionAnchors.
+	 * @return Hashtable
+	 */
+	protected Hashtable getConnectionAnchors() {
+		if (connectionAnchors == null)
+			connectionAnchors = new Hashtable(1);
+		return connectionAnchors;
+	}
+	
+	/**
+	 * Specifies how large the area of the figure's bounds where <Code>SlidableAnchor</Code>
+	 * will be created. The result number: 0<=result<=1
+	 * 
+	 * @return  the size of the area of the figure's bounds
+	 */
+	protected double getSlidableAnchorArea() {
+		return 0.25;
+	}
 
     /* 
      * (non-Javadoc)
