@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IContributor;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Status;
@@ -183,5 +184,15 @@ public class TestingConfigurationElement implements IConfigurationElement {
 	public boolean isValid() {
 		return false;
 	}
+    
+    public IContributor getContributor()
+        throws InvalidRegistryObjectException {
+        return null;
+    }
+    
+    public String getNamespaceIdentifier()
+        throws InvalidRegistryObjectException {
+        return null;
+    }
 
 }
