@@ -54,66 +54,8 @@
    </extension>
    
    
-  <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
-     <propertyContributor contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes" labelProvider="org.eclipse.gmf.runtime.common.ui.services.util.CommonLabelProvider">
-        <propertyCategory category="General"/>
-        <propertyCategory category="Advanced"/>
-        <propertyCategory category="Appearance"/>
-     </propertyContributor>
-  </extension>
   
-  <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
-     <propertyTabs contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes">
-        <propertyTab label="%General" category="General" id="geoshapes.tab.General"/>
-        <propertyTab label="%Advanced" category="Advanced" id="geoshapes.tab.Advanced"/>
-        <propertyTab label="%Appearance" category="Appearance" id="geoshapes.tab.Appearance"/>
-     </propertyTabs>
-  </extension>
 
-  <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
-     <propertySections contributorId="org.eclipse.gmf.examples.runtime.diagram.geoshapes">
-        
-        <propertySection
-              class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.DiagramGeneralSection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.NotationElementFilter"
-              id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.GeneralDiagram"
-              tab="geoshapes.tab.General">
-           <input type="org.eclipse.gmf.runtime.notation.Diagram"/>
-        </propertySection>
-        
-        <propertySection
-              class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.section.GeoShapeGeneralSection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
-              id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.GeoShapeGeneralSection"
-              tab="geoshapes.tab.General">
-           <input type="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.GeoShapeEditPart"/>
-        </propertySection>
-        
-        <propertySection
-              class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ShapeColorsAndFontsPropertySection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
-              id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.GeoShapeColorsAndFontsPropertySection"
-              tab="geoshapes.tab.Appearance">
-           <input type="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.GeoShapeEditPart"/>
-        </propertySection>
-
-        <propertySection
-              class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectionAppearancePropertySection"
-              filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
-              id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.ConnectorAppearancePropertySection"
-              tab="geoshapes.tab.Appearance">
-           <input type="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart"/>           
-        </propertySection>
-        
-        <propertySection 
-        	class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.AdvancedPropertySection" 
-        	tab="geoshapes.tab.Advanced" 
-        	id="org.eclipse.gmf.examples.runtime.diagram.geoshapes.Advanced">
-           <input type="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart"/>
-        </propertySection>
-                
-     </propertySections>
-  </extension> 
   
   <extension id="globalActionHandlerProviders" 
   	name="%ext.globalActionHandlerProviders" 
