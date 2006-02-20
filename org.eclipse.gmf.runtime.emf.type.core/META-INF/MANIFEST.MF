@@ -8,7 +8,6 @@ Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.emf.commands.core.commands,
  org.eclipse.gmf.runtime.emf.commands.core.edithelpers,
- org.eclipse.gmf.runtime.emf.core.internal.util,
  org.eclipse.gmf.runtime.emf.type.core,
  org.eclipse.gmf.runtime.emf.type.core.commands,
  org.eclipse.gmf.runtime.emf.type.core.edithelper,
