@@ -34,6 +34,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleLocatorTes
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.DiagramCommandStackTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.GraphicalNodeEditPolicyTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.render.util.CopyToImageUtilTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.requests.RequestTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.ConnectionToolTests;
@@ -71,6 +72,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(LogicTransientViewsTests.suite());
 		suite.addTest(RequestTests.suite());
 		suite.addTest(ConnectionToolTests.suite());
+        suite.addTest(CopyToImageUtilTests.suite());
 		
 		return suite;
 	}

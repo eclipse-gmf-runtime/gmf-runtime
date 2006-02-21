@@ -59,10 +59,15 @@ public class ImageFileFormat extends EnumeratedType {
 	 */
 	public static final ImageFileFormat SVG = new ImageFileFormat("SVG", IMAGE_SVG); //$NON-NLS-1$
 
+    /**
+     * supported format PNG.
+     */
+    public static final ImageFileFormat PNG = new ImageFileFormat("PNG", SWT.IMAGE_PNG); //$NON-NLS-1$
+
 	/**
 	 * The list of values for this enumerated type.
 	 */
-	public static final ImageFileFormat[] VALUES = { GIF, BMP, JPEG, JPG, SVG };
+	public static final ImageFileFormat[] VALUES = { GIF, BMP, JPEG, JPG, SVG, PNG };
 
 	/**
 	 * Constructs a new type with the specified
