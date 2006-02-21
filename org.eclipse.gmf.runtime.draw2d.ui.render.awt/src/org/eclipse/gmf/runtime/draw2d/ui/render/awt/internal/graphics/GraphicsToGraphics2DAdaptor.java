@@ -17,6 +17,7 @@ import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Polygon;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
@@ -1154,5 +1155,36 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	protected Point getTranslationOffset() {
 		return new Point(transX, transY);
 	}
+    
+    /* 
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.Graphics#getAntialias()
+     */
+    public int getAntialias() {
+        Object antiAlias = getGraphics2D().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+        if (antiAlias != null) {
+            if (antiAlias.equals(RenderingHints.VALUE_ANTIALIAS_ON))
+                return SWT.ON;
+            else if (antiAlias.equals(RenderingHints.VALUE_ANTIALIAS_OFF))
+                return SWT.OFF;
+            else if (antiAlias.equals(RenderingHints.VALUE_ANTIALIAS_DEFAULT))
+                return SWT.DEFAULT;
+        }
+        
+        return SWT.DEFAULT;
+    }
+    
+    /* 
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.Graphics#setAntialias(int)
+     */
+    public void setAntialias(int value) {
+        if (value == SWT.ON) {
+            getGraphics2D().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        }
+        else if (value == SWT.OFF) {
+            getGraphics2D().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        }
+    }
 
 }
