@@ -14,10 +14,15 @@ package org.eclipse.gmf.runtime.emf.core.resources;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 
 /**
- * Documentation for <code>IResourceHelper</code>.
+ * Interface of an adapter for {@link Resource}s that provides
+ * services such as creation and destruction of objects in that resource.
+ * This interface is used by the {@link EMFCoreUtil} class to implement
+ * extensible/overrideable object creation and destruction behaviours.
  *
  * @author Christian W. Damus (cdamus)
  */

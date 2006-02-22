@@ -26,13 +26,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -40,8 +41,8 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.index.ReferenceVisitor;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
+import org.eclipse.gmf.runtime.emf.core.resources.IResourceHelper;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
-import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.osgi.framework.Bundle;
 
 import com.ibm.icu.util.StringTokenizer;
@@ -61,6 +62,26 @@ public class Util {
 	/** Cannot instantiate. */
 	private Util() {
 		super();
+	}
+
+	/**
+	 * Gets the helper for the specified resource, if any.
+	 * 
+	 * @param resource a resource (may be <code>null</code>)
+	 * 
+	 * @return the helper, if one is attached, or <code>null</code> if none
+	 *     or if no resource is specified
+	 */
+	public static IResourceHelper getHelper(Resource resource) {
+		IResourceHelper result = null;
+		
+		if (resource != null) {
+			result = (IResourceHelper) EcoreUtil.getExistingAdapter(
+				resource,
+				IResourceHelper.class);
+		}
+		
+		return result;
 	}
 
 	/**
@@ -305,7 +326,7 @@ public class Util {
 
 							try {
 
-								url = Platform.resolve(url);
+								url = FileLocator.resolve(url);
 
 								if (url != null) {
 
@@ -444,86 +465,6 @@ public class Util {
 			return -1;
 
 		return diff;
-	}
-
-	/**
-	 * Gets the proxy name by parsing the proxy URI.
-	 * 
-	 * @param proxy
-	 *            The proxy object.
-	 * @return The name.
-	 */
-	public static String getProxyName(EObject proxy) {
-
-		String result = null;
-
-		String proxyQName = getProxyQualifiedName(proxy);
-
-		if ((proxyQName != null) && (proxyQName.length() > 0)) {
-
-			String[] segments = proxyQName
-				.split(EMFCoreConstants.QUALIFIED_NAME_SEPARATOR);
-
-			result = segments[segments.length - 1];
-		}
-
-		if ((result == null) || (result.length() == 0)) {
-
-			EAttribute nameAttribute = PackageUtil.getNameAttribute(
-				proxy.eClass());
-
-			if (nameAttribute != null) {
-
-				result = (String) proxy.eGet(nameAttribute);
-
-			}
-		}
-
-		if (result == null) {
-			result = EMFCoreConstants.EMPTY_STRING;
-		}
-		
-		return result;
-	}
-
-	/**
-	 * Gets the proxy qualified name by parsing the proxy URI.
-	 * 
-	 * @param proxy
-	 *            The proxy object.
-	 * @return The qualified name.
-	 */
-	public static String getProxyQualifiedName(EObject proxy) {
-
-		URI uri = EcoreUtil.getURI(proxy);
-
-		String result = null;
-
-		String uriFragment = uri.fragment();
-
-		int index = uriFragment.indexOf(EMFCoreConstants.FRAGMENT_SEPARATOR);
-
-		if (index != -1) {
-			result = Util.decodeQName(uriFragment.substring(index + 1,
-				uriFragment.length()));
-		}
-
-		if ((result == null) || (result.length() == 0)) {
-
-			EAttribute qNameAttribute = PackageUtil.getQualifiedNameAttribute(
-				proxy.eClass());
-
-			if (qNameAttribute != null) {
-
-				result = (String) proxy.eGet(qNameAttribute);
-			}
-		}
-
-		if (result == null) {
-			result = EMFCoreConstants.EMPTY_STRING;
-		}
-		
-		return result;
 	}
 
 	/**

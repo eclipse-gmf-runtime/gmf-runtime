@@ -22,7 +22,8 @@ import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
 
 
 /**
- * Documentation for <code>ResourceHelperImpl</code>.
+ * Default implementation of a resource helper, useful for subclassing.
+ * Implements the default algorithms for the interface methods.
  *
  * @author Christian W. Damus (cdamus)
  */
@@ -30,6 +31,11 @@ public class ResourceHelperImpl
 	extends AdapterImpl
 	implements IResourceHelper {
 
+	/**
+	 * Obtains the resource that I help.
+	 * 
+	 * @return my resource
+	 */
 	protected Resource getResource() {
 		return (Resource) getTarget();
 	}
@@ -38,8 +44,11 @@ public class ResourceHelperImpl
 		return type == IResourceHelper.class;
 	}
 	
-	/* (non-Javadoc)
-	 * Redefines/Implements/Extends the inherited method.
+	/**
+	 * Default algorithm just uses the associated EFactory to instantiate the
+	 * EClass.  If the resource is under the control of a transactional editing
+	 * domain, then it will be managed already by that domain before it is
+	 * attached to the resource.
 	 */
 	public EObject create(EClass eClass) {
 
@@ -57,8 +66,10 @@ public class ResourceHelperImpl
 		return eObject;
 	}
 	
-	/* (non-Javadoc)
-	 * Redefines/Implements/Extends the inherited method.
+	/**
+	 * Default algorithm just detaches the object and, recursively, its contents
+	 * and nullifies all references to them from other objects in the resource
+	 * set.
 	 */
 	public void destroy(EObject eObject) {
 		Util.destroy(eObject);

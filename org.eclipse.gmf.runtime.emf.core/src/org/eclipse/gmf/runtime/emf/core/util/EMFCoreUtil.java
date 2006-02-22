@@ -66,7 +66,7 @@ public class EMFCoreUtil {
 
 		EObject result = null;
 
-		IResourceHelper helper = getHelper(container.eResource());
+		IResourceHelper helper = Util.getHelper(container.eResource());
 		
 		if (helper != null) {
 
@@ -99,7 +99,7 @@ public class EMFCoreUtil {
 		
 		if (resource != null) {
 
-			IResourceHelper helper = getHelper(resource);
+			IResourceHelper helper = Util.getHelper(resource);
 			
 			if (helper != null) {
 				helper.destroy(eObject);
@@ -107,26 +107,6 @@ public class EMFCoreUtil {
 				Util.destroy(eObject);
 			}
 		}
-	}
-
-	/**
-	 * Gets the helper for the specified resource, if any.
-	 * 
-	 * @param resource a resource (may be <code>null</code>)
-	 * 
-	 * @return the helper, if one is attached, or <code>null</code> if none
-	 *     or if no resource is specified
-	 */
-	private static IResourceHelper getHelper(Resource resource) {
-		IResourceHelper result = null;
-		
-		if (resource != null) {
-			result = (IResourceHelper) EcoreUtil.getExistingAdapter(
-				resource,
-				IResourceHelper.class);
-		}
-		
-		return result;
 	}
 
 	/**
@@ -453,7 +433,7 @@ public class EMFCoreUtil {
 		if (result == null) {
 			// default algorithm
 			
-			result = Util.getProxyName(proxy);
+			result = EMFCoreConstants.EMPTY_STRING;
 		}
 		
 		return result;
@@ -561,7 +541,7 @@ public class EMFCoreUtil {
 		if (result == null) {
 			// default algorithm
 			
-			result = Util.getProxyQualifiedName(proxy);
+			result = EMFCoreConstants.EMPTY_STRING;
 		}
 		
 		return result;

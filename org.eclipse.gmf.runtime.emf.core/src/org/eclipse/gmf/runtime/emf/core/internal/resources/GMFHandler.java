@@ -150,5 +150,4 @@ public class GMFHandler
 			throw new AbortResourceLoadException(e);
 		}
 	}
-
 }

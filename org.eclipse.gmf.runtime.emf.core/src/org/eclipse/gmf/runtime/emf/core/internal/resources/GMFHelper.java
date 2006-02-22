@@ -12,13 +12,9 @@
 package org.eclipse.gmf.runtime.emf.core.internal.resources;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIHelperImpl;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
-import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 /**
  * This class changes the behavior of the default XMIHelper so that references
@@ -52,28 +48,5 @@ public class GMFHelper
 			return uri;
 
 		return super.deresolve(uri);
-	}
-
-	/**
-	 * @see org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl#getHREF(org.eclipse.emf.ecore.resource.Resource,
-	 *      org.eclipse.emf.ecore.EObject)
-	 */
-	protected URI getHREF(Resource otherResource, EObject obj) {
-		URI result = super.getHREF(otherResource, obj);
-
-		if (otherResource instanceof GMFResource) {
-			String qName = EMFCoreUtil.getQualifiedName(obj, true);
-
-			if (qName.length() > 0) {
-				StringBuffer buffer = new StringBuffer(result.toString());
-
-				buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
-				buffer.append(Util.encodeQualifiedName(qName));
-
-				return URI.createURI(buffer.toString());
-			}
-		}
-
-		return result;
 	}
 }

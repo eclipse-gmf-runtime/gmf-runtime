@@ -12,11 +12,14 @@
 package org.eclipse.gmf.runtime.emf.core.resources;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 
 /**
- * Documentation for <code>IExtendedResourceFactory</code>.
+ * Mix-in interface to be implemented by {@link Resource.Factory} implementations
+ * that provide extended object name/type/ID information in proxy URIs and/or
+ * custom proxy resolution strategies.
  *
  * @author Christian W. Damus (cdamus)
  */
@@ -76,5 +79,4 @@ public interface IExtendedResourceFactory {
 	 *     cannot be resolved
 	 */
 	EObject resolve(TransactionalEditingDomain domain, EObject proxy);
-
 }
