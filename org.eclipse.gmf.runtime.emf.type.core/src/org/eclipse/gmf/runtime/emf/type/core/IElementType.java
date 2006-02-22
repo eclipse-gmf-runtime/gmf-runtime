@@ -84,6 +84,16 @@ public interface IElementType
 	 *         before it is executed.
 	 */
 	public abstract ICommand getEditCommand(IEditCommandRequest request);
+    
+    /**
+     * Answers whether or not the requested edit can be performed.
+     * 
+     * @param req
+     *            the edit request
+     * @return <code>true</code> if the requested edit can be performed,
+     *         <code>false</code> otherwise.
+     */
+    public boolean canEdit(IEditCommandRequest req);
 
 	/**
 	 * Gets the edit helper for this element type.

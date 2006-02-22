@@ -15,12 +15,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
- * A command factory for commands that will modify elements of a specific type.
+ * A factory for commands that will modify elements of a specific type.
  * <P>
  * Clients should not implement this interface directly, but should subclass
  * {@link org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper}instead.
@@ -29,6 +28,16 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
  */
 public interface IEditHelper {
 
+    /**
+     * Answers whether or not the requested edit can be performed.
+     * 
+     * @param req
+     *            the edit request
+     * @return <code>true</code> if the requested edit can be performed,
+     *         <code>false</code> otherwise.
+     */
+    public boolean canEdit(IEditCommandRequest req);
+    
 	/**
 	 * Gets an edit command to perform the work requested in <code>req</code>.
 	 * <P>

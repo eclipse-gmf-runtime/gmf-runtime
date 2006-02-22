@@ -110,4 +110,30 @@ public class AbstractEditHelperTest
         command = EmployeeType.DEPARTMENT.getEditCommand(request);
         assertTrue(command == null || !command.canExecute());
     }
+    
+    /**
+     * Tests the canEdit() method on an edit helper.
+     */
+    public void test_canEdit_122771() {
+        
+        // allowed to create a manager in a department
+        CreateElementRequest request = new CreateElementRequest(
+            getEditingDomain(), department, EmployeeType.MANAGER);
+
+        boolean canEdit = EmployeeType.DEPARTMENT.getEditHelper().canEdit(request);
+        assertTrue(canEdit);
+        
+        canEdit = EmployeeType.DEPARTMENT.canEdit(request);
+        assertTrue(canEdit);
+
+        // not allowed to create an office in a department
+        request = new CreateElementRequest(
+            getEditingDomain(), department, EmployeeType.OFFICE);
+
+        canEdit = EmployeeType.DEPARTMENT.getEditHelper().canEdit(request);
+        assertFalse(canEdit);
+        
+        canEdit = EmployeeType.DEPARTMENT.canEdit(request);
+        assertFalse(canEdit);
+    }
 }

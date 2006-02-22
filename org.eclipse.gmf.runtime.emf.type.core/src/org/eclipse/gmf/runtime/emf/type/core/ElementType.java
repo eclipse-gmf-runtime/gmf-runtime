@@ -130,8 +130,12 @@ public abstract class ElementType
 	public ICommand getEditCommand(IEditCommandRequest request) {
 		return getEditHelper().getEditCommand(request);
 	}
-	
-	
+    
+    // documentation copied from interface
+    public boolean canEdit(IEditCommandRequest req) {
+        return getEditHelper().canEdit(req);
+    }
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */

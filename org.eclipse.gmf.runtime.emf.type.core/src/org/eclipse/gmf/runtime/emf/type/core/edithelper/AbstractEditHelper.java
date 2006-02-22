@@ -79,16 +79,28 @@ public abstract class AbstractEditHelper
 	 * EReference.
 	 */
 	private Map defaultContainmentFeatures = new HashMap();
+    
+    /**
+     * Checks that I can get an executable edit command.
+     * <P>
+     * Subclasses should override if they have a different way to decide whether
+     * or not the edit is allowed.
+     */
+    public boolean canEdit(IEditCommandRequest req) {
+
+        ICommand command = getEditCommand(req);
+        return command != null && command.canExecute();
+    }
 
 	/**
-	 * Implements the default edit command algorithm, which returns a composite
-	 * command containing the following:
-	 * <OL>
-	 * <LI>'before' commands from matching element type specializations</LI>
-	 * <LI>'instead' command from this edit helper</LI>
-	 * <LI>'after' commands from matching element type specializations</LI>
-	 * </OL>
-	 */
+     * Implements the default edit command algorithm, which returns a composite
+     * command containing the following:
+     * <OL>
+     * <LI>'before' commands from matching element type specializations</LI>
+     * <LI>'instead' command from this edit helper</LI>
+     * <LI>'after' commands from matching element type specializations</LI>
+     * </OL>
+     */
 	public ICommand getEditCommand(IEditCommandRequest req) {
 
 		ICompositeCommand command = createCommand(req);
