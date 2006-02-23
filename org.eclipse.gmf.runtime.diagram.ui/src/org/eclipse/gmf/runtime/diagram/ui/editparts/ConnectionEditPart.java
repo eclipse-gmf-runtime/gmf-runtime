@@ -1454,7 +1454,9 @@ abstract public class ConnectionEditPart
 				feature)) {
 			refreshChildren();
 		} else if (NotationPackage.eINSTANCE.getView_Visible().equals(feature)) {
-			setVisibility(((Boolean) event.getNewValue()).booleanValue());
+            Object notifier = event.getNotifier();
+            if (notifier== getModel())
+                setVisibility(((Boolean) event.getNewValue()).booleanValue());
 			// Reactivating in response to semantic model reference change
 			// However, we need to verify that the event belongs to this
 			// editpart's view
