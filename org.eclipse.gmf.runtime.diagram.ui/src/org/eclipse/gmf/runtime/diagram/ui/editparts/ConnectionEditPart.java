@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RelativeBendpoint;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -990,22 +991,23 @@ abstract public class ConnectionEditPart
 	 * <code>RoutingStyle</code>
 	 */
 	protected void installRouter() {
-		ConnectionLayerEx cLayer = (ConnectionLayerEx) getLayer(LayerConstants.CONNECTION_LAYER);
-
+		ConnectionLayer cLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
 		RoutingStyle style = (RoutingStyle) ((View) getModel())
 			.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
-		if (style != null) {
+        
+		if (style != null && cLayer instanceof ConnectionLayerEx) {
 
+            ConnectionLayerEx cLayerEx = (ConnectionLayerEx)cLayer;
 			Routing routing = style.getRouting();
 			if (Routing.MANUAL_LITERAL == routing) {
 				getConnectionFigure().setConnectionRouter(
-					cLayer.getObliqueRouter());
+                    cLayerEx.getObliqueRouter());
 			} else if (Routing.RECTILINEAR_LITERAL == routing) {
 				getConnectionFigure().setConnectionRouter(
-					cLayer.getRectilinearRouter());
+                    cLayerEx.getRectilinearRouter());
 			} else if (Routing.TREE_LITERAL == routing) {
 				getConnectionFigure().setConnectionRouter(
-					cLayer.getTreeRouter());
+                    cLayerEx.getTreeRouter());
 			}
 
 		}
