@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IContributor;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Status;
@@ -183,5 +184,15 @@ public class TestingConfigurationElement implements IConfigurationElement {
 	public boolean isValid() {
 		return false;
 	}
+    
+    public IContributor getContributor()
+        throws InvalidRegistryObjectException {
+        return null;
+    }
+    
+    public String getNamespaceIdentifier()
+        throws InvalidRegistryObjectException {
+        return null;
+    }
 
 }
