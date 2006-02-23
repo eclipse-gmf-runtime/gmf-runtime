@@ -13,17 +13,13 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.EMFTranscoder;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.metafile.WMFTranscoder;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageType;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
 
 
@@ -67,11 +63,11 @@ public class SVGImageType
 		
 		try {
 			svgFactory.createDocument(null,bIS);
-			return true;
-		} catch (IOException e) {
-			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e.getMessage(), e);
+		} catch (Exception e) {
+			return false;
 		}
-		return false;
+        
+		return true;
 	}
 
 }
