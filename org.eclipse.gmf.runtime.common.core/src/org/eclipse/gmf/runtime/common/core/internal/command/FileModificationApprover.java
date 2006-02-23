@@ -21,6 +21,7 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
@@ -93,13 +94,17 @@ public class FileModificationApprover
 
             } else {
                 // the file is not in the workspace
-                File file = nextFile.getRawLocation().toFile();
-
-                if (file != null && file.exists() && !file.canWrite()) {
-                    // cancel if we find a read-only file outside the
-                    // workspace
-                    return Status.CANCEL_STATUS;
-                }
+            	IPath path = nextFile.getRawLocation();
+            	if (path == null) {
+					// cancel if we can't find the file
+					return Status.CANCEL_STATUS;
+				}
+				File file = path.toFile();
+				if (file != null && file.exists() && !file.canWrite()) {
+					// cancel if we find a read-only file outside the
+					// workspace
+					return Status.CANCEL_STATUS;
+				}	
             }
         }
 
