@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
@@ -35,6 +36,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The abstract parent of all concrete action delegates that execute commands.
@@ -444,18 +446,34 @@ public abstract class AbstractActionDelegate implements IPartListener, IActionWi
 	 * @param status The status object for which to open an error dialog.
 	 * 
 	 */
-	protected void openErrorDialog(IStatus status) {
-		ErrorDialog.openError(getWorkbenchPart().getSite().getShell(),
-			Action.removeMnemonics(getLabel()), null, status);
-	}
+	protected void openErrorDialog(final IStatus status) {
+
+        final Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
+
+        if (workbenchDisplay.getThread() == Thread.currentThread()) {
+            // we're already on the UI thread
+            ErrorDialog.openError(workbenchDisplay.getActiveShell(), Action
+                .removeMnemonics(getLabel()), null, status);
+
+        } else {
+            // we're not on the UI thread
+            workbenchDisplay.asyncExec(new Runnable() {
+                public void run() {
+                    ErrorDialog.openError(workbenchDisplay.getActiveShell(),
+                        Action.removeMnemonics(getLabel()), null, status);
+                }
+            });
+        }
+    }
 
 	/**
-	 * Performs the actual work when this action delegate is run. Subclasses
-	 * must override this method to do some work.
-	 * 
-	 * @param progressMonitor A progress monitor for tracking the progress of
-	 * 						   the action's execution.
-	 */
+     * Performs the actual work when this action delegate is run. Subclasses
+     * must override this method to do some work.
+     * 
+     * @param progressMonitor
+     *            A progress monitor for tracking the progress of the action's
+     *            execution.
+     */
 	protected abstract void doRun(IProgressMonitor progressMonitor);
 
 

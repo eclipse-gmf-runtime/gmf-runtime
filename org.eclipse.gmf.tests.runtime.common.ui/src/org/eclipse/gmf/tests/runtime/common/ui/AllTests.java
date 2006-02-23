@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.common.ui.internal.action.AbstractActionDelegateTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.ActionManagerTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.RemoveMnemonicTests;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.dialogs.SelectableElementTest;
@@ -35,6 +36,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
+        suite.addTest(AbstractActionDelegateTest.suite());
 		suite.addTest(ActionManagerTest.suite());
 		suite.addTest(RemoveMnemonicTests.suite());
 //		suite.addTest(ExtendedPropertyDescriptorTest.suite());

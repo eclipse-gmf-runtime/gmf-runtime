@@ -18,6 +18,9 @@ import org.eclipse.gmf.runtime.common.ui.action.AbstractActionDelegate;
  * issues when the action is run in an non UI thread.
  * 
  * @author wdiu, Wayne Diu
+ * 
+ * @deprecated {@link AbstractActionDelegate} has been enhanced to handle errors
+ *             from either a UI or non-UI thread.
  */
 public abstract class AbstractThreadSafeActionDelegate extends
 		AbstractActionDelegate {
