@@ -40,6 +40,7 @@ public class AllTests
 		suite.addTest(MoveRequestTest.suite());
         suite.addTest(SetValueCommandTest.suite());
 		suite.addTest(SpecializationTypeDescriptorTest.suite());
+        suite.addTest(SpecializationTypeTest.suite());
 		return suite;
 	}
 

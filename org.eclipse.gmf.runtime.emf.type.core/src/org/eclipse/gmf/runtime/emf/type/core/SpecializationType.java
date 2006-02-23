@@ -164,8 +164,10 @@ public class SpecializationType
 	 */
 	public boolean isSpecializationOf(IElementType type) {
 
-		for (int i = 0; i < specializedTypeIds.length; i++) {
-			if (type.getId().equals(specializedTypeIds[i])) {
+        String[] ids = getSpecializedTypeIds();
+        
+		for (int i = 0; i < ids.length; i++) {
+			if (type.getId().equals(ids[i])) {
 				return true;
 			}
 		}
