@@ -30,8 +30,6 @@ public class EMFCoreConstants {
 
 	public final static String EMPTY_STRING = ""; //$NON-NLS-1$
 
-	public final static String CC_TOKEN = "xtools2_universal_type_manager"; //$NON-NLS-1$
-
 	public final static char META_CLASS_BEGIN = '<';
 
 	public final static char META_CLASS_END = '>';

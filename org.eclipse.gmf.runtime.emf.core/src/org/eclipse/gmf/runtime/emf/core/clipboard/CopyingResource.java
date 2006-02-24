@@ -31,11 +31,11 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMIHelperImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.GMFResource;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.GMFSave;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
@@ -192,7 +192,7 @@ public class CopyingResource
 	}
 
 	protected XMLSave createXMLSave() {
-		return new GMFSave(createXMLHelper()) {
+		return new XMISaveImpl(createXMLHelper()) {
 
 			/**
 			 * @see org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl#sameDocMany(org.eclipse.emf.ecore.EObject,

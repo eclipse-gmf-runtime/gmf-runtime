@@ -95,7 +95,12 @@ public class DiagramIOUtil {
 			InputStream contents = fStorage.getContents();
 			String storagePath = fStorage.getFullPath().toString();
 			
-			Resource resource = domain.loadResource(storagePath, loadOptions, contents);
+            Resource resource = domain.findResource(storagePath, loadOptions);
+            if ( resource == null ) {
+                resource = domain.createResource(storagePath);                
+            }
+            
+            domain.loadResource(resource, loadOptions, contents);
 			return resource;
 		}
 	}

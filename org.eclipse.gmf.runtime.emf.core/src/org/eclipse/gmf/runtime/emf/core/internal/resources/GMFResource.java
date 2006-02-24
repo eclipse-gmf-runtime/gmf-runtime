@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLLoad;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
 
@@ -78,7 +79,7 @@ public class GMFResource
 	}
 
 	protected XMLSave createXMLSave() {
-		return new GMFSave(createXMLHelper());
+		return new XMISaveImpl(createXMLHelper());
 	}
 
 	/**
