@@ -28,5 +28,10 @@ final public class LayoutType {
 	 * the radial layout type
 	 */
 	public static final String RADIAL = "RADIAL"; //$NON-NLS-1$
+    
+    /**
+     * the composite layout type
+     */
+    public static final String COMPOSITE = "COMPOSITE"; //$NON-NLS-1$
 
 }

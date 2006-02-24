@@ -43,17 +43,16 @@ abstract public class AbstractLayoutEditPartProvider extends
 			boolean offsetFromBoundingBox, IAdaptable layoutHint) {
 		IGraphicalEditPart gep = (IGraphicalEditPart) layoutHint
 				.getAdapter(IGraphicalEditPart.class);
-		List editparts = new ArrayList(layoutNodes.size());
 		Assert.isNotNull(gep, "The Graphical EditPart is null"); //$NON-NLS-1$
 
-		Map registry = gep.getViewer().getEditPartRegistry();
-		Iterator nodes = layoutNodes.listIterator();
-		while (nodes.hasNext()) {
-			Node view = ((ILayoutNode) nodes.next()).getNode();
-			editparts.add(registry.get(view));
-		}
-
-		if (offsetFromBoundingBox) {
+        if (offsetFromBoundingBox) {
+            List editparts = new ArrayList(layoutNodes.size());
+            Map registry = gep.getViewer().getEditPartRegistry();
+            Iterator nodes = layoutNodes.listIterator();
+            while (nodes.hasNext()) {
+                Node view = ((ILayoutNode) nodes.next()).getNode();
+                editparts.add(registry.get(view));
+            }
 			final Command cmdSelect = layoutEditParts(editparts, layoutHint);
 			return new IInternalLayoutRunnable() {
 				public void run() {

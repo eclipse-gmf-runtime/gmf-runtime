@@ -407,4 +407,10 @@
               value=""/>
      </ActionFilterProvider>
   </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.layoutProviders">
+      <layoutProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicLayoutProvider">
+         <Priority name="Medium"/>
+      </layoutProvider>
+   </extension>
 </plugin>

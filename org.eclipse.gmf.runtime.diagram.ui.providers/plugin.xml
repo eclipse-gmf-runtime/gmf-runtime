@@ -712,6 +712,9 @@
          <Priority name="Lowest">
          </Priority>
       </layoutProvider>
+	  <layoutProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.CompositeTopDownProvider">
+         <Priority name="Lowest"/>
+      </layoutProvider>
    </extension>
    
       <extension id="presentationPaletteProvider" name="%ext.presentationPaletteProvider" point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">

@@ -14,10 +14,13 @@ package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -31,6 +34,7 @@ import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
+import org.eclipse.draw2d.graph.Subgraph;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
@@ -41,6 +45,8 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderedShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNodesOperation;
@@ -67,12 +73,13 @@ public abstract class DefaultProvider
 	// Minimum sep between icon and bottommost horizontal arc
 	protected int minX = -1;
 	protected int minY = -1;
-    private int layoutDefaultMargin = 0;
-    private IMapMode mm;
+    protected int layoutDefaultMargin = 0;
+    protected IMapMode mm;
 	
-	private static final int NODE_PADDING = 30;
-	private static final int MIN_EDGE_PADDING = 5;
-	private static final int MAX_EDGE_PADDING = NODE_PADDING * 3;
+	protected static final int NODE_PADDING = 30;
+    protected static final int MIN_EDGE_PADDING = 5;
+    protected static final int MAX_EDGE_PADDING = NODE_PADDING * 3;
+    
 
 	
 	/**
@@ -104,21 +111,19 @@ public abstract class DefaultProvider
 	 */
 	public Command layoutEditParts(GraphicalEditPart containerEditPart,
 			IAdaptable layoutHint) {
-
+        if (containerEditPart == null) {
+            InvalidParameterException ipe = new InvalidParameterException();
+            Trace.throwing(DiagramProvidersPlugin.getInstance(),
+                DiagramActionsDebugOptions.EXCEPTIONS_THROWING, getClass(),
+                "layout()", //$NON-NLS-1$
+                ipe);
+            throw ipe;
+        }
 		mm = MapModeUtil.getMapMode(containerEditPart.getFigure());
-		if (containerEditPart == null) {
-			InvalidParameterException ipe = new InvalidParameterException();
-			Trace.throwing(DiagramProvidersPlugin.getInstance(),
-				DiagramActionsDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"layout()", //$NON-NLS-1$
-				ipe);
-			throw ipe;
-		}
-
 		// setup graph
-		DirectedGraph g = new DirectedGraph();
+		DirectedGraph g = createGraph();
 		build_graph(g, containerEditPart.getChildren());
-		new DirectedGraphLayout().visit(g);
+		createGraphLayout().visit(g);
 		// update the diagram based on the graph
 		Command cmd = update_diagram(containerEditPart, g, false);
 		
@@ -143,9 +148,9 @@ public abstract class DefaultProvider
 
 		mm = MapModeUtil.getMapMode(containerEditPart.getFigure());
 		
-		DirectedGraph g = new DirectedGraph();
+		DirectedGraph g = createGraph();
 		build_graph(g, selectedObjects);
-		new DirectedGraphLayout().visit(g);
+        createGraphLayout().visit(g);
 		// update the diagram based on the graph
 		Command cmd = update_diagram(containerEditPart, g, true);
 		
@@ -179,7 +184,7 @@ public abstract class DefaultProvider
 	 *            layout.
 	 * @return NodeList list of Nodes that is passed to the graph structure.
 	 */
-	private NodeList build_nodes(List selectedObjects, Map editPartToNodeDict) {
+	protected NodeList build_nodes(List selectedObjects, Map editPartToNodeDict, Subgraph root) {
 		ListIterator li = selectedObjects.listIterator();
 
 		NodeList nodes = new NodeList();
@@ -247,8 +252,17 @@ public abstract class DefaultProvider
 	 *            Node that has the metrics values to be retrieved.
 	 * @return Rectangle that represents the location and extend of the Node.
 	 */
-	final protected Rectangle getNodeMetrics(Node n) {
-		return translateFromGraph(new Rectangle(n.x, n.y, n.width, n.height));
+	 protected Rectangle getNodeMetrics(Node n) {
+        Rectangle rect = null;
+        Node parent = n.getParent();
+        while (parent!=null &&!(parent.data instanceof IGraphicalEditPart))
+            parent = parent.getParent();
+        if (parent!=null){
+            rect = new Rectangle(n.x - parent.x, n.y - parent.y, n.width, n.height);
+        }
+        else
+            rect = new Rectangle(n.x, n.y, n.width, n.height);
+        return translateFromGraph(rect);
 	}
 
 	/**
@@ -289,7 +303,7 @@ public abstract class DefaultProvider
 	 *            layout.
 	 * @return EdgeList list of Edges that is passed to the graph structure.
 	 */
-	private EdgeList build_edges(List selectedObjects, Map editPartToNodeDict) {
+	protected EdgeList build_edges(List selectedObjects, Map editPartToNodeDict) {
 
 		EdgeList edges = new EdgeList();
 
@@ -307,6 +321,7 @@ public abstract class DefaultProvider
 		ArrayList objects = new ArrayList();
 		objects.addAll(selectedObjects);
 		ListIterator li = objects.listIterator();
+        ArrayList notTopDownEdges = new ArrayList();
 		while (li.hasNext()) {
 			EditPart gep = (EditPart) li.next();
 			if (gep instanceof ConnectionEditPart) {
@@ -315,7 +330,10 @@ public abstract class DefaultProvider
 				if (layoutTopDown(poly)) {
 					EditPart from = poly.getSource();
 					EditPart to = poly.getTarget();
-
+					if (from instanceof IBorderItemEditPart)
+                        from = from.getParent();
+                    if (to instanceof IBorderItemEditPart)
+                        to = to.getParent();
 					Node fromNode = (Node) editPartToNodeDict.get(from);
 					Node toNode = (Node) editPartToNodeDict.get(to);
 
@@ -323,32 +341,30 @@ public abstract class DefaultProvider
 						&& !fromNode.equals(toNode)) {
 						addEdge(edges, poly, toNode, fromNode);
 					}
+				}else{
+                    notTopDownEdges.add(poly);
 				}
 			}
 		}
 
 		// third pass for all other connections
-		li = objects.listIterator();
+		li = notTopDownEdges.listIterator();
 		while (li.hasNext()) {
-			EditPart gep = (EditPart) li.next();
-			if (gep instanceof ConnectionEditPart) {
-				ConnectionEditPart poly = (ConnectionEditPart) gep;
-
-				if (!layoutTopDown(poly)) {
-					EditPart from = poly.getSource();
-					EditPart to = poly.getTarget();
-
-					Node fromNode = (Node) editPartToNodeDict.get(from);
-					Node toNode = (Node) editPartToNodeDict.get(to);
-
-					if (fromNode != null && toNode != null
-						&& !fromNode.equals(toNode)) {
-						addEdge(edges, poly, fromNode, toNode);
-					}
-				}
+			ConnectionEditPart poly = (ConnectionEditPart) li.next();
+			EditPart from = poly.getSource();
+			EditPart to = poly.getTarget();
+            if (from instanceof IBorderItemEditPart)
+                from = from.getParent();
+            if (to instanceof IBorderItemEditPart)
+                to = to.getParent();
+			Node fromNode = (Node) editPartToNodeDict.get(from);
+			Node toNode = (Node) editPartToNodeDict.get(to);
+            
+			if (fromNode != null && toNode != null
+				&& !fromNode.equals(toNode)) {
+				addEdge(edges, poly, fromNode, toNode);
 			}
 		}
-
 		return edges;
 	}
 
@@ -450,16 +466,25 @@ public abstract class DefaultProvider
 		ArrayList connectionsToMove = new ArrayList();
 		while (enumeration.hasMoreElements()) {
 			Object e = enumeration.nextElement();
-			ShapeEditPart shapeEP = (ShapeEditPart) e;
-			List sourceConnections = shapeEP.getSourceConnections();
-			for (int i = 0; i < sourceConnections.size(); i++) {
-				ConnectionEditPart connectionEP = (ConnectionEditPart) sourceConnections
-					.get(i);
+			GraphicalEditPart shapeEP = (GraphicalEditPart) e;
+            Set sourceConnections = new HashSet(shapeEP.getSourceConnections());
+            if (shapeEP instanceof IBorderedShapeEditPart){
+                List borderItems = getBorderItemEditParts(shapeEP);
+                for (Iterator iter = borderItems.iterator(); iter.hasNext();) {
+                    GraphicalEditPart element = (GraphicalEditPart) iter.next();
+                    sourceConnections.addAll(element.getSourceConnections());
+                }
+            }
+            
+			for (Iterator iter = sourceConnections.iterator();
+                    iter.hasNext();) {
+				ConnectionEditPart connectionEP = (ConnectionEditPart) iter.next();
 				EditPart target = connectionEP.getTarget();
-
 				// check to see if the toView is in the shapesDict, if yes,
 				// the associated connectionView should be included on graph
-				Object o = editPartToNodeDict.get(target);
+				if (target instanceof IBorderItemEditPart)
+                    target = target.getParent();
+                Object o = editPartToNodeDict.get(target);
 				if (o != null) {
 					connectionsToMove.add(connectionEP);
 				}
@@ -468,6 +493,23 @@ public abstract class DefaultProvider
 
 		return connectionsToMove;
 	}
+    
+    /**
+     * This method searches an edit part for a child that is a border item edit part
+     * @param parent part needed to search
+     * @param set to be modified of border item edit parts that are direct children of the parent
+     */
+    private List getBorderItemEditParts(EditPart parent) {
+        Iterator iter = parent.getChildren().iterator();
+        List list = new ArrayList();
+        while(iter.hasNext()) {
+            EditPart child = (EditPart)iter.next();
+            if( child instanceof IBorderItemEditPart ) {
+                list.add(child);
+            }
+        }
+        return list;
+    }
 
 	/**
 	 * Method build_graph. This method will build the proxy graph that the
@@ -480,32 +522,28 @@ public abstract class DefaultProvider
 	 *            List of editparts that the Nodes and Edges will be calculated
 	 *            from.
 	 */
-	private void build_graph(DirectedGraph g, List selectedObjects) {
+	protected void build_graph(DirectedGraph g, List selectedObjects) {
 		Hashtable editPartToNodeDict = new Hashtable(500);
-
 		this.minX = -1;
 		this.minY = -1;
-
-		NodeList nodes = build_nodes(selectedObjects, editPartToNodeDict);
+        NodeList nodes = build_nodes(selectedObjects, editPartToNodeDict,null);
 
 		// append edges that should be added to the graph
 		ArrayList objects = new ArrayList();
 		objects.addAll(selectedObjects);
 		objects.addAll(getRelevantConnections(editPartToNodeDict));
-
 		EdgeList edges = build_edges(objects, editPartToNodeDict);
-
-		g.nodes = nodes;
+        g.nodes = nodes;
 		g.edges = edges;
+        postProcessGraph(g,editPartToNodeDict);
+        //printGraph(g);
+     }
+    
+    protected void postProcessGraph(DirectedGraph g, Hashtable editPartToNodeDict) {
+        //default do nothing
+    }
 
-		//new BreakCycles().visit(g);
-				
-		// this has to be called after - BreakCycles to ensure we are fully
-		// connected.
-		//connectNonConnectedSubgraphs(nodes, edges);
-	}
-
-	/**
+    /**
 	 * reverse Utility function to reverse the order of points in a list.
 	 * 
 	 * @param c
@@ -596,18 +634,18 @@ public abstract class DefaultProvider
 	 * @return Command usually a command command that will set the locations of
 	 *         nodes and bendpoints for connections.
 	 */
-	Command update_diagram(GraphicalEditPart diagramEP, DirectedGraph g,
+	protected Command update_diagram(GraphicalEditPart diagramEP, DirectedGraph g,
 			boolean isLayoutForSelected) {
 		
 		CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
 
 		Point diff = getLayoutPositionDelta(g, isLayoutForSelected);
 		layoutDefaultMargin = MapModeUtil.getMapMode(diagramEP.getFigure()).DPtoLP(25);
-		Command cmd = getShapesPositionCommand(g, diff);
+		Command cmd = createNodeChangeBoundCommands(g, diff);
 		if (cmd != null)
 			cc.add(cmd);
 		
-		cmd = getConnectionPositionCommand(g, diff);
+		cmd = createEdgesChangeBoundsCommands(g, diff);
 		if (cmd != null)
 			cc.add(cmd);
 		
@@ -621,7 +659,7 @@ public abstract class DefaultProvider
 	 * points of both outgoing and incomping arcs must be set before
 	 * recalculating connection points.
 	 */ 
-	private Command getConnectionPositionCommand(DirectedGraph g, Point diff) {
+	protected Command createEdgesChangeBoundsCommands(DirectedGraph g, Point diff) {
 		
 		CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
 		PointList points = new PointList(10);
@@ -630,7 +668,7 @@ public abstract class DefaultProvider
 		while (vi.hasNext()) {
 			Edge edge = (Edge) vi.next();
 			
-			if (edge.data == null)
+			if (edge.data == null || edge.getPoints()==null)
 				continue;
 			
 			points.removeAllPoints();
@@ -659,33 +697,38 @@ public abstract class DefaultProvider
 	}
 
 	private void collectPoints(PointList points, Edge edge) {
-		Point startpt = edge.getPoints().getFirstPoint();
-		Rectangle start = translateFromGraph(new Rectangle(startpt.x, startpt.y, 0, 0));
-		points.addPoint(start.getTopLeft());
+        PointList pointList = edge.getPoints();
+        Rectangle start = translateFromGraph(
+            new Rectangle(pointList.getFirstPoint().x,
+                          pointList.getFirstPoint().y, 0, 0));
+        points.addPoint(start.getTopLeft());
+        NodeList vnodes = edge.vNodes;
+        if (vnodes != null) {
+            for (int i = 0; i < vnodes.size(); i++) {
+                Node vn = vnodes.getNode(i);
+                Rectangle nodeExt = getNodeMetrics(vn);
+                int x = nodeExt.x;
+                int y = nodeExt.y;
 
-		NodeList vnodes = edge.vNodes;
-		if (vnodes != null) {
-			for (int i = 0; i < vnodes.size(); i++) {
-				Node vn = vnodes.getNode(i);
-				Rectangle nodeExt = getNodeMetrics(vn);
-				int x = nodeExt.x;
-				int y = nodeExt.y;
+                points.addPoint(x + nodeExt.width / 2, y + nodeExt.height / 2);
+            }
+        }
+        Rectangle end = translateFromGraph(new Rectangle(pointList.getLastPoint().x,
+            pointList.getLastPoint().y, 0, 0));
+        points.addPoint(end.getTopLeft());
+    }
 
-				points.addPoint(x + nodeExt.width / 2, y + nodeExt.height / 2);
-			}
-		}
-
-		Point endpt = edge.getPoints().getLastPoint();
-		Rectangle end = translateFromGraph(new Rectangle(endpt.x, endpt.y, 0, 0));
-		points.addPoint(end.getTopLeft());
+	protected Command createNodeChangeBoundCommands(DirectedGraph g, Point diff) {
+		ListIterator vi = g.nodes.listIterator();
+        CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
+		createSubCommands(diff, vi, cc);
+	    if (cc.isEmpty())
+			return null;
+		return cc;
 	}
 
-	private Command getShapesPositionCommand(DirectedGraph g, Point diff) {
-		ListIterator vi = g.nodes.listIterator();
-
-		CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
-		
-		// Now set the position of the icons. This causes the
+    protected void createSubCommands(Point diff, ListIterator vi, CompoundCommand cc) {
+        // Now set the position of the icons. This causes the
 		// arc connection points to be recalculated
 		while (vi.hasNext()) {
 			Node node = (Node) vi.next();
@@ -709,15 +752,11 @@ public abstract class DefaultProvider
 				request.setLocation(ptLocation);
 
 				Command cmd = gep.getCommand(request);
-				if (cmd != null)
+				if (cmd != null && cmd.canExecute())
 					cc.add(cmd);
 			}
 		}
-		
-		if (cc.isEmpty())
-			return null;
-		return cc;
-	}
+    }
 
 	private Point getLayoutPositionDelta(DirectedGraph g, boolean isLayoutForSelected) {
 		// If laying out selected objects, use diff variables to
@@ -746,4 +785,74 @@ public abstract class DefaultProvider
 		
 		return new Point(layoutDefaultMargin, layoutDefaultMargin);
 	}
+    
+    /**
+     * Creates the graph that will be used by the layouy provider
+     * Clients can override this method create different kind of graphs
+     * This method is called by {@link DefaultProvider#layoutEditParts(GraphicalEditPart, IAdaptable) } 
+     * and {@link DefaultProvider#layoutEditParts(List, IAdaptable)}  
+     * @return the Graph that will be used by the layout algorithm
+     */
+    protected DirectedGraph createGraph(){
+        return new DirectedGraph();
+    }
+    
+    /**
+     * Creates the graph layout algorithm that will be used to layout the diagram
+     * This method is called by {@link DefaultProvider#layoutEditParts(GraphicalEditPart, IAdaptable) } 
+     * and {@link DefaultProvider#layoutEditParts(List, IAdaptable)}  
+     * @return the graph layout 
+     */
+    protected DirectedGraphLayout createGraphLayout() {
+        return new DirectedGraphLayout();
+    }
+    
+   /* private void printGraph(DirectedGraph g){
+        int depth = 0;
+        if (g instanceof CompoundDirectedGraph){
+            NodeList subGraphs = ((CompoundDirectedGraph)g).nodes;
+            for (Iterator iter = subGraphs.iterator(); iter.hasNext();) {
+                Node node = (Node)iter.next();
+                if (node.getParent()!=null)
+                    continue;
+                if (node instanceof Subgraph){
+                    printSubGraph((Subgraph)node,depth);
+                }else {
+                    printNode(node,depth);
+                }
+            }
+        }
+    }
+
+    private void printNode(Node node, int depth) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i =0 ; i<depth ; i++)
+            buffer.append("\t");
+        buffer.append("Node");
+        System.out.println(buffer);
+    }
+
+    private void printSubGraph(Subgraph subgraph, int depth) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i =0 ; i<depth ; i++)
+            buffer.append("\t");
+        buffer.append("SubGraph");
+        if (!subgraph.members.isEmpty()){
+            buffer.append(" : ");
+            System.out.println(buffer);
+            NodeList nodes = subgraph.members;
+            depth++;
+            for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+                Node element = (Node) iter.next();
+                if (element instanceof Subgraph){
+                    printSubGraph((Subgraph)element,depth);
+                }else {
+                    printNode(element,depth);
+                }
+            }
+        }else {
+            System.out.println(buffer);
+        }
+            
+    }*/
 }

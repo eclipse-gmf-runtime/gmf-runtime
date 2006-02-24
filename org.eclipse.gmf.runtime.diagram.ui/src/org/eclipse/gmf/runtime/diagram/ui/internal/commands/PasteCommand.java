@@ -124,6 +124,7 @@ public final class PasteCommand extends ClipboardCommand {
             	EAnnotation measureUnitAnnotation  = (EAnnotation)element;
         		String unitName = measureUnitAnnotation.getSource();
         		mu = MeasurementUnit.get(unitName);
+                view.getEAnnotations().remove(element);
             }
         }
 	    
