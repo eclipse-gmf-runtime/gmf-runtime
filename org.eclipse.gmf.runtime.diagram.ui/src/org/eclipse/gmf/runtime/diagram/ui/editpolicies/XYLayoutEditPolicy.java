@@ -149,32 +149,45 @@ public class XYLayoutEditPolicy
 			}
 		}
 		
-		if (request.getType().equals(REQ_MOVE_CHILDREN)
-				|| request.getType().equals(REQ_ALIGN_CHILDREN)) {
-			Integer guidePos = (Integer)request.getExtendedData()
-					.get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
-			ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, true);
-			if (guidePos != null) {
-				int hAlignment = ((Integer)request.getExtendedData()
-						.get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
-				cgm.setNewGuide(findGuideAt(guidePos.intValue(), true), hAlignment);
-			}
-			// If know this creates a lot of extra commands.  They are currently
-			// required for attaching/detaching shapes to guides
-			cmd = cmd.chain(new EtoolsProxyCommand(cgm));
-			
-			guidePos = (Integer)request.getExtendedData()
-					.get(SnapToGuides.KEY_VERTICAL_GUIDE);
-			cgm = new ChangeGuideCommand(editingDomain, view, false);
-			if (guidePos != null) {
-				int vAlignment = ((Integer)request.getExtendedData()
-						.get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
-				cgm.setNewGuide(findGuideAt(guidePos.intValue(), false), vAlignment);
-			}
-			// If know this creates a lot of extra commands.  They are currently
-			// required for attaching/detaching shapes to guides
-			cmd = cmd.chain(new EtoolsProxyCommand(cgm));
-		}
+        if (request.getType().equals(REQ_MOVE_CHILDREN)
+                || request.getType().equals(REQ_ALIGN_CHILDREN)) {
+            Integer guidePos = (Integer)request.getExtendedData()
+                    .get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
+            ChangeGuideCommand cgm = null;
+            if (guidePos != null) {
+                cgm = new ChangeGuideCommand(editingDomain,view, true);;
+                int hAlignment = ((Integer)request.getExtendedData()
+                        .get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
+                cgm.setNewGuide(findGuideAt(guidePos.intValue(), true), hAlignment);
+            }else {
+                Guide theOldGuide = DiagramGuide.getInstance().getHorizontalGuide(view);
+                if (theOldGuide!=null)
+                    cgm = new ChangeGuideCommand(editingDomain,view, true);
+            }
+            // If know this creates a lot of extra commands.  They are currently
+            // required for attaching/detaching shapes to guides
+            if (cgm!=null)
+                cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+            
+            guidePos = (Integer)request.getExtendedData()
+                    .get(SnapToGuides.KEY_VERTICAL_GUIDE);
+            cgm = null;
+            if (guidePos != null) {
+                cgm = new ChangeGuideCommand(editingDomain, view, false);
+                int vAlignment = ((Integer)request.getExtendedData()
+                        .get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
+                cgm.setNewGuide(findGuideAt(guidePos.intValue(), false), vAlignment);
+            }else {
+                 Guide theOldGuide = DiagramGuide.getInstance().getVerticalGuide(view);
+                    if (theOldGuide!=null)
+                        cgm = new ChangeGuideCommand(editingDomain, view, true);
+            }
+            // If know this creates a lot of extra commands.  They are currently
+            // required for attaching/detaching shapes to guides
+            if (cgm!=null)
+                cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+        }
+
 
 		return cmd;
 	}
