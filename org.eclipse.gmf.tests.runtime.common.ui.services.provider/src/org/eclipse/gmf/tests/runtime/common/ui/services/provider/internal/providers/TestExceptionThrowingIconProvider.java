@@ -12,6 +12,7 @@ package org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.provi
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
+import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses.TestAdaptable;
 
 /**
@@ -34,7 +35,7 @@ public class TestExceptionThrowingIconProvider
 	public boolean provides(IOperation operation) {
 		providesExecuted = true;
 		if (operation instanceof GetIconOperation) {
-			if (((GetIconOperation) operation).getHint() instanceof TestAdaptable) {
+			if (((IIconOperation) operation).getHint() instanceof TestAdaptable) {
 				throw new NullPointerException();
 			}
 		}

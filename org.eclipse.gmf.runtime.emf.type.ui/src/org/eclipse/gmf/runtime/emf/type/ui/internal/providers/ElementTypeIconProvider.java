@@ -15,16 +15,16 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
+import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Default icon provider for {@link org.eclipse.gmf.runtime.emf.type.core.IElementType}s and
@@ -81,7 +81,7 @@ public class ElementTypeIconProvider
 	public boolean provides(IOperation operation) {
 
 		if (operation instanceof GetIconOperation) {
-			GetIconOperation getIconOperation = (GetIconOperation) operation;
+			IIconOperation getIconOperation = (IIconOperation) operation;
 			IAdaptable hint = getIconOperation.getHint();
 			
 			return getType(hint) != null;

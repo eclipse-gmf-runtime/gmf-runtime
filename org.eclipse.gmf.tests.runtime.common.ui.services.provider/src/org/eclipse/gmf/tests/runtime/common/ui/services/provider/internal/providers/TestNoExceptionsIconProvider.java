@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProviderChangeListener;
 import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
+import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
 import org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses.TestAdaptable;
 import org.eclipse.swt.graphics.Image;
@@ -29,7 +30,7 @@ public class TestNoExceptionsIconProvider
 
 	public boolean provides(IOperation operation) {
 		if (operation instanceof GetIconOperation) {
-			if (((GetIconOperation) operation).getHint() instanceof TestAdaptable) {
+			if (((IIconOperation) operation).getHint() instanceof TestAdaptable) {
 				return true;
 			}
 		}

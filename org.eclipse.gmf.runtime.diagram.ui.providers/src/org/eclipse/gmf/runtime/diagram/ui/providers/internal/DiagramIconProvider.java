@@ -17,7 +17,7 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
-import org.eclipse.gmf.runtime.common.ui.services.icon.GetIconOperation;
+import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
@@ -70,7 +70,7 @@ implements IIconProvider {
 	 */
 	public boolean provides(IOperation operation) {
 
-		GetIconOperation oper = (GetIconOperation)operation;
+		IIconOperation oper = (IIconOperation)operation;
 		
 		IAdaptable adapter = oper.getHint();
 		

@@ -12,15 +12,14 @@
 package org.eclipse.gmf.runtime.common.ui.services.internal.icon;
 
 import org.eclipse.core.runtime.IAdaptable;
-
-import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 
 /**
  * The parent of all icon operations.
  * 
  * @author Michael Yee
  */
-public abstract class IconOperation implements IOperation {
+public abstract class IconOperation implements IIconOperation {
 	
 	/**
 	 * A hint that does not adapt to anything. Used to indicate
