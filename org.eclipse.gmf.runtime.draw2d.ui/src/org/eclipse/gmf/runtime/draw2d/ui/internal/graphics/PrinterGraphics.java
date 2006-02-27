@@ -45,8 +45,6 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 		return printScale;
 	}
 	
-    private Graphics g;
-    
     /**
 	* Creates a new <code>PrinterGraphics</code> with <code>Graphics</code> g, using 
 	* <code>Printer</code> p
@@ -59,7 +57,6 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 	public PrinterGraphics(Graphics g, Printer p, boolean roundFonts) {
 		super(g, p);
         this.roundFonts = roundFonts;
-        this.g = g;
 	}
 	
 	/* (non-Javadoc)
@@ -142,7 +139,7 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 	 * @see org.eclipse.draw2d.Graphics#scale(double)
 	 */
 	public void scale(double amount) {
-        printScale = amount;
+        printScale = printScale * amount;
         super.scale(amount);
     }
 
@@ -169,20 +166,4 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
        super.setFont(newFont);
     }
     
-     
-	/**
-	 * setLineWidth
-	 * Override to accommodate bug RATLC00514719 (Bugzilla 4853) which states that SWT doesn't
-	 * support setting a line style to lines that have a width > 1.  This method should be
-	 * removed when there is an appropriate resolution for Bugzilla 4853.
-	 * 
-	 * @see org.eclipse.draw2d.Graphics#setLineStyle(int)
-	 */
-	public void setLineWidth(int width) {
-		super.setLineWidth(width);
-		
-		if (getLineStyle() != Graphics.LINE_SOLID) {
-			g.setLineWidth(1);
-		}
-	}
 }

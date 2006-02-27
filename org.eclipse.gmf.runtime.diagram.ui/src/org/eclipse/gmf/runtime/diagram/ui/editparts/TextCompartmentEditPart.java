@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
@@ -47,10 +48,14 @@ import org.eclipse.gmf.runtime.gef.ui.internal.requests.DirectEditRequestWrapper
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 
 /*
@@ -368,6 +373,12 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 			refreshUnderline();
 		else if (NotationPackage.eINSTANCE.getFontStyle_StrikeThrough().equals(feature))
 			refreshStrikeThrough();
+        else if (NotationPackage.eINSTANCE.getFontStyle_FontHeight().equals(feature) ||
+                NotationPackage.eINSTANCE.getFontStyle_FontName().equals(feature) ||
+                NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
+                NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
+			refreshFont();
+		} 
 		else if (isAffectingParserOptions(event)) {
 			refreshParserOptions();
 			refreshLabel();
@@ -398,12 +409,37 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 		super.refreshVisuals();
 		refreshParserOptions();
 		refreshLabel();
+        refreshFont();
 		refreshUnderline();
 		refreshStrikeThrough();
 		refreshFontColor();
 	}
 
-	protected void setFontColor(Color color) {
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#refreshFont()
+     */
+    protected void refreshFont() {
+        FontStyle style = (FontStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
+        FontData fontData = null;
+        
+        if (style != null) {
+            fontData = new FontData(
+                style.getFontName(), 
+                style.getFontHeight(), 
+                (style.isBold() ? SWT.BOLD : SWT.NORMAL) | 
+                (style.isItalic() ? SWT.ITALIC : SWT.NORMAL));
+        } else {
+            // initialize font to defaults
+            fontData =
+                PreferenceConverter.getFontData(
+                    (IPreferenceStore)getDiagramPreferencesHint().getPreferenceStore(),
+                    IPreferenceConstants.PREF_DEFAULT_FONT);
+        }
+        
+        setFont(fontData);
+    }
+
+    protected void setFontColor(Color color) {
 		getLabel().setForegroundColor(color);
 	}
 

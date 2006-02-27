@@ -31,8 +31,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.AccessibleEditPart;
@@ -95,6 +93,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
@@ -802,11 +801,14 @@ public abstract class GraphicalEditPart
 	 * @param fontData the font data
 	 */
 	protected void setFont(FontData fontData) {
-		getFigure().setFont(
-			DiagramFontRegistry.getInstance().getFont(
-				Display.getDefault(),
-				fontData));
-		getFigure().repaint();
+        Font newFont = DiagramFontRegistry.getInstance().getFont(
+            Display.getDefault(),
+            fontData);
+        
+        if (!newFont.equals(getFigure().getFont())) {
+            getFigure().setFont(newFont);
+    		getFigure().repaint();
+        }
 	}
 
 	/**

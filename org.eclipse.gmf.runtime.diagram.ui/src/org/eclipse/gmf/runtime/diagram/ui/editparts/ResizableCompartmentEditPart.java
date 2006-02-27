@@ -145,9 +145,12 @@ public abstract class ResizableCompartmentEditPart
 			Integer c = (Integer) event.getNewValue();
 			setFontColor(DiagramColorRegistry.getInstance().getColor(c));
 		}
-		else if (NotationPackage.eINSTANCE.getFontStyle().isInstance(event.getNotifier())){
+		else if (NotationPackage.eINSTANCE.getFontStyle_FontHeight().equals(feature) ||
+                NotationPackage.eINSTANCE.getFontStyle_FontName().equals(feature) ||
+                NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
+                NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
 			refreshFont();
-		}else
+		} else
 			super.handleNotificationEvent(event);
 	}
 		
