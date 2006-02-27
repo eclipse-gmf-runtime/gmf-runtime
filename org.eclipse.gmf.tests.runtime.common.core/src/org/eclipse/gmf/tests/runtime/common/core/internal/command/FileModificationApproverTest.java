@@ -95,7 +95,7 @@ public class FileModificationApproverTest
         
         file.delete(true, new NullProgressMonitor());
         project.close(new NullProgressMonitor());
-        project.delete(true, new NullProgressMonitor());
+        project.delete(true, true, new NullProgressMonitor());
         project = null;
         file = null;
         history = null;
