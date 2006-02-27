@@ -11,12 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.providers;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -28,6 +30,10 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration.ObjectDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteTemplateEntry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
@@ -181,7 +187,6 @@ public class DefaultPaletteProvider
 
 			description = configElement.getAttribute(DESCRIPTION);
 
-//			String permissionStr = configElement.getAttribute(PERMISSION);
 			if (NONE.equals(kindStr))
 				permission =
 					new Integer(PaletteEntry.PERMISSION_NO_MODIFICATION);
@@ -194,26 +199,11 @@ public class DefaultPaletteProvider
 				permission =
 					new Integer(PaletteEntry.PERMISSION_FULL_MODIFICATION);
 
-			String pluginId = configElement.getDeclaringExtension().getNamespace();
-			Bundle bundle = Platform.getBundle(pluginId);
-
 			String smallIconPath = configElement.getAttribute(SMALL_ICON);
-			if (smallIconPath != null) {
-				URL fullPathString =
-					Platform.find(bundle, new Path(smallIconPath));
-				if (fullPathString != null) {
-					small_icon = ImageDescriptor.createFromURL(fullPathString);
-				}
-			}
-
-			String largeIconPath = configElement.getAttribute(LARGE_ICON);
-			if (largeIconPath != null) {
-				URL fullPathString =
-					Platform.find(bundle, new Path(largeIconPath));
-				if (fullPathString != null) {
-					large_icon = ImageDescriptor.createFromURL(fullPathString);
-				}
-			}
+            small_icon = findIconImageDescriptor(configElement, smallIconPath);
+            
+            String largeIconPath = configElement.getAttribute(LARGE_ICON);
+            large_icon = findIconImageDescriptor(configElement, largeIconPath);
 
 			if (kind.intValue() == ENUM_DRAWER) {
 				IConfigurationElement[] configChildren =
@@ -224,6 +214,37 @@ public class DefaultPaletteProvider
 					expandHelper = new DrawerExpandHelper(Boolean.FALSE);
 			}
 		}
+
+        /**
+         * Finds the image descriptor that is associated with the icon path.
+         * @param configElement
+         * @param smallIconPath
+         * @return
+         */
+        private ImageDescriptor findIconImageDescriptor(IConfigurationElement configElement, String iconPath) {
+            String pluginId = configElement.getDeclaringExtension().getNamespaceIdentifier();
+            Bundle bundle = Platform.getBundle(pluginId);
+            try
+            {
+                if (iconPath != null) {
+                	URL fullPathString = FileLocator.find(bundle, new Path(iconPath), null);
+                    fullPathString = fullPathString != null ? fullPathString : new URL(iconPath);
+                    if (fullPathString != null) {
+                		return ImageDescriptor.createFromURL(fullPathString);
+                	}
+                }
+            }
+            catch (MalformedURLException e)
+            {
+                Trace.catching(DiagramUIPlugin.getInstance(),
+                    DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
+                    DefaultPaletteProvider.class, e.getLocalizedMessage(), e); 
+                Log.error(DiagramUIPlugin.getInstance(),
+                    DiagramUIStatusCodes.RESOURCE_FAILURE, e.getMessage(), e);
+            }
+            
+            return null;
+        }
 
 		/**
 		 * Contributes the palette entry based on the given content, starting
