@@ -292,9 +292,11 @@ public class DiagramEventBroker extends ResourceSetListenerImpl {
 	 * @return
 	 */
 	private boolean isDestroyEvent(Notification notification) {		
-		return (notification.getEventType() == Notification.REMOVE || notification
-			.getEventType() == Notification.REMOVE_MANY)
-			&& ((EObject) notification.getNotifier()).eContainer() == null;
+        return false;
+        // TODO:  FIX THIS!
+//		return (notification.getEventType() == Notification.REMOVE || notification
+//			.getEventType() == Notification.REMOVE_MANY)
+//			&& ((EObject) notification.getNotifier()).eContainer() == null;
 	}
 
 	/**
