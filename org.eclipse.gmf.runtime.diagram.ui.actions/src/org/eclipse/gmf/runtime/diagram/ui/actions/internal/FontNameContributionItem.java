@@ -101,10 +101,10 @@ public class FontNameContributionItem
 		runWithEvent(event);
 	}
 
-	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractContributionItem#isCommandStackListener()
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractContributionItem#isOperationHistoryListener()
 	 */
-	protected boolean isCommandStackListener() {
+	protected boolean isOperationHistoryListener() {
 		return true;
 	}
 }

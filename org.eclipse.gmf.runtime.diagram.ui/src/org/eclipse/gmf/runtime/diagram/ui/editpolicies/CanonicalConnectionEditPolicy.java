@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -47,7 +48,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -151,7 +152,7 @@ public abstract class CanonicalConnectionEditPolicy
 			EditPartViewer viewer = getHost().getViewer();
 			if (viewer instanceof IDiagramGraphicalViewer) {
 				List parts = ((IDiagramGraphicalViewer) viewer)
-					.findEditPartsForElement(EObjectUtil.getID(element),
+					.findEditPartsForElement(((XMLResource) element.eResource()).getID(element),
 						INodeEditPart.class);
 
 				if (parts.isEmpty()) {
@@ -162,7 +163,7 @@ public abstract class CanonicalConnectionEditPolicy
 					if (containerEP != null) {
 						containerEP.refresh();
 						parts = ((IDiagramGraphicalViewer) viewer)
-							.findEditPartsForElement(EObjectUtil.getID(element),
+							.findEditPartsForElement(((XMLResource) element.eResource()).getID(element),
 								INodeEditPart.class);
 					}
 				}
@@ -727,13 +728,13 @@ public abstract class CanonicalConnectionEditPolicy
 	 * 
 	 * @param dropElement
 	 *            object being dropped.
-	 * @return <code>EObjectUtil.canContain(getSemanticHost(), ((EObject)dropElement).eClass(), false)</code>
+	 * @return <code>PackageUtil.canContain(getSemanticHost().eClass(), ((EObject)dropElement).eClass(), false)</code>
 	 *         if the supplied elemnt is an <code>EObject</code>; otherwise
 	 *         <tt>false</tt>
 	 */
 	protected boolean preventDropElement(Object dropElement) {
-		return dropElement instanceof EObject ? !EObjectUtil.canContain(
-			getSemanticHost(), ((EObject) dropElement).eClass(), false)
+		return dropElement instanceof EObject ? !PackageUtil.canContain(
+			getSemanticHost().eClass(), ((EObject) dropElement).eClass(), false)
 			: false;
 	}
 

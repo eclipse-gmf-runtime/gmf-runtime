@@ -12,10 +12,8 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.provider.SemanticItemProviderAdapterFactory;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
+import org.eclipse.gmf.runtime.emf.core.internal.util.MetamodelManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -71,11 +69,10 @@ public class LogicDiagramPlugin
 		throws Exception {
 		super.start(context);
 
-		MSLAdapterFactoryManager
-			.register(new SemanticItemProviderAdapterFactory());
-		MSLMetaModelManager.register(SemanticPackage.eINSTANCE, null);
+		MetamodelManager.register(SemanticPackage.eINSTANCE, null);
 		
 		PreferencesHint.registerPreferenceStore(
 			new PreferencesHint(EDITOR_ID), getPreferenceStore());
 	}
+
 }

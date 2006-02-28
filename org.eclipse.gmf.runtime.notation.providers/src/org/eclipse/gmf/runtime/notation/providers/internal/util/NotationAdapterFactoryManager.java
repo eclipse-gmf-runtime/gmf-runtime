@@ -12,9 +12,8 @@
 package org.eclipse.gmf.runtime.notation.providers.internal.util;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-
 import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
+import org.eclipse.gmf.runtime.emf.core.internal.util.MetamodelManager;
 import org.eclipse.gmf.runtime.notation.NotationEditPlugin;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
@@ -33,7 +32,7 @@ public class NotationAdapterFactoryManager {
 	 */
 	public static void init() {
 
-		MSLMetaModelManager.register(NotationPackage.eINSTANCE,
+		MetamodelManager.register(NotationPackage.eINSTANCE,
 			NotationEditPlugin.INSTANCE);
 
 		MSLAdapterFactoryManager.register(notationFactory);

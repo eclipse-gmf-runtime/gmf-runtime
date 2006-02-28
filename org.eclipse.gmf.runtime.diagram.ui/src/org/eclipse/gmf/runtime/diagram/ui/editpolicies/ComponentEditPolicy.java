@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -125,24 +126,31 @@ public class ComponentEditPolicy
 	protected Command createDeleteViewCommand(GroupRequest deleteRequest) {
 		CompositeCommand cc = new CompositeCommand(null);
 
-        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+        TransactionalEditingDomain editingDomain = getEditingDomain();
+		if (editingDomain == null) {
+			return null;
+		}
 		List toDel = deleteRequest.getEditParts();
 		if (toDel == null || toDel.isEmpty()) {
-			cc.compose(new DeleteCommand(editingDomain, (View)getHost().getModel()));
+			cc.compose(new DeleteCommand(editingDomain, (View) getHost()
+				.getModel()));
 		} else {
 			for (int i = 0; i < toDel.size(); i++) {
 				IGraphicalEditPart gep = (IGraphicalEditPart) toDel.get(i);
-				cc.compose(new DeleteCommand(editingDomain, (View)gep.getModel()));
+				cc.compose(new DeleteCommand(editingDomain, (View) gep
+					.getModel()));
 			}
 		}
 		return new EtoolsProxyCommand(cc.reduce());
 	}
 
-	/** 
-	 * Return a command to delete the host's semantic elements.  This method is
+	/**
+	 * Return a command to delete the host's semantic elements. This method is
 	 * called if the host is canonical.
+	 * 
 	 * @see #shouldDeleteSemantic()
-	 * @param deleteRequest the original delete request.
+	 * @param deleteRequest
+	 *            the original delete request.
 	 * @return Command
 	 */
 	protected Command createDeleteSemanticCommand(GroupRequest deleteRequest) {
@@ -239,26 +247,32 @@ public class ComponentEditPolicy
 		
 		EObject hostElement = ViewUtil.resolveSemanticElement((View)insertEP.getModel());
 		if (hostElement != null) {
-			
-			MObjectType theMType = EObjectUtil.getType(hostElement);
-			if (theMType.equals(MObjectType.MODELING)) {
-                TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
-                
-				CreateElementRequest theReq =
-						new CreateElementRequest(editingDomain, hostElement, insertEP.getElementType());
-					
-				EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(theReq);
-				Command cmd =
-					((IGraphicalEditPart)getHost()).getCommand(editCommandRequest);
-					
-				return cmd;
-			}
+
+            MObjectType theMType = EObjectUtil.getType(hostElement);
+            if (theMType.equals(MObjectType.MODELING)) {
+                TransactionalEditingDomain editingDomain = getEditingDomain();
+                if (editingDomain == null) {
+                    return null;
+                }
+
+                CreateElementRequest theReq = new CreateElementRequest(
+                    editingDomain, hostElement, insertEP.getElementType());
+
+                EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(
+                    theReq);
+                Command cmd = ((IGraphicalEditPart) getHost())
+                    .getCommand(editCommandRequest);
+
+                return cmd;
+            }
 		}
 		
 		return null;
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gef.editpolicies.ComponentEditPolicy#getCommand(org.eclipse.gef.Request)
 	 */
 	public Command getCommand(Request request) {
@@ -275,5 +289,18 @@ public class ComponentEditPolicy
 		
 		return super.getCommand(request);
 	}
+    
+    private TransactionalEditingDomain getEditingDomain() {
+         if (getHost() instanceof IGraphicalEditPart) {
+            return ((IGraphicalEditPart) getHost()).getEditingDomain();
+        } else if (getHost() instanceof IEditingDomainProvider) {
+            Object domain = ((IEditingDomainProvider) getHost())
+                .getEditingDomain();
+            if (domain instanceof TransactionalEditingDomain) {
+                return (TransactionalEditingDomain) domain;
+            }
+        }
+        return null;
+    }
 
  }

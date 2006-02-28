@@ -18,6 +18,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.commands.Command;
@@ -31,7 +32,6 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
@@ -140,21 +140,21 @@ public class DeferredCreateConnectionViewAndElementCommand
 		this.request = request;
 		this.typeInfoAdapter = typeInfoAdapter;
 	}
-    
+
     public List getAffectedFiles() {
-        if (viewer != null) {
-            EditPart editpart = viewer.getRootEditPart().getContents();
-            if (editpart instanceof IGraphicalEditPart) {
-                View view = (View) editpart.getModel();
-                if (view != null) {
-                    IFile f = EObjectUtil.getWorkspaceFile(view);
-                    return f != null ? Collections.singletonList(f)
-                        : Collections.EMPTY_LIST;
-                }
-            }
-        }
+		if (viewer != null) {
+			EditPart editpart = viewer.getRootEditPart().getContents();
+			if (editpart instanceof IGraphicalEditPart) {
+				View view = (View) editpart.getModel();
+				if (view != null) {
+					IFile f = WorkspaceSynchronizer.getFile(view.eResource());
+					return f != null ? Collections.singletonList(f)
+						: Collections.EMPTY_LIST;
+				}
+			}
+		}
         return super.getAffectedFiles();
-    }
+	}
 
 	public boolean canUndo() {
 		return command != null && command.canUndo();

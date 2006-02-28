@@ -21,11 +21,12 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -33,7 +34,6 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.resources.FileChangeManager;
 import org.eclipse.gmf.runtime.common.ui.resources.IBookmark;
 import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
@@ -44,9 +44,6 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
@@ -205,9 +202,11 @@ public class BookmarkDecorator
 			// Extract the element guid from the marker and retrieve
 			// corresponding view
 			try {
-				MEditingDomainGetter.getMEditingDomain(getDecoratorTarget()).runAsRead(new MRunnable() {
+				TransactionUtil.getEditingDomain(
+					getDecoratorTarget().getAdapter(View.class)).runExclusive(
+					new Runnable() {
 
-					public Object run() {
+					public void run() {
 						String elementId = (String) attributes
 							.get(IBookmark.ELEMENT_ID);
 						List list = elementId != null ? (List)mapOfIdsToDecorators.get(elementId) : null;
@@ -220,7 +219,6 @@ public class BookmarkDecorator
 								}
 							}
 						}
-						return null;
 					}
 				});
 			} catch (Exception e) {
@@ -244,9 +242,11 @@ public class BookmarkDecorator
 			// corresponding view
 			try {
 				
-				MEditingDomainGetter.getMEditingDomain(getDecoratorTarget()).runAsRead(new MRunnable() {
+				TransactionUtil.getEditingDomain(
+					getDecoratorTarget().getAdapter(View.class)).runExclusive(
+					new Runnable() {
 
-					public Object run() {
+					public void run() {
 						String elementId = marker.getAttribute(
 							IBookmark.ELEMENT_ID, StringStatics.BLANK);
 						List list = elementId != null ? (List)mapOfIdsToDecorators.get(elementId) : null;
@@ -259,7 +259,6 @@ public class BookmarkDecorator
 								}
 							}
 						}
-						return null;
 					}
 				});
 			} catch (Exception e) {
@@ -298,20 +297,15 @@ public class BookmarkDecorator
 
 		/* Set the id */		
 		try {
-			MEditingDomainGetter.getMEditingDomain(decoratorTarget).runAsRead(
-				new MRunnable() {
+			final View view = (View) getDecoratorTarget().getAdapter(View.class);
+			TransactionUtil.getEditingDomain(view).runExclusive(new Runnable() {
 
-					/*
-					 * @see java.lang.Runnable#run()
-					 */
-					public Object run() {
-						View view = (View) BookmarkDecorator.this
-							.getDecoratorTarget().getAdapter(View.class);
-						BookmarkDecorator.this.viewId = view != null ? ViewUtil
-							.getIdStr(view)
-							: null;
-						return null;
-					}
+				public void run() {
+
+					BookmarkDecorator.this.viewId = view != null ? ViewUtil
+						.getIdStr(view)
+						: null;
+				}
 				});
 		} catch (Exception e) {
 			Trace.catching(DiagramProvidersPlugin.getInstance(),
@@ -358,7 +352,7 @@ public class BookmarkDecorator
 
 		// find the bookmark containing the element's GUID
 		IMarker foundMarker = null;
-		String elementId = EObjectUtil.getID(view);
+		String elementId = ((XMLResource) view.eResource()).getID(view);
 		if (elementId == null) {
 			return;
 		}
@@ -396,13 +390,7 @@ public class BookmarkDecorator
 	private static IResource getResource(View view) {
 		Resource model = view.eResource();
 		if (model != null) {
-			MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain(model);
-			String filePath = editingDomain.getResourceFileName(model);
-			if (filePath != null && filePath.length() != 0) {
-				return ResourcesPlugin.getWorkspace().getRoot()
-					.getFileForLocation(
-						new Path(editingDomain.getResourceFileName(model)));
-			}
+           return WorkspaceSynchronizer.getFile(model);
 		}
 		return null;
 	}
@@ -416,7 +404,7 @@ public class BookmarkDecorator
 		if (view == null) return;
 		Diagram diagramView = view.getDiagram();
 		if (diagramView == null) return;
-		IFile file = EObjectUtil.getFile(diagramView);
+		IFile file = WorkspaceSynchronizer.getFile(diagramView.eResource());
 		// It does not make sense to add a file observer if the resource
 		//  is not persisted or the uri is not in the form of file:///
 		if (file != null) {

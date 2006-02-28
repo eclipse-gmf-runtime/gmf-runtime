@@ -11,15 +11,20 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.View;
 
 
@@ -43,9 +48,9 @@ public Command getCommand(Request request) {
 }
 
 protected Command getIncrementDecrementCommand(boolean type){
-	IncrementDecrementCommand command = new IncrementDecrementCommand(type);
+	IncrementDecrementCommand command = new IncrementDecrementCommand(((IGraphicalEditPart)getHost()).getEditingDomain(), type);
 	command.setChild(((View)(getHost().getModel())).getElement());
-	return command;
+	return new EtoolsProxyCommand(command);
 }
 
 /* (non-Javadoc)
@@ -59,13 +64,13 @@ public EditPart getTargetEditPart(Request request) {
 }
 	
 static class IncrementDecrementCommand 
-	extends org.eclipse.gef.commands.Command{
+	extends AbstractTransactionalCommand {
 	
 	boolean isIncrement = true;
 	LED child = null;
 	
-	public IncrementDecrementCommand(boolean increment){
-		super("Logic Value Change"); //$NON-NLS-1$
+	public IncrementDecrementCommand(TransactionalEditingDomain editingDomain, boolean increment){
+		super(editingDomain, "Logic Value Change", null); //$NON-NLS-1$
 		isIncrement=increment;
 	}
 	
@@ -73,41 +78,24 @@ static class IncrementDecrementCommand
 		this.child=(LED)child;
 	}
 	
-	public void execute(){
-		MEditingDomain.INSTANCE.runInUndoInterval(new Runnable(){
-			public void run(){
-					try {
-						MEditingDomain.INSTANCE.runAsWrite(new MRunnable() {
-							public Object run(){
-								int value = child.getValue();
-								if(isIncrement){
-									if(value==15)value=-1;
-									child.setValue(value+1);
-								}else{
-									if(value==0)value=16;
-									child.setValue(value-1);
-								}
-								return child;
-							}
-						}
-						);
-					} catch (MSLActionAbandonedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			}
-		});
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+	 */
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+		throws ExecutionException {
+		
+		int value = child.getValue();
+		if(isIncrement){
+			if(value==15)value=-1;
+			child.setValue(value+1);
+		}else{
+			if(value==0)value=16;
+			child.setValue(value-1);
+		}
+		
+		return CommandResult.newOKCommandResult();
 	}
-	
-	public void undo(){
-		isIncrement=!isIncrement;
-		execute();
-		isIncrement=!isIncrement;
-	}
-	
-	public void redo(){
-		execute();
-	}
+
 }
 
 }

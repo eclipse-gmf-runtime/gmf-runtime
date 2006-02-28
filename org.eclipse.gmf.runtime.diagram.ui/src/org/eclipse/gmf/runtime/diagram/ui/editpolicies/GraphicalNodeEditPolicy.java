@@ -60,7 +60,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnecti
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
@@ -270,7 +270,7 @@ public class GraphicalNodeEditPolicy
 			// get the semantic request
 			CreateRelationshipRequest createElementRequest = (CreateRelationshipRequest) requestAdapter
 					.getAdapter(CreateRelationshipRequest.class);
-			hint = MetaModelUtil.getDisplayName(createElementRequest.getElementType().getEClass());
+			hint = PackageUtil.getDisplayName(createElementRequest.getElementType().getEClass());
 		} else if (request instanceof ReconnectRequest) {
 			ReconnectRequest rr = (ReconnectRequest) request;
 			hint = ViewUtil.getSemanticElementClassId((View)rr.getConnectionEditPart().getModel());
@@ -328,7 +328,6 @@ public class GraphicalNodeEditPolicy
 			}
 		}
 		if (newRouterType != null) {
-
 			// add commands for line routing. Convert the new connection and
 			// also the targeted connection.
 			ICommand spc = new SetPropertyCommand(
@@ -350,7 +349,7 @@ public class GraphicalNodeEditPolicy
 		INodeEditPart node = getConnectableEditPart();
 		if (node == null)
 			return null;
-   
+		
         TransactionalEditingDomain editingDomain = getEditingDomain();
 		
 		ConnectionAnchor targetAnchor = getConnectionTargetAnchor(request);
@@ -884,9 +883,8 @@ public class GraphicalNodeEditPolicy
 		Command command = realTargetEP.getCommand(request);
 		return command;
 	}
-    
+
     private TransactionalEditingDomain getEditingDomain() {
         return ((IGraphicalEditPart) getHost()).getEditingDomain();
-    }
-
+}
 }

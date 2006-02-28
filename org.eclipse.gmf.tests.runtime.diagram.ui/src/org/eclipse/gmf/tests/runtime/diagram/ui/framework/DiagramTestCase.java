@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.ui.util.FileUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -178,16 +178,15 @@ public abstract class DiagramTestCase extends TestCase {
      * that resource.
      */
     protected void createResource() {
-        editingDomain = MEditingDomain.INSTANCE;
         
         IFile file = getDiagramFile();
         
         if (file != null) {
             String filePath = file.getLocation().toOSString();
-            resource = editingDomain.loadResource(filePath);
+            resource = getEditingDomain().loadResource(filePath);
 
         } else {
-            resource = editingDomain
+            resource = getEditingDomain()
                 .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
         }
 
@@ -196,7 +195,7 @@ public abstract class DiagramTestCase extends TestCase {
         if (d != null) {
 
             AbstractEMFOperation operation = new AbstractEMFOperation(
-                editingDomain, "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
+            	getEditingDomain(), "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
 
                 protected IStatus doExecute(IProgressMonitor monitor,
                         IAdaptable info)
@@ -341,15 +340,12 @@ public abstract class DiagramTestCase extends TestCase {
 	 */
 	protected abstract void createShapesAndConnectors() throws Exception;
 
-
-	
-	
-	
-	
-	
-	
-	
-
+    public TransactionalEditingDomain getEditingDomain() {
+    	if (editingDomain == null) {
+    		editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+    	}
+        return editingDomain;
+    }
 
 	//
 //	protected boolean isDirty() {

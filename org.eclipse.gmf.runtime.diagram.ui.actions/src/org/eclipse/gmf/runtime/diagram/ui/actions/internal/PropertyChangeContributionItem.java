@@ -15,17 +15,16 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.Request;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.ui.IWorkbenchPage;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.CustomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * An abstract implementation of a custom toolbar contribution item for reflecting
@@ -146,14 +145,27 @@ public abstract class PropertyChangeContributionItem
 		final IGraphicalEditPart editPart,
 		final String thePropertyId) {
 
-		return MEditingDomainGetter.getMEditingDomain((View)editPart.getModel()).runAsRead(new MRunnable() {
-			public Object run() {
-				ENamedElement element = MetaModelUtil.getElement(thePropertyId);
-				if (element instanceof EStructuralFeature)
-					return editPart.getStructuralFeatureValue((EStructuralFeature)element);
-				return null;
-			}
-		});
+		try {
+			return editPart.getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
+
+					public void run() {
+						ENamedElement element = PackageUtil
+							.getElement(thePropertyId);
+						if (element instanceof EStructuralFeature)
+							setResult(editPart
+								.getStructuralFeatureValue((EStructuralFeature) element));
+					}
+				});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramActionsPlugin.getInstance(),
+				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getPropertyValue", e); //$NON-NLS-1$
+			Log.error(DiagramActionsPlugin.getInstance(),
+				DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getPropertyValue", e); //$NON-NLS-1$
+			return null;
+		}
 	}
 
 	/**

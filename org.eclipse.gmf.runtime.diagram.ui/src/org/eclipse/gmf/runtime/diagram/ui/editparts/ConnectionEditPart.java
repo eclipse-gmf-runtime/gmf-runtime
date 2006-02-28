@@ -14,9 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editparts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -31,9 +29,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RelativeBendpoint;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.AccessibleEditPart;
@@ -55,8 +53,9 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -67,6 +66,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PropertyHandlerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
@@ -87,10 +89,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ForestRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
 import org.eclipse.gmf.runtime.gef.ui.internal.tools.SelectConnectionEditPartTracker;
@@ -134,6 +133,11 @@ abstract public class ConnectionEditPart
 
 	/** Used for accessibility. */
 	protected AccessibleEditPart accessibleEP;
+	
+    /**
+     * Cache the editing domain after it is retrieved.
+     */
+    private TransactionalEditingDomain editingDomain;
 
 	/**
 	 * gets a property change command for the passed property, using both of the
@@ -173,8 +177,7 @@ abstract public class ConnectionEditPart
 		addNotationalListeners();
 
 		EObject semanticProxy = ((View) getModel()).getElement();
-		EObject semanticElement = ProxyUtil.resolve(MEditingDomainGetter
-			.getMEditingDomain((View) getModel()), semanticProxy);
+		EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(), semanticProxy);
 
 		if (semanticElement != null)
 			addSemanticListeners();
@@ -206,7 +209,7 @@ abstract public class ConnectionEditPart
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
 
-		DiagramEventBroker.getInstance().addNotificationListener(element,
+		getDiagramEventBroker().addNotificationListener(element,
 			listener);
 		listenerFilters.put(filterId, new Object[] {element, listener});
 	}
@@ -234,7 +237,7 @@ abstract public class ConnectionEditPart
 		if (listenerFilters == null)
 			listenerFilters = new HashMap();
 
-		DiagramEventBroker.getInstance().addNotificationListener(element,
+		getDiagramEventBroker().addNotificationListener(element,
 			feature, listener);
 		listenerFilters
 			.put(filterId, new Object[] {element, feature, listener});
@@ -308,14 +311,12 @@ abstract public class ConnectionEditPart
 			for (Iterator i = listenerFilters.keySet().iterator(); i.hasNext();) {
 				Object[] obj = (Object[]) listenerFilters.get(i.next());
 				if (obj.length > 2) {
-					DiagramEventBroker.getInstance()
-						.removeNotificationListener((EObject) obj[0],
-							(EStructuralFeature) obj[1],
-							(NotificationListener) obj[2]);
+					getDiagramEventBroker().removeNotificationListener(
+						(EObject) obj[0], (EStructuralFeature) obj[1],
+						(NotificationListener) obj[2]);
 				} else {
-					DiagramEventBroker.getInstance()
-						.removeNotificationListener((EObject) obj[0],
-							(NotificationListener) obj[1]);
+					getDiagramEventBroker().removeNotificationListener(
+						(EObject) obj[0], (NotificationListener) obj[1]);
 				}
 			}
 		}
@@ -521,14 +522,25 @@ abstract public class ConnectionEditPart
 		}
 
 		final Request request = _request;
-		Command cmd = (Command) MEditingDomainGetter.getMEditingDomain(
-			(View) getModel()).runAsRead(new MRunnable() {
+		try {
+			Command cmd = (Command) TransactionUtil.getEditingDomain(
+				(View) getModel()).runExclusive(new RunnableWithResult.Impl() {
 
-			public Object run() {
-				return ConnectionEditPart.super.getCommand(request);
-			}
-		});
-		return cmd;
+				public void run() {
+					setResult(ConnectionEditPart.super.getCommand(request));
+				}
+
+			});
+			return cmd;
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getCommand", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getCommand", e); //$NON-NLS-1$
+			return null;
+		}
 	}
 
 	/**
@@ -612,13 +624,24 @@ abstract public class ConnectionEditPart
 	 * @return non proxy EObject or NULL
 	 */
 	public EObject resolveSemanticElement() {
-		return (EObject) MEditingDomainGetter.getMEditingDomain(
-			(View) getModel()).runAsRead(new MRunnable() {
+		try {
+			return (EObject) TransactionUtil.getEditingDomain(
+				(View) getModel()).runExclusive(new RunnableWithResult.Impl() {
+	
+				public void run() {
+					setResult(ViewUtil.resolveSemanticElement((View) getModel()));
+				}
+			});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"resolveSemanticElement", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"resolveSemanticElement", e); //$NON-NLS-1$
+			return null;
+		}
 
-			public Object run() {
-				return ViewUtil.resolveSemanticElement((View) getModel());
-			}
-		});
 	}
 
 	/**
@@ -765,11 +788,11 @@ abstract public class ConnectionEditPart
 		}
 
 		if (objects.length > 2) {
-			DiagramEventBroker.getInstance().removeNotificationListener(
+			DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(
 				(EObject) objects[0], (EStructuralFeature) objects[1],
 				(NotificationListener) objects[2]);
 		} else {
-			DiagramEventBroker.getInstance().removeNotificationListener(
+			getDiagramEventBroker().removeNotificationListener(
 				(EObject) objects[0], (NotificationListener) objects[1]);
 		}
 		listenerFilters.remove(filterId);
@@ -874,31 +897,6 @@ abstract public class ConnectionEditPart
 	}
 
 	/**
-	 * Return a Map of all the appearance property ids supported by the edit
-	 * part and its children.
-	 * 
-	 * Each entry in the map is the factory hint of the edit part as key and a
-	 * dictionary of appearance properties as values. The edit parts are the
-	 * receiver itself and it's children.
-	 * 
-	 * For example, the connectable shape edit part with name, attribute,
-	 * operation and shape compartments will return a map where: 1 entry:
-	 * connectable shape factory hint -> dictionary: Properties.ID_FONT -> font
-	 * data Properties.ID_FONTCOLOR -> font color Properties.ID_LINECOLOR ->
-	 * line color Properties.ID_FILLCOLOR -> fill color 2d entry: attribute
-	 * compartment hint -> dictionary(empty) 3d entry: operation compartment
-	 * hint -> dictionary(empty) 4d entry: shape compartment hint ->
-	 * dictionary(empty)
-	 * 
-	 * @return Map
-	 */
-	public Map getAppearancePropertiesMap() {
-		Map properties = new HashMap();
-		fillAppearancePropertiesMap(properties);
-		return properties;
-	}
-
-	/**
 	 * a static array of appearance property ids applicable to the connections
 	 */
 	protected static final String[] appearanceProperties = new String[] {
@@ -934,22 +932,31 @@ abstract public class ConnectionEditPart
 	 * @see org.eclipse.gef.EditPart#refresh()
 	 */
 	public void refresh() {
-		if (getSource() != null && getTarget() != null)
-			MEditingDomainGetter.getMEditingDomain((View) getModel())
-				.runAsRead(new MRunnable() {
+		if (getSource() != null && getTarget() != null) {
+			try {
+				TransactionUtil.getEditingDomain((View) getModel())
+					.runExclusive(new Runnable() {
 
-					public Object run() {
-						ConnectionEditPart.super.refresh();
-						EditPolicyIterator i = getEditPolicyIterator();
-						while (i.hasNext()) {
-							EditPolicy policy = i.next();
-							if (policy instanceof GraphicalEditPolicyEx) {
-								((GraphicalEditPolicyEx) policy).refresh();
+						public void run() {
+							ConnectionEditPart.super.refresh();
+							EditPolicyIterator i = getEditPolicyIterator();
+							while (i.hasNext()) {
+								EditPolicy policy = i.next();
+								if (policy instanceof GraphicalEditPolicyEx) {
+									((GraphicalEditPolicyEx) policy).refresh();
+								}
 							}
 						}
-						return null;
-					}
-				});
+					});
+			} catch (InterruptedException e) {
+				Trace.catching(DiagramUIPlugin.getInstance(),
+					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"refresh", e); //$NON-NLS-1$
+				Log.error(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"refresh", e); //$NON-NLS-1$
+			}
+		}
 	}
 
 	/**
@@ -994,7 +1001,7 @@ abstract public class ConnectionEditPart
 		ConnectionLayer cLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
 		RoutingStyle style = (RoutingStyle) ((View) getModel())
 			.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
-        
+
 		if (style != null && cLayer instanceof ConnectionLayerEx) {
 
             ConnectionLayerEx cLayerEx = (ConnectionLayerEx)cLayer;
@@ -1179,37 +1186,6 @@ abstract public class ConnectionEditPart
 		getFigure().repaint();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#fillAppearancePropertiesMap(java.util.Map)
-	 */
-	public void fillAppearancePropertiesMap(Map properties) {
-
-		if (getAppearancePropertyIDs().length > 0) {
-			// only if there are any appearance properties
-			final Dictionary local_properties = new Hashtable();
-			for (int i = 0; i < getAppearancePropertyIDs().length; i++) {
-				String prob = getAppearancePropertyIDs()[i];
-				ENamedElement element = MetaModelUtil.getElement(prob);
-				if (element instanceof EStructuralFeature
-					&& ViewUtil.isPropertySupported((View) getModel(), prob)) {
-					local_properties
-						.put(
-							getAppearancePropertyIDs()[i],
-							getStructuralFeatureValue((EStructuralFeature) element));
-				}
-			}
-			properties.put(((View) getModel()).getType(), local_properties);
-		}
-
-		Iterator iterator = getChildren().iterator();
-		while (iterator.hasNext()) {
-			IGraphicalEditPart child = (IGraphicalEditPart) iterator.next();
-			child.fillAppearancePropertiesMap(properties);
-		}
-	}
-
 	/**
 	 * Returns an array of the appearance property ids applicable to the
 	 * receiver. Fro this type it is Properties.ID_FONT,
@@ -1255,16 +1231,27 @@ abstract public class ConnectionEditPart
 	 *            the direct edit request
 	 */
 	protected void performDirectEditRequest(Request request) {
-		EditPart primaryChildEditPart = (EditPart) MEditingDomainGetter
-			.getMEditingDomain((View) getModel()).runAsRead(new MRunnable() {
+		try {
+			EditPart primaryChildEditPart = (EditPart) getEditingDomain()
+				.runExclusive(new RunnableWithResult.Impl() {
 
-				public Object run() {
-					return getPrimaryChildEditPart();
-				}
-			});
-		if (primaryChildEditPart != null) {
-			primaryChildEditPart.performRequest(request);
+						public void run() {
+							setResult(getPrimaryChildEditPart());
+						}
+					});
+			if (primaryChildEditPart != null) {
+				primaryChildEditPart.performRequest(request);
+			}
+
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"performDirectEditRequest", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"performDirectEditRequest", e); //$NON-NLS-1$
 		}
+
 	}
 
 	/**
@@ -1285,7 +1272,7 @@ abstract public class ConnectionEditPart
 			return;
 		}
 
-		elementGuid = ProxyUtil.getProxyID(ref);
+		elementGuid = EMFCoreUtil.getProxyID(ref);
 
 		((IDiagramGraphicalViewer) getViewer()).registerEditPartForElement(
 			elementGuid, this);
@@ -1456,7 +1443,7 @@ abstract public class ConnectionEditPart
 		} else if (NotationPackage.eINSTANCE.getView_Visible().equals(feature)) {
             Object notifier = event.getNotifier();
             if (notifier== getModel())
-                setVisibility(((Boolean) event.getNewValue()).booleanValue());
+			setVisibility(((Boolean) event.getNewValue()).booleanValue());
 			// Reactivating in response to semantic model reference change
 			// However, we need to verify that the event belongs to this
 			// editpart's view
@@ -1488,10 +1475,6 @@ abstract public class ConnectionEditPart
 			.getView_Element()
 			&& ((EObject) event.getNotifier()) == getNotationView())
 			handleMajorSemanticChange();
-
-		else if (event.getEventType() == EventTypes.UNRESOLVE
-			&& event.getNotifier() == ((View) getModel()).getElement())
-			handleMajorSemanticChange();
 	}
 
 	/**
@@ -1504,15 +1487,31 @@ abstract public class ConnectionEditPart
 			DiagramRootEditPart dgrmRoot = (DiagramRootEditPart)root;
 			return dgrmRoot.getMapMode();
 		}
-				
+
 		return MapModeUtil.getMapMode();
 	}
-    
+	
     /**
-     * Derives my editing domain from my diagram view element. Subclasses may
+     * Derives my editing domain from my diagram element. Subclasses may
      * override.
      */
-    public TransactionalEditingDomain getEditingDomain() {
-        return TransactionUtil.getEditingDomain(getDiagramView());
+    public final TransactionalEditingDomain getEditingDomain() {
+        if (editingDomain == null) {
+            editingDomain = TransactionUtil.getEditingDomain(getDiagramView());
+        }
+        return editingDomain;
+    } 	
+    
+	/**
+	 * Gets the diagram event broker from the editing domain.
+	 * 
+	 * @return the diagram event broker
+	 */
+	private DiagramEventBroker getDiagramEventBroker() {
+        TransactionalEditingDomain theEditingDomain = getEditingDomain();
+        if (theEditingDomain != null) {
+            return DiagramEventBroker.getInstance(theEditingDomain);
+        }
+        return null;
     }
 }

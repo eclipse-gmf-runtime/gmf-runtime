@@ -14,9 +14,16 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.tools;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -30,8 +37,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandSelectionTool
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -240,13 +245,35 @@ public class RubberBandSelectionToolTest
 		throws Exception {
 		
 		AbstractTestBase.println("Creating diagram"); //$NON-NLS-1$
-		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
-			public Object run() {
+		
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			getEditingDomain(), "") { //$NON-NLS-1$
+
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+				
 				diagramView = ViewService.createDiagram(
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
 				setDiagram(diagramView);
-                return null;
-			}});
+			
+				return Status.OK_STATUS;
+			};
+		};
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation,
+					new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			assertFalse(false);
+		}
+//		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
+//			public Object run() {
+//				diagramView = ViewService.createDiagram(
+//					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
+//				setDiagram(diagramView);
+//                return null;
+//			}});
 		
 		return null;
 	}

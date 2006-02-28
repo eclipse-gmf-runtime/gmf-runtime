@@ -21,8 +21,8 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.Ratio;
@@ -63,14 +63,14 @@ public class SetCompartmentRatioCommand extends SetPropertyCommand {
 
 			if (((Double)getNewValue()).doubleValue() == -1) {
 				if (ratio != null)
-					EObjectUtil.destroy(ratio);
+					EMFCoreUtil.destroy(ratio);
 			} else {
 				if (ratio == null) {
 					ratio = NotationFactory.eINSTANCE.createRatio();
 					node.setLayoutConstraint(ratio);
 				}
 				if (getPropertyId() instanceof String){
-					ENamedElement namedElement = MetaModelUtil.getElement((String)getPropertyId());
+					ENamedElement namedElement = PackageUtil.getElement((String)getPropertyId());
 					if (namedElement instanceof EStructuralFeature)
 						ViewUtil.setStructuralFeatureValue(view,(EStructuralFeature)namedElement, getNewValue());
 				}

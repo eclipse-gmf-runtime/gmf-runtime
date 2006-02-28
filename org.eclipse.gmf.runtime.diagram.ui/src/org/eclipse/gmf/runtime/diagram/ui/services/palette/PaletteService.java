@@ -16,6 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
@@ -32,9 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.ContributeToPaletteOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteProviderConfiguration;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteGroup;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
 import org.eclipse.jface.util.Assert;
@@ -214,12 +215,20 @@ public class PaletteService extends Service implements IPaletteProvider {
 		final Object content) {
 		final PaletteRoot root = new PaletteRoot();
 		try {
-			DiagramMEditingDomainGetter.getMEditingDomain(editor).runAsRead( new MRunnable() {
-		        public Object run() {
-		            contributeToPalette(editor, content, root);
-		            return null;
-		        }
-		    });
+			IEditingDomainProvider provider = (IEditingDomainProvider) editor
+				.getAdapter(IEditingDomainProvider.class);
+			if (provider != null) {
+				EditingDomain domain = provider.getEditingDomain();
+				if (domain instanceof TransactionalEditingDomain) {
+					((TransactionalEditingDomain) domain)
+						.runExclusive(new Runnable() {
+
+							public void run() {
+								contributeToPalette(editor, content, root);
+							}
+						});
+				}
+			}
 		} catch (Exception e) {
 			Trace.catching(DiagramUIPlugin.getInstance(),
 					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, PaletteService.class,

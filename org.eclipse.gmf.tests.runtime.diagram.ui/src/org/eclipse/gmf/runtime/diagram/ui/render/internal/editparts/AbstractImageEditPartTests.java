@@ -17,14 +17,21 @@ import java.util.ListIterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
@@ -48,6 +55,8 @@ extends TestCase {
 	public Node getNode() {
 		return node;
 	}
+
+	private TransactionalEditingDomain editingDomain;
 	
 	/**
 	 * Sets up the fixture, for example, open a network connection.
@@ -55,8 +64,13 @@ extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		Diagram dgrm = DiagramCreator.createEmptyDiagram(getPreferenceHint());
+		
+		editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+		Diagram dgrm = DiagramCreator.createEmptyDiagram(getPreferenceHint(),
+			editingDomain);
+		Resource resource = editingDomain
+			.createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+		resource.getContents().add(dgrm);
 		node = createNode(dgrm);
 	}
 	
@@ -77,27 +91,29 @@ extends TestCase {
 	protected Node createNode(final Diagram diagram) {
 
 		final List list = new ArrayList(1);
-		OperationUtil.runInUndoInterval(new Runnable() {
+		
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			editingDomain, "") { //$NON-NLS-1$
 
-			public void run() {
-				try {
-					MEditingDomainGetter.getMEditingDomain(diagram).
-						runAsWrite(new MRunnable() {
-
-						public Object run() {
-							Node note1 = ViewService.createNode(diagram,
-								ViewType.NOTE, getPreferenceHint());
-							assertNotNull("Note1 creation failed", note1); //$NON-NLS-1$
-							list.add(note1);
-							return note1;
-						}
-					});
-				} catch (MSLActionAbandonedException e) {
-					e.printStackTrace();
-					assertFalse(false);
-				}
-			}
-		});
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+				
+				Node note1 = ViewService.createNode(diagram,
+					ViewType.NOTE, getPreferenceHint());
+				assertNotNull("Note1 creation failed", note1); //$NON-NLS-1$
+				list.add(note1);
+				
+				return Status.OK_STATUS;
+			};
+		};
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation,
+					new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			assertFalse(false);
+		}
 
 		return (Node)list.get(0);
 	}

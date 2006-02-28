@@ -20,6 +20,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -29,11 +31,9 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -67,8 +67,10 @@ public class AddBookmarkHelper {
 				.getSelection();
 
 		try {
-			DiagramMEditingDomainGetter.getMEditingDomain(editorPart).runAsRead( new MRunnable() {
-				public Object run() {
+			TransactionUtil.getEditingDomain(editorPart.getDiagram())
+				.runExclusive(new Runnable() {
+
+					public void run() {
 					for (Iterator i = selection.toList().iterator();
 						i.hasNext();
 						) {
@@ -89,7 +91,7 @@ public class AddBookmarkHelper {
 						EObject semanticElement = ViewUtil.resolveSemanticElement(view);
 	
 						if (semanticElement != null) {
-							elementName = EObjectUtil.getQName(semanticElement,true);
+							elementName = EMFCoreUtil.getQualifiedName(semanticElement,true);
 						}
 	
 						// Obtain the marker description from the user.  
@@ -102,7 +104,9 @@ public class AddBookmarkHelper {
 							HashMap attribMap = new HashMap();
 							attribMap.put(IMarker.MESSAGE, description);
 							attribMap.put(IMarker.LOCATION, elementName);
-							attribMap.put(IBookmark.ELEMENT_ID, EObjectUtil.getID(view));
+							attribMap.put(IBookmark.ELEMENT_ID,
+									((XMLResource) view.eResource())
+										.getID(view));
 	
 							IResource resource = getResource(editorPart);
 							Assert.isNotNull(resource);
@@ -117,7 +121,6 @@ public class AddBookmarkHelper {
 							}
 						}
 					}
-					return null;
 				}
 			});
 		}catch (Exception e) {

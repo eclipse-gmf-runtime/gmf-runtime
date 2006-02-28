@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.FilteringStyle;
@@ -96,11 +96,11 @@ public class ViewRefactorHelper {
 			} else if (oldView instanceof Diagram) {
 				refactorDiagram((Diagram)oldView, newElement);
 			}
-			EObjectUtil.destroy(oldView);
+			EMFCoreUtil.destroy(oldView);
 		}
 		
 		// refactor filtering styles
-		Collection filterStyles = EObjectUtil.getReferencers(oldElement, new EReference[]{NotationPackage.eINSTANCE.getFilteringStyle_FilteredObjects()});
+		Collection filterStyles = EMFCoreUtil.getReferencers(oldElement, new EReference[]{NotationPackage.eINSTANCE.getFilteringStyle_FilteredObjects()});
 		for (Iterator i = filterStyles.iterator(); i.hasNext();) {
 			List filteredObjects = ((FilteringStyle) i.next()).getFilteredObjects();
 			if (!filteredObjects.contains(oldElement))
@@ -109,7 +109,7 @@ public class ViewRefactorHelper {
 		}
 		
 		// refactor sorting styles
-		Collection sortingStyles = EObjectUtil.getReferencers(oldElement, new EReference[]{NotationPackage.eINSTANCE.getSortingStyle_SortedObjects()});
+		Collection sortingStyles = EMFCoreUtil.getReferencers(oldElement, new EReference[]{NotationPackage.eINSTANCE.getSortingStyle_SortedObjects()});
 		for (Iterator i = sortingStyles.iterator(); i.hasNext();) {
 			List sortingObjects = ((SortingStyle) i.next()).getSortedObjects();
 			if (!sortingObjects.contains(oldElement))
@@ -184,7 +184,7 @@ public class ViewRefactorHelper {
 	}
 
 	protected void refactorDiagramLinks(Diagram oldDiagram, Diagram newDiagram) {
-		Collection links = EObjectUtil.getReferencers(oldDiagram, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+		Collection links = EMFCoreUtil.getReferencers(oldDiagram, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
 		for (Iterator i = links.iterator(); i.hasNext();) {
 			View view = (View) i.next();
 			view.setElement(newDiagram);
@@ -361,7 +361,7 @@ public class ViewRefactorHelper {
 	 * @param newNode The replacing new node
 	 */
 	protected final void refactorGuides(Node oldNode, Node newNode) {
-		Collection guides = EObjectUtil.getReferencers(oldNode, new EReference[]{NotationPackage.eINSTANCE.getNodeEntry_Key()});
+		Collection guides = EMFCoreUtil.getReferencers(oldNode, new EReference[]{NotationPackage.eINSTANCE.getNodeEntry_Key()});
 		for (Iterator i = guides.iterator(); i.hasNext();) {
 			EMap nodeMap =  ((Guide) ((EObject) i.next()).eContainer()).getNodeMap();
 			nodeMap.put(newNode, nodeMap.get(oldNode));
@@ -378,7 +378,7 @@ public class ViewRefactorHelper {
 	 * @return A collection of views that reference the given element to refactor
 	 */
 	protected Collection getReferencingViews(EObject element) {
-		Collection views = EObjectUtil.getReferencers(element, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+		Collection views = EMFCoreUtil.getReferencers(element, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
 
 		// remove subviews since they will be refactored with their parent
 		for (Iterator i = views.iterator(); i.hasNext();) {

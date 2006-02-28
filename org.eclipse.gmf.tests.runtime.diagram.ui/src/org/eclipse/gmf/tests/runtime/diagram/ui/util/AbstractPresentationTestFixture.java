@@ -28,6 +28,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -44,7 +45,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -276,9 +278,13 @@ public abstract class AbstractPresentationTestFixture
 				.getActiveWorkbenchWindow()
 				.getActivePage();
 
+		IDEEditorUtil.openDiagram(getDiagramFile(), page.getWorkbenchWindow(),
+            false, new NullProgressMonitor());
+
 		setDiagramWorkbenchPart((IDiagramWorkbenchPart)IDE.openEditor(page, getDiagramFile(), true));
 		setDiagramEditPart(getDiagramWorkbenchPart().getDiagramEditPart());
         setDiagram(getDiagramEditPart().getDiagramView());
+        resource = getDiagram().eResource();
 	}
 
 	public boolean closeDiagram() {
@@ -329,45 +335,45 @@ public abstract class AbstractPresentationTestFixture
 	 */
 	protected abstract void createDiagram() throws Exception;
     
-    /**
+	/**
      * Creates the editing domain and resource and adds the diagram to
      * that resource.
      */
-    protected void createResource() {
-        editingDomain = MEditingDomain.INSTANCE;
-        
-        IFile file = getDiagramFile();
-        
-        if (file != null) {
-            String filePath = file.getLocation().toOSString();
-            resource = editingDomain.loadResource(filePath);
-
-        } else {
-            resource = editingDomain
-                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
-        }
-
-        if (getDiagram() != null) {
-            
-            AbstractEMFOperation operation = new AbstractEMFOperation(
-                editingDomain, "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
-
-                protected IStatus doExecute(IProgressMonitor monitor,
-                        IAdaptable info)
-                    throws ExecutionException {
-                    
-                    resource.getContents().add(getDiagram());
-                    return Status.OK_STATUS;
-                };
-            };
-
-    
-            try {
-                operation.execute(new NullProgressMonitor(), null);
-            } catch (ExecutionException ie) {
-                fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
-            }
-        }
+    protected void createResource() {  
+    	if (resource == null) {
+	        IFile file = getDiagramFile();
+	        
+	        if (file != null) {
+	            String filePath = file.getLocation().toOSString();
+	            resource = getEditingDomain().loadResource(filePath);
+	
+	        } else {
+	            resource = getEditingDomain()
+	                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+	        }
+	
+	        if (getDiagram() != null) {
+	            
+	            AbstractEMFOperation operation = new AbstractEMFOperation(
+	            	getEditingDomain(), "AbstractPresentationTestFixture setup") { //$NON-NLS-1$
+	
+	                protected IStatus doExecute(IProgressMonitor monitor,
+	                        IAdaptable info)
+	                    throws ExecutionException {
+	                    
+	                    resource.getContents().add(getDiagram());
+	                    return Status.OK_STATUS;
+	                };
+	            };
+	
+	    
+	            try {
+	                operation.execute(new NullProgressMonitor(), null);
+	            } catch (ExecutionException ie) {
+	                fail("createResource failed: " + ie.getLocalizedMessage()); //$NON-NLS-1$
+	            }
+	        }
+    	}
     }
 
 	/**
@@ -561,6 +567,15 @@ public abstract class AbstractPresentationTestFixture
 
     
     public TransactionalEditingDomain getEditingDomain() {
+    	if (editingDomain == null) {
+            if (getDiagram() != null) {
+                editingDomain = TransactionUtil.getEditingDomain(getDiagram());
+            } else {
+                editingDomain = GMFEditingDomainFactory.INSTANCE
+                    .createEditingDomain();
+            }
+        }
         return editingDomain;
     }
+
 }

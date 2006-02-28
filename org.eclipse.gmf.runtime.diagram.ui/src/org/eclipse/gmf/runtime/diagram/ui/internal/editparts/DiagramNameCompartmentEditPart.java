@@ -14,22 +14,26 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconOptions;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
@@ -70,15 +74,25 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 
 	/** Return the semantic element associated to this editpart. */
 	public EObject resolveSemanticElement() {
-		return (EObject) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+		try {
+			return (EObject) getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
 
-			public Object run() {
-				View primary = getPrimaryView();
-				if (primary != null)
-					return ViewUtil.resolveSemanticElement(primary);
-				return null;
-			}
-		});
+				public void run() {
+					View primary = getPrimaryView();
+					if (primary != null)
+						setResult(ViewUtil.resolveSemanticElement(primary));
+				}
+			});
+		} catch (InterruptedException e) {
+			   Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"resolveSemanticElement", e); //$NON-NLS-1$
+				Log.error(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"resolveSemanticElement", e); //$NON-NLS-1$
+			return null;
+		}
 	}
 
 	/**

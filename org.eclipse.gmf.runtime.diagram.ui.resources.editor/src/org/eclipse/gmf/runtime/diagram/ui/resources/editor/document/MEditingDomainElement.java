@@ -10,7 +10,7 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 
 /**
@@ -21,5 +21,5 @@ public interface MEditingDomainElement {
 	/**
 	 * @return The editing domain for this diagram document
 	 */
-	MEditingDomain getEditingDomain();
+	TransactionalEditingDomain getEditingDomain();
 }

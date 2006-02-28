@@ -18,8 +18,6 @@ import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramMEditingDomainGetter;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.ActivityManagerEvent;
@@ -69,15 +67,14 @@ public abstract class DiagramActionBarContributor
 				getEditorClass(),
 				getPage());
 
-		try {			
-			DiagramMEditingDomainGetter.getMEditingDomain(getPage().getActiveEditor()).runAsRead( new MRunnable() {
-				public Object run() {
-					ContributionItemService.getInstance().contributeToActionBars(
-							bars,
-							descriptor);
-					return null;
-				}
-			});
+		try {
+//			getEditingDomain().runExclusive(new Runnable() {
+//
+//				public void run() {
+					ContributionItemService.getInstance()
+						.contributeToActionBars(bars, descriptor);
+//				}
+//			});
 		}catch (Exception e) {
 			Trace.catching(DiagramUIPlugin.getInstance(),
 					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
@@ -135,6 +132,8 @@ public abstract class DiagramActionBarContributor
 	 * @return The editor's class configured with this contribution
 	 */
 	protected abstract Class getEditorClass();
+	
+//	protected abstract TransactionalEditingDomain getEditingDomain();
 
 	/**
 	 * Updates the actionbars to show/hide contribution items as applicable.

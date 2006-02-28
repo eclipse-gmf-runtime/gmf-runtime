@@ -23,18 +23,24 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
+import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableLabelEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.VisibilityComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.LabelLocator;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.ResizableLabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
@@ -43,7 +49,6 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -116,11 +121,23 @@ public class LabelEditPart extends TopGraphicEditPart {
 	 */
 	protected String getSemanticType() {
 		if (semanticHint == null) {
-			semanticHint = ((String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
-				public Object run() {
-					return ((View)getModel()).getType();
-				}
-			}));
+			try {
+				semanticHint = ((String) getEditingDomain().runExclusive(
+					new RunnableWithResult.Impl() {
+
+							public void run() {
+								setResult(((View) getModel()).getType());
+							}
+						}));
+			} catch (InterruptedException e) {
+				Trace.catching(DiagramUIPlugin.getInstance(),
+					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"getSemanticType", e); //$NON-NLS-1$
+				Log.error(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"getSemanticType", e); //$NON-NLS-1$
+			}
+
 		}
 		return semanticHint;
 	}

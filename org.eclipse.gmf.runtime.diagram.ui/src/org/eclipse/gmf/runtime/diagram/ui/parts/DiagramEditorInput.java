@@ -14,21 +14,19 @@ package org.eclipse.gmf.runtime.diagram.ui.parts;
 import java.lang.ref.WeakReference;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IPersistableElement;
-
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author melaasar
@@ -78,14 +76,14 @@ public class DiagramEditorInput implements IDiagramEditorInput {
 	 * @return <code>String</code>
 	 */
 	public String getQName() {
-		final String[] name = new String[1];
 		try {
-			MEditingDomainGetter.getMEditingDomain(getDiagram()).runAsRead(new MRunnable() {
-				public Object run() {
-					name[0] = EObjectUtil.getQName(getDiagram(), false);
-					return null;
-				}
-			});
+			return (String) TransactionUtil.getEditingDomain(getDiagram())
+				.runExclusive(new RunnableWithResult.Impl() {
+
+					public void run() {
+						setResult(EMFCoreUtil.getQualifiedName(getDiagram(), false));
+					}
+				});
 		} catch (Exception e) {
 			Trace.catching(
 				DiagramUIPlugin.getInstance(),
@@ -93,9 +91,8 @@ public class DiagramEditorInput implements IDiagramEditorInput {
 				getClass(),
 				e.getMessage(),
 				e);
-			name[0] = null;
+			return null;
 		}
-		return name[0];
 	}
 	
 	
@@ -103,13 +100,13 @@ public class DiagramEditorInput implements IDiagramEditorInput {
 	 * @see org.eclipse.ui.IEditorInput#getName()
 	 */
 	public String getName() {
-		final String[] name = new String[1];
 		try {
-			MEditingDomainGetter.getMEditingDomain(getDiagram()).runAsRead(new MRunnable() {
-				public Object run() {
-					name[0] = EObjectUtil.getName(getDiagram()); //((IElement) getDiagram()).getFullyQualifiedName(false);
-					return null;
-				}				
+			return (String) TransactionUtil.getEditingDomain(getDiagram())
+				.runExclusive(new RunnableWithResult.Impl() {
+
+					public void run() {
+						setResult(EMFCoreUtil.getName(getDiagram()));
+					}				
 			});
 		} catch (Exception e) {
 			Trace.catching(
@@ -118,9 +115,8 @@ public class DiagramEditorInput implements IDiagramEditorInput {
 				getClass(),
 				e.getMessage(),
 				e);
-			name[0] = null;
+			return null;
 		}
-		return name[0];
 	}
 
 	/**
@@ -187,30 +183,23 @@ public class DiagramEditorInput implements IDiagramEditorInput {
 	  * @return File The file resource in the workspace
 	  */
 	private IFile getStorageUnitFile() {
-		final IFile[] file = new IFile[1];
 		try {
-			final MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain(getDiagram());
-			editingDomain.runAsRead(new MRunnable() {
+			final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(getDiagram());
+			return (IFile) editingDomain.runExclusive(new RunnableWithResult.Impl() {
 
-				public Object run() {
+				public void run() {
 					Resource model = getDiagram().eResource();
-					String path = editingDomain.getResourceFileName(model);
-					file[0] = model != null && path != null
-						&& path.length() != 0 ? ResourcesPlugin.getWorkspace()
-						.getRoot().getFileForLocation(
-							new Path(path))
-						: null;
-
-					return null;
+						setResult(model != null ? WorkspaceSynchronizer
+							.getFile(model)
+							: null);
 				}
 			});
 		} catch (Exception e) {
 			Trace.catching(DiagramUIPlugin.getInstance(),
 				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(), e
 					.getMessage(), e);
-			file[0] = null;
+			return null;
 		}
-		return file[0];
 	}
 
 }

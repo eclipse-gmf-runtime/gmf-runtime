@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.ResourceUndoContext;
@@ -71,7 +72,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
@@ -80,6 +81,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.InsertAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
@@ -98,7 +100,6 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.GuideStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -294,13 +295,22 @@ public abstract class DiagramEditor
 		 * initialize the outline viewer
 		 */
 		protected void initializeOutlineViewer() {
-			MEditingDomainGetter.getMEditingDomain(getDiagram()).runAsRead(new MRunnable() {
+			try {
+				TransactionUtil.getEditingDomain(getDiagram())
+					.runExclusive(new Runnable() {
 
-				public Object run() {
-					getViewer().setContents(getDiagram());
-					return null;
-				}
-			});
+					public void run() {
+						getViewer().setContents(getDiagram());
+					}
+				});
+			} catch (InterruptedException e) {
+				Trace.catching(DiagramUIPlugin.getInstance(),
+					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"initializeOutlineViewer", e); //$NON-NLS-1$
+				Log.error(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"initializeOutlineViewer", e); //$NON-NLS-1$
+			}
 		}
 
 		/**
@@ -369,7 +379,7 @@ public abstract class DiagramEditor
 		}
 
 	}
-    
+
     /**
      * My editing domain provider.
      */
@@ -394,8 +404,8 @@ public abstract class DiagramEditor
 	 *  rulers
 	 */
 	private RulerComposite rulerComposite;
-    
-    /**
+
+	/**
      * My undo context.
      */
     private IUndoContext undoContext;
@@ -438,10 +448,10 @@ public abstract class DiagramEditor
         historyListener = createHistoryListener();
         if (historyListener != null) {
             getOperationHistory().addOperationHistoryListener(historyListener);
-        }
 	}
-    
-    /**
+	}
+
+	/**
      * Gets my operation history listener. By default it adds my undo context to
      * operations that have affected my editing domain.
      * <P>
@@ -498,10 +508,10 @@ public abstract class DiagramEditor
                 ResourceSet resourceSet = nextResource.getResourceSet();
 
                 if (resourceSet != null) {
-                    TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
+                    TransactionalEditingDomain resourceSetEditingDomain = TransactionalEditingDomain.Factory.INSTANCE
                         .getEditingDomain(resourceSet);
 
-                    if (domain.equals(editingDomain)) {
+                    if (domain.equals(resourceSetEditingDomain)) {
                         return true;
                     }
                 }
@@ -511,8 +521,8 @@ public abstract class DiagramEditor
     }
 
 	/**
-     * @see org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart#getDiagramEditDomain()
-     */
+	 * @see org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart#getDiagramEditDomain()
+	 */
 	public IDiagramEditDomain getDiagramEditDomain() {
 		return (IDiagramEditDomain) getEditDomain();
 	}
@@ -543,7 +553,7 @@ public abstract class DiagramEditor
 	/**
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(Class)
 	 */
-	public Object getAdapter(Class type) {	
+	public Object getAdapter(Class type) {		
 		if (type == IContentOutlinePage.class) {
 			TreeViewer viewer = new TreeViewer();
 			viewer.setRootEditPart(new DiagramRootTreeEditPart());
@@ -762,8 +772,8 @@ public abstract class DiagramEditor
 
 	/**
      * Configures my diagram edit domain with its command stack.
-     */
-    protected void configureDiagramEditDomain() {
+	 */
+	protected void configureDiagramEditDomain() {
 
         DefaultEditDomain editDomain = getEditDomain();
 
@@ -773,7 +783,7 @@ public abstract class DiagramEditor
             if (stack != null) {
                 // dispose the old stack
                 stack.dispose();
-            }
+	}
 
             // create and assign the new stack
             DiagramCommandStack diagramStack = new DiagramCommandStack(getDiagramEditDomain());
@@ -786,7 +796,7 @@ public abstract class DiagramEditor
         }
     }
     
-    /**
+	/**
      * @overridable
      */
     protected ActionManager createActionManager() {
@@ -810,12 +820,11 @@ public abstract class DiagramEditor
 		super.setInput(input);
 		if(input != null) {
 			Assert.isNotNull(getDiagram(), "Couldn't load/create diagram view"); //$NON-NLS-1$
-		}
-		startListening();
-
+ 		}
+        startListening();
         // dispose the old command stack and create a new one
         configureDiagramEditDomain();
-    }
+	}
 
 	/** 
 	 * Do nothing
@@ -854,15 +863,22 @@ public abstract class DiagramEditor
 	/**
 	 * Installs all the listeners needed by the editor
 	 */
-	protected void startListening() {
-		// do nothing
+	protected void startListening() {		
+		// Create a diagram event broker if there isn't already one for this editing domain.
+		TransactionalEditingDomain domain = getEditingDomain();
+		if (domain != null) {
+			DiagramEventBroker eventBroker = DiagramEventBroker.getInstance(domain);
+			if (eventBroker == null) {
+				DiagramEventBroker.startListening(domain);
+			}
+		}
 	}
 
 	/**
 	 * Removes all the listeners used by the editor
 	 */
 	protected void stopListening() {
-		// do nothing		
+		// do nothing
 	}
 
 	/**
@@ -898,17 +914,17 @@ public abstract class DiagramEditor
 	private RootEditPart getRootEditPart() {
 		return getGraphicalViewer().getRootEditPart();		
 	}
-    
-    /**
+	
+	/**
      * Returns the operation history from my action manager.
-     * 
+	 * 
      * @return the operation history
-     */
+	 */
     protected IOperationHistory getOperationHistory() {
         return getActionManager().getOperationHistory();
-    }
-    
-    /**
+	}
+
+	/**
      * Gets my editing domain derived from my diagram editor input.
      * <P>
      * If subclasses have a known editing domain, they should override this method
@@ -917,8 +933,11 @@ public abstract class DiagramEditor
      * 
      * @return my editing domain
      */
-    protected EditingDomain getEditingDomain() {
-        return TransactionUtil.getEditingDomain(getDiagram());
+    public TransactionalEditingDomain getEditingDomain() {
+    	if (getDiagram() != null) {
+            return TransactionUtil.getEditingDomain(getDiagram());
+        }
+        return null;
     }
     
     /**
@@ -930,7 +949,7 @@ public abstract class DiagramEditor
     protected IUndoContext getUndoContext() {
 
         if (undoContext == null) {
-            TransactionalEditingDomain domain = (TransactionalEditingDomain) getEditingDomain();
+            TransactionalEditingDomain domain = getEditingDomain();
 
             if (domain != null) {
                 undoContext = new EditingDomainUndoContext(domain);
@@ -953,11 +972,11 @@ public abstract class DiagramEditor
     }
 
 	/**
-     * go to a specific marker
+	 * go to a specific marker
      * 
      * @param marker
      *            marker to use
-     */
+	 */
 	public final void gotoMarker(IMarker marker) {
 		MarkerNavigationService.getInstance().gotoMarker(this, marker);
 	}
@@ -1190,7 +1209,7 @@ public abstract class DiagramEditor
 			DiagramRuler verticalRuler = ((DiagramRootEditPart) getRootEditPart()).getVerticalRuler();
 			verticalRuler.setGuideStyle(guideStyle);
 			verticalRuler.setUnit(rulerUnits);
-			DiagramRulerProvider vertProvider = new DiagramRulerProvider((TransactionalEditingDomain) getEditingDomain(),
+			DiagramRulerProvider vertProvider = new DiagramRulerProvider(getEditingDomain(),
 				verticalRuler, root.getMapMode());
 			vertProvider.init();
 			getDiagramGraphicalViewer().setProperty(
@@ -1200,7 +1219,7 @@ public abstract class DiagramEditor
 			DiagramRuler horizontalRuler = ((DiagramRootEditPart) getRootEditPart()).getHorizontalRuler();
 			horizontalRuler.setGuideStyle(guideStyle);
 			horizontalRuler.setUnit(rulerUnits);
-			DiagramRulerProvider horzProvider = new DiagramRulerProvider((TransactionalEditingDomain) getEditingDomain(),
+			DiagramRulerProvider horzProvider = new DiagramRulerProvider(getEditingDomain(),
 				horizontalRuler, root.getMapMode());
 			horzProvider.init();
 			getDiagramGraphicalViewer().setProperty(
@@ -1248,37 +1267,45 @@ public abstract class DiagramEditor
 	 * @return a list of <code>EObject</code>
 	 */
 	protected List getElements(final ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 
-			return (List) MEditingDomainGetter.getMEditingDomain(
-				((IStructuredSelection) selection).toList()).runAsRead(
-				new MRunnable() {
+			try {
+				return (List) TransactionUtil.getEditingDomain(
+					((IAdaptable) ((IStructuredSelection) selection).toList()
+						.get(0)).getAdapter(View.class)).runExclusive(
+					new RunnableWithResult.Impl() {
 
-					public Object run() {
-						List retval = new ArrayList();
-						if (selection instanceof IStructuredSelection) {
-							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+						public void run() {
+							List retval = new ArrayList();
+							if (selection instanceof IStructuredSelection) {
+								IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
-							for (Iterator i = structuredSelection.iterator(); i
-								.hasNext();) {
-								Object next = i.next();
+								for (Iterator i = structuredSelection.iterator(); i
+									.hasNext();) {
+									Object next = i.next();
 
-								View view = (View) ((IAdaptable) next)
-									.getAdapter(View.class);
-								if (view != null) {
-									EObject eObject = ViewUtil
-										.resolveSemanticElement(view);
-									if (eObject != null) {
-										retval.add(eObject);
-									} else {
-										retval.add(view);
+									View view = (View) ((IAdaptable) next)
+										.getAdapter(View.class);
+									if (view != null) {
+										EObject eObject = ViewUtil
+											.resolveSemanticElement(view);
+										if (eObject != null) {
+											retval.add(eObject);
+										} else {
+											retval.add(view);
+										}
 									}
 								}
 							}
+							setResult(retval);
 						}
-						return retval;
-					}
-				});
+					});
+			} catch (InterruptedException e) {
+				Trace.catching(DiagramUIPlugin.getInstance(),
+					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"createEditPart", e); //$NON-NLS-1$
+				return Collections.EMPTY_LIST;
+			}
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -1307,5 +1334,4 @@ public abstract class DiagramEditor
 	protected PreferencesHint getPreferencesHint() {
 		return new PreferencesHint(getEditorSite().getId());
 	};
-   
 }

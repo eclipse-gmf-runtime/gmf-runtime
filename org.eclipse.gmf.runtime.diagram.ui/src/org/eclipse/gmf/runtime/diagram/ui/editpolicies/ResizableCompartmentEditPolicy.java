@@ -19,12 +19,13 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
@@ -158,6 +159,11 @@ public class ResizableCompartmentEditPolicy
 	private EditPartListener parentListener;
 
 	private NotificationListener propertyListener;
+	
+	/**
+	 * Cache the diagram event broker after it is retrieved.
+	 */
+	private DiagramEventBroker diagramEventBroker;
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#addSelectionListener()
@@ -188,7 +194,7 @@ public class ResizableCompartmentEditPolicy
 					setSelectedState();
 			}
 		};
-		DiagramEventBroker.getInstance().addNotificationListener(
+		getDiagramEventBroker().addNotificationListener(
 			getGraphicalEditPart().getNotationView(), propertyListener);
 	}
 
@@ -196,7 +202,7 @@ public class ResizableCompartmentEditPolicy
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
 	protected void removeSelectionListener() {
-		DiagramEventBroker.getInstance().removeNotificationListener(
+		getDiagramEventBroker().removeNotificationListener(
 			getGraphicalEditPart().getNotationView(), propertyListener);
 		getHost().removeEditPartListener(hostListener);
 		getParentGraphicEditPart().removeEditPartListener(parentListener);
@@ -281,5 +287,13 @@ public class ResizableCompartmentEditPolicy
 			req.setMoveDelta(new Point(-delta.width, -delta.height));
 		return req;
 	}
-
+	
+    private DiagramEventBroker getDiagramEventBroker() {
+        TransactionalEditingDomain theEditingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        if (theEditingDomain != null) {
+            return DiagramEventBroker.getInstance(theEditingDomain);
+        }
+        return null;
+    }
 }

@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
 import org.eclipse.gmf.runtime.notation.JumpLinkType;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -114,7 +114,7 @@ public class ConnectionAppearancePropertySection
 			commands.add(createCommand(szCmd, res, new Runnable() {
 
 				public void run() {
-					ENamedElement element = MetaModelUtil.getElement(szID);
+					ENamedElement element = PackageUtil.getElement(szID);
 					if (element instanceof EStructuralFeature)
 						ep.setStructuralFeatureValue((EStructuralFeature)element, val);
 				}
@@ -345,7 +345,7 @@ public class ConnectionAppearancePropertySection
 
 				public void run() {
 					if (propertyId instanceof String){
-						ENamedElement element = MetaModelUtil.getElement((String)propertyId);
+						ENamedElement element = PackageUtil.getElement((String)propertyId);
 						if (element instanceof EStructuralFeature)
 							ep.setStructuralFeatureValue((EStructuralFeature)element, button.getData());
 					}

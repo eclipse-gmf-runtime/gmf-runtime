@@ -11,10 +11,8 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal;
 
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLMetaModelManager;
+import org.eclipse.gmf.runtime.emf.core.internal.util.MetamodelManager;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -30,7 +28,7 @@ public class DiagramPlugin extends AbstractUIPlugin {
 	 * The shared instance.
 	 */
 	private static DiagramPlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -63,9 +61,9 @@ public class DiagramPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context)
 		throws Exception {
 		super.start(context);
-		
-		MSLAdapterFactoryManager.register(new NotationItemProviderAdapterFactory());
-		MSLMetaModelManager.register(NotationPackage.eINSTANCE, null);
+
+		MetamodelManager.register(NotationPackage.eINSTANCE, null);
 	}
+
 
 }

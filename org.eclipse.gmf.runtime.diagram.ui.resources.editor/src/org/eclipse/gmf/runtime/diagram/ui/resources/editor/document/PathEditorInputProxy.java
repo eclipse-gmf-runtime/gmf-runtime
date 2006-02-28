@@ -12,9 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.ui.IPathEditorInput;
-
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
 /**
@@ -28,7 +27,7 @@ public class PathEditorInputProxy extends EditorInputProxy
 	 * @param input IEditorInput
 	 * @param domain EditingDomain
 	 */
-	public PathEditorInputProxy(IPathEditorInput input, MEditingDomain domain) {
+	public PathEditorInputProxy(IPathEditorInput input, TransactionalEditingDomain domain) {
 		super(input, domain);
 	}
 	

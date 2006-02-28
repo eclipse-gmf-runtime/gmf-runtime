@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
@@ -31,7 +32,6 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -90,7 +90,7 @@ public class DeferredLayoutCommand
 
 		super(editingDomain,
             DiagramUIMessages.Command_Deferred_Layout, null);
-        if (commandLayoutType != null) {
+		if (commandLayoutType != null) {
 			this.layoutType = commandLayoutType;
 		} else {
 			this.layoutType = LayoutType.DEFAULT;
@@ -103,7 +103,7 @@ public class DeferredLayoutCommand
 		if (containerEP != null) {
 			View view = (View)containerEP.getModel();
 			if (view != null) {
-				IFile f = EObjectUtil.getWorkspaceFile(view);
+				IFile f = WorkspaceSynchronizer.getFile(view.eResource());
 				return f != null ? Collections.singletonList(f)
 					: Collections.EMPTY_LIST;
 			}

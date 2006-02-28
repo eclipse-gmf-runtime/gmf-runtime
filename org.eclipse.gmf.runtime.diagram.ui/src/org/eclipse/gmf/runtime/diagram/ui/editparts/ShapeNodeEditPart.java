@@ -17,18 +17,22 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionHandleEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterCompartmentItemsEditPolicy;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
@@ -101,15 +105,26 @@ public abstract class ShapeNodeEditPart
 	public ConnectionAnchor getSourceConnectionAnchor(
 			ConnectionEditPart connEditPart) {
 		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+		String t = ""; //$NON-NLS-1$
+		try {
+			t = (String) getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
 
-			public Object run() {
-				Anchor a = connection.getEdge().getSourceAnchor();
-				if (a instanceof IdentityAnchor)
-					return ((IdentityAnchor) a).getId();
-				return ""; //$NON-NLS-1$
-			}
-		});
+				public void run() {
+					Anchor a = connection.getEdge().getSourceAnchor();
+					if (a instanceof IdentityAnchor)
+						setResult(((IdentityAnchor) a).getId());
+					setResult(""); //$NON-NLS-1$
+				}
+			});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getSourceConnectionAnchor", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getSourceConnectionAnchor", e); //$NON-NLS-1$
+		}
 		return getNodeFigure().getConnectionAnchor(t);
 	}
 
@@ -134,15 +149,28 @@ public abstract class ShapeNodeEditPart
 	public ConnectionAnchor getTargetConnectionAnchor(
 			ConnectionEditPart connEditPart) {
 		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
 
-			public Object run() {
-				Anchor a = connection.getEdge().getTargetAnchor();
-				if (a instanceof IdentityAnchor)
-					return ((IdentityAnchor) a).getId();
-				return ""; //$NON-NLS-1$
-			}
-		});
+		String t = ""; //$NON-NLS-1$
+		try {
+			t = (String) getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
+
+				public void run() {
+					Anchor a = connection.getEdge().getTargetAnchor();
+					if (a instanceof IdentityAnchor)
+						setResult(((IdentityAnchor) a).getId());
+					setResult(""); //$NON-NLS-1$
+				}
+			});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getTargetConnectionAnchor", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getTargetConnectionAnchor", e); //$NON-NLS-1$
+		}
+
 		return getNodeFigure().getConnectionAnchor(t);
 	}
 

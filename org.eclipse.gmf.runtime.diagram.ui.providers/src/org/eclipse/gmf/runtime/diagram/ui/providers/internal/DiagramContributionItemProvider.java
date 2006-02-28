@@ -16,7 +16,6 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
-import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ActionRegistry;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
@@ -71,8 +70,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.actions.OpenAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersMessages;
-import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectContainmentUtil;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
@@ -283,10 +280,6 @@ public class DiagramContributionItemProvider
 		if (actionId.equals(ActionIds.ACTION_FONT_DIALOG))
 			return new FontDialogAction(workbenchPage);
 		if (actionId.equals(ActionIds.ACTION_DELETE_FROM_MODEL)){
-			Object theObj = getSelectedObject(partDescriptor);
-			if (!EObjectContainmentUtil.hasMObjectType(theObj, MObjectType.MODELING)){
-				return null;
-			}
 			return new DeleteFromModelAction(workbenchPage);
 		}	
 		if (actionId.equals(ActionIds.ACTION_DELETE_FROM_DIAGRAM)){	
@@ -351,23 +344,5 @@ public class DiagramContributionItemProvider
 
 		return super.createAction(actionId, partDescriptor);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider#getActionFromRegistry(java.lang.String, org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor, org.eclipse.gmf.runtime.common.ui.util.ActionRegistry)
-	 */
-	protected IAction getActionFromRegistry(String actionId, IWorkbenchPartDescriptor partDescriptor, ActionRegistry registry){
 		
-		//TODO:
-		//Added in order to have the delete from model not show up for visualizer objects.
-		//Once contribution item service allows for static method calls in xml, this can
-		//be removed.
-		if (actionId.equals(ActionIds.ACTION_DELETE_FROM_MODEL)){
-			Object theObj = getSelectedObject(partDescriptor);
-			if (!EObjectContainmentUtil.hasMObjectType(theObj, MObjectType.MODELING)){
-				return null;
-			}
-		}		
-		return super.getActionFromRegistry(actionId, partDescriptor, registry);
-	}
-	
 }

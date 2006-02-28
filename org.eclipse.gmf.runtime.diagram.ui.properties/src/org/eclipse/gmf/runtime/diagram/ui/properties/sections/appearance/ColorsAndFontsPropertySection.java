@@ -28,8 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIProp
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
@@ -403,9 +402,9 @@ public class ColorsAndFontsPropertySection
 						.getModel()).eResource(), new Runnable() {
 
 						public void run() {
-							ENamedElement element = MetaModelUtil.getElement(propertyId);
+							ENamedElement element = PackageUtil.getElement(propertyId);
 							if (element instanceof EStructuralFeature)
-								ep.setStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(propertyId), FigureUtilities
+								ep.setStructuralFeatureValue((EStructuralFeature)PackageUtil.getElement(propertyId), FigureUtilities
 									.RGBToInteger(color));
 						}
 					}));
@@ -544,9 +543,9 @@ public class ColorsAndFontsPropertySection
 				lineColor).createImage();
 		lineColorButton.setImage(overlyedImage);
 
-		executeAsReadAction(new MRunnable() {
+		executeAsReadAction(new Runnable() {
 
-			public Object run() {
+			public void run() {
 
 				IGraphicalEditPart ep = getSingleInput();
 				if (ep != null) {
@@ -572,8 +571,6 @@ public class ColorsAndFontsPropertySection
 						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFontStyle_Italic()))
 						.booleanValue());
 				}
-
-				return null;
 			}
 		});
 		}
@@ -622,9 +619,9 @@ public class ColorsAndFontsPropertySection
 	 */
 	protected void updateColorCache() {
 
-		executeAsReadAction(new MRunnable() {
+		executeAsReadAction(new Runnable() {
 
-			public Object run() {
+			public void run() {
 
 				IGraphicalEditPart ep = getSingleInput();
 				if (ep != null) {
@@ -633,8 +630,6 @@ public class ColorsAndFontsPropertySection
 					lineColor = FigureUtilities.integerToRGB((Integer) ep
 						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getLineStyle_LineColor()));
 				}
-
-				return null;
 			}
 		});
 

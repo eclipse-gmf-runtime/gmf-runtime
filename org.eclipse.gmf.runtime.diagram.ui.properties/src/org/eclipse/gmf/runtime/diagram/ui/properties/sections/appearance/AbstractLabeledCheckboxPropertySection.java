@@ -21,7 +21,7 @@ import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -70,13 +70,13 @@ public abstract class AbstractLabeledCheckboxPropertySection
 					// Update display from model
 					if (getSingleInput() instanceof GraphicalEditPart) {
 						GraphicalEditPart ep = (GraphicalEditPart) getSingleInput();
-						ENamedElement element = MetaModelUtil.getElement(getID());
+						ENamedElement element = PackageUtil.getElement(getID());
 						if (element instanceof EStructuralFeature){
 							checkbox.setSelection(((Boolean)ep
 								.getStructuralFeatureValue((EStructuralFeature)element)).booleanValue());
 						}
 					} else if (getSingleInput() instanceof ConnectionNodeEditPart) {
-						ENamedElement element = MetaModelUtil.getElement(getID());
+						ENamedElement element = PackageUtil.getElement(getID());
 						ConnectionNodeEditPart ep = (ConnectionNodeEditPart) getSingleInput();
 						if (element instanceof EStructuralFeature){
 							checkbox.setSelection(((Boolean) ep
@@ -134,13 +134,13 @@ public abstract class AbstractLabeledCheckboxPropertySection
 							public void run() {
 								if (aep instanceof GraphicalEditPart) {
 									GraphicalEditPart ep = (GraphicalEditPart) aep;
-									ENamedElement element = MetaModelUtil.getElement(getID());
+									ENamedElement element = PackageUtil.getElement(getID());
 									if (element instanceof EStructuralFeature)
 										ep.setStructuralFeatureValue((EStructuralFeature)element, Boolean.valueOf(
 											checkbox.getSelection()));
 								} else if (aep instanceof ConnectionNodeEditPart) {
 									ConnectionNodeEditPart ep = (ConnectionNodeEditPart) aep;
-									ENamedElement element = MetaModelUtil.getElement(getID());
+									ENamedElement element = PackageUtil.getElement(getID());
 									if (element instanceof EStructuralFeature)
 										ep.setStructuralFeatureValue((EStructuralFeature)element, Boolean.valueOf(
 											checkbox.getSelection()));

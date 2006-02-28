@@ -13,19 +13,20 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
 /**
  * FileEditorInput Proxy.
  * 
  * @author mgoyal
+ *
  *
  */
 public class FileEditorInputProxy extends StorageEditorInputProxy
@@ -34,7 +35,7 @@ public class FileEditorInputProxy extends StorageEditorInputProxy
 	 * @param proxied
 	 * @param domain
 	 */
-	public FileEditorInputProxy(IFileEditorInput proxied, MEditingDomain domain) {
+	public FileEditorInputProxy(IFileEditorInput proxied, TransactionalEditingDomain domain) {
 		super(proxied, domain);
 		assert proxied != null && domain != null;
 	}
@@ -91,7 +92,7 @@ public class FileEditorInputProxy extends StorageEditorInputProxy
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement#getEditingDomain()
 	 */
-	public MEditingDomain getEditingDomain() {
+	public TransactionalEditingDomain getEditingDomain() {
 		return editingDomain;
 	}
 	

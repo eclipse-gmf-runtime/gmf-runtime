@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -30,10 +32,8 @@ import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateEdgeVie
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateNodeViewOperation;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewForKindOperation;
 import org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewOperation;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -301,7 +301,7 @@ public class AbstractViewProvider
 			return null;
 		EObject eObject = (EObject) semanticAdapter.getAdapter(EObject.class);
 		if (eObject != null)
-			return ProxyUtil.getProxyClass(eObject);
+			return EMFCoreUtil.getProxyClass(eObject);
 		IElementType type = (IElementType) semanticAdapter
 			.getAdapter(IElementType.class);
 		if (type != null)
@@ -320,8 +320,7 @@ public class AbstractViewProvider
 			return null;
 		EObject eObject = (EObject) semanticAdapter.getAdapter(EObject.class);
 		if (eObject != null)
-			return ProxyUtil.resolve(MEditingDomainGetter
-				.getMEditingDomain(eObject), eObject);
+			return EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(eObject), eObject);
 		return null;
 	}
 
@@ -332,12 +331,12 @@ public class AbstractViewProvider
 	 * @return EClass
 	 */
 	protected EObject getSemanticElement(IAdaptable semanticAdapter,
-			MEditingDomain domain) {
+			TransactionalEditingDomain domain) {
 		if (semanticAdapter == null)
 			return null;
 		EObject eObject = (EObject) semanticAdapter.getAdapter(EObject.class);
 		if (eObject != null)
-			return ProxyUtil.resolve(domain, eObject);
+			return EMFCoreUtil.resolve(domain, eObject);
 		return null;
 	}
 

@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
@@ -71,16 +70,8 @@ public class DiagramUIPlugin
 	public void start(BundleContext context)
 	throws Exception {
 		super.start(context);
-
-		DiagramEventBroker.getInstance().startListening();
 		
 		initializeDefaultDiagramPreferenceStore();
-	}
-
-	public void stop(BundleContext context)
-		throws Exception {
-		DiagramEventBroker.getInstance().stopListening();
-		super.stop(context);
 	}
 
 	/**

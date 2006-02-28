@@ -23,6 +23,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.Disposable;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -44,10 +46,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramState;
@@ -185,15 +184,23 @@ public abstract class AbstractTestBase extends TestCase {
 
 	protected DiagramState getDiagramState() {
 
-		DiagramState returnState = (DiagramState) OperationUtil.runAsRead( new MRunnable() {
-			public Object run() {
+		try {
+			return (DiagramState) TransactionUtil
+				.getEditingDomain(getDiagram()).runExclusive(
+					new RunnableWithResult.Impl() {
 
-				return new DiagramState(getDiagramEditPart());
+					public void run() {
 
-			}
-		});
+						setResult(new DiagramState(getDiagramEditPart()));
 
-		return returnState;
+					}
+				});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
+
+		return null;
 	}
 
 	/**
@@ -232,12 +239,17 @@ public abstract class AbstractTestBase extends TestCase {
 		getCommandStack().execute(command);
 		flushEventQueue();
 
-		MEditingDomain.INSTANCE.runAsRead( new MRunnable() {
-			public Object run() {
-				callback.onCommandExecution();
-				return null;
-			}
-		});
+		try {
+			TransactionUtil.getEditingDomain(getDiagram()).runExclusive(
+				new Runnable() {
+				public void run() {
+					callback.onCommandExecution();
+				}
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
 		
 		DiagramState state2 = getDiagramState();
 
@@ -377,7 +389,7 @@ public abstract class AbstractTestBase extends TestCase {
 
 		testCommand(cmd, new ITestCommandCallback() {
 			public void onCommandExecution() {
-					assertEquals( expectedValue, ep.getStructuralFeatureValue((EStructuralFeature)MetaModelUtil.getElement(property)) );
+					assertEquals( expectedValue, ep.getStructuralFeatureValue((EStructuralFeature)PackageUtil.getElement(property)) );
 			}
 		});
 	}

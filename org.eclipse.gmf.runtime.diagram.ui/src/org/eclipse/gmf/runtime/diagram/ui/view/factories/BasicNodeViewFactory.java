@@ -11,13 +11,27 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.view.factories; 
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
@@ -66,19 +80,43 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		
 		node.setType(semanticHint);
 		
-	    // decorate view assumes that the view had been inserted already, so 
+	    // decorate view assumes that the view had been inserted already, so
 		// we had to call insert child before calling decorate view
-		ViewUtil.insertChildView(containerView,node,index, persisted);
-		int options = MRunOption.UNCHECKED | MRunOption.SILENT;
+		ViewUtil.insertChildView(containerView, node, index, persisted);
 		final boolean childPersisted = persisted;
-		MEditingDomainGetter.getMEditingDomain(containerView).runWithOptions(new MRunnable() {
-			public Object run() {
+
+		Map options = new HashMap();
+		options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
+		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
+
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			TransactionUtil.getEditingDomain(node), StringStatics.BLANK,
+			options) {
+
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+
 				// decorate view had to run as a silent operation other wise
-				//it will generate too many events 
-				decorateView(containerView,node, semanticAdapter, semanticHint, index, childPersisted);
-				return null;
+				// it will generate too many events
+				decorateView(containerView, node, semanticAdapter,
+					semanticHint, index, childPersisted);
+
+				return Status.OK_STATUS;
 			}
-		},options);
+		};
+		try {
+			operation.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"createView", e); //$NON-NLS-1$
+			Log
+				.warning(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"createView", e); //$NON-NLS-1$
+		}
 		return node;
 	}
 	

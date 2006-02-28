@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 
@@ -54,18 +54,13 @@ public final class DiagramDocument
 	/**
 	 * The editing domain for this document.
 	 */
-	private MEditingDomain fDomain = null;
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument#getEditingDomain()
-	 */
-	public MEditingDomain getEditingDomain() {
+	private TransactionalEditingDomain fDomain = null;
+	
+	public TransactionalEditingDomain getEditingDomain() {
 		return fDomain;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument#setEditingDomain(org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain)
-	 */
-	public void setEditingDomain(MEditingDomain domain) {
+	public void setEditingDomain(TransactionalEditingDomain domain) {
 		fDomain = domain;
 	}
 }

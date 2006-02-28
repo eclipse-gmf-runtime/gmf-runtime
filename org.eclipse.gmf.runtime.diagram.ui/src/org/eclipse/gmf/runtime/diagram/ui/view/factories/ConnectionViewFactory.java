@@ -13,17 +13,30 @@
 package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.core.view.factories.ViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunOption;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Bendpoints;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
@@ -76,17 +89,40 @@ public class ConnectionViewFactory
 		// decorate view assumes the view had been inserted already, so 
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView,edge, index, persisted);
-		int options = MRunOption.UNCHECKED | MRunOption.SILENT;
-		MEditingDomainGetter.getMEditingDomain(containerView).runWithOptions(new MRunnable() {
+		
+		Map options = new HashMap();
+		options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
+		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
 
-			public Object run() {
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			TransactionUtil.getEditingDomain(edge), StringStatics.BLANK,
+			options) {
+
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+
 				//	decorate view had to run as a silent operation other wise
 				//	it will generate too many events
 				decorateView(containerView, edge, semanticAdapter,
 					semanticHint, index, true);
-				return null;
+
+				return Status.OK_STATUS;
 			}
-		},options);
+		};
+		try {
+			operation.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"createView", e); //$NON-NLS-1$
+			Log
+				.warning(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"createView", e); //$NON-NLS-1$
+		}
+
 		return edge;
 	}
 	

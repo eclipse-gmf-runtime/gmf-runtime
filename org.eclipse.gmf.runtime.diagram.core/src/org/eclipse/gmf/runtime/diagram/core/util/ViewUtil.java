@@ -15,28 +15,31 @@ package org.eclipse.gmf.runtime.diagram.core.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramDebugOptions;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramStatusCodes;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistElementCommand;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
@@ -71,7 +74,7 @@ public class ViewUtil{
 		}
 		return list;
 	}
-	
+
 	/** 
 	 * move the supplied view from, and all of its parents from the transient 
 	 * collections to the persisted collections. This Api will modify the model
@@ -86,15 +89,18 @@ public class ViewUtil{
 	 */
 	public static void persistElement(View view) {
 		assert null != view: "null view in ViewUtil.persistElement";//$NON-NLS-1$
-		MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain(view);
+		
+		TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(view);
         
 		if (!view.isMutable()) {
 			// get first view needs to get persisted
 			View viewToPersist = getViewToPersist(view);
 			if (viewToPersist!=null){
 				// now create a command to persisted the view and exectue it
+				Map options = Collections.singletonMap(	Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+
 				PersistElementCommand pvc = 
-					new PersistElementCommand(editingDomain, viewToPersist);
+					new PersistElementCommand(editingDomain, viewToPersist, options);
                 
                 try {
                     pvc.execute( new NullProgressMonitor(), null );
@@ -108,13 +114,12 @@ public class ViewUtil{
                             .getLocalizedMessage(), e);
                 }
                 
-				editingDomain.setCanRedoCurrentInterval( false );
 				CommandResult result = pvc.getCommandResult();
 				view = (View)result.getReturnValue();
 			}
 		}
 	}
-
+	
 	/**
 	 * helper method used to get the first view needs to be persisted,
 	 * starting from the passed view, it could return the passed view
@@ -169,7 +174,7 @@ public class ViewUtil{
 			View child = (View)children.get(i);
 			destroy(child);
 		}
-		EObjectUtil.destroy(view);
+		EMFCoreUtil.destroy(view);
 	}
 	
 	/**
@@ -295,7 +300,7 @@ public class ViewUtil{
 	 */
 	public static boolean isPropertySupported(View view,Object id) {
 		if(id instanceof String){
-			EStructuralFeature feature = (EStructuralFeature) MetaModelUtil.getElement((String)id);
+			EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
 			if (feature != null) {
 				return isPropertySupported(view,feature, feature.getEContainingClass());
 			}
@@ -347,7 +352,7 @@ public class ViewUtil{
 	 */
 	static public final Object getPropertyValue(View view, Object id) {
 		if(id instanceof String){
-			EStructuralFeature feature = (EStructuralFeature) MetaModelUtil.getElement((String)id);
+			EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
 			if (feature != null) {
 				return ViewUtil.getPropertyValue(view,feature, feature.getEContainingClass());
 			}
@@ -404,7 +409,7 @@ public class ViewUtil{
 	 */
 	public static void setPropertyValue(View view,Object id, Object value) {
 		if(id instanceof String){
-			EStructuralFeature feature = (EStructuralFeature) MetaModelUtil.getElement((String)id);
+			EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
 			if (feature != null) {
 				ViewUtil.setPropertyValue(view,feature, feature.getEContainingClass(), value);
 				return;
@@ -469,7 +474,7 @@ public class ViewUtil{
 	public static EObject resolveSemanticElement(View view) {
 	    EObject element = view.getElement();
 	    if (element!=null && element.eIsProxy())
-	    	return ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain(view), element);
+	    	return EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(view), element);
 	    return element;
 	}
 	
@@ -482,7 +487,7 @@ public class ViewUtil{
 	public static EObject resolve(EObject object){
 		if (object!=null){
 			if (object.eIsProxy())
-				return ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain(object), object);
+				return EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(object), object);
 			else
 				return object;
 		}
@@ -497,7 +502,7 @@ public class ViewUtil{
 	 */
 	public static String getSemanticElementClassId(View view) {
 		EObject element = view.getElement();
-	    return element == null ? null : ProxyUtil.getProxyClassID(element);
+	    return element == null ? null : PackageUtil.getID(EMFCoreUtil.getProxyClass(element));
 	}
 	
 	/**
@@ -532,7 +537,7 @@ public class ViewUtil{
 	public static String getSemanticEClassName(View view){
 		EObject eObject = view.getElement();
 		if (eObject != null)
-			return ProxyUtil.getProxyClassID(eObject);
+			return PackageUtil.getID(EMFCoreUtil.getProxyClass(eObject));
 		return ""; //$NON-NLS-1$
 	}
 	
@@ -542,7 +547,13 @@ public class ViewUtil{
 	 * @return String the GUID of a view (constant)
 	 */
 	public static String getIdStr(View view) {
-		return EObjectUtil.getID( view );
+		String id = ((XMLResource) view.eResource()).getID(view);
+		if (id != null) {
+			return id;
+		}
+		
+		// Remain compatible with previous behavior.
+		return StringStatics.BLANK;
 	}
 	
 	/**
@@ -573,7 +584,7 @@ public class ViewUtil{
 	static public View getChildByIdStr(View view, String idStr) {
 		for(Iterator children = view.getChildren().iterator();children.hasNext();) {
 			View child = (View)children.next();
-			if ( idStr.equals( EObjectUtil.getID(child))) {
+			if ( idStr.equals( ((XMLResource) child.eResource()).getID(child))) {
 				return child;
 			}
 		}

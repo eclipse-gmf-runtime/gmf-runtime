@@ -16,16 +16,20 @@ import java.util.List;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.DropRequest;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -87,14 +91,26 @@ abstract public class ConnectionNodeEditPart
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
 		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead( new MRunnable() {
-			public Object run() {
-				Anchor a = connection.getEdge().getSourceAnchor();
-				if (a instanceof IdentityAnchor)
-					return ((IdentityAnchor) a).getId();
-				return ""; //$NON-NLS-1$
-			}
-		});
+		String t = ""; //$NON-NLS-1$
+		try {
+			t = (String) getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
+
+				public void run() {
+					Anchor a = connection.getEdge().getSourceAnchor();
+					if (a instanceof IdentityAnchor)
+						setResult(((IdentityAnchor) a).getId());
+					setResult(""); //$NON-NLS-1$
+				}
+			});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getSourceConnectionAnchor", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getSourceConnectionAnchor", e); //$NON-NLS-1$
+		}
 		return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
 	}
 
@@ -125,14 +141,26 @@ abstract public class ConnectionNodeEditPart
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
 		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-		String t = (String) MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead( new MRunnable() {
-			public Object run() {
-				Anchor a = connection.getEdge().getTargetAnchor();
-				if (a instanceof IdentityAnchor)
-					return ((IdentityAnchor) a).getId();
-				return ""; //$NON-NLS-1$
-			}
-		});
+		String t = ""; //$NON-NLS-1$
+		try {
+			t = (String) getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
+
+				public void run() {
+					Anchor a = connection.getEdge().getTargetAnchor();
+					if (a instanceof IdentityAnchor)
+						setResult(((IdentityAnchor) a).getId());
+					setResult(""); //$NON-NLS-1$
+				}
+			});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getTargetConnectionAnchor", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getTargetConnectionAnchor", e); //$NON-NLS-1$
+		}
 		return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
 	}
 	

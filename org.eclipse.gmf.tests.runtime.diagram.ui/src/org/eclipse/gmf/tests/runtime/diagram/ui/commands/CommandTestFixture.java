@@ -12,14 +12,18 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.commands;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.framework.DiagramTestCase;
@@ -52,30 +56,73 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 	protected IFile createDiagram()
 		throws Exception {
 
-		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			getEditingDomain(), "") { //$NON-NLS-1$
 
-			public Object run() {
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+				
 				Diagram diagram = ViewService.createDiagram(
 					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
 				diagramView = diagram;
                 setDiagram(diagram);
-				return null;
-			}
-		});
+			
+				return Status.OK_STATUS;
+			};
+		};
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation,
+					new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			assertFalse(false);
+		}
+//		MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
+//
+//			public Object run() {
+//				Diagram diagram = ViewService.createDiagram(
+//					PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND, PreferencesHint.USE_DEFAULTS);
+//				diagramView = diagram;
+//                setDiagram(diagram);
+//				return null;
+//			}
+//		});
 
 		return null;
 	}
 
 	protected View createView() {
 		final View []toCreate = new View[1];
-			MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
+		
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			getEditingDomain(), "") { //$NON-NLS-1$
 
-			public Object run() {
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+				
 				View view = ViewService.getInstance().createNode(null,diagramView,"Note",0,false, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
 				toCreate[0] = view;
-				return null;
-			}
-		});
+				
+				return Status.OK_STATUS;
+			};
+		};
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation,
+					new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			assertFalse(false);
+		}
+//			MEditingDomain.INSTANCE.runAsUnchecked(new MRunnable() {
+//
+//			public Object run() {
+//				View view = ViewService.getInstance().createNode(null,diagramView,"Note",0,false, PreferencesHint.USE_DEFAULTS); //$NON-NLS-1$
+//				toCreate[0] = view;
+//				return null;
+//			}
+//		});
 
 		return toCreate[0];
 	}
@@ -104,8 +151,5 @@ public abstract class CommandTestFixture extends DiagramTestCase {
 	protected Diagram getDiagram() {
 		return diagramView;
 	}
-    
-    public TransactionalEditingDomain getEditingDomain() {
-        return TransactionUtil.getEditingDomain(diagramView);
-    }
+
 }

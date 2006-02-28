@@ -12,6 +12,8 @@
 
 package org.eclipse.gmf.runtime.diagram.core.internal.commands;
 
+import java.util.Map;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -44,9 +46,22 @@ public class PersistElementCommand extends AbstractTransactionalCommand {
 	public PersistElementCommand(TransactionalEditingDomain editingDomain, View view) {
 		super(editingDomain, DiagramCoreMessages.AddCommand_Label,
             null);
-        _view = view;
+		_view = view;
 	}
 	
+	/**
+	 * Creates a new instance.
+	 * @param domain
+	 * @param label
+	 * @param options
+	 * @param affectedFiles
+	 */
+	public PersistElementCommand(TransactionalEditingDomain editingDomain, View view, Map options) {
+		super(editingDomain, DiagramCoreMessages.AddCommand_Label, options, 
+            null);
+		_view = view;
+	}
+
 	/**
 	 * Walks up the supplied element's container tree until a container is
 	 * found in the detached element map and then moves all of the detached

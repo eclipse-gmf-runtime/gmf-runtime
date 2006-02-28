@@ -21,26 +21,30 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
@@ -194,19 +198,28 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 				if (value instanceof String) {
 					final EObject element = resolveSemanticElement();
 
-					final IParserEditStatus isValid[] = { null };
 					final IParser theParser = getParser();
-					MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
-							public Object run() {
-								isValid[0] =
-								    theParser.isValidEditString(
-										new EObjectAdapter(element),
-										(String) value);
-								return null;
-							}
-						});
+					try {
+						IParserEditStatus isValid = (IParserEditStatus) getEditingDomain()
+							.runExclusive(new RunnableWithResult.Impl() {
 
-					return isValid[0].getCode() == ParserEditStatus.EDITABLE ? null : isValid[0].getMessage();
+									public void run() {
+										setResult(theParser.isValidEditString(
+											new EObjectAdapter(element),
+											(String) value));
+									}
+								});
+						return isValid.getCode() == ParserEditStatus.EDITABLE ? null
+							: isValid.getMessage();
+					} catch (InterruptedException e) {
+						Trace.catching(DiagramUIPlugin.getInstance(),
+							DiagramUIDebugOptions.EXCEPTIONS_CATCHING,
+							getClass(), "getEditTextValidator", e); //$NON-NLS-1$
+						Log.error(DiagramUIPlugin.getInstance(),
+							DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+							"getEditTextValidator", e); //$NON-NLS-1$
+					}
+
 				}
 
 				// shouldn't get here
@@ -341,8 +354,9 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 
 		final Request theRequest = request;
 
-		MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
-				public Object run() {
+		try {
+			getEditingDomain().runExclusive(new Runnable() {
+				public void run() {
 					if (isActive() && isEditable()) {
 
 						// IF the direct edit request has an initial character...
@@ -357,10 +371,17 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 							performDirectEdit();
 						}
 					}
-					
-					return null;
 				}
 			});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"performDirectEditRequest", e); //$NON-NLS-1$
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"performDirectEditRequest", e); //$NON-NLS-1$
+		}
+
 	}
 
 	protected void handleNotificationEvent(Notification event) {
@@ -439,7 +460,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
         setFont(fontData);
     }
 
-    protected void setFontColor(Color color) {
+	protected void setFontColor(Color color) {
 		getLabel().setForegroundColor(color);
 	}
 

@@ -32,5 +32,13 @@ public final class EditorStatusCodes {
 
 	public static final int OK = 0;
     public static final int ERROR = 1;
+    
+	/**
+	 * Status code indicating that an error occurred with a resource, such as
+	 * loading an image file.
+	 * Set to 5 to be consistent with CommonUIStatusCodes.
+	 */
+	public static final int RESOURCE_FAILURE = 5;
+
 
 }

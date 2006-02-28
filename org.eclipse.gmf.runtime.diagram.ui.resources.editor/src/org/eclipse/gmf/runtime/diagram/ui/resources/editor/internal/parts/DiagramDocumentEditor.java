@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -43,8 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProv
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
-import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -86,27 +85,14 @@ import org.osgi.framework.Bundle;
  */
 public class DiagramDocumentEditor
 	extends DiagramEditorWithFlyOutPalette implements IDocumentEditor, IReusableEditor {
-	private MEditingDomain fEditingDomain;
 	
 	/**
 	 * Constructs a diagram editor with optional flyout palette.
 	 * 
-	 * @param domain Editing Domain for the diagram.
-	 * @param hasFlyoutPalette creates a palette if true, else no palette
-	 */
-	public DiagramDocumentEditor(MEditingDomain domain, boolean hasFlyoutPalette) {
-		super(hasFlyoutPalette);
-		fEditingDomain = domain;
-        setUndoContext(new EditingDomainUndoContext(domain));
-	}
-
-	/**
-	 * Constructs a diagram editor with optional flyout palette.
-	 * This uses default editing domain.
 	 * @param hasFlyoutPalette creates a palette if true, else no palette
 	 */
 	public DiagramDocumentEditor(boolean hasFlyoutPalette) {
-		this(MEditingDomain.INSTANCE, hasFlyoutPalette);
+		super(hasFlyoutPalette);
 	}
 
 	/* (non-Javadoc)
@@ -428,8 +414,9 @@ public class DiagramDocumentEditor
 				throw new CoreException(s);
 			}
 
-			if(!(input instanceof MEditingDomainElement))
-				input = ((IDiagramDocumentProvider)provider).createInputWithEditingDomain(input, fEditingDomain);
+			if (!(input instanceof MEditingDomainElement)) {
+				input = ((IDiagramDocumentProvider)provider).createInputWithEditingDomain(input, createEditingDomain());
+			}
 
 			provider.connect(input);
 
@@ -1455,7 +1442,18 @@ public class DiagramDocumentEditor
 	}
     
     // Documentation copied from superclass
-    public EditingDomain getEditingDomain() {
-        return fEditingDomain;
+    public TransactionalEditingDomain getEditingDomain() {
+        return getEditorInput() instanceof MEditingDomainElement ? ((MEditingDomainElement)getEditorInput()).getEditingDomain() : super.getEditingDomain();
     }
+    
+	/**
+     * Clients may override this if they wish to re-use an existing editing
+     * domain for this editor. The default behavior is to create a new editing
+     * domain is created for each diagram that is opened.
+     * 
+     * @return the editing domain
+     */
+	protected TransactionalEditingDomain createEditingDomain() {
+		return GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+	}
 }

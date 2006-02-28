@@ -14,6 +14,11 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertyDescriptor;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.events.PaintEvent;
@@ -27,12 +32,6 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.properties.descriptors.NotationPropertyDescriptor;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author nbalaba
@@ -84,7 +83,7 @@ public abstract class AbstractNotationPropertiesSection
 
 			descriptors = propertySource.getPropertyDescriptors();
 			for (int j = 0; j < descriptors.length; j++) {
-				if (descriptors[j].getId() == MetaModelUtil
+				if (descriptors[j].getId() == PackageUtil
 					.getElement(propertyId.toString())) {
 					labelProvider = descriptors[j].getLabelProvider();
 					break;

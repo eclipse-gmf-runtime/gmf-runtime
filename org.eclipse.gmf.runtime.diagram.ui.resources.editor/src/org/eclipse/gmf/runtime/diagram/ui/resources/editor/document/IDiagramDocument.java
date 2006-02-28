@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 
@@ -32,12 +32,12 @@ public interface IDiagramDocument
 	/**
 	 * @return The editing domain for this diagram document
 	 */
-	MEditingDomain getEditingDomain();
+	TransactionalEditingDomain getEditingDomain();
 	
 	/**
 	 * Sets the EditingDomain for this document
 	 */
-	void setEditingDomain(MEditingDomain domain);
+	void setEditingDomain(TransactionalEditingDomain domain);
 	
 	/**
 	 * Detaches the attached <code>Diagram</code> from this document.

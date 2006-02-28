@@ -13,12 +13,11 @@ package org.eclipse.gmf.runtime.diagram.core.internal.services.view;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -162,10 +161,10 @@ public abstract class CreateViewOperation implements IOperation {
 			return null;
 		EObject eObject = (EObject) semanticAdapter.getAdapter(EObject.class);
 		if (eObject != null)
-			return ProxyUtil.getProxyClassID(eObject);
+			return PackageUtil.getID(EMFCoreUtil.getProxyClass(eObject));
 		IElementType type = (IElementType) semanticAdapter.getAdapter(IElementType.class);
 		if (type != null)
-			MetaModelUtil.getID(type.getEClass());
+			PackageUtil.getID(type.getEClass());
 		return null;
 	}
 

@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.ruler;
 
 import java.util.List;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
@@ -79,14 +80,20 @@ public class DiagramRuler {
 		}
 	}
 	
-	public void addNotificationListener(NotificationListener listener) {
-		DiagramEventBroker.getInstance().addNotificationListener(getGuideStyle(),listener);
-
+	public void addNotificationListener(
+			TransactionalEditingDomain editingDomain,
+			NotificationListener listener) {
+		
+		DiagramEventBroker.getInstance(editingDomain).addNotificationListener(
+			getGuideStyle(), listener);
 	}
 
-	public void removeNotificationListener(NotificationListener listener) {
-		DiagramEventBroker.getInstance().removeNotificationListener(getGuideStyle(),listener);
-
+	public void removeNotificationListener(
+			TransactionalEditingDomain editingDomain,
+			NotificationListener listener) {
+		
+		DiagramEventBroker.getInstance(editingDomain)
+			.removeNotificationListener(getGuideStyle(), listener);
 	}
 
 	

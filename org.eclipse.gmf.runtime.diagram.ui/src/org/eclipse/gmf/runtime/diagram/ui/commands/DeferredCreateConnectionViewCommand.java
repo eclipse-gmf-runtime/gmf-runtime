@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.commands.Command;
@@ -30,7 +31,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 
@@ -95,7 +95,7 @@ public class DeferredCreateConnectionViewCommand
 
 		super(editingDomain,
             "Deferred Create Connection View Command", null); //$NON-NLS-1$
-        this.element = element;
+		this.element = element;
 		this.sourceViewAdapter = sourceViewAdapter;
 		this.targetViewAdapter = targetViewAdapter;
 		this.viewer = viewer;
@@ -124,7 +124,7 @@ public class DeferredCreateConnectionViewCommand
 
 		super(editingDomain,
             "Deferred Create Connection View Command", null); //$NON-NLS-1$
-        this.semanticHint = semanticHint;
+		this.semanticHint = semanticHint;
 		this.sourceViewAdapter = sourceViewAdapter;
 		this.targetViewAdapter = targetViewAdapter;
 		this.viewer = viewer;
@@ -137,7 +137,7 @@ public class DeferredCreateConnectionViewCommand
 			if (editpart instanceof IGraphicalEditPart) {
 				View view = (View) ((IGraphicalEditPart) editpart).getModel();
 				if (view != null) {
-					IFile f = EObjectUtil.getWorkspaceFile(view);
+					IFile f = WorkspaceSynchronizer.getFile(view.eResource());
 					return f != null ? Collections.singletonList(f)
 						: Collections.EMPTY_LIST;
 				}

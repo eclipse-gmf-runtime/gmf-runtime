@@ -37,5 +37,11 @@ public final class LogicDiagramStatusCodes {
 	 * Status code indicating that an error occurred with a command.
 	 */
 	public static final int COMMAND_FAILURE = 4;
+
+	/**
+	 * Status code warning that an exception was ignored.
+	 * Set to 9 to be consistent with CommonUIStatusCodes.
+	 */
+	public static final int IGNORED_EXCEPTION_WARNING = 9;
 	
 }

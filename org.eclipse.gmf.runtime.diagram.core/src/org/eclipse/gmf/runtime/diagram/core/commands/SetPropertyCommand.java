@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
 
@@ -61,7 +61,7 @@ public class SetPropertyCommand extends AbstractTransactionalCommand {
 	/**
 	 * Creates a set property command with a default label based on property name
 	 * @param editingDomain the editing domain
-     * @param viewAdapter	the view adapter of the <code>View<code> that owns the property
+	 * @param viewAdapter	the view adapter of the <code>View<code> that owns the property
 	 * @param propertyId	the property Id of the property to set
 	 * @param propertyName  the property name 
 	 * @param newValue		the new value of the property
@@ -96,7 +96,7 @@ public class SetPropertyCommand extends AbstractTransactionalCommand {
         
 		View view = (View) viewAdapter.getAdapter(View.class);
 		if (view != null){
-			ENamedElement namedElement =  MetaModelUtil.getElement(propertyId);
+			ENamedElement namedElement =  PackageUtil.getElement(propertyId);
 			if (namedElement instanceof EStructuralFeature)
 				ViewUtil.setStructuralFeatureValue(view,(EStructuralFeature)namedElement, newValue);
 		}

@@ -18,16 +18,19 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DirectEditRequest;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConstrainedToolbarLayoutEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -110,11 +113,22 @@ public abstract class TopGraphicEditPart extends GraphicalEditPart implements IC
 			editPart =(EditPart) getViewer().getVisualPartMap().get(fig);
 		}
 		if (editPart == this) {
-			editPart= (EditPart)MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead( new MRunnable() {
-				public Object run() {
-					return getPrimaryChildEditPart();
-				}
-			});
+			try {
+				editPart = (EditPart) getEditingDomain().runExclusive(
+					new RunnableWithResult.Impl() {
+
+						public void run() {
+							setResult(getPrimaryChildEditPart());
+						}
+					});
+			} catch (InterruptedException e) {
+				Trace.catching(DiagramUIPlugin.getInstance(),
+					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"performDirectEditRequest", e); //$NON-NLS-1$
+				Log.error(DiagramUIPlugin.getInstance(),
+					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+					"performDirectEditRequest", e); //$NON-NLS-1$
+			}
 			if (editPart != null){
 				editPart.performRequest(request);
 			}

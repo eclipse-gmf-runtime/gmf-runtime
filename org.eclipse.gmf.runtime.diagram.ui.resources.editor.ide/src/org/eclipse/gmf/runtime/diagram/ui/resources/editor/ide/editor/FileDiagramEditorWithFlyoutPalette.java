@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor;
 
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
 /**
@@ -23,20 +22,9 @@ public class FileDiagramEditorWithFlyoutPalette
 	extends FileDiagramEditor {
 
 	/**
-	 * Constructs a FileDiagramEditorWithFlyoutPalette and default
-	 * editing domain.
+	 * Constructs a FileDiagramEditor with Flyout Palette.
 	 */
 	public FileDiagramEditorWithFlyoutPalette() {
-		this(MEditingDomain.INSTANCE);
-	}
-
-	/**
-	 * Constructs a FileDiagramEditor with Flyout Palette and any given
-	 * editing domain.
-	 * 
-	 * @param domain EditingDomain to be used.
-	 */
-	public FileDiagramEditorWithFlyoutPalette(MEditingDomain domain) {
-		super(domain, true);
+		super(true);
 	}
 }

@@ -13,10 +13,10 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.HashUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.EditorInputProxy;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.ui.IStorageEditorInput;
 
 
@@ -31,7 +31,7 @@ public class StorageEditorInputProxy extends EditorInputProxy
 	 * @param input IEditorInput
 	 * @param domain EditingDomain
 	 */
-	public StorageEditorInputProxy(IStorageEditorInput input, MEditingDomain domain) {
+	public StorageEditorInputProxy(IStorageEditorInput input, TransactionalEditingDomain domain) {
 		super(input, domain);
 	}
 	

@@ -17,12 +17,11 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
-import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFixture;
+import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
 
 
 /**
@@ -35,8 +34,8 @@ public class DiagramTestFixture extends AbstractPresentationTestFixture {
 
 	protected void createDiagram()
 		throws Exception {
-		setDiagram(DiagramCreator.createSimpleDiagram(getPreferencesHint()));
-
+		setDiagram(DiagramCreator.createEmptyDiagram(getPreferencesHint(),
+			getEditingDomain()));
 	}
 
 	
@@ -48,6 +47,10 @@ public class DiagramTestFixture extends AbstractPresentationTestFixture {
 	
 	protected void createShapesAndConnectors()
 		throws Exception {
+		
+		DiagramCreator.createNodes(getDiagram(), getPreferencesHint(),
+			getEditingDomain());
+			
 		EList children = getDiagram().getChildren();
 		Node node = (Node)children.get(0);
 		EList edges = node.getSourceEdges();

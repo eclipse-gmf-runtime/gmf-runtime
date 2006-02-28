@@ -15,6 +15,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
@@ -27,8 +31,8 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
@@ -41,7 +45,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TreeEditPart
 	extends AbstractTreeEditPart
-	implements NotificationListener {
+	implements NotificationListener, IEditingDomainProvider {
 
 	/** the element parser */
 	private IParser parser;
@@ -49,6 +53,11 @@ public class TreeEditPart
 	/** the element parser */
 	private IAdaptable referenceAdapter;
 	
+    /**
+     * Cache the editing domain after it is retrieved.
+     */
+    private TransactionalEditingDomain editingDomain;
+
 	/**
 	 * @param model
 	 */
@@ -71,16 +80,16 @@ public class TreeEditPart
 	public void activate() {
 		super.activate();
 
-		DiagramEventBroker.getInstance().addNotificationListener((View)getModel(),this);
-		DiagramEventBroker.getInstance().addNotificationListener(getSemanticElement(),this);
+		getDiagramEventBroker().addNotificationListener((View)getModel(),this);
+		getDiagramEventBroker().addNotificationListener(getSemanticElement(),this);
 	}
 
 	/**
 	 * @see org.eclipse.gef.EditPart#deactivate()
 	 */
 	public void deactivate() {
-		DiagramEventBroker.getInstance().removeNotificationListener((View)getModel(),this);
-		DiagramEventBroker.getInstance().removeNotificationListener(getSemanticElement(),this);
+		getDiagramEventBroker().removeNotificationListener((View)getModel(),this);
+		getDiagramEventBroker().removeNotificationListener(getSemanticElement(),this);
 		super.deactivate();
 	}
 
@@ -122,10 +131,13 @@ public class TreeEditPart
 	 */
 	protected String getText() {
 		if (getParser() != null)
-			return getParser().getPrintString(
-				referenceAdapter,
+			return getParser().getPrintString(referenceAdapter,
 				ParserOptions.NONE.intValue());
-		String name = ProxyUtil.getProxyName(((View)getModel()).getElement());
+		EObject eObject = ((View) getModel()).getElement();
+		if (eObject == null) {
+			return ""; //$NON-NLS-1$
+		}
+		String name = EMFCoreUtil.getName(eObject);
 		return name == null ? "" : name; //$NON-NLS-1$
 	}
 
@@ -213,4 +225,29 @@ public class TreeEditPart
 
 		return super.getAdapter(key);
 	}
+	
+    /**
+     * Derives my editing domain from my diagram element. Subclasses may
+     * override.
+     */
+    public EditingDomain getEditingDomain() {
+        if (editingDomain == null) {
+            editingDomain = TransactionUtil.getEditingDomain(getModel());
+        }
+        return editingDomain;
+    }
+    
+    /**
+     * Gets the diagram event broker from the editing domain.
+     * 
+     * @return the diagram event broker
+     */
+    private DiagramEventBroker getDiagramEventBroker() {
+        EditingDomain theEditingDomain = getEditingDomain();
+        if (theEditingDomain instanceof TransactionalEditingDomain) {
+            return DiagramEventBroker
+                .getInstance((TransactionalEditingDomain) theEditingDomain);
+        }
+        return null;
+    }
 }

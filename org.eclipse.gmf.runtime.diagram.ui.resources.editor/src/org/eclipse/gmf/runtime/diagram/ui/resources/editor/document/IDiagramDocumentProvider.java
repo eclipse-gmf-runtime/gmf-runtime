@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
 import org.eclipse.ui.IEditorInput;
 
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 
 
@@ -34,5 +34,5 @@ public interface IDiagramDocumentProvider {
 	 */
 	IDiagramDocument getDiagramDocument(Object element);
 	
-	IEditorInput createInputWithEditingDomain(IEditorInput editorInput, MEditingDomain domain);
+	IEditorInput createInputWithEditingDomain(IEditorInput editorInput, TransactionalEditingDomain domain);
 }

@@ -36,7 +36,7 @@ public class ZoomTool
 	static private final int ZOOM_PAN_MODE = 3;
 
 	static final Cursor zoom_out_cursor = new Cursor(null,
-		DiagramUIPluginImages.DESC_ZOOM_OUT.getImageData(), 0, 0); //$NON-NLS-1$
+		DiagramUIPluginImages.DESC_ZOOM_OUT.getImageData(), 0, 0); 
 
 	static final Cursor zoom_in_cursor = new Cursor(null,
 		DiagramUIPluginImages.DESC_ZOOM_IN.getImageData(), 0, 0);

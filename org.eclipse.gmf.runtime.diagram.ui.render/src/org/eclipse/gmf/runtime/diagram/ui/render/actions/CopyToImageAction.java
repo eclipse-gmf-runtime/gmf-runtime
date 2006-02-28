@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -36,7 +35,6 @@ import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderStatusC
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.dialogs.CopyToImageDialog;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -343,13 +341,11 @@ public class CopyToImageAction
 		try {
 			// whatever we are copying belongs to the same editing domain as
 			// the Diagram
-			MEditingDomainGetter.getMEditingDomain(
-				getDiagramEditPart().getDiagramView()).runAsRead(
-				new MRunnable() {
+			getDiagramEditPart().getEditingDomain().runExclusive(
+				new Runnable() {
 
-					public Object run() {
+					public void run() {
 						CopyToImageAction.this.run();
-						return null;
 					}
 				});
 		} catch (Exception e) {

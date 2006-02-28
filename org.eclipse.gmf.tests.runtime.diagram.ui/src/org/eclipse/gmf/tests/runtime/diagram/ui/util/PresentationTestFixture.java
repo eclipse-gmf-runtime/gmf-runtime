@@ -13,9 +13,16 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.util;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
@@ -24,9 +31,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -59,26 +63,28 @@ public class PresentationTestFixture
 	protected void createDiagram()
 		throws Exception {
 
-		MEditingDomain.INSTANCE.runInUndoInterval(new Runnable() {
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			getEditingDomain(), "") { //$NON-NLS-1$
 
-			public void run() {
-				try {
-					MEditingDomain.INSTANCE.runAsWrite(new MRunnable() {
-
-						public Object run() {
-							setDiagram(ViewService
-								.createDiagram(
-									PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND,
-									getPreferencesHint()));
-							return null;
-						}
-					});
-				} catch (MSLActionAbandonedException e) {
-					e.printStackTrace();
-					assertFalse(false);
-				}
-			}
-		});
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+				
+				setDiagram(ViewService
+					.createDiagram(
+						PresentationTestsViewProvider.PRESENTATION_TESTS_DIAGRAM_KIND,
+						getPreferencesHint()));
+				
+				return Status.OK_STATUS;
+			};
+		};
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation,
+					new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			assertFalse(false);
+		}
 	}
 	
 	

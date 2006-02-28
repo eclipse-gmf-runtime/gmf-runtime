@@ -24,12 +24,10 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.Circuit
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -97,15 +95,14 @@ public class LogicShapeTests extends AbstractShapeTests {
 		getCommandStack().execute(cmd);
 		flushEventQueue();
 		
-		MEditingDomainGetter.getMEditingDomain((View)ledEP1.getModel()).runAsRead( new MRunnable() {
-			public Object run() {
+		ledEP1.getEditingDomain().runExclusive( new Runnable() {
+			public void run() {
 				View ledView = ledEP1.getNotationView();
 				ShapeStyle shapeStyle = (ShapeStyle)ledView.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
 				assertTrue(shapeStyle.getFillColor() == ((FigureUtilities.colorToInteger(red)).intValue()));
 				assertTrue(shapeStyle.getLineColor() == ((FigureUtilities.colorToInteger(red)).intValue()));
 				assertTrue(shapeStyle.getFontColor() == ((FigureUtilities.colorToInteger(red)).intValue()));
 				assertTrue(shapeStyle.getFontHeight() == fontHeight);
-				return null;
 			}
 		});
 	}

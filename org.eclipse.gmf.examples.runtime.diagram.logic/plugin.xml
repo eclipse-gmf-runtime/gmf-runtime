@@ -347,12 +347,6 @@
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicPreferencesInitializer" />
    </extension>
-   <extension
-         point="org.eclipse.gmf.runtime.emf.core.compatibility.MetaModelProviders">
-      <MetaModelProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicMetamodelSupportProvider">
-         <Priority name="Highest"/>
-      </MetaModelProvider>
-   </extension>
    
    <!-- Context Menu Items -->
    <extension

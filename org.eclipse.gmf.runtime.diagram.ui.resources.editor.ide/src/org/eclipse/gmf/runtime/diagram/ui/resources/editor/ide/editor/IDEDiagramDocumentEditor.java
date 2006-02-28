@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditor;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,10 +27,6 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class IDEDiagramDocumentEditor
 	extends DiagramDocumentEditor {
-
-	public IDEDiagramDocumentEditor(MEditingDomain domain, boolean hasFlyoutPalette) {
-		super(domain, hasFlyoutPalette);
-	}
 
 	public IDEDiagramDocumentEditor(boolean hasFlyoutPalette) {
 		super(hasFlyoutPalette);

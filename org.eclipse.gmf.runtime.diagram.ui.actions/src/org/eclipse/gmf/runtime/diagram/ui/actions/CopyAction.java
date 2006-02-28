@@ -15,14 +15,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.Request;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -156,20 +156,22 @@ abstract public class CopyAction extends DiagramAction {
 		try {
 			//whatever we are copying belongs to the same editing domain as 
 			//the Diagram
-			MEditingDomainGetter.getMEditingDomain(getDiagramEditPart().getDiagramView())
-				.runAsRead(new MRunnable() {
+			getDiagramEditPart().getEditingDomain().runExclusive(
+				new Runnable() {
 
-					public Object run() {
+					public void run() {
 						CopyAction.this.run();
-						return null;
 					}
 				});
-		}catch (Exception e) {
+		} catch (Exception e) {
 			Trace.catching(DiagramActionsPlugin.getInstance(),
 				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-					"doRun()", //$NON-NLS-1$
-					e);
-		}
+				"doRun()", //$NON-NLS-1$
+				e);
+			Log.error(DiagramActionsPlugin.getInstance(),
+				DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getPropertyValue", e); //$NON-NLS-1$
+		}	
 	}
 
 	/** 

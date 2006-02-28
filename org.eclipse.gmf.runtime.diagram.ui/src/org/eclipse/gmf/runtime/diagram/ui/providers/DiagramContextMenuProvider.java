@@ -12,18 +12,16 @@
 package org.eclipse.gmf.runtime.diagram.ui.providers;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * 
@@ -67,12 +65,11 @@ public class DiagramContextMenuProvider extends ContextMenuProvider {
 		getViewer().flush();
 
 		try {
-			MEditingDomainGetter.getMEditingDomain((EObject)getViewer().getContents().getModel()).runAsRead( new MRunnable() {
-				public Object run() {
+			TransactionUtil.getEditingDomain((EObject)getViewer().getContents().getModel()).runExclusive( new Runnable() {
+				public void run() {
 					ContributionItemService.getInstance().contributeToPopupMenu(
 						DiagramContextMenuProvider.this,
 						part);
-					return null;
 				}
 			});
 		}catch (Exception e) {

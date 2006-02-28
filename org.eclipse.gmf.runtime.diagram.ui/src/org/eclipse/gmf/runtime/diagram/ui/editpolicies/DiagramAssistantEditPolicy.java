@@ -14,15 +14,19 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
@@ -251,15 +255,27 @@ public abstract class DiagramAssistantEditPolicy
 	private boolean isHostResolvable() {
 		final View view = (View) getHost().getModel();
 		if (view.getElement() != null) {
-			Boolean retval = (Boolean) MEditingDomainGetter.getMEditingDomain(
-				view).runAsRead(new MRunnable() {
+			Boolean retval;
+			try {
+				retval = (Boolean) ((IGraphicalEditPart) getHost())
+					.getEditingDomain().runExclusive(
+						new RunnableWithResult.Impl() {
 
-				public Object run() {
-					return ViewUtil.resolveSemanticElement(view) != null ? Boolean.TRUE
-						: Boolean.FALSE;
-				}
-			});
-			return retval.booleanValue();
+					public void run() {
+						setResult(ViewUtil.resolveSemanticElement(view) != null ? Boolean.TRUE
+							: Boolean.FALSE);
+					}
+				});
+				return retval.booleanValue();
+			} catch (InterruptedException e) {
+				   Trace.catching(DiagramUIPlugin.getInstance(),
+						DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+						"isHostResolvable", e); //$NON-NLS-1$
+					Log.error(DiagramUIPlugin.getInstance(),
+						DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+						"isHostResolvable", e); //$NON-NLS-1$
+				   return false;
+			}
 		}
 		return true;
 	}

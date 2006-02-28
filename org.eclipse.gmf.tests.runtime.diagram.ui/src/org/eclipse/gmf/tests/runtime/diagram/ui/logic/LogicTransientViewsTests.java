@@ -22,21 +22,28 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
@@ -74,6 +81,7 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 		try {
 			println("testTransientWiresCreation_AcrossTransientLeds() starting ...");//$NON-NLS-1$
 			CanonicalTestFixture _testFixture = getCanonicalTestFixture();
+			
 			IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
 			
 			LED led1 = _testFixture.createLED(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView()));
@@ -97,21 +105,40 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			assertTransient((View)ep.getTarget().getModel());
 			assertTransient((View)ep.getModel());
 			
-			final MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain((EObject)ep.getModel());
+			final TransactionalEditingDomain editingDomain = ((IGraphicalEditPart)ep).getEditingDomain();
 			
-			//start read action here 
-			editingDomain.runInUndoInterval(new Runnable() {
-				public void run() {
-					try {
-						editingDomain.runAsWrite(new MRunnable() {
-							public Object run() {
-								((View)ep.getModel()).setVisible(false);
-								return null;
-							}});
-					} catch (MSLActionAbandonedException e) {
-						// do nothing
-					}
-				}});
+			AbstractEMFOperation operation = new AbstractEMFOperation(
+				editingDomain, "") { //$NON-NLS-1$
+
+				protected IStatus doExecute(IProgressMonitor monitor,
+						IAdaptable info)
+					throws ExecutionException {
+					
+					((View)ep.getModel()).setVisible(false);
+					
+					return Status.OK_STATUS;
+				};
+			};
+			try {
+				OperationHistoryFactory.getOperationHistory().execute(operation,
+						new NullProgressMonitor(), null);
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+				assertFalse(false);
+			}
+//			
+//			editingDomain.runInUndoInterval(new Runnable() {
+//				public void run() {
+//					try {
+//						editingDomain.runAsWrite(new MRunnable() {
+//							public Object run() {
+//								((View)ep.getModel()).setVisible(false);
+//								return null;
+//							}});
+//					} catch (MSLActionAbandonedException e) {
+//						// do nothing
+//					}
+//				}});
 				
 			assertPersisted((View)ep.getSource().getModel());
 			assertPersisted((View)ep.getTarget().getModel());
@@ -123,7 +150,7 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			println("testTransientWiresCreation_AcrossTransientLeds() complete.");//$NON-NLS-1$
 		}
 	}
-    
+	
     private GraphicalEditPart _editPartForSemanticElement(GraphicalEditPart container, Object element){
         List children = container.getChildren();
         for (Iterator iter = children.iterator(); iter.hasNext();) {
@@ -158,21 +185,28 @@ public class LogicTransientViewsTests extends AbstractTestBase{
             
             
             // force the led to be persisted
-            final MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain((EObject)ledEditPart.getModel());
+            final TransactionalEditingDomain editingDomain = ledEditPart.getEditingDomain();
             
-            //start read action here 
-            editingDomain.runInUndoInterval(new Runnable() {
-                public void run() {
-                    try {
-                        editingDomain.runAsWrite(new MRunnable() {
-                            public Object run() {
-                                ((View)((View)ep1.getModel()).eContainer()).persistChildren();
-                                return null;
-                            }});
-                    } catch (MSLActionAbandonedException e) {
-                        // do nothing
-                    }
-                }});
+			AbstractEMFOperation operation = new AbstractEMFOperation(
+				editingDomain, "") { //$NON-NLS-1$
+
+				protected IStatus doExecute(IProgressMonitor monitor,
+						IAdaptable info)
+					throws ExecutionException {
+					
+                    ((View)((View)ep1.getModel()).eContainer()).persistChildren();
+					
+					return Status.OK_STATUS;
+				};
+			};
+			try {
+				getDiagramEditPart().getDiagramEditDomain().getActionManager()
+					.getOperationHistory().execute(operation,
+						new NullProgressMonitor(), null);
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+				assertFalse(false);
+			}
                 
             assertPersisted((View)ep1.getModel());
             
@@ -283,6 +317,41 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			println("testTransientCircuitsCreation() complete.");//$NON-NLS-1$
 		}
 	}
+
+//	/**
+//	 * Test that moving a transient LED will cause it to be persisted.
+//	 */
+//	public void testPersistedAfterMove(){
+//		try {
+//			println("test_testPersistedAfterMove() starting ...");//$NON-NLS-1$
+//			CanonicalTestFixture _testFixture = getCanonicalTestFixture();
+//			IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
+//			
+//			_testFixture.createLED(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView()));
+//			assertEquals( "Unexpected LED count.", 1, logicCompartment.getChildren().size() );//$NON-NLS-1$
+//			
+//			// Starts out as being transient.
+//			assertTransient(logicCompartment.getChildren());
+//			
+//			// Move LED.
+//			IGraphicalEditPart ledEP = (IGraphicalEditPart) logicCompartment.getChildren().get(0);
+//			Point oldLocation = ledEP.getFigure().getBounds().getLocation();
+//			ChangeBoundsRequest request = new ChangeBoundsRequest(
+//				RequestConstants.REQ_MOVE);
+//			request.setEditParts(ledEP);
+//			request.setMoveDelta(new Point(100, 100));
+//			Command cmd = ledEP.getCommand(request);
+//			cmd.execute();
+//			flushEventQueue();
+//			assertFalse(oldLocation.equals(ledEP.getFigure().getBounds().getLocation()));		
+//			
+//			// Should be persisted after a move.
+//			assertPersisted(logicCompartment.getChildren());				
+//		}
+//		finally {
+//			println("test_testPersistedAfterMove() complete.");//$NON-NLS-1$
+//		}
+//	}
 	
 	private void assertPersisted(View view) {
 		if (view != null){

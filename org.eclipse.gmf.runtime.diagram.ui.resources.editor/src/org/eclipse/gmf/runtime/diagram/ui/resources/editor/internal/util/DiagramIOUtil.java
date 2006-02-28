@@ -11,8 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -21,12 +23,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.ClassNotFoundException;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.ecore.xmi.PackageNotFoundException;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
@@ -34,9 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugO
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.edit.MResourceOption;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLRuntimeException;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -65,7 +66,7 @@ public class DiagramIOUtil {
 	private static String MESSAGE2_SAVE = EditorMessages.compatibility_message2_save;
 
 	private static interface ILoader {
-		public Resource load(MEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException;
+		public Resource load(TransactionalEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException;
 	}
 	
 	private static class FileLoader implements ILoader {
@@ -75,11 +76,12 @@ public class DiagramIOUtil {
 			fFile = file;
 		}
 		
-		public Resource load(MEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException {
+		public Resource load(TransactionalEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException {
 			fFile.refreshLocal(IResource.DEPTH_ZERO, monitor);
-			String fileName = fFile.getLocation().toOSString();
+			URI uri = URI.createPlatformResourceURI(fFile.getFullPath()
+                .toString(), true);
 			
-			Resource resource = domain.loadResource(fileName);
+			Resource resource = domain.getResourceSet().getResource(uri, true);
 			return resource;
 		}
 	}
@@ -91,26 +93,24 @@ public class DiagramIOUtil {
 			fStorage = storage;
 		}
 		
-		public Resource load(MEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException {
-			InputStream contents = fStorage.getContents();
-			String storagePath = fStorage.getFullPath().toString();
-			
-            Resource resource = domain.findResource(storagePath, loadOptions);
-            if ( resource == null ) {
-                resource = domain.createResource(storagePath);                
-            }
+		public Resource load(TransactionalEditingDomain editingDomain,
+				int loadOptions, IProgressMonitor monitor)
+			throws CoreException {
             
-            domain.loadResource(resource, loadOptions, contents);
+			String storagePath = fStorage.getFullPath().toString();
+ 
+			Resource resource = editingDomain.getResourceSet().getResource(
+				URI.createPlatformResourceURI(storagePath, true), true);
 			return resource;
 		}
 	}
 	
-	static public Diagram load(final MEditingDomain domain, final IFile file, boolean bTryCompatible, IProgressMonitor monitor) throws CoreException {
+	static public Diagram load(final TransactionalEditingDomain domain, final IFile file, boolean bTryCompatible, IProgressMonitor monitor) throws CoreException {
 		FileLoader loader = new FileLoader(file);
 		return load(domain, loader, bTryCompatible, monitor);
 	}
 	
-	static public Diagram load(final MEditingDomain domain, final IStorage storage, boolean bTryCompatible, IProgressMonitor monitor) throws CoreException {
+	static public Diagram load(final TransactionalEditingDomain domain, final IStorage storage, boolean bTryCompatible, IProgressMonitor monitor) throws CoreException {
 		ILoader loader = null;
 		if(storage instanceof IFile) {
 			loader = new FileLoader((IFile)storage);
@@ -127,14 +127,14 @@ public class DiagramIOUtil {
 	 * @return
 	 * @throws CoreException
 	 */
-	static private Diagram load(final MEditingDomain domain, final ILoader loader, boolean bTryCompatible, IProgressMonitor monitor) throws CoreException  {
+	static private Diagram load(final TransactionalEditingDomain domain, final ILoader loader, boolean bTryCompatible, IProgressMonitor monitor) throws CoreException  {
 		Resource notationModel = null;
 		try {
 			try {	
-				// File exists with contents..
-				notationModel = loader.load(domain, 0, monitor);
-		     
-			} catch (MSLRuntimeException e) {
+			// File exists with contents..
+			notationModel = loader.load(domain, 0, monitor);
+
+			} catch (Exception e) {
 				if (bTryCompatible) {
 					Throwable t = e.getCause();
 					
@@ -189,26 +189,31 @@ public class DiagramIOUtil {
 		}
 	}
 
-	static public void save(MEditingDomain domain, IFile file, Diagram diagram, boolean bOverwrite, boolean bKeepUnrecognizedData, IProgressMonitor progressMonitor) throws CoreException {
+	static public void save(TransactionalEditingDomain domain, IFile file, Diagram diagram, boolean bKeepUnrecognizedData, IProgressMonitor progressMonitor) throws CoreException {
+        Map options = new HashMap();
 		int nOptions = 0;
-		if(bOverwrite)
-			nOptions = MResourceOption.OVERWRITE_READONLY;
 		if(bKeepUnrecognizedData)
 			nOptions |= MResourceOption.COMPATIBILITY_MODE;
-        save(domain, file, diagram, progressMonitor, nOptions);
+        save(domain, file, diagram, progressMonitor, options);
 	}
 	
-	static public void save(MEditingDomain domain, IFile file, Diagram diagram, IProgressMonitor progressMonitor, int nOptions) throws CoreException {
-        Resource notationModel = ((EObject)diagram).eResource();
-        String fileName = file.getLocation().toOSString();
-        
-        domain.saveResourceAs(notationModel, fileName, nOptions);
+	static public void save(TransactionalEditingDomain domain, IFile file, Diagram diagram, IProgressMonitor progressMonitor, Map options) throws CoreException {
+		Resource notationModel = ((EObject) diagram).eResource();
+		String fileName = file.getFullPath().toOSString();
+		notationModel.setURI(URI.createPlatformResourceURI(fileName, true));
+		try {
+			notationModel.save(options);
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, EditorPlugin
+				.getPluginId(), EditorStatusCodes.RESOURCE_FAILURE, e
+				.getLocalizedMessage(), null));
+		}
 
-		if (progressMonitor != null)		
+		if (progressMonitor != null)
 			progressMonitor.done();
 	}
 	
-	/**
+		/**
 	 * @param errMsg
 	 * @return
 	 */
@@ -274,9 +279,8 @@ public class DiagramIOUtil {
 		return bLoadAgain;
 	}
 	
-	public static void unload(MEditingDomain domain, Diagram diagram) {
-		Resource resource = diagram.eResource();
-		domain.unloadResource(resource);
+	public static void unload(TransactionalEditingDomain domain, Diagram diagram) {
+		diagram.eResource().unload();
 	}
 
 	public static boolean hasUnrecognizedData(Resource resource) {

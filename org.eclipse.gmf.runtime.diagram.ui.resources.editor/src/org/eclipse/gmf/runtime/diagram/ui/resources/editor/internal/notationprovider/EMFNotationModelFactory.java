@@ -16,15 +16,14 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.notationpro
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
@@ -39,12 +38,8 @@ public class EMFNotationModelFactory {
 	 * @param file
 	 * @return
 	 * @throws EmfNotationException
-	 */
-	static public Diagram load(final IFile file) throws EmfNotationException {
-		return load(file, MEditingDomain.INSTANCE);
-	}
-	
-	static public Diagram load(final IFile file, MEditingDomain editingDomain) throws EmfNotationException {
+	 */	
+	static public Diagram load(final IFile file, TransactionalEditingDomain editingDomain) throws EmfNotationException {
 		Resource notationModel = null;
 		try {
 			file.refreshLocal(IResource.DEPTH_ZERO, null); //RATLC00514368
@@ -70,20 +65,27 @@ public class EMFNotationModelFactory {
             throw t;
 		}
 
-		EObject element = ResourceUtil.getFirstRoot(notationModel);
-		return (element instanceof Diagram) ? (Diagram)element : null;
+		EList contents = notationModel.getContents();
+		if (!contents.isEmpty()) {
+			Object element = contents.get(0);
+			return (element instanceof Diagram) ? (Diagram) element
+				: null;
+		}
+		return null;
 	}
 	
 	static public void save(IFile file, Diagram diagram, boolean clone, IProgressMonitor progressMonitor) throws Exception {
         Resource notationModel = ((EObject)diagram).eResource();
         String fileName = file.getLocation().toOSString();
         
-        if(clone) {
-            //save as option..
-            MEditingDomainGetter.getMEditingDomain(notationModel).saveResourceAs(notationModel, fileName);
-        } else {
-        	MEditingDomainGetter.getMEditingDomain(notationModel).saveResource(notationModel);
-        }
+        if (clone) {
+			// save as option..
+//            URI uri = URI.createPlatformResourceURI(fFile.getFullPath().toString(), true);
+			notationModel.setURI(URI.createURI((fileName)));
+			notationModel.save(null);
+		} else {
+			notationModel.save(null);
+		}
 
 		if (progressMonitor != null)		
 			progressMonitor.done();

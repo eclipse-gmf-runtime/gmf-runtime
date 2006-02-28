@@ -15,23 +15,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.jface.viewers.ICellEditorValidator;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DescriptionDirectEditPolicy;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 
 /*
  * @canBeSeenBy %level1
@@ -99,24 +97,22 @@ public class DescriptionCompartmentEditPart extends TextCompartmentEditPart {
 				if (value instanceof String) {
 					//final IElement element = resolveModelReference();
 
-					final IParserEditStatus isValid[] = {null};
 					final IParser descParser = getParser();
 					try {
-						MEditingDomainGetter.getMEditingDomain((View)getModel()).runAsRead(new MRunnable() {
+						IParserEditStatus isValid = (IParserEditStatus) getEditingDomain()
+							.runExclusive(new RunnableWithResult.Impl() {
 
-							public Object run() {
-								isValid[0] = descParser.isValidEditString(null,
-									(String) value);
-								return null;
-							}
-						});
+									public void run() {
+										setResult(descParser.isValidEditString(
+											null, (String) value));
+									}
+								});
+						return isValid.getCode() == ParserEditStatus.EDITABLE ? null
+							: isValid.getMessage();
 					} catch (Exception e) {
 						Log.error(DiagramUIPlugin.getInstance(), IStatus.ERROR,
 							e.getMessage(), e);
 					}
-
-					return isValid[0].getCode() == ParserEditStatus.EDITABLE ? null
-						: isValid[0].getMessage();
 				}				
 				return null;
 			}

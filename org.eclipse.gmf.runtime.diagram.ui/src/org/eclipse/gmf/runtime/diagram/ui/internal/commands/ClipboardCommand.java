@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
@@ -24,8 +25,8 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
+import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
@@ -142,6 +143,7 @@ public abstract class ClipboardCommand extends AbstractTransactionalCommand {
 		}
 
 		/* Copy the selection to the string */
-		return EObjectUtil.serialize( selection, Collections.EMPTY_MAP); 	
+		return ClipboardUtil.copyElementsToString(selection,
+			Collections.EMPTY_MAP, new NullProgressMonitor()); 	
 	}
 }

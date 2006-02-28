@@ -15,15 +15,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -51,13 +54,13 @@ public abstract class IndividualConnectionLabelAction
 			String[] labelSemanticHints) {
 		super(
 			workbenchPage,
-			MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
+			PackageUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
 			DiagramUIActionsMessages.ConstrainedFlowLayoutEditPolicy_changeVisibilityCommand_label);
 		Assert.isNotNull(labelSemanticHints);
 		this.labelSemanticHints = labelSemanticHints;
 	}
 
-    /*
+	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getTargetEditParts(org.eclipse.gef.EditPart)
@@ -67,17 +70,28 @@ public abstract class IndividualConnectionLabelAction
 		List editParts = new ArrayList();
 		if (editpart instanceof ConnectionNodeEditPart) {
 			final ConnectionNodeEditPart conEP = (ConnectionNodeEditPart) editpart;
-			MEditingDomain editingDomain = MEditingDomainGetter
-				.getMEditingDomain((View) editpart.getModel());
+			TransactionalEditingDomain editingDomain = conEP.getEditingDomain();
 			for (int i = 0; i < getLabelSemanticHints().length; i++) {
 				final int index = i;
-				targetEP = (EditPart) editingDomain.runAsRead(new MRunnable() {
+				
+				try {
+					targetEP = (EditPart) editingDomain
+						.runExclusive(new RunnableWithResult.Impl() {
 
-					public Object run() {
-						return conEP
-							.getChildBySemanticHint(getLabelSemanticHints()[index]);
-					}
-				});
+							public void run() {
+								setResult(conEP
+									.getChildBySemanticHint(getLabelSemanticHints()[index]));
+							}
+						});
+				} catch (InterruptedException e) {
+					Trace.catching(DiagramActionsPlugin.getInstance(),
+						DiagramActionsDebugOptions.EXCEPTIONS_CATCHING,
+						getClass(), "getTargetEditParts", e); //$NON-NLS-1$
+					Log.error(DiagramActionsPlugin.getInstance(),
+						DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING,
+						"getTargetEditParts", e); //$NON-NLS-1$
+				}
+				
 				if (targetEP != null)
 					editParts.add(targetEP);
 			}

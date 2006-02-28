@@ -14,10 +14,10 @@ package org.eclipse.gmf.runtime.diagram.core.edithelpers;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.IProxyEObject;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 
@@ -104,7 +104,7 @@ public class CreateElementRequestAdapter
 	 */
 	public Object getProxyClassID() {
 		return getNewElement() == null ? null
-			: ProxyUtil.getProxyClassID(getNewElement());
+			: PackageUtil.getID(EMFCoreUtil.getProxyClass(getNewElement()));
 	}
 
 	/*
@@ -114,7 +114,7 @@ public class CreateElementRequestAdapter
 	 */
 	public EObject resolve() {
 		return getNewElement() == null ? null
-			: ProxyUtil.resolve(MEditingDomainGetter.getMEditingDomain(createElementRequest.getContainer()), getNewElement()); 
+			: EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(createElementRequest.getContainer()), getNewElement()); 
 	}
 
 }

@@ -17,18 +17,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorPart;
 
@@ -78,10 +77,10 @@ public class OpenDiagramCommand extends AbstractCommand {
 		this(DiagramUIMessages.Command_openDiagram, element);
 	}
 	
-    /**
-     * This command can only be executed if the element is a diagram.
-     * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
-    */
+	/**
+	 * This command can only be executed if the element is a diagram.
+	 * @see org.eclipse.gmf.runtime.common.core.command.ICommand#isExecutable()
+	*/
     public boolean canExecute() {
 		return getElement() instanceof Diagram;
 	}
@@ -96,9 +95,9 @@ public class OpenDiagramCommand extends AbstractCommand {
             IAdaptable info)
         throws ExecutionException {
         
-        try {
-			MEditingDomainGetter.getMEditingDomain(getElement()).runAsRead(new MRunnable() {
-				public Object run() {
+		try {
+			TransactionUtil.getEditingDomain(getElement()).runExclusive(new Runnable() {
+				public void run() {
 					Diagram diagram = null;
 					// Obtain the associated diagram if one exists.
 					if (getElement() instanceof Diagram) {
@@ -113,7 +112,6 @@ public class OpenDiagramCommand extends AbstractCommand {
 							throw new UnsupportedOperationException();
 						}
 					}					
-					return null;
 				}
 			});
 		} catch (Exception e) {
@@ -136,17 +134,16 @@ public class OpenDiagramCommand extends AbstractCommand {
     public boolean canUndo() {
 		return false;
 	}
-    
+
     public boolean canRedo() {
 		return false;
 	}
-    
+
     protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
 
         return null;
-    }
-    
+}
     protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
 

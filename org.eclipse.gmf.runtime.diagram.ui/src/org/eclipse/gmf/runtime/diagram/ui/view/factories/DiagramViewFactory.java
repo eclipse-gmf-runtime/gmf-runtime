@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -74,7 +73,8 @@ public class DiagramViewFactory implements DiagramFactory{
 
 		setPreferencesHint(thePreferencesHint);
 
-		Diagram diagram = (Diagram)MEditingDomainGetter.getMEditingDomain(semanticAdapter).create(NotationPackage.eINSTANCE.getDiagram());
+		Diagram diagram = (Diagram)  NotationPackage.eINSTANCE.getDiagram().getEPackage().getEFactoryInstance().create(
+			NotationPackage.eINSTANCE.getDiagram());
 		diagram.getStyles().addAll(createStyles(diagram));
 
 		if (diagramKind != null)

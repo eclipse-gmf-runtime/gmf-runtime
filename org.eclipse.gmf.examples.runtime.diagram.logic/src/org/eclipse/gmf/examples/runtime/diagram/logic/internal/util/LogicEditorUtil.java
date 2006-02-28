@@ -11,27 +11,30 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramDebugOptions;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramPlugin;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramStatusCodes;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
-import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -50,20 +53,20 @@ public class LogicEditorUtil extends IDEEditorUtil {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil#createAndOpenDiagram(org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator, org.eclipse.core.runtime.IPath, java.lang.String, java.io.InputStream, java.lang.String, org.eclipse.ui.IWorkbenchWindow, org.eclipse.core.runtime.IProgressMonitor, boolean, boolean, org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
 	 */
 	public static final IFile createAndOpenDiagram(
-			DiagramFileCreator diagramFileCreator,
-			IPath containerPath, String fileName, InputStream initialContents,
-			String kind, IWorkbenchWindow dWindow,
-			IProgressMonitor progressMonitor, boolean openEditor,
-			boolean saveDiagram) {
-		IFile newFile = LogicEditorUtil.createNewDiagramFile(diagramFileCreator,
-			containerPath, fileName, initialContents, kind, dWindow.getShell(),
-			progressMonitor);
+			DiagramFileCreator diagramFileCreator, IPath containerPath,
+			String fileName, InputStream initialContents, String kind,
+			IWorkbenchWindow dWindow, IProgressMonitor progressMonitor,
+			boolean openEditor, boolean saveDiagram) {
+
+		IFile newFile = LogicEditorUtil.createNewDiagramFile(
+            diagramFileCreator, containerPath, fileName, initialContents, kind,
+            dWindow.getShell(), progressMonitor);
 
 		if (newFile != null && openEditor) {
-			//Since the file resource was created fine, open it for editing
+			// Since the file resource was created fine, open it for editing
 			// iff requested by the user
 			IDEEditorUtil.openDiagram(newFile, dWindow, saveDiagram,
-				progressMonitor);
+                progressMonitor);
 		}
 
 		return newFile;
@@ -92,9 +95,8 @@ public class LogicEditorUtil extends IDEEditorUtil {
 	 *         not created
 	 */
 	public static final IFile createNewDiagramFile(
-			DiagramFileCreator diagramFileCreator,
-			IPath containerFullPath, String fileName,
-			InputStream initialContents, final String kind,
+			DiagramFileCreator diagramFileCreator, IPath containerFullPath,
+			String fileName, InputStream initialContents, final String kind,
 			Shell shell, final IProgressMonitor progressMonitor) {
 		/** cache of newly-created file */
 		final IFile newDiagramFile = diagramFileCreator.createNewFile(
@@ -117,7 +119,9 @@ public class LogicEditorUtil extends IDEEditorUtil {
 
 			try {
 				// Empty file....
-				notationModel = ResourceUtil.create(completeFileName, null);
+                ResourceSet resourceSet = new ResourceSetImpl();
+                notationModel = resourceSet.createResource(URI
+                    .createFileURI(completeFileName)); 
 			} finally {
 				stream.close();
 			}
@@ -130,20 +134,28 @@ public class LogicEditorUtil extends IDEEditorUtil {
 		}
 
 		if (notationModel != null) {
-			final Resource notationModel_ = notationModel;
-			OperationUtil.runAsUnchecked(new MRunnable() {
-				public Object run() {
-					//create model semantic element and hook it up with diagram view
-					EObject model = EObjectUtil.create(SemanticPackage.eINSTANCE.getModel());
-					Diagram view = ViewService.createDiagram(model, kind, new PreferencesHint(LogicDiagramPlugin.EDITOR_ID));
-					if (view != null) {
-						notationModel_.getContents().add(view);
-						notationModel_.getContents().add(model);
-						view.getDiagram().setName(newDiagramFile.getName());
-					}
-					return null;
-				}
-			});
+            // create model semantic element and hook it up with diagram view
+            EObject model = SemanticPackage.eINSTANCE.getModel().getEPackage()
+                .getEFactoryInstance().create(
+                    SemanticPackage.eINSTANCE.getModel());
+            Diagram view = ViewService.createDiagram(model, kind,
+                new PreferencesHint(LogicDiagramPlugin.EDITOR_ID));
+            if (view != null) {
+                notationModel.getContents().add(view);
+                notationModel.getContents().add(model);
+                view.getDiagram().setName(newDiagramFile.getName());
+            }
+
+            try {
+                notationModel.save(Collections.EMPTY_MAP);
+            } catch (IOException e) {
+                Trace.catching(LogicDiagramPlugin.getInstance(),
+                    LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
+                    LogicEditorUtil.class, "createNewDiagramFile", e); //$NON-NLS-1$
+                Log.error(LogicDiagramPlugin.getInstance(),
+                    LogicDiagramStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                        .getLocalizedMessage());
+            }
 		}
 
 		return newDiagramFile;

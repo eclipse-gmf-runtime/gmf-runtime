@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.core.listener;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,36 +23,36 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.NotificationFilter;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.DiagramDebugOptions;
-import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.emf.transaction.ResourceSetChangeEvent;
+import org.eclipse.emf.transaction.ResourceSetListenerImpl;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
-import org.eclipse.gmf.runtime.emf.core.edit.MUniversalListener;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+
 
 /**
  * A model server listener that broadcast EObject events to all registered
  * listeners.
  * 
- * @author melaasar, mmostafa
+ * @author melaasar, mmostafa, cmahoney
  */
-public class DiagramEventBroker
-	extends MUniversalListener {
+public class DiagramEventBroker extends ResourceSetListenerImpl {
 
 	private static String LISTEN_TO_ALL_FEATURES = "*"; //$NON-NLS-1$
 
 	/** listener map */
-	private final NotifierToKeyToListenersSetMap listeners = new NotifierToKeyToListenersSetMap();
+	private final NotifierToKeyToListenersSetMap preListeners = new NotifierToKeyToListenersSetMap();
+	private final NotifierToKeyToListenersSetMap postListeners = new NotifierToKeyToListenersSetMap();
+	
+	private static final Map instanceMap = new WeakHashMap();
 
 	/**
 	 * Utility class representing a Map of Notifier to a Map of Keys to a Set of
@@ -166,66 +167,134 @@ public class DiagramEventBroker
 	}
 
 	/**
-	 * Start listening to the model server. {@link MFilter.WildCard} is the
-	 * default filter by this listener.
+	 * Creates a <code>DiagramEventBroker</code> that listens to all
+	 * <code>EObject </code> notifications for the given editing domain.
 	 */
-	public void startListening() {
-		Trace.trace(DiagramPlugin.getInstance(), DiagramDebugOptions.EVENTS,
-			this + "#startListening()"); //$NON-NLS-1$
-		setFilter(new MFilter.NotifierType(EObject.class, false));
-		super.startListening();
+	private DiagramEventBroker() {
+		super(NotificationFilter.createNotifierTypeFilter(EObject.class));
 	}
-
-	/** Stop listening to Model Server */
-	public void stopListening() {
-		Trace.trace(DiagramPlugin.getInstance(), DiagramDebugOptions.EVENTS,
-			this + "#stopListening()"); //$NON-NLS-1$
-		super.stopListening();
+	
+	/**
+	 * Gets the diagmam event broker instance for the editing domain passed in.
+	 * There is one diagram event broker per editing domain.
+	 * 
+	 * @param editingDomain
+	 * @return Returns the diagram event broker.
+	 */
+	public static DiagramEventBroker getInstance(
+			TransactionalEditingDomain editingDomain) {
+		WeakReference reference = (WeakReference) instanceMap
+			.get(editingDomain);
+		if (reference != null) {
+			return (DiagramEventBroker) reference.get();
+		}
+		return null;
 	}
 
 	/**
-	 * Model Server event callback method. This method will redirect the events
-	 * to their respective event type handler
-	 * 
-	 * @see #handleElementEvent(Notification)
-	 * @see #handleResourceEvent(Notification)
-	 */
-	public final void onEvent(List events) {
-		List eventArray = new ArrayList(events);
-
-		// if the events contain "uncreated" objects, remove all events related
-		// to those
-		// objects from the event list (except the "uncreate" events themselves)
-		HashSet deletedObjects = new HashSet();
-		// first collect the "destroyed" objects
-		for (Iterator i = eventArray.iterator(); i.hasNext();) {
-			Notification event = (Notification) i.next();
-			if (event.getEventType() == EventTypes.UNCREATE
-				|| event.getEventType() == EventTypes.DESTROY)
-				deletedObjects.add(event.getNotifier());
+     * Creates a new diagram event broker instance for the editing domain passed
+     * in only if the editing domain does not already have a diagram event
+     * broker. There is one diagram event broker per editing domain. Adds the
+     * diagram event broker instance as a listener to the editing domain.
+     * 
+     * @param editingDomain
+     */
+	public static void startListening(
+			TransactionalEditingDomain editingDomain) {
+		DiagramEventBroker diagramEventBroker = getInstance(editingDomain);
+		if (diagramEventBroker == null) {
+			diagramEventBroker = new DiagramEventBroker();
+			editingDomain.addResourceSetListener(diagramEventBroker);
+			instanceMap.put(editingDomain,
+				new WeakReference(diagramEventBroker));
 		}
+	}
 
-		for (Iterator i = eventArray.iterator(); i.hasNext();) {
-			Notification event = (Notification) i.next();
-			Object eventFeature = event.getFeature();
+    /**
+     * @param editingDomain
+     */
+    public static void stopListening(
+            TransactionalEditingDomain editingDomain) {
+        DiagramEventBroker diagramEventBroker = getInstance(editingDomain);
+        if (diagramEventBroker != null) {
+            editingDomain.removeResourceSetListener(diagramEventBroker);
+            instanceMap.remove(editingDomain);
+        }
+    }
+    
+    public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
+        Set deletedObjects = getDeletedObjects(event);
+ 
+        CompoundCommand cc = new CompoundCommand();
+        for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
+            final Notification notification = (Notification) i.next();
+            Object eventFeature = notification.getFeature();
+
+            // ignore touch event if it is not a resolve event,and ignore the mutable feature
+            // events
+            if ((notification.isTouch() && notification.getEventType() != Notification.RESOLVE)||
+                 NotationPackage.eINSTANCE.getView_Mutable().equals(eventFeature)){
+                 continue;
+            }
+            
+            Object notifier = notification.getNotifier();
+            if (notifier instanceof EObject) {
+                if (deletedObjects.contains(notification.getNotifier()) && !isDestroyEvent(notification))
+                    continue;
+                Command cmd = handleTransactionAboutToCommitEvent(notification);
+                if (cmd != null) {
+                    cc.append(cmd);
+                }
+            }
+        }
+        return cc.isEmpty() ? null : cc;
+    }
+
+	public void resourceSetChanged(ResourceSetChangeEvent event) {
+        Set deletedObjects = getDeletedObjects(event);
+
+		for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
+			final Notification notification = (Notification) i.next();
+			Object eventFeature = notification.getFeature();
 
 			// ignore touch event if it is not a resolve event,and ignore the mutable feature
 			// events
-			if ((event.isTouch() && event.getEventType() != Notification.RESOLVE)||
+			if ((notification.isTouch() && notification.getEventType() != Notification.RESOLVE)||
 			     NotationPackage.eINSTANCE.getView_Mutable().equals(eventFeature)){
 				 continue;
 			}
 			
-			Object notifier = event.getNotifier();
+			Object notifier = notification.getNotifier();
 			if (notifier instanceof EObject) {
-				if (deletedObjects.contains(event.getNotifier())
-					&& event.getEventType() != EventTypes.UNCREATE
-					&& event.getEventType() != EventTypes.DESTROY
-					&& event.getEventType() != EventTypes.UNRESOLVE)
+				if (deletedObjects.contains(notification.getNotifier())  && !isDestroyEvent(notification))
 					continue;
-				handleElementEvent(event);
+				handleElementEvent(notification);
 			}
 		}
+	}
+    
+    private Set getDeletedObjects(ResourceSetChangeEvent event) {
+        HashSet deletedObjects = new HashSet();
+        // first collect the "destroyed" objects
+        for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
+            Notification notification = (Notification) i.next();
+            if (isDestroyEvent(notification))
+                deletedObjects.add(notification.getNotifier());
+        }
+        return deletedObjects;
+    }
+
+	/**
+	 * Returns true if this notification is the equivalent of what used to be a
+	 * destroy event. Assumes the notifier is an <code>EObject</code>.
+	 * 
+	 * @param notification
+	 * @return
+	 */
+	private boolean isDestroyEvent(Notification notification) {		
+		return (notification.getEventType() == Notification.REMOVE || notification
+			.getEventType() == Notification.REMOVE_MANY)
+			&& ((EObject) notification.getNotifier()).eContainer() == null;
 	}
 
 	/**
@@ -237,8 +306,8 @@ public class DiagramEventBroker
 	 * ElementEvent (for backwards compatibility). The ElementEvent will be
 	 * removed one the MSL migration is complete.
 	 */
-	protected void fireNotification(Notification event) {
-		Collection listenerList = getInterestedNotificationListeners(event);
+	private void fireNotification(Notification event) {
+		Collection listenerList = getInterestedNotificationListeners(event, false);
 		if (!listenerList.isEmpty()) {
 			List listenersSnapShot = new ArrayList(listenerList);
 			if (!listenerList.isEmpty()) {
@@ -252,6 +321,44 @@ public class DiagramEventBroker
 		}
 	}
 
+	private Command fireTransactionAboutToCommit(Notification event) {
+		Collection listenerList = getInterestedNotificationListeners(event,
+			true);
+		if (!listenerList.isEmpty()) {
+			List listenersSnapShot = new ArrayList(listenerList);
+			if (!listenerList.isEmpty()) {
+				CompoundCommand cc = new CompoundCommand();
+				for (Iterator listenerIT = listenersSnapShot.iterator(); listenerIT
+					.hasNext();) {
+					NotificationPreCommitListener listener = (NotificationPreCommitListener) listenerIT
+						.next();
+					Command cmd = listener.transactionAboutToCommit(event);
+					if (cmd != null) {
+						cc.append(cmd);
+					}
+				}
+				return cc.isEmpty() ? null
+					: cc;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Add the supplied <tt>listener</tt> to the listener list.
+	 * 
+	 * @param target
+	 *            the traget to listen to
+	 * @param listener
+	 *            the listener
+	 */
+	public final void addNotificationListener(EObject target,
+			NotificationPreCommitListener listener) {
+		if (target != null) {
+			preListeners.addListener(target, LISTEN_TO_ALL_FEATURES, listener);
+		}
+	}
+
 	/**
 	 * Add the supplied <tt>listener</tt> to the listener list.
 	 * 
@@ -263,10 +370,26 @@ public class DiagramEventBroker
 	public final void addNotificationListener(EObject target,
 			NotificationListener listener) {
 		if (target != null) {
-			listeners.addListener(target, LISTEN_TO_ALL_FEATURES, listener);
+			postListeners.addListener(target, LISTEN_TO_ALL_FEATURES, listener);
 		}
 	}
-
+	
+	/**
+	 * Add the supplied <tt>listener</tt> to the listener list.
+	 * 
+	 * @param target
+	 *            the traget to listen to
+	 * @param key
+	 *            the key for the listener
+	 * @param listener
+	 *            the listener
+	 */
+	public final void addNotificationListener(EObject target,
+			EStructuralFeature key, NotificationPreCommitListener listener) {
+		if (target != null) {
+			preListeners.addListener(target, key, listener);
+		}
+	}	
 	/**
 	 * Add the supplied <tt>listener</tt> to the listener list.
 	 * 
@@ -280,7 +403,7 @@ public class DiagramEventBroker
 	public final void addNotificationListener(EObject target,
 			EStructuralFeature key, NotificationListener listener) {
 		if (target != null) {
-			listeners.addListener(target, key, listener);
+			postListeners.addListener(target, key, listener);
 		}
 	}
 
@@ -293,9 +416,41 @@ public class DiagramEventBroker
 	 *            the listener
 	 */
 	public final void removeNotificationListener(EObject target,
+			NotificationPreCommitListener listener) {
+		if (target != null) {
+			preListeners.removeListener(target, LISTEN_TO_ALL_FEATURES, listener);
+		}
+	}
+	
+	/**
+	 * remove the supplied <tt>listener</tt> from the listener list.
+	 * 
+	 * @param target
+	 *            the traget to listen to
+	 * @param listener
+	 *            the listener
+	 */
+	public final void removeNotificationListener(EObject target,
 			NotificationListener listener) {
 		if (target != null) {
-			listeners.removeListener(target, LISTEN_TO_ALL_FEATURES, listener);
+			postListeners.removeListener(target, LISTEN_TO_ALL_FEATURES, listener);
+		}
+	}
+
+	/**
+	 * remove the supplied <tt>listener</tt> from the listener list.
+	 * 
+	 * @param target
+	 *            the traget to listen to
+	 * @param key
+	 *            the key for the listener
+	 * @param listener
+	 *            the listener
+	 */
+	public final void removeNotificationListener(EObject target, Object key,
+			NotificationPreCommitListener listener) {
+		if (target != null) {
+			preListeners.removeListener(target, key, listener);
 		}
 	}
 
@@ -312,23 +467,39 @@ public class DiagramEventBroker
 	public final void removeNotificationListener(EObject target, Object key,
 			NotificationListener listener) {
 		if (target != null) {
-			listeners.removeListener(target, key, listener);
+			postListeners.removeListener(target, key, listener);
 		}
 	}
-
 	public final void finalize() {
 		try {
-			stopListening();
+			for (Iterator iter = instanceMap.keySet().iterator(); iter
+				.hasNext();) {
+				TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) iter
+					.next();
+				editingDomain
+					.removeResourceSetListener((DiagramEventBroker) ((WeakReference) instanceMap
+						.get(editingDomain)).get());
+			}
 		} catch (Throwable ignored) {
 			// intentionally ignored
 		}
 	}
-
-	protected Set getNotificationListeners(Object notifier) {
+	
+	private Set getNotificationListeners(Object notifier, boolean preCommit) {
+		NotifierToKeyToListenersSetMap listeners = preCommit ? preListeners
+			: postListeners;
 		return listeners.getListeners(notifier, LISTEN_TO_ALL_FEATURES);
 	}
 
-	protected Set getNotificationListeners(Object notifier, Object key) {
+
+	/**
+	 * @param notifier
+	 * @param key
+	 * @param preCommit
+	 * @return
+	 */
+	private Set getNotificationListeners(Object notifier, Object key, boolean preCommit) {
+		NotifierToKeyToListenersSetMap listeners = preCommit ? preListeners : postListeners;
 		if (key != null) {
 			if (!key.equals(LISTEN_TO_ALL_FEATURES)) {
 				Set listenersSet = new HashSet();
@@ -345,60 +516,7 @@ public class DiagramEventBroker
 		}
 		return listeners.getAllListeners(notifier);
 	}
-
-	/** SLOT_MODIFIED filter. */
-	public final static MFilter SLOT_MODIFIED = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.And(
-			new MFilter.EventType(EventTypes.SET), new MFilter.EventType(
-				EventTypes.UNSET)));
-
-	/** ELEMENT_INSERTED_INTO_SLOT filter. */
-	public final static MFilter ELEMENT_INSERTED_INTO_SLOT = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.Or(
-			new MFilter.EventType(EventTypes.ADD), new MFilter.EventType(
-				EventTypes.ADD_MANY)));
-
-	/** ELEMENT_REMOVED_FROM_SLOT filter. */
-	public final static MFilter ELEMENT_REMOVED_FROM_SLOT = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.Or(
-			new MFilter.EventType(EventTypes.REMOVE), new MFilter.EventType(
-				EventTypes.REMOVE_MANY)));
-
-	/** ELEMENT_CREATED filter. */
-	public final static MFilter ELEMENT_CREATED = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.EventType(
-			EventTypes.CREATE));
-
-	/** ELEMENT_UNCREATED filter */
-	public final static MFilter ELEMENT_UNCREATED = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.EventType(
-			EventTypes.UNCREATE));
-
-	/** ELEMENT_DELETED filter. */
-	public final static MFilter ELEMENT_DELETED = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.EventType(
-			EventTypes.DESTROY));
-
-	/** ELEMENT_UNDELETED filter. */
-	public final static MFilter ELEMENT_UNDELETED = new MFilter.And(
-		new MFilter.NotifierType(EObject.class, false), new MFilter.EventType(
-			EventTypes.UNDESTROY));
-
-	/** The DiagramEventBroker singleton */
-	private static DiagramEventBroker instance;
-
-	/**
-	 * gives access to the <code>DiagramEventBroker</code> singleton
-	 * 
-	 * @return the <code>DiagramEventBroker</code> singleton
-	 */
-	public static DiagramEventBroker getInstance() {
-		if (instance == null) {
-			instance = new DiagramEventBroker();
-		}
-		return instance;
-	}
-
+	
 	/**
 	 * gets a subset of all the registered listeners who are interested in
 	 * receiving the supplied event.
@@ -407,11 +525,11 @@ public class DiagramEventBroker
 	 *            the event to use
 	 * @return the interested listeners in the event
 	 */
-	protected Set getInterestedNotificationListeners(Notification event) {
+	private Set getInterestedNotificationListeners(Notification event, boolean preCommit) {
 		HashSet listenerSet = new HashSet();
 
 		Collection c = getNotificationListeners(event.getNotifier(), event
-			.getFeature());
+			.getFeature(), preCommit);
 		if (c != null) {
 			listenerSet.addAll(c);
 		}
@@ -420,19 +538,19 @@ public class DiagramEventBroker
 		//the Visibility Event get fired to all interested listeners in the container
 		if (NotationPackage.eINSTANCE.getView_Visible().equals(event.getFeature()) &&
 			notifier.eContainer()!=null){
-				listenerSet.addAll(getNotificationListeners(notifier.eContainer()));
+				listenerSet.addAll(getNotificationListeners(notifier.eContainer(), preCommit));
 		}
 		else if (notifier instanceof EAnnotation) {
-			addListenersOfNotifier(listenerSet, notifier.eContainer(), event);
+			addListenersOfNotifier(listenerSet, notifier.eContainer(), event, preCommit);
 		} else if (!(notifier instanceof View)) {
 			while (notifier != null && !(notifier instanceof View)) {
 				notifier = notifier.eContainer();
 			}
-			addListenersOfNotifier(listenerSet, notifier, event);
+			addListenersOfNotifier(listenerSet, notifier, event, preCommit);
 		}
 		return listenerSet;
 	}
-
+	
 	/**
 	 * Helper method to add all the listners of the given <code>notifier</code>
 	 * to the list of listeners
@@ -441,10 +559,10 @@ public class DiagramEventBroker
 	 * @param notifier
 	 */
 	private void addListenersOfNotifier(Set listenerSet, EObject notifier,
-			Notification event) {
+			Notification event, boolean preCommit) {
 		if (notifier != null) {
 			Collection c = getNotificationListeners(notifier, event
-				.getFeature());
+				.getFeature(), preCommit);
 			if (c != null) {
 				if (listenerSet.isEmpty())
 					listenerSet.addAll(c);
@@ -465,11 +583,24 @@ public class DiagramEventBroker
 	 * @param event
 	 *            the event to handle
 	 */
-	protected void handleElementEvent(Notification event) {
-		MEditingDomain doamin = null;
-		if (!event.isTouch()
-			&& !(doamin = MEditingDomainGetter.getMEditingDomain(event))
-				.isUndoNotification(event) && !doamin.isRedoNotification(event)) {
+	private Command handleTransactionAboutToCommitEvent(Notification event) {
+		EObject element = (EObject) event.getNotifier();
+		if (element != null) {
+			return fireTransactionAboutToCommit(event);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Forwards the event to all interested listeners.
+	 * 
+	 * @param event
+	 *            the event to handle
+	 */
+	private void handleElementEvent(Notification event) {
+		
+		if (!event.isTouch()) {
 			EObject element = (EObject) event.getNotifier();
 			while (element != null && !(element instanceof View)) {
 				element = element.eContainer();
@@ -480,9 +611,11 @@ public class DiagramEventBroker
                 }
 			}
 		}
+
 		EObject element = (EObject) event.getNotifier();
 		if (element != null) {
 			fireNotification(event);
 		}
 	}
+
 }

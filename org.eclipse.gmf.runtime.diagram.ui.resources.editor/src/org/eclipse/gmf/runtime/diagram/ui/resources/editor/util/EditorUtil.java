@@ -14,34 +14,31 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.util;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.ui.parts.FileResourceEditorInput;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -54,86 +51,10 @@ import org.eclipse.ui.PlatformUI;
 public class EditorUtil {
 
 	/**
-	 * @param diagramFileCreator 
-	 * @param containerPath Directory path where the file will be stored
-	 * @param fileName Name of the file to be created
-	 * @param initialContents InputStream of the initial contents of the file if desired
-	 * @param diagramId the id of the editor extension to use
-	 * @param kind diagram kind, check {@link ViewType} for predefined values
-	 * @param dWindow the workbench window containing the active page
-	 * @param progressMonitor A progress monitor for tracking the progress of the action's execution
-	 * @param openEditor boolean indicating if the editor containing the diagram should be opened
-	 * @param saveDiagram boolean indicating if the diagram is to be saved
-	 * @param preferencesHint
-	 *            The preference hint that is to be used to find the appropriate
-	 *            preference store from which to retrieve diagram preference
-	 *            values. The preference hint is mapped to a preference store in
-	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 * @return
-	 */
-	public static final IFile createAndOpenDiagram(
-			DiagramFileCreator diagramFileCreator,
-			IPath containerPath, String fileName, String diagramId,
-			InputStream initialContents,
-			String kind, IWorkbenchWindow dWindow,
-			IProgressMonitor progressMonitor, boolean openEditor,
-			boolean saveDiagram, PreferencesHint preferencesHint) {
-		IFile newFile = EditorUtil.createNewDiagramFile(diagramFileCreator,
-			containerPath, fileName, initialContents, kind, dWindow.getShell(),
-			progressMonitor, preferencesHint);
-
-		if (newFile != null && openEditor) {
-			//Since the file resource was created fine, open it for editing
-			// iff requested by the user
-			EditorUtil.openDiagram(newFile, dWindow, saveDiagram,
-				progressMonitor, diagramId);
-			
-		}
-
-		return newFile;
-	}
-	
-	/**
-	 * @param file IFile to be opened
-	 * @param dWindow the workbench window containing the active page
-	 * @param saveDiagram boolean indicating if the diagram is to be saved
-	 * @param progressMonitor A progress monitor for tracking the progress of the action's execution
-	 * @param diagramId the id of the editor extension to use
-	 * @return editpart representing opened diagram
-	 */
-	public static final DiagramEditPart openDiagram(IFile file,
-			IWorkbenchWindow dWindow, boolean saveDiagram,
-			IProgressMonitor progressMonitor, String diagramId) {
-		IEditorPart editorPart = null;
-		try {
-			//TODO which MEditingDomain to use?
-			IWorkbenchPage page = dWindow.getActivePage();
-			if (page != null) {
-				
-				editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().openEditor(new FileResourceEditorInput(file),
-					diagramId);
-
-				if (saveDiagram)
-					editorPart.doSave(progressMonitor);
-			}
-			file.refreshLocal(IResource.DEPTH_ZERO, null);
-			return ((IDiagramWorkbenchPart) editorPart).getDiagramEditPart();
-		} catch (Exception e) {
-			Trace.catching(EditorPlugin.getInstance(),
-				EditorDebugOptions.EXCEPTIONS_CATCHING,
-				EditorUtil.class, "openDiagram", e); //$NON-NLS-1$
-		}
-
-		return null;
-	}	
-
-
-
-	/**
 	 * Creates a new diagram file resource in the selected container and with
 	 * the selected name. Creates any missing resource containers along the
-	 * path; does nothing if the container resources already exist.
+	 * path; does nothing if the container resources already exist. Creates a
+	 * new editing domain for this diagram.
 	 * <p>
 	 * In normal usage, this method is invoked after the user has pressed Finish
 	 * on the wizard; the enablement of the Finish button implies that all
@@ -148,12 +69,13 @@ public class EditorUtil {
 	 * This method should be called within a workspace modify operation since it
 	 * creates resources.
 	 * </p>
+	 * 
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
-	 *
+	 * 
 	 * @return the created file resource, or <code>null</code> if the file was
 	 *         not created
 	 */
@@ -161,7 +83,8 @@ public class EditorUtil {
 			DiagramFileCreator diagramFileCreator,
 			IPath containerFullPath, String fileName,
 			InputStream initialContents, final String kind,
-			Shell shell, final IProgressMonitor progressMonitor, final PreferencesHint preferencesHint) {
+			Shell shell, final IProgressMonitor progressMonitor,
+			final PreferencesHint preferencesHint) {
 		/** cache of newly-created file */
 		final IFile newDiagramFile = diagramFileCreator.createNewFile(
 			containerFullPath, fileName, initialContents, shell,
@@ -176,6 +99,7 @@ public class EditorUtil {
 
 		// Fill the contents of the file dynamically
 		Resource notationModel = null;
+
 		try {
 			newDiagramFile.refreshLocal(IResource.DEPTH_ZERO, null); //RATLC00514368
 			InputStream stream = newDiagramFile.getContents();
@@ -183,7 +107,9 @@ public class EditorUtil {
 
 			try {
 				// Empty file....
-				notationModel = ResourceUtil.create(completeFileName, null);//TODO which MEditingDomain to use?
+                ResourceSet resourceSet = new ResourceSetImpl();
+                notationModel = resourceSet.createResource(URI
+                    .createFileURI(completeFileName)); 
 			} finally {
 				stream.close();
 			}
@@ -196,22 +122,23 @@ public class EditorUtil {
 		}
 
 		if (notationModel != null) {
-			final Resource notationModel_ = notationModel;
-			MEditingDomainGetter.getMEditingDomain(notationModel_).runAsUnchecked(new MRunnable() {
-				public Object run() {
-					View view = ViewService
-						.createDiagram(kind, preferencesHint);
-					
-					if (view != null) {
-						notationModel_.getContents().add(view.getDiagram());
-						view.getDiagram().setName(newDiagramFile.getName());
-					}
-					return null;
-				}
-			});
-		}
+            View view = ViewService.createDiagram(kind, preferencesHint);
 
-		return newDiagramFile;
+            if (view != null) {
+                notationModel.getContents().add(view.getDiagram());
+                view.getDiagram().setName(newDiagramFile.getName());
+            }
+		}
+		try {
+            notationModel.save(Collections.EMPTY_MAP);
+        } catch (IOException e) {
+            Trace.catching(EditorPlugin.getInstance(),
+                EditorDebugOptions.EXCEPTIONS_CATCHING, EditorUtil.class,
+                "createNewDiagramFile", e); //$NON-NLS-1$
+            Log.error(EditorPlugin.getInstance(),
+                EditorStatusCodes.RESOURCE_FAILURE, e.getLocalizedMessage());
+        }
+ 		return newDiagramFile;
 	}
 
 	/**

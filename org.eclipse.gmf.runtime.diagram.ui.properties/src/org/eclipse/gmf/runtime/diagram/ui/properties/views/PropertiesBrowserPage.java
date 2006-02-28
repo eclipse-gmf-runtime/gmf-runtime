@@ -16,9 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
+import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -39,14 +40,6 @@ import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
-import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
-import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.emf.core.edit.DemuxingMListener;
-import org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener;
-import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
-import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
-import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
-
 /**
  * A property sheet page for modeler.
  * 
@@ -55,17 +48,12 @@ import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
  */
 public class PropertiesBrowserPage
 	extends TabbedPropertySheetPage
-	implements IDemuxedMListener, IPropertyChangeListener {
+	implements IPropertyChangeListener {
 
 	/**
 	 * the contributor for this property sheet page
 	 */
 	private ITabbedPropertySheetPageContributor contributor;
-
-	/**
-	 * model event listener
-	 */
-	private DemuxingMListener eventListener = new DemuxingMListener(this);
 
 	/**
 	 * save reference to the workbench window if there is a
@@ -173,7 +161,7 @@ public class PropertiesBrowserPage
 	 */
 	public void dispose() {
 		super.dispose();
-		eventListener.stopListening();
+
 		/**
 		 * Remove the part activation listener.
 		 */
@@ -218,110 +206,13 @@ public class PropertiesBrowserPage
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
-	 */
-	public MFilter getFilter() {
-		return MFilter.ELEMENT_MODIFIED_FILTER;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceLoadedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceLoadedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceUnloadedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleResourceUnloadedEvent(Notification notification,
-			Resource resource, EObject modelRoot) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceDirtiedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceDirtiedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceImportedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceImportedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceExportedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceExportedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceSavedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceSavedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-				
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleElementCreatedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleElementCreatedEvent(Notification notification,
-			EObject owner, EObject newElement) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleElementDeletedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleElementDeletedEvent(Notification notification,
-			EObject owner, EObject oldElement) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleElementModifiedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleElementModifiedEvent(Notification notification,
-			EObject element) {
-		/* not implemented */
-	}
-
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		/* not implemented */
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleUndoIntervalClosedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval)
-	 */
-	public void handleUndoIntervalClosedEvent(Notification notification,
-			MUndoInterval undoInterval) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleUndoIntervalsFlushedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval)
-	 */
-	public void handleUndoIntervalsFlushedEvent(Notification notification,
-			MUndoInterval undoInterval) {
-		/* not implemented */
-	}
-
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.IPage#setFocus()

@@ -16,12 +16,26 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 
@@ -111,24 +125,52 @@ public class SetViewMutabilityCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute() {
-		SetMutability(_immutable);
+		setMutability(_immutable);
 	}
 	
 	/** Set the mutability flag on all views. */
-	private void SetMutability(final boolean immutable) {
-		MEditingDomainGetter.getMEditingDomain(_viewAdapters).runAsUnchecked(new MRunnable() {
-			public Object run() {
-				Iterator adapters = _viewAdapters.iterator();
-				while (adapters.hasNext()) {
-					IAdaptable adapter = (IAdaptable)adapters.next();
-					View notationView = (View)adapter.getAdapter(View.class);
-					if (notationView != null) {
-						notationView.setMutable(!immutable);
+	private void setMutability(final boolean immutable) {
+		if (!_viewAdapters.isEmpty()) {
+			
+			TransactionalEditingDomain editingDomain = TransactionUtil
+				.getEditingDomain(((IAdaptable) _viewAdapters.get(0))
+					.getAdapter(View.class));
+			if (editingDomain != null) {
+
+				Map options = Collections.singletonMap(
+					Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+				AbstractEMFOperation operation = new AbstractEMFOperation(
+					editingDomain, StringStatics.BLANK, options) {
+
+					protected IStatus doExecute(IProgressMonitor monitor,
+							IAdaptable info)
+						throws ExecutionException {
+						Iterator adapters = _viewAdapters.iterator();
+						while (adapters.hasNext()) {
+							IAdaptable adapter = (IAdaptable) adapters.next();
+							View notationView = (View) adapter
+								.getAdapter(View.class);
+							if (notationView != null) {
+								notationView.setMutable(!immutable);
+							}
+						}
+						return Status.OK_STATUS;
 					}
+				};
+				try {
+					operation.execute(new NullProgressMonitor(), null);
+				} catch (ExecutionException e) {
+					Trace.catching(DiagramUIPlugin.getInstance(),
+						DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+						"setMutability", e); //$NON-NLS-1$
+					Log.warning(DiagramUIPlugin.getInstance(),
+						DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+						"setMutability", e); //$NON-NLS-1$
+
 				}
-				return null; 
+
 			}
-		});
+		}
 	}
 
 	/** 
@@ -144,14 +186,14 @@ public class SetViewMutabilityCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#redo()
 	 */
 	public void redo() {
-		SetMutability(_immutable);
+		setMutability(_immutable);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
 	public void undo() {
-		SetMutability(!_immutable);
+		setMutability(!_immutable);
 	}
 
 }

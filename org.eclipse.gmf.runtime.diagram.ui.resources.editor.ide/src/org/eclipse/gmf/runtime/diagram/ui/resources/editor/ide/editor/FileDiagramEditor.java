@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
 /**
@@ -28,29 +27,14 @@ public class FileDiagramEditor
 	 * <code>hasFlyoutPalette</code> is true and without flyout palette
 	 * if <code>hasFlyoutPalette</code> is false.
 	 * 
-	 * This uses the default editing domain.
-	 * 
 	 * @param hasFlyoutPalette true if flyoutPalette is required.
 	 */
 	public FileDiagramEditor(boolean hasFlyoutPalette) {
-		this(MEditingDomain.INSTANCE, hasFlyoutPalette);
+		super(hasFlyoutPalette);
 	}
 
 	/**
-	 * Constructs a file diagram editor, with flyout palette if
-	 * <code>hasFlyoutPalette</code> is true and without flyout palette
-	 * if <code>hasFlyoutPalette</code> is false.
-	 * 
-	 * @param domain Editing Domain to be used for create the diagram resource.
-	 * @param hasFlyoutPalette true if flyoutPalette is required.
-	 */
-	public FileDiagramEditor(MEditingDomain domain, boolean hasFlyoutPalette) {
-		super(domain, hasFlyoutPalette);
-	}
-
-	/**
-	 * Constructs a file diagram editor without flyout palette and default editing domain.
-	 * 
+	 * Constructs a file diagram editor without flyout palette.
 	 */
 	public FileDiagramEditor() {
 		this(false);

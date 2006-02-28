@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui;
 
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
@@ -76,9 +78,12 @@ public class OffscreenEditPartFactory {
 
 		customViewer.setEditPartFactory(EditPartService.getInstance());
 
+		DiagramEventBroker.startListening(TransactionUtil.getEditingDomain(diagram));
+		
 		customViewer.setContents(diagram);
 		customViewer.flush();
 
+		
 		Assert.isTrue(customViewer.getContents() instanceof DiagramEditPart);
 		
 		return (DiagramEditPart) customViewer.getContents();

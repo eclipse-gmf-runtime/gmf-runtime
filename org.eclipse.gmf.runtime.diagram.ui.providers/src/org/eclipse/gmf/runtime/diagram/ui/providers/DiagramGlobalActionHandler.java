@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -42,7 +43,6 @@ import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -58,7 +58,6 @@ import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersPlu
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.ui.properties.actions.PropertyPageViewAction;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
@@ -192,7 +191,7 @@ public class DiagramGlobalActionHandler
 
                 if (isUndoable) {
                     return Status.OK_STATUS;
-                }
+			}
                 return super.doUndo(monitor, info);
             }
 
@@ -201,7 +200,7 @@ public class DiagramGlobalActionHandler
 
                 if (isUndoable) {
                     return Status.OK_STATUS;
-                }
+			}
                 return super.doRedo(monitor, info);
             }
 		};
@@ -221,7 +220,7 @@ public class DiagramGlobalActionHandler
 	 */
 	protected ICommand getCutCommand(IGlobalActionContext cntxt,
 			IDiagramWorkbenchPart diagramPart) {
-        
+
         TransactionalEditingDomain editingDomain = getEditingDomain(diagramPart);
 
         if (editingDomain == null) {
@@ -307,7 +306,6 @@ public class DiagramGlobalActionHandler
 
 		CompositeTransactionalCommand compositeCommand = new CompositeTransactionalCommand(editingDomain, 
 			cntxt.getLabel());
-        
 		/* Get the selected edit parts */
 		Object[] objects = ((IStructuredSelection) cntxt.getSelection())
 			.toArray();
@@ -382,33 +380,34 @@ public class DiagramGlobalActionHandler
 		}
 
 		/* Get rid of dangling connections */
-		try {
-			MEditingDomainGetter.getMEditingDomain(views).runAsRead(
-				new MRunnable() {
-
-					public Object run() {
-						ArrayList objects = (ArrayList) views.clone();
-						for (Iterator i = objects.iterator(); i.hasNext();) {
-							Object object = i.next();
-							if (object instanceof Edge) {
-								Edge view = (Edge) object;
-								View fromView = view.getSource();
-								View toView = view.getTarget();
-								if (fromView == null || toView == null
-									|| !isContainedInViews(views, fromView)
-									|| !isContainedInViews(views, toView)) {
-									views.remove(view);
+		if (!views.isEmpty()) {
+			try {
+				TransactionUtil.getEditingDomain(views.get(0)).runExclusive(
+					new Runnable() {
+	
+						public void run() {
+							ArrayList objects = (ArrayList) views.clone();
+							for (Iterator i = objects.iterator(); i.hasNext();) {
+								Object object = i.next();
+								if (object instanceof Edge) {
+									Edge view = (Edge) object;
+									View fromView = view.getSource();
+									View toView = view.getTarget();
+									if (fromView == null || toView == null
+										|| !isContainedInViews(views, fromView)
+										|| !isContainedInViews(views, toView)) {
+										views.remove(view);
+									}
 								}
 							}
 						}
-						return null;
-					}
-				});
-		} catch (Exception e) {
-			Trace.catching(DiagramProvidersPlugin.getInstance(),
-				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-				"getSelectedViews()", //$NON-NLS-1$
-				e);
+					});
+			} catch (Exception e) {
+				Trace.catching(DiagramProvidersPlugin.getInstance(),
+					DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					"getSelectedViews()", //$NON-NLS-1$
+					e);
+			}
 		}
 
 		/* Make sure that the selection contains atleast one IShapeView */
@@ -699,8 +698,7 @@ public class DiagramGlobalActionHandler
 
             if (domain != null && domain instanceof TransactionalEditingDomain) {
                 result = (TransactionalEditingDomain) domain;
-            }
-        }
+}        }
 
         return result;
     }

@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
@@ -30,6 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolE
 import org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditor;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.TestingConfigurationElement;
@@ -284,9 +286,17 @@ public class PaletteServiceTests
 			new ProviderD());
 		getPaletteService().addPaletteProvider(ProviderPriority.HIGHEST,
 			descriptorD);
+		
+		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE
+			.createEditingDomain();
 
 		// test service
-		DiagramDocumentEditor editor = new DiagramDocumentEditor(true);
+		DiagramDocumentEditor editor = new DiagramDocumentEditor(true) {
+
+			public TransactionalEditingDomain getEditingDomain() {
+				return editingDomain;
+			}
+		};
 
 		PaletteRoot paletteRoot = getPaletteService().createPalette(editor,
 			"DUMMY CONTENT"); //$NON-NLS-1$

@@ -27,6 +27,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.DemultiplexingListener;
+import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
@@ -36,7 +38,6 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
@@ -44,12 +45,6 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCo
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.edit.DemuxingMListener;
-import org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener;
-import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -68,15 +63,20 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  *         href="mailto:anthonyh@ca.ibm.com">anthonyh@ca.ibm.com </a>
  */
 public abstract class AbstractModelerPropertySection
-	extends AbstractPropertySection
-	implements IDemuxedMListener {
+	extends AbstractPropertySection {
 
 	private TabbedPropertySheetPage tabbedPropertySheetPage;
-
+ 
 	/**
 	 * model event listener
 	 */
-	protected DemuxingMListener eventListener = new DemuxingMListener(this);
+	protected DemultiplexingListener eventListener = new DemultiplexingListener(getFilter()) {
+
+		protected void handleNotification(TransactionalEditingDomain domain,
+				Notification notification) {
+			update(notification, (EObject) notification.getNotifier());
+		}
+	};
 
 	// properties provider to obtain properties of the objects on the list
 	protected static final PropertiesServiceAdapterFactory propertiesProvider = new PropertiesServiceAdapterFactory();
@@ -98,7 +98,8 @@ public abstract class AbstractModelerPropertySection
 	 * a flag indicating if this property section got disposed
 	 */
 	protected boolean disposed = false;
-
+    
+    private TransactionalEditingDomain editingDomain = null;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
@@ -236,25 +237,14 @@ public abstract class AbstractModelerPropertySection
 	 *            Runnable code to execute
 	 */
 	protected void executeAsReadAction(final Runnable code) {
-		executeAsReadAction(new MRunnable() {
-
-			public Object run() {
-				code.run();
-				return null;
-			}
-		});
+		try {
+			getEditingDomain().runExclusive(code);
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramPropertiesPlugin.getDefault(),
+				DiagramPropertiesDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"executeAsReadAction", e); //$NON-NLS-1$
+		}
 	}
-	
-	/**
-	 * A utility method allows execute a piece of code wrapping it in the read
-	 * call to the model.
-	 * 
-	 * @param code -
-	 *            MRunnable code to execute
-	 */
-	protected Object executeAsReadAction(MRunnable code) {		
-		return MEditingDomainGetter.getMEditingDomain(getEObjectList()).runAsRead(code);
-	}	
 
 	/**
 	 * A utility method allows execute a list of commands by wrapping them\ in a
@@ -270,16 +260,16 @@ public abstract class AbstractModelerPropertySection
 			return null;
 
 		bIsCommandInProgress = true;
-        
+
         CompositeCommand command = new CompositeCommand(actionName, commands);
         IOperationHistory history = OperationHistoryFactory.getOperationHistory();
-       
+
         try {
             IStatus status = history.execute(command,
                 new NullProgressMonitor(), null);
 
             if (status.getCode() == DiagramPropertiesStatusCodes.CANCELLED) {
-                refresh();
+			refresh();
             }
 
         } catch (ExecutionException e) {
@@ -311,7 +301,9 @@ public abstract class AbstractModelerPropertySection
 	 */
 	public void aboutToBeHidden() {
 		super.aboutToBeHidden();
-		eventListener.stopListening();
+        if (editingDomain != null) {
+            editingDomain.removeResourceSetListener(getEventListener());
+        }
 	}
 
 	/* (non-Javadoc)
@@ -319,7 +311,10 @@ public abstract class AbstractModelerPropertySection
 	 */
 	public void aboutToBeShown() {
 		super.aboutToBeShown();
-		eventListener.startListening();
+        editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            editingDomain.addResourceSetListener(getEventListener());
+        }
 	}
 
 	/* (non-Javadoc)
@@ -327,7 +322,7 @@ public abstract class AbstractModelerPropertySection
 	 */
 	public void dispose() {
 		super.dispose();
-		/*
+		/* 
 		 * if (getUpdateRequestCollapser() != null) {
 		 * getUpdateRequestCollapser().stop(); updateRequestCollapser = null; }
 		 */
@@ -364,73 +359,11 @@ public abstract class AbstractModelerPropertySection
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
 	 */
-	public MFilter getFilter() {
-		return MFilter.ELEMENT_MODIFIED_FILTER;
+	public NotificationFilter getFilter() {
+		return NotificationFilter.createEventTypeFilter(Notification.SET).and(
+            NotificationFilter.createNotifierTypeFilter(EObject.class));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceLoadedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceLoadedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceUnloadedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleResourceUnloadedEvent(Notification notification,
-			Resource resource, EObject modelRoot) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceDirtiedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceDirtiedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceSavedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceSavedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceImportedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceImportedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleResourceExportedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.resource.Resource)
-	 */
-	public void handleResourceExportedEvent(Notification notification,
-			Resource resource) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleElementCreatedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleElementCreatedEvent(Notification notification,
-			EObject owner, EObject newElement) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleElementDeletedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-	 */
-	public void handleElementDeletedEvent(Notification notification,
-			EObject owner, EObject oldElement) {
-		/* not implemented */
-	}
 
 	/**
 	 * Update if nessesary, upon receiving the model event. This event will only
@@ -511,37 +444,6 @@ public abstract class AbstractModelerPropertySection
 	}
 
 	/**
-	 * Handle the action abandoned exception
-	 * 
-	 * @param exception
-	 *            the action abandoned exception
-	 */
-	protected void handleException(MSLActionAbandonedException exception) {
-		Trace.catching(DiagramPropertiesPlugin.getDefault(),
-			DiagramPropertiesDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-			exception.getMessage(), exception);
-		Log.warning(DiagramPropertiesPlugin.getDefault(),
-			DiagramPropertiesStatusCodes.IGNORED_EXCEPTION_WARNING,
-			exception.getMessage(), exception);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleUndoIntervalClosedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval)
-	 */
-	public void handleUndoIntervalClosedEvent(Notification notification,
-			MUndoInterval undoInterval) {
-		/* not implemented */
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#handleUndoIntervalsFlushedEvent(org.eclipse.emf.common.notify.Notification, org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval)
-	 */
-	public void handleUndoIntervalsFlushedEvent(Notification notification,
-			MUndoInterval undoInterval) {
-		/* not implemented */
-	}
-
-	/**
 	 * @return Returns the eObjectList.
 	 */
 	protected List getEObjectList() {
@@ -558,7 +460,7 @@ public abstract class AbstractModelerPropertySection
 	/**
 	 * @return Returns the eventListener.
 	 */
-	protected DemuxingMListener getEventListener() {
+	protected DemultiplexingListener getEventListener() {
 		return eventListener;
 	}
 
@@ -584,7 +486,7 @@ public abstract class AbstractModelerPropertySection
 	 * @return Returns a command
 	 */
 	private ICommand createCommandInternal(String name, Resource res,
-            final Runnable runnable) {
+			final Runnable runnable) {
 
         ICommand command = new AbstractTransactionalCommand(getEditingDomain(), name,
             Collections.singletonList(WorkspaceSynchronizer.getFile(res))) {
@@ -593,33 +495,31 @@ public abstract class AbstractModelerPropertySection
                     IProgressMonitor monitor, IAdaptable info)
                 throws ExecutionException {
 
-                runnable.run();
+				runnable.run();
 
                 return CommandResult.newOKCommandResult();
-            }
-        };
+			}
+		};
 
-        return command;
-    }
-    
+		return command;
+	}
+
     /**
      * Gets the editing domain from my EObject input.
      * 
      * @return my editing domain
      */
     protected TransactionalEditingDomain getEditingDomain() {
-
         EObject eObjectInput = getEObject();
-
         if (eObjectInput != null) {
             return TransactionUtil.getEditingDomain(eObjectInput);
+        } else if (!getEObjectList().isEmpty()) {
+            return TransactionUtil.getEditingDomain(getEObjectList().get(0));
         }
-
         return null;
     }
 
-	
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
 	public void createControls(Composite parent,
@@ -681,4 +581,5 @@ public abstract class AbstractModelerPropertySection
 		return DiagramPropertiesPlugin.getDefault()
 			.getUpdateRequestCollapser();
 	}
+	
 }

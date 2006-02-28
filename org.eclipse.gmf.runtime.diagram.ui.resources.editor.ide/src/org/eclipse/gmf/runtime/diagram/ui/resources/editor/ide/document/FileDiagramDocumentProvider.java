@@ -11,19 +11,32 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramModificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentEvent;
@@ -32,10 +45,10 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocu
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.DiagramIOUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.util.ResourceUtil;
+import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -125,7 +138,7 @@ public class FileDiagramDocumentProvider
 		Diagram diagram = (Diagram)document.getContent();
 		if(diagram != null) {
 			Resource resource = diagram.eResource();
-			IFile resourceFile = ResourceUtil.getFile(resource);
+			IFile resourceFile = WorkspaceSynchronizer.getFile(resource);
 			// unload if the resourceFile and storage is same.
 			// if not same throw exception.
 			if(resourceFile != null) {
@@ -137,7 +150,7 @@ public class FileDiagramDocumentProvider
 			}
 		}
 		IDiagramDocument diagramDocument = (IDiagramDocument)document;
-		MEditingDomain domain = diagramDocument.getEditingDomain();
+		TransactionalEditingDomain domain = diagramDocument.getEditingDomain();
 
 		diagram = DiagramIOUtil.load(domain, storage, true, getProgressMonitor());
 		document.setContent(diagram);
@@ -150,16 +163,16 @@ public class FileDiagramDocumentProvider
 		throws CoreException {
 		Diagram diagram = (Diagram)document.getContent();
 		Resource resource = diagram.eResource();
-		IFile resourceFile = ResourceUtil.getFile(resource);
+		IFile resourceFile = WorkspaceSynchronizer.getFile(resource);
 		// if the diagram in the document is referring to another file, then we should
 		// create a copy of this diagram and save it to the new file, save as scenario.
 		if(resourceFile != null && !resourceFile.equals(file)) {
 			diagram = copyDiagramResource(diagram);
 		}
 		IDiagramDocument diagramDocument = (IDiagramDocument)document;
-		MEditingDomain domain = diagramDocument.getEditingDomain();
+		TransactionalEditingDomain domain = diagramDocument.getEditingDomain();
 
-		DiagramIOUtil.save(domain, file, diagram, overwrite, DiagramIOUtil.hasUnrecognizedData(diagram.eResource()), monitor);
+		DiagramIOUtil.save(domain, file, diagram, DiagramIOUtil.hasUnrecognizedData(diagram.eResource()), monitor);
 	}
 	
 	private Diagram copyDiagramResource(Diagram sourceDiagram) {
@@ -167,11 +180,41 @@ public class FileDiagramDocumentProvider
 		EList contents = sourceRes.getContents();
 		
 		int indexOfDiagram = contents.indexOf(sourceDiagram);
-		Collection copiedContents = EcoreUtil.copyAll(contents);
-		
-		Resource newResource = ResourceUtil.getEditingDomain().createResource(null);
-		newResource.getContents().addAll(copiedContents);
-		
+		final Collection copiedContents = EcoreUtil.copyAll(contents);
+
+		TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sourceDiagram);
+		final Resource newResource = editingDomain
+            .createResource(
+                EcoreUtil.generateUUID() + EMFCoreConstants.INVALID_PATH);
+         
+        Map options = new HashMap();
+        options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+ 
+        AbstractEMFOperation operation = new AbstractEMFOperation(
+            editingDomain, StringStatics.BLANK,
+            options) {
+
+            protected IStatus doExecute(IProgressMonitor monitor,
+                    IAdaptable info)
+                throws ExecutionException {
+
+                newResource.getContents().addAll(copiedContents);
+
+                return Status.OK_STATUS;
+            }
+        };
+        try {
+            operation.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            Trace.catching(EditorIDEPlugin.getInstance(),
+                EditorDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "createView", e); //$NON-NLS-1$
+            Log
+                .warning(EditorIDEPlugin.getInstance(),
+                    EditorStatusCodes.RESOURCE_FAILURE,
+                    "createView", e); //$NON-NLS-1$
+        }
+ 	
 		return (Diagram)newResource.getContents().get(indexOfDiagram);
 	}
 
@@ -230,7 +273,7 @@ public class FileDiagramDocumentProvider
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider#createInputWithEditingDomain(org.eclipse.ui.IEditorInput, org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain)
 	 */
-	public IEditorInput createInputWithEditingDomain(IEditorInput editorInput, MEditingDomain domain) {
+	public IEditorInput createInputWithEditingDomain(IEditorInput editorInput, TransactionalEditingDomain domain) {
 		if(editorInput instanceof IFileEditorInput)
 			return new FileEditorInputProxy((IFileEditorInput)editorInput, domain);
 		assert false;

@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -162,7 +162,7 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 	 * @return the view's <code>EClass</code>
 	 */
 	protected static EClass getReferencedElementEClass(View view ) {
-		return ProxyUtil.getProxyClass(view.getElement());
+		return EMFCoreUtil.getProxyClass(view.getElement());
 	}
 
 	/**

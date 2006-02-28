@@ -69,13 +69,13 @@ public class DiagramRulerProvider extends RulerProvider {
 				// Add a new Guide
 				if( event.getNewValue() != null && event.getOldValue() == null ) {
 					guide = (Guide)event.getNewValue();
-					DiagramEventBroker.getInstance().addNotificationListener(guide,guideListener);
+					DiagramEventBroker.getInstance(editingDomain).addNotificationListener(guide,guideListener);
 				}
 
 				// Remove Guide
 				if( event.getNewValue() == null && event.getOldValue() != null ) {
 					guide = (Guide)event.getOldValue();
-					DiagramEventBroker.getInstance().removeNotificationListener(guide,guideListener);
+					DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(guide,guideListener);
 				}
 				
 				for (int i = 0; i < listeners.size(); i++) {
@@ -128,19 +128,19 @@ public class DiagramRulerProvider extends RulerProvider {
 		return mm;
 	}
 	public void init() {
-		theRuler.addNotificationListener(rulerListener);
+		theRuler.addNotificationListener(editingDomain, rulerListener);
 
 		Iterator iter = getGuides().iterator();
 		while(iter.hasNext()) {
 			Guide guide = (Guide)iter.next();
-			DiagramEventBroker.getInstance().addNotificationListener(guide,guideListener);
+			DiagramEventBroker.getInstance(editingDomain).addNotificationListener(guide,guideListener);
 		}
 		
 		refreshMap();
 	}
 	
 	public void uninit() {
-		theRuler.removeNotificationListener(rulerListener);
+		theRuler.removeNotificationListener(editingDomain, rulerListener);
 	}
 
 	/* (non-Javadoc)

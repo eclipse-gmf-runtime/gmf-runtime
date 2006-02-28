@@ -13,14 +13,18 @@ package org.eclipse.gmf.runtime.diagram.ui.actions;
 
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.Request;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeChildPropertyValueRequest;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
@@ -49,7 +53,7 @@ public abstract class IndividualCompartmentAction
 		String compartmentSemanticHint) {
 		super(
 			workbenchPage,
-			MetaModelUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
+			PackageUtil.getID(NotationPackage.eINSTANCE.getView_Visible()),
 			DiagramUIActionsMessages.ConstrainedFlowLayoutEditPolicy_changeVisibilityCommand_label);
 		Assert.isNotNull(compartmentSemanticHint);
 		this.compartmentSemanticHint = compartmentSemanticHint;
@@ -81,20 +85,37 @@ public abstract class IndividualCompartmentAction
 	protected Object getPropertyValue(
 		final IGraphicalEditPart editPart,
 		final String thePropertyId) {
-		return MEditingDomainGetter.getMEditingDomain((View)editPart.getModel()).runAsRead( new MRunnable() {
-			public Object run() {
-				ENamedElement element = MetaModelUtil.getElement(thePropertyId);
-				if (element instanceof EStructuralFeature){
-					View view  = editPart.getNotationView();
-					if (view !=null){
-						View childView = ViewUtil.getChildBySemanticHint(view,getCompartmentSemanticHint());
-						if (childView!=null){
-							return ViewUtil.getStructuralFeatureValue(childView,(EStructuralFeature)element);
+		
+		try {
+			return editPart.getEditingDomain().runExclusive(
+				new RunnableWithResult.Impl() {
+
+					public void run() {
+						ENamedElement element = PackageUtil
+							.getElement(thePropertyId);
+						if (element instanceof EStructuralFeature) {
+							View view = editPart.getNotationView();
+							if (view != null) {
+								View childView = ViewUtil
+									.getChildBySemanticHint(view,
+										getCompartmentSemanticHint());
+								if (childView != null) {
+									setResult(ViewUtil
+										.getStructuralFeatureValue(childView,
+											(EStructuralFeature) element));
+								}
+							}
 						}
 					}
-				}
-				return null;
-			}
-		});
+				});
+		} catch (InterruptedException e) {
+			Trace.catching(DiagramActionsPlugin.getInstance(),
+				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				"getPropertyValue", e); //$NON-NLS-1$
+			Log.error(DiagramActionsPlugin.getInstance(),
+				DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING,
+				"getPropertyValue", e); //$NON-NLS-1$
+		}
+		return null;
 	}
 }

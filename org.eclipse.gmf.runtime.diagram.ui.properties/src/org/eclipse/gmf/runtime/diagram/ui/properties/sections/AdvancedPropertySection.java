@@ -14,10 +14,10 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.emf.core.edit.MFilter;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
+import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.gmf.runtime.emf.ui.properties.sections.UndoableModelPropertySheetEntry;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FormAttachment;
@@ -65,7 +65,6 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
         }
 
         page = new PropertySheetPage();
-        
         UndoableModelPropertySheetEntry root = new UndoableModelPropertySheetEntry(
             OperationHistoryFactory.getOperationHistory());
         
@@ -136,6 +135,13 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
      * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void setInput(IWorkbenchPart part, ISelection selection) {
+        if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+            Object firstElement = ((IStructuredSelection) selection)
+                .getFirstElement();
+            if (firstElement instanceof EObject) {
+                setEObject((EObject) firstElement);
+            }
+        }
         page.selectionChanged(part, selection);
     }
 
@@ -190,59 +196,30 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
 			});
 		}
 	}
-
-    /**
-	 * Overwrites the default behavior to perform update on the create event.
-	 * That must be done because proeprties of the advanced tab might be
-	 * affected by creation of new elements.
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.core.internal.events.IDemuxedMListener#handleElementCreatedEvent(org.eclipse.emf.common.notify.Notification,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-	 */
-    public void handleElementCreatedEvent(Notification notification,
-            EObject owner, EObject newElement) {
-        update(notification, owner);
-    }
-
-    /**
-     * Overwrites the default behavior to perform update on the delete event.
-     * That must be done because proeprties of the advanced tab might be
-     * affected by deletion of elements.
-     * 
-     * @see org.eclipse.gmf.runtime.emf.core.internal.events.IDemuxedMListener#handleElementDeletedEvent(org.eclipse.emf.common.notify.Notification,
-     *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-     */
-    public void handleElementDeletedEvent(Notification notification,
-            EObject owner, EObject oldElement) {
-        update(notification, owner);
-    }
-
+   
     /* (non-Javadoc)
      * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
      */
-    public MFilter getFilter() {
-        MFilter lifeCycleEventFilter = new MFilter.Or(
-                MFilter.ELEMENT_CREATED_FILTER,
-                MFilter.ELEMENT_DELETED_FILTER);
-
-        return new MFilter.Or(lifeCycleEventFilter,
-                        MFilter.ELEMENT_MODIFIED_FILTER);
-    }
+    public NotificationFilter getFilter() {
+		return NotificationFilter.createEventTypeFilter(Notification.SET).or(
+			NotificationFilter.createEventTypeFilter(Notification.ADD)).or(
+			NotificationFilter.createEventTypeFilter(Notification.ADD_MANY))
+			.or(NotificationFilter.createEventTypeFilter(Notification.REMOVE))
+			.or(
+				NotificationFilter
+					.createEventTypeFilter(Notification.REMOVE_MANY)).and(
+				NotificationFilter.createNotifierTypeFilter(EObject.class));
+	}
 
    
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#addToEObjectList(java.lang.Object)
-     */
+    /*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#addToEObjectList(java.lang.Object)
+	 */
     protected boolean addToEObjectList(Object object) {
         /* not implemented */
     	return true;
-    }
+    }  
 
-  
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#handleException(org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException)
-     */
-    protected void handleException(MSLActionAbandonedException exception) {
-        /* not implemented */
-    }
 }

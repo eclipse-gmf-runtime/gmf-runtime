@@ -3,14 +3,19 @@ package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.core.internal.util.MEditingDomainGetter;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractShapeTests;
@@ -96,21 +101,40 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 		final View view  = getDiagramEditPart().getNotationView();
 		TestListenningEditPart ep = 
 			new TestListenningEditPart(view);
-		final MEditingDomain editingDomain = MEditingDomainGetter.getMEditingDomain((EObject)ep.getModel());
+		final TransactionalEditingDomain editingDomain = ep.getEditingDomain();
 		ep.activate();
-		//start read action here 
-		editingDomain.runInUndoInterval(new Runnable() {
-			public void run() {
-				try {
-					editingDomain.runAsWrite(new MRunnable() {
-						public Object run() {
-							view.setType("ddd"); //$NON-NLS-1$
-							return null;
-						}});
-				} catch (MSLActionAbandonedException e) {
-					// do nothing
-				}
-			}});
+
+		AbstractEMFOperation operation = new AbstractEMFOperation(
+			editingDomain, "") { //$NON-NLS-1$
+
+			protected IStatus doExecute(IProgressMonitor monitor,
+					IAdaptable info)
+				throws ExecutionException {
+				
+				view.setType("ddd"); //$NON-NLS-1$
+				
+				return Status.OK_STATUS;
+			};
+		};
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation,
+					new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			assertFalse(false);
+		}
+//		editingDomain.runInUndoInterval(new Runnable() {
+//			public void run() {
+//				try {
+//					editingDomain.runAsWrite(new MRunnable() {
+//						public Object run() {
+//							view.setType("ddd"); //$NON-NLS-1$
+//							return null;
+//						}});
+//				} catch (MSLActionAbandonedException e) {
+//					// do nothing
+//				}
+//			}});
 		flushEventQueue();
 		assertTrue(ep.receivedTypeEvent());
 	}

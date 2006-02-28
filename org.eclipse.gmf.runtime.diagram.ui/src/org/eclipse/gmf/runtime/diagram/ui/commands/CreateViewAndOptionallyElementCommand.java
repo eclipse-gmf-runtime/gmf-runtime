@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -31,8 +32,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFac
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
@@ -119,16 +120,16 @@ public class CreateViewAndOptionallyElementCommand
 	}
 
     public List getAffectedFiles() {
-        if (containerEP != null) {
-            View view = (View)containerEP.getModel();
-            if (view != null) {
-                IFile f = EObjectUtil.getWorkspaceFile(view);
-                return f != null ? Collections.singletonList(f) : Collections.EMPTY_LIST;
-            }
-        }
+		if (containerEP != null) {
+			View view = (View)containerEP.getModel();
+			if (view != null) {
+				IFile f = WorkspaceSynchronizer.getFile(view.eResource());
+				return f != null ? Collections.singletonList(f) : Collections.EMPTY_LIST;
+			}
+		}
 
         return super.getAffectedFiles();
-    }
+	}
 	
 	/**
 	 * Searches the container editpart to see if the element passed in already
@@ -195,7 +196,7 @@ public class CreateViewAndOptionallyElementCommand
 
 					messageBox.setText(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Title);
 					messageBox.setMessage(NLS.bind(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Message,
-						EObjectUtil.getName(element)));
+						EMFCoreUtil.getName(element)));
 					int iResult = messageBox.open();
 					if(iResult == SWT.YES)
 					{
@@ -223,31 +224,31 @@ public class CreateViewAndOptionallyElementCommand
 	}
 
     public boolean canUndo() {
-        return getCommand() != null && getCommand().canUndo();
-    }
+		return getCommand() != null && getCommand().canUndo();
+	}
 
     public boolean canRedo() {
-        return getCommand() != null && getCommand().canExecute();
-    }
+		return getCommand() != null && getCommand().canExecute();
+	}
 
     
     protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
         
-        if (getCommand() != null) {
-            getCommand().redo();
-        }
+		if (getCommand() != null) {
+			getCommand().redo();
+		}
         return CommandResult.newOKCommandResult();
-    }
+	}
 
     protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
 
-        if (getCommand() != null) {
-            getCommand().undo();
-        }
+		if (getCommand() != null) {
+			getCommand().undo();
+		}
         return CommandResult.newOKCommandResult();
-    }
+	}
 
 	/**
 	 * @return the adapter from which the view can be retrieved.

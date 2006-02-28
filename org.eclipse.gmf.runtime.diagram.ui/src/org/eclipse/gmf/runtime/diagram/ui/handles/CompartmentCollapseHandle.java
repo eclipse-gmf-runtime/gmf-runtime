@@ -22,6 +22,7 @@ import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
@@ -126,7 +127,7 @@ public class CompartmentCollapseHandle
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
 		View view = owner.getNotationView();
 		if (view!=null){
-			DiagramEventBroker.getInstance().addNotificationListener(owner.getNotationView(),CompartmentCollapseHandle.this);
+			getDiagramEventBroker().addNotificationListener(owner.getNotationView(),CompartmentCollapseHandle.this);
 		}
 	}
 
@@ -135,8 +136,17 @@ public class CompartmentCollapseHandle
 	 */
 	public void removeNotify() {
 		IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
-		DiagramEventBroker.getInstance().removeNotificationListener(owner.getNotationView(),this);
+		getDiagramEventBroker().removeNotificationListener(owner.getNotationView(),this);
 		super.removeNotify();
 	}
+	
+    private DiagramEventBroker getDiagramEventBroker() {
+        TransactionalEditingDomain theEditingDomain = ((IGraphicalEditPart) getOwner())
+            .getEditingDomain();
+        if (theEditingDomain != null) {
+            return DiagramEventBroker.getInstance(theEditingDomain);
+        }
+        return null;
+    }
 
 }

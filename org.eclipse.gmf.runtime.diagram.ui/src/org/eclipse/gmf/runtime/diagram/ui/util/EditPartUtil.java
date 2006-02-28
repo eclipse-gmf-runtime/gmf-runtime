@@ -13,7 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.util;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.emf.core.util.ProxyUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -33,7 +34,7 @@ public class EditPartUtil {
 		if (editPart.getModel() instanceof View){
 			View view = (View)editPart.getModel();
 			EObject element = view.getElement();
-			return element == null ? null : ProxyUtil.getProxyClassID(element);
+			return element == null ? null : PackageUtil.getID(EMFCoreUtil.getProxyClass(element));
 		}
 		return null;
 	}

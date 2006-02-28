@@ -13,13 +13,13 @@ package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramModificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.DiagramIOUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -72,7 +72,7 @@ public class StorageDiagramDocumentProvider
 		super.disposeElementInfo(element, info);
 		Object content = info.fDocument.getContent();
 		if(content instanceof Diagram && info.fDocument instanceof IDiagramDocument) {
-			MEditingDomain domain = ((IDiagramDocument)info.fDocument).getEditingDomain();
+			TransactionalEditingDomain domain = ((IDiagramDocument)info.fDocument).getEditingDomain();
 			DiagramIOUtil.unload(domain, (Diagram)content);
 			
 			assert info instanceof DiagramStorageInfo;
@@ -87,7 +87,7 @@ public class StorageDiagramDocumentProvider
 	protected void setDocumentContentFromStorage(IDocument document, IStorage storage)
 		throws CoreException {
 		IDiagramDocument diagramDocument = (IDiagramDocument)document;
-		MEditingDomain domain = diagramDocument.getEditingDomain();
+		TransactionalEditingDomain domain = diagramDocument.getEditingDomain();
 		Diagram diagram = DiagramIOUtil.load(domain, storage, true, getProgressMonitor());
 		document.setContent(diagram);
 	}
@@ -107,7 +107,7 @@ public class StorageDiagramDocumentProvider
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocumentProvider#createInputWithEditingDomain(org.eclipse.ui.IEditorInput, org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain)
 	 */
-	public IEditorInput createInputWithEditingDomain(IEditorInput editorInput, MEditingDomain domain) {
+	public IEditorInput createInputWithEditingDomain(IEditorInput editorInput, TransactionalEditingDomain domain) {
 		if(editorInput instanceof IStorageEditorInput)
 			return new StorageEditorInputProxy((IStorageEditorInput)editorInput, domain);
 		assert false;

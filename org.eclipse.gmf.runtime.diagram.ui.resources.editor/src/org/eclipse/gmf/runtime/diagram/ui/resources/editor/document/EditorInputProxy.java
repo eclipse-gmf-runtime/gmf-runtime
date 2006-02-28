@@ -15,8 +15,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.HashUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
 
 
 /**
@@ -27,13 +27,13 @@ public class EditorInputProxy
 	implements IEditorInput, MEditingDomainElement {
 
 	protected IEditorInput fProxied = null;
-	protected MEditingDomain editingDomain = null;
+	protected TransactionalEditingDomain editingDomain = null;
 	
 	/**
 	 * @param input IEditorInput
 	 * @param domain EditingDomain
 	 */
-	public EditorInputProxy(IEditorInput input, MEditingDomain domain) {
+	public EditorInputProxy(IEditorInput input, TransactionalEditingDomain domain) {
 		assert input != null && domain != null;
 		fProxied = input;
 		editingDomain = domain;
@@ -85,7 +85,7 @@ public class EditorInputProxy
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.MEditingDomainElement#getEditingDomain()
 	 */
-	public MEditingDomain getEditingDomain() {
+	public TransactionalEditingDomain getEditingDomain() {
 		return editingDomain;
 	}
 	

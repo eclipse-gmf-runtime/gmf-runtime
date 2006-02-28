@@ -45,7 +45,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -226,7 +226,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			final IGraphicalEditPart andEP = getLogicRefactorTestFixture().getAndEP();
 			
 			final int color = FigureUtilities.RGBToInteger(new RGB(255, 0, 255)).intValue();
-            
+			
             TransactionalEditingDomain editingDomain = getLogicRefactorTestFixture().getEditingDomain();
             
 			// do notational changes to the And gate
@@ -269,16 +269,15 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 					newObject.getTerminals().addAll(oldObject.getTerminals());
 
 					new ViewRefactorHelper(PreferencesHint.USE_DEFAULTS).refactor(oldObject, newObject);
-
-					EObjectUtil.destroy(oldObject);
-
+					EMFCoreUtil.destroy(oldObject);
+					
 					return CommandResult.newOKCommandResult(newObject);
 				}
 			});
 			
 			// validate the morphing
 			XORGate xorGate = (XORGate) results.iterator().next();
-			Collection newNodes = EObjectUtil.getReferencers(xorGate, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+			Collection newNodes = EMFCoreUtil.getReferencers(xorGate, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
 			assertFalse("morphing view failed", newNodes.isEmpty());//$NON-NLS-1$
 			
 			Node newNode = (Node) newNodes.iterator().next();
@@ -348,7 +347,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 							}
 						}						
 					}.refactor(oldObject, newObject);
-					EObjectUtil.destroy(oldObject);
+					EMFCoreUtil.destroy(oldObject);
 					
 					return CommandResult.newOKCommandResult(newObject);
 				}
@@ -356,7 +355,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 			
 			// validate the morphing
 			FlowContainer flowContainer = (FlowContainer) results.iterator().next();
-			Collection newNodes = EObjectUtil.getReferencers(flowContainer, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
+			Collection newNodes = EMFCoreUtil.getReferencers(flowContainer, new EReference[]{NotationPackage.eINSTANCE.getView_Element()});
 			assertFalse("morphing view failed", newNodes.isEmpty());//$NON-NLS-1$
 			
 			Node newNode = (Node) newNodes.iterator().next();

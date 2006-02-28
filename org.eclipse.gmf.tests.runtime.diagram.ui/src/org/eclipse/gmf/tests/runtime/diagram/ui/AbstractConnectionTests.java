@@ -13,14 +13,12 @@ package org.eclipse.gmf.tests.runtime.diagram.ui;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -55,15 +53,15 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 	public void testDeleteConnection() throws Exception {
 
 		final Object[] diagramValues = new Object[2];
-		MEditingDomain.INSTANCE.runAsRead(  new MRunnable() {
-			public Object run() {
+		getTestFixture().getEditingDomain().runExclusive(
+			new Runnable() {
+			public void run() {
 
 				Diagram dgrm2 =
 					getTestFixture().getConnectorView().getDiagram();
 
 				diagramValues[0] = dgrm2;
 				diagramValues[1] = new Integer(dgrm2.getEdges().size());
-				return dgrm2;
 			}
 		});
 
@@ -149,15 +147,13 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 					}
 				});
 				flushEventQueue();
-	}
+			}
 
 	/**
 	 * Method testConnectionProperties.
 	 * @throws Exception
 	 */
 	public void testConnectionProperties() throws Exception {
-/*		MEditingDomain.INSTANCE.runAsRead(  new MRunnable() {
-			public Object run() {*/
 				final Edge connectorView =
 					getTestFixture().getConnectorView();
 
@@ -214,9 +210,6 @@ public abstract class AbstractConnectionTests extends AbstractTestBase {
 					Properties.ID_ROUTING,
 					Routing.MANUAL_LITERAL);
 				flushEventQueue();
-/*				return null;
-			}
-		});*/
 	}
 
 }
