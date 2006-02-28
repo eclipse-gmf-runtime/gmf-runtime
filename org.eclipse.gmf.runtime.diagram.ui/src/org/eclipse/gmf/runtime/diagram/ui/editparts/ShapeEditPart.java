@@ -11,17 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Map;
-
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
@@ -29,10 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
-import org.eclipse.gmf.runtime.emf.core.EventTypes;
-import org.eclipse.gmf.runtime.emf.core.util.MetaModelUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -45,18 +36,6 @@ import org.eclipse.gmf.runtime.notation.View;
  *
  */
 public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrimaryEditPart {
-	/**
-	 * a static array of appearance property ids applicable to shapes
-	 */
-	private static final String[] appearanceProperties =
-		new String[] {
-			Properties.ID_FONTNAME,
-			Properties.ID_FONTSIZE,
-			Properties.ID_FONTBOLD,
-			Properties.ID_FONTITALIC,
-			Properties.ID_FONTCOLOR,
-			Properties.ID_LINECOLOR,
-			Properties.ID_FILLCOLOR};
 
 	/**
 	 * copnstructor
@@ -111,10 +90,6 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		 && ((EObject)notification.getNotifier())== getNotationView())
 			handleMajorSemanticChange();
 
-		else if (notification.getEventType() == EventTypes.UNRESOLVE 
-				&& notification.getNotifier() == ((View)getModel()).getElement())
-			handleMajorSemanticChange();
-
 		else
 			super.handleNotificationEvent(notification);
 	}
@@ -142,46 +117,6 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		refreshBackgroundColor();
 		refreshForegroundColor();
 		refreshFont();
-	}
-
-	/**
-	 * Returns an array of the appearance property ids applicable to the receiver.
-	 * Fro this type it is  Properties.ID_FONT, Properties.ID_FONTCOLOR, Properties.ID_LINECOLOR, Properties.ID_FILLCOLOR,Properties.ID_AUTOSIZE 
-	 * 
-	 * @return - an array of the appearance property ids applicable to the receiver
-	 */
-	private String[] getAppearancePropertyIDs() {
-		return appearanceProperties;
-	}
-
-	/* Contributing appearance properties specific to this class definition
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#fillAppearancePropertiesMap(java.util.Map)
-	 */
-	public void fillAppearancePropertiesMap(Map properties) {
-
-		super.fillAppearancePropertiesMap(properties);
-
-		Dictionary local_properties =
-			(Dictionary) properties.get(
-				((View)getModel()).getType());
-
-		if (local_properties == null) {
-			local_properties = new Hashtable();
-		}
-
-		if (getAppearancePropertyIDs().length > 0) {
-			// only if there are any appearance properties
-			for (int i = 0; i < getAppearancePropertyIDs().length; i++){
-				ENamedElement element = MetaModelUtil.getElement(getAppearancePropertyIDs()[i]);
-				if (element instanceof EStructuralFeature)
-					local_properties.put(
-						getAppearancePropertyIDs()[i],
-						getStructuralFeatureValue((EStructuralFeature)element));
-			}
-			properties.put(
-				((View)getModel()).getType(),
-				local_properties);
-		}
 	}
 
 	/**

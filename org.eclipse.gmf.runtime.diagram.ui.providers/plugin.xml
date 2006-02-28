@@ -699,10 +699,6 @@
    &lt;/extension&gt;
    -->
    
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.preferences.PresentationPreferenceInitializer"/>
-   </extension>
-   
    <extension id="presentationLayoutProvider" name="%ext.presentationLayoutProvider" point="org.eclipse.gmf.runtime.diagram.ui.layoutProviders">
       <layoutProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.TopDownProvider">
          <Priority name="Lowest">

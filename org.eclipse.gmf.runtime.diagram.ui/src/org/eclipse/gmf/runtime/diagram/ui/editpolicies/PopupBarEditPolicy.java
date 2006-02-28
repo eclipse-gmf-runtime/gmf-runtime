@@ -40,9 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
-import org.eclipse.gmf.runtime.diagram.ui.tools.AddUMLActionBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.PopupBarTool;
-import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.osgi.util.NLS;
@@ -747,99 +745,6 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		PopupBarTool theTracker =
 			new PopupBarTool(getHost(), theRequest);
-
-		this.addPopupBarDescriptor(elementType, theImage, theTracker);
-
-	}
-
-	/**
-	 * default method for plugins which passes along the AddUMLActionBarTool as
-	 * the tool to be used.
-	 * @param elementType
-	 * @param theImage
-	 * @deprecated Use <code>addPopupBarDescriptor</code> instead. All your
-	 *             popup bar scenarios should be tested when migrating to
-	 *             <code>addPopupBarDescriptor</code>. The difference
-	 *             between the two is that <code>AddUMLActionBarTool</code>
-	 *             has been removed and <code>PopupBarTool</code> is now
-	 *             used always. <code>AddUMLActionBarTool</code> used a
-	 *             request to create an element only, whereas
-	 *             <code>PopupBarTool</code> uses a request to create an
-	 *             element and view and if that does not return a command, then
-	 *             it tries a request to create an element only. Alternatively,
-	 *             you could migrate to use the Modeling Assistant Service to
-	 *             handle the popup bar types instead of overriding this
-	 *             editpolicy. Contact Cherie for assistance.
-	 */
-	protected void addActionBarDescriptor(
-		IElementType elementType,
-			Image theImage) {
-
-		DragTracker theTracker;
-		if (elementType instanceof INotationType) {
-			theTracker = new PopupBarTool(getHost(), elementType);
-		}
-		else{
-			theTracker = new AddUMLActionBarTool(getHost(), elementType);
-		}
-		this.addPopupBarDescriptor(elementType, theImage, theTracker);
-
-	}
-
-	/**
-	 * @param elementType
-	 * @param theImage
-	 * @param theTip
-	 * @deprecated Use <code>addPopupBarDescriptor</code> instead. All your
-	 *             popup bar scenarios should be tested when migrating to
-	 *             <code>addaddPopupBarDescriptorDescriptor2</code>. The difference
-	 *             between the two is that <code>AddUMLActionBarTool</code>
-	 *             has been removed and <code>PopupBarTool</code> is now
-	 *             used always. <code>AddUMLActionBarTool</code> used a
-	 *             request to create an element only, whereas
-	 *             <code>PopupBarTool</code> uses a request to create an
-	 *             element and view and if that does not return a command, then
-	 *             it tries a request to create an element only. Contact Cherie
-	 *             for assistance.
-	 */
-	protected void addActionBarDescriptor(
-			IElementType elementType,
-			Image theImage,
-			String theTip) {
-
-		AddUMLActionBarTool theTracker =
-			new AddUMLActionBarTool(getHost(), elementType);
-		PopupBarDescriptor desc =
-			new PopupBarDescriptor(theTip, theImage, elementType, theTracker);
-		myPopupBarDescriptors.add(desc);
-
-	}
-
-	/**
-	 * method used primarily to add UnspecifiedTypeCreationTool
-	 * @param elementType
-	 * @param theImage
-	 * @param theTool
-	 * @deprecated Use <code>addPopupBarDescriptor</code> instead. All your
-	 *             popup bar scenarios should be tested when migrating to
-	 *             <code>addPopupBarDescriptor</code>. The difference
-	 *             between the two is that <code>AddUMLActionBarTool</code>
-	 *             has been removed and <code>PopupBarTool</code> is now
-	 *             used always. <code>AddUMLActionBarTool</code> used a
-	 *             request to create an element only, whereas
-	 *             <code>PopupBarTool</code> uses a request to create an
-	 *             element and view and if that does not return a command, then
-	 *             it tries a request to create an element only. Contact Cherie
-	 *             for assistance.
-	 */
-	protected void addActionBarDescriptor(
-			IElementType elementType,
-			Image theImage,
-			CreateRequest theRequest)
-	{
-
-		AddUMLActionBarTool theTracker =
-			new AddUMLActionBarTool(getHost(), theRequest);
 
 		this.addPopupBarDescriptor(elementType, theImage, theTracker);
 

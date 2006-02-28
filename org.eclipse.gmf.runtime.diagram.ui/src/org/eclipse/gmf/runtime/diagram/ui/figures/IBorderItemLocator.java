@@ -15,7 +15,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.diagram.ui.util.DrawConstant;
 
 /**
  * Controls the location of border items around another figure.
@@ -59,17 +58,7 @@ public interface IBorderItemLocator
 	 * @return a rectangle containing the valid location
 	 */
 	public Rectangle getValidLocation(Rectangle proposedLocation,
-			IFigure borderItem);;
-
-	/**
-	 * Returns the side of the parent figure on which the border item is
-	 * currently on.
-	 * 
-	 * @return the side on which this border item appears
-	 * @deprecated 06/01/23 Use {@link #getCurrentSideOfParent()}. See
-	 *             https://bugs.eclipse.org/bugs/show_bug.cgi?id=121457
-	 */
-	public DrawConstant getCurrentSide();
+			IFigure borderItem);
 	
 	/**
 	 * Returns the side of the parent figure on which the border item is

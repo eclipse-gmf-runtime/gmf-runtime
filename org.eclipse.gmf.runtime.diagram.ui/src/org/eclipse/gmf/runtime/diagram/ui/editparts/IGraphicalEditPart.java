@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -58,13 +56,6 @@ public interface IGraphicalEditPart
 	public TopGraphicEditPart getTopGraphicEditPart();
 
 	/**
-	 * Method fillAppearancePropertiesMap.
-	 * @param properties
-	 * @deprecated this is no longer needed by the copy appearance action.
-	 */
-	public void fillAppearancePropertiesMap(Map properties);
-
-	/**
 	 * Convenience method to retreive the value for the supplied poperty
 	 * from the editpart's associated view element.
 	 * @param id the property id
@@ -96,13 +87,6 @@ public interface IGraphicalEditPart
 	 */
 	public void setStructuralFeatureValue(EStructuralFeature feature, Object value);
 
-	/**
-	 * Method getAppearancePropertiesMap.
-	 * @return Map
-	 * @deprecated this is no longer needed by the copy appearance action.
-	 */
-	public Map getAppearancePropertiesMap();
-	
 	/**
 	 * finds an editpart given a starting editpart and an EObject
 	 * @param epBegin starting edit part
@@ -139,7 +123,7 @@ public interface IGraphicalEditPart
 	 * <code>null</code> or unresolvable 
 	 */
 	public EObject resolveSemanticElement();
-    
+      
     /**
      * Gets my transactional EMF editing domain.
      * 

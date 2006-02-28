@@ -252,10 +252,6 @@ public class DiagramEditPart
 		return Collections.EMPTY_LIST;
 	}
 
-	public Map getAppearancePropertiesMap() {
-		return Collections.EMPTY_MAP;
-	}
-
 	/**
 	 * Adds a figure listener to each figure that is added to the diagram so,
 	 * the the page breaks can be notified of changes.

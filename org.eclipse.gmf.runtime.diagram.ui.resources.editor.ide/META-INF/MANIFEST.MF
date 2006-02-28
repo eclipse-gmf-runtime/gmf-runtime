@@ -10,7 +10,6 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n,
- org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.parts,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards
 Require-Bundle: org.eclipse.ui,
