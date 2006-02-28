@@ -73,7 +73,8 @@ public class CopyToImageUtilTests extends AbstractTestBase {
             monitor);
         
         RenderedImage ri = RenderedImageFactory.getInstance(tmpDest.toString());
-        assertTrue(ri != null && ri.getSWTImage() != null);
+        assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
+        assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$ 
         file.delete();
     }
 
