@@ -50,7 +50,7 @@ public class CompositeDirectedGraphLayout
         EdgeList edges = new EdgeList();
         for (Iterator iter = nodes.iterator(); iter.hasNext();) {
             Node element = (Node) iter.next();
-            if (element instanceof Subgraph){
+            if (element instanceof Subgraph && !(element instanceof VirtualNode)){
                 layoutNodes(((Subgraph)element).members,virtualPass);
             }
             for (Iterator edgesIter = element.outgoing.iterator(); edgesIter.hasNext();) {
@@ -62,71 +62,99 @@ public class CompositeDirectedGraphLayout
         }
         if (!virtualPass){
             virtualNodesToNodes virtualNodesNodes = new virtualNodesToNodes();
-            for (Iterator edgeIter = edges.iterator(); edgeIter.hasNext();) {
-                Edge element = (Edge) edgeIter.next();
-                Node source = element.source;
-                Node target = element.target;
-                boolean sourceHandled = true;
-                boolean targetHandled = true;
-                Subgraph sg = virtualNodesNodes.getVirtualContainer(source);
-                Subgraph sg1 = virtualNodesNodes.getVirtualContainer(target);
-                if (sg==null){
-                    sourceHandled = false;
-                    sg = sg1;
-                }
-                if (sg1==null)
-                    targetHandled = false;
-                if (sourceHandled == false && targetHandled==false){
-                    sg = new VirtualNode(null,source.getParent());
-                    sg.setPadding(new Insets(30));
-                    if (source.getParent()==null)
-                        nodes.add(sg);
-                }
-                if (!sourceHandled){
-                    addNode(sg, source, nodes);
-                    virtualNodesNodes.addNode(sg, source);
-                }
-                if (!targetHandled){
-                    addNode(sg, target, nodes);
-                    virtualNodesNodes.addNode(sg, target);
-                }
-            }
+            createVirtualNodes(nodes, edges, virtualNodesNodes);
             NodeList vituralNodes = virtualNodesNodes.getVirtualNodes();
             int size = vituralNodes.size();
-            // todo consider the commented out optimization later
-            /*if (size==1 && nodes.size()==1){
+/*            if (size==1 && nodes.size()==1){
                 nodes = ((VirtualNode)vituralNodes.get(0)).members;
-            }else */
-            if (size > 0){
-                edges.clear();
-                layoutNodes(vituralNodes, true);
+            }else*/ if (size > 0){
+                edges = virtualNodesNodes.getEdges();
+                for (Iterator iter = vituralNodes.iterator(); iter.hasNext();) {
+                    Subgraph virtualNode = (Subgraph) iter.next();
+                    layoutNodes(virtualNode.members, true);
+                }
                 adjustVirtualNodesWidthAndHeight(vituralNodes);
-                
             }
         }
-        
+        int nodesSize = nodes.size();
         Map nodeToOutGoing = new HashMap();
         Map nodeToIncomingGoing = new HashMap();
-        int nodesSize = nodes.size();
-        for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-            Node element = (Node) iter.next();
-            pushExtraEdges(nodes, nodeToOutGoing, element, element.outgoing,false);
-            if (nodesSize>0)
-                pushExtraEdges(nodes, nodeToIncomingGoing, element, element.incoming,true);
-        }
+        removeDisconnectedEdges(nodes, nodeToOutGoing, nodeToIncomingGoing);
                  
-        if (nodesSize >= 2 ||
-            (nodesSize==1 && nodes.get(0) instanceof Subgraph )){
+        if (nodesSize >= 2){
             DirectedGraph g = new DirectedGraph();
-            g.nodes = nodes/*cloneNodeList(nodes)*/;
-            g.edges = edges/*cloneEdgeList(edges)*/;
+            g.nodes = nodes;
+            g.edges = edges;
             DirectedGraphLayout layout = new DirectedGraphLayout();
             layout.visit(g);
         }
         
+        restoreDisconnectedEdges(nodeToOutGoing, nodeToIncomingGoing);
+    }
+
+    private void restoreDisconnectedEdges(Map nodeToOutGoing, Map nodeToIncomingGoing) {
         restoreEdges(nodeToOutGoing.entrySet(),true);
-        if (nodesSize>0)
-            restoreEdges(nodeToIncomingGoing.entrySet(),false);
+        restoreEdges(nodeToIncomingGoing.entrySet(),false);
+    }
+
+    private void removeDisconnectedEdges(NodeList nodes, Map nodeToOutGoing, Map nodeToIncomingGoing) {
+        for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+            Node element = (Node) iter.next();
+            pushExtraEdges(nodes, nodeToOutGoing, element, element.outgoing,false);
+            pushExtraEdges(nodes, nodeToIncomingGoing, element, element.incoming,true);
+        }
+    }
+
+    private void createVirtualNodes(NodeList nodes, EdgeList edges, virtualNodesToNodes virtualNodesNodes) {
+        Set handledEdges = new HashSet();
+        recursiveHandleVirtualNode(nodes, edges, virtualNodesNodes, handledEdges, new HashSet(nodes));
+    }
+
+    private void recursiveHandleVirtualNode(NodeList nodes, EdgeList edges, virtualNodesToNodes virtualNodesNodes, Set handledEdges, Set nodesSnapeShot) {
+        for (Iterator edgeIter = edges.iterator(); edgeIter.hasNext();) {
+            Edge element = (Edge) edgeIter.next();
+            if (handledEdges.contains(element))
+                continue;
+            handledEdges.add(element);
+            if (!nodesSnapeShot.contains(element.source) || !nodesSnapeShot.contains(element.target))
+                continue;
+            Node source = element.source;
+            Node target = element.target;
+            boolean sourceHandled = true;
+            boolean targetHandled = true;
+            Subgraph sg = virtualNodesNodes.getVirtualContainer(source);
+            Subgraph sg1 = virtualNodesNodes.getVirtualContainer(target);
+            if (sg==null){
+                sourceHandled = false;
+                sg = sg1;
+            }
+            if (sg1==null)
+                targetHandled = false;
+            if (sourceHandled == false && targetHandled==false){
+                sg = new VirtualNode(null,source.getParent());
+                sg.setPadding(new Insets(30));
+                if (source.getParent()==null)
+                    nodes.add(sg);
+            }
+            if (!sourceHandled){
+                addNode(sg, source, nodes);
+                virtualNodesNodes.addNode(sg, source);
+            }
+            if (!targetHandled){
+                addNode(sg, target, nodes);
+                virtualNodesNodes.addNode(sg, target);
+            }
+            // order is important; so we should start handling the outgoing and the incoming
+            // edges only after the source and target had been handled
+            if (!sourceHandled){
+                recursiveHandleVirtualNode(nodes,source.outgoing,virtualNodesNodes,handledEdges,nodesSnapeShot);
+                recursiveHandleVirtualNode(nodes,source.incoming,virtualNodesNodes,handledEdges,nodesSnapeShot);
+            }
+            if (!targetHandled){
+                recursiveHandleVirtualNode(nodes,target.outgoing,virtualNodesNodes,handledEdges,nodesSnapeShot);
+                recursiveHandleVirtualNode(nodes,target.incoming,virtualNodesNodes,handledEdges,nodesSnapeShot);
+            }
+        }
     }
 
     private void pushExtraEdges(NodeList nodes, Map nodeToIncomingGoing, Node element, List list,boolean sourceCheck) {
@@ -137,19 +165,32 @@ public class CompositeDirectedGraphLayout
             if (!nodes.contains(nodeToCheck)){
                 edges.add(edge);
                 iterator.remove();
+                Node sourceNode = null;
+                Node targetNode = null;
+                sourceNode = getParent(edge.source);
+                targetNode = getParent(edge.target);
+                sourceNode = (!sourceCheck || sourceNode!=null )? sourceNode : edge.source;
+                targetNode = ( sourceCheck || targetNode!=null)? targetNode : edge.target;
                 if (!sourceCheck &&
-                    edge.source.getParent()!=  edge.target.getParent()){
-                    Edge virtualEdge = new Edge(edge.source.getParent(),
-                                                edge.target.getParent(),
+                    sourceNode!= null && targetNode!=null && sourceNode!=targetNode &&
+                    (edge.source!=sourceNode || edge.target!=targetNode)){
+                    Edge virtualEdge = new Edge(sourceNode,
+                                                targetNode,
                                                 edge.getDelta(),
                                                 edge.weight);
                     virtualEdge.setPadding(edge.getPadding());
                 }
             }
-            
         }
         if (!edges.isEmpty())
             nodeToIncomingGoing.put(element,edges);
+    }
+
+    private Node getParent(Node node) {
+        Node parent  = node.getParent();
+        if (parent != null && parent instanceof VirtualNode)
+            parent = parent.getParent();
+        return parent;
     }
 
     private void restoreEdges(Set entries, boolean outgoing) {
@@ -213,6 +254,21 @@ public class CompositeDirectedGraphLayout
             put(node, sg);
         }
         
+        public EdgeList getEdges() {
+            EdgeList edges = new EdgeList();
+            for (Iterator iter = virtualNodes.iterator(); iter.hasNext();) {
+                Node element = (Node) iter.next();
+                for (Iterator iterator = element.outgoing.iterator(); iterator
+                    .hasNext();) {
+                    Edge edge = (Edge) iterator.next();
+                    if (virtualNodes.contains(edge.target))
+                        edges.add(edge);
+                    
+                }
+            }
+            return edges;
+        }
+
         public Subgraph getVirtualContainer(Node node){
             return (Subgraph)get(node);
         }
@@ -223,61 +279,4 @@ public class CompositeDirectedGraphLayout
             return nodeList;
         }
     }
-    
-/*    private NodeList cloneNodeList(NodeList source){
-        NodeList list = new NodeList();
-        for (Iterator iter = source.iterator(); iter.hasNext();) {
-            Node element = (Node) iter.next();
-            Node newNode = null;
-            if (element instanceof Subgraph)
-                newNode = cloneSubgraph((Subgraph)element);
-            else
-                newNode = cloneNode(element);
-            list.add(newNode);
-        }
-        return list;
-    }
-    
-    private Node cloneSubgraph(Subgraph element) {
-        Subgraph sg = null;
-        if (element instanceof VirtualNode)
-            sg = new VirtualNode(element.data);
-        else
-            sg = new Subgraph(element.data);
-        sg.x = element.x;
-        sg.y = element.y;
-        sg.height = element.height;
-        sg.width = element.width;
-        sg.setPadding(element.getPadding());
-        return sg;
-    }
-
-    private Node cloneNode(Node element) {
-        Node node = null;
-        node = new Node(element.data);
-        node.x = element.x;
-        node.y = element.y;
-        node.height = element.height;
-        node.width = element.width;
-        node.setPadding(element.getPadding());
-        return node;
-    }
-
-    private EdgeList cloneEdgeList(EdgeList source){
-        EdgeList list = new EdgeList();
-        for (Iterator iter = source.iterator(); iter.hasNext();) {
-            Edge element = (Edge) iter.next();
-            list.add(cloneEdge(element));
-        }
-        return list;
-    }
-
-    private Edge cloneEdge(Edge element) {
-        Edge edge = new Edge(element.source,element.target,element.getDelta(),element.weight);
-        edge.data = element.data;
-        edge.setPadding(element.getPadding());
-        edge.setSourceOffset(element.getSourceOffset());
-        edge.setTargetOffset(element.getTargetOffset());
-        return edge;
-    }*/
 }

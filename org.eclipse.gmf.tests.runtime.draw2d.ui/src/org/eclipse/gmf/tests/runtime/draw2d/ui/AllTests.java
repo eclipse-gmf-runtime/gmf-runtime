@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.draw2d.ui.graph.CompositeGraphLayoutTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.LeftRightForestRouterTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.RectilinearRouterTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.internal.routers.TopDownForestRouterTest;
@@ -40,6 +41,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTestSuite( TopDownForestRouterTest.class );
 		suite.addTestSuite( TreeRouterTest.class );
 		suite.addTestSuite( RectilinearRouterTest.class );
+        suite.addTestSuite( CompositeGraphLayoutTest.class );
 		
         return suite;
 	}
