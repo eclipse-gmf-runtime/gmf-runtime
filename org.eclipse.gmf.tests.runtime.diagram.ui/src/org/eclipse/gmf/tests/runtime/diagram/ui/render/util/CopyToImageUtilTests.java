@@ -57,9 +57,9 @@ public class CopyToImageUtilTests extends AbstractTestBase {
         copyToImageTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$ 
     }
     
-    public void testCopyToImageUtilTest_SVG() throws Exception {
-        copyToImageTestForFormat(".svg", ImageFileFormat.SVG);//$NON-NLS-1$ 
-    }
+//    public void testCopyToImageUtilTest_SVG() throws Exception {
+//        copyToImageTestForFormat(".svg", ImageFileFormat.SVG);//$NON-NLS-1$ 
+//    }
 
     private void copyToImageTestForFormat(String suffix, ImageFileFormat type)
         throws IOException, CoreException {
