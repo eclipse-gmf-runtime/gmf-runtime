@@ -27,11 +27,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
+import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.DiagramCreator;
@@ -65,7 +65,7 @@ extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+		editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
 		final Diagram dgrm = DiagramCreator.createEmptyDiagram(getPreferenceHint(),
 			editingDomain);
 		
@@ -76,9 +76,9 @@ extends TestCase {
                     IAdaptable info)
                 throws ExecutionException {
                 
-                Resource resource = editingDomain
-                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
-                resource.getContents().add(dgrm);
+		Resource resource = editingDomain
+			.createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+		resource.getContents().add(dgrm);
                 
                 return Status.OK_STATUS;
             };
@@ -91,7 +91,7 @@ extends TestCase {
             assertFalse(false);
         }
         
-        node = createNode(dgrm);
+		node = createNode(dgrm);
 	}
 	
 	/**

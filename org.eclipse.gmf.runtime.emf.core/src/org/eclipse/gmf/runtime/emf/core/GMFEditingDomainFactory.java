@@ -30,6 +30,20 @@ import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 public class GMFEditingDomainFactory
 	extends WorkspaceEditingDomainFactory {
 
+    /**
+     * The single shared instance of the GMF editing domain factory.
+     */
+    private static GMFEditingDomainFactory instance  = new GMFEditingDomainFactory();
+
+    /**
+     * Gets the single shared instance of the GMF editing domain factory.
+     * 
+     * @return the editing domain factory
+     */
+    public static WorkspaceEditingDomainFactory getInstance() {
+        return instance;
+    }
+    
 	public TransactionalEditingDomain createEditingDomain() {
 		TransactionalEditingDomain result = super.createEditingDomain();
 		configure(result);
@@ -60,7 +74,7 @@ public class GMFEditingDomainFactory
 	 * 
 	 * @param domain the new editing domain
 	 */
-	private void configure(TransactionalEditingDomain domain) {
+	protected void configure(TransactionalEditingDomain domain) {
 		ResourceSet rset = domain.getResourceSet();
 		
 		// ensure that the cross-referencing adapter is installed

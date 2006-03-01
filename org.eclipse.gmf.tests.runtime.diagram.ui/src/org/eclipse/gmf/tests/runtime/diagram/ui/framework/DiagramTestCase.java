@@ -32,9 +32,9 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.ui.util.FileUtil;
+import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -342,7 +342,7 @@ public abstract class DiagramTestCase extends TestCase {
 
     public TransactionalEditingDomain getEditingDomain() {
     	if (editingDomain == null) {
-    		editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+    		editingDomain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
     	}
         return editingDomain;
     }

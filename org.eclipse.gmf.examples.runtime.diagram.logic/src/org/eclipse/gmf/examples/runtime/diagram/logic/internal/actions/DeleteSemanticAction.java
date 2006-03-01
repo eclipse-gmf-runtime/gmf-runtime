@@ -39,8 +39,6 @@ import org.eclipse.ui.IWorkbenchPage;
  *  specifically, we would like for the notation view to be destroyed whenever
  *  a LED semantic element is destroyed.
  *  
- *  @see org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicMetamodelSupportProvider.LogicMetamodelSupport
- *  @see org.eclipse.gmf.runtime.notation.providers.internal.semproc.NotationSemProc
  */
 public class DeleteSemanticAction
 	extends DiagramAction

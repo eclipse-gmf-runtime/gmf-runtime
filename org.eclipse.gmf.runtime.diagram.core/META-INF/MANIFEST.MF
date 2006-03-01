@@ -6,11 +6,13 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.diagram.core.commands,
+Export-Package: org.eclipse.gmf.runtime.diagram.core,
+ org.eclipse.gmf.runtime.diagram.core.commands,
  org.eclipse.gmf.runtime.diagram.core.edithelpers,
  org.eclipse.gmf.runtime.diagram.core.internal,
  org.eclipse.gmf.runtime.diagram.core.internal.commands,
  org.eclipse.gmf.runtime.diagram.core.internal.l10n,
+ org.eclipse.gmf.runtime.diagram.core.internal.listener,
  org.eclipse.gmf.runtime.diagram.core.internal.services.view,
  org.eclipse.gmf.runtime.diagram.core.internal.util,
  org.eclipse.gmf.runtime.diagram.core.listener,

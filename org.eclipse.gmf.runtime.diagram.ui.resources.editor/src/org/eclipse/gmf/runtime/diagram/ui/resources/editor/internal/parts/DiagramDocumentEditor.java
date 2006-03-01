@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
+import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorWithFlyOutPalette;
@@ -43,7 +44,6 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DocumentProv
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.palette.EditorInputPaletteContent;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -1454,6 +1454,6 @@ public class DiagramDocumentEditor
      * @return the editing domain
      */
 	protected TransactionalEditingDomain createEditingDomain() {
-		return GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+		return DiagramEditingDomainFactory.getInstance().createEditingDomain();
 	}
 }

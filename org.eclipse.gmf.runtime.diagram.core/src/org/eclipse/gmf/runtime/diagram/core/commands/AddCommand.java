@@ -19,11 +19,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -74,7 +74,7 @@ public class AddCommand extends AbstractTransactionalCommand {
         
         if (view != null) {
             List result = new ArrayList();
-            IFile file = EObjectUtil.getWorkspaceFile(view);
+            IFile file = WorkspaceSynchronizer.getFile(view.eResource());
             
             if (file != null) {
                 result.add(file);

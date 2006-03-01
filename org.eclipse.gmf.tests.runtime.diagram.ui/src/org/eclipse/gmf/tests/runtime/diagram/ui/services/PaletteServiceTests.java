@@ -27,11 +27,11 @@ import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.IProviderPolicy;
 import org.eclipse.gmf.runtime.common.core.service.ProviderPriority;
 import org.eclipse.gmf.runtime.common.core.service.Service;
+import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.parts.DiagramDocumentEditor;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.TestingConfigurationElement;
@@ -287,7 +287,7 @@ public class PaletteServiceTests
 		getPaletteService().addPaletteProvider(ProviderPriority.HIGHEST,
 			descriptorD);
 		
-		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE
+		final TransactionalEditingDomain editingDomain = DiagramEditingDomainFactory.getInstance()
 			.createEditingDomain();
 
 		// test service

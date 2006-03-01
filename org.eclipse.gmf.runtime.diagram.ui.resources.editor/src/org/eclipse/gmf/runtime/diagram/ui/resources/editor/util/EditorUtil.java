@@ -103,13 +103,13 @@ public class EditorUtil {
 		try {
 			newDiagramFile.refreshLocal(IResource.DEPTH_ZERO, null); //RATLC00514368
 			InputStream stream = newDiagramFile.getContents();
-			String completeFileName = newDiagramFile.getLocation().toOSString();
+			String completeFileName = newDiagramFile.getFullPath().toString();
 
 			try {
 				// Empty file....
                 ResourceSet resourceSet = new ResourceSetImpl();
                 notationModel = resourceSet.createResource(URI
-                    .createFileURI(completeFileName)); 
+                    .createPlatformResourceURI(completeFileName, true)); 
 			} finally {
 				stream.close();
 			}

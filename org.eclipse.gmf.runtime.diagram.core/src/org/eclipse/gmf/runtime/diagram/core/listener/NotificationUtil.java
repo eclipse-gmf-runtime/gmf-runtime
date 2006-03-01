@@ -12,7 +12,13 @@
 
 package org.eclipse.gmf.runtime.diagram.core.listener;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 
 /**
  * Utility class that implements few helper methods around the EMF
@@ -64,4 +70,22 @@ public class NotificationUtil {
 	public static boolean isMove(Notification notification) {
 		return notification.getEventType() == Notification.MOVE;
 	}
+    
+    /**
+     * Collect the deleted objects from all the notifications in the event.
+     * 
+     * @param event
+     * @return
+     */
+    public static Set getDeletedObjects(ResourceSetChangeEvent event) {
+        HashSet deletedObjects = new HashSet();
+        for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
+            Notification notification = (Notification) i.next();
+            if (notification.getEventType() == Notification.REMOVE
+                && ((EObject) notification.getOldValue()).eResource() == null) {
+                deletedObjects.add(notification.getOldValue());
+            }
+        }
+        return deletedObjects;
+    }
 }

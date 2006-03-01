@@ -223,7 +223,7 @@ public class DiagramEventBroker extends ResourceSetListenerImpl {
     }
     
     public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
-        Set deletedObjects = getDeletedObjects(event);
+        Set deletedObjects = NotificationUtil.getDeletedObjects(event);
  
         CompoundCommand cc = new CompoundCommand();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
@@ -239,8 +239,9 @@ public class DiagramEventBroker extends ResourceSetListenerImpl {
             
             Object notifier = notification.getNotifier();
             if (notifier instanceof EObject) {
-                if (deletedObjects.contains(notification.getNotifier()) && !isDestroyEvent(notification))
+                if (deletedObjects.contains(notification.getNotifier())) {
                     continue;
+                }
                 Command cmd = handleTransactionAboutToCommitEvent(notification);
                 if (cmd != null) {
                     cc.append(cmd);
@@ -251,7 +252,7 @@ public class DiagramEventBroker extends ResourceSetListenerImpl {
     }
 
 	public void resourceSetChanged(ResourceSetChangeEvent event) {
-        Set deletedObjects = getDeletedObjects(event);
+        Set deletedObjects = NotificationUtil.getDeletedObjects(event);
 
 		for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
 			final Notification notification = (Notification) i.next();
@@ -266,38 +267,16 @@ public class DiagramEventBroker extends ResourceSetListenerImpl {
 			
 			Object notifier = notification.getNotifier();
 			if (notifier instanceof EObject) {
-				if (deletedObjects.contains(notification.getNotifier())  && !isDestroyEvent(notification))
+				if (deletedObjects.contains(notification.getNotifier())) {
 					continue;
+                }
+                
 				handleElementEvent(notification);
 			}
 		}
 	}
     
-    private Set getDeletedObjects(ResourceSetChangeEvent event) {
-        HashSet deletedObjects = new HashSet();
-        // first collect the "destroyed" objects
-        for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
-            Notification notification = (Notification) i.next();
-            if (isDestroyEvent(notification))
-                deletedObjects.add(notification.getNotifier());
-        }
-        return deletedObjects;
-    }
 
-	/**
-	 * Returns true if this notification is the equivalent of what used to be a
-	 * destroy event. Assumes the notifier is an <code>EObject</code>.
-	 * 
-	 * @param notification
-	 * @return
-	 */
-	private boolean isDestroyEvent(Notification notification) {		
-        return false;
-        // TODO:  FIX THIS!
-//		return (notification.getEventType() == Notification.REMOVE || notification
-//			.getEventType() == Notification.REMOVE_MANY)
-//			&& ((EObject) notification.getNotifier()).eContainer() == null;
-	}
 
 	/**
 	 * Forward the supplied event to all listeners listening on the supplied

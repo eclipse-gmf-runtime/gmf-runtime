@@ -36,6 +36,7 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
@@ -46,7 +47,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUtil;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -571,7 +571,7 @@ public abstract class AbstractPresentationTestFixture
             if (getDiagram() != null) {
                 editingDomain = TransactionUtil.getEditingDomain(getDiagram());
             } else {
-                editingDomain = GMFEditingDomainFactory.INSTANCE
+                editingDomain = DiagramEditingDomainFactory.getInstance()
                     .createEditingDomain();
             }
         }
