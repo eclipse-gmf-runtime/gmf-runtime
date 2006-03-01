@@ -13,23 +13,24 @@ package org.eclipse.gmf.examples.runtime.diagram.decorator.provider;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
-
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gmf.examples.runtime.diagram.decorator.DecoratorPlugin;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.gmf.runtime.emf.core.IOperationEvent;
-import org.eclipse.gmf.runtime.emf.core.OperationListener;
-import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.notation.DescriptionStyle;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author sshaw
@@ -63,13 +64,14 @@ public class ReviewDecorator implements IDecorator {
 		 */
 		IPath path = new Path("$nl$").append( //$NON-NLS-1$
 				"icons//failed.gif"); //$NON-NLS-1$
-		URL url = DecoratorPlugin.getDefault().find(path);
-		ImageDescriptor imgDesc = ImageDescriptor.createFromURL(url);
+        URL url = FileLocator.find(DecoratorPlugin.getDefault().getBundle(), path, null);
+        ImageDescriptor imgDesc = ImageDescriptor.createFromURL(url);
 		ICON_FAILED = imgDesc.createImage();
 
 		path = new Path("$nl$").append( //$NON-NLS-1$
 				"icons//passed.gif"); //$NON-NLS-1$
-		url = DecoratorPlugin.getDefault().find(path);
+     
+        url = FileLocator.find(DecoratorPlugin.getDefault().getBundle(), path, null);
 		imgDesc = ImageDescriptor.createFromURL(url);
 		ICON_PASSED = imgDesc.createImage();
 	}
@@ -178,25 +180,26 @@ public class ReviewDecorator implements IDecorator {
 		return (DescriptionStyle)node.getStyle(NotationPackage.eINSTANCE.getDescriptionStyle());			 
 	}
 
-	private OperationListener operationListener = new OperationListener() {
-		public void done(IOperationEvent event) {
-			refresh();
-		}
+	private NotificationListener notificationListener = new NotificationListener() {
 
-		public void redone(IOperationEvent event) {
-			refresh();
-		}
-
-		public void undone(IOperationEvent event) {
-			refresh();
-		}
+        /* (non-Javadoc)
+         * @see org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
+         */
+        public void notifyChanged(Notification notification) {
+            refresh();
+        }
 	};
 	
 	/**
 	 * Adds decoration if applicable.
 	 */
 	public void activate() {
-		MSLEditingDomain.INSTANCE.addOperationListener(operationListener);
+        
+        IGraphicalEditPart gep = (IGraphicalEditPart)getDecoratorTarget().getAdapter(IGraphicalEditPart.class);
+        assert gep != null;
+        
+        DiagramEventBroker.getInstance(gep.getEditingDomain()).addNotificationListener(gep.getNotationView(), 
+                NotationPackage.eINSTANCE.getDescriptionStyle_Description(), notificationListener);
 	}
 
 	/**
@@ -205,7 +208,10 @@ public class ReviewDecorator implements IDecorator {
 	public void deactivate() {
 		removeDecoration();
 
-		MSLEditingDomain.INSTANCE.removeOperationListener(operationListener);
+        IGraphicalEditPart gep = (IGraphicalEditPart)getDecoratorTarget().getAdapter(IGraphicalEditPart.class);
+        assert gep != null;
+        
+        DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.getNotationView(), notificationListener);
 	}
 	
 }
