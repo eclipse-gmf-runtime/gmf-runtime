@@ -67,57 +67,57 @@ public class DiagramLinkTest
 	}
 	
 	public void testBrokenDiagramLink(){
-		EAnnotation annotation = EcoreFactory.eINSTANCE.createEAnnotation();
-		annotation.setSource("uml2.diagrams"); //$NON-NLS-1$
-		Diagram diagram1 = NotationFactory.eINSTANCE.createDiagram();
-		diagram1.setType("Class"); //$NON-NLS-1$
-		diagram1.setName("Diagram1"); //$NON-NLS-1$
-		diagram1.setVisible(true);
-		
-		// temp diagram 
-		Diagram diagram2 = NotationFactory.eINSTANCE.createDiagram();
-		diagram2.setType("Class"); //$NON-NLS-1$
-		diagram2.setName("Diagram2"); //$NON-NLS-1$
-		diagram1.setVisible(true);
-		
-		// add the diagrams to the model (so they will have guids)
-		annotation.getContents().add(diagram1);
-		annotation.getContents().add(diagram2);
-		
-		// simulate creating a valid Diagram Link	using the new format
-		View link1 = ViewService.getInstance().createNode(new EObjectAdapter(diagram1),diagram1,ViewType.NOTE,0,true, PreferencesHint.USE_DEFAULTS); 
-		assertValidDiagramLinkView(link1);
-		
-		
-		//simulate loading  broken link using the new format	
-		View link2 = ViewService.getInstance().createNode(new EObjectAdapter(diagram2),diagram1,ViewType.NOTE,0,true, PreferencesHint.USE_DEFAULTS); 
-		assertValidDiagramLinkView(link2);
-		link2.setElement(null);
-		View link2NotationView = (View)EcoreUtil.copy(link2);
-		diagram1.insertChild(link2NotationView);
-		assertValidDiagramLinkView(link2NotationView);
-		
-		//simulate loading  valid link using the old format	
-		View diagramLink = NotationFactory.eINSTANCE.createNode();
-		diagramLink.setElement(diagram1);
-		diagramLink.setVisible(true);
-		diagram1.insertChild(diagramLink);
-		assertValidDiagramLinkView(diagramLink);
-		
-		//simulate loading broken link using the old format	
-		diagramLink = NotationFactory.eINSTANCE.createNode();
-		diagramLink.setElement(null);
-		diagramLink.setVisible(true);
-		diagram1.insertChild(diagramLink);
-		assertCorruptView(diagramLink);
-		
-		// last check will be making sure that normal Notes still working fine
-		diagramLink = NotationFactory.eINSTANCE.createNode();
-		diagramLink.setElement(null);
-		diagramLink.setType(ViewType.NOTE);
-		diagramLink.setVisible(true);
-		diagram1.insertChild(diagramLink);
-		assertValidNoteView(diagramLink);
+//		EAnnotation annotation = EcoreFactory.eINSTANCE.createEAnnotation();
+//		annotation.setSource("uml2.diagrams"); //$NON-NLS-1$
+//		Diagram diagram1 = NotationFactory.eINSTANCE.createDiagram();
+//		diagram1.setType("Class"); //$NON-NLS-1$
+//		diagram1.setName("Diagram1"); //$NON-NLS-1$
+//		diagram1.setVisible(true);
+//		
+//		// temp diagram 
+//		Diagram diagram2 = NotationFactory.eINSTANCE.createDiagram();
+//		diagram2.setType("Class"); //$NON-NLS-1$
+//		diagram2.setName("Diagram2"); //$NON-NLS-1$
+//		diagram1.setVisible(true);
+//		
+//		// add the diagrams to the model (so they will have guids)
+//		annotation.getContents().add(diagram1);
+//		annotation.getContents().add(diagram2);
+//		
+//		// simulate creating a valid Diagram Link	using the new format
+//		View link1 = ViewService.getInstance().createNode(new EObjectAdapter(diagram1),diagram1,ViewType.NOTE,0,true, PreferencesHint.USE_DEFAULTS); 
+//		assertValidDiagramLinkView(link1);
+//		
+//		
+//		//simulate loading  broken link using the new format	
+//		View link2 = ViewService.getInstance().createNode(new EObjectAdapter(diagram2),diagram1,ViewType.NOTE,0,true, PreferencesHint.USE_DEFAULTS); 
+//		assertValidDiagramLinkView(link2);
+//		link2.setElement(null);
+//		View link2NotationView = (View)EcoreUtil.copy(link2);
+//		diagram1.insertChild(link2NotationView);
+//		assertValidDiagramLinkView(link2NotationView);
+//		
+//		//simulate loading  valid link using the old format	
+//		View diagramLink = NotationFactory.eINSTANCE.createNode();
+//		diagramLink.setElement(diagram1);
+//		diagramLink.setVisible(true);
+//		diagram1.insertChild(diagramLink);
+//		assertValidDiagramLinkView(diagramLink);
+//		
+//		//simulate loading broken link using the old format	
+//		diagramLink = NotationFactory.eINSTANCE.createNode();
+//		diagramLink.setElement(null);
+//		diagramLink.setVisible(true);
+//		diagram1.insertChild(diagramLink);
+//		assertCorruptView(diagramLink);
+//		
+//		// last check will be making sure that normal Notes still working fine
+//		diagramLink = NotationFactory.eINSTANCE.createNode();
+//		diagramLink.setElement(null);
+//		diagramLink.setType(ViewType.NOTE);
+//		diagramLink.setVisible(true);
+//		diagram1.insertChild(diagramLink);
+//		assertValidNoteView(diagramLink);
 		
 	}
 

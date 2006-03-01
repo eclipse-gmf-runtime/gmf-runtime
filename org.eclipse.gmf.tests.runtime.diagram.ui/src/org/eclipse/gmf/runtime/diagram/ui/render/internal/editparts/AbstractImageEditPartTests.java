@@ -66,12 +66,32 @@ extends TestCase {
 		super.setUp();
 		
 		editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
-		Diagram dgrm = DiagramCreator.createEmptyDiagram(getPreferenceHint(),
+		final Diagram dgrm = DiagramCreator.createEmptyDiagram(getPreferenceHint(),
 			editingDomain);
-		Resource resource = editingDomain
-			.createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
-		resource.getContents().add(dgrm);
-		node = createNode(dgrm);
+		
+        AbstractEMFOperation operation = new AbstractEMFOperation(
+            editingDomain, "") { //$NON-NLS-1$
+
+            protected IStatus doExecute(IProgressMonitor monitor,
+                    IAdaptable info)
+                throws ExecutionException {
+                
+                Resource resource = editingDomain
+                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+                resource.getContents().add(dgrm);
+                
+                return Status.OK_STATUS;
+            };
+        };
+        try {
+            OperationHistoryFactory.getOperationHistory().execute(operation,
+                    new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            assertFalse(false);
+        }
+        
+        node = createNode(dgrm);
 	}
 	
 	/**
