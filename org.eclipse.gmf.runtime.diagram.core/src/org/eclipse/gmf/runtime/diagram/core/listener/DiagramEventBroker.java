@@ -607,7 +607,9 @@ public class DiagramEventBroker extends ResourceSetListenerImpl {
 			while (element != null && !(element instanceof View)) {
 				element = element.eContainer();
 			}
-			if (element != null) {
+			if (element != null && 
+                (NotationPackage.eINSTANCE.getView_TransientChildren()==element.eContainingFeature() ||
+                 NotationPackage.eINSTANCE.getDiagram_TransientEdges()==element.eContainingFeature())) {
                 if (!NotificationFilter.READ.matches(event)) {
                     ViewUtil.persistElement((View) element);
                 }
