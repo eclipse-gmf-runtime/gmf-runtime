@@ -12,16 +12,17 @@
 package org.eclipse.gmf.runtime.emf.ui.properties.providers;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
-
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.properties.GetPropertySourceOperation;
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
 import org.eclipse.gmf.runtime.common.ui.services.properties.IPropertiesProvider;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.gmf.runtime.emf.ui.properties.descriptors.EMFCompositePropertySource;
+import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 /**
  * Provider that provides clients with generic EMF propeties.
@@ -37,15 +38,22 @@ public class GenericEMFPropertiesProvider
 	 */
 	public GenericEMFPropertiesProvider() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	/**
+
+    /**
 	 * Adapter to the EMF layer - the factory that will return IItelPropertySource adapters
 	 * @return - the EMF based composite adapter factory that will return IItelPropertySource adapters
 	 */
-	protected static AdapterFactory getAdapterFactory() {
-		return MSLAdapterFactoryManager.getAdapterFactory();
-	}
+	protected static AdapterFactory getAdapterFactory(Object object) {
+        TransactionalEditingDomain editingDomain = TransactionUtil
+            .getEditingDomain(object);
+
+        if (editingDomain instanceof AdapterFactoryEditingDomain) {
+            return ((AdapterFactoryEditingDomain) editingDomain)
+                .getAdapterFactory();
+        }
+        return null;
+    }
 
 	/**
 	 * This implements {@link IPropertySourceProvider}.getPropertySource to
@@ -57,7 +65,11 @@ public class GenericEMFPropertiesProvider
 		if (object instanceof ICompositePropertySource) {
 			return (ICompositePropertySource) object;
 		} else {
-			IItemPropertySource itemPropertySource = (IItemPropertySource) (getAdapterFactory()
+            AdapterFactory adapterFactory = getAdapterFactory(object);
+            if (adapterFactory == null) {
+                return null;
+            }
+			IItemPropertySource itemPropertySource = (IItemPropertySource) (adapterFactory
 				.adapt(object, IItemPropertySource.class));
 			return itemPropertySource != null ? createPropertySource(object,
 				itemPropertySource)

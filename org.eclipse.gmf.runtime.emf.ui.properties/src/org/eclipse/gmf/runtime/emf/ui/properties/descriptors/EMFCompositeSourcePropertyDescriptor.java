@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -35,12 +36,12 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptorDecorator;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.emf.edit.ui.provider.PropertyDescriptor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransaction;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MSLAdapterFactoryManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -485,10 +486,14 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
      * @return an property source for the given object
      */
     protected IItemPropertySource getPropertySource(Object value) {
+        TransactionalEditingDomain editingDomain = TransactionUtil
+            .getEditingDomain(getObject());
 
-        return (IItemPropertySource) MSLAdapterFactoryManager
+        if (editingDomain instanceof AdapterFactoryEditingDomain) {
+            return (IItemPropertySource) ((AdapterFactoryEditingDomain) editingDomain)
                 .getAdapterFactory().adapt(value, IItemPropertySource.class);
-
+        }
+        return null;
     }
 
     /*

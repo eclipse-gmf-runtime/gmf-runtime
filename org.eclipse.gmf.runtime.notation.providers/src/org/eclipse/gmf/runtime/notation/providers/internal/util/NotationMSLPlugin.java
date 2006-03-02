@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.notation.providers.internal.util;
 
 import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
 
 /**
  * The plug-in for EMF implementation of UML.
@@ -63,12 +62,4 @@ public class NotationMSLPlugin
 		return getDefault().getBundle().getSymbolicName();
 	}
 
-	/**
-	 * Starts up this plug-in.
-	 */
-	public void start(BundleContext context)
-		throws Exception {
-		super.start(context);
-		NotationAdapterFactoryManager.init();
-	}
 }

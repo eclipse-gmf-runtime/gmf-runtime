@@ -14,10 +14,12 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.NotificationFilter;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.ui.properties.sections.UndoableModelPropertySheetEntry;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FormAttachment;
@@ -135,11 +137,12 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
      * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void setInput(IWorkbenchPart part, ISelection selection) {
-        if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
-            Object firstElement = ((IStructuredSelection) selection)
-                .getFirstElement();
-            if (firstElement instanceof EObject) {
-                setEObject((EObject) firstElement);
+        IEditingDomainProvider provider = (IEditingDomainProvider) part
+            .getAdapter(IEditingDomainProvider.class);
+        if (provider != null) {
+            EditingDomain theEditingDomain = provider.getEditingDomain();
+            if (theEditingDomain instanceof TransactionalEditingDomain) {
+                setEditingDomain((TransactionalEditingDomain) theEditingDomain);
             }
         }
         page.selectionChanged(part, selection);
@@ -201,15 +204,15 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
      * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
      */
     public NotificationFilter getFilter() {
-		return NotificationFilter.createEventTypeFilter(Notification.SET).or(
-			NotificationFilter.createEventTypeFilter(Notification.ADD)).or(
-			NotificationFilter.createEventTypeFilter(Notification.ADD_MANY))
-			.or(NotificationFilter.createEventTypeFilter(Notification.REMOVE))
-			.or(
-				NotificationFilter
-					.createEventTypeFilter(Notification.REMOVE_MANY)).and(
-				NotificationFilter.createNotifierTypeFilter(EObject.class));
-	}
+        return NotificationFilter.createEventTypeFilter(Notification.SET).or(
+            NotificationFilter.createEventTypeFilter(Notification.ADD)).or(
+            NotificationFilter.createEventTypeFilter(Notification.ADD_MANY))
+            .or(NotificationFilter.createEventTypeFilter(Notification.REMOVE))
+            .or(
+                NotificationFilter
+                    .createEventTypeFilter(Notification.REMOVE_MANY)).and(
+                NotificationFilter.createNotifierTypeFilter(EObject.class));
+    }
 
    
     /*

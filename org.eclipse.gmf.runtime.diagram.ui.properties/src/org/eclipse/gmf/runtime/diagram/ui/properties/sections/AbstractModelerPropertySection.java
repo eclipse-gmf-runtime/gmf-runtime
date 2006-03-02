@@ -101,7 +101,7 @@ public abstract class AbstractModelerPropertySection
     
     private TransactionalEditingDomain editingDomain = null;
 	
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void setInput(IWorkbenchPart part, ISelection selection) {
@@ -301,8 +301,10 @@ public abstract class AbstractModelerPropertySection
 	 */
 	public void aboutToBeHidden() {
 		super.aboutToBeHidden();
-        if (editingDomain != null) {
-            editingDomain.removeResourceSetListener(getEventListener());
+        
+        TransactionalEditingDomain theEditingDomain = getEditingDomain();
+        if (theEditingDomain != null) {
+            theEditingDomain.removeResourceSetListener(getEventListener());
         }
 	}
 
@@ -310,12 +312,13 @@ public abstract class AbstractModelerPropertySection
 	 * @see org.eclipse.ui.views.properties.tabbed.ISection#aboutToBeShown()
 	 */
 	public void aboutToBeShown() {
-		super.aboutToBeShown();
-        editingDomain = getEditingDomain();
-        if (editingDomain != null) {
-            editingDomain.addResourceSetListener(getEventListener());
+        super.aboutToBeShown();
+
+        TransactionalEditingDomain theEditingDomain = getEditingDomain();
+        if (theEditingDomain != null) {
+            theEditingDomain.addResourceSetListener(getEventListener());
         }
-	}
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
@@ -510,13 +513,23 @@ public abstract class AbstractModelerPropertySection
      * @return my editing domain
      */
     protected TransactionalEditingDomain getEditingDomain() {
-        EObject eObjectInput = getEObject();
-        if (eObjectInput != null) {
-            return TransactionUtil.getEditingDomain(eObjectInput);
-        } else if (!getEObjectList().isEmpty()) {
-            return TransactionUtil.getEditingDomain(getEObjectList().get(0));
+        if (editingDomain == null) {
+            EObject eObjectInput = getEObject();
+            if (eObjectInput != null) {
+                editingDomain = TransactionUtil.getEditingDomain(eObjectInput);
+            } else if (!getEObjectList().isEmpty()) {
+                editingDomain = TransactionUtil.getEditingDomain(getEObjectList().get(0));
+            }
         }
-        return null;
+        return editingDomain;
+    }
+    
+    /**
+     * Sets the editingDomain.
+     * @param editingDomain The editingDomain to set.
+     */
+    protected void setEditingDomain(TransactionalEditingDomain editingDomain) {
+        this.editingDomain = editingDomain;
     }
 
     /* (non-Javadoc)
