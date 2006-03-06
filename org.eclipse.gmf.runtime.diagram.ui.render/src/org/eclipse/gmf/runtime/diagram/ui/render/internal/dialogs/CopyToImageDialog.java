@@ -127,12 +127,12 @@ public class CopyToImageDialog extends Dialog {
 	/**
 	 * the file name label text
 	 */
-	private static final String FILE_NAME_LABEL = DiagramUIMessages.CopyToImageDialog_folder_label; 
+	private static final String FILE_NAME_LABEL = DiagramUIMessages.CopyToImageDialog_filename_label; 
 
 	/**
 	 * the image format label text
 	 */
-	private static final String IMAGE_FORMAT_LABEL = DiagramUIMessages.CopyToImageDialog_folder_label; 
+	private static final String IMAGE_FORMAT_LABEL = DiagramUIMessages.CopyToImageDialog_imageformat_label; 
 
 	/**
 	 * the browse button text
@@ -314,6 +314,10 @@ public class CopyToImageDialog extends Dialog {
 				imageFormat =
 					ImageFileFormat.resolveImageFormat(
 						imageFormatCombo.getSelectionIndex());
+                
+                // update filename to reflect new format
+                fileNameText.setText(fileName + DOT_STRING + imageFormat.getName().toLowerCase());
+                validateFileNameText();
 			}
 		});
 		GridData gridData =
@@ -517,7 +521,9 @@ public class CopyToImageDialog extends Dialog {
 		}
 
 		fileNameValid = true;
-		fileName = fileNameText.getText();
+        
+        IPath filePath = (new Path(fileNameText.getText())).removeFileExtension();
+		fileName = filePath.toString();
 		if (folderValid) {
 			setDialogOKState();
 		} else {
