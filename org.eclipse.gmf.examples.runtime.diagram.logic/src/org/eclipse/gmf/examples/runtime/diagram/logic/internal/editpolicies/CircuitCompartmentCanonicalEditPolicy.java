@@ -76,6 +76,14 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
                     EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
 					wires.add(wire);
 				}
+                else {
+                    if ((!wire.getSource().eContainer().equals(circuitElement) && 
+                        EcoreUtil.isAncestor(circuitElement, wire.getSource().eContainer())) ||
+                        (!wire.getTarget().eContainer().equals(circuitElement) &&
+                        EcoreUtil.isAncestor(circuitElement, wire.getTarget().eContainer()))) {
+                        wires.add(wire);
+                    }
+                }
 			}
 		}
 		
