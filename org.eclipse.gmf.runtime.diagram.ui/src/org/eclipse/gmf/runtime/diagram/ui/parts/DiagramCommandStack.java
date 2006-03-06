@@ -327,22 +327,6 @@ public class DiagramCommandStack
     }
 
     /**
-     * Flushes my undo context from my delegate operation history.
-     */
-    public void flush() {
-        getOperationHistory().dispose(getUndoContext(), true, true, false);
-        super.flush();
-    }
-    
-    /**
-     * Flushes my operation history delegate.
-     */
-    public void dispose() {
-        super.dispose();
-        flush();
-    }
-
-    /**
      * Returns the most recently executed command.
      * 
      * @return The most recently executed command.

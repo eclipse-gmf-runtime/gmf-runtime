@@ -642,9 +642,10 @@ public abstract class DiagramEditor
         if (historyListener != null) {
             getOperationHistory().removeOperationHistoryListener(
                 historyListener);
+            
+            // dispose my undo context
+            getOperationHistory().dispose(getUndoContext(), true, true, true);
         }
-        // dispose my undo context
-        getOperationHistory().dispose(getUndoContext(), true, true, true);
 
         super.dispose();
     }
@@ -884,7 +885,7 @@ public abstract class DiagramEditor
         // editing domain.
         TransactionalEditingDomain domain = getEditingDomain();
         if (domain != null) {
-            if (historyListener != null) {
+            if (historyListener != null) { 
                 getOperationHistory().addOperationHistoryListener(
                     historyListener);
             }
@@ -902,6 +903,9 @@ public abstract class DiagramEditor
      */
     protected void stopListening() {
         if (historyListener != null) {
+            // dispose my undo context
+            getOperationHistory().dispose(getUndoContext(), true, true, true);
+            
             getOperationHistory().removeOperationHistoryListener(
                 historyListener);
         }
