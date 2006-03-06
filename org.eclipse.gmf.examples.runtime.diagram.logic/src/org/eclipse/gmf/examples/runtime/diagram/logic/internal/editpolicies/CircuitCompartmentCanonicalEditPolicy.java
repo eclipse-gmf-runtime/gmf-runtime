@@ -72,7 +72,7 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 			Object obj = li.next();
 			if (obj instanceof Wire) {
 				Wire wire = (Wire)obj;
-				if (EcoreUtil.isAncestor(circuitElement, wire.getSource()) ||
+				if (EcoreUtil.isAncestor(circuitElement, wire.getSource()) &&
                     EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
 					wires.add(wire);
 				}
