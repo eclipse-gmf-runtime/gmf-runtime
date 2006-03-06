@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.common.ui.action.internal.actions.global;
+package org.eclipse.gmf.runtime.common.ui.action.actions.global;
 
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,26 +21,27 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.operations.RedoActionHandler;
+import org.eclipse.ui.operations.UndoActionHandler;
 
 /**
- * Global Redo Action.
+ * Global Undo Action.
  * <P>
- * Extension of the GMF {@link GlobalAction} class that delegates redo behaviour
- * to the undoable operation framework's {@link RedoActionHandler}.
+ * Extension of the GMF {@link GlobalAction} class that delegates undo behaviour
+ * to the undoable operation framework's {@link UndoActionHandler}.
  * <P>
  * The undo context can be set through {@link #setUndoContext(IUndoContext)}.
  * If it is not explicitly set, the undo context will be derived by adapting the
  * workbench part to {@link IUndoContext}.
  * 
  * @author vramaswa
+ * @author ldamus
  */
-public final class GlobalRedoAction extends GlobalAction {
+public final class GlobalUndoAction extends GlobalAction {
 
 	/**
 	 * My operation framework action handler delegate.
 	 */
-	private RedoActionHandler delegate;
+	private UndoActionHandler delegate;
     
     /**
      * My undo context.
@@ -58,17 +59,17 @@ public final class GlobalRedoAction extends GlobalAction {
 	 * @param workbenchPage
 	 *            the page
 	 */
-	public GlobalRedoAction(IWorkbenchPage workbenchPage) {
+	public GlobalUndoAction(IWorkbenchPage workbenchPage) {
 		super(workbenchPage);
 	}
 
 	/**
-	 * Initializes me with a workbench part.
+	 * Initilizes me with a workbench part.
 	 * 
 	 * @param workbenchPart
 	 *            the part
 	 */
-	public GlobalRedoAction(IWorkbenchPart workbenchPart) {
+	public GlobalUndoAction(IWorkbenchPart workbenchPart) {
 		super(workbenchPart);
 	}
 
@@ -78,7 +79,7 @@ public final class GlobalRedoAction extends GlobalAction {
 	 * @see org.eclipse.gmf.runtime.common.ui.action.internal.global.GlobalAction#getActionId()
 	 */
 	public String getActionId() {
-		return GlobalActionId.REDO;
+		return GlobalActionId.UNDO;
 	}
 
 	/**
@@ -88,7 +89,7 @@ public final class GlobalRedoAction extends GlobalAction {
 	protected void setWorkbenchPart(IWorkbenchPart workbenchPart) {
 		super.setWorkbenchPart(workbenchPart);
 
-        IUndoContext context = getUndoContext();
+		IUndoContext context = getUndoContext();
 
 		if (context != null) {
 			if (delegate != null) {
@@ -96,7 +97,8 @@ public final class GlobalRedoAction extends GlobalAction {
 				delegate.dispose();
 			}
 
-			delegate = new RedoActionHandler(workbenchPart.getSite(), context);
+			delegate = new UndoActionHandler(workbenchPart.getSite(), context);
+			delegate.setPruneHistory(true);
 			delegate.addPropertyChangeListener(getDelegateListener());
 
 			// force enablement update in UI
@@ -268,12 +270,11 @@ public final class GlobalRedoAction extends GlobalAction {
         }
         return undoContext;
     }
-    
-    /**
+
+	/**
      * Listens to the operation history events.
      */
     protected boolean isOperationHistoryListener() {
         return true;
     }
-
 }

@@ -32,13 +32,11 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalMo
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalOpenAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalPasteAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalPropertiesAction;
-import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRedoAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRefreshAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRenameAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRevertAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalSaveAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalSelectAllAction;
-import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalUndoAction;
 
 /**
  * This class manages all the global actions. It has methods to create
