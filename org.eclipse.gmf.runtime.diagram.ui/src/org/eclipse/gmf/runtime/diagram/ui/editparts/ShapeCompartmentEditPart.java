@@ -398,7 +398,7 @@ public abstract class ShapeCompartmentEditPart
 		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getCompartmentName(),
 			getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
 		scf.getContentPane().setLayoutManager(getLayoutManager());
-		scf.addLayoutListener(LayoutAnimator.getDefault());
+        scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
 
 		return scf;
 	}
