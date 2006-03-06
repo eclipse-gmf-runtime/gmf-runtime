@@ -398,8 +398,7 @@ public abstract class GraphicalEditPart
 			GETCOMMAND_RECURSIVE_COUNT++;
 			final Request request = _request;
 			try {
-				cmd = (Command) TransactionUtil.getEditingDomain(
-					(EObject) getModel()).runExclusive(
+				cmd = (Command) getEditingDomain().runExclusive(
 					new RunnableWithResult.Impl() {
 
 						public void run() {
