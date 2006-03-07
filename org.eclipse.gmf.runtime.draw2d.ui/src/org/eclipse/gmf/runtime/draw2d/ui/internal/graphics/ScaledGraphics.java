@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -200,11 +201,18 @@ public void drawFocus(int x, int y, int w, int h) {
 /** @see Graphics#drawImage(Image, int, int) */
 public void drawImage(Image srcImage, int x, int y) {
 	org.eclipse.swt.graphics.Rectangle size = srcImage.getBounds();
+    Dimension sizeLPDim = new Dimension(size.width, size.height);
+    if (graphics instanceof MapModeGraphics) {
+        ((MapModeGraphics)graphics).getMapMode().DPtoLP(sizeLPDim);
+    }
+    
+    Rectangle z = new Rectangle((int)(Math.floor((x * zoom + fractionalX))), 
+        (int)(Math.floor((y * zoom + fractionalY))),
+        (int)(Math.floor((sizeLPDim.width * zoom + fractionalX))), 
+        (int)(Math.floor((sizeLPDim.height * zoom + fractionalY))));
+    
 	graphics.drawImage(srcImage, 0, 0, size.width, size.height,
-		(int)(Math.floor((x * zoom + fractionalX))), 
-		(int)(Math.floor((y * zoom + fractionalY))),
-		(int)(Math.floor((size.width * zoom + fractionalX))), 
-		(int)(Math.floor((size.height * zoom + fractionalY))));
+		z.x, z.y, z.width, z.height);
 }
 
 /** @see Graphics#drawImage(Image, int, int, int, int, int, int, int, int) */
