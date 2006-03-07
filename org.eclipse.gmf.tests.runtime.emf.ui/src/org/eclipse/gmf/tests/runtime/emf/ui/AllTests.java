@@ -13,12 +13,13 @@ package org.eclipse.gmf.tests.runtime.emf.ui;
 
 import java.util.Arrays;
 
-import org.eclipse.core.runtime.IPlatformRunnable;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.emf.ui.services.action.AbstractModelActionFilterProviderTest;
 
 
 /**
@@ -33,6 +34,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
+        suite.addTestSuite(AbstractModelActionFilterProviderTest.class);
 		suite.addTestSuite(ModelingAssistantServiceTests.class);
 		return suite;
 	}
