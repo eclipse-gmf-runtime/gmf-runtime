@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,17 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import java.util.Iterator;
+
 import org.eclipse.ui.PlatformUI;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.emf.ui.services.action.AbstractModelActionFilterProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * An action filter provider for the Diagram UI Actions plugin.
@@ -52,5 +59,34 @@ public class DiagramActionFilterProvider
 	protected boolean doProvides(IOperation operation) {
 		return true;
 	}
+    
+    /**
+     * Finds my editing domain by adating the current selection to
+     * <code>EObject</code>.
+     */
+    protected TransactionalEditingDomain getEditingDomain(Object target) {
+
+        TransactionalEditingDomain result = null;
+        IStructuredSelection selection = getStructuredSelection();
+
+        if (selection != null && !selection.isEmpty()) {
+
+            for (Iterator i = selection.iterator(); i.hasNext()
+                && result == null;) {
+                Object next = i.next();
+
+                if (next instanceof IAdaptable) {
+                    EObject element = (EObject) ((IAdaptable) next)
+                        .getAdapter(EObject.class);
+
+                    if (element != null) {
+                        result = TransactionUtil.getEditingDomain(element);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
 }

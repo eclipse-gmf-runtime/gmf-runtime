@@ -108,7 +108,7 @@ public abstract class AbstractModelActionFilterProvider
 	public final boolean testAttribute(final Object target, final String name,
 		final String value) {
 
-        TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(target);
+        TransactionalEditingDomain domain = getEditingDomain(target);
 
         if (domain == null) {
             return false;
@@ -167,7 +167,7 @@ public abstract class AbstractModelActionFilterProvider
             Object target = ((TestAttributeOperation) operation).getTarget();
 
             if (target != null) {
-                domain = TransactionUtil.getEditingDomain(target);
+                domain = getEditingDomain(target);
             }
         }
 
@@ -208,5 +208,16 @@ public abstract class AbstractModelActionFilterProvider
 
 		return getResult();
 	}
+    
+    /**
+     * Determines the editing domain from the target object.
+     * 
+     * @param target
+     *            the target object
+     * @return the editing domain
+     */
+    protected TransactionalEditingDomain getEditingDomain(Object target) {
+        return TransactionUtil.getEditingDomain(target);
+    }
 
 }
