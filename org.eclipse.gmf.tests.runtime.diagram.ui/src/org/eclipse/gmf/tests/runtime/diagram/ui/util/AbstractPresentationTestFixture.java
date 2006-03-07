@@ -224,9 +224,9 @@ public abstract class AbstractPresentationTestFixture
 			// erasing all the data
 			setDiagramWorkbenchPart(null);
             // unload resource
-            if (resource != null) {
-                resource.unload();
-                resource = null;
+            if (getResource() != null) {
+                getResource().unload();
+                setResource(null);
             }
 			setDiagramFile(null);
 			setProject(null);
@@ -284,7 +284,7 @@ public abstract class AbstractPresentationTestFixture
 		setDiagramWorkbenchPart((IDiagramWorkbenchPart)IDE.openEditor(page, getDiagramFile(), true));
 		setDiagramEditPart(getDiagramWorkbenchPart().getDiagramEditPart());
         setDiagram(getDiagramEditPart().getDiagramView());
-        resource = getDiagram().eResource();
+        setResource(getDiagram().eResource());
 	}
 
 	public boolean closeDiagram() {
@@ -340,16 +340,16 @@ public abstract class AbstractPresentationTestFixture
      * that resource.
      */
     protected void createResource() {  
-    	if (resource == null) {
+    	if (getResource() == null) {
 	        IFile file = getDiagramFile();
 	        
 	        if (file != null) {
 	            String filePath = file.getLocation().toOSString();
-	            resource = getEditingDomain().loadResource(filePath);
+	            setResource(getEditingDomain().loadResource(filePath));
 	
 	        } else {
-	            resource = getEditingDomain()
-	                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui"); //$NON-NLS-1$
+                setResource(getEditingDomain()
+	                .createResource("null:/org.eclipse.gmf.tests.runtime.diagram.ui")); //$NON-NLS-1$
 	        }
 	
 	        if (getDiagram() != null) {
@@ -361,7 +361,7 @@ public abstract class AbstractPresentationTestFixture
 	                        IAdaptable info)
 	                    throws ExecutionException {
 	                    
-	                    resource.getContents().add(getDiagram());
+	                    getResource().getContents().add(getDiagram());
 	                    return Status.OK_STATUS;
 	                };
 	            };
@@ -576,6 +576,14 @@ public abstract class AbstractPresentationTestFixture
             }
         }
         return editingDomain;
+    }
+    
+    protected Resource getResource() {
+        return resource;
+    }
+    
+    protected void setResource(Resource resource) {
+        this.resource = resource;
     }
 
 }
