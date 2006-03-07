@@ -23,14 +23,15 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.emf.commands.core.commands.DestroyEObjectCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.IEditorPart;
@@ -40,7 +41,14 @@ import org.eclipse.ui.part.FileEditorInput;
 public class CanonicalTestFixture extends LogicTestFixture {
 
 	public void destroy(EObject eObject) {
-		execute(new DestroyEObjectCommand(getEditingDomain(), StringStatics.BLANK, eObject));
+		DestroyElementRequest destroy = new DestroyElementRequest(
+				getEditingDomain(),
+				eObject,
+				false);
+		IElementType context = ElementTypeRegistry.getInstance().getElementType(
+				destroy.getEditHelperContext());
+		
+		execute(context.getEditCommand(destroy));
 	}
 
 	/** Sets the <tt>COLLAPSED</tt> property value. */

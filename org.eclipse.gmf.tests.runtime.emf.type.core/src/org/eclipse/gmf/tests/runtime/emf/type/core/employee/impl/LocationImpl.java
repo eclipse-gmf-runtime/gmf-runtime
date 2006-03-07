@@ -11,12 +11,10 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.EModelElementImpl;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +25,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class LocationImpl extends EObjectImpl implements Location {
+public class LocationImpl extends EModelElementImpl implements Location {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -43,7 +41,7 @@ public class LocationImpl extends EObjectImpl implements Location {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return EmployeePackage.eINSTANCE.getLocation();
+		return EmployeePackage.Literals.LOCATION;
 	}
 
 } //LocationImpl

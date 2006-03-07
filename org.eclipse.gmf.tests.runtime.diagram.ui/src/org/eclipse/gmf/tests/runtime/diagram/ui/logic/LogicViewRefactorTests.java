@@ -48,6 +48,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.FillStyle;
@@ -269,7 +270,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 					newObject.getTerminals().addAll(oldObject.getTerminals());
 
 					new ViewRefactorHelper(PreferencesHint.USE_DEFAULTS).refactor(oldObject, newObject);
-					EMFCoreUtil.destroy(oldObject);
+					DestroyElementCommand.destroy(oldObject);
 					
 					return CommandResult.newOKCommandResult(newObject);
 				}
@@ -347,7 +348,7 @@ public class LogicViewRefactorTests extends AbstractTestBase {
 							}
 						}						
 					}.refactor(oldObject, newObject);
-					EMFCoreUtil.destroy(oldObject);
+					DestroyElementCommand.destroy(oldObject);
 					
 					return CommandResult.newOKCommandResult(newObject);
 				}

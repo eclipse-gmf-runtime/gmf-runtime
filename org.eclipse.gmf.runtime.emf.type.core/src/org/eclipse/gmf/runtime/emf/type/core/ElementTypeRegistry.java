@@ -161,8 +161,15 @@ public class ElementTypeRegistry {
 	 */
 	public IEditHelperAdvice[] getEditHelperAdvice(EObject eObject) {
 
-		List result = specializationTypeRegistry.getEditHelperAdvice(eObject,
-			getMetamodelTypeDescriptor(eObject));
+		Collection result;
+		MetamodelTypeDescriptor desc = getMetamodelTypeDescriptor(eObject);
+		if (desc == null) {
+			result = specializationTypeRegistry.getEditHelperAdvice(
+					eObject,
+					DefaultMetamodelType.getDescriptorInstance());
+		} else {
+			result = specializationTypeRegistry.getEditHelperAdvice(eObject, desc);
+		}
 
 		return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[] {});
 	}
@@ -349,7 +356,13 @@ public class ElementTypeRegistry {
 	 */
 	public IElementType getElementType(EClass eClass) {
 
-		return getMetamodelType(eClass);
+		IElementType result = getMetamodelType(eClass);
+		if (result == null) {
+			// at least provide the default type for default editing support
+			result = DefaultMetamodelType.getInstance();
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -362,7 +375,13 @@ public class ElementTypeRegistry {
 	 */
 	public IElementType getElementType(EObject eObject) {
 
-		return getMetamodelType(eObject);
+		IElementType result = getMetamodelType(eObject);
+		if (result == null) {
+			// at least provide the default type for default editing support
+			result = DefaultMetamodelType.getInstance();
+		}
+		
+		return result;
 	}
 
 	/**
@@ -428,9 +447,14 @@ public class ElementTypeRegistry {
 		if (metamodelType != null) {
 
 			// Get the matching specializations
-			Collection specializations = specializationTypeRegistry
-				.getSpecializationDescriptorsMatching(eObject,
-					getMetamodelTypeDescriptor(eObject));
+			Collection specializations;
+			MetamodelTypeDescriptor desc = getMetamodelTypeDescriptor(eObject);
+			if (desc == null) {
+				specializations = Collections.EMPTY_LIST;
+			} else {
+				specializations = specializationTypeRegistry
+					.getSpecializationDescriptorsMatching(eObject, desc);
+			}
 
 			for (Iterator i = specializations.iterator(); i.hasNext();) {
 				SpecializationTypeDescriptor next = (SpecializationTypeDescriptor) i
@@ -448,6 +472,12 @@ public class ElementTypeRegistry {
 			Collections.reverse(superTypes);
 			result.addAll(superTypes);
 		}
+		
+		if (result.isEmpty()) {
+			// at least provide the default type for default editing behaviour
+			result.add(DefaultMetamodelType.getInstance());
+		}
+		
 		return (IElementType[]) result.toArray(EMPTY_ELEMENT_TYPE_ARRAY);
 	}
 
@@ -466,6 +496,8 @@ public class ElementTypeRegistry {
 
 		if (typeDescriptor != null) {
 			return typeDescriptor.getElementType();
+		} else if (DefaultMetamodelType.ID.equals(id)) {
+			return DefaultMetamodelType.getInstance();
 		}
 		return null;
 	}

@@ -14,12 +14,10 @@ package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.EModelElementImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
@@ -45,7 +43,7 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
  *
  * @generated
  */
-public class EmployeeImpl extends EObjectImpl implements Employee {
+public class EmployeeImpl extends EModelElementImpl implements Employee {
 	/**
 	 * The default value of the '{@link #getSalary() <em>Salary</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -117,14 +115,14 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	protected static final boolean SECURITY_CLEARANCE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isSecurityClearance() <em>Security Clearance</em>}' attribute.
+	 * The flag representing the value of the '{@link #isSecurityClearance() <em>Security Clearance</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isSecurityClearance()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean securityClearance = SECURITY_CLEARANCE_EDEFAULT;
+	protected static final int SECURITY_CLEARANCE_EFLAG = 1 << 8;
 
 	/**
 	 * The default value of the '{@link #isFullTime() <em>Full Time</em>}' attribute.
@@ -137,14 +135,14 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	protected static final boolean FULL_TIME_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isFullTime() <em>Full Time</em>}' attribute.
+	 * The flag representing the value of the '{@link #isFullTime() <em>Full Time</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isFullTime()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean fullTime = FULL_TIME_EDEFAULT;
+	protected static final int FULL_TIME_EFLAG = 1 << 9;
 
 	/**
 	 * The cached value of the '{@link #getOffice() <em>Office</em>}' containment reference.
@@ -171,7 +169,7 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return EmployeePackage.eINSTANCE.getEmployee();
+		return EmployeePackage.Literals.EMPLOYEE;
 	}
 
 	/**
@@ -285,51 +283,14 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isSecurityClearance() {
-		return securityClearance;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setSecurityClearance(boolean newSecurityClearance) {
-		boolean oldSecurityClearance = securityClearance;
-		securityClearance = newSecurityClearance;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.EMPLOYEE__SECURITY_CLEARANCE, oldSecurityClearance, securityClearance));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Department getDepartment() {
-		if (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT) return null;
-		return (Department)eContainer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDepartment(Department newDepartment) {
-		if (newDepartment != eContainer || (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT && newDepartment != null)) {
-			if (EcoreUtil.isAncestor(this, newDepartment))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
-			NotificationChain msgs = null;
-			if (eContainer != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newDepartment != null)
-				msgs = ((InternalEObject)newDepartment).eInverseAdd(this, EmployeePackage.DEPARTMENT__MEMBERS, Department.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject)newDepartment, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
-			if (msgs != null) msgs.dispatch();
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EmployeePackage.EMPLOYEE__DEPARTMENT:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return eBasicSetContainer(otherEnd, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.EMPLOYEE__DEPARTMENT, newDepartment, newDepartment));
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -337,41 +298,14 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isFullTime() {
-		return fullTime;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setFullTime(boolean newFullTime) {
-		boolean oldFullTime = fullTime;
-		fullTime = newFullTime;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.EMPLOYEE__FULL_TIME, oldFullTime, fullTime));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case EmployeePackage.EMPLOYEE__DEPARTMENT:
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EmployeePackage.EMPLOYEE__DEPARTMENT:
+				return eBasicSetContainer(null, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
+			case EmployeePackage.EMPLOYEE__OFFICE:
+				return basicSetOffice(null, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -379,18 +313,12 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case EmployeePackage.EMPLOYEE__DEPARTMENT:
-					return eBasicSetContainer(null, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
-				case EmployeePackage.EMPLOYEE__OFFICE:
-					return basicSetOffice(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID) {
+			case EmployeePackage.EMPLOYEE__DEPARTMENT:
+				return eInternalContainer().eInverseRemove(this, EmployeePackage.DEPARTMENT__MEMBERS, Department.class, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -398,25 +326,8 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
-				case EmployeePackage.EMPLOYEE__DEPARTMENT:
-					return eContainer.eInverseRemove(this, EmployeePackage.DEPARTMENT__MEMBERS, Department.class, msgs);
-				default:
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
-		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case EmployeePackage.EMPLOYEE__SALARY:
 				return new Integer(getSalary());
 			case EmployeePackage.EMPLOYEE__BAND:
@@ -432,7 +343,7 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 			case EmployeePackage.EMPLOYEE__OFFICE:
 				return getOffice();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -440,8 +351,8 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case EmployeePackage.EMPLOYEE__SALARY:
 				setSalary(((Integer)newValue).intValue());
 				return;
@@ -464,7 +375,7 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 				setOffice((Office)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -472,8 +383,8 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case EmployeePackage.EMPLOYEE__SALARY:
 				setSalary(SALARY_EDEFAULT);
 				return;
@@ -496,7 +407,7 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 				setOffice((Office)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -504,8 +415,8 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case EmployeePackage.EMPLOYEE__SALARY:
 				return salary != SALARY_EDEFAULT;
 			case EmployeePackage.EMPLOYEE__BAND:
@@ -513,15 +424,88 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 			case EmployeePackage.EMPLOYEE__NUMBER:
 				return number != NUMBER_EDEFAULT;
 			case EmployeePackage.EMPLOYEE__SECURITY_CLEARANCE:
-				return securityClearance != SECURITY_CLEARANCE_EDEFAULT;
+				return ((eFlags & SECURITY_CLEARANCE_EFLAG) != 0) != SECURITY_CLEARANCE_EDEFAULT;
 			case EmployeePackage.EMPLOYEE__DEPARTMENT:
 				return getDepartment() != null;
 			case EmployeePackage.EMPLOYEE__FULL_TIME:
-				return fullTime != FULL_TIME_EDEFAULT;
+				return ((eFlags & FULL_TIME_EFLAG) != 0) != FULL_TIME_EDEFAULT;
 			case EmployeePackage.EMPLOYEE__OFFICE:
 				return office != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSecurityClearance() {
+		return (eFlags & SECURITY_CLEARANCE_EFLAG) != 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSecurityClearance(boolean newSecurityClearance) {
+		boolean oldSecurityClearance = (eFlags & SECURITY_CLEARANCE_EFLAG) != 0;
+		if (newSecurityClearance) eFlags |= SECURITY_CLEARANCE_EFLAG; else eFlags &= ~SECURITY_CLEARANCE_EFLAG;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.EMPLOYEE__SECURITY_CLEARANCE, oldSecurityClearance, newSecurityClearance));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Department getDepartment() {
+		if (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT) return null;
+		return (Department)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDepartment(Department newDepartment) {
+		if (newDepartment != eInternalContainer() || (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT && newDepartment != null)) {
+			if (EcoreUtil.isAncestor(this, newDepartment))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newDepartment != null)
+				msgs = ((InternalEObject)newDepartment).eInverseAdd(this, EmployeePackage.DEPARTMENT__MEMBERS, Department.class, msgs);
+			msgs = eBasicSetContainer((InternalEObject)newDepartment, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.EMPLOYEE__DEPARTMENT, newDepartment, newDepartment));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isFullTime() {
+		return (eFlags & FULL_TIME_EFLAG) != 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFullTime(boolean newFullTime) {
+		boolean oldFullTime = (eFlags & FULL_TIME_EFLAG) != 0;
+		if (newFullTime) eFlags |= FULL_TIME_EFLAG; else eFlags &= ~FULL_TIME_EFLAG;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.EMPLOYEE__FULL_TIME, oldFullTime, newFullTime));
 	}
 
 	/**
@@ -540,9 +524,9 @@ public class EmployeeImpl extends EObjectImpl implements Employee {
 		result.append(", number: "); //$NON-NLS-1$
 		result.append(number);
 		result.append(", securityClearance: "); //$NON-NLS-1$
-		result.append(securityClearance);
+		result.append((eFlags & SECURITY_CLEARANCE_EFLAG) != 0);
 		result.append(", fullTime: "); //$NON-NLS-1$
-		result.append(fullTime);
+		result.append((eFlags & FULL_TIME_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

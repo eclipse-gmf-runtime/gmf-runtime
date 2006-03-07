@@ -211,7 +211,7 @@ public class SemanticEditPolicy
 				if (destroyRequest instanceof DestroyElementRequest) {
 					((DestroyElementRequest) destroyRequest)
 						.setElementToDestroy(getHostElement());
-
+					((DestroyElementRequest) destroyRequest).getParameters().clear();
 				} else {
 					result = new DestroyElementRequest(request
                         .getEditingDomain(), getHostElement(), destroyRequest

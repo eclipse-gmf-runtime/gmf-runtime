@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -362,10 +363,7 @@ public class SpecializationTypeRegistry {
 			if (adviceDescriptor != null) {
 				// See if the advice from this descriptor matches the model
 				// element
-				List matchingAdvice = getAdviceMatching(eObject, Collections
-					.singletonList(adviceDescriptor));
-
-				if (!matchingAdvice.isEmpty()) {
+				if (adviceMatches(eObject, adviceDescriptor)) {
 					result.add(nextDescriptor);
 				}
 			} else {
@@ -410,74 +408,57 @@ public class SpecializationTypeRegistry {
 	}
 
 	/**
-	 * Gets the list of edit helper advice descriptors that match
-	 * <code>eObject</code>, from the collection of descriptors in
-	 * <code>editHelperAdviceDescriptors</code>.
+	 * Queries whether the specified edit helper advice descriptor matches an
+	 * <code>eObject</code>.
 	 * 
 	 * @param eObject
 	 *            the model element for which to find matching advice
-	 * @param editHelperAdviceDescriptors
-	 *            a collection of <code>IEditHelperAdviceDescriptor</code> s
-	 *            from which to find the ones that match <code>eObject</code>
-	 * @return a list of <code>IEditHelperAdviceDescriptor</code> s that match
-	 *         <code>eObject</code>
+	 * @param editHelperAdviceDescriptor
+	 *            an advice descriptor that may opr may not match <code>eObject</code>
+	 * @return <code>true</code> if the advice matches; <code>false</code>, otherwise
 	 */
-	private List getAdviceMatching(EObject eObject,
-			Collection editHelperAdviceDescriptors) {
-
-		List result = new ArrayList();
+	private boolean adviceMatches(EObject eObject,
+			IEditHelperAdviceDescriptor editHelperAdviceDescriptor) {
 
 		EReference containmentFeature = eObject.eContainmentFeature();
 
-		for (Iterator i = editHelperAdviceDescriptors.iterator(); i.hasNext();) {
-			IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) i
-				.next();
-			IContainerDescriptor container = nextAdviceDescriptor
-				.getContainerDescriptor();
+		IContainerDescriptor container = editHelperAdviceDescriptor
+			.getContainerDescriptor();
 
-			if (container != null) {
-				IElementMatcher containerMatcher = container.getMatcher();
+		if (container != null) {
+			IElementMatcher containerMatcher = container.getMatcher();
 
-				if (containerMatcher != null
-					&& !containerMatcher.matches(eObject.eContainer())) {
-					continue;
-				}
+			if (containerMatcher != null
+				&& !containerMatcher.matches(eObject.eContainer())) {
+				return false;
 			}
+		}
 
-			EReference[] features = null;
-			if (container != null) {
-				features = container.getContainmentFeatures();
-			}
+		EReference[] features = null;
+		if (container != null) {
+			features = container.getContainmentFeatures();
+		}
 
-			if (features == null || features.length < 1) {
-				// All features that can contain this type's EClass are valid
-				IElementMatcher matcher = nextAdviceDescriptor.getMatcher();
+		if (features == null || features.length < 1) {
+			// All features that can contain this type's EClass are valid
+			IElementMatcher matcher = editHelperAdviceDescriptor.getMatcher();
 
-				if (matcher == null
-					|| (matcher != null && matcher.matches(eObject))) {
-					result.add(nextAdviceDescriptor);
-				}
+			return (matcher == null) || matcher.matches(eObject);
 
-			} else {
+		} else {
 
-				for (int j = 0; j < features.length; j++) {
+			for (int j = 0; j < features.length; j++) {
 
-					if (features[j] == containmentFeature) {
-						IElementMatcher matcher = nextAdviceDescriptor
-							.getMatcher();
+				if (features[j] == containmentFeature) {
+					IElementMatcher matcher = editHelperAdviceDescriptor
+						.getMatcher();
 
-						if (matcher == null) {
-							result.add(nextAdviceDescriptor);
-
-						} else if (matcher.matches(eObject)) {
-							result.add(nextAdviceDescriptor);
-						}
-					}
+					return (matcher == null) || matcher.matches(eObject);
 				}
 			}
 		}
 
-		return result;
+		return false;
 	}
 
 	/**
@@ -586,7 +567,7 @@ public class SpecializationTypeRegistry {
 	public List getEditHelperAdvice(EObject eObject,
 			MetamodelTypeDescriptor metamodelTypeDescriptor) {
 
-		List result = new ArrayList();
+		LinkedHashSet result = new LinkedHashSet();
 
 		// Look at advice bound to the metamodel supertypes
 		IElementType[] metamodelSupertypes = metamodelTypeDescriptor
@@ -614,7 +595,7 @@ public class SpecializationTypeRegistry {
 				eObject, ALL_NONE));
 		}
 
-		return result;
+		return new ArrayList(result);
 	}
 
 	/**
@@ -677,26 +658,23 @@ public class SpecializationTypeRegistry {
 
 		List result = new ArrayList();
 
-		Set adviceDescriptors = (Set) adviceBindings.get(elementTypeId);
+		for (Iterator j = getAdviceBindings(elementTypeId); j.hasNext();) {
+			IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) j
+				.next();
 
-		if (adviceDescriptors != null) {
 			// Filter out any of the bound advice that doesn't match
-			List matchingAdviceDescriptors = getAdviceMatching(eObject,
-				adviceDescriptors);
+			if (!adviceMatches(eObject, nextAdviceDescriptor)) {
+				continue;
+			}
+			
+			if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
+					.getInheritance())) {
+				
+				IEditHelperAdvice nextAdvice = nextAdviceDescriptor
+					.getEditHelperAdvice();
 
-			for (Iterator j = matchingAdviceDescriptors.iterator(); j.hasNext();) {
-				IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) j
-					.next();
-
-				if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
-						.getInheritance())) {
-					
-					IEditHelperAdvice nextAdvice = nextAdviceDescriptor
-						.getEditHelperAdvice();
-
-					if (nextAdvice != null) {
-						result.add(nextAdvice);
-					}
+				if (nextAdvice != null) {
+					result.add(nextAdvice);
 				}
 			}
 		}
@@ -720,27 +698,92 @@ public class SpecializationTypeRegistry {
 
 		List result = new ArrayList();
 
-		Set adviceDescriptors = (Set) adviceBindings.get(elementTypeId);
+		for (Iterator j = getAdviceBindings(elementTypeId); j.hasNext();) {
+			IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) j
+				.next();
 
-		if (adviceDescriptors != null) {
+			if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
+					.getInheritance())) {
+				
+				IEditHelperAdvice nextAdvice = nextAdviceDescriptor
+					.getEditHelperAdvice();
 
-			for (Iterator j = adviceDescriptors.iterator(); j.hasNext();) {
-				IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) j
-					.next();
-
-				if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
-						.getInheritance())) {
-					
-					IEditHelperAdvice nextAdvice = nextAdviceDescriptor
-						.getEditHelperAdvice();
-
-					if (nextAdvice != null) {
-						result.add(nextAdvice);
-					}
+				if (nextAdvice != null) {
+					result.add(nextAdvice);
 				}
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Obtains an iterator over the advices bound exactly to the specified element
+	 * type ID and also to patterns matching the element type ID.
+	 * <p>
+	 * <b>Note</b> for now, in the interest of simplicity and performance, the
+	 * only pattern supported is <code>"*"</code> to match all element types.
+	 * </p>
+	 * 
+	 * @param elementTypeId the element type ID for which to get advice
+	 * 
+	 * @return an immutable iterator of the advice bindings (cannot
+	 *     {@linkplain Iterator#remove() remove} from it)
+	 */
+	private Iterator getAdviceBindings(String elementTypeId) {
+		class MultiIterator implements Iterator {
+			private Iterator current;
+			private Collection[] collections;
+			private int index = 0;
+			
+			MultiIterator(Collection[] collections) {
+				this.collections = collections;
+				current = nextIterator();
+			}
+			
+			public boolean hasNext() {
+				while (current != null) {
+					if (current.hasNext()) {
+						return true;
+					}
+					
+					current = nextIterator();
+				}
+				
+				return false;
+			}
+
+			public Object next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
+				
+				return current.next();
+			}
+
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+			
+			private Iterator nextIterator() {
+				Iterator result = null;
+				
+				while ((result == null) && (index < collections.length)) {
+					if (collections[index] != null) {
+						result = collections[index].iterator();
+						collections[index] = null; // free memory
+					}
+					
+					index++;
+				}
+				
+				return result;
+			}
+		}
+		
+		return new MultiIterator(new Collection[] {
+				(Collection) adviceBindings.get(elementTypeId),
+				(Collection) adviceBindings.get("*"), //$NON-NLS-1$
+		});
 	}
 
 	/**

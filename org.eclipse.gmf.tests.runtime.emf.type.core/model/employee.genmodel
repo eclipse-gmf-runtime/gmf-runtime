@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.gmf.tests.runtime.emf.type.ui/src"
-    editDirectory="/org.eclipse.gmf.tests.runtime.emf.type.ui.edit/src" editorDirectory="/org.eclipse.gmf.tests.runtime.emf.type.ui.editor/src"
-    modelPluginID="org.eclipse.gmf.tests.runtime.emf.type.ui" runtimeJar="true" modelName="Employee"
-    editPluginClass="Employee.provider.EmployeeEditPlugin" editorPluginClass="Employee.presentation.EmployeeEditorPlugin"
-    nonNLSMarkers="true" importerID="org.eclipse.emf.importer.ecore">
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.gmf.tests.runtime.emf.type.core/src"
+    editDirectory="/org.eclipse.gmf.tests.runtime.emf.type.core.edit/src" editorDirectory="/org.eclipse.gmf.tests.runtime.emf.type.core.editor/src"
+    modelPluginID="org.eclipse.gmf.tests.runtime.emf.type.core" runtimeJar="true"
+    modelName="Employee" editPluginClass="Employee.provider.EmployeeEditPlugin" editorPluginClass="Employee.presentation.EmployeeEditorPlugin"
+    nonNLSMarkers="true" testsDirectory="/org.eclipse.gmf.tests.runtime.emf.type.core/src"
+    testSuiteClass="org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeAllTests"
+    booleanFlagsField="eFlags" booleanFlagsReservedBits="8" importerID="org.eclipse.emf.importer.ecore">
   <foreignModel>Employee.ecore</foreignModel>
-  <genPackages prefix="Employee" basePackage="org.eclipse.gmf.tests.runtime.emf.type.ui" ecorePackage="Employee.ecore#/">
+  <genPackages prefix="Employee" basePackage="org.eclipse.gmf.tests.runtime.emf.type.core"
+      ecorePackage="Employee.ecore#/">
     <genEnums ecoreEnum="Employee.ecore#//Band">
       <genEnumLiterals ecoreEnumLiteral="Employee.ecore#//Band/junior"/>
       <genEnumLiterals ecoreEnumLiteral="Employee.ecore#//Band/senior"/>
@@ -38,5 +41,17 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Employee.ecore#//Student/coop"/>
     </genClasses>
     <genClasses ecoreClass="Employee.ecore#//Location"/>
+    <genClasses ecoreClass="Employee.ecore#//Client">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Employee.ecore#//Client/firstName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Employee.ecore#//Client/lastName"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Employee.ecore#//Client/represents"/>
+    </genClasses>
+    <genClasses ecoreClass="Employee.ecore#//Customer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Employee.ecore#//Customer/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Employee.ecore#//Customer/address"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Employee.ecore#//Customer/representatives"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Employee.ecore#//Customer/subsidiaries"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Employee.ecore#//Customer/parent"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

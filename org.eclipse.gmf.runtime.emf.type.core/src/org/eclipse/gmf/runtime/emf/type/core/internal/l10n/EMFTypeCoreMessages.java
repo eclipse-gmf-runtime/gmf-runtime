@@ -22,6 +22,7 @@ public final class EMFTypeCoreMessages extends NLS {
 
 	public static String Request_Label_Create;
 	public static String Request_Label_Destroy;
+	public static String Request_Label_DestroyDependents;
 	public static String Request_Label_Duplicate;
 	public static String Request_Label_Move;
 	public static String Request_Label_ReorientSource;
@@ -63,6 +64,9 @@ public final class EMFTypeCoreMessages extends NLS {
 	public static String specializationType_specializes_multiple_metamodel_types_ERROR_;
 	public static String specializationType_specializes_invalid_id_ERROR_;
 	public static String moveElementsCommand_noTargetFeature;
+	public static String destroyCommandFailed;
+	
+	public static String defaultEditHelper_name;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EMFTypeCoreMessages.class);

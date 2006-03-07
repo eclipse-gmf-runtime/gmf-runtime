@@ -181,8 +181,8 @@ public class ElementTypeRegistryTest
 		executive.setOffice(executiveOffice);
 		
 	}
-
-	protected ElementTypeRegistry getFixture() {
+    
+    protected ElementTypeRegistry getFixture() {
 		return fixture;
 	}
 
@@ -246,15 +246,13 @@ public class ElementTypeRegistryTest
 
 	public void test_getEditHelperAdvice_noAdvice() {
 
-		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
-			studentOffice);
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(studentOffice);
 		assertEquals(0, advice.length);
 	}
 
 	public void test_getEditHelperAdvice_eObject_directAdvice() {
 
-		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
-			financeEmployee);
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(financeEmployee);
 		assertEquals(2, advice.length);
 
 		for (int i = 0; i < advice.length; i++) {
@@ -267,8 +265,7 @@ public class ElementTypeRegistryTest
 
 	public void test_getEditHelperAdvice_eObject_indirectAdvice() {
 
-		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
-			financeManager);
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(financeManager);
 		assertEquals(3, advice.length);
 
 		for (int i = 0; i < advice.length; i++) {
@@ -282,8 +279,7 @@ public class ElementTypeRegistryTest
 
 	public void test_getEditHelperAdvice_elementType_directMatch() {
 
-		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
-			EmployeeType.EMPLOYEE);
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.EMPLOYEE);
 		assertEquals(2, advice.length);
 		for (int i = 0; i < advice.length; i++) {
 			if (advice[i].getClass() != FinanceEditHelperAdvice.class
@@ -295,8 +291,7 @@ public class ElementTypeRegistryTest
 
 	public void test_getEditHelperAdvice_elementType_inheritedMatches() {
 
-		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
-			EmployeeType.EXECUTIVE);
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.EXECUTIVE);
 		assertEquals(4, advice.length);
 		for (int i = 0; i < advice.length; i++) {
 			if (advice[i].getClass() != FinanceEditHelperAdvice.class
@@ -310,8 +305,7 @@ public class ElementTypeRegistryTest
 
 	public void test_getEditHelperAdvice_elementType_noInheritedMatches() {
 
-		IEditHelperAdvice[] advice = getFixture().getEditHelperAdvice(
-			EmployeeType.STUDENT);
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.STUDENT);
 		assertEquals(1, advice.length);
 		for (int i = 0; i < advice.length; i++) {
 			if (advice[i].getClass() != FinanceEditHelperAdvice.class) {

@@ -67,13 +67,6 @@ public abstract class AbstractClipboardSupport implements IClipboardSupport {
 		
 		EMFCoreUtil.setName(eObject, name);
 	}
-	
-	/**
-	 * MSL implements rich object destruction semantics.
-	 */
-	public void destroy(EObject eObject) {
-		EMFCoreUtil.destroy(eObject);
-	}
 
 	public XMLResource getResource(EObject eObject) {
 		return (XMLResource) eObject.eResource();

@@ -41,9 +41,11 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
+import org.eclipse.gmf.runtime.emf.type.core.internal.InternalRequestParameters;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyReferenceRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
@@ -274,7 +276,10 @@ public abstract class AbstractEditHelper
 
 		} else if (req instanceof DestroyElementRequest) {
 			return getDestroyElementCommand((DestroyElementRequest) req);
-
+			
+		} else if (req instanceof DestroyDependentsRequest) {
+			return getDestroyDependentsCommand((DestroyDependentsRequest) req);
+			
 		} else if (req instanceof DestroyReferenceRequest) {
 			return getDestroyReferenceCommand((DestroyReferenceRequest) req);
 
@@ -491,16 +496,147 @@ public abstract class AbstractEditHelper
 	}
 
 	/**
-	 * Gets the command to destroy a child of an element of my kind. By default,
-	 * returns <code>null</code>. Subclasses may override to provide their
-	 * command.
+	 * Gets the command to destroy a single child of an element of my kind, and
+	 * only it. By default, returns a {@link DestroyElementCommand}. Subclasses
+	 * may override to provide their own command.
 	 * 
 	 * @param req
 	 *            the destroy request
-	 * @return the destroy command
+	 * @return a command that destroys only the element specified as the request's
+	 *    {@linkplain DestroyElementRequest#getElementToDestroy() element to destroy}
+	 */
+	protected ICommand getBasicDestroyElementCommand(DestroyElementRequest req) {
+		ICommand result = req.getBasicDestroyCommand();
+		
+		if (result == null) {
+			result = new DestroyElementCommand(req);
+		} else {
+			// ensure that re-use of this request will not accidentally
+			//    propagate this command, which would destroy the wrong object
+			req.setBasicDestroyCommand(null);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gets the command to destroy a single child of an element of my kind along
+	 * with its dependents (not related by containment). By default, returns a
+	 * composite that destroys the elements and zero or more dependents.
+	 * 
+	 * @param req
+	 *            the destroy request
+	 * @return a command that destroys the element specified as the request's
+	 *    {@linkplain DestroyElementRequest#getElementToDestroy() element to destroy}
+	 *    and its non-containment dependents
+	 */
+	protected ICommand getDestroyElementWithDependentsCommand(DestroyElementRequest req) {
+		ICommand result = getBasicDestroyElementCommand(req);
+		
+		// get elements dependent on the element we are destroying, that
+		//   must also be destroyed
+		DestroyDependentsRequest ddr = (DestroyDependentsRequest) req.getParameter(
+				InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
+		if (ddr == null) {
+			// create the destroy-dependents request that will be propagated to
+			//    destroy requests for all elements destroyed in this operation
+			ddr = new DestroyDependentsRequest(
+				req.getEditingDomain(),
+				req.getElementToDestroy(),
+				req.isConfirmationRequired());
+			req.setParameter(
+					InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER,
+					ddr);
+		} else {
+			ddr.setElementToDestroy(req.getElementToDestroy());
+		}
+		
+		IElementType typeToDestroy = ElementTypeRegistry.getInstance().getElementType(
+				req.getElementToDestroy());
+		
+		if (typeToDestroy != null) {
+			ICommand command = typeToDestroy.getEditCommand(ddr);
+		
+			if (command != null) {
+				result = result.compose(command);
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gets the command to destroy a child of an element of my kind. By
+	 * default, returns a composite command that destroys the element specified
+	 * by the request and all of its contents.
+	 * 
+	 * @param req
+	 *            the destroy request
+	 * @return a command that destroys the element specified as the request's
+	 *    {@link DestroyElementRequest#getElementToDestroy() element to destroy}
+	 *    along with its contents and other dependents
 	 */
 	protected ICommand getDestroyElementCommand(DestroyElementRequest req) {
-		return new DestroyElementCommand(req);
+		ICommand result = null;
+		
+		ICommand destroyParent = getDestroyElementWithDependentsCommand(req);
+		
+		EObject parent = req.getElementToDestroy();
+		IElementType parentType = ElementTypeRegistry.getInstance().getElementType(
+				parent);
+
+		if (parentType != null) {
+			for (Iterator iter = parent.eContents().iterator(); iter.hasNext();) {
+				EObject next = (EObject) iter.next();
+				
+				DestroyDependentsRequest ddr = (DestroyDependentsRequest) req.getParameter(
+						InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
+				
+				// if another object is already destroying this one because it
+				//    is (transitively) a dependent, then don't destroy it again
+				if ((ddr == null) || !ddr.getDependentElementsToDestroy().contains(next)) {
+					// set the element to be destroyed
+					req.setElementToDestroy(next);
+					
+					ICommand command = parentType.getEditCommand(req);
+				
+					if (command != null) {
+						if (result == null) {
+							result = command;
+						} else {
+							result = result.compose(command);
+						}
+						
+						if (!command.canExecute()) {
+							// no point in continuing if we're abandoning the works
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		// bottom-up destruction:  destroy children before parent
+		if (result == null) {
+			result = destroyParent;
+		} else {
+			result = result.compose(destroyParent);
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Gets the command to destroy dependents of an element of my kind. By
+	 * default, returns <code>null</code>. Subclasses may override to provide
+	 * a command.
+	 * 
+	 * @param req
+	 *            the destroy dependents request
+	 * @return a command to destroy dependents, or <code>null</code>
+	 */
+	protected ICommand getDestroyDependentsCommand(DestroyDependentsRequest req) {
+		return null;
 	}
 
 	/**

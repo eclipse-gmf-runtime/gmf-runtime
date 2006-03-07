@@ -11,13 +11,22 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
-import org.eclipse.gmf.tests.runtime.emf.type.core.employee.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.*;
+
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,6 +35,25 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
  * @generated
  */
 public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static EmployeeFactory init() {
+		try {
+			EmployeeFactory theEmployeeFactory = (EmployeeFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore"); //$NON-NLS-1$ 
+			if (theEmployeeFactory != null) {
+				return theEmployeeFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new EmployeeFactoryImpl();
+	}
+
 	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -48,6 +76,8 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 			case EmployeePackage.OFFICE: return createOffice();
 			case EmployeePackage.STUDENT: return createStudent();
 			case EmployeePackage.LOCATION: return createLocation();
+			case EmployeePackage.CLIENT: return createClient();
+			case EmployeePackage.CUSTOMER: return createCustomer();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -60,11 +90,8 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 	 */
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case EmployeePackage.BAND: {
-				Band result = Band.get(initialValue);
-				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				return result;
-			}
+			case EmployeePackage.BAND:
+				return createBandFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -78,7 +105,7 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case EmployeePackage.BAND:
-				return instanceValue == null ? null : instanceValue.toString();
+				return convertBandToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -132,6 +159,46 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 	public Location createLocation() {
 		LocationImpl location = new LocationImpl();
 		return location;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Client createClient() {
+		ClientImpl client = new ClientImpl();
+		return client;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Customer createCustomer() {
+		CustomerImpl customer = new CustomerImpl();
+		return customer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Band createBandFromString(EDataType eDataType, String initialValue) {
+		Band result = Band.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertBandToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

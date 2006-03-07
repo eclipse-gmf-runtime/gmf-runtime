@@ -25,12 +25,9 @@ import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.TriggerListener;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * The following class implements the Notation semantic procedures.
@@ -92,50 +89,6 @@ public class NotationSemProc extends TriggerListener {
 
 				}
 			}
-            
-            ///////////////////////////////////////////////////////
-            // TODO:  Remove when we can contribute edit helper advice when destroying an EObject.    
-            if (notification.getEventType() == Notification.REMOVE) {
-                final EObject removedObject = (EObject) notification.getOldValue();
-
-                if (removedObject.eResource() == null) {
-                    // this is the equivalent of a destroy
-                    
-                    return new RecordingCommand(editingDomain) {
-                        protected void doExecute() {
-                            preProcessDestroy(removedObject);
-                        }
-                    };
-                    
-                } else if (NotationPackage.eINSTANCE.getView_SourceEdges()
-                    .equals(feature)) {
-
-                    final Edge edge = (Edge) notification.getOldValue();
-                    if (edge.getSource() == null) {
-                        return new RecordingCommand(editingDomain) {
-
-                            protected void doExecute() {
-                                EMFCoreUtil.destroy(edge);
-                            }
-                        };
-                    }
-                    
-                } else if (NotationPackage.eINSTANCE.getView_TargetEdges()
-                    .equals(feature)) {
-
-                    final Edge edge = (Edge) notification.getOldValue();
-                    if (edge.getTarget() == null) {
-                        return new RecordingCommand(editingDomain) {
-
-                            protected void doExecute() {
-                                EMFCoreUtil.destroy(edge);
-                            }
-                        };
-                    }
-                    
-                }     
-            }
-            ///////////////////////////////////////////////////////
 		}
         return null;
 	}
@@ -282,39 +235,6 @@ public class NotationSemProc extends TriggerListener {
 			if (eObject instanceof Diagram)
 				((Diagram) eObject).setName(name);
 		}
-	}
-    
-	/**
-	 * Pre-process destroy.
-	 */
-	private static void preProcessDestroy(EObject eObject) {
-        Collection semanticReferencers = EMFCoreUtil.getReferencers(
-            eObject, new EReference[] {NotationPackage.eINSTANCE
-                .getView_Element()});
-
-        for (Iterator i = semanticReferencers.iterator(); i.hasNext();) {
-
-            EObject referencer = (EObject) i.next();
-
-            if (referencer != null) {
-                EMFCoreUtil.destroy(referencer);
-            }
-        }
-
-        if (eObject instanceof View) {
-
-            Collection nodeEntryKeys = EMFCoreUtil.getReferencers(eObject,
-                new EReference[] {NotationPackage.eINSTANCE
-                    .getNodeEntry_Key()});
-
-            for (Iterator i = nodeEntryKeys.iterator(); i.hasNext();) {
-
-                EObject nodeEntry = (EObject) i.next();
-
-                if (nodeEntry != null)
-                    EMFCoreUtil.destroy(nodeEntry);
-            }
-        }
 	}
 
 }

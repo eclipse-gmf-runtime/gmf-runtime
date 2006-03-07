@@ -19,9 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.gmf.tests.runtime.emf.commands.core.command.AbstractModelCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.commands.core.command.AbstractTransactionalCommandTest;
-import org.eclipse.gmf.tests.runtime.emf.commands.core.command.CompositeModelCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.commands.core.command.CompositeTransactionalCommandTest;
 
 /**
@@ -37,9 +35,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
 		
-		suite.addTest(AbstractModelCommandTest.suite());
         suite.addTest(AbstractTransactionalCommandTest.suite());
-		suite.addTest(CompositeModelCommandTest.suite());
         suite.addTest(CompositeTransactionalCommandTest.suite());
 
 		return suite;

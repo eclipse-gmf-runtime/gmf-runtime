@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.FilteringStyle;
@@ -96,7 +97,7 @@ public class ViewRefactorHelper {
 			} else if (oldView instanceof Diagram) {
 				refactorDiagram((Diagram)oldView, newElement);
 			}
-			EMFCoreUtil.destroy(oldView);
+			DestroyElementCommand.destroy(oldView);
 		}
 		
 		// refactor filtering styles

@@ -20,6 +20,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.CreateElementCommandTest;
+import org.eclipse.gmf.tests.runtime.emf.type.core.commands.DestroyElementCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.SetValueCommandTest;
 
 public class AllTests
@@ -36,6 +37,7 @@ public class AllTests
 		suite.addTest(ElementTypeRegistryTest.suite());
 		suite.addTest(CreateElementCommandTest.suite());
 		suite.addTest(CreateElementRequestTest.suite());
+		suite.addTest(DestroyElementCommandTest.suite());
 		suite.addTest(MetamodelTypeDescriptorTest.suite());
 		suite.addTest(MoveRequestTest.suite());
         suite.addTest(SetValueCommandTest.suite());

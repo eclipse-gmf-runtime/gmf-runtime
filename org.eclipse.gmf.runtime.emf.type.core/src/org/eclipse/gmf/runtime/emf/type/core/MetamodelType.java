@@ -118,7 +118,9 @@ public class MetamodelType
 					IElementType nextElementType = ElementTypeRegistry
 						.getInstance().getElementType(nextEClass);
 	
-					if (nextElementType != null) {
+					if ((nextElementType != null)
+							&& (nextElementType != DefaultMetamodelType.getInstance())) {
+						
 						result.add(nextElementType);
 					}
 				}

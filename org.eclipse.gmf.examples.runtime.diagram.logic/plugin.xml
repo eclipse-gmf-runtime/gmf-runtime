@@ -282,22 +282,22 @@
            <metamodelType
                    id="logic.terminal"     
                    eclass="Terminal"
-                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.LogicElementEditHelper"> 
+                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.TerminalEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="logic.inputterminal"     
                    eclass="InputTerminal"
-                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.LogicElementEditHelper"> 
+                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.TerminalEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="logic.outputterminal"     
                    eclass="OutputTerminal"
-                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.LogicElementEditHelper"> 
+                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.TerminalEditHelper"> 
            </metamodelType>
            <metamodelType
                    id="logic.inputoutputterminal"     
                    eclass="InputOutputTerminal"
-                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.LogicElementEditHelper"> 
+                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.TerminalEditHelper"> 
            </metamodelType>
            <specializationType
                    id="logic.halfAdder"     

@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.emf.ui,
- org.eclipse.gmf.runtime.emf.ui.action,
+Export-Package: org.eclipse.gmf.runtime.emf.ui.action,
  org.eclipse.gmf.runtime.emf.ui.dialogs,
  org.eclipse.gmf.runtime.emf.ui.internal,
  org.eclipse.gmf.runtime.emf.ui.internal.l10n,

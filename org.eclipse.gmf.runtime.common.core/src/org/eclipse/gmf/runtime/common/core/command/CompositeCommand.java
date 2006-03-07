@@ -290,6 +290,27 @@ public class CompositeCommand
         }
         return this;
     }
+    
+	/**
+	 * Appends a command onto a (possibly) existing composeite of commands.
+	 * 
+	 * @param command an existing command, which may be a composite, a single
+	 *     command, or <code>null</code>
+	 * @param next a command to append to the composite (may also be
+	 *     <code>null</code>, which produces no effect)
+	 * 
+	 * @return the new composite, which is just <code>next</code> if
+	 *     <code>command</code> was <code>null</code>
+	 */
+	public static ICommand compose(ICommand command, ICommand next) {
+		if (command == null) {
+			return next;
+		} else if (next != null) {
+			return command.compose(next);
+		} else {
+			return command;
+		}
+	}
 
     /**
      * Returns the simplest form of this command that is equivalent. This is

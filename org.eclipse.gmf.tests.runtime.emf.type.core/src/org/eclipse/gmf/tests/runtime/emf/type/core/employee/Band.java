@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,7 +94,7 @@ public final class Band extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Band JUNIOR_LITERAL = new Band(JUNIOR, "junior"); //$NON-NLS-1$
+	public static final Band JUNIOR_LITERAL = new Band(JUNIOR, "junior", "junior"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * The '<em><b>Senior</b></em>' literal object.
@@ -108,7 +108,7 @@ public final class Band extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Band SENIOR_LITERAL = new Band(SENIOR, "senior"); //$NON-NLS-1$
+	public static final Band SENIOR_LITERAL = new Band(SENIOR, "senior", "senior"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * The '<em><b>Manager</b></em>' literal object.
@@ -122,7 +122,7 @@ public final class Band extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Band MANAGER_LITERAL = new Band(MANAGER, "manager"); //$NON-NLS-1$
+	public static final Band MANAGER_LITERAL = new Band(MANAGER, "manager", "manager"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * The '<em><b>Director</b></em>' literal object.
@@ -136,7 +136,7 @@ public final class Band extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Band DIRECTOR_LITERAL = new Band(DIRECTOR, "director"); //$NON-NLS-1$
+	public static final Band DIRECTOR_LITERAL = new Band(DIRECTOR, "director", "director"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * The '<em><b>Executive</b></em>' literal object.
@@ -150,7 +150,7 @@ public final class Band extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Band EXECUTIVE_LITERAL = new Band(EXECUTIVE, "executive"); //$NON-NLS-1$
+	public static final Band EXECUTIVE_LITERAL = new Band(EXECUTIVE, "executive", "executive"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * An array of all the '<em><b>Band</b></em>' enumerators.
@@ -176,15 +176,15 @@ public final class Band extends AbstractEnumerator {
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Band</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Band</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Band get(String name) {
+	public static Band get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			Band result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -192,7 +192,23 @@ public final class Band extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Band</b></em>' literal with the specified value.
+	 * Returns the '<em><b>Band</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static Band getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			Band result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Band</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -214,8 +230,8 @@ public final class Band extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private Band(int value, String name) {
-		super(value, name);
+	private Band(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } //Band

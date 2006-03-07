@@ -13,5 +13,5 @@ Export-Package: org.eclipse.gmf.runtime.emf.commands.core.command,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.common.core;visibility:=reexport,
  org.eclipse.emf.workspace;visibility:=reexport,
- org.eclipse.gmf.runtime.emf.core.compatibility;visibility:=reexport
+ org.eclipse.gmf.runtime.emf.core;visibility:=reexport
 Eclipse-LazyStart: true

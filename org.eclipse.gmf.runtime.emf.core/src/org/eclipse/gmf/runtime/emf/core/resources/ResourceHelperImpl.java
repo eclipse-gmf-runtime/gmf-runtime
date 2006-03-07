@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
 
 
 /**
@@ -64,14 +63,5 @@ public class ResourceHelperImpl
 		}
 
 		return eObject;
-	}
-	
-	/**
-	 * Default algorithm just detaches the object and, recursively, its contents
-	 * and nullifies all references to them from other objects in the resource
-	 * set.
-	 */
-	public void destroy(EObject eObject) {
-		Util.destroy(eObject);
 	}
 }

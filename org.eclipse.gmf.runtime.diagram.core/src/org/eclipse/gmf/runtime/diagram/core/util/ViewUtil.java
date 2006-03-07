@@ -15,7 +15,6 @@ package org.eclipse.gmf.runtime.diagram.core.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistElementComm
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
+import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
@@ -174,7 +174,7 @@ public class ViewUtil{
 			View child = (View)children.get(i);
 			destroy(child);
 		}
-		EMFCoreUtil.destroy(view);
+		DestroyElementCommand.destroy(view);
 	}
 	
 	/**

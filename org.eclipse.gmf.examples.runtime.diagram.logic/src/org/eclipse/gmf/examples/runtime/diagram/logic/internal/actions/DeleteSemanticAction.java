@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.DiagramStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -70,7 +70,7 @@ public class DeleteSemanticAction
 				for (Iterator i = getStructuredSelection().iterator(); i
 					.hasNext();) {
 					IGraphicalEditPart ep = (IGraphicalEditPart) i.next();
-					EMFCoreUtil.destroy(ep.getPrimaryView().getElement());
+					DestroyElementCommand.destroy(ep.getPrimaryView().getElement());
 
 				}
 				return new Status(IStatus.OK, LogicDiagramPlugin.getPluginId(),

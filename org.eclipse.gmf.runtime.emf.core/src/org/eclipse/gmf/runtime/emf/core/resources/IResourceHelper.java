@@ -20,9 +20,9 @@ import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 
 /**
  * Interface of an adapter for {@link Resource}s that provides
- * services such as creation and destruction of objects in that resource.
+ * services such as creation of objects in that resource.
  * This interface is used by the {@link EMFCoreUtil} class to implement
- * extensible/overrideable object creation and destruction behaviours.
+ * extensible/overrideable object creation behaviours.
  *
  * @author Christian W. Damus (cdamus)
  */
@@ -37,13 +37,4 @@ public interface IResourceHelper extends Adapter {
 	 * @return the instance
 	 */
 	EObject create(EClass eClass);
-
-	/**
-	 * Destroys the specified element which is currently attached to my
-	 * resource.  At the very least, when this is done, the <code>eObject</code>
-	 * must no longer be attached to my resource.
-	 * 
-	 * @param eObject an element to destroy
-	 */
-	void destroy(EObject eObject);
 }

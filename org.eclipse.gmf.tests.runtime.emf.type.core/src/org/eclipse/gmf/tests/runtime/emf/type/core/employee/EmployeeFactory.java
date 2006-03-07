@@ -21,14 +21,14 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage
  * @generated
  */
-public interface EmployeeFactory extends EFactory{
+public interface EmployeeFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	EmployeeFactory eINSTANCE = new org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.EmployeeFactoryImpl();
+	EmployeeFactory eINSTANCE = org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.EmployeeFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Employee</em>'.
@@ -74,6 +74,24 @@ public interface EmployeeFactory extends EFactory{
 	 * @generated
 	 */
 	Location createLocation();
+
+	/**
+	 * Returns a new object of class '<em>Client</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Client</em>'.
+	 * @generated
+	 */
+	Client createClient();
+
+	/**
+	 * Returns a new object of class '<em>Customer</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Customer</em>'.
+	 * @generated
+	 */
+	Customer createCustomer();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -3,7 +3,7 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="employee"
     nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore" nsPrefix="Employee">
-  <eClassifiers xsi:type="ecore:EClass" name="Employee">
+  <eClassifiers xsi:type="ecore:EClass" name="Employee" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="salary" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="band" lowerBound="1" eType="#//Band"/>
@@ -25,7 +25,7 @@
     <eLiterals name="director" value="3"/>
     <eLiterals name="executive" value="4"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Department">
+  <eClassifiers xsi:type="ecore:EClass" name="Department" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -35,7 +35,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="manager" lowerBound="1"
         eType="#//Employee" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Office">
+  <eClassifiers xsi:type="ecore:EClass" name="Office" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfWindows" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasDoor" lowerBound="1"
@@ -44,5 +44,21 @@
   <eClassifiers xsi:type="ecore:EClass" name="Student" eSuperTypes="#//Employee">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="coop" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Location"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Location" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Client" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="represents" eType="#//Customer"
+        eOpposite="#//Customer/representatives"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Customer" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="representatives" upperBound="-1"
+        eType="#//Client" containment="true" eOpposite="#//Client/represents"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subsidiaries" upperBound="-1"
+        eType="#//Customer" containment="true" eOpposite="#//Customer/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Customer"
+        eOpposite="#//Customer/subsidiaries"/>
+  </eClassifiers>
 </ecore:EPackage>

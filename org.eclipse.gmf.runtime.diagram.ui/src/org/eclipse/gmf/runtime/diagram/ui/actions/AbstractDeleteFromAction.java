@@ -82,6 +82,9 @@ public abstract class AbstractDeleteFromAction
 
 		// Reset the element to null
 		deleteReq.setElementToDestroy((EObject)null);
+		
+		// ensure that any parameters are cleared, as well
+		deleteReq.getParameters().clear();
 	}
 
 	/**

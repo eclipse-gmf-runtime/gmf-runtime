@@ -11,16 +11,12 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.EModelElementImpl;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
-
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,7 +32,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class OfficeImpl extends EObjectImpl implements Office {
+public class OfficeImpl extends EModelElementImpl implements Office {
 	/**
 	 * The default value of the '{@link #getNumberOfWindows() <em>Number Of Windows</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -68,14 +64,14 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	protected static final boolean HAS_DOOR_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isHasDoor() <em>Has Door</em>}' attribute.
+	 * The flag representing the value of the '{@link #isHasDoor() <em>Has Door</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isHasDoor()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean hasDoor = HAS_DOOR_EDEFAULT;
+	protected static final int HAS_DOOR_EFLAG = 1 << 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -92,7 +88,7 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return EmployeePackage.eINSTANCE.getOffice();
+		return EmployeePackage.Literals.OFFICE;
 	}
 
 	/**
@@ -122,7 +118,7 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * @generated
 	 */
 	public boolean isHasDoor() {
-		return hasDoor;
+		return (eFlags & HAS_DOOR_EFLAG) != 0;
 	}
 
 	/**
@@ -131,10 +127,10 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * @generated
 	 */
 	public void setHasDoor(boolean newHasDoor) {
-		boolean oldHasDoor = hasDoor;
-		hasDoor = newHasDoor;
+		boolean oldHasDoor = (eFlags & HAS_DOOR_EFLAG) != 0;
+		if (newHasDoor) eFlags |= HAS_DOOR_EFLAG; else eFlags &= ~HAS_DOOR_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.OFFICE__HAS_DOOR, oldHasDoor, hasDoor));
+			eNotify(new ENotificationImpl(this, Notification.SET, EmployeePackage.OFFICE__HAS_DOOR, oldHasDoor, newHasDoor));
 	}
 
 	/**
@@ -142,14 +138,14 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
 				return new Integer(getNumberOfWindows());
 			case EmployeePackage.OFFICE__HAS_DOOR:
 				return isHasDoor() ? Boolean.TRUE : Boolean.FALSE;
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -157,8 +153,8 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
 				setNumberOfWindows(((Integer)newValue).intValue());
 				return;
@@ -166,7 +162,7 @@ public class OfficeImpl extends EObjectImpl implements Office {
 				setHasDoor(((Boolean)newValue).booleanValue());
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -174,8 +170,8 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
 				setNumberOfWindows(NUMBER_OF_WINDOWS_EDEFAULT);
 				return;
@@ -183,7 +179,7 @@ public class OfficeImpl extends EObjectImpl implements Office {
 				setHasDoor(HAS_DOOR_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -191,14 +187,14 @@ public class OfficeImpl extends EObjectImpl implements Office {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case EmployeePackage.OFFICE__NUMBER_OF_WINDOWS:
 				return numberOfWindows != NUMBER_OF_WINDOWS_EDEFAULT;
 			case EmployeePackage.OFFICE__HAS_DOOR:
-				return hasDoor != HAS_DOOR_EDEFAULT;
+				return ((eFlags & HAS_DOOR_EFLAG) != 0) != HAS_DOOR_EDEFAULT;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**
@@ -213,7 +209,7 @@ public class OfficeImpl extends EObjectImpl implements Office {
 		result.append(" (numberOfWindows: "); //$NON-NLS-1$
 		result.append(numberOfWindows);
 		result.append(", hasDoor: "); //$NON-NLS-1$
-		result.append(hasDoor);
+		result.append((eFlags & HAS_DOOR_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

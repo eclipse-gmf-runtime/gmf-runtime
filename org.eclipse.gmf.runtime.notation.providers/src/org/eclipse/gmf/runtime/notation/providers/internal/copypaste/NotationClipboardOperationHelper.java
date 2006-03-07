@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.PasteAction;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteOption;
 import org.eclipse.gmf.runtime.emf.core.clipboard.AbstractClipboardSupport;
+import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -51,6 +52,10 @@ import org.eclipse.gmf.runtime.notation.View;
 public class NotationClipboardOperationHelper
 	extends AbstractClipboardSupport {
 
+	public void destroy(EObject eObject) {
+		DestroyElementCommand.destroy(eObject);
+	}
+	
 	/**
 	 * By default, there are no collisions in pasting.
 	 * 

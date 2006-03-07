@@ -21,8 +21,8 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
+import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.Ratio;
@@ -63,7 +63,7 @@ public class SetCompartmentRatioCommand extends SetPropertyCommand {
 
 			if (((Double)getNewValue()).doubleValue() == -1) {
 				if (ratio != null)
-					EMFCoreUtil.destroy(ratio);
+					DestroyElementCommand.destroy(ratio);
 			} else {
 				if (ratio == null) {
 					ratio = NotationFactory.eINSTANCE.createRatio();

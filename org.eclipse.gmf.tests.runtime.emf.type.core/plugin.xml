@@ -55,6 +55,18 @@
                    eclass="Office"
                    edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.OfficeEditHelper"> 
            </metamodelType>
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.core.customer"     
+                   name="Customer"
+                   eclass="Customer"
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.CustomerEditHelper"> 
+           </metamodelType>
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.core.client"     
+                   name="Client"
+                   eclass="Client"
+                   edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.ClientEditHelper"> 
+           </metamodelType>
 
            <specializationType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.secretDepartment"
@@ -147,6 +159,12 @@
                <specializes id="org.eclipse.gmf.tests.runtime.emf.type.core.noSuchType"/>
            </specializationType>
            
+           <!-- Advice for dependents of Clients -->
+           <adviceBinding
+                id="org.eclipse.gmf.tests.runtime.emf.type.core.clientDependentsAdvice"
+                typeId="org.eclipse.gmf.tests.runtime.emf.type.core.client"
+                class="org.eclipse.gmf.tests.runtime.emf.type.core.internal.ClientDependentsAdvice"> 
+           </adviceBinding>    
         </metamodel>
         
         <!-- Test metamodel that doesn't exist -->

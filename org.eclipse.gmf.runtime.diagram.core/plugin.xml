@@ -11,5 +11,16 @@
 <plugin>
 
      <extension-point id="viewProviders" name="%extPoint.viewProviders" schema="schema/viewProviders.exsd"/>
+     
+     <extension
+           point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+        <metamodel nsURI="http://www.eclipse.org/emf/2002/Ecore">
+           <adviceBinding
+                 class="org.eclipse.gmf.runtime.diagram.core.edithelpers.NotationViewDependentsAdvice"
+                 id="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"
+                 inheritance="none"
+                 typeId="*"/>
+        </metamodel>
+     </extension>
    
 </plugin>

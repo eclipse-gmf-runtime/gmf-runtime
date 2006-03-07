@@ -14,10 +14,7 @@ package org.eclipse.gmf.runtime.emf.core.internal.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,11 +35,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.internal.index.ReferenceVisitor;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 import org.eclipse.gmf.runtime.emf.core.resources.IResourceHelper;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.osgi.framework.Bundle;
 
 import com.ibm.icu.util.StringTokenizer;
@@ -547,185 +542,6 @@ public class Util {
 		}
 
 		return false;
-	}
-	
-	/**
-	 * Destroys an EMF ebject.
-	 */
-	public static void destroy(EObject eObject) {
-		EObject container = eObject.eContainer();
-
-		teardownContainment(eObject);
-
-		if (container != null) {
-
-			EReference reference = eObject.eContainmentFeature();
-
-			if (reference.isMany()) {
-				((Collection) container.eGet(reference)).remove(eObject);
-			} else {
-				container.eSet(reference, null);
-			}
-			
-			teardownReferences(eObject, container);
-		}
-	}
-
-	/**
-	 * Tear down containment of an EMF object.
-	 */
-	private static void teardownContainment(EObject eObject) {
-
-		List actions = new ArrayList();
-
-		Iterator i = eObject.eClass().getEAllContainments().iterator();
-
-		while (i.hasNext()) {
-
-			EReference reference = (EReference) i.next();
-
-			if ((reference.isChangeable()) && (eObject.eIsSet(reference))) {
-				actions
-					.add(new TeardownAction(eObject, reference, null));
-			}
-		}
-
-		Iterator j = actions.iterator();
-
-		while (j.hasNext())
-			((TeardownAction) j.next()).execute();
-	}
-
-	/**
-	 * Teardown references to and from an EMF object.
-	 */
-	private static void teardownReferences(final EObject eObject,
-			final EObject container) {
-
-		final List actions = new ArrayList();
-
-		Iterator i = eObject.eClass().getEAllReferences().iterator();
-
-		while (i.hasNext()) {
-
-			EReference reference = (EReference) i.next();
-
-			if ((reference.isChangeable()) && (!reference.isContainer())
-				&& (!reference.isContainment()) && (eObject.eIsSet(reference))) {
-
-				actions
-					.add(new TeardownAction(eObject, reference, null));
-			}
-		}
-
-		ReferenceVisitor visitor = new ReferenceVisitor(eObject) {
-
-			protected void visitedReferencer(EReference reference,
-					EObject referencer) {
-
-				actions.add(new TeardownAction(referencer, reference,
-					eObject));
-			}};
-
-		visitor.visitReferencers();
-
-		Iterator j = actions.iterator();
-
-		while (j.hasNext())
-			((TeardownAction) j.next()).execute();
-	}
-
-	
-	/**
-	 * Helper class used by teardown.
-	 */
-	private static class TeardownAction {
-
-		private EObject container = null;
-
-		private EReference reference = null;
-
-		private EObject object = null;
-
-		/**
-		 * Constructor.
-		 */
-		public TeardownAction(EObject container,
-				EReference reference, EObject object) {
-
-			this.container = container;
-			this.reference = reference;
-			this.object = object;
-		}
-
-		/**
-		 * Execute the action.
-		 */
-		public void execute() {
-
-			if (object == null) {
-
-				if (container.eIsSet(reference)) {
-
-					if (reference.isMany()) {
-
-						List objects = (List) container.eGet(reference);
-
-						if (reference.isContainment()) {
-
-							if (!objects.isEmpty()) {
-
-								Collection destroyed = new ArrayList(objects);
-
-								for (Iterator i = destroyed.iterator(); i
-									.hasNext();)
-									EMFCoreUtil.destroy((EObject) i.next());
-							}
-
-						} else {
-
-							if (!objects.isEmpty()) {
-
-								Collection detached = new ArrayList(objects);
-
-								for (Iterator i = detached.iterator(); i
-									.hasNext();) {
-
-									EObject eObject = (EObject) i.next();
-
-									((Collection) container.eGet(reference))
-										.remove(eObject);
-								}
-							}
-						}
-
-					} else {
-
-						if (reference.isContainment()) {
-
-							object = (EObject) container.eGet(reference);
-
-							if (object != null)
-								EMFCoreUtil.destroy(object);
-						} else
-							container.eSet(reference, null);
-					}
-				}
-
-			} else {
-
-				if (reference.isContainment())
-					EMFCoreUtil.destroy(object);
-
-				else {
-
-					if (reference.isMany())
-						((Collection) container.eGet(reference)).remove(object);
-					else
-						container.eSet(reference, null);
-				}
-			}
-		}
 	}
 
 }

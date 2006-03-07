@@ -16,6 +16,7 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.*;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -95,18 +96,21 @@ public class EmployeeSwitch {
 			case EmployeePackage.EMPLOYEE: {
 				Employee employee = (Employee)theEObject;
 				Object result = caseEmployee(employee);
+				if (result == null) result = caseEModelElement(employee);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case EmployeePackage.DEPARTMENT: {
 				Department department = (Department)theEObject;
 				Object result = caseDepartment(department);
+				if (result == null) result = caseEModelElement(department);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case EmployeePackage.OFFICE: {
 				Office office = (Office)theEObject;
 				Object result = caseOffice(office);
+				if (result == null) result = caseEModelElement(office);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -114,12 +118,28 @@ public class EmployeeSwitch {
 				Student student = (Student)theEObject;
 				Object result = caseStudent(student);
 				if (result == null) result = caseEmployee(student);
+				if (result == null) result = caseEModelElement(student);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case EmployeePackage.LOCATION: {
 				Location location = (Location)theEObject;
 				Object result = caseLocation(location);
+				if (result == null) result = caseEModelElement(location);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case EmployeePackage.CLIENT: {
+				Client client = (Client)theEObject;
+				Object result = caseClient(client);
+				if (result == null) result = caseEModelElement(client);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case EmployeePackage.CUSTOMER: {
+				Customer customer = (Customer)theEObject;
+				Object result = caseCustomer(customer);
+				if (result == null) result = caseEModelElement(customer);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -199,6 +219,51 @@ public class EmployeeSwitch {
 	 * @generated
 	 */
 	public Object caseLocation(Location object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Client</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Client</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseClient(Client object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Customer</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Customer</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseCustomer(Customer object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EModel Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EModel Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseEModelElement(EModelElement object) {
 		return null;
 	}
 

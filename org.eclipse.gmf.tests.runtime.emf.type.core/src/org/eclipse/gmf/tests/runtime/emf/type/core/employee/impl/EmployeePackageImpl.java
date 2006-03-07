@@ -11,7 +11,15 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Client;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Customer;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
@@ -19,14 +27,6 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -69,6 +69,20 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 	 * @generated
 	 */
 	private EClass locationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass clientEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass customerEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -321,6 +335,96 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getClient() {
+		return clientEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getClient_FirstName() {
+		return (EAttribute)clientEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getClient_LastName() {
+		return (EAttribute)clientEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getClient_Represents() {
+		return (EReference)clientEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getCustomer() {
+		return customerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCustomer_Name() {
+		return (EAttribute)customerEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCustomer_Address() {
+		return (EAttribute)customerEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCustomer_Representatives() {
+		return (EReference)customerEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCustomer_Subsidiaries() {
+		return (EReference)customerEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCustomer_Parent() {
+		return (EReference)customerEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getBand() {
 		return bandEEnum;
 	}
@@ -377,6 +481,18 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 
 		locationEClass = createEClass(LOCATION);
 
+		clientEClass = createEClass(CLIENT);
+		createEAttribute(clientEClass, CLIENT__FIRST_NAME);
+		createEAttribute(clientEClass, CLIENT__LAST_NAME);
+		createEReference(clientEClass, CLIENT__REPRESENTS);
+
+		customerEClass = createEClass(CUSTOMER);
+		createEAttribute(customerEClass, CUSTOMER__NAME);
+		createEAttribute(customerEClass, CUSTOMER__ADDRESS);
+		createEReference(customerEClass, CUSTOMER__REPRESENTATIVES);
+		createEReference(customerEClass, CUSTOMER__SUBSIDIARIES);
+		createEReference(customerEClass, CUSTOMER__PARENT);
+
 		// Create enums
 		bandEEnum = createEEnum(BAND);
 	}
@@ -405,7 +521,13 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 		setNsURI(eNS_URI);
 
 		// Add supertypes to classes
+		employeeEClass.getESuperTypes().add(ecorePackage.getEModelElement());
+		departmentEClass.getESuperTypes().add(ecorePackage.getEModelElement());
+		officeEClass.getESuperTypes().add(ecorePackage.getEModelElement());
 		studentEClass.getESuperTypes().add(this.getEmployee());
+		locationEClass.getESuperTypes().add(ecorePackage.getEModelElement());
+		clientEClass.getESuperTypes().add(ecorePackage.getEModelElement());
+		customerEClass.getESuperTypes().add(ecorePackage.getEModelElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(employeeEClass, Employee.class, "Employee", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -431,6 +553,18 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 		initEAttribute(getStudent_Coop(), ecorePackage.getEBoolean(), "coop", null, 1, 1, Student.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(locationEClass, Location.class, "Location", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(clientEClass, Client.class, "Client", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getClient_FirstName(), ecorePackage.getEString(), "firstName", null, 0, 1, Client.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getClient_LastName(), ecorePackage.getEString(), "lastName", null, 0, 1, Client.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getClient_Represents(), this.getCustomer(), this.getCustomer_Representatives(), "represents", null, 0, 1, Client.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(customerEClass, Customer.class, "Customer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getCustomer_Name(), ecorePackage.getEString(), "name", null, 0, 1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCustomer_Address(), ecorePackage.getEString(), "address", null, 0, 1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCustomer_Representatives(), this.getClient(), this.getClient_Represents(), "representatives", null, 0, -1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCustomer_Subsidiaries(), this.getCustomer(), this.getCustomer_Parent(), "subsidiaries", null, 0, -1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCustomer_Parent(), this.getCustomer(), this.getCustomer_Subsidiaries(), "parent", null, 0, 1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(bandEEnum, Band.class, "Band"); //$NON-NLS-1$

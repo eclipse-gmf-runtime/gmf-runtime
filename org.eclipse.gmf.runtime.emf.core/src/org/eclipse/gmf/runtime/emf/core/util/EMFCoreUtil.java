@@ -86,30 +86,6 @@ public class EMFCoreUtil {
 	}
 
 	/**
-	 * Destroys the object by removing it from its container and severing all
-	 * references from and to the object. it is also recursive, i.e., it gets
-	 * called on the children. Calling destroy on an already detached object
-	 * will do nothing.
-	 * 
-	 * @param eObject
-	 *            The object to destroy.
-	 */
-	public static void destroy(EObject eObject) {
-		Resource resource = eObject.eResource();
-		
-		if (resource != null) {
-
-			IResourceHelper helper = Util.getHelper(resource);
-			
-			if (helper != null) {
-				helper.destroy(eObject);
-			} else {
-				Util.destroy(eObject);
-			}
-		}
-	}
-
-	/**
 	 * Gets the first container with the specified EClass.
 	 * 
 	 * @param eObject

@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyReferenceRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
@@ -74,6 +75,9 @@ public class AbstractEditHelperAdvice implements IEditHelperAdvice {
 		} else if (request instanceof DestroyElementRequest) {
 			return getBeforeDestroyElementCommand((DestroyElementRequest) request);
 
+		} else if (request instanceof DestroyDependentsRequest) {
+			return getBeforeDestroyDependentsCommand((DestroyDependentsRequest) request);
+
 		} else if (request instanceof DestroyReferenceRequest) {
 			return getBeforeDestroyReferenceCommand((DestroyReferenceRequest) request);
 
@@ -117,6 +121,9 @@ public class AbstractEditHelperAdvice implements IEditHelperAdvice {
 
 		} else if (request instanceof DestroyElementRequest) {
 			return getAfterDestroyElementCommand((DestroyElementRequest) request);
+
+		} else if (request instanceof DestroyDependentsRequest) {
+			return getAfterDestroyDependentsCommand((DestroyDependentsRequest) request);
 
 		} else if (request instanceof DestroyReferenceRequest) {
 			return getAfterDestroyReferenceCommand((DestroyReferenceRequest) request);
@@ -232,6 +239,32 @@ public class AbstractEditHelperAdvice implements IEditHelperAdvice {
 	 */
 	protected ICommand getAfterDestroyElementCommand(
 			DestroyElementRequest request) {
+		return null;
+	}
+
+	/**
+	 * Gets my 'before' advice for destroying the dependents of an element that
+	 * is being destroyed.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return the command to execute before the edit helper work is done
+	 */
+	protected ICommand getBeforeDestroyDependentsCommand(
+			DestroyDependentsRequest request) {
+		return null;
+	}
+
+	/**
+	 * Gets my 'after' advice for destroying the dependents of an element that
+	 * is being destroyed.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return the command to execute after the edit helper work is done
+	 */
+	protected ICommand getAfterDestroyDependentsCommand(
+			DestroyDependentsRequest request) {
 		return null;
 	}
 

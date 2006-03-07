@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee;
 
+import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -35,7 +36,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Employee extends EObject{
+public interface Employee extends EObject, EModelElement {
 	/**
 	 * Returns the value of the '<em><b>Salary</b></em>' attribute.
 	 * <!-- begin-user-doc -->

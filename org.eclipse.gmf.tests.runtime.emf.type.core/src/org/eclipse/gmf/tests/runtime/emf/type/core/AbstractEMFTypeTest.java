@@ -11,15 +11,27 @@
 
 package org.eclipse.gmf.tests.runtime.emf.type.core;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 
 public class AbstractEMFTypeTest
@@ -31,7 +43,7 @@ public class AbstractEMFTypeTest
 
     private EmployeePackage employeePkg;
 
-    private EFactory employeeFactory;
+    private EmployeeFactory employeeFactory;
 
     protected AbstractEMFTypeTest(String name) {
         super(name);
@@ -42,9 +54,9 @@ public class AbstractEMFTypeTest
         super.setUp();
 
         employeePkg = EmployeePackage.eINSTANCE;
-        employeeFactory = employeePkg.getEFactoryInstance();
+        employeeFactory = (EmployeeFactory) employeePkg.getEFactoryInstance();
 
-        editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain();
+        editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain();
         resource = editingDomain
             .getResourceSet()
             .createResource(
@@ -93,7 +105,73 @@ public class AbstractEMFTypeTest
         return resource;
     }
 
-    protected EFactory getEmployeeFactory() {
+    protected EmployeeFactory getEmployeeFactory() {
         return employeeFactory;
     }
+    
+    protected IStatus execute(ICommand command) {
+    	assertTrue(command.canExecute());
+    	
+    	try {
+    		IStatus result = command.execute(new NullProgressMonitor(), null);
+    		assertTrue(result.isOK());
+    		return result;
+    	} catch (Exception e) {
+    		fail("Command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+    		return Status.CANCEL_STATUS;  // won't get past fail() call
+    	}
+    }
+    
+    protected IStatus undo(ICommand command) {
+    	assertTrue(command.canUndo());
+    	
+    	try {
+    		IStatus result = command.undo(new NullProgressMonitor(), null);
+    		assertTrue(result.isOK());
+    		return result;
+    	} catch (Exception e) {
+    		fail("Command undo failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+    		return Status.CANCEL_STATUS;  // won't get past fail() call
+    	}
+    }
+    
+    protected IStatus redo(ICommand command) {
+    	assertTrue(command.canRedo());
+    	
+    	try {
+    		IStatus result = command.redo(new NullProgressMonitor(), null);
+    		assertTrue(result.isOK());
+    		return result;
+    	} catch (Exception e) {
+    		fail("Command redo failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+    		return Status.CANCEL_STATUS;  // won't get past fail() call
+    	}
+    }
+
+	protected IEditHelperAdvice[] getWildcardAdvice() {
+		// get wildcard advices by finding advices on the default element type
+		//     (which can only have wildcard advice)
+		IElementType dflt = ElementTypeRegistry.getInstance().getType(
+				"org.eclipse.gmf.runtime.emf.type.core.default"); //$NON-NLS-1$
+		assertNotNull(dflt);
+		return ElementTypeRegistry.getInstance().getEditHelperAdvice(dflt);
+	}
+
+	protected IEditHelperAdvice[] getNonWildcardAdvice(IElementType type) {
+	    	LinkedHashSet result = new LinkedHashSet();
+	    	
+	    	result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(type)));
+	    	result.removeAll(Arrays.asList(getWildcardAdvice()));
+	    	
+	    	return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
+	   }
+
+	protected IEditHelperAdvice[] getNonWildcardAdvice(EObject element) {
+	    	LinkedHashSet result = new LinkedHashSet();
+	    	
+	    	result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(element)));
+	    	result.removeAll(Arrays.asList(getWildcardAdvice()));
+	    	
+	    	return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
+	   }
 }
