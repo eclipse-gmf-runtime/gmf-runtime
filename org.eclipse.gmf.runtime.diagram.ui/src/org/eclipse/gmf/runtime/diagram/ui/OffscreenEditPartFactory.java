@@ -14,8 +14,9 @@ package org.eclipse.gmf.runtime.diagram.ui;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
@@ -52,40 +53,66 @@ public class OffscreenEditPartFactory {
 	 * @return the new populated <code>DiagramEditPart</code>
 	 */
 	public DiagramEditPart createDiagramEditPart(
-		Diagram diagram) {		
-
-		Shell shell = new Shell();
-		DiagramGraphicalViewer customViewer = new DiagramGraphicalViewer();
-		customViewer.createControl(shell);
-
-		DiagramEditDomain editDomain = new DiagramEditDomain(null);
-		editDomain.setCommandStack(
-			new DiagramCommandStack(editDomain));
-
-		customViewer.setEditDomain(editDomain);
-
-		// hook in preferences
-		RootEditPart rep = EditPartService.getInstance()
-		.createRootEditPart(diagram);
-		if (rep instanceof DiagramRootEditPart) {
-			DiagramRootEditPart drep = (DiagramRootEditPart)rep;
-			IPreferenceStore fPreferences = (IPreferenceStore) drep.getPreferencesHint().getPreferenceStore();
-
-			customViewer.hookWorkspacePreferenceStore(fPreferences);
-		}
-		
-		customViewer.setRootEditPart(rep);
-
-		customViewer.setEditPartFactory(EditPartService.getInstance());
-
-		DiagramEventBroker.startListening(TransactionUtil.getEditingDomain(diagram));
-		
-		customViewer.setContents(diagram);
-		customViewer.flush();
-
-		
-		Assert.isTrue(customViewer.getContents() instanceof DiagramEditPart);
-		
-		return (DiagramEditPart) customViewer.getContents();
+		Diagram diagram) {	
+        
+        return createDiagramEditPart(diagram, new Shell(), null);
 	}
+    
+    /**
+     * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
+     * without opening an editor.
+     * 
+     * @param diagram
+     *            the <code>Diagram</code>
+     * @param shell
+     *            the shell
+     * @param preferencesHint
+     *            the preferences hint to be used when creating the diagram; if
+     *            null, the preferences hint from the root editpart will be
+     *            used.
+     * @return the new populated <code>DiagramEditPart</code>
+     */
+     public DiagramEditPart createDiagramEditPart(
+        Diagram diagram, Shell shell, PreferencesHint preferencesHint) {     
+        
+        DiagramGraphicalViewer customViewer = new DiagramGraphicalViewer();
+        customViewer.createControl(shell);
+
+        DiagramEditDomain editDomain = new DiagramEditDomain(null);
+        editDomain.setCommandStack(
+            new DiagramCommandStack(editDomain));
+
+        customViewer.setEditDomain(editDomain);
+
+        // hook in preferences
+        RootEditPart rootEP = EditPartService.getInstance().createRootEditPart(
+            diagram);
+        if (rootEP instanceof IDiagramPreferenceSupport) {
+            if (preferencesHint == null) {
+                preferencesHint = ((IDiagramPreferenceSupport) rootEP)
+                    .getPreferencesHint();
+            } else {
+                ((IDiagramPreferenceSupport) rootEP)
+                    .setPreferencesHint(preferencesHint);
+            }
+            customViewer
+                .hookWorkspacePreferenceStore((IPreferenceStore) preferencesHint
+                    .getPreferenceStore());
+        }
+        
+        customViewer.setRootEditPart(rootEP);
+
+        customViewer.setEditPartFactory(EditPartService.getInstance());
+
+        DiagramEventBroker.startListening(TransactionUtil.getEditingDomain(diagram));
+        
+        customViewer.setContents(diagram);
+        customViewer.flush();
+        
+        Assert.isTrue(customViewer.getContents() instanceof DiagramEditPart);
+        
+        return (DiagramEditPart) customViewer.getContents();
+
+    }
+
 }

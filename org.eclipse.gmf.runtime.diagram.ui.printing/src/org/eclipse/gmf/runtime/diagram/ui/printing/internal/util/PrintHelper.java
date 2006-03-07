@@ -18,28 +18,24 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Helper to assist in making an offscreen diagram suitable for printing or
@@ -57,32 +53,11 @@ public class PrintHelper {
 	 * preferences of the root edit part
 	 * @return the new populated <code>DiagramEditPart</code>
 	 */
-	public static DiagramEditPart createDiagramEditPart(Diagram diagram, PreferencesHint preferencesHint) {
-
-		Shell shell = new Shell();
-		DiagramGraphicalViewer viewer = new DiagramGraphicalViewer();
-		viewer.createControl(shell);
-
-		DiagramEditDomain editDomain = new DiagramEditDomain(null);
-		editDomain.setCommandStack(new DiagramCommandStack(editDomain));
-
-		viewer.setEditDomain(editDomain);
-
-		RootEditPart rootEP = EditPartService.getInstance()
-			.createRootEditPart(diagram);
-		if (rootEP instanceof IDiagramPreferenceSupport && preferencesHint != null) {
-			((IDiagramPreferenceSupport) rootEP)
-				.setPreferencesHint(preferencesHint);
-		}
-		viewer.setRootEditPart(rootEP);
-		
-		viewer.setEditPartFactory(EditPartService.getInstance());
-
-		viewer.setContents(diagram);
-		viewer.flush();
-
-		return (DiagramEditPart) viewer.getContents();
-	}
+	public static DiagramEditPart createDiagramEditPart(Diagram diagram,
+            PreferencesHint preferencesHint) {
+        return OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+            diagram, new Shell(), preferencesHint);
+    }
 	
 	/**
 	 * Initialize the preferences for a diagram edit part, specifically

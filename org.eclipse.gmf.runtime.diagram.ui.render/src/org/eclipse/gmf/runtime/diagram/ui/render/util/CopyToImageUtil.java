@@ -27,23 +27,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.util.Assert;
@@ -79,29 +73,8 @@ public class CopyToImageUtil {
      */
     public DiagramEditPart createDiagramEditPart(Diagram diagram, Shell shell,
             PreferencesHint preferencesHint) {
-        GraphicalViewer viewer = new DiagramGraphicalViewer();
-        viewer.createControl(shell);
-
-        DiagramEditDomain editDomain = new DiagramEditDomain(null);
-        editDomain.setCommandStack(new DiagramCommandStack(editDomain));
-
-        viewer.setEditDomain(editDomain);
-
-        RootEditPart rootEP = EditPartService.getInstance().createRootEditPart(
-            diagram);
-        if (rootEP instanceof IDiagramPreferenceSupport) {
-            ((IDiagramPreferenceSupport) rootEP)
-                .setPreferencesHint(preferencesHint);
-        }
-        viewer.setRootEditPart(rootEP);
-
-        viewer.setEditPartFactory(EditPartService.getInstance());
-
-        viewer.setContents(diagram);
-        viewer.flush();
-
-        Assert.isTrue(viewer.getContents() instanceof DiagramEditPart);
-        return (DiagramEditPart) viewer.getContents();
+        return OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+            diagram, shell, preferencesHint);
     }
 
     /**
