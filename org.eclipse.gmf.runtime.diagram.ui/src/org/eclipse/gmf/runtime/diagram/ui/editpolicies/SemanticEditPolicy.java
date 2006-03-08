@@ -146,7 +146,7 @@ public class SemanticEditPolicy
 		if (shouldProceed) {
 			Command c = new EtoolsProxyCommand(semanticCommand);
 			if (completedRequest instanceof DestroyRequest) {
-				ICommand ic = new DeleteCommand(request.getEditingDomain(),
+				ICommand ic = new DeleteCommand(((IGraphicalEditPart) getHost()).getEditingDomain(),
 					(View)getHost().getModel());
 				CompositeCommand cc = new CompositeCommand(semanticCommand
 					.getLabel());
@@ -238,7 +238,7 @@ public class SemanticEditPolicy
 						.setReferencedObject(referenceObject);
 
 				} else {
-					result = new DestroyReferenceRequest(request
+					result = new DestroyReferenceRequest(((IGraphicalEditPart)getHost())
                         .getEditingDomain(), container, null, referenceObject,
                         destroyRequest.isConfirmationRequired());
 				}
