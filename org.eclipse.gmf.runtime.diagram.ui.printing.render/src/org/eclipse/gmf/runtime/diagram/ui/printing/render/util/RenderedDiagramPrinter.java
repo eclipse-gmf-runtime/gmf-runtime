@@ -16,6 +16,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedPrinterGraphics;
@@ -46,11 +47,17 @@ public class RenderedDiagramPrinter
 		super(preferencesHint);
 	}
 
-	/**
-	 * Creates a mapmode graphics that supports rendering of images.
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter#createMapModeGraphics(org.eclipse.draw2d.Graphics)
 	 */
-	public MapModeGraphics createMapModeGraphics(Graphics theGraphics) {
-		return new RenderedMapModeGraphics(new RenderedPrinterGraphics(
-			theGraphics, printer, true), getMapMode());
+	protected MapModeGraphics createMapModeGraphics(Graphics theGraphics) {
+		return new RenderedMapModeGraphics(theGraphics, getMapMode());
 	}
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter#createPrinterGraphics(org.eclipse.draw2d.Graphics)
+     */
+    protected PrinterGraphics createPrinterGraphics(Graphics theGraphics) {
+        return new RenderedPrinterGraphics(theGraphics, printer, true);
+    }
 }

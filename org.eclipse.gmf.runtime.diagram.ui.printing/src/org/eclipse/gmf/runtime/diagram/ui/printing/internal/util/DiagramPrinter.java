@@ -57,7 +57,11 @@ public class DiagramPrinter
 
 	private GC gc;
 
-	protected Graphics graphics;
+    private Graphics swtGraphics;
+    
+	private Graphics graphics;
+    
+    private PrinterGraphics printerGraphics;
 	
 	protected Point printerOffset;
 
@@ -229,8 +233,9 @@ public class DiagramPrinter
 		this.gc = new GC(printer);
 		gc.setXORMode(false);
 
-		Graphics g = new SWTGraphics(gc);
-		this.graphics = createMapModeGraphics(g);
+		this.swtGraphics = new SWTGraphics(gc);
+        this.printerGraphics = createPrinterGraphics(swtGraphics);
+		this.graphics = createMapModeGraphics(printerGraphics);
 		this.graphics.scale(computePrinterDisplayScale());
 		
 		this.logicalClientArea = this.graphics.getClip(new Rectangle(
@@ -519,7 +524,21 @@ public class DiagramPrinter
 	 * Disposes of the resources.
 	 */
 	private void dispose() {
-
+	    if (graphics != null) {
+	        graphics.dispose();
+            graphics = null;
+        }
+        
+        if (printerGraphics != null) {
+            printerGraphics.dispose();
+            printerGraphics = null;
+        }
+        
+        if (swtGraphics != null) {
+            swtGraphics.dispose();
+            swtGraphics = null;
+        }
+        
 		if (this.gc != null) {
 			this.gc.dispose();
 			this.gc = null;
@@ -530,13 +549,23 @@ public class DiagramPrinter
 	 * Creates the <code>MapModeGraphics</code>.
 	 * 
 	 * @param theGraphics
-	 *            the <code>Graphics</code> object
+	 *            the <code>PrinterGraphics</code> object
 	 * @return the new <code>MapModeGraphics</code>
 	 */
 	protected MapModeGraphics createMapModeGraphics(Graphics theGraphics) {
-		return new MapModeGraphics(new PrinterGraphics(theGraphics, printer,
-			true), getMapMode());
+		return new MapModeGraphics(theGraphics, getMapMode());
 	}
+    
+    /**
+     * Creates the <code>PrinterGraphics</code>.
+     * 
+     * @param theGraphics
+     *          the <code>Graphics</code> object
+     * @return the new <code>PrinterGraphics</code>
+     */
+    protected PrinterGraphics createPrinterGraphics(Graphics theGraphics) {
+        return new PrinterGraphics(theGraphics, printer, true);
+    }
 	
 	/**
 	 * Gets the preferences hint that is to be used to find the appropriate
