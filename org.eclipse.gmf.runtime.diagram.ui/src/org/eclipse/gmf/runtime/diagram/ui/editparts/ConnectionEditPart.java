@@ -523,8 +523,8 @@ abstract public class ConnectionEditPart
 
 		final Request request = _request;
 		try {
-			Command cmd = (Command) TransactionUtil.getEditingDomain(
-				(View) getModel()).runExclusive(new RunnableWithResult.Impl() {
+			Command cmd = (Command) getEditingDomain().runExclusive(
+                new RunnableWithResult.Impl() {
 
 				public void run() {
 					setResult(ConnectionEditPart.super.getCommand(request));
@@ -625,8 +625,8 @@ abstract public class ConnectionEditPart
 	 */
 	public EObject resolveSemanticElement() {
 		try {
-			return (EObject) TransactionUtil.getEditingDomain(
-				(View) getModel()).runExclusive(new RunnableWithResult.Impl() {
+			return (EObject) getEditingDomain().runExclusive(
+                new RunnableWithResult.Impl() {
 	
 				public void run() {
 					setResult(ViewUtil.resolveSemanticElement((View) getModel()));
@@ -934,8 +934,7 @@ abstract public class ConnectionEditPart
 	public void refresh() {
 		if (getSource() != null && getTarget() != null) {
 			try {
-				TransactionUtil.getEditingDomain((View) getModel())
-					.runExclusive(new Runnable() {
+                getEditingDomain().runExclusive(new Runnable() {
 
 						public void run() {
 							ConnectionEditPart.super.refresh();

@@ -152,7 +152,7 @@ public abstract class GraphicalEditPart
 		else
 			semanticProxy = (EObject)basicGetModel();
 		
-		EObject semanticElement = EMFCoreUtil.resolve(TransactionUtil.getEditingDomain((EObject)getModel()), semanticProxy);
+		EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(), semanticProxy);
 		
 		if (semanticElement != null)
 			addSemanticListeners();
@@ -302,7 +302,7 @@ public abstract class GraphicalEditPart
 			else{
 				EObject element = (EObject)model;
 				if (element.eIsProxy()){
-					semanticObject = EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(element), element);
+					semanticObject = EMFCoreUtil.resolve(getEditingDomain(), element);
 				}
 			}
 			if (key.isInstance(semanticObject)) {
@@ -607,8 +607,7 @@ public abstract class GraphicalEditPart
 	 */
 	public EObject resolveSemanticElement() {
 		try {
-			return (EObject) TransactionUtil.getEditingDomain(
-				(EObject) getModel()).runExclusive(
+			return (EObject) getEditingDomain().runExclusive(
 				new RunnableWithResult.Impl() {
 
 					public void run() {
@@ -718,8 +717,7 @@ public abstract class GraphicalEditPart
 	/** Invoke the editpart's refresh mechanism. */
 	public void refresh() {
 		try {
-			TransactionUtil.getEditingDomain((EObject) getModel())
-				.runExclusive(new Runnable() {
+            getEditingDomain().runExclusive(new Runnable() {
 	
 				public void run() {
 					EditPolicyIterator i = getEditPolicyIterator();
