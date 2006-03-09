@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
-import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper;
+import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultMetamodelType;
 
 /**
  * Request to destroy a model element.
@@ -126,6 +126,24 @@ public class DestroyElementRequest extends DestroyRequest {
 			return getElementToDestroy().eContainer();
 		}
 		return null;
+	}
+	
+	/**
+	 * Extends the inherited method to return the default element type when
+	 * destroying a root element of a resource.
+	 */
+	public Object getEditHelperContext() {
+		Object result = super.getEditHelperContext();
+		
+		if (result == null) {
+			EObject element = getElementToDestroy();
+			
+			if ((element != null) && (element.eResource() != null)) {
+				result = DefaultMetamodelType.getInstance();
+			}
+		}
+		
+		return result;
 	}
 
     /**

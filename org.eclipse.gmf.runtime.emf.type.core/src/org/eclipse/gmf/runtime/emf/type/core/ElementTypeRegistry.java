@@ -41,6 +41,7 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.ElementTypeXml
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.SpecializationTypeDescriptor;
+import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.SpecializationTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 

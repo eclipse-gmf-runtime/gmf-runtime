@@ -9,10 +9,10 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.type.core;
+package org.eclipse.gmf.runtime.emf.type.core.internal.impl;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelper;
 import org.eclipse.gmf.runtime.emf.type.core.internal.descriptors.MetamodelTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
@@ -23,10 +23,10 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
  * 
  * @author Christian W. Damus (cdamus)
  */
-class DefaultMetamodelType
+public class DefaultMetamodelType
 	extends MetamodelType {
 
-	static final String ID = "org.eclipse.gmf.runtime.emf.type.core.default"; //$NON-NLS-1$
+	public static final String ID = "org.eclipse.gmf.runtime.emf.type.core.default"; //$NON-NLS-1$
 	
 	private static final DefaultMetamodelType INSTANCE = new DefaultMetamodelType();
 	private static final MetamodelTypeDescriptor DESCRIPTOR_INSTANCE =
@@ -49,7 +49,7 @@ class DefaultMetamodelType
 	 * 
 	 * @return the singleton instance
 	 */
-	static DefaultMetamodelType getInstance() {
+	public static DefaultMetamodelType getInstance() {
 		return INSTANCE;
 	}
 	
@@ -58,7 +58,7 @@ class DefaultMetamodelType
 	 * 
 	 * @return the singleton descriptor instance
 	 */
-	static MetamodelTypeDescriptor getDescriptorInstance() {
+	public static MetamodelTypeDescriptor getDescriptorInstance() {
 		return DESCRIPTOR_INSTANCE;
 	}
 

@@ -85,16 +85,33 @@ public class DestroyElementCommandTest
     	assertSame(billieJoAnnotation.eContainer(), customer);
     	assertEquals(0, billieJoAnnotation.getReferences().size());
    }
+
+    /**
+     * Tests that we cannot destroy detached elements.
+     */
+    public void test_destroyCommand_detached() {
+    	Client detachedClient = getEmployeeFactory().createClient();
+    	
+    	DestroyElementRequest req = new DestroyElementRequest(detachedClient, false);
+    	
+    	assertNull(req.getEditHelperContext());
+    	
+    	DestroyElementCommand cmd = new DestroyElementCommand(req);
+    	
+    	assertFalse(cmd.canExecute());
+   }
     
     /**
      * Tests that dependents are correctly destroyed, as well.
      */
     public void test_destroyCommand_withDependents() {
-    	IElementType type = ElementTypeRegistry.getInstance().getElementType(billieJo);
+    	DestroyElementRequest req = new DestroyElementRequest(billieJo, false);
+    	IElementType type = ElementTypeRegistry.getInstance().getElementType(
+    			req.getEditHelperContext());
     	
     	assertNotNull(type);
     	
-    	ICommand cmd = type.getEditCommand(new DestroyElementRequest(billieJo, false));
+    	ICommand cmd = type.getEditCommand(req);
     	
     	assertNotNull(cmd);
     	
@@ -120,13 +137,14 @@ public class DestroyElementCommandTest
      * Incidentally tests the destruction of resource roots.
      */
     public void test_destroyCommand_withContainment() {
+    	// destroy the parent company (resource root)
+    	DestroyElementRequest req = new DestroyElementRequest(parentCompany, false);
     	IElementType type = ElementTypeRegistry.getInstance().getElementType(
-    			parentCompany);
+    			req.getEditHelperContext());
     	
     	assertNotNull(type);
     	
-    	// destroy the parent company (resource root)
-    	ICommand cmd = type.getEditCommand(new DestroyElementRequest(parentCompany, false));
+    	ICommand cmd = type.getEditCommand(req);
     	
     	assertNotNull(cmd);
     	

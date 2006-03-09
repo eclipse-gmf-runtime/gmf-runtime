@@ -171,7 +171,7 @@ public class DestroyElementCommand
 	}
 
 	public boolean canExecute() {
-		return elementToDestroy != null;
+		return (elementToDestroy != null) && (elementToDestroy.eResource() != null);
 	}
 	
 	/**
