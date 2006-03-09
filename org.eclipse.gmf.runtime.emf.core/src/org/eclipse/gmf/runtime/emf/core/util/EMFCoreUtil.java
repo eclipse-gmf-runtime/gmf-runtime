@@ -359,7 +359,7 @@ public class EMFCoreUtil {
 
 			if (!exports.contains(directExport)) {
 
-				directExports.add(directExport);
+				exports.add(directExport);
 
 				getTransitiveExports(directExport, exports, unload);
 			}

@@ -24,7 +24,6 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -33,6 +32,7 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
@@ -151,29 +151,127 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	}
 	
 	/**
+	 * Extends the superclass method to handle the removal cases of containment,
+	 * to tear down aggregate (resource-level) cross-references.
+	 */
+	protected void handleContainment(Notification notification) {
+		super.handleContainment(notification);
+		
+		Object notifier = notification.getNotifier();
+		if (notifier instanceof ResourceSet) {
+			// not interested in removal of resources from the resource set
+			return;
+		}
+		
+	    switch (notification.getEventType()) {
+		case Notification.SET:
+		case Notification.UNSET:
+		case Notification.REMOVE: {
+			EObject oldValue = (EObject) notification.getOldValue();
+			
+			if (oldValue != null) {
+				Resource resource;
+				if (notifier instanceof Resource) {
+					resource = (Resource) notifier;
+				} else {
+					resource = ((EObject) notification.getNotifier()).eResource();
+				}
+				
+				remove(resource, oldValue);
+			}
+			break;
+		}
+		case Notification.REMOVE_MANY: {
+			Resource resource;
+			if (notifier instanceof Resource) {
+				resource = (Resource) notifier;
+			} else {
+				resource = ((EObject) notification.getNotifier()).eResource();
+			}
+			
+			Collection oldValues = (Collection) notification.getOldValue();
+			
+			for (Iterator iter = oldValues.iterator(); iter.hasNext();) {
+				EObject next = (EObject) iter.next();
+				
+				if (next != null) {
+					remove(resource, next);
+				}
+			}
+			break;
+		}
+		}
+	}
+	
+	/**
+	 * Removes all aggregate cross-references for the specified resource, due to
+	 * detachment of an eObject.
+	 * 
+	 * @param resource
+	 *            a resource
+	 * @param eObject
+	 *            an object being removed from it
+	 */
+	private void remove(Resource resource, EObject eObject) {
+		for (Iterator allContents = EcoreUtil.getAllContents(Collections.singleton(eObject)); allContents.hasNext();) {
+			EObject next = (EObject) allContents.next();
+			List allRefs = next.eClass().getEAllReferences();
+			int refCount = allRefs.size();
+			
+			for (int i = 0; i < refCount; ++i) {
+				EReference eReference = (EReference) allRefs.get(i);
+				
+				if (!eReference.isContainer() && !eReference.isContainment() && next.eIsSet(eReference)) {
+					if (eReference.isMany()) {
+						for (Iterator iter = ((Collection)next.eGet(eReference)).iterator(); iter.hasNext(); ) {
+							deregisterReference(resource, ((EObject)iter.next()).eResource());
+						}
+					} else {
+						deregisterReference(resource, ((EObject)next.eGet(eReference)).eResource());
+					}
+				}
+			}
+			
+			// now, deregister incoming unidirectional references
+			for (Iterator iter = getNonNavigableInverseReferencers(next, null, null).iterator(); iter.hasNext();) {
+				deregisterReference(((EObject)iter.next()).eResource(), resource);
+			}
+		}
+	}
+	
+	/**
 	 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#setTarget(org.eclipse.emf.common.notify.Notifier)
 	 */
 	public void setTarget(Notifier target) {
 		super.setTarget(target);
-		if (target instanceof Resource) {
-			Resource resource = (Resource)target;
-			for (TreeIterator conents = resource.getAllContents(); conents.hasNext(); ) {
-				EObject eObject = (EObject)conents.next();
-				List allRefs = eObject.eClass().getEAllReferences();
-				for (int i = 0; i < allRefs.size(); ++i) {
-					EReference eReference = (EReference)allRefs.get(i);
-					if (!eReference.isContainer() && !eReference.isContainment() && eObject.eIsSet(eReference)) {
-						if (eReference.isMany()) {
-							for (Iterator iter = ((Collection)eObject.eGet(eReference)).iterator(); iter.hasNext(); ) {
-								registerReference(resource, ((EObject)iter.next()).eResource());
-							}
-						} else {
-							registerReference(resource, ((EObject)eObject.eGet(eReference)).eResource());
+		
+		if (target instanceof EObject) {
+			EObject eObject = (EObject) target;
+			Resource resource = eObject.eResource();
+			
+			List allRefs = eObject.eClass().getEAllReferences();
+			int refCount = allRefs.size();
+			
+			// register outgoing references
+			for (int i = 0; i < refCount; ++i) {
+				EReference eReference = (EReference) allRefs.get(i);
+				
+				if (!eReference.isContainer() && !eReference.isContainment() && eObject.eIsSet(eReference)) {
+					if (eReference.isMany()) {
+						for (Iterator iter = ((Collection)eObject.eGet(eReference)).iterator(); iter.hasNext(); ) {
+							registerReference(resource, ((EObject)iter.next()).eResource());
 						}
+					} else {
+						registerReference(resource, ((EObject)eObject.eGet(eReference)).eResource());
 					}
 				}
 			}
-	    }
+			
+			// now, register incoming unidirectional references
+			for (Iterator iter = getNonNavigableInverseReferencers(eObject, null, null).iterator(); iter.hasNext();) {
+				registerReference(((EObject)iter.next()).eResource(), resource);
+			}
+		}
 	}
 
 	/**
@@ -300,19 +398,17 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 				imports.put(referencer, importsMap);
 			}
 
-			Integer importsCount = (Integer) importsMap.get(referenced);
+			Counter importsCount = (Counter) importsMap.get(referenced);
 
 			if (importsCount == null) {
 
+				importsCount = new Counter();
+				importsMap.put(referenced, importsCount);
+
 				importAdded(referencer, referenced);
-
-				importsCount = new Integer(1);
-
 			} else {
-				importsCount = new Integer(importsCount.intValue() + 1);
+				importsCount.inc();
 			}
-
-			importsMap.put(referenced, importsCount);
 
 			Map exportsMap = getExportsMap(referenced);
 
@@ -321,19 +417,17 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 				exports.put(referenced, exportsMap);
 			}
 
-			Integer exportsCount = (Integer) exportsMap.get(referencer);
+			Counter exportsCount = (Counter) exportsMap.get(referencer);
 
 			if (exportsCount == null) {
 
+				exportsCount = new Counter();
+				exportsMap.put(referencer, exportsCount);
+
 				exportAdded(referenced, referencer);
-
-				exportsCount = new Integer(1);
-
 			} else {
-				exportsCount = new Integer(exportsCount.intValue() + 1);
+				exportsCount.inc();
 			}
-
-			exportsMap.put(referencer, exportsCount);
 		}
 	}
 	
@@ -402,23 +496,17 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 			if (importsMap != null) {
 
-				Integer importsCount = (Integer) importsMap.get(referenced);
+				Counter importsCount = (Counter) importsMap.get(referenced);
 
-				if (importsCount != null) {
+				if ((importsCount != null) && importsCount.dec()) {
 
-					if (importsCount.intValue() < 2) {
+					importsMap.remove(referenced);
 
-						importsMap.remove(referenced);
+					importRemoved(referencer, referenced);
 
-						importRemoved(referencer, referenced);
-					} else {
-						importsMap.put(referenced, new Integer(importsCount
-							.intValue() - 1));
+					if (importsMap.isEmpty()) {
+						imports.remove(referencer);
 					}
-				}
-
-				if (importsMap.isEmpty()) {
-					imports.remove(referencer);
 				}
 			}
 
@@ -426,23 +514,17 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 			if (exportsMap != null) {
 
-				Integer exportsCount = (Integer) exportsMap.get(referencer);
+				Counter exportsCount = (Counter) exportsMap.get(referencer);
 
-				if (exportsCount != null) {
+				if ((exportsCount != null) && exportsCount.dec()) {
 
-					if (exportsCount.intValue() < 2) {
+					exportsMap.remove(referencer);
 
-						exportsMap.remove(referencer);
-
-						exportRemoved(referenced, referencer);
-					} else {
-						exportsMap.put(referencer, new Integer(exportsCount
-							.intValue() - 1));
+					exportRemoved(referenced, referencer);
+					
+					if (exportsMap.isEmpty()) {
+						exports.remove(referenced);
 					}
-				}
-
-				if (exportsMap.isEmpty()) {
-					exports.remove(referenced);
 				}
 			}
 		}
@@ -587,4 +669,43 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		return result;
 	}
 
+	/**
+	 * A mutable integer used to count number of object-level references between
+	 * two resources.
+	 *
+	 * @author Christian W. Damus (cdamus)
+	 */
+	private static final class Counter {
+		private int value = 1;
+		
+		Counter() {
+			super();
+		}
+		
+		/**
+		 * Obtains my value.
+		 * 
+		 * @return my count
+		 */
+		int getValue() {
+			return value;
+		}
+		
+		/**
+		 * Increments me.
+		 */
+		void inc() {
+			value++;
+		}
+		
+		/**
+		 * Decrements me.
+		 * 
+		 * @return <code>true</code> if I am now zero; <code>false</code>, otherwise
+		 */
+		boolean dec() {
+			return --value <= 0;
+		}
+	}
+	
 }
