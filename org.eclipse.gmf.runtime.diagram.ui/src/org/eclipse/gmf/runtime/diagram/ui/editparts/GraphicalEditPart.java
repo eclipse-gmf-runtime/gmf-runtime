@@ -1286,12 +1286,18 @@ public abstract class GraphicalEditPart
 	}
 	
     /**
-     * Derives my editing domain from my diagram element. Subclasses may
-     * override.
+     * Derives my editing domain from my model or my diagram element. Subclasses
+     * may override.
      */
     public TransactionalEditingDomain getEditingDomain() {
         if (editingDomain == null) {
-            editingDomain = TransactionUtil.getEditingDomain(getDiagramView());
+            // try to get the editing domain for the model
+            editingDomain = TransactionUtil.getEditingDomain(getModel());
+            
+            if (editingDomain == null) {
+                // try to get the editing domain from the diagram view
+                editingDomain = TransactionUtil.getEditingDomain(getDiagramView());
+            }
         }
         return editingDomain;
     }
