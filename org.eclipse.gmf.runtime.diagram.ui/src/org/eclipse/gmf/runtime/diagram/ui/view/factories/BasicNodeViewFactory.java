@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -90,48 +91,84 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
 		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
 
-		AbstractEMFOperation operation = new AbstractEMFOperation(
-			TransactionUtil.getEditingDomain(node), StringStatics.BLANK,
-			options) {
-
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info)
-				throws ExecutionException {
-
-				// decorate view had to run as a silent operation other wise
-				// it will generate too many events
-				decorateView(containerView, node, semanticAdapter,
-					semanticHint, index, childPersisted);
-
-				return Status.OK_STATUS;
-			}
-		};
-		try {
-			operation.execute(new NullProgressMonitor(), null);
-		} catch (ExecutionException e) {
-			Trace.catching(DiagramUIPlugin.getInstance(),
-				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-				"createView", e); //$NON-NLS-1$
-			Log
-				.warning(DiagramUIPlugin.getInstance(),
-					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-					"createView", e); //$NON-NLS-1$
-		}
+        TransactionalEditingDomain domain = getEditingDomain(semanticEl,
+            containerView);
+        
+        if (domain != null) {
+    		AbstractEMFOperation operation = new AbstractEMFOperation(
+                domain, StringStatics.BLANK, options) {
+    
+    			protected IStatus doExecute(IProgressMonitor monitor,
+    					IAdaptable info)
+    				throws ExecutionException {
+    
+    				// decorate view had to run as a silent operation other wise
+    				// it will generate too many events
+    				decorateView(containerView, node, semanticAdapter,
+    					semanticHint, index, childPersisted);
+    
+    				return Status.OK_STATUS;
+    			}
+    		};
+    		try {
+    			operation.execute(new NullProgressMonitor(), null);
+    		} catch (ExecutionException e) {
+    			Trace.catching(DiagramUIPlugin.getInstance(),
+    				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+    				"createView", e); //$NON-NLS-1$
+    			Log
+    				.warning(DiagramUIPlugin.getInstance(),
+    					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+    					"createView", e); //$NON-NLS-1$
+    		}
+        }
 		return node;
 	}
+    
+    /**
+     * Determines the editing domain for the view creation.
+     * 
+     * @param semanticElement
+     *            the semantic elemement; may be null
+     * @param containerView
+     *            the container view
+     * @return the editing domain
+     */
+    protected TransactionalEditingDomain getEditingDomain(
+            EObject semanticElement, View containerView) {
+
+        TransactionalEditingDomain result = null;
+
+        if (semanticElement != null) {
+            result = TransactionUtil.getEditingDomain(semanticElement);
+        }
+
+        if (result == null) {
+            result = TransactionUtil.getEditingDomain(containerView);
+        }
+        return result;
+    }
 	
 	/**
-	 * This method is responsible for decorating the created view, it get called
-	 * by the Factory method @link #createView(IAdaptable, View, String, int, boolean),
-	 * it will intiliaze the view with the default preferences also it will create 
-	 * the default elements of the <code>View</code> if it had any
-	 * @param containerView the container of the view
-	 * @param view the view itself
-	 * @param semanticAdapter the semantic elemnent of the view (it could be null)
-	 * @param semanticHint the semantic hint of the view
-	 * @param index the index of the view
-	 * @param persisted flag indicating the the view was created as persisted or not
-	 */
+     * This method is responsible for decorating the created view, it get called
+     * by the Factory method
+     * 
+     * @link #createView(IAdaptable, View, String, int, boolean), it will
+     *       intiliaze the view with the default preferences also it will create
+     *       the default elements of the <code>View</code> if it had any
+     * @param containerView
+     *            the container of the view
+     * @param view
+     *            the view itself
+     * @param semanticAdapter
+     *            the semantic elemnent of the view (it could be null)
+     * @param semanticHint
+     *            the semantic hint of the view
+     * @param index
+     *            the index of the view
+     * @param persisted
+     *            flag indicating the the view was created as persisted or not
+     */
 	protected void decorateView(View containerView,
 								View view,
 								IAdaptable semanticAdapter,
