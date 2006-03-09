@@ -227,7 +227,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 							deregisterReference(resource, ((EObject)iter.next()).eResource());
 						}
 					} else {
-						deregisterReference(resource, ((EObject)next.eGet(eReference)).eResource());
+						EObject referent = (EObject)next.eGet(eReference);
+						if (referent != null) {
+							deregisterReference(resource, referent.eResource());
+						}
 					}
 				}
 			}
@@ -262,7 +265,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 							registerReference(resource, ((EObject)iter.next()).eResource());
 						}
 					} else {
-						registerReference(resource, ((EObject)eObject.eGet(eReference)).eResource());
+						EObject referent = (EObject)eObject.eGet(eReference);
+						if (referent != null) {
+							registerReference(resource, referent.eResource());
+						}
 					}
 				}
 			}
