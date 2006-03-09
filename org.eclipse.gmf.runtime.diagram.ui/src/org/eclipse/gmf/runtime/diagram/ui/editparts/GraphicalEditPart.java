@@ -1314,4 +1314,12 @@ public abstract class GraphicalEditPart
         }
         return null;
     }
+    
+    // documentation copied from superclass
+    public RootEditPart getRoot() {
+        if (getParent() != null) {
+            return super.getRoot();
+        }
+        return null;
+    }
 }
