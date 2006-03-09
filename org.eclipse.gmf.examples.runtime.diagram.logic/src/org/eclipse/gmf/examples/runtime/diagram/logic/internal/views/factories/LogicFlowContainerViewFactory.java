@@ -41,9 +41,6 @@ public class LogicFlowContainerViewFactory
 			String semanticHint, int index, boolean persisted, final PreferencesHint preferencesHint) {
 		View view =  super.createView(semanticAdapter, containerView, semanticHint,
 			index, persisted, preferencesHint);
-		ShapeStyle style = (ShapeStyle)view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
-		style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.logicGreen)).intValue());
-		style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.logicBlack)).intValue());
 		return view;
 	}
 
@@ -56,6 +53,9 @@ public class LogicFlowContainerViewFactory
 			boolean persisted) {
 		super.decorateView(containerView, view, semanticAdapter, semanticHint,
 			index, persisted);
+        ShapeStyle style = (ShapeStyle)view.getStyle(NotationPackage.eINSTANCE.getShapeStyle());
+        style.setFillColor((FigureUtilities.colorToInteger(LogicColorConstants.logicGreen)).intValue());
+        style.setLineColor((FigureUtilities.colorToInteger(LogicColorConstants.logicBlack)).intValue());
 		getViewService().createNode(semanticAdapter, view,
 			LogicConstants.LOGIC_FLOW_COMPARTMENT, ViewUtil.APPEND, getPreferencesHint());	
 	}

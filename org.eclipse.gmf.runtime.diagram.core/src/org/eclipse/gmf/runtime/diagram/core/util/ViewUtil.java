@@ -94,13 +94,13 @@ public class ViewUtil{
         
 		if (!view.isMutable()) {
 			// get first view needs to get persisted
-			View viewToPersist = getViewToPersist(view);
+			View viewToPersist = getTopViewToPersist(view);
 			if (viewToPersist!=null){
 				// now create a command to persisted the view and exectue it
 				Map options = Collections.singletonMap(	Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
 
 				PersistElementCommand pvc = 
-					new PersistElementCommand(editingDomain, viewToPersist, options);
+					new PersistElementCommand(editingDomain, viewToPersist , options);
                 
                 try {
                     pvc.execute( new NullProgressMonitor(), null );
@@ -121,14 +121,14 @@ public class ViewUtil{
 	}
 	
 	/**
-	 * helper method used to get the first view needs to be persisted,
+	 * Returns the top view that should be persisted,
 	 * starting from the passed view, it could return the passed view
 	 * itself if it is a transient view, other wise it will check its
 	 * parent and so on ...
 	 * @param view , view to start from
 	 * @return first view needs to get persisted
 	 */
-	static private View getViewToPersist(View view) {
+	static public View getTopViewToPersist(View view) {
 		EObject container = view.eContainer();
 		// if the view had no container then it can not get persisted
 		if (container==null)
@@ -144,7 +144,7 @@ public class ViewUtil{
 				dContainer.getTransientEdges().size()>0)
 				return view;
 			else
-				return (getViewToPersist(dContainer)); 
+				return (getTopViewToPersist(dContainer)); 
 		}
 		else if (container instanceof View){
 			View vContainer = (View)container;
@@ -155,7 +155,7 @@ public class ViewUtil{
 				vContainer.getTransientChildren().size()>0)
 				return view;
 			else 
-				return (getViewToPersist(vContainer));
+				return (getTopViewToPersist(vContainer));
 		} 
 		return null;
 	}

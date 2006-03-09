@@ -53,6 +53,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
@@ -434,7 +435,7 @@ implements NotificationListener {
 	
 
 	/**
-	 * Creates a view facade element for each of the supplied semantic elements.
+	 * Creates a <code>View</code> element for each of the supplied semantic elements.
 	 * @param eObjects list of semantic element
 	 * @return a list of {@link IAdaptable} that adapt to {@link View}.
 	 */
@@ -461,13 +462,12 @@ implements NotificationListener {
 				SetViewMutabilityCommand.makeMutable(new EObjectAdapter(host().getNotationView())).execute();
 				executeCommand(cmd);
 				List adapters = (List)request.getNewObject();
-				makeViewsMutable(adapters);
 				return adapters;
 			}
 		}
 		return Collections.EMPTY_LIST;
 	}
-		
+    	
 	/**
 	 * Executes the supplied command inside an <code>unchecked action</code>
 	 * @param cmd command that can be executed (i.e., cmd.canExecute() == true)
@@ -499,8 +499,6 @@ implements NotificationListener {
 				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
 				"executeCommand", e); //$NON-NLS-1$
 		}
-		
-		//getHost().refresh();
 	}
 
 	/**
@@ -511,24 +509,27 @@ implements NotificationListener {
 	 * @return command create view command(s)
 	 */
 	protected Command getCreateViewCommand(CreateRequest request) {
-		Command cmd = host().getCommand(request);
-		if (cmd == null) {
-			assert request instanceof CreateViewRequest;
-			CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label);
-			Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
-
-			while (descriptors.hasNext()) {
-				CreateViewRequest.ViewDescriptor descriptor =
-					(CreateViewRequest.ViewDescriptor)descriptors.next();
-
-				ICommand createCommand = getCreateViewCommand(descriptor);
-
-				cc.compose(createCommand);
-			}
-			cmd = new EtoolsProxyCommand(cc.reduce());
-		}
-		
-		return cmd;
+        CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label); 
+        Command cmd = host().getCommand(request);
+        if (cmd == null) {
+            assert request instanceof CreateViewRequest;
+            Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
+            while (descriptors.hasNext()) {
+                CreateViewRequest.ViewDescriptor descriptor =
+                    (CreateViewRequest.ViewDescriptor)descriptors.next();
+                ICommand createCommand = getCreateViewCommand(descriptor);
+                cc.compose(createCommand);
+            }
+        }else {
+            cc.compose(new CommandProxy(cmd));
+            Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
+            while (descriptors.hasNext()) {
+                CreateViewRequest.ViewDescriptor descriptor =
+                    (CreateViewRequest.ViewDescriptor)descriptors.next();
+                cc.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
+            }
+        }
+        return new EtoolsProxyCommand(cc.reduce());
 	}
 	
 	/**
@@ -541,7 +542,10 @@ implements NotificationListener {
             new CreateCommand(editingDomain,
 				descriptor, 
 				(View)getHost().getModel());
-		return createCommand;
+        CompositeCommand cmd = new CompositeCommand(DiagramUIMessages.AddCommand_Label);
+        cmd.compose(createCommand);
+        cmd.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
+		return cmd;
 	}
 	
 	/**
