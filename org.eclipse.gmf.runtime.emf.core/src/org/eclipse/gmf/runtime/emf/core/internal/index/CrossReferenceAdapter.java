@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -252,22 +253,22 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			EObject eObject = (EObject) target;
 			Resource resource = eObject.eResource();
 			
-			List allRefs = eObject.eClass().getEAllReferences();
-			int refCount = allRefs.size();
-			
-			// register outgoing references
-			for (int i = 0; i < refCount; ++i) {
-				EReference eReference = (EReference) allRefs.get(i);
+			// register the outgoing references and incoming bidirectionals
+		    EContentsEList.FeatureIterator crossReferences =
+		    	(EContentsEList.FeatureIterator) eObject.eCrossReferences().iterator();
+			while (crossReferences.hasNext()) {
+				EObject referent = (EObject) crossReferences.next();
 				
-				if (!eReference.isContainer() && !eReference.isContainment() && eObject.eIsSet(eReference)) {
-					if (eReference.isMany()) {
-						for (Iterator iter = ((Collection)eObject.eGet(eReference)).iterator(); iter.hasNext(); ) {
-							registerReference(resource, ((EObject)iter.next()).eResource());
-						}
-					} else {
-						EObject referent = (EObject)eObject.eGet(eReference);
-						if (referent != null) {
-							registerReference(resource, referent.eResource());
+				if (referent != null) {
+					EReference eReference = (EReference) crossReferences.feature();
+					
+					if (!eReference.isContainer() && !eReference.isContainment()) {
+						Resource referencedResource = referent.eResource();
+						registerReference(resource, referencedResource);
+						
+						if (eReference.getEOpposite() != null) {
+							// implied incoming reference
+							registerReference(referencedResource, resource);
 						}
 					}
 				}
