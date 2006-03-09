@@ -12,6 +12,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 
 
@@ -21,6 +23,12 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
  * @author mmostafa
  */
 public class DummyEditPart extends GraphicalEditPart {
+
+    
+    /**
+     * Cache the editing domain after it is retrieved.
+     */
+    private TransactionalEditingDomain editingDomain;
 
 	protected IFigure createFigure() {
 		return null;
@@ -43,4 +51,13 @@ public class DummyEditPart extends GraphicalEditPart {
 		//no need for Listeners
 	}
 
+    public TransactionalEditingDomain getEditingDomain() {
+        if (editingDomain == null) {
+            editingDomain = TransactionUtil.getEditingDomain(getModel());
+        }
+        if (editingDomain == null) {
+            return super.getEditingDomain();
+        }
+        return editingDomain;
+    }
 }

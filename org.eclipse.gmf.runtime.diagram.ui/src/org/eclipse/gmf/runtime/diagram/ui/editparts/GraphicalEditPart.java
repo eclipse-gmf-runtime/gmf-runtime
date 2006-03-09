@@ -1289,7 +1289,7 @@ public abstract class GraphicalEditPart
      * Derives my editing domain from my diagram element. Subclasses may
      * override.
      */
-    public final TransactionalEditingDomain getEditingDomain() {
+    public TransactionalEditingDomain getEditingDomain() {
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(getDiagramView());
         }
