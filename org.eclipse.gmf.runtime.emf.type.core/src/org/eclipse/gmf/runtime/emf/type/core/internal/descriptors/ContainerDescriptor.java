@@ -221,6 +221,7 @@ class ContainerDescriptor
 															nextFeatureName),
 											null);
 						}
+                    } else {
 						Log
 								.error(
 										EMFTypePlugin.getPlugin(),
