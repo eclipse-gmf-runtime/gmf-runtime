@@ -49,6 +49,9 @@ import org.eclipse.emf.validation.service.ValidationEvent;
  * settings.
  *
  * @author Christian W. Damus (cdamus)
+ * @deprecated Use the org.eclipse.emf.validation.ui.UIRegisteredClientContext
+ *              extension point instead to signal that a live validation dialog
+ *              be displayed for a particular client context.
  */
 public class LiveValidationListener
 	implements IValidationListener {

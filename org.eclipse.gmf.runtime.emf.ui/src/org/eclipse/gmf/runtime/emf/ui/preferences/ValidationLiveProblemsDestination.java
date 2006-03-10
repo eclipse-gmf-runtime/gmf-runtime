@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
  * An enumeration of destinations for display of live validation problems.
  *
  * @author Christian W. Damus (cdamus)
+ * @deprecated
  */
 public class ValidationLiveProblemsDestination extends EnumeratedType {
     /**

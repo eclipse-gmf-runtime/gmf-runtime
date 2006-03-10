@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
  * Default preferences initializer for the MSL UI plug-in.
  *
  * @author Christian W. Damus (cdamus)
+ * @deprecated
  */
 public class PreferenceInitializer
 	extends AbstractPreferenceInitializer {

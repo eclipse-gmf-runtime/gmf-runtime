@@ -17,6 +17,7 @@ package org.eclipse.gmf.runtime.emf.ui.preferences;
  * Preference constants for the MSL UI plug-in.
  *
  * @author Christian W. Damus (cdamus)
+ * @deprecated
  */
 public interface IPreferenceConstants {
 	

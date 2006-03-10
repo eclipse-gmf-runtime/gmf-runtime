@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
  * The preference page for Modeler validation controls.
  *
  * @author Christian W. Damus (cdamus)
+ * @deprecated
  */
 public class ValidationPreferencePage 
 		extends FieldEditorPreferencePage

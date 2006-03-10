@@ -49,6 +49,7 @@ import org.eclipse.emf.validation.service.ValidationEvent;
  * settings.
  *
  * @author Christian W. Damus (cdamus)
+ * @deprecated
  */
 public class LiveValidationListener
 	implements IValidationListener {
