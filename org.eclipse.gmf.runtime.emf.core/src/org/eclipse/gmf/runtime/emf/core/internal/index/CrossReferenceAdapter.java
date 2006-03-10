@@ -226,7 +226,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 				if (referent != null) {
 					EReference eReference = (EReference) crossReferences.feature();
 					
-					if (!eReference.isContainer() && !eReference.isContainment()) {
+					// we ignore unchangeable references
+					if (eReference.isChangeable()) {
 						Resource referencedResource = referent.eResource();
 						deregisterReference(resource, referencedResource);
 						
@@ -264,7 +265,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 				if (referent != null) {
 					EReference eReference = (EReference) crossReferences.feature();
 					
-					if (!eReference.isContainer() && !eReference.isContainment()) {
+					// we ignore unchangeable references
+					if (eReference.isChangeable()) {
 						Resource referencedResource = referent.eResource();
 						registerReference(resource, referencedResource);
 						
@@ -314,19 +316,16 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			result.addAll(nonNavigableInverseReferences);
 		}
 		
-		for (Iterator i = eObject.eClass().getEAllReferences().iterator(); i.hasNext(); ) {
-			EReference eReference = (EReference)i.next();
+	    EContentsEList.FeatureIterator crossReferences =
+	    	(EContentsEList.FeatureIterator) eObject.eCrossReferences().iterator();
+		while (crossReferences.hasNext()) {
+			InternalEObject referent = (InternalEObject) crossReferences.next();
+			EReference eReference = (EReference) crossReferences.feature();
 			EReference eOpposite = eReference.getEOpposite();
-			// added eReference.isChangeable() from default behavior
-			if (eOpposite != null && eReference.isChangeable() && !eReference.isContainer() && !eReference.isContainment() && eObject.eIsSet(eReference)) {
-				if (eReference.isMany()) {
-					for (Iterator j = ((Collection)eObject.eGet(eReference)).iterator(); j.hasNext(); ) {
-						InternalEObject referencingEObject = (InternalEObject)j.next();
-						result.add(referencingEObject.eSetting(eOpposite));
-					}
-				} else {
-					result.add(((InternalEObject)eObject.eGet(eReference)).eSetting(eOpposite));
-				}
+			
+			// added eReference.isChangeable() to the superclass filter
+			if (referent != null && eOpposite != null && eReference.isChangeable()) {
+				result.add(referent.eSetting(eOpposite));
 			}
 		}
 		
