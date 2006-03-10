@@ -216,21 +216,23 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	private void remove(Resource resource, EObject eObject) {
 		for (Iterator allContents = EcoreUtil.getAllContents(Collections.singleton(eObject)); allContents.hasNext();) {
 			EObject next = (EObject) allContents.next();
-			List allRefs = next.eClass().getEAllReferences();
-			int refCount = allRefs.size();
 			
-			for (int i = 0; i < refCount; ++i) {
-				EReference eReference = (EReference) allRefs.get(i);
+			// deregister the outgoing references and incoming bidirectionals
+		    EContentsEList.FeatureIterator crossReferences =
+		    	(EContentsEList.FeatureIterator) next.eCrossReferences().iterator();
+			while (crossReferences.hasNext()) {
+				EObject referent = (EObject) crossReferences.next();
 				
-				if (!eReference.isContainer() && !eReference.isContainment() && next.eIsSet(eReference)) {
-					if (eReference.isMany()) {
-						for (Iterator iter = ((Collection)next.eGet(eReference)).iterator(); iter.hasNext(); ) {
-							deregisterReference(resource, ((EObject)iter.next()).eResource());
-						}
-					} else {
-						EObject referent = (EObject)next.eGet(eReference);
-						if (referent != null) {
-							deregisterReference(resource, referent.eResource());
+				if (referent != null) {
+					EReference eReference = (EReference) crossReferences.feature();
+					
+					if (!eReference.isContainer() && !eReference.isContainment()) {
+						Resource referencedResource = referent.eResource();
+						deregisterReference(resource, referencedResource);
+						
+						if (eReference.getEOpposite() != null) {
+							// implied incoming reference
+							deregisterReference(referencedResource, resource);
 						}
 					}
 				}
