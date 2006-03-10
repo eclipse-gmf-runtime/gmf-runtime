@@ -88,25 +88,33 @@ public final class GlobalUndoAction extends GlobalAction {
 	 */
 	protected void setWorkbenchPart(IWorkbenchPart workbenchPart) {
 		super.setWorkbenchPart(workbenchPart);
-
-		IUndoContext context = getUndoContext();
-
-		if (context != null) {
-			if (delegate != null) {
-				delegate.removePropertyChangeListener(getDelegateListener());
-				delegate.dispose();
-			}
-
-			delegate = new UndoActionHandler(workbenchPart.getSite(), context);
-			delegate.setPruneHistory(true);
-			delegate.addPropertyChangeListener(getDelegateListener());
-
-			// force enablement update in UI
-			boolean enabled = isEnabled();
-			firePropertyChange(IAction.ENABLED, Boolean.valueOf(!enabled),
-					Boolean.valueOf(enabled));
-		}
+		initializeWithContext(getUndoContext());
 	}
+    
+    /**
+     * Initializes me with a new undo <code>context</code>.
+     * 
+     * @param context
+     *            the undo context
+     */
+    protected void initializeWithContext(IUndoContext context) {
+        if (context != null) {
+            if (delegate != null) {
+                delegate.removePropertyChangeListener(getDelegateListener());
+                delegate.dispose();
+            }
+
+            delegate = new UndoActionHandler(getWorkbenchPart().getSite(),
+                context);
+            delegate.setPruneHistory(true);
+            delegate.addPropertyChangeListener(getDelegateListener());
+
+            // force enablement update in UI
+            boolean enabled = isEnabled();
+            firePropertyChange(IAction.ENABLED, Boolean.valueOf(!enabled),
+                Boolean.valueOf(enabled));
+        }
+    }
     
     /**
      * Gets my property change listener to listen for changes in my delegate.
@@ -249,6 +257,7 @@ public final class GlobalUndoAction extends GlobalAction {
      */
     public final void setUndoContext(IUndoContext undoContext) {
         this.undoContext = undoContext;
+        initializeWithContext(undoContext);
     }
     
     /**
