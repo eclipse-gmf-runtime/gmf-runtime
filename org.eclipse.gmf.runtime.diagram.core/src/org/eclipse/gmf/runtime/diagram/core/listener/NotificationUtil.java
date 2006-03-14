@@ -12,12 +12,14 @@
 
 package org.eclipse.gmf.runtime.diagram.core.listener;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 
 /**
@@ -81,9 +83,21 @@ public class NotificationUtil {
         HashSet deletedObjects = new HashSet();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             Notification notification = (Notification) i.next();
-            if (notification.getEventType() == Notification.REMOVE
-                && ((EObject) notification.getOldValue()).eResource() == null) {
-                deletedObjects.add(notification.getOldValue());
+            if (notification.getFeature() instanceof EReference
+                && ((EReference) notification.getFeature()).isContainment()) {
+                if (notification.getEventType() == Notification.REMOVE_MANY) {
+                    for (Iterator iter = ((Collection) notification
+                        .getOldValue()).iterator(); iter.hasNext();) {
+                        EObject removedObject = (EObject) iter.next();
+                        if (removedObject.eResource() == null) {
+                            deletedObjects.add(notification.getOldValue());
+                        }
+                    }
+                }
+                if (notification.getEventType() == Notification.REMOVE
+                    && ((EObject) notification.getOldValue()).eResource() == null) {
+                    deletedObjects.add(notification.getOldValue());
+                }
             }
         }
         return deletedObjects;
