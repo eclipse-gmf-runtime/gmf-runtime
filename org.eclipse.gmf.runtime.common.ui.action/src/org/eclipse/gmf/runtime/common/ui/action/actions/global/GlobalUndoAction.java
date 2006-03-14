@@ -42,11 +42,11 @@ public final class GlobalUndoAction extends GlobalAction {
 	 * My operation framework action handler delegate.
 	 */
 	private UndoActionHandler delegate;
-    
-    /**
-     * My undo context.
-     */
-    private IUndoContext undoContext;
+
+	/**
+	 * My undo context.
+	 */
+	private IUndoContext undoContext;
 
 	/**
 	 * Property change listener to listen for changes in my delegate.
@@ -90,7 +90,7 @@ public final class GlobalUndoAction extends GlobalAction {
 		super.setWorkbenchPart(workbenchPart);
 		initializeWithContext(getUndoContext());
 	}
-    
+	
     /**
      * Initializes me with a new undo <code>context</code>.
      * 
@@ -98,40 +98,44 @@ public final class GlobalUndoAction extends GlobalAction {
      *            the undo context
      */
     protected void initializeWithContext(IUndoContext context) {
-        if (context != null) {
-            if (delegate != null) {
-                delegate.removePropertyChangeListener(getDelegateListener());
-                delegate.dispose();
-            }
+		if (delegate != null) {
+			delegate.removePropertyChangeListener(getDelegateListener());
+			delegate.dispose();
+			delegate = null;
+		}
 
-            delegate = new UndoActionHandler(getWorkbenchPart().getSite(),
-                context);
-            delegate.setPruneHistory(true);
-            delegate.addPropertyChangeListener(getDelegateListener());
+		if (context != null) {
+			IWorkbenchPart part = getWorkbenchPart();
 
-            // force enablement update in UI
-            boolean enabled = isEnabled();
-            firePropertyChange(IAction.ENABLED, Boolean.valueOf(!enabled),
-                Boolean.valueOf(enabled));
-        }
+			if (part != null) {
+				delegate = new UndoActionHandler(part.getSite(), context);
+				delegate.setPruneHistory(true);
+				delegate.addPropertyChangeListener(getDelegateListener());
+			}
+		}
+		
+		// force enablement update in UI
+		boolean enabled = isEnabled();
+		firePropertyChange(IAction.ENABLED, Boolean.valueOf(!enabled), Boolean
+				.valueOf(enabled));
     }
-    
-    /**
-     * Gets my property change listener to listen for changes in my delegate.
-     */
-    private IPropertyChangeListener getDelegateListener() {
-        if (listener == null) {
-            listener = new IPropertyChangeListener() {
 
-                public void propertyChange(PropertyChangeEvent event) {
-                    // propagate to my own listeners
-                    firePropertyChange(event.getProperty(),
-                        event.getOldValue(), event.getNewValue());
-                }
-            };
-        }
-        return listener;
-    }
+	/**
+	 * Gets my property change listener to listen for changes in my delegate.
+	 */
+	private IPropertyChangeListener getDelegateListener() {
+		if (listener == null) {
+			listener = new IPropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent event) {
+					// propagate to my own listeners
+					firePropertyChange(event.getProperty(),
+							event.getOldValue(), event.getNewValue());
+				}
+			};
+		}
+		return listener;
+	}
 
 	/**
 	 * Delegates to the operation framework action handler.
@@ -246,44 +250,58 @@ public final class GlobalUndoAction extends GlobalAction {
 		if (delegate != null) {
 			delegate.update();
 		}
-        setText(getText());
+		setText(getText());
 	}
-    
-    /**
-     * Sets my undo context.
-     * 
-     * @param undoContext
-     *            my undo context
-     */
-    public final void setUndoContext(IUndoContext undoContext) {
-        this.undoContext = undoContext;
-        initializeWithContext(undoContext);
-    }
-    
-    /**
-     * Gets my undo context. If it has not been explicitly set, derives the undo
-     * context from my workbench part.
-     * 
-     * @return my undo context. May be <code>null</code> if no one has set my
-     *         undo context and my workbench part does not adapt to
-     *         {@link IUndoContext}.
-     */
-    public final IUndoContext getUndoContext() {
-
-        if (undoContext == null) {
-            IWorkbenchPart part = getWorkbenchPart();
-
-            if (part != null) {
-                return (IUndoContext) part.getAdapter(IUndoContext.class);
-            }
-        }
-        return undoContext;
-    }
 
 	/**
-     * Listens to the operation history events.
-     */
-    protected boolean isOperationHistoryListener() {
-        return true;
-    }
+	 * Sets my undo context.
+	 * 
+	 * @param undoContext
+	 *            my undo context
+	 */
+	public final void setUndoContext(IUndoContext context) {
+		this.undoContext = context;
+		initializeWithContext(context);
+	}
+
+	/**
+	 * Gets my undo context. If it has not been explicitly set, derives the undo
+	 * context from my workbench part.
+	 * 
+	 * @return my undo context. May be <code>null</code> if no one has set my
+	 *         undo context and my workbench part does not adapt to
+	 *         {@link IUndoContext}.
+	 */
+	public final IUndoContext getUndoContext() {
+
+		if (undoContext == null) {
+			IWorkbenchPart part = getWorkbenchPart();
+
+			if (part != null) {
+				return (IUndoContext) part.getAdapter(IUndoContext.class);
+			}
+		}
+		return undoContext;
+	}
+
+	/**
+	 * Listens to the operation history events.
+	 */
+	protected boolean isOperationHistoryListener() {
+		return true;
+	}
+
+	/**
+	 * Disposes my delegate.
+	 */
+	public void dispose() {
+
+		if (delegate != null) {
+			delegate.removePropertyChangeListener(getDelegateListener());
+			delegate.dispose();
+			delegate = null;
+		}
+
+		super.dispose();
+	}
 }

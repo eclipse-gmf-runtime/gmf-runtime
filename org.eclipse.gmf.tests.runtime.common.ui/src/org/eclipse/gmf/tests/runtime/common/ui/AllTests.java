@@ -19,6 +19,8 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.common.ui.action.actions.global.GlobalRedoActionTest;
+import org.eclipse.gmf.tests.runtime.common.ui.action.actions.global.GlobalUndoActionTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.AbstractActionDelegateTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.ActionManagerTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.RemoveMnemonicTests;
@@ -47,6 +49,8 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(FileChangeEventTest.suite());
 		suite.addTest(FileObserverFilterTypeTest.suite());
 		suite.addTest(FileObserverFilterTest.suite());
+        suite.addTest(GlobalRedoActionTest.suite());
+        suite.addTest(GlobalUndoActionTest.suite());
         suite.addTest(SelectableElementTest.suite());
         /**
          * waiting for resolution of Bugzilla 115843
