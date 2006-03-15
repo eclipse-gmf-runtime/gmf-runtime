@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.internal.index.CrossReferenceAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
@@ -192,7 +191,7 @@ public class EMFCoreUtil {
 			
 			if (domain != null) {
 				crossReferenceAdapter = CrossReferenceAdapter.getCrossReferenceAdapter(
-					domain);
+					domain.getResourceSet());
 			}
 			
 			if (crossReferenceAdapter == null) {
@@ -237,7 +236,7 @@ public class EMFCoreUtil {
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 		
 		if (domain != null) {
-			return CrossReferenceAdapter.getCrossReferenceAdapter(domain).getImports(resource);
+			return CrossReferenceAdapter.getCrossReferenceAdapter(domain.getResourceSet()).getImports(resource);
 		}
 		
 		return Collections.EMPTY_SET;
@@ -254,7 +253,7 @@ public class EMFCoreUtil {
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 		
 		if (domain != null) {
-			return CrossReferenceAdapter.getCrossReferenceAdapter(domain).getExports(resource);
+			return CrossReferenceAdapter.getCrossReferenceAdapter(domain.getResourceSet()).getExports(resource);
 		}
 		
 		return Collections.EMPTY_SET;

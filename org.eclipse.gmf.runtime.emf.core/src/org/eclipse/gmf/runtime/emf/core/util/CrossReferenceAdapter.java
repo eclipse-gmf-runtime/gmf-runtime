@@ -9,9 +9,8 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.core.internal.index;
+package org.eclipse.gmf.runtime.emf.core.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,14 +26,12 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
  * An adapter that maintains itself as an adapter for all contained objects.
@@ -52,13 +49,26 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 	private Map exports = new HashMap();
 
+	private boolean resolve = true;
+	
 	/**
 	 * Initializes me.
 	 */
 	public CrossReferenceAdapter() {
-		super();
+		this(true);
 	}
 
+	/**
+	 * Initializes me.
+	 * 
+	 * @param resolve flag to determine if the proxies need to be resolved
+	 */
+	public CrossReferenceAdapter(boolean resolve) {
+		super();
+		
+		this.resolve = resolve;
+	}
+	
 	/**
 	 * Updates imports and exports maps.
 	 * 
@@ -293,43 +303,6 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		if (notifier instanceof Resource) {
 			deregisterReferences((Resource)notifier);
 	    }
-	}
-
-	/**
-	 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#isIncluded(org.eclipse.emf.ecore.EReference)
-	 */
-	protected boolean isIncluded(EReference eReference) {
-		return super.isIncluded(eReference) && eReference.isChangeable()
-			&& !eReference.isContainer() && !eReference.isContainment();
-	}
-
-	/**
-	 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#getInverseReferences(org.eclipse.emf.ecore.EObject)
-	 */
-	public Collection getInverseReferences(EObject eObject) {
-		Collection result = new ArrayList();
-
-		// removed the addition of eContainer from default behavior
-		
-		Collection nonNavigableInverseReferences = (Collection)inverseCrossReferencer.get(eObject);
-		if (nonNavigableInverseReferences != null) {
-			result.addAll(nonNavigableInverseReferences);
-		}
-		
-	    EContentsEList.FeatureIterator crossReferences =
-	    	(EContentsEList.FeatureIterator) eObject.eCrossReferences().iterator();
-		while (crossReferences.hasNext()) {
-			InternalEObject referent = (InternalEObject) crossReferences.next();
-			EReference eReference = (EReference) crossReferences.feature();
-			EReference eOpposite = eReference.getEOpposite();
-			
-			// added eReference.isChangeable() to the superclass filter
-			if (referent != null && eOpposite != null && eReference.isChangeable()) {
-				result.add(referent.eSetting(eOpposite));
-			}
-		}
-		
-		return result;
 	}
 
 	/**
@@ -646,6 +619,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	 * @return the CrossReferenceAdapter if found, otherwise null
 	 */
 	public static CrossReferenceAdapter getExistingCrossReferenceAdapter(Notifier notifier) {
+		if (notifier == null ) {
+			return null;
+		}
+		
 		List adapters = notifier.eAdapters();
 		
 		for (int i = 0, size = adapters.size(); i < size; ++i) {
@@ -658,20 +635,24 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	}
 
 	/**
-	 * Obtains the cross-reference adapter for the specified editing domain's
-	 * resource set, if necessary creating it and attaching it.
+	 * Obtains the cross-reference adapter for the specified resource set,
+	 * if necessary creating it and attaching it.
 	 * 
-	 * @param domain an editing domain
+	 * @param resourceSet the resource set
 	 * 
-	 * @return the editing domain's cross-reference adapter
+	 * @return the resourceSet's cross-reference adapter
 	 */
-	public static CrossReferenceAdapter getCrossReferenceAdapter(TransactionalEditingDomain domain) {
+	public static CrossReferenceAdapter getCrossReferenceAdapter(ResourceSet resourceSet) {
+		if ( resourceSet == null ) {
+			return null;
+		}
+		
 		CrossReferenceAdapter result = getExistingCrossReferenceAdapter(
-			domain.getResourceSet());
+			resourceSet);
 		
 		if (result == null) {
 			result = new CrossReferenceAdapter();
-			domain.getResourceSet().eAdapters().add(result);
+			resourceSet.eAdapters().add(result);
 		}
 		
 		return result;
@@ -715,5 +696,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			return --value <= 0;
 		}
 	}
-	
+
+	protected boolean resolve() {
+		return this.resolve;
+	}	
 }

@@ -14,8 +14,8 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
-import org.eclipse.gmf.runtime.emf.core.internal.index.CrossReferenceAdapter;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
+import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 
 
 /**

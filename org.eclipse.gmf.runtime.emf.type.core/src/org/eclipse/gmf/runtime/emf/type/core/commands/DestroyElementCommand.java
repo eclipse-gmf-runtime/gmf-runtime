@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.internal.index.ReferenceVisitor;
+import org.eclipse.gmf.runtime.emf.core.internal.util.ReferenceVisitor;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypeDebugOptions;

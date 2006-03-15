@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.core.internal.index;
+package org.eclipse.gmf.runtime.emf.core.internal.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +23,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 
 /**
  * This class is used to visit the referencers of an EObject.
