@@ -18,6 +18,7 @@ import junit.textui.TestRunner;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
@@ -128,5 +129,16 @@ public class CreateElementRequestTest
         request.setContainer(employee);
         Object employeeContext = getFixture().getEditHelperContext();
         assertNotSame(departmentContext, employeeContext);
+    }
+    
+    /**
+     * Verifies that getting the editing domain from a request in which neither
+     * the editing domain nor the container have been specified returns 'null'.
+     */
+    public void test_getEditingDomain_noContainer_131766() {
+        CreateElementRequest request = new CreateElementRequest(
+            EmployeeType.DEPARTMENT);
+        TransactionalEditingDomain domain = request.getEditingDomain();
+        assertNull(domain);
     }
 }

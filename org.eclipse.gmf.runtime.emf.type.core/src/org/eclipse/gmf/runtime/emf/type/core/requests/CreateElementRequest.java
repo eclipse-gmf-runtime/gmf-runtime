@@ -404,8 +404,10 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
     public TransactionalEditingDomain getEditingDomain() {
         TransactionalEditingDomain result = super.getEditingDomain();
 
-        if (result == null) {
-            result = TransactionUtil.getEditingDomain(getContainer());
+        EObject c = getContainer();
+        if (result == null && c != null) {
+            // get the editing domain from the container
+            result = TransactionUtil.getEditingDomain(c);
         }
         return result;
     }
