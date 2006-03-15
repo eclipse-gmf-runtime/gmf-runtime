@@ -44,7 +44,7 @@ public class GenericEMFPropertiesProvider
 	 * Adapter to the EMF layer - the factory that will return IItelPropertySource adapters
 	 * @return - the EMF based composite adapter factory that will return IItelPropertySource adapters
 	 */
-	protected static AdapterFactory getAdapterFactory(Object object) {
+	protected AdapterFactory getAdapterFactory(Object object) {
         TransactionalEditingDomain editingDomain = TransactionUtil
             .getEditingDomain(object);
 
