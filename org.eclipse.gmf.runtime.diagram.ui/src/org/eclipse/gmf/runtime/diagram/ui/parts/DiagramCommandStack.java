@@ -523,8 +523,12 @@ public class DiagramCommandStack
         if (cmd instanceof ICompositeCommand) {
             ICompositeCommand cc = (ICompositeCommand) cmd;
             List l = new ArrayList();
-            for (Iterator i = cc.iterator(); i.hasNext();)
-                l.addAll(getReturnValues((ICommand) i.next()));
+            for (Iterator i = cc.iterator(); i.hasNext();) {
+            	IUndoableOperation child = (IUndoableOperation) i.next();
+            	if (child instanceof ICommand) {
+            		l.addAll(getReturnValues((ICommand) child));
+            	}
+            }
             return l;
             
         } else if ( cmd instanceof CommandProxy ) { //
