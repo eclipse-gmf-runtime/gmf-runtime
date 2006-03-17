@@ -48,7 +48,7 @@ http://www.eclipse.org/legal/epl-v10.html
       <import plugin="org.eclipse.ui.views.properties.tabbed"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.draw2d"/>
-      <import feature="org.eclipse.gef" version="3.1.0"/>
+      <import feature="org.eclipse.gef" version="3.2.0"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.emf.edit"/>
@@ -60,8 +60,7 @@ http://www.eclipse.org/legal/epl-v10.html
       <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.swt"/>
-      <import feature="org.eclipse.gef" version="3.1.0"/>
-      <import feature="org.eclipse.emf" version="2.1.0"/>
+      <import feature="org.eclipse.emf" version="2.2.0"/>
       <import feature="org.eclipse.emf.ocl" version="1.0.0"/>
       <import feature="org.eclipse.emf.query" version="1.0.0"/>
       <import feature="org.eclipse.emf.validation" version="1.0.0"/>
