@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.AbstractCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.CompositeCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.FileModificationApproverTest;
+import org.eclipse.gmf.tests.runtime.common.core.internal.command.OneTimeCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.compatibility.CommandManagerTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.AbstractProviderTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.ExecutionStrategyTest;
@@ -48,6 +49,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(ExecutionStrategyTest.suite());
         suite.addTest(FileModificationApproverTest.suite());
         suite.addTest(HashUtilTest.suite());
+        suite.addTest(OneTimeCommandTest.suite());
         suite.addTest(ProviderPriorityTest.suite());
         suite.addTest(ProxyTest.suite());
         suite.addTest(StringUtilTest.suite());
