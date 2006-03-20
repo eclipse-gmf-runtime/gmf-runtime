@@ -467,8 +467,12 @@ public class ViewUtil{
 	 */
 	public static EObject resolveSemanticElement(View view) {
 	    EObject element = view.getElement();
-	    if (element!=null && element.eIsProxy())
-	    	return EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(view), element);
+	    if (element!=null && element.eIsProxy()) {
+            TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(view);
+            if (domain != null) {
+                return EMFCoreUtil.resolve(domain, element);
+            }
+        }
 	    return element;
 	}
 	
