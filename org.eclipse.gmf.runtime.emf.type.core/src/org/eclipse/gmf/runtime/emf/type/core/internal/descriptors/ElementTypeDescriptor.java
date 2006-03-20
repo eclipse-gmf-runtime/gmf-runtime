@@ -110,7 +110,7 @@ public abstract class ElementTypeDescriptor implements IElementTypeDescriptor {
 			.getAttribute(ElementTypeXmlConfig.A_ICON);
 		if (imageFilePath != null) {
 			String pluginId = configElement.getDeclaringExtension()
-				.getNamespace();
+				.getContributor().getName();
 			if (pluginId != null) {
 				this.iconURL = getUrlFromPlugin(pluginId, imageFilePath);
 			}

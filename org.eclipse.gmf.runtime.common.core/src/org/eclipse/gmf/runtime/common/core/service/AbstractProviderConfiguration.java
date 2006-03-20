@@ -305,11 +305,11 @@ public class AbstractProviderConfiguration {
 								methods.add(new MethodValueEntry(methodDescriptor, value));
 						} catch (Exception e) {
 							syntaxError = true;
-							Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "]: invalid syntax for method [" + name + "]");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getContributor().getName()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "]: invalid syntax for method [" + name + "]");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					} else {
 						syntaxError = true;
-						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ 
+						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getContributor().getName()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ 
 					}
 				}
 			} 
@@ -332,11 +332,11 @@ public class AbstractProviderConfiguration {
 								staticMethods.add(new MethodValueEntry(methodDescriptor, value));
 						} catch (Exception e) {
 							syntaxError = true;
-							Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "]: invalid syntax for method [" + name + "]");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getContributor().getName()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "]: invalid syntax for method [" + name + "]");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					} else {
 						syntaxError = true;
-						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ 
+						Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE,	configElement.getDeclaringExtension().getContributor().getName()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "] : missing method name");  //$NON-NLS-1$ //$NON-NLS-2$ 
 					}
 				}
 			}else
@@ -1085,7 +1085,7 @@ public class AbstractProviderConfiguration {
 			if (objectVal != null)
 				objectList.add(objectVal);
 			else {
-				Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE, configElement.getDeclaringExtension().getNamespace()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "]: object id (" + objectId + ") is not in the list " + objectMap.keySet());  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+				Log.error(CommonCorePlugin.getDefault(), CommonCoreStatusCodes.SERVICE_FAILURE, configElement.getDeclaringExtension().getContributor().getName()+ ".plugin.xml extension [" + configElement.getDeclaringExtension().getExtensionPointUniqueIdentifier() + "]: object id (" + objectId + ") is not in the list " + objectMap.keySet());  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		return objectList;

@@ -914,7 +914,7 @@ public class ElementTypeRegistry {
 			} catch (CoreException ce) {
 
 				String sourcePluginId = next.getDeclaringExtension()
-					.getNamespace();
+					.getContributor().getName();
 				Log.error(EMFTypePlugin.getPlugin(), ce.getStatus().getCode(),
 						EMFTypeCoreMessages.bind(
 								EMFTypeCoreMessages.xml_parsing_ERROR_,
@@ -924,7 +924,7 @@ public class ElementTypeRegistry {
 			} catch (Exception e) {
 
 				String sourcePluginId = next.getDeclaringExtension()
-					.getNamespace();
+					.getContributor().getName();
 
 				Log.error(EMFTypePlugin.getPlugin(),
 						EMFTypePluginStatusCodes.ERROR_PARSING_XML,

@@ -155,7 +155,7 @@ public class ContributionItemService
 							}
 
 							public String getPluginId() {
-								return getElement().getNamespace();
+								return getElement().getContributor().getName();
 							}
 						});
 				}
@@ -171,7 +171,7 @@ public class ContributionItemService
 		 *         provider is loaded, <code>false</code> otherwise
 		 */
 		private boolean isPluginLoaded() {
-			String pluginId = getElement().getDeclaringExtension().getNamespace();
+			String pluginId = getElement().getDeclaringExtension().getContributor().getName();
 			Bundle bundle = Platform.getBundle(pluginId);
 			return null != bundle
 				&& bundle.getState() == org.osgi.framework.Bundle.ACTIVE;

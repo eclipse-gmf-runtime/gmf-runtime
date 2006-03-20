@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Path;
@@ -79,7 +80,7 @@ public class PropertiesConfigurationManager {
 				.getExtensionPoint(CommonCorePlugin.getPluginId(),
 					PROPERTIES_CONFIGURATION_EXT_P_NAME).getExtensions();
 			for (int i = 0; i < extensions.length; ++i) {
-				if (extensions[i].getNamespace().equals(pluginId)) {
+				if (extensions[i].getContributor().getName().equals(pluginId)) {
 					loadProperties(propertiesMap, extensions[i]
 						.getConfigurationElements());
 				}
@@ -120,17 +121,17 @@ public class PropertiesConfigurationManager {
 			String relativePath = element.getAttribute(PATH_ATTRIBUTE);
 			
 			Bundle bundle = Platform.getBundle(
-					element.getDeclaringExtension().getNamespace());
+					element.getDeclaringExtension().getContributor().getName());
 			
 			assert bundle != null;
 			
-			URL url = Platform.find(bundle, new Path(relativePath));
+			URL url = FileLocator.find(bundle, new Path(relativePath), null);
 			
 			if (url == null) {
 				Log.error(CommonCorePlugin.getDefault(),
 					CommonCoreStatusCodes.SERVICE_FAILURE,
 					"Couldn't find relative path " + relativePath + " in " //$NON-NLS-1$ //$NON-NLS-2$
-						+ element.getDeclaringExtension().getNamespace());
+						+ element.getDeclaringExtension().getContributor().getName());
 			}
 			
 			InputStream is = null;

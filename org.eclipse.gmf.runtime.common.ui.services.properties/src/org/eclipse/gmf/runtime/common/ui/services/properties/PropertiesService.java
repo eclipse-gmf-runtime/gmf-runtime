@@ -89,7 +89,7 @@ public class PropertiesService
 		 */
 		private boolean isPluginLoaded() {
 			String pluginId = ((IExtension) getElement().getParent())
-				.getNamespace();
+				.getContributor().getName();
 			Bundle bundle = Platform.getBundle(pluginId);
 
 			return null != bundle
