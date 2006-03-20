@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,7 +24,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -97,14 +95,10 @@ public class ViewUtil{
 			View viewToPersist = getTopViewToPersist(view);
 			if (viewToPersist!=null){
 				// now create a command to persisted the view and exectue it
-				Map options = Collections.singletonMap(	Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
-
 				PersistElementCommand pvc = 
-					new PersistElementCommand(editingDomain, viewToPersist , options);
-                
+					new PersistElementCommand(editingDomain, viewToPersist);
                 try {
                     pvc.execute( new NullProgressMonitor(), null );
-                    
                 } catch (ExecutionException e) {
                     Trace.catching(DiagramPlugin.getInstance(),
                         DiagramDebugOptions.EXCEPTIONS_CATCHING,
