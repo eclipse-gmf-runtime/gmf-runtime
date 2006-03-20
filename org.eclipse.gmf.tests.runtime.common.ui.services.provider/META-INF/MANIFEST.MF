@@ -12,4 +12,4 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services.provider.intern
  org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses
 Require-Bundle: org.eclipse.gmf.runtime.common.ui.services,
  org.junit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

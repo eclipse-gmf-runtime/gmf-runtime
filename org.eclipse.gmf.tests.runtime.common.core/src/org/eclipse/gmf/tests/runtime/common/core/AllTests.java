@@ -23,7 +23,6 @@ import org.eclipse.gmf.tests.runtime.common.core.internal.command.AbstractComman
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.CompositeCommandTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.FileModificationApproverTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.command.OneTimeCommandTest;
-import org.eclipse.gmf.tests.runtime.common.core.internal.command.compatibility.CommandManagerTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.AbstractProviderTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.ExecutionStrategyTest;
 import org.eclipse.gmf.tests.runtime.common.core.internal.service.ProviderPriorityTest;
@@ -41,11 +40,8 @@ public class AllTests extends TestCase implements IPlatformRunnable {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.addTest(AbstractCommandTest.suite());
-        suite.addTest(org.eclipse.gmf.tests.runtime.common.core.internal.command.compatibility.AbstractCommandTest.suite());
         suite.addTest(AbstractProviderTest.suite());
-        suite.addTest(CommandManagerTest.suite());
         suite.addTest(CompositeCommandTest.suite());
-        suite.addTest(org.eclipse.gmf.tests.runtime.common.core.internal.command.compatibility.CompositeCommandTest.suite());
 		suite.addTest(ExecutionStrategyTest.suite());
         suite.addTest(FileModificationApproverTest.suite());
         suite.addTest(HashUtilTest.suite());
