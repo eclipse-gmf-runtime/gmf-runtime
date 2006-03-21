@@ -86,22 +86,23 @@ public class ImageFileDropTargetListener
 
 		if (super.isEnabled(event)) {
 			Object modelObj = getViewer().getContents().getModel();
+			List dropObjects = getDropObjectsRequest().getObjects();
+			
 			if (modelObj instanceof EObject) {
-				return getDropObjectsRequest().getObjects() != null;
+				return dropObjects != null && !dropObjects.isEmpty();
+				
 			} else if (modelObj instanceof IAdaptable) {
 				final EObject target = (EObject) ((IAdaptable) modelObj)
 					.getAdapter(EObject.class);
-				List elements = getDropObjectsRequest().getObjects();
 
 				// additional check
-				if (elements == null || target == null) {
+				if (dropObjects == null || dropObjects.isEmpty()
+						|| target == null) {
 					return false;
 				}
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 
