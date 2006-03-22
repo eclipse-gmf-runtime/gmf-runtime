@@ -292,13 +292,15 @@ public final class GlobalRedoAction extends GlobalAction {
 	}
 
 	/**
-	 * Disposes my delegate.
+	 * Sets my delegate to <code>null</code>.
 	 */
 	public void dispose() {
 
 		if (delegate != null) {
+		    // Doesn't call delegate.dispose() because the delegate is itself a
+            // part listener and will dispose of itself when its part closes.
+            // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=131781
 			delegate.removePropertyChangeListener(getDelegateListener());
-			delegate.dispose();
 			delegate = null;
 		}
 

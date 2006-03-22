@@ -29,13 +29,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalRedoAction;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 public class GlobalRedoActionTest
     extends TestCase {
 
     private GlobalRedoAction redoAction;
+    private IViewPart part;
 
     public static void main(String[] args) {
         TestRunner.run(suite());
@@ -48,7 +50,7 @@ public class GlobalRedoActionTest
 
     protected void setUp()
         throws Exception {
-        IWorkbenchPart part = PlatformUI.getWorkbench()
+        part = (IViewPart) PlatformUI.getWorkbench()
             .getActiveWorkbenchWindow().getActivePage().getActivePart();
 
         IOperationHistory history = OperationHistoryFactory
@@ -88,13 +90,28 @@ public class GlobalRedoActionTest
     }
 
     /**
-     * Tests that the delegate is disposed when the workbench part is set to
-     * null.
+     * Tests that the action is not enabled when it's part is closed.
      */
-    public void test_dispose_() {
+    public void test_dispose_131781() {
+
+        // Enables testing that closing the view doesn't cause exceptions to be
+        // reported to the user
+        SafeRunnable.setIgnoreErrors(false);
+
+        // Re-set the undo context to ensure that the RedoActionHandler's part
+        // listener is registered AFTER the GlobalRedoAction. We can then test
+        // that closing the part doesn't cause the RedoActionHandler's part
+        // listener to throw an NPE.
+        redoAction.setUndoContext(redoAction.getUndoContext());
         assertTrue(redoAction.isEnabled());
-        redoAction.dispose();
+
+        // Close the view
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            .hideView(part);
+
         assertFalse(redoAction.isEnabled());
+        
+        SafeRunnable.setIgnoreErrors(true);
     }
 
     /**
