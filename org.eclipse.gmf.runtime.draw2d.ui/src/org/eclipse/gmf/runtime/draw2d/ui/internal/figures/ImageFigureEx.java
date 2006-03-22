@@ -182,6 +182,9 @@ public class ImageFigureEx
 			return;
 		img = image;
         
+        // reset image size
+        imgSize = new Dimension();
+        
 		revalidate();
 		repaint();
 	}
