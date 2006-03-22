@@ -18,9 +18,11 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.figures;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Image;
 
@@ -35,7 +37,7 @@ public class ImageFigureEx
 
 	private Image img;
 
-	private Dimension size = new Dimension();
+	private Dimension imgSize = new Dimension();
 
 	private int alignment;
 
@@ -81,6 +83,23 @@ public class ImageFigureEx
 		return img;
 	}
 
+    /**
+     * @return <code>Dimension</code> that is the size of the image in logical coordinates
+     */
+    private Dimension getImageSize() {
+        if (imgSize.isEmpty() && getImage() != null) {
+            org.eclipse.swt.graphics.Rectangle r = getImage().getBounds();
+            IMapMode mm = MapModeUtil.getMapMode(this);
+            imgSize = new Dimension(mm.DPtoLP(r.width), 
+                mm.DPtoLP(r.height));
+        }
+        
+        if (!imgSize.isEmpty())
+            return imgSize;
+        
+        return getBounds().getSize();
+    }
+    
 	/**
 	 * Returns the size of the Image that this Figure displays; or (0,0) if no
 	 * Image has been set.
@@ -88,7 +107,7 @@ public class ImageFigureEx
 	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
 	 */
 	public Dimension getPreferredSize(int wHint, int hHint) {
-		return size;
+		return getImageSize();
 	}
 
 	/**
@@ -102,6 +121,8 @@ public class ImageFigureEx
 
 		int x, y;
 		Rectangle area = getClientArea();
+        Dimension size = getImageSize();
+        
 		switch (alignment & PositionConstants.NORTH_SOUTH) {
 			case PositionConstants.NORTH:
 				y = area.y;
@@ -160,15 +181,11 @@ public class ImageFigureEx
 		if (img == image)
 			return;
 		img = image;
-		if (img != null) {
-			org.eclipse.swt.graphics.Rectangle r = image.getBounds();
-			size = new Dimension(MapModeUtil.getMapMode(this).DPtoLP(r.width), 
-								MapModeUtil.getMapMode(this).DPtoLP(r.height));
-		}
-		else
-			size = new Dimension();
+        
 		revalidate();
 		repaint();
 	}
+    
+    
 }
 
