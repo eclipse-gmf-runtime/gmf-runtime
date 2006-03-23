@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.emf.core.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -804,5 +806,35 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 	protected boolean resolve() {
 		return this.resolve;
+	}
+
+	public Collection getInverseReferences(EObject eObject) {
+	    Collection result = new ArrayList();
+	    
+	    EObject eContainer = eObject.eContainer();
+	    if (eContainer != null)
+	    {
+	      result.add(((InternalEObject)eContainer).eSetting(eObject.eContainmentFeature()));
+	    }
+	    
+	    Collection nonNavigableInverseReferences = (Collection)inverseCrossReferencer.get(eObject);
+	    if (nonNavigableInverseReferences != null)
+	    {
+	      result.addAll(nonNavigableInverseReferences);
+	    }
+	    
+	    EContentsEList.FeatureIterator crossReferences =
+	    	(EContentsEList.FeatureIterator) eObject.eCrossReferences().iterator();
+		while (crossReferences.hasNext()) {
+			InternalEObject referent = (InternalEObject) crossReferences.next();
+			EReference eReference = (EReference) crossReferences.feature();
+			EReference eOpposite = eReference.getEOpposite();
+			
+			if (referent != null && eOpposite != null) {
+				result.add(referent.eSetting(eOpposite));
+			}
+		}
+	    
+	    return result;
 	}
 }
