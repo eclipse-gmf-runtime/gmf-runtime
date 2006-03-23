@@ -114,7 +114,8 @@ public abstract class ShapeNodeEditPart
 					Anchor a = connection.getEdge().getSourceAnchor();
 					if (a instanceof IdentityAnchor)
 						setResult(((IdentityAnchor) a).getId());
-					setResult(""); //$NON-NLS-1$
+                    else
+                        setResult(""); //$NON-NLS-1$
 				}
 			});
 		} catch (InterruptedException e) {
@@ -159,7 +160,8 @@ public abstract class ShapeNodeEditPart
 					Anchor a = connection.getEdge().getTargetAnchor();
 					if (a instanceof IdentityAnchor)
 						setResult(((IdentityAnchor) a).getId());
-					setResult(""); //$NON-NLS-1$
+                    else
+                        setResult(""); //$NON-NLS-1$
 				}
 			});
 		} catch (InterruptedException e) {
