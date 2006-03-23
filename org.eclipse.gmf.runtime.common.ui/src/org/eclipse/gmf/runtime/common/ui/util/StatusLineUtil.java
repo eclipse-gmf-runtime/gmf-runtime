@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,12 @@
 package org.eclipse.gmf.runtime.common.ui.util;
 
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorActionBarContributor;
 
 /**
@@ -24,39 +26,69 @@ import org.eclipse.ui.part.EditorActionBarContributor;
  * @author myee
  */
 public class StatusLineUtil {
-	private StatusLineUtil() {
-		 /* private constructor */
-	}
 
-	/**
-	 * Outputs an error message to the part's status line
-	 * 
-	 * @param part the part
-	 * @param errorMessage the error message
-	 */
-	public static void outputErrorMessage(IWorkbenchPart part, String errorMessage) {
-		if (part instanceof IViewPart) {
-			IViewPart viewPart = (IViewPart) part;
+    private StatusLineUtil() {
+        /* private constructor */
+    }
 
-			IStatusLineManager statusLineManager =
-				viewPart.getViewSite().getActionBars().getStatusLineManager();
+    /**
+     * Outputs an error message to the part's status line. Does nothing if the
+     * status line manager cannot be determined from the <code>part</code>.
+     * <P>
+     * Can be invoked from a non-UI thread.
+     * 
+     * @param part
+     *            the part
+     * @param errorMessage
+     *            the error message
+     */
+    public static void outputErrorMessage(IWorkbenchPart part,
+            final String errorMessage) {
 
-			statusLineManager.setErrorMessage(errorMessage);
+        final IStatusLineManager statusLineManager = getStatusLineManager(part);
 
-		} else if (part instanceof IEditorPart) {
-			IEditorPart editorPart = (IEditorPart) part;
+        if (statusLineManager == null) {
+            // can't find the status line manager
+            return;
+        }
 
-			IEditorActionBarContributor contributor =
-				editorPart.getEditorSite().getActionBarContributor();
-			if (contributor instanceof EditorActionBarContributor) {
-				IStatusLineManager statusLineManager =
-					((EditorActionBarContributor) contributor)
-						.getActionBars()
-						.getStatusLineManager();
+        final Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
 
-				statusLineManager.setMessage(errorMessage);
-			}
-		}
-	}
+        if (workbenchDisplay.getThread() == Thread.currentThread()) {
+            // we're already on the UI thread
+            statusLineManager.setErrorMessage(errorMessage);
+        } else {
+            // we're not on the UI thread
+            workbenchDisplay.asyncExec(new Runnable() {
+
+                public void run() {
+                    statusLineManager.setErrorMessage(errorMessage);
+                }
+            });
+        }
+    }
+
+    private static IStatusLineManager getStatusLineManager(IWorkbenchPart part) {
+
+        IStatusLineManager result = null;
+
+        if (part instanceof IViewPart) {
+            IViewPart viewPart = (IViewPart) part;
+            result = viewPart.getViewSite().getActionBars()
+                .getStatusLineManager();
+
+        } else if (part instanceof IEditorPart) {
+            IEditorPart editorPart = (IEditorPart) part;
+
+            IEditorActionBarContributor contributor = editorPart
+                .getEditorSite().getActionBarContributor();
+
+            if (contributor instanceof EditorActionBarContributor) {
+                result = ((EditorActionBarContributor) contributor)
+                    .getActionBars().getStatusLineManager();
+            }
+        }
+        return result;
+    }
 
 }
