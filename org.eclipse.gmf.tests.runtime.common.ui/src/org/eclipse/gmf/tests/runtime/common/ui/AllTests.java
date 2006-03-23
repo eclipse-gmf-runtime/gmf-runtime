@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.common.ui.action.actions.global.GlobalRedoActionTest;
 import org.eclipse.gmf.tests.runtime.common.ui.action.actions.global.GlobalUndoActionTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.AbstractActionDelegateTest;
+import org.eclipse.gmf.tests.runtime.common.ui.internal.action.AbstractActionHandlerTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.ActionManagerTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.action.RemoveMnemonicTests;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.dialogs.SelectableElementTest;
@@ -29,6 +30,7 @@ import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileChangeEven
 import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileChangeEventTypeTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileObserverFilterTest;
 import org.eclipse.gmf.tests.runtime.common.ui.internal.resources.FileObserverFilterTypeTest;
+import org.eclipse.gmf.tests.runtime.common.ui.util.StatusLineUtilTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {
 
@@ -39,6 +41,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
         suite.addTest(AbstractActionDelegateTest.suite());
+        suite.addTest(AbstractActionHandlerTest.suite());
 		suite.addTest(ActionManagerTest.suite());
 		suite.addTest(RemoveMnemonicTests.suite());
 //		suite.addTest(ExtendedPropertyDescriptorTest.suite());
@@ -52,6 +55,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         suite.addTest(GlobalRedoActionTest.suite());
         suite.addTest(GlobalUndoActionTest.suite());
         suite.addTest(SelectableElementTest.suite());
+        suite.addTest(StatusLineUtilTest.suite());
         /**
          * waiting for resolution of Bugzilla 115843
          */

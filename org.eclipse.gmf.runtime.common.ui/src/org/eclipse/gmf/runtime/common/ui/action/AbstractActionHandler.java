@@ -36,11 +36,13 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The abstract parent of all concrete action handlers that execute commands.
@@ -467,10 +469,26 @@ public abstract class AbstractActionHandler
 	 *            The status object for which to open an error dialog.
 	 *  
 	 */
-	protected void openErrorDialog(IStatus status) {
-		ErrorDialog.openError(getWorkbenchPart().getSite().getShell(),
-			removeMnemonics(getLabel()), null, status);
-	}
+	protected void openErrorDialog(final IStatus status) {
+        
+        final Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
+
+        if (workbenchDisplay.getThread() == Thread.currentThread()) {
+            // we're already on the UI thread
+            ErrorDialog.openError(workbenchDisplay.getActiveShell(),
+                removeMnemonics(getLabel()), null, status);
+
+        } else {
+            // we're not on the UI thread
+            workbenchDisplay.asyncExec(new Runnable() {
+
+                public void run() {
+                    ErrorDialog.openError(workbenchDisplay.getActiveShell(),
+                        removeMnemonics(getLabel()), null, status);
+                }
+            });
+        }
+    }
 
 	/**
 	 * Performs the actual work when this action handler is run. Subclasses must
