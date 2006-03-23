@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,21 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
@@ -32,19 +40,32 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.Circuit
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.AndGate;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.figures.ICanonicalShapeCompartmentLayout;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.render.actions.CopyToImageAction;
+import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractDiagramTests;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorSite;
@@ -320,5 +341,94 @@ public class LogicDiagramTests
 
 	}
 
+    /**
+     * Performs a <code>DropObjectsRequest</code> in a modal context thread.
+     * Verifies that the diagram refreshes on the UI thread.
+     * 
+     * @throws Exception
+     *             if an unexpected exception occurs
+     */
+    public void test_drop_modalContextThread()
+        throws Exception {
+
+        // Open the test fixture diagram
+        getTestFixture().openDiagram();
+        final DiagramEditPart diagramEditPart = getDiagramEditPart();
+
+        //Create an AND gate in the semantic model
+        ICommand andCommand = new AbstractTransactionalCommand(getTestFixture()
+            .getEditingDomain(), "Create AND Gate", null) { //$NON-NLS-1$
+
+            protected CommandResult doExecuteWithResult(
+                    IProgressMonitor monitor, IAdaptable info)
+                throws ExecutionException {
+
+                AndGate newElement = (AndGate) SemanticPackage.eINSTANCE
+                    .getEFactoryInstance().create(
+                        SemanticPackage.eINSTANCE.getAndGate());
+
+                ContainerElement semanticElement = (ContainerElement) diagramEditPart
+                    .resolveSemanticElement();
+
+                semanticElement.getChildren().add(newElement);
+                return CommandResult.newOKCommandResult(newElement);
+            }
+        };
+
+        andCommand.execute(new NullProgressMonitor(), null);
+        AndGate andGate = (AndGate) andCommand.getCommandResult()
+            .getReturnValue();
+
+        // Get the initial number of edit parts on the diagram
+        List primaryEditParts = diagramEditPart.getPrimaryEditParts();
+        int initialEditPartCount = primaryEditParts.size();
+
+        // Get the command to drop the AND gate onto the diagram
+        Point dropLocation = ICanonicalShapeCompartmentLayout.UNDEFINED
+            .getLocation();
+        DropObjectsRequest request = new DropObjectsRequest();
+        request.setObjects(Collections.singletonList(andGate));
+        request.setAllowedDetail(DND.DROP_COPY);
+        request.setLocation(dropLocation);
+
+        Command command = diagramEditPart.getCommand(request);
+        final CommandProxy proxy = new CommandProxy(command);
+
+        //Execute the command in a forking progress monitor dialog
+        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor)
+                throws InvocationTargetException, InterruptedException {
+                
+                try {
+                    OperationHistoryFactory.getOperationHistory().execute(
+                        proxy, monitor, null);
+
+                } catch (ExecutionException e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
+
+        new ProgressMonitorDialog(null).run(true, true, runnable);
+
+        // Verify that a new edit part has been added to the diagram for the AND gate
+        primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
+
+        assertTrue(
+            "Size of primary edit parts should have increased.", primaryEditParts.size() > initialEditPartCount); //$NON-NLS-1$
+
+        IGraphicalEditPart andGateEditPart = null;
+        for (Iterator i = primaryEditParts.iterator(); i.hasNext();) {
+            IGraphicalEditPart nextEditPart = (IGraphicalEditPart) i.next();
+
+            if (andGate.equals(nextEditPart.resolveSemanticElement())) {
+                andGateEditPart = nextEditPart;
+                break;
+            }
+        }
+        assertNotNull(
+            "Expected a new edit part for the AND gate", andGateEditPart); //$NON-NLS-1$
+    }
 
 }
