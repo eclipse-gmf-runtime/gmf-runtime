@@ -119,6 +119,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -426,6 +427,13 @@ public abstract class DiagramEditor
     private IOperationHistoryListener historyListener;
 
     /**
+     * Alternative operation history listener. By default it adds it disables
+     * updates when command is executing on a separate thread and then reables
+     * afterwards.
+     */
+    private IOperationHistoryListener disableUpdateHistoryListener;
+
+    /**
      * Returns this editor's outline-page default display mode.
      * 
      * @return int the integer value indicating the content-outline-page dispaly
@@ -458,8 +466,42 @@ public abstract class DiagramEditor
 
         // add my operation history listener, if I have one
         historyListener = createHistoryListener();
+        disableUpdateHistoryListener = createDisableUpdateHistoryListener();
     }
 
+    /**
+     * Creates a listener on the <code>IOperationHistory</code> that allows
+     * us to turn off updates when execution is performed on a separate
+     * thread.
+     * 
+     * @return 
+     */
+    private IOperationHistoryListener createDisableUpdateHistoryListener() {
+        return new IOperationHistoryListener() {
+
+            public void historyNotification(final OperationHistoryEvent event) {
+
+                if (event.getEventType() == OperationHistoryEvent.ABOUT_TO_EXECUTE ||
+                    event.getEventType() == OperationHistoryEvent.ABOUT_TO_UNDO ||
+                    event.getEventType() == OperationHistoryEvent.ABOUT_TO_REDO) {
+                    DiagramGraphicalViewer viewer = (DiagramGraphicalViewer)getDiagramGraphicalViewer();
+
+                    if (viewer != null && Display.getCurrent() == null)
+                        viewer.enableUpdates(false); 
+                }
+                else if (event.getEventType() == OperationHistoryEvent.OPERATION_NOT_OK ||
+                    event.getEventType() == OperationHistoryEvent.DONE ||
+                    event.getEventType() == OperationHistoryEvent.UNDONE ||
+                    event.getEventType() == OperationHistoryEvent.REDONE) {
+                    DiagramGraphicalViewer viewer = (DiagramGraphicalViewer)getDiagramGraphicalViewer();
+
+                    if (viewer != null)
+                        viewer.enableUpdates(true); 
+                }
+            }
+        };
+    }
+    
     /**
      * Gets my operation history listener. By default it adds my undo context to
      * operations that have affected my editing domain.
@@ -647,6 +689,11 @@ public abstract class DiagramEditor
             getOperationHistory().dispose(getUndoContext(), true, true, true);
         }
 
+        if (disableUpdateHistoryListener != null) {
+            getOperationHistory().removeOperationHistoryListener(
+                disableUpdateHistoryListener);
+        }
+        
         super.dispose();
     }
 
@@ -890,6 +937,11 @@ public abstract class DiagramEditor
                     historyListener);
             }
 
+            if (disableUpdateHistoryListener != null) { 
+                getOperationHistory().addOperationHistoryListener(
+                    disableUpdateHistoryListener);
+            }
+            
             DiagramEventBroker eventBroker = DiagramEventBroker
                 .getInstance(domain);
             if (eventBroker == null) {
@@ -908,6 +960,11 @@ public abstract class DiagramEditor
             
             getOperationHistory().removeOperationHistoryListener(
                 historyListener);
+        }
+        
+        if (disableUpdateHistoryListener != null) {
+            getOperationHistory().removeOperationHistoryListener(
+                disableUpdateHistoryListener);
         }
     }
 

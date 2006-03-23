@@ -46,7 +46,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.ConnectionHandleTool;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * GEF command stack that delegates to an {@link IOperationHistory}.
@@ -188,11 +187,6 @@ public class DiagramCommandStack
     protected void execute(ICommand command, IProgressMonitor progressMonitor) {
 
         if (progressMonitor != null) {
-            DiagramGraphicalViewer viewer = getDiagramGraphicalViewer();
-
-            if (viewer != null && Display.getCurrent() == null)
-                viewer.enableUpdates(false);
-
             try {
                 command.addContext(getUndoContext());
                 getOperationHistory().execute(command, progressMonitor, null);
@@ -203,10 +197,7 @@ public class DiagramCommandStack
                     getClass(), "execute", e); //$NON-NLS-1$
                 Log.error(DiagramUIPlugin.getInstance(),
                     DiagramUIStatusCodes.COMMAND_FAILURE, "execute", e); //$NON-NLS-1$
-            } finally {
-                if (viewer != null)
-                    viewer.enableUpdates(true);
-            }
+            } 
         } else {
             try {
                 command.addContext(getUndoContext());
@@ -224,22 +215,6 @@ public class DiagramCommandStack
 
     }
     
-    private DiagramGraphicalViewer getDiagramGraphicalViewer() {
-        IDiagramEditDomain ded = getDiagramEditDomain();
-        DiagramGraphicalViewer viewer = null;
-
-        if (ded instanceof DiagramEditDomain) {
-            IDiagramWorkbenchPart dgrmWP = ((DiagramEditDomain) ded)
-                .getDiagramEditorPart();
-            if (dgrmWP != null) {
-                IDiagramGraphicalViewer dgv = ((DiagramEditDomain) ded)
-                    .getDiagramEditorPart().getDiagramGraphicalViewer();
-                if (dgv instanceof DiagramGraphicalViewer)
-                    viewer = (DiagramGraphicalViewer) dgv;
-            }
-        }
-        return viewer;
-    }
 
     /**
      * Converts a GEF {@link Command} into a GMF {@link ICommand}
