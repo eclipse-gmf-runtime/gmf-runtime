@@ -583,9 +583,16 @@ public class DiagramEventBroker
         }
         return listenerSet;
     }
-
+    
     public boolean isAggregatePrecommitListener() {
-        return true;
+    	return true;
+    }
+    
+    public boolean isPrecommitOnly() {
+    	// We aren't really a precommit only listener, the DiagramEditingDomain
+    	//  has a special case for us to be a special postcommit listener
+    	//  that can make changes while responding to batched events.
+    	return true;
     }
 
     /**

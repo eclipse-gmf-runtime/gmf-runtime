@@ -30,7 +30,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.CompositeChangeDescription;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CMValidator;
@@ -222,6 +224,22 @@ public abstract class AbstractTransactionalCommand
             IProgressMonitor monitor, IAdaptable info)
         throws ExecutionException;
 
+    protected void didUndo(Transaction tx) {
+    	// We will amalgamate any change description that were added by the DiagramEditingDomain's
+    	//  special post-commit listener. See DiagramEditingDomainFactory for more details.
+    	if (tx.getChangeDescription() != null && !tx.getChangeDescription().isEmpty()) {
+    		((CompositeChangeDescription)getChange()).add(tx.getChangeDescription());
+    	}
+    }
+    
+    protected void didRedo(Transaction tx) {
+    	// We will amalgamate any change description that were added by the DiagramEditingDomain's
+    	//  special post-commit listener. See DiagramEditingDomainFactory for more details.
+    	if (tx.getChangeDescription() != null && !tx.getChangeDescription().isEmpty()) {
+    		((CompositeChangeDescription)getChange()).add(tx.getChangeDescription());
+    	}
+    }
+    
     /**
      * Delegates to {@link #doExecuteWithResult(IProgressMonitor, IAdaptable)}
      * to perform the model changes. Sets the command result and calls

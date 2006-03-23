@@ -73,6 +73,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(RequestTests.suite());
 		suite.addTest(ConnectionToolTests.suite());
         suite.addTest(CopyToImageUtilTests.suite());
+        suite.addTest(DiagramEditingDomainTestCase.suite());
 		
 		return suite;
 	}
