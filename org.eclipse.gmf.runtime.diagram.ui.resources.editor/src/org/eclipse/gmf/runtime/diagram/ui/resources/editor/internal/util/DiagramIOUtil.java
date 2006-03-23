@@ -38,7 +38,9 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.emf.core.edit.MResourceOption;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.util.NotationExtendedMetaData;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -81,7 +83,24 @@ public class DiagramIOUtil {
 			URI uri = URI.createPlatformResourceURI(fFile.getFullPath()
                 .toString(), true);
 			
-			Resource resource = domain.getResourceSet().getResource(uri, true);
+			Resource resource = domain.getResourceSet().getResource(uri, false);
+			
+			if (resource == null) {
+				resource = domain.getResourceSet().createResource(uri);
+			}
+			
+			if (!resource.isLoaded()) {
+				Map loadingOptions = new HashMap(GMFResourceFactory.getDefaultLoadOptions());
+				// We will place a special extended metadata in here to ensure that we can load diagrams
+				//  from older versions of our metamodel.
+				loadingOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, new NotationExtendedMetaData());
+				
+				try {
+					resource.load(loadingOptions);
+				} catch (IOException e) {
+					// Proceed with an unloaded resource.
+				}
+			}
 			return resource;
 		}
 	}
