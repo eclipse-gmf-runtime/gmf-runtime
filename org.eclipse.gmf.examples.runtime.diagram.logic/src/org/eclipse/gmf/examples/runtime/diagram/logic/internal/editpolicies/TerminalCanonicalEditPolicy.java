@@ -17,13 +17,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Element;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Element;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -58,14 +59,6 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 		} else {
 			List theInput = logicElement.getInputTerminals();
 			List theOutput = logicElement.getOutputTerminals();
-		
-			int icnt = theInput.size();
-			int ocnt = theOutput.size();
-		
-			if(icnt < 1 || ocnt < 1)
-			{
-				return Collections.EMPTY_LIST;
-			}
 		
 			theElements.addAll(theInput);
 			theElements.addAll(theOutput);
@@ -116,5 +109,5 @@ public class TerminalCanonicalEditPolicy extends CanonicalEditPolicy {
 		cc.compose(boundsCommand);
 		
 		return cc;
-	}	
+	}
 }

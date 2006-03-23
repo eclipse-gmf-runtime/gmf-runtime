@@ -28,10 +28,10 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OrGateFig
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OrGateTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OutputTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.XOrGateFigure;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.AndGate;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.AndGate;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;

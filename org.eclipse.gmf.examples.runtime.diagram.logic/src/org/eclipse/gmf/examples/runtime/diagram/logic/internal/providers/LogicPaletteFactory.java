@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.gef.Tool;
-
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanticType;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;

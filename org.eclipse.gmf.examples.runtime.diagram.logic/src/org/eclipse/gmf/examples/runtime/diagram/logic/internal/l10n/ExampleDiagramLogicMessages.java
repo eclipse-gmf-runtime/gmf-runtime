@@ -56,6 +56,9 @@ public final class ExampleDiagramLogicMessages extends NLS {
 	public static String logic_FullAdderTool_Description;
 	public static String logic_Shape_Label;
 	public static String SetLocationCommand_Label_Resize;
+	public static String LogicWizardPage_StoreSemanticsSeparately;
+	public static String LogicWizardPage_BrowseSemanticResource;
+	public static String LogicWizardPage_BrowseSemanticDialogTitle;
 	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ExampleDiagramLogicMessages.class);

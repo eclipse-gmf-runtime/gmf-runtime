@@ -15,16 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicFlowCompartmentEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicFlowContainerEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicGateEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicShapeCompartmentEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.WireEditPart;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
 import org.eclipse.gmf.runtime.notation.View;

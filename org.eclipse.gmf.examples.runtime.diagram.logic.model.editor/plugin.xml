@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+
+  <extension
+    point = "org.eclipse.ui.newWizards">
+    <category
+      id = "org.eclipse.emf.ecore.Wizard.category.ID"
+      name="%_UI_Wizard_category">
+    </category>
+    <wizard
+      id = "org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticModelWizardID"
+      name = "%_UI_SemanticModelWizard_label"
+      class = "org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticModelWizard"
+      category = "org.eclipse.emf.ecore.Wizard.category.ID"
+      icon = "icons/full/obj16/SemanticModelFile.gif">
+      <description>%_UI_SemanticModelWizard_description</description>
+      <selection class = "org.eclipse.core.resources.IResource" />
+    </wizard>
+  </extension>
+
+  <extension point = "org.eclipse.ui.editors">
+    <editor
+        id = "org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticEditorID"
+        name = "%_UI_SemanticEditor_label"
+        icon = "icons/full/obj16/SemanticModelFile.gif"
+        extensions = "logic2semantic"
+        class = "org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticEditor" 
+        contributorClass="org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticActionBarContributor" >
+    </editor>
+  </extension>
+  <extension
+        point="org.eclipse.emf.transaction.listeners">
+     <listener class="org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.ResourceLoadedListener">
+        <editingDomain id="org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"/>
+     </listener>
+  </extension>
+  <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+     <parser
+           class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory"
+           type="logic2semantic"/>
+  </extension>    
+</plugin>

@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;

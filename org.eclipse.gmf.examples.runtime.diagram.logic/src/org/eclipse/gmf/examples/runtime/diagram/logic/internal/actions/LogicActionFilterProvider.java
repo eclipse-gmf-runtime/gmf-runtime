@@ -12,7 +12,7 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.ContainerElement;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider;
 

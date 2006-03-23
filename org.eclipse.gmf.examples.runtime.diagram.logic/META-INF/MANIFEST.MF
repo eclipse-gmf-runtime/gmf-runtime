@@ -43,6 +43,8 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.gmf.examples.runtime.diagram.logic.model.edit,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
  org.eclipse.gmf.runtime.diagram.ui.providers.ide,
- org.eclipse.gmf.runtime.diagram.ui.render
+ org.eclipse.gmf.runtime.diagram.ui.render,
+ org.eclipse.gmf.runtime.common.ui.services.dnd,
+ org.eclipse.emf.edit.ui
 Eclipse-LazyStart: true
 

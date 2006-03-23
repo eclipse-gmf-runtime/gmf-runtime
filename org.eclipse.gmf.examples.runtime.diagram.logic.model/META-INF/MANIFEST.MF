@@ -5,10 +5,10 @@ Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.diagram.logic.model; singl
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.examples.runtime.diagram.logic.model,
- org.eclipse.gmf.examples.runtime.diagram.logic.model.impl,
- org.eclipse.gmf.examples.runtime.diagram.logic.model.util,
- model,
+Export-Package: model,
+ org.eclipse.gmf.examples.runtime.diagram.logic.semantic,
+ org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl,
+ org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util,
  rosemodel
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,

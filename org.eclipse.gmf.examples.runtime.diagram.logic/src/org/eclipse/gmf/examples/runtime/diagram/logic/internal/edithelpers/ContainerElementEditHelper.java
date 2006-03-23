@@ -12,10 +12,10 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.CreateWireCommand;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.OutputTerminal;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.OutputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanticType;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;

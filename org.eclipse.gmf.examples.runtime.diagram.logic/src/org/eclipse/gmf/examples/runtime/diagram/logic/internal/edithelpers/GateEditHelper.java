@@ -12,14 +12,13 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IAdaptable;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.ConfigureLogicElementCommand;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Gate;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.ConfigureLogicElementCommand;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Gate;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 
 /**

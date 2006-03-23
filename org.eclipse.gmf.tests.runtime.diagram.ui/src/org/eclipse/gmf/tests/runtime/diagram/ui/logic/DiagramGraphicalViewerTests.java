@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;

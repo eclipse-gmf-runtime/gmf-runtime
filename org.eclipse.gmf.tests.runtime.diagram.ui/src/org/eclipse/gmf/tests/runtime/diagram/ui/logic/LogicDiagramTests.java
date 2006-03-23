@@ -32,9 +32,9 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.Circuit
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;

@@ -25,7 +25,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.L
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.LogicShapeCompartmentViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.OrGateViewFactory;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.views.factories.XORGateViewFactory;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;

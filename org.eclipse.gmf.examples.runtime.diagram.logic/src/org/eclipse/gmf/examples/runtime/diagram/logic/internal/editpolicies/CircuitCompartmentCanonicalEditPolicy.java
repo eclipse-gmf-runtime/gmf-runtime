@@ -18,9 +18,9 @@ import java.util.ListIterator;
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Element;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Wire;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Element;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Wire;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy;
 import org.eclipse.gmf.runtime.notation.View;
 

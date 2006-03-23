@@ -14,7 +14,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;

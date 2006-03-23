@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.ui.editors">   
       <editor
-            class="org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagramEditorWithFlyoutPalette"
+            class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.ui.parts.LogicNotationEditor"
             contributorClass="org.eclipse.gmf.examples.runtime.diagram.logic.internal.ui.parts.LogicDiagramActionBarContributor"
             default="true"
             extensions="logic2"
@@ -38,10 +38,49 @@
          </Priority>
          <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="">
          </context>
-         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="FlowContainer, circuit, LED, LogicCompartment, LogicFlowCompartment, OrGate, AndGate, XORGate">
+         <context
+               semanticHints="FlowContainer, circuit, LED, LogicCompartment, LogicFlowCompartment, OrGate, AndGate, XORGate"
+               viewClass="org.eclipse.gmf.runtime.notation.Node">
          </context>
          <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints="wire">
          </context>
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="LED">
+            <method name="getProxyClassID()" value="semantic.LED">
+            </method>
+         </object>  
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="AndGate">
+            <method name="getProxyClassID()" value="semantic.AndGate">
+            </method>
+         </object>
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="OrGate">
+            <method name="getProxyClassID()" value="semantic.OrGate">
+            </method>
+         </object>
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="XORGate">
+            <method name="getProxyClassID()" value="semantic.XORGate">
+            </method>
+         </object>
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="Circuit">
+            <method name="getProxyClassID()" value="semantic.Circuit">
+            </method>
+         </object> 
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="FlowContainer">
+            <method name="getProxyClassID()" value="semantic.FlowContainer">
+            </method>
+         </object> 
+         <object class="org.eclipse.gmf.runtime.emf.core.util.IProxyEObject(org.eclipse.gmf.runtime.emf.core)" id="Wire">
+            <method name="getProxyClassID()" value="semantic.Wire">
+            </method>
+         </object> 
+         <object
+               class="org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement"
+               id="ContainerElement"/>
+         <context
+               elements="LED,FlowContainer,Circuit,XORGate,OrGate,AndGate"
+               viewClass="org.eclipse.gmf.runtime.notation.Node"/>
+         <context
+               elements="Wire"
+               viewClass="org.eclipse.gmf.runtime.notation.Edge"/>
       </viewProvider>
   </extension>
   
@@ -204,7 +243,7 @@
   
   
   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <parser type="logic2" class="org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory">
+      <parser type="logic2" class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
       </parser>
    </extension>
   
@@ -406,5 +445,11 @@
       <layoutProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicLayoutProvider">
          <Priority name="Medium"/>
       </layoutProvider>
+   </extension>
+   <extension
+         point="org.eclipse.emf.transaction.editingDomains">
+      <editingDomain
+            factory="org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory"
+            id="org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"/>
    </extension>
 </plugin>

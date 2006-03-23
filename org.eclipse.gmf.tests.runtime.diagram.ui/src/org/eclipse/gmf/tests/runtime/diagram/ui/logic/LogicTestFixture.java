@@ -28,9 +28,9 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicDiagramFileCreator;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.LogicEditorUtil;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Circuit;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
@@ -78,7 +78,7 @@ public class LogicTestFixture
 			LogicEditorUtil.getInitialContents(),
 			"logic", //$NON-NLS-1$
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-			new NullProgressMonitor());
+			new NullProgressMonitor(), (String)null);
 		setDiagramFile(diagramFile);
 		
 		openDiagram();

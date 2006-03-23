@@ -16,14 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.ITerminalOwnerEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicFlowCompartmentEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicShapeCompartmentEditPart;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.util.LogicSemanticType;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanticType;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantProvider;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantProvider;
 
 /**
  * Provides modeling assistant services for logic diagrams.

@@ -26,10 +26,10 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTer
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LEDFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.InputTerminal;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.LED;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.SemanticPackage;
-import org.eclipse.gmf.examples.runtime.diagram.logic.model.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
