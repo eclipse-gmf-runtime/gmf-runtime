@@ -90,10 +90,15 @@ public class ArrangeAction extends DiagramAction {
 			List elements = getOperationSet();
 			for (Iterator iter = elements.iterator(); iter.hasNext();) {
 				EditPart element = (EditPart) iter.next();
-				arrangeCC.add(element.getCommand(getTargetRequest()));
+                Command cmd = element.getCommand(getTargetRequest());
+                if (cmd !=null)
+                    arrangeCC.add(cmd);
 			}
-			return arrangeCC;
-		}
+            if (!arrangeCC.isEmpty())
+                return arrangeCC;
+            else
+                return UnexecutableCommand.INSTANCE;
+        }
 		else if (getOperationSet().size() >= 2) {
 			EditPart parent = getSelectionParent(getOperationSet());
 			if (parent != null)

@@ -284,7 +284,8 @@ public class ContainerEditPolicy
 			offsetFromBoundingBox = true;
 			layoutDesc = LayoutType.RADIAL;
 		}
-		
+		if (editparts.isEmpty())
+            return null;
 		List nodes = new ArrayList(editparts.size());
 		ListIterator li = editparts.listIterator();
 		while (li.hasNext()) {
