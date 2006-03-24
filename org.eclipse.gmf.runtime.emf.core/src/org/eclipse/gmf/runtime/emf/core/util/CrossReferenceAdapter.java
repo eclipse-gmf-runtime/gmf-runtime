@@ -734,7 +734,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	      {
 	        if (eReference.isMany())
 	        {
-	          for (Iterator j = ((Collection)eObject.eGet(eReference)).iterator(); j.hasNext(); )
+	          Object collection = eObject.eGet(eReference);
+	          for (Iterator j = resolve() ? ((Collection)collection).iterator() : ((InternalEList)collection).basicIterator(); j.hasNext(); )
 	          {
 	            InternalEObject referencingEObject = (InternalEObject)j.next();
 	            result.add(referencingEObject.eSetting(eOpposite));
@@ -743,7 +744,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	        else
 	        {
 	        	// although the reference is set, the value could be null
-	        	InternalEObject referencingEObject = ((InternalEObject)eObject.eGet(eReference));
+	        	InternalEObject referencingEObject = ((InternalEObject)eObject.eGet(eReference, resolve()));
 	        	if ( referencingEObject != null ) {
 	        		result.add(referencingEObject.eSetting(eOpposite));
 	        	}
