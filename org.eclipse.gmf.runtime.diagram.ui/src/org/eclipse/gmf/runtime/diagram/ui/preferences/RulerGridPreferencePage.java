@@ -396,8 +396,8 @@ public class RulerGridPreferencePage
 	 * @return
 	 */
 	private Double forceDouble(Number number) {
-		if (number instanceof Long)
-			return new Double(number.doubleValue());
+		if (!(number instanceof Double))
+			return new Double(number.doubleValue());			
 		return (Double) number;
 	}	
 
