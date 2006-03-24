@@ -17,31 +17,21 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.ui.celleditor.ExtendedComboBoxCellEditor;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptorDecorator;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.emf.edit.ui.provider.PropertyDescriptor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.impl.InternalTransaction;
-import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -439,34 +429,7 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
                 || (oldValue == null && value == null))
             return;
         
-        
-        // TODO Temporary fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=127528
-        // 
-        // Once https://bugs.eclipse.org/bugs/show_bug.cgi?id=128117 is fixed, 
-        // TransactionalOperationItemPropertyDescriptor can be deleted and the 
-        // following line can be used instead:
-        //
-        // getItemDescriptor().setPropertyValue(getObject(), value);
-        //
-        
-        InternalTransactionalEditingDomain editingDomain = (InternalTransactionalEditingDomain) TransactionUtil
-            .getEditingDomain(getObject());
-
-        InternalTransaction transaction = editingDomain.getActiveTransaction();
-
-        if (transaction != null && !transaction.isReadOnly()) {
-            // we're executing an EMF transactional operation, so use a property
-            // descriptor that won't execute the EMF set command through the
-            // editing domain command stack
-            ItemPropertyDescriptorDecorator decorator = new TransactionalOperationItemPropertyDescriptor(
-                editingDomain, getObject(), itemPropertyDescriptor);
-            decorator.setPropertyValue(getObject(), value);
-
-        } else {
-            // no transaction open so execute the EMF set command through the
-            // editing domain command stack
-            getItemDescriptor().setPropertyValue(getObject(), value);
-        } 
+        getItemDescriptor().setPropertyValue(getObject(), value);
     }
 
     /**
@@ -534,121 +497,5 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
     public void resetPropertyValue(Object value) {
       getItemDescriptor().resetPropertyValue(getObject());
         
-    }
-    
-    /**
-     * Property descriptor decorator that overrides
-     * {@link #setPropertyValue(Object, Object)} to execute the EMF commands
-     * directly, rather than through the EMF command stack.
-     * <P>
-     * This decorator should only be used when the properties are being changed
-     * through an {@link AbstractTransactionalCommand}.
-     * 
-     * @author ldamus
-     */
-    protected class TransactionalOperationItemPropertyDescriptor
-        extends ItemPropertyDescriptorDecorator {
-
-        private final EditingDomain editingDomain;
-
-        /**
-         * Initializes me with my editing domain, the object whose properties I
-         * describe and my item property descriptor delegate.
-         * 
-         * @param editingDomain
-         *            the editing domain
-         * @param object
-         *            the object whose properties I describe
-         * @param itemPropertyDescriptor
-         *            the delegate
-         */
-        public TransactionalOperationItemPropertyDescriptor(
-                EditingDomain editingDomain, Object object,
-                IItemPropertyDescriptor itemPropertyDescriptor) {
-
-            super(object, itemPropertyDescriptor);
-            this.editingDomain = editingDomain;
-        }
-
-        /**
-         * Sets the property value without executing commands on the editing
-         * domain command stack.
-         */
-        public void setPropertyValue(Object thisObject, Object newValue) {
-
-            if (editingDomain == null) {
-                // no editing domain, so no my delegate will not execute a
-                // command through the command stack
-                itemPropertyDescriptor.setPropertyValue(thisObject, newValue);
-                return;
-            }
-
-            EObject eObject = (EObject) this.object;
-
-            Object owner = null;
-
-            if (getItemDescriptor() instanceof ItemPropertyDescriptor) {
-                owner = ((ItemPropertyDescriptor) getItemDescriptor())
-                    .getCommandOwner();
-            }
-
-            Object commandOwner = (owner != null) ? owner
-                : eObject;
-
-            Object featureObject = getFeature(eObject);
-
-            if (featureObject instanceof EReference[]) {
-                EReference[] parentReferences = (EReference[]) featureObject;
-                Command removeCommand = null;
-
-                for (int i = 0; i < parentReferences.length; ++i) {
-                    Object formerValue = eObject.eGet(parentReferences[i]);
-
-                    if (formerValue != null) {
-                        final EReference parentReference = parentReferences[i];
-
-                        if (formerValue == newValue) {
-                            return;
-
-                        } else if (parentReference.getEType().isInstance(
-                            newValue)) {
-
-                            SetCommand.create(editingDomain, commandOwner,
-                                parentReference, newValue).execute();
-                            return;
-
-                        } else {
-                            removeCommand = SetCommand.create(editingDomain,
-                                commandOwner, parentReference, null);
-                            break;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < parentReferences.length; ++i) {
-                    final EReference parentReference = parentReferences[i];
-
-                    if (parentReference.getEType().isInstance(newValue)) {
-                        if (removeCommand != null) {
-                            final CompoundCommand compoundCommand = new CompoundCommand(
-                                CompoundCommand.LAST_COMMAND_ALL);
-                            compoundCommand.append(removeCommand);
-                            compoundCommand.append(SetCommand.create(
-                                editingDomain, commandOwner, parentReference,
-                                newValue));
-                            compoundCommand.execute();
-
-                        } else {
-                            SetCommand.create(editingDomain, commandOwner,
-                                parentReference, newValue).execute();
-                        }
-                        break;
-                    }
-                }
-            } else {
-                SetCommand.create(editingDomain, commandOwner, featureObject,
-                    newValue).execute();
-            }
-        }
     }
 }

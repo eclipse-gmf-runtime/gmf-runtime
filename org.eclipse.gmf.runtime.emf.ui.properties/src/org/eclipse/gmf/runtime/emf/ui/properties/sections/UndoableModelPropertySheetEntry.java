@@ -15,6 +15,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.TriggeredOperations;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -120,16 +121,7 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
                 changed = true;
         } else if (!editValue.equals(newValue))
             changed = true;
-        
-        /*
-        Object newValue = editor.getValue();
-        boolean changed = false;
-        if (editValue == null) {
-            if (newValue != null)
-                changed = true;
-        } else if (!editValue.equals(newValue))
-            changed = true;
-            */
+
         // Set the editor value
         if (changed)
             setValue(newValue);
@@ -169,7 +161,9 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
         if (executeCommand) {
             /* status is ok, can edit the storage units */
             try {
-                getOperationHistory().execute(cc, new NullProgressMonitor(), null);
+                TriggeredOperations triggerOperation = 
+                    new TriggeredOperations(cc, getOperationHistory());
+                getOperationHistory().execute(triggerOperation, new NullProgressMonitor(), null);
                 
             } catch (ExecutionException e) {
                 Trace.catching(EMFPropertiesPlugin.getDefault(),
@@ -245,7 +239,9 @@ public class UndoableModelPropertySheetEntry extends PropertySheetEntry {
         } else {
             //I am the root entry
             try {
-                getOperationHistory().execute(command, new NullProgressMonitor(), null);
+                TriggeredOperations triggerOperation = 
+                    new TriggeredOperations(command, getOperationHistory());
+                getOperationHistory().execute(triggerOperation, new NullProgressMonitor(), null);
           
             } catch (ExecutionException e) {
                 Trace.catching(EMFPropertiesPlugin.getDefault(),
