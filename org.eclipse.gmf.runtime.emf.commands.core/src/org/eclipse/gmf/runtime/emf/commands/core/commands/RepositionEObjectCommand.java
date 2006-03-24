@@ -65,14 +65,14 @@ public class RepositionEObjectCommand
 	protected CommandResult doExecuteWithResult(
             IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
-
 		CommandResult commandResult = null;
-
-		int currentPosition = elements.indexOf(element);
-		
-		elements.move(currentPosition + displacement, element);
-
-		return (commandResult == null) ? CommandResult.newCancelledCommandResult()
+		try {
+    		int currentPosition = elements.indexOf(element);
+    		elements.move(currentPosition + displacement, element);
+        }catch (RuntimeException exp){
+            commandResult = CommandResult.newErrorCommandResult(exp);
+        }
+		return (commandResult == null) ? CommandResult.newOKCommandResult()
 			: commandResult;
 	}
 
