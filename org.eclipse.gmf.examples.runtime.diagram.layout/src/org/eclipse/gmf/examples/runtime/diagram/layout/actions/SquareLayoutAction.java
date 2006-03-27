@@ -11,17 +11,19 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.layout.actions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.gmf.examples.runtime.diagram.layout.LayoutPlugin;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.examples.runtime.diagram.layout.provider.SquareLayoutProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutService;
-import org.eclipse.gmf.runtime.emf.core.ResourceSetModifyOperation;
-import org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.action.IAction;
@@ -65,44 +67,51 @@ public class SquareLayoutAction	implements IWorkbenchWindowActionDelegate {
 
 		// Get selection from the window
 		final ISelection selection = window.getSelectionService().getSelection();
-		
-		/* Perform remaining work within a ResourceSetWriteOperation */
-		try {
-			MSLEditingDomain.INSTANCE.run(
-				new ResourceSetModifyOperation(LayoutPlugin
-					.getResourceString(KEY_SQUARE_LAYOUT)) {
+        Diagram diagramView = null;
+        
+        // get the editing domain
+        if (selection instanceof IStructuredSelection) {
 
-					protected void execute(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
+            IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
-						if (selection instanceof IStructuredSelection) {
+            // Walk selection
+            for (Iterator i = structuredSelection.iterator(); i.hasNext();) {
 
-							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+                // Try to adapt the selection to a view
+                Object selectedObject = i.next();
+                if (selectedObject instanceof IAdaptable) {
 
-							// Walk selection
-							for (Iterator i = structuredSelection.iterator(); i.hasNext();) {
+                    // Try to get a View (new notation)
+                    Object object = ((IAdaptable) selectedObject)
+                        .getAdapter(View.class);
+                    
+                    diagramView = ((View)object).getDiagram();
+                }
+            }
+        }
+        
+        if (diagramView != null) {
+            final Diagram diag = diagramView;
+            TransactionalEditingDomain ted = TransactionUtil.getEditingDomain(diagramView);
+            AbstractEMFOperation operation = new AbstractEMFOperation(
+                ted, KEY_SQUARE_LAYOUT, null) {
 
-								// Try to adapt the selection to a view
-								Object selectedObject = i.next();
-								if (selectedObject instanceof IAdaptable) {
+                protected IStatus doExecute(IProgressMonitor monitor,
+                        IAdaptable info)
+                    throws ExecutionException {
 
-									// Try to get a View (new notation)
-									Object object = ((IAdaptable) selectedObject)
-										.getAdapter(View.class);
-									
-									Diagram diag = ((View)object).getDiagram();
-									if (diag != null) {
-										LayoutService.getInstance().layout(diag, SquareLayoutProvider.SQUARE_LAYOUT);
-			 						}
-								}
-							}
-						}
-					}
-				}, new NullProgressMonitor());
+                    LayoutService.getInstance().layout(diag, SquareLayoutProvider.SQUARE_LAYOUT);
 
-		} catch (Exception e) {
-			throw new RuntimeException(e.getCause());
-		}
+                    return Status.OK_STATUS;
+                }
+            };
+            try {
+                operation.execute(new NullProgressMonitor(), null);
+            } 
+            catch (Exception e) {
+                throw new RuntimeException(e.getCause());
+            }
+        }
 	}
 
 	/**
