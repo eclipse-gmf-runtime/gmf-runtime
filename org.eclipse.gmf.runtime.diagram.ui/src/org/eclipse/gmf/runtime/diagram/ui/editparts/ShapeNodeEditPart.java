@@ -104,7 +104,8 @@ public abstract class ShapeNodeEditPart
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(
 			ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
+		final org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart connection = 
+            (org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart)connEditPart;
 		String t = ""; //$NON-NLS-1$
 		try {
 			t = (String) getEditingDomain().runExclusive(
@@ -149,8 +150,9 @@ public abstract class ShapeNodeEditPart
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(
 			ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-
+        final org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart connection = 
+            (org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart)connEditPart;
+        
 		String t = ""; //$NON-NLS-1$
 		try {
 			t = (String) getEditingDomain().runExclusive(
