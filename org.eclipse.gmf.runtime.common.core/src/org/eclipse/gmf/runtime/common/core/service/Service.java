@@ -747,7 +747,7 @@ public abstract class Service
 					String identifier = extension.getUniqueIdentifier();
 
 					if (identifier == null)
-						identifier = String.valueOf(extension.getNamespace());
+						identifier = String.valueOf(extension.getNamespaceIdentifier());
 
 					extension.getExtensionPointUniqueIdentifier();
 
