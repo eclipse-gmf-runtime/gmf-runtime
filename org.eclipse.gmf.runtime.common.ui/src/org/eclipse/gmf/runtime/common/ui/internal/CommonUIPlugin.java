@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.common.ui.internal;
 
-import org.eclipse.gmf.runtime.common.core.command.CMValidator;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.ui.util.UIModificationValidator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -63,9 +62,6 @@ public class CommonUIPlugin
 	public void start(BundleContext context)
 		throws Exception {
 		super.start(context);
-		
-		// TODO remove when CMValidator is removed
-		CMValidator.setValidator(new UIModificationValidator());
 		
 		// Make sure validateEdit for resources affected by GMF operations is
 		// done with UI context.

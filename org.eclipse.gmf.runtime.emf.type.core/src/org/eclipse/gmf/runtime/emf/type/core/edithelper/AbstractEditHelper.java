@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.IdentityCommand;
@@ -183,21 +182,6 @@ public abstract class AbstractEditHelper
 		return ElementTypeRegistry.getInstance().getEditHelperAdvice(
 			editHelperContext);
 	}
-    
-    /**
-     * Creates a new composite command.
-     * <P>
-     * Subclasses may override to provide their own kind of composite command.
-     * 
-     * @param label
-     *            the command label
-     * @return a new composite command
-     * @deprecated Subclasses must implement
-     *             {@link #createComposite(IEditCommandRequest)} instead.
-     */
-    protected CompositeCommand createCompositeCommand(IEditCommandRequest req) {
-        return null;
-    }
 
 	/**
 	 * Creates a new composite command.
@@ -208,13 +192,6 @@ public abstract class AbstractEditHelper
 	 * @return a new composite command
 	 */
 	protected ICompositeCommand createCommand(IEditCommandRequest req) {
-        
-        // Delegate to the old API first
-        // TODO remove this with deprecated method
-        CompositeCommand command = createCompositeCommand(req);
-        if (command != null) {
-            return command;
-        }
 		
 		return new CompositeTransactionalCommand(req.getEditingDomain(), req.getLabel()) {
 			

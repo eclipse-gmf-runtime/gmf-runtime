@@ -11,14 +11,12 @@
 
 package org.eclipse.gmf.runtime.common.core.command;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.commands.operations.IOperationApprover;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * A self-composing undoable operation that has a {@link CommandResult} and a
@@ -84,106 +82,4 @@ public interface ICommand extends IUndoableOperation {
      * @return the simplest form of this command that is equivalent
      */
     public abstract ICommand reduce();
-
-    
-    /**
-     * Retrieves the collection of objects that would be affected if this
-     * command were executed, undone, or redone.
-     * 
-     * @return The collection of objects affected by this command.
-     * 
-     * @deprecated Commands that will modify resources and wish to have these
-     *             resources validated should implement the
-     *             {@link #getAffectedFiles()} interface.
-     */
-    public Collection getAffectedObjects();
-
-    /**
-     * Indicates whether non workspace files are involved in executing, undoing
-     * or redoing this command.
-     * 
-     * @return boolean
-     * 
-     * @deprecated No replacement. File validation is now done through a
-     *             {@link IOperationApprover} registered with with the
-     *             {@link OperationHistoryFactory#getOperationHistory()}.
-     */
-    public boolean involvesReadOnlyNonWorkSpaceFiles();
-
-    /**
-     * Return a validator which can be used to check whether the units being
-     * modified by a command are writable.
-     * 
-     * @return the validator
-     * 
-     * @deprecated No replacement. File validation is now done through a
-     *             {@link IOperationApprover} registered with with the
-     *             {@link OperationHistoryFactory#getOperationHistory()}.
-     */
-    public CMValidator getValidator();
-
-    /**
-     * Answers whether this command can be executed.
-     * 
-     * @return <code>true</code> if the command can be executed;
-     *         <code>false</code> otherwise.
-     * 
-     * @deprecated Use {@link IUndoableOperation#canExecute()} instead.
-     */
-    public boolean isExecutable();
-
-    /**
-     * Answers whether this command can be redone.
-     * 
-     * @return <code>true</code> if the command can be redone;
-     *         <code>false</code> otherwise.
-     * 
-     * @deprecated Use {@link IUndoableOperation#canRedo()} instead.
-     */
-    public boolean isRedoable();
-
-    /**
-     * Answers whether this command can be undone.
-     * 
-     * @return <code>true</code> if the command can be undone;
-     *         <code>false</code> otherwise.
-     * 
-     * @deprecated Use {@link IUndoableOperation#canUndo()()} instead.
-     */
-    public boolean isUndoable();
-
-    /**
-     * Executes this command. A progress monitor is supplied so that the
-     * progress of executing the command may be tracked.
-     * 
-     * @param progressMonitor
-     *            The object that monitors the progress of this command
-     *            execution. May be
-     *            {@link org.eclipse.core.runtime.NullProgressMonitor}if the
-     *            command should be executed without monitoring its progress.
-     * 
-     * @deprecated Use
-     *             {@link IUndoableOperation#execute(IProgressMonitor, org.eclipse.core.runtime.IAdaptable)}
-     *             instead.
-     */
-    public void execute(IProgressMonitor progressMonitor);
-
-    /**
-     * Redoes this command.
-     * 
-     * @deprecated Use
-     *             {@link IUndoableOperation#redo(IProgressMonitor, org.eclipse.core.runtime.IAdaptable)}
-     *             instead.
-     */
-    public void redo();
-
-    /**
-     * Undoes this command.
-     * 
-     * @deprecated Use
-     *             {@link IUndoableOperation#undo(IProgressMonitor, org.eclipse.core.runtime.IAdaptable)}
-     *             instead.
-     */
-    public void undo();
-
 }

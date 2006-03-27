@@ -6,9 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.emf.commands.core.commands,
- org.eclipse.gmf.runtime.emf.commands.core.edithelpers,
- org.eclipse.gmf.runtime.emf.type.core,
+Export-Package: org.eclipse.gmf.runtime.emf.type.core,
  org.eclipse.gmf.runtime.emf.type.core.commands,
  org.eclipse.gmf.runtime.emf.type.core.edithelper,
  org.eclipse.gmf.runtime.emf.type.core.internal,

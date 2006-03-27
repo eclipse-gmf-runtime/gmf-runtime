@@ -19,7 +19,6 @@ import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -260,17 +259,6 @@ public abstract class AbstractActionHandler
 		return null == manager ? ActionManager.getDefault()
 			: manager;
 	}
-
-	/**
-	 * Retrieves the command manager for this action handler from its action
-	 * manager.
-	 * 
-	 * @return The command manager for this action handler.
-     * @deprecated Use {@link #getOperationHistory()} instead.
-	 */
-	protected CommandManager getCommandManager() {
-		return CommandManager.getDefault();
-	}
 	
     /**
      * Returns the operation history for this action handler from its action
@@ -417,18 +405,6 @@ public abstract class AbstractActionHandler
 	 *         <code>false</code> otherwise.
 	 */
 	protected boolean isPropertyListener() {
-		return false;
-	}
-    	
-	/**
-	 * Retrieves a Boolean indicating whether this action handler is interested
-	 * in commnd stack changed events.
-	 * 
-	 * @return <code>true</code> if this action handler is interested;
-	 *         <code>false</code> otherwise.
-     * @deprecated Subclasses must implement {@link #isOperationHistoryListener()}.
-	 */
-	protected boolean isCommandStackListener() {
 		return false;
 	}
 	

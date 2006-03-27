@@ -21,7 +21,6 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
@@ -79,16 +78,6 @@ public class ActionManager {
         assert null != operationHistory;
         this.operationHistory = operationHistory;
     }
-    	
-   	/**
-	 * Constructs a new action manager for the specified command manager.
-	 * 
-	 * @param commandManager The command manager for this action manager.
-     * @deprecated Use {@link #ActionManager(IOperationHistory)} instead.
-	 */
-	public ActionManager(CommandManager commandManager) {
-		this(OperationHistoryFactory.getOperationHistory());
-	}
 
 	/**
 	 * Retrieves the default action manager.
@@ -111,16 +100,6 @@ public class ActionManager {
     public final IOperationHistory getOperationHistory() {
         return operationHistory;
     }
-
-	/**
-	 * Retrieves the value of the <code>commandManager</code> instance variable.
-	 * 
-	 * @return The value of the <code>commandManager</code> instance variable.
-     * @deprecated Use {@link #getOperationHistory()} instead.
-	 */
-	public final CommandManager getCommandManager() {
-		return CommandManager.getDefault();
-	}
 	
 	/**
 	 * Retrieves the value of the <code>action</code> instance variable.

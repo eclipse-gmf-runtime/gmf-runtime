@@ -7,7 +7,6 @@ Bundle-Activator: org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.core.command,
- org.eclipse.gmf.runtime.common.core.command.compatibility,
  org.eclipse.gmf.runtime.common.core.internal,
  org.eclipse.gmf.runtime.common.core.internal.command;x-friends:="org.eclipse.gmf.tests.runtime.common.core",
  org.eclipse.gmf.runtime.common.core.internal.l10n,

@@ -13,31 +13,21 @@ package org.eclipse.gmf.runtime.emf.commands.core.command;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationApprover;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.emf.workspace.CompositeEMFOperation;
-import org.eclipse.gmf.runtime.common.core.command.CMValidator;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
-import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
-import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 
 /**
  * An undoable operation that is composed of child {@link IUndoableOperation}s
@@ -255,135 +245,5 @@ public class CompositeTransactionalCommand
      */
     public final boolean isEmpty() {
         return size() < 1;
-    }
-
-    //
-    // TODO LMDAMUS The following methods to be removed when deprecated API on ICommand
-    // is removed. 
-    // 
-
-    /**
-     * Returns the affected {@link IFile}s.
-     * 
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #getAffectedFiles()} instead.
-     */
-    public Collection getAffectedObjects() {
-        return Collections.EMPTY_LIST;
-    }
-
-    /**
-     * Returns <code>null</code>.
-     * 
-     * @deprecated File validation is now done through a
-     *             {@link IOperationApprover} registered with with the
-     *             {@link OperationHistoryFactory#getOperationHistory()}. No
-     *             need to return a validator for backwards compatilibity.
-     */
-    public CMValidator getValidator() {
-        return null;
-    }
-
-    /**
-     * Returns <code>false</code>.
-     * 
-     * @deprecated File validation is now done through a
-     *             {@link IOperationApprover} registered with with the
-     *             {@link OperationHistoryFactory#getOperationHistory()}. No
-     *             need to calculate the answer for backwards compatilibity.
-     */
-    public boolean involvesReadOnlyNonWorkSpaceFiles() {
-        return false;
-    }
-
-    /**
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #canExecute()} instead.
-     */
-    public boolean isExecutable() {
-        return canExecute();
-    }
-
-    /**
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #canRedo()} instead.
-     */
-    public boolean isRedoable() {
-        return canRedo();
-    }
-
-    /**
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #canUndo()} instead.
-     */
-    public boolean isUndoable() {
-        return canUndo();
-    }
-
-    /**
-     * Delegates to {@link #execute(IProgressMonitor, IAdaptable)} and logs any
-     * {@link ExecutionException} that occurs.
-     * 
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #execute(IProgressMonitor, IAdaptable)} instead.
-     */
-    public void execute(IProgressMonitor progressMonitor) {
-
-        try {
-            execute(progressMonitor, null);
-
-        } catch (ExecutionException e) {
-            handle(e);
-        }
-    }
-
-    /**
-     * Delegates to {@link #redo(IProgressMonitor, IAdaptable)} and logs any
-     * {@link ExecutionException} that occurs.
-     * 
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #redo(IProgressMonitor, IAdaptable)} instead.
-     */
-    public void redo() {
-        try {
-            redo(new NullProgressMonitor(), null);
-
-        } catch (ExecutionException e) {
-            handle(e);
-        }
-    }
-
-    /**
-     * Delegates to {@link #undo(IProgressMonitor, IAdaptable)} and logs any
-     * {@link ExecutionException} that occurs.
-     * 
-     * @deprecated Implemented for backwards compatibility. Use
-     *             {@link #undo(IProgressMonitor, IAdaptable)} instead.
-     */
-    public void undo() {
-        try {
-            undo(new NullProgressMonitor(), null);
-
-        } catch (ExecutionException e) {
-            handle(e);
-        }
-    }
-
-    /**
-     * Handles the specified exception by logging, tracing and setting the
-     * command result to an error.
-     * 
-     * @param exception
-     *            The exception to be handled.
-     * @deprecated Supports deprecated implementation
-     */
-    protected void handle(Exception exception) {
-        Trace.catching(CommonCorePlugin.getDefault(),
-                CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-                "handle", exception); //$NON-NLS-1$
-
-        setResult(CommandResult.newErrorCommandResult(exception));
-
-        Log.log(CommonCorePlugin.getDefault(), getCommandResult().getStatus());
     }
 }

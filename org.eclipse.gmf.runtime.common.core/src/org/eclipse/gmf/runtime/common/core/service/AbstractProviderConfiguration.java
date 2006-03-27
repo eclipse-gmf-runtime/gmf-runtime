@@ -1368,7 +1368,7 @@ public class AbstractProviderConfiguration {
 			if (methodDescriptor == null)
 				return null;
 			
-			Object[] valuesCopy = (Object[])methodDescriptor.getParameters().clone();
+			Object[] valuesCopy = methodDescriptor.getParameters().clone();
 			for (int i = 0; i < valuesCopy.length; i++) {
 				if(valuesCopy[i].equals(contextParam)){
 					valuesCopy[i]=object;

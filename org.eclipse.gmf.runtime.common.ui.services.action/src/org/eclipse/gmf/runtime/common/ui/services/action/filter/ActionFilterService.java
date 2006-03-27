@@ -21,7 +21,6 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IOperationHistoryListener;
 import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
@@ -244,16 +243,6 @@ public class ActionFilterService
 	 */
 	protected ActionManager getActionManager() {
 		return ActionManager.getDefault();
-	}
-	
-	/**
-	 * Retrieves the command manager for this action filter service.
-	 * 
-	 * @return The command manager for this action filter service.
-	 * @deprecated Use {@link #getOperationHistory()} instead.
-	 */
-	protected CommandManager getCommandManager() {
-		return CommandManager.getDefault();
 	}
     
     /**

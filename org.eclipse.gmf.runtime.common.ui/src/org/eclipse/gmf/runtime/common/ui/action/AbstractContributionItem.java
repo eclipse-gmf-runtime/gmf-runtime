@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -508,17 +507,6 @@ public abstract class AbstractContributionItem
 		return null == manager ? ActionManager.getDefault()
 			: manager;
 	}
-
-	/**
-	 * Retrieves the command manager for this action delegate from its action
-	 * manager.
-	 * 
-	 * @return The command manager for this action delegate.
-     * @deprecated Use {@link #getOperationHistory()} instead.
-	 */
-	protected CommandManager getCommandManager() {
-		return CommandManager.getDefault();
-	}
 	
     /**
      * Returns the operation history for this contribution item from its action
@@ -612,18 +600,6 @@ public abstract class AbstractContributionItem
 	 *         <code>false</code> otherwise.
 	 */
 	protected boolean isSelectionListener() {
-		return false;
-	}
-	
-	/**
-	 * Retrieves a Boolean indicating whether this action handler is interested
-	 * in commnd stack changed events.
-	 * 
-	 * @return <code>true</code> if this action handler is interested;
-	 *         <code>false</code> otherwise.
-     * @deprecated Subclasses must implement {@link #isOperationHistoryListener()}.
-	 */
-	protected boolean isCommandStackListener() {
 		return false;
 	}
     

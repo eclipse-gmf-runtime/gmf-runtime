@@ -15,7 +15,6 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.gmf.runtime.common.core.command.CommandManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
@@ -170,17 +169,6 @@ public abstract class AbstractActionDelegate implements IPartListener, IActionWi
 			}
 		}
 		return ActionManager.getDefault();
-	}
-
-	/**
-	 * Retrieves the command manager for this action delegate from its action
-	 * manager.
-	 * 
-	 * @return The command manager for this action delegate.
-     * @deprecated Use {@link #getOperationHistory()} instead.
-	 */
-	protected CommandManager getCommandManager() {
-		return CommandManager.getDefault();
 	}
     
     /**
