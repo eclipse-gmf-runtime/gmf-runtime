@@ -69,7 +69,7 @@ public class ActivityFilterProviderDescriptor
 						}
 
 						public String getPluginId() {
-							return getElement().getNamespace();
+							return getElement().getContributor().getName();
 						}
 					}));
 		if (id != null && !id.isEnabled()) {
