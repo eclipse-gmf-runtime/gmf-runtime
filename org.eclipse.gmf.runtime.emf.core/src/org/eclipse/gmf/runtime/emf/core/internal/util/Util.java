@@ -347,14 +347,9 @@ public class Util {
 
 		else {
 
-			if (filePath.indexOf(EMFCoreConstants.INVALID_PATH) == -1) {
-
-				if (File.separatorChar != EMFCoreConstants.PATH_SEPARATOR)
-					filePath = filePath.replace(EMFCoreConstants.PATH_SEPARATOR,
-						File.separatorChar);
-
-			} else
-				filePath = EMFCoreConstants.EMPTY_STRING;
+			if (File.separatorChar != EMFCoreConstants.PATH_SEPARATOR)
+				filePath = filePath.replace(EMFCoreConstants.PATH_SEPARATOR,
+					File.separatorChar);
 		}
 
 		return filePath;

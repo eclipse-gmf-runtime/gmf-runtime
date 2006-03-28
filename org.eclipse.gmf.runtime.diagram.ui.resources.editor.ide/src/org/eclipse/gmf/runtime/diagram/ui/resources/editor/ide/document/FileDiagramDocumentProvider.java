@@ -48,7 +48,6 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.Edi
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.util.DiagramIOUtil;
-import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -167,7 +166,7 @@ public class FileDiagramDocumentProvider
 		// if the diagram in the document is referring to another file, then we should
 		// create a copy of this diagram and save it to the new file, save as scenario.
 		if(resourceFile != null && !resourceFile.equals(file)) {
-			diagram = copyDiagramResource(diagram);
+			diagram = copyDiagramResource(diagram, file);
 		}
 		IDiagramDocument diagramDocument = (IDiagramDocument)document;
 		TransactionalEditingDomain domain = diagramDocument.getEditingDomain();
@@ -175,7 +174,7 @@ public class FileDiagramDocumentProvider
 		DiagramIOUtil.save(domain, file, diagram, DiagramIOUtil.hasUnrecognizedData(diagram.eResource()), monitor);
 	}
 	
-	private Diagram copyDiagramResource(Diagram sourceDiagram) {
+	private Diagram copyDiagramResource(Diagram sourceDiagram, IFile file) {
 		Resource sourceRes = sourceDiagram.eResource();
 		EList contents = sourceRes.getContents();
 		
@@ -183,9 +182,9 @@ public class FileDiagramDocumentProvider
 		final Collection copiedContents = EcoreUtil.copyAll(contents);
 
 		TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sourceDiagram);
-		final Resource newResource = editingDomain
-            .createResource(
-                EcoreUtil.generateUUID() + EMFCoreConstants.INVALID_PATH);
+		String fileName = file.getFullPath().toString();
+		final Resource newResource = editingDomain.getResourceSet()
+            .createResource(URI.createPlatformResourceURI(fileName, true));
          
         Map options = new HashMap();
         options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);

@@ -18,16 +18,6 @@ package org.eclipse.gmf.runtime.emf.core.internal.util;
  */
 public class EMFCoreConstants {
 
-	public final static String INVALID_EXTENSION = "@@@@@InvalidExtension@@@@@"; //$NON-NLS-1$
-
-	public final static String INVALID_PATH = "@@@@@InvalidPath@@@@@." //$NON-NLS-1$
-		+ INVALID_EXTENSION;
-
-	public final static String EPHEMERAL_INVALID_EXTENSION = "@@@@@EphemeralInvalidExtension@@@@@"; //$NON-NLS-1$
-
-	public final static String EPHEMERAL_INVALID_PATH = "@@@@@EphemeralInvalidPath@@@@@." //$NON-NLS-1$
-		+ EPHEMERAL_INVALID_EXTENSION;
-
 	public final static String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	public final static char META_CLASS_BEGIN = '<';

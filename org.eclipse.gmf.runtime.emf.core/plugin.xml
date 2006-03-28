@@ -12,16 +12,6 @@
 
    <extension-point id="Pathmaps" name="Path Maps" schema="schema/Pathmaps.exsd"/>
    
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <parser type="@@@@@InvalidExtension@@@@@" class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
-      </parser>
-   </extension>
-   
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <parser type="@@@@@EphemeralInvalidExtension@@@@@" class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
-      </parser>
-   </extension>
-   
    <extension
          point="org.eclipse.emf.validation.constraintProviders">
       <category
