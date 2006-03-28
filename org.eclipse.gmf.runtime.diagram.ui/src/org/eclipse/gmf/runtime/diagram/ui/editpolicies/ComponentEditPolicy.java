@@ -34,8 +34,6 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.notation.View;
@@ -73,19 +71,9 @@ public class ComponentEditPolicy
 			return createDeleteSemanticCommand(deleteRequest);
 		}
 		if (deleteRequest instanceof GroupRequestViaKeyboard) {
-			boolean isModellerElement = false;
-			if (getHost() instanceof IGraphicalEditPart) {
-				EObject semanticElement = ViewUtil
-					.resolveSemanticElement((View) ((IGraphicalEditPart) getHost())
-						.getModel());
-				if ((semanticElement != null)
-					&& (EObjectUtil.getType(semanticElement) == MObjectType.MODELING)) {
-					isModellerElement = true;
-				}
-			}
 			boolean shouldShowPrompt = ((GroupRequestViaKeyboard) deleteRequest)
 				.isShowInformationDialog();
-			if (shouldShowPrompt && isModellerElement) {
+			if (shouldShowPrompt) {
 				((GroupRequestViaKeyboard) deleteRequest)
 					.setShowInformationDialog(false);
 				if (showPrompt() == false) {
@@ -248,23 +236,20 @@ public class ComponentEditPolicy
 		EObject hostElement = ViewUtil.resolveSemanticElement((View)insertEP.getModel());
 		if (hostElement != null) {
 
-            MObjectType theMType = EObjectUtil.getType(hostElement);
-            if (theMType.equals(MObjectType.MODELING)) {
-                TransactionalEditingDomain editingDomain = getEditingDomain();
-                if (editingDomain == null) {
-                    return null;
-                }
-
-                CreateElementRequest theReq = new CreateElementRequest(
-                    editingDomain, hostElement, insertEP.getElementType());
-
-                EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(
-                    theReq);
-                Command cmd = ((IGraphicalEditPart) getHost())
-                    .getCommand(editCommandRequest);
-
-                return cmd;
+            TransactionalEditingDomain editingDomain = getEditingDomain();
+            if (editingDomain == null) {
+                return null;
             }
+
+            CreateElementRequest theReq = new CreateElementRequest(
+                 editingDomain, hostElement, insertEP.getElementType());
+
+            EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(
+                theReq);
+            Command cmd = ((IGraphicalEditPart) getHost())
+                .getCommand(editCommandRequest);
+
+            return cmd;
 		}
 		
 		return null;

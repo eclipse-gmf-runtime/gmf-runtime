@@ -37,7 +37,6 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugO
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
-import org.eclipse.gmf.runtime.emf.core.edit.MResourceOption;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.util.NotationExtendedMetaData;
@@ -68,7 +67,7 @@ public class DiagramIOUtil {
 	private static String MESSAGE2_SAVE = EditorMessages.compatibility_message2_save;
 
 	private static interface ILoader {
-		public Resource load(TransactionalEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException;
+		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws CoreException;
 	}
 	
 	private static class FileLoader implements ILoader {
@@ -78,7 +77,7 @@ public class DiagramIOUtil {
 			fFile = file;
 		}
 		
-		public Resource load(TransactionalEditingDomain domain, int loadOptions, IProgressMonitor monitor) throws CoreException {
+		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws CoreException {
 			fFile.refreshLocal(IResource.DEPTH_ZERO, monitor);
 			URI uri = URI.createPlatformResourceURI(fFile.getFullPath()
                 .toString(), true);
@@ -95,6 +94,13 @@ public class DiagramIOUtil {
 				//  from older versions of our metamodel.
 				loadingOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, new NotationExtendedMetaData());
 				
+                // propogate passed in options to the defaults
+                Iterator iter = loadOptions.keySet().iterator();
+                while (iter.hasNext()) {
+                    Object key = iter.next();
+                    loadingOptions.put(key, loadOptions.get(key));
+                }
+                
 				try {
 					resource.load(loadingOptions);
 				} catch (IOException e) {
@@ -113,7 +119,7 @@ public class DiagramIOUtil {
 		}
 		
 		public Resource load(TransactionalEditingDomain editingDomain,
-				int loadOptions, IProgressMonitor monitor)
+				Map loadOptions, IProgressMonitor monitor)
 			throws CoreException {
             
 			String storagePath = fStorage.getFullPath().toString();
@@ -151,7 +157,7 @@ public class DiagramIOUtil {
 		try {
 			try {	
 			// File exists with contents..
-			notationModel = loader.load(domain, 0, monitor);
+			notationModel = loader.load(domain, new HashMap(), monitor);
 
 			} catch (Exception e) {
 				if (bTryCompatible) {
@@ -173,7 +179,9 @@ public class DiagramIOUtil {
 							|| causeError instanceof ClassNotFoundException
 							|| causeError instanceof FeatureNotFoundException)) {
 						if (shouldLoadInCompatibilityMode(errMsg)) {
-							notationModel = loader.load(domain, MResourceOption.COMPATIBILITY_MODE, monitor);
+                            Map loadOptions = new HashMap();
+                            loadOptions.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+							notationModel = loader.load(domain, loadOptions, monitor);
 						} else {
 							// user does not want to load in compatibility mode.
 							return null; 
@@ -210,9 +218,9 @@ public class DiagramIOUtil {
 
 	static public void save(TransactionalEditingDomain domain, IFile file, Diagram diagram, boolean bKeepUnrecognizedData, IProgressMonitor progressMonitor) throws CoreException {
         Map options = new HashMap();
-		int nOptions = 0;
 		if(bKeepUnrecognizedData)
-			nOptions |= MResourceOption.COMPATIBILITY_MODE;
+            options.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+			
         save(domain, file, diagram, progressMonitor, options);
 	}
 	

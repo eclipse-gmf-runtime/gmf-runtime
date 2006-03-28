@@ -31,8 +31,6 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
@@ -403,17 +401,9 @@ public class SemanticEditPolicy
 		if (!(destroyRequest.isConfirmationRequired())){
 			return true;
 		}else{
-			boolean modellingObject = false; 	
-			if (getHostElement() != null)
-				if (EObjectUtil.getType(getHostElement()) == MObjectType.MODELING)
-					modellingObject = true;	
-			
-			if (modellingObject){
-				destroyRequest.setConfirm(false);
-				return showMessageDialog();					
-			}
+			destroyRequest.setConfirm(false);
+			return showMessageDialog();					
 		}
-		return true;
 	}
 
 
