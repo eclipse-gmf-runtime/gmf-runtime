@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,8 +49,7 @@ public class SetBoundsCommand extends AbstractTransactionalCommand {
 	 * @param bounds The new bounds
 	 */
 	public SetBoundsCommand(TransactionalEditingDomain editingDomain, String label,IAdaptable adapter, Rectangle bounds) {
-        super(editingDomain, label,
-            getWorkspaceFiles((View) adapter.getAdapter(View.class)));
+        super(editingDomain, label, null);
 		Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(bounds, "bounds cannot be null"); //$NON-NLS-1$
 		this.adapter = adapter;
@@ -66,8 +67,7 @@ public class SetBoundsCommand extends AbstractTransactionalCommand {
 	 * @param location The new location
 	 */
 	public SetBoundsCommand (TransactionalEditingDomain editingDomain, String label,IAdaptable adapter, Point location) {
-        super(editingDomain, label,
-            getWorkspaceFiles((View) adapter.getAdapter(View.class)));
+        super(editingDomain, label, null);
 		Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(location, "location cannot be null"); //$NON-NLS-1$
 		this.adapter = adapter;
@@ -84,8 +84,7 @@ public class SetBoundsCommand extends AbstractTransactionalCommand {
 	 * @param size The new size
 	 */
 	public SetBoundsCommand (TransactionalEditingDomain editingDomain, String label, IAdaptable adapter, Dimension size) {
-		super(editingDomain, label,
-            getWorkspaceFiles((View) adapter.getAdapter(View.class)));
+		super(editingDomain, label, null);
         Assert.isNotNull(adapter, "view cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(size, "size cannot be null"); //$NON-NLS-1$
 		this.adapter = adapter;
@@ -110,4 +109,14 @@ public class SetBoundsCommand extends AbstractTransactionalCommand {
 		}
 		return CommandResult.newOKCommandResult();
 	}
+    
+    public List getAffectedFiles() {
+        if (adapter != null) {
+            View view = (View) adapter.getAdapter(View.class);
+            if (view != null) {
+                return getWorkspaceFiles(view);
+            }
+        }
+        return super.getAffectedFiles();
+    }
 }
