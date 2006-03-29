@@ -117,7 +117,7 @@ public abstract class GlobalAction
 		}
 
 		/* Create the composite operation */
-		IUndoableOperation operation = createCompositeCommand(list);
+		IUndoableOperation operation = createCompositeCommand(list).reduce();
         try {
             IStatus status = getOperationHistory()
                 .execute(operation, progressMonitor, null);

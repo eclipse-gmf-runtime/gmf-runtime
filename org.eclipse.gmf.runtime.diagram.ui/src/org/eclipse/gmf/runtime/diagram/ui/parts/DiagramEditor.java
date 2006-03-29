@@ -955,8 +955,11 @@ public abstract class DiagramEditor
      */
     protected void stopListening() {
         if (historyListener != null) {
-            // dispose my undo context
-            getOperationHistory().dispose(getUndoContext(), true, true, true);
+            
+            if (undoContext != null) {
+                // dispose my undo context
+                getOperationHistory().dispose(getUndoContext(), true, true, true);
+            }
             
             getOperationHistory().removeOperationHistoryListener(
                 historyListener);

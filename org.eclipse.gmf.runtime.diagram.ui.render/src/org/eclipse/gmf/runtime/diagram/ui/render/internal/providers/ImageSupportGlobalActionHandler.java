@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.render.internal.providers;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -141,6 +142,18 @@ public class ImageSupportGlobalActionHandler
 				return isUndoable ? CommandResult.newOKCommandResult()
 					: super.doRedoWithResult(progressMonitor, info);
 			}
+            
+            public void addContext(IUndoContext context) {
+                if (isUndoable) {
+                    super.addContext(context);
+                }
+            }
+
+            public void removeContext(IUndoContext context) {
+               if (isUndoable) {
+                   super.removeContext(context);
+               }
+            }
 		};
 	}
 
