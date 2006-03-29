@@ -56,5 +56,119 @@
          </context>
       </decoratorProvider>
    </extension>
-
+   
+   <!-- Palette providers for predefining palette entries -->
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+         <contribution
+               factoryClass="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapePaletteFactory">
+            <entry
+            	  defineOnly="true"
+                  id="ovalDrawer"
+                  kind="drawer"
+                  label="ovalDrawer">
+            </entry>
+            <entry
+                  label="oval"
+                  kind="tool"
+                  path="ovalDrawer/"
+                  id="oval">
+            </entry>
+            <entry
+                  label="circle"
+                  kind="tool"
+                  path="ovalDrawer/"
+                  id="circle">
+            </entry>
+         </contribution>
+      </paletteProvider>
+   </extension>
+   
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+         <contribution
+               factoryClass="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapePaletteFactory">
+            <entry
+            	  defineOnly="true"
+                  id="cylinder"
+                  kind="tool"
+                  label="cylinder">
+            </entry>
+         </contribution>
+      </paletteProvider>
+   </extension>
+   
+   <!-- Palette providers for contributing predefined palette entries -->
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Low">
+         </Priority>
+         <editor
+               class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor">
+         </editor>
+         <contribution>
+            <predefinedEntry
+                  id="ovalDrawer"
+                  path="/"/>
+         </contribution>
+      </paletteProvider>
+   </extension>
+   
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Medium">
+         </Priority>
+         <editor
+               class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor">
+         </editor>
+         <contribution>
+            <entry
+                  id="ovalAndCylinderDrawer"
+                  kind="drawer"
+                  label="ovalAndCylinderDrawer"
+                  path="/"/>
+            <predefinedEntry
+                  id="/ovalDrawer/oval"
+                  path="/ovalAndCylinderDrawer"/>
+            <predefinedEntry
+                  id="cylinder"
+                  path="/ovalAndCylinderDrawer"/>
+         </contribution>
+      </paletteProvider>
+   </extension>
+   
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="High">
+         </Priority>
+         <contribution>
+            <predefinedEntry
+                  id="ovalAndCylinderDrawer">
+               <expand force="true"/>
+            </predefinedEntry>
+            <predefinedEntry
+                  id="/ovalDrawer/circle"
+                  remove="true"/>
+         </contribution>
+      </paletteProvider>
+   </extension>
 </plugin>

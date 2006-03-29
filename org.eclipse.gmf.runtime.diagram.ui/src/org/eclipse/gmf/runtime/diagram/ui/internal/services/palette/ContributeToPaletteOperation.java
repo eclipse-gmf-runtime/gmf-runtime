@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.palette;
 
+import java.util.Map;
+
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IEditorPart;
@@ -31,24 +33,33 @@ public class ContributeToPaletteOperation implements IOperation {
 	private final Object content;
 	/** the palette root */
 	private final PaletteRoot root;
+    /** map of predefined entries, populated by each provider */
+    private final Map predefinedEntries;
 
 	/**
 	 * Constructs a new ContributeToPalette operation from an editor and its content
 	 * 
 	 * @param editor The given editor
 	 * @param content The editor's contents
+	 * @param root
+     * @param predefinedEntries
+     *            map of predefined palette entries where the key is the palette
+     *            entry id and the value is the palette entry
 	 */
 	public ContributeToPaletteOperation(
 		IEditorPart editor,
 		Object content,
-		PaletteRoot root) {
+		PaletteRoot root, 
+        Map predefinedEntries) {
 		Assert.isNotNull(editor);
 		Assert.isNotNull(content);
 		Assert.isNotNull(root);
+        Assert.isNotNull(predefinedEntries);
 
 		this.editor = editor;
 		this.content = content;
 		this.root = root;
+        this.predefinedEntries = predefinedEntries;
 	}
 
 	/**
@@ -76,7 +87,7 @@ public class ContributeToPaletteOperation implements IOperation {
 		((IPaletteProvider) provider).contributeToPalette(
 			getEditor(),
 			getContent(),
-			getPaletteRoot());
+			getPaletteRoot(), getPredefinedEntries());
 		return null;
 	}
 
@@ -88,4 +99,11 @@ public class ContributeToPaletteOperation implements IOperation {
 		return root;
 	}
 
+    /**
+     * Gets the predefined entries map.
+     * @return
+     */
+    public Map getPredefinedEntries() {
+        return predefinedEntries;
+    }
 }

@@ -73,7 +73,7 @@
             <annotation>
                <documentation>
                   The priority of the provider. It can be one of the following values:
-&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them.
+&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them. Similarly, a provider that contributes palette entries that have been predefined by other providers has to have a higher priority than them. 
                </documentation>
             </annotation>
             <simpleType>
@@ -97,7 +97,7 @@
    <element name="editor">
       <annotation>
          <documentation>
-            A descriptor for the targetted editor.
+            A descriptor for the targetted editor.  The editor is not required when predefining palette entries.
          </documentation>
       </annotation>
       <complexType>
@@ -151,12 +151,16 @@ className&lt;(plugin id)&gt;?
       <complexType>
          <sequence>
             <element ref="entry" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="predefinedEntry" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="factoryClass" type="string">
             <annotation>
                <documentation>
                   The fully qualified name of a class that represents the factory for the contributions. The class has to implemenent the interface : org.eclipse.gmf.runtime.gef.ui.internal.ui.palette.PaletteFactory
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -165,7 +169,7 @@ className&lt;(plugin id)&gt;?
    <element name="entry">
       <annotation>
          <documentation>
-            A descriptor for a palette contribution entry.
+            A descriptor for a palette contribution entry that will be contributed to the palette.
          </documentation>
       </annotation>
       <complexType>
@@ -200,13 +204,15 @@ className&lt;(plugin id)&gt;?
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="path" type="string" use="required">
+         <attribute name="path" type="string">
             <annotation>
                <documentation>
-                  a fully qualified path of contribution. The format is: 
+                  A fully qualified path of contribution. The format is: 
 /&lt;drawer id&lt;/separator id | entry id&gt;&gt; or /&lt;group id&lt;/separator id | entry id&gt;&gt;
 
 All path ids should have been previously defined. Previous means either earlier in the XML file or another one with a lower priority (order). If a path ends with a separator id, the new entry is appended to the elements following the separator (just before the next separator or at the end of the container if it has no more separators below that one). If a path ends with a normal entry id, the new entry is inserted after that entry.
+
+A path is required unless this palette entry is being defined only so that it can be contributed by another palette provider.
                </documentation>
             </annotation>
          </attribute>
@@ -257,13 +263,20 @@ All path ids should have been previously defined. Previous means either earlier 
                </restriction>
             </simpleType>
          </attribute>
+         <attribute name="defineOnly" type="boolean">
+            <annotation>
+               <documentation>
+                  If true, this palette entry is only being defined, but will not be contributed.  In this case, the path is ignored and not required.  When defining a palette drawer or palette stack, this flag need only be set on the palette drawer or stack to indicate that all the entries on the drawer are being defined only.  The palette entry can be contributed by another palette extension using a predefinedEntry.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
    <element name="expand">
       <annotation>
          <documentation>
-            A descriptor for a condition to make palette drawers initially expanded. The descriptor con
+            A descriptor for a condition to make palette drawers initially expanded.
          </documentation>
       </annotation>
       <complexType>
@@ -360,6 +373,45 @@ className&lt;(plugin id)&gt;?
                <documentation>
                   The fully qualified name of a class/interface that is assignable from or adaptable to the &quot;value&quot; object. The name could be followed (between paranthesis &quot;()&quot;) by the id of a plugin whose classloader is able to load that class. The finaly syntax is:
 className&lt;(plugin id)&gt;?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="predefinedEntry">
+      <annotation>
+         <documentation>
+            A descriptor for a palette contribution entry that has already been defined by another plug-in and will now be contributed.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="expand" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The ID given to the palette entry when it was defined.  If the palette entry is in a palette container (i.e. drawer or stack) the id is considered the full path of this palette entry.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string">
+            <annotation>
+               <documentation>
+                  A fully qualified path describing where this palette entry should appear on the palette. The format is: 
+/&lt;drawer id&lt;/separator id | entry id&gt;&gt; or /&lt;group id&lt;/separator id | entry id&gt;&gt;
+
+All path ids should have been previously defined. Previous means either earlier in the XML file or another one with a lower priority (order). If a path ends with a separator id, the new entry is appended to the elements following the separator (just before the next separator or at the end of the container if it has no more separators below that one). If a path ends with a normal entry id, the new entry is inserted after that entry.
+
+The path is not required if this predefined entry is not being contributed.  That is, a predefined entry can be used to expand an existing drawer, remove an existing entry from the palette.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="remove" type="boolean">
+            <annotation>
+               <documentation>
+                  If true, an existing entry will be removed.
                </documentation>
             </annotation>
          </attribute>

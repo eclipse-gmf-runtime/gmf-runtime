@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.gmf.tests.runtime.diagram.ui.services;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -110,7 +111,7 @@ public class PaletteServiceTests
 		public static String STACK_A = "STACK_A"; //$NON-NLS-1$
 
 		public void contributeToPalette(IEditorPart editor, Object content,
-				PaletteRoot root) {
+				PaletteRoot root, Map predefinedEntries) {
 
 			PaletteDrawer drawerA = new PaletteDrawer(DRAWER_A, DRAWER_A);
 			drawerA.add(new PaletteToolEntry(TOOL_A, TOOL_A, null));
@@ -133,7 +134,7 @@ public class PaletteServiceTests
 		public static String TOOL_B = "TOOL_B"; //$NON-NLS-1$
 
 		public void contributeToPalette(IEditorPart editor, Object content,
-				PaletteRoot root) {
+				PaletteRoot root, Map predefinedEntries) {
 
 			PaletteDrawer drawerB = new PaletteDrawer(DRAWER_B, DRAWER_B);
 			drawerB.add(new PaletteToolEntry(TOOL_B, TOOL_B, null));
@@ -159,7 +160,7 @@ public class PaletteServiceTests
 		public static String TOOL_C = "TOOL_C"; //$NON-NLS-1$
 
 		public void contributeToPalette(IEditorPart editor, Object content,
-				PaletteRoot root) {
+				PaletteRoot root, Map predefinedEntries) {
 
 			PaletteDrawer drawerC = new PaletteDrawer(DRAWER_C, DRAWER_C);
 			drawerC.add(new PaletteToolEntry(TOOL_C, TOOL_C, null));
@@ -185,7 +186,7 @@ public class PaletteServiceTests
 		public static String TOOL_D = "TOOL_D"; //$NON-NLS-1$
 
 		public void contributeToPalette(IEditorPart editor, Object content,
-				PaletteRoot root) {
+				PaletteRoot root, Map predefinedEntries) {
 
 			PaletteDrawer drawerD = new PaletteDrawer(DRAWER_D, DRAWER_D);
 			drawerD.add(new PaletteToolEntry(TOOL_D, TOOL_D, null));
@@ -204,8 +205,29 @@ public class PaletteServiceTests
 			stackA.add(new PaletteToolEntry(TOOL_D, TOOL_D, null));
 		}
 	}
+    
+    /**
+     * We need a special editor type so that the XML palette providers can
+     * contribute to this editor and only.
+     * 
+     * @author cmahoney
+     */
+    public class PaletteServiceTestEditor
+        extends DiagramDocumentEditor {
 
-	public PaletteServiceTests(String name) {
+        final TransactionalEditingDomain editingDomain = DiagramEditingDomainFactory
+            .getInstance().createEditingDomain();
+
+        public PaletteServiceTestEditor() {
+            super(true);
+        }
+
+        public TransactionalEditingDomain getEditingDomain() {
+            return editingDomain;
+        }
+    };
+    
+    public PaletteServiceTests(String name) {
 		super(name);
 	}
 
@@ -287,16 +309,7 @@ public class PaletteServiceTests
 		getPaletteService().addPaletteProvider(ProviderPriority.HIGHEST,
 			descriptorD);
 		
-		final TransactionalEditingDomain editingDomain = DiagramEditingDomainFactory.getInstance()
-			.createEditingDomain();
-
-		// test service
-		DiagramDocumentEditor editor = new DiagramDocumentEditor(true) {
-
-			public TransactionalEditingDomain getEditingDomain() {
-				return editingDomain;
-			}
-		};
+        PaletteServiceTestEditor editor = new PaletteServiceTestEditor();
 
 		PaletteRoot paletteRoot = getPaletteService().createPalette(editor,
 			"DUMMY CONTENT"); //$NON-NLS-1$
@@ -413,6 +426,58 @@ public class PaletteServiceTests
 
 		}
 	}
+    
+    /**
+     * Tests the abilities of the palette relating to predefining palette
+     * entries in one extension and contributing the palette entries in another
+     * extension. This test uses the palette extensions defined in the XML for
+     * this plugin.
+     * 
+     * @throws Exception
+     */
+    public void testPredefineAndContributeEntries()
+        throws Exception {
+
+        PaletteServiceTestEditor editor = new PaletteServiceTestEditor();
+
+        PaletteRoot paletteRoot = PaletteService.getInstance().createPalette(
+            editor, "DUMMY CONTENT"); //$NON-NLS-1$
+        
+        boolean ovalDrawerFound = false;
+        boolean ovalAndCylinderDrawerFound = false;
+        
+        for (Iterator iter = paletteRoot.getChildren().iterator(); iter.hasNext();) {
+            Object paletteEntry = iter.next();
+            if (paletteEntry instanceof PaletteDrawer) {
+                PaletteDrawer drawer = (PaletteDrawer) paletteEntry;
+                if (drawer.getId().equals("ovalDrawer")) {
+
+                    ovalDrawerFound = true;
+
+                    assertEquals(
+                        "oval", ((PaletteEntry) drawer.getChildren().get(0)).getId()); //$NON-NLS-1$
+                    
+                    // verify that the circle tool has been removed.
+                    assertEquals(1, drawer.getChildren().size());
+                    
+                } else if (drawer.getId().equals("ovalAndCylinderDrawer")) {
+                    
+                    ovalAndCylinderDrawerFound = true;
+                    
+                    assertEquals(
+                        "oval", ((PaletteEntry) drawer.getChildren().get(0)).getId()); //$NON-NLS-1$
+                    assertEquals(
+                        "cylinder", ((PaletteEntry) drawer.getChildren().get(1)).getId()); //$NON-NLS-1$
+                     assertTrue(drawer.isInitiallyOpen());      
+                     
+                }
+            }           
+        }
+        
+        assertTrue(ovalDrawerFound);
+        assertTrue(ovalAndCylinderDrawerFound);
+
+     }
 
 	// /**
 	// * Prints out the palette entries to the console. Used for debugging.

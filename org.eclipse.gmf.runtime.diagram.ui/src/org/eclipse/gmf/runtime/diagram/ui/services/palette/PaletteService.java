@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -168,12 +169,12 @@ public class PaletteService extends Service implements IPaletteProvider {
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider#contributeToPalette(org.eclipse.ui.IEditorPart, java.lang.Object, org.eclipse.gef.palette.PaletteRoot)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.IPaletteProvider#contributeToPalette(org.eclipse.ui.IEditorPart, java.lang.Object, org.eclipse.gef.palette.PaletteRoot, Map)
 	 */
 	public void contributeToPalette(
 		IEditorPart editor,
 		Object content,
-		PaletteRoot root) {
+		PaletteRoot root, Map predefinedEntries) {
 
 		PaletteGroup standardGroup = new PaletteGroup(GROUP_STANDARD, DiagramUIMessages.StandardGroup_Label);
 		standardGroup.setDescription(DiagramUIMessages.StandardGroup_Description);
@@ -187,7 +188,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 		standardGroup.add(selectTool);
 		root.setDefaultEntry(selectTool);
 
-		execute(new ContributeToPaletteOperation(editor, content, root));
+		execute(new ContributeToPaletteOperation(editor, content, root, predefinedEntries));
 	}
 
 	/**
@@ -224,7 +225,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 						.runExclusive(new Runnable() {
 
 							public void run() {
-								contributeToPalette(editor, content, root);
+								contributeToPalette(editor, content, root, new HashMap());
 							}
 						});
 				}

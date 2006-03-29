@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.palette;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.ui.IEditorPart;
@@ -31,11 +33,12 @@ public interface IPaletteProvider extends IProvider {
 	 * @param editor The editor hosting the palette
 	 * @param content The editor's contents
 	 * @param root The editor's palette root
+     * @param predefinedEntries
+     *            map of predefined palette entries where the key is the palette
+     *            entry id and the value is the palette entry
 	 */
-	public void contributeToPalette(
-		IEditorPart editor,
-		Object content,
-		PaletteRoot root);
+	public void contributeToPalette(IEditorPart editor, Object content,
+            PaletteRoot root, Map predefinedEntries);
 
 	
 	/**

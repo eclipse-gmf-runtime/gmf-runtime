@@ -125,5 +125,20 @@
       <parser type="geo" class="org.eclipse.gmf.runtime.emf.core.resources.MResourceFactory">
       </parser>
   </extension>
-
+  <extension
+     point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+       <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority name="Medium">
+         </Priority>
+         <editor id="GeoshapeEditor">
+         </editor>
+         <contribution factoryClass="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapePaletteFactory">
+            <predefinedEntry
+                  id="geoshapeDrawer"
+                  path="/">
+               <expand force="true"/>
+            </predefinedEntry>
+         </contribution>
+      </paletteProvider>
+   </extension>
 </plugin>
