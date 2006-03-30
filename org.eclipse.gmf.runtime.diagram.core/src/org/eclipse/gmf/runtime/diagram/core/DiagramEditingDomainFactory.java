@@ -17,11 +17,14 @@ import java.util.List;
 
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.ResourceSetListener;
+import org.eclipse.emf.transaction.ResourceSetListenerImpl;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalCommandStack;
@@ -57,23 +60,54 @@ public class DiagramEditingDomainFactory
 		//  while handling a post-commit event.
 		private InternalTransaction originatingTransaction = null;
 		private DiagramEventBroker deb = null;
+		private ResourceSetListener debWrapper = null;
 		
 		public void addResourceSetListener(ResourceSetListener l) {
 			if (l.getClass() == DiagramEventBroker.class) {
 				assert deb == null;
 				deb = (DiagramEventBroker)l;
+				debWrapper = new ResourceSetListenerImpl() {
+					public boolean isAggregatePrecommitListener() {
+						return deb.isAggregatePrecommitListener();
+					}
+					
+					public boolean isPrecommitOnly() {
+						return true;
+					}
+					
+					public Command transactionAboutToCommit(ResourceSetChangeEvent event)
+						throws RollbackException {
+						return deb.transactionAboutToCommit(event);
+					}
+					
+					public void resourceSetChanged(ResourceSetChangeEvent event) {
+						deb.resourceSetChanged(event);
+					}
+					
+					public NotificationFilter getFilter() {
+						return deb.getFilter();
+					}
+					
+					public boolean isPostcommitOnly() {
+						return false;
+					}
+				};
+				
+				super.addResourceSetListener(debWrapper);
+			} else {
+				super.addResourceSetListener(l);
 			}
-			
-			super.addResourceSetListener(l);
 		}
 		
 		public void removeResourceSetListener(ResourceSetListener l) {
 			if (l.getClass() == DiagramEventBroker.class) {
 				assert deb != null;
 				deb = null;
+				super.removeResourceSetListener(debWrapper);
+				debWrapper = null;
+			} else {
+				super.removeResourceSetListener(l);
 			}
-			
-			super.removeResourceSetListener(l);
 		}
 		
 		public DiagramEditingDomain(AdapterFactory adapterFactory, ResourceSet resourceSet) {
