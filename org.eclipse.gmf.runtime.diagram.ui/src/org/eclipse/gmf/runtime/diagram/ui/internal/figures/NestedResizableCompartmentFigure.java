@@ -13,9 +13,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 
 import org.eclipse.draw2d.geometry.Dimension;
-
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 
 /**
  * A figure to represent the nested resizable compartment figure. Extends 
@@ -35,6 +35,7 @@ public class NestedResizableCompartmentFigure extends ResizableCompartmentFigure
 	 * and the scrollpane 
 	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
 	 * logical coordinates.
+     * @deprecated use {@link NestedResizableCompartmentFigure(IMapMode mm)} instead
 	 */
 	public NestedResizableCompartmentFigure(int minClientSize) {
 		super(null, minClientSize);
@@ -43,6 +44,22 @@ public class NestedResizableCompartmentFigure extends ResizableCompartmentFigure
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT); //diff cause we want to align our title to the left top
 		getScrollPane().getContents().setBorder(null);
 	}
+    
+    /**
+     * Constructors a ResizeableComparmtmentFigure that has the text align to the left
+     * and the scrollpane 
+     * @param mm the <code>IMapMode</code> that is used to initialize the
+     * default values of of the scrollpane contained inside the figure.  This is
+     * necessary since the figure is not attached at construction time and consequently
+     * can't get access to the owned IMapMode in the parent containment hierarchy.
+     */
+    public NestedResizableCompartmentFigure(IMapMode mm) {
+        super(null, mm);
+        setBorder(null);
+        ConstrainedToolbarLayout layout = (ConstrainedToolbarLayout)getLayoutManager();
+        layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT); //diff cause we want to align our title to the left top
+        getScrollPane().getContents().setBorder(null);
+    }
 	
 	/*
 	 * Zero dimension

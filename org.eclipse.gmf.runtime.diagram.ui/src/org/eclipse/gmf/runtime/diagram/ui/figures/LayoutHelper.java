@@ -149,6 +149,6 @@ public class LayoutHelper {
 	 */
 	public Point updateClobberedPosition(
 		IFigure clobbered, IFigure newlyAddedChild) {
-		return clobbered.getBounds().getRight().getCopy().translate(MapModeUtil.getMapMode(newlyAddedChild).DPtoLP(30), 0);
+		return clobbered.getBounds().getRight().getCopy().translate(MapModeUtil.getMapMode(clobbered).DPtoLP(30), 0);
 	}
 }

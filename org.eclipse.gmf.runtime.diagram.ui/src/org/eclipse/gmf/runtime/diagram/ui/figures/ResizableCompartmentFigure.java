@@ -92,19 +92,18 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	
 	/**
 	 * @param compartmentTitle
-	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, int minClientSize)} instead.
-	 * Clients must specify the minClientSize in their own logical coordinate system instead of the
-	 * figure assuming a default.  @link{ ResizableCompartmentFigure.MIN_CLIENT_DP } is provided as a default
-	 * value for convenience in device coordinates.
+	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
 	 */
 	public ResizableCompartmentFigure(String compartmentTitle) {
 		this(compartmentTitle, MapModeUtil.getMapMode().DPtoLP(MIN_CLIENT_DP));
 	}
+    
 	/**
 	 * A constructor for a top level resizable compartment figure
 	 * @param compartmentTitle
 	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
 	 * logical coordinates.
+     * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
 	 */
 	public ResizableCompartmentFigure(String compartmentTitle, int minClientSize) {
 		this.minClientSize = minClientSize;
@@ -121,31 +120,71 @@ public class ResizableCompartmentFigure extends NodeFigure {
 		setToolTip(compartmentTitle);
 		setBorder(new OneLineBorder());
 	}
+    
+    /**
+     * A constructor for a top level resizable compartment figure
+     * 
+     * @param compartmentTitle <code>String</code> that is the title that is
+     * displayed at the top of the compartment figure (optional).
+     * @param mm the <code>IMapMode</code> that is used to initialize the
+     * default values of of the scrollpane contained inside the figure.  This is
+     * necessary since the figure is not attached at construction time and consequently
+     * can't get access to the owned IMapMode in the parent containment hierarchy.
+     */
+    public ResizableCompartmentFigure(String compartmentTitle, IMapMode mm) {
+        this.minClientSize = mm.DPtoLP(MIN_CLIENT_DP);
+        setTextPane(new Figure() {
+            public Dimension getMaximumSize() {
+                return getPreferredSize();
+            }
+        });
+        getTextPane().setLayoutManager(new ConstrainedToolbarLayout());
+        add(getTextPane());
+        add(scrollPane = createScrollpane(mm));
+        setLayoutManager(new ConstrainedToolbarLayout());
+        setTitle(compartmentTitle);
+        setToolTip(compartmentTitle);
+        setBorder(new OneLineBorder());
+    }
+    
 	/**
 	 * Creates the animatable scroll pane
 	 * 
 	 * @return <code>AnimatableScrollPane</code>
+     * @deprecated use {@link ResizableCompartmentFigure#createScrollpane(IMapMode)} instead
 	 */
 	protected AnimatableScrollPane createScrollpane() {
-		scrollPane = new AnimatableScrollPane();
-		scrollPane.getViewport().setContentsTracksWidth(true);
-		scrollPane.getViewport().setContentsTracksHeight(false);
-		scrollPane.setLayoutManager(new OverlayScrollPaneLayout());
-		
-		IMapMode mm = MapModeUtil.getMapMode(this);
-		Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
-			mm.DPtoLP(1), mm.DPtoLP(0));
-		Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
-		
-		scrollPane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
-									mm.DPtoLP(10), mm.DPtoLP(50)));
-		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
-		scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
-		scrollPane.setContents(new Figure());
-		scrollPane.getContents().setBorder(
-				new MarginBorder(1, getMinClientSize()/2, 1, getMinClientSize()/2));			
-		return scrollPane;
+		return createScrollpane(MapModeUtil.getMapMode(this));
 	}
+    
+    /**
+     * Creates the animatable scroll pane
+     * 
+     * @param mm the <code>IMapMode</code> that is used to initialize the
+     * default values of of the scrollpane contained inside the figure.  This is
+     * necessary since the figure is not attached at construction time and consequently
+     * can't get access to the owned IMapMode in the parent containment hierarchy.
+     * @return <code>AnimatableScrollPane</code>
+     */
+    protected AnimatableScrollPane createScrollpane(IMapMode mm) {
+        scrollPane = new AnimatableScrollPane();
+        scrollPane.getViewport().setContentsTracksWidth(true);
+        scrollPane.getViewport().setContentsTracksHeight(false);
+        scrollPane.setLayoutManager(new OverlayScrollPaneLayout());
+        
+        Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
+            mm.DPtoLP(1), mm.DPtoLP(0));
+        Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
+        
+        scrollPane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
+                                    mm.DPtoLP(10), mm.DPtoLP(50)));
+        scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
+        scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
+        scrollPane.setContents(new Figure());
+        scrollPane.getContents().setBorder(
+                new MarginBorder(1, getMinClientSize()/2, 1, getMinClientSize()/2));            
+        return scrollPane;
+    }
 	
 	/**
 	 * @return that is the minimum size the client area can occupy in 

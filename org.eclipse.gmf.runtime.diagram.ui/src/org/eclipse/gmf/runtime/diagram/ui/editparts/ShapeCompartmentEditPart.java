@@ -54,7 +54,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
@@ -395,8 +394,7 @@ public abstract class ShapeCompartmentEditPart
 	 * drawn. The factory hint property is used to set this compartments label.
 	 */
 	protected IFigure createFigure() {
-		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getCompartmentName(),
-			getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
+		ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getCompartmentName(), getMapMode());
 		scf.getContentPane().setLayoutManager(getLayoutManager());
         scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
 

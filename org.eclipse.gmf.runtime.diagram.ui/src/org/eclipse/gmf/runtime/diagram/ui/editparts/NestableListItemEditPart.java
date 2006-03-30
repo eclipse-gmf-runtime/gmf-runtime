@@ -102,7 +102,7 @@ public class NestableListItemEditPart
 	protected IFigure createFigure() {
 
 		if (isResizable()) {
-			ResizableCompartmentFigure compartmentFigure = new NestedResizableCompartmentFigure(getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
+			ResizableCompartmentFigure compartmentFigure = new NestedResizableCompartmentFigure(getMapMode());
 			ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 			layout.setStretchMajorAxis(false);
 			layout.setStretchMinorAxis(false);

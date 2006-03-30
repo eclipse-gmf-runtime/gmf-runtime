@@ -11,7 +11,10 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.mapmode;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 
 /**
  * @author sshaw
@@ -28,9 +31,16 @@ public class MapModeUtil {
 	 * @return appropriate <code>IMapMode</code> for the given <code>IFigure</code> object.
 	 */
 	static public IMapMode getMapMode( IFigure fig ) {
-		if (fig == null)
-			return getMapMode();
-		
+        if (fig == null) {
+            Log.warning(Draw2dPlugin.getInstance(), IStatus.WARNING, "MapModeUtil#getMapMode(IFigure fig) fig parameter must not be null - using default MapMode");//$NON-NLS-1$
+            return MapModeTypes.DEFAULT_MM;
+        }
+        
+        if (fig.getParent() == null) {
+            Log.warning(Draw2dPlugin.getInstance(), IStatus.WARNING, "MapModeUtil#getMapMode(IFigure fig) fig parameter must be attached to a parent - using default MapMode");//$NON-NLS-1$
+            return MapModeTypes.DEFAULT_MM;
+        }
+        
 		if (fig instanceof IMapMode)
 			return (IMapMode)fig;
 		

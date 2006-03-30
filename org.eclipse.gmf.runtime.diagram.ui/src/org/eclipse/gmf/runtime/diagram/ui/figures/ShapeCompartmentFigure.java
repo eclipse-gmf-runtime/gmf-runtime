@@ -63,10 +63,7 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
 	 * the scrollpane.
 	 * 
 	 * @param title figure's title.
-	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, int minClientSize)} instead.
-	 * Clients must specify the minClientSize in their own logical coordinate system instead of the
-	 * figure assuming a default.  @link{ ResizableCompartmentFigure.MIN_CLIENT_DP } is provided as a default
-	 * value for convenience in device coordinates.
+	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
 	 */
 	public ShapeCompartmentFigure(String title) {
 		this(title, MapModeUtil.getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
@@ -79,45 +76,74 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
 	 * @param title figure's title.
 	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
 	 * logical coordinates.
+     * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
 	 */
 	public ShapeCompartmentFigure(String title, int minClientSize) {
 		super(title, minClientSize);
 		configureFigure();
 	}
+    
+    /**
+     * Create an instance.  Calls {@link #configureFigure()} to reconfigure
+     * the scrollpane.
+     * 
+     * @param title figure's title.
+     * @param mm the <code>IMapMode</code> that is used to initialize the
+     * default values of of the scrollpane contained inside the figure.  This is
+     * necessary since the figure is not attached at construction time and consequently
+     * can't get access to the owned IMapMode in the parent containment hierarchy.
+     */
+    public ShapeCompartmentFigure(String title, IMapMode mm) {
+        super(title, mm);
+        configureFigure(mm);
+    }
 
 	/**
 	 * The scrollpane is configured to use a {@link FreeformLayer} with a
 	 * {@link FreeformLayout} as its contents.
+     * @deprecated use {@link ShapeCompartmentFigure#configureFigure(IMapMode)} instead
 	 */
 	protected void configureFigure() {
-		ScrollPane scrollpane = getScrollPane();
-		scrollpane.setViewport(new FreeformViewport());
-		
-		IMapMode mm = MapModeUtil.getMapMode(this);
-		Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
-			mm.DPtoLP(1), mm.DPtoLP(0));
-		Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
-		
-		scrollpane.setHorizontalScrollBar(
-			new ListScrollBar(Orientable.HORIZONTAL, insets, size, 
-			mm.DPtoLP(10), mm.DPtoLP(50)));
-		scrollpane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
-			mm.DPtoLP(10), mm.DPtoLP(50)));
-
-		scrollpane.setScrollBarVisibility(ScrollPane.AUTOMATIC);
-		scrollpane.setLayoutManager(new OverlayScrollPaneLayout() );
-
-		IFigure contents = new FreeformLayer();
-		contents.setLayoutManager(new FreeformLayout());
-		scrollpane.setContents(contents);
-		
-		int MB = MapModeUtil.getMapMode(this).DPtoLP(5);
-		scrollpane.setBorder(new MarginBorder(MB, MB, MB, MB));
-		int SZ = MapModeUtil.getMapMode(this).DPtoLP(10);
-		scrollpane.setMinimumSize(new Dimension(SZ, SZ));
-	
-		this.setFont(FONT_TITLE);
+		configureFigure(MapModeUtil.getMapMode(this));
 	}
+    
+    /**
+     * The scrollpane is configured to use a {@link FreeformLayer} with a
+     * {@link FreeformLayout} as its contents.
+     * 
+     * @param mm the <code>IMapMode</code> that is used to initialize the
+     * default values of of the scrollpane contained inside the figure.  This is
+     * necessary since the figure is not attached at construction time and consequently
+     * can't get access to the owned IMapMode in the parent containment hierarchy.
+     */
+    protected void configureFigure(IMapMode mm) {
+        ScrollPane scrollpane = getScrollPane();
+        scrollpane.setViewport(new FreeformViewport());
+        
+        Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
+            mm.DPtoLP(1), mm.DPtoLP(0));
+        Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
+        
+        scrollpane.setHorizontalScrollBar(
+            new ListScrollBar(Orientable.HORIZONTAL, insets, size, 
+            mm.DPtoLP(10), mm.DPtoLP(50)));
+        scrollpane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
+            mm.DPtoLP(10), mm.DPtoLP(50)));
+
+        scrollpane.setScrollBarVisibility(ScrollPane.AUTOMATIC);
+        scrollpane.setLayoutManager(new OverlayScrollPaneLayout() );
+
+        IFigure contents = new FreeformLayer();
+        contents.setLayoutManager(new FreeformLayout());
+        scrollpane.setContents(contents);
+        
+        int MB = mm.DPtoLP(5);
+        scrollpane.setBorder(new MarginBorder(MB, MB, MB, MB));
+        int SZ = mm.DPtoLP(10);
+        scrollpane.setMinimumSize(new Dimension(SZ, SZ));
+    
+        this.setFont(FONT_TITLE);
+    }
 
 	/**
 	 * Convenience method to registers the supplied listener to the scrollpane's 
