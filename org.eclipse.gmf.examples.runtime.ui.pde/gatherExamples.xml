@@ -23,7 +23,6 @@
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/logicSemanticEdit.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.decorator/servicesDecorator.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.layout/servicesLayout.zip"/>			
-			<include name="org.eclipse.gmf.examples.runtime.emf/emf-msl-general.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.emf.clipboard/emf-clipboard-copypaste.zip"/>
 			<include name="org.eclipse.emf.ocl.examples.interpreter/emf-ocl-interpreter.zip"/>
 			<include name="org.eclipse.emf.query.examples.ocl/emf-ocl-query.zip"/>

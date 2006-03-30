@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.gmf.runtime.emf.clipboard.core,
  org.eclipse.emf.ecore,
- org.eclipse.gmf.runtime.emf.core.compatibility,
+ org.eclipse.gmf.runtime.emf.core,
  org.eclipse.emf.examples.library,
  org.eclipse.core.resources
 Eclipse-LazyStart: false

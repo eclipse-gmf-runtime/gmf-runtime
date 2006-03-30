@@ -14,16 +14,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.examples.extlibrary.Book;
 import org.eclipse.emf.examples.extlibrary.Library;
 import org.eclipse.emf.examples.extlibrary.Writer;
+import org.eclipse.emf.transaction.RollbackException;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
-import org.eclipse.gmf.runtime.emf.core.edit.MEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.edit.MRunnable;
-import org.eclipse.gmf.runtime.emf.core.edit.MUndoInterval;
-import org.eclipse.gmf.runtime.emf.core.exceptions.MSLActionAbandonedException;
-import org.eclipse.gmf.runtime.emf.core.util.OperationUtil;
+import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.osgi.framework.Bundle;
 
 /**
@@ -39,10 +40,11 @@ public abstract class BaseClipboardTest extends TestCase {
 	protected static final String PROJECT_NAME = "clipboardTests"; //$NON-NLS-1$
 	protected static final String RESOURCE_NAME = "/" + PROJECT_NAME + "/logres.extlibrary";  //$NON-NLS-1$//$NON-NLS-2$
 
-	private MRunnable mrun;
-	private MUndoInterval lastUndo;
+	private Transaction tx;
 	
-	protected MEditingDomain domain;
+	private ChangeDescription lastChange;
+	
+	protected TransactionalEditingDomain domain;
 
 	protected IProject project;
 
@@ -97,49 +99,38 @@ public abstract class BaseClipboardTest extends TestCase {
 		
 		project.open(null);
 	
-		domain = MEditingDomain.INSTANCE;
+		domain = GMFEditingDomainFactory.getInstance().createEditingDomain();
 		
-		domain.runInUndoInterval(new Runnable() {
-			public void run() {
-				try {
-					domain.runAsWrite(new MRunnable() {
-						public Object run() {
-							try {
-								Resource originalRes = domain.getResourceSet().getResource(
-										URI.createURI(
-												CLIPBOARD_TESTS_BUNDLE.getEntry(
-													"/test_models/clipboard_test.extlibrary") //$NON-NLS-1$
-										.toString()), true);
-								originalRes.setURI(URI.createPlatformResourceURI(RESOURCE_NAME));
-								originalRes.save(Collections.EMPTY_MAP);
-								testResource = originalRes;
+		tx = ((InternalTransactionalEditingDomain) domain).startTransaction(false, null);
+		
+		try {
+			Resource originalRes = domain.getResourceSet().getResource(
+					URI.createURI(
+							CLIPBOARD_TESTS_BUNDLE.getEntry(
+								"/test_models/clipboard_test.extlibrary") //$NON-NLS-1$
+					.toString()), true);
+			originalRes.setURI(URI.createPlatformResourceURI(RESOURCE_NAME));
+			originalRes.save(Collections.EMPTY_MAP);
+			testResource = originalRes;
 
-								// see above for model info
-								root1 = (Library)testResource.getContents().get(0);
-								level1writer = (Writer)root1.getWriters().get(0);
-								level1book = (Book)root1.getBooks().get(0);
-								level1 = (Library)root1.getBranches().get(0);
-								
-								level12writer = (Writer)level1.getWriters().get(0);
-								level12book = (Book)level1.getBooks().get(0);
-								level12 = (Library)level1.getBranches().get(0);
-								
-								root2 = (Library)testResource.getContents().get(1);
-								level2writer = (Writer)root2.getWriters().get(0);
-								level2book = (Book)root2.getBooks().get(0);
-								
-								root3 = (Library)testResource.getContents().get(2);
-							} catch (IOException e) {
-								fail("Failed to load test model: " + e.getLocalizedMessage()); //$NON-NLS-1$
-							}
-							return testResource;
-						}
-					});
-				} catch (MSLActionAbandonedException e) {
-					fail("Failed to load test model: " + e.getLocalizedMessage()); //$NON-NLS-1$
-				}
-			}
-		});
+			// see above for model info
+			root1 = (Library)testResource.getContents().get(0);
+			level1writer = (Writer)root1.getWriters().get(0);
+			level1book = (Book)root1.getBooks().get(0);
+			level1 = (Library)root1.getBranches().get(0);
+			
+			level12writer = (Writer)level1.getWriters().get(0);
+			level12book = (Book)level1.getBooks().get(0);
+			level12 = (Library)level1.getBranches().get(0);
+			
+			root2 = (Library)testResource.getContents().get(1);
+			level2writer = (Writer)root2.getWriters().get(0);
+			level2book = (Book)root2.getBooks().get(0);
+			
+			root3 = (Library)testResource.getContents().get(2);
+		} catch (IOException e) {
+			fail("Failed to load test model: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
 	}
 
 	/* (non-Javadoc)
@@ -210,22 +201,34 @@ public abstract class BaseClipboardTest extends TestCase {
 	 */
 	protected Collection paste(final String str, final Object target, final Map hints) {
 		assert (target instanceof Resource || target instanceof EObject);
+
+		Collection result = null;
+		Transaction pasteTx = null;
 		
-		Collection result = (Collection) OperationUtil.runWithNoSemProcs(new MRunnable() {
-			public Object run() {
-				try {
-					if (target instanceof Resource) {
-						return ClipboardUtil.pasteElementsFromString(
-							str, (Resource)target, hints, new NullProgressMonitor());
-					} // else it must be an EObject
-					return ClipboardUtil.pasteElementsFromString(
-						str, (EObject)target, hints, new NullProgressMonitor());
-				} catch (Exception ex) {
-					fail("Failed to paste elements from string."); //$NON-NLS-1$
-				}
-				return null;
+		try {
+			pasteTx = ((InternalTransactionalEditingDomain) domain).startTransaction(false, null);
+		} catch (Exception e) {
+			fail("Failed to paste elements from string: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+		
+		try {
+			if (target instanceof Resource) {
+				result = ClipboardUtil.pasteElementsFromString(
+					str, (Resource)target, hints, new NullProgressMonitor());
+			} else {
+				// else it must be an EObject
+				result =  ClipboardUtil.pasteElementsFromString(
+					str, (EObject)target, hints, new NullProgressMonitor());
 			}
-		});
+		} catch (Exception ex) {
+			fail("Failed to paste elements from string."); //$NON-NLS-1$
+		} finally {
+			try {
+				pasteTx.commit();
+			} catch (RollbackException e) {
+				fail("Failed to paste elements from string: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			}
+		}
 
 		return result;
 	}
@@ -254,58 +257,61 @@ public abstract class BaseClipboardTest extends TestCase {
 	 * @see #getLastUndo()
 	 */
 	protected boolean writing() {
-		boolean result = (mrun != null);
+		boolean result = (tx != null);
 		
 		if (!result) {
-			mrun = new MRunnable() {
-				public Object run() {
+			try {
+				tx = ((InternalTransactionalEditingDomain) domain).startTransaction(false, null);
+			} catch (Exception e) {
+				fail("Could not start transaction: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			}
+			
+			try {
+				runTest();
+			} catch (AssertionFailedError e) {
+				tx.rollback();
+				throw e;
+			} catch (Exception e) {
+				tx.rollback();
+				e.printStackTrace();
+				fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+			} catch (Throwable t) {
+				tx.rollback();
+				throw (Error) t;
+			} finally {
+				if (tx.isActive()) {
 					try {
-						runTest();
-					} catch (AssertionFailedError e) {
-						throw e;
-					} catch (Exception e) {
-						e.printStackTrace();
-						fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
-					} catch (Throwable t) {
-						throw (Error) t;
-					} finally {
-						mrun = null;
+						tx.commit();
+					} catch (RollbackException e) {
+						fail("Transaction rolled back: " + e.getLocalizedMessage()); //$NON-NLS-1$
 					}
-					
-					return null;
-				}};
+				}
+			}
 				
-			lastUndo = domain.runInUndoInterval(new Runnable() {
-				public void run() {
-					try {
-						domain.runAsWrite(mrun);
-					} catch (MSLActionAbandonedException e) {
-						fail("Write action abandoned: " + e.getLocalizedMessage()); //$NON-NLS-1$
-					}
-				}});
+			lastChange = tx.getChangeDescription();
 		}
 		
 		return result;
 	}
 	
 	/**
-	 * Gets the undo interval created by the test within its
+	 * Gets the change description created by the test within its
 	 * <pre>
 	 *     if (writing()) {
 	 *        // ... do stuff in a write action ...
 	 *     } else {
-	 *         MUndoInterval undo = getLastUndo();
+	 *         ChangeDescription change = getLastChange();
 	 *         
-	 *         // ... do stuff with the undo interval ...
+	 *         // ... do stuff with the change description ...
 	 *     }
 	 * </pre>
 	 * block.
 	 * 
-	 * @return the test's undo interval
+	 * @return the test's change description
 	 * 
 	 * @see #writing()
 	 */
-	protected MUndoInterval getLastUndo() {
-		return lastUndo;
+	protected ChangeDescription getLastChange() {
+		return lastChange;
 	}
 }

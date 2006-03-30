@@ -13,8 +13,6 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.filters;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.emf.core.edit.MObjectType;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectUtil;
 import org.eclipse.ui.views.properties.tabbed.AbstractTypeMapper;
 
 /**
@@ -90,6 +88,6 @@ public class GenericModelElementFilter
 	 * @return <code>true</code> if the type is supported; otherwise <code>false</code>
 	 */
 	protected boolean isSupportedMObjectType(EObject obj) {
-		return EObjectUtil.getType(obj) == MObjectType.MODELING;
+		return true; // all objects in GMF are "modeling" objects
 	}
 }

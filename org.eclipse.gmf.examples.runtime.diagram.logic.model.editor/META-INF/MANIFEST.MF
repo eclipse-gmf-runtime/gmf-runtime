@@ -19,6 +19,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.transaction,
  org.eclipse.emf.transaction.ui,
  org.eclipse.emf.workspace,
- org.eclipse.gmf.runtime.emf.core,
- org.eclipse.gmf.runtime.emf.core.compatibility
+ org.eclipse.gmf.runtime.emf.core
 Eclipse-LazyStart: true
