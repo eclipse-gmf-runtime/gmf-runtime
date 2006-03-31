@@ -10,6 +10,7 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.common.ui.services.internal.elementselection;
 
+import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IElementSelectionInput;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObjectsOperation;
 
@@ -18,30 +19,35 @@ import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObje
  * 
  * @author Anthony Hunter
  */
-public abstract class MatchingObjectsOperation
-	implements IMatchingObjectsOperation {
-
-	/**
-	 * the element selection input.
-	 */
-	private IElementSelectionInput input;
-
-	/**
-	 * Constructor for a MatchingObjectsOperation
-	 * 
-	 * @param input
-	 *            the element selection input.
-	 */
-	public MatchingObjectsOperation(IElementSelectionInput input) {
-		super();
-		this.input = input;
-	}
+public class MatchingObjectsOperation
+    implements IMatchingObjectsOperation {
 
     /**
-     * @inheritDoc
+     * the element selection input.
      */
-	public IElementSelectionInput getElementSelectionInput() {
-		return input;
-	}
+    private IElementSelectionInput input;
+
+    /**
+     * Constructor for a MatchingObjectsOperation
+     * 
+     * @param input
+     *            the element selection input.
+     */
+    public MatchingObjectsOperation(IElementSelectionInput input) {
+        super();
+        this.input = input;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public IElementSelectionInput getElementSelectionInput() {
+        return input;
+    }
+
+    public Object execute(IProvider provider) {
+        assert true : "MatchingObjectsOperation.execute() should not be executed"; //$NON-NLS-1$
+        return null;
+    }
 
 }

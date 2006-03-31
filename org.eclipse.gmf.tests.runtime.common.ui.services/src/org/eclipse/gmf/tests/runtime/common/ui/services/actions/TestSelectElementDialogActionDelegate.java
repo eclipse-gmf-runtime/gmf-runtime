@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestSelectElementDialog;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -21,6 +22,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * Action to launch the TestSelectElementDialog.
+ * 
+ * @author Anthony Hunter
  */
 public class TestSelectElementDialogActionDelegate
     implements IWorkbenchWindowActionDelegate {
@@ -37,9 +40,12 @@ public class TestSelectElementDialogActionDelegate
         TestSelectElementDialog dialog = new TestSelectElementDialog(window
             .getShell());
         dialog.open();
-        List selectedElements = dialog.getSelectedElements();
-        MessageDialog.openInformation(window.getShell(), "Result", "Selected "//$NON-NLS-2$//$NON-NLS-1$
-            + ((String) selectedElements.get(0)));
+        if (dialog.getReturnCode() != Dialog.CANCEL) {
+            List selectedElements = dialog.getSelectedElements();
+            MessageDialog.openInformation(window.getShell(),
+                "Result", "Selected "//$NON-NLS-2$//$NON-NLS-1$
+                    + ((String) selectedElements.get(0)));
+        }
     }
 
     /**

@@ -10,8 +10,6 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Test;
@@ -47,10 +45,10 @@ public class ElementSelectionUserInputTest
             public boolean select(Object toTest) {
                 return true;
             }
-            
+
         };
-        input = new AbstractElementSelectionInput(filter, context,
-            scope, StringStatics.BLANK);
+        input = new AbstractElementSelectionInput(filter, context, scope,
+            StringStatics.BLANK);
     }
 
     protected void tearDown()
@@ -69,57 +67,43 @@ public class ElementSelectionUserInputTest
 
     public void testBlankUserInput() {
         input.setInput(StringStatics.BLANK);
-        List matches = getMatchingObjects();
+        List matches = ElementSelectionService.getInstance()
+            .getMatchingObjects(input);
         assertTrue(matches.size() == 0);
     }
 
     public void testFullNameUserInput() {
         input.setInput("one");//$NON-NLS-1$
-        List matches = getMatchingObjects();
+        List matches = ElementSelectionService.getInstance()
+            .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
 
     public void testNamePrefixUserInput() {
         input.setInput("t");//$NON-NLS-1$
-        List matches = getMatchingObjects();
+        List matches = ElementSelectionService.getInstance()
+            .getMatchingObjects(input);
         assertTrue(matches.size() == 6);
     }
 
     public void testAnotherNamePrefixUserInput() {
         input.setInput("th");//$NON-NLS-1$
-        List matches = getMatchingObjects();
+        List matches = ElementSelectionService.getInstance()
+            .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
 
     public void testAnyStringUserInput() {
         input.setInput("t*ee");//$NON-NLS-1$
-        List matches = getMatchingObjects();
+        List matches = ElementSelectionService.getInstance()
+            .getMatchingObjects(input);
         assertTrue(matches.size() == 3);
     }
 
     public void testOnCharacterUserInput() {
         input.setInput("t?ree");//$NON-NLS-1$
-        List matches = getMatchingObjects();
-        assertTrue(matches.size() == 3);
-    }
-
-    /**
-     * Due to the fact that the ElementSelectionService uses the FORWARD
-     * execution strategy, the service returns a list of list of objects, this
-     * method compresses it down to a list of objects.
-     * 
-     * @param input
-     *            the element selection input
-     * @return List of matching objects from the element selection service.
-     */
-    private List getMatchingObjects() {
-        List matchingObjects = new ArrayList();
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
-        for (Iterator iter = matches.iterator(); iter.hasNext();) {
-            List element = (List) iter.next();
-            matchingObjects.addAll(element);
-        }
-        return matchingObjects;
+        assertTrue(matches.size() == 3);
     }
 }

@@ -21,7 +21,7 @@ public class TestElementSelectionProviderContext
     implements IAdaptable {
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public Object getAdapter(Class adapter) {
         return null;

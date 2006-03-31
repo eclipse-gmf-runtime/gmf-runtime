@@ -10,8 +10,6 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Test;
@@ -69,7 +67,8 @@ public class ElementSelectionFilterTest
     }
 
     public void testAllElementsFilter() {
-        List matches = getMatchingObjects();
+        List matches = ElementSelectionService.getInstance()
+        .getMatchingObjects(input);
         assertTrue(matches.size() == 6);
     }
 
@@ -86,27 +85,8 @@ public class ElementSelectionFilterTest
                 return false;
             }
         });
-        List matches = getMatchingObjects();
-        assertTrue(matches.size() == 2);
-    }
-
-    /**
-     * Due to the fact that the ElementSelectionService uses the FORWARD
-     * execution strategy, the service returns a list of list of objects, this
-     * method compresses it down to a list of objects.
-     * 
-     * @param input
-     *            the element selection input
-     * @return List of matching objects from the element selection service.
-     */
-    private List getMatchingObjects() {
-        List matchingObjects = new ArrayList();
         List matches = ElementSelectionService.getInstance()
             .getMatchingObjects(input);
-        for (Iterator iter = matches.iterator(); iter.hasNext();) {
-            List element = (List) iter.next();
-            matchingObjects.addAll(element);
-        }
-        return matchingObjects;
+        assertTrue(matches.size() == 2);
     }
 }

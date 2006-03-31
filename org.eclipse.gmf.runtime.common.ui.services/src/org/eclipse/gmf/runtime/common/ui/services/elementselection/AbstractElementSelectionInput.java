@@ -63,28 +63,28 @@ public class AbstractElementSelectionInput
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public ElementSelectionScope getScope() {
         return scope;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public IFilter getFilter() {
         return filter;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public IAdaptable getContext() {
         return context;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public String getInput() {
         return input;

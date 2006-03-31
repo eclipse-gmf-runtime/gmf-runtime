@@ -71,38 +71,38 @@ public class AbstractMatchingObject
 		this.provider = provider;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getDisplayName() {
 		return displayName;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public Image getImage() {
 		return image;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String toString() {
 		return displayName != null ? displayName
 			: super.toString();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public IElementSelectionProvider getProvider() {
 		return provider;
 	}

@@ -60,7 +60,7 @@ public class TestSelectElementDialog
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected Control createDialogArea(Composite parent) {
         getShell().setText("Select Element"); //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class TestSelectElementDialog
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
@@ -121,6 +121,14 @@ public class TestSelectElementDialog
      */
     public List getSelectedElements() {
         return selectElementComposite.getSelectedElements();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void cancelPressed() {
+        selectElementComposite.cancel();
+        super.cancelPressed();
     }
 
 }

@@ -11,16 +11,22 @@
 package org.eclipse.gmf.runtime.common.ui.services.elementselection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.gmf.runtime.common.ui.services.internal.elementselection.ElementSelectionCompositeContentProvider;
-import org.eclipse.gmf.runtime.common.ui.services.internal.elementselection.ElementSelectionCompositeLabelProvider;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.common.ui.services.internal.l10n.CommonUIServicesMessages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.ProgressMonitorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -28,6 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -48,7 +55,8 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Anthony Hunter
  */
-public abstract class ElementSelectionComposite {
+public abstract class ElementSelectionComposite
+    implements IElementSelectionListener {
 
     /**
      * The title to display at the top of the element selection composite.
@@ -71,9 +79,19 @@ public abstract class ElementSelectionComposite {
     private TableViewer tableViewer = null;
 
     /**
+     * The progress bar when searching for matching objects.
+     */
+    private ProgressMonitorPart progressBar;
+
+    /**
      * The input for the element selection service.
      */
     private AbstractElementSelectionInput input;
+
+    /**
+     * The job running the element selection service.
+     */
+    private Job job;
 
     /**
      * Constructs a new instance that will create the new composite.
@@ -166,10 +184,22 @@ public abstract class ElementSelectionComposite {
             }
         });
 
-        tableViewer
-            .setLabelProvider(new ElementSelectionCompositeLabelProvider());
-        tableViewer
-            .setContentProvider(new ElementSelectionCompositeContentProvider());
+        progressBar = new ProgressMonitorPart(result, new GridLayout());
+        progressBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        progressBar.setVisible(false);
+
+        tableViewer.setLabelProvider(new LabelProvider() {
+
+            public Image getImage(Object element) {
+                assert element instanceof AbstractMatchingObject;
+                return ((AbstractMatchingObject) element).getImage();
+            }
+
+            public String getText(Object element) {
+                assert element instanceof AbstractMatchingObject;
+                return ((AbstractMatchingObject) element).getDisplayName();
+            }
+        });
         tableViewer.setSorter(new ViewerSorter());
 
         createCompositeAdditions(result);
@@ -194,12 +224,38 @@ public abstract class ElementSelectionComposite {
      */
     private void handleFilterChange() {
         input.setInput(filterText.getText());
-        tableViewer.setInput(input);
+        fillTableViewer();
         Object element = tableViewer.getElementAt(0);
         if (element != null) {
             tableViewer.setSelection(new StructuredSelection(element), true);
         }
         handleSelectionChange();
+    }
+
+    /**
+     * Fill the table viewer with results from the element selection service.
+     */
+    private void fillTableViewer() {
+        /*
+         * Clean the previous list
+         */
+        tableViewer.getTable().removeAll();
+
+        /*
+         * Initialize all possible matching objects from the select element
+         * service.
+         */
+        if (!input.getInput().equals(StringStatics.BLANK)) {
+            filterText.setEnabled(false);
+            progressBar.setVisible(true);
+            progressBar.beginTask(
+                CommonUIServicesMessages.ElementSelectionService_ProgressName,
+                IProgressMonitor.UNKNOWN);
+
+            job = ElementSelectionService.getInstance().getMatchingObjects(
+                input, this);
+        }
+
     }
 
     /**
@@ -253,5 +309,28 @@ public abstract class ElementSelectionComposite {
             result.add(object);
         }
         return result;
+    }
+
+    public void matchingObjectEvent(IMatchingObjectEvent matchingObjectEvent) {
+        if (!progressBar.isDisposed()) {
+            if (matchingObjectEvent.getEventType() == MatchingObjectEventType.END_OF_MATCHES) {
+                progressBar.done();
+                progressBar.setVisible(false);
+                filterText.setEnabled(true);
+                filterText.setFocus();
+            } else {
+                progressBar.worked(1);
+                progressBar.subTask(matchingObjectEvent.getMatchingObject()
+                    .getName());
+                tableViewer.add(matchingObjectEvent.getMatchingObject());
+            }
+        }
+    }
+
+    /**
+     * Cancel the job running the element selection service.
+     */
+    public void cancel() {
+        job.cancel();
     }
 }

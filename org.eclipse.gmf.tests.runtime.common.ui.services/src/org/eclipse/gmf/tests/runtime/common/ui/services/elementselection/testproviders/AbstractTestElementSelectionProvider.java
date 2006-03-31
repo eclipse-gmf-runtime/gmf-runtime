@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.AbstractElementSelectionProvider;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.AbstractMatchingObject;
-import org.eclipse.gmf.runtime.common.ui.services.elementselection.IElementSelectionInput;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObject;
 import org.eclipse.gmf.runtime.common.ui.services.elementselection.IMatchingObjectsOperation;
 import org.eclipse.gmf.tests.runtime.common.ui.services.dialogs.TestElementSelectionProviderContext;
@@ -34,7 +34,7 @@ import org.eclipse.swt.graphics.Image;
 public abstract class AbstractTestElementSelectionProvider
     extends AbstractElementSelectionProvider {
 
-    private List elements = new ArrayList();
+    private List matchingObjects = new ArrayList();
 
     public AbstractTestElementSelectionProvider() {
         super();
@@ -50,7 +50,7 @@ public abstract class AbstractTestElementSelectionProvider
             TestMatchingObject testMatchingObject = new TestMatchingObject(
                 names[i], component, names[i] + TestMatchingObject.DASHES
                     + component, image, this);
-            elements.add(testMatchingObject);
+            matchingObjects.add(testMatchingObject);
         }
     }
 
@@ -58,14 +58,13 @@ public abstract class AbstractTestElementSelectionProvider
 
     protected abstract Image getTestElementImage();
 
-    public List getMatchingObjects(IElementSelectionInput input) {
+    public void run(IProgressMonitor monitor) {
         /**
-         * filter the matching elements using the user input and filter.
+         * filter the matching objects using the user input and filter.
          */
-        String filter = validatePattern(input.getInput());
-        List result = new ArrayList();
+        String filter = validatePattern(getElementSelectionInput().getInput());
         Pattern pattern = Pattern.compile(filter);
-        for (Iterator iter = elements.iterator(); iter.hasNext();) {
+        for (Iterator iter = matchingObjects.iterator(); iter.hasNext();) {
             AbstractMatchingObject element = (AbstractMatchingObject) iter
                 .next();
             Matcher matcher = pattern.matcher(element.getName().toLowerCase());
@@ -76,13 +75,16 @@ public abstract class AbstractTestElementSelectionProvider
                 /**
                  * If element matches input filter.
                  */
-                if (input.getFilter().select(element)) {
-                    result.add(element);
+                if (getElementSelectionInput().getFilter().select(element)) {
+                    fireMatchingObjectEvent(element);
                 }
+            }
+            if (monitor.isCanceled()) {
+                break;
             }
         }
 
-        return result;
+        fireEndOfMatchesEvent();
     }
 
     public boolean provides(IOperation operation) {
