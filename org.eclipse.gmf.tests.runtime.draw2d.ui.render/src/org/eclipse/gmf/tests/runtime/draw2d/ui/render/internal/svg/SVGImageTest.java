@@ -14,12 +14,14 @@ package org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.Graphics;
@@ -100,15 +102,19 @@ public class SVGImageTest
 			// Initialize the path the the resources.
 			Bundle bundle = Platform.getBundle("org.eclipse.gmf.tests.runtime.draw2d.ui.render" ); //$NON-NLS-1$
 			
-			fixture1 = RenderedImageFactory.getInstance(Platform.find(bundle, new Path(SVG_UMLSHAPES))); 
-			assertNotNull("Fixture1 shouldn't be null", fixture1); //$NON-NLS-1$
+			URL url = FileLocator.find(bundle, new Path(SVG_UMLSHAPES), null);
+            fixture1 = RenderedImageFactory.getInstance(url); 
+            
+            assertNotNull("Fixture1 shouldn't be null", fixture1); //$NON-NLS-1$
 
 			RenderInfo info = RenderedImageFactory.createInfo(WIDTH, HEIGHT,
 				false, false, (RGB) null, (RGB) null);
-			fixture2 = RenderedImageFactory.getInstance(Platform.find(bundle, new Path(SVG_SHAPES)), info); 
+            url = FileLocator.find(bundle, new Path(SVG_SHAPES), null);
+            fixture2 = RenderedImageFactory.getInstance(url, info); 
 			assertNotNull("Fixture2 shouldn't be null", fixture2); //$NON-NLS-1$
 
-			fixture3 = RenderedImageFactory.getInstance(Platform.find(bundle, new Path(SVG_BLACKWHITE)));	
+            url = FileLocator.find(bundle, new Path(SVG_BLACKWHITE), null);
+			fixture3 = RenderedImageFactory.getInstance(url);	
 			assertNotNull("Fixture3 shouldn't be null", fixture3); //$NON-NLS-1$
 
 		} catch (Exception e) {

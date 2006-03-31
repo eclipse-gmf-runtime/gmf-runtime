@@ -19,6 +19,9 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.runtime.draw2d.ui.render.internal.svg.metafile.Metafile2SvgTest;
+import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.RenderMultipleSVGTest;
+import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.SVGImageTest;
 import org.eclipse.gmf.tests.runtime.draw2d.ui.render.internal.svg.SVGTranscoderTest;
 
 public class AllTests extends TestCase implements IPlatformRunnable {
@@ -30,9 +33,10 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public static Test suite() {
 		TestSuite suite = new TestSuite( "All Shapes GEF Tests" ); //$NON-NLS-1$
 
-		//suite.addTestSuite( SVGImageTest.class );
-		//suite.addTestSuite( Metafile2SvgTest.class );
-		suite.addTestSuite(SVGTranscoderTest.class);
+		suite.addTestSuite( RenderMultipleSVGTest.class );
+        suite.addTestSuite( SVGImageTest.class );
+		suite.addTestSuite( Metafile2SvgTest.class );
+		suite.addTestSuite( SVGTranscoderTest.class );
         return suite;
 	}
 
