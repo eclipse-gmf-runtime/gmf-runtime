@@ -85,12 +85,22 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		Object feature = notification.getFeature();
 
 		// update import / export information when a resource
-		// is unloaded
+		// is unloaded or loaded
 		if (notifier instanceof Resource) {
-			if (notification.getFeatureID(Resource.class) == Resource.RESOURCE__IS_LOADED
-					&& !notification.getNewBooleanValue()) {
-				deregisterReferences((Resource) notifier);
+			if (notification.getFeatureID(Resource.class) == Resource.RESOURCE__IS_LOADED) {
+				if (!notification.getNewBooleanValue()) {
+					deregisterReferences((Resource) notifier);
+				} else {
+					for (Iterator i = ((Resource) notifier).getContents()
+							.iterator(); i.hasNext();) {
+						EObject child = (EObject) i.next();
+						if (child != null) {
+							add((Resource) notifier, child);
+						}
+					}
+				}
 			}
+
 			return;
 		}
 
