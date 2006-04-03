@@ -69,6 +69,14 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	 * The edit context command.
 	 */
 	private ICommand editContextCommand;
+    
+    /**
+     * Flag indicating that we are in the process of making the request for the
+     * edit context. The edit context request and command will not be
+     * invalidated if the container or containment feature is set during this
+     * time.
+     */
+    private boolean requestingEditContext;
 
 	/**
 	 * The edit context request.
@@ -218,11 +226,26 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	 *            the containment feature
 	 */
 	public void setContainmentFeature(EReference containmentFeature) {
-		if (this.containmentFeature != containmentFeature) {
-			this.containmentFeature = containmentFeature;
-			invalidateEditHelperContext();
-		}
+        if (this.containmentFeature != containmentFeature) {
+            this.containmentFeature = containmentFeature;
+            invalidateEditHelperContext();
+        }
 	}
+    
+    /**
+     * Sets the containment feature in which to create the new element.
+     * <p>
+     * Does nothing of the feature has not changed. Does not invalidate the
+     * edit helper context.
+     * 
+     * @param containmentFeature
+     *            the containment feature
+     */
+    public void initializeContainmentFeature(EReference feature) {
+        if (this.containmentFeature != feature) {
+            this.containmentFeature = feature;
+        }
+    }
 
 	/**
 	 * Gets the original context in which the new element will be created. This
@@ -283,8 +306,13 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	private ICommand getEditContextCommand() {
 
 		if (editContextCommand == null) {
-			editContextCommand = getElementType().getEditCommand(
-					getEditContextRequest());
+            requestingEditContext = true;
+            try {
+    			editContextCommand = getElementType().getEditCommand(
+    					getEditContextRequest());
+            } finally {
+                requestingEditContext = false;
+            }
 		}
 		return editContextCommand;
 	}
@@ -317,8 +345,15 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	public void setContainer(EObject container) {
 		if (this.container != container) {
 			this.container = container;
-			invalidateEditHelperContext();
-			invalidateContainmentFeature();
+            
+            if (!requestingEditContext) {
+                editContextCommand = null;
+                
+                if (editContextRequest != null) {
+                    editContextRequest.setEditContext(container);
+                }
+            }
+            invalidateContainmentFeature();
 		}
 	}
 
@@ -390,15 +425,19 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	 * Invalidates the cached edit context request and command.
 	 */
 	protected void invalidateEditHelperContext() {
-		editContextCommand = null;
-		editContextRequest = null;
+        if (!requestingEditContext) {
+    		editContextCommand = null;
+    		editContextRequest = null;
+        }
 	}
 
 	/**
 	 * Invalidates the cached containment feature.
 	 */
 	protected void invalidateContainmentFeature() {
-		containmentFeature = null;
+        if (!requestingEditContext) {
+            containmentFeature = null;
+        }
 	}
     
     public TransactionalEditingDomain getEditingDomain() {

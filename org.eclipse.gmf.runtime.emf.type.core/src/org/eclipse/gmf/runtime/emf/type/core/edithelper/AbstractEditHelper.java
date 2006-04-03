@@ -393,7 +393,7 @@ public abstract class AbstractEditHelper
 								&& eClass.getEAllReferences().contains(
 									features[i])) {
 								// Use the first feature
-								req.setContainmentFeature((features[i]));
+								req.initializeContainmentFeature((features[i]));
 								return;
 							}
 						}
@@ -405,7 +405,7 @@ public abstract class AbstractEditHelper
 			EClass eClass = req.getElementType().getEClass();
 			
 			if (eClass != null) {
-				req.setContainmentFeature(getDefaultContainmentFeature(eClass));
+				req.initializeContainmentFeature(getDefaultContainmentFeature(eClass));
 			}
 		}
 	}

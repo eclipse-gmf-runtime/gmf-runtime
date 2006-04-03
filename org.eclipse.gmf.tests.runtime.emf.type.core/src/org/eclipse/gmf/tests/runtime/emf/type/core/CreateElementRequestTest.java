@@ -23,7 +23,10 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.SpecializationType;
+import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.GetEditContextRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
@@ -34,6 +37,7 @@ public class CreateElementRequestTest
     private CreateElementRequest fixture;
 
     private Department department;
+    private Department department2;
 
     private Employee employee;
 
@@ -55,6 +59,11 @@ public class CreateElementRequestTest
             getEmployeePackage().getDepartment());
         department.setName("Department"); //$NON-NLS-1$
         getResource().getContents().add(department);
+        
+        department2 = (Department) getEmployeeFactory().create(
+            getEmployeePackage().getDepartment());
+        department2.setName("Department2"); //$NON-NLS-1$
+        getResource().getContents().add(department2);
 
         employee = (Employee) getEmployeeFactory().create(
             getEmployeePackage().getEmployee());
@@ -140,5 +149,82 @@ public class CreateElementRequestTest
             EmployeeType.DEPARTMENT);
         TransactionalEditingDomain domain = request.getEditingDomain();
         assertNull(domain);
+    }
+    
+    /**
+     * Verifies that setting the container on a CreateElementRequest
+     * does not result in the creation of a new GetElementContextRequest.
+     */
+    public void test_noNewRequestWhenSetContainer_132253() {
+
+        final GetEditContextRequest[] contextRequestArray = new GetEditContextRequest[] {null};
+        ElementTypeRegistry.getInstance().register(
+            new SpecializationType("132253", null, "132253", //$NON-NLS-1$ //$NON-NLS-2$
+                new IElementType[] {EmployeeType.MANAGER}, null, null,
+                new AbstractEditHelperAdvice() {
+
+                    protected ICommand getBeforeEditContextCommand(
+                            GetEditContextRequest request) {
+                        contextRequestArray[0] = request;
+                        return null;
+                    };
+                }));
+
+        CreateElementRequest request = new CreateElementRequest(department,
+            EmployeeType.MANAGER);
+
+        request.getEditHelperContext();
+        GetEditContextRequest contextRequest1 = contextRequestArray[0];
+        contextRequestArray[0] = null;
+
+        request.setContainer(department2);
+
+        request.getEditHelperContext();
+        GetEditContextRequest contextRequest2 = contextRequestArray[0];
+        contextRequestArray[0] = null;
+
+        assertSame(contextRequest1, contextRequest2);
+    }
+    
+    /**
+     * Verifies that setting the container or containment feature during the
+     * request to get the edit context does not clear the edit context request,
+     * causing the request to be made again the next time we look for the edit
+     * helper context.
+     */
+    public void test_singleGetEditContextRequest_129582() {
+
+        final GetEditContextRequest[] contextRequestArray = new GetEditContextRequest[] {null};
+        ElementTypeRegistry.getInstance().register(
+            new SpecializationType("132253", null, "132253", //$NON-NLS-1$ //$NON-NLS-2$
+                new IElementType[] {EmployeeType.MANAGER}, null, null,
+                new AbstractEditHelperAdvice() {
+
+                    protected ICommand getBeforeEditContextCommand(
+                            GetEditContextRequest request) {
+                        contextRequestArray[0] = request;
+                        CreateElementRequest createRequest = (CreateElementRequest) request
+                            .getEditCommandRequest();
+                        createRequest
+                            .setContainmentFeature(getEmployeePackage()
+                                .getDepartment_Manager());
+                        return null;
+                    };
+                }));
+
+        CreateElementRequest request = new CreateElementRequest(department,
+            EmployeeType.MANAGER);
+
+        request.getEditHelperContext();
+        GetEditContextRequest contextRequest1 = contextRequestArray[0];
+        contextRequestArray[0] = null;
+
+        request.setContainer(department2);
+
+        request.getEditHelperContext();
+        GetEditContextRequest contextRequest2 = contextRequestArray[0];
+        contextRequestArray[0] = null;
+
+        assertSame(contextRequest1, contextRequest2);
     }
 }

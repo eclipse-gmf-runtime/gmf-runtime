@@ -28,13 +28,19 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
  */
 public class ContainerElementEditHelper
 	extends LogicElementEditHelper {
+    
+    // Default containment features.
+    {
+        getDefaultContainmentFeatures().put(
+            SemanticPackage.eINSTANCE.getElement(),
+            SemanticPackage.eINSTANCE.getContainerElement_Children());
+    }
 
 	/**
-	 * Gets a command to create a child in the container element.
-	 */
+     * Gets a command to create a child in the container element.
+     */
 	protected ICommand getCreateCommand(CreateElementRequest req) {
 
-		setDefaultContainmentFeature(req);
 		return super.getCreateCommand(req);
 	}
 
@@ -44,8 +50,6 @@ public class ContainerElementEditHelper
 	protected ICommand getCreateRelationshipCommand(
 			CreateRelationshipRequest req) {
 
-		setDefaultContainmentFeature(req);
-
 		if (req.getElementType() == LogicSemanticType.WIRE
             && req.getSource() instanceof OutputTerminal
             && req.getTarget() instanceof InputTerminal) {
@@ -54,21 +58,6 @@ public class ContainerElementEditHelper
         }
 
 		return super.getCreateRelationshipCommand(req);
-	}
-
-	/**
-	 * Sets the containment feature in <code>req</code> to the default, if it
-	 * hasn't been specified.
-	 * 
-	 * @param req
-	 *            the create request
-	 */
-	private void setDefaultContainmentFeature(CreateElementRequest req) {
-
-		if (req.getContainmentFeature() == null) {
-			req.setContainmentFeature(SemanticPackage.eINSTANCE
-				.getContainerElement_Children());
-		}
 	}
 
 }
