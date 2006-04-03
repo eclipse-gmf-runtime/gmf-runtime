@@ -212,6 +212,13 @@ public abstract class CompositeLayoutProvider
     protected DirectedGraph createGraph(){
         return new CompoundDirectedGraph();
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#shouldHandleConnectableListItems()
+     */
+    protected boolean shouldHandleConnectableListItems() {
+        return true;
+    }
 
    
 }
