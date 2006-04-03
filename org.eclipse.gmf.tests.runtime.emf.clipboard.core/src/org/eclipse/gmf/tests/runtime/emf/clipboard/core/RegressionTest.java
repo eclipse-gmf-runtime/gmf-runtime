@@ -5,6 +5,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.examples.extlibrary.EXTLibraryFactory;
+import org.eclipse.emf.examples.extlibrary.Library;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -201,6 +206,69 @@ public class RegressionTest	extends BaseClipboardTest {
 			
 			// level2book has no author
 			assertNull(level2book.getAuthor());
+		}
+	}
+	
+	/**
+	 * Check that we ignore container features as well as containments when
+	 * "resolving" features on paste.
+	 */
+	public void test_resolvingContainerFeature_129046() {
+		if (writing()) {
+			List objects = new ArrayList();
+
+			// create a few branches in level1 (we already have one, level1-2)
+			Library level1a = EXTLibraryFactory.eINSTANCE.createLibrary();
+			level1a.setName("level1a"); //$NON-NLS-1$
+			level1.getBranches().add(level1a);
+			Library level1b = EXTLibraryFactory.eINSTANCE.createLibrary();
+			level1b.setName("level1b"); //$NON-NLS-1$
+			level1.getBranches().add(level1b);
+			Library level1c = EXTLibraryFactory.eINSTANCE.createLibrary();
+			level1c.setName("level1c"); //$NON-NLS-1$
+			level1.getBranches().add(level1c);
+
+			XMLResource xml = (XMLResource) testResource;
+			if (xml.getID(level1a) == null) {
+				// create some IDs because our resource impl didn't do it for us
+				xml.setID(level1a, EcoreUtil.generateUUID());
+				xml.setID(level1b, EcoreUtil.generateUUID());
+				xml.setID(level1c, EcoreUtil.generateUUID());
+			}
+			
+			// verify that they know their parent branch
+			assertSame(level1, level1a.getParentBranch());
+			assertSame(level1, level1b.getParentBranch());
+			assertSame(level1, level1c.getParentBranch());
+			
+			// copy level1
+			objects.add(level1);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste level1 copy into root3
+			Collection eObjects = paste(copyStr, root3, Collections.EMPTY_MAP);
+			assertEquals(1, eObjects.size());
+			
+			Object pasted = eObjects.iterator().next();
+			assertTrue(pasted instanceof Library);
+			
+			// verify that the pasted library knows its container
+			Library pastedLibrary = (Library) pasted;
+			assertSame(root3, pastedLibrary.getParentBranch());
+			
+			// get its branches and verify them
+			assertEquals(4, pastedLibrary.getBranches().size());
+			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(0)).getParentBranch());
+			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(1)).getParentBranch());
+			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(2)).getParentBranch());
+			assertSame(pastedLibrary, ((Library) pastedLibrary.getBranches().get(3)).getParentBranch());
+			
+			// make sure that the original level1 branches are unchanged
+			assertSame(level1, level1a.getParentBranch());
+			assertSame(level1, level1b.getParentBranch());
+			assertSame(level1, level1c.getParentBranch());
 		}
 	}
 }

@@ -475,10 +475,10 @@ public class PasteIntoParentOperation
 		while (refIt.hasNext()) {
 			reference = (EReference) refIt.next();
 			//Here we will handle non-containment refs only because
-			// containments
+			// containments (and, inversely, containers)
 			//are copied and/or will be resolved too from
 			// pasteSelectionFromString(..)
-			if ((reference.isContainment() == false)
+			if (!reference.isContainment() && !reference.isContainer()
 				&& reference.isChangeable()) {
 				if (reference.isMany()) {
 					if (!pastedEObject.eIsSet(reference)) {
