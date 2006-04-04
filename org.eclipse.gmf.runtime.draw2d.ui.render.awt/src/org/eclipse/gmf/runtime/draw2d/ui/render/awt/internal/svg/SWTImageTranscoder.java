@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;
 
 import java.awt.Graphics2D;
 
+import org.apache.batik.ext.awt.RenderingHintsKeyExt;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.Graphics2DToGraphicsAdaptor;
 import org.eclipse.swt.graphics.Color;
@@ -72,7 +73,12 @@ public class SWTImageTranscoder
 		swtGC.fillRectangle(0, 0, w, h);
 		transparentColor.dispose();
 		
-		return new Graphics2DToGraphicsAdaptor(swtGC, TRANSPARENT_COLOR, REPLACE_TRANSPARENT_COLOR);
+        Graphics2D g2d = new Graphics2DToGraphicsAdaptor(swtGC, TRANSPARENT_COLOR, REPLACE_TRANSPARENT_COLOR);
+        // needed to avoid eroneous error being dumped to console
+        g2d.setRenderingHint(RenderingHintsKeyExt.KEY_TRANSCODING,
+            RenderingHintsKeyExt.VALUE_TRANSCODING_PRINTING);
+        
+        return g2d;
 	}
 
 	/* 

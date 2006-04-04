@@ -29,7 +29,7 @@ import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.dom.util.DOMUtilities;
-import org.apache.batik.ext.awt.RenderingHintsKeyExt;
+import org.apache.batik.ext.awt.image.GraphicsUtil;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.transcoder.TranscoderException;
@@ -344,10 +344,6 @@ public class ImageTranscoderEx extends ImageTranscoder {
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		
-		// needed to avoid eroneous error being dumped to console
-		g2d.setRenderingHint(RenderingHintsKeyExt.KEY_TRANSCODING,
-            RenderingHintsKeyExt.VALUE_TRANSCODING_PRINTING);
-		
 		g2d.clip(new java.awt.Rectangle(0, 0, w, h));
 		
 		g2d.transform(Px);
@@ -366,9 +362,7 @@ public class ImageTranscoderEx extends ImageTranscoder {
 	 */
 	protected Graphics2D createGraphics(int w, int h) {
 		bufferedImage = createImage(w, h);
-		Graphics2D g2d = bufferedImage.createGraphics();
-		g2d.setColor(Color.white);
-		g2d.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+		Graphics2D g2d = GraphicsUtil.createGraphics(bufferedImage);
 		return g2d;
 	}
 

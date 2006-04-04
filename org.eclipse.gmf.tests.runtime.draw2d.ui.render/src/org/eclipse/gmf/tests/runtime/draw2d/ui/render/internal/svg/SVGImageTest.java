@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.RenderingListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
@@ -61,6 +62,7 @@ public class SVGImageTest
 	private static final String SVG_BLACKWHITE = PREFIX_ROOT + "blackwhite.svg"; //$NON-NLS-1$
 	private static final String SVG_SHAPES = PREFIX_ROOT + "shapes.svg";//$NON-NLS-1$
 	private static final String SVG_UMLSHAPES = PREFIX_ROOT + "uml.svg";//$NON-NLS-1$
+    private static final String SVG_TRANSPARENCY_TEST = PREFIX_ROOT + "presenter.svg";//$NON-NLS-1$
 
 	private final int WIDTH = 200;
 
@@ -79,6 +81,8 @@ public class SVGImageTest
 	private RenderedImage fixture2;
 
 	private RenderedImage fixture3;
+    
+    private RenderedImage fixture4;
 
 	public SVGImageTest(String name) {
 		super(name);
@@ -95,6 +99,10 @@ public class SVGImageTest
 	private RenderedImage getFixture3() {
 		return fixture3;
 	}
+    
+    private RenderedImage getFixture4() {
+        return fixture4;
+    }
 
 	protected void setUp() {
 		try {
@@ -116,6 +124,10 @@ public class SVGImageTest
             url = FileLocator.find(bundle, new Path(SVG_BLACKWHITE), null);
 			fixture3 = RenderedImageFactory.getInstance(url);	
 			assertNotNull("Fixture3 shouldn't be null", fixture3); //$NON-NLS-1$
+            
+            url = FileLocator.find(bundle, new Path(SVG_TRANSPARENCY_TEST), null);
+            fixture4 = RenderedImageFactory.getInstance(url);   
+            assertNotNull("Fixture3 shouldn't be null", fixture4); //$NON-NLS-1$
 
 		} catch (Exception e) {
 			fail("The SVGImageTest.setUp method caught an exception - " + e); //$NON-NLS-1$
@@ -517,4 +529,46 @@ public class SVGImageTest
 		img = getFixture2().getSWTImage();
 		assertNotNull("getSWTImage fixture 2 Image invalid", img); //$NON-NLS-1$
 	}
+    
+    public void testTransparency() {
+        Image img = getFixture4().getSWTImage();
+        ImageData imgData = img.getImageData();
+        Rectangle bounds = img.getBounds();
+        
+        // check 4 corners
+        assertTrue(isTransparentAt(imgData, bounds.x + 1, bounds.y + 1));
+        assertTrue(isTransparentAt(imgData, bounds.x + bounds.width - 2, bounds.y + 1));
+        assertTrue(isTransparentAt(imgData, bounds.x + 1, bounds.y + bounds.height - 2));
+        assertTrue(isTransparentAt(imgData, bounds.x + bounds.width - 2, bounds.y + bounds.height - 2));
+    }
+    
+    protected boolean isTransparentAt(ImageData data, int x, int y) {
+        // boundary checking
+        if (x < 0 || x >= data.width || y < 0
+            || y >= data.height)
+            return true;
+
+        ImageData transMaskData = data.getTransparencyMask();
+        // check for alpha channel
+        int transValue = 255;
+        // check for transparency mask
+        if (transMaskData != null) {
+            transValue = transMaskData.getPixel(x, y) == 0 ? 0
+                : 255;
+        }
+
+        if (transValue != 0) {
+            if (data.alphaData != null) {
+                transValue = data.getAlpha(x, y);
+            }
+        }
+
+        // use a tolerance
+        boolean trans = false;
+        if (transValue < 10) {
+            trans = true;
+        }
+
+        return trans;
+    }
 }
