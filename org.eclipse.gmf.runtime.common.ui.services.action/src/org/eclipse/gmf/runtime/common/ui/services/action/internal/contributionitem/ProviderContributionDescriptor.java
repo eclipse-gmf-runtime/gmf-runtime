@@ -53,6 +53,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	private static final String POPUP_ACTION_CONTRIBUTION = "popupAction"; //$NON-NLS-1$
 	private static final String POPUP_ACTIONGROUP_CONTRIBUTION = "popupActionGroup"; //$NON-NLS-1$
 	private static final String POPUP_CUSTOM_CONTRIBUTION = "popupCustom"; //$NON-NLS-1$
+    private static final String POPUP_PREDEFINED_ITEM = "popupPredefinedItem"; //$NON-NLS-1$
 	private static final String STRUCTURED_CRITERIA = "popupStructuredContributionCriteria"; //$NON-NLS-1$
 	private static final String TEXT_CRITERIA = "popupTextContributionCriteria"; //$NON-NLS-1$
 	private static final String MARK_CRITERIA = "popupMarkContributionCriteria"; //$NON-NLS-1$
@@ -67,6 +68,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	private static final String GLOBAL = "global"; //$NON-NLS-1$
 	private static final String TEXT = "text"; //$NON-NLS-1$
 	private static final String DOCUMENT_CLASS = "documentClass"; //$NON-NLS-1$
+    private static final String REMOVE = "remove"; //$NON-NLS-1$
 
 	/** the list of all part contributions made by a provider */
 	private List partContributions = new ArrayList();
@@ -311,6 +313,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 				else if (contributionType.equals(PART_ACTIONGROUP_CONTRIBUTION))
 					getContributionItems().add(
 						new PartActionGroupDescriptor(configChildren[i]));
+                  
 			}
 		}
 
@@ -363,6 +366,10 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 				else if (contributionType.equals(POPUP_ACTIONGROUP_CONTRIBUTION))
 					getContributionItems().add(
 						new PopupActionGroupDescriptor(configChildren[i]));
+               else if (contributionType.equals(POPUP_PREDEFINED_ITEM))
+                    getContributionItems().add(
+                        new PopupPredefinedItemDescriptor(configChildren[i]));
+
 			}
 		}
 
@@ -829,7 +836,48 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 			super(configElement);
 		}
 	}
+    
+    /**
+     * A descriptor for a predefined contribution item.
+     */
+    public static class PopupPredefinedItemDescriptor
+        extends AbstractContributionItemDescriptor {
+        
+        /** the contribution item's path */
+        private String path;
+        
+        /** flag to remove the predefined contribution item */
+        private boolean remove;
 
+        /**
+         * Constructs a new popup custom descriptor from its configration element.
+         * 
+         * @param configElement The contribution's configuration element
+         */
+        public PopupPredefinedItemDescriptor(IConfigurationElement configElement) {
+            super(configElement);
+            
+            String location = configElement.getAttribute(CONTRIBUTION_PATH);
+            path = (location == null) ? "/" //$NON-NLS-1$
+                : extractMenuPath(location);
+            remove = Boolean.valueOf(configElement.getAttribute(REMOVE))
+                .booleanValue();
+        }
+        
+        /**
+         * Returns the contribution item's path if any.
+         * 
+         * @return The contribution item's path if any
+         */
+        public String getPath() {
+            return path;
+        }
+        
+        public boolean isToBeRemoved() {
+            return remove;
+        }
+        
+    }
 	/**
 	 * The popup menu contribution criteria.  Currently the following criteria are supported:
 	 * 1) Whether a given contribution policy applies to the selection.

@@ -63,10 +63,10 @@ However, this extension point focuses on distinguishing the contribution criteri
       <complexType>
          <sequence>
             <element ref="Priority"/>
-            <group>
+            <sequence>
                <element ref="partContribution" minOccurs="0" maxOccurs="unbounded"/>
                <element ref="popupContribution" minOccurs="0" maxOccurs="unbounded"/>
-            </group>
+            </sequence>
          </sequence>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -180,6 +180,7 @@ Criteria for the visibility of this group of contributions can be specified by a
             <element ref="popupAction" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="popupCustom" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="popupActionGroup" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="popupPredefinedItem" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="id" type="string">
             <annotation>
@@ -780,6 +781,41 @@ It has to start with a &apos;/&apos; indicating the root of the contribution man
       </complexType>
    </element>
 
+   <element name="popupPredefinedItem">
+      <annotation>
+         <documentation>
+            Reference to a previously defined contribution to a workbench part&apos;s popup menu.  The referenced contributed must be defined in a lower priority provider.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The id of the previously defined popup action contribution. The id combined with the path is unique within the popup menu.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string">
+            <annotation>
+               <documentation>
+                  The contribution path of this previously defined item within the popup. The path is a &apos;/&apos; delimited string in the following format:
+&lt;PRE&gt;
+/&lt;submenu_id/&gt;*
+&lt;/PRE&gt;
+It has to start with a &apos;/&apos; indicating the root of the contribution manager. Following that there could be multiple submenu_id paths that are also &apos;/&apos; delimited.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="remove" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  If true, an existing contribution item will be removed.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
    <annotation>
       <appInfo>
          <meta.section type="since"/>
@@ -888,7 +924,11 @@ It has to start with a &apos;/&apos; indicating the root of the contribution man
                   path=&quot;/alignMenu/alignVerticalGroup&quot;
                   id=&quot;alignTopAction&quot;&gt;
             &lt;/popupAction&gt;
-         &lt;/popupContribution&gt;
+            &lt;popupPredefinedItem
+                  id=&quot;autoSizeAction&quot;
+                  path=&quot;/formatMenu/&quot;
+                  remove=&quot;true&quot;/&gt;
+            &lt;/popupContribution&gt;
       &lt;/contributionItemProvider&gt;
    &lt;/extension&gt;
 &lt;/PRE&gt;

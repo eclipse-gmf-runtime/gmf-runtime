@@ -22,8 +22,8 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
 import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
+import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionStatusCodes;
@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.util.ActionGroupCache;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
+import org.eclipse.jface.action.AbstractGroupMarker;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -298,9 +299,12 @@ public abstract class AbstractContributionItemProvider
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider#updateActionBars(org.eclipse.ui.IActionBars, org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
-	 */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider#updateActionBars(org.eclipse.ui.IActionBars,
+     *      org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor)
+     */
 	public final void updateActionBars(IActionBars actionBars,
 			IWorkbenchPartDescriptor partDescriptor) {
 
@@ -398,7 +402,12 @@ public abstract class AbstractContributionItemProvider
 						popupMenu,
 						item.getPath(),
 						item.getGroup());
+            } else if (c instanceof ProviderContributionDescriptor.PopupPredefinedItemDescriptor) {
+                ProviderContributionDescriptor.PopupPredefinedItemDescriptor item = (ProviderContributionDescriptor.PopupPredefinedItemDescriptor) c;
 
+                if (item.isToBeRemoved()) {
+                    removeExistingItem(item.getId(), item.getPath(), popupMenu);
+                }
 			}
 		}
 	}
@@ -602,8 +611,8 @@ public abstract class AbstractContributionItemProvider
 			return manager.findMenuUsingPath(rest);
 		}
 		return null;
-	}
-
+	}  
+ 
 	/**
 	 * Contributes the given item to the given manager in the given path/group.
 	 * 
@@ -734,9 +743,60 @@ public abstract class AbstractContributionItemProvider
 		Log.info(CommonUIServicesActionPlugin.getDefault(), CommonUIServicesActionStatusCodes.SERVICE_FAILURE, "Failed to create the contribution with id: " + (String) contributionItemAdapter.getAdapter(String.class)); //$NON-NLS-1$
 	}
 
+    /**
+     * @param id
+     * @param path
+     * @param contributionManager
+     */
+    private void removeExistingItem(String id, String path,
+            IContributionManager contributionManager) {
+
+        // Find the menu or action or group.
+        if (id == null)
+            return;
+        
+        IContributionManager parent = contributionManager;
+        if (path.length() > 1) { // if path is more than '/'
+            parent = findMenuUsingPath(contributionManager, path.substring(1));
+            if (parent == null) {
+                Log.info(CommonUIServicesActionPlugin.getDefault(), CommonUIServicesActionStatusCodes.SERVICE_FAILURE, "The contribution item path is invalid"); //$NON-NLS-1$
+                return;
+            }
+        }
+
+        IContributionItem predefinedItem = parent.find(id);
+        if (predefinedItem == null) {
+            Log.info(CommonUIServicesActionPlugin.getDefault(),
+                CommonUIServicesActionStatusCodes.SERVICE_FAILURE,
+                "The contribution item path is invalid"); //$NON-NLS-1$
+            return;
+        }
+
+         if (predefinedItem instanceof AbstractGroupMarker) {
+            IContributionItem allItems[] = parent.getItems();
+            int groupIndex;
+            for (groupIndex = 0; groupIndex < allItems.length; groupIndex++) {
+                IContributionItem item = allItems[groupIndex];
+                if (item.equals(predefinedItem)) {
+                    break;
+                }
+            }
+            for (int j = groupIndex + 1; j < allItems.length; j++) {
+                IContributionItem item = allItems[j];
+                if (item instanceof AbstractGroupMarker) {
+                    break;
+                }
+                parent.remove(item);
+            }
+
+        }
+        parent.remove(predefinedItem);
+
+    }
+    
 	/**
-	 * An adapter for an action contribution item.
-	 */
+     * An adapter for an action contribution item.
+     */
 	private class ActionContributionItemAdapter implements IAdaptable {
 		private String actionId;
 		private IWorkbenchPartDescriptor partDescriptor;
