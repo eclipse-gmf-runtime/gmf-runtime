@@ -535,7 +535,7 @@ public class EMFCoreUtil {
 			return EMFCoreConstants.EMPTY_STRING;
 		}
 		
-		if (!proxy.eIsProxy()) {
+		if (!proxy.eIsProxy() && (proxy.eResource() instanceof XMLResource)) {
 			XMLResource res = (XMLResource) proxy.eResource();
 			
 			if (res == null) {
