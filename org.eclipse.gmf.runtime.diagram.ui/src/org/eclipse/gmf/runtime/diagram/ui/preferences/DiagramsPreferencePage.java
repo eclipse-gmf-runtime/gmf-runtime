@@ -15,6 +15,7 @@ import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -96,6 +97,11 @@ public class DiagramsPreferencePage
 			IPreferenceConstants.PREF_ENABLE_ANTIALIAS, ENABLE_ANTIALIAS,
 			composite);
 		addField(enableAntiAlias);
+        
+        // Anti Alias is disabled if the RTL orintation is ON
+        // this is to avoid an SWT bug, on the GC object, where if the Advanced
+        // graphics Mask is on it does not consider mirroring
+        enableAntiAlias.setEnabled(Window.getDefaultOrientation()!=SWT.RIGHT_TO_LEFT,composite);
 		
 	}
 
