@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,5 +44,30 @@ public interface IEditHelperAdvice {
 	 *         'after' behaviour.
 	 */
 	public ICommand getAfterEditCommand(IEditCommandRequest request);
+    
+    /**
+     * Configures the <code>request</code>. Advisors may modify the request
+     * parameters in this method. This method is consulted before the request is
+     * approved by {@link #approveRequest(IEditCommandRequest)} and before the
+     * edit command is constructed.
+     * 
+     * @param request
+     *            the edit request to be configured.
+     */
+    public void configureRequest(IEditCommandRequest request);
+    
+    /**
+     * Approves the edit gesture described in the <code>request</code>. This
+     * method will be consulted before the edit command is constructed, but
+     * after {@link #configureRequest(IEditCommandRequest)} has been called on
+     * all applicable advice.
+     * 
+     * @param request
+     *            the edit request
+     * @return <code>true</code> if the edit request is approved,
+     *         <code>false</code> otherwise. No edit command will be
+     *         constructed if the request is not approved.
+     */
+    public boolean approveRequest(IEditCommandRequest request);
 
 }

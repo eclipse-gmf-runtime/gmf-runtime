@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,86 +89,213 @@ public abstract class AbstractEditHelper
      */
     public boolean canEdit(IEditCommandRequest req) {
 
-        ICommand command = getEditCommand(req);
+        // Get the matching edit helper advice
+        IEditHelperAdvice[] advice = getEditHelperAdvice(req);
+        
+        // Consult advisors to allow them to configure the request
+        configureRequest(req, advice);
+        
+        // Consult advisors to allow them approve the request
+        boolean approved = approveRequest(req, advice);
+        
+        if (!approved) {
+            return false;
+        }
+        
+        ICommand command = getEditCommand(req, advice);
         return command != null && command.canExecute();
     }
 
 	/**
-     * Implements the default edit command algorithm, which returns a composite
-     * command containing the following:
+     * Builds and returns the edit command, which is a composite command
+     * containing the following:
+     * <OL>
+     * <LI>'before' commands from matching element type specializations</LI>
+     * <LI>'instead' command from this edit helper</LI>
+     * <LI>'after' commands from matching element type specializations</LI>
+     * </OL>
+     * <P>
+     * Verifies that the edit request is approved before constructing the edit
+     * command.
+     */
+	public ICommand getEditCommand(IEditCommandRequest req) { 
+		
+		// Get the matching edit helper advice
+		IEditHelperAdvice[] advice = getEditHelperAdvice(req);
+        
+		// Consult advisors to allow them to configure the request
+        configureRequest(req, advice);
+        
+		// Consult advisors to allow them approve the request
+        boolean approved = approveRequest(req, advice);
+        
+        if (!approved) {
+            return null;
+        }
+        
+        return getEditCommand(req, advice);
+	}
+    
+    /**
+     * Template method that implements the default edit command algorithm, which
+     * returns a composite command containing the following:
      * <OL>
      * <LI>'before' commands from matching element type specializations</LI>
      * <LI>'instead' command from this edit helper</LI>
      * <LI>'after' commands from matching element type specializations</LI>
      * </OL>
      */
-	public ICommand getEditCommand(IEditCommandRequest req) {
+    private ICommand getEditCommand(IEditCommandRequest req, IEditHelperAdvice[] advice) { 
+        ICompositeCommand command = createCommand(req);
 
-		ICompositeCommand command = createCommand(req);
-		
-		// Get 'before' commands from matching element type
-		// specializations
-		IEditHelperAdvice[] advice = getEditHelperAdvice(req);
+        // Get 'before' commands from matching element type
+        // specializations
+        if (advice != null) {
+            for (int i = 0; i < advice.length; i++) {
+                IEditHelperAdvice nextAdvice = advice[i];
 
-		if (advice != null) {
-			for (int i = 0; i < advice.length; i++) {
-				IEditHelperAdvice nextAdvice = advice[i];
-
-				// Before commands
-				ICommand beforeAdvice = nextAdvice.getBeforeEditCommand(req);
+                // Before commands
+                ICommand beforeAdvice = nextAdvice.getBeforeEditCommand(req);
                 
-				if (beforeAdvice != null) {
+                if (beforeAdvice != null) {
 
                     if (!beforeAdvice.canExecute()) {
                         // The operation is not permitted
                         return null;
                     }
-					command.compose(beforeAdvice);
-				}
-			}
-		}
-		
-		// Check if the parameter has been set to ignore the default edit command.
-		Object replaceParam = req
-				.getParameter(IEditCommandRequest.REPLACE_DEFAULT_COMMAND);
+                    command.compose(beforeAdvice);
+                }
+            }
+        }
+        
+        // Check if the parameter has been set to ignore the default edit command.
+        Object replaceParam = req
+                .getParameter(IEditCommandRequest.REPLACE_DEFAULT_COMMAND);
 
-		if (replaceParam != Boolean.TRUE) {
-			// Get 'instead' command from this edit helper
-			ICommand insteadCommand = getInsteadCommand(req);
+        if (replaceParam != Boolean.TRUE) {
+            // Get 'instead' command from this edit helper
+            ICommand insteadCommand = getInsteadCommand(req);
 
-			if (insteadCommand != null) {
+            if (insteadCommand != null) {
                 
                 if (!insteadCommand.canExecute()) {
                     // The operation is not permitted
                     return null;
                 }
-				command.compose(insteadCommand);
-			}
-		}
-		
-		// Get 'after' commands from matching element type
-		// specializations
-		if (advice != null) {
-			for (int i = 0; i < advice.length; i++) {
-				IEditHelperAdvice nextAdvice = advice[i];
+                command.compose(insteadCommand);
+            }
+        }
+        
+        // Get 'after' commands from matching element type
+        // specializations
+        if (advice != null) {
+            for (int i = 0; i < advice.length; i++) {
+                IEditHelperAdvice nextAdvice = advice[i];
 
-				// After commands
-				ICommand afterAdvice = nextAdvice.getAfterEditCommand(req);
+                // After commands
+                ICommand afterAdvice = nextAdvice.getAfterEditCommand(req);
 
-				if (afterAdvice != null) {
+                if (afterAdvice != null) {
                     
                     if (!afterAdvice.canExecute()) {
                         // The operation is not permitted
                         return null;
                     }
-					command.compose(afterAdvice);
-				}
-			}
-		}
-		
-		return command.isEmpty() ? null
-			: command;
-	}
+                    command.compose(afterAdvice);
+                }
+            }
+        }
+        
+        return command.isEmpty() ? null
+            : command;
+    }
+    
+    /**
+     * Template method that consults the edit helper advice to configure the
+     * edit request.
+     * 
+     * @param req
+     *            the edit request
+     * @param advice
+     *            array of applicable edit helper advice
+     */
+    private void configureRequest(IEditCommandRequest req,
+            IEditHelperAdvice[] advice) {
+
+        if (advice != null) {
+
+            for (int i = 0; i < advice.length; i++) {
+                IEditHelperAdvice nextAdvice = advice[i];
+                nextAdvice.configureRequest(req);
+            }
+        }
+        // All advice has configured the request. Now consult this edit helper.
+        configureRequest(req);
+    }
+    
+    /**
+     * Template method that consults the edit helper advice to see whether or
+     * not they approve the request. If all advice approves the request, then
+     * {@link #approveRequest(IEditCommandRequest)} is called to determine if
+     * this edit helper approves the request.
+     * 
+     * @param req
+     *            the edit request
+     * @param advice
+     *            array of applicable edit helper advice
+     * @return <code>true</code> if the edit request is approved,
+     *         <code>false</code> otherwise. No edit command will be
+     *         constructed if the request is not approved.
+     */
+    private boolean approveRequest(IEditCommandRequest req,
+            IEditHelperAdvice[] advice) {
+
+        if (advice != null) {
+
+            for (int i = 0; i < advice.length; i++) {
+                IEditHelperAdvice nextAdvice = advice[i];
+                boolean approved = nextAdvice.approveRequest(req);
+
+                if (!approved) {
+                    // An advice doesn't approve this request
+                    return false;
+                }
+            }
+        }
+        // All advice has approved the request. Now consult this edit helper.
+        return approveRequest(req);
+    }
+   
+    /**
+     * Approves the edit gesture described in the <code>request</code>. This
+     * method will be consulted before the edit request is approved.
+     * <P>
+     * The default implementation does nothing. Subclasses should override if
+     * they wish to change the request parameters.
+     * 
+     * @param request
+     *            the edit request
+     */
+    protected void configureRequest(IEditCommandRequest request) {
+        // does nothing, by default
+    }
+    
+    /**
+     * Approves the edit gesture described in the <code>request</code>. This
+     * method will be consulted before the edit command is constructed.
+     * <P>
+     * The default implementation returns <code>true</code>. Subclasses
+     * should override if they wish to provide a different answer.
+     * 
+     * @param req
+     *            the edit request
+     * @return <code>true</code> if the edit request is approved,
+     *         <code>false</code> otherwise. No edit command will be
+     *         constructed if the request is not approved.
+     */
+    protected boolean approveRequest(IEditCommandRequest request) {
+        return true;
+    }
 	
 	/**
 	 * Gets the array of edit helper advice for this request.

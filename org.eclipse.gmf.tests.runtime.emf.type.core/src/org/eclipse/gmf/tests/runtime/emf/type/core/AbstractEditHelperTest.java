@@ -19,13 +19,12 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
 
 public class AbstractEditHelperTest
     extends AbstractEMFTypeTest {
-
-    private CreateElementRequest fixture;
 
     private Department department;
 
@@ -49,14 +48,6 @@ public class AbstractEditHelperTest
 
         getResource().getContents().add(department);
 
-    }
-
-    protected CreateElementRequest getFixture() {
-        return fixture;
-    }
-
-    protected void setFixture(CreateElementRequest fixture) {
-        this.fixture = fixture;
     }
 
     public void test_defaultContainmentFeature() {
@@ -135,5 +126,46 @@ public class AbstractEditHelperTest
         
         canEdit = EmployeeType.DEPARTMENT.canEdit(request);
         assertFalse(canEdit);
+    }
+    
+    /**
+     * Tests that the edit helper is consulted to approve edit requests.
+     */
+    public void test_approveRequest_133160() {
+        
+        // Request is approved by the DepartmentEditHelper
+        SetRequest setRequest = new SetRequest(department,
+            getEmployeePackage().getDepartment_Number(), new Integer(123456));
+        
+        boolean canEdit = EmployeeType.DEPARTMENT.getEditHelper().canEdit(setRequest);
+        assertTrue(canEdit);
+        Object parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+        assertSame(Boolean.TRUE, parameter);
+        
+        // reset the parameter
+        setRequest.setParameter("approved", null); //$NON-NLS-1$
+        
+        ICommand command = EmployeeType.DEPARTMENT.getEditHelper().getEditCommand(setRequest);
+        assertNotNull(command);
+        assertTrue(command.canExecute());
+        parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+        assertSame(Boolean.TRUE, parameter);
+        
+        // Request is not approved by the DepartmentEditHelper
+        setRequest = new SetRequest(department,
+            getEmployeePackage().getDepartment_Number(), new Integer(0));
+        
+        canEdit = EmployeeType.DEPARTMENT.getEditHelper().canEdit(setRequest);
+        assertFalse(canEdit);
+        parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+        assertSame(Boolean.FALSE, parameter);
+        
+        // reset the parameter
+        setRequest.setParameter("approved", null); //$NON-NLS-1$
+        
+        command = EmployeeType.DEPARTMENT.getEditHelper().getEditCommand(setRequest);
+        assertNull(command);
+        parameter = setRequest.getParameter("approved"); //$NON-NLS-1$
+        assertSame(Boolean.FALSE, parameter);
     }
 }

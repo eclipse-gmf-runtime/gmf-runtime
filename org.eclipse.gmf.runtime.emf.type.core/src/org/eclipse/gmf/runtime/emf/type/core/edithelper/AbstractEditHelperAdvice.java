@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -508,4 +508,20 @@ public class AbstractEditHelperAdvice implements IEditHelperAdvice {
         }
 		return null;
 	}
+    
+    /**
+     * Does nothing by default. Subclasses should override if they want to add,
+     * modify or remove parameters in the request.
+     */
+    public void configureRequest(IEditCommandRequest request) {
+        // does nothing, by default
+    }
+    
+    /**
+     * Returns <code>true</code> by default. Subclasses should override if
+     * they want to give a different answer.
+     */
+    public boolean approveRequest(IEditCommandRequest request) {
+        return true;
+    }
 }

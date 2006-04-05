@@ -33,6 +33,7 @@ public class AllTests
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
+        suite.addTest(AbstractEditHelperAdviceTest.suite());
 		suite.addTest(AbstractEditHelperTest.suite());
 		suite.addTest(ElementTypeRegistryTest.suite());
 		suite.addTest(CreateElementCommandTest.suite());
