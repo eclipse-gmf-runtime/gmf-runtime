@@ -48,6 +48,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -201,32 +202,12 @@ public class BookmarkDecorator
 			Assert.isTrue(!marker.exists());
 			// Extract the element guid from the marker and retrieve
 			// corresponding view
-			try {
-				TransactionUtil.getEditingDomain(
-					getDecoratorTarget().getAdapter(View.class)).runExclusive(
-					new Runnable() {
-
-					public void run() {
-						String elementId = (String) attributes
-							.get(IBookmark.ELEMENT_ID);
-						List list = elementId != null ? (List)mapOfIdsToDecorators.get(elementId) : null;
-						if ( list != null && !list.isEmpty() ) {
-							Iterator iter = list.iterator();
-							while (iter.hasNext()) {
-								IDecorator decorator = (IDecorator)iter.next();
-								if ( decorator != null ) {
-									decorator.refresh();
-								}
-							}
-						}
-					}
-				});
-			} catch (Exception e) {
-				Trace.catching(DiagramProvidersPlugin.getInstance(),
-					DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-					"handleMarkerDeleted()", //$NON-NLS-1$
-					e);
-			}
+            String elementId = (String) attributes
+            .get(IBookmark.ELEMENT_ID);
+            List list = elementId != null ? (List)mapOfIdsToDecorators.get(elementId) : null;
+            if ( list != null && !list.isEmpty() ) {
+                refreshDecorators(list);
+            }
 		}
 
 		/*
@@ -240,34 +221,52 @@ public class BookmarkDecorator
 			Assert.isTrue(marker.exists());
 			// Extract the element ID list from the marker and retrieve
 			// corresponding view
-			try {
-				
-				TransactionUtil.getEditingDomain(
-					getDecoratorTarget().getAdapter(View.class)).runExclusive(
-					new Runnable() {
-
-					public void run() {
-						String elementId = marker.getAttribute(
-							IBookmark.ELEMENT_ID, StringStatics.BLANK);
-						List list = elementId != null ? (List)mapOfIdsToDecorators.get(elementId) : null;
-						if ( list != null && !list.isEmpty() ) {
-							Iterator iter = list.iterator();
-							while (iter.hasNext()) {
-								IDecorator decorator = (IDecorator)iter.next();
-								if ( decorator != null ) {
-									decorator.refresh();
-								}
-							}
-						}
-					}
-				});
-			} catch (Exception e) {
-				Trace.catching(DiagramProvidersPlugin.getInstance(),
-					DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-					"handleMarkerChanged()", //$NON-NLS-1$
-					e);
-			}
+            
+            String elementId = marker.getAttribute(
+                IBookmark.ELEMENT_ID, StringStatics.BLANK);
+            List list = elementId != null ? (List)mapOfIdsToDecorators.get(elementId) : null;
+            
+            if ( list != null && !list.isEmpty() ) {
+                refreshDecorators(list);
+            }
 		}
+        
+        /**
+         * Refreshes decorators asynchronously on the UI thread (required
+         * because GEF can only be used on the UI thread) so that getting a read
+         * transaction won't contribute to deadlock while the workspace is
+         * locked.
+         * 
+         * @param decorators
+         *            the decorators to be refreshed
+         */
+        private void refreshDecorators(final List decorators) {
+            PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+                public void run() {
+                    try {
+                        TransactionUtil.getEditingDomain(
+                            getDecoratorTarget().getAdapter(View.class)).runExclusive(
+                            new Runnable() {
+    
+                            public void run() {
+                                Iterator iter = decorators.iterator();
+                                while (iter.hasNext()) {
+                                    IDecorator decorator = (IDecorator)iter.next();
+                                    if ( decorator != null ) {
+                                        decorator.refresh();
+                                    }
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        Trace.catching(DiagramProvidersPlugin.getInstance(),
+                            DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                            "refreshDecorators()", //$NON-NLS-1$
+                            e);
+                    }
+                }
+            });
+        }
 		
 		/**
 		 * Returns the flag if this observer is registered
