@@ -35,7 +35,6 @@ import org.eclipse.gmf.runtime.common.ui.resources.FileChangeManager;
 import org.eclipse.gmf.runtime.common.ui.resources.IBookmark;
 import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersPluginImages;
@@ -260,7 +259,7 @@ public class BookmarkDecorator
                         });
                     } catch (Exception e) {
                         Trace.catching(DiagramProvidersPlugin.getInstance(),
-                            DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                            DiagramProvidersDebugOptions.EXCEPTIONS_CATCHING, getClass(),
                             "refreshDecorators()", //$NON-NLS-1$
                             e);
                     }
@@ -308,7 +307,7 @@ public class BookmarkDecorator
 				});
 		} catch (Exception e) {
 			Trace.catching(DiagramProvidersPlugin.getInstance(),
-				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				DiagramProvidersDebugOptions.EXCEPTIONS_CATCHING, getClass(),
 				"BookmarkDecorator::Constructor", //$NON-NLS-1$
 				e);
 		}
@@ -340,7 +339,7 @@ public class BookmarkDecorator
 				IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
 			Trace.catching(DiagramProvidersPlugin.getInstance(),
-				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+				DiagramProvidersDebugOptions.EXCEPTIONS_CATCHING, getClass(),
 				"getDecorations", e); //$NON-NLS-1$
 			Log.error(DiagramProvidersPlugin.getInstance(), IStatus.ERROR, e
 				.getMessage());

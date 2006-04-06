@@ -141,7 +141,7 @@ public class FigureSlidableAnchorTests
 		// Rference point is at the center of the figure as well as the anchors position
 		reference = new Point(0,0);
 		position = new Point (0,0);
-		anchor = anchor = fig.getSourceConnectionAnchorAt(position);
+		anchor = fig.getSourceConnectionAnchorAt(position);
 		location = anchor.getLocation(reference);
 		assertTrue(location.x==0 && location.y==0);
 	}

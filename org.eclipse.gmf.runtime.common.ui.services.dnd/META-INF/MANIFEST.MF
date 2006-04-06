@@ -9,8 +9,9 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.ui.services.dnd.core,
  org.eclipse.gmf.runtime.common.ui.services.dnd.drag,
  org.eclipse.gmf.runtime.common.ui.services.dnd.drop,
- org.eclipse.gmf.runtime.common.ui.services.dnd.internal,
- org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n
-Require-Bundle: org.eclipse.gmf.runtime.common.core;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui;visibility:=reexport
+ org.eclipse.gmf.runtime.common.ui.services.dnd.internal;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n;x-internal:=true
+Require-Bundle: org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
 Eclipse-LazyStart: true

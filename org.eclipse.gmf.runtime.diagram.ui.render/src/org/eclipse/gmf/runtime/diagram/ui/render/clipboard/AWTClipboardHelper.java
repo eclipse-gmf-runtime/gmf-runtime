@@ -19,9 +19,9 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionDebugOptions;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.clipboard.AWTViewImageTransferable;
 
 /**
@@ -112,12 +112,12 @@ public class AWTClipboardHelper {
 			data = (CustomData) transferable
 				.getTransferData(AWTViewImageTransferable.AWTCUSTOMDATAFLAVOR);
 		} catch (UnsupportedFlavorException e) {
-			Trace.catching(CommonUIActionPlugin.getDefault(),
-				CommonUIActionDebugOptions.EXCEPTIONS_CATCHING,
+			Trace.catching(DiagramUIRenderPlugin.getInstance(),
+				DiagramUIRenderDebugOptions.EXCEPTIONS_CATCHING,
 				AWTClipboardHelper.class, "getCustomData", e); //$NON-NLS-1$
 		} catch (IOException e) {
-			Trace.catching(CommonUIActionPlugin.getDefault(),
-				CommonUIActionDebugOptions.EXCEPTIONS_CATCHING,
+			Trace.catching(DiagramUIRenderPlugin.getInstance(),
+                DiagramUIRenderDebugOptions.EXCEPTIONS_CATCHING,
 				AWTClipboardHelper.class, "getCustomData", e); //$NON-NLS-1$
 		}
 

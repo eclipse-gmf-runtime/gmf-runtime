@@ -31,13 +31,13 @@ public class DiagramEditingDomainTestCase
 	
 	public void testDiagramEventBrokerAsSpecialListener() {
 		final TransactionalEditingDomain domain = DiagramEditingDomainFactory.getInstance().createEditingDomain();
-		final Resource r = domain.getResourceSet().createResource(URI.createURI("file:///foo.logic2"));
+		final Resource r = domain.getResourceSet().createResource(URI.createURI("file:///foo.logic2")); //$NON-NLS-1$
 		eCls = EcoreFactory.eINSTANCE.createEClass();
-		eCls.setName("");
+		eCls.setName(""); //$NON-NLS-1$
 		
 		// Set up the resource contents.
 		try {
-			new AbstractTransactionalCommand(domain, "Setup", null) {
+			new AbstractTransactionalCommand(domain, "Setup", null) { //$NON-NLS-1$
 				protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 					throws ExecutionException {
 					
@@ -55,7 +55,7 @@ public class DiagramEditingDomainTestCase
 			public void notifyChanged(Notification notification) {
 				if (notification.getNotifier() == eCls && notification.getFeature() == EcorePackage.eINSTANCE.getENamedElement_Name()) {
 					try {
-						new AbstractTransactionalCommand(domain, "Add Attribute", null) {
+						new AbstractTransactionalCommand(domain, "Add Attribute", null) { //$NON-NLS-1$
 							protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 								throws ExecutionException {
 								
@@ -72,10 +72,10 @@ public class DiagramEditingDomainTestCase
 			}
 		});
 		
-		AbstractTransactionalCommand cmd = new AbstractTransactionalCommand(domain, "Set Name", null) {
+		AbstractTransactionalCommand cmd = new AbstractTransactionalCommand(domain, "Set Name", null) { //$NON-NLS-1$
 			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 				throws ExecutionException {
-				eCls.setName("foo");
+				eCls.setName("foo"); //$NON-NLS-1$
 				
 				return CommandResult.newOKCommandResult();
 			}

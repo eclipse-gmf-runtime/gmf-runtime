@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.TriggerListener;
-import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -192,7 +192,7 @@ public class NotationSemProc extends TriggerListener {
 		else
 			return;
 
-		if (((name == null) || (name.equals(EMFCoreConstants.EMPTY_STRING))
+		if (((name == null) || (name.equals(StringStatics.BLANK))
 			&& (canAutoName(eObject.eClass())))) {
 
 			name = PackageUtil.getLocalizedName(eObject.eClass());

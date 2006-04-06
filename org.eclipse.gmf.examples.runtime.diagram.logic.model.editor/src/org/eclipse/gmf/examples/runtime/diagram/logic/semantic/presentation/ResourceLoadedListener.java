@@ -160,7 +160,7 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 		
 		URI normalizedURI = domain.getResourceSet().getURIConverter().normalize(resource.getURI());
 		
-		if (normalizedURI.scheme().equals("file")) {
+		if (normalizedURI.scheme().equals("file")) { //$NON-NLS-1$
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(URI.decode(normalizedURI.devicePath())));
 			if (files.length > 0) {
 				result = files[0];

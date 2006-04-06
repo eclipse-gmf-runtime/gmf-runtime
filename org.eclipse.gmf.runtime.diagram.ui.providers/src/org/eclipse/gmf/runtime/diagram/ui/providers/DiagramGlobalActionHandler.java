@@ -43,7 +43,6 @@ import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
@@ -54,6 +53,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.CopyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramProvidersPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -404,7 +404,7 @@ public class DiagramGlobalActionHandler
 					});
 			} catch (Exception e) {
 				Trace.catching(DiagramProvidersPlugin.getInstance(),
-					DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+					DiagramProvidersDebugOptions.EXCEPTIONS_CATCHING, getClass(),
 					"getSelectedViews()", //$NON-NLS-1$
 					e);
 			}

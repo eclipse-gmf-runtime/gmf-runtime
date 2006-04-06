@@ -7,13 +7,13 @@ Bundle-Activator: org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.core.command,
- org.eclipse.gmf.runtime.common.core.internal,
+ org.eclipse.gmf.runtime.common.core.internal;x-friends:="org.eclipse.gmf.tests.runtime.common.core",
  org.eclipse.gmf.runtime.common.core.internal.command;x-friends:="org.eclipse.gmf.tests.runtime.common.core",
- org.eclipse.gmf.runtime.common.core.internal.l10n,
+ org.eclipse.gmf.runtime.common.core.internal.l10n;x-friends:="org.eclipse.gmf.tests.runtime.common.core",
  org.eclipse.gmf.runtime.common.core.service,
  org.eclipse.gmf.runtime.common.core.util
-Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.eclipse.core.resources;visibility:=reexport,
- org.eclipse.core.commands;visibility:=reexport,
- com.ibm.icu
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.commands;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ com.ibm.icu;bundle-version="[3.4.3,4.0.0)"
 Eclipse-LazyStart: true

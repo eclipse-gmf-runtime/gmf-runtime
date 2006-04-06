@@ -41,11 +41,11 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAd
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.util.SectionUpdateRequestCollapser;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.graphics.GC;
@@ -84,7 +84,7 @@ public abstract class AbstractModelerPropertySection
 	private boolean bIsCommandInProgress = false;
 
 	/** value changed string */
-	static protected String VALUE_CHANGED_STRING = EMFUIMessages.AbstractPropertySection_UndoIntervalPropertyString;
+	static protected String VALUE_CHANGED_STRING = DiagramUIPropertiesMessages.AbstractPropertySection_UndoIntervalPropertyString;
 
 	/** object currently selected on either a diagram or a ME - a view */
 	protected List input;

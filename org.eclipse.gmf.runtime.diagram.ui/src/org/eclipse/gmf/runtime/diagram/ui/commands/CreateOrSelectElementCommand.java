@@ -19,10 +19,10 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.common.ui.dialogs.PopupDialog;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.InternalDiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.dialogs.AbstractSelectElementDialog;
-import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
@@ -71,19 +71,19 @@ public class CreateOrSelectElementCommand
 	 * Add this to the content list of the popup menu to add an 'unspecified'
 	 * option.
 	 */
-	public static final String UNSPECIFIED = EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_UnspecifiedMenuItem_Text;
+	public static final String UNSPECIFIED = InternalDiagramUIMessages.CreateOrSelectElementCommand_PopupMenu_UnspecifiedMenuItem_Text;
 
 	/**
 	 * Add this to the content list of the popup menu to add a 'select existing'
 	 * option.
 	 */
-	public static final String SELECT_EXISTING = EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_SelectExistingElementMenuItem_Text;
+	public static final String SELECT_EXISTING = InternalDiagramUIMessages.CreateOrSelectElementCommand_PopupMenu_SelectExistingElementMenuItem_Text;
 
 	/**
 	 * Add this to the content list of the popup menu to add a 'create without
 	 * binding' option.
 	 */
-	public static final String CREATE_WITHOUT_BINDING = EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateWithoutBindingMenuItem_Text;
+	public static final String CREATE_WITHOUT_BINDING = InternalDiagramUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateWithoutBindingMenuItem_Text;
 
 	/**
 	 * The default label provider for the the menu items used in this command.
@@ -101,7 +101,7 @@ public class CreateOrSelectElementCommand
 			if (object instanceof IElementType) {
 				return NLS
 					.bind(
-						EMFUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateMenuItem_Text,
+						InternalDiagramUIMessages.CreateOrSelectElementCommand_PopupMenu_CreateMenuItem_Text,
 						text);
 			}
 			return text;
@@ -149,7 +149,7 @@ public class CreateOrSelectElementCommand
 	 */
 	public CreateOrSelectElementCommand(Shell parentShell, List content,
 			int style) {
-		this(EMFUIMessages.CreateOrSelectElementCommand_Label, parentShell,
+		this(InternalDiagramUIMessages.CreateOrSelectElementCommand_Label, parentShell,
 			content, style);
 	}
 
@@ -209,7 +209,7 @@ public class CreateOrSelectElementCommand
 	 *            the popup menu
 	 */
 	public CreateOrSelectElementCommand(Shell parentShell, PopupMenu popupMenu) {
-		super(EMFUIMessages.CreateOrSelectElementCommand_Label, parentShell,
+		super(InternalDiagramUIMessages.CreateOrSelectElementCommand_Label, parentShell,
 			popupMenu);
 	}
 

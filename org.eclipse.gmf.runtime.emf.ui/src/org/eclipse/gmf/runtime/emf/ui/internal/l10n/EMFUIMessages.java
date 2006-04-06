@@ -27,7 +27,6 @@ public final class EMFUIMessages extends NLS {
 	public static String CreateOrSelectElementCommand_PopupMenu_CreateWithoutBindingMenuItem_Text;
 	public static String SelectElementDialog_title;
 	public static String SelectElementDialog_selection;
-	public static String AbstractPropertySection_UndoIntervalPropertyString;
 	public static String Validation_liveValidationGroupLabel;
 	public static String Validation_liveValidationDestinationPrompt;
 	public static String Validation_liveValidationDestination_dialogComboItem;

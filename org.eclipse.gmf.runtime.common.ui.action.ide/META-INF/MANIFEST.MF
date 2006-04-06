@@ -8,12 +8,12 @@ Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.ui.action.ide.actions.global,
  org.eclipse.gmf.runtime.common.ui.action.ide.global,
- org.eclipse.gmf.runtime.common.ui.action.ide.internal,
- org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.ui.ide;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui,
- org.eclipse.gmf.runtime.common.ui.services.action,
- org.eclipse.gmf.runtime.common.ui.action;visibility:=reexport
+ org.eclipse.gmf.runtime.common.ui.action.ide.internal;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.action.ide.internal.l10n;x-internal:=true
+Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.gmf.runtime.common.ui.services.action;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.gmf.runtime.common.ui.action;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
 Eclipse-LazyStart: true

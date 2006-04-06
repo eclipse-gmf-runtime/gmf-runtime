@@ -6,10 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.CommonUIServicesProviderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal,
- org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies,
- org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers,
- org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses
-Require-Bundle: org.eclipse.gmf.runtime.common.ui.services,
- org.junit
+Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services.provider;x-internal:=true,
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal;x-internal:=true,
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.policies;x-friends:="org.eclipse.gmf.tests.runtime.common.ui",
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.providers;x-friends:="org.eclipse.gmf.tests.runtime.common.ui",
+ org.eclipse.gmf.tests.runtime.common.ui.services.provider.internal.testClasses;x-friends:="org.eclipse.gmf.tests.runtime.common.ui"
+Require-Bundle: org.eclipse.gmf.runtime.common.ui.services;bundle-version="[1.0.0,2.0.0)",
+ org.junit;bundle-version="[3.8.1,4.0.0)"
 Eclipse-LazyStart: true

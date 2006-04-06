@@ -450,7 +450,7 @@ public class PaletteServiceTests
             Object paletteEntry = iter.next();
             if (paletteEntry instanceof PaletteDrawer) {
                 PaletteDrawer drawer = (PaletteDrawer) paletteEntry;
-                if (drawer.getId().equals("ovalDrawer")) {
+                if (drawer.getId().equals("ovalDrawer")) { //$NON-NLS-1$
 
                     ovalDrawerFound = true;
 
@@ -460,7 +460,7 @@ public class PaletteServiceTests
                     // verify that the circle tool has been removed.
                     assertEquals(1, drawer.getChildren().size());
                     
-                } else if (drawer.getId().equals("ovalAndCylinderDrawer")) {
+                } else if (drawer.getId().equals("ovalAndCylinderDrawer")) { //$NON-NLS-1$
                     
                     ovalAndCylinderDrawerFound = true;
                     

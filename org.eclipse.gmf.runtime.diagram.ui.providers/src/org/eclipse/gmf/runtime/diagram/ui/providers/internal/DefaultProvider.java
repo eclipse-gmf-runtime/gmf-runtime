@@ -44,7 +44,6 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderedShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -116,7 +115,7 @@ public abstract class DefaultProvider
         if (containerEditPart == null) {
             InvalidParameterException ipe = new InvalidParameterException();
             Trace.throwing(DiagramProvidersPlugin.getInstance(),
-                DiagramActionsDebugOptions.EXCEPTIONS_THROWING, getClass(),
+                DiagramProvidersDebugOptions.EXCEPTIONS_THROWING, getClass(),
                 "layout()", //$NON-NLS-1$
                 ipe);
             throw ipe;

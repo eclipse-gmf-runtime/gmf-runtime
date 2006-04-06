@@ -19,6 +19,7 @@ import java.util.ListIterator;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -74,7 +75,7 @@ public class URLImageEditPartTests
 		IPath path =
 			new Path(TRANSLATE_PATH_ARGUMENT).append(
 				getImagePathName() + fileName);
-		return TestsPlugin.getDefault().find(path);
+		return FileLocator.find(TestsPlugin.getDefault().getBundle(), path, null);
 	}
 	
 	class URLImageEditPartFixture1 extends URLImageEditPart {

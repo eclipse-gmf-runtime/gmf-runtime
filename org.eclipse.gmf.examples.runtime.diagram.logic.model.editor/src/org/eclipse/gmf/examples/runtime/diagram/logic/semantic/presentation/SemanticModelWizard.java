@@ -161,8 +161,8 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.workbench = workbench;
 		this.selection = selection;
-		setWindowTitle(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_Wizard_label"));
-		setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(LogicsemanticEditorPlugin.INSTANCE.getImage("full/wizban/NewSemantic")));
+		setWindowTitle(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_Wizard_label")); //$NON-NLS-1$
+		setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(LogicsemanticEditorPlugin.INSTANCE.getImage("full/wizban/NewSemantic"))); //$NON-NLS-1$ 
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 					 workbench.getEditorRegistry().getDefaultEditor(modelFile.getFullPath().toString()).getId());
 			}
 			catch (PartInitException exception) {
-				MessageDialog.openError(workbenchWindow.getShell(), LogicsemanticEditorPlugin.INSTANCE.getString("_UI_OpenEditorError_label"), exception.getMessage());
+				MessageDialog.openError(workbenchWindow.getShell(), LogicsemanticEditorPlugin.INSTANCE.getString("_UI_OpenEditorError_label"), exception.getMessage()); //$NON-NLS-1$
 				return false;
 			}
 
@@ -316,10 +316,10 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 			if (super.validatePage()) {
 				// Make sure the file ends in ".semantic".
 				//
-				String requiredExt = LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameExtension");
+				String requiredExt = LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameExtension"); //$NON-NLS-1$
 				String enteredExt = new Path(getFileName()).getFileExtension();
 				if (enteredExt == null || !enteredExt.equals(requiredExt)) {
-					setErrorMessage(LogicsemanticEditorPlugin.INSTANCE.getString("_WARN_FilenameExtension", new Object [] { requiredExt }));
+					setErrorMessage(LogicsemanticEditorPlugin.INSTANCE.getString("_WARN_FilenameExtension", new Object [] { requiredExt })); //$NON-NLS-1$
 					return false;
 				}
 				else {
@@ -401,7 +401,7 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 
 			Label containerLabel = new Label(composite, SWT.LEFT);
 			{
-				containerLabel.setText(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_ModelObject"));
+				containerLabel.setText(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_ModelObject")); //$NON-NLS-1$
 
 				GridData data = new GridData();
 				data.horizontalAlignment = GridData.FILL;
@@ -427,7 +427,7 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 
 			Label encodingLabel = new Label(composite, SWT.LEFT);
 			{
-				encodingLabel.setText(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_XMLEncoding"));
+				encodingLabel.setText(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_XMLEncoding")); //$NON-NLS-1$
 
 				GridData data = new GridData();
 				data.horizontalAlignment = GridData.FILL;
@@ -526,7 +526,7 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 		 */
 		protected String getLabel(String typeName) {
 			try {
-				return LogicsemanticEditPlugin.INSTANCE.getString("_UI_" + typeName + "_type");
+				return LogicsemanticEditPlugin.INSTANCE.getString("_UI_" + typeName + "_type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			catch(MissingResourceException mre) {
 				LogicsemanticEditorPlugin.INSTANCE.log(mre);
@@ -542,7 +542,7 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 		protected Collection getEncodings() {
 			if (encodings == null) {
 				encodings = new ArrayList();
-				for (StringTokenizer stringTokenizer = new StringTokenizer(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_XMLEncodingChoices")); stringTokenizer.hasMoreTokens(); ) {
+				for (StringTokenizer stringTokenizer = new StringTokenizer(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_XMLEncodingChoices")); stringTokenizer.hasMoreTokens(); ) { //$NON-NLS-1$
 					encodings.add(stringTokenizer.nextToken());
 				}
 			}
@@ -559,10 +559,10 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		// Create a page, set the title, and the initial model file name.
 		//
-		newFileCreationPage = new SemanticModelWizardNewFileCreationPage("Whatever", selection);
-		newFileCreationPage.setTitle(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticModelWizard_label"));
-		newFileCreationPage.setDescription(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticModelWizard_description"));
-		newFileCreationPage.setFileName(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameDefaultBase") + "." + LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameExtension"));
+		newFileCreationPage = new SemanticModelWizardNewFileCreationPage("Whatever", selection); //$NON-NLS-1$
+		newFileCreationPage.setTitle(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticModelWizard_label")); //$NON-NLS-1$
+		newFileCreationPage.setDescription(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticModelWizard_description")); //$NON-NLS-1$
+		newFileCreationPage.setFileName(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameDefaultBase") + "." + LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameExtension")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		addPage(newFileCreationPage);
 
 		// Try and get the resource selection to determine a current directory for the file dialog.
@@ -588,19 +588,19 @@ public class SemanticModelWizard extends Wizard implements INewWizard {
 
 					// Make up a unique new name here.
 					//
-					String defaultModelBaseFilename = LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameDefaultBase");
-					String defaultModelFilenameExtension = LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameExtension");
-					String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension;
+					String defaultModelBaseFilename = LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameDefaultBase"); //$NON-NLS-1$
+					String defaultModelFilenameExtension = LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticEditorFilenameExtension"); //$NON-NLS-1$
+					String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension; //$NON-NLS-1$
 					for (int i = 1; ((IContainer)selectedResource).findMember(modelFilename) != null; ++i) {
-						modelFilename = defaultModelBaseFilename + i + "." + defaultModelFilenameExtension;
+						modelFilename = defaultModelBaseFilename + i + "." + defaultModelFilenameExtension; //$NON-NLS-1$
 					}
 					newFileCreationPage.setFileName(modelFilename);
 				}
 			}
 		}
-		initialObjectCreationPage = new SemanticModelWizardInitialObjectCreationPage("Whatever2");
-		initialObjectCreationPage.setTitle(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticModelWizard_label"));
-		initialObjectCreationPage.setDescription(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description"));
+		initialObjectCreationPage = new SemanticModelWizardInitialObjectCreationPage("Whatever2"); //$NON-NLS-1$
+		initialObjectCreationPage.setTitle(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_SemanticModelWizard_label")); //$NON-NLS-1$
+		initialObjectCreationPage.setDescription(LogicsemanticEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description")); //$NON-NLS-1$
 		addPage(initialObjectCreationPage);
 	}
 

@@ -9,14 +9,15 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.draw2d.ui.render,
  org.eclipse.gmf.runtime.draw2d.ui.render.factory,
  org.eclipse.gmf.runtime.draw2d.ui.render.figures,
- org.eclipse.gmf.runtime.draw2d.ui.render.internal,
- org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory,
- org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics,
- org.eclipse.gmf.runtime.draw2d.ui.render.internal.image
-Require-Bundle: org.eclipse.ui,
- org.eclipse.draw2d,
- org.eclipse.core.runtime,
- org.eclipse.gmf.runtime.common.core,
- org.eclipse.gmf.runtime.common.ui,
- org.eclipse.gmf.runtime.draw2d.ui
+ org.eclipse.gmf.runtime.draw2d.ui.render.image,
+ org.eclipse.gmf.runtime.draw2d.ui.render.internal;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.draw2d.ui.render.awt,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.printing.render",
+ org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.draw2d.ui.render.awt,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.printing.render",
+ org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.draw2d.ui.render.awt,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.printing.render",
+ org.eclipse.gmf.runtime.draw2d.ui.render.internal.image;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.draw2d.ui.render.awt,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.printing.render"
+Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.draw2d;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.gmf.runtime.draw2d.ui;bundle-version="[1.0.0,2.0.0)"
 Eclipse-LazyStart: true

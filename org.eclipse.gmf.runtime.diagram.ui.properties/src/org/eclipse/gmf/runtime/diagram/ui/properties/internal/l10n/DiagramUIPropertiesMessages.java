@@ -75,6 +75,7 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String Spaced_Dot_Label_Text;
 	public static String Restore_Defaults_Label_Text;	
 	public static String Positive_Number_Error;
+    public static String AbstractPropertySection_UndoIntervalPropertyString;
 	
 	
 	static {

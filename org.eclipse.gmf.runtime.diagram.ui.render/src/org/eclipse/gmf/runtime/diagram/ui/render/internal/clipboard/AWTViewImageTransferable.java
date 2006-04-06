@@ -17,9 +17,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionDebugOptions;
-import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 
 /**
  * Used for image transfer to the clipboard. 
@@ -76,8 +76,8 @@ public class AWTViewImageTransferable
 		if (!isDataFlavorSupported(flavor)) {
 			UnsupportedFlavorException ufe = new UnsupportedFlavorException(
 				flavor);
-			Trace.throwing(CommonUIActionPlugin.getDefault(),
-				CommonUIActionDebugOptions.EXCEPTIONS_THROWING, getClass(),
+			Trace.throwing(DiagramUIRenderPlugin.getInstance(),
+				DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
 				"getTransferData()", //$NON-NLS-1$
 				ufe);
 			throw ufe;

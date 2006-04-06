@@ -20,10 +20,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsStatusCodes;
 import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
-import org.eclipse.gmf.runtime.emf.ui.internal.MslUIDebugOptions;
-import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
-import org.eclipse.gmf.runtime.emf.ui.internal.MslUIStatusCodes;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -74,12 +74,12 @@ public abstract class AbstractDiagramModelActionDelegate
                     }
                 });
             } catch (InterruptedException e) {
-                Trace.catching(MslUIPlugin.getDefault(),
-                    MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                Trace.catching(DiagramActionsPlugin.getInstance(),
+                    DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
                     "getElements", e); //$NON-NLS-1$
 
-                Log.error(MslUIPlugin.getDefault(),
-                    MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+                Log.error(DiagramActionsPlugin.getInstance(),
+                    DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING, e
                         .getLocalizedMessage(), e);
             }
         }

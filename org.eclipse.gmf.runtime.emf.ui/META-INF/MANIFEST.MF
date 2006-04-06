@@ -8,20 +8,21 @@ Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.emf.ui.action,
  org.eclipse.gmf.runtime.emf.ui.dialogs,
- org.eclipse.gmf.runtime.emf.ui.internal,
- org.eclipse.gmf.runtime.emf.ui.internal.l10n,
- org.eclipse.gmf.runtime.emf.ui.validation,
+ org.eclipse.gmf.runtime.emf.ui.internal;x-friends:="org.eclipse.gmf.runtime.diagram.ui.properties",
+ org.eclipse.gmf.runtime.emf.ui.internal.l10n;x-internal:=true,
+ org.eclipse.gmf.runtime.emf.ui.internal.validation;x-internal:=true,
  org.eclipse.gmf.runtime.emf.ui.preferences,
  org.eclipse.gmf.runtime.emf.ui.providers.marker,
  org.eclipse.gmf.runtime.emf.ui.services.action,
  org.eclipse.gmf.runtime.emf.ui.services.modelingassistant,
- org.eclipse.gmf.runtime.emf.ui.services.parser
-Require-Bundle: org.eclipse.ui.views;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui.action;visibility:=reexport,
- org.eclipse.gmf.runtime.common.core;visibility:=reexport,
- org.eclipse.ui;visibility:=reexport,
- org.eclipse.core.resources;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui.services;visibility:=reexport,
- org.eclipse.gmf.runtime.emf.type.core;visibility:=reexport
+ org.eclipse.gmf.runtime.emf.ui.services.parser,
+ org.eclipse.gmf.runtime.emf.ui.validation
+Require-Bundle: org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui.action;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
+ org.eclipse.ui;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui.services;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.emf.type.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
 Eclipse-LazyStart: true
