@@ -9,12 +9,16 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.ui.services.editor,
  org.eclipse.gmf.runtime.common.ui.services.elementselection,
  org.eclipse.gmf.runtime.common.ui.services.icon,
- org.eclipse.gmf.runtime.common.ui.services.internal,
+ org.eclipse.gmf.runtime.common.ui.services.internal;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.services.internal.elementselection;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.services.internal.icon;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.services.internal.l10n;x-internal:=true,
+ org.eclipse.gmf.runtime.common.ui.services.internal.marker;x-internal:=true,
  org.eclipse.gmf.runtime.common.ui.services.marker,
  org.eclipse.gmf.runtime.common.ui.services.parser,
  org.eclipse.gmf.runtime.common.ui.services.util
-Require-Bundle: org.eclipse.core.resources;visibility:=reexport,
- org.eclipse.ui;visibility:=reexport,
- org.eclipse.gmf.runtime.common.core;visibility:=reexport,
- org.eclipse.gmf.runtime.common.ui;visibility:=reexport
+Require-Bundle: org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.ui;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
 Eclipse-LazyStart: true
