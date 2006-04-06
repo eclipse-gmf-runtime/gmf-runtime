@@ -331,6 +331,8 @@ public abstract class ElementSelectionComposite
      * Cancel the job running the element selection service.
      */
     public void cancel() {
-        job.cancel();
+        if (job != null) {
+            job.cancel();
+        }
     }
 }
