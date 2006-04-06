@@ -298,9 +298,13 @@ public class ShowRelatedElementsDialog
 		getShell().setText(CommonUIMessages.ShowRelatedElementsDialog_Title);
 
 		// set context sensitive help
-		if (helpContextId != null)
+		if (helpContextId != null) {
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
 				helpContextId);
+        } else {
+            PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, 
+                "org.eclipse.gmf.runtime.common.ui.egmf0200"); //$NON-NLS-1$
+        }
 
 		return parent;
 	}

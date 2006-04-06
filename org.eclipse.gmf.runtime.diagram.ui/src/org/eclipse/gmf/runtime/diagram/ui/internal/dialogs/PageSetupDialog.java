@@ -83,6 +83,9 @@ public class PageSetupDialog extends Dialog implements ILabels {
 		enableConfigurationBlocks();
 		
 		getShell().setText(LABEL_TITLE_PAGE_SETUP);
+        
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, 
+            "org.eclipse.gmf.runtime.diagram.ui.egmf0300"); //$NON-NLS-1$
 		
 		return parent;
 	}

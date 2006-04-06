@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
@@ -77,7 +78,10 @@ public class ValidationPreferencePage
 		panel.setLayoutData(blockData);
 
 		// create groups
-		createLiveValidationProblemsGroup(panel);        
+		createLiveValidationProblemsGroup(panel);
+        
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, 
+            "org.eclipse.gmf.runtime.emf.ui.egmf0500"); //$NON-NLS-1$
     }
     
     

@@ -465,9 +465,14 @@ public class ShowHideRelationshipsDialog
 
 		getShell().setText(CommonUIMessages.ShowHideRelationshipsDialog_Title);
 
-		// set context sensitive help
-		PlatformUI.getWorkbench().getHelpSystem()
-			.setHelp(parent, helpContextId);
+        // set context sensitive help
+        if (helpContextId != null) {
+            PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+                helpContextId);
+        } else {
+            PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, 
+                "org.eclipse.gmf.runtime.common.ui.egmf0100"); //$NON-NLS-1$
+        }
 
 		return parent;
 
