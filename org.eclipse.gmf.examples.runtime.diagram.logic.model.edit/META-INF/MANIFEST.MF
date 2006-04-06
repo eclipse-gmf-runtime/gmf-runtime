@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.examples.runtime.diagram.logic.model.provider.LogicsemanticEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.examples.runtime.diagram.logic.semantic.provider
+Export-Package: org.eclipse.gmf.examples.runtime.diagram.logic.model.provider,
+ org.eclipse.gmf.examples.runtime.diagram.logic.semantic.provider;x-friends:="org.eclipse.gmf.examples.runtime.diagram.logic.model.editor"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.examples.runtime.diagram.logic.model;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport
