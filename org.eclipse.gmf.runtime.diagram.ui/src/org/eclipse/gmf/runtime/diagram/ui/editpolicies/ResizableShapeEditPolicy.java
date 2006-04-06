@@ -11,9 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,19 +18,13 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.AccessibleHandleProvider;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.handles.MoveHandle;
-import org.eclipse.gef.handles.ResizeHandle;
-import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.IPropertyValueDeferred;
@@ -58,41 +49,6 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class ResizableShapeEditPolicy
 	extends ResizableEditPolicyEx {
-
-	/**
-	 * Customize the selection handles
-	 */
-	protected List createSelectionHandles() {
-		GraphicalEditPart part = (GraphicalEditPart) getHost();
-		List selectionhandles = new ArrayList(9);
-		MoveHandle moveHandle = new MoveHandle(part);
-		moveHandle.setBorder(null);
-		selectionhandles.add(moveHandle);
-		selectionhandles.add(createHandle(part, PositionConstants.EAST));
-		selectionhandles.add(createHandle(part, PositionConstants.SOUTH_EAST));
-		selectionhandles.add(createHandle(part, PositionConstants.SOUTH));
-		selectionhandles.add(createHandle(part, PositionConstants.SOUTH_WEST));
-		selectionhandles.add(createHandle(part, PositionConstants.WEST));
-		selectionhandles.add(createHandle(part, PositionConstants.NORTH_WEST));
-		selectionhandles.add(createHandle(part, PositionConstants.NORTH));
-		selectionhandles.add(createHandle(part, PositionConstants.NORTH_EAST));
-		return selectionhandles;
-	}
-
-	/**
-	 * Create resize handle with a normalized resize tracker
-	 * 
-	 * @param owner
-	 *            the owner edit part
-	 * @param direction
-	 *            the handle direction
-	 * @return handle
-	 */
-	protected Handle createHandle(GraphicalEditPart owner, int direction) {
-		ResizeHandle handle = new ResizeHandle(owner, direction);
-		handle.setDragTracker(new ResizeTracker(owner, direction));
-		return handle;
-	}
 
 	/**
 	 * Cfreates a new AutoSize comamnd

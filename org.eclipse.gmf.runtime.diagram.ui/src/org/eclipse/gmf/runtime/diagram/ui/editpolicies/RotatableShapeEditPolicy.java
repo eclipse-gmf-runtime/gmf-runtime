@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
@@ -23,9 +22,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.RotateHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RotateTracker;
 import org.eclipse.gmf.runtime.gef.ui.internal.requests.RotateShapeRequest;
@@ -49,18 +46,15 @@ public class RotatableShapeEditPolicy extends ResizableShapeEditPolicy {
 	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#createSelectionHandles()
 	 */
 	protected List createSelectionHandles() {
-		GraphicalEditPart part = (GraphicalEditPart) getHost();
-		List selectionhandles = new ArrayList(9);
-		MoveHandle moveHandle = new MoveHandle(part);
-		moveHandle.setBorder(null);
-		selectionhandles.add(moveHandle);
-		selectionhandles.add(super.createHandle(part, PositionConstants.EAST));
+        setResizeDirections(PositionConstants.EAST | PositionConstants.SOUTH | 
+            PositionConstants.WEST | PositionConstants.NORTH);
+        
+        List selectionhandles = super.createSelectionHandles();
+        GraphicalEditPart part = (GraphicalEditPart) getHost();
+		
 		selectionhandles.add(createRotationHandle(part, PositionConstants.SOUTH_EAST));
-		selectionhandles.add(super.createHandle(part, PositionConstants.SOUTH));
 		selectionhandles.add(createRotationHandle(part, PositionConstants.SOUTH_WEST));
-		selectionhandles.add(super.createHandle(part, PositionConstants.WEST));
 		selectionhandles.add(createRotationHandle(part, PositionConstants.NORTH_WEST));
-		selectionhandles.add(super.createHandle(part, PositionConstants.NORTH));
 		selectionhandles.add(createRotationHandle(part, PositionConstants.NORTH_EAST));
 		return selectionhandles;
 	}

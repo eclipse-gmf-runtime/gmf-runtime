@@ -159,11 +159,6 @@ public class ResizableCompartmentEditPolicy
 	private EditPartListener parentListener;
 
 	private NotificationListener propertyListener;
-	
-	/**
-	 * Cache the diagram event broker after it is retrieved.
-	 */
-	private DiagramEventBroker diagramEventBroker;
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#addSelectionListener()
