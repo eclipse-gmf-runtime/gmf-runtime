@@ -26,7 +26,10 @@ import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
  * @deprecated
  */
 public class ValidationLiveProblemsDestination extends EnumeratedType {
-    /**
+
+	private static final long serialVersionUID = 1L;
+
+	/**
      * An internal unique identifier for this enumerated type.
      */
     private static int nextOrdinal = 0;
