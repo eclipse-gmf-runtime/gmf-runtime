@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
@@ -160,13 +161,19 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 		
 		URI normalizedURI = domain.getResourceSet().getURIConverter().normalize(resource.getURI());
 		
-		if (normalizedURI.scheme().equals("file")) { //$NON-NLS-1$
+		if ("file".equals(normalizedURI.scheme())) { //$NON-NLS-1$
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(URI.decode(normalizedURI.devicePath())));
 			if (files.length > 0) {
 				result = files[0];
 			}
 		} else  {
-			result = WorkspaceSynchronizer.getFile(resource);
+			if ("platform".equals(normalizedURI.scheme()) && (normalizedURI.segmentCount() > 2)) { //$NON-NLS-1$
+				if ("resource".equals(normalizedURI.segment(0))) { //$NON-NLS-1$
+					IPath path = new Path(URI.decode(normalizedURI.path())).removeFirstSegments(1);
+					
+					result = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				}
+			}
 		}
 		return result;
 	}

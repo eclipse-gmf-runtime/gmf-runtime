@@ -44,6 +44,14 @@ public final class EMFUIMessages extends NLS {
 	public static String Validation_liveDialogTitle;
 	public static String Validation_dontShowCheck;
 	public static String Validation_outputProviderCategory;
+	public static String PathmapsPreferencePage_availablePathVariables;
+	public static String PathmapsPreferencePage_pathVariablesUsedInModeling;
+	public static String PathmapsPreferencePage_addChevron;
+	public static String PathmapsPreferencePage_removeChevron;
+	public static String PathmapsPreferencePage_incompatiblePathVariableErrorMessage;
+	public static String PathmapsPreferencePage_mainDescription;
+	public static String PathmapsPreferencePage_addAllChevron;
+	public static String PathmapsPreferencePage_removeAllChevron;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EMFUIMessages.class);

@@ -11,20 +11,37 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.resources;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.Map.Entry;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IPathVariableChangeEvent;
+import org.eclipse.core.resources.IPathVariableChangeListener;
+import org.eclipse.core.resources.IPathVariableManager;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
@@ -37,6 +54,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.osgi.framework.Bundle;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * This class manages GMF path mappings for URI conversion.
@@ -44,8 +62,9 @@ import org.osgi.framework.Bundle;
  * @author rafikj
  */
 public class PathmapManager extends AdapterImpl {
-
-	// path maps can be defined using an extension point: Pathmaps.
+	// path maps can be defined using an extension point: Pathmaps
+	//  or by referencing an eclipse path variable
+	//  or by adding a pathmap manually
 
 	// The variable name.
 	private static final String NAME = "name"; //$NON-NLS-1$
@@ -55,12 +74,165 @@ public class PathmapManager extends AdapterImpl {
 
 	// The path.
 	private static final String PATH = "path"; //$NON-NLS-1$
+	
+	private static final String NODE_QUALIFIER = EMFCorePlugin.getDefault().getBundle().getSymbolicName();
+	private static final String PREFERENCE_KEY = "referenced.path.variables"; //$NON-NLS-1$
 
-	// The path map as defined by the extensions
+	// The path map as defined by the extensions and the referenced path variables and the manually
+	//  added pathmaps.
 	private static final Map PATH_MAP = Collections.synchronizedMap(configure());
-
+	
 	private static final Map instances = Collections.synchronizedMap(new WeakHashMap());
 	
+	// The list of eclipse path variables that are being used in this path map manager
+	private static Set referencedPathVariablesList;
+	
+	private static IEclipsePreferences preferenceStore = null;
+	
+	static {
+		IPathVariableManager pathManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
+		
+		// We will get the initial list of referenced path variables from our preference store
+		IEclipsePreferences preferences = getPreferenceStore();
+		String referencedPathVariables = preferences.get(PREFERENCE_KEY, ""); //$NON-NLS-1$
+		StringTokenizer tokenizer = new StringTokenizer(referencedPathVariables, " "); //$NON-NLS-1$
+		referencedPathVariablesList = new HashSet(tokenizer.countTokens());
+		for (;tokenizer.hasMoreTokens();) {
+			String pathVariable = tokenizer.nextToken();
+			addPathVariableReference(pathVariable);
+		}
+		// Update the preference store in case some path variables have been deleted since the
+		//  last time we saved the store.
+		updatePreferenceStore();
+		
+		// Register this listener to keep up-to-date with the eclipse path variables and update our
+		//  referenced path variables appropriately.
+		pathManager.addChangeListener(new IPathVariableChangeListener() {
+			public void pathVariableChanged(IPathVariableChangeEvent event) {
+				switch (event.getType()) {
+					case IPathVariableChangeEvent.VARIABLE_DELETED:
+						removePathVariableReference(event.getVariableName());
+						updatePreferenceStore();
+						break;
+					case IPathVariableChangeEvent.VARIABLE_CHANGED:
+						// We only care about variables that we are referencing that
+						//  have changed.
+						if (referencedPathVariablesList.contains(event.getVariableName())) {
+							// Check to see if it has become incompatible
+							if (!isDirectory(event.getValue())) {
+								removePathVariableReference(event.getVariableName());
+							} else {
+								setPathVariable(event.getVariableName(), URI.createFileURI(event.getValue().toString()).toString());
+							}
+							
+							updatePreferenceStore();
+						}
+						break;
+				}
+			}
+		});
+	}
+
+	private static IEclipsePreferences getPreferenceStore() {
+		if (preferenceStore == null) {
+			IScopeContext ctx = new InstanceScope();
+			preferenceStore = ctx.getNode(NODE_QUALIFIER);
+		}
+		
+		return preferenceStore;
+	}
+	
+	/**
+	 * Adds a new reference to a path variable defined in eclipse
+	 *  to be used by this pathmap manager. It is assumed that this
+	 *  path variable is declared in the eclipes path variable manager
+	 *  and that it is a valid path variable for our purposes. 
+	 *  See {@link #isCompatiblePathVariable(String)} for more details.
+	 *  
+	 * @param pathVariable A valid path variable that has been defined in the
+	 *  eclipse {@link IPathVariableManager} and is compatible with our path maps.
+	 */
+	public static void addPathVariableReference(String pathVariable) {
+		if (referencedPathVariablesList.contains(pathVariable)) {
+			// We already reference this path variable so we can assume that it is added
+			//  and is compatible.
+			return;
+		}
+		
+		if (!isCompatiblePathVariable(pathVariable)) {
+			return;
+		}
+		
+		IPathVariableManager pathManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
+		IPath value = pathManager.getValue(pathVariable);
+		if (value != null) {
+			referencedPathVariablesList.add(pathVariable);
+			setPathVariable(pathVariable, URI.createFileURI(value.toString()).toString());
+		}
+	}
+	
+	/**
+	 * Updates the preference store with the current set of path variables that this manager
+	 *  is currently referencing from the eclipse {@link IPathVariableManager}.
+	 */
+	public static void updatePreferenceStore() {
+		StringBuffer referencedPathVariables = new StringBuffer();
+		for (Iterator i = referencedPathVariablesList.iterator(); i.hasNext();) {
+			referencedPathVariables.append((String)i.next());
+			referencedPathVariables.append(' ');
+		}
+		
+		getPreferenceStore().put(PREFERENCE_KEY, referencedPathVariables.toString());
+		try {
+			getPreferenceStore().flush();
+		} catch (BackingStoreException e) {
+			EMFCorePlugin.getDefault().getLog().log(new Status(IStatus.ERROR, EMFCorePlugin.getPluginId(), IStatus.ERROR, e.getMessage(), e));
+		}
+	}
+	
+	/**
+	 * Removes a reference to a path variable defined in eclipse that was being
+	 *  used by this pathmap manager.
+	 *  
+	 * @param pathVariable A path variable that was once referenced by this pathmap
+	 *  manager pointing to a variable declared in the eclipse {@link IPathVariableManager}.
+	 */
+	public static void removePathVariableReference(String pathVariable) {
+		if (referencedPathVariablesList.contains(pathVariable)) {
+			referencedPathVariablesList.remove(pathVariable);
+			removePathVariable(pathVariable);
+		}
+	}
+	
+	public static Set getPathVariableReferences() {
+		return Collections.unmodifiableSet(referencedPathVariablesList);
+	}
+	
+	public static boolean isCompatiblePathVariable(String variable) {
+		if (referencedPathVariablesList.contains(variable)) {
+			// We assume that if this variable is already referenced then it is valid.
+			return true;
+		}
+		
+		IPathVariableManager pathManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
+		IPath value = pathManager.getValue(variable);
+		
+		if (value == null)
+			return false;
+		
+		// Check to see if it is a directory first.
+		// EMF will not correctly handle extension parsing
+		//  of a pathmap URI if we point directly to a file. This
+		//  means that the wrong resource factory could be called.
+		// This could possibly change in the future.
+		return isDirectory(value);
+	}
+
+	private static boolean isDirectory(IPath value) {
+		File f = new File(value.toString());
+		return (f.isDirectory());
+	}
+
 	/**
 	 * Constructor.
 	 */
@@ -105,9 +277,27 @@ public class PathmapManager extends AdapterImpl {
 	 * Set the value of a pathmap variable.
 	 * 
 	 * @param var the path map variable name
-	 * @param val the path map variable value (a URI)
+	 * @param val the path map variable value (a file URI)
 	 */
 	public static void setPathVariable(String var, String val) {
+		// We must try to determine if this pathmap resides in the workspace as some container
+		//  so that we store into the pathmap a substitution that is a platform:/resource 
+		//  type of substitution. This is required because otherwise, pathmap URIs normalize
+		//  to file URIs while platform URIs do not normalize, they remain as platform URIs.
+		//  This will break some comparisons that might occur when trying to load a resource
+		//  that is already loaded because the normalized version of the platform URI to be loaded
+		//  will not match the normalized version of the pathmap URI causing two instances of
+		//  the same resource to be loaded.
+		java.net.URI valURI = java.net.URI.create(val);
+		IContainer[] containers = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI(valURI);
+		if (containers.length == 1) {
+			val = URI.createPlatformResourceURI(containers[0].getFullPath().toString(),true).toString();
+		}
+		IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(valURI);
+		if (files.length == 1) {
+			val = URI.createPlatformResourceURI(files[0].getFullPath().toString(),true).toString();
+		}
+		
 		PATH_MAP.put(var, val);
 
 		for (Iterator i = allInstances().iterator(); i.hasNext();) {
@@ -131,7 +321,7 @@ public class PathmapManager extends AdapterImpl {
 	 * 
 	 * @return my resource set
 	 */
-	public ResourceSet getResourceSet() {
+	private ResourceSet getResourceSet() {
 		return (ResourceSet) getTarget();
 	}
 
@@ -199,7 +389,7 @@ public class PathmapManager extends AdapterImpl {
 			String plugin = element.getAttribute(PLUGIN);
 
 			if ((plugin == null) || (plugin.length() == 0))
-				plugin = element.getDeclaringExtension().getNamespace();
+				plugin = element.getDeclaringExtension().getNamespaceIdentifier();
 
 			Bundle bundle = Platform.getBundle(plugin);
 
@@ -213,7 +403,7 @@ public class PathmapManager extends AdapterImpl {
 
 			try {
 
-				url = Platform.resolve(url);
+				url = FileLocator.resolve(url);
 
 				if (url == null)
 					continue;
@@ -229,6 +419,29 @@ public class PathmapManager extends AdapterImpl {
 		}
 
 		return paths;
+	}
+	
+	public void notifyChanged(Notification msg) {
+		if (msg.getFeatureID(ResourceSet.class) == ResourceSet.RESOURCE_SET__RESOURCES) {
+			switch (msg.getEventType()) {
+			case Notification.ADD:
+				denormalize((Resource) msg.getNewValue(), getResourceSet().getURIConverter());
+				break;
+			case Notification.ADD_MANY:
+				for (Iterator i = ((List)msg.getNewValue()).iterator(); i.hasNext();) {
+					denormalize((Resource)msg.getNewValue(), getResourceSet().getURIConverter());
+				}
+				break;
+			case Notification.REMOVE:
+				normalize((Resource)msg.getOldValue(), getResourceSet().getURIConverter());
+				break;
+			case Notification.REMOVE_MANY:
+				for (Iterator i = ((List)msg.getNewValue()).iterator(); i.hasNext();) {
+					normalize((Resource)msg.getNewValue(), getResourceSet().getURIConverter());
+				}
+				break;
+			}
+		}
 	}
 
 	public void setTarget(Notifier newTarget) {
@@ -260,6 +473,9 @@ public class PathmapManager extends AdapterImpl {
 		Map savedURIs = new HashMap();
 
 		ResourceSet rset = getResourceSet();
+		
+		if (rset == null)
+			return;
 
 		for (Iterator i = rset.getResources().iterator(); i.hasNext();) {
 
@@ -387,17 +603,23 @@ public class PathmapManager extends AdapterImpl {
 				.hasNext();) {
 
 				Resource resource = (Resource) i.next();
-
-				URI uri = resource.getURI();
-
-				if ((EMFCoreConstants.PATH_MAP_SCHEME.equals(uri.scheme()))
-					&& (resource instanceof GMFResource)) {
-
-					((GMFResource) resource)
-						.setRawURI(converter.normalize(uri));
-				}
+				normalize(resource, converter);
 			}
 		}
+	}
+	
+	private void normalize(Resource resource, URIConverter converter) {
+		URI uri = resource.getURI();
+		
+		if (uri == null)
+			return;
+		
+		if ((EMFCoreConstants.PATH_MAP_SCHEME.equals(uri.scheme()))
+				&& (resource instanceof GMFResource)) {
+
+				((GMFResource) resource)
+					.setRawURI(converter.normalize(uri));
+			}
 	}
 
 	/**
@@ -415,13 +637,19 @@ public class PathmapManager extends AdapterImpl {
 				.hasNext();) {
 
 				Resource resource = (Resource) i.next();
-
-				URI uri = resource.getURI();
-
-				if (resource instanceof GMFResource)
-					((GMFResource) resource).setURI(converter.normalize(uri));
+				denormalize(resource, converter);
 			}
 		}
+	}
+	
+	private void denormalize(Resource resource, URIConverter converter) {
+		URI uri = resource.getURI();
+		
+		if (uri == null)
+			return;
+
+		if (resource instanceof GMFResource)
+			((GMFResource) resource).setURI(converter.normalize(uri));
 	}
 
 	/**
@@ -453,5 +681,64 @@ public class PathmapManager extends AdapterImpl {
 	 */
 	private Map getURIMap() {
 		return getResourceSet().getURIConverter().getURIMap();
+	}
+
+	/**
+	 * Denormalizes a given resource's URI to a pathmap URI if it is possible.
+	 * 
+	 * @param uri A file or platform URI that has been denormalized as much
+	 *  possible.
+	 *  
+	 * @return The original URI if it could not be denormalized any further
+	 *  or a new pathmap URI otherwise.
+	 */
+	public static URI denormalizeURI(URI uri) {
+		if (!uri.isFile()) {
+			if (!uri.scheme().equals("platform")) { //$NON-NLS-1$
+				return uri;
+			} else if (!uri.segment(0).equals("resource")) { //$NON-NLS-1$
+				return uri;
+			}
+		}
+		
+		String uriAsString = uri.toString();
+		
+		String maxValueString = null;
+		String maxKey = null;
+		
+		synchronized(PATH_MAP) {
+			for (Iterator i = PATH_MAP.entrySet().iterator(); i.hasNext();) {
+				Map.Entry entry = (Map.Entry)i.next();
+				String valueString = (String)entry.getValue();
+				
+				// Wipe out the trailing separator from the value if necessary
+				if (valueString.endsWith("/")) { //$NON-NLS-1$
+					valueString = valueString.substring(0,valueString.length()-1);
+				}
+				
+				if (uriAsString.startsWith(valueString)
+					&& (maxValueString == null || 
+							maxValueString.length() < valueString.length())) {
+					maxValueString = valueString;
+					maxKey = (String)entry.getKey();
+				}
+			}
+		}
+		
+		if (maxKey != null) {
+			URI valueURI = URI.createURI(maxValueString);
+			URI pathmapURI = makeURI(maxKey);
+			
+			int segmentStart = valueURI.segmentCount();
+			int segmentCount = uri.segmentCount();
+			
+			for (int j=segmentStart; j < segmentCount; j++) {
+				pathmapURI = pathmapURI.appendSegment(uri.segment(j));
+			}
+			
+			return pathmapURI;
+		}
+		
+		return uri;
 	}
 }

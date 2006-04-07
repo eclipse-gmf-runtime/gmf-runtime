@@ -11,21 +11,11 @@
 
 package org.eclipse.gmf.runtime.emf.core.internal.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -34,11 +24,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
-import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
+import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 import org.eclipse.gmf.runtime.emf.core.resources.IResourceHelper;
-import org.osgi.framework.Bundle;
 
 import com.ibm.icu.util.StringTokenizer;
 
@@ -166,295 +153,21 @@ public class Util {
 	 * @return the URI denormalized as much as possible
 	 */
 	public static URI denormalizeURI(URI uri, ResourceSet rset) {
+		URI denormalizedURI = uri;
 
-		URI resolvedURI = uri;
-
-		if (EMFCoreConstants.PLATFORM_SCHEME.equals(resolvedURI.scheme())) {
-
-			String filePath = getFilePath(rset, resolvedURI);
-
-			if ((filePath != null) && (filePath.length() > 0))
-				resolvedURI = URI.createFileURI(filePath);
-		}
-
-		if ((resolvedURI != null) && (resolvedURI.isFile())) {
-
-			String fileName = resolvedURI.lastSegment();
-
-			// attempt to convert the URI to a path map URI.
-			if (fileName != null) {
-
-				URI prefix = resolvedURI.trimSegments(1);
-
-				// find a matching pathmap.
-				URI foundKeyURI = null;
-				URI foundValURI = null;
-				int minDiff = Integer.MAX_VALUE;
-
-				Iterator i = rset.getURIConverter().getURIMap()
-					.entrySet().iterator();
-
-				while (i.hasNext()) {
-
-					Map.Entry entry = (Map.Entry) i.next();
-
-					if (entry != null) {
-
-						URI keyURI = (URI) entry.getKey();
-						URI valURI = (URI) entry.getValue();
-
-						if ((keyURI.isHierarchical())
-							&& (EMFCoreConstants.PATH_MAP_SCHEME.equals(keyURI
-								.scheme())) && (valURI.isFile())) {
-
-							int diff = computeDiff(valURI, prefix);
-
-							if ((diff >= 0) && (diff < minDiff)) {
-
-								minDiff = diff;
-
-								foundKeyURI = keyURI;
-								foundValURI = valURI;
-
-								if (minDiff == 0)
-									break;
-							}
-						}
-					}
-				}
-
-				if ((foundKeyURI != null) && (foundValURI != null))
-					return resolvedURI.replacePrefix(foundValURI, foundKeyURI);
-			}
-
-			// attempt to convert URI to a platform URI.
-			URI platformURI = getPlatformURI(uri);
-
-			if (platformURI != null)
-				return platformURI;
-		}
-
-		return uri;
-	}
-	
-	/**
-	 * Obtains, if possible, an absolute filesystem path corresponding to the
-	 * specified URI.
-	 * 
-	 * @param resourceSet a resource set context for the URI normalization
-	 * @param uri the URI to normalize to a file path
-	 * 
-	 * @return the file path, or <code>null</code> if the URI does not resolve
-	 *      to a file
-	 */
-	private static String getFilePath(ResourceSet resourceSet, URI uri) {
-
-		String filePath = null;
-
-		if (uri == null) {
-
-			filePath = EMFCoreConstants.EMPTY_STRING;
-			return filePath;
-		}
-
-		if ((resourceSet != null)
-			&& (EMFCoreConstants.PATH_MAP_SCHEME.equals(uri.scheme())))
-			uri = resourceSet.getURIConverter().normalize(uri);
-
-		if (uri.isFile())
-			filePath = uri.toFileString();
-
-		else if (EMFCoreConstants.PLATFORM_SCHEME.equals(uri.scheme())) {
-
-			String[] segments = uri.segments();
-
-			if (segments.length > 2) {
-
-				if (EMFCoreConstants.RESOURCE.equals(segments[0])) {
-
-					IProject project = null;
-
-					IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-					if (workspace != null) {
-
-						IWorkspaceRoot root = workspace.getRoot();
-
-						if (root != null)
-							project = root.getProject(URI.decode(segments[1]));
-					}
-
-					if ((project != null) && (project.exists())) {
-
-						StringBuffer path = new StringBuffer();
-
-						path.append(project.getLocation().toString());
-
-						for (int i = 2; i < segments.length; i++) {
-
-							path.append(EMFCoreConstants.PATH_SEPARATOR);
-
-							path.append(URI.decode(segments[i]));
-						}
-
-						filePath = path.toString();
-					}
-
-				} else if (EMFCoreConstants.PLUGIN.equals(segments[0])) {
-
-					Bundle bundle = Platform.getBundle(URI.decode(segments[1]));
-
-					if (bundle != null) {
-
-						StringBuffer path = new StringBuffer();
-
-						for (int i = 2; i < segments.length; i++) {
-
-							path.append(URI.decode(segments[i]));
-
-							path.append(EMFCoreConstants.PATH_SEPARATOR);
-						}
-
-						URL url = bundle.getEntry(path.toString());
-
-						if (url != null) {
-
-							try {
-
-								url = FileLocator.resolve(url);
-
-								if (url != null) {
-
-									if (EMFCoreConstants.FILE_SCHEME.equals(url
-										.getProtocol()))
-										filePath = url.getPath();
-								}
-
-							} catch (IOException e) {
-
-								Trace.catching(EMFCorePlugin.getDefault(),
-									EMFCoreDebugOptions.EXCEPTIONS_CATCHING,
-									Util.class, "getFilePath", e); //$NON-NLS-1$
-							}
-						}
-					}
-				}
+		// First, check to see if this is a file URI and it is in the workspace.
+		//  If so, we will denormalize first to a platform URI.
+		if ("file".equals(denormalizedURI.scheme())) { //$NON-NLS-1$
+			IContainer[] containers = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI(java.net.URI.create(denormalizedURI.toString()));
+			if (containers.length == 1) {
+				denormalizedURI = URI.createPlatformResourceURI(containers[0].getFullPath().toString(),true);
 			}
 		}
+		
+		// Second, we will now attempt to find a pathmap for this URI
+		denormalizedURI = PathmapManager.denormalizeURI(denormalizedURI);
 
-		if (filePath == null)
-			filePath = EMFCoreConstants.EMPTY_STRING;
-
-		else {
-
-			if (File.separatorChar != EMFCoreConstants.PATH_SEPARATOR)
-				filePath = filePath.replace(EMFCoreConstants.PATH_SEPARATOR,
-					File.separatorChar);
-		}
-
-		return filePath;
-	}
-
-	/**
-	 * Converts a file URI to a platform URI.
-	 */
-	private static URI getPlatformURI(URI uri) {
-
-		if (EMFCoreConstants.PLATFORM_SCHEME.equals(uri.scheme()))
-			return URI.createURI(uri.toString(), true);
-
-		IFile file = findFileInWorkspace(uri);
-
-		if (file != null) {
-
-			IProject project = file.getProject();
-
-			if (project != null) {
-
-				StringBuffer pathName = new StringBuffer(project.getName());
-
-				pathName.append(EMFCoreConstants.PATH_SEPARATOR);
-				pathName.append(file.getProjectRelativePath().toString());
-
-				return URI.createURI(URI.createPlatformResourceURI(
-					pathName.toString(),true).toString(), true);
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Finds a file in the workspace given its file URI.
-	 */
-	private static IFile findFileInWorkspace(URI uri) {
-
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		if (workspace != null) {
-
-			IWorkspaceRoot root = workspace.getRoot();
-
-			if (root != null) {
-
-				IFile[] files = root.findFilesForLocation(new Path(uri
-					.toFileString()));
-
-				if (files != null) {
-
-					for (int i = 0; i < files.length; i++) {
-
-						IFile file = files[i];
-
-						IProject project = file.getProject();
-
-						if (project != null)
-							return file;
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Computes segement count difference between two URIs if one is a subset of
-	 * the other.
-	 */
-	private static int computeDiff(URI subURI, URI containerURI) {
-
-		int subSegmentCount = subURI.segmentCount();
-		int containerSegmentCount = containerURI.segmentCount();
-
-		if ((subSegmentCount > 0)
-			&& (subURI.segment(subSegmentCount - 1)
-				.equals(EMFCoreConstants.EMPTY_STRING))) {
-
-			subURI = subURI.trimSegments(1);
-			subSegmentCount--;
-		}
-
-		if ((containerSegmentCount > 0)
-			&& (containerURI.segment(containerSegmentCount - 1)
-				.equals(EMFCoreConstants.EMPTY_STRING))) {
-
-			containerURI = containerURI.trimSegments(1);
-			containerSegmentCount--;
-		}
-
-		int diff = containerSegmentCount - subSegmentCount;
-
-		if (diff < 0)
-			return -1;
-
-		else if (diff > 0)
-			containerURI = containerURI.trimSegments(diff);
-
-		if (!subURI.equals(containerURI))
-			return -1;
-
-		return diff;
+		return denormalizedURI;
 	}
 
 	/**
