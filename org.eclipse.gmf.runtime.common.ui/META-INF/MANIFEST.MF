@@ -20,7 +20,7 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.action,
  org.eclipse.gmf.runtime.common.ui.util,
  org.eclipse.gmf.runtime.common.ui.viewers
 Require-Bundle: org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
- org.eclipse.ui.console;bundle-version="[3.1.100,4.0.0)";visibility:=reexport,
+ org.eclipse.ui.console;bundle-version="[3.1.0,4.0.0)";visibility:=reexport,
  org.eclipse.jface.text;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.ui.workbench.texteditor;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
