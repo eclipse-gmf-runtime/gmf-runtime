@@ -23,18 +23,6 @@
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/logicSemanticEdit.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.decorator/servicesDecorator.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.layout/servicesLayout.zip"/>			
-			<include name="org.eclipse.gmf.examples.runtime.emf.clipboard/emf-clipboard-copypaste.zip"/>
-			<include name="org.eclipse.emf.ocl.examples.interpreter/emf-ocl-interpreter.zip"/>
-			<include name="org.eclipse.emf.query.examples.ocl/emf-ocl-query.zip"/>
-			<include name="org.eclipse.emf.validation.examples.ocl/emf-ocl-validation.zip"/>
-			<include name="org.eclipse.emf.query.examples.statements/emf-query-statements.zip"/>
-			<include name="org.eclipse.emf.validation.examples.adapter/emf-validation-adapter.zip"/>
-			<include name="org.eclipse.emf.validation.examples/emf-validation-general.zip"/>
-			
-			<!--  The following zips are for the EXT library metamodel that is required for the model services examples -->
-			<include name="org.eclipse.emf.examples.library/ext-library.zip"/>
-			<include name="org.eclipse.emf.examples.library.edit/ext-library-edit.zip"/>
-			<include name="org.eclipse.emf.examples.library.editor/ext-library-editor.zip"/>
 		</patternset>
 
 		<!-- IMPORTANT: Include new example icons here -->	
@@ -45,11 +33,6 @@
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/icons/full/obj16/Element.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.decorator/icons/diagram.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.layout/icons/diagram2.gif"/>
-			<include name="org.eclipse.gmf.examples.runtime.emf.clipboard/icons/copy.gif"/>
-			<include name="org.eclipse.emf.ocl.examples.interpreter/icons/ocl.gif"/>
-			<include name="org.eclipse.emf.query.examples.statements/icons/query.gif"/>
-			<include name="org.eclipse.emf.validation.examples/icons/validate.gif"/>
-			
 		</patternset>
 						
 	</target>

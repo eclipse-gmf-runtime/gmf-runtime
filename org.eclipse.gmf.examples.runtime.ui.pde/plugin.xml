@@ -45,7 +45,7 @@
       
       <wizard
             name="%newWizards.examples.layoutservice.name"
-            icon="icons/layout.gif"
+            icon="icons/diagram2.gif"
             category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.LayoutNewWizard"
             project="true"
@@ -58,7 +58,7 @@
       
       <wizard
             name="%newWizards.examples.decorationservice.name"
-            icon="icons/decorator.gif"
+            icon="icons/diagram.gif"
             category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.DecoratorNewWizard"
             project="true"
@@ -69,115 +69,20 @@
          </description>
       </wizard>  
       
-      <wizard
-            name="%emf.clipboard.copypaste.name"
-            icon="icons/copy.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfClipboardCopypasteNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.clipboard.copypaste">
-         <description>
-            %emf.clipboard.copypaste.desc
-         </description>
-      </wizard>  
+      
+      
+      
+      
+      
       
       <wizard
-            name="%emf.ocl.interpreter.name"
-            icon="icons/ocl.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfOclInterpreterNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.ocl.interpreter">
-         <description>
-            %emf.ocl.interpreter.desc
-         </description>
-      </wizard>  
-      
-      <wizard
-            name="%emf.ocl.query.name"
-            icon="icons/ocl.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfOclQueryNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.ocl.query">
-         <description>
-            %emf.ocl.query.desc
-         </description>
-      </wizard>  
-      
-      <wizard
-            name="%emf.ocl.validation.name"
-            icon="icons/ocl.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfOclValidationNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.ocl.validation">
-         <description>
-            %emf.ocl.validation.desc
-         </description>
-      </wizard>  
-      
-      <wizard
-            name="%emf.query.statements.name"
-            icon="icons/query.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfQueryStatementsNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.query.statements">
-         <description>
-            %emf.query.statements.desc
-         </description>
-      </wizard>  
-      
-      <wizard
-            name="%emf.validation.adapter.name"
-            icon="icons/validate.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfValidationAdapterNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.validation.adapter">
-         <description>
-            %emf.validation.adapter.desc
-         </description>
-      </wizard>  
-      
-      <wizard
-            name="%emf.validation.general.name"
-            icon="icons/validate.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfValidationGeneralNewWizard"
-            project="true"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.validation.general">
-         <description>
-            %emf.validation.general.desc
-         </description>
-      </wizard>
-      <wizard
-            icon="icons/msl.gif"
-            class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.EmfMslNewWizard"
-            finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
-            project="true"
-            name="%emf.msl.general.name"
-            id="org.eclipse.gmf.examples.runtime.ui.pde.wizards.emf.msl.general">
-         <description>
-            %emf.msl.genernal.desc
-         </description>
-      </wizard>  
-      <wizard
-            name="%newWizards.examples.serviceexample.name"
             category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ServiceExampleNewWizard"
-            project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
-            id="org.eclipse.gmf.examples.runtime.common.service.wizards">
+            icon="icons/diagram.gif"
+            id="org.eclipse.gmf.examples.runtime.common.service.wizards"
+            name="%newWizards.examples.serviceexample.name"
+            project="true">
          <description>
             %newWizards.examples.serviceexample.description
          </description>
