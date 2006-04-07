@@ -25,5 +25,5 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.properties;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.notation.edit;bundle-version="[1.0.0,2.0.0)",
- com.ibm.icu;bundle-version="[3.4.3,4.0.0)"
+ com.ibm.icu;bundle-version="[3.4.0,4.0.0)"
 Eclipse-LazyStart: true
