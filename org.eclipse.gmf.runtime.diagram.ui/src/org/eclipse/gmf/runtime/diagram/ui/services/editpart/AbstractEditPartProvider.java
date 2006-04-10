@@ -70,7 +70,7 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 	 */
 	public boolean provides(IOperation operation) {
 		if ( operation instanceof CreateGraphicEditPartOperation ) {
-			View view = (( CreateGraphicEditPartOperation)operation).getView();
+			View view = (( IEditPartOperation)operation).getView();
 			return getEditPartClass(view) != null;
 		}
 		return false;

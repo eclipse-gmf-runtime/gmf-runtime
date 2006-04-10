@@ -30,10 +30,10 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEdit
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicGateEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeType;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;

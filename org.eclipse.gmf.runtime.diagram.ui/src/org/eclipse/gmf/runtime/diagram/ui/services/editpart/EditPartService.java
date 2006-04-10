@@ -35,7 +35,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.EditPartProviderConfiguration;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartProvider;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -165,7 +164,7 @@ final public class EditPartService
 	 * @see org.eclipse.gmf.runtime.common.core.service.Service#getCachingKey(org.eclipse.gmf.runtime.common.core.service.IOperation)
 	 */
 	protected Object getCachingKey(IOperation operation) {
-		return ((EditPartOperation)operation).getCachingKey();
+		return ((IEditPartOperation)operation).getCachingKey();
 	}
 
 	/** 

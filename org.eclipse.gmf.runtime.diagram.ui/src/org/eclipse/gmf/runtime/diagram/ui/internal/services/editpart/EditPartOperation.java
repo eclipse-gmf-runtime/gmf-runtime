@@ -11,8 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart;
 
-import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.services.editpart.IEditPartOperation;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 
@@ -24,7 +24,7 @@ import org.eclipse.jface.util.Assert;
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public abstract class EditPartOperation
-	implements IOperation {
+	implements IEditPartOperation {
 
 	/** cached view. */
 	private final View view;
@@ -47,10 +47,8 @@ public abstract class EditPartOperation
 	/** cached caching key */
 	private String cachingKey;
 
-	/**
-	 * Gets the caching key.
-	 * 
-	 * @return a string to be used as the caching key
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartOperation#getCachingKey()
 	 */
 	public String getCachingKey() {
 		if (cachingKey == null)
@@ -58,9 +56,8 @@ public abstract class EditPartOperation
 		return cachingKey;
 	}
 
-	/**
-	 * gets the cached view.
-	 * @return the notation View
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.services.editpart.IEditPartOperation#getView()
 	 */
 	public final View getView() {
 		return view;
