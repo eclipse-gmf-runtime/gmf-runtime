@@ -31,7 +31,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanti
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ClipboardPlugin.Tracing;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureElementCommand;
@@ -228,7 +228,8 @@ public abstract class ConfigureLogicElementCommand
                     }
 
                 } catch (ExecutionException e) {
-                    Tracing.catching(
+                    Trace.catching(
+                    	LogicDiagramPlugin.getInstance(),
                         LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
                         getClass(), "createWire", e); //$NON-NLS-1$
 
@@ -309,7 +310,8 @@ public abstract class ConfigureLogicElementCommand
                     }
 
                 } catch (ExecutionException e) {
-                    Tracing.catching(
+                    Trace.catching(
+                    	LogicDiagramPlugin.getInstance(),
                         LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
                         getClass(), "createElement", e); //$NON-NLS-1$
 
@@ -348,7 +350,9 @@ public abstract class ConfigureLogicElementCommand
                 setCommand.execute(progressMonitor, null);
 
             } catch (ExecutionException e) {
-                Tracing.catching(LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
+                Trace.catching(
+                	LogicDiagramPlugin.getInstance(),
+                	LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
                     getClass(), "setTerminalId", e); //$NON-NLS-1$
 
                 Log.error(LogicDiagramPlugin.getInstance(),

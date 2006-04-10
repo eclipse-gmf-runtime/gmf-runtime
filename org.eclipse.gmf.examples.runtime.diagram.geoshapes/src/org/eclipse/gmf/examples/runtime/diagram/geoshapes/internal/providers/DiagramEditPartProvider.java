@@ -15,6 +15,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.CreateGraphicEditPartOperation;
+import org.eclipse.gmf.runtime.diagram.ui.services.editpart.IEditPartOperation;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -44,7 +45,7 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 	public boolean provides(IOperation operation) {
 		String dgrmType ="Geoshape"; //$NON-NLS-1$
 		if (operation instanceof CreateGraphicEditPartOperation) {
-			View view = ((CreateGraphicEditPartOperation)operation).getView();
+			View view = ((IEditPartOperation)operation).getView();
 			if (view instanceof Diagram && view.getType().equals(dgrmType)) 
 				return true;
 		}

@@ -11,9 +11,7 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal;
 
-import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.emf.core.internal.util.MetamodelManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -68,8 +66,6 @@ public class LogicDiagramPlugin
 	public void start(BundleContext context)
 		throws Exception {
 		super.start(context);
-
-		MetamodelManager.register(SemanticPackage.eINSTANCE, null);
 		
 		PreferencesHint.registerPreferenceStore(
 			new PreferencesHint(EDITOR_ID), getPreferenceStore());

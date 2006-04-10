@@ -11,10 +11,7 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal;
 
-import org.eclipse.gmf.runtime.emf.core.internal.util.MetamodelManager;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
 
 
 /**
@@ -54,16 +51,5 @@ public class DiagramPlugin extends AbstractUIPlugin {
 	public static String getPluginId() {
 		return getInstance().getBundle().getSymbolicName();
 	}
-
-	/**
-	 * Starts up this wizards plug-in.
-	 */
-	public void start(BundleContext context)
-		throws Exception {
-		super.start(context);
-
-		MetamodelManager.register(NotationPackage.eINSTANCE, null);
-	}
-
 
 }

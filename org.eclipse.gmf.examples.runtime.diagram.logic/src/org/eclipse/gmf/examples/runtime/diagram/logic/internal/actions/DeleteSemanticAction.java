@@ -27,7 +27,6 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.LogicDiagramStatu
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.internal.DiagramStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
@@ -74,7 +73,7 @@ public class DeleteSemanticAction
 
 				}
 				return new Status(IStatus.OK, LogicDiagramPlugin.getPluginId(),
-					DiagramStatusCodes.OK, StringStatics.BLANK, null);
+						LogicDiagramStatusCodes.OK, StringStatics.BLANK, null);
 			};
 		};
 

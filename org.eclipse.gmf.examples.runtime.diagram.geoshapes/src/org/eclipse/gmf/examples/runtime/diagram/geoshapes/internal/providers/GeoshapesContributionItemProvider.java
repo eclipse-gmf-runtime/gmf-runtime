@@ -11,11 +11,11 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
 
+import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.PrintPreviewAction;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.EnhancedPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.RenderedPrintPreviewAction;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider;
 import org.eclipse.jface.action.IAction;
 
 /**
@@ -25,7 +25,7 @@ import org.eclipse.jface.action.IAction;
  * @author Wayne Diu, wdiu
  */
 public class GeoshapesContributionItemProvider
-	extends DiagramContributionItemProvider {
+	extends AbstractContributionItemProvider {
 
 	/**
 	 * The constructor
