@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.IListenerContext;
 
 /**
  * The abstract parent of all drag and drop listener operations. This class

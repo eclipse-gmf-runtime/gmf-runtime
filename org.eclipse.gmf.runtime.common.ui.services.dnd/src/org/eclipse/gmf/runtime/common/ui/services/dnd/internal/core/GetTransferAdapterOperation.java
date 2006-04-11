@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core;
 
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.IListenerContext;
 
 /**
  * An operation that gets the transfer adapter listener

@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.common.ui.services.dnd.core;
 
 import org.eclipse.ui.IWorkbenchPart;
 
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.IListenerContext;
 
 /**
  * Interface for accessing the attributes used to determine the

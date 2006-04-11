@@ -35,7 +35,6 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesD
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.GetDragListenerOperation;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.GetDropListenerOperation;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.IListenerContext;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.ListenerOperation;
 
 /**

@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.ITransferDropTargetLi
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.GetTransferAdapterOperation;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.IListenerContext;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.ITransferAdapterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.ListenerOperation;
 

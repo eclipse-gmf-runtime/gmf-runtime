@@ -25,11 +25,11 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.DragDropListenerService;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.core.IListenerContext;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAdapterService;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.CommonUIServicesDNDStatusCodes;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core.IListenerContext;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n.CommonUIServicesDNDMessages;
 
 /**

@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.common.ui.services.dnd.internal.core;
+package org.eclipse.gmf.runtime.common.ui.services.dnd.core;
 
 /**
  * Interface for accessing the attributes used to determine the drag and drop
