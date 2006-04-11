@@ -19,6 +19,7 @@ import org.eclipse.ui.IEditorPart;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
+import org.eclipse.gmf.runtime.diagram.ui.services.palette.IPaletteProvider;
 
 /**
  * @author melaasar

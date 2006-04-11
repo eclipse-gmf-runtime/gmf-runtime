@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.services.palette;
+package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 
 import java.util.Map;
 
