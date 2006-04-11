@@ -15,6 +15,7 @@ import org.eclipse.draw2d.AncestorListener;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
+import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
@@ -45,6 +46,21 @@ public class Decoration
 	private boolean ignoreParentVisibility;
 
 	/**
+     * Creates a new instance.
+     */
+    public Decoration() {
+        super();
+        setFocusTraversable(false);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.draw2d.Figure#findFigureAt(int, int, org.eclipse.draw2d.TreeSearch)
+     */
+    public IFigure findFigureAt(int x, int y, TreeSearch search) {
+        return getOwnerFigure().findFigureAt(x, y, search);
+    }
+
+    /**
 	 * Overridden to avoid having decorations show outside of resizeable
 	 * compartment figures when they are not in the viewable area.
 	 * 
