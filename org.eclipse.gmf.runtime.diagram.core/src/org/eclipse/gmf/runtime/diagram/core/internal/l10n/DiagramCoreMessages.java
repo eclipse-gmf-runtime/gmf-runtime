@@ -29,6 +29,11 @@ public final class DiagramCoreMessages extends NLS {
 	public static String DeleteCommand_Label;
 	public static String Command_ChangeViewProperty_ChangePropertyPattern;
 	public static String AbstractViewProvider_create_view_failed_ERROR_;
+    
+    public static String BringForwardCommand_Label;
+    public static String BringToFrontCommand_Label;
+    public static String SendBackwardCommand_Label;
+    public static String SendToBackCommand_Label;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramCoreMessages.class);

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -40,7 +41,7 @@ public class BringForwardCommand extends ZOrderCommand {
 	 * @param toMove The child view to move
 	 */
 	public BringForwardCommand(TransactionalEditingDomain editingDomain, View toMove ) {
-		super(editingDomain, "BringForwardCommand", toMove ); //$NON-NLS-1$
+		super(editingDomain, DiagramCoreMessages.BringForwardCommand_Label, toMove); 
 	}
 
     protected CommandResult doExecuteWithResult(IProgressMonitor monitor,

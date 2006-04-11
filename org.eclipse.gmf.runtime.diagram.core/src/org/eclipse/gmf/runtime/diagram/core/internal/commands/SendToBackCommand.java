@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -35,7 +36,7 @@ public class SendToBackCommand extends ZOrderCommand {
      * @param toMove
      */
 	public SendToBackCommand(TransactionalEditingDomain editingDomain, View toMove ) {
-		super(editingDomain, "SendToBackCommand", toMove ); //$NON-NLS-1$
+		super(editingDomain, DiagramCoreMessages.SendToBackCommand_Label, toMove ); 
 	}
 
 	protected CommandResult doExecuteWithResult(
