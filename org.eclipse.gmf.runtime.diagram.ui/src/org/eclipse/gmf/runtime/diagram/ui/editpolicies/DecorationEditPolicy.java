@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,10 +23,10 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.DecoratorService;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecoratorTargetBase.Direction;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
+import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OnConnectionLocator;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -121,26 +121,6 @@ public class DecorationEditPolicy
 			}
 		}
 
-		/**
-		 * Adds a figure as a decoration on a shape.
-		 * 
-		 * @param figure
-		 *            the figure to be used as the decoration
-		 * @param direction
-		 *            The direction relative to the shape to place the
-		 *            decoration.
-		 * @param margin
-		 *            The margin is the space, in himetric units, between the
-		 *            shape's edge and the decoration. A positive margin will
-		 *            place the figure outside the shape, a negative margin will
-		 *            place the decoration inside the shape.
-		 * @param isVolatile
-		 *            True if this decoration is volatile (i.e. not to be
-		 *            included in the printed output of a diagram); false
-		 *            otherwise.
-		 * @return The decoration object, which is needed to later remove the
-		 *         decoration.
-		 */
 		public IDecoration addShapeDecoration(IFigure figure,
 				Direction direction, int margin, boolean isVolatile) {
 
@@ -150,22 +130,6 @@ public class DecorationEditPolicy
 				isVolatile);
 		}
 
-		/**
-		 * Adds a figure as a decoration on a connection.
-		 * 
-		 * @param figure
-		 *            the figure to be used as the decoration
-		 * @param percentageFromSource
-		 *            The percentage of the connection length away from the
-		 *            source end (range is from 0 to 100) where the decoration
-		 *            should be positioned.
-		 * @param isVolatile
-		 *            True if this decoration is volatile (i.e. not to be
-		 *            included in the printed output of a diagram); false
-		 *            otherwise.
-		 * @return The decoration object, which is needed to later remove the
-		 *         decoration.
-		 */
 		public IDecoration addConnectionDecoration(IFigure figure,
 				int percentageFromSource, boolean isVolatile) {
 
@@ -177,20 +141,6 @@ public class DecorationEditPolicy
 				(Connection) hostFigure, percentageFromSource), isVolatile);
 		}
 
-		/**
-		 * Adds a figure as a decoration on a shape or conenction.
-		 * 
-		 * @param figure
-		 *            the figure to be used as the decoration
-		 * @param locator
-		 *            The locator to be used to position the decoration
-		 * @param isVolatile
-		 *            True if this decoration is volatile (i.e. not to be
-		 *            included in the printed output of a diagram); false
-		 *            otherwise.
-		 * @return The decoration object, which is needed to later remove the
-		 *         decoration.
-		 */
 		public IDecoration addDecoration(IFigure figure, Locator locator,
 				boolean isVolatile) {
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.decorator;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Locator;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecoratorTargetBase;
 
 /**
  * An object that can be decorated. The decorator target is an adaptable.
@@ -33,7 +34,46 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecorator
  * @author cmahoney
  */
 public interface IDecoratorTarget
-	extends IDecoratorTargetBase {
+	extends IAdaptable {
+    
+  /**
+   * Enumeration of directions for the location of shape decorations.
+   */
+    public class Direction {
+
+        private Direction() {
+            super();
+        }
+        
+        /** Center */
+        public static final Direction CENTER = new Direction();
+
+        /** North */
+        public static final Direction NORTH = new Direction();
+
+        /** South */
+        public static final Direction SOUTH = new Direction();
+
+        /** West */
+        public static final Direction WEST = new Direction();
+
+        /** East */
+        public static final Direction EAST = new Direction();
+
+        /** North-East */
+        public static final Direction NORTH_EAST = new Direction();
+
+        /** North-West */
+        public static final Direction NORTH_WEST = new Direction();
+
+        /** South-East */
+        public static final Direction SOUTH_EAST = new Direction();
+
+        /** South-West */
+        public static final Direction SOUTH_WEST = new Direction();
+    
+    }
+    
 	/**
 	 * Installs a decorator on this decorator target using a key (a String
 	 * identifier). If another decorator is installed on the same target with
@@ -93,5 +133,62 @@ public interface IDecoratorTarget
 	 *            The decoration to be removed.
 	 */
 	public void removeDecoration(IDecoration decoration);
+    
+    /**
+     * Adds a figure as a decoration on a shape.
+     * 
+     * @param figure
+     *            the figure to be used as the decoration
+     * @param direction
+     *            The direction relative to the shape to place the
+     *            decoration.
+     * @param margin
+     *            The margin is the space, in himetric units, between the
+     *            shape's edge and the decoration. A positive margin will
+     *            place the figure outside the shape, a negative margin will
+     *            place the decoration inside the shape.
+     * @param isVolatile
+     *            True if this decoration is volatile (i.e. not to be
+     *            included in the printed output of a diagram); false
+     *            otherwise.
+     * @return The decoration object, which is needed to later remove the
+     *         decoration.
+     */
+    public IDecoration addShapeDecoration(IFigure figure,
+            Direction direction, int margin, boolean isVolatile);
 
+    /**
+     * Adds a figure as a decoration on a connection.
+     * 
+     * @param figure
+     *            the figure to be used as the decoration
+     * @param percentageFromSource
+     *            The percentage of the connection length away from the
+     *            source end (range is from 0 to 100) where the decoration
+     *            should be positioned.
+     * @param isVolatile
+     *            True if this decoration is volatile (i.e. not to be
+     *            included in the printed output of a diagram); false
+     *            otherwise.
+     * @return The decoration object, which is needed to later remove the
+     *         decoration.
+     */
+    public IDecoration addConnectionDecoration(IFigure figure,
+            int percentageFromSource, boolean isVolatile);
+    /**
+     * Adds a figure as a decoration on a shape or connection.
+     * 
+     * @param figure
+     *            the figure to be used as the decoration
+     * @param locator
+     *            The locator to be used to position the decoration
+     * @param isVolatile
+     *            True if this decoration is volatile (i.e. not to be
+     *            included in the printed output of a diagram); false
+     *            otherwise.
+     * @return The decoration object, which is needed to later remove the
+     *         decoration.
+     */
+    public IDecoration addDecoration(IFigure figure, Locator locator,
+            boolean isVolatile);
 }
