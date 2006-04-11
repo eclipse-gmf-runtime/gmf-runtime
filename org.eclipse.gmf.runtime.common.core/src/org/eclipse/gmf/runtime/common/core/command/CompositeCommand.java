@@ -226,10 +226,10 @@ public class CompositeCommand
     }
 
     /**
-     * I can execute if all of my children can execute.
+     * I can execute if I am not empty and all of my children can execute.
      */
     public boolean canExecute() {
-        boolean result = super.canExecute();
+        boolean result = !isEmpty() && super.canExecute();
 
         for (Iterator iter = iterator(); result && iter.hasNext();) {
             result = ((IUndoableOperation) iter.next()).canExecute();
@@ -239,10 +239,10 @@ public class CompositeCommand
     }
 
     /**
-     * I can redo if all my children can all be redone.
+     * I can redo if I am not empty and all my children can all be redone.
      */
     public boolean canRedo() {
-        boolean result = super.canRedo();
+        boolean result = !isEmpty() && super.canRedo();
 
         for (Iterator iter = iterator(); result && iter.hasNext();) {
             result = ((IUndoableOperation) iter.next()).canRedo();
@@ -252,10 +252,10 @@ public class CompositeCommand
     }
 
     /**
-     * I can undo if all my children can all be undone.
+     * I can undo if I am not empty and all my children can all be undone.
      */
     public boolean canUndo() {
-        boolean result = super.canUndo();
+        boolean result = !isEmpty() && super.canUndo();
 
         for (Iterator iter = iterator(); result && iter.hasNext();) {
             result = ((IUndoableOperation) iter.next()).canUndo();

@@ -246,4 +246,25 @@ public class CompositeTransactionalCommand
     public final boolean isEmpty() {
         return size() < 1;
     }
+    
+    /**
+     * I can execute if I am not empty and all of my children can execute.
+     */
+    public boolean canExecute() {
+    	return !isEmpty() && super.canExecute();
+    }
+    
+    /**
+     * I can redo if I am not empty and all my children can all be redone.
+     */
+    public boolean canRedo() {
+    	return !isEmpty() && super.canRedo();
+    }
+    
+    /**
+     * I can undo if I am not empty and all my children can all be undone.
+     */
+    public boolean canUndo() {
+    	return !isEmpty() && super.canUndo();
+    }
 }
