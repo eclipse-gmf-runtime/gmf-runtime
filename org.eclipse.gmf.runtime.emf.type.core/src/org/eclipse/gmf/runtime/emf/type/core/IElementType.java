@@ -22,10 +22,10 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * Interface used to define application-layer types that describe the kinds of
- * elements that can be displayed, created, modified and destroyed in the
- * Rational Modeling Platform. These types extend the types defined for any
- * given metamodel, so that <code>IElementType</code> s can be used to
- * distinguish types of elements that share the same metaclass.
+ * elements that can be displayed, created, modified and destroyed. These types
+ * extend the types defined for any given metamodel, so that
+ * <code>IElementType</code> s can be used to distinguish types of elements
+ * that share the same metaclass.
  * <P>
  * Each element type defines how model objects that match its type are to be
  * displayed (by icon URL and display name), as well as how they are to be
@@ -39,7 +39,8 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
  * <code>IElementMatcher</code> class.
  * <P>
  * Clients should not implement this interface directly, but should extend the
- * abstract implementation {@link org.eclipse.gmf.runtime.emf.type.core.ElementType}.
+ * abstract implementation
+ * {@link org.eclipse.gmf.runtime.emf.type.core.ElementType}.
  * 
  * @author ldamus
  */
