@@ -636,18 +636,19 @@ public abstract class DiagramEditor
      */
     public void init(IEditorSite site, IEditorInput input)
         throws PartInitException {
+        
+        super.init(site, input);
+        
         try {
-            super.init(site, input);
             EditorService.getInstance().registerEditor(this);
         } catch (Exception e) {
-            // RATLC 524435
-            // As discussed with Steve, Removing the Log and removing the
-            // standard message and replacing it with one obtained from the
-            // Exception.
             Trace.catching(DiagramUIPlugin.getInstance(),
-                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-                "init", e); //$NON-NLS-1$
-            throw new PartInitException(e.getMessage(), e);
+                   DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                   "init", e); //$NON-NLS-1$
+            if (e.getMessage() != null)
+                throw new PartInitException(e.getMessage(), e);
+            else
+                throw new PartInitException("DiagramEditor failed to initialize", e);//$NON-NLS-1$
         }
     }
 
