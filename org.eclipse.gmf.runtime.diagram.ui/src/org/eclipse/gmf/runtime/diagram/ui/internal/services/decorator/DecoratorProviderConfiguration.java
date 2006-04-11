@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
+import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
+import org.eclipse.jface.util.Assert;
 
 
 /**
@@ -92,7 +92,7 @@ public class DecoratorProviderConfiguration
 	 * @param decoratorTarget the decoratorTarget
 	 * @return boolean <code>true</code> if it supports; <code>false</code> otherwise
 	 */
-	public boolean supports(IDecoratorTargetBase decoratorTarget) {
+	public boolean supports(IDecoratorTarget decoratorTarget) {
 		if (contextDescriptors.isEmpty())
 			return true;
 
@@ -128,7 +128,7 @@ public class DecoratorProviderConfiguration
 		 * @param decoratorTarget the decoratorTarget
 		 * @return boolean
 		 */
-		public boolean matches(IDecoratorTargetBase decoratorTarget) {
+		public boolean matches(IDecoratorTarget decoratorTarget) {
 			if (decoratorTargets != null) {
 				if (!objectMatches(decoratorTarget, decoratorTargets))
 					return false;

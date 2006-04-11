@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.decorator;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecoratorBase;
 
 /**
  * Clients providing an extension to the DecoratorService need to create  
@@ -24,6 +23,28 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecorator
  * 
  * @author cmahoney
  */
-public interface IDecorator extends IDecoratorBase {
-	// empty interface
+public interface IDecorator {
+    /**
+     * Activates this decorator. The decorator might need to hook listeners.
+     * These listeners should be unhooked in <code>deactivate()</code>.
+     * 
+     * @see #deactivate()
+     */
+    public void activate();
+
+    /**
+     * Deactivates this decorator, the inverse of {@link #activate()}.
+     * Deactivate is called when the host decorator target is deactivated.
+     * Deactivate unhooks any listeners, and removes decoration figures that
+     * have been added.
+     * 
+     * @see #activate()
+     */
+    public void deactivate();
+
+    /**
+     * Refreshes the decorations. This is called when the host decorator target
+     * is refreshed.
+     */
+    public void refresh();
 }

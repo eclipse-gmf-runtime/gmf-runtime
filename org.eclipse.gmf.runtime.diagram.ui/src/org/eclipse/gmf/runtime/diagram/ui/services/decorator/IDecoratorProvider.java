@@ -11,7 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.decorator;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecoratorProviderBase;
+import org.eclipse.gmf.runtime.common.core.service.IProvider;
 
 /**
  * Clients providing an extension to the DecoratorService need to create a
@@ -67,7 +67,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecorator
  * @author cmahoney
  */
 public interface IDecoratorProvider
-	extends IDecoratorProviderBase {
+	extends IProvider {
 
 	/**
 	 * Creates the decorators and installs them on the decorator target. See

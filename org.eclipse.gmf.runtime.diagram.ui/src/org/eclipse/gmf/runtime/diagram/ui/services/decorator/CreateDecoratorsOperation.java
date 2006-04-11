@@ -13,8 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.services.decorator;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.CreateDecoratorsOperationBase;
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecoratorTargetBase;
+import org.eclipse.jface.util.Assert;
 
 /**
  * The operation used with the Decoration Service.
@@ -26,17 +25,21 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecorator
  * @author cmahoney
  */
 public /*final*/ class CreateDecoratorsOperation
-	extends CreateDecoratorsOperationBase implements IOperation {
+	implements IOperation {
 
-	/**
-	 * Constructor for <code>CreateDecoratorsOperation</code>.
-	 * 
-	 * @param decoratorTarget
-	 *            the object to be decorated
-	 */
-	public CreateDecoratorsOperation(IDecoratorTargetBase decoratorTarget) {
-		super(decoratorTarget);
-	}
+    /** the decorator target */
+    protected final IDecoratorTarget decoratorTarget;
+
+    /**
+     * Constructor for <code>CreateDecoratorsOperation</code>.
+     * 
+     * @param decoratorTarget
+     *            the object to be decorated
+     */
+    public CreateDecoratorsOperation(IDecoratorTarget decoratorTarget) {
+        Assert.isNotNull(decoratorTarget);
+        this.decoratorTarget = decoratorTarget;
+    }
 
 	/**
 	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(IProvider)

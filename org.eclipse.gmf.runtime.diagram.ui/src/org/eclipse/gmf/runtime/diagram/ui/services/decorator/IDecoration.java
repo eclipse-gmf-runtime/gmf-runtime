@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.decorator;
 
-import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecorationBase;
 
 /**
  * This represents a decoration object returned by a decorator target. The
@@ -19,8 +18,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.IDecoratio
  * 
  * @author cmahoney
  */
-public interface IDecoration
-	extends IDecorationBase {
+public interface IDecoration {
 
 	/**
 	 * If this flag is set to true, then the decoration's visibility is not to
