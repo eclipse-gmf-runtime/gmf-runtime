@@ -25,13 +25,4 @@
             id="org.eclipse.gmf.runtime.emf.ui.modeling">
       </category>
   </extension>
-  
-  <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="xtools.modeling"
-            class="org.eclipse.gmf.runtime.emf.ui.internal.preferences.PathmapsPreferencePage"
-            id="pathmaps"
-            name="%pathMapLabel"/>
-   </extension>
 </plugin>

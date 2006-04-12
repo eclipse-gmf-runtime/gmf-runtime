@@ -1,4 +1,4 @@
-package org.eclipse.gmf.runtime.emf.ui.internal.preferences;
+package org.eclipse.gmf.runtime.emf.ui.preferences;
 
 import java.util.Iterator;
 
