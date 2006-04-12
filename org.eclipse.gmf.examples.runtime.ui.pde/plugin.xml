@@ -12,15 +12,15 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="%newWizardCategories.examples.auroraPlatformPlugin"
+            name="%newWizardCategories.examples.runtimePDEPlugin"
             parentCategory="org.eclipse.ui.Examples"
-            id="com.ibm.xtools.aurora.gmf">
+            id="org.eclipse.gmf.examples.runtime">
       </category>
       
       <wizard
             name="%newWizards.examples.logic.name"
             icon="icons/logic.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
+            category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.LogicNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
@@ -33,7 +33,7 @@
       <wizard
             name="%newWizards.examples.geoshapes.name"
             icon="icons/geoshape.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
+            category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.GeoshapeNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
@@ -46,7 +46,7 @@
       <wizard
             name="%newWizards.examples.layoutservice.name"
             icon="icons/diagram2.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
+            category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.LayoutNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
@@ -59,7 +59,7 @@
       <wizard
             name="%newWizards.examples.decorationservice.name"
             icon="icons/diagram.gif"
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
+            category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.DecoratorNewWizard"
             project="true"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
@@ -69,14 +69,8 @@
          </description>
       </wizard>  
       
-      
-      
-      
-      
-      
-      
       <wizard
-            category="org.eclipse.ui.Examples/com.ibm.xtools.aurora.gmf"
+            category="org.eclipse.ui.Examples/org.eclipse.gmf.examples.runtime"
             class="org.eclipse.gmf.examples.runtime.ui.pde.internal.wizards.ServiceExampleNewWizard"
             finalPerspective="org.eclipse.pde.ui.PDEPerspective"
             icon="icons/diagram.gif"

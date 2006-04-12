@@ -37,9 +37,6 @@ public class GetTypesForPopupBarOperation
 		this.host = host;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.xtools.msl.ui.internal.services.modelingassistant.IModelingAssistantOperation#getId()
-	 */
 	public String getId() {
 		return GET_TYPES_FOR_POPUP_BAR_ID;
 	}

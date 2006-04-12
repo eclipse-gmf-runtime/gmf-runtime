@@ -60,15 +60,11 @@ public final class ResourceManager
 	/**
 	 * Initializes this resource manager's resources.
 	 * 
-	 * @see com.rational.xtools.common.core.l10n.AbstractResourceManager#initializeResources()
 	 */
 	protected void initializeResources() {
 		initializeMessageResources();
 	}
 
-	/**
-	 * @see com.rational.xtools.common.core.l10n.AbstractResourceManager#getPlugin()
-	 */
 	protected Plugin getPlugin() {
 		return GmfExamplesPlugin.getDefault();
 	}

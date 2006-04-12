@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--xtools2_universal_type_manager-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:extlib="http:///org/eclipse/emf/examples/library/extlibrary.ecore/1.0.0">
   <extlib:Library xmi:id="__PdYcDwREdqsreH7ZEkn1Q" name="root1">
     <stock xmi:type="extlib:Book" xmi:id="_aR_fwDwUEdqsreH7ZEkn1Q" title="level1-1 book" author="_Z6mTcDwUEdqsreH7ZEkn1Q"/>

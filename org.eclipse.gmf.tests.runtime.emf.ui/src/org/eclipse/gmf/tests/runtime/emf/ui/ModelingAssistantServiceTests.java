@@ -107,11 +107,6 @@ public class ModelingAssistantServiceTests
 			super(id, null, id);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.ibm.xtools.emf.type.IElementType#getEditHelper()
-		 */
 		public IEditHelper getEditHelper() {
 			return null;
 		}

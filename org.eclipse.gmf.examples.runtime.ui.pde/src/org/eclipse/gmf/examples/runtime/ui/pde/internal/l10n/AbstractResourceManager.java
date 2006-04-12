@@ -49,7 +49,7 @@ import org.eclipse.gmf.examples.runtime.ui.pde.util.Trace;
  * </p>
  * <p>
  * Each cluster-oriented resource management package will have a single 
- * <code>com.ibm.xtools.common.l10n.AbstractResourceManager</code> subclass. The subclass should
+ * <code>org.eclipse.gmf.examples.runtime.ui.pde.internal.l10n.AbstractResourceManager</code> subclass. The subclass should
  * have a singleton instance and override, if necessary, the resource initialization method
  * <code>
  * 	initializeMessageResources()
