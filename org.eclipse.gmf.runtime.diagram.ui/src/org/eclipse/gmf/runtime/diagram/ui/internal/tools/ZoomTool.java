@@ -75,13 +75,26 @@ public class ZoomTool
 	 * @see org.eclipse.gef.tools.AbstractTool#getDebugName()
 	 */
 	protected String getDebugName() {
-		return "Marquee Tool";//$NON-NLS-1$
+		return "Zoom Tool";//$NON-NLS-1$
 	}
 
 	private int getZoomMode() {
 		return zoommode;
 	}
 
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.tools.AbstractTool#handleViewerEntered()
+     */
+    protected boolean handleViewerEntered() {
+        boolean handled = super.handleViewerEntered();
+        if (getCurrentViewer() != null) {
+        	getCurrentViewer().getControl().forceFocus();
+       		handled = true;
+       	}
+       	
+       	return handled;
+    }
+    
 	/**
 	 * Handles high-level processing of a key down event. KeyEvents are
 	 * forwarded to the current viewer's {@link KeyHandler}, via
