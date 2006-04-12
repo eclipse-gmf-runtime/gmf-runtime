@@ -95,7 +95,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 							.iterator(); i.hasNext();) {
 						EObject child = (EObject) i.next();
 						if (child != null) {
-							add((Resource) notifier, child);
+							updateImportsAndExports((Resource) notifier, child,
+									true);
 						}
 					}
 				}
@@ -195,8 +196,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 							.eResource();
 				}
 
-				add(resource, newValue);
+				// handle processing of the new value that has been added
+				updateImportsAndExports(resource, newValue, true);
 			}
+
 			break;
 		}
 		case Notification.ADD_MANY: {
@@ -213,7 +216,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 				EObject next = (EObject) iter.next();
 
 				if (next != null) {
-					add(resource, next);
+					// handle processing of the new value that has been added
+					updateImportsAndExports(resource, next, true);
 				}
 			}
 			break;
@@ -231,7 +235,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 							.eResource();
 				}
 
-				remove(resource, oldValue);
+				// handle processing of the old value that has been removed
+				updateImportsAndExports(resource, oldValue, false);
 			}
 			break;
 		}
@@ -249,7 +254,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 				EObject next = (EObject) iter.next();
 
 				if (next != null) {
-					remove(resource, next);
+					// handle processing of the old value that has been removed
+					updateImportsAndExports(resource, next, false);
 				}
 			}
 			break;
@@ -258,77 +264,87 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	}
 
 	/**
-	 * Adds all aggregate cross-references for the specified resource, due to
-	 * attachment of an eObject.
+	 * Updates the imports and exports map for the specified eObject
 	 * 
 	 * @param resource
 	 *            a resource
 	 * @param eObject
-	 *            an object being removed from it
+	 *            the specified eObject
+	 * @param register
+	 *            boolean flag to indicate whether to register imports or
+	 *            unregister imports
 	 */
-	protected void add(Resource resource, EObject eObject) {
-		// now, register incoming unidirectional references and opposites
-		CrossReferenceAdapter adapter = getExistingCrossReferenceAdapter(eObject);
-		if (adapter != null) {
-			for (Iterator iter = adapter.getInverseReferencers(eObject, null,
-					null).iterator(); iter.hasNext();) {
-				registerReference(((EObject) iter.next()).eResource(), resource);
+	public void updateImportsAndExports(Resource resource, EObject value,
+			boolean register) {
+		CrossReferenceAdapter adapter = getExistingCrossReferenceAdapter(value);
+
+		if (register) {
+			if (adapter != null) {
+				// now, register incoming unidirectional references and
+				// opposites
+				for (Iterator iter = adapter.getInverseReferencers(value, null,
+						null).iterator(); iter.hasNext();) {
+					registerReference(((EObject) iter.next()).eResource(),
+							resource);
+				}
 			}
-		}
+		} else {
+			// deregister the outgoing references and incoming bidirectionals
+			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() ? value
+					.eCrossReferences().iterator()
+					: ((InternalEList) value.eCrossReferences())
+							.basicIterator());
+			while (crossReferences.hasNext()) {
+				EObject referent = (EObject) crossReferences.next();
 
-		// go through the children of the eObject
-		for (Iterator i = resolve() ? eObject.eContents().iterator()
-				: ((InternalEList) eObject.eContents()).basicIterator(); i
-				.hasNext();) {
-			EObject notifier = (EObject) i.next();
-			add(resource, notifier);
-		}
-	}
+				if (referent != null) {
+					EReference eReference = (EReference) crossReferences
+							.feature();
 
-	/**
-	 * Removes all aggregate cross-references for the specified resource, due to
-	 * detachment of an eObject.
-	 * 
-	 * @param resource
-	 *            a resource
-	 * @param eObject
-	 *            an object being removed from it
-	 */
-	protected void remove(Resource resource, EObject eObject) {
-		// deregister the outgoing references and incoming bidirectionals
-		EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() ? eObject
-				.eCrossReferences().iterator()
-				: ((InternalEList) eObject.eCrossReferences()).basicIterator());
-		while (crossReferences.hasNext()) {
-			EObject referent = (EObject) crossReferences.next();
+					// we ignore unchangeable references
+					if (eReference.isChangeable()) {
+						Resource referencedResource = referent.eResource();
+						deregisterReference(resource, referencedResource);
+					}
+				}
+			}
 
-			if (referent != null) {
-				EReference eReference = (EReference) crossReferences.feature();
-
-				// we ignore unchangeable references
-				if (eReference.isChangeable()) {
-					Resource referencedResource = referent.eResource();
-					deregisterReference(resource, referencedResource);
+			// now, deregister incoming unidirectional references and opposites
+			if (adapter != null) {
+				for (Iterator iter = adapter.getInverseReferencers(value, null,
+						null).iterator(); iter.hasNext();) {
+					deregisterReference(((EObject) iter.next()).eResource(),
+							resource);
 				}
 			}
 		}
 
-		// now, deregister incoming unidirectional references and opposites
-		CrossReferenceAdapter adapter = getExistingCrossReferenceAdapter(eObject);
+		// process contents
 		if (adapter != null) {
-			for (Iterator iter = adapter.getInverseReferencers(eObject, null,
-					null).iterator(); iter.hasNext();) {
-				deregisterReference(((EObject) iter.next()).eResource(),
-						resource);
-			}
+			adapter.updateImportsAndExportsForContents(resource, value,
+					register);
 		}
+	}
 
+	/**
+	 * Updates the imports and exports map for the contents of the specified
+	 * eObject
+	 * 
+	 * @param resource
+	 *            a resource
+	 * @param eObject
+	 *            the specified eObject
+	 * @param register
+	 *            boolean flag to indicate whether to register imports or
+	 *            unregister imports
+	 */
+	public void updateImportsAndExportsForContents(Resource resource,
+			EObject value, boolean register) {
 		// go through the children of the eObject
-		for (Iterator i = resolve() ? eObject.eContents().iterator()
-				: ((InternalEList) eObject.eContents()).basicIterator(); i
+		for (Iterator i = resolve() ? value.eContents().iterator()
+				: ((InternalEList) value.eContents()).basicIterator(); i
 				.hasNext();) {
-			EObject notifier = (EObject) i.next();
-			remove(resource, notifier);
+			updateImportsAndExports(resource, (EObject) i.next(), register);
 		}
 	}
 
