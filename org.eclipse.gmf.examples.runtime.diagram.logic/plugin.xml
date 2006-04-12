@@ -382,6 +382,12 @@
             class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicRulerGridPreferencePage"
             id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicRulerGridPreferencePage">
       </page>
+      <page
+            name="%PreferencePage.Pathmaps"
+            category="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicDiagramsPreferencePage"
+            class="org.eclipse.gmf.runtime.emf.ui.preferences.PathmapsPreferencePage"
+            id="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicPathmapsPreferencePage">
+      </page>
    </extension>
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.preferences.LogicPreferencesInitializer" />
