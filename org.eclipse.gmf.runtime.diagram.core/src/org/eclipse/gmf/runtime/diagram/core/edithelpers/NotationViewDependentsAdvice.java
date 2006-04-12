@@ -20,6 +20,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -29,7 +30,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * notations views under the following circumstances:
  * <ul>
  *   <li>element being destroyed is the view's semantic referent</li>
- *   <li>element being destroyed is a Node to which an Edge is connected</li>
+ *   <li>element being destroyed is a Node or Edge to which an Edge is connected</li>
  * </ul>
  *
  * @author Christian W. Damus (cdamus)
@@ -61,18 +62,18 @@ public class NotationViewDependentsAdvice extends AbstractEditHelperAdvice {
             		request.getDestroyDependentsCommand(nodeEntryKeys));
         }
         
-        // handle the edges connected to nodes
+        // handle the edges connected to nodes or other edges
         
-        if (destructee instanceof Node) {
-        	Node node = (Node) destructee;
+        if (destructee instanceof Node || destructee instanceof Edge) {
+        	View view = (View) destructee;
         	
             result = CompositeCommand.compose(
             		result,
-            		request.getDestroyDependentsCommand(node.getSourceEdges()));
+            		request.getDestroyDependentsCommand(view.getSourceEdges()));
         	
             result = CompositeCommand.compose(
             		result,
-            		request.getDestroyDependentsCommand(node.getTargetEdges()));
+            		request.getDestroyDependentsCommand(view.getTargetEdges()));
         }
         
  		return result;
