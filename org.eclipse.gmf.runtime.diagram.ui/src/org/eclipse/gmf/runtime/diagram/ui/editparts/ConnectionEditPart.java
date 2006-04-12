@@ -1070,7 +1070,11 @@ abstract public class ConnectionEditPart
 	 * Method refreshSmoothness.
 	 */
 	protected void refreshSmoothness() {
-		PolylineConnectionEx poly = ((PolylineConnectionEx) getConnectionFigure());
+        Connection connection = getConnectionFigure();
+        if (!(connection instanceof PolylineConnectionEx))
+            return;
+        
+		PolylineConnectionEx poly = (PolylineConnectionEx) connection;
 		RoutingStyle style = (RoutingStyle) ((View) getModel())
 			.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
 		if (style != null) {
@@ -1092,7 +1096,11 @@ abstract public class ConnectionEditPart
 	 * Method refreshJumplinks.
 	 */
 	protected void refreshJumplinks() {
-		PolylineConnectionEx poly = ((PolylineConnectionEx) getConnectionFigure());
+        Connection connection = getConnectionFigure();
+        if (!(connection instanceof PolylineConnectionEx))
+            return;
+        
+		PolylineConnectionEx poly = (PolylineConnectionEx) connection;
 		RoutingStyle style = (RoutingStyle) ((View) getModel())
 			.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
 
@@ -1126,7 +1134,11 @@ abstract public class ConnectionEditPart
 	 * Method refreshRoutingStyles.
 	 */
 	protected void refreshRoutingStyles() {
-		PolylineConnectionEx poly = ((PolylineConnectionEx) getConnectionFigure());
+        Connection connection = getConnectionFigure();
+        if (!(connection instanceof PolylineConnectionEx))
+            return;
+        
+		PolylineConnectionEx poly = (PolylineConnectionEx) connection;
 
 		RoutingStyle style = (RoutingStyle) ((View) getModel())
 			.getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
