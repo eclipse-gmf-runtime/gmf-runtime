@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ * 	  Dmitry Stadnik (Borland) - contribution for bugzilla 135694
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
@@ -70,7 +71,7 @@ import org.eclipse.swt.graphics.Image;
  * @author mmostafa
  *
  */
-public class TextCompartmentEditPart extends CompartmentEditPart {
+public class TextCompartmentEditPart extends CompartmentEditPart implements ITextAwareEditPart {
 	
 	/** the direct edit manager for text editing */
 	private DirectEditManager manager;
@@ -160,9 +161,8 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 					getParserOptions().intValue());
 	}
 
-	/**
-	 * gets the edit text
-	 * @return the edit text
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#getEditText()
 	 */
 	public String getEditText() {
 		EObject element = resolveSemanticElement();
@@ -171,10 +171,17 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 			new EObjectAdapter(element),
 			getParserOptions().intValue());
 	}
-	
-	/**
-	 * get the completion processor
-	 * @return IContentAssistProcessor 
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#editTextModified(java.lang.String)
+	 */
+	public void setLabelText(String text) {
+		getLabel().setText(text);
+	}
+
+	/* 
+     * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#getCompletionProcessor()
 	 */
 	public IContentAssistProcessor getCompletionProcessor() {
 		EObject element = resolveSemanticElement();
@@ -188,9 +195,9 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 		return getEditText() != null;
 	}
 
-	/**
-	 * Returns a validator for the user's edit text
-	 * @return a validator
+	/* 
+     * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#getEditTextValidator()
 	 */
 	public ICellEditorValidator getEditTextValidator() {
 		return new ICellEditorValidator() {
@@ -228,10 +235,9 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 		};
 	}
 
-	/**
-	 * Gets the parser options. The result is passed as a parameter to the 
-	 * parser's getPrintString() and isAffectingEvent() methods
-	 * @return ParserOptions the parser options
+	/* 
+     * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#getParserOptions()
 	 */
 	public final ParserOptions getParserOptions() {
 		if (parserOptions == null)
@@ -515,9 +521,9 @@ public class TextCompartmentEditPart extends CompartmentEditPart {
 		return Collections.EMPTY_LIST;
 	}
 
-	/**
-	 * Method getParser.
-	 * @return IParser
+	/* 
+     * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#getParser()
 	 */
 	public IParser getParser() {
 		if (parser == null) {

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,17 +7,21 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ * 	  Dmitry Stadnik (Borland) - contribution for bugzilla 135694
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.tools;
 
 import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
@@ -42,10 +46,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author melaasar
- * 
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of type
- * comments go to Window>Preferences>Java>Code Generation.
  */
 public class TextDirectEditManager
 	extends DirectEditManager {
@@ -103,16 +103,40 @@ public class TextDirectEditManager
 		}
 
 	}
-	
+
+	private static class LabelCellEditorLocator implements CellEditorLocator {
+
+		private Label label;
+
+		public LabelCellEditorLocator(Label label) {
+			this.label = label;
+		}
+
+		public Label getLabel() {
+			return label;
+		}
+
+		public void relocate(CellEditor celleditor) {
+			Text text = (Text) celleditor.getControl();
+			Rectangle rect = getLabel().getTextBounds().getCopy();
+			getLabel().translateToAbsolute(rect);
+
+			int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
+			rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr * 2, 0));
+
+			if (!rect.equals(new Rectangle(text.getBounds())))
+				text.setBounds(rect.x, rect.y, rect.width, rect.height);
+		}
+	}
+
 	/**
 	 * constructor
 	 * 
 	 * @param source <code>GraphicalEditPart</code> to support direct edit of.  The figure of
 	 * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
 	 */
-	public TextDirectEditManager(TextCompartmentEditPart source) {
-		super(source, getTextCellEditorClass(source), 
-				new TextCellEditorLocator(source.getLabel()));
+	public TextDirectEditManager(ITextAwareEditPart source) {
+		super(source, getTextCellEditorClass(source), getTextCellEditorLocator(source));
 	}
 
 	/**
@@ -124,10 +148,30 @@ public class TextDirectEditManager
 		super(source, editorType, locator);		
 	}
 
-	private static Class getTextCellEditorClass(TextCompartmentEditPart source){
-		WrapLabel wrapLabel = source.getLabel();
+    /**
+     * @param source the <code>ITextAwareEditPart</code> to determine the cell editor for
+     * @return the <code>CellEditorLocator</code> that is appropriate for the source <code>EditPart</code>
+     */
+    public static CellEditorLocator getTextCellEditorLocator(ITextAwareEditPart source){
+               
+        if (source instanceof TextCompartmentEditPart)
+            return new TextCellEditorLocator(((TextCompartmentEditPart)source).getLabel());
+        else {
+            IFigure figure = source.getFigure();
+            assert figure instanceof Label;
+            return new LabelCellEditorLocator((Label)figure);
+        }
+    }
+    
+	/**
+	 * @param source the <code>GraphicalEditPart</code> that is used to determine which
+     * <code>CellEditor</code> class to use.
+	 * @return the <code>Class</code> of the <code>CellEditor</code> to use for the text editing.
+	 */
+	public static Class getTextCellEditorClass(GraphicalEditPart source){
+		IFigure figure = source.getFigure();
 				
-		if (wrapLabel.isTextWrapped())
+		if (figure instanceof WrapLabel && ((WrapLabel) figure).isTextWrapped())
 			return WrapTextCellEditor.class;
 		
 		return TextCellEditorEx.class;
@@ -146,7 +190,7 @@ public class TextDirectEditManager
 	 * Note: the returned <code>Font</code> should not be disposed since it is
 	 * cached by a common resource manager.
 	 */
-	protected Font getScaledFont(WrapLabel label) {
+	protected Font getScaledFont(IFigure label) {
 		Font scaledFont = label.getFont();
 		FontData data = scaledFont.getFontData()[0];
 		Dimension fontSize = new Dimension(0, MapModeUtil.getMapMode(label).DPtoLP(data.getHeight()));
@@ -164,11 +208,11 @@ public class TextDirectEditManager
 		committed = false;
 
 		// Get the Text Compartments Edit Part
-		TextCompartmentEditPart textEP = (TextCompartmentEditPart) getEditPart();
+		ITextAwareEditPart textEP = (ITextAwareEditPart) getEditPart();
 
 		setEditText(textEP.getEditText());
 
-		WrapLabel label = textEP.getLabel();
+		IFigure label = textEP.getFigure();
 		Assert.isNotNull(label);
 		Text text = (Text) getCellEditor().getControl();
 		// scale the font accordingly to the zoom level
@@ -268,16 +312,13 @@ public class TextDirectEditManager
 		}
 
 		// Get the Text Compartment Edit Part
-		TextCompartmentEditPart textEP = (TextCompartmentEditPart) getEditPart();
+		ITextAwareEditPart textEP = (ITextAwareEditPart) getEditPart();
 
 		// Get the Text control
 		Text textControl = (Text) cellEditor.getControl();
 
-		// Get the Text Edit Part's Figure (WrapLabel)
-		WrapLabel label = textEP.getLabel();
-		Assert.isNotNull(label);
 		// Set the Figures text
-		label.setText(toEdit);
+		textEP.setLabelText(toEdit);
 		
 		
 		// See RATLC00522324
