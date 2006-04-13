@@ -94,14 +94,6 @@ public final class CommonUIMessages extends NLS {
 	public static String ActionAbandonedDialog_title;
 	public static String SaveAllDirtyEditorsDialog_title;
 	public static String SaveAllDirtyEditorsDialog_message;
-	public static String ModelingPreferencePage_OpenUnrecognizedContent_label;
-	public static String ModelingPreferencePage_OpenUnrecognizedContent_always;
-	public static String ModelingPreferencePage_OpenUnrecognizedContent_never;
-	public static String ModelingPreferencePage_OpenUnrecognizedContent_prompt;
-	public static String ModelingPreferencePage_SaveUnrecognizedContent_label;
-	public static String ModelingPreferencePage_SaveUnrecognizedContent_always;
-	public static String ModelingPreferencePage_SaveUnrecognizedContent_never;
-	public static String ModelingPreferencePage_SaveUnrecognizedContent_prompt;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CommonUIMessages.class);

@@ -30,9 +30,7 @@ import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.ecore.xmi.PackageNotFoundException;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorStatusCodes;
@@ -40,31 +38,13 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorM
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.util.NotationExtendedMetaData;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Display;
 
 public class DiagramIOUtil {
 	
 	// localized labels
-	private static String TITLE_OPEN = EditorMessages.compatibility_title_open;
-
-	private static String MESSAGE1_OPEN = EditorMessages.compatibility_message1_open;
-
-	private static String MESSAGE2_OPEN = EditorMessages.compatibility_message2_open;
-
-	private static String MESSAGE3_OPEN = EditorMessages.compatibility_message3_open;
-
 	private static String UNABLE_TO_LOAD_DIAGRAM = EditorMessages.Diagram_UNABLE_TO_LOAD_RESOURCE;
 
 	private static String NO_DIAGRAM_IN_RESOURCE = EditorMessages.Diagram_NO_DIAGRAM_IN_RESOURCE;
-
-	private static String TITLE_SAVE = EditorMessages.compatibility_title_save;
-
-	private static String MESSAGE1_SAVE = EditorMessages.compatibility_message1_save;
-
-	private static String MESSAGE2_SAVE = EditorMessages.compatibility_message2_save;
 
 	private static interface ILoader {
 		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws IOException, CoreException;
@@ -252,65 +232,8 @@ public class DiagramIOUtil {
 	 * @return
 	 */
 	private static boolean shouldLoadInCompatibilityMode(String errMsg) {
-
-		boolean bLoadAgain = false;
-
-		// Check prefs to see how we handle compatibility issues.
-		IPreferenceStore prefs = CommonUIPlugin.getDefault()
-			.getPreferenceStore();
-		// The pref is available on globalPreferancesPage.java
-		prefs
-			.setDefault(
-				org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.OPEN_UNRECOGNIZED_VERSIONS,
-				MessageDialogWithToggle.PROMPT);
-		String szOption = prefs
-			.getString(org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.OPEN_UNRECOGNIZED_VERSIONS);
-
-		// Are we prompting the user?
-		if (szOption == MessageDialogWithToggle.PROMPT) {
-
-			// Prepare the message
-			StringBuffer displayErrors = new StringBuffer();
-			displayErrors.append(MESSAGE1_OPEN);
-			displayErrors.append(StringStatics.PLATFORM_NEWLINE);
-
-			if (errMsg != null && errMsg.trim().length() > 0) {
-				displayErrors.append(StringStatics.PLATFORM_NEWLINE);
-				displayErrors.append(errMsg);
-			}
-
-			displayErrors.append(StringStatics.PLATFORM_NEWLINE);
-			displayErrors.append(StringStatics.PLATFORM_NEWLINE);
-			displayErrors.append(MESSAGE2_OPEN);
-			displayErrors.append(StringStatics.PLATFORM_NEWLINE);
-			displayErrors.append(StringStatics.PLATFORM_NEWLINE);
-			displayErrors.append(MESSAGE3_OPEN);
-
-			// Show the message
-			MessageDialogWithToggle dlg = MessageDialogWithToggle
-				.openYesNoQuestion(Display.getDefault().getActiveShell(),
-					TITLE_OPEN, displayErrors.toString(), null, false, null,
-					null);
-
-			// Respond to the user's decisions
-			bLoadAgain = (dlg.getReturnCode() == IDialogConstants.YES_ID);
-
-			//	More Responding to the user's decisions
-			if (true == dlg.getToggleState()) {
-				String state = MessageDialogWithToggle.ALWAYS;
-				if (false == bLoadAgain) {
-					state = MessageDialogWithToggle.NEVER;
-				}
-				prefs
-					.setValue(
-						org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.OPEN_UNRECOGNIZED_VERSIONS,
-						state);
-			}
-		} else {
-			bLoadAgain = (szOption == MessageDialogWithToggle.ALWAYS);
-		}
-
-		return bLoadAgain;
+		// no compatibility support at present
+		return false;
 	}
 	
 	public static void unload(TransactionalEditingDomain domain, Diagram diagram) {
@@ -318,58 +241,8 @@ public class DiagramIOUtil {
 	}
 
 	public static boolean hasUnrecognizedData(Resource resource) {
-		boolean bKeepUnrecognizedData = false;
-		// Do we have any tags?
-		if ((resource instanceof XMLResource)
-			&& (false == ((XMLResource) resource).getEObjectToExtensionMap()
-				.isEmpty())) {
-
-			// Check prefs to see how we handle compatibility issues.
-			// The pref is available on globalPreferancesPage.java which is in
-			// presentation
-			IPreferenceStore prefs = CommonUIPlugin.getDefault()
-				.getPreferenceStore();
-			prefs
-				.setDefault(
-					org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.SAVE_UNRECOGNIZED_VERSIONS,
-					MessageDialogWithToggle.PROMPT);
-			String szOption = prefs
-				.getString(org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.SAVE_UNRECOGNIZED_VERSIONS);
-
-			// Are we prompting the user?
-			if (szOption == MessageDialogWithToggle.PROMPT) {
-
-				// Prepare the message
-				String display = MESSAGE1_SAVE + StringStatics.PLATFORM_NEWLINE
-					+ StringStatics.PLATFORM_NEWLINE + MESSAGE2_SAVE;
-
-				// Show the message
-				MessageDialogWithToggle dlg = MessageDialogWithToggle
-					.openYesNoQuestion(Display.getDefault().getActiveShell(),
-						TITLE_SAVE, display, null, false, null, null);
-
-				// Respond to the user's decisions
-				bKeepUnrecognizedData = (dlg.getReturnCode() == IDialogConstants.YES_ID);
-
-				//	More Responding to the user's decisions
-				if (true == dlg.getToggleState()) {
-
-					//Warnings say this is not used
-					//String state = MessageDialogWithToggle.ALWAYS;
-					//if (false == bKeepUnrecognizedData) {
-					//	state = MessageDialogWithToggle.NEVER;
-					//}
-					prefs
-						.setValue(
-							org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.SAVE_UNRECOGNIZED_VERSIONS,
-							szOption);
-				}
-			} else if (MessageDialogWithToggle.ALWAYS.equals(szOption)) {
-				bKeepUnrecognizedData = true;
-			}
-		}
-
-		return bKeepUnrecognizedData;
+		// no compatibility support at present
+		return false;
 	}
 }
 

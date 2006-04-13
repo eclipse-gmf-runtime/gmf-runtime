@@ -78,14 +78,6 @@ final public class EditorMessages extends NLS {
 	public static String Editor_error_saving_message2;
 	public static String Editor_error_saving_title1;
 	public static String Editor_error_saving_title2;
-
-	public static String compatibility_title_save;
-	public static String compatibility_message1_save;
-	public static String compatibility_message2_save;
-	public static String compatibility_title_open;
-	public static String compatibility_message1_open;
-	public static String compatibility_message2_open;
-	public static String compatibility_message3_open;
 	
 	public static String Diagram_UNABLE_TO_LOAD_RESOURCE;
 	public static String Diagram_NO_DIAGRAM_IN_RESOURCE;
