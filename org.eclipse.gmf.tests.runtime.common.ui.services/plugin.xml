@@ -13,21 +13,25 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.eclipse.gmf.tests.runtime.common.ui.services.actionSet"
-            label="Sample Action Set"
+            label="Element Selection Service Tests"
             visible="true">
          <menu
                id="sampleMenu"
-               label="Sample &amp;Menu">
+               label="Element Selection Service Tests">
             <separator name="sampleGroup"/>
          </menu>
          <action
                class="org.eclipse.gmf.tests.runtime.common.ui.services.actions.TestSelectElementDialogActionDelegate"
                icon="icons/sample.gif"
-               id="org.eclipse.gmf.tests.runtime.common.ui.services.actions.SampleAction"
-               label="&amp;Sample Action"
-               menubarPath="sampleMenu/sampleGroup"
-               toolbarPath="sampleGroup"
-               tooltip="Hello, Eclipse world"/>
+               id="org.eclipse.gmf.tests.runtime.common.ui.services.actions.TestSelectElementDialogActionDelegate"
+               label="Test Select Element Dialog"
+               menubarPath="sampleMenu/sampleGroup"/>
+         <action
+               class="org.eclipse.gmf.tests.runtime.common.ui.services.actions.TestSelectElementListActionDelegate"
+               icon="icons/sample.gif"
+               id="org.eclipse.gmf.tests.runtime.common.ui.services.actions.TestSelectElementListActionDelegate"
+               label="Test Select Element List"
+               menubarPath="sampleMenu/sampleGroup"/>
       </actionSet>
    </extension-->
    <extension
