@@ -65,6 +65,12 @@ public class ElementSelectionScope {
         1 << 4);
 
     /**
+     * Provide all primities types in the sources (if applicable).
+     */
+    public static final ElementSelectionScope PRIMITIVES = new ElementSelectionScope(
+        1 << 5);
+
+    /**
      * Returns the scope as an integer bit flag
      * 
      * @return int the scope as an integer bit flag
