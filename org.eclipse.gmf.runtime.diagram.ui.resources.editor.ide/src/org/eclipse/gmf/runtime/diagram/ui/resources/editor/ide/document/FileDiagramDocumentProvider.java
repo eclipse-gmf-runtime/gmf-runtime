@@ -170,8 +170,7 @@ public class FileDiagramDocumentProvider
 		}
 		IDiagramDocument diagramDocument = (IDiagramDocument)document;
 		TransactionalEditingDomain domain = diagramDocument.getEditingDomain();
-
-		DiagramIOUtil.save(domain, file, diagram, DiagramIOUtil.hasUnrecognizedData(diagram.eResource()), monitor);
+		doSave(domain, file, diagram, null, monitor);
 	}
 	
 	private Diagram copyDiagramResource(Diagram sourceDiagram, IFile file) {
@@ -330,5 +329,30 @@ public class FileDiagramDocumentProvider
 
 		return fResourceRuleFactory.createRule(toCreateOrModify);
 	}
-	
+    
+    /**
+     * Handles the saving of the diagram to a file
+     * 
+     * @param domain
+     *            the TransactionalEditingDomain we are saving in
+     * @param file
+     *            the IFile to save to
+     * @param diagram
+     *            Diagram that will be saved
+     * @param options
+     *            save options or null
+     * @param monitor
+     *            IProgressMonitor
+     * @throws CoreException
+     */
+    protected void doSave(TransactionalEditingDomain domain, IFile file,
+            Diagram diagram, Map options, IProgressMonitor monitor)
+        throws CoreException {
+        if (options == null) {
+            DiagramIOUtil.save(domain, file, diagram, DiagramIOUtil
+                .hasUnrecognizedData(diagram.eResource()), monitor);
+        } else {
+            DiagramIOUtil.save(domain, file, diagram, monitor, options);
+        }
+    }
 }

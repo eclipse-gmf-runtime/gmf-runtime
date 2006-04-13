@@ -67,7 +67,7 @@ public class DiagramIOUtil {
 	private static String MESSAGE2_SAVE = EditorMessages.compatibility_message2_save;
 
 	private static interface ILoader {
-		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws CoreException;
+		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws IOException, CoreException;
 	}
 	
 	private static class FileLoader implements ILoader {
@@ -77,7 +77,7 @@ public class DiagramIOUtil {
 			fFile = file;
 		}
 		
-		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws CoreException {
+		public Resource load(TransactionalEditingDomain domain, Map loadOptions, IProgressMonitor monitor) throws IOException, CoreException {
 			fFile.refreshLocal(IResource.DEPTH_ZERO, monitor);
 			URI uri = URI.createPlatformResourceURI(fFile.getFullPath()
                 .toString(), true);
@@ -90,9 +90,6 @@ public class DiagramIOUtil {
 			
 			if (!resource.isLoaded()) {
 				Map loadingOptions = new HashMap(GMFResourceFactory.getDefaultLoadOptions());
-				// We will place a special extended metadata in here to ensure that we can load diagrams
-				//  from older versions of our metamodel.
-				loadingOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, new NotationExtendedMetaData());
 				
                 // propogate passed in options to the defaults
                 Iterator iter = loadOptions.keySet().iterator();
@@ -101,11 +98,12 @@ public class DiagramIOUtil {
                     loadingOptions.put(key, loadOptions.get(key));
                 }
                 
-				try {
-					resource.load(loadingOptions);
-				} catch (IOException e) {
-					// Proceed with an unloaded resource.
-				}
+                try {
+                	resource.load(loadingOptions);
+                } catch (IOException e) {
+                	resource.unload();
+                	throw e;
+                }
 			}
 			return resource;
 		}
@@ -120,7 +118,7 @@ public class DiagramIOUtil {
 		
 		public Resource load(TransactionalEditingDomain editingDomain,
 				Map loadOptions, IProgressMonitor monitor)
-			throws CoreException {
+			throws IOException, CoreException {
             
 			String storagePath = fStorage.getFullPath().toString();
  
@@ -156,17 +154,16 @@ public class DiagramIOUtil {
 		Resource notationModel = null;
 		try {
 			try {	
-			// File exists with contents..
-			notationModel = loader.load(domain, new HashMap(), monitor);
-
-			} catch (Exception e) {
+				// File exists with contents..
+				notationModel = loader.load(domain, new HashMap(), monitor);
+			} catch (Resource.IOWrappedException e) {
 				if (bTryCompatible) {
-					Throwable t = e.getCause();
+					Throwable causeError = e.getWrappedException();
 					
-					Throwable causeError = t.getCause();
 					if (causeError == null) {
-						causeError = t;
+						causeError = e;
 					}
+					
 					String errMsg = causeError.getLocalizedMessage();
 					if (causeError instanceof Resource.IOWrappedException) {
 						Exception exc = ((Resource.IOWrappedException) causeError)
@@ -175,11 +172,17 @@ public class DiagramIOUtil {
 							causeError = exc;
 						}
 					}
+					
 					if ((causeError instanceof PackageNotFoundException 
 							|| causeError instanceof ClassNotFoundException
 							|| causeError instanceof FeatureNotFoundException)) {
 						if (shouldLoadInCompatibilityMode(errMsg)) {
                             Map loadOptions = new HashMap();
+            				
+                            // We will place a special extended metadata in here to ensure that we can load diagrams
+            				//  from older versions of our metamodel.
+            				loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, new NotationExtendedMetaData());
+            				
                             loadOptions.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
 							notationModel = loader.load(domain, loadOptions, monitor);
 						} else {
@@ -220,9 +223,13 @@ public class DiagramIOUtil {
         Map options = new HashMap();
 		if(bKeepUnrecognizedData)
             options.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-			
         save(domain, file, diagram, progressMonitor, options);
 	}
+    
+    static public void save(TransactionalEditingDomain domain, IFile file, Diagram diagram, IProgressMonitor progressMonitor) throws CoreException {
+        Map options = new HashMap();
+        save(domain, file, diagram, progressMonitor, options);
+    }
 	
 	static public void save(TransactionalEditingDomain domain, IFile file, Diagram diagram, IProgressMonitor progressMonitor, Map options) throws CoreException {
 		Resource notationModel = ((EObject) diagram).eResource();
@@ -357,7 +364,7 @@ public class DiagramIOUtil {
 							org.eclipse.gmf.runtime.common.ui.preferences.IPreferenceConstants.SAVE_UNRECOGNIZED_VERSIONS,
 							szOption);
 				}
-			} else if (szOption == MessageDialogWithToggle.ALWAYS) {
+			} else if (MessageDialogWithToggle.ALWAYS.equals(szOption)) {
 				bKeepUnrecognizedData = true;
 			}
 		}
