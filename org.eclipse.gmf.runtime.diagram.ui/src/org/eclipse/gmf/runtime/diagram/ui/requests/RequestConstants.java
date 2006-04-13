@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,5 +144,10 @@ public interface RequestConstants extends org.eclipse.gef.RequestConstants {
 	 * constant for show all compartments  request
 	 */
 	public static final String REQ_SHOW_ALL_COMPARTMENTS = "show_all_compartments"; //$NON-NLS-1$
+    
+	/**
+	 * constant key for extended data in the DirectEditRequest for the initial character
+	 */
+	public static final String REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR = "directedit_extendeddata_initial_char"; //$NON-NLS-1$
 }
  

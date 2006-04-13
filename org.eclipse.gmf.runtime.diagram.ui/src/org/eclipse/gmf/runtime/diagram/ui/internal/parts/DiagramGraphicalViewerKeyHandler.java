@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2003  IBM Corporation and others.
+ * Copyright (c) 2000, 2003, 2006  IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,6 @@ import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 
-import org.eclipse.gmf.runtime.gef.ui.internal.requests.DirectEditRequestWrapper;
-
 /**
  * @author melaasar
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -54,14 +52,6 @@ public class DiagramGraphicalViewerKeyHandler
 	 * @see org.eclipse.gef.KeyHandler#keyPressed(org.eclipse.swt.events.KeyEvent)
 	 */
 	public boolean keyPressed(KeyEvent event) {
-		if (isAlphaNum(event)) {
-			// Create a Direct Edit Request and cache the character typed
-			DirectEditRequestWrapper req =
-				new DirectEditRequestWrapper(event.character);
-			// Send the request to the current edit part in focus
-			getFocusPart().performRequest(req);
-			return true;
-		}
 		switch (event.keyCode) {
 			case SWT.HOME :
 				if ((event.stateMask & SWT.ALT) != 0) {
@@ -97,29 +87,6 @@ public class DiagramGraphicalViewerKeyHandler
 				}
 		}
 		return super.keyPressed(event);
-	}
-
-	/**
-	 * Tests to see if the key pressed was an letter or number
-	 * @param event KeyEvent to be tested
-	 * @return true if the key pressed is Alpha Numeric, otherwise false.
-	 */
-	protected boolean isAlphaNum(KeyEvent event) {
-
-		final String allowedStartingCharacters = "`~!@#$%^&*()-_=+{}[]|;:',.<>?\""; //$NON-NLS-1$
-
-		// IF the character is a letter or number or is contained
-		// in the list of allowed starting characters ...
-		if (Character.isLetterOrDigit(event.character)
-			|| !(allowedStartingCharacters.indexOf(event.character) == -1)) {
-
-			// And the character hasn't been modified or is only modified
-			// with SHIFT
-			if (event.stateMask == 0 || event.stateMask == SWT.SHIFT)
-				return true;
-		}
-
-		return false;
 	}
 
 	/**

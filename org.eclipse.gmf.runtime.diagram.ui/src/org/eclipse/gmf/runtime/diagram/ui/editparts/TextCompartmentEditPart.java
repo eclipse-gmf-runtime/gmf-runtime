@@ -8,6 +8,7 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  * 	  Dmitry Stadnik (Borland) - contribution for bugzilla 135694
+ *	  Dmitry Stadnik (Borland) - contribution for bugzilla 136582
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
@@ -44,12 +45,12 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
-import org.eclipse.gmf.runtime.gef.ui.internal.requests.DirectEditRequestWrapper;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -366,10 +367,9 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 					if (isActive() && isEditable()) {
 
 						// IF the direct edit request has an initial character...
-						if (theRequest instanceof DirectEditRequestWrapper) {							
-							char initialCharacter = ((DirectEditRequestWrapper) theRequest)
-							.getInitialCharacter();							
-							performDirectEdit(initialCharacter);
+						if (theRequest.getExtendedData().get(RequestConstants.REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR) instanceof Character) {							
+							Character initialChar = (Character) theRequest.getExtendedData().get(RequestConstants.REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR);
+							performDirectEdit(initialChar.charValue());
 						} else if ((theRequest instanceof DirectEditRequest) && (getEditText().equals(getLabelText()))) {
 							DirectEditRequest editRequest = (DirectEditRequest) theRequest;
 							performDirectEdit(editRequest.getLocation());

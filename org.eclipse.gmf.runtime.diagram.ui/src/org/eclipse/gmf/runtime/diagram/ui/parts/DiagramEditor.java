@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 - 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Dmitry Stadnik (Borland) - contribution for bugzilla 136582
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.parts;
@@ -92,6 +93,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DirectEditKeyHandler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRulerProvider;
@@ -802,8 +804,10 @@ public abstract class DiagramEditor
         viewer.setContextMenu(provider);
         getSite().registerContextMenu(ActionIds.DIAGRAM_EDITOR_CONTEXT_MENU,
             provider, viewer);
-        viewer.setKeyHandler(new DiagramGraphicalViewerKeyHandler(viewer)
-            .setParent(getKeyHandler()));
+        KeyHandler viewerKeyHandler = new DiagramGraphicalViewerKeyHandler(viewer)
+            .setParent(getKeyHandler());
+        viewer.setKeyHandler(new DirectEditKeyHandler(viewer)
+            .setParent(viewerKeyHandler));
         ((FigureCanvas) viewer.getControl())
             .setScrollBarVisibility(FigureCanvas.ALWAYS);
     }
