@@ -112,7 +112,9 @@ abstract public class SemanticListCompartmentEditPart
 	 * @param child
 	 */
 	protected void semanticChildRemoved(EObject child){
-		for (Iterator iter = children.iterator(); iter.hasNext();) {
+        if (children==null)
+            return;
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
 			GraphicalEditPart ep = (GraphicalEditPart) iter.next();
 			if (ep.basicGetModel().equals(child)){
 				removeChild(ep);
