@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,10 +14,10 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
-
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -36,9 +36,11 @@ public class DescriptionDirectEditPolicy extends LabelDirectEditPolicy {
 
 	protected Command getDirectEditCommand(DirectEditRequest edit) {
 		String labelText = (String) edit.getCellEditor().getValue();
-		TextCompartmentEditPart compartment =
-			(TextCompartmentEditPart) getHost();
-		View primaryView = compartment.getPrimaryView();
+		ITextAwareEditPart compartment =
+			(ITextAwareEditPart) getHost();
+        IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
+        
+		View primaryView = gep.getPrimaryView();
 		IAdaptable elementAdapter = new EObjectAdapter(primaryView);
 
 		// check to make sure an edit has occurred before returning a command.

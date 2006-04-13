@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 - 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
+ *    Dmitri Stadnik (Borland) - remove dependency to TextCompartmentEditPart
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
@@ -18,7 +19,7 @@ import org.eclipse.gef.requests.DirectEditRequest;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
@@ -75,15 +76,16 @@ public class LabelDirectEditPolicy
 			return null;
 		}
 		
-		TextCompartmentEditPart compartment = (TextCompartmentEditPart) getHost();
-		View view = compartment.getNotationView();
+		ITextAwareEditPart compartment = (ITextAwareEditPart) getHost();
+		EObject model = (EObject)compartment.getModel();
 		EObjectAdapter elementAdapter = null ;
-		if (view !=null)
+		if (model instanceof View) {
+            View view = (View)model;
 			elementAdapter = new EObjectAdapterEx(ViewUtil.resolveSemanticElement(view),
 				view);
+        }
 		else
-			elementAdapter = new EObjectAdapterEx((EObject)compartment.getModel(),
-				null);
+			elementAdapter = new EObjectAdapterEx(model, null);
 		// check to make sure an edit has occurred before returning a command.
 		String prevText = compartment.getParser().getEditString(elementAdapter,
 			compartment.getParserOptions().intValue());
@@ -101,7 +103,7 @@ public class LabelDirectEditPolicy
 	 */
 	protected void showCurrentEditValue(DirectEditRequest request) {
 		String value = (String) request.getCellEditor().getValue();
-		((TextCompartmentEditPart) getHost()).getLabel().setText(value);
+		((ITextAwareEditPart) getHost()).setLabelText(value);
 	}
 
 }
