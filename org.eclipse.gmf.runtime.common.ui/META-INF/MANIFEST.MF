@@ -26,8 +26,6 @@ Require-Bundle: org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)";visibility:=
  org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
  org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.team.core;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
- org.eclipse.help;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.ui;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
- org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
- org.eclipse.ui.editors;bundle-version="[3.2.0,4.0.0)";visibility:=reexport
+ org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)";visibility:=reexport
 Eclipse-LazyStart: true
