@@ -98,11 +98,4 @@
       </constraintProvider>
    </extension>
    
-   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
-        <elementTypeFactory
-               factory="org.eclipse.gmf.runtime.emf.core.internal.type.HintedTypeFactory"
-               kind = "org.eclipse.gmf.runtime.emf.core.internal.util.IHintedType">
-        </elementTypeFactory>
-   </extension>
-   
  </plugin>
