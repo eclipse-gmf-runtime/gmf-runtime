@@ -121,6 +121,12 @@ public class DestroyElementCommand
 			
 			// remove the object from its container
 			EcoreUtil.remove(destructee);
+			
+			// in case it was cross-resource-contained
+			Resource res = destructee.eResource();
+			if (res != null) {
+				res.getContents().remove(destructee);
+			}
 		}
 		
 		return CommandResult.newOKCommandResult();

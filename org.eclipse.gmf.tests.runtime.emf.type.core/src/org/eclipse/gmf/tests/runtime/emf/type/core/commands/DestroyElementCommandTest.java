@@ -15,11 +15,16 @@ import java.util.Iterator;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.change.ChangeDescription;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -177,6 +182,71 @@ public class DestroyElementCommandTest
     	assertDestroyed(jimBob);
     	assertDestroyed(jimBobAnnotation);
     }
+
+    /**
+     * Tests that we completely destroy cross-resource-contained objects, also
+     * (removing them from their resource).
+     */
+    public void test_destroy_crossResourceContained_136738() {
+    	// use the Ecore metamodel because EXTLibrary does not have any
+    	//    cross-resource containment support
+    	
+    	// create a couple of resources
+    	final Resource res1 = getEditingDomain().getResourceSet().createResource(
+    			URI.createURI("null://res1.ecore")); //$NON-NLS-1$
+    	final Resource res2 = getEditingDomain().getResourceSet().createResource(
+    			URI.createURI("null://res2.ecore")); //$NON-NLS-1$
+    	
+    	// the Ecore model
+    	final EPackage pkg1 = EcoreFactory.eINSTANCE.createEPackage();
+    	pkg1.setName("package1"); //$NON-NLS-1$
+    	final EClass class1 = EcoreFactory.eINSTANCE.createEClass();
+    	class1.setName("Class1"); //$NON-NLS-1$
+    	final EClass class2 = EcoreFactory.eINSTANCE.createEClass();
+    	class2.setName("Class2"); //$NON-NLS-1$
+    	
+    	// establish cross-resource containment
+        RecordingCommand command = new RecordingCommand(getEditingDomain()) {
+            protected void doExecute() {
+                res1.getContents().add(pkg1);
+                pkg1.getEClassifiers().add(class1);
+                pkg1.getEClassifiers().add(class2);
+                class2.getESuperTypes().add(class1);  // set a reference feature
+                
+                res2.getContents().add(class2);
+            }};
+        getEditingDomain().getCommandStack().execute(command);
+    	
+        // check that we have cross-resource containment
+        assertSame(pkg1, class2.eContainer());
+        assertSame(res2, class2.eResource());
+        
+    	DestroyElementRequest req = new DestroyElementRequest(class2, false);
+    	IElementType type = ElementTypeRegistry.getInstance().getElementType(
+    			req.getEditHelperContext());
+    	
+    	assertNotNull(type);
+    	
+    	ICommand cmd = type.getEditCommand(req);
+    	
+    	assertNotNull(cmd);
+    	
+    	execute(cmd);
+    	
+    	assertDestroyed(class2);
+    	assertNull(class2.eResource());
+    	
+    	undo(cmd);
+    	
+    	assertSame(pkg1, class2.eContainer());
+    	assertSame(res2, class2.eResource());
+    	assertTrue(class2.getESuperTypes().contains(class1));  // check the reference
+    	
+    	redo(cmd);
+    	
+    	assertDestroyed(class2);
+    	assertNull(class2.eResource());
+   }
     
     //
     // Test framework methods
