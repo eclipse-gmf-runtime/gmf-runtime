@@ -23,6 +23,7 @@ import java.util.Set;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -404,21 +405,27 @@ public class ContainerEditPolicy
 					cc.compose(new DuplicateViewsCommand(editingDomain,
 						DiagramUIMessages.Commands_Duplicate_Label,
 						request, notationViewsToDuplicate,
-						duplicateElementsRequest.getAllDuplicatedElementsMap(), getPasteOffset()));
+						duplicateElementsRequest.getAllDuplicatedElementsMap(), getDuplicateViewsOffset(request)));
 					return new EtoolsProxyCommand(cc);
 				}
 			} else {
 				return new EtoolsProxyCommand(new DuplicateViewsCommand(editingDomain,
 					DiagramUIMessages.Commands_Duplicate_Label,
-					request, notationViewsToDuplicate, getPasteOffset()));
+					request, notationViewsToDuplicate, getDuplicateViewsOffset(request)));
 			}
 		}
 		return null;
 	}
 	
-	private int getPasteOffset() {
-		return MapModeUtil.getMapMode(((org.eclipse.gef.GraphicalEditPart)getHost()).getFigure()).DPtoLP(10);
-	}
+	private Point getDuplicateViewsOffset(DuplicateRequest request) {
+        if (request.getOffset() != null) {
+            return request.getOffset();
+        }
+        int offset = MapModeUtil.getMapMode(
+            ((org.eclipse.gef.GraphicalEditPart) getHost()).getFigure())
+            .DPtoLP(10);
+        return new Point(offset, offset);
+    }
 	
 	/**
 	 * @see org.eclipse.gef.EditPolicy#getCommand(Request)

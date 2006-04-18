@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -61,30 +62,30 @@ public class DuplicateViewsCommand
 	 */
 	List duplicatedViewsToBeReturned = new ArrayList();
 	
-	private int offset = 0;
+	private Point offset = new Point(0, 0);
 
 	/**
-	 * Creates a new <code>DuplicateViewsCommand</code>.
-	 * 
+     * Creates a new <code>DuplicateViewsCommand</code>.
+     * 
      * @param editingDomain
      *            the editing domain through which model changes are made
-	 * @param label
-	 *            the command label
-	 * @param request
-	 *            the <code>DuplicateElementsRequest</code> whose list of duplicated
-	 *            views will be populated
-	 * @param viewsToDuplicate
-	 *            the views to be duplicated
-	 * @param duplicatedElements
-	 *            the map of elements that were duplicated that should be used
-	 *            to change the duplicated views to reference its dupliated
-	 *            element (if applicable)
-	 * @param offset
-	 * 			the <code>int</code> that is the offset from the original views that
-	 * 			the new views will be placed in logical coordinates
-	 */
+     * @param label
+     *            the command label
+     * @param request
+     *            the <code>DuplicateElementsRequest</code> whose list of
+     *            duplicated views will be populated
+     * @param viewsToDuplicate
+     *            the views to be duplicated
+     * @param duplicatedElements
+     *            the map of elements that were duplicated that should be used
+     *            to change the duplicated views to reference its dupliated
+     *            element (if applicable)
+     * @param offset
+     *            the offset from the location of the original views where the
+     *            new views will be placed.
+     */
 	public DuplicateViewsCommand(TransactionalEditingDomain editingDomain, String label, DuplicateRequest request,
-			List viewsToDuplicate, Map duplicatedElements, int offset) {
+			List viewsToDuplicate, Map duplicatedElements, Point offset) {
 		super(editingDomain, label, viewsToDuplicate);
 		this.duplicatedElements = duplicatedElements;
 		duplicatedViewsToBeReturned = request.getDuplicatedViews();
@@ -92,23 +93,23 @@ public class DuplicateViewsCommand
 	}
 
 	/**
-	 * Creates a new <code>DuplicateViewsCommand</code>.
-	 * 
+     * Creates a new <code>DuplicateViewsCommand</code>.
+     * 
      * @param editingDomain
      *            the editing domain through which model changes are made
-	 * @param label
-	 *            the command label
-	 * @param request
-	 *            the <code>DuplicateElementsRequest</code> whose list of duplicated
-	 *            views will be populated
-	 * @param viewsToDuplicate
-	 *            the views to be duplicated
-	 * @param offset
-	 * 			the <code>int</code> that is the offset from the original views that
-	 * 			the new views will be placed in logical coordinates
-	 */
+     * @param label
+     *            the command label
+     * @param request
+     *            the <code>DuplicateElementsRequest</code> whose list of
+     *            duplicated views will be populated
+     * @param viewsToDuplicate
+     *            the views to be duplicated
+     * @param offset
+     *            the offset from the location of the original views where the
+     *            new views will be placed.
+     */
 	public DuplicateViewsCommand(TransactionalEditingDomain editingDomain, String label, DuplicateRequest request,
-			List viewsToDuplicate, int offset) {
+			List viewsToDuplicate, Point offset) {
 		this(editingDomain, label, request, viewsToDuplicate, null, offset);
 	}
 
@@ -163,9 +164,9 @@ public class DuplicateViewsCommand
 				if (layoutConstraint instanceof Bounds) {
 					Bounds bounds = (Bounds) layoutConstraint;
 					int x = bounds.getX();
-					bounds.setX(x + offset);
+					bounds.setX(x + offset.x);
 					int y = bounds.getY();
-					bounds.setY(y + offset);
+					bounds.setY(y + offset.y);
 				}
 			}
 

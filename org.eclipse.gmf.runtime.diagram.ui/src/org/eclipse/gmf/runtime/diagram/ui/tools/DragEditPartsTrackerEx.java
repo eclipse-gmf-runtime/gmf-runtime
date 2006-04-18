@@ -12,15 +12,20 @@
 package org.eclipse.gmf.runtime.diagram.ui.tools;
 
 import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
-
+import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * A dervied DragEditPartsTRacker that sends REQ_DRAG instead of REQ_ORPHAN
@@ -63,15 +68,39 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	 * @param command
 	 */
 	protected void addSourceCommands(boolean isMove, CompoundCommand command) {
-		Iterator iter = getOperationSet().iterator();
-		Request request = getTargetRequest();
-		request.setType(isMove ? REQ_MOVE : RequestConstants.REQ_DRAG);
-		while (iter.hasNext()) {
-			EditPart editPart = (EditPart) iter.next();
-			command.add(editPart.getCommand(request));
-		}
-		request.setType(RequestConstants.REQ_DROP);
-	}
+        Request request = getTargetRequest();
+
+        if (isCloneActive()) {
+
+            // do not use operation set in this case as connections will get
+            // filtered out
+            List editparts = ToolUtilities
+                .getSelectionWithoutDependants(getCurrentViewer());
+
+            DuplicateRequest duplicateRequest = new DuplicateRequest();
+            duplicateRequest.setEditParts(editparts);
+            duplicateRequest.setExtendedData(request.getExtendedData());
+            if (request instanceof ChangeBoundsRequest) {
+                Point delta = ((ChangeBoundsRequest) request).getMoveDelta();
+                MapModeUtil.getMapMode(
+                    ((IGraphicalEditPart) getTargetEditPart()).getFigure())
+                    .DPtoLP(delta);
+
+                duplicateRequest.setOffset(delta);
+            }
+            command.add(getTargetEditPart().getCommand(duplicateRequest));
+        } else {
+            request.setType(isMove ? REQ_MOVE
+                : RequestConstants.REQ_DRAG);
+            Iterator iter = getOperationSet().iterator();
+            while (iter.hasNext()) {
+                EditPart editPart = (EditPart) iter.next();
+                command.add(editPart.getCommand(request));
+            }
+        }
+
+        request.setType(RequestConstants.REQ_DROP);
+    }
 
 	/**
 	 * @see org.eclipse.gef.tools.AbstractTool#getCommandName()
@@ -121,5 +150,5 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	protected void reveal(EditPart editpart){
 		editpart.getViewer().reveal(editpart);
 	}
-
+    
 }

@@ -14,8 +14,8 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.requests.GroupRequest;
-
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /**
@@ -34,6 +34,13 @@ public class DuplicateRequest
 	 * command executes.
 	 */
 	List duplicatedViews = new ArrayList();
+    
+    /**
+     * The offset from the location of the original views where the new views
+     * will be placed.
+     */
+    private Point offset;
+
 
 	/**
 	 * Creates a new <code>DuplicateElementsRequest</code>.
@@ -51,5 +58,26 @@ public class DuplicateRequest
 	public List getDuplicatedViews() {
 		return duplicatedViews;
 	}
+
+    /**
+     * Gets the offset from the location of the original views where the new
+     * views will be placed.
+     * 
+     * @return the offset
+     */
+    public Point getOffset() {
+        return offset;
+    }
+
+    /**
+     * Sets the offset from the location of the original views where the new
+     * views will be placed.
+     * 
+     * @param offset
+     *            The offset to set.
+     */
+    public void setOffset(Point offset) {
+        this.offset = offset;
+    }
 
 }
