@@ -146,6 +146,28 @@ public class CreateViewAndOptionallyElementCommand
 		return null;
 		
 	}
+
+	/**
+     * Prompts the user to see if they would like to use an existing view on the
+     * diagram. Clients may subclass this method to customize the message
+     * dialog.
+     * 
+     * @param view
+     *            the existing view
+     * @return true if this view should be used; false otherwise
+     */
+    protected boolean useExistingView(View view) {
+        MessageBox messageBox = new MessageBox(Display.getCurrent()
+            .getActiveShell(), SWT.YES | SWT.NO);
+        messageBox
+            .setText(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Title);
+        messageBox
+            .setMessage(NLS
+                .bind(
+                    DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Message,
+                    EMFCoreUtil.getName(view.getElement())));
+        return messageBox.open() == SWT.YES;
+    }
 	
 	/**
 	 * <li>If the element adapter is empty, this command creates a new element
@@ -189,21 +211,12 @@ public class CreateViewAndOptionallyElementCommand
 				Command theCmd = target.getCommand(createRequest);
 				setCommand(theCmd);
 
-				View theExistingView = getExistingView(element);
-				if(theExistingView != null)
-				{
-					MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(), SWT.YES | SWT.NO);
-
-					messageBox.setText(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Title);
-					messageBox.setMessage(NLS.bind(DiagramUIMessages.CreateViewAndOptionallyElementCommand_ViewExists_Message,
-						EMFCoreUtil.getName(element)));
-					int iResult = messageBox.open();
-					if(iResult == SWT.YES)
-					{
-						setResult(new EObjectAdapter(theExistingView));
-						return CommandResult.newOKCommandResult(getResult());
-					}
-				}
+				View theExistingView = getExistingView(element);            
+                
+                if (theExistingView != null && useExistingView(theExistingView)) {
+                    setResult(new EObjectAdapter(theExistingView));
+                    return CommandResult.newOKCommandResult(getResult());
+                }
 				// Fall-thru and create a new view
 				if (getCommand().canExecute()) {
 					ICommand cmd = DiagramCommandStack.getICommand(getCommand());
