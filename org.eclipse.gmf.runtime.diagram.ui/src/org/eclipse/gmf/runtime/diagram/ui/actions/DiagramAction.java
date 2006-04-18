@@ -277,20 +277,6 @@ public abstract class DiagramAction
      * @param editpart
      *            The given editpart
      * @return a list of target editparts, or Empty list if none
-     * @deprecated Use {@link #getTargetEditParts(EditPart)} instead
-     * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=125233.
-     */
-    protected List getTargetEdiParts(EditPart editpart) {
-        return getTargetEditParts(editpart);
-    }
-
-    /**
-     * Given an editpart, returns a list of target editparts to the current
-     * request If no targets could be found, an empty list is returned
-     * 
-     * @param editpart
-     *            The given editpart
-     * @return a list of target editparts, or Empty list if none
      */
     protected List getTargetEditParts(EditPart editpart) {
         EditPart targetEP = editpart.getTargetEditPart(getTargetRequest());

@@ -52,11 +52,14 @@
             <element ref="content" minOccurs="0" maxOccurs="1"/>
             <element ref="contribution" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
-         <attribute name="class" type="string" use="default" value="org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.DefaultPaletteProvider">
+         <attribute name="class" type="string" use="default" value="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
             <annotation>
                <documentation>
                   The fully qualified name of the palette provider class
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -73,7 +76,7 @@
             <annotation>
                <documentation>
                   The priority of the provider. It can be one of the following values:
-&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them. Similarly, a provider that contributes palette entries that have been predefined by other providers has to have a higher priority than them. 
+&lt;Lowest, Low, Medium, High, Highest&gt;. Consideration of dependencies has to be done when choosing the priority. A provider that adds contributions to paths (menus | groups) contributed by other providers has to have a higher priority than them. Similarly, a provider that contributes palette entries that have been predefined by other providers has to have a higher priority than them.
                </documentation>
             </annotation>
             <simpleType>

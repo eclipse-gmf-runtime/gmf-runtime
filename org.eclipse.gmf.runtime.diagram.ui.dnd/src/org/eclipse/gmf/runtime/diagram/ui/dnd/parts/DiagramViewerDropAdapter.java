@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.gef.dnd.DelegatingDropAdapter;
-import org.eclipse.gef.dnd.TransferDropTargetListener;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
@@ -146,15 +145,6 @@ public class DiagramViewerDropAdapter
 		/* Set the part */
 		this.workbenchPart = workbenchPart;
 	}
-
-	/**
-	 * Adds the given TransferDropTargetListener.
-	 * @param listener the listener
-	 * @deprecated 
-	 */
-	public void addDropTargetListener(TransferDropTargetListener listener) {
-		super.addDropTargetListener(listener);
-	}	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.util.DelegatingDropAdapter#getTransfers()
@@ -255,14 +245,6 @@ public class DiagramViewerDropAdapter
 	 */
 	public void dropAccept(DropTargetEvent event) {
 		getInternalDropAdapter().dropAccept(event);
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.dnd.DelegatingDropAdapter#getTransferTypes()
-	 */
-	public Transfer[] getTransferTypes() {
-		return getTransfers();
 	}
 
 	/**

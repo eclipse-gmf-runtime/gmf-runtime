@@ -57,7 +57,7 @@ Extensions to the service can provide additional layout behaviour.  For example,
                <documentation>
                   The fully qualified name of the layout provider class.
 
-The specified provider class should implement the org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesProvider 
+The specified provider class should implement the org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodeProvider 
 interface.
                </documentation>
             </annotation>
@@ -131,7 +131,7 @@ Lowest, Low, Medium, High, Highest.
          For API information, see the interfaces defined in the &lt;tt&gt;org.eclipse.gmf.runtime.diagram.ui.services.layout&lt;/tt&gt; package.
 
 &lt;p&gt;
-Clients providing an extension to the layout service need to create a provider class that implements the &lt;tt&gt;org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesProvider&lt;/tt&gt; interface.
+Clients providing an extension to the layout service need to create a provider class that implements the &lt;tt&gt;org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodeProvider&lt;/tt&gt; interface.
 &lt;/p&gt;
       </documentation>
    </annotation>

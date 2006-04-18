@@ -30,15 +30,6 @@ public final class DiagramUIMessages extends NLS {
 	public static String DiagramEditor_Delete_from_ModelToolTip;
 	public static String DiagramEditor_partInitExceptionMessage;
 	public static String Accessible_Connection_Label;
-	
-	/**
-	 * @deprecated Use one of the other Accessible_Connection strings.
-	 */
-	public static String Accessible_Connection_From;
-	/**
-	 * @deprecated Use one of the other Accessible_Connection strings.
-	 */
-	public static String Accessible_Connection_To;
 
 	public static String Accessible_Connection_From_Source;
 	public static String Accessible_Connection_To_Target;

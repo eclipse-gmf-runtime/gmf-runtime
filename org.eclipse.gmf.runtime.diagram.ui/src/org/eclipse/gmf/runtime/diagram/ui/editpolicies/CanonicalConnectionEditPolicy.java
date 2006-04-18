@@ -585,14 +585,14 @@ public abstract class CanonicalConnectionEditPolicy
 		Iterator sourceIter = view.getSourceEdges().listIterator();
 		while (sourceIter.hasNext()) {
 			Edge sourceEdge = (Edge)sourceIter.next();
-			if (shouldIncludeConnection(sourceEdge, (List)viewChildren))
+			if (shouldIncludeConnection(sourceEdge, viewChildren))
 				connections.add(sourceEdge);
 		}
 		
 		Iterator targetIter = view.getTargetEdges().listIterator();
 		while (targetIter.hasNext()) {
 			Edge targetEdge = (Edge)targetIter.next();
-			if (shouldIncludeConnection(targetEdge, (List)viewChildren))
+			if (shouldIncludeConnection(targetEdge, viewChildren))
 				connections.add(targetEdge);
 		}
 		
@@ -645,32 +645,6 @@ public abstract class CanonicalConnectionEditPolicy
 	protected boolean shouldIncludeConnection(Edge connection, Collection children) {
 		return shouldCheckForConnections(connection.getSource(), children) ||
 				shouldCheckForConnections(connection.getTarget(), children);
-	}
-	
-	/**
-	 * Called by {@link #getConnectionViews()} to determine if the underlying
-	 * shape compartment is responsible for the supplied connection. By default,
-	 * the following conditition must be met for the connection to be accepted:
-	 * <UL>
-	 * <LI> its source must not be null.
-	 * <LI> its target must not be null.
-	 * <LI> the shape compartment contains the source (or the source's container
-	 * view).
-	 * <LI> the shape compartment contains the target (or the target's container
-	 * view). </LI>
-	 * 
-	 * @param connection
-	 *            the connection view
-	 * @param children
-	 *            underlying shape compartment's children.
-	 * @return <tt>false</tt> if supplied connection should be ignored;
-	 *         otherwise <tt>true</tt>.
-	 * @deprecated clients should override {@link CanonicalConnectionEditPolicy#shouldIncludeConnection(Edge, Collection) instead
-	 * 				deprecated on Dec 22nd / 2005
-	 * 				to be deleted on Jan 30th / 2006
-	 */
-	protected boolean shouldIncludeConnection(Edge connection, List children) {
-		return shouldIncludeConnection(connection, (Collection)children);
 	}
 	
 	/**

@@ -54,9 +54,8 @@ public class PrintPreviewAction
 	 * @param printPreviewHelper
 	 *            the helper class that creates that creates the print preview
 	 *            dialog
-	 * @deprecated please use the other constructor as this will be protected
 	 */
-	public PrintPreviewAction(IPrintActionHelper printActionHelper, PrintPreviewHelper printPreviewHelper) {
+	protected PrintPreviewAction(IPrintActionHelper printActionHelper, PrintPreviewHelper printPreviewHelper) {
 		setId(ID);
 		setText(DiagramUIPrintingMessages.PrintPreview_ActionLabel);
 		setPrintActionHelper(printActionHelper);

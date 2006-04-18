@@ -62,7 +62,6 @@ public class ConnectionCreationTool
 	// see defect RATLC00525995
 	private boolean antiScroll = false;
 
-	/** @deprecated the requested element kind */
 	private IElementType elementType = null;
 
 	/** Should deactivation be avoided? */

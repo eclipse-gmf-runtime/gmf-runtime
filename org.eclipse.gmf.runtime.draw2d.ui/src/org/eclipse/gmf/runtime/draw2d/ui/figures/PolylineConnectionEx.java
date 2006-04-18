@@ -386,14 +386,6 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     }
 
     /**
-     * @deprecated Use setPoints(PointList)
-     */
-    public void setPoint(Point pt, int index) {
-        super.setPoint(pt, index);
-        refreshLine();
-    }
-
-    /**
      * Sets the list of points to be used by this polyline connection.
      * Removes any previously existing points. 
      *
@@ -990,7 +982,6 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure#getPolygonPoints()
 	 */
 	public PointList getPolygonPoints() {
-		// TODO Auto-generated method stub
 		return getSmoothPoints();
 	}
 

@@ -105,18 +105,6 @@ public abstract class ResizableCompartmentEditPart
 	public String getCompartmentName() {
 		return new String();
 	}
-	
-	/**
-	 * Subclasses should override to return the compartment title
-	 * 
-	 * @return The compartment title
-	 * @deprecated use {@link ResizableCompartmentEditPart#getCompartmentName()} instead
-	 * 		deprecated on Dec 20th / 2005
-	 * 		will be removed on Jan 30th / 2006
-	 */
-	protected String getTitleName() {
-		return getCompartmentName();
-	}
 		
 	/**
 	 * Handles the following properties: <BR>

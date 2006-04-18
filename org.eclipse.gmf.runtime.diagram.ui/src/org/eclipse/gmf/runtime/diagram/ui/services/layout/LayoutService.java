@@ -260,18 +260,6 @@ final public class LayoutService extends Service implements
 		layoutRun.run();
 	}
 	
-	/**
-	 * @deprecated use {@link LayoutService#layoutLayoutNodes(List, boolean, IAdaptable)} 
-	 * Will be removed on December 16th / 2005
-	 */
-	public Runnable layoutNodes(List layoutNodes, boolean offsetFromBoundingBox, IAdaptable layoutHint) {
-		return layoutLayoutNodes(layoutNodes, offsetFromBoundingBox, layoutHint);
-	}
-
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesProvider#layoutLayoutNodes(java.util.List, boolean, org.eclipse.core.runtime.IAdaptable)
-	 */
 	public Runnable layoutLayoutNodes(List layoutNodes,
 			boolean offsetFromBoundingBox, IAdaptable layoutHint) {
 		if (null == layoutHint) {

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -163,14 +163,6 @@ public abstract class AbstractEditPartProvider extends AbstractProvider
 	 */
 	protected static EClass getReferencedElementEClass(View view ) {
 		return EMFCoreUtil.getProxyClass(view.getElement());
-	}
-
-	/**
-	 * @return the <code>RootEditPart</code>
-	 * @deprecated clients should override {@link AbstractEditPartProvider#createRootEditPart(Diagram)} instead
-	 */
-	public RootEditPart createRootEditPart() {
-		return null;
 	}
 	
 	/* 

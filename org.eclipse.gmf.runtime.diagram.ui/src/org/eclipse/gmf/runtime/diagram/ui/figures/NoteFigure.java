@@ -55,38 +55,7 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	 * the clip margin constant in device coordinates
 	 */
 	static public final int CLIP_MARGIN_DP = 14;
-	
-	/**
-	 * @deprecated Clients should map <code>MARGIN_DP</code> to logical coordinates using the <code>IMapMode</code>
-	 * object retrieve from @link{GraphicalEditPart#getMapMode()} or @link{MapModeUtil.getMapMode(IFigure)}
-	 */
-	public static final int MARGIN = MapModeUtil.getMapMode().DPtoLP(5);
-	
-	/**
-	 * @deprecated Clients should map <code>CLIP_HEIGHT_DP</code> to logical coordinates using the <code>IMapMode</code>
-	 * object retrieve from @link{GraphicalEditPart#getMapMode()} or @link{MapModeUtil.getMapMode(IFigure)}
-	 */
-	static public final int CLIP_HEIGHT = MapModeUtil.getMapMode().DPtoLP(12);
-	
-	/**
-	 * @deprecated Clients should map <code>CLIP_HEIGHT_DP</code> to logical coordinates using the <code>IMapMode</code>
-	 * object retrieve from @link{GraphicalEditPart#getMapMode()} or @link{MapModeUtil.getMapMode(IFigure)}
-	 */
-	static public final int CLIP_MARGIN = MapModeUtil.getMapMode().DPtoLP(14);
-	
-	/**
-	 * Constructor
-	 * 
-	 * @deprecated use @link(NoteFigure(int width, int height, Insets insets)) instead
-	 */
-	public NoteFigure() {
-		this(MapModeUtil.getMapMode().DPtoLP(100), MapModeUtil.getMapMode().DPtoLP(56), 
-			new Insets(MapModeUtil.getMapMode().DPtoLP(MARGIN_DP), 
-						MapModeUtil.getMapMode().DPtoLP(MARGIN_DP), 
-						MapModeUtil.getMapMode().DPtoLP(MARGIN_DP), 
-						MapModeUtil.getMapMode().DPtoLP(CLIP_MARGIN_DP)));
-	}
-	
+		
 	/**
 	 * Constructor
 	 * 

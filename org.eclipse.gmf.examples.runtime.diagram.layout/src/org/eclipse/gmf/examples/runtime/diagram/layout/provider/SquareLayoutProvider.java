@@ -55,7 +55,7 @@ public class SquareLayoutProvider extends AbstractLayoutNodeProvider {
 		
 		// Provide for SQUARE_LAYOUT hint.  
 		// Note: To override the default layout which is invoked from the Arrange menu
-		// then the provider can compare against ILayoutNodesProvider.DEFAULT_LAYOUT.
+		// then the provider can compare against ILayoutNodeProvider.DEFAULT_LAYOUT.
 		IAdaptable layoutHint = ((ILayoutNodeOperation) operation).getLayoutHint();
 		String layoutType = (String) layoutHint.getAdapter(String.class);
 		//return DEFAULT_LAYOUT.equals(layoutType);

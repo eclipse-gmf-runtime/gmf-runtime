@@ -36,7 +36,7 @@ abstract public class AbstractLayoutEditPartProvider extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodesProvider#layoutNodes(java.util.List,
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.layout.ILayoutNodeProvider#layoutNodes(java.util.List,
 	 *      boolean, org.eclipse.core.runtime.IAdaptable)
 	 */
 	public Runnable layoutLayoutNodes(List layoutNodes,

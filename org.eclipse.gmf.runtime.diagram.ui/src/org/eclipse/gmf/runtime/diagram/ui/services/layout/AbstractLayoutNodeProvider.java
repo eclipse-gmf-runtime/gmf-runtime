@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -31,15 +30,6 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 abstract public class AbstractLayoutNodeProvider extends AbstractProvider
 		implements ILayoutNodeProvider {
-
-	/**
-	 * @deprecated use {@link AbstractLayoutNodeProvider#layoutLayoutNodes}
-	 */
-	public Runnable layoutNodes(List layoutNodes,
-			boolean offsetFromBoundingBox, IAdaptable layoutHint) {
-		// TODO Auto-generated method stub
-		return layoutLayoutNodes(layoutNodes, offsetFromBoundingBox, layoutHint);
-	}
 
 	/**
 	 * Retrieves the common container that will be the target for the layout
@@ -94,20 +84,4 @@ abstract public class AbstractLayoutNodeProvider extends AbstractProvider
 		return viewsToSizesMap;
 	}
 
-	/**
-	 * getViewsToSizesMap
-	 * 
-	 * @param operation
-	 * @return <code>Map</code>
-	 * @deprecated use
-	 *             {@link AbstractLayoutNodeProvider#getNodeToSizeMap(ILayoutNodeOperation)}
-	 *             Will be removed on December 16th / 2005
-	 */
-	protected Map getViewsToSizesMap(IOperation operation) {
-		if (operation instanceof ILayoutNodeOperation) {
-			return getNodeToSizeMap((ILayoutNodeOperation) operation);
-		}
-
-		return null;
-	}
 }
