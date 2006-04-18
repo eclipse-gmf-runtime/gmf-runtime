@@ -161,28 +161,7 @@ public class ConnectionHandle extends AbstractHandle {
 		removeAll();
 		int side = ((ConnectionHandleLocator) getLocator())
 			.getBorderSide();
-		Image image = null;
-		if (side == PositionConstants.WEST) {
-			image = isIncoming() ? DiagramUIPluginImages
-				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_WEST)
-				: DiagramUIPluginImages
-					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_WEST);
-		} else if (side == PositionConstants.EAST) {
-			image = isIncoming() ? DiagramUIPluginImages
-				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_EAST)
-				: DiagramUIPluginImages
-					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_EAST);
-		} else if (side == PositionConstants.SOUTH) {
-			image = isIncoming() ? DiagramUIPluginImages
-				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_SOUTH)
-				: DiagramUIPluginImages
-					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_SOUTH);
-		} else {
-			image = isIncoming() ? DiagramUIPluginImages
-				.get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_NORTH)
-				: DiagramUIPluginImages
-					.get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_NORTH);
-		}
+		Image image = getImage(side);
 
 		ImageFigure imageFigure = new ImageFigure(image);
 		imageFigure.setSize(image.getBounds().width, image.getBounds().height);
@@ -192,5 +171,39 @@ public class ConnectionHandle extends AbstractHandle {
 
 		super.validate();
 	}
+    
+    /**
+     * Gets the image to be used for the connection handle given the side of the
+     * shape where the connection handle will appear. A call to
+     * <code>isIncoming()</code> will reveal the direction of the handle.
+     * 
+     * @param side
+     *            the side of the shape where the connection handle will appear,
+     *            a value in PositionConstants
+     * @return the image to be used for the connection handle
+     */
+    protected Image getImage(int side) {
+        if (side == PositionConstants.WEST) {
+            return isIncoming() ? DiagramUIPluginImages
+                .get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_WEST)
+                : DiagramUIPluginImages
+                    .get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_WEST);
+        } else if (side == PositionConstants.EAST) {
+            return isIncoming() ? DiagramUIPluginImages
+                .get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_EAST)
+                : DiagramUIPluginImages
+                    .get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_EAST);
+        } else if (side == PositionConstants.SOUTH) {
+            return isIncoming() ? DiagramUIPluginImages
+                .get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_SOUTH)
+                : DiagramUIPluginImages
+                    .get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_SOUTH);
+        } else {
+            return isIncoming() ? DiagramUIPluginImages
+                .get(DiagramUIPluginImages.IMG_HANDLE_INCOMING_NORTH)
+                : DiagramUIPluginImages
+                    .get(DiagramUIPluginImages.IMG_HANDLE_OUTGOING_NORTH);
+        }
+    }
 
 }
