@@ -24,12 +24,13 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
@@ -203,33 +204,40 @@ public class ConnectionCreationTool
 	 */
 	protected void selectAddedObject(EditPartViewer viewer, Collection objects) {
 		final List editparts = new ArrayList();
+        final EditPart[] primaryEP = new EditPart[1];
 		for (Iterator i = objects.iterator(); i.hasNext();) {
 			Object object = i.next();
 			if (object instanceof IAdaptable) {
 				Object editPart = viewer.getEditPartRegistry().get(
 					((IAdaptable) object).getAdapter(View.class));
-				if (editPart instanceof AbstractConnectionEditPart) {
-					editparts.add(editPart);
-				}
-				// if (editPart != null)
-				// editparts.add(editPart);
+
+                if (editPart instanceof IPrimaryEditPart) {
+                    editparts.add(editPart);
+                }
+                
+                // Priority is to put a shape into direct edit mode.
+                if (editPart instanceof ShapeEditPart) {
+                    primaryEP[0] = (ShapeEditPart) editPart;
+                }
 			}
 		}
 
-		if (!editparts.isEmpty()) {
+ 		if (!editparts.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(editparts));
 
 			// automatically put the first shape into edit-mode
 			Display.getCurrent().asyncExec(new Runnable() {
 
 				public void run() {
-					EditPart editPart = (EditPart) editparts.get(0);
+                    if (primaryEP[0] == null) {
+                        primaryEP[0] = (EditPart) editparts.get(0);
+                    }
 					//
 					// add active test since test scripts are failing on this
 					// basically, the editpart has been deleted when this
 					// code is being executed. (see RATLC00527114)
-					if (editPart.isActive()) {
-						editPart.performRequest(new Request(
+					if (primaryEP[0].isActive()) {
+                        primaryEP[0].performRequest(new Request(
 							RequestConstants.REQ_DIRECT_EDIT));
 					}
 				}
