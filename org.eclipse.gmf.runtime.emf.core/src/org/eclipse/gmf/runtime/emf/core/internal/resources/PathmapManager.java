@@ -428,7 +428,11 @@ public class PathmapManager extends AdapterImpl {
 				denormalize((Resource) msg.getNewValue(), getResourceSet().getURIConverter());
 				break;
 			case Notification.ADD_MANY:
-				for (Iterator i = ((List)msg.getNewValue()).iterator(); i.hasNext();) {
+				List resources = (List)msg.getNewValue();
+				if (resources == null)
+					break;
+				
+				for (Iterator i = resources.iterator(); i.hasNext();) {
 					denormalize((Resource)msg.getNewValue(), getResourceSet().getURIConverter());
 				}
 				break;
@@ -436,7 +440,11 @@ public class PathmapManager extends AdapterImpl {
 				normalize((Resource)msg.getOldValue(), getResourceSet().getURIConverter());
 				break;
 			case Notification.REMOVE_MANY:
-				for (Iterator i = ((List)msg.getNewValue()).iterator(); i.hasNext();) {
+				resources = (List)msg.getNewValue();
+				if (resources == null)
+					break;
+				
+				for (Iterator i = resources.iterator(); i.hasNext();) {
 					normalize((Resource)msg.getNewValue(), getResourceSet().getURIConverter());
 				}
 				break;
