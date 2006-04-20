@@ -109,12 +109,7 @@ public class ResourceLoadedListener extends DemultiplexingListener {
 							if (page != null) {
 								IEditorPart activeEditor = page.getActiveEditor();
 								
-								if (file.getFileExtension().equals("logic2")) { //$NON-NLS-1$
-									page.openEditor(
-										new FileEditorInput(file),
-										"LogicEditor", //$NON-NLS-1$
-										false);
-								} else {
+								if (file.getFileExtension().equals("logic2semantic")) { //$NON-NLS-1$
 									page.openEditor(
 											new FileEditorInput(file),
 											"org.eclipse.gmf.examples.runtime.diagram.logic.semantic.presentation.SemanticEditorID", //$NON-NLS-1$
