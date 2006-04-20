@@ -172,6 +172,7 @@
          <contribution
                factoryClass="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapePaletteFactory">
             <entry
+                  defineOnly="true"
                   label="%GeoshapeDrawer.Label"
                   kind="drawer"
                   description="%GeoshapeDrawer.Description"

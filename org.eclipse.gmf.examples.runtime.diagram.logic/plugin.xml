@@ -133,6 +133,13 @@
             <entry label="%ConnectionTool.Label" kind="tool" description="%ConnectionTool.Description" path="/logicDrawer/" small_icon="icons/connection16.gif" large_icon="icons/connection24.gif" id="wire">
             </entry>
          </contribution>
+         <contribution>
+            <predefinedEntry
+                  id="geoshapeDrawer"
+                  path="/">
+               <expand force="true"/>
+            </predefinedEntry>
+         </contribution>
       </paletteProvider>
    </extension>
   

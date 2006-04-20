@@ -132,7 +132,7 @@
          </Priority>
          <editor id="GeoshapeEditor">
          </editor>
-         <contribution factoryClass="org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapePaletteFactory">
+         <contribution>
             <predefinedEntry
                   id="geoshapeDrawer"
                   path="/">
