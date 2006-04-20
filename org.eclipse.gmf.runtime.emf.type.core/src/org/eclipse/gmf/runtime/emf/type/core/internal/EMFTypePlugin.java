@@ -59,10 +59,6 @@ public class EMFTypePlugin
 		configureElementTypeRegistry();
 	}
 
-	public void stop(BundleContext context) throws Exception {
-		deconfigureElementTypeRegistry();
-		super.stop(context);
-	}
 	/**
 	 * Configures validation constraint providers based on the
 	 * <tt>constraintProvider</tt> extension configurations.
@@ -71,7 +67,4 @@ public class EMFTypePlugin
 		ElementTypeRegistry.getInstance();
 	}
 
-	private void deconfigureElementTypeRegistry() {
-		ElementTypeRegistry.getInstance().shutdown();
-	}
 }

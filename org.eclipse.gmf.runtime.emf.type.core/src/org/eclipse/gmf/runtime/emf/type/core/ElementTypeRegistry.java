@@ -24,12 +24,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.dynamichelpers.ExtensionTracker;
-import org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler;
-import org.eclipse.core.runtime.dynamichelpers.IExtensionTracker;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -104,9 +99,6 @@ public class ElementTypeRegistry {
 	 */
 	private static ElementTypeRegistry INSTANCE;
 
-	private ExtensionTracker extensionTracker;
-	private IExtensionChangeHandler extensionListener;
-
 	/**
 	 * Constructs a new element type registry.
 	 */
@@ -120,36 +112,7 @@ public class ElementTypeRegistry {
 		elementTypeRegistryListeners = new ArrayList();
 
 		registerNullElementType();
-
-		startExtensionTracking();
 		load(configs);
-	}
-
-	private void startExtensionTracking() {
-		extensionListener = new IExtensionChangeHandler() {
-			public void addExtension(IExtensionTracker tracker, IExtension extension) {
-				load(extension.getConfigurationElements());
-			}
-
-			public void removeExtension(IExtension extension, Object[] objects) {
-				// FIXME implement extension removal
-			}
-		};
-		final IExtensionPoint pt = Platform.getExtensionRegistry().getExtensionPoint(EMFTypePlugin.getPluginId(), ELEMENT_TYPES_EXT_P_NAME);
-		extensionTracker = new ExtensionTracker();
-		extensionTracker.registerHandler(extensionListener, ExtensionTracker.createExtensionPointFilter(pt));
-	}
-
-	private void stopExtensionTracking() {
-		if (extensionTracker != null) {
-			extensionTracker.unregisterHandler(extensionListener);
-			extensionTracker = null;
-			extensionListener = null;
-		}
-	}
-
-	public void shutdown() {
-		stopExtensionTracking();
 	}
 
 	/**
@@ -929,7 +892,7 @@ public class ElementTypeRegistry {
 	 * @param configs
 	 *            the configuration elements
 	 */
-	private synchronized void load(IConfigurationElement[] configs) {
+	private void load(IConfigurationElement[] configs) {
 
 		for (int i = 0; i < configs.length; i++) {
 
