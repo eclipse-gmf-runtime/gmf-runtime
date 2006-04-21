@@ -45,10 +45,10 @@ public class RelativeToBorderLocator implements Locator {
 	private int margin;
 
 	/** the direction */
-	private int direction;
+	protected int direction;
 
 	/** the parent figure */
-	private IFigure reference;
+	protected IFigure reference;
 	
 	/**
 	 * Constructor for <code>RelativeToBorderLocator</code>.

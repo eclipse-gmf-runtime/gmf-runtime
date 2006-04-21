@@ -11,18 +11,12 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
-import java.util.List;
-
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 
 /**
  * A set of methods that are useful when manipulating figures.  These are often
@@ -181,52 +175,4 @@ public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 			constraint);
 	}
 
-
-	/**
-	 * Method getLineSegments.
-	 * Converts the points of this polyline into a list of <code>LineSeg</code> 
-	 *      objects
-	 * 
-	 * @param points PointList to get LineSeg equivalents of.
-	 * @return List of LineSeg objects.
-	 * @deprecated replace with {@link PointListUtilities#getLineSegments(PointList)}
-	 */
-	public static List getLineSegments(PointList points) {
-		return PointListUtilities.getLineSegments(points);
-	}
-
-	/**
-	 * Static utility method to get the nearest segment in the polyline 
-	 * from the given coordinates.
-	 * 
-	 * @param mySegments the <code>List</code> of <code>LineSeg</code> objects
-	 * @param xCoord the <code>int</code> x coordinate of the point
-	 * @param yCoord the <code>int</code> y coordinate of the point
-	 * @return the <code>LineSeg</code> by reference which is closest to the given coordinates.
-	 * @deprecated replace with (@link PointListUtilities#getNearestSegment(List, int, int)}
-	 */
-	public static LineSeg getNearestSegment(
-		List mySegments,
-		final int xCoord,
-		final int yCoord) {
-		
-		return PointListUtilities.getNearestSegment(mySegments, xCoord, yCoord);
-	}
-
-	/**
-	 * Method findNearestLineSegIndexOfPoint.
-	 * Calculate the nearest line segment index distance wise to the given point.
-	 * 
-	 * @param points PointList to calculate the nearest line segment of.
-	 * @param ptCoord the <code>Point</code> to test containment of.
-	 * @return int Index of line segment that is nearest in the polyline to the given point.
-	 * The index is 1 based where 1 represents the first segment.
-	 * @deprecated replace with {@link PointListUtilities#findNearestLineSegIndexOfPoint(PointList, Point)}
-	 */
-	static public int findNearestLineSegIndexOfPoint(
-		PointList points,
-		final Point ptCoord) {
-		
-		return PointListUtilities.findNearestLineSegIndexOfPoint(points, ptCoord);
-	}
 }

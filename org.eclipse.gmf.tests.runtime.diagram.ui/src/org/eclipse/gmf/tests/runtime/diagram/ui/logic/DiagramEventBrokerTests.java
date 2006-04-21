@@ -13,12 +13,18 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractShapeTests;
+import org.eclipse.jface.util.Assert;
 
 
 public class DiagramEventBrokerTests extends AbstractShapeTests{
@@ -26,14 +32,49 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 	private class TestListenningEditPart extends GraphicalEditPart {
 		
 		private boolean receivedTypeEvent = false;
+        private DiagramEventBroker eventBroker;
+        private DiagramEditPart diagremEditPart; 
 		
 		public boolean receivedTypeEvent(){
 			return receivedTypeEvent ; 
 		}
+        
+        protected Diagram getDiagramView() {
+           return diagremEditPart.getDiagramView();
+        }
+
+        public TestListenningEditPart(DiagramEditPart dEP,DiagramEventBroker eventBroker, EObject model){
+            super(model);
+            this.eventBroker = eventBroker;
+            this.diagremEditPart = dEP;
+            addListenerFilter("Type",this,model,NotationPackage.eINSTANCE.getView_Type()); //$NON-NLS-1$
+        }
 		
 		public IFigure createFigure() {
 			return null;
 		}
+        
+                
+        /**
+         * Adds a listener filter by adding the given listener to a passed notifier
+         * 
+         * @param filterId
+         *            A unique filter id (within the same editpart instance)
+         * @param listener
+         *            A listener instance
+         * @param element
+         *            An element to add the listener to
+         */
+        protected void addListenerFilter(String filterId,
+                NotificationListener listener,
+                EObject element,
+                EStructuralFeature feature) {
+            if (element == null)
+                return;
+            Assert.isNotNull(filterId);
+            Assert.isNotNull(listener);
+            eventBroker.addNotificationListener(element,feature,listener);
+        }
 		
 		/**
 		 * Create an instance.
@@ -43,7 +84,6 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 		 */
 		public TestListenningEditPart(EObject model) {
 			super(model);
-			addListenerFilter("Type",this,model,NotationPackage.eINSTANCE.getView_Type()); //$NON-NLS-1$
 		}
 		
 		/**
@@ -80,7 +120,7 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 	}
 
 	public static Test suite() {
-		return new TestSuite(LogicShapeTests.class);
+		return new TestSuite(DiagramEventBrokerTests.class);
 	}
 
 	protected void setTestFixture() {
@@ -91,6 +131,18 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 	protected LogicTestFixture getLogicTestFixture() {
 		return (LogicTestFixture)getTestFixture();
 	}
+    
+     /**
+     * Gets the diagram event broker from the editing domain.
+     * 
+     * @return the diagram event broker
+     */
+    public DiagramEventBroker getDiagramEventBroker(TransactionalEditingDomain theEditingDomain) {
+        if (theEditingDomain != null) {
+            return DiagramEventBroker.getInstance(theEditingDomain);
+        }
+        return null;
+    }
 	
 	/**
 	 * Test to verify that copy appearance properties is working properly
@@ -99,20 +151,19 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 	public void testDiagramEventBroker()
 		throws Exception {
 		final View view  = getDiagramEditPart().getNotationView();
+        DiagramEditPart diagramEP = getDiagramEditPart();
+        
 		TestListenningEditPart ep = 
-			new TestListenningEditPart(view);
+			new TestListenningEditPart(diagramEP,getDiagramEventBroker(diagramEP.getEditingDomain()),view);
+        
 		final TransactionalEditingDomain editingDomain = ep.getEditingDomain();
 		ep.activate();
-
 		AbstractEMFOperation operation = new AbstractEMFOperation(
 			editingDomain, "") { //$NON-NLS-1$
-
 			protected IStatus doExecute(IProgressMonitor monitor,
 					IAdaptable info)
 				throws ExecutionException {
-				
 				view.setType("ddd"); //$NON-NLS-1$
-				
 				return Status.OK_STATUS;
 			};
 		};
@@ -123,18 +174,6 @@ public class DiagramEventBrokerTests extends AbstractShapeTests{
 			e.printStackTrace();
 			assertFalse(false);
 		}
-//		editingDomain.runInUndoInterval(new Runnable() {
-//			public void run() {
-//				try {
-//					editingDomain.runAsWrite(new MRunnable() {
-//						public Object run() {
-//							view.setType("ddd"); //$NON-NLS-1$
-//							return null;
-//						}});
-//				} catch (MSLActionAbandonedException e) {
-//					// do nothing
-//				}
-//			}});
 		flushEventQueue();
 		assertTrue(ep.receivedTypeEvent());
 	}

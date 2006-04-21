@@ -35,7 +35,6 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -383,14 +382,6 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
     public void setLineWidth(int w) {
         bounds = null;
         super.setLineWidth(w);
-    }
-
-    /**
-     * @deprecated Use setPoints(PointList)
-     */
-    public void setPoint(Point pt, int index) {
-        super.setPoint(pt, index);
-        refreshLine();
     }
 
     /**
@@ -990,7 +981,6 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure#getPolygonPoints()
 	 */
 	public PointList getPolygonPoints() {
-		// TODO Auto-generated method stub
 		return getSmoothPoints();
 	}
 

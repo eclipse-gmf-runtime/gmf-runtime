@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.gef.ui.figures;
 
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * A node figure that ensures a minimum preferred size (called the default size)
@@ -24,14 +23,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 public class DefaultSizeNodeFigure extends NodeFigure {
 
 	private Dimension defaultSize = new Dimension();
- 
-	/**
-	 * Constructor
-	 * @deprecated clients should call @link{DefaultSizeNodeFigure(Dimension defSize)} instead
-	 */
-	public DefaultSizeNodeFigure() {
-		this(MapModeUtil.getMapMode().DPtoLP(40), MapModeUtil.getMapMode().DPtoLP(40));
-	}
 	
 	/**
 	 * Constructor

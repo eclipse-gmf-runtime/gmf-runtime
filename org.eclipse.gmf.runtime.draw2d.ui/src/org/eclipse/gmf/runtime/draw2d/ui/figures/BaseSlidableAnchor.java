@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.draw2d.ui.internal.figures;
+package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
 import org.eclipse.draw2d.AbstractConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
@@ -19,7 +19,6 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 
@@ -95,7 +94,7 @@ public class BaseSlidableAnchor
 	 * <Code>String</Code>, namely as "(preciseX,preciseY)"
 	 * @return <code>String</code> terminal composed from specified <code>PrecisionPoint</code>  
 	 */
-	public static String composeTerminalString(PrecisionPoint p) {
+	private String composeTerminalString(PrecisionPoint p) {
 		StringBuffer s = new StringBuffer(24);
 		s.append(TERMINAL_START_CHAR); 		// 1 char
 		s.append((float)p.preciseX);		// 10 chars
