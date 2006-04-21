@@ -72,7 +72,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	/**
 	 * The compartment scroll pane
 	 */
-	protected AnimatableScrollPane scrollPane;
+	protected ScrollPane scrollPane;
 	/**
 	 * The selected state
 	 */
@@ -140,7 +140,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
         });
         getTextPane().setLayoutManager(new ConstrainedToolbarLayout());
         add(getTextPane());
-        add(scrollPane = createScrollpane(mm));
+        add(scrollPane = createScrollPane(mm));
         setLayoutManager(new ConstrainedToolbarLayout());
         setTitle(compartmentTitle);
         setToolTip(compartmentTitle);
@@ -151,7 +151,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * Creates the animatable scroll pane
 	 * 
 	 * @return <code>AnimatableScrollPane</code>
-     * @deprecated use {@link ResizableCompartmentFigure#createScrollpane(IMapMode)} instead
+     * @deprecated use {@link ResizableCompartmentFigure#createScrollPane(IMapMode)} instead
 	 */
 	protected AnimatableScrollPane createScrollpane() {
 		return createScrollpane(MapModeUtil.getMapMode(this));
@@ -165,6 +165,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
      * necessary since the figure is not attached at construction time and consequently
      * can't get access to the owned IMapMode in the parent containment hierarchy.
      * @return <code>AnimatableScrollPane</code>
+     * @deprecated use {@link ResizableCompartmentFigure#createScrollPane(IMapMode)} instead
      */
     protected AnimatableScrollPane createScrollpane(IMapMode mm) {
         scrollPane = new AnimatableScrollPane();
@@ -183,7 +184,20 @@ public class ResizableCompartmentFigure extends NodeFigure {
         scrollPane.setContents(new Figure());
         scrollPane.getContents().setBorder(
                 new MarginBorder(1, getMinClientSize()/2, 1, getMinClientSize()/2));            
-        return scrollPane;
+        return (AnimatableScrollPane)scrollPane;
+    }
+    
+    /**
+     * Creates the animatable scroll pane
+     * 
+     * @param mm the <code>IMapMode</code> that is used to initialize the
+     * default values of of the scrollpane contained inside the figure.  This is
+     * necessary since the figure is not attached at construction time and consequently
+     * can't get access to the owned IMapMode in the parent containment hierarchy.
+     * @return <code>ScrollPane</code>
+     */
+    protected ScrollPane createScrollPane(IMapMode mm) {
+        return createScrollpane(mm);
     }
 	
 	/**
@@ -206,7 +220,9 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * Expands the compartment figure
 	 */
 	public void expand() {
-		scrollPane.expand();
+        if (scrollPane instanceof AnimatableScrollPane) {
+            ((AnimatableScrollPane)scrollPane).expand();
+        }
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
 	}
 	/**
@@ -214,13 +230,17 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 */
 	public void collapse() {
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.NEVER);
-		scrollPane.collapse();
+        if (scrollPane instanceof AnimatableScrollPane) {
+            ((AnimatableScrollPane)scrollPane).collapse();
+        }
 	}
 	/**
 	 * Expands the compartment figure
 	 */
 	public void setExpanded() {
-		scrollPane.setExpanded(true);
+        if (scrollPane instanceof AnimatableScrollPane) {
+            ((AnimatableScrollPane)scrollPane).setExpanded(true);
+        }
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
 	}
 	/**
@@ -228,7 +248,9 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 */
 	public void setCollapsed() {
 		scrollPane.setVerticalScrollBarVisibility(ScrollPane.NEVER);
-		scrollPane.setExpanded(false);
+        if (scrollPane instanceof AnimatableScrollPane) {
+            ((AnimatableScrollPane)scrollPane).setExpanded(false);
+        }
 	}
 	
 	/**
@@ -284,7 +306,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * 
 	 * @return the scrollpane figure.
 	 */
-	public final AnimatableScrollPane getScrollPane() {
+	public final ScrollPane getScrollPane() {
 		return scrollPane;
 	}
 	
@@ -294,7 +316,11 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * @return boolean expanded
 	 */
 	public final boolean isExpanded() {
-		return getScrollPane().isExpanded();
+        if (scrollPane instanceof AnimatableScrollPane) {
+            return ((AnimatableScrollPane)scrollPane).isExpanded();
+        }
+        
+		return true;
 	}
 	
 	/**
