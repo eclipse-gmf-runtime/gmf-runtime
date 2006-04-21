@@ -106,6 +106,14 @@ public class DiagramGraphicalViewer
             if (!shouldDisableUpdates())
                 super.performValidation();
         }
+        
+        /* (non-Javadoc)
+         * @see org.eclipse.draw2d.DeferredUpdateManager#queueWork()
+         */
+        public void queueWork() {
+            if (!shouldDisableUpdates())
+                super.queueWork();
+        }
     }
 
     private class LightweightSystemWithUpdateToggle
