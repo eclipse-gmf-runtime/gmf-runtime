@@ -12,12 +12,15 @@
 package org.eclipse.gmf.runtime.diagram.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -27,6 +30,7 @@ import org.eclipse.emf.transaction.ResourceSetListener;
 import org.eclipse.emf.transaction.ResourceSetListenerImpl;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionChangeDescription;
 import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.FilterManager;
@@ -34,7 +38,7 @@ import org.eclipse.emf.transaction.impl.InternalTransaction;
 import org.eclipse.emf.transaction.impl.ReadWriteValidatorImpl;
 import org.eclipse.emf.transaction.impl.TransactionValidator;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
-import org.eclipse.emf.transaction.util.CompositeChangeDescription;
+import org.eclipse.emf.transaction.util.TriggerCommand;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.eclipse.emf.workspace.impl.WorkspaceCommandStackImpl;
 import org.eclipse.gmf.runtime.diagram.core.internal.listener.NotationSemProc;
@@ -126,6 +130,29 @@ public class DiagramEditingDomainFactory
 			super(adapterFactory);
 		}
 		
+		public void precommit(InternalTransaction tx) throws RollbackException {
+			super.precommit(tx);
+			
+			if ((tx.getParent() == null) && (deb != null)) {
+				// ensure that when the top-level transaction commits, it
+				//    has a self-chaining composite command as a trigger to
+				//    insert the DiagramEventBroker's post-commit changes into,
+				//    so that the transaction's change description and any other
+				//    AbstractEMFOperation will get the changes automatically
+				Command existingTriggers = tx.getTriggers();
+				if (existingTriggers instanceof CompoundCommand) {
+					// nothing to do:  already a self-chaining command
+				} else if (existingTriggers != null) {
+					// force it to be a compound by appending a no-op
+					tx.addTriggers(NOOP_TRIGGER);
+				} else {
+					// no triggers, yet?  have to add *two* no-ops
+					tx.addTriggers(NOOP_TRIGGER);
+					tx.addTriggers(NOOP_TRIGGER);
+				}
+			}
+		}
+		
 		protected void postcommit(InternalTransaction tx) {
 			try {
 				List notifications = getValidator().getNotificationsForPostcommit(tx);
@@ -140,8 +167,14 @@ public class DiagramEditingDomainFactory
 						setValidator(new ReadWriteValidatorImpl());
 					} else {
 						// In this case we must copy over the notifications and change
-						//  descriptions to the originatingTransaction.
-						((CompositeChangeDescription)originatingTransaction.getChangeDescription()).add(tx.getChangeDescription());
+						//  descriptions to the originatingTransaction.  Do this
+						//  as a "late trigger command" because the trigger
+						//  mechanism is already understood by some of the
+						//  operations that need to undo/redo these changes
+						originatingTransaction.addTriggers(new TriggerCommand(
+								Collections.singletonList(
+										new DiagramEventBrokerCommand(
+												tx.getChangeDescription()))));
 						originatingTransaction.getNotifications().addAll(notifications);
 					}
 					
@@ -186,6 +219,46 @@ public class DiagramEditingDomainFactory
 			}
 		}
 	}
+	
+	private static class DiagramEventBrokerCommand extends AbstractCommand {
+		private final TransactionChangeDescription change;
+		
+		DiagramEventBrokerCommand(TransactionChangeDescription change) {
+			this.change = change;
+		}
+		
+		protected boolean prepare() {
+			return true;
+		}
+		
+		public final void execute() {
+			// never executed
+		}
+
+		public boolean canUndo() {
+			return (change != null) && change.canApply();
+		}
+		
+		public final void undo() {
+			if (change != null) {
+				change.applyAndReverse();
+			}
+		}
+		
+		public final void redo() {
+			if (change != null) {
+				change.applyAndReverse();
+			}
+		}
+	}
+	
+	static final TriggerCommand NOOP_TRIGGER = new TriggerCommand(
+			Collections.singletonList(new AbstractCommand() {
+				protected boolean prepare() { return true; }
+				public void execute() {}
+				public boolean canUndo() { return true;	}
+				public void undo() {}
+				public void redo() {}}));
 	
     /**
      * The single shared instance of the GMF diagram editing domain factory.

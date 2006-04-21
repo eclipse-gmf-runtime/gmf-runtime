@@ -37,6 +37,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.InternalTransaction;
+import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
@@ -57,6 +59,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
@@ -473,10 +476,19 @@ implements NotificationListener {
 	 * @param cmd command that can be executed (i.e., cmd.canExecute() == true)
 	 */
 	protected void executeCommand( final Command cmd ) {
-		Map options = Collections.singletonMap(Transaction.OPTION_UNPROTECTED,
-			Boolean.TRUE);
-
-		AbstractEMFOperation operation = new AbstractEMFOperation(
+        Map options = null;
+        EditPart ep = getHost();
+        while (ep !=null && !(ep instanceof DiagramEditPart)){
+            ep = ep.getParent();
+        }
+        
+        if ( ep==null ||
+            (ep!=null && ((DiagramEditPart)ep).isActivatingDiagram())||
+            !isWriteTransactionInProgress())
+            options = Collections.singletonMap(Transaction.OPTION_UNPROTECTED,
+                Boolean.TRUE);
+  
+        AbstractEMFOperation operation = new AbstractEMFOperation(
 			((IGraphicalEditPart) getHost()).getEditingDomain(),
 			StringStatics.BLANK, options) {
 
@@ -1193,5 +1205,28 @@ implements NotificationListener {
             return DiagramEventBroker.getInstance(theEditingDomain);
         }
         return null;
+    }
+    
+    /**
+     * Checks if the current active transaction is a Write transaction or not
+     * unprotected transaction are not considered write transaction
+     * 
+     * @return true if the current active transaction is a write transaction 
+     */
+    private boolean isWriteTransactionInProgress() {
+        TransactionalEditingDomain theEditingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        if (theEditingDomain instanceof InternalTransactionalEditingDomain){
+            InternalTransactionalEditingDomain internalEditingDomain = 
+                (InternalTransactionalEditingDomain)theEditingDomain;
+            InternalTransaction transaction = internalEditingDomain.getActiveTransaction();
+            if (transaction!=null && !transaction.isReadOnly()){
+                Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
+                if (unprotectedMode == null ||
+                    unprotectedMode == Boolean.FALSE)
+                return true;
+            }
+        }
+        return false;
     }
 }

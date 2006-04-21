@@ -69,6 +69,7 @@ public class DiagramEditPart
 	implements LayerConstants, ISurfaceEditPart {
 	private boolean shouldUpdatePageBreakLocation = false;
 	private boolean isSupportingViewActions = true;
+    private boolean isActivatingDiagram = false;
 	
 	/**
 	 * construcotr
@@ -354,4 +355,22 @@ public class DiagramEditPart
 	public void setIsSupportingViewActions(boolean supportsViewActions){
 		this.isSupportingViewActions = supportsViewActions;
 	}
+
+    
+    /**
+     * checks if the Diagram is still in the process of activating it self
+     * @return true if activating; false if the activation process is finished
+     */
+    public boolean isActivatingDiagram() {
+        return isActivatingDiagram;
+    }
+
+    public void activate() {
+        isActivatingDiagram = true;
+        try {
+	        super.activate();
+	    }finally{
+        	isActivatingDiagram = false;
+        }
+    }
 }

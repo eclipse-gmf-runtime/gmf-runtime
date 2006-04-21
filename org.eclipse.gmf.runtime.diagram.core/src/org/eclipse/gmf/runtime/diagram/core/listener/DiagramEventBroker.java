@@ -231,6 +231,7 @@ public class DiagramEventBroker
      */
     public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
+        Set elementsInPersistQueue = new HashSet();
         CompoundCommand cc = new CompoundCommand();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
@@ -241,12 +242,13 @@ public class DiagramEventBroker
                 if (deletedObjects.contains(notification.getNotifier())) {
                     continue;
                 }
-                Command cmd = handleTransactionAboutToCommitEvent(notification);
+                Command cmd = handleTransactionAboutToCommitEvent(notification,elementsInPersistQueue);
                 if (cmd != null) {
                     cc.append(cmd);
                 }
             }
         }
+        elementsInPersistQueue.clear();
         return cc.isEmpty() ? null
             : cc;
     }
@@ -258,12 +260,10 @@ public class DiagramEventBroker
      */
     public void resourceSetChanged(ResourceSetChangeEvent event) {
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
-
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
             if (shouldIgnoreNotification(notification))
                 continue;
-
             Object notifier = notification.getNotifier();
             if (notifier instanceof EObject) {
                 if (deletedObjects.contains(notification.getNotifier())) {
@@ -274,7 +274,7 @@ public class DiagramEventBroker
             }
         }
     }
-
+    
     /**
      * determine if the passed notification can be ignored or not the default
      * implementation will ignore touch event if it is not a resolve event, also
@@ -318,11 +318,11 @@ public class DiagramEventBroker
         }
     }
 
-    private Command fireTransactionAboutToCommit(Notification event) {
+    private Command fireTransactionAboutToCommit(Notification event,Set elementsInPersistQueue) {
         Collection listenerList = getInterestedNotificationListeners(event,
             true);
         CompoundCommand cc = new CompoundCommand();
-        preparePersistCommand(event,cc);
+        preparePersistCommand(event,cc,elementsInPersistQueue);
         if (!listenerList.isEmpty()) {
             List listenersSnapShot = new ArrayList(listenerList);
             if (!listenerList.isEmpty()) {
@@ -347,19 +347,20 @@ public class DiagramEventBroker
         return cc;
     }
 
-    private void preparePersistCommand(Notification event, CompoundCommand cc) {
+    private void preparePersistCommand(Notification event, CompoundCommand cc, Set elementsInPersistQueue) {
         PersistElementCommand persistCmd = null;
         if (!event.isTouch()) {
             EObject elementToPersist = (EObject) event.getNotifier();
             while (elementToPersist != null && !(elementToPersist instanceof View)) {
                 elementToPersist = elementToPersist.eContainer();
             }
-            if (elementToPersist != null
+            if (elementToPersist != null && !elementsInPersistQueue.contains(elementToPersist)
                 && (NotationPackage.eINSTANCE.getView_TransientChildren() == elementToPersist
                     .eContainingFeature() || NotationPackage.eINSTANCE
                     .getDiagram_TransientEdges() == elementToPersist
                     .eContainingFeature())) {
                 if (!NotificationFilter.READ.matches(event)) {
+                    elementsInPersistQueue.add(elementToPersist);
                     persistCmd = getPersistViewCommand((View)elementToPersist);
                 }
             }
@@ -587,7 +588,7 @@ public class DiagramEventBroker
     public boolean isAggregatePrecommitListener() {
     	return true;
     }
-
+    
     /**
      * Helper method to add all the listners of the given <code>notifier</code>
      * to the list of listeners
@@ -619,11 +620,12 @@ public class DiagramEventBroker
      * 
      * @param event
      *            the event to handle
+     * @p
      */
-    private Command handleTransactionAboutToCommitEvent(Notification event) {
+    private Command handleTransactionAboutToCommitEvent(Notification event, Set elementsInPersistQueue) {
         EObject element = (EObject) event.getNotifier();
         if (element != null) {
-            return fireTransactionAboutToCommit(event);
+            return fireTransactionAboutToCommit(event,elementsInPersistQueue);
         }
         return null;
     }
@@ -634,9 +636,10 @@ public class DiagramEventBroker
      * 
      * @param event
      *            the event to handle
+     * 
      */
     private void handleElementEvent(Notification event) {
-       EObject element = (EObject) event.getNotifier();
+        EObject element = (EObject) event.getNotifier();
         if (element != null) {
             fireNotification(event);
         }
