@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005 - 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,10 +23,10 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.RectilinearRouter;
 

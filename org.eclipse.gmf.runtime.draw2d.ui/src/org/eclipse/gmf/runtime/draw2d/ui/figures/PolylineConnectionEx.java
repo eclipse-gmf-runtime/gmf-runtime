@@ -35,7 +35,6 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
