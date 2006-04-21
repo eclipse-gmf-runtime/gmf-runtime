@@ -46,13 +46,34 @@ public class NotationSemProc extends TriggerListener {
 
 		autoNamedElements.add(notation.getDiagram());
 	}
+    
+    private boolean shouldHandleNotification(Notification notification){
+        if (notification.getNotifier() instanceof EObject && 
+            notification.getFeature() instanceof EReference &&
+            ((EReference)notification.getFeature()).isContainment()){
+            Object newValue = notification.getNewValue();
+            if (newValue!=null){
+                if (newValue instanceof Diagram)
+                    return true;
+                if (newValue instanceof Collection){
+                    Collection collection = (Collection)newValue;
+                    for (Iterator iter = collection.iterator(); iter.hasNext();) {
+                        if (iter.next() instanceof Diagram)
+                           return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Handle sem-proc event.
 	 */
     protected Command trigger(TransactionalEditingDomain editingDomain, Notification notification) {
-
-		int eventType = notification.getEventType();
+        if (!shouldHandleNotification(notification))
+            return null;
+        int eventType = notification.getEventType();
 
 		Object notifier = notification.getNotifier();
 
