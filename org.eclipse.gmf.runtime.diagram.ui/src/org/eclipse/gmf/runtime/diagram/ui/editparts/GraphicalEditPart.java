@@ -105,8 +105,8 @@ import org.eclipse.ui.IActionFilter;
 public abstract class GraphicalEditPart
 	extends AbstractGraphicalEditPart
 	implements IGraphicalEditPart, IAdaptableSelection, NotificationListener {
-
-	/** A map of listener filters ids to filter data */
+  
+    /** A map of listener filters ids to filter data */
 	private Map listenerFilters;
 	
 	/** Used for accessibility. */
@@ -117,11 +117,6 @@ public abstract class GraphicalEditPart
 
 	/** Used for handling the editable status of the edit part */
 	private final IEditableEditPart editableEditPart;
-	
-	// temporary object used to make getModel returns a view 
-	// this should be removed after the assumption that getModel
-	// will return a view is removed
-	private static Node dummyNode = null;
 	
 	/**
 	 * Cache the editing domain after it is retrieved.
@@ -1267,21 +1262,20 @@ public abstract class GraphicalEditPart
 		return true;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.EditPart#getModel()
+	/**
+     * Returns tis edit part's model; the returned values is not granteed to be 
+     * <code>View</code>, the return value could be null or any Object depending
+     * on the edit part implementation 
+     * 
 	 */
 	public Object getModel() {
 		if (hasNotationView()){
 			return super.getModel();
 		} else {
 			Object _model = basicGetModel();
-			// this is just temporary, so we do not break the assumption that the model
-			// is always a view
-			if (dummyNode == null){
-				dummyNode = NotationFactory.eINSTANCE.createNode();
-			}
-			dummyNode.setElement((EObject)_model);
-			return dummyNode;
+            Node node = NotationFactory.eINSTANCE.createNode();;
+            node.setElement((EObject)_model);
+			return node;
 		}
 	}
 	
