@@ -29,8 +29,8 @@ public class LogicNotationEditor
 		SUPPORTED_DRAG_DROP_ECLASSES.add(SemanticPackage.eINSTANCE.getCircuit());
 	}
 	
-	protected TransactionalEditingDomain createEditingDomain() {
-		return TransactionalEditingDomain.Registry.INSTANCE.getEditingDomain(EDITING_DOMAIN_ID);
+	protected String getEditingDomainID() {
+		return EDITING_DOMAIN_ID;
 	}
 	
 	protected void initializeGraphicalViewer() {

@@ -1447,13 +1447,40 @@ public class DiagramDocumentEditor
     }
     
 	/**
-     * Clients may override this if they wish to re-use an existing editing
-     * domain for this editor. The default behavior is to create a new editing
-     * domain is created for each diagram that is opened.
+     * Gets an editing domain from the editing domain registry using the id
+     * returned from {@link #getEditingDomainID()} if an editing domain has been
+     * registered already with this id. Use the
+     * <code>org.eclipse.emf.transaction.editingDomains</code> extension point
+     * to register a shared editing domain.
+     * <p>
+     * If an editing domain is not found for the id, then a new editing domain
+     * will be created per editor instance.
+     * </p>
      * 
      * @return the editing domain
      */
-	protected TransactionalEditingDomain createEditingDomain() {
-		return DiagramEditingDomainFactory.getInstance().createEditingDomain();
-	}
+    protected TransactionalEditingDomain createEditingDomain() {
+        String editingDomainID = getEditingDomainID();
+        if (editingDomainID != null) {
+            TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Registry.INSTANCE
+                .getEditingDomain(editingDomainID);
+            if (editingDomain != null) {
+                return editingDomain;
+            }
+        }
+
+        return DiagramEditingDomainFactory.getInstance().createEditingDomain();
+    }
+
+    /**
+     * Returns an editing domain id used to retrive an editing domain from the
+     * editing domain registry. Clients should override this if they wish to use
+     * a shared editing domain for this editor. If null is returned then a new
+     * editing domain will be created per editor instance.
+     * 
+     * @return the shared editing domain id if applicable
+     */
+    protected String getEditingDomainID() {
+        return null;
+    }
 }
