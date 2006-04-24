@@ -30,10 +30,15 @@ import org.eclipse.swt.graphics.Image;
  * </pre>
  * 
  * </p>
+ * <p>
+ * This interface is <EM>not</EM> intended to be implemented by clients as new
+ * methods may be added in the future. 
+ * </p>
  * 
  * @author cmahoney
  */
 public interface IDecoratorTarget
+
 	extends IAdaptable {
     
   /**

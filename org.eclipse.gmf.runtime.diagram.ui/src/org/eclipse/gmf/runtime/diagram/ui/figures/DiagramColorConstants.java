@@ -16,6 +16,10 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * Set of color constants that are commonly used.
+ * <p>
+ * This interface defines constants only, it is <EM>not</EM> intended to be
+ * implemented by clients.
+ * </p>
  * 
  * @author sshaw
  */

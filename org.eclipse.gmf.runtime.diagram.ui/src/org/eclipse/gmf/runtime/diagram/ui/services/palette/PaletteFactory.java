@@ -17,6 +17,11 @@ import org.eclipse.gef.Tool;
  * @author melaasar
  * 
  * An interface for defining a factory for palette entries : toolss & templates
+ * <p>
+ * This interface is <EM>not</EM> intended to be implemented by clients as new
+ * methods may be added in the future. Extend the <code>Adapter</code> class
+ * instead.
+ * </p>
  */
 public interface PaletteFactory {
 

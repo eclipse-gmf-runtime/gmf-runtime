@@ -17,7 +17,11 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
  * editpolicy is installed on the same editpart with the same role then it will
  * override the previous one installed. If an editpolicy is installed that may
  * need to be overridden, add its role here.
- * 
+ * <p>
+ * This interface defines constants only, it is <EM>not</EM> intended to be
+ * implemented by clients.
+ * </p>
+ *  
  * @author cmahoney
  */
 public interface EditPolicyRoles {

@@ -18,6 +18,10 @@ package org.eclipse.gmf.runtime.diagram.ui.services.decorator;
  * same key then it will override the previous one installed. This is similar to
  * how EditPolicy roles work. If a decorator is installed that may need to be
  * overridden, add its key here.
+ * <p>
+ * This interface defines constants only, it is <EM>not</EM> intended to be
+ * implemented by clients.
+ * </p>
  * 
  * @author cmahoney
  */

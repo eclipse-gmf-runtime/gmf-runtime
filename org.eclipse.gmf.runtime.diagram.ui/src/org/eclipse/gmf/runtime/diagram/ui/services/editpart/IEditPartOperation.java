@@ -14,6 +14,14 @@ package org.eclipse.gmf.runtime.diagram.ui.services.editpart;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.notation.View;
 
+/**
+ * <p>
+ * This interface is <EM>not</EM> intended to be implemented by clients as new
+ * methods may be added in the future. 
+ * </p>
+ *
+ * @author cmahoney
+ */
 public interface IEditPartOperation extends IOperation {
 
 	/**

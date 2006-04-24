@@ -13,6 +13,10 @@ package org.eclipse.gmf.runtime.diagram.ui.actions;
 
 /**
  * A list of constants defining the diagram action and menu action ids.
+ * <p>
+ * This interface defines constants only, it is <EM>not</EM> intended to be
+ * implemented by clients.
+ * </p>
  */
 public interface ActionIds {
 

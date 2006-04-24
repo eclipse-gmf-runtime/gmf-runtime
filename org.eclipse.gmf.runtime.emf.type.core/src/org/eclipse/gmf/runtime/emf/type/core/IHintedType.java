@@ -9,21 +9,27 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
- package org.eclipse.gmf.runtime.emf.type.core;
+package org.eclipse.gmf.runtime.emf.type.core;
 
+/**
+ * A type that requires a semantic hint for view creation.
+ * 
+ * <p>
+ * This interface may be implemented by clients if the class extends the
+ * abstract implementation
+ * {@link org.eclipse.gmf.runtime.emf.type.core.ElementType} as
+ * {@link IElementType} is not meant to be implemented by clients.
+ * </p>
+ * 
+ * @author cmahoney
+ */
+public interface IHintedType
+    extends IElementType {
 
- /**
-  * A type that requires a semantic hint for view creation. 
-  * 
-  * @author cmahoney
-  */
- public interface IHintedType
- 	extends IElementType {
-
- 	/**
- 	 * Gets the semantic hint required for view creation.
- 	 * 
- 	 * @return the semantic hint.
- 	 */
- 	String getSemanticHint();
- }
+    /**
+     * Gets the semantic hint required for view creation.
+     * 
+     * @return the semantic hint.
+     */
+    String getSemanticHint();
+}

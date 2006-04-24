@@ -11,12 +11,19 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.util;
 
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 
 
 /**
- * Identifies a notation type, that is a type that is represented
- * by a view only.
+ * Identifies a notation type, that is a type that is represented by a view
+ * only.
+ * <p>
+ * This interface may be implemented by clients if the class extends the
+ * abstract implementation
+ * {@link org.eclipse.gmf.runtime.emf.type.core.ElementType} as
+ * {@link IElementType} is not meant to be implemented by clients.
+ * </p>
  * 
  * @author cmahoney
  */

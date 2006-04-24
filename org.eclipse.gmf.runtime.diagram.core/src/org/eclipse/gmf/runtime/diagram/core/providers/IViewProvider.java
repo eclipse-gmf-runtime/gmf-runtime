@@ -22,9 +22,14 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author melaasar, mmostafa
- *
- * An interface for manipulating the notational model
- * Defines the factory methods for creating the various view elements.
+ * 
+ * An interface for manipulating the notational model Defines the factory
+ * methods for creating the various view elements.
+ * <p>
+ * This interface is <EM>not</EM> intended to be implemented by clients as new
+ * methods may be added in the future. Extend {@link AbstractViewProvider}
+ * instead.
+ * </p>
  */
 public interface IViewProvider extends IProvider {
 

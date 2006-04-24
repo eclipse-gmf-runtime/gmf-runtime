@@ -13,7 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
 /**
  * Defines preference constants for the GMF diagram layer.
- * 
+ * <p>
+ * This interface defines constants only, it is <EM>not</EM> intended to be
+ * implemented by clients.
+ * </p>
+ *  
  * @author schafe
  * 
  */

@@ -11,11 +11,13 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.requests;
  
-/*
- * @canBeSeenBy %partners
- */
+
 /**
  * this class defines the request constants
+ * <p>
+ * This interface is <EM>not</EM> intended to be implemented by clients as new
+ * methods may be added in the future. 
+ * </p>
  * @author sshaw
  *
  */
