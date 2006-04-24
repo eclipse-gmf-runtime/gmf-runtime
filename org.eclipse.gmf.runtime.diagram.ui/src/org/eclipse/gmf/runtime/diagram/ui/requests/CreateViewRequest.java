@@ -109,6 +109,25 @@ public class CreateViewRequest extends CreateRequest {
 		public ViewDescriptor(IAdaptable elementAdapter, Class viewkind, PreferencesHint preferencesHint) {
 			this(elementAdapter, viewkind, "", preferencesHint); //$NON-NLS-1$
 		}
+        
+        /**
+         * Creates a new view descriptor using element adapter and a view kind
+         * 
+         * @param elementAdapter the element adapter referened by the view
+         * @param viewkind the kind of the view to be created (a concrete class
+         *            derived from IView)
+         * @param persisted
+         *            indicates if the view will be created as a persisted
+         *            view or transient 
+         * @param preferencesHint
+         *            The preference hint that is to be used to find the appropriate
+         *            preference store from which to retrieve diagram preference
+         *            values. The preference hint is mapped to a preference store in
+         *            the preference registry <@link DiagramPreferencesRegistry>.
+         */
+        public ViewDescriptor(IAdaptable elementAdapter, Class viewkind,boolean persisted, PreferencesHint preferencesHint) {
+            this(elementAdapter, viewkind, "",persisted, preferencesHint); //$NON-NLS-1$
+        }
 
 		/**
 		 * Creates a new view descriptor using element adapter, a view kind and
@@ -117,6 +136,11 @@ public class CreateViewRequest extends CreateRequest {
 		 * @param elementAdapter the element adapter referened by the view
 		 * @param viewkind the kind of the view to be created 
 		 * @param semanticHint the semantic hint of the view
+         * @param preferencesHint
+         *            The preference hint that is to be used to find the appropriate
+         *            preference store from which to retrieve diagram preference
+         *            values. The preference hint is mapped to a preference store in
+         *            the preference registry <@link DiagramPreferencesRegistry>.
 		 */
 		public ViewDescriptor(
 			IAdaptable elementAdapter,
@@ -125,6 +149,31 @@ public class CreateViewRequest extends CreateRequest {
 			PreferencesHint preferencesHint) {
 			this(elementAdapter, viewkind, semanticHint, ViewUtil.APPEND, preferencesHint);
 		}
+        
+        /**
+         * Creates a new view descriptor using element adapter, a view kind and
+         * a factory hint
+         * 
+         * @param elementAdapter the element adapter referened by the view
+         * @param viewkind the kind of the view to be created 
+         * @param semanticHint the semantic hint of the view
+         * @param persisted
+         *            indicates if the view will be created as a persisted
+         *            view or transient 
+         * @param preferencesHint
+         *            The preference hint that is to be used to find the appropriate
+         *            preference store from which to retrieve diagram preference
+         *            values. The preference hint is mapped to a preference store in
+         *            the preference registry <@link DiagramPreferencesRegistry>.
+         */
+        public ViewDescriptor(
+            IAdaptable elementAdapter,
+            Class viewkind,
+            String semanticHint,
+            boolean persisted,
+            PreferencesHint preferencesHint) {
+            this(elementAdapter, viewkind, semanticHint, ViewUtil.APPEND,persisted, preferencesHint);
+        }
 
 		/**
 		 * Creates a new view descriptor using the supplied element adapter, 

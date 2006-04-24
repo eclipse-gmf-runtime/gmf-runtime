@@ -22,6 +22,7 @@ import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -30,6 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescrip
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 
 /**
@@ -75,6 +77,25 @@ public class CreateConnectionViewRequest
 				PreferencesHint preferencesHint) {
 			super(elementAdapter, Edge.class, preferencesHint);
 		}
+        
+        /**
+         * Constructor.
+         * 
+         * @param elementAdapter
+         * @param persisted
+         *            indicates if ths connector will be created as a persisted
+         *            connector or transient connector
+         * @param preferencesHint
+         *            The preference hint that is to be used to find the
+         *            appropriate preference store from which to retrieve
+         *            diagram preference values. The preference hint is mapped
+         *            to a preference store in the preference registry <@link
+         *            DiagramPreferencesRegistry>.
+         */
+        public ConnectionViewDescriptor(IAdaptable elementAdapter,
+                boolean persisted, PreferencesHint preferencesHint) {
+            super(elementAdapter, Edge.class,persisted, preferencesHint);
+        }
 
 		/**
 		 * Constructor.
@@ -92,6 +113,26 @@ public class CreateConnectionViewRequest
 				String semanticHint, PreferencesHint preferencesHint) {
 			super(elementAdapter, Edge.class, semanticHint, preferencesHint);
 		}
+        
+        /**
+         * Constructor.
+         * 
+         * @param elementAdapter
+         * @param semanticHint
+         * @param persisted
+         *            Indicates if the connector will be created as a transient
+         *            or persisted connector 
+         * @param preferencesHint
+         *            The preference hint that is to be used to find the
+         *            appropriate preference store from which to retrieve
+         *            diagram preference values. The preference hint is mapped
+         *            to a preference store in the preference registry <@link
+         *            DiagramPreferencesRegistry>.
+         */
+        public ConnectionViewDescriptor(IAdaptable elementAdapter,
+                String semanticHint,boolean persisted, PreferencesHint preferencesHint) {
+            super(elementAdapter, Edge.class, semanticHint,persisted, preferencesHint);
+        }
 
 		/**
 		 * Constructor.
@@ -139,6 +180,20 @@ public class CreateConnectionViewRequest
 		this(new ConnectionViewDescriptor(new EObjectAdapter(element),
 			preferencesHint));
 	}
+    
+    /**
+     * Constructor.
+     * 
+     * @param element
+     *            a semantic element
+     * @param boolean
+     *            indicate if the connection will be persisted or not
+     */
+    public CreateConnectionViewRequest(EObject element,
+            boolean persisted, PreferencesHint preferencesHint) {
+        this(new ConnectionViewDescriptor(new EObjectAdapter(element),
+            persisted,preferencesHint));
+    }
 
 	/**
 	 * Constructor.
@@ -214,9 +269,10 @@ public class CreateConnectionViewRequest
 		Assert.isNotNull(element);
 		Assert.isNotNull(sourceEditPart);
 		Assert.isNotNull(targetEditPart);
+        boolean transientTargetOrSource = hasTransientSourceOrTarget(sourceEditPart, targetEditPart);
 
 		CreateConnectionViewRequest request = new CreateConnectionViewRequest(
-			element, preferencesHint);
+			element,!transientTargetOrSource, preferencesHint);
 
 		request.setSourceEditPart(sourceEditPart);
 		request.setTargetEditPart(targetEditPart);
@@ -225,6 +281,43 @@ public class CreateConnectionViewRequest
 		request.setType(RequestConstants.REQ_CONNECTION_END);
 		return targetEditPart.getCommand(request);
 	}
+
+    private static boolean hasTransientSourceOrTarget(EditPart sourceEditPart, EditPart targetEditPart) {
+        boolean transientTargetOrSource = hasTransientView(sourceEditPart);
+        if (!transientTargetOrSource){
+            transientTargetOrSource = hasTransientView(targetEditPart);
+        }
+        return transientTargetOrSource;
+    }
+    
+    private static boolean hasTransientSourceOrTarget(IAdaptable sourceView,IAdaptable targetView) {
+        boolean transientTargetOrSource = hasTransientView(sourceView);
+        if (!transientTargetOrSource){
+            transientTargetOrSource = hasTransientView(targetView);
+        }
+        return transientTargetOrSource;
+    }
+
+    private static boolean hasTransientView(EditPart sourceEditPart) {
+        boolean transientTargetOrSource = false;
+        if (sourceEditPart.getModel() instanceof View){
+            View srcView = (View)sourceEditPart.getModel();
+            if (ViewUtil.isTransient(srcView)){
+                transientTargetOrSource = true;
+            }
+        }
+        return transientTargetOrSource;
+    }
+    
+    private static boolean hasTransientView(IAdaptable adaptable) {
+        View view = (View)adaptable.getAdapter(View.class);
+        if (view !=null){
+            if (ViewUtil.isTransient(view)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Method getCreateCommand Gets the command given a request, source and
@@ -264,8 +357,9 @@ public class CreateConnectionViewRequest
 			DiagramEditPart diagramEditPart, PreferencesHint preferencesHint) {
 
         Diagram diagram = diagramEditPart.getDiagramView().getDiagram();
+        boolean transientTargetOrSource = hasTransientSourceOrTarget(sourceViewAdapter, targetViewAdapter);
 		CreateCommand createCommand = new CreateCommand(diagramEditPart.getEditingDomain(),
-			new ConnectionViewDescriptor(elementAdapter, preferencesHint),
+			new ConnectionViewDescriptor(elementAdapter,!transientTargetOrSource, preferencesHint),
             diagram);
 
 		IAdaptable viewAdapter = (IAdaptable) createCommand.getCommandResult()
@@ -301,34 +395,17 @@ public class CreateConnectionViewRequest
         Diagram diagram = diagramEditPart.getDiagramView().getDiagram();
 		CreateCommand createCommand = new CreateCommand(diagramEditPart.getEditingDomain(), viewDescriptor,
             diagram);
-
 		IAdaptable viewAdapter = (IAdaptable) createCommand.getCommandResult()
 			.getReturnValue();
-        
         TransactionalEditingDomain editingDomain = diagramEditPart.getEditingDomain();
-
 		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, 
 			DiagramUIMessages.Commands_SetConnectionEndsCommand_Source);
 		sceCommand.setEdgeAdaptor(viewAdapter);
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);
-		// sceCommand.setNewSourceTerminal("anchor"); //$NON-NLS-1$
 		sceCommand.setNewTargetAdaptor(targetViewAdapter);
-		// sceCommand.setNewTargetTerminal("anchor"); //$NON-NLS-1$
-
-		// Need some bendpoints set, otherwise a null exception occurs
-		// when the user tries to bend the .
-		// SetBendpointsCommand sbbCommand = new SetBendpointsCommand();
-		// sbbCommand.setConnectorAdapter(viewAdapter);
-		// PointList pointList = new PointList();
-		// pointList.addPoint(new Point(0, 0));
-		// pointList.addPoint(new Point(0, 0));
-		// sbbCommand.setNewPointList(pointList, new Point(0, 0), new Point(0,
-		// 0));
-
 		CompositeCommand cc = new CompositeCommand(null);
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
-		// cc.compose(sbbCommand);
 		return new EtoolsProxyCommand(cc);
 	}
 
