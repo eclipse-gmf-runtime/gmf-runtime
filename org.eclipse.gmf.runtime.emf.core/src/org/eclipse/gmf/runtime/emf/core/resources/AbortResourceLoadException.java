@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.core.internal.exceptions;
+package org.eclipse.gmf.runtime.emf.core.resources;
 
 /**
  * This exception is intended to be thrown during Resource load when an
@@ -17,13 +17,10 @@ package org.eclipse.gmf.runtime.emf.core.internal.exceptions;
  * abort loading at any time.
  * 
  * @author Christian Vogt (cvogt)
- * 
- * @deprecated Use the {@link org.eclipse.gmf.runtime.emf.core.resources.AbortResourceLoadException}
- *     exception, instead.
  */
-public class AbortResourceLoadException extends org.eclipse.gmf.runtime.emf.core.resources.AbortResourceLoadException {
+public class AbortResourceLoadException extends RuntimeException {
 
-	private static final long serialVersionUID = 1317448650831196205L;
+	private static final long serialVersionUID = -5621491416138595586L;
 
 	/**
 	 * Initializes me without any details.
@@ -49,6 +46,7 @@ public class AbortResourceLoadException extends org.eclipse.gmf.runtime.emf.core
 	 *            the cause of this exception.
 	 */
 	public AbortResourceLoadException(Throwable cause) {
-		super(cause);
+		super(null == cause ? null
+			: cause.toString(), cause);
 	}
 }

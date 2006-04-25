@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
-import org.eclipse.gmf.runtime.emf.core.internal.resources.GMFResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 
 /**

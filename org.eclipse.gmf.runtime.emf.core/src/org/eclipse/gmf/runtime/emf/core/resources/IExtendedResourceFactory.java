@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.emf.core.resources;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 

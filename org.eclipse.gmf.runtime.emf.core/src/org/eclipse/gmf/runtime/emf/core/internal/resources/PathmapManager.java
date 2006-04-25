@@ -52,6 +52,8 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
+import org.eclipse.gmf.runtime.emf.core.resources.IPathmapManager;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.service.prefs.BackingStoreException;
@@ -61,7 +63,7 @@ import org.osgi.service.prefs.BackingStoreException;
  * 
  * @author rafikj
  */
-public class PathmapManager extends AdapterImpl {
+public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	// path maps can be defined using an extension point: Pathmaps
 	//  or by referencing an eclipse path variable
 	//  or by adding a pathmap manually
@@ -200,7 +202,7 @@ public class PathmapManager extends AdapterImpl {
 	public static void removePathVariableReference(String pathVariable) {
 		if (referencedPathVariablesList.contains(pathVariable)) {
 			referencedPathVariablesList.remove(pathVariable);
-			removePathVariable(pathVariable);
+			unsetPathVariable(pathVariable);
 		}
 	}
 	
@@ -305,15 +307,27 @@ public class PathmapManager extends AdapterImpl {
 		}
 	}
 
+	public IStatus addPathVariable(String name, String value) {
+		setPathVariable(name, value);
+		
+		return Status.OK_STATUS; // TODO: report accurate status
+	}
+	
 	/**
 	 * Remove a pathmap variable.
 	 */
-	public static void removePathVariable(String var) {
+	public static void unsetPathVariable(String var) {
 		PATH_MAP.remove(var);
 
 		for (Iterator i = allInstances().iterator(); i.hasNext();) {
 			((PathmapManager) i.next()).resyncEntries(true);
 		}
+	}
+	
+	public IStatus removePathVariable(String name) {
+		unsetPathVariable(name);
+		
+		return Status.OK_STATUS; // TODO: report accurate status
 	}
 	
 	/**

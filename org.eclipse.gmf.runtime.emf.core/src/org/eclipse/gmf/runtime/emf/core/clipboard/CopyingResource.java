@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
-import org.eclipse.gmf.runtime.emf.core.internal.resources.GMFResource;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;

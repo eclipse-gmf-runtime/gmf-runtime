@@ -9,10 +9,18 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.emf.core.internal.resources;
+package org.eclipse.gmf.runtime.emf.core.resources;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.UnresolvedReferenceException;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.SAXWrapper;
+import org.eclipse.emf.ecore.xmi.impl.XMILoadImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -20,18 +28,34 @@ import org.xml.sax.helpers.DefaultHandler;
  * UnresolvedReferenceExceptions are not thrown back.
  * 
  * @author rafikj
- * 
- * @deprecated Use the {@link org.eclipse.gmf.runtime.emf.core.resources.GMFLoad}
- *     class, instead
  */
 public class GMFLoad
-	extends org.eclipse.gmf.runtime.emf.core.resources.GMFLoad {
+	extends XMILoadImpl {
 
 	/**
 	 * Constructor.
 	 */
 	public GMFLoad(XMLHelper helper) {
 		super(helper);
+	}
+
+	/**
+	 * @see org.eclipse.emf.ecore.xmi.XMLLoad#load(org.eclipse.emf.ecore.xmi.XMLResource,
+	 *      java.io.InputStream, java.util.Map)
+	 */
+	public void load(XMLResource r, InputStream s, Map o)
+		throws IOException {
+
+		try {
+
+			super.load(r, s, o);
+
+		} catch (Resource.IOWrappedException e) {
+			if (!(e.getWrappedException() instanceof UnresolvedReferenceException))
+				throw e;
+		} catch (AbortResourceLoadException arle) {
+			throw new Resource.IOWrappedException((Exception)arle.getCause());
+		}
 	}
 
 	/**
