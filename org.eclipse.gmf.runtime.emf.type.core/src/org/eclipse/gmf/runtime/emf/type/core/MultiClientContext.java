@@ -202,17 +202,8 @@ public class MultiClientContext implements IClientContext {
 	 */
 	public boolean equals(Object obj) {
 
-		if (obj instanceof MultiClientContext
-				&& ((MultiClientContext) obj).getChildren().size() == getChildren()
-						.size()) {
-
-			for (Iterator i = ((MultiClientContext) obj).getChildren()
-					.iterator(); i.hasNext();) {
-				if (!getChildren().contains(i.next())) {
-					return false;
-				}
-			}
-			return true;
+		if (obj instanceof MultiClientContext) {
+			return getChildren().equals(((MultiClientContext) obj).getChildren());
 		}
 		return false;
 	}
@@ -221,13 +212,7 @@ public class MultiClientContext implements IClientContext {
 	 * The children fully determine equality.
 	 */
 	public int hashCode() {
-		
-		int result = 0;
-		
-		for (Iterator i = getChildren().iterator(); i.hasNext();) {
-			result += i.next().hashCode();
-		}
-		return result;
+		return getChildren().hashCode();
 	}
 
 	public String toString() {
