@@ -78,32 +78,15 @@ public class ImageSupportGlobalActionHandler
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#canCopy(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
-	 */
-	protected boolean canCopy(IGlobalActionContext cntxt) {
-		return AWTClipboardHelper.getInstance().isImageCopySupported()
-			&& super.canCopy(cntxt);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#canCut(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
-	 */
-	protected boolean canCut(IGlobalActionContext cntxt) {
-		return AWTClipboardHelper.getInstance().isImageCopySupported()
-			&& super.canCut(cntxt);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#canPaste(org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext)
 	 */
 	protected boolean canPaste(IGlobalActionContext cntxt) {
+		if (!AWTClipboardHelper.getInstance().isImageCopySupported()) {
+			return super.canPaste(cntxt);
+		}
+		
 		/* Check if the clipboard has data for the drawing surface */
-		return AWTClipboardHelper.getInstance().isImageCopySupported()
-			&& AWTClipboardHelper.getInstance().hasCustomData();
+		return AWTClipboardHelper.getInstance().hasCustomData();
 	}
 
 	/*
@@ -115,6 +98,10 @@ public class ImageSupportGlobalActionHandler
 	 */
 	protected ICommand getCopyCommand(IGlobalActionContext cntxt,
 			IDiagramWorkbenchPart diagramPart, final boolean isUndoable) {
+		if (!AWTClipboardHelper.getInstance().isImageCopySupported()) {
+			return super.getCopyCommand(cntxt, diagramPart, isUndoable);
+		}
+		
 		return new CopyImageCommand(cntxt.getLabel(), diagramPart.getDiagram(),
 			getSelectedViews(cntxt.getSelection()), diagramPart
 				.getDiagramEditPart()) {
@@ -163,6 +150,10 @@ public class ImageSupportGlobalActionHandler
 	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler#createPasteViewRequest()
 	 */
 	protected PasteViewRequest createPasteViewRequest() {
+		if (!AWTClipboardHelper.getInstance().isImageCopySupported()) {
+			return super.createPasteViewRequest();
+		}
+		
 		CustomData data = AWTClipboardHelper.getInstance().getCustomData();
 
 		return new PasteViewRequest(new ICustomData[] {data});
