@@ -522,7 +522,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
             
             // Normalize the polyline to remove unwanted segments
 			Dimension tolerance = new Dimension(3, 0);
-			if (!isFeedback(conn))
+			if (!RouterHelper.getInstance().isFeedback(conn))
 				tolerance = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(tolerance);
 			
             normalizationChangedLine |= PointListUtilities.normalizeSegments(newLine, tolerance.width);

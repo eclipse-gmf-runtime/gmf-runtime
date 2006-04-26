@@ -12,27 +12,19 @@
 package org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 
-import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -201,70 +193,22 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			|| (conn.getTargetAnchor() == null))
 			return;
 
-		List bendpoints = (List)getConstraint(conn);
-		if (bendpoints == null)
-			bendpoints = Collections.EMPTY_LIST;
-
-		PointList points = new PointList(bendpoints.size());
-
-		for (int i = 0; i < bendpoints.size(); i++) {
-			Bendpoint bp = (Bendpoint) bendpoints.get(i);
-			points.addPoint(bp.getLocation());
-		}
-
-		if (bendpoints.size() == 0) {
-			Point r1 = conn.getSourceAnchor().getReferencePoint().getCopy();
-			conn.translateToRelative(r1);
-			points.addPoint(r1);
-
-			Point r2 = conn.getTargetAnchor().getReferencePoint().getCopy();
-			conn.translateToRelative(r2);
-			points.addPoint(r2);
-		}
-
-		if (isClosestDistance(conn))
-			closestDistanceRouting(points);
-
-		routeLine(conn, 0, points);
-
-		if (isAvoidingObstructions(conn))
-			avoidObstructionsRouting(conn, points);
-
+        PointList points = new PointList();
+             
+		if (isAvoidingObstructions(conn)) {
+            points = RouterHelper.getInstance().routeAroundObstructions(conn);	
+		} 
+        else if (isClosestDistance(conn)) {
+            points = RouterHelper.getInstance().routeClosestDistance(conn);
+        }
+        else {
+            points = RouterHelper.getInstance().routeFromConstraint(conn);
+        }
+        
+        routeLine(conn, 0, points);
 		conn.setPoints(points);
 	}
 
-	/**
-	 * This is option on the router to use the closest distance possible to route the line.
-	 */
-	protected void closestDistanceRouting(
-		PointList newLine) {
-		Point ptOrig = new Point(newLine.getFirstPoint());
-		Point ptTerm = new Point(newLine.getLastPoint());
-
-		newLine.removeAllPoints();
-		newLine.addPoint(ptOrig);
-		newLine.addPoint(ptTerm);
-	}
-
-	/**
-	 * This method will move the line around any obstructions in it's path.
-	 */
-	protected void avoidObstructionsRouting(
-		Connection conn,
-		PointList newLine) {
-		boolean bSkipNormalization = routeThroughObstructions(conn, newLine);
-
-		int dwSaveRouterFlags = routerFlags;
-
-		// avoid recursion
-		if (bSkipNormalization)
-			routerFlags |= ObliqueRouter.ROUTER_FLAG_SKIPNORMALIZATION;
-
-		// reroute line
-		routeLine(conn, 0, newLine);
-
-		routerFlags = dwSaveRouterFlags;
-	}
 
 	/**
 	 * Method removePointsInViews.
@@ -385,260 +329,9 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	protected void resetEndPointsToEdge(
     Connection conn,
     PointList newLine) {
-		if (newLine.size() <= 1)
-			return;
-
-		Point ptS2 = newLine.getPoint(1);
-		Point ptAbsS2 = new Point(ptS2);
-		conn.translateToAbsolute(ptAbsS2);
-		if (newLine.size() == 2)
-            ptAbsS2 = conn.getTargetAnchor().getReferencePoint();
-		Point ptAbsS1 = conn.getSourceAnchor().getLocation(ptAbsS2);
-		Point ptS1 = new Point(ptAbsS1);
-        conn.translateToRelative(ptS1);
-        
-        Point ptE2 = newLine.getPoint(newLine.size() - 2);
-        Point ptAbsE2 = new Point(ptE2);
-        conn.translateToAbsolute(ptAbsE2);
-		if (newLine.size() == 2)
-			ptAbsE2 = ptAbsS1;
-		Point ptE1 = new Point(conn.getTargetAnchor().getLocation(ptAbsE2)); 
-		conn.translateToRelative(ptE1);
-        
-		newLine.setPoint(ptS1, 0);
-		// convert reference points back to relative to avoid rounding issues.
-		newLine.setPoint(ptE1, newLine.size() - 1);
-		if (newLine.size() != 2) {
-			ptS2 = ptAbsS2;
-			conn.translateToRelative(ptS2);
-			newLine.setPoint(ptS2, 1);
-			ptE2 = ptAbsE2;
-			conn.translateToRelative(ptE2);
-			newLine.setPoint(ptE2, newLine.size() - 2);
-		}
+		RouterHelper.getInstance().resetEndPointsToEdge(conn, newLine);
 	}
 	
-	protected final static int ROUTER_OBSTRUCTION_BUFFER = 12;
-
-	/**
-	 * This method will collapse all the rectangles together that intersect in the given List.  It utilizes
-	 * a recursive implementation.
-	 */
-	protected List collapseRects(List collectRect, int inflate) {
-		if (collectRect.size() == 0)
-			return new LinkedList();
-
-		Rectangle rCompare = new Rectangle((Rectangle) collectRect.remove(0));
-		List collapsedRects = collapseRects(rCompare, collectRect, inflate);
-		collapsedRects.add(rCompare);
-
-		return collapsedRects;
-	}
-
-	/**
-	 * Recursively called method called by collapseRects(List collectRect).
-	 */
-	private List collapseRects(Rectangle rCompare, List collectRect, int inflate) {
-		List newCollect = new LinkedList();
-		Rectangle rCompare1 = new Rectangle(rCompare);
-
-		// compare rectangle with each rectangle in the rest of the list
-		boolean intersectionOccurred = false;
-		ListIterator listIter = collectRect.listIterator();
-		while (listIter.hasNext()) {
-			Rectangle rCompare2 = new Rectangle((Rectangle) listIter.next());
-
-			Rectangle rExpandRect1 = new Rectangle(rCompare1);
-			Rectangle rExpandRect2 = new Rectangle(rCompare2);
-
-			// inflate the rect by the obstruction buffer for the intersection
-			// calculation so that we won't try to route through a space smaller
-			// then necessary
-			rExpandRect1.expand(inflate, inflate);
-			rExpandRect2.expand(inflate, inflate);
-
-			if (rExpandRect1.intersects(rExpandRect2)) {
-				rCompare1.union(rCompare2);
-				intersectionOccurred = true;
-			} else {
-				newCollect.add(rCompare2);
-			}
-		}
-
-		rCompare.setBounds(rCompare1);
-
-		if (newCollect.size() > 0) {
-			if (intersectionOccurred) {
-				return collapseRects(rCompare, newCollect, inflate);
-			} else {
-				Rectangle rFirst =
-					new Rectangle((Rectangle) newCollect.remove(0));
-				List finalCollapse = collapseRects(rFirst, newCollect, inflate);
-				finalCollapse.add(rFirst);
-
-				return finalCollapse;
-			}
-		} else {
-			return newCollect;
-		}
-	}
-
-	/**
-	 * Helper function for the avoidObstructionsRouting method.
-	 */
-	protected boolean routeThroughObstructions(
-		Connection conn,
-		PointList newLine) {
-		boolean bRet = false;
-
-		Point infimumPoint = PointListUtilities.getPointsInfimum(newLine);
-		Point supremumPoint = PointListUtilities.getPointsSupremum(newLine);
-
-		Ray diameter = new Ray(infimumPoint, supremumPoint);
-		Rectangle rPoly =
-			new Rectangle(
-				infimumPoint.x,
-				infimumPoint.y,
-				diameter.x,
-				diameter.y);
-
-		List collectObstructs = new LinkedList();
-
-		IFigure parent = getContainerFigure(conn);
-
-		// don't bother routing if there is no attachments
-		if (parent == null)
-			return false;
-
-        // set the end points back to the reference points - this will avoid errors, where
-        // an edge point is erroneously aligned with a specific edge, even though the avoid
-        // obstructions would suggest attachment to another edge is more appropriate
-        Point ptRef = conn.getSourceAnchor().getReferencePoint();
-        conn.translateToRelative(ptRef);
-        newLine.setPoint(ptRef, 0);
-        ptRef = conn.getTargetAnchor().getReferencePoint();
-        conn.translateToRelative(ptRef);
-        newLine.setPoint(ptRef, newLine.size() - 1);
-        
-		// TBD - optimize this
-		// increase connect view rect by width or height of diagram
-		// to maximize views included in the obstruction calculation
-		// without including all views in the diagram
-		Rectangle rBoundingRect = new Rectangle(parent.getBounds());
-		parent.translateToAbsolute(rBoundingRect);
-		conn.translateToRelative(rBoundingRect);
-
-		if (rPoly.width > rPoly.height) {
-			rPoly.y = rBoundingRect.y;
-			rPoly.setSize(rPoly.width, rBoundingRect.height);
-		} else {
-			rPoly.x = rBoundingRect.x;
-			rPoly.setSize(rBoundingRect.width, rPoly.height);
-		}
-
-		List children = parent.getChildren();
-		for (int i = 0; i < children.size(); i++) {
-			IFigure child = (IFigure) children.get(i);
-
-			if (!child.equals(conn.getSourceAnchor().getOwner())
-				&& !child.equals(conn.getTargetAnchor().getOwner())) {
-				Rectangle rObstruct = new Rectangle(child.getBounds());
-				child.translateToAbsolute(rObstruct);
-				conn.translateToRelative(rObstruct);
-
-				// inflate slightly
-				rObstruct.expand(1, 1);
-
-				if (rPoly.intersects(rObstruct)) {
-					collectObstructs.add(rObstruct);
-					bRet = true;
-				}
-			}
-		}
-
-		// parse through obstruction collect and combine rectangle that
-		// intersect with each other
-		if (collectObstructs.size() > 0) {
-			Dimension buffer = new Dimension(ROUTER_OBSTRUCTION_BUFFER + 1, 0);
-			if (!isFeedback(conn))
-				buffer = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(buffer);
-			final int inflate = buffer.width;
-			
-			List collapsedRects = collapseRects(collectObstructs, inflate);
-			collectObstructs.clear();
-
-			// Loop through the collapsedRects list until there are no more
-			// intersections
-			boolean bRouted = true;
-			while (bRouted && !collapsedRects.isEmpty()) {
-				ListIterator listIter = collapsedRects.listIterator();
-				bRouted = false;
-
-				while (listIter.hasNext()) {
-					Rectangle rObstruct = (Rectangle) listIter.next();
-					PointList routedPoly = PointListUtilities
-					.routeAroundRect(
-                        newLine,
-						rObstruct,
-						0,
-						false,
-						inflate);
-					
-					if (routedPoly != null) {
-						bRouted = true;
-						newLine.removeAllPoints();
-						newLine.addAll(routedPoly);
-					} else
-						collectObstructs.add(rObstruct);
-				}
-
-				List tempList = collapsedRects;
-				collapsedRects = collectObstructs;
-				tempList.clear();
-				collectObstructs = tempList;
-
-				if (bRouted && !collapsedRects.isEmpty())
-					resetEndPointsToEdge(conn, newLine);
-			}
-		}
-
-		return bRet;
-	}
-
-
-	/**
-	 * getContainerFigure
-	 * @param conn
-	 * @return
-	 */
-	private IFigure getContainerFigure(Connection conn) {
-		IFigure sourceContainer = findContainerFigure(conn.getSourceAnchor().getOwner());
-		IFigure targetContainer = findContainerFigure(conn.getTargetAnchor().getOwner());
-		
-		if (sourceContainer == targetContainer)
-			return sourceContainer;
-		
-		return null;
-	}
-	
-	/**
-	 * findContainerFigure
-	 * Recursive method to find the figure that owns the children the
-	 * connection is connecting to.
-	 * 
-	 * @param fig IFigure to find the shape container figure parent of.
-	 * @return Container figure 
-	 */
-	private IFigure findContainerFigure(IFigure fig) {
-		if (fig == null)
-			return null;
-		
-		if (fig.getLayoutManager() instanceof FreeformLayout)
-			return fig;
-		
-		return findContainerFigure(fig.getParent());
-	}
-
 	protected static final int SELFRELSIZEINIT = 62;
 	protected static final int SELFRELSIZEINCR = 10;
 
@@ -711,7 +404,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		}
 
 		Dimension selfrelsizeincr = new Dimension(SELFRELSIZEINCR, 0);
-		if (!isFeedback(conn))
+		if (!RouterHelper.getInstance().isFeedback(conn))
 			selfrelsizeincr = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeincr);
 		
 		IFigure owner = conn.getSourceAnchor().getOwner();
@@ -800,7 +493,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		int xNew, yNew;
 
 		Dimension selfrelsizeinit = new Dimension(SELFRELSIZEINIT, 0);
-		if (!isFeedback(conn))
+		if (!RouterHelper.getInstance().isFeedback(conn))
 			selfrelsizeinit = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeinit);
 		
 		xNew = x + (nXDir * (selfrelsizeinit.width + nOffset));
@@ -847,7 +540,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		int xNew, yNew;
 
 		Dimension selfrelsizeinit = new Dimension(SELFRELSIZEINIT, 0);
-		if (!isFeedback(conn))
+		if (!RouterHelper.getInstance().isFeedback(conn))
 			selfrelsizeinit = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeinit);
 		
 		yNew = y + (nDir * (selfrelsizeinit.width + nOffset));
@@ -890,7 +583,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		int xNew, yNew;
 		
 		Dimension selfrelsizeinit = new Dimension(SELFRELSIZEINIT, 0);
-		if (!isFeedback(conn))
+		if (!RouterHelper.getInstance().isFeedback(conn))
 			selfrelsizeinit = (Dimension)MapModeUtil.getMapMode(conn).DPtoLP(selfrelsizeinit);
 		
 		xNew = x + (nDir * (selfrelsizeinit.width + nOffset));
@@ -911,14 +604,27 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	 */
 	public void remove(Connection connection) {
 		super.remove(connection);
-
+		
+        RouterHelper.getInstance().remove(connection);
 		removeSelfRelConnection(connection);
 	}
-	
-	protected boolean isFeedback(Connection conn) {
-		Dimension dim = new Dimension(100, 100);
-		Dimension dimCheck = dim.getCopy();
-		conn.translateToRelative(dimCheck);
-		return dim.equals(dimCheck);
+
+	/* 
+	 * Added to support GEF's shortest path routing
+	 */
+	public void invalidate(Connection connection) {
+        super.invalidate(connection);
+		RouterHelper.getInstance().invalidate(connection);
 	}
+    
+    /**
+     * Sets the constraint for the given {@link Connection}.
+     *
+     * @param connection The connection whose constraint we are setting
+     * @param constraint The constraint
+     */
+    public void setConstraint(Connection connection, Object constraint) {
+        super.setConstraint(connection, constraint);
+        RouterHelper.getInstance().setConstraint(connection, constraint);
+    }
 }
