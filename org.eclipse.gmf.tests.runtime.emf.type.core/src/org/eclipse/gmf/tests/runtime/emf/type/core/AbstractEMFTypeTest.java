@@ -28,7 +28,10 @@ import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.gmf.runtime.emf.type.core.ClientContextManager;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
+import org.eclipse.gmf.runtime.emf.type.core.IEditHelperContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
@@ -39,7 +42,9 @@ public class AbstractEMFTypeTest
 
     private TransactionalEditingDomain editingDomain;
 
-    private Resource resource;
+    private Resource defaultResource;
+    
+    private Resource resourceWithContext;
 
     private EmployeePackage employeePkg;
 
@@ -57,16 +62,27 @@ public class AbstractEMFTypeTest
         employeeFactory = (EmployeeFactory) employeePkg.getEFactoryInstance();
 
         editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain();
-        resource = editingDomain
+        TransactionalEditingDomain.Registry.INSTANCE
+				.add(
+						"org.eclipse.gmf.tests.runtime.emf.type.core.EditingDomain", editingDomain); //$NON-NLS-1$
+        
+        defaultResource = editingDomain
             .getResourceSet()
             .createResource(
                 URI
                     .createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core")); //$NON-NLS-1$
-
+        
+        resourceWithContext = editingDomain
+        .getResourceSet()
+        .createResource(
+            URI
+                .createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core.context")); //$NON-NLS-1$
+    
         RecordingCommand command = new RecordingCommand(editingDomain) {
 
             protected void doExecute() {
-                doModelSetup();
+                doModelSetup(defaultResource);
+                doModelSetupWithContext(resourceWithContext);
             };
         };
 
@@ -85,11 +101,16 @@ public class AbstractEMFTypeTest
         
         employeeFactory = null;
         employeePkg = null;
-        resource.unload();
+        defaultResource.unload();
+        resourceWithContext.unload();
         editingDomain.dispose();
     }
 
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
+        // Do nothing.
+    }
+    
+    protected void doModelSetupWithContext(Resource resource) {
         // Do nothing.
     }
 
@@ -102,7 +123,11 @@ public class AbstractEMFTypeTest
     }
 
     protected Resource getResource() {
-        return resource;
+        return defaultResource;
+    }
+    
+    protected Resource getResourceWithContext() {
+        return resourceWithContext;
     }
 
     protected EmployeeFactory getEmployeeFactory() {
@@ -147,31 +172,61 @@ public class AbstractEMFTypeTest
     		return Status.CANCEL_STATUS;  // won't get past fail() call
     	}
     }
-
-	protected IEditHelperAdvice[] getWildcardAdvice() {
+    
+	protected IEditHelperAdvice[] getWildcardAdvice(IClientContext clientContext) {
 		// get wildcard advices by finding advices on the default element type
 		//     (which can only have wildcard advice)
 		IElementType dflt = ElementTypeRegistry.getInstance().getType(
 				"org.eclipse.gmf.runtime.emf.type.core.default"); //$NON-NLS-1$
 		assertNotNull(dflt);
-		return ElementTypeRegistry.getInstance().getEditHelperAdvice(dflt);
+		return ElementTypeRegistry.getInstance().getEditHelperAdvice(dflt, clientContext);
+	}
+	
+	protected IEditHelperAdvice[] getNonWildcardAdvice(IElementType type) {
+		IClientContext context = ClientContextManager.getInstance().getBinding(
+				type);
+		return getNonWildcardAdvice(type, context);
+	}
+	
+	protected IEditHelperAdvice[] getNonWildcardAdvice(IElementType type, IClientContext context) {
+		
+		LinkedHashSet result = new LinkedHashSet();
+		
+		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance()
+				.getEditHelperAdvice(type, context)));
+		result.removeAll(Arrays.asList(getWildcardAdvice(context)));
+
+		return (IEditHelperAdvice[]) result
+				.toArray(new IEditHelperAdvice[result.size()]);
+	}
+	
+	protected IEditHelperAdvice[] getNonWildcardAdvice(IEditHelperContext context) {
+		
+		LinkedHashSet result = new LinkedHashSet();
+		
+		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance()
+				.getEditHelperAdvice(context)));
+		result.removeAll(Arrays.asList(getWildcardAdvice(context.getClientContext())));
+
+		return (IEditHelperAdvice[]) result
+				.toArray(new IEditHelperAdvice[result.size()]);
 	}
 
-	protected IEditHelperAdvice[] getNonWildcardAdvice(IElementType type) {
-	    	LinkedHashSet result = new LinkedHashSet();
-	    	
-	    	result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(type)));
-	    	result.removeAll(Arrays.asList(getWildcardAdvice()));
-	    	
-	    	return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
-	   }
-
 	protected IEditHelperAdvice[] getNonWildcardAdvice(EObject element) {
-	    	LinkedHashSet result = new LinkedHashSet();
-	    	
-	    	result.addAll(Arrays.asList(ElementTypeRegistry.getInstance().getEditHelperAdvice(element)));
-	    	result.removeAll(Arrays.asList(getWildcardAdvice()));
-	    	
-	    	return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[result.size()]);
-	   }
+		IClientContext context = ClientContextManager.getInstance()
+				.getClientContextFor(element);
+		return getNonWildcardAdvice(element, context);
+	}
+	
+	protected IEditHelperAdvice[] getNonWildcardAdvice(EObject element, IClientContext context) {
+		
+		LinkedHashSet result = new LinkedHashSet();
+		
+		result.addAll(Arrays.asList(ElementTypeRegistry.getInstance()
+				.getEditHelperAdvice(element, context)));
+		result.removeAll(Arrays.asList(getWildcardAdvice(context)));
+
+		return (IEditHelperAdvice[]) result
+				.toArray(new IEditHelperAdvice[result.size()]);
+	}
 }

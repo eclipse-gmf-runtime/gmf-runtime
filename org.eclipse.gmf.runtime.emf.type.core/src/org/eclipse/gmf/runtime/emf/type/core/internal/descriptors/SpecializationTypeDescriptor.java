@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -247,9 +247,9 @@ public class SpecializationTypeDescriptor
 	}
 
 	/**
-	 * Gets the edit helper advice descriptor. May be <code>null</code>.
+	 * Gets the edit helper advice. May be <code>null</code>.
 	 * 
-	 * @return the edit helper advice descriptor
+	 * @return the edit helper advice
 	 */
 	public IEditHelperAdviceDescriptor getEditHelperAdviceDescriptor() {
 		return editHelperAdviceDescriptor;
@@ -325,5 +325,9 @@ public class SpecializationTypeDescriptor
 			return getSpecializedTypes()[0].getIconURL();
 		}
 		return super.getIconURL();
+	}
+	
+	public String toString() {
+		return "SpecializationTypeDescriptor[" + getId()+ "]";
 	}
 }

@@ -18,6 +18,7 @@ import junit.textui.TestRunner;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -53,21 +54,21 @@ public class CreateElementRequestTest
         return new TestSuite(CreateElementRequestTest.class);
     }
 
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
 
         department = (Department) getEmployeeFactory().create(
             getEmployeePackage().getDepartment());
         department.setName("Department"); //$NON-NLS-1$
-        getResource().getContents().add(department);
+        resource.getContents().add(department);
         
         department2 = (Department) getEmployeeFactory().create(
             getEmployeePackage().getDepartment());
         department2.setName("Department2"); //$NON-NLS-1$
-        getResource().getContents().add(department2);
+        resource.getContents().add(department2);
 
         employee = (Employee) getEmployeeFactory().create(
             getEmployeePackage().getEmployee());
-        getResource().getContents().add(employee);
+        resource.getContents().add(employee);
     }
 
     protected CreateElementRequest getFixture() {

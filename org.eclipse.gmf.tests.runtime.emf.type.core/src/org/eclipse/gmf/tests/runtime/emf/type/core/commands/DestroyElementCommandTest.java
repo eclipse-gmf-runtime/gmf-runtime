@@ -252,10 +252,10 @@ public class DestroyElementCommandTest
     // Test framework methods
     //
     
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
         parentCompany = getEmployeeFactory().createCustomer();
         parentCompany.setName("GlobalMega"); //$NON-NLS-1$
-        getResource().getContents().add(parentCompany);
+        resource.getContents().add(parentCompany);
         
         customer = getEmployeeFactory().createCustomer();
         customer.setName("Acme"); //$NON-NLS-1$

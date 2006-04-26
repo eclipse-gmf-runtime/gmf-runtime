@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,8 @@ public class EMFTypePluginStatusCodes {
 	public static final int FACTORY_NOT_INITED = 14;
 
 	public static final int METAMODEL_NOT_INITED = 15;
+	
+	public static final int CONTEXT_NOT_INITED = 16;
 
 	public static final int EDIT_HELPER_ADVICE_CLASS_NOT_FOUND = 20;
 
@@ -63,6 +65,23 @@ public class EMFTypePluginStatusCodes {
 	public static final int SPECIALIZATION_TYPE_SPECIALIZES_INVALID_ID = 28;
 	
 	public static final int CONTAINMENT_FEATURE_NO_METAMODEL = 29;
+	
+	public static final int CLIENT_CONTEXT_NOT_INITED = 50;
+	
+	public static final int BINDING_NO_CONTEXT = 60;
+	
+	public static final int BINDING_NO_SUCH_CONTEXT = 61;
+	
+	public static final int PATTERN_INVALID_SYNTAX = 62;
+	
+	public static final int BINDING_NO_REF_OR_PATTERN = 63;
+	
+	public static final int BINDING_BOTH_REF_AND_PATTERN = 64;
+	
+	public static final int CLIENT_MATCHER_FAILURE = 70;
+	
+	public static final int CLIENT_NO_MATCHER = 71;
+
 
 	/**
 	 * Cannot be instantiated by clients.
@@ -172,6 +191,26 @@ public class EMFTypePluginStatusCodes {
 				.getPluginId(), METAMODEL_NOT_INITED, EMFTypeCoreMessages.bind(
 				EMFTypeCoreMessages.metamodel_not_init_WARN_, nsURI, reason),
 				null));
+	}
+
+	/**
+	 * Convenience method to construct a new CoreException indicating that an
+	 * element type factory initialization failed.
+	 * 
+	 * @param factoryName
+	 *            the factory name
+	 * @param reason
+	 *            the localized reason why the element type factory
+	 *            was not initialized
+	 * @return the new CoreException
+	 */
+	public static CoreException getContextInitException(String contextId,
+			String reason) {
+
+		return new CoreException(new Status(IStatus.WARNING, EMFTypePlugin
+				.getPluginId(), CONTEXT_NOT_INITED, EMFTypeCoreMessages.bind(
+				EMFTypeCoreMessages.clientContext_not_init_WARN_,
+				contextId, reason), null));
 	}
 }
 

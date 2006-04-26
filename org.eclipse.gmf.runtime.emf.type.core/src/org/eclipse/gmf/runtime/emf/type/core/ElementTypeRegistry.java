@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
@@ -71,8 +70,8 @@ public class ElementTypeRegistry {
 	private final SpecializationTypeRegistry specializationTypeRegistry;
 
 	/**
-	 * Metamodel type descriptors stored by EClass. Each value is a single
-	 * MetamodelTypeDescriptor.
+	 * Metamodel type descriptors stored by EClass. Each value is a collection of
+	 * MetamodelTypeDescriptors.
 	 */
 	private final Map metamodelTypeDescriptorsByEClass;
 
@@ -137,20 +136,48 @@ public class ElementTypeRegistry {
 	 * Gets the edit helper advice for <code>type</code> in order of most
 	 * general advice to most specific advice. This order is used so that the
 	 * more specific advice can act on or modify the more general advice.
+	 * <P>
+	 * The client context is inferred from the <code>type</code>.
 	 * 
 	 * @param type
 	 *            the element type for which to obtain editing advice
 	 * @return the array of edit helper advice descriptors
 	 */
 	public IEditHelperAdvice[] getEditHelperAdvice(IElementType type) {
+		
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getBinding(type);
+
+		return getEditHelperAdvice(type, clientContext);
+	}
+
+	/**
+	 * Gets the edit helper advice for <code>type</code> to which the
+	 * <code>clientContext</code> has been bound, in order of most general
+	 * advice to most specific advice. This order is used so that the more
+	 * specific advice can act on or modify the more general advice.
+	 * 
+	 * @param type
+	 *            the element type for which to obtain editing advice
+	 * @param clientContext
+	 *            the client context
+	 * @return the array of edit helper advice descriptors
+	 */
+	public IEditHelperAdvice[] getEditHelperAdvice(IElementType type, IClientContext clientContext) {
+		
+		IClientContext context = (clientContext == null) ? ClientContextManager
+				.getDefaultClientContext() : clientContext;
 
 		EClass eClass = type.getEClass();
-		MetamodelTypeDescriptor metamodelType = (eClass != null) ? getMetamodelTypeDescriptor(eClass) : null;
-		List result = specializationTypeRegistry.getEditHelperAdvice(type, metamodelType);
+		MetamodelTypeDescriptor metamodelType = (eClass != null) ? getMetamodelTypeDescriptor(
+				eClass, context)
+				: null;
+		List result = specializationTypeRegistry.getEditHelperAdvice(type,
+				metamodelType, context);
 
 		return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[] {});
 	}
-
+	
 	/**
 	 * Gets the edit helper advice for <code>eObject</code> in order of most
 	 * general advice to most specific advice. This order is used so that the
@@ -158,56 +185,103 @@ public class ElementTypeRegistry {
 	 * 
 	 * @param eObject
 	 *            the model element for which to obtain editing advice
+	 * @param clientContext
+	 *            the client context
 	 * @return the array of edit helper advice
 	 */
-	public IEditHelperAdvice[] getEditHelperAdvice(EObject eObject) {
+	public IEditHelperAdvice[] getEditHelperAdvice(EObject eObject,
+			IClientContext clientContext) {
 
 		Collection result;
-		MetamodelTypeDescriptor desc = getMetamodelTypeDescriptor(eObject);
+		MetamodelTypeDescriptor desc = getMetamodelTypeDescriptor(eObject, clientContext);
 		if (desc == null) {
 			result = specializationTypeRegistry.getEditHelperAdvice(
 					eObject,
-					DefaultMetamodelType.getDescriptorInstance());
+					DefaultMetamodelType.getDescriptorInstance(), clientContext);
 		} else {
-			result = specializationTypeRegistry.getEditHelperAdvice(eObject, desc);
+			result = specializationTypeRegistry.getEditHelperAdvice(eObject, desc, clientContext);
 		}
 
 		return (IEditHelperAdvice[]) result.toArray(new IEditHelperAdvice[] {});
 	}
+	
+	/**
+	 * Gets the edit helper advice for <code>eObject</code> in order of most
+	 * general advice to most specific advice. This order is used so that the
+	 * more specific advice can act on or modify the more general advice.
+	 * <P>
+	 * The client context will be inferred from the <code>eObject</code>.
+	 * 
+	 * @param eObject
+	 *            the model element for which to obtain editing advice
+	 * @return the array of edit helper advice
+	 */
+	public IEditHelperAdvice[] getEditHelperAdvice(EObject eObject) {
+	
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getClientContextFor(eObject);
+		
+		return getEditHelperAdvice(eObject, clientContext);
+	}
 
 	/**
 	 * Gets the edit helper advice registered for <code>o</code>, which can
-	 * be either an EObject or an IElementType.
+	 * be either an EObject or an IElementType or an
+	 * <code>IEditHelperContext</code>.
 	 * 
 	 * @param o
 	 *            the element or type
 	 * @return the edit helper advice, or <code>null</code> if none.
 	 */
 	public IEditHelperAdvice[] getEditHelperAdvice(Object o) {
-
+		
 		if (o instanceof EObject) {
 			return getEditHelperAdvice((EObject) o);
 
 		} else if (o instanceof IElementType) {
 			return getEditHelperAdvice((IElementType) o);
+
+		} else if (o instanceof IEditHelperContext) {
+			IEditHelperContext editHelperContext = (IEditHelperContext) o;
+			IClientContext clientContext = editHelperContext.getClientContext();
+			IElementType elementType = editHelperContext.getElementType();
+			EObject eObject = editHelperContext.getEObject();
+
+			if (clientContext != null) {
+				if (elementType != null) {
+					return getEditHelperAdvice(elementType, clientContext);
+
+				} else if (eObject != null) {
+					return getEditHelperAdvice(eObject, clientContext);
+				}
+			} else {
+				if (elementType != null) {
+					return getEditHelperAdvice(elementType);
+
+				} else if (eObject != null) {
+					return getEditHelperAdvice(eObject);
+				}
+			}
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Gets the array of types that can be contained in the structural
-	 * <code>feature</code> of <code>eContainer</code>.  The result will 
-	 * not include types that represent abstract EClasses.
+	 * <code>feature</code> of <code>eContainer</code>. The result will not
+	 * include types that represent abstract EClasses.
 	 * 
 	 * @param eContainer
 	 *            the container
 	 * @param reference
 	 *            the feature
+	 * @param clientContext
+	 *            the client context
 	 * @return the array of types
 	 */
 	public IElementType[] getContainedTypes(EObject eContainer,
-			EReference reference) {
-
+			EReference reference, IClientContext clientContext) {
+		
 		Set result = new HashSet();
 
 		EClass containerEClass = eContainer.eClass();
@@ -221,7 +295,7 @@ public class ElementTypeRegistry {
 			types.add(eType);
 
 			// Get the metamodel types for the eclasses
-			List metamodelTypeDescriptors = getMetamodelTypeDescriptors(types);
+			List metamodelTypeDescriptors = getMetamodelTypeDescriptors(types, clientContext);
 			
 			for (Iterator i = metamodelTypeDescriptors.iterator(); i.hasNext();) {
 
@@ -240,7 +314,7 @@ public class ElementTypeRegistry {
 					// container and reference
 					Collection specializationDescriptors = specializationTypeRegistry
 						.getMatchingSpecializations(
-							nextMetamodelTypeDescriptor, eContainer, reference);
+							nextMetamodelTypeDescriptor, eContainer, reference, clientContext);
 
 					for (Iterator j = specializationDescriptors.iterator(); j
 						.hasNext();) {
@@ -257,6 +331,28 @@ public class ElementTypeRegistry {
 			}
 		}
 		return (IElementType[]) result.toArray(EMPTY_ELEMENT_TYPE_ARRAY);
+	}
+
+	/**
+	 * Gets the array of types that can be contained in the structural
+	 * <code>feature</code> of <code>eContainer</code>.  The result will 
+	 * not include types that represent abstract EClasses.
+	 * <P>
+	 * The client context will be inferred from the <code>eContainer</code>.
+	 * 
+	 * @param eContainer
+	 *            the container
+	 * @param reference
+	 *            the feature
+	 * @return the array of types
+	 */
+	public IElementType[] getContainedTypes(EObject eContainer,
+			EReference reference) {
+
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getClientContextFor(eContainer);
+		
+		return getContainedTypes(eContainer, reference, clientContext);
 	}
 
 	/**
@@ -286,18 +382,19 @@ public class ElementTypeRegistry {
 	}
 
 	/**
-	 * Gets the metamodel type for <code>eClass</code>. If there is none
-	 * registered against the <code>eClass</code>, returns the metamodel type
-	 * for the nearest supertype of
-	 * <code>eClass/code> that has a metamodel type.
+	 * Gets the metamodel type for <code>eClass</code> in the client
+	 * <code>context</code>. If there is none registered against the
+	 * <code>eClass</code>, returns the metamodel type for the nearest
+	 * supertype of <code>eClass/code> that has a metamodel type.
 	 * 
 	 * @param eClass
 	 *            the metaclass
-	 * @return the metamodel type for this <code>eClass</code>, or <code>null</code> if none can be found.
+	 * @param context the client context
+	 * @return the metamodel type for this <code>eClass</code> in the client <code>context</code>, or <code>null</code> if none can be found.
 	 */
-	private IMetamodelType getMetamodelType(EClass eClass) {
-
-		MetamodelTypeDescriptor descriptor = getMetamodelTypeDescriptor(eClass);
+	private IMetamodelType getMetamodelType(EClass eClass, IClientContext context) {
+		
+		MetamodelTypeDescriptor descriptor = getMetamodelTypeDescriptor(eClass, context);
 
 		if (descriptor != null) {
 			return (IMetamodelType) descriptor.getElementType();
@@ -313,10 +410,12 @@ public class ElementTypeRegistry {
 	 * 
 	 * @param eObject
 	 *            the model element
+	 * @param clientContext the clientContext
 	 * @return the metamodel type for this <code>eObject</code>
 	 */
-	private IMetamodelType getMetamodelType(EObject eObject) {
-		return getMetamodelType(eObject.eClass());
+	private IMetamodelType getMetamodelType(EObject eObject, IClientContext clientContext) {
+		
+		return getMetamodelType(eObject.eClass(), clientContext);
 	}
 
 	/**
@@ -326,10 +425,18 @@ public class ElementTypeRegistry {
 	 * <code>o</code>.
 	 * <P>
 	 * If <code>o</code> is an <code>EObject</code>, returns the metamodel
-	 * type registered for <code>o</code>'s eClass.
-	 * <P>            
-	 * Use {@link #getElementType(EClass)} to get metamodel types registered
-	 * for a specific <code>EClass</code>.
+	 * type registered for <code>o</code>'s eClass in the client context that
+	 * is bound to <code>o</code>.
+	 * <P>
+	 * If <code>o</code> is an <code>IEditHelperContext</code>, returns the
+	 * element type in <code>o</code> if specified. Else, returns the
+	 * metamodel type registered for the eClass of the EObject specified in
+	 * <code>o</code> in the client context specified in <code>o</code>. If
+	 * no client context is specified, then the client context bound to the
+	 * EObject is used.
+	 * <P>
+	 * Use {@link #getElementType(EClass, IClientContext)} to get metamodel
+	 * types registered for a specific <code>EClass</code>.
 	 * 
 	 * @param o
 	 *            the object for which to find an element type.
@@ -343,13 +450,33 @@ public class ElementTypeRegistry {
 
 		} else if (o instanceof IElementType) {
 			return (IElementType) o;
-		}
+			
+		} else if (o instanceof IEditHelperContext) {
+			IEditHelperContext editHelperContext = (IEditHelperContext) o;
+			IElementType elementType = editHelperContext.getElementType();
+			
+			if (elementType != null) {
+				return elementType;
+			}
+			
+			IClientContext clientContext = editHelperContext.getClientContext();
+			EObject eObject = editHelperContext.getEObject();
 
+			if (eObject != null) {
+				if (clientContext != null) {
+					return getElementType(eObject, clientContext);
+				} else {
+					return getElementType(eObject);
+				}
+			}
+		}
+		
 		return null;
 	}
 	
 	/**
-	 * Gets the registered element type for <code>eClass</code>.
+	 * Gets the registered element type for <code>eClass</code> that 
+	 * has no client contexts explicitly bound to it.
 	 * 
 	 * @param eClass
 	 *            the <code>EClass</code> whose element type is to be found.
@@ -357,7 +484,21 @@ public class ElementTypeRegistry {
 	 */
 	public IElementType getElementType(EClass eClass) {
 
-		IElementType result = getMetamodelType(eClass);
+		return getElementType(eClass, null);
+	}
+	
+	/**
+	 * Gets the registered element type for <code>eClass</code>.
+	 * 
+	 * @param eClass
+	 *            the <code>EClass</code> whose element type is to be found.
+	 * @param clientContext
+	 *            the client context
+	 * @return the metamodel type registered for <code>eClass</code>
+	 */
+	public IElementType getElementType(EClass eClass, IClientContext clientContext) {
+
+		IElementType result = getMetamodelType(eClass, clientContext);
 		if (result == null) {
 			// at least provide the default type for default editing support
 			result = DefaultMetamodelType.getInstance();
@@ -368,6 +509,8 @@ public class ElementTypeRegistry {
 	
 	/**
 	 * Gets the registered element type for <code>eObject</code>.
+	 * <P>
+	 * The client context will be inferred from the <code>eObject</code>.
 	 * 
 	 * @param eObject
 	 *            the <code>EObject</code> whose element type is to be found.
@@ -375,62 +518,115 @@ public class ElementTypeRegistry {
 	 *         <code>EClass</code>
 	 */
 	public IElementType getElementType(EObject eObject) {
+		
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getClientContextFor(eObject);
+		
+		return getElementType(eObject, clientContext);
+	}
+	
+	/**
+	 * Gets the registered element type for <code>eObject</code> in the
+	 * <code>clientContext</code>.
+	 * 
+	 * @param eObject
+	 *            the <code>EObject</code> whose element type is to be found.
+	 * @param clientContext
+	 *            the client context
+	 * @return the metamodel type registered for <code>eObject</code>'s
+	 *         <code>EClass</code>
+	 */
+	public IElementType getElementType(EObject eObject,
+			IClientContext clientContext) {
 
-		IElementType result = getMetamodelType(eObject);
+		IElementType result = getMetamodelType(eObject, clientContext);
 		if (result == null) {
 			// at least provide the default type for default editing support
 			result = DefaultMetamodelType.getInstance();
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * Gets the metamodel type descriptor for <code>eObject</code>'s EClass.
-	 * If there is none registered against the <code>eClass</code>, returns
-	 * the metamodel type for the nearest supertype of
-	 * <code>eClass/code> that has a metamodel type.
-	 * @param eObject the model element
+	 * Gets the metamodel type descriptor for <code>eObject</code>'s EClass
+	 * in the client <code>context</code>. If there is none registered
+	 * against the <code>eClass</code> for that <code>context</code>,
+	 * returns the metamodel type for the nearest supertype of
+	 * <code>eClass</code> that has a metamodel type in that
+	 * <code>context</code>.
+	 * 
+	 * @param eObject
+	 *            the model element
+	 * @param context
+	 *            the client context
 	 * @return the metamodel type descriptor
 	 */
-	private MetamodelTypeDescriptor getMetamodelTypeDescriptor(EObject eObject) {
-		return getMetamodelTypeDescriptor(eObject.eClass());
+	private MetamodelTypeDescriptor getMetamodelTypeDescriptor(EObject eObject,
+			IClientContext context) {
+		return getMetamodelTypeDescriptor(eObject.eClass(), context);
 	}
 
 	/**
-	 * Gets the metamodel type descriptor for <code>eClass</code>. If there
-	 * is none registered against the <code>eClass</code>, returns the
-	 * metamodel type for the nearest supertype of
-	 * <code>eClass/code> that has a metamodel type.
+	 * Gets the metamodel type descriptor for <code>eClass</code> in the
+	 * client <code>context</code>. If there is none registered against the
+	 * <code>eClass</code> for the client <code>context</code>, returns the
+	 * metamodel type for the nearest supertype of <code>eClass</code> that
+	 * has a metamodel type in the client <code>context</code>.
 	 * 
-	 * @param eClass the model element eclass
+	 * @param eClass
+	 *            the model element eclass
+	 * @param context
+	 *            the client context
 	 * @return the metamodel type descriptor
 	 */
-	private MetamodelTypeDescriptor getMetamodelTypeDescriptor(EClass eClass) {
+	private MetamodelTypeDescriptor getMetamodelTypeDescriptor(EClass eClass,
+			IClientContext context) {
 
-		MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) metamodelTypeDescriptorsByEClass
-			.get(eClass);
+		IClientContext clientContext = context;
 
-		if (descriptor != null) {
-			return descriptor;
+		if (clientContext == null) {
+			// use the default context
+			clientContext = ClientContextManager.getDefaultClientContext();
+		}
 
+		Collection descriptors = (Collection) metamodelTypeDescriptorsByEClass
+				.get(eClass);
+
+		if (descriptors != null) {
+			for (Iterator i = descriptors.iterator(); i.hasNext();) {
+				MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) i
+						.next();
+	
+				if (clientContext.includes(descriptor)) {
+					return descriptor;
+				}
+			}
+			
 		} else {
 			// Find the metamodel type for the nearest supertype.
 			List supertypes = eClass.getEAllSuperTypes();
 			for (int i = supertypes.size() - 1; i >= 0; i--) {
 				EClass nextEClass = (EClass) supertypes.get(i);
-				MetamodelTypeDescriptor typeDescriptor = (MetamodelTypeDescriptor) metamodelTypeDescriptorsByEClass
-					.get(nextEClass);
-
-				if (typeDescriptor != null) {
-					return typeDescriptor;
-
+	
+				descriptors = (Collection) metamodelTypeDescriptorsByEClass
+						.get(nextEClass);
+	
+				if (descriptors != null) {
+					for (Iterator j = descriptors.iterator(); j.hasNext();) {
+						MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) j
+								.next();
+		
+						if (clientContext.includes(descriptor)) {
+							return descriptor;
+						}
+					}
 				}
 			}
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Gets all of the element types (metamodel type and specialization types)
 	 * that match <code>eObject</code> in breadth-first order (specializations
@@ -438,23 +634,25 @@ public class ElementTypeRegistry {
 	 * 
 	 * @param eObject
 	 *            the model element to match
+	 * @param clientContext
+	 *            the client context
 	 * @return all of the element types that match the model element
 	 */
-	public IElementType[] getAllTypesMatching(EObject eObject) {
-
+	public IElementType[] getAllTypesMatching(EObject eObject, IClientContext clientContext) {
+		
 		List result = new ArrayList();
-		IMetamodelType metamodelType = getMetamodelType(eObject);
+		IMetamodelType metamodelType = getMetamodelType(eObject, clientContext);
 
 		if (metamodelType != null) {
 
 			// Get the matching specializations
 			Collection specializations;
-			MetamodelTypeDescriptor desc = getMetamodelTypeDescriptor(eObject);
+			MetamodelTypeDescriptor desc = getMetamodelTypeDescriptor(eObject, clientContext);
 			if (desc == null) {
 				specializations = Collections.EMPTY_LIST;
 			} else {
 				specializations = specializationTypeRegistry
-					.getSpecializationDescriptorsMatching(eObject, desc);
+					.getSpecializationDescriptorsMatching(eObject, desc, clientContext);
 			}
 
 			for (Iterator i = specializations.iterator(); i.hasNext();) {
@@ -480,6 +678,25 @@ public class ElementTypeRegistry {
 		}
 		
 		return (IElementType[]) result.toArray(EMPTY_ELEMENT_TYPE_ARRAY);
+	}
+
+	/**
+	 * Gets all of the element types (metamodel type and specialization types)
+	 * that match <code>eObject</code> in breadth-first order (specializations
+	 * before metamodel types).
+	 * <P>
+	 * The client context will be inferred from the <code>eObject</code>.
+	 * 
+	 * @param eObject
+	 *            the model element to match
+	 * @return all of the element types that match the model element
+	 */
+	public IElementType[] getAllTypesMatching(EObject eObject) {
+
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getClientContextFor(eObject);
+		
+		return getAllTypesMatching(eObject, clientContext);
 	}
 
 	/**
@@ -522,8 +739,10 @@ public class ElementTypeRegistry {
 	}
 
 	/**
-	 * Registers <code>metamodelType</code> with this registry, if its ID and
-	 * EClass are unique in the registry.
+	 * Registers <code>metamodelType</code> with this registry, if its ID is
+	 * unique in the registry. The type's EClass does not have to be unique in
+	 * the registry. Metamodel types in the registry are distinguished by the
+	 * client context that is bound to the type.
 	 * <P>
 	 * Notifies clients if the element type was added to the registry.
 	 * 
@@ -535,9 +754,7 @@ public class ElementTypeRegistry {
 	public boolean register(IMetamodelType metamodelType) {
 
 		if (metamodelType == null
-			|| getType(metamodelType.getId()) != null
-			|| metamodelTypeDescriptorsByEClass.containsKey(metamodelType
-				.getEClass())) {
+			|| getType(metamodelType.getId()) != null) {
 
 			return false;
 		}
@@ -694,7 +911,7 @@ public class ElementTypeRegistry {
 
 	/**
 	 * Adds the metamodel <code>type</code> to this registry. Logs an error if
-	 * a metamodel type has already been registered for the same EClass.
+	 * a metamodel type has already been registered for the same ID.
 	 * 
 	 * @param typeDescriptor
 	 *            the descriptor of the type to be added.
@@ -709,14 +926,18 @@ public class ElementTypeRegistry {
 
 		EClass eClass = typeDescriptor.getEClass();
 
-		if (metamodelTypeDescriptorsByEClass.containsKey(eClass)) {
-			// Log an error
-			return false;
+		Collection descriptors = (Collection) metamodelTypeDescriptorsByEClass
+				.get(eClass);
+
+		if (descriptors == null) {
+			descriptors = new ArrayList();
+			metamodelTypeDescriptorsByEClass.put(eClass, descriptors);
 		}
 
-		metamodelTypeDescriptorsByEClass.put(eClass, typeDescriptor);
+		descriptors.add(typeDescriptor);
+
 		metamodelTypeDescriptorsById
-			.put(typeDescriptor.getId(), typeDescriptor);
+				.put(typeDescriptor.getId(), typeDescriptor);
 
 		return true;
 	}
@@ -765,19 +986,24 @@ public class ElementTypeRegistry {
 
 	/**
 	 * Gets the metamodel type descriptors that match the EClasses in
-	 * <code>eClasses</code>.
+	 * <code>eClasses</code> for the client <code>context</code>.
 	 * 
 	 * @param eClasses
 	 *            a Set of <code>EClass</code> instances
-	 * @return a List of <code>tamodelType</code> s
+	 * @param context
+	 *            the client context
+	 * @return a List of <code>modelType</code>s
 	 */
-	private List getMetamodelTypeDescriptors(Set eClasses) {
+	private List getMetamodelTypeDescriptors(Set eClasses,
+			IClientContext context) {
+		
 		List result = new ArrayList();
 
 		for (Iterator i = eClasses.iterator(); i.hasNext();) {
 			EClass nextType = (EClass) i.next();
-			MetamodelTypeDescriptor metamodelTypeDescriptor = (MetamodelTypeDescriptor) metamodelTypeDescriptorsByEClass
-				.get(nextType);
+
+			MetamodelTypeDescriptor metamodelTypeDescriptor = getMetamodelTypeDescriptor(
+					nextType, context);
 
 			if (metamodelTypeDescriptor != null) {
 				result.add(metamodelTypeDescriptor);

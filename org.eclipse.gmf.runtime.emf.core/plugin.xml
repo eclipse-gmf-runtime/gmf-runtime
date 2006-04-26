@@ -98,4 +98,14 @@
       </constraintProvider>
    </extension>
    
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+           id="org.eclipse.gmf.runtime.emf.core.EObjectTester"
+           type="org.eclipse.emf.ecore.EObject"
+           namespace="org.eclipse.gmf.runtime.emf.core"
+           properties="editingDomain"
+           class="org.eclipse.gmf.runtime.emf.core.internal.util.EObjectTester">
+       </propertyTester>
+   </extension>
+   
  </plugin>

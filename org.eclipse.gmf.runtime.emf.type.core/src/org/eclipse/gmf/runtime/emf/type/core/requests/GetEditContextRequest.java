@@ -11,7 +11,11 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.requests;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
  * Request to get the context for editing a model element.
@@ -70,10 +74,22 @@ public class GetEditContextRequest extends AbstractEditCommandRequest {
         
 
 	/**
-	 * Gets the edit helper context for this request, which is always
-	 * <code>null</code>.
+	 * Gets the edit helper context for this request.
 	 */
 	public Object getEditHelperContext() {
+		IClientContext context = getClientContext();
+		
+		if (context == null) {
+			return editHelperContext;
+
+		} else if (editHelperContext instanceof EObject) {
+			return new EditHelperContext((EObject) editHelperContext, context);
+
+		} else if (editHelperContext instanceof IElementType) {
+			return new EditHelperContext((IElementType) editHelperContext,
+					context);
+		}
+		
 		return editHelperContext;
 	}
 

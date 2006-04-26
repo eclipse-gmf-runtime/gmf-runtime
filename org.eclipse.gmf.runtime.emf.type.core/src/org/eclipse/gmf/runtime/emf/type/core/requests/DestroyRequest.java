@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -103,6 +105,13 @@ public abstract class DestroyRequest extends AbstractEditCommandRequest {
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditCommandRequest#getEditHelperContext()
 	 */
 	public Object getEditHelperContext() {
-		return getContainer();
+		
+		IClientContext context = getClientContext();
+		
+		if (context == null) {
+			return getContainer();
+		} else {
+			return new EditHelperContext(getContainer(), context);
+		}
 	}
 }

@@ -1,0 +1,268 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.gmf.runtime.emf.type.core">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.gmf.runtime.emf.type.core" id="elementTypeBindings" name="GMF Element Type Bindings"/>
+      </appInfo>
+      <documentation>
+         This extension point allows clients of the GMF extensible type registry to define &quot;client contexts&quot; that describe the objects that they are interested in editing, and to bind them to element types and advice that they wish to have applied to these objects.
+      </documentation>
+   </annotation>
+
+   <include schemaLocation="schema://org.eclipse.core.expressions/schema/expressionLanguage.exsd"/>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="clientContext" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="binding" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="clientContext">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="id"/>
+         </appInfo>
+         <documentation>
+            &lt;p&gt;
+Definition of a client context, representing a class of
+objects that a client wishes to edit using a set of element types and advice.
+&lt;/p&gt;
+&lt;p&gt;
+A client context can declare an
+&lt;code&gt;&amp;lt;enablement&amp;gt;&lt;/code&gt; expression that matches
+model elements that are included in the context.
+Where that is not sufficient, an alternative is to define
+a matcher class using a &lt;code&gt;&amp;lt;matcher&amp;gt;&lt;/code&gt;
+element.
+&lt;/p&gt;
+         </documentation>
+      </annotation>
+      <complexType>
+         <choice>
+            <element ref="enablement"/>
+            <element ref="matcher"/>
+         </choice>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The unique ID of the client context.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="matcher">
+      <annotation>
+         <documentation>
+            This element is used to specify the class that will determine whether or not an existing model element matches this client context.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class that implements &lt;code&gt;org.eclipse.gmf.runtime.emf.type.core.IElementMatcher&lt;/code&gt;.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.gmf.runtime.emf.core.type.IElementMatcher"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="binding">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="context"/>
+         </appInfo>
+         <documentation>
+            &lt;p&gt;
+Declares a binding between a client context and one or more
+element types or advice.  The context can, itself, be declared by the
+same plug-in or by a different plug-in.
+&lt;/p&gt;
+&lt;p&gt;
+The constraints to be bound may be specified by any number of nested &lt;code&gt;&amp;lt;elementType&amp;gt;&lt;/code&gt; and/or &lt;code&gt;&amp;lt;advice&amp;gt;&lt;/code&gt; elements to reference multiple element types and/or advice.
+&lt;/p&gt;
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="elementType" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="advice" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="context" type="string" use="required">
+            <annotation>
+               <documentation>
+                  References the ID of a context that is bound to one or more element types or advice.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="elementType">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="ref"/>
+         </appInfo>
+         <documentation>
+            Includes an element type or a pattern of element type IDs in a client context &lt;code&gt;&amp;lt;binding&amp;gt;&lt;/code&gt;.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="ref" type="string">
+            <annotation>
+               <documentation>
+                  References the ID of an element type to bind the client context to. This attribute may not be used in conjunection with the &lt;code&gt;pattern&lt;/code&gt; attribute.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="pattern" type="string">
+            <annotation>
+               <documentation>
+                  The pattern of element type IDs to be bound. Patterns are regular expressions which match unique identifiers. Please see the Java documentation for java.util.regex.Pattern for further details.  This attribute may not be used in conjunection with the &lt;code&gt;ref&lt;/code&gt; attribute.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="advice">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="ref"/>
+         </appInfo>
+         <documentation>
+            Includes an advice or a pattern of advice IDs in a client context &lt;code&gt;&amp;lt;binding&amp;gt;&lt;/code&gt;.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="ref" type="string">
+            <annotation>
+               <documentation>
+                  References the ID of an advice to bind the client context to. This attribute may not be used in conjunection with the &lt;code&gt;pattern&lt;/code&gt; attribute.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="pattern" type="string">
+            <annotation>
+               <documentation>
+                  The pattern of advice IDs to be bound. Patterns are regular expressions which match unique identifiers. Please see the Java documentation for java.util.regex.Pattern for further details.  This attribute may not be used in conjunection with the &lt;code&gt;ref&lt;/code&gt; attribute.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+Example of a context which only includes &lt;code&gt;EObjects&lt;/code&gt; from the logic example&apos;s editing domain:
+&lt;/p&gt;
+&lt;pre&gt;
+   &lt;extension point=&quot;org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings&quot;&gt;
+      &lt;clientContext id=&quot;org.eclipse.gmf.examples.runtime.diagram.logic&quot;&gt;
+         &lt;enablement&gt;
+            &lt;test
+               property=&quot;org.eclipse.gmf.runtime.emf.core.editingDomain&quot;
+               value=&quot;org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain&quot;/&gt;
+         &lt;/enablement&gt;
+      &lt;/clientContext&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;p&gt;
+Example of a binding of a single advice to the logic context:
+&lt;/p&gt;
+&lt;pre&gt;
+   &lt;extension point=&quot;org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings&quot;&gt;
+      &lt;binding context=&quot;org.eclipse.gmf.examples.runtime.diagram.logic&quot;/&gt;
+         &lt;advice ref=&quot;org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents&quot;/&gt;
+      &lt;/binding&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;p&gt;
+Example of binding multiple element types and advice to the logic context:
+&lt;/p&gt;
+&lt;pre&gt;
+   &lt;extension point=&quot;org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings&quot;&gt;
+      &lt;binding context=&quot;org.eclipse.gmf.examples.runtime.diagram.logic&quot;/&gt;
+         &lt;elementType pattern=&quot;logic.*&quot;/&gt;
+         &lt;advice pattern=&quot;logic.*&quot;/&gt;
+      &lt;/binding&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2006  IBM Corporation and others.&lt;br&gt;
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>

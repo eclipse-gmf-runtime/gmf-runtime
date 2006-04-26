@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
@@ -44,11 +45,11 @@ public class SetValueCommandTest
         return new TestSuite(SetValueCommandTest.class);
     }
 
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
         department = (Department) getEmployeeFactory().create(
             getEmployeePackage().getDepartment());
         department.setName("Department"); //$NON-NLS-1$
-        getResource().getContents().add(department);
+        resource.getContents().add(department);
 
         manager = (Employee) getEmployeeFactory().create(
             getEmployeePackage().getEmployee());

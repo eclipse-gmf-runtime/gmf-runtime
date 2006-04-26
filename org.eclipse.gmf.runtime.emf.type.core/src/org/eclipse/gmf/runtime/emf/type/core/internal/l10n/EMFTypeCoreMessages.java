@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ public final class EMFTypeCoreMessages extends NLS {
 	public static String Request_Label_ReorientSource;
 	public static String Request_Label_ReorientTarget;
 	public static String xml_parsing_ERROR_;
+	public static String xml_parsing_elementTypeBindings_ERROR_;
 	public static String type_not_init_WARN_;
 	public static String type_reason_no_id_WARN_;
 	public static String type_reason_duplicate_id_WARN_;
@@ -63,6 +64,16 @@ public final class EMFTypeCoreMessages extends NLS {
 	public static String eContainmentFeature_no_such_feature_ERROR_;
 	public static String specializationType_specializes_multiple_metamodel_types_ERROR_;
 	public static String specializationType_specializes_invalid_id_ERROR_;
+	public static String binding_noContextId_ERROR_;
+	public static String binding_noSuchContext_ERROR_;
+	public static String pattern_invalid_syntax_ERROR_;
+	public static String binding_no_ref_or_pattern_ERROR_;
+	public static String binding_both_ref_and_pattern_ERROR_;
+	public static String client_matcherFailure_ERROR_;
+	public static String clientContext_not_init_WARN_;
+	public static String context_no_matcher_ERROR_;
+	public static String context_no_id_ERROR_;
+	public static String context_matcher_wrong_class_ERROR_;
 	public static String moveElementsCommand_noTargetFeature;
 	public static String destroyCommandFailed;
 	

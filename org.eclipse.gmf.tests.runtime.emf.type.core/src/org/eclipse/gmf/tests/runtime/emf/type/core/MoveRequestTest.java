@@ -22,6 +22,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -56,17 +57,17 @@ public class MoveRequestTest
         return new TestSuite(MoveRequestTest.class);
     }
 
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
 
         department1 = (Department) getEmployeeFactory().create(
             getEmployeePackage().getDepartment());
         department1.setName("Department1"); //$NON-NLS-1$
-        getResource().getContents().add(department1);
+        resource.getContents().add(department1);
 
         department2 = (Department) getEmployeeFactory().create(
             getEmployeePackage().getDepartment());
         department2.setName("Department2"); //$NON-NLS-1$
-        getResource().getContents().add(department2);
+        resource.getContents().add(department2);
 
         employee1 = (Employee) getEmployeeFactory().create(
             getEmployeePackage().getEmployee());

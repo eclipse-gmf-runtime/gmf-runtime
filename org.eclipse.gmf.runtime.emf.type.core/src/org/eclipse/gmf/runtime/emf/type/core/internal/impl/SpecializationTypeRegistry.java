@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,13 +29,14 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationType;
+import org.eclipse.gmf.runtime.emf.type.core.ISpecializationTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePluginStatusCodes;
@@ -258,17 +259,18 @@ public class SpecializationTypeRegistry {
 	}
 
 	/**
-	 * Gets a list containing the immediate specializations of
-	 * <code>type</code>.
+	 * Gets a list containing the immediate specializations of <code>type</code>.
 	 * 
 	 * @param type
 	 *            the element type for which to find specializations
-	 * @return the list of all <code>SpecializationTypeDescriptor</code>
-	 *         s of <code>type</code>
+	 * @param clientContext
+	 *            the client context
+	 * @return the list of all <code>SpecializationTypeDescriptor</code> s of
+	 *         <code>type</code>
 	 */
 	private List getImmediateSpecializationTypeDescriptors(
-			ElementTypeDescriptor type) {
-		return getSpecializationTypeDescriptors(type, false);
+			ElementTypeDescriptor type, IClientContext clientContext) {
+		return getSpecializationTypeDescriptors(type, false, clientContext);
 	}
 
 	/**
@@ -277,12 +279,14 @@ public class SpecializationTypeRegistry {
 	 * 
 	 * @param type
 	 *            the element type
+	 * @param clientContext
+	 *            the client context
 	 * @return the list of all specializations of <code>type</code>
 	 */
 	private List getAllSpecializationTypeDescriptors(
-			ElementTypeDescriptor type) {
+			ElementTypeDescriptor type, IClientContext clientContext) {
 
-		return getSpecializationTypeDescriptors(type, true);
+		return getSpecializationTypeDescriptors(type, true, clientContext);
 	}
 
 	/**
@@ -300,7 +304,7 @@ public class SpecializationTypeRegistry {
 	 *         <code>type</code>
 	 */
 	private List getSpecializationTypeDescriptors(ElementTypeDescriptor type,
-			boolean deep) {
+			boolean deep, IClientContext clientContext) {
 
 		LinkedHashSet result = new LinkedHashSet();
 
@@ -315,13 +319,15 @@ public class SpecializationTypeRegistry {
 				SpecializationTypeDescriptor nextDescriptor = (SpecializationTypeDescriptor) i
 					.next();
 
-				if (nextDescriptor != null) {
-					specializations.add(nextDescriptor);
-
-					if (deep) {
-						// Recursively search for specializations
-						result.addAll(getSpecializationTypeDescriptors(
-							nextDescriptor, deep));
+				if (clientContext.includes(nextDescriptor)) {
+					if (nextDescriptor != null) {
+						specializations.add(nextDescriptor);
+	
+						if (deep) {
+							// Recursively search for specializations
+							result.addAll(getSpecializationTypeDescriptors(
+								nextDescriptor, deep, clientContext));
+						}
 					}
 				}
 			}
@@ -335,6 +341,9 @@ public class SpecializationTypeRegistry {
 	/**
 	 * Gets the array of specialization types that match <code>eObject</code>,
 	 * in order of decreasing specialization.
+	 * <P>
+	 * Returns an empty list if the <code>clientContext</code> is not bound to
+	 * the <code>metamodelTypeDescriptor</code>.
 	 * 
 	 * @param eObject
 	 *            the model element for which to find specializations
@@ -344,13 +353,14 @@ public class SpecializationTypeRegistry {
 	 *         match <code>eObject</code>
 	 */
 	public List getSpecializationDescriptorsMatching(EObject eObject,
-			MetamodelTypeDescriptor metamodelTypeDescriptor) {
-
+			MetamodelTypeDescriptor metamodelTypeDescriptor, IClientContext clientContext) {
+		
 		List result = new ArrayList();
 
 		// Get all of the specializations of the metamodel type that matches the
 		// eObject
-		List specializations = getAllSpecializationTypeDescriptors(metamodelTypeDescriptor);
+		List specializations = getAllSpecializationTypeDescriptors(
+				metamodelTypeDescriptor, clientContext);
 
 		// Get the edit helper specialization descriptors that have matching
 		// advice
@@ -378,6 +388,9 @@ public class SpecializationTypeRegistry {
 	 * Gets the list of specializations of <code>type</code> whose matching
 	 * criteria match the given <code>eContainer</code> and
 	 * <code>reference</code>.
+	 * <P>
+	 * Returns an empty list if the <code>clientContext</code> is not bound to
+	 * the <code>type</code>.
 	 * 
 	 * @param type
 	 *            the element type
@@ -385,24 +398,26 @@ public class SpecializationTypeRegistry {
 	 *            the container
 	 * @param reference
 	 *            the reference feature.
+	 * @param clientContext
+	 *            the client context
 	 * @return the list of matching specializations
 	 */
 	public List getMatchingSpecializations(ElementTypeDescriptor type,
-			EObject eContainer, EReference reference) {
-
+			EObject eContainer, EReference reference, IClientContext clientContext) {
+		
 		List result = new ArrayList();
 
 		// Get the specializations of the element type that match the given
 		// feature of the container
 		List matchingSpecializations = getSpecializationDescriptorsMatching(
-			type, eContainer, reference);
+			type, eContainer, reference, clientContext);
 
 		result.addAll(matchingSpecializations);
 
 		// Repeat for only the matching specializations
 		for (Iterator i = matchingSpecializations.iterator(); i.hasNext();) {
 			result.addAll(getMatchingSpecializations((ElementTypeDescriptor) i
-				.next(), eContainer, reference));
+				.next(), eContainer, reference, clientContext));
 		}
 		return result;
 	}
@@ -469,19 +484,28 @@ public class SpecializationTypeRegistry {
 	 *            the container to match
 	 * @param feature
 	 *            the containment feature to match
+	 * @param clientContext
+	 *            the client context
 	 * @return the list of <code>SpecializationTypeDescriptor</code> s that
 	 *         match
 	 */
 	private List getSpecializationDescriptorsMatching(
 			ElementTypeDescriptor typeDescriptor, EObject eContainer,
-			EReference feature) {
+			EReference feature, IClientContext clientContext) {
 
 		List result = new ArrayList();
-		Collection specializationDescriptors = getImmediateSpecializationTypeDescriptors(typeDescriptor);
+		Collection specializationDescriptors = getImmediateSpecializationTypeDescriptors(
+				typeDescriptor, clientContext);
 
 		for (Iterator i = specializationDescriptors.iterator(); i.hasNext();) {
 			SpecializationTypeDescriptor nextDescriptor = (SpecializationTypeDescriptor) i
 				.next();
+			
+			if (!clientContext.includes(nextDescriptor)) {
+				// descriptor isn't bound to the client context
+				continue;
+			}
+			
 			IContainerDescriptor container = nextDescriptor
 				.getContainerDescriptor();
 
@@ -554,18 +578,24 @@ public class SpecializationTypeRegistry {
 
 	/**
 	 * Gets the edit helper advice bound to the <code>elementTypes</code> that
-	 * match <code>eObject</code>. The advice is ordered from most general
+	 * match <code>eObject</code>. The advice will be that which is bound to
+	 * the <code>clientContext</code>, and is ordered from most general
 	 * advice (inherited from metamodel supertypes) to most specific advice
 	 * (bound to specializations).
+	 * <P>
+	 * Returns an empty list if the <code>clientContext</code> is not bound to
+	 * the <code>metamodelTypeDescriptor</code>.
 	 * 
 	 * @param eObject
 	 *            the model element to match
 	 * @param metamodelTypeDescriptor
 	 *            the metamodel type descriptor for the model element
+	 * @param clientContext
+	 *            the client context
 	 * @return the collection of matching <code>IEditHelperAdvice</code>.
 	 */
 	public List getEditHelperAdvice(EObject eObject,
-			MetamodelTypeDescriptor metamodelTypeDescriptor) {
+			MetamodelTypeDescriptor metamodelTypeDescriptor, IClientContext clientContext) {
 
 		LinkedHashSet result = new LinkedHashSet();
 
@@ -575,16 +605,16 @@ public class SpecializationTypeRegistry {
 		for (int i = 0; i < metamodelSupertypes.length; i++) {
 			IElementType nextSupertype = metamodelSupertypes[i];
 			result.addAll(getMatchingAdvice(nextSupertype.getId(), eObject,
-					ALL));
+					ALL, clientContext));
 		}
 
 		// Add the advice bound to the metamodel type
 		result.addAll(getMatchingAdvice(metamodelTypeDescriptor.getId(),
-			eObject, ALL_NONE));
+			eObject, ALL_NONE, clientContext));
 
 		// Get the specializations that match
 		List specializationDescriptors = getSpecializationDescriptorsMatching(
-			eObject, metamodelTypeDescriptor);
+			eObject, metamodelTypeDescriptor, clientContext);
 		Collections.reverse(specializationDescriptors);
 		for (Iterator i = specializationDescriptors.iterator(); i.hasNext();) {
 			SpecializationTypeDescriptor nextSpecialization = (SpecializationTypeDescriptor) i
@@ -592,7 +622,7 @@ public class SpecializationTypeRegistry {
 
 			// Look for advice bound to the matching specialization type
 			result.addAll(getMatchingAdvice(nextSpecialization.getId(),
-				eObject, ALL_NONE));
+				eObject, ALL_NONE, clientContext));
 		}
 
 		return new ArrayList(result);
@@ -600,23 +630,29 @@ public class SpecializationTypeRegistry {
 
 	/**
 	 * Gets the edit helper advice bound to the <code>elementType</code> and
-	 * the inheritable advice bounds to its supertypes. The advice is ordered
-	 * from most general advice (inherited from metamodel supertypes) to most
+	 * the inheritable advice bounds to its supertypes. The advice will be that
+	 * which is bound to the <code>clientContext</code>, and is ordered from
+	 * most general advice (inherited from metamodel supertypes) to most
 	 * specific advice (bound to specializations).
+	 * <P>
+	 * Returns an empty list if the <code>clientContext</code> is not bound to
+	 * the <code>elementType</code>.
 	 * 
 	 * @param elementType
 	 *            the element type whose bound edit helper advice will be
 	 *            considered
 	 * @param metamodelTypeDescriptor
 	 *            the metamodel type descriptor for the eClass
+	 * @param clientContext
+	 *            the client context
 	 * @return the collection of matching <code>IEditHelperAdvice</code>.
 	 */
 	public List getEditHelperAdvice(IElementType elementType,
-			MetamodelTypeDescriptor metamodelTypeDescriptor) {
-
+			MetamodelTypeDescriptor metamodelTypeDescriptor, IClientContext clientContext) {
+		
 		LinkedHashSet result = new LinkedHashSet();
 		
-		String metamodelTypeId = (metamodelTypeDescriptor != null) ?metamodelTypeDescriptor.getId() : null;
+		String metamodelTypeId = (metamodelTypeDescriptor != null) ? metamodelTypeDescriptor.getId() : null;
 
 		// Look at advice bound to the supertypes
 		IElementType[] metamodelSupertypes = elementType.getAllSuperTypes();
@@ -626,15 +662,15 @@ public class SpecializationTypeRegistry {
 			if (nextSupertype instanceof ISpecializationType || nextSupertype.getId().equals(metamodelTypeId)) {
 				result
 						.addAll(getMatchingAdvice(nextSupertype.getId(),
-								ALL_NONE));
+								ALL_NONE, clientContext));
 
 			} else if (nextSupertype instanceof IMetamodelType) {
-				result.addAll(getMatchingAdvice(nextSupertype.getId(), ALL));
+				result.addAll(getMatchingAdvice(nextSupertype.getId(), ALL, clientContext));
 			}
 		}
 
 		// Add the advice bound to the element type itself
-		result.addAll(getMatchingAdvice(elementType.getId(), ALL_NONE));
+		result.addAll(getMatchingAdvice(elementType.getId(), ALL_NONE, clientContext));
 
 		return new ArrayList(result);
 	}
@@ -651,10 +687,12 @@ public class SpecializationTypeRegistry {
 	 *            <code>true</code> if only those advice bindings that apply
 	 *            to subtypes should be returned, <code>false</code>
 	 *            otherwise.
+	 * @param clientContext
+	 *            the client context
 	 * @return the list of matching <code>IEditHelperAdvice</code>
 	 */
 	private List getMatchingAdvice(String elementTypeId, EObject eObject,
-			Set adviceInheritanceToConsider) {
+			Set adviceInheritanceToConsider, IClientContext clientContext) {
 
 		List result = new ArrayList();
 
@@ -662,19 +700,21 @@ public class SpecializationTypeRegistry {
 			IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) j
 				.next();
 
-			// Filter out any of the bound advice that doesn't match
-			if (!adviceMatches(eObject, nextAdviceDescriptor)) {
-				continue;
-			}
-			
-			if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
-					.getInheritance())) {
+			if (clientContext.includes(nextAdviceDescriptor)) {
+				// Filter out any of the bound advice that doesn't match
+				if (!adviceMatches(eObject, nextAdviceDescriptor)) {
+					continue;
+				}
 				
-				IEditHelperAdvice nextAdvice = nextAdviceDescriptor
-					.getEditHelperAdvice();
-
-				if (nextAdvice != null) {
-					result.add(nextAdvice);
+				if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
+						.getInheritance())) {
+					
+					IEditHelperAdvice nextAdvice = nextAdviceDescriptor
+						.getEditHelperAdvice();
+	
+					if (nextAdvice != null) {
+						result.add(nextAdvice);
+					}
 				}
 			}
 		}
@@ -691,25 +731,30 @@ public class SpecializationTypeRegistry {
 	 *            <code>true</code> if only those advice bindings that apply
 	 *            to subtypes should be returned, <code>false</code>
 	 *            otherwise.
+	 * @param clientContext
+	 *            the client context
 	 * @return the list of matching <code>IEditHelperAdvice</code>
 	 */
 	private List getMatchingAdvice(String elementTypeId,
-			Set adviceInheritanceToConsider) {
+			Set adviceInheritanceToConsider, IClientContext clientContext) {
 
 		List result = new ArrayList();
 
 		for (Iterator j = getAdviceBindings(elementTypeId); j.hasNext();) {
 			IEditHelperAdviceDescriptor nextAdviceDescriptor = (IEditHelperAdviceDescriptor) j
 				.next();
+			
+			if (clientContext.includes(nextAdviceDescriptor)) {
 
-			if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
-					.getInheritance())) {
-				
-				IEditHelperAdvice nextAdvice = nextAdviceDescriptor
-					.getEditHelperAdvice();
-
-				if (nextAdvice != null) {
-					result.add(nextAdvice);
+				if (adviceInheritanceToConsider.contains(nextAdviceDescriptor
+						.getInheritance())) {
+					
+					IEditHelperAdvice nextAdvice = nextAdviceDescriptor
+						.getEditHelperAdvice();
+	
+					if (nextAdvice != null) {
+						result.add(nextAdvice);
+					}
 				}
 			}
 		}
@@ -718,7 +763,9 @@ public class SpecializationTypeRegistry {
 	
 	/**
 	 * Obtains an iterator over the advices bound exactly to the specified element
-	 * type ID and also to patterns matching the element type ID.
+	 * type ID and also to patterns matching the element type ID. Advice bindings
+	 * are returned for all client contexts.  The caller should filter the list 
+	 * by context.
 	 * <p>
 	 * <b>Note</b> for now, in the interest of simplicity and performance, the
 	 * only pattern supported is <code>"*"</code> to match all element types.
@@ -782,7 +829,7 @@ public class SpecializationTypeRegistry {
 		
 		return new MultiIterator(new Collection[] {
 				(Collection) adviceBindings.get(elementTypeId),
-				(Collection) adviceBindings.get("*"), //$NON-NLS-1$
+				(Collection) adviceBindings.get("*") //$NON-NLS-1$
 		});
 	}
 
@@ -809,7 +856,32 @@ public class SpecializationTypeRegistry {
 	public Collection getSpecializationTypeDescriptors() {
 		return specializationTypeDescriptors.values();
 	}
+	
+	/**
+	 * Gets the collection of all registered specialization type descriptors
+	 * bound to the <code>clientContext</code>.
+	 * 
+	 * @return the registered specialization type descriptors. Each element in
+	 *         the collection is a <code>SpecializationTypeDescriptor</code>.
+	 */
+	public Collection getSpecializationTypeDescriptors(
+			IClientContext clientContext) {
 
+		Collection result = new ArrayList();
+
+		for (Iterator i = getSpecializationTypeDescriptors().iterator(); i
+				.hasNext();) {
+			
+			ISpecializationTypeDescriptor next = (ISpecializationTypeDescriptor) i
+					.next();
+
+			if (clientContext.includes(next)) {
+				result.add(next);
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * Checks to see if an element type with the same ID as
 	 * <code>typeDescriptor</code> has already been registered.

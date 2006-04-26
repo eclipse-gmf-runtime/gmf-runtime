@@ -36,11 +36,13 @@ public class AllTests
         suite.addTest(AbstractEditHelperAdviceTest.suite());
 		suite.addTest(AbstractEditHelperTest.suite());
 		suite.addTest(ElementTypeRegistryTest.suite());
+		suite.addTest(ClientContextManagerTest.suite());
 		suite.addTest(CreateElementCommandTest.suite());
 		suite.addTest(CreateElementRequestTest.suite());
 		suite.addTest(DestroyElementCommandTest.suite());
 		suite.addTest(MetamodelTypeDescriptorTest.suite());
 		suite.addTest(MoveRequestTest.suite());
+		suite.addTest(MultiClientContextTest.suite());
         suite.addTest(SetValueCommandTest.suite());
 		suite.addTest(SpecializationTypeDescriptorTest.suite());
         suite.addTest(SpecializationTypeTest.suite());

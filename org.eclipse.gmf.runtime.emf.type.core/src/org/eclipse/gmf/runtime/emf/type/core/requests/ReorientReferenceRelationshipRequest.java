@@ -17,6 +17,8 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 
 /**
  * Request to change the source or target of a reference.
@@ -101,7 +103,13 @@ public class ReorientReferenceRelationshipRequest extends ReorientRequest {
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditCommandRequest#getEditHelperContext()
 	 */
 	public Object getEditHelperContext() {
-		return referenceOwner;
+		IClientContext context = getClientContext();
+		
+		if (context == null) {
+			return referenceOwner;
+		} else {
+			return new EditHelperContext(referenceOwner, context);
+		}
 	}
 
 }

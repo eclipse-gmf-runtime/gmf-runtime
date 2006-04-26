@@ -10,7 +10,9 @@
 <!--    IBM Corporation - initial API and implementation                   -->
 <plugin>
 
-     <extension-point id="elementTypes" name="%extPoint.elementTypes" schema="schema/elementTypes.exsd"/>
+   <extension-point id="elementTypes" name="%extPoint.elementTypes" schema="schema/elementTypes.exsd"/>
+   <extension-point id="elementTypeBindings" name="%extPoint.elementTypeBindings" schema="schema/elementTypeBindings.exsd"/>
+   
    <extension
          point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
          <elementTypeFactory

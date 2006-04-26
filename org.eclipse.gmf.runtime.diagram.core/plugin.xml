@@ -22,5 +22,11 @@
                  typeId="*"/>
         </metamodel>
      </extension>
+     
+     <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+        <binding context="org.eclipse.gmf.runtime.emf.type.core.defaultContext">
+           <elementType ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+        </binding>
+     </extension>
    
 </plugin>

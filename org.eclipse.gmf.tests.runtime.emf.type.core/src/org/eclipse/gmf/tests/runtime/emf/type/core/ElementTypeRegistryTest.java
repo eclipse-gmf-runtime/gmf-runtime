@@ -23,12 +23,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.type.core.ClientContextManager;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeAddedEvent;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
+import org.eclipse.gmf.runtime.emf.type.core.IEditHelperContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeFactory;
 import org.eclipse.gmf.runtime.emf.type.core.IElementTypeRegistryListener;
@@ -39,6 +44,7 @@ import org.eclipse.gmf.runtime.emf.type.core.SpecializationType;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultElementTypeFactory;
+import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
@@ -69,6 +75,10 @@ public class ElementTypeRegistryTest
 
 	private ElementTypeRegistry fixture = null;
 
+    private IClientContext clientContext;
+    
+    private IClientContext unboundClientContext;
+
 	// Model elements
 	private Department department;
 
@@ -95,6 +105,34 @@ public class ElementTypeRegistryTest
 	private Employee executive;
 
 	private Office executiveOffice;
+	
+	// Model elements in resource with context
+	private Department cDepartment;
+
+	private Department cExecutiveDepartment;
+
+	private Department cFinanceDepartment;
+
+	private Employee cEmployee;
+
+	private Employee cFinanceEmployee;
+
+	private Employee cFinanceManager;
+
+	private Student cStudent;
+
+	private Office cEmployeeOffice;
+
+	private Office cStudentOffice;
+
+	private Employee cManager;
+
+	private Office cManagerOffice;
+
+	private Employee cExecutive;
+
+	private Office cExecutiveOffice;
+	
 
 	/**
 	 * Constructor for CreateDiagramCommandTest.
@@ -113,23 +151,23 @@ public class ElementTypeRegistryTest
 		return new TestSuite(ElementTypeRegistryTest.class);
 	}
 
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
 		setFixture(ElementTypeRegistry.getInstance());
 
 		department = (Department) getEmployeeFactory().create(getEmployeePackage()
 			.getDepartment());
 		department.setName("Department"); //$NON-NLS-1$
-        getResource().getContents().add(department);
+		resource.getContents().add(department);
 
 		executiveDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
 			.getDepartment());
 		executiveDepartment.setName("ExecutiveDepartment"); //$NON-NLS-1$
-        getResource().getContents().add(executiveDepartment);
+		resource.getContents().add(executiveDepartment);
 
 		financeDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
 			.getDepartment());
 		financeDepartment.setName("Finance"); //$NON-NLS-1$
-        getResource().getContents().add(financeDepartment);
+		resource.getContents().add(financeDepartment);
 
 		employee = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
 		employee.setNumber(1);
@@ -182,12 +220,101 @@ public class ElementTypeRegistryTest
 		
 	}
     
+    protected void doModelSetupWithContext(Resource resource) {
+		setFixture(ElementTypeRegistry.getInstance());
+
+		cDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
+			.getDepartment());
+		cDepartment.setName("DepartmentWithContext"); //$NON-NLS-1$
+		resource.getContents().add(cDepartment);
+
+		cExecutiveDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
+			.getDepartment());
+		cExecutiveDepartment.setName("ExecutiveDepartmentWithContext"); //$NON-NLS-1$
+		resource.getContents().add(cExecutiveDepartment);
+
+		cFinanceDepartment = (Department) getEmployeeFactory().create(getEmployeePackage()
+			.getDepartment());
+		cFinanceDepartment.setName("FinanceWithContext"); //$NON-NLS-1$
+		resource.getContents().add(cFinanceDepartment);
+
+		cEmployee = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
+		cEmployee.setNumber(1);
+		cDepartment.getMembers().add(cEmployee);
+
+		cEmployeeOffice = (Office) getEmployeeFactory().create(getEmployeePackage()
+			.getOffice());
+		cEmployee.setOffice(cEmployeeOffice);
+
+		cFinanceEmployee = (Employee) getEmployeeFactory().create(getEmployeePackage()
+			.getEmployee());
+		cFinanceEmployee.setDepartment(cFinanceDepartment);
+
+		cFinanceManager = (Employee) getEmployeeFactory().create(getEmployeePackage()
+			.getEmployee());
+		cFinanceDepartment.setManager(cFinanceManager);
+
+		Office financeManagerOffice = (Office) getEmployeeFactory()
+			.create(getEmployeePackage().getOffice());
+		financeManagerOffice.setNumberOfWindows(1);
+		financeManagerOffice.setHasDoor(false);
+		cFinanceManager.setOffice(financeManagerOffice);
+
+		cStudent = (Student) getEmployeeFactory().create(getEmployeePackage().getStudent());
+		cStudent.setNumber(2);
+		cDepartment.getMembers().add(cStudent);
+
+		cStudentOffice = (Office) getEmployeeFactory()
+			.create(getEmployeePackage().getOffice());
+		cStudent.setOffice(cStudentOffice);
+
+		cManager = (Employee) getEmployeeFactory().create(getEmployeePackage().getEmployee());
+		cDepartment.setManager(cManager);
+
+		cManagerOffice = (Office) getEmployeeFactory()
+			.create(getEmployeePackage().getOffice());
+		cManagerOffice.setNumberOfWindows(1);
+		cManagerOffice.setHasDoor(false);
+		cManager.setOffice(cManagerOffice);
+
+		cExecutive = (Employee) getEmployeeFactory()
+			.create(getEmployeePackage().getEmployee());
+		cExecutiveDepartment.setManager(cExecutive);
+
+		cExecutiveOffice = (Office) getEmployeeFactory().create(getEmployeePackage()
+			.getOffice());
+		cExecutiveOffice.setNumberOfWindows(1);
+		cExecutiveOffice.setHasDoor(true);
+		cExecutive.setOffice(cExecutiveOffice);
+		
+	}
+    
     protected ElementTypeRegistry getFixture() {
 		return fixture;
 	}
 
 	protected void setFixture(ElementTypeRegistry fixture) {
 		this.fixture = fixture;
+	}
+	
+	protected IClientContext getClientContext() {
+		if (clientContext == null) {
+			clientContext = ClientContextManager
+					.getInstance()
+					.getClientContext(
+							"org.eclipse.gmf.tests.runtime.emf.type.core.ClientContext1"); //$NON-NLS-1$
+		}
+		return clientContext;
+	}
+	
+	protected IClientContext getUnboundClientContext() {
+		if (unboundClientContext == null) {
+			unboundClientContext = ClientContextManager
+					.getInstance()
+					.getClientContext(
+							"org.eclipse.gmf.tests.runtime.emf.type.core.UnboundClientContext"); //$NON-NLS-1$
+		}
+		return unboundClientContext;
 	}
 
 	public void test_getAllTypesMatching_eObject_metamodel() {
@@ -196,6 +323,29 @@ public class ElementTypeRegistryTest
 			employeeOffice);
 		assertTrue(officeMatches.length == 1);
 		assertTrue(officeMatches[0] == EmployeeType.OFFICE);
+	}
+	
+	public void test_getAllTypesMatching_eObject_metamodel_withContext() {
+
+		// context inferred
+		IElementType[] officeMatches = getFixture().getAllTypesMatching(
+			cEmployeeOffice);
+		assertTrue(officeMatches.length == 1);
+		assertTrue(officeMatches[0] == EmployeeType.CONTEXT_OFFICE);
+		
+		// context explicit
+		officeMatches = getFixture().getAllTypesMatching(
+				cEmployeeOffice, getClientContext());
+		assertTrue(officeMatches.length == 1);
+		assertTrue(officeMatches[0] == EmployeeType.CONTEXT_OFFICE);
+	}
+	
+	public void test_getAllTypesMatching_eObject_metamodel_unboundContext() {
+
+		IElementType[] officeMatches = getFixture().getAllTypesMatching(
+				cEmployeeOffice, getUnboundClientContext());
+		assertTrue(officeMatches.length == 1);
+		assertTrue(officeMatches[0] == DefaultMetamodelType.getInstance());
 	}
 
 	public void test_getAllTypesMatching_eObject_metamodelAndSpecializations() {
@@ -210,6 +360,37 @@ public class ElementTypeRegistryTest
 		assertEquals(EmployeeType.EMPLOYEE, managerMatches[2]);
 	}
 
+	public void test_getAllTypesMatching_eObject_metamodelAndSpecializations_withContext() {
+
+		// context inferred
+		IElementType[] managerMatches = getFixture().getAllTypesMatching(
+			cManager);
+		assertEquals(3, managerMatches.length);
+		List managerMatchList = Arrays.asList(managerMatches);
+		assertTrue(managerMatchList.contains(EmployeeType.CONTEXT_MANAGER));
+		assertTrue(managerMatchList.contains(EmployeeType.CONTEXT_TOP_SECRET));
+		// The metamodel type should be last.
+		assertEquals(EmployeeType.CONTEXT_EMPLOYEE, managerMatches[2]);
+		
+		// context explicit
+		managerMatches = getFixture().getAllTypesMatching(
+			cManager, getClientContext());
+		assertEquals(3, managerMatches.length);
+		managerMatchList = Arrays.asList(managerMatches);
+		assertTrue(managerMatchList.contains(EmployeeType.CONTEXT_MANAGER));
+		assertTrue(managerMatchList.contains(EmployeeType.CONTEXT_TOP_SECRET));
+		// The metamodel type should be last.
+		assertEquals(EmployeeType.CONTEXT_EMPLOYEE, managerMatches[2]);
+	}
+
+	public void test_getAllTypesMatching_eObject_metamodelAndSpecializations_unboundContext() {
+
+		IElementType[] managerMatches = getFixture().getAllTypesMatching(
+			cManager, getUnboundClientContext());
+		assertEquals(1, managerMatches.length);
+		assertTrue(managerMatches[0] == DefaultMetamodelType.getInstance());
+	}
+
 	public void test_getContainedTypes_metamodel() {
 
 		IElementType[] officeMatches = getFixture().getContainedTypes(employee,
@@ -217,6 +398,30 @@ public class ElementTypeRegistryTest
 		assertEquals(1, officeMatches.length);
 		List officeMatchList = Arrays.asList(officeMatches);
 		assertTrue(officeMatchList.contains(EmployeeType.OFFICE));
+	}
+	
+	public void test_getContainedTypes_metamodel_withContext() {
+
+		// context inferred
+		IElementType[] officeMatches = getFixture().getContainedTypes(cEmployee,
+			EmployeePackage.eINSTANCE.getEmployee_Office());
+		assertEquals(1, officeMatches.length);
+		List officeMatchList = Arrays.asList(officeMatches);
+		assertTrue(officeMatchList.contains(EmployeeType.CONTEXT_OFFICE));
+		
+		// context explicit
+		officeMatches = getFixture().getContainedTypes(cEmployee,
+				EmployeePackage.eINSTANCE.getEmployee_Office(), getClientContext());
+		assertEquals(1, officeMatches.length);
+		officeMatchList = Arrays.asList(officeMatches);
+		assertTrue(officeMatchList.contains(EmployeeType.CONTEXT_OFFICE));
+	}
+	
+	public void test_getContainedTypes_metamodel_unboundContext() {
+
+		IElementType[] officeMatches = getFixture().getContainedTypes(cEmployee,
+			EmployeePackage.eINSTANCE.getEmployee_Office(), getUnboundClientContext());
+		assertEquals(0, officeMatches.length);
 	}
 
 	public void test_getContainedTypes_metamodelAndSpecializations_departmentMembers() {
@@ -229,6 +434,37 @@ public class ElementTypeRegistryTest
 
 		assertEquals(expected.size(), memberMatches.length);
 		assertTrue(memberMatchList.containsAll(expected));
+	}
+	
+	public void test_getContainedTypes_metamodelAndSpecializations_departmentMembers_withContext() {
+
+		// context inferred
+		IElementType[] memberMatches = getFixture().getContainedTypes(
+			cDepartment, EmployeePackage.eINSTANCE.getDepartment_Members());
+		List memberMatchList = Arrays.asList(memberMatches);
+		List expected = Arrays.asList(new Object[] {EmployeeType.CONTEXT_EMPLOYEE,
+			EmployeeType.CONTEXT_STUDENT, EmployeeType.CONTEXT_TOP_SECRET});
+
+		assertEquals(expected.size(), memberMatches.length);
+		assertTrue(memberMatchList.containsAll(expected));
+		
+		// context explicit
+		memberMatches = getFixture().getContainedTypes(
+			cDepartment, EmployeePackage.eINSTANCE.getDepartment_Members(), getClientContext());
+		memberMatchList = Arrays.asList(memberMatches);
+		expected = Arrays.asList(new Object[] {EmployeeType.CONTEXT_EMPLOYEE,
+			EmployeeType.CONTEXT_STUDENT, EmployeeType.CONTEXT_TOP_SECRET});
+
+		assertEquals(expected.size(), memberMatches.length);
+		assertTrue(memberMatchList.containsAll(expected));
+	}
+	
+	public void test_getContainedTypes_metamodelAndSpecializations_departmentMembers_unboundContext() {
+
+		IElementType[] memberMatches = getFixture().getContainedTypes(
+			cDepartment, EmployeePackage.eINSTANCE.getDepartment_Members(), getUnboundClientContext());
+		
+		assertEquals(0, memberMatches.length);
 	}
 
 	public void test_getContainedTypes_metamodelAndSpecializations_departmentManager() {
@@ -243,10 +479,60 @@ public class ElementTypeRegistryTest
 		assertEquals(expected.size(), managerMatches.length);
 		assertTrue(managerMatchList.containsAll(expected));
 	}
+	
+	public void test_getContainedTypes_metamodelAndSpecializations_departmentManager_withContext() {
+
+		// context inferred
+		IElementType[] managerMatches = getFixture().getContainedTypes(
+			cDepartment, EmployeePackage.eINSTANCE.getDepartment_Manager());
+		List managerMatchList = Arrays.asList(managerMatches);
+		List expected = Arrays.asList(new Object[] {EmployeeType.CONTEXT_EMPLOYEE,
+			EmployeeType.CONTEXT_STUDENT, EmployeeType.CONTEXT_MANAGER, EmployeeType.CONTEXT_EXECUTIVE,
+			EmployeeType.CONTEXT_TOP_SECRET});
+
+		assertEquals(expected.size(), managerMatches.length);
+		assertTrue(managerMatchList.containsAll(expected));
+		
+		// context explicit
+		managerMatches = getFixture().getContainedTypes(
+			cDepartment, EmployeePackage.eINSTANCE.getDepartment_Manager(), getClientContext());
+		managerMatchList = Arrays.asList(managerMatches);
+		expected = Arrays.asList(new Object[] {EmployeeType.CONTEXT_EMPLOYEE,
+			EmployeeType.CONTEXT_STUDENT, EmployeeType.CONTEXT_MANAGER, EmployeeType.CONTEXT_EXECUTIVE,
+			EmployeeType.CONTEXT_TOP_SECRET});
+
+		assertEquals(expected.size(), managerMatches.length);
+		assertTrue(managerMatchList.containsAll(expected));	
+	}
+	
+	public void test_getContainedTypes_metamodelAndSpecializations_departmentManager_unboundContext() {
+
+		IElementType[] managerMatches = getFixture().getContainedTypes(
+			cDepartment, EmployeePackage.eINSTANCE.getDepartment_Manager(), getUnboundClientContext());
+
+		assertEquals(0, managerMatches.length);
+	}
 
 	public void test_getEditHelperAdvice_noAdvice() {
 
 		IEditHelperAdvice[] advice = getNonWildcardAdvice(studentOffice);
+		assertEquals(0, advice.length);
+	}
+	
+	public void test_getEditHelperAdvice_noAdvice_withContext() {
+
+		// context inferred
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(cStudentOffice);
+		assertEquals(0, advice.length);
+		
+		// context explicit
+		advice = getNonWildcardAdvice(cStudentOffice, getClientContext());
+		assertEquals(0, advice.length);
+	}
+	
+	public void test_getEditHelperAdvice_noAdvice_unboundContext() {
+
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(cStudentOffice, getUnboundClientContext());
 		assertEquals(0, advice.length);
 	}
 
@@ -262,6 +548,37 @@ public class ElementTypeRegistryTest
 			}
 		}
 	}
+	
+	public void test_getEditHelperAdvice_eObject_directAdvice_withContext() {
+
+		// context inferred
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(cFinanceEmployee);
+		assertEquals(2, advice.length);
+
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance and not inherited helper advice"); //$NON-NLS-1$
+			}
+		}
+		
+		// context explicit
+		advice = getNonWildcardAdvice(cFinanceEmployee, getClientContext());
+		assertEquals(2, advice.length);
+
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance and not inherited helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_eObject_directAdvice_unboundContext() {
+
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(cFinanceEmployee, getUnboundClientContext());
+		assertEquals(0, advice.length);
+	}
 
 	public void test_getEditHelperAdvice_eObject_indirectAdvice() {
 
@@ -276,6 +593,39 @@ public class ElementTypeRegistryTest
 			}
 		}
 	}
+	
+	public void test_getEditHelperAdvice_eObject_indirectAdvice_withContext() {
+
+		// context inferred
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(cFinanceManager);
+		assertEquals(3, advice.length);
+
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager and not inherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+		
+		// context explicit
+		advice = getNonWildcardAdvice(cFinanceManager, getClientContext());
+		assertEquals(3, advice.length);
+
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager and not inherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_eObject_indirectAdvice_unboundContext() {
+
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(cFinanceManager, getUnboundClientContext());
+		assertEquals(0, advice.length);
+	}
 
 	public void test_getEditHelperAdvice_elementType_directMatch() {
 
@@ -287,6 +637,35 @@ public class ElementTypeRegistryTest
 				fail("expected finance and notInherited edit helper advice"); //$NON-NLS-1$
 			}
 		}
+	}
+	
+	public void test_getEditHelperAdvice_elementType_directMatch_withContext() {
+
+		// context inferred
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.CONTEXT_EMPLOYEE);
+		assertEquals(2, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance and notInherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+		
+		// context explicit
+		advice = getNonWildcardAdvice(EmployeeType.CONTEXT_EMPLOYEE, getClientContext());
+		assertEquals(2, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance and notInherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_elementType_directMatch_unboundContext() {
+
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.CONTEXT_EMPLOYEE, getUnboundClientContext());
+		assertEquals(0, advice.length);
 	}
 
 	public void test_getEditHelperAdvice_elementType_inheritedMatches() {
@@ -302,6 +681,39 @@ public class ElementTypeRegistryTest
 			}
 		}
 	}
+	
+	public void test_getEditHelperAdvice_elementType_inheritedMatches_withContext() {
+
+		// context inferred
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.CONTEXT_EXECUTIVE);
+		assertEquals(4, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != ExecutiveEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager, executive and not-inherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+		
+		// context explicit
+		advice = getNonWildcardAdvice(EmployeeType.CONTEXT_EXECUTIVE, getClientContext());
+		assertEquals(4, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != ExecutiveEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager, executive and not-inherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_elementType_inheritedMatches_unboundContext() {
+
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.CONTEXT_EXECUTIVE, getUnboundClientContext());
+		assertEquals(0, advice.length);
+	}
 
 	public void test_getEditHelperAdvice_elementType_noInheritedMatches() {
 
@@ -310,6 +722,83 @@ public class ElementTypeRegistryTest
 		for (int i = 0; i < advice.length; i++) {
 			if (advice[i].getClass() != FinanceEditHelperAdvice.class) {
 				fail("expected finance edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_elementType_noInheritedMatches_withContext() {
+
+		// context inferred
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.CONTEXT_STUDENT);
+		assertEquals(1, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class) {
+				fail("expected finance edit helper advice"); //$NON-NLS-1$
+			}
+		}
+		
+		// context explicit
+		advice = getNonWildcardAdvice(EmployeeType.CONTEXT_STUDENT, getClientContext());
+		assertEquals(1, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class) {
+				fail("expected finance edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_elementType_noInheritedMatches_unboundContext() {
+
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(EmployeeType.CONTEXT_STUDENT, getUnboundClientContext());
+		assertEquals(0, advice.length);
+	}
+
+
+	public void test_getEditHelperAdvice_editHelperContext_withEObject() {
+		
+		IEditHelperContext context = new EditHelperContext(cFinanceManager,
+				getClientContext());
+		
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(context);
+		assertEquals(3, advice.length);
+
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager and not inherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_editHelperContext_withElementType() {
+		IEditHelperContext context = new EditHelperContext(
+				EmployeeType.CONTEXT_EXECUTIVE, getClientContext());
+		
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(context);
+		assertEquals(4, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != ExecutiveEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager, executive and not-inherited edit helper advice"); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	public void test_getEditHelperAdvice_editHelperContext_noClientContext() {
+		IEditHelperContext context = new EditHelperContext(
+				EmployeeType.CONTEXT_EXECUTIVE, null);
+		
+		IEditHelperAdvice[] advice = getNonWildcardAdvice(context);
+		assertEquals(4, advice.length);
+		for (int i = 0; i < advice.length; i++) {
+			if (advice[i].getClass() != FinanceEditHelperAdvice.class
+				&& advice[i].getClass() != ManagerEditHelperAdvice.class
+				&& advice[i].getClass() != ExecutiveEditHelperAdvice.class
+				&& advice[i].getClass() != NotInheritedEditHelperAdvice.class) {
+				fail("expected finance, manager, executive and not-inherited edit helper advice"); //$NON-NLS-1$
 			}
 		}
 	}
@@ -344,6 +833,24 @@ public class ElementTypeRegistryTest
 		assertNotNull(metamodelType);
 		assertEquals(EmployeeType.DEPARTMENT, metamodelType);
 	}
+	
+	public void test_getElementType_eClass_withContext() {
+		
+		// context explicit
+		IElementType metamodelType = getFixture().getElementType(
+			getEmployeePackage().getDepartment(), getClientContext());
+		
+		assertNotNull(metamodelType);
+		assertEquals(EmployeeType.CONTEXT_DEPARTMENT, metamodelType);
+	}
+	
+	public void test_getElementType_eClass_unboundContext() {
+		
+		IElementType metamodelType = getFixture().getElementType(
+			getEmployeePackage().getDepartment(), getUnboundClientContext());
+		
+		assertSame(DefaultMetamodelType.getInstance(), metamodelType);
+	}
 
 	public void test_getElementType_eObject() {
 		
@@ -354,23 +861,52 @@ public class ElementTypeRegistryTest
 		assertEquals(EmployeeType.EMPLOYEE, metamodelType);
 	}
 	
+	public void test_getElementType_eObject_withContext() {
+		
+		// context inferred
+		IElementType metamodelType = getFixture().getElementType(
+			cFinanceManager);
+		
+		assertNotNull(metamodelType);
+		assertEquals(EmployeeType.CONTEXT_EMPLOYEE, metamodelType);
+		
+		// context explicit
+		metamodelType = getFixture().getElementType(
+			cFinanceManager, getClientContext());
+		
+		assertNotNull(metamodelType);
+		assertEquals(EmployeeType.CONTEXT_EMPLOYEE, metamodelType);
+	}
+	
+	public void test_getElementType_eObject_unboundContext() {
+		
+		IElementType metamodelType = getFixture().getElementType(
+			cFinanceManager, getUnboundClientContext());
+		
+		assertSame(DefaultMetamodelType.getInstance(), metamodelType);
+	}
+	
 	public void test_getElementType_eObject_eClass() {
 
 		MetamodelType eClassType = new MetamodelType(
-			"org.eclipse.gmf.tests.runtime.emf.type.core.eclass", null, null, //$NON-NLS-1$
-			EcorePackage.eINSTANCE.getEClass(), null);
+				"dynamic.org.eclipse.gmf.tests.runtime.emf.type.core.eclass", null, null, //$NON-NLS-1$
+				EcorePackage.eINSTANCE.getEClass(), null);
+
+		// EClass type conflicts with the one in the ECore example editor
+		getClientContext().bindId(
+				"dynamic.org.eclipse.gmf.tests.runtime.emf.type.core.eclass"); //$NON-NLS-1$
 
 		boolean wasRegistered = getFixture().register(eClassType);
-        EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
-        
-        IElementType metamodelType = getFixture().getElementType(
-            myEClassInstance);
-        assertNotNull(metamodelType);
-        
-        if (wasRegistered) {
-    		assertSame(eClassType, metamodelType);
-        }
-    }
+		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
+
+		IElementType metamodelType = getFixture().getElementType(
+				myEClassInstance, getClientContext());
+		assertNotNull(metamodelType);
+
+		if (wasRegistered) {
+			assertSame(eClassType, metamodelType);
+		}
+	}
 	
 
 	public void test_getElementType_overridesEditHelper() {
@@ -383,6 +919,16 @@ public class ElementTypeRegistryTest
 		assertTrue(elementType.getEditHelper() instanceof SecurityClearedElementTypeFactory.SecurityClearedEditHelper);
 	}
 	
+	public void test_getElementType_overridesEditHelper_withContext() {
+
+		IElementType elementType = getFixture().getElementType(
+				EmployeeType.CONTEXT_TOP_SECRET);
+		assertNotNull(elementType);
+		assertEquals(EmployeeType.CONTEXT_TOP_SECRET, elementType);
+
+		assertTrue(elementType.getEditHelper() instanceof SecurityClearedElementTypeFactory.SecurityClearedEditHelper);
+	}
+	
 
 	public void test_getElementType_metamodelType() {
 		IElementType metamodelType = getFixture().getElementType(EmployeeType.STUDENT);
@@ -390,12 +936,54 @@ public class ElementTypeRegistryTest
 		assertEquals(EmployeeType.STUDENT, metamodelType);
 	}
 	
+	public void test_getElementType_metamodelType_withContext() {
+		IElementType metamodelType = getFixture().getElementType(EmployeeType.CONTEXT_STUDENT);
+		assertNotNull(metamodelType);
+		assertEquals(EmployeeType.CONTEXT_STUDENT, metamodelType);
+	}
 
 	public void test_getElementType_specializationType() {
 		IElementType specializationType = getFixture()
 				.getElementType(EmployeeType.MANAGER);
 		assertNotNull(specializationType);
 		assertEquals(EmployeeType.MANAGER, specializationType);
+	}
+
+	public void test_getElementType_specializationType_withContext() {
+		IElementType specializationType = getFixture()
+				.getElementType(EmployeeType.CONTEXT_MANAGER);
+		assertNotNull(specializationType);
+		assertEquals(EmployeeType.CONTEXT_MANAGER, specializationType);
+	}
+
+	public void test_getElementType_editHelperContext_withEObject() {
+		
+		IEditHelperContext context = new EditHelperContext(cFinanceManager,
+				getClientContext());
+		
+		IElementType type = getFixture().getElementType(context);
+		assertNotNull(type);
+		assertEquals(EmployeeType.CONTEXT_EMPLOYEE, type);
+	}
+	
+	/**
+	 * Verifies that the element type in the IEditHelperContext will be used
+	 * regardless of the client context specified in the IEditHelperContext.
+	 */
+	public void test_getElementType_editHelperContext_withElementType() {
+		IEditHelperContext context = new EditHelperContext(
+				EmployeeType.CONTEXT_STUDENT, ClientContextManager.getDefaultClientContext());
+		IElementType type = getFixture().getElementType(context);
+		assertNotNull(type);
+		assertEquals(EmployeeType.CONTEXT_STUDENT, type);
+	}
+	
+	public void test_getElementType_editHelperContext_noClientContext() {
+		IEditHelperContext context = new EditHelperContext(financeManager, null);
+		
+		IElementType type = getFixture().getElementType(context);
+		assertNotNull(type);
+		assertEquals(EmployeeType.EMPLOYEE, type);
 	}
 
 	public void test_getType_metamodel() {

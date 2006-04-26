@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
+import org.eclipse.gmf.runtime.emf.type.core.IEditHelperContext;
 
 
 /**
@@ -45,9 +47,9 @@ public interface IEditCommandRequest {
 
 	/**
 	 * Gets the edit helper context for this request. The context can be an
-	 * <code>IElementType</code> or an <code>EObject</code>. It determines
-	 * which edit helper should be used to find a command to do the work in the
-	 * request.
+	 * <code>IElementType</code> or an <code>EObject</code>, or an
+	 * {@link IEditHelperContext}. It determines which edit helper should be
+	 * used to find a command to do the work in the request.
 	 * 
 	 * @return the edit helper context for this request
 	 */
@@ -103,5 +105,19 @@ public interface IEditCommandRequest {
 	 * @return the editing domain
 	 */
 	public abstract TransactionalEditingDomain getEditingDomain();
+	
+	/**
+	 * Sets the client context for this request.
+	 * 
+	 * @param clientContext the client context
+	 */
+	public abstract void setClientContext(IClientContext clientContext);
+	
+	/**
+	 * Gets the client context for this request.
+	 * 
+	 * @return the client context
+	 */
+	public IClientContext getClientContext();
 	
 }

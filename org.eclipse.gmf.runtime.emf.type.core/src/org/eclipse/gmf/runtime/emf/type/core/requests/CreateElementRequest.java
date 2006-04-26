@@ -26,6 +26,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypeDebugOptions;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
@@ -327,8 +328,9 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 		if (editContextRequest == null) {
 			editContextRequest = new GetEditContextRequest(getEditingDomain(), this,
 					getElementType());
-			// Initialize the context with the container
+			// Initialize the context with the container and the client context
 			editContextRequest.setEditContext(getContainer());
+			editContextRequest.setClientContext(getClientContext());
 		}
 		return editContextRequest;
 	}
@@ -355,6 +357,14 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
             }
             invalidateContainmentFeature();
 		}
+	}
+	
+	public void setClientContext(IClientContext clientContext) {
+		super.setClientContext(clientContext);
+		
+		if (editContextRequest != null) {
+            editContextRequest.setClientContext(clientContext);
+        }
 	}
 
 	/**
@@ -405,7 +415,7 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 	 * @return the edit helper context
 	 */
 	public Object getEditHelperContext() {
-
+		
 		// Get, but don't execute the command. Gives clients a chance to set the
 		// edit context in the request, if they need to.
 		ICommand contextCommand = getEditContextCommand();

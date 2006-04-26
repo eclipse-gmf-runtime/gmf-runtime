@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 
 /**
  * Abstract superclass for edit command requests.
@@ -32,6 +33,11 @@ public abstract class AbstractEditCommandRequest
 	 * label will be used.
 	 */
 	private String label;
+	
+	/**
+	 * My client context.
+	 */
+	private IClientContext clientContext;
 
 	/**
 	 * Arbitrary edit command parameters. Keyed on strings representing the name
@@ -146,6 +152,16 @@ public abstract class AbstractEditCommandRequest
 	 */
 	public Map getParameters() {
 		return parameters;
+	}
+	
+	// documentation copied from the interface
+	public void setClientContext(IClientContext clientContext) {
+		this.clientContext = clientContext;
+	}
+	
+	// documentation copied from the interface
+	public IClientContext getClientContext() {
+		return clientContext;
 	}
 
 }

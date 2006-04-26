@@ -22,7 +22,9 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.InternalRequestParameters;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
@@ -128,7 +130,13 @@ public class DestroyDependentsRequest extends DestroyRequest {
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditCommandRequest#getEditHelperContext()
 	 */
 	public Object getEditHelperContext() {
-		return getElementToDestroy();
+		IClientContext context = getClientContext();
+		
+		if (context == null) {
+			return getElementToDestroy();
+		} else {
+			return new EditHelperContext(getElementToDestroy(), context);
+		}
 	}
 
     /**

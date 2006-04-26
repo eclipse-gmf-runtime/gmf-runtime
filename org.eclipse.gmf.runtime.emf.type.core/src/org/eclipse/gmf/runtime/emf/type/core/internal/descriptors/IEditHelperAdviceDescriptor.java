@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,14 @@ import org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditHelperAdvice;
 public interface IEditHelperAdviceDescriptor {
 
 	/**
-	 * Gets the element type identifier.
+	 * Gets the ID of this advice.
+	 * 
+	 * @return the advice ID
+	 */
+	public abstract String getId();
+	
+	/**
+	 * Gets the identifier of the element type that this advice is bound to.
 	 * 
 	 * @return the element type identifier.
 	 */

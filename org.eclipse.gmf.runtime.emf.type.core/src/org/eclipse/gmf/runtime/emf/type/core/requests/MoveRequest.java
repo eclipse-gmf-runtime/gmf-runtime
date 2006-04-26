@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -307,7 +309,13 @@ public class MoveRequest
      * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditCommandRequest#getEditHelperContext()
      */
     public Object getEditHelperContext() {
-        return targetContainer;
+    	IClientContext context = getClientContext();
+    	
+    	if (context == null) {
+    		return targetContainer;
+    	} else {
+    		return new EditHelperContext(targetContainer, context);
+    	}
     }
 
 }

@@ -21,6 +21,8 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -183,7 +185,15 @@ public class DuplicateElementsRequest extends AbstractEditCommandRequest {
 		if (commonContainer == null) {
 			commonContainer = getLeastCommonContainer(getElementsToBeDuplicated());
 		}
-		return commonContainer;
+		
+		IClientContext context = getClientContext();
+		
+		if (context == null) {
+			return commonContainer;
+			
+		} else {
+			return new EditHelperContext(commonContainer, context);
+		}
 	}
 
 	/**

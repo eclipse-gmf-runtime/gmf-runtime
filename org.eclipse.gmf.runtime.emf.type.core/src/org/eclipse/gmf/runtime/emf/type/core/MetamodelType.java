@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,6 +110,10 @@ public class MetamodelType
 	public IElementType[] getAllSuperTypes() {
 
 		if (super.getAllSuperTypes() == null) {
+			
+			IClientContext context = ClientContextManager.getInstance()
+					.getBinding(this);
+			
 			LinkedHashSet result = new LinkedHashSet();
 			if (getEClass() != null) {
 				List supertypes = getEClass().getEAllSuperTypes();
@@ -117,7 +121,7 @@ public class MetamodelType
 				for (int i = 0; i < supertypes.size(); i++) {
 					EClass nextEClass = (EClass) supertypes.get(i);
 					IElementType nextElementType = ElementTypeRegistry
-						.getInstance().getElementType(nextEClass);
+						.getInstance().getElementType(nextEClass, context);
 	
 					if ((nextElementType != null)
 							&& (nextElementType != DefaultMetamodelType.getInstance())) {
@@ -130,6 +134,10 @@ public class MetamodelType
 				.toArray(new IElementType[] {}));
 		}
 		return super.getAllSuperTypes();
+	}
+	
+	public String toString() {
+		return "MetamodelType[" + getId()+ "]";
 	}
 
 }

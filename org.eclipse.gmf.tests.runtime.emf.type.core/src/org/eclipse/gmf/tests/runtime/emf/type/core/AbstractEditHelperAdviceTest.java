@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band;
@@ -42,13 +43,13 @@ public class AbstractEditHelperAdviceTest
             "AbstractEditHelperAdvice Test Suite"); //$NON-NLS-1$
     }
 
-    protected void doModelSetup() {
+    protected void doModelSetup(Resource resource) {
 
         department = (Department) getEmployeeFactory().create(
             getEmployeePackage().getDepartment());
         department.setName("Finance"); //$NON-NLS-1$
 
-        getResource().getContents().add(department);
+        resource.getContents().add(department);
         
         financeEmployee = (Employee) getEmployeeFactory().create(
             getEmployeePackage().getEmployee());

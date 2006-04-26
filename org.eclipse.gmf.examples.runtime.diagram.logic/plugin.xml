@@ -356,6 +356,20 @@
            </specializationType>
         </metamodel>
     </extension>
+    
+    <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+       <clientContext id="org.eclipse.gmf.example.runtime.diagram.logic.context">
+          <enablement>
+             <test
+                property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+                value="org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"/>
+          </enablement>
+       </clientContext> 
+       <binding context="org.eclipse.gmf.example.runtime.diagram.logic.context">
+          <elementType pattern="logic.*"/>
+          <elementType ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+       </binding>
+    </extension>
    
    <!-- Diagram Preferences --> 
    <extension
