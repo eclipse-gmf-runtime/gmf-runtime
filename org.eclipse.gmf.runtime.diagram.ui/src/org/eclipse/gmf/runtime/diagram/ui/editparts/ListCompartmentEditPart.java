@@ -76,7 +76,7 @@ public abstract class ListCompartmentEditPart
 		if (getParent() == getTopGraphicEditPart()){
 			rcf = (ResizableCompartmentFigure) super.createFigure();
 		} else {
-			rcf = new NestedResizableCompartmentFigure(getMapMode().DPtoLP(11));
+			rcf = new NestedResizableCompartmentFigure(getMapMode());
 		}
 		
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();

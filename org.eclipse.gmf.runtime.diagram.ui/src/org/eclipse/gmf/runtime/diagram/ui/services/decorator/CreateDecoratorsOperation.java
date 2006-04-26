@@ -55,6 +55,6 @@ public /*final*/ class CreateDecoratorsOperation
 	 * @return the decorator target
 	 */
 	public final IDecoratorTarget getDecoratorTarget() {
-		return (IDecoratorTarget) decoratorTarget;
+		return decoratorTarget;
 	}
 }
