@@ -221,8 +221,13 @@ public class MultiClientContext implements IClientContext {
 	 * The children fully determine equality.
 	 */
 	public int hashCode() {
-		// TODO check if this is right
-		return getChildren().hashCode();
+		
+		int result = 0;
+		
+		for (Iterator i = getChildren().iterator(); i.hasNext();) {
+			result += i.next().hashCode();
+		}
+		return result;
 	}
 
 	public String toString() {
