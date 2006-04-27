@@ -89,6 +89,9 @@ public class MetamodelType
 			
 			if (superTypes.length > 0) {
 				editHelper = superTypes[superTypes.length - 1].getEditHelper();
+				
+			} else {
+				editHelper = DefaultMetamodelType.getInstance().getEditHelper();
 			}
 		}
 		return editHelper;
@@ -137,7 +140,7 @@ public class MetamodelType
 	}
 	
 	public String toString() {
-		return "MetamodelType[" + getId()+ "]";
+		return "MetamodelType[" + getId()+ "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }
