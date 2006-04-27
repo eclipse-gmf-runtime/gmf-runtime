@@ -26,6 +26,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.emf.type.core.ClientContextManager;
 import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypeDebugOptions;
@@ -365,6 +366,21 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 		if (editContextRequest != null) {
             editContextRequest.setClientContext(clientContext);
         }
+	}
+	
+	/**
+	 * Infers the client context from {@link #getElementType()} if the context
+	 * has not be explicity set.
+	 */
+	public IClientContext getClientContext() {
+
+		IClientContext result = super.getClientContext();
+		IElementType type = getElementType();
+
+		if (result == null && type != null) {
+			result = ClientContextManager.getInstance().getBinding(type);
+		}
+		return result;
 	}
 
 	/**

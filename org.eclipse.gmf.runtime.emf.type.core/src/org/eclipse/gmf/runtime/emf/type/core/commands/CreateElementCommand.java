@@ -98,6 +98,9 @@ public class CreateElementCommand extends EditElementCommand {
 		ConfigureRequest configureRequest = new ConfigureRequest(
             getEditingDomain(), newElement, getElementType());
         
+		// pass along the client context
+		configureRequest.setClientContext(getCreateRequest().getClientContext());
+		
         configureRequest.addParameters(getRequest().getParameters());
 
 		return configureRequest;

@@ -147,7 +147,7 @@ public class MultiClientContext implements IClientContext {
 	}
 
 	/**
-	 * Includes the <code>elementTypeDescriptor</code> if all one of my child
+	 * Includes the <code>elementTypeDescriptor</code> if all of my child
 	 * contexts include the <code>elementTypeDescriptor</code>.
 	 */
 	public boolean includes(IElementTypeDescriptor elementTypeDescriptor) {
