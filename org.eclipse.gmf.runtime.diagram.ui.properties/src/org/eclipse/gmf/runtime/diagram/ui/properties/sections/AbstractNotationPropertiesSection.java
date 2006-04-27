@@ -21,13 +21,8 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
@@ -47,8 +42,6 @@ public abstract class AbstractNotationPropertiesSection
 	protected int standardLabelWidth = -1;
 
 	protected Composite composite;
-
-	protected PaintListener painter;
 
 	/**
 	 * 
@@ -113,63 +106,9 @@ public abstract class AbstractNotationPropertiesSection
 	 * @param parent - parent composite
 	 */
 	protected void initializeControls(Composite parent) {
-		createPaintedSectionComposite(parent);		
-	}
-
-	/**
-	 * Create a composite for the section
-	 * 
-	 * @param parent - parent widget to host the section's composite
-	 */
-	protected Composite createPaintedSectionComposite(Composite parent) {
 		composite = getWidgetFactory().createFlatFormComposite(parent);
-
 		FormLayout layout = (FormLayout) composite.getLayout();
 		layout.spacing = 3;
-
-		painter = createPainter();
-		composite.addPaintListener(painter);
-		return composite;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
-	 */
-	public void dispose() {
-		if (composite != null && ! composite.isDisposed() && painter != null)
-			composite.removePaintListener(painter);
-		super.dispose();
-
-	}
-
-	/**
-	 * @return - create and return a painter for the section composite which
-	 *         will do partial gradient color fill fopr the section widget
-	 */
-	protected PaintListener createPainter() {
-		return new PaintListener() {
-
-			public void paintControl(PaintEvent e) {
-				Rectangle bounds = composite.getClientArea();
-				GC gc = e.gc;
-
-				gc.setForeground(gc.getBackground());
-				gc.setBackground(getWidgetFactory().getColors().getColor(
-					FormColors.TB_BG));
-
-				gc.fillGradientRectangle(4 + bounds.width / 2, 0,
-					bounds.width / 2 - 9, bounds.height, false);
-
-				gc.setForeground(getWidgetFactory().getColors().getColor(
-					FormColors.TB_BORDER));
-				gc.drawLine(bounds.width - 5, 0, bounds.width - 5,
-					bounds.height);
-			}
-
-		};
-
 	}
 
 	/**

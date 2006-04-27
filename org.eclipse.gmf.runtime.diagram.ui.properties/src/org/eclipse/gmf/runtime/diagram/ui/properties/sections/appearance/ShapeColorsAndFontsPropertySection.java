@@ -21,7 +21,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * Colors section to represent line, font and fill colors properties of a 2D shape
@@ -33,8 +32,8 @@ public class ShapeColorsAndFontsPropertySection
 	extends ColorsAndFontsPropertySection {
 
 
-	protected ToolBar createFontsGroup(Composite contents) {
-		ToolBar toolBar = super.createFontsGroup(contents);
+	protected Composite createFontsGroup(Composite contents) {
+		Composite toolBar = super.createFontsGroup(contents);
 
 		fillColorButton.addSelectionListener(new SelectionAdapter() {
 
@@ -95,6 +94,7 @@ public class ShapeColorsAndFontsPropertySection
 					DiagramUIPropertiesImages.DESC_FILL_COLOR
 					.getImageData(), fillColor).createImage();
 		fillColorButton.setImage(overlyedImage);
+		overlyedImage.dispose();
 		}
 	}
 

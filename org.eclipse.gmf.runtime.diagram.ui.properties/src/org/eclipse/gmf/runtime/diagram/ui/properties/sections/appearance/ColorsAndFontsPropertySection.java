@@ -38,11 +38,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -50,12 +47,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -89,7 +84,7 @@ public class ColorsAndFontsPropertySection
 	protected static final String FONTS_AND_COLORS_LABEL = DiagramUIPropertiesMessages.
 		FontAndColor_nameLabel;
 
-	protected ToolItem fillColorButton;
+	protected Button fillColorButton;
 
 	protected RGB fillColor = null;
 
@@ -99,9 +94,9 @@ public class ColorsAndFontsPropertySection
 	// font size drop down
 	private CCombo fontSizeCombo;
 
-	private ToolItem fontBoldButton;
+	private Button fontBoldButton;
 
-	private ToolItem fontItalicButton;
+	private Button fontItalicButton;
 
 	/**
 	 * An image descriptor that overlays two images: a basic icon and a thin
@@ -161,15 +156,13 @@ public class ColorsAndFontsPropertySection
 	/** the default preference color */
 	protected static final RGB DEFAULT_PREF_COLOR = new RGB(0, 0, 0);
 
-	protected ToolItem fontColorButton;
+	protected Button fontColorButton;
 
-	protected ToolItem lineColorButton;
+	protected Button lineColorButton;
 
 	protected RGB fontColor;
 
 	protected RGB lineColor;
-
-	private CoolBar coolBar;
 
 	protected Group colorsAndFontsGroup;
 
@@ -179,7 +172,7 @@ public class ColorsAndFontsPropertySection
 	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection#initializeControls(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void initializeControls(Composite parent) {
-		createPaintedSectionComposite(parent);
+		super.initializeControls(parent);
 		createFontsAndColorsGroups(composite);		
 	}
 
@@ -194,33 +187,15 @@ public class ColorsAndFontsPropertySection
 		GridLayout layout = new GridLayout(1, false);
 		colorsAndFontsGroup.setLayout(layout);
 
-		ToolBar toolBar = createFontsGroup(colorsAndFontsGroup);
+		/*Composite toolBar = */createFontsGroup(colorsAndFontsGroup);
 
-		CoolItem coolItem = new CoolItem(coolBar, SWT.NULL);
+		//CoolItem coolItem = new CoolItem(coolBar, SWT.NULL);
 		// set the control of the coolItem
-		coolItem.setControl(toolBar);
+		//coolItem.setControl(toolBar);
 		// You have to specify the size
-		Point size = toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		Point coolSize = coolItem.computeSize(size.x, size.y);
-		coolItem.setSize(coolSize);
-
-		colorsAndFontsGroup.addPaintListener(new PaintListener() {
-
-			public void paintControl(PaintEvent e) {
-				Rectangle bounds = colorsAndFontsGroup.getClientArea();
-				GC gc = e.gc;
-
-				gc.setForeground(gc.getBackground());
-				gc.setBackground(coolBar.getBackground());
-
-				gc.fillGradientRectangle(1, bounds.height / 2,
-					bounds.width + 3, bounds.height - 14, true);
-
-			}
-
-		}
-
-		);
+		//Point size = toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		//Point coolSize = coolItem.computeSize(size.x, size.y);
+		//coolItem.setSize(coolSize);
 		
 		return colorsAndFontsGroup;
 
@@ -232,7 +207,7 @@ public class ColorsAndFontsPropertySection
 	 * @param parent - parent composite
 	 * @return - font tool bar
 	 */
-	protected ToolBar createFontsGroup(Composite parent) {
+	protected Composite createFontsGroup(Composite parent) {
 		Composite familySize = getWidgetFactory().createComposite(parent);
 		GridLayout layout = new GridLayout(2, false);
 		layout.horizontalSpacing = 0;
@@ -261,14 +236,15 @@ public class ColorsAndFontsPropertySection
 			}
 		});
 
-		coolBar = new CoolBar(parent, SWT.BORDER);
-		ToolBar toolBar = new ToolBar(coolBar, SWT.FLAT);
+		Composite toolBar = new Composite(parent, SWT.SHADOW_NONE);
+		toolBar.setLayout(new GridLayout(7, false));
+		toolBar.setBackground(parent.getBackground());
 
-		fontBoldButton = new ToolItem(toolBar, SWT.CHECK);
+		fontBoldButton = new Button(toolBar, SWT.TOGGLE);
 		fontBoldButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_BOLD));
 	
 		
-		fontItalicButton = new ToolItem(toolBar, SWT.CHECK );
+		fontItalicButton = new Button(toolBar, SWT.TOGGLE );
 		fontItalicButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_ITALIC));
 
 		fontBoldButton.addSelectionListener(new SelectionAdapter() {
@@ -285,9 +261,9 @@ public class ColorsAndFontsPropertySection
 			}
 		});
 
-		new ToolItem(toolBar, SWT.SEPARATOR);
+		new Label(toolBar, SWT.LEFT);
 
-		fontColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
+		fontColorButton = new Button(toolBar, SWT.PUSH);
 		fontColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FONT_COLOR));
 
 		fontColorButton.addSelectionListener(new SelectionAdapter() {
@@ -297,9 +273,9 @@ public class ColorsAndFontsPropertySection
 			}
 		});
 
-		new ToolItem(toolBar, SWT.SEPARATOR);
+		new Label(toolBar, SWT.LEFT);
 
-		lineColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
+		lineColorButton = new Button(toolBar, SWT.PUSH);
 		lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
 
 		lineColorButton.addSelectionListener(new SelectionAdapter() {
@@ -309,7 +285,7 @@ public class ColorsAndFontsPropertySection
 			}
 		});
 
-		fillColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
+		fillColorButton = new Button(toolBar, SWT.PUSH);
 		fillColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FILL_COLOR));
 
 		fillColorButton.setEnabled(false);
@@ -375,7 +351,7 @@ public class ColorsAndFontsPropertySection
 	 *            color is set
 	 * @return - new RGB color, or null if none selected
 	 */
-	protected RGB changeColor(SelectionEvent event, ToolItem button,
+	protected RGB changeColor(SelectionEvent event, Button button,
 			String preferenceId, final String propertyId, String commandName,
 			ImageDescriptor imageDescriptor) {
 
@@ -537,11 +513,13 @@ public class ColorsAndFontsPropertySection
 				DiagramUIPropertiesImages.DESC_FONT_COLOR.getImageData(),
 				fontColor).createImage();
 		fontColorButton.setImage(overlyedImage);
+		overlyedImage.dispose();
 
 		overlyedImage = new ColorOverlayImageDescriptor(
 				DiagramUIPropertiesImages.DESC_LINE_COLOR.getImageData(),
 				lineColor).createImage();
 		lineColorButton.setImage(overlyedImage);
+		overlyedImage.dispose();
 
 		executeAsReadAction(new Runnable() {
 

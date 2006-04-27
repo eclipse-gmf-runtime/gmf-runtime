@@ -128,7 +128,7 @@ public class ConnectionAppearancePropertySection
 	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection#initializeControls(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void initializeControls(Composite parent) {
-		createPaintedSectionComposite(parent);
+		super.initializeControls(parent);
 		Composite groups = getWidgetFactory().createComposite(composite);
 		groups.setLayout(new GridLayout(2, false));		
 		createFontsAndColorsGroups(groups);		
