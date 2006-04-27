@@ -513,13 +513,11 @@ public class ColorsAndFontsPropertySection
 				DiagramUIPropertiesImages.DESC_FONT_COLOR.getImageData(),
 				fontColor).createImage();
 		fontColorButton.setImage(overlyedImage);
-		overlyedImage.dispose();
 
 		overlyedImage = new ColorOverlayImageDescriptor(
 				DiagramUIPropertiesImages.DESC_LINE_COLOR.getImageData(),
 				lineColor).createImage();
 		lineColorButton.setImage(overlyedImage);
-		overlyedImage.dispose();
 
 		executeAsReadAction(new Runnable() {
 

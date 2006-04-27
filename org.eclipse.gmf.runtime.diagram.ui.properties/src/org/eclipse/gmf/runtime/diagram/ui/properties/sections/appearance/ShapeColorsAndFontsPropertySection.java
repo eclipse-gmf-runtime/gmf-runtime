@@ -94,7 +94,6 @@ public class ShapeColorsAndFontsPropertySection
 					DiagramUIPropertiesImages.DESC_FILL_COLOR
 					.getImageData(), fillColor).createImage();
 		fillColorButton.setImage(overlyedImage);
-		overlyedImage.dispose();
 		}
 	}
 
