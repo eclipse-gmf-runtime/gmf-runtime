@@ -367,7 +367,7 @@
        </clientContext> 
        <binding context="org.eclipse.gmf.example.runtime.diagram.logic.context">
           <elementType pattern="logic.*"/>
-          <elementType ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+          <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
        </binding>
     </extension>
    
