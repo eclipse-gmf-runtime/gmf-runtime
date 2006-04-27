@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -94,7 +95,7 @@ public class Util {
 		Display display;
 		display= Display.getCurrent();
 		if (display == null)
-			display= Display.getDefault();
+			display= PlatformUI.getWorkbench().getDisplay();
 		return display;
 	}
 

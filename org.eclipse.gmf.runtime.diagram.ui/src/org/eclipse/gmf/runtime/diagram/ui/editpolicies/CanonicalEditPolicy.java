@@ -75,7 +75,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -137,11 +137,13 @@ implements NotificationListener {
 		 * Calls {@link #doExecute}.
 		 */
 		public final void execute() {
-				Display.getCurrent().asyncExec( new Runnable() {
-					public void run() {
-						AsyncCommand.this.doExecute();
-					}
-				} );
+            // do not use Display.getCurrent() this mthod could be invoked
+            // on a non ui thread
+            PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable() {
+                public void run() {
+                    AsyncCommand.this.doExecute();
+                }
+            } );
 		}
 		
 		/**
