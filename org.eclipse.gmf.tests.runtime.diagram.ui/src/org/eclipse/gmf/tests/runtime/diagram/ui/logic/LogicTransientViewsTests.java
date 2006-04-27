@@ -302,7 +302,6 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 					Object _circuit = view.getElement();
 					if (_circuit == circuit){
 						assertTransient(view);
-						assertTransient(element.getChildren());
 					} else {
 						assertPersisted(view);
 					}

@@ -84,8 +84,7 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 	    // decorate view assumes that the view had been inserted already, so
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView, node, index, persisted);
-		final boolean childPersisted = persisted;
-
+		
 		Map options = new HashMap();
 		options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
 		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
@@ -105,7 +104,7 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
     				// decorate view had to run as a silent operation other wise
     				// it will generate too many events
     				decorateView(containerView, node, semanticAdapter,
-    					semanticHint, index, childPersisted);
+    					semanticHint, index, true);
     
     				return Status.OK_STATUS;
     			}
