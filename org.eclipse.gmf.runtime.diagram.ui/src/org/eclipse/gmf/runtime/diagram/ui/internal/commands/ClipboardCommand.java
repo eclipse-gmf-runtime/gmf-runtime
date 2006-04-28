@@ -126,13 +126,6 @@ public abstract class ClipboardCommand extends AbstractTransactionalCommand {
 
 		/* views iterator */
 		Iterator iter = views.iterator();
-
-		// add the measurement unit in a annotation
-		View firstView = (View)views.get(0);
-		Diagram dgrm = firstView.getDiagram();
-		EAnnotation measureUnitAnnotation  = EcoreFactory.eINSTANCE.createEAnnotation();
-		measureUnitAnnotation.setSource(dgrm.getMeasurementUnit().getName());
-		selection.add(measureUnitAnnotation);
 		
 		/* Add the elements to the selection */
 		while (iter.hasNext()) {
@@ -141,6 +134,17 @@ public abstract class ClipboardCommand extends AbstractTransactionalCommand {
 				selection.add(viewElement);
 			}
 		}
+
+		// add the measurement unit in an annotation.  Put it in the last position
+		//   to work around a limitation in the copy/paste infrastructure, that
+		//   selects the ClipboardSupportFactory based on the first element in
+		//   the copy list.  If the annotation is first, then we get the wrong
+		//   clipboard support instance
+		View firstView = (View)views.get(0);
+		Diagram dgrm = firstView.getDiagram();
+		EAnnotation measureUnitAnnotation  = EcoreFactory.eINSTANCE.createEAnnotation();
+		measureUnitAnnotation.setSource(dgrm.getMeasurementUnit().getName());
+		selection.add(measureUnitAnnotation);
 
 		/* Copy the selection to the string */
 		return ClipboardUtil.copyElementsToString(selection,

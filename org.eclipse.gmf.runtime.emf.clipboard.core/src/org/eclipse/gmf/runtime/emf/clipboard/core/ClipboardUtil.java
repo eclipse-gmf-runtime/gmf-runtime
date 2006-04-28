@@ -139,14 +139,21 @@ public class ClipboardUtil {
 			
 			monitor.beginTask(CopyOperation.COPY,
 				CopyOperation.TOTAL_WORK);
+			
+			// as long as we do not support heterogeneous copy, we need to
+			//   look at the first object in the client's original collection
+			//   in case they try to force a certain clipboard support by
+			//   ordering a particular element to the front (bug 136975)
+			EObject first = eObjects.isEmpty()? null : (EObject) eObjects.iterator().next();
 			eObjects = ClipboardSupportUtil.getCopyElements(eObjects);
+			
 			if (eObjects.isEmpty() == false) {
 				if (hints == null) {
 					hints = Collections.EMPTY_MAP;
 				}
 				CopyOperation copyOperation = new CopyOperation(
 					monitor,
-					createClipboardSupport(((EObject) eObjects.toArray()[0]).eClass()),
+					createClipboardSupport(first.eClass()),
 					eObjects, hints);
 				return copyOperation.copy();
 			}

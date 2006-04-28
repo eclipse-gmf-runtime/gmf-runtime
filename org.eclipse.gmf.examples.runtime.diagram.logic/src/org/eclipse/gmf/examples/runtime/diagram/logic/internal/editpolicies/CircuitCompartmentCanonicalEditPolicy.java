@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Circuit;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Element;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Wire;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -72,23 +73,30 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 			Object obj = li.next();
 			if (obj instanceof Wire) {
 				Wire wire = (Wire)obj;
-				if (EcoreUtil.isAncestor(circuitElement, wire.getSource()) &&
-                    EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
-					wires.add(wire);
-				}
-                else {
-                    if ((!wire.getSource().eContainer().equals(circuitElement) && 
-                        EcoreUtil.isAncestor(circuitElement, wire.getSource().eContainer())) ||
-                        (!wire.getTarget().eContainer().equals(circuitElement) &&
-                        EcoreUtil.isAncestor(circuitElement, wire.getTarget().eContainer()))) {
-                        wires.add(wire);
-                    }
-                }
+                if (isWirePartOfContainer(circuitElement, wire))
+                    wires.add(wire);
 			}
 		}
 		
 		return wires;
 	}
+    
+    private boolean isWirePartOfContainer(Circuit circuitElement, Wire wire) {
+        if (EcoreUtil.isAncestor(circuitElement, wire.getSource()) &&
+                EcoreUtil.isAncestor(circuitElement, wire.getTarget())) {
+                return true;
+            }
+            else {
+                if ((!wire.getSource().eContainer().equals(circuitElement) && 
+                    EcoreUtil.isAncestor(circuitElement, wire.getSource().eContainer())) ||
+                    (!wire.getTarget().eContainer().equals(circuitElement) &&
+                    EcoreUtil.isAncestor(circuitElement, wire.getTarget().eContainer()))) {
+                    return true;
+                }
+            }
+        
+        return false;
+    }
 
 
 	/* 
@@ -96,7 +104,23 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#shouldDeleteView(org.eclipse.gmf.runtime.notation.View)
 	 */
 	protected boolean shouldDeleteView(View view) {
-		return true;
+	    EObject modelRef = resolveSemanticElement(); 
+        Circuit circuitElement = (Circuit) modelRef;
+        
+        EObject semEl = ViewUtil.resolveSemanticElement(view);
+        if (semEl != null) {
+            if (semEl instanceof Wire) {
+                Wire wire = (Wire)semEl;
+                if (wire.eContainer().equals(circuitElement) &&
+                    isWirePartOfContainer(circuitElement, wire))
+                    return true;
+            }
+            else if (semEl instanceof Element) {
+                return true;
+            }
+        }
+        
+		return false;
 	}
 	
 	/* 
