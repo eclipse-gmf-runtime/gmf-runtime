@@ -160,8 +160,10 @@ public class CopyOperation
 			originalEObject = (EObject) mainEObjectIt.next();
 			getCopyAlwaysObjects(originalEObject, copyAlwaysSet,
 				combinedCopyAlwaysSet);
-			//now get copy-always for the originalObject's children
-			// -recursively
+			//now get copy-always for the originalObject's children,
+			//   recursively.  Use eAllContents() instead of
+			//   EcoreUtil.getAllProperContents() because we really need all
+			//   of the model sub-tree
 			Iterator childrenIt = originalEObject.eAllContents();
 			EObject directChild = null;
 			while (childrenIt.hasNext()) {
@@ -357,7 +359,7 @@ public class CopyOperation
 	}
 
 	private void removeNonCopyableObject(Collection collection) {
-		//basically IModel
+		// model roots are not copyable
 		Iterator it = collection.iterator();
 		EObject eObject = null;
 		while (it.hasNext()) {

@@ -208,7 +208,9 @@ public class PasteIntoParentOperation
 
 		if (!parentRes.getURI().equals(sourceUri)) {
 			// don't need to check anything when pasting into the source
-			//    resource (from which we cut in the first place)
+			//    resource (from which we cut in the first place).  OK to
+			//    get all contents of 'toPaste' because the clipboard resource
+			//    has no cross-resource containment
 			Iterator iter = EcoreUtil.getAllContents(Collections.singleton(toPaste));
 			while (!result && iter.hasNext()) {
 				result = parentRes.getEObject(
@@ -260,6 +262,9 @@ public class PasteIntoParentOperation
 			EObject eObj = (EObject) it.next();
 			if ((eObj instanceof EAnnotation) == false) {
 				resolveLocalProxies(eObj);
+				
+				// OK to get all contents of 'eObj' because the clipboard resource
+				//    has no cross-resource containment
 				Iterator contentIt = eObj.eAllContents();
 				while (contentIt.hasNext()) {
 					resolveLocalProxies((EObject) contentIt.next());
@@ -365,6 +370,9 @@ public class PasteIntoParentOperation
 
 	private void fireCreateEvents() {
 		List elements = new ArrayList();
+		
+		// OK to get all contents because the elements were all pasted into
+		//    a single resource (no cross-resource containments)
 		Iterator it = EcoreUtil.getAllContents(getPastedElementSet());
 		while (it.hasNext()) {
 			elements.add(it.next());
@@ -410,6 +418,10 @@ public class PasteIntoParentOperation
 					.getPastedElement();
 				if (getPastedElementSet().contains(pastedChildElement)) {
 					recycleObjectId(pastedChildElement);
+					
+					// OK to get all contents of 'pastedChildElement' because we
+					//    paste all elements into the same resource (no
+					//    cross-resource containment)
 					TreeIterator contentIt = pastedChildElement.eAllContents();
 					while (contentIt.hasNext()) {
 						recycleObjectId((EObject) contentIt.next());
@@ -461,6 +473,9 @@ public class PasteIntoParentOperation
 			pastedEObject = (EObject) it.next();
 			checkReferences(pastedEObject);
 			//now, resolveReferences for contained elements recursively
+			// OK to get all contents of 'pastedEObject' because we
+			//    paste all elements into the same resource (no
+			//    cross-resource containment)
 			TreeIterator contentIt = pastedEObject.eAllContents();
 			while (contentIt.hasNext()) {
 				checkReferences((EObject) contentIt.next());

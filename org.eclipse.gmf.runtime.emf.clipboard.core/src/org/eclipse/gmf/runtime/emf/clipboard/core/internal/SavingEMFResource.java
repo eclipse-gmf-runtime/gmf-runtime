@@ -101,8 +101,11 @@ public class SavingEMFResource
 		Iterator entryIt = parentObjectMap.entrySet().iterator();
 		while (entryIt.hasNext()) {
 			Map.Entry entry = (Map.Entry) entryIt.next();
+			
+			// get the basic list view of the contents list to avoid resolving
+			//    cross-resource containment proxies
 			Collections.sort((List) entry.getValue(), new ListIndexComparator(
-				((EObject) entry.getKey()).eContents()));
+				((InternalEList) ((EObject) entry.getKey()).eContents()).basicList()));
 			list.addAll((List) entry.getValue());
 		}
 		contentSet = new LinkedHashSet(list);
@@ -120,6 +123,9 @@ public class SavingEMFResource
 		while (it.hasNext()) {
 			EObject eObj = (EObject) it.next();
 			addToSerializationAnnotation(eAnnotation, eObj);
+			
+			// OK to resolve containment proxies because we must load the
+			//    entire model sub-tree in order to copy it
 			TreeIterator contentIt = eObj.eAllContents();
 			while (contentIt.hasNext()) {
 				EObject childEObj = (EObject) contentIt.next();
@@ -211,6 +217,13 @@ public class SavingEMFResource
 
 	protected XMLSave createXMLSave() {
 		return new XMISaveImpl(createXMLHelper()) {
+
+			protected void saveElement(InternalEObject o, EStructuralFeature f) {
+				// do not save cross-resource-contained objects as hrefs, because
+				//    the clipboard resource must actually duplicate all of the
+				//    original data
+				saveElement((EObject) o, f);
+			}
 
 			protected void saveElement(EObject o, EStructuralFeature f) {
 				if (excludedObjects.contains(o)) {

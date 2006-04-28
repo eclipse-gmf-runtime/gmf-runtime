@@ -77,6 +77,8 @@ public class CopyingResource
 	 *  
 	 */
 	private void createNewIDs() {
+		// OK to get all contents because we have to copy
+		//    the entire model content of this resource
 		Iterator it = xmlResource.getAllContents();
 		while (it.hasNext()) {
 			setID((EObject) it.next(), EcoreUtil.generateUUID());
@@ -234,7 +236,18 @@ public class CopyingResource
 	}
 
 	private boolean isInResource(EObject eObject) {
-		return (eObject.eResource() == xmlResource);
+		// in case of cross-resource containment, the 'eObject' may be in a
+		//     different resource than xmlResource, though one of its containers
+		//     may be
+		while (eObject != null) {
+			if (((InternalEObject) eObject).eDirectResource() == xmlResource) {
+				return true;
+			}
+			
+			eObject = eObject.eContainer();
+		}
+		
+		return false;
 	}
 
 	public EList getContents() {
@@ -320,10 +333,21 @@ public class CopyingResource
 	}
 
 	private void copyIDs() {
+		// OK to get all contents because we have to copy
+		//    the entire model content of this resource
+		XMLResource lastRes = null;
+		
 		for (Iterator iter = xmlResource.getAllContents(); iter.hasNext(); ) {
-			EObject eObject = (EObject)iter.next();
-			getEObjectToIDMap().put(eObject, xmlResource.getID(eObject));
-			getIDToEObjectMap().put(xmlResource.getID(eObject), eObject);
+			InternalEObject eObject = (InternalEObject)iter.next();
+			
+			if (eObject.eDirectResource() != null) {
+				// ensure that we only ask the resource that actually contains
+				//    an object for that object's ID
+				lastRes = (XMLResource) eObject.eDirectResource();
+			}
+			
+			getEObjectToIDMap().put(eObject, lastRes.getID(eObject));
+			getIDToEObjectMap().put(lastRes.getID(eObject), eObject);
 		}
 	}
 }

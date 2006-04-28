@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
 
@@ -240,18 +241,11 @@ public class AbstractClipboardSupport
 	 * Simply removes an <code>eObject</code> from its container.
 	 */
 	public void destroy(EObject eObject) {
-		EObject container = eObject.eContainer();
+		EcoreUtil.remove(eObject);
 		
-		if (container != null) {
-			EReference ref = eObject.eContainmentFeature();
-			
-			if (ref != null) {  // shouldn't be null!
-				if (ref.isMany()) {
-					((Collection) container.eGet(ref)).remove(eObject);
-				} else {
-					container.eSet(ref, null);
-				}
-			}
+		if (eObject.eResource() != null) {
+			// it was a cross-resource-contained element
+			eObject.eResource().getContents().remove(eObject);
 		}
 	}
 
