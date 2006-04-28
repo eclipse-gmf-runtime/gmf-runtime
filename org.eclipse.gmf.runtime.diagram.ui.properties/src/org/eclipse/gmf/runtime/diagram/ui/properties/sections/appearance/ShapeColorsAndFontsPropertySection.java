@@ -93,6 +93,7 @@ public class ShapeColorsAndFontsPropertySection
 		Image overlyedImage = new ColorOverlayImageDescriptor(
 					DiagramUIPropertiesImages.DESC_FILL_COLOR
 					.getImageData(), fillColor).createImage();
+        disposeImage(fillColorButton.getImage());
 		fillColorButton.setImage(overlyedImage);
 		}
 	}

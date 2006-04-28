@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -128,7 +129,10 @@ public class ConnectionAppearancePropertySection
 	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection#initializeControls(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void initializeControls(Composite parent) {
-		super.initializeControls(parent);
+        composite = getWidgetFactory().createFlatFormComposite(parent);
+        FormLayout layout = (FormLayout) composite.getLayout();
+        layout.spacing = 3;
+        
 		Composite groups = getWidgetFactory().createComposite(composite);
 		groups.setLayout(new GridLayout(2, false));		
 		createFontsAndColorsGroups(groups);		

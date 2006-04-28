@@ -158,7 +158,7 @@ public class ColorsAndFontsPropertySection
 
 	protected Button fontColorButton;
 
-	protected Button lineColorButton;
+    protected Button lineColorButton;
 
 	protected RGB fontColor;
 
@@ -187,16 +187,8 @@ public class ColorsAndFontsPropertySection
 		GridLayout layout = new GridLayout(1, false);
 		colorsAndFontsGroup.setLayout(layout);
 
-		/*Composite toolBar = */createFontsGroup(colorsAndFontsGroup);
+		createFontsGroup(colorsAndFontsGroup);
 
-		//CoolItem coolItem = new CoolItem(coolBar, SWT.NULL);
-		// set the control of the coolItem
-		//coolItem.setControl(toolBar);
-		// You have to specify the size
-		//Point size = toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		//Point coolSize = coolItem.computeSize(size.x, size.y);
-		//coolItem.setSize(coolSize);
-		
 		return colorsAndFontsGroup;
 
 	}
@@ -389,6 +381,7 @@ public class ColorsAndFontsPropertySection
 				executeAsCompositeCommand(commandName, commands);
 				Image overlyedImage = new ColorOverlayImageDescriptor(
 					imageDescriptor.getImageData(), color).createImage();
+                disposeImage(button.getImage());
 				button.setImage(overlyedImage);
 			}
 
@@ -509,15 +502,17 @@ public class ColorsAndFontsPropertySection
 	 */
 	public void refresh() {
 		if(!isDisposed()){
-		Image overlyedImage = new ColorOverlayImageDescriptor(
+            Image overlyedImage = new ColorOverlayImageDescriptor(
 				DiagramUIPropertiesImages.DESC_FONT_COLOR.getImageData(),
 				fontColor).createImage();
-		fontColorButton.setImage(overlyedImage);
+            disposeImage(fontColorButton.getImage());
+            fontColorButton.setImage(overlyedImage);
 
-		overlyedImage = new ColorOverlayImageDescriptor(
+            overlyedImage = new ColorOverlayImageDescriptor(
 				DiagramUIPropertiesImages.DESC_LINE_COLOR.getImageData(),
 				lineColor).createImage();
-		lineColorButton.setImage(overlyedImage);
+            disposeImage(lineColorButton.getImage());
+            lineColorButton.setImage(overlyedImage);
 
 		executeAsReadAction(new Runnable() {
 
@@ -622,4 +617,41 @@ public class ColorsAndFontsPropertySection
 		updateColorCache();
 	}
 
+    /**
+     * Dispose the image if it was created locally to avoid a leak. Do not
+     * dispose the images in the registry.
+     * 
+     * @param image
+     */
+    protected void disposeImage(Image image) {
+        if (image == null) {
+            return;
+        }
+        
+        if (image.equals(DiagramUIPropertiesImages
+            .get(DiagramUIPropertiesImages.IMG_FILL_COLOR))
+            || image.equals(DiagramUIPropertiesImages
+                .get(DiagramUIPropertiesImages.IMG_LINE_COLOR))
+            || image.equals(DiagramUIPropertiesImages
+                .get(DiagramUIPropertiesImages.IMG_FONT_COLOR))) {
+            return;
+        }
+
+        if (! image.isDisposed()) {
+            image.dispose();
+        }
+    }
+
+    public void dispose() {
+        if (! fontColorButton.isDisposed()) {
+            disposeImage(fontColorButton.getImage());
+        }
+        if (! lineColorButton.isDisposed()) {
+            disposeImage(lineColorButton.getImage());
+        }
+        if (! fillColorButton.isDisposed()) {
+            disposeImage(fillColorButton.getImage());
+        }
+        super.dispose();
+    }
 }
