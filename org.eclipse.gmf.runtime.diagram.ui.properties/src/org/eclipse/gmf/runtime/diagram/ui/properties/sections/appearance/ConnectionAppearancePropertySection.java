@@ -364,68 +364,88 @@ public class ConnectionAppearancePropertySection
 
 	public void refresh() {
 		super.refresh();
-		try {
-			executeAsReadAction(new Runnable() {
+        if (!isDisposed()) {
+            try {
+                executeAsReadAction(new Runnable() {
 
-				public void run() {
+                    public void run() {
 
-					// Deselect all the radio buttons;
-					// the appropriate radio buttons will be properly selected below				 
-					for (Iterator i = buttons.keySet().iterator(); i.hasNext();) {
-						Button radioButton = (Button) buttons.get(i.next());
-						radioButton.setSelection(false);
-					}
-															
-					// Update display from model
-					ConnectionEditPart obj = (ConnectionEditPart) getSingleInput();
+                        // Deselect all the radio buttons;
+                        // the appropriate radio buttons will be properly
+                        // selected below
+                        for (Iterator i = buttons.keySet().iterator(); i
+                            .hasNext();) {
+                            Button radioButton = (Button) buttons.get(i.next());
+                            radioButton.setSelection(false);
+                        }
 
-					if (!avoidObstaclesButton.isDisposed()) {
-						Boolean val = (Boolean) obj
-							.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_AvoidObstructions());
-						avoidObstaclesButton.setSelection(val.booleanValue());
-					}
+                        // Update display from model
+                        ConnectionEditPart obj = (ConnectionEditPart) getSingleInput();
 
-					if (!closestDistanceButton.isDisposed()) {
-						Boolean val = (Boolean) obj
-							.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_ClosestDistance());
-						closestDistanceButton.setSelection(val.booleanValue());
-					}
+                        if (!avoidObstaclesButton.isDisposed()) {
+                            Boolean val = (Boolean) obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_AvoidObstructions());
+                            avoidObstaclesButton.setSelection(val
+                                .booleanValue());
+                        }
 
-					if (!reverseJumpLinksButton.isDisposed()) {
-						Boolean val = (Boolean) obj
-							.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_JumpLinksReverse());
-						reverseJumpLinksButton.setSelection(val.booleanValue());
-					}
+                        if (!closestDistanceButton.isDisposed()) {
+                            Boolean val = (Boolean) obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_ClosestDistance());
+                            closestDistanceButton.setSelection(val
+                                .booleanValue());
+                        }
 
-					Button button = (Button) buttons.get(obj
-						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_JumpLinkStatus()));
-					if (button != null)
-						button.setSelection(true);
+                        if (!reverseJumpLinksButton.isDisposed()) {
+                            Boolean val = (Boolean) obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_JumpLinksReverse());
+                            reverseJumpLinksButton.setSelection(val
+                                .booleanValue());
+                        }
 
-					button = (Button) buttons.get(obj
-						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_JumpLinkType()));
-					if (button != null)
-						button.setSelection(true);
+                        Button button = (Button) buttons
+                            .get(obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_JumpLinkStatus()));
+                        if (button != null)
+                            button.setSelection(true);
 
-					// determine if tree routing is supported
-					Button treeRoutingButton = (Button)buttons.get(Routing.TREE_LITERAL);
-					if (treeRoutingButton != null)
-						treeRoutingButton.setEnabled(obj instanceof ITreeBranchEditPart);
-					
-					button = (Button) buttons.get(obj
-						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_Routing()));
-					if (button != null)
-						button.setSelection(true);
+                        button = (Button) buttons
+                            .get(obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_JumpLinkType()));
+                        if (button != null)
+                            button.setSelection(true);
 
-					button = (Button) buttons.get(obj
-						.getStructuralFeatureValue(NotationPackage.eINSTANCE.getRoutingStyle_Smoothness()));
-					if (button != null)
-						button.setSelection(true);
+                        // determine if tree routing is supported
+                        Button treeRoutingButton = (Button) buttons
+                            .get(Routing.TREE_LITERAL);
+                        if (treeRoutingButton != null)
+                            treeRoutingButton
+                                .setEnabled(obj instanceof ITreeBranchEditPart);
 
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+                        button = (Button) buttons
+                            .get(obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_Routing()));
+                        if (button != null)
+                            button.setSelection(true);
+
+                        button = (Button) buttons
+                            .get(obj
+                                .getStructuralFeatureValue(NotationPackage.eINSTANCE
+                                    .getRoutingStyle_Smoothness()));
+                        if (button != null)
+                            button.setSelection(true);
+
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 	}
 }
