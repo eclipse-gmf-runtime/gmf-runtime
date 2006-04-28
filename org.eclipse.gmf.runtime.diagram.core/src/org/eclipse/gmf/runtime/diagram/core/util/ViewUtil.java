@@ -463,7 +463,7 @@ public class ViewUtil{
 	 * resolves the passed <code>View<code>'s semantic element, and returns it.
 	 * If the semantic element is unresolvable the method will returns <code>null</code>
 	 * @param view the view to use to get the semantic element
-	 * @return the semanticelement or null if there is no semantic element or if it is unresolvable
+     * @return the semanticelement or null if there is no semantic element or if it is unresolvable
 	 */
 	public static EObject resolveSemanticElement(View view) {
 	    EObject element = view.getElement();
@@ -480,16 +480,15 @@ public class ViewUtil{
 	 * resolves the passed element, and returns it.
 	 * If the element is unresolvable the method will returns <code>null</code>
 	 * @param the element to resolve
-	 * @return the element or null if it is unresolvable
+     * @return the element or null if it is unresolvable
 	 */
 	public static EObject resolve(EObject object){
-		if (object!=null){
-			if (object.eIsProxy())
-				return EMFCoreUtil.resolve(TransactionUtil.getEditingDomain(object), object);
-			else
-				return object;
+		if (object!=null && object.eIsProxy()){
+            TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(object);
+            if (domain != null)
+                return EMFCoreUtil.resolve(domain, object);
 		}
-	    return null;
+	    return object;
 	}
 	
 	/** 
