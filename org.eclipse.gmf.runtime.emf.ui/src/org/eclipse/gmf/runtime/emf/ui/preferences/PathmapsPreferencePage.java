@@ -59,6 +59,8 @@ public class PathmapsPreferencePage
 	protected Control createContents(Composite parent) {
 		GridData gridData = null;
 		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setFont(parent.getFont());
+		
 		composite.setLayout(new GridLayout(3, false));
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
@@ -255,6 +257,8 @@ public class PathmapsPreferencePage
 		ResourcesPlugin.getWorkspace().getPathVariableManager().addChangeListener(pathVariableChangeListener);
 		
 		disposed = false;
+		
+		applyDialogFont(composite);
 		
 		return composite;
 	}
