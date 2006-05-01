@@ -36,13 +36,13 @@ public class MapModeUtil {
             return MapModeTypes.DEFAULT_MM;
         }
         
+        if (fig instanceof IMapMode)
+            return (IMapMode)fig;
+        
         if (fig.getParent() == null) {
             Log.warning(Draw2dPlugin.getInstance(), IStatus.WARNING, "MapModeUtil#getMapMode(IFigure fig) fig parameter must be attached to a parent - using default MapMode");//$NON-NLS-1$
             return MapModeTypes.DEFAULT_MM;
         }
-        
-		if (fig instanceof IMapMode)
-			return (IMapMode)fig;
 		
 		return getMapMode(fig.getParent());
 	}
