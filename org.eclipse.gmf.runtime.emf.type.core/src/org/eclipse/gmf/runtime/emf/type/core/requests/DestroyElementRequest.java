@@ -14,6 +14,9 @@ package org.eclipse.gmf.runtime.emf.type.core.requests;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.emf.type.core.ClientContextManager;
+import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
+import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultMetamodelType;
 
@@ -139,7 +142,10 @@ public class DestroyElementRequest extends DestroyRequest {
 			EObject element = getElementToDestroy();
 			
 			if ((element != null) && (element.eResource() != null)) {
-				result = DefaultMetamodelType.getInstance();
+				IClientContext context = ClientContextManager.getInstance()
+						.getClientContextFor(element);
+				result = new EditHelperContext(DefaultMetamodelType
+						.getInstance(), context);
 			}
 		}
 		
