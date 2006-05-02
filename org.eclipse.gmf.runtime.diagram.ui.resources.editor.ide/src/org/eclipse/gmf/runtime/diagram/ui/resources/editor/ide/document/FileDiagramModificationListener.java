@@ -55,11 +55,12 @@ public class FileDiagramModificationListener
 		final Diagram diagram = document.getDiagram();
 
 		NotificationFilter diagramResourceModifiedFilter = NotificationFilter
-			.createNotifierFilter(diagram.eResource()).and(
-				NotificationFilter.createEventTypeFilter(Notification.SET))
-			.and(
-				NotificationFilter.createFeatureFilter(Resource.class,
-					Resource.RESOURCE__IS_MODIFIED));
+            .createNotifierFilter(diagram.eResource()).and(
+                NotificationFilter.createEventTypeFilter(Notification.SET).or(
+                    NotificationFilter
+                        .createEventTypeFilter(Notification.UNSET))).and(
+                NotificationFilter.createFeatureFilter(Resource.class,
+                    Resource.RESOURCE__IS_MODIFIED));
 
 		if (diagramSavedListener == null) {
 			diagramSavedListener = new DemultiplexingListener(

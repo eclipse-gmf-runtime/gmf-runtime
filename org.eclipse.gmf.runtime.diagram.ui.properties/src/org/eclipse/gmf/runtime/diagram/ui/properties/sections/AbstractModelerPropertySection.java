@@ -363,9 +363,10 @@ public abstract class AbstractModelerPropertySection
 	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
 	 */
 	public NotificationFilter getFilter() {
-		return NotificationFilter.createEventTypeFilter(Notification.SET).and(
+        return NotificationFilter.createEventTypeFilter(Notification.SET).or(
+            NotificationFilter.createEventTypeFilter(Notification.UNSET)).and(
             NotificationFilter.createNotifierTypeFilter(EObject.class));
-	}
+    }
 
 
 	/**

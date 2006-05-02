@@ -52,11 +52,12 @@ public class DiagramModificationListener {
 		editingDomain = TransactionUtil.getEditingDomain(diagram);
 
 		NotificationFilter diagramResourceModifiedFilter = NotificationFilter
-			.createNotifierFilter(diagram.eResource()).and(
-				NotificationFilter.createEventTypeFilter(Notification.SET))
-			.and(
-				NotificationFilter.createFeatureFilter(Resource.class,
-					Resource.RESOURCE__IS_MODIFIED));
+            .createNotifierFilter(diagram.eResource()).and(
+                NotificationFilter.createEventTypeFilter(Notification.SET).or(
+                    NotificationFilter
+                        .createEventTypeFilter(Notification.UNSET))).and(
+                NotificationFilter.createFeatureFilter(Resource.class,
+                    Resource.RESOURCE__IS_MODIFIED));
 
 		if (diagramChangeListener == null) {
 			diagramChangeListener = new DemultiplexingListener(

@@ -205,6 +205,7 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
      */
     public NotificationFilter getFilter() {
         return NotificationFilter.createEventTypeFilter(Notification.SET).or(
+            NotificationFilter.createEventTypeFilter(Notification.UNSET)).or(
             NotificationFilter.createEventTypeFilter(Notification.ADD)).or(
             NotificationFilter.createEventTypeFilter(Notification.ADD_MANY))
             .or(NotificationFilter.createEventTypeFilter(Notification.REMOVE))
