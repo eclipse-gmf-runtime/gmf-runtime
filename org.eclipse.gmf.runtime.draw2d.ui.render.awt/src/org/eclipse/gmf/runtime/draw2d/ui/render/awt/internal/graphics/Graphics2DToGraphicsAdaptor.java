@@ -82,8 +82,6 @@ public class Graphics2DToGraphicsAdaptor
 	 * @see org.apache.batik.ext.awt.g2d.DefaultGraphics2D#dispose()
 	 */
 	public void dispose() {
-		super.dispose();
-		
 		if (currentColor != null)
 			currentColor.dispose();
 		currentColor = null;
