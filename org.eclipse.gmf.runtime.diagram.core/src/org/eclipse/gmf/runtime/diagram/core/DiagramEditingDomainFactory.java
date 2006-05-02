@@ -38,6 +38,7 @@ import org.eclipse.emf.transaction.impl.InternalTransaction;
 import org.eclipse.emf.transaction.impl.ReadWriteValidatorImpl;
 import org.eclipse.emf.transaction.impl.TransactionValidator;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
+import org.eclipse.emf.transaction.util.ConditionalRedoCommand;
 import org.eclipse.emf.transaction.util.TriggerCommand;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.eclipse.emf.workspace.impl.WorkspaceCommandStackImpl;
@@ -220,7 +221,9 @@ public class DiagramEditingDomainFactory
 		}
 	}
 	
-	private static class DiagramEventBrokerCommand extends AbstractCommand {
+	private static class DiagramEventBrokerCommand
+			extends AbstractCommand
+			implements ConditionalRedoCommand {
 		private final TransactionChangeDescription change;
 		
 		DiagramEventBrokerCommand(TransactionChangeDescription change) {
@@ -245,6 +248,10 @@ public class DiagramEditingDomainFactory
 			}
 		}
 		
+		public boolean canRedo() {
+			return (change != null) && change.canApply();
+		}
+		
 		public final void redo() {
 			if (change != null) {
 				change.applyAndReverse();
@@ -257,6 +264,8 @@ public class DiagramEditingDomainFactory
 				protected boolean prepare() { return true; }
 				public void execute() {}
 				public boolean canUndo() { return true;	}
+				// this command does not need to implement canRedo() because it
+				//    is assumed to be redoable, anyway, which is what we want
 				public void undo() {}
 				public void redo() {}}));
 	
