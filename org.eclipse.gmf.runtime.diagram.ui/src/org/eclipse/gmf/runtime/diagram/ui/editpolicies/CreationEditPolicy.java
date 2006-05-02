@@ -187,6 +187,10 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				getHost().getCommand(
 					new EditCommandRequestWrapper(
 						new MoveRequest(editingDomain, context, element)));
+            
+              if (moveSemanticCmd == null) {
+                  return org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand.INSTANCE;
+              }
 			
 			cc.compose ( new CommandProxy(moveSemanticCmd) );
 		}
@@ -292,7 +296,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 					(CreateElementRequest)requestAdapter.getAdapter(
 						CreateElementRequest.class), request.getExtendedData()));
 
-		if (createElementCommand == null)
+		if (createElementCommand == null) 
 			return UnexecutableCommand.INSTANCE;
 
 		// create the semantic create wrapper command
