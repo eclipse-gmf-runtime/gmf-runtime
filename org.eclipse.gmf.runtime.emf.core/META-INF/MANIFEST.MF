@@ -8,7 +8,6 @@ Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.emf.core,
  org.eclipse.gmf.runtime.emf.core.clipboard,
- org.eclipse.gmf.runtime.emf.core.internal.exceptions;x-internal:=true,
  org.eclipse.gmf.runtime.emf.core.internal.l10n;x-internal:=true,
  org.eclipse.gmf.runtime.emf.core.internal.plugin;x-internal:=true,
  org.eclipse.gmf.runtime.emf.core.internal.resources;x-friends:="org.eclipse.gmf.runtime.emf.ui",
