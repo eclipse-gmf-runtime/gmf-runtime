@@ -11,10 +11,6 @@
 <plugin>
 
      <extension-point id="modelingAssistantProviders" name="%ext.modelingAssistantProviders" schema="schema/modelingAssistantProviders.exsd"/>
-      
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.gmf.runtime.emf.ui.preferences.PreferenceInitializer" />
-   </extension>
 
    <extension
          id="modelingNewWizards"
