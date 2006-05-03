@@ -206,6 +206,16 @@ public class PaletteServiceTests
 		}
 	}
     
+    private static boolean shouldStaticMethodDrawerBeShown = false;
+    
+    /**
+     * Called by the extension point in the XML and used by the {@link #testStaticMethodInPaletteExtension()}.
+     * @return
+     */
+    public static boolean shouldStaticMethodDrawerBeShown() {
+        return shouldStaticMethodDrawerBeShown;
+    }
+    
     /**
      * We need a special editor type so that the XML palette providers can
      * contribute to this editor and only.
@@ -478,7 +488,74 @@ public class PaletteServiceTests
         assertTrue(ovalAndCylinderDrawerFound);
 
      }
+    
+    /**
+     * Tests the ability of a client to use a static method to assist in
+     * identifying the editor in the extension point XML.This test uses the
+     * palette extensions defined in the XML for this plugin.
+     * 
+     * @throws Exception
+     */
+    public void testStaticMethodInPaletteExtension()
+        throws Exception {
 
+        shouldStaticMethodDrawerBeShown = false;
+
+        PaletteServiceTestEditor editor = new PaletteServiceTestEditor();
+        PaletteRoot paletteRoot = PaletteService.getInstance().createPalette(
+            editor, "DUMMY CONTENT"); //$NON-NLS-1$
+        
+        boolean staticMethodDrawerFound = false;        
+        for (Iterator iter = paletteRoot.getChildren().iterator(); iter.hasNext();) {
+            Object paletteEntry = iter.next();
+            if (paletteEntry instanceof PaletteDrawer) {
+                PaletteDrawer drawer = (PaletteDrawer) paletteEntry;
+                if (drawer.getId().equals("staticMethodDrawer")) { //$NON-NLS-1$
+                    staticMethodDrawerFound = true;
+                } 
+            }           
+        }        
+        assertFalse(staticMethodDrawerFound);
+        
+        shouldStaticMethodDrawerBeShown = true;
+
+        editor = new PaletteServiceTestEditor();
+        paletteRoot = PaletteService.getInstance().createPalette(
+            editor, "DUMMY CONTENT"); //$NON-NLS-1$
+        
+        staticMethodDrawerFound = false;        
+        for (Iterator iter = paletteRoot.getChildren().iterator(); iter.hasNext();) {
+            Object paletteEntry = iter.next();
+            if (paletteEntry instanceof PaletteDrawer) {
+                PaletteDrawer drawer = (PaletteDrawer) paletteEntry;
+                if (drawer.getId().equals("staticMethodDrawer")) { //$NON-NLS-1$
+                    staticMethodDrawerFound = true;
+                } 
+            }           
+        }        
+        assertTrue(staticMethodDrawerFound);
+
+        shouldStaticMethodDrawerBeShown = false;
+
+        editor = new PaletteServiceTestEditor();
+        paletteRoot = PaletteService.getInstance().createPalette(
+            editor, "DUMMY CONTENT"); //$NON-NLS-1$
+        
+        staticMethodDrawerFound = false;        
+        for (Iterator iter = paletteRoot.getChildren().iterator(); iter.hasNext();) {
+            Object paletteEntry = iter.next();
+            if (paletteEntry instanceof PaletteDrawer) {
+                PaletteDrawer drawer = (PaletteDrawer) paletteEntry;
+                if (drawer.getId().equals("staticMethodDrawer")) { //$NON-NLS-1$
+                    staticMethodDrawerFound = true;
+                } 
+            }           
+        }        
+        assertFalse(staticMethodDrawerFound);
+
+     }
+
+    
 	// /**
 	// * Prints out the palette entries to the console. Used for debugging.
 	// *

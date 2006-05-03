@@ -171,4 +171,23 @@
          </contribution>
       </paletteProvider>
    </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority name="Lowest"/>
+         <editor class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor"/>
+         <content>
+            <staticMethod
+                  name="org.eclipse.gmf.tests.runtime.diagram.ui/org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests.shouldStaticMethodDrawerBeShown()"
+                  value="true"/>
+         </content>
+         <contribution>
+            <entry
+                  id="staticMethodDrawer"
+                  kind="drawer"
+                  label="staticMethodDrawer"
+                  path="/"/>
+         </contribution>
+      </paletteProvider>
+   </extension>
 </plugin>
