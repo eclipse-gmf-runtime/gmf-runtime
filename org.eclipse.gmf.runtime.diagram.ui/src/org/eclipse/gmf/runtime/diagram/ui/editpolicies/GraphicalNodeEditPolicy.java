@@ -30,6 +30,7 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
@@ -756,9 +757,11 @@ public class GraphicalNodeEditPolicy
 			CreateConnectionRequest request) {
 		if (connectionType instanceof IElementType) {
 			if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
-				return getHost().getCommand(
-					((CreateUnspecifiedTypeConnectionRequest) request)
-						.getRequestForType((IElementType) connectionType));
+				CreateRequest createRequest = ((CreateUnspecifiedTypeConnectionRequest) request)
+						.getRequestForType((IElementType) connectionType);
+				if (createRequest != null) {
+					return getHost().getCommand(createRequest);
+				}
 			}
 		}
 		return null;
