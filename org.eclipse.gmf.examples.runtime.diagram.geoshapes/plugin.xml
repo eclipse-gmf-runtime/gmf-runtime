@@ -141,4 +141,8 @@
          </contribution>
       </paletteProvider>
    </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.preferences.GeoshapesPreferenceInitializer"/>
+  </extension>
 </plugin>

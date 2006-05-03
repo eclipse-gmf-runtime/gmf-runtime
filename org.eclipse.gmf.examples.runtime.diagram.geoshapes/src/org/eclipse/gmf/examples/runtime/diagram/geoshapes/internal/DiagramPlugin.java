@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal;
 
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 
 /**
@@ -20,6 +22,12 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @author qili
  */
 public class DiagramPlugin extends AbstractUIPlugin {
+    
+    /**
+     * The geo shapes diagram editor ID. This matches the id used in this
+     * plugin's XML for the editor extension point.
+     */
+    public static final String EDITOR_ID = "GeoshapeEditor"; //$NON-NLS-1$
 
 	/**
 	 * The shared instance.
@@ -51,5 +59,13 @@ public class DiagramPlugin extends AbstractUIPlugin {
 	public static String getPluginId() {
 		return getInstance().getBundle().getSymbolicName();
 	}
+
+    public void start(BundleContext context)
+        throws Exception {
+        super.start(context);
+         PreferencesHint.registerPreferenceStore(
+             new PreferencesHint(EDITOR_ID), getPreferenceStore());
+    }
+    
 
 }

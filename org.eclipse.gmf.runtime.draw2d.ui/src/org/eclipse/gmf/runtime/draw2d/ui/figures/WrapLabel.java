@@ -1343,6 +1343,8 @@ public class WrapLabel
 	 */
 	private Dimension getTextExtents(String s, Font f) {
 		Dimension d = FigureUtilities.getTextExtents(s, f);
+        // hieght should be set using the font hight not the string height
+        d.height = FigureUtilities.getFontMetrics(f).getHeight();
 		return new Dimension(MapModeUtil.getMapMode(this).DPtoLP(d.width), 
 							MapModeUtil.getMapMode(this).DPtoLP(d.height));
 	}
