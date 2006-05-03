@@ -643,13 +643,13 @@ public class ColorsAndFontsPropertySection
     }
 
     public void dispose() {
-        if (! fontColorButton.isDisposed()) {
+        if (fontColorButton != null && ! fontColorButton.isDisposed()) {
             disposeImage(fontColorButton.getImage());
         }
-        if (! lineColorButton.isDisposed()) {
+        if (lineColorButton != null && ! lineColorButton.isDisposed()) {
             disposeImage(lineColorButton.getImage());
         }
-        if (! fillColorButton.isDisposed()) {
+        if (fillColorButton != null && ! fillColorButton.isDisposed()) {
             disposeImage(fillColorButton.getImage());
         }
         super.dispose();
