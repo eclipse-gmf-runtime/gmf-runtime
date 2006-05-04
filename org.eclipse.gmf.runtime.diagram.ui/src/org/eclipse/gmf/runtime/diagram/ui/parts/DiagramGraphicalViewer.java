@@ -217,7 +217,7 @@ public class DiagramGraphicalViewer
         if (selectionEventPending)
             return;
         selectionEventPending = true;
-        Display display = Display.getCurrent();
+        Display display = PlatformUI.getWorkbench().getDisplay();
         if (display != null) {
             display.asyncExec(new Runnable() {
 
@@ -252,7 +252,7 @@ public class DiagramGraphicalViewer
         if (selectionEventPending)
             return;
         selectionEventPending = true;
-        Display display = Display.getCurrent();
+        Display display = PlatformUI.getWorkbench().getDisplay();
         if (display != null) {
             display.asyncExec(new Runnable() {
 
