@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -296,8 +297,10 @@ public class SavingEMFResource
 	}
 
 	private String getOriginalID(EObject eObject) {
-		if (eObject.eResource() != this) {
-			return ((XMLResource) eObject.eResource()).getID(eObject);
+		Resource res = eObject.eResource();
+		
+		if ((res != this) && (res != null)) {
+			return ((XMLResource) res).getID(eObject);
 		}
 		return null;
 	}
@@ -315,9 +318,13 @@ public class SavingEMFResource
 			if (original != null) {
 				id = getOriginalID(original);
 			} else {
-				//we'll use our own assigned ids, (detached view-elements bug)
-				assert eObject.eResource() == this: "eObject.eResource not same as self"; //$NON-NLS-1$
-				id = super.getID(eObject);
+				Resource res = eObject.eResource();
+				
+				if (res != null) {
+					//we'll use our own assigned ids, (detached view-elements bug)
+					assert eObject.eResource() == this: "eObject.eResource not same as self"; //$NON-NLS-1$
+					id = super.getID(eObject);
+				}
 			}
 		}
 		return id;
