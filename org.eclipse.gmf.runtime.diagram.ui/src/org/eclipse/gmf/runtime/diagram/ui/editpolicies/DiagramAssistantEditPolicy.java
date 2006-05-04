@@ -70,7 +70,7 @@ public abstract class DiagramAssistantEditPolicy
 		 * only add the diagram assistant when the user stops moving the mouse).
 		 */
 		public void run() {
-			if (originalMouseLocation.equals(getMouseLocation())) {
+			if (originalMouseLocation != null && originalMouseLocation.equals(getMouseLocation())) {
 				if (isDiagramAssistantShowing()
 					&& !shouldAvoidHidingDiagramAssistant()) {
 					hideDiagramAssistant();
