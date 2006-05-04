@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -75,7 +76,7 @@ public class EMFCoreUtil {
 			result = eClass.getEPackage().getEFactoryInstance().create(eClass);
 		}
 		
-		if (reference.isMany()) {
+		if (FeatureMapUtil.isMany(container,reference)) {
 			((Collection) container.eGet(reference)).add(result);
 		} else {
 			container.eSet(reference, result);

@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -845,7 +846,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			if (eOpposite != null && !eReference.isContainer()
 					&& !eReference.isContainment()
 					&& eObject.eIsSet(eReference)) {
-				if (eReference.isMany()) {
+				if (FeatureMapUtil.isMany(eObject,eReference)) {
 					Object collection = eObject.eGet(eReference);
 					for (Iterator j = resolve() ? ((Collection) collection)
 							.iterator() : ((InternalEList) collection)

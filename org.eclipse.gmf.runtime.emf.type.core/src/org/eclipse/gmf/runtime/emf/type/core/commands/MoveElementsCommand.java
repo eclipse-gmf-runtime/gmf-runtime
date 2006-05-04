@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
@@ -73,7 +74,7 @@ public class MoveElementsCommand extends EditElementCommand {
 			EReference feature = getTargetFeature(element);
 
 			if (feature != null) {
-				if (feature.isMany()) {
+				if (FeatureMapUtil.isMany(targetContainer, feature)) {
 					((Collection) targetContainer.eGet(feature)).add(element);
 
 				} else {

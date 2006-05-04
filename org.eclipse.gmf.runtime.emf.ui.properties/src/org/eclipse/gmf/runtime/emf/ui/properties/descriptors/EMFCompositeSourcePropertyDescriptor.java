@@ -196,6 +196,7 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
 
             if (!choiceOfValues.isEmpty()) {
 
+            	// TODO We need to properly handle unspecified multiplicities on the structural feature
                 if (feature.isMany()) {
                     boolean valid = true;
                     for (Iterator i = choiceOfValues.iterator(); i.hasNext();) {
@@ -216,6 +217,7 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
 
                     EDataType eDataType = (EDataType) eType;
                     if (eDataType.isSerializable()) {
+                    	// TODO We need to properly handle unspecified multiplicities on the structural feature
                         if (feature.isMany()) {
                             result = createComboBoxCellEditor(composite);
                         } else if (eDataType == EcorePackage.eINSTANCE

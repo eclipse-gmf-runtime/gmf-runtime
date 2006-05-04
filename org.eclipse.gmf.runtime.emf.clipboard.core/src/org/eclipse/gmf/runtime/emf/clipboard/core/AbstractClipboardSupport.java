@@ -195,7 +195,7 @@ public class AbstractClipboardSupport
 					EAttribute next = (EAttribute) iter.next();
 					
 					if ((next.getEType().getInstanceClass() == String.class)
-							&& !next.isMany()
+							&& next.getUpperBound() == 1
 							&& "name".equalsIgnoreCase(next.getName())) { //$NON-NLS-1$
 						
 						result = next;

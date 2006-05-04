@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.CopyObjects;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ResourceInfoProcessor;
@@ -399,7 +400,7 @@ public class CopyOperation
 				Object value = eObject.eGet(ref, true);
 				if (getClipboardOperationHelper().isCopyAlways(eObject, ref,
 					value)) {
-					if (ref.isMany()) {
+					if (FeatureMapUtil.isMany(eObject,ref)) {
 						List vals = (List) value;
 						if (vals.isEmpty() == false) {
 							Iterator valIt = vals.iterator();
@@ -529,7 +530,7 @@ public class CopyOperation
 				// (copy-parent-request <-> non-null-child)
 				if (doNotCopyEObjects != null) {
 					//many-refs will be handled in copyAll function
-					if (eReference.isMany() == false) {
+					if (!FeatureMapUtil.isMany(eObject,eReference)) {
 						if (doNotCopyEObjects
 							.contains(eObject.eGet(eReference))) {
 							return;
@@ -537,7 +538,7 @@ public class CopyOperation
 					}
 				}
 				if (isCritical(eObject, eReference)) {
-					if (eReference.isMany()) {
+					if (FeatureMapUtil.isMany(eObject,eReference)) {
 						((Collection) copiedEObject.eGet(eReference))
 							.addAll(copyAll(eObject, eReference));
 					} else {
@@ -563,7 +564,7 @@ public class CopyOperation
 			if (upperBound == 0) {
 				return false;
 			}
-			if (eReference.isMany() && !eObject.eIsSet(eReference))
+			if (FeatureMapUtil.isMany(eObject, eReference) && !eObject.eIsSet(eReference))
 				return false;
 			Object value = eObject.eGet(eReference);
 			if (value == null) {

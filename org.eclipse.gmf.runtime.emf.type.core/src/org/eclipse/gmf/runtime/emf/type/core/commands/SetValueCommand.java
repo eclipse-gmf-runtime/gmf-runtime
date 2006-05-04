@@ -18,6 +18,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
@@ -57,7 +58,7 @@ public class SetValueCommand
 	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 	    throws ExecutionException {
 
-		if (feature.isMany()) {
+		if (FeatureMapUtil.isMany(getElementToEdit(),feature)) {
 			((Collection) getElementToEdit().eGet(feature)).add(value);
 
 		} else {
@@ -77,7 +78,7 @@ public class SetValueCommand
             return false;
         }
 
-        if (value == null && feature.isMany()) {
+        if (value == null && FeatureMapUtil.isMany(getElementToEdit(), feature)) {
             return false;
         }
 

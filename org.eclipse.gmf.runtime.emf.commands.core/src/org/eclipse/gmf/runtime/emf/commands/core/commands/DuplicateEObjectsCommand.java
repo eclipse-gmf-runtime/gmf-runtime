@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
@@ -126,7 +127,7 @@ public abstract class DuplicateEObjectsCommand
 			EObject original = (EObject) iter.next();
 
 			EReference reference = original.eContainmentFeature();
-			if (reference == null || !reference.isMany()) {
+			if (reference == null || !FeatureMapUtil.isMany(original.eContainer(),reference)) {
 				return false;
 			}
 		}
@@ -161,7 +162,7 @@ public abstract class DuplicateEObjectsCommand
 
 			EReference reference = original.eContainmentFeature();
 			if (reference != null
-				&& reference.isMany()
+				&& FeatureMapUtil.isMany(original.eContainer(),reference)
 				&& ClipboardSupportUtil.isOkToAppendEObjectAt(
 					original.eContainer(), reference, duplicate)) {
 				

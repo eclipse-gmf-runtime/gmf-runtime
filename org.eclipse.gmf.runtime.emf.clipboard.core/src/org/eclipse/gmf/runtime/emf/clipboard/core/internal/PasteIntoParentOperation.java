@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.BasePasteOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
@@ -280,7 +281,7 @@ public class PasteIntoParentOperation
 			ref = (EReference) it.next();
 			if ((ref.isContainment() == false) && ref.isChangeable()) {
 				Object value = eObject.eGet(ref, true);
-				if (ref.isMany()) {
+				if (FeatureMapUtil.isMany(eObject, ref)) {
 					Collection collection = (Collection) value;
 					boolean withInverseElist = (collection instanceof EObjectWithInverseEList);
 					Iterator valIt = new ArrayList(collection).iterator();
@@ -495,7 +496,7 @@ public class PasteIntoParentOperation
 			// pasteSelectionFromString(..)
 			if (!reference.isContainment() && !reference.isContainer()
 				&& reference.isChangeable()) {
-				if (reference.isMany()) {
+				if (FeatureMapUtil.isMany(pastedEObject, reference)) {
 					if (!pastedEObject.eIsSet(reference)) {
 						continue;
 					}

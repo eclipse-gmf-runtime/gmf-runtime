@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.MergedEObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ObjectCopyType;
@@ -656,7 +657,7 @@ public class PasteChildOperation
 	protected EObject doPasteInto(EObject pasteIntoEObject, EReference reference) {
 		EObject childElement = null;
 		Object value = pasteIntoEObject.eGet(reference, true);
-		if (reference.isMany()) {
+		if (FeatureMapUtil.isMany(pasteIntoEObject,reference)) {
 			if (handleCollision(reference, (List) value, getEObject(),
 				getChildObjectInfo())) {
 				childElement = ClipboardSupportUtil.appendEObjectAt(
@@ -1044,7 +1045,7 @@ public class PasteChildOperation
 			reference = (EReference) it.next();
 			if (reference.isChangeable()) {
 				Object unresolvedEObjectValue = eObject.eGet(reference, false);
-				if (reference.isMany()) {
+				if (FeatureMapUtil.isMany(eObject, reference)) {
 					List childList = (List) unresolvedEObjectValue;
 					if (childList.isEmpty() == false) {
 						List targetObjectList = (List) targetEObject.eGet(

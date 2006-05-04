@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyReferenceRequest;
@@ -77,7 +78,7 @@ public class DestroyReferenceCommand
 		for (Iterator i = features.iterator(); i.hasNext();) {
 			EReference nextReference = (EReference) i.next();
 
-			if (nextReference.isMany()) {
+			if (FeatureMapUtil.isMany(getContainer(), nextReference)) {
 				Collection referenceCollection = (Collection) getContainer()
 					.eGet(nextReference);
 
