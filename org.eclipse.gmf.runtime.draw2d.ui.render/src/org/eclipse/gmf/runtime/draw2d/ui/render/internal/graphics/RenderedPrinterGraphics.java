@@ -35,7 +35,7 @@ import org.eclipse.swt.printing.Printer;
 public class RenderedPrinterGraphics extends PrinterGraphics 
 								implements DrawableRenderedImage {
 	
-	/* 
+    /* 
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#allowDelayRender()
 	 */
@@ -58,25 +58,51 @@ public class RenderedPrinterGraphics extends PrinterGraphics
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#drawRenderedImage(org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage, org.eclipse.draw2d.geometry.Rectangle, org.eclipse.gmf.runtime.draw2d.ui.render.RenderingListener)
 	 */
 	public RenderedImage drawRenderedImage(RenderedImage srcImage, Rectangle rect, RenderingListener listener) {
-		int nNewWidth = (int)Math.round(rect.width * getPrintScale());
-		int nNewHeight = (int)Math.round(rect.height * getPrintScale());
-		
-		RenderInfo info = srcImage.getRenderInfo();
-		info.setValues(nNewWidth, nNewHeight, 
-						info.shouldMaintainAspectRatio(), true,
-						info.getBackgroundColor(), info.getForegroundColor());
-		
-		RenderedImage img = srcImage.getNewRenderedImage(info);
-		
-		Image swtImg = img.getSWTImage();
-		drawImage(swtImg, rect.x, rect.y + rect.height - swtImg.getBounds().height);
-		return img;
+        int nNewWidth = (int)Math.round(rect.width * getPrintScale());
+        int nNewHeight = (int)Math.round(rect.height * getPrintScale());
+            
+        RenderInfo info = srcImage.getRenderInfo();
+        info.setValues(nNewWidth, nNewHeight, 
+                        info.shouldMaintainAspectRatio(), false, 
+                        info.getBackgroundColor(), info.getForegroundColor());
+            
+        RenderedImage img = srcImage.getNewRenderedImage(info);
+        
+        Image swtImg = null;
+        try {
+            swtImg = img.getSWTImage();
+        }
+        catch (OutOfMemoryError e) {
+            // don't do any scaling and rerender with anti-aliasing on
+            nNewWidth = rect.width;
+            nNewHeight = rect.height;
+            info.setValues(nNewWidth, nNewHeight, 
+                info.shouldMaintainAspectRatio(), true, 
+                info.getBackgroundColor(), info.getForegroundColor());
+            img = srcImage.getNewRenderedImage(info);
+            swtImg = img.getSWTImage();
+        }
+        catch (Exception ex) {
+            // don't do any scaling and rerender with anti-aliasing on
+            nNewWidth = rect.width;
+            nNewHeight = rect.height;
+            info.setValues(nNewWidth, nNewHeight, 
+                info.shouldMaintainAspectRatio(), true, 
+                info.getBackgroundColor(), info.getForegroundColor());
+            img = srcImage.getNewRenderedImage(info);
+            swtImg = img.getSWTImage();
+        }
+        
+        drawImage(swtImg, 0, 0, nNewWidth, nNewHeight, 
+                rect.x, rect.y, rect.width, rect.height);
+        
+        return img;
 	}
 	
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.draw2d.ui.render.internal.DrawableRenderedImage#getMaximumRenderSize()
 	 */
 	public Dimension getMaximumRenderSize() {
-		return null;
+        return null;
 	}
 }

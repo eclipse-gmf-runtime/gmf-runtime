@@ -15,6 +15,7 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.graphics;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.swt.graphics.Font;
@@ -37,7 +38,8 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 	
     private double printScale = 1.0;
     private boolean roundFonts = false;
-	
+    private Stack stateStack = new Stack();
+    
     /**
 	 * @return Returns the printScale.
 	 */
@@ -143,6 +145,32 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
         super.scale(amount);
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.draw2d.Graphics#popState()
+     */
+    public void popState() {
+        if (!stateStack.isEmpty())
+            printScale = ((Double)stateStack.pop()).doubleValue();
+        super.popState();
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.draw2d.Graphics#pushState()
+     */
+    public void pushState() {
+        stateStack.push(new Double(printScale));
+        super.pushState();
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.draw2d.Graphics#restoreState()
+     */
+    public void restoreState() {
+        if (!stateStack.isEmpty())
+            printScale = ((Double)stateStack.firstElement()).doubleValue();
+        super.restoreState();
+    }
+    
     /**
      * This should be escalated as a GEF / SWT problem - difficult to reproduce in 
      * logic example though.  The font size needs to scaled down to account for 
@@ -156,7 +184,7 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
        
        if (shouldRoundFonts()) {
            FontData fd = f.getFontData()[0];
-           int nAdjustedHeight = (int)(((fd.getHeight() - 0.5f) / printScale) * printScale);
+           int nAdjustedHeight = (int)(((fd.getHeight() - 0.5f) / getPrintScale()) * getPrintScale());
            if (fd.getHeight() != nAdjustedHeight) {
                fd.setHeight(nAdjustedHeight);    
                newFont = FontRegistry.getInstance().getFont(null, fd);   
