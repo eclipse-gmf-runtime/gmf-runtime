@@ -1343,10 +1343,20 @@ public class WrapLabel
 	 */
 	private Dimension getTextExtents(String s, Font f) {
 		Dimension d = FigureUtilities.getTextExtents(s, f);
-        // hieght should be set using the font hight not the string height
-        d.height = FigureUtilities.getFontMetrics(f).getHeight();
-		return new Dimension(MapModeUtil.getMapMode(this).DPtoLP(d.width), 
+        // height should be set using the font height and the number of lines
+        // in the string 
+        int lineCount = getLineCount(s);
+        d.height = FigureUtilities.getFontMetrics(f).getHeight()*lineCount;
+     	return new Dimension(MapModeUtil.getMapMode(this).DPtoLP(d.width), 
 							MapModeUtil.getMapMode(this).DPtoLP(d.height));
 	}
+
+    private int getLineCount(String s) {
+        StringTokenizer tokenizer = new StringTokenizer(s, "\n"); //$NON-NLS-1$
+        int count = tokenizer.countTokens();
+        if(count==0 && s.length()>0)
+            count++;
+        return count;
+    }
 	
 }
