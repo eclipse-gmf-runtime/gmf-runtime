@@ -102,6 +102,7 @@
       <complexType>
          <sequence>
             <element ref="method" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="staticMethod" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
