@@ -166,5 +166,22 @@ public class SetPropertyCommand extends AbstractTransactionalCommand {
 	protected void setPropertyName(String string) {
 		propertyName = string;
 	}
+    
+    /**
+     * Returns the value of the feature of the property
+     * @param view the view to use to get the value
+     * @param feature the feature to use
+     * @return the value of the property, or <code>null</code>
+     */
+    protected EStructuralFeature getPropertyStructuralFeature() {
+        if (getPropertyId() instanceof String) {
+            ENamedElement namedElement = PackageUtil
+                .getElement((String) getPropertyId());
+            if (namedElement instanceof EStructuralFeature) {
+                return (EStructuralFeature) namedElement;
+            }
+        }
+        return null;
+    }
 
 }

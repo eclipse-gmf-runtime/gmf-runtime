@@ -89,37 +89,6 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	 * coordinates.
 	 */
 	public static final int MIN_CLIENT_DP = 11;
-	
-	/**
-	 * @param compartmentTitle
-	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
-	 */
-	public ResizableCompartmentFigure(String compartmentTitle) {
-		this(compartmentTitle, MapModeUtil.getMapMode().DPtoLP(MIN_CLIENT_DP));
-	}
-    
-	/**
-	 * A constructor for a top level resizable compartment figure
-	 * @param compartmentTitle
-	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
-	 * logical coordinates.
-     * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
-	 */
-	public ResizableCompartmentFigure(String compartmentTitle, int minClientSize) {
-		this.minClientSize = minClientSize;
-		setTextPane(new Figure() {
-			public Dimension getMaximumSize() {
-				return getPreferredSize();
-			}
-		});
-		getTextPane().setLayoutManager(new ConstrainedToolbarLayout());
-		add(getTextPane());
-		add(scrollPane = createScrollpane());
-		setLayoutManager(new ConstrainedToolbarLayout());
-		setTitle(compartmentTitle);
-		setToolTip(compartmentTitle);
-		setBorder(new OneLineBorder());
-	}
     
     /**
      * A constructor for a top level resizable compartment figure

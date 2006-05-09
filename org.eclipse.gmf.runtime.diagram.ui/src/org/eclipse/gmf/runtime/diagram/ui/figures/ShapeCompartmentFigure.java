@@ -44,45 +44,7 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
 	 * constant defines the font title 
 	 */
 	public static final Font FONT_TITLE = new Font(null, new FontData("Helvetica", 9, SWT.BOLD));//$NON-NLS-1$
-	
-	/**
-	 * Create an instance.  Calls {@link #configureFigure()} to reconfigure
-	 * the scrollpane.
-	 * 
-	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, int minClientSize)} instead.
-	 * Clients must specify the minClientSize in their own logical coordinate system instead of the
-	 * figure assuming a default.  @link{ ResizableCompartmentFigure.MIN_CLIENT_DP } is provided as a default
-	 * value for convenience in device coordinates.
-	 */
-	public ShapeCompartmentFigure() {
-		this(null, MapModeUtil.getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
-	}
-	
-	/**
-	 * Create an instance.  Calls {@link #configureFigure()} to reconfigure
-	 * the scrollpane.
-	 * 
-	 * @param title figure's title.
-	 * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
-	 */
-	public ShapeCompartmentFigure(String title) {
-		this(title, MapModeUtil.getMapMode().DPtoLP(ResizableCompartmentFigure.MIN_CLIENT_DP));
-	}
-	
-	/**
-	 * Create an instance.  Calls {@link #configureFigure()} to reconfigure
-	 * the scrollpane.
-	 * 
-	 * @param title figure's title.
-	 * @param minClientSize <code>int</code> that is the minimum size the client area can occupy in 
-	 * logical coordinates.
-     * @deprecated use @link(ResizableCompartment(String compartmentTitle, IMapMode mm)} instead.
-	 */
-	public ShapeCompartmentFigure(String title, int minClientSize) {
-		super(title, minClientSize);
-		configureFigure();
-	}
-    
+	   
     /**
      * Create an instance.  Calls {@link #configureFigure()} to reconfigure
      * the scrollpane.

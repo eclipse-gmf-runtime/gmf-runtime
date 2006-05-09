@@ -11,8 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
-import java.util.Collection;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -23,7 +21,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.BorderItemSelectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -96,21 +93,6 @@ public abstract class AbstractBorderItemEditPart
 	 */
 	public EditPolicy getPrimaryDragEditPolicy() {
 		return new BorderItemSelectionEditPolicy();
-	}
-
-	/** Include the border items's parent's parent to the list. */
-	Collection disableCanonicalFor(final Request request) {
-		Collection disabled = super.disableCanonicalFor(request);
-		if ((request instanceof CreateConnectionViewRequest)) {
-			CreateConnectionViewRequest ccvr = (CreateConnectionViewRequest) request;
-			if (ccvr.getSourceEditPart() instanceof IBorderItemEditPart) {
-				disabled.add(ccvr.getSourceEditPart().getParent().getParent());
-			}
-			if (ccvr.getTargetEditPart() instanceof IBorderItemEditPart) {
-				disabled.add(ccvr.getTargetEditPart().getParent().getParent());
-			}
-		}
-		return disabled;
 	}
 
 	/**

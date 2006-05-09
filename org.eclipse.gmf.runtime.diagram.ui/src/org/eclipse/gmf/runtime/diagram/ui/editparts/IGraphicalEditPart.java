@@ -54,15 +54,6 @@ public interface IGraphicalEditPart
 	 * @return TopGraphicEditPart
 	 */
 	public TopGraphicEditPart getTopGraphicEditPart();
-
-	/**
-	 * Convenience method to retreive the value for the supplied poperty
-	 * from the editpart's associated view element.
-	 * @param id the property id
-	 * @return Object the value
-	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)} instead
-	 */
-	public Object getPropertyValue(Object id);
 	
 	/**
 	 * Convenience method to retreive the value for the supplied feature
@@ -72,14 +63,6 @@ public interface IGraphicalEditPart
 	 */
 	public Object getStructuralFeatureValue(EStructuralFeature id);
 
-	/**
-	 * Convenience method to set a property value.
-	 * @param id
-	 * @param value
-	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)} instead
-	 */
-	public void setPropertyValue(Object id, Object value);
-	
 	/**
 	 * Convenience method to set a feature value.
 	 * @param feature

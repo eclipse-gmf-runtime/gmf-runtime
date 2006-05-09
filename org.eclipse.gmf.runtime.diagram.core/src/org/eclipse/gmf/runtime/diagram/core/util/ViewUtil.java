@@ -336,23 +336,6 @@ public class ViewUtil{
 		// check if the id belongs to a style owned by the view
 		return featureClass.isInstance(view);
 	}
-
-	/**
-	 * Returns the value of the property with the given id inside the passed view
-	 * @param view the view to use to get the value
-	 * @param id the id of the property to get
-	 * @return the value of the property, or <code>null</code>
-	 * @deprecated use {@link ViewUtil#getStructuralFeatureValue(View, EStructuralFeature)} instead
-	 */
-	static public final Object getPropertyValue(View view, Object id) {
-		if(id instanceof String){
-			EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
-			if (feature != null) {
-				return ViewUtil.getPropertyValue(view,feature, feature.getEContainingClass());
-			}
-		}
-		return null;
-	}
 	
 	/**
 	 * Returns the value of the passed feature inside the passed view
@@ -391,24 +374,6 @@ public class ViewUtil{
 			return view.eGet(feature);
 
 		return feature.getDefaultValue(); // for extra robustness
-	}
-
-	/**
-	 * Sets the property with the given id if possible on the passed view
-	 * to the passed value.
-	 * @param view the view to set the value on 
-	 * @param id  the id of the property being set
-	 * @param value  the value of the property being set
-	 * @deprecated use {@link ViewUtil#setStructuralFeatureValue(View, EStructuralFeature, Object}} instead
-	 */
-	public static void setPropertyValue(View view,Object id, Object value) {
-		if(id instanceof String){
-			EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
-			if (feature != null) {
-				ViewUtil.setPropertyValue(view,feature, feature.getEContainingClass(), value);
-				return;
-			}
-		}
 	}
 	
 	/**
@@ -463,7 +428,7 @@ public class ViewUtil{
 	 * resolves the passed <code>View<code>'s semantic element, and returns it.
 	 * If the semantic element is unresolvable the method will returns <code>null</code>
 	 * @param view the view to use to get the semantic element
-     * @return the semanticelement or null if there is no semantic element or if it is unresolvable
+	 * @return the semanticelement or null if there is no semantic element or if it is unresolvable
 	 */
 	public static EObject resolveSemanticElement(View view) {
 	    EObject element = view.getElement();
@@ -480,7 +445,7 @@ public class ViewUtil{
 	 * resolves the passed element, and returns it.
 	 * If the element is unresolvable the method will returns <code>null</code>
 	 * @param the element to resolve
-     * @return the element or null if it is unresolvable
+	 * @return the element or null if it is unresolvable
 	 */
 	public static EObject resolve(EObject object){
 		if (object!=null && object.eIsProxy()){
@@ -488,8 +453,8 @@ public class ViewUtil{
             if (domain != null)
                 return EMFCoreUtil.resolve(domain, object);
 		}
-	    return object;
-	}
+				return object;
+		}
 	
 	/** 
 	 * gets the <code>View</code>'s semantic element Class Id, this could be used to
@@ -588,4 +553,38 @@ public class ViewUtil{
 		return null;
 	}
 	
+    /**
+     * Sets the property with the given id if possible on the passed view
+     * to the passed value.
+     * @param view the view to set the value on 
+     * @param id  the id of the property being set
+     * @param value  the value of the property being set
+     * @deprecated use {@link ViewUtil#setStructuralFeatureValue(View, EStructuralFeature, Object}} instead
+     */
+    public static void setPropertyValue(View view,Object id, Object value) {
+        if(id instanceof String){
+            EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
+            if (feature != null) {
+                ViewUtil.setPropertyValue(view,feature, feature.getEContainingClass(), value);
+                return;
+            }
+        }
+    }
+    
+    /**
+     * Returns the value of the property with the given id inside the passed view
+     * @param view the view to use to get the value
+     * @param id the id of the property to get
+     * @return the value of the property, or <code>null</code>
+     * @deprecated use {@link ViewUtil#getStructuralFeatureValue(View, EStructuralFeature)} instead
+     */
+    static public final Object getPropertyValue(View view, Object id) {
+        if(id instanceof String){
+            EStructuralFeature feature = (EStructuralFeature) PackageUtil.getElement((String)id);
+            if (feature != null) {
+                return ViewUtil.getPropertyValue(view,feature, feature.getEContainingClass());
+            }
+        }
+        return null;
+    }
 }

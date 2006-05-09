@@ -595,20 +595,6 @@ abstract public class ConnectionEditPart
 	}
 
 	/**
-	 * Convenience method to retreive the value for the supplied poperty from
-	 * the editpart's associated view element.
-	 * 
-	 * @param id
-	 *            the property id
-	 * @return Object the value
-	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)}
-	 *             instead
-	 */
-	public Object getPropertyValue(Object id) {
-		return ViewUtil.getPropertyValue((View) getModel(), id);
-	}
-
-	/**
 	 * Convenience method to retreive the value for the supplied value from the
 	 * editpart's associated view element. Same as calling
 	 * <code> ViewUtil.getStructuralFeatureValue(getNotationView(),feature)</code>.
@@ -806,18 +792,6 @@ abstract public class ConnectionEditPart
 	 */
 	protected void setForegroundColor(Color color) {
 		getFigure().setForegroundColor(color);
-	}
-
-	/**
-	 * Convenience method to set a property value.
-	 * 
-	 * @param id
-	 * @param value
-	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)}
-	 *             instead
-	 */
-	public void setPropertyValue(Object id, Object value) {
-		ViewUtil.setPropertyValue((View) getModel(), id, value);
 	}
 
 	/**

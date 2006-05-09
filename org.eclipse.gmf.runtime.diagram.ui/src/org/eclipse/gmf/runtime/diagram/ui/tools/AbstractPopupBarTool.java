@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.tools;
+package org.eclipse.gmf.runtime.diagram.ui.tools;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,15 +49,15 @@ public abstract class AbstractPopupBarTool
 	extends TargetingTool
 	implements DragTracker {
 
-	protected EditPart myHostEditPart = null;
+	private EditPart myHostEditPart = null;
 
 	/** the requested element kind */
-	protected IElementType myElementType = null;
+    private IElementType myElementType = null;
 
 	/** the create request to be used (optional) */
-	protected CreateRequest myRequest = null;
+    private CreateRequest myRequest = null;
 
-	/**
+    /**
 	 * @param epHost
 	 *            the host editpart
 	 * @param elementType
@@ -131,7 +131,7 @@ public abstract class AbstractPopupBarTool
 	 * @see org.eclipse.gef.tools.AbstractTool#performCreation(int)
 	 * @param button
 	 */
-	protected void performCreation(int button) {
+	private void performCreation(int button) {
 		EditPartViewer viewer = getCurrentViewer();
 		Command c = getCurrentCommand();
 		executeCurrentCommand();
@@ -233,4 +233,12 @@ public abstract class AbstractPopupBarTool
 		}
 		return preferencesHint;
 	}
+        
+    /**
+     * Gets the the create request to be used if one was specified in the constructor.
+     * @return Returns the create request.
+     */
+    protected CreateRequest getCreateRequest() {
+        return myRequest;
+    }
 }

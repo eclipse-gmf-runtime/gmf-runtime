@@ -21,7 +21,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.tools.AbstractPopupBarTool;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -77,8 +76,8 @@ public class PopupBarTool
 	protected Request createTargetRequest() {
 
 		/* if we have a request, use it */
-		if (myRequest != null) {
-			return myRequest;
+		if (getCreateRequest() != null) {
+			return getCreateRequest();
 		}
 
 		return CreateViewRequestFactory.getCreateShapeRequest(getElementType(),
@@ -101,7 +100,7 @@ public class PopupBarTool
 			((CreateRequest) theRequest).setLocation(thePoint);
 		}
 
-		Command theCmd = myHostEditPart.getCommand(theRequest);
+		Command theCmd = getHost().getCommand(theRequest);
 		// if we return a cmd that cannot execute then later downstream an
 		// NPE can be generated.
 		if (theCmd != null && theCmd.canExecute()) {
@@ -118,7 +117,7 @@ public class PopupBarTool
 	 */
 	private Command getCommandToCreateElementOnly() {
 		EObject hostElement = ViewUtil
-			.resolveSemanticElement((View) myHostEditPart.getModel());
+			.resolveSemanticElement((View) getHost().getModel());
 
 		if (hostElement != null && getElementType() != null) {
 			CreateElementRequest theReq = new CreateElementRequest(
@@ -129,7 +128,7 @@ public class PopupBarTool
 
 			// an EtoolsProxyCommand that wraps the ICommand of the from the
 			// semantic provider
-			Command theRealCmd = ((IGraphicalEditPart) myHostEditPart)
+			Command theRealCmd = ((IGraphicalEditPart) getHost())
 				.getCommand(semReq);
 
 			// if we return a cmd that cannot execute then later downstream an

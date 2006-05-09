@@ -14,13 +14,10 @@ package org.eclipse.gmf.runtime.diagram.ui;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditorInput;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -32,19 +29,6 @@ import org.eclipse.ui.PlatformUI;
  */
 
 public class DiagramUtil {
-
-	/**
-	 * Destroys a given view
-	 * 
-	 * @param view
-	 *            The view to be destroyed
- 	 *			deprectaion date:  Dec 19 , 05
-	 * 			removal date:	   Jan 31 , 06	
-     * @deprecated Use {@link DestroyElementCommand#destroy(EObject)} instead.     	
-	 */
-	public static void destroyView(View view) {
-		DestroyElementCommand.destroy(view);
-	}
 
 	/**
 	 * Opens an editor for a given diagram
@@ -78,9 +62,11 @@ public class DiagramUtil {
 		for (Iterator j = editors.iterator(); j.hasNext();) {
 			IEditorPart editor = (IEditorPart) j.next();
 			if (editor.getEditorSite().getWorkbenchWindow() == window) {
-				IDiagramWorkbenchPart de = (IDiagramWorkbenchPart) editor;
-				if (de.getDiagram() == diagram)
-					return de;
+                if (editor instanceof IDiagramWorkbenchPart) {
+                    IDiagramWorkbenchPart de = (IDiagramWorkbenchPart) editor;
+                    if (de.getDiagram() == diagram)
+                        return de;
+                }
 			}
 		}
 		return null;

@@ -73,6 +73,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolic
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
@@ -492,8 +493,27 @@ public abstract class GraphicalEditPart
 				hosts.add(ep.getParent());
 			}
 		}
-		return hosts;
-	}
+        
+        /////////////////////////////////////////////////////////////
+        // This following behavior is specific to BorderItemEditPart and
+        // AbstractBorderItemEditPart, but we do not want to allow clients to
+        // override this method so we do not want to make it protected.
+        
+        if (this instanceof IBorderItemEditPart) {
+            if ((request instanceof CreateConnectionViewRequest)) {
+                CreateConnectionViewRequest ccvr = (CreateConnectionViewRequest) request;
+                if (ccvr.getSourceEditPart() instanceof IBorderItemEditPart) {
+                    hosts.add(ccvr.getSourceEditPart().getParent().getParent());
+                }
+                if (ccvr.getTargetEditPart() instanceof IBorderItemEditPart) {
+                    hosts.add(ccvr.getTargetEditPart().getParent().getParent());
+                }
+            }
+        }
+        /////////////////////////////////////////////////////////////
+
+        return hosts;
+    }
 
 	/**
 	 * gets the content pane for the supplied editpart.
@@ -569,17 +589,6 @@ public abstract class GraphicalEditPart
 			return new ArrayList(((View)model).getVisibleChildren());
 		}
 		return Collections.EMPTY_LIST;
-	}
-
-	/**
-	 * Convenience method to retreive the value for the supplied value from the
-	 * editpart's associated view element. Same as calling
-	 * <code> ViewUtil.getPropertyValue(getNotationViewT(),id)</code>.
-	 * @deprecated use {@link #getStructuralFeatureValue(EStructuralFeature)} instead
-	 */
-
-	public Object getPropertyValue(Object id) {
-		return ViewUtil.getPropertyValue((View) getModel(), id);
 	}
 	
 	/**
@@ -856,18 +865,6 @@ public abstract class GraphicalEditPart
 	 */
 	protected void setForegroundColor(Color color) {
 		getFigure().setForegroundColor(color);
-	}
-
-	/**
-	 * Sets the property with the given id if possible on this editpart's view
-	 * to the passed value.
-	 * @param id  the id of the property being set
-	 * @param value  the value of the property being set
-	 * @deprecated use {@link #setStructuralFeatureValue(Object, Object)} instead
-	 */
-	public void setPropertyValue(Object id, Object value) {
-		if (hasNotationView())
-			ViewUtil.setPropertyValue((View) getModel(), id, value);
 	}
 	
 	/**

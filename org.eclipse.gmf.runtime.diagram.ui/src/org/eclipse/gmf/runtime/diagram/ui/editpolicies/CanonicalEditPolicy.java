@@ -140,10 +140,10 @@ implements NotificationListener {
             // do not use Display.getCurrent() this mthod could be invoked
             // on a non ui thread
             PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable() {
-                public void run() {
-                    AsyncCommand.this.doExecute();
-                }
-            } );
+					public void run() {
+						AsyncCommand.this.doExecute();
+					}
+				} );
 		}
 		
 		/**
@@ -864,30 +864,6 @@ implements NotificationListener {
 		}
 		return true;
 	}
-
-	/** 
-	 * Will invoke {@link #refreshSemantic()} if
-	 * {@link #shouldHandleSemanticEvent(NotificationEvent)} returns <tt>true</tt>.
-	 * 
-	 * @param event a semantic event.
-	 * @deprecated use {@link CanonicalEditPolicy#handleNotificationEvent} instead
-	 */
-	protected void handleSemanticEvent(Notification event) {
-		refresh();
-	}
-		
-	/**
-	 * Return <tt>true</tt> is the event is triggered by adding to or
-	 * removing from one of element's slots.
-	 * 
-	 * @param event a semantic event
-	 * @return <tt>true</tt> if {@link #refreshSemantic()} should be invoked;
-	 * otherwise <tt>false</tt>.
-	 * @deprecated use {@link CanonicalEditPolicy#shouldHandleNotificationEvent} instead
-	 */
-	protected boolean shouldHandleSemanticEvent(Notification event) {
-		return NotificationUtil.isElementAddedToSlot(event) || NotificationUtil.isElementRemovedFromSlot(event);
-	}
 	
 	/**
 	 * Handles <code>NotificationEvent</code> and resynchronizes the canonical
@@ -906,13 +882,6 @@ implements NotificationListener {
 				}
 			}
 			shouldRefresh = true;
-		}
-		
-		// This can be removed when all clients have migrated
-		// to handleNotificationEvent
-		if (shouldHandleSemanticEvent(event)) {
-			handleSemanticEvent(event);
-			return;
 		}
 		
 		if (shouldRefresh)
