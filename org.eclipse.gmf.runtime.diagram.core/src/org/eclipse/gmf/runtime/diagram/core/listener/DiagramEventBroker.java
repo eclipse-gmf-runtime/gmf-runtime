@@ -355,10 +355,7 @@ public class DiagramEventBroker
                 elementToPersist = elementToPersist.eContainer();
             }
             if (elementToPersist != null && !elementsInPersistQueue.contains(elementToPersist)
-                && (NotationPackage.eINSTANCE.getView_TransientChildren() == elementToPersist
-                    .eContainingFeature() || NotationPackage.eINSTANCE
-                    .getDiagram_TransientEdges() == elementToPersist
-                    .eContainingFeature())) {
+                && ViewUtil.isTransient(elementToPersist)) {
                 if (!NotificationFilter.READ.matches(event)) {
                     elementsInPersistQueue.add(elementToPersist);
                     persistCmd = getPersistViewCommand((View)elementToPersist);
