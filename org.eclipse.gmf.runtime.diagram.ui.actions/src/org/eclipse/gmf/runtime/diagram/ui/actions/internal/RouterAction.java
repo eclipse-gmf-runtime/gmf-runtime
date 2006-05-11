@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -18,6 +19,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.CheckedPropertyAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
@@ -128,5 +130,23 @@ public class RouterAction extends CheckedPropertyAction {
 		}
 		
 		return super.calculateEnabled();
+	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createOperationSet()
+	 */
+	protected List createOperationSet() {
+		List operationSet = super.createOperationSet();
+		List connectionSet = new ArrayList();
+		ListIterator iter = operationSet.listIterator();
+		while (iter.hasNext()) {
+			Object obj = iter.next();
+			if (obj instanceof ConnectionEditPart) {
+				connectionSet.add(obj);
+			}
+		}
+		
+		return connectionSet;
 	}
 }

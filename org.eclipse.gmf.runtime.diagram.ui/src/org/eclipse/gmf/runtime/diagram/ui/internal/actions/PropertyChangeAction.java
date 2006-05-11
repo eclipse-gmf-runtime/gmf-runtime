@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
+package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 
 import java.util.List;
 
@@ -19,23 +19,26 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.actions.CustomContributionItem;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
- * An abstract implementation of a custom toolbar contribution item for reflecting
- * and changing properties of the selected objects in a workbench part
  * 
  * @author melaasar
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
- *  
+ *
+ * To change the template for this generated type comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract class PropertyChangeContributionItem
-	extends CustomContributionItem {
+
+public abstract class PropertyChangeAction extends DiagramAction {
 
 	// id of the property this action will change
 	private String propertyId = null;
@@ -44,19 +47,17 @@ public abstract class PropertyChangeContributionItem
 	private String propertyName = null;
 
 	/**
-	 * Constructs a new property change contribution item
+	 * Constructs a new property change action
 	 * 
-	 * @param partService The part service
-	 * @param id The contribution id
-	 * @param propertyId The property id
+	 * @param workbenchPage The workbench page
 	 * @param propertyName The property name
+	 * @param propertyId The property id
 	 */
-	public PropertyChangeContributionItem(
+	public PropertyChangeAction(
 		IWorkbenchPage workbenchPage,
-		String id,
 		String propertyId,
 		String propertyName) {
-		super(workbenchPage, id);
+		super(workbenchPage);
 		Assert.isNotNull(propertyId);
 		Assert.isNotNull(propertyName);
 		setPropertyId(propertyId);
@@ -158,14 +159,14 @@ public abstract class PropertyChangeContributionItem
 					}
 				});
 		} catch (InterruptedException e) {
-			Trace.catching(DiagramActionsPlugin.getInstance(),
-				DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+			Trace.catching(DiagramUIPlugin.getInstance(),
+				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
 				"getPropertyValue", e); //$NON-NLS-1$
-			Log.error(DiagramActionsPlugin.getInstance(),
-				DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING,
+			Log.error(DiagramUIPlugin.getInstance(),
+				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
 				"getPropertyValue", e); //$NON-NLS-1$
-			return null;
 		}
+		return null;
 	}
 
 	/**

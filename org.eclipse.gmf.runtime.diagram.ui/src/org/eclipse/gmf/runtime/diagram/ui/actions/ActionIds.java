@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,6 +86,7 @@ public interface ActionIds {
 	public final String ACTION_ROUTER_RECTILINEAR = "rectilinearRouterAction"; //$NON-NLS-1$
 	public final String ACTION_ROUTER_OBLIQUE = "obliqueRouterAction"; //$NON-NLS-1$
 	public final String ACTION_ROUTER_TREE = "treeRouterAction"; //$NON-NLS-1$
+	public final String ACTION_TOGGLE_ROUTER = "toggleRouter";
 	public final String ACTION_COPY_APPEARANCE_PROPERTIES = "copyAppearancePropertiesAction"; //$NON-NLS-1$
 	public final String ACTION_SNAP_BACK = "snapBackAction"; //$NON-NLS-1$
 	public final String ACTION_COPY_BITMAP = "copyBitmapAction"; //$NON-NLS-1$
@@ -120,6 +121,5 @@ public interface ActionIds {
 	
 	// Navigate Action Ids
 	public final String OPEN = "OpenAction"; //$NON-NLS-1$
-
 	
 }

@@ -16,6 +16,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
@@ -50,7 +51,7 @@ public class FontDialogAction extends PropertyChangeAction {
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.internal.PropertyChangeAction#getNewPropertyValue()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction#getNewPropertyValue()
 	 */
 	protected Object getNewPropertyValue() {
 		return null;

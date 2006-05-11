@@ -15,6 +15,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -48,7 +49,7 @@ public class AllCompartmentsAction extends PropertyChangeAction {
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.internal.PropertyChangeAction#getNewPropertyValue()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction#getNewPropertyValue()
 	 */
 	protected Object getNewPropertyValue() {
 		return visibility;

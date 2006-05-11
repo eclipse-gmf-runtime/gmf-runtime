@@ -40,7 +40,7 @@ public class BooleanPropertyAction extends CheckedPropertyAction {
 	 * The default implementation assumes a <code>Boolean</code> property
 	 * If different, subclasses must override this method
 	 *  
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.internal.PropertyChangeAction#getNewPropertyValue()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction#getNewPropertyValue()
 	 */
 	protected Object getNewPropertyValue() {
 		Boolean value = (Boolean) getOperationSetPropertyValue(getPropertyId());

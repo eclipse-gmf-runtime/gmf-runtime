@@ -63,6 +63,8 @@ import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.ZoomInAction;
+import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
@@ -86,6 +88,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.InsertAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ToggleRouterAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
@@ -125,6 +128,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -733,6 +737,21 @@ public abstract class DiagramEditor
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
 
+            action = new ZoomInAction(getZoomManager());
+            action.setText(""); //$NON-NLS-1$ // no text necessary since this is not a visible action
+            registry.registerAction(action);
+            getSelectionActions().add(action.getId());
+
+            action = new ZoomOutAction(getZoomManager());
+            action.setText(""); //$NON-NLS-1$ // no text necessary since this is not a visible action
+            registry.registerAction(action);
+            getSelectionActions().add(action.getId());
+
+            action = new ToggleRouterAction((IWorkbenchPage) ((IWorkbenchPart) this).getSite().getPage());
+            action.setText(""); //$NON-NLS-1$ // no text necessary since this is not a visible action
+            registry.registerAction(action);
+            getSelectionActions().add(action.getId());
+            
             keyHandler.put(KeyStroke.getPressed(SWT.INSERT, 0),
                 getActionRegistry().getAction(InsertAction.ID));
             keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0),
@@ -740,9 +759,21 @@ public abstract class DiagramEditor
             keyHandler.put(KeyStroke.getPressed(SWT.BS, 8, 0),
                 getActionRegistry().getAction(ActionFactory.DELETE.getId()));
             keyHandler.put(/* CTRL + D */
-            KeyStroke.getPressed((char) 0x4, 100, SWT.CTRL),
-                getActionRegistry().getAction(
-                    ActionIds.ACTION_DELETE_FROM_MODEL));
+                    KeyStroke.getPressed((char) 0x4, 100, SWT.CTRL),
+                        getActionRegistry().getAction(
+                            ActionIds.ACTION_DELETE_FROM_MODEL));
+            keyHandler.put(/* CTRL + '=' */
+                    KeyStroke.getPressed('=', 0x3d, SWT.CTRL),
+                        getActionRegistry().getAction(
+                        		GEFActionConstants.ZOOM_IN));
+            keyHandler.put(/* CTRL + '-' */
+                    KeyStroke.getPressed('-', 0x2d, SWT.CTRL),
+                        getActionRegistry().getAction(
+                        		GEFActionConstants.ZOOM_OUT));
+            keyHandler.put(/* CTRL + L */
+                    KeyStroke.getPressed((char) 0xC, 108, SWT.CTRL),
+                        getActionRegistry().getAction(
+                        		ActionIds.ACTION_TOGGLE_ROUTER));
             keyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry()
                 .getAction(GEFActionConstants.DIRECT_EDIT));
         }
