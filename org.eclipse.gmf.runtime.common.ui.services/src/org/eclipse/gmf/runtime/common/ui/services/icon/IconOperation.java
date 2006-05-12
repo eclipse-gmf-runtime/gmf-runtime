@@ -9,10 +9,9 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.common.ui.services.internal.icon;
+package org.eclipse.gmf.runtime.common.ui.services.icon;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 
 /**
  * The parent of all icon operations.

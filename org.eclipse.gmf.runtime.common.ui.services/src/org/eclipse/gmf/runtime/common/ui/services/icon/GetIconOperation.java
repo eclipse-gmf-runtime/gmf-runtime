@@ -12,9 +12,7 @@
 package org.eclipse.gmf.runtime.common.ui.services.icon;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
-import org.eclipse.gmf.runtime.common.ui.services.internal.icon.IconOperation;
 
 /**
  * The operation used with the <code>IconService</code>.  GetIconOperation
