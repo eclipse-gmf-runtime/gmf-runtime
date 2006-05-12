@@ -172,6 +172,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 			myDragTracker = tracker;
 			this.setOpaque(true);
 			this.setBackgroundColor(ColorConstants.buttonLightest);
+            calculateEnabled();
 		}
 
 		/**
@@ -217,6 +218,8 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 		 *      flip myMouseOver bit and repaint
 		 */
 		public void handleMouseEntered(MouseEvent event) {
+            
+            calculateEnabled();
 
 			super.handleMouseEntered(event);
 			myMouseOver = true;
@@ -258,25 +261,21 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 			super.handleMousePressed(event);
 		}
 
-		/**
-		 * checks if tool tip is enabled or not
-		 * @return true or false
-		 */
-		protected boolean isToolEnabled()
-		{
-			if((myDragTracker != null) && (myDragTracker instanceof AbstractPopupBarTool))
-			{
-				AbstractPopupBarTool abarTool = (AbstractPopupBarTool) myDragTracker;
-				return abarTool.isCommandEnabled();
-			}
-			return true;
-		}
+        private void calculateEnabled() {
+            if((myDragTracker != null) && (myDragTracker instanceof AbstractPopupBarTool))
+            {
+                AbstractPopupBarTool abarTool = (AbstractPopupBarTool) myDragTracker;
+                setEnabled(abarTool.isCommandEnabled());
+            } else {
+                setEnabled(true);
+            }
+        }
 
 		/**
 		 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 		 */
 		protected void paintFigure(Graphics graphics) {
-			if(!isToolEnabled())
+			if(!isEnabled())
 			{
 				Image theImage = getDisabledImage();
 				if (theImage != null)
