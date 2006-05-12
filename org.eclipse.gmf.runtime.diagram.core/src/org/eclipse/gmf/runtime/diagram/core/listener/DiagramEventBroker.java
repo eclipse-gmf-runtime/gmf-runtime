@@ -174,7 +174,7 @@ public class DiagramEventBroker
      * Creates a <code>DiagramEventBroker</code> that listens to all
      * <code>EObject </code> notifications for the given editing domain.
      */
-    private DiagramEventBroker() {
+    protected DiagramEventBroker() {
         super(NotificationFilter.createNotifierTypeFilter(EObject.class));
     }
 
@@ -207,10 +207,24 @@ public class DiagramEventBroker
         DiagramEventBroker diagramEventBroker = getInstance(editingDomain);
         if (diagramEventBroker == null) {
             diagramEventBroker = new DiagramEventBroker();
-            editingDomain.addResourceSetListener(diagramEventBroker);
-            instanceMap.put(editingDomain,
-                new WeakReference(diagramEventBroker));
+            startListening(editingDomain, diagramEventBroker);
         }
+    }
+    
+    /**
+     * Creates a new diagram event broker instance for the editing domain passed
+     * in only if the editing domain does not already have a diagram event
+     * broker. There is one diagram event broker per editing domain. Adds the
+     * diagram event broker instance as a listener to the editing domain.
+     * 
+     * @param editingDomain
+     * @param diagramEventBroker the <code>DiagramEventBroker</code> to add as a listener to the 
+     * <code>TransactionalEditingDomain</code>
+     */
+    public static void startListening(TransactionalEditingDomain editingDomain, DiagramEventBroker diagramEventBroker) {
+        stopListening(editingDomain);
+        editingDomain.addResourceSetListener(diagramEventBroker);
+        instanceMap.put(editingDomain, new WeakReference(diagramEventBroker));
     }
 
     /**

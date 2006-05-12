@@ -56,6 +56,13 @@ public class DiagramGraphicalViewer
         else
             getLightweightSystemWithUpdateToggle().disableUpdates();
     }
+    
+    /**
+     * @return
+     */
+    public boolean areUpdatesDisabled() {
+        return getLightweightSystemWithUpdateToggle().getToggleUpdateManager().shouldDisableUpdates();
+    }
 
     private class ToggleUpdateManager
         extends DeferredUpdateManager {
@@ -80,10 +87,11 @@ public class DiagramGraphicalViewer
          * @param disableUpdates
          *            the disableUpdates to set
          */
-        public void setDisableUpdates(boolean disableUpdates) {
+        public synchronized void setDisableUpdates(boolean disableUpdates) {
+            boolean prevDisableUpdates = this.disableUpdates;
             this.disableUpdates = disableUpdates;
-            if (!disableUpdates) {
-                queueWork();
+            if (!disableUpdates && prevDisableUpdates != disableUpdates) {
+                sendUpdateRequest();
             }
         }
 
