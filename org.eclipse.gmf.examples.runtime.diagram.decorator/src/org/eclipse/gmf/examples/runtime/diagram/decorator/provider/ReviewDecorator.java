@@ -211,7 +211,7 @@ public class ReviewDecorator implements IDecorator {
         IGraphicalEditPart gep = (IGraphicalEditPart)getDecoratorTarget().getAdapter(IGraphicalEditPart.class);
         assert gep != null;
         
-        DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.getNotationView(), notificationListener);
+        DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.getNotationView(),NotationPackage.eINSTANCE.getDescriptionStyle_Description(), notificationListener);
 	}
 	
 }

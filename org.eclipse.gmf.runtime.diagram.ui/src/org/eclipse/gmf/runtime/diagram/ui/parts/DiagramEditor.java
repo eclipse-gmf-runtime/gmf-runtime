@@ -919,9 +919,9 @@ public abstract class DiagramEditor
         if (input != null) {
             Assert.isNotNull(getDiagram(), "Couldn't load/create diagram view"); //$NON-NLS-1$
         }
-        startListening();
         // dispose the old command stack and create a new one
         configureDiagramEditDomain();
+        startListening();
     }
 
     /**

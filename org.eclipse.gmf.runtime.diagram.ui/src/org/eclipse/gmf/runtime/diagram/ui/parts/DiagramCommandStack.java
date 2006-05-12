@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
@@ -551,6 +553,21 @@ public class DiagramCommandStack
      */
     public void setUndoContext(IUndoContext undoContext) {
         this.undoContext = undoContext;
+    }
+
+    public void dispose() {
+        // clean up the known listeners (if there is any remaining)
+        // this will prevent clients from causing memory leaks
+        Set entries = stackToManager.entrySet();
+        for (Iterator iter = entries.iterator(); iter.hasNext();) {
+            Map.Entry element = (Map.Entry) iter.next();
+            IOperationHistoryListener historyListener = (IOperationHistoryListener) element.getValue();
+            if (historyListener != null) {
+                getOperationHistory().removeOperationHistoryListener(
+                    historyListener);
+            }
+        }
+        super.dispose();
     }
 
 }
