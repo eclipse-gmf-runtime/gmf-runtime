@@ -357,7 +357,9 @@ public class TextDirectEditManager
 	 */
 	public void show(Point location) {		
 		show();
-		sendMouseClick(location);	
+		// Send another click if the previous one is within the editor bounds 
+		if (getCellEditor() != null && getCellEditor().getControl().getBounds().contains(location))
+			sendMouseClick(location);	
 	}
 
 	
