@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.core.internal.services.view;
+package org.eclipse.gmf.runtime.diagram.core.services.view;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
@@ -23,7 +23,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * Edge view creation operation
  * @author melaasar
  */
-public class CreateEdgeViewOperation extends CreateChildViewOperation {
+public final class CreateEdgeViewOperation extends CreateChildViewOperation {
 
 	/**
 	 * Creates a new instance.
@@ -48,9 +48,9 @@ public class CreateEdgeViewOperation extends CreateChildViewOperation {
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewOperation#getViewKind()
+	 * @see org.eclipse.gmf.runtime.diagram.core.services.view.CreateViewOperation#getViewKind()
 	 */
-	public Class getViewKind() {
+	public final Class getViewKind() {
 		return Edge.class;
 	}
 

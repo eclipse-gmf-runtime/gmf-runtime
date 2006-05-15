@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
+package org.eclipse.gmf.runtime.diagram.ui.render.editparts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,7 @@ import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
+import org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;

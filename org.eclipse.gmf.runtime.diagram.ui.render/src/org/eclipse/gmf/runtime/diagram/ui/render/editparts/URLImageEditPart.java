@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
+package org.eclipse.gmf.runtime.diagram.ui.render.editparts;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -9,14 +9,13 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
+package org.eclipse.gmf.runtime.diagram.ui.requests;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /**
  * The request used to duplicate a list of editparts. A list that will hold the
@@ -24,16 +23,15 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
  * <code>getDuplicatedViews()</code>.
  * 
  * @author cmahoney
- * @canBeSeenBy %level1
  */
-public class DuplicateRequest
+public final class DuplicateRequest
 	extends GroupRequest {
 
 	/**
 	 * This will be populated with the views that are duplicated after the
 	 * command executes.
 	 */
-	List duplicatedViews = new ArrayList();
+	private List duplicatedViews = new ArrayList();
     
     /**
      * The offset from the location of the original views where the new views
@@ -55,7 +53,7 @@ public class DuplicateRequest
 	 * 
 	 * @return Returns the duplicatedViews.
 	 */
-	public List getDuplicatedViews() {
+	public final List getDuplicatedViews() {
 		return duplicatedViews;
 	}
 
@@ -65,7 +63,7 @@ public class DuplicateRequest
      * 
      * @return the offset
      */
-    public Point getOffset() {
+    public final Point getOffset() {
         return offset;
     }
 
@@ -76,7 +74,7 @@ public class DuplicateRequest
      * @param offset
      *            The offset to set.
      */
-    public void setOffset(Point offset) {
+    public final void setOffset(Point offset) {
         this.offset = offset;
     }
 

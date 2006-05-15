@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * The <code>createView</code> will be called by the <code>ViewService<code> (using reflection) during
  * a view creation process. 
  * @see org.eclipse.gmf.runtime.diagram.core.services.ViewService
- * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewOperation
+ * @see org.eclipse.gmf.runtime.diagram.core.services.view.CreateViewOperation
  * @author mmostafa
  */
 

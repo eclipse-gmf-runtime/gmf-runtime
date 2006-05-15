@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * a diagram creation process. The Diagram Factory implementation class is provided to the <code>ViewService</code>
  * by the <code>CreateDiagramViewOperation<code>
  * @see org.eclipse.gmf.runtime.diagram.core.services.ViewService
- * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateDiagramViewOperation
+ * @see org.eclipse.gmf.runtime.diagram.core.services.view.CreateDiagramViewOperation
  * @author mmostafa
  */
 public interface DiagramFactory {

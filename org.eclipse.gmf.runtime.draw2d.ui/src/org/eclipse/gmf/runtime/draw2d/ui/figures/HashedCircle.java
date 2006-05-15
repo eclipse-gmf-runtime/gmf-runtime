@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
+package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
 import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.Graphics;
@@ -19,7 +19,7 @@ import org.eclipse.draw2d.geometry.Point;
 /**
  * A circle figure with hashed lines.
  * 
- * @author chmahone
+ * @author cmahoney
  */
 public class HashedCircle extends Ellipse {
 
@@ -54,9 +54,6 @@ public class HashedCircle extends Ellipse {
 		setMaximumSize(new Dimension(width, width));
 	}
 
-    /**
-     * @see #outlineShape(Graphics)
-     */
     protected void outlineShape(Graphics graphics) {
         // draw the circle
         super.outlineShape(graphics);

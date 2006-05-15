@@ -52,12 +52,12 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.DuplicateViewsComman
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.PasteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.RefreshEditPartCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNode;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ZOrderRequest;

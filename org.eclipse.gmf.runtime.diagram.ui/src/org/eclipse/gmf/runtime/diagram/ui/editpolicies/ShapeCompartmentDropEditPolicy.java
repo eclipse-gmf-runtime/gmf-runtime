@@ -14,7 +14,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
+package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +27,6 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;

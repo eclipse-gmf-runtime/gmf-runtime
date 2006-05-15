@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
 
+import org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.notation.View;
 

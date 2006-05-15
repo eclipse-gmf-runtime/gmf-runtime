@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;
+package org.eclipse.gmf.runtime.diagram.ui.render.editparts;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.render.editparts.URLImageEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -107,7 +109,7 @@ public class URLImageEditPartTests
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts.AbstractImageEditPartTests#getFixture()
+	 * @see org.eclipse.gmf.runtime.diagram.ui.render.editparts.AbstractImageEditPartTests#getFixture()
 	 */
 	public List getFixtures() {
 		List fixtures = new ArrayList(6);

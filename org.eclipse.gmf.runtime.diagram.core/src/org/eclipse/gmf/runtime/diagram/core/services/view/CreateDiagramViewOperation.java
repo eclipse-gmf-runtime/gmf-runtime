@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,75 +8,50 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-/*
- * Created on May 19, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-package org.eclipse.gmf.runtime.diagram.core.internal.services.view;
+
+package org.eclipse.gmf.runtime.diagram.core.services.view;
 
 import org.eclipse.core.runtime.IAdaptable;
 
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.IViewProvider;
-import org.eclipse.gmf.runtime.notation.Node;
-import org.eclipse.gmf.runtime.notation.View;
-
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author melaasar
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Diagram view creation operation
  */
-public class CreateNodeViewOperation extends CreateChildViewOperation 
-{
+public final class CreateDiagramViewOperation extends CreateViewOperation {
+	
 	/**
-	 * Constructor for CreateNodeViewOperation.
+	 * Creates a new instance.
 	 * @param semanticAdapter
-	 * @param containerView
-	 * @param semanticHint
-	 * @param index
-	 * @param persisted
+	 * @param diagramKindType
 	 * @param preferencesHint
 	 *            The preference hint that is to be used to find the appropriate
 	 *            preference store from which to retrieve diagram preference
 	 *            values. The preference hint is mapped to a preference store in
 	 *            the preference registry <@link DiagramPreferencesRegistry>.
 	 */
-	public CreateNodeViewOperation(
-		IAdaptable semanticAdapter,
-		View containerView,
-		String semanticHint,
-		int index,
-		boolean persisted, PreferencesHint preferencesHint) {
-		super(
-			semanticAdapter,
-			containerView,
-			semanticHint,
-			index,
-			persisted, preferencesHint);
+	public CreateDiagramViewOperation(IAdaptable semanticAdapter, String diagramKindType, PreferencesHint preferencesHint) {
+		super(semanticAdapter, diagramKindType, preferencesHint);
 	}
 
 	/**
-	 * @see org.eclipse.gmf.runtime.diagram.core.internal.services.view.CreateViewOperation#getViewKind()
+	 * @see org.eclipse.gmf.runtime.diagram.core.services.view.CreateViewOperation#getViewKind()
 	 */
-	public Class getViewKind() {
-		return Node.class;
+	public final Class getViewKind() {
+		return Diagram.class;
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.core.service.IOperation#execute(org.eclipse.gmf.runtime.common.core.service.IProvider)
 	 */
 	public Object execute(IProvider provider) {
-		return ((IViewProvider) provider).createNode(
-			getSemanticAdapter(),
-			getContainerView(),
-			getSemanticHint(),
-			getIndex(),
-			getPersisted(), getPreferencesHint());
+		return ((IViewProvider) provider).createDiagram(getSemanticAdapter(), getSemanticHint(), getPreferencesHint());
 	}
 
 }

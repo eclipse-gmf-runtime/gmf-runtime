@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.internal.editparts;x-internal:=true,
+Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.editparts;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui.action;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui.commands;x-internal:=true,

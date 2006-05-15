@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.core.internal.services.view;
+package org.eclipse.gmf.runtime.diagram.core.services.view;
 
 import org.eclipse.core.runtime.IAdaptable;
 
@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * To properly create a view, refer to <code>CreateViewOperation</code>
  * 
  */
-public class CreateViewForKindOperation extends CreateChildViewOperation {
+public final class CreateViewForKindOperation extends CreateChildViewOperation {
 	
 	private final Class viewKind;
 
@@ -62,7 +62,7 @@ public class CreateViewForKindOperation extends CreateChildViewOperation {
 	/**
 	 * @return
 	 */
-	public Class getViewKind() {
+	public final Class getViewKind() {
 		return viewKind;
 	}
 

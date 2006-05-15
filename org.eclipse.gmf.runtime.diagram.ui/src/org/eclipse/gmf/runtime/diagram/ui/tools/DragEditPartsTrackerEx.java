@@ -23,7 +23,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.requests.DuplicateRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
