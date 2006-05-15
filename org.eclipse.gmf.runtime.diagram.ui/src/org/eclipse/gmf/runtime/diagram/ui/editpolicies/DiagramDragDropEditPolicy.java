@@ -130,16 +130,18 @@ public class DiagramDragDropEditPolicy extends DragDropEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy#getDropCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
 	 */
 	protected Command getDropCommand(ChangeBoundsRequest request) {
-		EditPart parentEP =
-			((IGraphicalEditPart) request.getEditParts().get(0)).getParent();
-		if (parentEP instanceof ListCompartmentEditPart) {
-			Object originalType = request.getType();
-			request.setType(RequestConstants.REQ_SHOW_AS_ALTERNATE_VIEW);
-			Command cmd = parentEP.getCommand(request);
-			request.setType(originalType);
-			if (cmd != null) {
-				return cmd;
-			} 
+		if (request.getEditParts().size() > 0) {
+			EditPart parentEP =
+				((IGraphicalEditPart) request.getEditParts().get(0)).getParent();
+			if (parentEP instanceof ListCompartmentEditPart) {
+				Object originalType = request.getType();
+				request.setType(RequestConstants.REQ_SHOW_AS_ALTERNATE_VIEW);
+				Command cmd = parentEP.getCommand(request);
+				request.setType(originalType);
+				if (cmd != null) {
+					return cmd;
+				} 
+			}
 		}
 		return super.getDropCommand(request);
 	}
