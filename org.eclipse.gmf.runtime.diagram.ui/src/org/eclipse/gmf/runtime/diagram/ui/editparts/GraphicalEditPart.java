@@ -174,12 +174,16 @@ public abstract class GraphicalEditPart
 			EObject element) {
 		if (element == null)
 			return;
-		Assert.isNotNull(filterId);
-		Assert.isNotNull(listener);
-		if (listenerFilters == null)
-			listenerFilters = new HashMap();
-		getDiagramEventBroker().addNotificationListener(element,listener);
-		listenerFilters.put(filterId.intern(), new Object[] {element, listener});
+
+        DiagramEventBroker diagramEventBroker = getDiagramEventBroker();
+        if (diagramEventBroker != null) {
+            Assert.isNotNull(filterId);
+    		Assert.isNotNull(listener);
+    		if (listenerFilters == null)
+    			listenerFilters = new HashMap();
+            diagramEventBroker.addNotificationListener(element,listener);
+    		listenerFilters.put(filterId.intern(), new Object[] {element, listener});
+        }
 	}
 	
 	/**
@@ -198,12 +202,18 @@ public abstract class GraphicalEditPart
 			EStructuralFeature feature) {
 		if (element == null)
 			return;
-		Assert.isNotNull(filterId);
-		Assert.isNotNull(listener);
-		if (listenerFilters == null)
-			listenerFilters = new HashMap();
-		getDiagramEventBroker().addNotificationListener(element,feature,listener);
-		listenerFilters.put(filterId.intern(), new Object[] {element,feature, listener});
+                
+        DiagramEventBroker diagramEventBroker = getDiagramEventBroker();
+        if (diagramEventBroker != null) {
+            Assert.isNotNull(filterId);
+            Assert.isNotNull(listener);
+            if (listenerFilters == null)
+                listenerFilters = new HashMap();
+
+            diagramEventBroker.addNotificationListener(element,feature,listener);
+
+            listenerFilters.put(filterId.intern(), new Object[] {element,feature, listener});
+        }
 	}
 
 	/** Creates a connection editpart. */
