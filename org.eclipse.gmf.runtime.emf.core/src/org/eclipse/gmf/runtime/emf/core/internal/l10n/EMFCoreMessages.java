@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,11 +28,6 @@ public class EMFCoreMessages extends NLS {
 	public static String operation_canceled;
 	public static String operation_ok;
 	public static String operation_failed;
-	public static String MultiplicityValue_none_text;
-	public static String MultiplicityValue_all_text;
-	public static String MultiplicityValue_zeroOrOne_text;
-	public static String MultiplicityValue_one_text;
-	public static String MultiplicityValue_oneOrMore_text;
 	public static String logError_badListener;
 
 	static {
