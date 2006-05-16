@@ -824,8 +824,12 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		return this.resolve;
 	}
 
-	public Collection getInverseReferences(EObject eObject) {
+	public Collection getInverseReferences(EObject eObject, boolean resolve) {
 		Collection result = new ArrayList();
+
+		if (resolve) {
+			resolveAll(eObject);
+		}
 
 		EObject eContainer = eObject.eContainer();
 		if (eContainer != null) {
@@ -846,7 +850,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			if (eOpposite != null && !eReference.isContainer()
 					&& !eReference.isContainment()
 					&& eObject.eIsSet(eReference)) {
-				if (FeatureMapUtil.isMany(eObject,eReference)) {
+				if (FeatureMapUtil.isMany(eObject, eReference)) {
 					Object collection = eObject.eGet(eReference);
 					for (Iterator j = resolve() ? ((Collection) collection)
 							.iterator() : ((InternalEList) collection)
