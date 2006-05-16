@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -125,30 +124,6 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 	}
     
     /**
-     * Determines the editing domain for the view creation.
-     * 
-     * @param semanticElement
-     *            the semantic elemement; may be null
-     * @param containerView
-     *            the container view
-     * @return the editing domain
-     */
-    protected TransactionalEditingDomain getEditingDomain(
-            EObject semanticElement, View containerView) {
-
-        TransactionalEditingDomain result = null;
-
-        if (semanticElement != null) {
-            result = TransactionUtil.getEditingDomain(semanticElement);
-        }
-
-        if (result == null) {
-            result = TransactionUtil.getEditingDomain(containerView);
-        }
-        return result;
-    }
-	
-	/**
      * This method is responsible for decorating the created view, it get called
      * by the Factory method
      * 

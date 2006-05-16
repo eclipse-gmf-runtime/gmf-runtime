@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -165,4 +167,27 @@ abstract public class AbstractViewFactory implements ViewFactory {
 	protected void setPreferencesHint(PreferencesHint preferencesHint) {
 		this.preferencesHint = preferencesHint;
 	}
+
+    /**
+     * Determines the editing domain for the view creation.
+     * 
+     * @param semanticElement
+     *            the semantic elemement; may be null
+     * @param containerView
+     *            the container view
+     * @return the editing domain
+     */
+    protected TransactionalEditingDomain getEditingDomain(EObject semanticElement, View containerView) {
+    
+        TransactionalEditingDomain result = null;
+    
+        if (semanticElement != null) {
+            result = TransactionUtil.getEditingDomain(semanticElement);
+        }
+    
+        if (result == null) {
+            result = TransactionUtil.getEditingDomain(containerView);
+        }
+        return result;
+    }
 }

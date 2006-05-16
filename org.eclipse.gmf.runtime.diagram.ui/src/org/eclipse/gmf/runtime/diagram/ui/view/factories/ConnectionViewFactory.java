@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.Transaction;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -96,7 +95,7 @@ public class ConnectionViewFactory
 		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
 
 		AbstractEMFOperation operation = new AbstractEMFOperation(
-			TransactionUtil.getEditingDomain(edge), StringStatics.BLANK,
+			getEditingDomain(semanticEl, containerView), StringStatics.BLANK,
 			options) {
 
 			protected IStatus doExecute(IProgressMonitor monitor,
