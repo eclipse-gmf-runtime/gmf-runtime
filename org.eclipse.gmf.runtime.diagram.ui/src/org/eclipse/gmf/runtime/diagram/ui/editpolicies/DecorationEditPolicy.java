@@ -147,10 +147,15 @@ public class DecorationEditPolicy
 			Decoration decoration = new Decoration();
 			decoration.add(figure);
 			decoration.setSize(figure.getSize());
-			decoration
-				.setOwnerFigure(((GraphicalEditPart) getAdapter(GraphicalEditPart.class))
-					.getFigure());
+            
+            GraphicalEditPart ownerEditPart = (GraphicalEditPart) getAdapter(GraphicalEditPart.class);
+            decoration.setOwnerFigure(ownerEditPart.getFigure());
 			decoration.setLocator(locator);
+            
+            // Register this figure with it's owner editpart so mouse events
+            // will be propagated to it's host.
+            ownerEditPart.getViewer().getVisualPartMap().put(decoration,
+                ownerEditPart);
 
 			IFigure pane = getLayer(isVolatile ? DiagramRootEditPart.DECORATION_UNPRINTABLE_LAYER
 				: DiagramRootEditPart.DECORATION_PRINTABLE_LAYER);
