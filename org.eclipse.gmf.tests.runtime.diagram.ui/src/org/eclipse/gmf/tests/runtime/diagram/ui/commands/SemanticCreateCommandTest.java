@@ -16,10 +16,13 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.UndoContext;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -119,5 +122,61 @@ public class SemanticCreateCommandTest
 		
 		// Should return the request adapter
 		assertSame(requestAdapter, result.getReturnValue());
+	}
+	
+	/**
+	 * Verifies that contexts in the real semantic command are propagated to the
+	 * SemanticCreateCommand wrapper when it is created.
+	 */
+	public void test_contextPropagation_141122() {
+
+		// create an ICommand
+		ICommand iCommand = new AbstractCommand(
+				"test_contextPropagation_141122") { //$NON-NLS-1$
+			protected CommandResult doExecuteWithResult(
+					IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
+				return CommandResult.newOKCommandResult();
+			}
+
+			protected CommandResult doRedoWithResult(
+					IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
+				return CommandResult.newOKCommandResult();
+			}
+
+			protected CommandResult doUndoWithResult(
+					IProgressMonitor progressMonitor, IAdaptable info)
+					throws ExecutionException {
+				return CommandResult.newOKCommandResult();
+			}
+		};
+
+		// add two contexts to the ICommand
+		IUndoContext contextA = new UndoContext();
+		iCommand.addContext(contextA);
+
+		IUndoContext contextB = new UndoContext();
+		iCommand.addContext(contextB);
+
+		// wrap the ICommand in an EToolsProxyCommand
+		Command command = new EtoolsProxyCommand(iCommand);
+
+		// Create the test fixture
+		TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE
+				.createEditingDomain();
+
+		CreateElementRequest createRequest = new CreateElementRequest(
+				editingDomain, null, null);
+
+		CreateElementRequestAdapter requestAdapter = new CreateElementRequestAdapter(
+				createRequest);
+
+		SemanticCreateCommand semanticCreateCommand = new SemanticCreateCommand(
+				requestAdapter, command);
+
+		// verify that both contexts have been propagated to the semanticCreateCommand fixture
+		assertTrue(semanticCreateCommand.hasContext(contextA));
+		assertTrue(semanticCreateCommand.hasContext(contextB));
 	}
 }

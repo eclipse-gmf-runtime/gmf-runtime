@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -57,6 +58,12 @@ public class SemanticCreateCommand extends AbstractCommand {
 		this.requestAdapter = requestAdapter;
 		this.realSemanticCommand =
 			DiagramCommandStack.getICommand(realSemanticCommand);
+		
+		// propagate the contexts from the wrapped command
+		IUndoContext[] contexts = this.realSemanticCommand.getContexts();
+		for (int i = 0; i < contexts.length; i++) {
+			addContext(contexts[i]);
+		}
 	}
 
 	protected CommandResult doExecuteWithResult(
