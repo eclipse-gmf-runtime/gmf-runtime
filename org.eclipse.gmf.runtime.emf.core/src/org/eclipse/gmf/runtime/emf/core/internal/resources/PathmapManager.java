@@ -715,14 +715,6 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	 *  or a new pathmap URI otherwise.
 	 */
 	public static URI denormalizeURI(URI uri) {
-		if (!uri.isFile()) {
-			if (!uri.scheme().equals("platform")) { //$NON-NLS-1$
-				return uri;
-			} else if (!uri.segment(0).equals("resource")) { //$NON-NLS-1$
-				return uri;
-			}
-		}
-		
 		String uriAsString = uri.toString();
 		
 		String maxValueString = null;
