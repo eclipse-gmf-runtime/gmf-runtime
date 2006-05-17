@@ -28,10 +28,6 @@ http://www.eclipse.org/legal/epl-v10.html
       <discovery label="%updateSiteName" url="http://download.eclipse.org/technology/gmf/update-site/site-interim.xml"/>
    </url>
 
-   <includes
-         id="org.apache.batik"
-         version="0.0.0"/>
-
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -65,6 +61,7 @@ http://www.eclipse.org/legal/epl-v10.html
       <import feature="org.eclipse.emf.query" version="1.0.0"/>
       <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import feature="org.eclipse.emf.workspace" version="1.0.0"/>
+      <import feature="org.apache.batik" version="1.6.0.qualifier"/>
    </requires>
 
    <plugin
