@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,26 +63,44 @@ public interface ILabels {
 	public static String LABEL_PAGE_SIZE = DiagramUIMessages.PageSetupDialog_text_page_size;
 	
 	/** Represents a label of page width text field in Page Setup Dialog. */
-	public static String LABEL_PAGE_WIDTH = DiagramUIMessages.PageSetupDialog_text_page_width;
+	public static String LABEL_PAGE_WIDTH_INCHES = DiagramUIMessages.PageSetupDialog_text_page_width_inches;
+    
+    /** Represents a label of page width text field in Page Setup Dialog. */
+    public static String LABEL_PAGE_WIDTH_MM = DiagramUIMessages.PageSetupDialog_text_page_width_mm;
 	
 	/** Represents a label of page height text field in Page Setup Dialog. */
-	public static String LABEL_PAGE_HEIGHT = DiagramUIMessages.PageSetupDialog_text_page_height;
+	public static String LABEL_PAGE_HEIGHT_INCHES = DiagramUIMessages.PageSetupDialog_text_page_height_inches;
+    
+    /** Represents a label of page height text field in Page Setup Dialog. */
+    public static String LABEL_PAGE_HEIGHT_MM = DiagramUIMessages.PageSetupDialog_text_page_height_mm;
 	
 	// Margin group
 	/** Represents a label of margin group in Page Setup Dialog. */
 	public static String LABEL_TITLE_GROUP_MARGIN= DiagramUIMessages.PageSetupDialog_title_group_margin;
 	
 	/** Represents a label of top margin text field in Page Setup Dialog. */
-	public static String LABEL_MARGIN_TOP = DiagramUIMessages.PageSetupDialog_text_page_margin_top;
+	public static String LABEL_MARGIN_TOP_INCHES = DiagramUIMessages.PageSetupDialog_text_page_margin_top_inches;
+    
+    /** Represents a label of top margin text field in Page Setup Dialog. */
+    public static String LABEL_MARGIN_TOP_MM = DiagramUIMessages.PageSetupDialog_text_page_margin_top_mm;
 	
 	/** Represents a label of bottom margin text field in Page Setup Dialog. */
-	public static String LABEL_MARGIN_BOTTOM = DiagramUIMessages.PageSetupDialog_text_page_margin_bottom;
+	public static String LABEL_MARGIN_BOTTOM_INCHES = DiagramUIMessages.PageSetupDialog_text_page_margin_bottom_inches;
+    
+    /** Represents a label of bottom margin text field in Page Setup Dialog. */
+    public static String LABEL_MARGIN_BOTTOM_MM = DiagramUIMessages.PageSetupDialog_text_page_margin_bottom_mm;
 	
 	/** Represents a label of left margin text field in Page Setup Dialog. */
-	public static String LABEL_MARGIN_LEFT = DiagramUIMessages.PageSetupDialog_text_page_margin_left;
+	public static String LABEL_MARGIN_LEFT_INCHES = DiagramUIMessages.PageSetupDialog_text_page_margin_left_inches;
+    
+    /** Represents a label of left margin text field in Page Setup Dialog. */
+    public static String LABEL_MARGIN_LEFT_MM = DiagramUIMessages.PageSetupDialog_text_page_margin_left_mm;
 	
 	/** Represents a label of right margin text field in Page Setup Dialog. */
-	public static String LABEL_MARGIN_RIGHT = DiagramUIMessages.PageSetupDialog_text_page_margin_right;
+	public static String LABEL_MARGIN_RIGHT_INCHES = DiagramUIMessages.PageSetupDialog_text_page_margin_right_inches;
+    
+    /** Represents a label of right margin text field in Page Setup Dialog. */
+    public static String LABEL_MARGIN_RIGHT_MM = DiagramUIMessages.PageSetupDialog_text_page_margin_right_mm;
 	
 	/** Represents an inches label appearing after margin text field in Page Setup Dialog. */
 	public static String LABEL_INCHES = DiagramUIMessages.PageSetupDialog_label_inches;

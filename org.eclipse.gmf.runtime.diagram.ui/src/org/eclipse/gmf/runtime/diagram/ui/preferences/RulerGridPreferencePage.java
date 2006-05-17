@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.ibm.icu.text.NumberFormat;
@@ -141,7 +140,10 @@ public class RulerGridPreferencePage
 	private String GRID_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_gridGroup_label;
 	private String SHOW_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_showGrid_label;
 	private String SNAP_TO_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_snapToGrid_label;
-	private String GRID_SPACING_LABEL = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label;
+	private String GRID_SPACING_LABEL_INCHES = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_inches;
+    private String GRID_SPACING_LABEL_CM = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_cm;
+    private String GRID_SPACING_LABEL_PIXELS = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_pixels;
+    
 	
 	// Ruler Field Editors
 	private BooleanFieldEditor showRulers = null;
@@ -151,7 +153,7 @@ public class RulerGridPreferencePage
     private BooleanFieldEditor showGrid = null;
 	private BooleanFieldEditor snapToGrid = null;
 	private DoubleFieldEditor gridSpacing = null;
-	private Label gridUnits = null;
+    private Composite dblGroup = null;
 
 	private String convertUnits(int fromUnits, int toUnits ) {
 		String valueStr = gridSpacing.getStringValue();
@@ -227,20 +229,23 @@ public class RulerGridPreferencePage
 		switch( units )
 		{
 			case INCHES:
-				gridUnits.setText(RULER_UNITS_IN_LABEL);
+                gridSpacing.setLabelText(GRID_SPACING_LABEL_INCHES);
 				break;
 				
 			case CENTIMETERS:
-				gridUnits.setText(RULER_UNITS_CM_LABEL);
+                gridSpacing.setLabelText(GRID_SPACING_LABEL_CM);
 				break;
 
 			case PIXELS:
-				gridUnits.setText(RULER_UNITS_PIXEL_LABEL);
+                gridSpacing.setLabelText(GRID_SPACING_LABEL_PIXELS);
 				break;
 		}
 
 		gridSpacing.setStringValue( convertUnits( oldUnits, units ) );
 		oldUnits = units;
+        
+        dblGroup.layout();
+		
 	}
 
 	private int getUnits() {
@@ -332,31 +337,24 @@ public class RulerGridPreferencePage
 
 	private void addGridSpacing( Composite parent ) {
 	
-		Composite group = new Composite(parent, SWT.NONE);
+		dblGroup = new Composite(parent, SWT.NONE);
 		
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(2, false);
 
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalSpan = 1;
+		gridData.horizontalSpan = 2;
 
 		gridSpacing = new DoubleFieldEditor(
 			IPreferenceConstants.PREF_GRID_SPACING,
-			GRID_SPACING_LABEL, group);
+			GRID_SPACING_LABEL_INCHES, dblGroup);
 		gridSpacing.setTextLimit(10);
 		addField(gridSpacing);
 		
-		GridData gridData2 = new GridData(GridData.FILL_HORIZONTAL);
-		gridData2.grabExcessHorizontalSpace = true;
-		gridData2.horizontalSpan = 1;
-		
-		gridUnits = new Label(group, SWT.LEFT);
-		gridUnits.setLayoutData(gridData2);
-		
 		updateUnits();
 		
-		group.setLayoutData(gridData);
-		group.setLayout(gridLayout);
+        dblGroup.setLayoutData(gridData);
+        dblGroup.setLayout(gridLayout);
 	}
 
 	/* (non-Javadoc)

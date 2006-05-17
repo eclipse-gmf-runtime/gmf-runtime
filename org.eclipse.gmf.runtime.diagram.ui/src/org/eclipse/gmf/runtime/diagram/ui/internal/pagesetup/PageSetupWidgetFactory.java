@@ -115,10 +115,10 @@ public class PageSetupWidgetFactory {
 		Group group = new Group(parent, SWT.NULL);
 		group.setText(label);
 		
-		group.setLayout(new GridLayout(6, true));
+		group.setLayout(new GridLayout(5, true));
 		
 		GridData paperSizeGridData = new GridData(GridData.FILL_HORIZONTAL);
-		paperSizeGridData.horizontalSpan = 6;
+		paperSizeGridData.horizontalSpan = 5;
 		group.setLayoutData(paperSizeGridData);
 	
 		return group;
@@ -135,10 +135,10 @@ public class PageSetupWidgetFactory {
 		Group group = new Group(parent, SWT.NULL);
 		group.setText(label);
 		
-		group.setLayout(new GridLayout(6, true));
+		group.setLayout(new GridLayout(5, true));
 		
 		GridData paperSizeGridData = new GridData(GridData.FILL_HORIZONTAL);
-		paperSizeGridData.horizontalSpan = 6;
+		paperSizeGridData.horizontalSpan = 5;
 		group.setLayoutData(paperSizeGridData);
 		
 		return group;
@@ -154,21 +154,26 @@ public class PageSetupWidgetFactory {
 	public static Label createLabel(Group group, String labelText) {
 		Label label = new Label(group, SWT.LEFT);
 		label.setText(labelText);
+        
+        GridData gridData = new GridData(GridData.GRAB_HORIZONTAL);
+        gridData.grabExcessHorizontalSpace = true;
+    
+        label.setLayoutData(gridData);
 		
 		return label;
 	}
 	
 	/**
-	 * Create a unit label.
+	 * Create a filler label to fill space between fields.
 	 * 
 	 * @param group Group group hosting the label
 	 * @return Label created label
 	 */
-	public static Label createLabelUnit(Group group) {
+	public static Label createLabelFiller(Group group) {
 		Label label = new Label(group, SWT.LEFT);
 		
-		GridData gridData = new GridData();
-		gridData.widthHint = 40;
+		GridData gridData = new GridData(GridData.GRAB_HORIZONTAL);
+        gridData.grabExcessHorizontalSpace = true;
 	
 		label.setLayoutData(gridData);
 		
@@ -186,7 +191,7 @@ public class PageSetupWidgetFactory {
 		GridData scGridData =
 				new GridData(
 					GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING);
-		scGridData.horizontalSpan = 5;
+		scGridData.horizontalSpan = 4;
 		scGridData.grabExcessHorizontalSpace = true;
 		combo.setLayoutData(scGridData);
 		
@@ -224,24 +229,6 @@ public class PageSetupWidgetFactory {
 		text.setLayoutData(phGridData);
 				
 		return text;
-	}
-	
-	/**
-	 * Create a label that appears after margin text field and displays a label
-	 * corresponding to current measurement units, either inches or millimmetres.
-	 * 
-	 * @param group Group group hosting the label
-	 * @return Label created unit label
-	 */
-	public static Label createLabelUnitMargin(Group group) {
-		Label label = new Label(group, SWT.LEFT);
-		
-		GridData gridData = new GridData();
-		gridData.widthHint = 40;
-	
-		label.setLayoutData(gridData);
-
-		return label;
 	}
 	
 	/**

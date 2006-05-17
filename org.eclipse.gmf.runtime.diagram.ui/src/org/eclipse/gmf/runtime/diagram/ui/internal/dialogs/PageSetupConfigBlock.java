@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,15 +69,12 @@ public class PageSetupConfigBlock implements ILabels {
 		fLabelWidth,
 		fLabelUnitWidth,
 		fLabelHeight,
-		fLabelUnitHeight,
 		fLabelMarginTop,
 		fLabelUnitMarginTop,
 		fLabelMarginBottom,
-		fLabelUnitMarginBottom,
 		fLabelMarginLeft,
 		fLabelUnitMarginLeft,
-		fLabelMarginRight,
-		fLabelUnitMarginRight;
+		fLabelMarginRight;
 	
 	private Combo 
 		fComboSize;
@@ -188,14 +185,7 @@ public class PageSetupConfigBlock implements ILabels {
 		fTextMarginBottom.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_BOTTOM));
 		fTextMarginLeft.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_LEFT));
 		fTextMarginRight.setText(fNumberFormat.format(DefaultValues.DEFAULT_MARGIN_RIGHT));
-		
-		fLabelUnitHeight.setText(LABEL_INCHES);
-		fLabelUnitWidth.setText(LABEL_INCHES);
-		fLabelUnitMarginTop.setText(LABEL_INCHES);
-		fLabelUnitMarginBottom.setText(LABEL_INCHES);
-		fLabelUnitMarginLeft.setText(LABEL_INCHES);
-		fLabelUnitMarginRight.setText(LABEL_INCHES);	
-		
+        
 		fPreferencePage.setErrorMessage(null);
 	}
 	
@@ -253,14 +243,13 @@ public class PageSetupConfigBlock implements ILabels {
 			
 		fLabelSize = PageSetupWidgetFactory.createLabel(group, LABEL_PAGE_SIZE);
 		fComboSize = PageSetupWidgetFactory.createComboSize(group);
-		
-		fLabelWidth = PageSetupWidgetFactory.createLabel(group, LABEL_PAGE_WIDTH);
+        
+		fLabelWidth = PageSetupWidgetFactory.createLabel(group, LABEL_PAGE_WIDTH_INCHES);
 		fTextWidth = PageSetupWidgetFactory.createTextWidth(group);
-		fLabelUnitWidth = PageSetupWidgetFactory.createLabelUnit(group);
+		fLabelUnitWidth = PageSetupWidgetFactory.createLabelFiller(group);
 		
-		fLabelHeight = PageSetupWidgetFactory.createLabel(group, LABEL_PAGE_HEIGHT);
+		fLabelHeight = PageSetupWidgetFactory.createLabel(group, LABEL_PAGE_HEIGHT_INCHES);
 		fTextHeight = PageSetupWidgetFactory.createTextHeight(group);
-		fLabelUnitHeight = PageSetupWidgetFactory.createLabelUnit(group);
 		
 		fComboSize.addSelectionListener(new SelectionListener() {
 
@@ -307,7 +296,6 @@ public class PageSetupConfigBlock implements ILabels {
 		fControls.add(fLabelUnitWidth);
 		fControls.add(fLabelHeight);
 		fControls.add(fTextHeight);
-		fControls.add(fLabelUnitHeight);
 	}
 	
 	/**
@@ -359,23 +347,21 @@ public class PageSetupConfigBlock implements ILabels {
 	 */
 	private void createGroupMargin(Composite composite) {
 		Group group = PageSetupWidgetFactory.createGroupMargin(composite, LABEL_TITLE_GROUP_MARGIN);
-		
-		fLabelMarginTop = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_TOP);
+        
+		fLabelMarginTop = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_TOP_INCHES);
 		fTextMarginTop = PageSetupWidgetFactory.createTextMargin(group);
-		fLabelUnitMarginTop = PageSetupWidgetFactory.createLabelUnitMargin(group);
+		fLabelUnitMarginTop = PageSetupWidgetFactory.createLabelFiller(group);
 		
-		fLabelMarginBottom = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_BOTTOM);
+		fLabelMarginBottom = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_BOTTOM_INCHES);
 		fTextMarginBottom = PageSetupWidgetFactory.createTextMargin(group);
-		fLabelUnitMarginBottom = PageSetupWidgetFactory.createLabelUnitMargin(group);
-		
-		fLabelMarginLeft = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_LEFT);
+        
+		fLabelMarginLeft = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_LEFT_INCHES);
 		fTextMarginLeft = PageSetupWidgetFactory.createTextMargin(group);
-		fLabelUnitMarginLeft = PageSetupWidgetFactory.createLabelUnitMargin(group);
+		fLabelUnitMarginLeft = PageSetupWidgetFactory.createLabelFiller(group);
 		
-		fLabelMarginRight = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_RIGHT);
+		fLabelMarginRight = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_RIGHT_INCHES);
 		fTextMarginRight = PageSetupWidgetFactory.createTextMargin(group);
-		fLabelUnitMarginRight = PageSetupWidgetFactory.createLabelUnitMargin(group);
-		
+        
 		fTextMarginTop.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (fTextMarginTop.isFocusControl()) {
@@ -413,7 +399,6 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		fControls.add(fLabelMarginBottom);
 		fControls.add(fTextMarginBottom);
-		fControls.add(fLabelUnitMarginBottom);
 		
 		fControls.add(fLabelMarginLeft);
 		fControls.add(fTextMarginLeft);
@@ -421,7 +406,6 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		fControls.add(fLabelMarginRight);
 		fControls.add(fTextMarginRight);
-		fControls.add(fLabelUnitMarginRight);
 	}
 	
 	/**
@@ -459,16 +443,10 @@ public class PageSetupConfigBlock implements ILabels {
 		
 		else if (controlType.equals(PageSetupControlType.LABEL_UNIT_PAGE_HEIGHT))
 			return fLabelUnitWidth;
-		else if (controlType.equals(PageSetupControlType.LABEL_UNIT_PAGE_WIDTH))
-			return fLabelUnitHeight;
 		else if (controlType.equals(PageSetupControlType.LABEL_UNIT_MARGIN_TOP))
 			return fLabelUnitMarginTop;
-		else if (controlType.equals(PageSetupControlType.LABEL_UNIT_MARGIN_BOTTOM))
-			return fLabelUnitMarginBottom;
 		else if (controlType.equals(PageSetupControlType.LABEL_UNIT_MARGIN_LEFT))
 			return fLabelUnitMarginLeft;
-		else if (controlType.equals(PageSetupControlType.LABEL_UNIT_MARGIN_RIGHT))
-			return fLabelUnitMarginRight;
 		else
 			return null;
 	}
@@ -536,23 +514,26 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		private void initUnitLabels() {
-			String label;
-			
 			if (fButtonInches.getSelection()) {
-				label = LABEL_INCHES;
+                fLabelHeight.setText(LABEL_PAGE_HEIGHT_INCHES);
+                fLabelWidth.setText(LABEL_PAGE_WIDTH_INCHES);
+                fLabelMarginBottom.setText(LABEL_MARGIN_BOTTOM_INCHES);
+                fLabelMarginLeft.setText(LABEL_MARGIN_LEFT_INCHES);
+                fLabelMarginRight.setText(LABEL_MARGIN_RIGHT_INCHES);
+                fLabelMarginTop.setText(LABEL_MARGIN_TOP_INCHES);
+                
 				fCurrentUnit = "inc"; //$NON-NLS-1$
 			}
 			else {
-				label = LABEL_MILLIMETRES;
+                fLabelHeight.setText(LABEL_PAGE_HEIGHT_MM);
+                fLabelWidth.setText(LABEL_PAGE_WIDTH_MM);
+                fLabelMarginBottom.setText(LABEL_MARGIN_BOTTOM_MM);
+                fLabelMarginLeft.setText(LABEL_MARGIN_LEFT_MM);
+                fLabelMarginRight.setText(LABEL_MARGIN_RIGHT_MM);
+                fLabelMarginTop.setText(LABEL_MARGIN_TOP_MM);
+                
 				fCurrentUnit = "mil"; //$NON-NLS-1$
 			}
-			
-			fLabelUnitWidth.setText(label);
-			fLabelUnitHeight.setText(label);
-			fLabelUnitMarginTop.setText(label);
-			fLabelUnitMarginBottom.setText(label);
-			fLabelUnitMarginLeft.setText(label);
-			fLabelUnitMarginRight.setText(label);
 		}
 			
 		private void initRadioButton(PageSetupConfigBlock block, PageSetupControlType controlType, String key) {
@@ -730,12 +711,24 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		private void updateLabels() {
-			fLabelUnitWidth.setText(fLabel);
-			fLabelUnitHeight.setText(fLabel);
-			fLabelUnitMarginTop.setText(fLabel);
-			fLabelUnitMarginBottom.setText(fLabel);
-			fLabelUnitMarginLeft.setText(fLabel);
-			fLabelUnitMarginRight.setText(fLabel);
+            if (fLabel.equals(LABEL_MILLIMETRES)) {
+                fLabelHeight.setText(LABEL_PAGE_HEIGHT_MM);
+                fLabelWidth.setText(LABEL_PAGE_WIDTH_MM);
+                fLabelMarginBottom.setText(LABEL_MARGIN_BOTTOM_MM);
+                fLabelMarginLeft.setText(LABEL_MARGIN_LEFT_MM);
+                fLabelMarginRight.setText(LABEL_MARGIN_RIGHT_MM);
+                fLabelMarginTop.setText(LABEL_MARGIN_TOP_MM);
+            }
+            else {
+                fLabelHeight.setText(LABEL_PAGE_HEIGHT_INCHES);
+                fLabelWidth.setText(LABEL_PAGE_WIDTH_INCHES);
+                fLabelMarginBottom.setText(LABEL_MARGIN_BOTTOM_INCHES);
+                fLabelMarginLeft.setText(LABEL_MARGIN_LEFT_INCHES);
+                fLabelMarginRight.setText(LABEL_MARGIN_RIGHT_INCHES);
+                fLabelMarginTop.setText(LABEL_MARGIN_TOP_INCHES);
+            }
+
+            fLabelHeight.getShell().pack();
 		}	
 	}
 	
