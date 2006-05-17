@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -124,6 +125,10 @@ public final class ClipboardSupportUtil {
 		
 		if (isOkToSetEList(eObject, reference)) {
 			if (reference.isContainment()) {
+                for (Iterator referenced = referencedObjects.iterator();referenced.hasNext();) {
+                    EObject referencedObject = (EObject)referenced.next();
+                    EcoreUtil.remove(referencedObject);
+                }
 				sendCreateEvent(referencedObjects);
 			}
 			eObject.eSet(reference, referencedObjects);
@@ -223,6 +228,7 @@ public final class ClipboardSupportUtil {
 			return null;
 		}
 		if (reference.isContainment()) {
+            EcoreUtil.remove(referencedObject);
 			sendCreateEvent(referencedObject);
 		}
 		((Collection) eObject.eGet(reference)).add(referencedObject);
@@ -240,6 +246,7 @@ public final class ClipboardSupportUtil {
 	 * 
 	 */
 	public static EObject appendEObject(Resource resource, EObject referencedObject) {
+        EcoreUtil.remove(referencedObject);
 		sendCreateEvent(referencedObject);
 		resource.getContents().add(referencedObject);
 		return referencedObject;
@@ -264,6 +271,7 @@ public final class ClipboardSupportUtil {
 			return null;
 		}
 		if (reference.isContainment()) {
+            EcoreUtil.remove(referencedObject);
 			sendCreateEvent(referencedObject);
 		}
 		eObject.eSet(reference, referencedObject);
