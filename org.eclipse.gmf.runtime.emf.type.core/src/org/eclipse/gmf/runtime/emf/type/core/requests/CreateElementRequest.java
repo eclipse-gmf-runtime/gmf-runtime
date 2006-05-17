@@ -332,6 +332,7 @@ public class CreateElementRequest extends AbstractEditCommandRequest {
 			// Initialize the context with the container and the client context
 			editContextRequest.setEditContext(getContainer());
 			editContextRequest.setClientContext(getClientContext());
+			editContextRequest.addParameters(getParameters());
 		}
 		return editContextRequest;
 	}

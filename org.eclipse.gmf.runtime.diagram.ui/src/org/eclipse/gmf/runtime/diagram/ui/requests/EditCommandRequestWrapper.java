@@ -101,4 +101,29 @@ public class EditCommandRequestWrapper
 	public IEditCommandRequest getEditCommandRequest() {
 		return editCommandRequest;
 	}
+	
+	/**
+	 * Sets the parameters on the wrapped request.
+	 */
+	public void setExtendedData(Map map) {
+		IEditCommandRequest delegate = getEditCommandRequest();
+		
+		if (delegate != null) {
+			delegate.getParameters().clear();
+			delegate.addParameters(map);
+		}
+	}
+	
+	/**
+	 * Gets the parameters from the wrapped request.
+	 */
+	public Map getExtendedData() {
+		IEditCommandRequest delegate = getEditCommandRequest();
+		
+		if (delegate != null) {
+			return delegate.getParameters();
+		}
+		
+		return super.getExtendedData();
+	}
 }

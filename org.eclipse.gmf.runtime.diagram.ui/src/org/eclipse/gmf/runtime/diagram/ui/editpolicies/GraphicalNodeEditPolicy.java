@@ -576,7 +576,7 @@ public class GraphicalNodeEditPolicy
 		Command createElementCommand = getHost().getCommand(
 			new EditCommandRequestWrapper(
 						(CreateRelationshipRequest) requestAdapter
-								.getAdapter(CreateRelationshipRequest.class)));
+								.getAdapter(CreateRelationshipRequest.class), request.getExtendedData()));
 		// if element cannot be created, ignore
 		if (createElementCommand == null || !createElementCommand.canExecute())
 			return null;
@@ -677,7 +677,7 @@ public class GraphicalNodeEditPolicy
 		Command createElementCommand = targetEP
 				.getCommand(new EditCommandRequestWrapper(
 						(CreateRelationshipRequest) requestAdapter
-								.getAdapter(CreateRelationshipRequest.class)));
+								.getAdapter(CreateRelationshipRequest.class), request.getExtendedData()));
 		
 		// create the create semantic element wrapper command
 		if (null == createElementCommand)

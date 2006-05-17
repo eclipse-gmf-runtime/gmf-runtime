@@ -144,8 +144,10 @@ public class ComponentEditPolicy
 	protected Command createDeleteSemanticCommand(GroupRequest deleteRequest) {
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
         
-		EditCommandRequestWrapper editCommandRequest =
-			new EditCommandRequestWrapper(new DestroyElementRequest(editingDomain, false));
+		EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(
+				new DestroyElementRequest(editingDomain, false), deleteRequest
+						.getExtendedData());
+		
 		Command semanticCmd = getHost().getCommand(editCommandRequest);
 		if (semanticCmd != null && semanticCmd.canExecute()) {
 			CompoundCommand cc = new CompoundCommand();
@@ -245,7 +247,7 @@ public class ComponentEditPolicy
                  editingDomain, hostElement, insertEP.getElementType());
 
             EditCommandRequestWrapper editCommandRequest = new EditCommandRequestWrapper(
-                theReq);
+                theReq, insertRequest.getExtendedData());
             Command cmd = ((IGraphicalEditPart) getHost())
                 .getCommand(editCommandRequest);
 

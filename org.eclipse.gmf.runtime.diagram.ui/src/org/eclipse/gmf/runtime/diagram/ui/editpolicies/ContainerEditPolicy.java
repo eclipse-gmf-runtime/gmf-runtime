@@ -392,8 +392,9 @@ public class ContainerEditPolicy
 			if (!elementsToDuplicate.isEmpty()) {
 				org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest duplicateElementsRequest = new DuplicateElementsRequest(
                     editingDomain, new ArrayList(elementsToDuplicate));
+				
 				Command duplicateElementsCommand = getHost().getCommand(
-					new EditCommandRequestWrapper(duplicateElementsRequest));
+					new EditCommandRequestWrapper(duplicateElementsRequest, request.getExtendedData()));
 				if (duplicateElementsCommand != null
 					&& duplicateElementsCommand.canExecute()) {
 					CompositeCommand cc = new CompositeCommand(

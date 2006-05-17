@@ -108,11 +108,13 @@ public class CreateUnspecifiedTypeRequest
 						elementType)), Node.class,
 					((IHintedType) elementType).getSemanticHint(), getPreferencesHint());
 				request = new CreateViewAndElementRequest(viewDescriptor);
+				request.setExtendedData(getExtendedData());
 			} else {
 				ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(
 					new CreateElementRequestAdapter(new CreateElementRequest(
 						elementType)), Node.class, getPreferencesHint());
 				request = new CreateViewAndElementRequest(viewDescriptor);
+				request.setExtendedData(getExtendedData());
 			}
 
 			request.setType(getType());

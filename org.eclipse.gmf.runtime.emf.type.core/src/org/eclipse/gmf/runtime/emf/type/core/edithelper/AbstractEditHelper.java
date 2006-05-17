@@ -648,6 +648,7 @@ public abstract class AbstractEditHelper
 				req.getEditingDomain(),
 				req.getElementToDestroy(),
 				req.isConfirmationRequired());
+			ddr.addParameters(req.getParameters());
 			ddr.setClientContext(req.getClientContext());
 			req.setParameter(
 					InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER,

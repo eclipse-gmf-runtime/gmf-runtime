@@ -11,12 +11,15 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.requests;
 
+import java.util.Map;
+
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.SuppressibleUIRequest;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.jface.util.Assert;
 
@@ -218,6 +221,32 @@ public class CreateConnectionViewAndElementRequest
 			PreferencesHint preferencesHint) {
 		return getCreateCommand(new CreateConnectionViewAndElementRequest(
 			elementType, preferencesHint), sourceEditPart, targetEditPart);
+	}
+
+	/**
+	 * Propagates setting the parameters to the <code>CreateElementRequest</code> in my 
+	 * {@link #getViewAndElementDescriptor()}.
+	 */
+	public void setExtendedData(Map map) {
+		
+		super.setExtendedData(map);
+		
+		ConnectionViewAndElementDescriptor descriptor = getConnectionViewAndElementDescriptor();
+		
+		if (descriptor != null) {
+			CreateElementRequestAdapter adapter = descriptor
+					.getCreateElementRequestAdapter();
+			
+			if (adapter != null) {
+				CreateElementRequest request = (CreateElementRequest) adapter
+						.getAdapter(CreateElementRequest.class);
+		
+				if (request != null) {
+					request.getParameters().clear();
+					request.addParameters(map);
+				}
+			}
+		}
 	}
 
 }

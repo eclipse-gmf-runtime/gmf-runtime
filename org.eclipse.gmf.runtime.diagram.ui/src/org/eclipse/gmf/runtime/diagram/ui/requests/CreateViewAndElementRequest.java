@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.requests;
  
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -145,4 +146,30 @@ public class CreateViewAndElementRequest extends CreateViewRequest {
 		return (ViewAndElementDescriptor) getViewDescriptors().get(0);
 	}
 
+	
+	/**
+	 * Propagates setting the parameters to the <code>CreateElementRequest</code> in my 
+	 * {@link #getViewAndElementDescriptor()}.
+	 */
+	public void setExtendedData(Map map) {
+		
+		super.setExtendedData(map);
+		
+		ViewAndElementDescriptor descriptor = getViewAndElementDescriptor();
+		
+		if (descriptor != null) {
+			CreateElementRequestAdapter adapter = descriptor
+					.getCreateElementRequestAdapter();
+			
+			if (adapter != null) {
+				CreateElementRequest request = (CreateElementRequest) adapter
+						.getAdapter(CreateElementRequest.class);
+		
+				if (request != null) {
+					request.getParameters().clear();
+					request.addParameters(map);
+				}
+			}
+		}
+	}
 }

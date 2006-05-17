@@ -204,6 +204,9 @@ public class DestroyDependentsRequest extends DestroyRequest {
 						dependent,
 						isConfirmationRequired());
 				
+				// propagate my parameters
+				destroy.addParameters(getParameters());
+				
 				// propagate the dependents information to detect cycles
 				destroy.setParameter(
 						InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER,

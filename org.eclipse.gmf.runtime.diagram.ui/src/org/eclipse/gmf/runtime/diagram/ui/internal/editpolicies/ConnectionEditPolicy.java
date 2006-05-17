@@ -146,7 +146,7 @@ public class ConnectionEditPolicy
             .getEditingDomain();
         
 		EditCommandRequestWrapper semReq =
-			new EditCommandRequestWrapper(new DestroyElementRequest(editingDomain, false));
+			new EditCommandRequestWrapper(new DestroyElementRequest(editingDomain, false), deleteRequest.getExtendedData());
 		Command semanticCmd = getHost().getCommand(semReq);
 		if (semanticCmd != null && semanticCmd.canExecute()) {
 			CompoundCommand cc = new CompoundCommand();

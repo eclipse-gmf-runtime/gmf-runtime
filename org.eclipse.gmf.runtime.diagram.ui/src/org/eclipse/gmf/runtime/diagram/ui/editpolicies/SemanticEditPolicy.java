@@ -214,6 +214,7 @@ public class SemanticEditPolicy
 					result = new DestroyElementRequest(request
                         .getEditingDomain(), getHostElement(), destroyRequest
                         .isConfirmationRequired());
+					result.addParameters(request.getParameters());
                 }
 
 				
@@ -239,6 +240,7 @@ public class SemanticEditPolicy
 					result = new DestroyReferenceRequest(((IGraphicalEditPart)getHost())
                         .getEditingDomain(), container, null, referenceObject,
                         destroyRequest.isConfirmationRequired());
+					result.addParameters(request.getParameters());
 				}
 			}
 		}
@@ -264,6 +266,8 @@ public class SemanticEditPolicy
         ReorientRelationshipRequest semRequest = new ReorientRelationshipRequest(
             editingDomain, connectionSemElement, targetSemElement,
             oldSemElement, ReorientRelationshipRequest.REORIENT_SOURCE);
+        
+        semRequest.addParameters(request.getExtendedData());
 		
 		return getSemanticCommand(semRequest);
 	}
@@ -305,6 +309,8 @@ public class SemanticEditPolicy
         ReorientRelationshipRequest semRequest = new ReorientRelationshipRequest(
             editingDomain, connectionSemElement, targetSemElement,
             oldSemElement, ReorientRelationshipRequest.REORIENT_TARGET);
+        
+        semRequest.addParameters(request.getExtendedData());
 		
 		return getSemanticCommand(semRequest);
 	}
@@ -347,6 +353,8 @@ public class SemanticEditPolicy
 		ReorientReferenceRelationshipRequest semRequest = new ReorientReferenceRelationshipRequest(
             editingDomain, referenceOwner, newTarget, oldTarget,
             ReorientReferenceRelationshipRequest.REORIENT_SOURCE);
+		
+		semRequest.addParameters(request.getExtendedData());
 
 		return getSemanticCommand(semRequest);
 	}
@@ -376,6 +384,8 @@ public class SemanticEditPolicy
         ReorientReferenceRelationshipRequest semRequest = new ReorientReferenceRelationshipRequest(
             editingDomain, referenceOwner, newTarget, oldTarget,
             ReorientReferenceRelationshipRequest.REORIENT_TARGET);
+        
+        semRequest.addParameters(request.getExtendedData());
 
 		return getSemanticCommand(semRequest);
 	}
