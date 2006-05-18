@@ -274,15 +274,36 @@ public abstract class AbstractTransactionalCommand
 
         return status;
     }
+    
+    /**
+	 * Considers that the aggregate status may be different from the present
+	 * status, and updates the command result accordingly.
+	 */
+    protected IStatus aggregateStatuses(List statuses) {
+
+		IStatus status = super.aggregateStatuses(statuses);
+		CommandResult result = getCommandResult();
+
+		if (result == null) {
+			result = new CommandResult(status);
+			setResult(result);
+			
+		} else if (status != result.getStatus()) {
+			result = new CommandResult(status, result.getReturnValue());
+			setResult(result);
+		}
+
+		return status;
+	}
 
     /**
-     * Subclasses may implement this method to dispose of objects that were
-     * required for execution, but are no longer require to undo or redo this
-     * operation.
-     * <P>
-     * This method is invoked at the end of
-     * {@link #doExecute(IProgressMonitor, IAdaptable)}.
-     */
+	 * Subclasses may implement this method to dispose of objects that were
+	 * required for execution, but are no longer require to undo or redo this
+	 * operation.
+	 * <P>
+	 * This method is invoked at the end of
+	 * {@link #doExecute(IProgressMonitor, IAdaptable)}.
+	 */
     protected void cleanup() {
         // subclasses can use this to cleanup
     }
