@@ -38,11 +38,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.ResourceSetListenerImpl;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
@@ -199,16 +199,16 @@ public class AbstractTransactionalCommandTest
 				// precommit listeners
 				CommandResult result = super.doExecuteWithResult(
 						progressMonitor, info);
-				EFactory libraryFactory = EXTLibraryPackage.eINSTANCE
+				EFactory logicFactory = SemanticPackage.eINSTANCE
 						.getEFactoryInstance();
-				EObject library = libraryFactory
-						.create(EXTLibraryPackage.eINSTANCE.getLibrary());
+				EObject circuit = logicFactory
+						.create(SemanticPackage.eINSTANCE.getCircuit());
 				Resource resource = getEditingDomain()
 						.getResourceSet()
 						.createResource(
 								URI
-										.createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core")); //$NON-NLS-1$
-				resource.getContents().add(library);
+										.createURI("null://org.eclipse.gmf.tests.runtime.emf.commands.core")); //$NON-NLS-1$
+				resource.getContents().add(circuit);
 				return result;
 			}
 		};
