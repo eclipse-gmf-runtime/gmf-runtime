@@ -191,7 +191,7 @@ public class CompositePropertySource implements ICompositePropertySource {
      */
     public void setPropertyValue(Object propertyId, Object value) {
 
-        CompositeSourcePropertyDescriptor descriptor = (CompositeSourcePropertyDescriptor) getLocalDescriptors()
+    	ICompositeSourcePropertyDescriptor descriptor = (ICompositeSourcePropertyDescriptor) getLocalDescriptors()
                 .get(propertyId);
 
         if (descriptor != null) {
