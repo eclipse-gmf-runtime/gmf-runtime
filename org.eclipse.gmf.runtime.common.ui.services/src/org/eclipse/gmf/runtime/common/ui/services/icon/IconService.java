@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.Service;
 import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.internal.icon.IconServiceProviderConfiguration;
@@ -68,11 +69,13 @@ public class IconService extends Service implements IIconProvider {
 			if (provider == null) {
 				if (isSupportedInExtention(operation)) {
 					providerConfiguration = null;
-					return getProvider().provides(operation);
+					IProvider theProvider = getProvider();
+					return theProvider != null ? theProvider.provides(operation) : false;
 				}
 				return false;
 			}
-			return getProvider().provides(operation);
+			IProvider theProvider = getProvider();
+			return theProvider != null ? theProvider.provides(operation) : false;
 		}
 
 		/**
@@ -82,7 +85,8 @@ public class IconService extends Service implements IIconProvider {
 		 * @return <code>true</code> if the operation is supported, <code>false</code> otherwise
 		 */
 		private boolean isSupportedInExtention(IOperation operation) {
-			if (operation instanceof GetIconOperation) {
+			if (operation instanceof GetIconOperation
+					&& providerConfiguration != null) {
 				GetIconOperation o = (GetIconOperation) operation;
 				return providerConfiguration.supports(o.getHint());
 			}
