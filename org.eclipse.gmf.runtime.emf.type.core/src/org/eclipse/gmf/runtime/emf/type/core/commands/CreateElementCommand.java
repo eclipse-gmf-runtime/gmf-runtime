@@ -181,7 +181,7 @@ public class CreateElementCommand extends EditElementCommand {
 			if (classToEdit != null) {
 				IElementType type = getElementType();
 
-				if (type != null) {
+				if (type != null && type.getEClass() != null) {
 					containmentFeature = PackageUtil.findFeature(classToEdit,
 							type.getEClass());
 				}
