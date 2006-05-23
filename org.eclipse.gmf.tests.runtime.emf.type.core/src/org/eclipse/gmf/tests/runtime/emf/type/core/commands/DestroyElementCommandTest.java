@@ -10,7 +10,10 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -34,6 +37,7 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Client;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Customer;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
+import org.eclipse.gmf.tests.runtime.emf.type.core.internal.DestroyCustomerAdvice;
 
 /**
  * Tests the extensible {@link DestroyElementCommand}.
@@ -301,4 +305,36 @@ public class DestroyElementCommandTest
     	// in case it was a root object
     	assertFalse(getResource().getContents().contains(eObject));
     }
+    
+    /**
+	 * Tests that the element to destroy in a DestroyRequest is the same in the
+	 * before advice as it is in the after advice.
+	 */
+    public void test_preserveElementToDestroy_142561() {
+
+		DestroyElementRequest req = new DestroyElementRequest(parentCompany,
+				false);
+		IElementType type = ElementTypeRegistry.getInstance().getElementType(
+				req.getEditHelperContext());
+
+		req.setParameter(DestroyCustomerAdvice.BEFORE, new ArrayList());
+		req.setParameter(DestroyCustomerAdvice.AFTER, new ArrayList());
+
+		assertNotNull(type);
+
+		ICommand cmd = type.getEditCommand(req);
+
+		assertNotNull(cmd);
+
+		execute(cmd);
+
+		assertDestroyed(parentCompany);
+
+		// verify that the after advice sees the same elements to destroy in the reverse order
+		List before = (List) req.getParameter(DestroyCustomerAdvice.BEFORE);
+		List after = (List) req.getParameter(DestroyCustomerAdvice.AFTER);
+
+		Collections.reverse(after);
+		assertEquals(before, after);
+	}
 }

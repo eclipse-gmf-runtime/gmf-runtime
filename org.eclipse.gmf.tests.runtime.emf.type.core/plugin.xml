@@ -208,7 +208,14 @@
                 id="org.eclipse.gmf.tests.runtime.emf.type.core.clientDependentsAdvice"
                 typeId="org.eclipse.gmf.tests.runtime.emf.type.core.client"
                 class="org.eclipse.gmf.tests.runtime.emf.type.core.internal.ClientDependentsAdvice"> 
-           </adviceBinding>    
+           </adviceBinding>   
+           
+           <!-- Advice for destruction of Customers -->
+           <adviceBinding
+                id="org.eclipse.gmf.tests.runtime.emf.type.core.destroyCustomerAdvice"
+                typeId="*"
+                class="org.eclipse.gmf.tests.runtime.emf.type.core.internal.DestroyCustomerAdvice"> 
+           </adviceBinding>   
         </metamodel>
         
         <!-- Test metamodel that doesn't exist -->

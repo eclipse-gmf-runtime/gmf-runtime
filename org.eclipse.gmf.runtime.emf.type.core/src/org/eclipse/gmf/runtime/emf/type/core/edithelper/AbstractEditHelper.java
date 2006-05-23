@@ -730,6 +730,9 @@ public abstract class AbstractEditHelper
 			result = result.compose(destroyParent);
 		}
 		
+		// restore the elementToDestroy in the original request
+		req.setElementToDestroy(parent);
+		
 		return result;
 	}
 
