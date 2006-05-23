@@ -10,6 +10,9 @@
  ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.ReorientWireCommand;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
@@ -44,10 +47,21 @@ public class WireEditHelper
 
 			if (hasValidSourceAndTarget(createRelationshipRequest)) {
 
-				// Get the nearest container element to own the new wire.
-				EObject container = EMFCoreUtil.getContainer(
-					createRelationshipRequest.getSource(),
-					SemanticPackage.eINSTANCE.getContainerElement());
+				// Get the nearest common container element to own the new wire.
+				List terminals = new ArrayList();
+				
+				EObject source = createRelationshipRequest.getSource();
+				if (source != null) {
+					terminals.add(source);
+				}
+				EObject target = createRelationshipRequest.getTarget();
+				if (target != null) {
+					terminals.add(target);
+				}
+				
+				EObject container = EMFCoreUtil.getLeastCommonContainer(
+						terminals, SemanticPackage.eINSTANCE
+								.getContainerElement());
 
 				GetEditContextCommand result = new GetEditContextCommand(req);
 				result.setEditContext(container);
