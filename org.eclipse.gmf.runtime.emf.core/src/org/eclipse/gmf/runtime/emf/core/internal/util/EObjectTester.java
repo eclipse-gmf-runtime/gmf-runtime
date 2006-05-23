@@ -37,12 +37,11 @@ public class EObjectTester extends PropertyTester {
 		EObject eObject = (EObject) receiver;
 
 		if (property.equals(EDITING_DOMAIN_PROPERTY)) {
-			TransactionalEditingDomain expectedDomain = TransactionalEditingDomain.Registry.INSTANCE
-					.getEditingDomain((String) expectedValue);
+			String expectedID = (String) expectedValue;
 
-			if (expectedDomain != null) {
-				return expectedDomain == TransactionUtil
-						.getEditingDomain(eObject);
+			if (expectedID != null) {
+				return expectedID.equals(TransactionUtil.getEditingDomain(
+						eObject).getID());
 			}
 		}
 
