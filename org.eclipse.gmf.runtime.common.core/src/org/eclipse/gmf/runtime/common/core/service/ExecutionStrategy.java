@@ -319,12 +319,21 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 			return provider.provides(operation);
 		}
 		catch (Exception e) {
-			Log.log(
-				CommonCorePlugin.getDefault(),
-				IStatus.ERROR,
-				CommonCoreStatusCodes.SERVICE_FAILURE,
-				"Ignoring provider " + provider + " since it threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
-				e);
+			
+			List ignoredProviders = Service.getIgnoredProviders();
+			String providerClassName = provider.getClass().getName();
+			
+			if (!ignoredProviders.contains(providerClassName)) {
+				// remember the ignored provider so that the error is only logged once per provider
+				ignoredProviders.add(providerClassName);
+				
+				Log.log(
+					CommonCorePlugin.getDefault(),
+					IStatus.ERROR,
+					CommonCoreStatusCodes.SERVICE_FAILURE,
+					"Ignoring provider " + provider + " since it threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
+					e);
+			}
 			return false;
 		}
 		

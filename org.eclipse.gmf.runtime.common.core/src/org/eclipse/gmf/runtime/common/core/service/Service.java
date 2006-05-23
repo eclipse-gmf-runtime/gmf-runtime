@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreDebugOptions;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin;
 import org.eclipse.gmf.runtime.common.core.internal.CommonCoreStatusCodes;
+import org.eclipse.gmf.runtime.common.core.internal.l10n.CommonCoreMessages;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 
@@ -80,6 +81,8 @@ public abstract class Service
 		implements IProvider, IProviderChangeListener {
 		
 		protected boolean policyInitialized = false;
+		
+		private String providerClassName;
 
 		/**
 		 * The name of the 'class' XML attribute.
@@ -111,6 +114,12 @@ public abstract class Service
 		 * The policy associated with this descriptor's provider (if specified).
 		 */
 		protected IProviderPolicy policy;
+		
+		/**
+		 * Tracks the failure of the provider class intantiation, so that a
+		 * failure to create the class is logged only once.
+		 */
+		private boolean providerClassInstantiationFailed = false;
 
 		/**
 		 * Constructs a new provider descriptor for the specified configuration
@@ -142,7 +151,7 @@ public abstract class Service
 		 * @return The provider for which this object is a descriptor.
 		 */
 		public IProvider getProvider() {
-			if (null == provider) {
+			if (null == provider && !providerClassInstantiationFailed) {
 				CommonCorePlugin corePlugin = CommonCorePlugin.getDefault();
 
 				try {
@@ -150,14 +159,21 @@ public abstract class Service
 					provider = (IProvider)element.createExecutableExtension(A_CLASS);
 					provider.addProviderChangeListener(this);
 					Trace.trace(corePlugin, CommonCoreDebugOptions.SERVICES_ACTIVATE, "Provider '" + provider + "' activated."); //$NON-NLS-1$ //$NON-NLS-2$
+				
 				} catch (CoreException ce) {
+					
+					if (provider == null) {
+						// remember that the provider class could not be instantiated
+						providerClassInstantiationFailed = true;
+					}
+					
 					Trace.catching(corePlugin, CommonCoreDebugOptions.EXCEPTIONS_CATCHING, getClass(), "getProvider", ce); //$NON-NLS-1$
 					IStatus status = ce.getStatus();
 					Log.log(
 						corePlugin,
 						status.getSeverity(),
 						CommonCoreStatusCodes.SERVICE_FAILURE,
-						status.getMessage(),
+						CommonCoreMessages.bind(CommonCoreMessages.serviceProviderNotActivated, element.getAttribute(A_CLASS)),
 						status.getException());
 				}
 			}
@@ -251,6 +267,25 @@ public abstract class Service
 		public void providerChanged(ProviderChangeEvent event) {
 			fireProviderChange(event);
 		}
+		
+		/**
+		 * Returns the provider's class name, if it can be found.
+		 */
+		public String toString() {
+
+			if (providerClassName == null) {
+				if (getElement() != null) {
+					// get the provider class name
+					providerClassName = getElement().getAttribute(A_CLASS);
+				}
+				if (providerClassName == null) {
+					// use the object ID if no provider class name can be found
+					providerClassName = super.toString();
+				}
+			}
+
+			return providerClassName;
+		}
 
 	}
 
@@ -290,6 +325,12 @@ public abstract class Service
 
 		priorityCount = maxOrdinal + 1;
 	}
+	
+	/**
+	 * List of providers class names that have thrown exceptions in the provides() method.
+	 * Used to prevent logging repeatedly for the same failed provider.
+	 */
+	private static final List ignoredProviders = new ArrayList();
 
 	/**
 	 * The cache of providers (for optimization) indexed by
@@ -809,15 +850,35 @@ public abstract class Service
 			return provider.provides(operation);
 		}
 		catch (Exception e) {
-			Log.log(
-				CommonCorePlugin.getDefault(),
-				IStatus.ERROR,
-				CommonCoreStatusCodes.SERVICE_FAILURE,
-				"Ignoring provider " + provider + " since it threw an exception in the provides() method", //$NON-NLS-1$ //$NON-NLS-2$
-				e);
+			
+			String providerClassName = provider.getClass().getName();
+			
+			if (!ignoredProviders.contains(providerClassName)) {
+				// remember the ignored provider so that the error is only logged once per provider
+				ignoredProviders.add(providerClassName);
+				
+				Log.log(
+					CommonCorePlugin.getDefault(),
+					IStatus.ERROR,
+					CommonCoreStatusCodes.SERVICE_FAILURE,
+					"Ignoring provider " + provider + " since it threw an exception in the provides() method", //$NON-NLS-1$ //$NON-NLS-2$
+					e);
+			}
+			
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Package private access to the list of ignored providers. Providers are
+	 * ignored when they cause a runtime exception to be thrown in their {{@link #provides(IOperation)}}
+	 * method.
+	 * 
+	 * @return the list of ignored providers.
+	 */
+	static List getIgnoredProviders() {
+		return ignoredProviders;
 	}
 
 }
