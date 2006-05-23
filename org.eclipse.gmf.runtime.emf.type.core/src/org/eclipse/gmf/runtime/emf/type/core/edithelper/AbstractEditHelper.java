@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.IdentityCommand;
+import org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
@@ -161,7 +162,7 @@ public abstract class AbstractEditHelper
 
                     if (!beforeAdvice.canExecute()) {
                         // The operation is not permitted
-                        return null;
+                        return UnexecutableCommand.INSTANCE;
                     }
                     command.compose(beforeAdvice);
                 }
@@ -180,7 +181,7 @@ public abstract class AbstractEditHelper
                 
                 if (!insteadCommand.canExecute()) {
                     // The operation is not permitted
-                    return null;
+                	return UnexecutableCommand.INSTANCE;
                 }
                 command.compose(insteadCommand);
             }
@@ -199,7 +200,7 @@ public abstract class AbstractEditHelper
                     
                     if (!afterAdvice.canExecute()) {
                         // The operation is not permitted
-                        return null;
+                    	return UnexecutableCommand.INSTANCE;
                     }
                     command.compose(afterAdvice);
                 }

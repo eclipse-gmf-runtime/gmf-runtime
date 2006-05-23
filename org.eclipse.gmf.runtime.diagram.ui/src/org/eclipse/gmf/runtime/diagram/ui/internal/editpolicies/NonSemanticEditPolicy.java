@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 
-import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
@@ -49,15 +47,5 @@ public class NonSemanticEditPolicy extends SemanticEditPolicy {
 			}
 		}
 		return super.getSemanticCommand( editRequest );
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.EditPolicy#getCommand(org.eclipse.gef.Request)
-	 */
-	public Command getCommand(Request request) {
-		if (REQ_RECONNECT_SOURCE.equals(request.getType()) || REQ_RECONNECT_TARGET.equals(request.getType())) {
-			return null;
-		}
-		return super.getCommand(request);
 	}
 }
