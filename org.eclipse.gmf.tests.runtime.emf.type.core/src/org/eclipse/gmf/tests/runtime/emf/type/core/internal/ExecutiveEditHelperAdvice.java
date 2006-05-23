@@ -37,6 +37,12 @@ public class ExecutiveEditHelperAdvice
 
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 		    throws ExecutionException {
+			
+			if (getRequest().getParameter("fail_configuration") != null) { //$NON-NLS-1$
+				return CommandResult
+						.newWarningCommandResult("configuration failed", null); //$NON-NLS-1$
+			}
+			
 			return null;
 		}
 	}
@@ -51,7 +57,8 @@ public class ExecutiveEditHelperAdvice
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 		    throws ExecutionException {
             
-			Employee employee = (Employee) getRequest().getEditHelperContext();
+			Employee employee = (Employee) ((ConfigureRequest) getRequest()).getElementToConfigure();
+			
 			Office office = employee.getOffice();
 			office.setHasDoor(true);
 			

@@ -47,7 +47,7 @@ public class ClientContextManagerTest extends AbstractEMFTypeTest {
 
 	public static Test suite() {
 		return new TestSuite(ClientContextManagerTest.class,
-				"ClientContextManager Test Suit"); //$NON-NLS-1$
+				"ClientContextManager Test Suite"); //$NON-NLS-1$
 	}
 
 	protected void doModelSetupWithContext(Resource resource) {

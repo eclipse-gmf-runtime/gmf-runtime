@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.emf.type.core.commands;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -76,17 +77,21 @@ public class CreateElementCommand extends EditElementCommand {
 
         ICommand configureCommand = elementType
             .getEditCommand(configureRequest);
-
+        
+        IStatus configureStatus = null;
+        
         if (configureCommand != null && configureCommand.canExecute()) {
-            configureCommand.execute(monitor, info);
+        	configureStatus = configureCommand.execute(monitor, info);
         }
 
         // Put the newly created element in the request so that the
         // 'after' commands have access to it.
         getCreateRequest().setNewElement(newElement);
 
-        return CommandResult.newOKCommandResult(newElement);
-    }
+        return (configureStatus == null) ? 
+        		CommandResult.newOKCommandResult(newElement) : 
+        		new CommandResult(configureStatus, newElement);
+	}
 
 	/**
 	 * Creates the request to configure the new element.

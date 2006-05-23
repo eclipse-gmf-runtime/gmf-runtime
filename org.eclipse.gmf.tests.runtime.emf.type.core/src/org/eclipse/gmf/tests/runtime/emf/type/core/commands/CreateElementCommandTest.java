@@ -14,6 +14,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.commands.CreateElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -41,7 +44,7 @@ public class CreateElementCommandTest
     }
 
     public static Test suite() {
-        return new TestSuite(CreateElementCommandTest.class);
+        return new TestSuite(CreateElementCommandTest.class, "CreateElementCommand Test Suite"); //$NON-NLS-1$
     }
 
     protected void doModelSetup(Resource resource) {
@@ -68,4 +71,52 @@ public class CreateElementCommandTest
 
         assertFalse(getFixture().canExecute());
     }
+    
+    /**
+	 * Verifies that the status from configuring the new element is reported in
+	 * the command result of the create element command.
+	 */
+    public void test_configureStatusPropagated_139736() {
+
+		// First create an executive with no configuration failure
+		CreateElementRequest request = new CreateElementRequest(
+				getEditingDomain(), department, EmployeeType.EXECUTIVE,
+				EmployeePackage.eINSTANCE.getDepartment_Members());
+
+		CreateElementCommand command = new CreateElementCommand(request);
+
+		IStatus status = null;
+
+		try {
+			status = command.execute(new NullProgressMonitor(), null);
+
+		} catch (ExecutionException e) {
+			fail("Command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+
+		assertEquals(IStatus.OK, command.getCommandResult().getStatus()
+				.getSeverity());
+		assertEquals(IStatus.OK, status.getSeverity());
+
+		// Now create an executive whose configuration returns a warning status
+		request = new CreateElementRequest(getEditingDomain(), department,
+				EmployeeType.EXECUTIVE, EmployeePackage.eINSTANCE
+						.getDepartment_Members());
+
+		request.setParameter("fail_configuration", Boolean.TRUE); //$NON-NLS-1$
+
+		command = new CreateElementCommand(request);
+		status = null;
+
+		try {
+			status = command.execute(new NullProgressMonitor(), null);
+
+		} catch (ExecutionException e) {
+			fail("Command execution failed: " + e.getLocalizedMessage()); //$NON-NLS-1$
+		}
+
+		assertEquals(IStatus.WARNING, command.getCommandResult().getStatus()
+				.getSeverity());
+		assertEquals(IStatus.WARNING, status.getSeverity());
+	}
 }
