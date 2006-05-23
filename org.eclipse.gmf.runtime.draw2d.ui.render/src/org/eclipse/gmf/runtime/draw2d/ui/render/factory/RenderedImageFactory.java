@@ -294,11 +294,19 @@ public class RenderedImageFactory {
 			RenderedImageType imageType = (RenderedImageType)li.next();
 			image = imageType.autoDetect(buffer, key);
 			if (image != null)
-				return image;
+				break;
 		}
 
-		// can't create a RenderedImageType for image files until bugzilla 116227 is resolved.  Until then,
-		// assume, the fall through type is ImageRenderedImage.
-		return new ImageRenderedImage(buffer, key);
+		if (image == null) {
+			// can't create a RenderedImageType for image files until bugzilla 116227 is resolved.  Until then,
+			// assume, the fall through type is ImageRenderedImage.
+			image = new ImageRenderedImage(buffer, key);
+		}
+		
+		if (image != null) {
+			instanceMap.put(key, new WeakReference(image));
+		}
+		
+		return image;
 	}
 }
