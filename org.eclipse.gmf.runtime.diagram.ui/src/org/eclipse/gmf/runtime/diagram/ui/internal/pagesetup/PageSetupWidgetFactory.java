@@ -64,7 +64,6 @@ public class PageSetupWidgetFactory {
 	public static Button createRadioButton(Composite parent, String label) {
 		final Button button = new Button(parent, SWT.RADIO);
 		GridData groupGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_HORIZONTAL);
-		groupGridData.widthHint = 60;
 		button.setLayoutData(groupGridData);
 		button.setText(label);
 		
