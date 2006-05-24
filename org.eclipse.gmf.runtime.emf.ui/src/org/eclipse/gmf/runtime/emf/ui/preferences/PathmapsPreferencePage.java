@@ -17,7 +17,11 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IPathVariableChangeEvent;
 import org.eclipse.core.resources.IPathVariableChangeListener;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.CommonPlugin;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.preference.PreferencePage;
@@ -36,10 +40,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -48,6 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
@@ -229,6 +237,19 @@ public class PathmapsPreferencePage
 				adjustScrollpanes();
 			}});
 		
+		pathVariables.getTable().addMouseTrackListener(new MouseTrackAdapter() {
+			public void mouseHover(MouseEvent e) {
+				TableItem item = pathVariables.getTable().getItem(new Point(e.x, e.y));
+				String tip = null;
+				
+				if (item != null) {
+					String var = item.getText(0);
+					tip = getValue(var, false);
+				}
+				
+				pathVariables.getTable().setToolTipText(tip);
+			}});
+		
 		pathVariables.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (!event.getSelection().isEmpty()) { // prevent oscillation
@@ -244,6 +265,20 @@ public class PathmapsPreferencePage
 				}
 			}
 		});
+		
+		referencedPathVariables.getTable().addMouseTrackListener(new MouseTrackAdapter() {
+			public void mouseHover(MouseEvent e) {
+				TableItem item = referencedPathVariables.getTable().getItem(
+						new Point(e.x, e.y));
+				String tip = null;
+				
+				if (item != null) {
+					String var = item.getText(0);
+					tip = getValue(var, true);
+				}
+				
+				referencedPathVariables.getTable().setToolTipText(tip);
+			}});
 		
 		referencedPathVariables.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -366,6 +401,38 @@ public class PathmapsPreferencePage
 		referencedPathVariablesScroll.setMinSize(
 				referencedPathVariables.getTable().computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		referencedPathVariablesScroll.layout();
+	}
+	
+	private String getValue(String pathVariable, boolean includeRegistered) {
+		String result = null;
+		
+		if (includeRegistered && PathmapManager.isRegisteredPathVariable(pathVariable)) {
+			String path = PathmapManager.getRegisteredValue(pathVariable);
+			
+			if (path != null) {
+				URI uri = URI.createURI(path);
+				uri = CommonPlugin.resolve(uri);
+				
+				if (uri.isFile()) {
+					path = uri.toFileString();
+				} else {
+					path = uri.toString();
+				}
+				
+				result = path;
+			}
+		} else {
+			IPathVariableManager pathVarMgr =
+				ResourcesPlugin.getWorkspace().getPathVariableManager();
+			
+			IPath path = pathVarMgr.getValue(pathVariable);
+			
+			if (path != null) {
+				result = path.toOSString();
+			}
+		}
+		
+		return result;
 	}
 	
 	private boolean validateAdditions(IStructuredSelection selection, boolean showError) {

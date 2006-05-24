@@ -234,6 +234,18 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 				&& !referencedPathVariablesList.contains(variable);
 	}
 	
+	/**
+	 * If the specified <code>variable</code> is registered on the extension
+	 * point, then retrieve its value.
+	 * 
+	 * @param variable the registered variable to retrieve
+	 * @return the registered variable's value or <code>null</code> if
+	 *     it is not registered
+	 */
+	public static String getRegisteredValue(String variable) {
+		return (String) PATH_MAP.get(variable);
+	}
+	
 	public static boolean isCompatiblePathVariable(String variable) {
 		if (referencedPathVariablesList.contains(variable)) {
 			// We assume that if this variable is already referenced then it is valid.
