@@ -49,6 +49,7 @@ public final class EMFUIMessages extends NLS {
 	public static String PathmapsPreferencePage_addChevron;
 	public static String PathmapsPreferencePage_removeChevron;
 	public static String PathmapsPreferencePage_incompatiblePathVariableErrorMessage;
+	public static String PathmapsPreferencePage_registeredPathVariableErrorMessage;
 	public static String PathmapsPreferencePage_mainDescription;
 	public static String PathmapsPreferencePage_addAllChevron;
 	public static String PathmapsPreferencePage_removeAllChevron;

@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.runtime.emf.ui.preferences;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.resources.IPathVariableChangeEvent;
 import org.eclipse.core.resources.IPathVariableChangeListener;
@@ -19,16 +21,33 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
@@ -46,9 +65,14 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class PathmapsPreferencePage
 	extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private List referencedPathVariables;
-	private List pathVariables;
+	private ScrolledComposite referencedPathVariablesScroll;
+	private TableViewer referencedPathVariables;
+	private StringsContentProvider referencedPathVariablesContent;
+	private ScrolledComposite pathVariablesScroll;
+	private TableViewer pathVariables;
+	private StringsContentProvider pathVariablesContent;
 	private Button add;
+	private Button remove;
 	private IPathVariableChangeListener pathVariableChangeListener;
 	private boolean disposed = true;
 
@@ -77,7 +101,7 @@ public class PathmapsPreferencePage
 		gridData.grabExcessVerticalSpace = false;
 		gridData.horizontalSpan = 3;
 		pathVariablesArea.getControl().setLayoutData(gridData);
-	
+		
 		Composite pathVariablesComposite = new Composite(composite, SWT.NONE);
 		pathVariablesComposite.setLayout(new GridLayout(1, false));
 		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
@@ -95,12 +119,30 @@ public class PathmapsPreferencePage
 		pathVariablesLabel.setLayoutData(gridData);
 		pathVariablesLabel.setText(EMFUIMessages.PathmapsPreferencePage_availablePathVariables);
 		
-		pathVariables = new List(pathVariablesComposite, SWT.MULTI | SWT.BORDER);
+		pathVariablesScroll = new ScrolledComposite(
+				pathVariablesComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		pathVariablesScroll.setExpandHorizontal(true);
+		pathVariablesScroll.setExpandVertical(true);
 		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalSpan = 1;
-		pathVariables.setLayoutData(gridData);
+		pathVariablesScroll.setLayoutData(gridData);
+		pathVariables = new TableViewer(pathVariablesScroll, SWT.MULTI);
+		pathVariablesScroll.setContent(pathVariables.getTable());
+		
+		TableColumn column = new TableColumn(pathVariables.getTable(), SWT.LEFT);
+		column.setMoveable(false);
+		column.setResizable(false);
+		pathVariables.getTable().addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				pathVariables.getTable().getColumn(0).setWidth(
+						pathVariables.getTable().getClientArea().width);
+			}});
+		pathVariablesContent = new StringsContentProvider();
+		pathVariables.setContentProvider(pathVariablesContent);
+		pathVariables.setLabelProvider(new StringsLabelProvider());
+		pathVariables.setComparator(new StringsViewerComparator());
 		
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		buttonComposite.setLayout(new GridLayout(1, false));
@@ -117,7 +159,7 @@ public class PathmapsPreferencePage
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
 		addAll.setLayoutData(gridData);
-		Button remove = new Button(buttonComposite,SWT.CENTER);
+		remove = new Button(buttonComposite,SWT.CENTER);
 		remove.setText(EMFUIMessages.PathmapsPreferencePage_removeChevron);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
@@ -156,50 +198,79 @@ public class PathmapsPreferencePage
 		referencedPathVariablesLabel.setLayoutData(gridData);
 		referencedPathVariablesLabel.setText(EMFUIMessages.PathmapsPreferencePage_pathVariablesUsedInModeling);
 		
-		referencedPathVariables = new List(referencedPathVariablesComposite,SWT.MULTI | SWT.BORDER);
+		referencedPathVariablesScroll = new ScrolledComposite(
+				referencedPathVariablesComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		referencedPathVariablesScroll.setExpandHorizontal(true);
+		referencedPathVariablesScroll.setExpandVertical(true);
 		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalSpan = 1;
-		referencedPathVariables.setLayoutData(gridData);
+		referencedPathVariablesScroll.setLayoutData(gridData);
+		referencedPathVariables = new TableViewer(referencedPathVariablesScroll, SWT.MULTI);
+		referencedPathVariablesScroll.setContent(referencedPathVariables.getTable());
 		
-		pathVariables.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				referencedPathVariables.deselectAll();
-				
-				if (!validateSelections(pathVariables.getSelection())) {
-					setMessage(EMFUIMessages.PathmapsPreferencePage_incompatiblePathVariableErrorMessage,ERROR);
-					add.setEnabled(false);
-				} else {
-					setMessage(null);
-					add.setEnabled(true);
+		column = new TableColumn(referencedPathVariables.getTable(), SWT.LEFT);
+		column.setMoveable(false);
+		column.setResizable(false);
+		referencedPathVariables.getTable().addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				referencedPathVariables.getTable().getColumn(0).setWidth(
+						referencedPathVariables.getTable().getClientArea().width);
+			}});
+		referencedPathVariablesContent = new StringsContentProvider();
+		referencedPathVariables.setContentProvider(referencedPathVariablesContent);
+		referencedPathVariables.setLabelProvider(new StringsLabelProvider(true));
+		referencedPathVariables.setComparator(new StringsViewerComparator());
+		
+		// adjust the scroll bars whenever the preference page is resized
+		composite.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				adjustScrollpanes();
+			}});
+		
+		pathVariables.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!event.getSelection().isEmpty()) { // prevent oscillation
+					referencedPathVariables.setSelection(new StructuredSelection());
+					remove.setEnabled(true);
+					
+					if (!validateAdditions((IStructuredSelection) event.getSelection(), true)) {
+						add.setEnabled(false);
+					} else {
+						setMessage(null);
+						add.setEnabled(true);
+					}
 				}
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// No action necessary
 			}
 		});
 		
-		referencedPathVariables.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				setMessage(null);
-				add.setEnabled(true);
-				pathVariables.deselectAll();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// No action necessary
+		referencedPathVariables.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!event.getSelection().isEmpty()) { // prevent oscillation
+					add.setEnabled(true);
+					pathVariables.setSelection(new StructuredSelection());
+					
+					if (!validateRemovals((IStructuredSelection) event.getSelection(), true)) {
+						remove.setEnabled(false);
+					} else {
+						setMessage(null);
+						remove.setEnabled(true);
+					}
+				}
 			}
 		});
 		
 		add.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				String[] selections = pathVariables.getSelection();
+				IStructuredSelection selection =
+					(IStructuredSelection) pathVariables.getSelection();
 				
-				for (int i=0; i<selections.length; i++) {
-					referencedPathVariables.add(selections[i]);
-					pathVariables.remove(selections[i]);
+				for (Iterator iter = selection.iterator(); iter.hasNext();) {
+					String name = (String) iter.next();
+					pathVariablesContent.remove(name);
+					referencedPathVariablesContent.add(name);
+					adjustScrollpanes();
 				}
 			}
 
@@ -214,12 +285,14 @@ public class PathmapsPreferencePage
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				String[] items = pathVariables.getItems();
+				Object[] items = pathVariablesContent.getElements(null);
 				
-				for (int i=0; i<items.length; i++) {
-					if (validateSelections(new String[]{items[i]})) {
-						referencedPathVariables.add(items[i]);
-						pathVariables.remove(items[i]);
+				for (int i=items.length - 1; i >= 0; i--) {
+					if (validateAdditions(new StructuredSelection(items[i]), false)) {
+						String name = (String) items[i];
+						pathVariablesContent.remove(name);
+						referencedPathVariablesContent.add(name);
+						adjustScrollpanes();
 					}
 				}
 			}
@@ -227,11 +300,14 @@ public class PathmapsPreferencePage
 		
 		remove.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				String[] selections = referencedPathVariables.getSelection();
+				IStructuredSelection selection =
+					(IStructuredSelection) referencedPathVariables.getSelection();
 				
-				for (int i=0; i<selections.length; i++) {
-					pathVariables.add(selections[i]);
-					referencedPathVariables.remove(selections[i]);
+				for (Iterator iter = selection.iterator(); iter.hasNext();) {
+					String name = (String) iter.next();
+					referencedPathVariablesContent.remove(name);
+					pathVariablesContent.add(name);
+					adjustScrollpanes();
 				}
 			}
 
@@ -246,11 +322,15 @@ public class PathmapsPreferencePage
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				String[] items = referencedPathVariables.getItems();
+				Object[] items = referencedPathVariablesContent.getElements(null);
 				
-				for (int i=0; i<items.length; i++) {
-					pathVariables.add(items[i]);
-					referencedPathVariables.remove(items[i]);
+				for (int i=items.length - 1; i >= 0; i--) {
+					if (validateRemovals(new StructuredSelection(items[i]), false)) {
+						String name = (String) items[i];
+						referencedPathVariablesContent.remove(name);
+						pathVariablesContent.add(name);
+						adjustScrollpanes();
+					}
 				}
 			}
 		});
@@ -261,7 +341,7 @@ public class PathmapsPreferencePage
 		//  the up-to-date information.
 		pathVariableChangeListener = new IPathVariableChangeListener() {
 			public void pathVariableChanged(IPathVariableChangeEvent event) {
-				referencedPathVariables.getShell().getDisplay().asyncExec(new Runnable() {
+				referencedPathVariables.getTable().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (!PathmapsPreferencePage.this.disposed) {
 							performDefaults();
@@ -279,14 +359,50 @@ public class PathmapsPreferencePage
 		return composite;
 	}
 	
-	private boolean validateSelections(String[] selections) {
-		if (selections.length == 0)
+	private void adjustScrollpanes() {
+		pathVariablesScroll.setMinSize(
+				pathVariables.getTable().computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		pathVariablesScroll.layout();
+		referencedPathVariablesScroll.setMinSize(
+				referencedPathVariables.getTable().computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		referencedPathVariablesScroll.layout();
+	}
+	
+	private boolean validateAdditions(IStructuredSelection selection, boolean showError) {
+		if (selection.isEmpty())
 			return false;
 		
-		for (int i=0; i<selections.length; i++) {
-			String selection = selections[i];
+		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
 			
-			if (!PathmapManager.isCompatiblePathVariable(selection)) {
+			if (!PathmapManager.isCompatiblePathVariable(name)) {
+				if (showError) {
+					setMessage(EMFUIMessages.PathmapsPreferencePage_incompatiblePathVariableErrorMessage,ERROR);
+				}
+				return false;
+			}
+			
+			if (PathmapManager.isRegisteredPathVariable(name)) {
+				if (showError) {
+					setMessage(EMFUIMessages.PathmapsPreferencePage_registeredPathVariableErrorMessage,ERROR);
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean validateRemovals(IStructuredSelection selection, boolean showError) {
+		if (selection.isEmpty())
+			return false;
+		
+		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			
+			if (PathmapManager.isRegisteredPathVariable(name)) {
+				if (showError) {
+					setMessage(EMFUIMessages.PathmapsPreferencePage_registeredPathVariableErrorMessage,ERROR);
+				}
 				return false;
 			}
 		}
@@ -296,19 +412,21 @@ public class PathmapsPreferencePage
 	private void initializeContents() {
 		setMessage(null);
 		add.setEnabled(true);
-		referencedPathVariables.removeAll();
-		pathVariables.removeAll();
+		remove.setEnabled(true);
 		
+		referencedPathVariables.setInput(new HashSet(PathmapManager.getAllPathVariables()));
+		
+		Set currentVariables = PathmapManager.getPathVariableReferences();
+		
+		Set available = new HashSet();
 		String[] pathVariableNames = ResourcesPlugin.getWorkspace().getPathVariableManager().getPathVariableNames();
 		for (int i=0; i<pathVariableNames.length; i++) {
-			pathVariables.add(pathVariableNames[i]);
+			if (!currentVariables.contains(pathVariableNames[i])) {
+				available.add(pathVariableNames[i]);
+			}
 		}
 		
-		for (Iterator i = PathmapManager.getPathVariableReferences().iterator(); i.hasNext();) {
-			String pathVariable = (String)i.next();
-			referencedPathVariables.add(pathVariable);
-			pathVariables.remove(pathVariable);
-		}
+		pathVariables.setInput(available);
 	}
 
 	public void init(IWorkbench workbench) {
@@ -321,14 +439,20 @@ public class PathmapsPreferencePage
 	}
 	
 	public boolean performOk() {
-		String[] nonReferencedPathVariables = pathVariables.getItems();
+		Object[] nonReferencedPathVariables = pathVariablesContent.getElements(null);
 		for (int i=0; i<nonReferencedPathVariables.length; i++) {
-			PathmapManager.removePathVariableReference(nonReferencedPathVariables[i]);
+			String variableName = (String) nonReferencedPathVariables[i];
+			PathmapManager.removePathVariableReference(variableName);
 		}
 		
-		String[] variablesToReference = referencedPathVariables.getItems();
+		Set currentVariables = PathmapManager.getAllPathVariables();
+		Object[] variablesToReference = referencedPathVariablesContent.getElements(null);
 		for (int i=0; i<variablesToReference.length; i++) {
-			PathmapManager.addPathVariableReference(variablesToReference[i]);
+			String variableName = (String) variablesToReference[i];
+			
+			if (!currentVariables.contains(variableName)) {
+				PathmapManager.addPathVariableReference(variableName);
+			}
 		}
 		
 		PathmapManager.updatePreferenceStore();
@@ -343,5 +467,101 @@ public class PathmapsPreferencePage
 			pathVariableChangeListener = null;
 		}
 		super.dispose();
+	}
+	
+	private static class StringsContentProvider implements IStructuredContentProvider {
+		private Set strings;
+		private TableViewer table;
+		
+		StringsContentProvider() {
+			strings = new HashSet();
+		}
+		
+		void add(String string) {
+			if (!strings.contains(string)) {
+				strings.add(string);
+				table.add(string);
+			}
+		}
+		
+		void remove(String string) {
+			if (strings.contains(string)) {
+				strings.remove(string);
+				table.remove(string);
+			}
+		}
+		
+		public Object[] getElements(Object inputElement) {
+			return strings.toArray();
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			strings = (Set) newInput;
+			table = (TableViewer) viewer;
+		}
+
+		public void dispose() {
+			// nothing to clean up
+		}
+	}
+	
+	private static class StringsLabelProvider implements ITableLabelProvider, IColorProvider {
+		private final boolean isReferencedPathVariables;
+		
+		StringsLabelProvider() {
+			this(false);
+		}
+		
+		StringsLabelProvider(boolean isReferencedPathVariables) {
+			this.isReferencedPathVariables = isReferencedPathVariables;
+		}
+		
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			return (columnIndex == 0) ? (String) element : null;
+		}
+
+		public void dispose() {
+			// nothing to dispose (the colors are all shared system colors)
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void addListener(ILabelProviderListener listener) {
+			// not using listeners
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+			// not using listeners
+		}
+
+		public Color getBackground(Object element) {
+			if (isReferencedPathVariables && PathmapManager.isRegisteredPathVariable((String) element)) {
+				return Display.getDefault().getSystemColor(
+						SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
+			}
+			
+			return null;
+		}
+
+		public Color getForeground(Object element) {
+			return null;
+		}
+	}
+	
+	private static class StringsViewerComparator extends ViewerComparator {
+		StringsViewerComparator() {
+			super();
+		}
+		
+		public int category(Object element) {
+			// sort statically-registered variables to the end of the list
+			return PathmapManager.isRegisteredPathVariable((String) element)? 1 : 0;
+		}
 	}
 }

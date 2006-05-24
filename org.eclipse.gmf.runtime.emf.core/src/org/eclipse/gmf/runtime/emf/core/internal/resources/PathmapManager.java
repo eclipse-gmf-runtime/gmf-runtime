@@ -155,7 +155,7 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	 *  eclipse {@link IPathVariableManager} and is compatible with our path maps.
 	 */
 	public static void addPathVariableReference(String pathVariable) {
-		if (referencedPathVariablesList.contains(pathVariable)) {
+		if (getAllPathVariables().contains(pathVariable)) {
 			// We already reference this path variable so we can assume that it is added
 			//  and is compatible.
 			return;
@@ -208,6 +208,30 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	
 	public static Set getPathVariableReferences() {
 		return Collections.unmodifiableSet(referencedPathVariablesList);
+	}
+	
+	/**
+	 * Obtains a set of all path variable names, registered on the extension
+	 * point and referenced from Eclipse Platform path variables.
+	 * 
+	 * @return the set of all mapped path variables
+	 */
+	public static Set getAllPathVariables() {
+		return Collections.unmodifiableSet(PATH_MAP.keySet());
+	}
+	
+	/**
+	 * Queries whether the specified path variable name is registered on the
+	 * extension point (versus selected by the user from the platform variables).
+	 * 
+	 * @param variable the variable name
+	 * 
+	 * @return <code>true</code> if this variable name is registered on the
+	 *     path maps extension point; <code>false</code>, otherwise
+	 */
+	public static boolean isRegisteredPathVariable(String variable) {
+		return PATH_MAP.containsKey(variable)
+				&& !referencedPathVariablesList.contains(variable);
 	}
 	
 	public static boolean isCompatiblePathVariable(String variable) {
