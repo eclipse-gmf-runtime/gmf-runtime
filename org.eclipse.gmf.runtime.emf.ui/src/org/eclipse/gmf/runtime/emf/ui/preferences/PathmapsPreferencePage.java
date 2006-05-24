@@ -77,8 +77,16 @@ public class PathmapsPreferencePage
 		gridData.grabExcessVerticalSpace = false;
 		gridData.horizontalSpan = 3;
 		pathVariablesArea.getControl().setLayoutData(gridData);
+	
+		Composite pathVariablesComposite = new Composite(composite, SWT.NONE);
+		pathVariablesComposite.setLayout(new GridLayout(1, false));
+		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalSpan = 1;
+		pathVariablesComposite.setLayoutData(gridData);
 		
-		Label pathVariablesLabel = new Label(composite, SWT.LEFT);
+		Label pathVariablesLabel = new Label(pathVariablesComposite, SWT.LEFT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
@@ -87,16 +95,7 @@ public class PathmapsPreferencePage
 		pathVariablesLabel.setLayoutData(gridData);
 		pathVariablesLabel.setText(EMFUIMessages.PathmapsPreferencePage_availablePathVariables);
 		
-		Label referencedPathVariablesLabel = new Label(composite, SWT.LEFT);
-		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		gridData.horizontalSpan = 1;
-		gridData.verticalIndent = 20;
-		referencedPathVariablesLabel.setLayoutData(gridData);
-		referencedPathVariablesLabel.setText(EMFUIMessages.PathmapsPreferencePage_pathVariablesUsedInModeling);
-		
-		pathVariables = new List(composite,SWT.MULTI | SWT.BORDER);
+		pathVariables = new List(pathVariablesComposite, SWT.MULTI | SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
@@ -140,7 +139,24 @@ public class PathmapsPreferencePage
 		gridData.horizontalSpan = 1;
 		buttonComposite.setLayoutData(gridData);
 		
-		referencedPathVariables = new List(composite,SWT.MULTI | SWT.BORDER);
+		Composite referencedPathVariablesComposite = new Composite(composite, SWT.NONE);
+		referencedPathVariablesComposite.setLayout(new GridLayout(1, false));
+		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalSpan = 1;
+		referencedPathVariablesComposite.setLayoutData(gridData);
+		
+		Label referencedPathVariablesLabel = new Label(referencedPathVariablesComposite, SWT.LEFT);
+		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = false;
+		gridData.horizontalSpan = 1;
+		gridData.verticalIndent = 20;
+		referencedPathVariablesLabel.setLayoutData(gridData);
+		referencedPathVariablesLabel.setText(EMFUIMessages.PathmapsPreferencePage_pathVariablesUsedInModeling);
+		
+		referencedPathVariables = new List(referencedPathVariablesComposite,SWT.MULTI | SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
