@@ -105,16 +105,14 @@ public class ResizableShapeLabelEditPolicy
 
 	/**
 	 * adjust the rectangle used for the move command; the default implementatin
-	 * assumes Cenerting behavior, clients can override this function to change
-	 * this behvior
+	 * assumes no behavior, clients can override this function to change
+	 * this behavior
 	 * 
 	 * @param rect
 	 *            Rect to adjust
 	 */
 	protected void adjustRect(PrecisionRectangle rect) {
-		// Componsate for the fact that we are using the
-		// figure center
-		rect.translate(rect.width / 2, rect.height / 2);
+		// do nothing
 	}
 
 	protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {

@@ -45,8 +45,8 @@ public class ResizableLabelLocator extends LabelLocator{
 		if (currentExtent.width == -1) size.width = preferredSize.width;
 		if (currentExtent.height == -1) size.height = preferredSize.height;
 		target.setSize(size);
-		Point location = LabelHelper.calculatePointRelativeToPointOnLine(
-			getPointList(), getReferencePoint(), getOffset());
+		Point location = LabelHelper.relativeCoordinateFromOffset(target, getReferencePoint(), getOffset());
+		
 		target.setLocation(location);
 	}
 }

@@ -14,7 +14,6 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
@@ -55,7 +54,7 @@ public class LabelHelper {
 	 * point oriented based on the nearest line segment.
 	 */
 	static private Point offsetFromRelativeCoordinate(IFigure label, Rectangle bounds, PointList points, Point ref) {
-		PrecisionRectangle rect = new PrecisionRectangle(bounds);
+		Rectangle rect = new Rectangle(bounds);
 		
 		//Componsate for the fact that we are using the 
 		// figure center

@@ -11,17 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
-import org.eclipse.draw2d.geometry.PrecisionRectangle;
-
 /**
  * resizable edit lable
  * 
  * @author mmostafa
+ * @deprecated use {@link org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeLabelEditPolicy} instead
  */
 public class ResizableLabelEditPolicy
 	extends ResizableShapeLabelEditPolicy {
-
-	protected void adjustRect(PrecisionRectangle rect) {
-		// do nothing, resizbale lables does not need rect adjustment
-	}
 }
