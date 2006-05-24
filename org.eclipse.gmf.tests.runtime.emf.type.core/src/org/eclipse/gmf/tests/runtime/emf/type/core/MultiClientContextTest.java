@@ -151,7 +151,7 @@ public class MultiClientContextTest extends AbstractEMFTypeTest {
 		assertFalse(multiContext.includes(type));
 
 		Pattern pattern = Pattern
-				.compile("org.eclipse.gmf.tests.runtime.emf.type.example2.*");
+				.compile("org.eclipse.gmf.tests.runtime.emf.type.example2.*"); //$NON-NLS-1$
 
 		multiContext.bindPattern(pattern);
 

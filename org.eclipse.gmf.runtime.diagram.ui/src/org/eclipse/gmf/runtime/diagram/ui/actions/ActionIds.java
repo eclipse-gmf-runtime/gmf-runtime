@@ -86,7 +86,7 @@ public interface ActionIds {
 	public final String ACTION_ROUTER_RECTILINEAR = "rectilinearRouterAction"; //$NON-NLS-1$
 	public final String ACTION_ROUTER_OBLIQUE = "obliqueRouterAction"; //$NON-NLS-1$
 	public final String ACTION_ROUTER_TREE = "treeRouterAction"; //$NON-NLS-1$
-	public final String ACTION_TOGGLE_ROUTER = "toggleRouter";
+	public final String ACTION_TOGGLE_ROUTER = "toggleRouter"; //$NON-NLS-1$
 	public final String ACTION_COPY_APPEARANCE_PROPERTIES = "copyAppearancePropertiesAction"; //$NON-NLS-1$
 	public final String ACTION_SNAP_BACK = "snapBackAction"; //$NON-NLS-1$
 	public final String ACTION_COPY_BITMAP = "copyBitmapAction"; //$NON-NLS-1$
