@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
@@ -261,6 +261,16 @@ public class FileChangeManager
 	 */
 	public void addFileObserver(IFileObserver fileObserver, IFile fileFilter) {
 		fileObserverManager.add(fileObserver, fileFilter);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.common.ui.resources.IFileChangeManager#addFileObserver(org.eclipse.gmf.runtime.common.ui.resources.IFileObserver,
+	 *      org.eclipse.core.runtime.content.IContentType[])
+	 */
+	public void addFileObserver(IFileObserver fileObserver, IContentType[] contentTypeFilter) {
+		fileObserverManager.add(fileObserver, contentTypeFilter);
 	}
 
 	/*

@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
@@ -71,6 +71,24 @@ public class FileObserverManager {
 			+ " filter " + fileFilter.getLocation().toOSString()); //$NON-NLS-1$
 		FileObserverFilter filter = new FileObserverFilter(
 			FileObserverFilterType.FILE, fileFilter);
+		fileObserverList.put(fileObserver, filter);
+	}
+
+	/**
+	 * Add a file observer with a content type filter.
+	 * 
+	 * @param fileObserver
+	 *            the file observer class implementing the IFileObserver
+	 *            interface.
+	 * @param contentTypeFilter
+	 *            the content type array filter.
+	 */
+	protected void add(IFileObserver fileObserver, IContentType[] contentTypeFilter) {
+		trace("...FileObserverManager: addFileObserver " //$NON-NLS-1$
+			+ fileObserver.toString()
+			+ " filter " + contentTypeFilter.toString()); //$NON-NLS-1$
+		FileObserverFilter filter = new FileObserverFilter(
+			FileObserverFilterType.CONTENT_TYPE, contentTypeFilter);
 		fileObserverList.put(fileObserver, filter);
 	}
 

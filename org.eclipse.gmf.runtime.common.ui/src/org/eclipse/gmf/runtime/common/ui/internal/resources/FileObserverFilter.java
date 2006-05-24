@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.content.IContentType;
 
 
 /**
@@ -62,6 +63,22 @@ public class FileObserverFilter {
 		assert (aFilterType == FileObserverFilterType.EXTENSION);
 		setFilterType(aFilterType);
 		setFilter(extension);
+	}
+
+	/**
+	 * Create a file observer filter that will filter out any events not for the
+	 * provided content types.
+	 * 
+	 * @param aFilterType
+	 *            The filter type, content type.
+	 * @param extension
+	 *            The file content type array filter.
+	 */
+	public FileObserverFilter(FileObserverFilterType aFilterType,
+			IContentType[] contentType) {
+		assert (aFilterType == FileObserverFilterType.CONTENT_TYPE);
+		setFilterType(aFilterType);
+		setFilter(contentType);
 	}
 
 	/**
@@ -114,11 +131,16 @@ public class FileObserverFilter {
 
 		}
 		if (getFilterType() == FileObserverFilterType.FOLDER
-			&& resource instanceof IFile
-			&& getAbsolutePath(resource).startsWith(
-				getAbsolutePath(getFolderFilter()))) {
-			return true;
-		}
+				&& resource instanceof IFile
+				&& getAbsolutePath(resource).startsWith(
+					getAbsolutePath(getFolderFilter()))) {
+				return true;
+			}
+		if (getFilterType() == FileObserverFilterType.CONTENT_TYPE
+				&& resource instanceof IFile
+				&& matchesContentType(((IFile)resource).getName())) {
+				return true;
+			}
 		if (getFilterType() == FileObserverFilterType.EXTENSION
 			&& resource instanceof IFile) {
 			String FileExtension = resource.getFullPath().getFileExtension();
@@ -146,9 +168,13 @@ public class FileObserverFilter {
 			return true;
 		}
 		if (getFilterType() == FileObserverFilterType.FOLDER
-			&& getAbsolutePath(getFolderFilter()).startsWith(path.toOSString())) {
-			return true;
-		}
+				&& getAbsolutePath(getFolderFilter()).startsWith(path.toOSString())) {
+				return true;
+			}
+		if (getFilterType() == FileObserverFilterType.CONTENT_TYPE
+				&& matchesContentType(path.toFile().getName())) {
+				return true;
+			}
 		if (getFilterType() == FileObserverFilterType.EXTENSION
 			&& matchesExtension(path.getFileExtension())) {
 			return true;
@@ -156,6 +182,22 @@ public class FileObserverFilter {
 		return false;
 	}
 
+	/**
+	 * Determines if the file name matches observed content types
+	 * 
+	 * @param fileName
+	 *            file name to be matched
+	 * @return true if the file name matches observed content types
+	 */
+	private boolean matchesContentType(String fileName) {
+		IContentType[] contentTypes = getContentTypeFilter();
+		for (int i = 0; i < contentTypes.length; i++) {
+			if (contentTypes[i].isAssociatedWith(fileName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * Determines if the extension matches observed extensions
 	 * 
@@ -201,6 +243,16 @@ public class FileObserverFilter {
 	private String[] getExtensionFilter() {
 		assert (filterType == FileObserverFilterType.EXTENSION);
 		return (String[]) filter;
+	}
+
+	/**
+	 * Get the content type filter.
+	 * 
+	 * @return the content type array filter.
+	 */
+	private IContentType[] getContentTypeFilter() {
+		assert (filterType == FileObserverFilterType.CONTENT_TYPE);
+		return (IContentType[]) filter;
 	}
 
 	/**

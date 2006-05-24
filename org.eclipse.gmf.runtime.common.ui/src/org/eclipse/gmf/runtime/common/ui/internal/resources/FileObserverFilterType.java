@@ -58,10 +58,15 @@ public class FileObserverFilterType
 		"File"); //$NON-NLS-1$
 
 	/**
+	 * content type file observer filter type.
+     */
+	public static final FileObserverFilterType CONTENT_TYPE = new FileObserverFilterType("ContentType"); //$NON-NLS-1$
+	
+	/**
 	 * The list of values for this enumerated type.
 	 */
 	private static final FileObserverFilterType[] VALUES = {ALL, EXTENSION,
-		FOLDER, FILE};
+		FOLDER, FILE, CONTENT_TYPE};
 
 	/**
 	 * Constructs a new file observer filter type with the specified name and

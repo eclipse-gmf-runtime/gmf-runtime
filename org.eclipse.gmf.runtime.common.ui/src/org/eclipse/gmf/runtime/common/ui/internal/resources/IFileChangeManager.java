@@ -13,7 +13,7 @@ package org.eclipse.gmf.runtime.common.ui.internal.resources;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
 
 /**
@@ -43,6 +43,18 @@ public interface IFileChangeManager {
 	 *            the file filter.
 	 */
 	public void addFileObserver(IFileObserver fileObserver, IFile fileFilter);
+
+	/**
+	 * Add a file observer with a content type filter. The file observer will
+	 * be notified of file change events for any file whose file name is 
+	 * associated with the provided content type filter.
+	 * 
+	 * @param fileObserver
+	 *            the file observer.
+	 * @param contentTypeFilter
+	 *            the content type array filter.
+	 */
+	public void addFileObserver(IFileObserver fileObserver, IContentType[] contentTypeFilter);
 
 	/**
 	 * Add a file observer with a folder filter. The file observer will be
