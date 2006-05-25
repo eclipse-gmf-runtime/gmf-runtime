@@ -670,8 +670,21 @@ public class GraphicalNodeEditPolicy
 		INodeEditPart targetEP = getConnectionCompleteEditPart(request);
 		View sourceView = (View)request.getSourceEditPart().getModel();
 		View targetView = (View)targetEP.getModel();
-		createElementRequest.setSource(ViewUtil.resolveSemanticElement(sourceView));
-		createElementRequest.setTarget(ViewUtil.resolveSemanticElement(targetView));
+		
+		// resolve the source
+		EObject source = ViewUtil.resolveSemanticElement(sourceView);
+		if (source == null) {
+			source = sourceView;
+		}
+		createElementRequest.setSource(source);
+		
+		// resolve the target
+		EObject target = ViewUtil.resolveSemanticElement(targetView);
+		if (target == null) {
+			target = targetView;
+		}
+		createElementRequest.setTarget(target);
+		
 		// get the create element request based on the elementdescriptor's
 		// request
 		Command createElementCommand = targetEP
