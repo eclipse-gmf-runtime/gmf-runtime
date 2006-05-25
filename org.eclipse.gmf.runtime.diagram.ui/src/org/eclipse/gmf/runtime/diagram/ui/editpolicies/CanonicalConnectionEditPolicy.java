@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -47,6 +46,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -152,7 +152,7 @@ public abstract class CanonicalConnectionEditPolicy
 			EditPartViewer viewer = getHost().getViewer();
 			if (viewer instanceof IDiagramGraphicalViewer) {
 				List parts = ((IDiagramGraphicalViewer) viewer)
-					.findEditPartsForElement(((XMLResource) element.eResource()).getID(element),
+					.findEditPartsForElement(EMFCoreUtil.getProxyID(element),
 						INodeEditPart.class);
 
 				if (parts.isEmpty()) {
@@ -163,7 +163,7 @@ public abstract class CanonicalConnectionEditPolicy
 					if (containerEP != null) {
 						containerEP.refresh();
 						parts = ((IDiagramGraphicalViewer) viewer)
-							.findEditPartsForElement(((XMLResource) element.eResource()).getID(element),
+							.findEditPartsForElement(EMFCoreUtil.getProxyID(element),
 								INodeEditPart.class);
 					}
 				}
