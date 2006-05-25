@@ -29,5 +29,13 @@
          </partContribution>         
       </contributionItemProvider>
    </extension> 
+   <extension id="org.eclipse.gmf.runtime.diagram.ui.providers.diagramMarkerNavigationProvider" name="%ext.diagramMarkerNavigationProvider" point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders">
+      <MarkerNavigationProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal.providers.DiagramMarkerNavigationProvider">
+         <Priority name="Lowest">
+         </Priority>
+         <MarkerType name="org.eclipse.gmf.runtime.common.ui.services.bookmark">
+         </MarkerType>
+      </MarkerNavigationProvider>
+   </extension>
 
 </plugin>

@@ -12,5 +12,6 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.providers.ide.internal;x-inte
 Require-Bundle: org.eclipse.gmf.runtime.common.ui.action.ide;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.providers;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
- org.eclipse.gmf.runtime.emf.commands.core;bundle-version="[1.0.0,2.0.0)"
+ org.eclipse.gmf.runtime.emf.commands.core;bundle-version="[1.0.0,2.0.0)",
+ com.ibm.icu
 Eclipse-LazyStart: true

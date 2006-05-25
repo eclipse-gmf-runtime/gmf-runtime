@@ -1,12 +1,24 @@
+/******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.l10n.EditorMessages;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
@@ -22,11 +34,12 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
+import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
 
 
 public class IDEDiagramDocumentEditor
-	extends DiagramDocumentEditor {
+	extends DiagramDocumentEditor implements IGotoMarker {
 
 	public IDEDiagramDocumentEditor(boolean hasFlyoutPalette) {
 		super(hasFlyoutPalette);
@@ -113,4 +126,13 @@ public class IDEDiagramDocumentEditor
 			progressMonitor.setCanceled(!success);
 	}
 	
+    /**
+     * go to a specific marker
+     * 
+     * @param marker
+     *            marker to use
+     */
+    public final void gotoMarker(IMarker marker) {
+        MarkerNavigationService.getInstance().gotoMarker(this, marker);
+    }
 }
