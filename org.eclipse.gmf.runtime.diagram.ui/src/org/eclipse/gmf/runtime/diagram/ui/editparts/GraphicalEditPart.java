@@ -253,6 +253,7 @@ public abstract class GraphicalEditPart
 			return;
 		}
 		removeNotationalListeners();
+        removeSemanticListeners();
 		if (listenerFilters != null ) {
 			for (Iterator i = listenerFilters.keySet().iterator(); i.hasNext();) {
 				Object[] obj = (Object[]) listenerFilters.get(i.next());
