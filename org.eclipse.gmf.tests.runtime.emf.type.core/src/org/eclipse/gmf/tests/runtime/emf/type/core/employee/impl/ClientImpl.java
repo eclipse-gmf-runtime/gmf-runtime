@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ClientImpl.java,v 1.1 2006/03/07 02:40:36 ldamus Exp $
+ * $Id: ClientImpl.java,v 1.2 2006/05/25 21:36:05 ldamus Exp $
  */
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
@@ -152,6 +152,16 @@ public class ClientImpl extends EModelElementImpl implements Client {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotificationChain basicSetRepresents(Customer newRepresents, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newRepresents, EmployeePackage.CLIENT__REPRESENTS, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void setRepresents(Customer newRepresents) {
 		if (newRepresents != eInternalContainer() || (eContainerFeatureID != EmployeePackage.CLIENT__REPRESENTS && newRepresents != null)) {
 			if (EcoreUtil.isAncestor(this, newRepresents))
@@ -161,7 +171,7 @@ public class ClientImpl extends EModelElementImpl implements Client {
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newRepresents != null)
 				msgs = ((InternalEObject)newRepresents).eInverseAdd(this, EmployeePackage.CUSTOMER__REPRESENTATIVES, Customer.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject)newRepresents, EmployeePackage.CLIENT__REPRESENTS, msgs);
+			msgs = basicSetRepresents(newRepresents, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
@@ -178,7 +188,7 @@ public class ClientImpl extends EModelElementImpl implements Client {
 			case EmployeePackage.CLIENT__REPRESENTS:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
-				return eBasicSetContainer(otherEnd, EmployeePackage.CLIENT__REPRESENTS, msgs);
+				return basicSetRepresents((Customer)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -191,7 +201,7 @@ public class ClientImpl extends EModelElementImpl implements Client {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EmployeePackage.CLIENT__REPRESENTS:
-				return eBasicSetContainer(null, EmployeePackage.CLIENT__REPRESENTS, msgs);
+				return basicSetRepresents(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}

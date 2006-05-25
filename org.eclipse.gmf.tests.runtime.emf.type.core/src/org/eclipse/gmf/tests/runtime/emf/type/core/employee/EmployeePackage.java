@@ -49,7 +49,7 @@ public interface EmployeePackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore"; //$NON-NLS-1$
+	String eNS_URI = "http:///org.eclipse.gmf.tests.runtime.emf.type.core/Employee.ecore"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.

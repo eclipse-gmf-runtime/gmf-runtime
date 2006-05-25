@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CustomerImpl.java,v 1.1 2006/03/07 02:40:36 ldamus Exp $
+ * $Id: CustomerImpl.java,v 1.2 2006/05/25 21:36:05 ldamus Exp $
  */
 package org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl;
 
@@ -204,6 +204,16 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotificationChain basicSetParent(Customer newParent, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newParent, EmployeePackage.CUSTOMER__PARENT, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void setParent(Customer newParent) {
 		if (newParent != eInternalContainer() || (eContainerFeatureID != EmployeePackage.CUSTOMER__PARENT && newParent != null)) {
 			if (EcoreUtil.isAncestor(this, newParent))
@@ -213,7 +223,7 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newParent != null)
 				msgs = ((InternalEObject)newParent).eInverseAdd(this, EmployeePackage.CUSTOMER__SUBSIDIARIES, Customer.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject)newParent, EmployeePackage.CUSTOMER__PARENT, msgs);
+			msgs = basicSetParent(newParent, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
@@ -234,7 +244,7 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 			case EmployeePackage.CUSTOMER__PARENT:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
-				return eBasicSetContainer(otherEnd, EmployeePackage.CUSTOMER__PARENT, msgs);
+				return basicSetParent((Customer)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -251,7 +261,7 @@ public class CustomerImpl extends EModelElementImpl implements Customer {
 			case EmployeePackage.CUSTOMER__SUBSIDIARIES:
 				return ((InternalEList)getSubsidiaries()).basicRemove(otherEnd, msgs);
 			case EmployeePackage.CUSTOMER__PARENT:
-				return eBasicSetContainer(null, EmployeePackage.CUSTOMER__PARENT, msgs);
+				return basicSetParent(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}

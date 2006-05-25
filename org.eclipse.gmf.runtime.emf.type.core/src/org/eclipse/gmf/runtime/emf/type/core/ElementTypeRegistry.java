@@ -70,10 +70,11 @@ public class ElementTypeRegistry {
 	private final SpecializationTypeRegistry specializationTypeRegistry;
 
 	/**
-	 * Metamodel type descriptors stored by EClass. Each value is a collection of
-	 * MetamodelTypeDescriptors.
+	 * Metamodel type descriptors stored by nsURI. Each key is a namespace URI
+	 * and each value is a map, whose key is an EClass name and whose value is a
+	 * collection of MetamodelTypeDescriptors.
 	 */
-	private final Map metamodelTypeDescriptorsByEClass;
+	private final Map metamodelTypeDescriptorsByNsURI;
 
 	/**
 	 * All metamodel type descriptors stored by ID. Each value is an instance of
@@ -105,7 +106,7 @@ public class ElementTypeRegistry {
 		super();
 
 		specializationTypeRegistry = new SpecializationTypeRegistry();
-		metamodelTypeDescriptorsByEClass = new HashMap();
+		metamodelTypeDescriptorsByNsURI = new HashMap();
 		metamodelTypeDescriptorsById = new HashMap();
 		elementTypeFactoryMap = new HashMap();
 		elementTypeRegistryListeners = new ArrayList();
@@ -589,9 +590,12 @@ public class ElementTypeRegistry {
 			// use the default context
 			clientContext = ClientContextManager.getDefaultClientContext();
 		}
-
-		Collection descriptors = (Collection) metamodelTypeDescriptorsByEClass
-				.get(eClass);
+		
+		Map metamodelTypeDescriptorsByEClass = (Map) metamodelTypeDescriptorsByNsURI
+				.get(eClass.getEPackage().getNsURI());
+		Collection descriptors = metamodelTypeDescriptorsByEClass != null ? (Collection) metamodelTypeDescriptorsByEClass
+				.get(eClass.getName())
+				: null;
 
 		if (descriptors != null) {
 			for (Iterator i = descriptors.iterator(); i.hasNext();) {
@@ -609,8 +613,10 @@ public class ElementTypeRegistry {
 			for (int i = supertypes.size() - 1; i >= 0; i--) {
 				EClass nextEClass = (EClass) supertypes.get(i);
 	
-				descriptors = (Collection) metamodelTypeDescriptorsByEClass
-						.get(nextEClass);
+				// same nsURI is assumed because we're looking at supertypes of the eclass
+				descriptors = metamodelTypeDescriptorsByEClass != null ? (Collection) metamodelTypeDescriptorsByEClass
+						.get(nextEClass.getName())
+						: null;
 	
 				if (descriptors != null) {
 					for (Iterator j = descriptors.iterator(); j.hasNext();) {
@@ -923,15 +929,23 @@ public class ElementTypeRegistry {
 		if (checkForDuplicate(typeDescriptor)) {
 			return false;
 		}
+		
+		String nsURI = typeDescriptor.getNsURI();
+		String eClassName = typeDescriptor.getEClassName();
 
-		EClass eClass = typeDescriptor.getEClass();
+		Map metamodelTypeDescriptorsByEClass = (Map) metamodelTypeDescriptorsByNsURI
+				.get(nsURI);
 
-		Collection descriptors = (Collection) metamodelTypeDescriptorsByEClass
-				.get(eClass);
-
+		if (metamodelTypeDescriptorsByEClass == null) {
+			metamodelTypeDescriptorsByEClass = new HashMap();
+			metamodelTypeDescriptorsByNsURI.put(nsURI, metamodelTypeDescriptorsByEClass);
+		}
+		
+		Collection descriptors = (Collection) metamodelTypeDescriptorsByEClass.get(eClassName);
+		
 		if (descriptors == null) {
 			descriptors = new ArrayList();
-			metamodelTypeDescriptorsByEClass.put(eClass, descriptors);
+			metamodelTypeDescriptorsByEClass.put(eClassName, descriptors);
 		}
 
 		descriptors.add(typeDescriptor);

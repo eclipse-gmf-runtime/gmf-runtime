@@ -43,7 +43,7 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 	 */
 	public static EmployeeFactory init() {
 		try {
-			EmployeeFactory theEmployeeFactory = (EmployeeFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore"); //$NON-NLS-1$ 
+			EmployeeFactory theEmployeeFactory = (EmployeeFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org.eclipse.gmf.tests.runtime.emf.type.core/Employee.ecore"); //$NON-NLS-1$ 
 			if (theEmployeeFactory != null) {
 				return theEmployeeFactory;
 			}

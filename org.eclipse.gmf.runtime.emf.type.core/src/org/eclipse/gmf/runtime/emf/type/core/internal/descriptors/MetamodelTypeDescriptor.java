@@ -42,6 +42,22 @@ public class MetamodelTypeDescriptor
 	 * The metaclass that this type represents.
 	 */
 	private EClass eClass;
+	
+	/**
+	 * The name of the metaclass that this type represents.
+	 */
+	private String eClassName;
+
+	/**
+	 * Flag indicating that a metaclass could not be found with the specified
+	 * name.
+	 */
+	private boolean eClassNotFound = false;
+
+	/**
+	 * Describes the metamodel in which to find the metaclass.
+	 */
+	private final MetamodelDescriptor metamodelDescriptor;
 
 	/**
 	 * The edit helper.
@@ -71,6 +87,7 @@ public class MetamodelTypeDescriptor
 		this.eClass = metamodelType.getEClass();
 		this.editHelper = metamodelType.getEditHelper();
 		this.metamodelType = metamodelType;
+		this.metamodelDescriptor = null;
 	}
 	
 	/**
@@ -86,31 +103,16 @@ public class MetamodelTypeDescriptor
 		throws CoreException {
 
 		super(configElement);
+		
+		this.metamodelDescriptor = metamodelDescriptor;
 
 		// ECLASS
-		String eClassName = configElement
+		eClassName = configElement
 			.getAttribute(ElementTypeXmlConfig.A_ECLASS);
 
 		if (eClassName == null) {
 			throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
 				EMFTypeCoreMessages.type_reason_no_eclass_WARN_, null);
-		}
-
-		EPackage ePackage = metamodelDescriptor.getEPackage();
-		ENamedElement namedElement = ePackage.getEClassifier(eClassName);
-
-		if (namedElement instanceof EClass) {
-			eClass = (EClass) namedElement;
-		}
-
-		if (eClass == null) {
-			throw EMFTypePluginStatusCodes.getTypeInitException(getId(),
-				EMFTypeCoreMessages.type_reason_eclass_not_found_WARN_, null);
-		}
-
-		// NAME
-		if (getName() == null || getName().length() < 1) {
-			setName(eClass.getName());
 		}
 
 		editHelperName = getConfigElement().getAttribute(
@@ -139,13 +141,59 @@ public class MetamodelTypeDescriptor
 		return metamodelType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gmf.runtime.emf.type.core.IMetamodelTypeDescriptor#getEClass()
+	/**
+	 * Gets the <code>EClass</code> that this type represents.
 	 */
 	public EClass getEClass() {
+		if (eClass == null && !eClassNotFound && metamodelDescriptor != null) {
+			EPackage ePackage = metamodelDescriptor.getEPackage();
+			ENamedElement namedElement = ePackage.getEClassifier(getEClassName());
+
+			if (namedElement instanceof EClass) {
+				eClass = (EClass) namedElement;
+			}
+
+			if (eClass == null) {
+				eClassNotFound = true;
+				Log
+				.error(
+						EMFTypePlugin.getPlugin(),
+						EMFTypePluginStatusCodes.TYPE_NOT_INITED,
+						EMFTypeCoreMessages
+								.bind(
+										EMFTypeCoreMessages.type_not_init_WARN_,
+										getEClassName(),
+										EMFTypeCoreMessages.type_reason_eclass_not_found_WARN_));
+			}
+		}
 		return eClass;
+	}
+	
+	/**
+	 * Gets the name of the <code>EClass</code> that this type represents.
+	 * @return the name of the EClass, or <code>null</code> if this type doesn't represent an EClass.
+	 */
+	public String getEClassName() {
+		if (eClassName == null && eClass != null) {
+			eClassName = eClass.getName();
+		}
+		return eClassName;
+	}
+	
+	/**
+	 * Gets the namespace URI of the metamodel that owns the <code>EClass</code>
+	 * that I represent.
+	 * 
+	 * @return the namespace URI, or <code>null</code> if I don't have one
+	 */
+	public String getNsURI() {
+		if (metamodelDescriptor == null) {
+			if (eClass != null) {
+				return eClass.getEPackage().getNsURI();
+			}
+			return null;
+		}
+		return metamodelDescriptor.getNsURI();
 	}
 
 	/*
@@ -181,8 +229,22 @@ public class MetamodelTypeDescriptor
 		return editHelper;
 	}
 	
+	/**
+	 * Gets my name. If no name is specified, uses the name of the
+	 * <code>EClass</code> that I represent.
+	 */
+	public String getName() {
+		String name = super.getName();
+		
+		if ((name == null || name.length() < 1) && getEClass() != null) {
+			name = getEClass().getName();
+			setName(name);
+		}
+		return name;
+	}
+	
 	public String toString() {
-		return "MetamodelTypeDescriptor[" + getId()+ "]";
+		return "MetamodelTypeDescriptor[" + getId()+ "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

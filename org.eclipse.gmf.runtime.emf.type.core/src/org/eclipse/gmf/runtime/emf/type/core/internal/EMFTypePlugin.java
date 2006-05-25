@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,6 @@
 package org.eclipse.gmf.runtime.emf.type.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
-import org.osgi.framework.BundleContext;
 
 /**
  * Plug-in class for the Model Element Type framework.
@@ -52,19 +50,6 @@ public class EMFTypePlugin
 	 */
 	public static String getPluginId() {
 		return getPlugin().getBundle().getSymbolicName();
-	}
-	
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		configureElementTypeRegistry();
-	}
-
-	/**
-	 * Configures validation constraint providers based on the
-	 * <tt>constraintProvider</tt> extension configurations.
-	 */
-	protected void configureElementTypeRegistry() {
-		ElementTypeRegistry.getInstance();
 	}
 
 }

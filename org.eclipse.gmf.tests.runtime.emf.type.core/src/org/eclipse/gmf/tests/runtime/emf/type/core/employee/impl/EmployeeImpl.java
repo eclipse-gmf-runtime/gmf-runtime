@@ -288,7 +288,7 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 			case EmployeePackage.EMPLOYEE__DEPARTMENT:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
-				return eBasicSetContainer(otherEnd, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
+				return basicSetDepartment((Department)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -301,7 +301,7 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EmployeePackage.EMPLOYEE__DEPARTMENT:
-				return eBasicSetContainer(null, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
+				return basicSetDepartment(null, msgs);
 			case EmployeePackage.EMPLOYEE__OFFICE:
 				return basicSetOffice(null, msgs);
 		}
@@ -471,6 +471,16 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotificationChain basicSetDepartment(Department newDepartment, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newDepartment, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void setDepartment(Department newDepartment) {
 		if (newDepartment != eInternalContainer() || (eContainerFeatureID != EmployeePackage.EMPLOYEE__DEPARTMENT && newDepartment != null)) {
 			if (EcoreUtil.isAncestor(this, newDepartment))
@@ -480,7 +490,7 @@ public class EmployeeImpl extends EModelElementImpl implements Employee {
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newDepartment != null)
 				msgs = ((InternalEObject)newDepartment).eInverseAdd(this, EmployeePackage.DEPARTMENT__MEMBERS, Department.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject)newDepartment, EmployeePackage.EMPLOYEE__DEPARTMENT, msgs);
+			msgs = basicSetDepartment(newDepartment, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())

@@ -2,7 +2,7 @@
 <ecore:EPackage xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="employee"
-    nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.ui/Employee.ecore" nsPrefix="Employee">
+    nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.core/Employee.ecore" nsPrefix="Employee">
   <eClassifiers xsi:type="ecore:EClass" name="Employee" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EModelElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="salary" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
