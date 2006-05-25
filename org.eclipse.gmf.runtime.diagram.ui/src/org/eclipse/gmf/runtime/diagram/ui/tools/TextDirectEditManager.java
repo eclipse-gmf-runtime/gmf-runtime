@@ -339,9 +339,11 @@ public class TextDirectEditManager
 	public void show(char initialChar) {
 		
 		show();
-		// Set the cell editor text to the initial character
-		String initialString = String.valueOf(initialChar);
-		setEditText(initialString);
+		if (SWT.getPlatform() != "carbon") { //$NON-NLS-1$ 
+			// Set the cell editor text to the initial character
+			String initialString = String.valueOf(initialChar);
+			setEditText(initialString);
+		}
 
 	}
 
