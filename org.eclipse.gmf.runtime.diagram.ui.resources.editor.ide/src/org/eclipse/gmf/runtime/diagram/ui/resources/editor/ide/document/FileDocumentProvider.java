@@ -194,16 +194,8 @@ public abstract class FileDocumentProvider
 						break;
 
 					boolean isSynchronized= computeModificationStamp(getFile()) == info.fModificationStamp;
-					if ((IResourceDelta.ENCODING & delta.getFlags()) != 0 && isSynchronized) {
-						runnable= new SafeChange(fFileEditorInput) {
-							protected void execute(IFileEditorInput input) throws Exception {
-								handleElementContentChanged(input);
-							}
-						};
-					}
-
-					if (runnable != null && (IResourceDelta.CONTENT & delta.getFlags()) != 0 && !isSynchronized) {
-						runnable= new SafeChange(fFileEditorInput) {
+					if (((IResourceDelta.ENCODING & delta.getFlags()) != 0 && isSynchronized) || ((IResourceDelta.CONTENT & delta.getFlags()) != 0 && !isSynchronized)) {
+						runnable = new SafeChange(fFileEditorInput) {
 							protected void execute(IFileEditorInput input) throws Exception {
 								handleElementContentChanged(input);
 							}
