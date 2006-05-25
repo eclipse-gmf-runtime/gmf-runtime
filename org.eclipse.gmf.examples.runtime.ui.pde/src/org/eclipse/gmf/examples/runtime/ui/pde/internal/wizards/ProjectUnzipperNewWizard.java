@@ -108,6 +108,11 @@ abstract public class ProjectUnzipperNewWizard
 	 */
 	private String pageDescription;
 
+    /**
+     * The name of the project in the project creation page
+     */
+    private String pageProjectName;
+
 	/**
 	 * The list of paths pointing to the location of the project archives
 	 */
@@ -132,12 +137,14 @@ abstract public class ProjectUnzipperNewWizard
 	 *            The title of the project creation page
 	 * @param pageDescriptionIn
 	 *            The description of the project creation page
+     * @param pageProjectNameIn
+     *            The project name in the project creation page
 	 * @param projectZipURLIn
 	 *            The URL pointing to the location of the project archive
 	 */
 	public ProjectUnzipperNewWizard(String pageNameIn, String pageTitleIn,
-			String pageDescriptionIn, URL projectZipURLIn) {
-		this(pageNameIn, pageTitleIn, pageDescriptionIn,
+			String pageDescriptionIn, String pageProjectNameIn, URL projectZipURLIn) {
+		this(pageNameIn, pageTitleIn, pageDescriptionIn, pageProjectNameIn,
 			new URL[] {projectZipURLIn}, new String[] {"{0}"}); //$NON-NLS-1$
 	}
 
@@ -150,6 +157,8 @@ abstract public class ProjectUnzipperNewWizard
 	 *            The title of the project creation page
 	 * @param pageDescriptionIn
 	 *            The description of the project creation page
+     * @param pageProjectNameIn
+     *            The project name in the project creation page
 	 * @param projectZipURLListIn
 	 *            The list of URL pointing to the location of the project
 	 *            archives
@@ -162,7 +171,8 @@ abstract public class ProjectUnzipperNewWizard
 	 *            ignore the user supplied name.
 	 */
 	public ProjectUnzipperNewWizard(String pageNameIn, String pageTitleIn,
-			String pageDescriptionIn, URL[] projectZipURLListIn,
+			String pageDescriptionIn, String pageProjectNameIn, 
+            URL[] projectZipURLListIn,
 			String[] nameFormatsIn) {
 		super();
 
@@ -173,6 +183,7 @@ abstract public class ProjectUnzipperNewWizard
 		pageName = pageNameIn;
 		pageTitle = pageTitleIn;
 		pageDescription = pageDescriptionIn;
+        pageProjectName = pageProjectNameIn;
 		projectZipURL = projectZipURLListIn;
 		nameFormats = nameFormatsIn;
 		setNeedsProgressMonitor(true);
@@ -460,6 +471,8 @@ abstract public class ProjectUnzipperNewWizard
 		wizardNewProjectCreationPage.setTitle(getPageTitle());
 
 		wizardNewProjectCreationPage.setDescription(getPageDescription());
+        
+        wizardNewProjectCreationPage.setInitialProjectName(getPageProjectName());
 
 		this.addPage(wizardNewProjectCreationPage);
 	}
@@ -490,6 +503,15 @@ abstract public class ProjectUnzipperNewWizard
 	private String getPageDescription() {
 		return pageDescription;
 	}
+
+    /**
+     * Accessor to the PageProjectName field
+     * 
+     * @return The PageProjectName field value
+     */
+    private String getPageProjectName() {
+        return pageProjectName;
+    }
 
 	/**
 	 * Accessor to the ProjectZipURL field

@@ -44,8 +44,10 @@ public class ServiceExampleNewWizard extends ProjectUnzipperNewWizard {
 	public ServiceExampleNewWizard() {
 		super("exampleProjectLocation", //$NON-NLS-1$
 			WIZARD_CREATEPROJECTPAGE_TITLE,
-			WIZARD_CREATEPROJECTPAGE_DESC, GmfExamplesPlugin
-				.getDefault().find(new Path("examples/service_provider_src.zip"))); //$NON-NLS-1$
+			WIZARD_CREATEPROJECTPAGE_DESC,
+            "org.eclipse.gmf.examples.runtime.common.service", //$NON-NLS-1$ 
+            GmfExamplesPlugin
+				.getDefault().find(new Path("examples/serviceExample.zip"))); //$NON-NLS-1$
 	}	
 
 }

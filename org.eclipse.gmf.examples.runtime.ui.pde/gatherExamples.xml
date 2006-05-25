@@ -21,8 +21,10 @@
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic/logic.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model/logicSemantic.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/logicSemanticEdit.zip"/>
+			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.editor/logicSemanticEditor.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.decorator/servicesDecorator.zip"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.layout/servicesLayout.zip"/>			
+			<include name="org.eclipse.gmf.examples.runtime.common.service/serviceExample.zip"/>			
 		</patternset>
 
 		<!-- IMPORTANT: Include new example icons here -->	
@@ -31,6 +33,7 @@
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic/icons/logic.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model/icons/Circuit.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit/icons/full/obj16/Element.gif"/>
+			<include name="org.eclipse.gmf.examples.runtime.diagram.logic.model.editor/icons/full/obj16/SemanticModelFile.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.decorator/icons/diagram.gif"/>
 			<include name="org.eclipse.gmf.examples.runtime.diagram.layout/icons/diagram2.gif"/>
 		</patternset>

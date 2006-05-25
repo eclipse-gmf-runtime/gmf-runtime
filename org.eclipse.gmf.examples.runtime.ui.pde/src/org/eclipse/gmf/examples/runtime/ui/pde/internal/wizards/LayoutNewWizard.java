@@ -37,7 +37,9 @@ public class LayoutNewWizard
 	public LayoutNewWizard() {
 		super("exampleProjectLocation", //$NON-NLS-1$
 			LAYOUTSERVICE_WIZARD_CREATEPROJECTPAGE_TITLE,
-			LAYOUTSERVICE_WIZARD_CREATEPROJECTPAGE_DESC, GmfExamplesPlugin
+			LAYOUTSERVICE_WIZARD_CREATEPROJECTPAGE_DESC, 
+            "org.eclipse.gmf.examples.runtime.diagram.layout", //$NON-NLS-1$  
+            GmfExamplesPlugin
 				.getDefault().find(new Path("examples/servicesLayout.zip"))); //$NON-NLS-1$
 	}
 }

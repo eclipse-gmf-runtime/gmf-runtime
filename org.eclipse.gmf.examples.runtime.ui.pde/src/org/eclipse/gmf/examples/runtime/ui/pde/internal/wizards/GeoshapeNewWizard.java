@@ -37,7 +37,9 @@ public class GeoshapeNewWizard
 	public GeoshapeNewWizard() {
 		super("exampleProjectLocation", //$NON-NLS-1$
 			GEOSHAPES_WIZARD_CREATEPROJECTPAGE_TITLE,
-			GEOSHAPES_WIZARD_CREATEPROJECTPAGE_DESC, GmfExamplesPlugin
+			GEOSHAPES_WIZARD_CREATEPROJECTPAGE_DESC,
+            "org.eclipse.gmf.examples.runtime.diagram.geoshapes", //$NON-NLS-1$ 
+            GmfExamplesPlugin
 				.getDefault().find(new Path("examples/geoshapes.zip"))); //$NON-NLS-1$
 	}
 }

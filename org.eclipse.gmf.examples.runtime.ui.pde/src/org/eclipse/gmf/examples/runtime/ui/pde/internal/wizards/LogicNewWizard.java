@@ -41,14 +41,18 @@ public class LogicNewWizard
 	public LogicNewWizard() {
 		super("exampleProjectLocation", //$NON-NLS-1$
 			LOGIC_WIZARD_CREATEPROJECTPAGE_TITLE,
-			LOGIC_WIZARD_CREATEPROJECTPAGE_DESC, new URL[] {
+			LOGIC_WIZARD_CREATEPROJECTPAGE_DESC,
+            "org.eclipse.gmf.examples.runtime.diagram.logic", //$NON-NLS-1$
+            new URL[] {
 				GmfExamplesPlugin.getDefault().find(
 					new Path("examples/logic.zip")), //$NON-NLS-1$
 				GmfExamplesPlugin.getDefault().find(
 					new Path("examples/logicSemantic.zip")), //$NON-NLS-1$
+                    GmfExamplesPlugin.getDefault().find(
+                        new Path("examples/logicSemanticEdit.zip")), //$NON-NLS-1$
 				GmfExamplesPlugin.getDefault().find(
-					new Path("examples/logicSemanticEdit.zip")) //$NON-NLS-1$
-			}, new String[] {"{0}", "{0}.semantic", "{0}.semantic.edit"} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					new Path("examples/logicSemanticEditor.zip")) //$NON-NLS-1$
+			}, new String[] {"{0}", "{0}.semantic", "{0}.semantic.edit", "{0}.semantic.editor"} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		);
 	}
 }

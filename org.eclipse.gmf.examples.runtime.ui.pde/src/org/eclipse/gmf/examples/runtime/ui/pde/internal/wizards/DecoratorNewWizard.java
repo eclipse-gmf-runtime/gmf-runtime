@@ -37,7 +37,9 @@ public class DecoratorNewWizard
 	public DecoratorNewWizard() {
 		super("exampleProjectLocation", //$NON-NLS-1$
 				DECORATORSERVICE_WIZARD_CREATEPROJECTPAGE_TITLE,
-				DECORATORSERVICE_WIZARD_CREATEPROJECTPAGE_DESC, GmfExamplesPlugin
+				DECORATORSERVICE_WIZARD_CREATEPROJECTPAGE_DESC,
+                "org.eclipse.gmf.examples.runtime.diagram.decorator", //$NON-NLS-1$
+                GmfExamplesPlugin
 				.getDefault().find(new Path("examples/servicesDecorator.zip"))); //$NON-NLS-1$
 	}
 }
