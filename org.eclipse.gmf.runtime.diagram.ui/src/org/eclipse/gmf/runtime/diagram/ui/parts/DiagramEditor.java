@@ -1139,16 +1139,6 @@ public abstract class DiagramEditor
     }
 
     /**
-     * go to a specific marker
-     * 
-     * @param marker
-     *            marker to use
-     */
-    public final void gotoMarker(IMarker marker) {
-        MarkerNavigationService.getInstance().gotoMarker(this, marker);
-    }
-
-    /**
      * 
      * @return The getRulerComposite(), which is the graphical control
      */
