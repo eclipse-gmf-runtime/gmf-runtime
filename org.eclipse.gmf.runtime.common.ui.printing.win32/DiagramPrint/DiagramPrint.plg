@@ -1,0 +1,268 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DiagramPrint - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+DiagramPrint_en.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_de - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x407 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_de\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP20C.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP20C.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_de.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_de.dll" /implib:"Release/DiagramPrint_de.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_de.lib and object Release/DiagramPrint_de.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_de.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_es - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0xc0a /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_es\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP210.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP210.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_es.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_es.dll" /implib:"Release/DiagramPrint_es.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_es.lib and object Release/DiagramPrint_es.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_es.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_fr - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x40c /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_fr\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP214.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP214.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_fr.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_fr.dll" /implib:"Release/DiagramPrint_fr.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_fr.lib and object Release/DiagramPrint_fr.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_fr.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_it - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x410 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_it\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP218.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP218.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_it.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_it.dll" /implib:"Release/DiagramPrint_it.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_it.lib and object Release/DiagramPrint_it.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_it.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_ja - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x411 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_ja\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP21C.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP21C.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_ja.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_ja.dll" /implib:"Release/DiagramPrint_ja.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_ja.lib and object Release/DiagramPrint_ja.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_ja.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_ko - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_ko\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP220.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP220.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_ko.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_ko.dll" /implib:"Release/DiagramPrint_ko.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_ko.lib and object Release/DiagramPrint_ko.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_ko.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_pt_BR - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x416 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_pt_BR\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP224.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP224.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_pt_BR.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_pt_BR.dll" /implib:"Release/DiagramPrint_pt_BR.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_pt_BR.lib and object Release/DiagramPrint_pt_BR.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_pt_BR.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_zh_CN - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_zh_CN\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP228.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP228.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_zh_CN.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_zh_CN.dll" /implib:"Release/DiagramPrint_zh_CN.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_zh_CN.lib and object Release/DiagramPrint_zh_CN.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_zh_CN.dll - 0 error(s), 5 warning(s)
+<h3>
+--------------------Configuration: DiagramPrint_zh_TW - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x404 /fo"Release/DiagramPrint.res" /i "../." /d "NDEBUG" /d "_AFXDLL" "C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint_zh_TW\DiagramPrint.rc"" 
+Creating temporary file "C:\DOCUME~1\satif\LOCALS~1\Temp\RSP22C.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\satif\LOCALS~1\Temp\RSP22C.tmp" 
+Creating command line "link.exe /nologo /dll /incremental:no /pdb:"Release/DiagramPrint_zh_TW.pdb" /machine:I386 /out:"..\I10n\DiagramPrint_zh_TW.dll" /implib:"Release/DiagramPrint_zh_TW.lib"  .\Release\DiagramPrint.obj .\Release\StdAfx.obj .\Release\DiagramPrint.res "
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+DiagramPrint.cpp
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(266) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(267) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(268) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(293) : warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Atif\workspace\DiagramPrint\Latest\DiagramPrint\DiagramPrint.cpp(304) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+Linking...
+   Creating library Release/DiagramPrint_zh_TW.lib and object Release/DiagramPrint_zh_TW.exp
+
+
+
+<h3>Results</h3>
+DiagramPrint_zh_TW.dll - 0 error(s), 5 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,181 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "DiagramPrint"=.\DiagramPrint.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_de"=.\DiagramPrint_de\DiagramPrint_de.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_de
+    .\DiagramPrint_de
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_es"=.\DiagramPrint_es\DiagramPrint_es.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_es
+    .\DiagramPrint_es
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_fr"=.\DiagramPrint_fr\DiagramPrint_fr.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_fr
+    .\DiagramPrint_fr
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_it"=.\DiagramPrint_it\DiagramPrint_it.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_it
+    .\DiagramPrint_it
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_ja"=.\DiagramPrint_ja\DiagramPrint_ja.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_ja
+    .\DiagramPrint_ja
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_ko"=.\DiagramPrint_ko\DiagramPrint_ko.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_ko
+    .\DiagramPrint_ko
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_pt_BR"=.\DiagramPrint_pt_BR\DiagramPrint_pt_BR.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_pt_BR
+    .\DiagramPrint_pt_BR
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_zh_CN"=.\DiagramPrint_zh_CN\DiagramPrint_zh_CN.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_zh_CN
+    .\DiagramPrint_zh_CN
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DiagramPrint_zh_TW"=.\DiagramPrint_zh_TW\DiagramPrint_zh_TW.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint_zh_TW
+    .\DiagramPrint_zh_TW
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+    begin source code control
+    DiagramPrint
+    .
+    end source code control
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+
