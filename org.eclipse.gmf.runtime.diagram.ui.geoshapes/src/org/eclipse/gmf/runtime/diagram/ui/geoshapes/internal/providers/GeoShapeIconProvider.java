@@ -37,53 +37,30 @@ public class GeoShapeIconProvider
 	static {
 
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_OVAL,
-			DiagramUIGeoshapesPluginImages.DESC_OVAL);
+			DiagramUIGeoshapesPluginImages.IMG_OVAL);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_TRIANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_TRIANGLE);
+			DiagramUIGeoshapesPluginImages.IMG_TRIANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_RECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_RECTANGLE);
+			DiagramUIGeoshapesPluginImages.IMG_RECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_SHADOWRECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_SHADOWRECTANGLE);
+			DiagramUIGeoshapesPluginImages.IMG_SHADOWRECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_3DRECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_3DRECTANGLE);
+			DiagramUIGeoshapesPluginImages.IMG_3DRECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_ROUNDRECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_ROUNDRECTANGLE);
+			DiagramUIGeoshapesPluginImages.IMG_ROUNDRECTANGLE);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_HEXAGON,
-			DiagramUIGeoshapesPluginImages.DESC_HEXAGON);
+			DiagramUIGeoshapesPluginImages.IMG_HEXAGON);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_OCTAGON,
-			DiagramUIGeoshapesPluginImages.DESC_OCTAGON);
+			DiagramUIGeoshapesPluginImages.IMG_OCTAGON);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_PENTAGON,
-			DiagramUIGeoshapesPluginImages.DESC_PENTAGON);
+			DiagramUIGeoshapesPluginImages.IMG_PENTAGON);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_DIAMOND,
-			DiagramUIGeoshapesPluginImages.DESC_DIAMOND);
+			DiagramUIGeoshapesPluginImages.IMG_DIAMOND);
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_CYLINDER,
-			DiagramUIGeoshapesPluginImages.DESC_CYLINDER);
+			DiagramUIGeoshapesPluginImages.IMG_CYLINDER);
 
 		semanticHintIconMap.put(GeoshapeConstants.TOOL_LINE,
-			DiagramUIGeoshapesPluginImages.DESC_LINE);
-	}
-
-	/** map for storing icon images based on type */
-	private static HashMap typeIconMap = new HashMap();
-	static {
-
-		typeIconMap.put(GeoshapeType.OVAL, DiagramUIGeoshapesPluginImages.DESC_OVAL);
-		typeIconMap.put(GeoshapeType.TRIANGLE, DiagramUIGeoshapesPluginImages.DESC_TRIANGLE);
-		typeIconMap.put(GeoshapeType.RECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_RECTANGLE);
-		typeIconMap.put(GeoshapeType.SHADOWRECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_SHADOWRECTANGLE);
-		typeIconMap.put(GeoshapeType.THREEDRECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_3DRECTANGLE);
-		typeIconMap.put(GeoshapeType.ROUNDRECTANGLE,
-			DiagramUIGeoshapesPluginImages.DESC_ROUNDRECTANGLE);
-		typeIconMap.put(GeoshapeType.HEXAGON, DiagramUIGeoshapesPluginImages.DESC_HEXAGON);
-		typeIconMap.put(GeoshapeType.OCTAGON, DiagramUIGeoshapesPluginImages.DESC_OCTAGON);
-		typeIconMap.put(GeoshapeType.PENTAGON, DiagramUIGeoshapesPluginImages.DESC_PENTAGON);
-		typeIconMap.put(GeoshapeType.DIAMOND, DiagramUIGeoshapesPluginImages.DESC_DIAMOND);
-		typeIconMap.put(GeoshapeType.CYLINDER, DiagramUIGeoshapesPluginImages.DESC_CYLINDER);
-
-		typeIconMap.put(GeoshapeType.LINE, DiagramUIGeoshapesPluginImages.DESC_LINE);
+			DiagramUIGeoshapesPluginImages.IMG_LINE);
 	}
 
 	/*
@@ -94,23 +71,12 @@ public class GeoShapeIconProvider
 	 */
 	public Image getIcon(IAdaptable hint, int flags) {
 
-		if (hint != null) {
-			if (hint instanceof View) {
-				View view = (View) hint;
-
-				String semanticHint = view.getType();
-				return getIcon(semanticHint);
-			} else {
-				String fileName = (String) typeIconMap.get(hint);
-
-				if (fileName != null) {
-					return DiagramUIGeoshapesPluginImages.get(
-						fileName);
-				}
-			}
-
-		}
-		return null;
+        View view = (View) hint.getAdapter(View.class);
+        if (view != null) {
+            String semanticHint = view.getType();
+            return getIcon(semanticHint);
+        } 
+        return null;
 	}
 	
 	/*
@@ -141,13 +107,10 @@ public class GeoShapeIconProvider
 		IAdaptable hint = ((IIconOperation) operation).getHint();
 
 		if (hint != null) {
-			if (hint instanceof View) {
-				String semanticHint = ((View)hint).getType();
+            View view = (View) hint.getAdapter(View.class);
+            if (view != null) {
+				String semanticHint = view.getType();
 				return (getIcon(semanticHint)!=null);
-			}
-			Object type = hint.getAdapter(GeoshapeType.class);
-			if (type != null && typeIconMap.containsKey(type)) {
-				return true;
 			}
 		}
 

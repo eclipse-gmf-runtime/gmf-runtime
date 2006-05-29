@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,20 +29,13 @@ import org.eclipse.gmf.runtime.notation.View;
  * Supports the creation of <b>diagram</b> view elements.  
  * Diagram elements are commonly used by all plugins.
  * 
- * @author schafe
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.providers.*
+ * @author schafe, cmahoney
  */
 public class DiagramViewProvider extends AbstractViewProvider {
-	
-	private static DiagramViewProvider instance;
-
-	public DiagramViewProvider() {
-		instance = this;
-	}
 
 	/** list of supported shape views. */
-	private Map nodeMap = new HashMap();
-	{
+    static private final Map nodeMap = new HashMap();
+	static {
 		nodeMap.put(CommonParserHint.DESCRIPTION, BasicNodeViewFactory.class);
 		nodeMap.put(ViewType.DIAGRAM_NAME, BasicNodeViewFactory.class);
 		nodeMap.put(ViewType.NOTE, NoteViewFactory.class);
@@ -50,8 +43,8 @@ public class DiagramViewProvider extends AbstractViewProvider {
 		nodeMap.put(NotationPackage.eINSTANCE.getDiagram(), NoteViewFactory.class);	
 	}
 	/** list of supported connection views. */
-	static private Map connectionMap = new HashMap();
-	{
+	static private final Map connectionMap = new HashMap();
+    static {
 		connectionMap.put(
 			ViewType.NOTEATTACHMENT,
 			ConnectionViewFactory.class);
@@ -87,17 +80,16 @@ public class DiagramViewProvider extends AbstractViewProvider {
 		return (Class) connectionMap.get(semanticHint);
 	}
 	
-	
 	public static boolean isNoteView(View view) {
-		if ((instance != null) && (view != null)) {
-			return (instance.nodeMap.get(view.getType()) instanceof NoteViewFactory);
+		if ((view != null)) {
+			return (NoteViewFactory.class.equals(nodeMap.get(view.getType())));
 		}
 		return false;
 	}
-	
-	public static boolean isTextView(View view){
-		if ((instance != null) && (view != null)) {
-			return (instance.nodeMap.get(view.getType()) instanceof TextShapeViewFactory);
+
+    public static boolean isTextView(View view){
+		if ((view != null)) {
+			return (TextShapeViewFactory.class.equals(nodeMap.get(view.getType())));
 		}
 		return false;
 	}

@@ -76,7 +76,7 @@ public class DiagramUIGeoshapesPluginImages {
 
 	public static final ImageDescriptor DESC_SHADOWRECTANGLE = createAndCache(IMG_SHADOWRECTANGLE);
 
-	public static final ImageDescriptor DESC_3DRECTANGLE = createAndCache(IMG_ROUNDRECTANGLE);
+	public static final ImageDescriptor DESC_3DRECTANGLE = createAndCache(IMG_3DRECTANGLE);
 
 	public static final ImageDescriptor DESC_ROUNDRECTANGLE = createAndCache(IMG_ROUNDRECTANGLE);
 

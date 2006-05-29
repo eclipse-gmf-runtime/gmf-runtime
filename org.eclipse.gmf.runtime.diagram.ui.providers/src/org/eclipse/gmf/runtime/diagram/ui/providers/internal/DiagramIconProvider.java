@@ -49,19 +49,20 @@ implements IIconProvider {
 	 */
 	public Image getIcon(IAdaptable hint, int flags) {
 		
-		if( hint instanceof View && DiagramViewProvider.isTextView((View)hint)) {
-			return SharedImages.get(SharedImages.IMG_TEXT);
-		}
-		
-		else if( hint instanceof View && DiagramViewProvider.isNoteView((View)hint)) {
-			
-			return SharedImages.get(SharedImages.IMG_NOTE);
-		}
-		
-		else if (hint.getAdapter(IElementType.class) != null){
-			String fileName = (String) typeIconMap.get(hint);
-			return SharedImages.get(fileName);
-		}
+        View view = (View) hint.getAdapter(View.class);
+        if (view != null) {
+            if (DiagramViewProvider.isTextView(view)) {
+                return SharedImages.get(SharedImages.IMG_TEXT);
+            }
+
+            else if (DiagramViewProvider.isNoteView(view)) {
+
+                return SharedImages.get(SharedImages.IMG_NOTE);
+            }
+        } else if (hint.getAdapter(IElementType.class) != null) {
+            String fileName = (String) typeIconMap.get(hint);
+            return SharedImages.get(fileName);
+        }
 		return null;	
 	}
 
@@ -78,9 +79,10 @@ implements IIconProvider {
 			return false;
 		}
 				
-		if(adapter instanceof View && 
-		   (DiagramViewProvider.isNoteView((View)adapter)
-		   	|| DiagramViewProvider.isTextView((View)adapter))) {
+        View view = (View) adapter.getAdapter(View.class);
+        if (view != null && 
+		   (DiagramViewProvider.isNoteView(view)
+		   	|| DiagramViewProvider.isTextView(view))) {
 			return true;
 		}
 		
