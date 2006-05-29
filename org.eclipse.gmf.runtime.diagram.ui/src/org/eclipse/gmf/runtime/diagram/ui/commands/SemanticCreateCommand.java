@@ -60,10 +60,7 @@ public class SemanticCreateCommand extends AbstractCommand {
 			DiagramCommandStack.getICommand(realSemanticCommand);
 		
 		// propagate the contexts from the wrapped command
-		IUndoContext[] contexts = this.realSemanticCommand.getContexts();
-		for (int i = 0; i < contexts.length; i++) {
-			addContext(contexts[i]);
-		}
+		recomputeContexts();
 	}
 
 	protected CommandResult doExecuteWithResult(
@@ -83,8 +80,10 @@ public class SemanticCreateCommand extends AbstractCommand {
 				EObject element = (EObject) object;
 				requestAdapter.setNewElement(element);
 			}
-			return CommandResult.newOKCommandResult(requestAdapter);
+			result = CommandResult.newOKCommandResult(requestAdapter);
 		}
+		
+		recomputeContexts();
 		return result;
 	}
 
@@ -92,14 +91,18 @@ public class SemanticCreateCommand extends AbstractCommand {
         throws ExecutionException {
 
 		realSemanticCommand.redo(progressMonitor, info);
-		return realSemanticCommand.getCommandResult();
+		CommandResult result = realSemanticCommand.getCommandResult();
+		recomputeContexts();
+		return result;
 	}
 
     protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
 
 		realSemanticCommand.undo(progressMonitor, info);
-		return realSemanticCommand.getCommandResult();
+		CommandResult result = realSemanticCommand.getCommandResult();
+		recomputeContexts();
+		return result;
 	}
 
     public boolean canExecute() {
@@ -116,6 +119,42 @@ public class SemanticCreateCommand extends AbstractCommand {
     
     public List getAffectedFiles() {
         return realSemanticCommand.getAffectedFiles();
+    }
+    
+    /**
+     * Propagates the contexts from my wrapped command.
+     */
+    private void recomputeContexts() {
+    	
+    	// Get my real contexts from my wrapped command
+    	IUndoContext[] realContexts = realSemanticCommand.getContexts();
+    	
+    	// Clear my contexts
+    	IUndoContext[] myContexts = getContexts();
+    	for (int i = 0; i < myContexts.length; i++) {
+    		removeContext(myContexts[i]);
+    	}
+    	
+    	// Add the contexts from my wrapped command
+		for (int i = 0; i < realContexts.length; i++) {
+			addContext(realContexts[i]);
+		}
+    }
+    
+    /**
+     * Adds the context to my wrapped command.
+     */
+    public void addContext(IUndoContext context) {
+    	super.addContext(context);
+    	realSemanticCommand.addContext(context);
+    }
+    
+    /**
+     * Removes the context from my wrapped command.
+     */
+    public void removeContext(IUndoContext context) {
+    	super.removeContext(context);
+    	realSemanticCommand.removeContext(context);
     }
 
 }

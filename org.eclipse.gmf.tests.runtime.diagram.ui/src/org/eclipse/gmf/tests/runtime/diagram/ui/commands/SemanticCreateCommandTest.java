@@ -130,12 +130,21 @@ public class SemanticCreateCommandTest
 	 */
 	public void test_contextPropagation_141122() {
 
+		final IUndoContext contextA = new UndoContext();
+		final IUndoContext contextB = new UndoContext();
+		final IUndoContext contextC = new UndoContext();
+		
 		// create an ICommand
 		ICommand iCommand = new AbstractCommand(
 				"test_contextPropagation_141122") { //$NON-NLS-1$
 			protected CommandResult doExecuteWithResult(
 					IProgressMonitor progressMonitor, IAdaptable info)
 					throws ExecutionException {
+				
+				// change my contexts
+				removeContext(contextB);
+				addContext(contextC);
+				
 				return CommandResult.newOKCommandResult();
 			}
 
@@ -153,10 +162,7 @@ public class SemanticCreateCommandTest
 		};
 
 		// add two contexts to the ICommand
-		IUndoContext contextA = new UndoContext();
 		iCommand.addContext(contextA);
-
-		IUndoContext contextB = new UndoContext();
 		iCommand.addContext(contextB);
 
 		// wrap the ICommand in an EToolsProxyCommand
@@ -178,5 +184,16 @@ public class SemanticCreateCommandTest
 		// verify that both contexts have been propagated to the semanticCreateCommand fixture
 		assertTrue(semanticCreateCommand.hasContext(contextA));
 		assertTrue(semanticCreateCommand.hasContext(contextB));
+		
+		// execute removes contextB and adds contextC
+		try {
+			semanticCreateCommand.execute(new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            fail(e.getLocalizedMessage());
+        }
+        
+        assertTrue(semanticCreateCommand.hasContext(contextA));
+		assertFalse(semanticCreateCommand.hasContext(contextB));
+		assertTrue(semanticCreateCommand.hasContext(contextC));
 	}
 }
