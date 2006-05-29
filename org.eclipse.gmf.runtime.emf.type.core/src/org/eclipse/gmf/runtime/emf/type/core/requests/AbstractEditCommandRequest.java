@@ -163,5 +163,16 @@ public abstract class AbstractEditCommandRequest
 	public IClientContext getClientContext() {
 		return clientContext;
 	}
+    
+    /**
+     * Sets the editing domain.
+     * 
+     * @param editingDomain
+     *            the editing domain in which I am requesting to make model
+     *            changes.
+     */
+    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+        this.editingDomain = editingDomain;
+    }
 
 }

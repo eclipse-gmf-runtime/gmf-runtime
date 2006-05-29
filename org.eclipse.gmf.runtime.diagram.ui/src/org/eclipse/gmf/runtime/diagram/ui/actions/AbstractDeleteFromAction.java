@@ -31,11 +31,6 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 public abstract class AbstractDeleteFromAction
 	extends DiagramAction {
 	
-    /**
-     * The editing domain used by this action to make changes to the model.
-     */
-    private TransactionalEditingDomain editingDomain;
-	
 	/**
 	 * Creates an <code>AbstractDeleteFromAction</code> with a default label.
 	 *
@@ -85,6 +80,8 @@ public abstract class AbstractDeleteFromAction
 		
 		// ensure that any parameters are cleared, as well
 		deleteReq.getParameters().clear();
+        
+        deleteReq.setEditingDomain(getEditingDomain());
 	}
 
 	/**
@@ -108,21 +105,19 @@ public abstract class AbstractDeleteFromAction
      */
     protected TransactionalEditingDomain getEditingDomain() {
         
-        if (editingDomain == null) {
-            // try adapting the workbench part
-            IWorkbenchPart part = getWorkbenchPart();
+        // try adapting the workbench part
+        IWorkbenchPart part = getWorkbenchPart();
 
-            if (part != null) {
-                IEditingDomainProvider edProvider = (IEditingDomainProvider) part
-                    .getAdapter(IEditingDomainProvider.class);
+        if (part != null) {
+            IEditingDomainProvider edProvider = (IEditingDomainProvider) part
+                .getAdapter(IEditingDomainProvider.class);
 
-                if (edProvider != null) {
-                    editingDomain = (TransactionalEditingDomain) edProvider
-                        .getEditingDomain();
-                }
+            if (edProvider != null) {
+                return (TransactionalEditingDomain) edProvider
+                    .getEditingDomain();
             }
         }
-        return editingDomain;
+        return null;
     }
 
 }
