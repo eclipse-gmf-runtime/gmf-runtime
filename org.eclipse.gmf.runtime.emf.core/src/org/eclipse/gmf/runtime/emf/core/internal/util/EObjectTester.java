@@ -40,8 +40,11 @@ public class EObjectTester extends PropertyTester {
 			String expectedID = (String) expectedValue;
 
 			if (expectedID != null) {
-				return expectedID.equals(TransactionUtil.getEditingDomain(
-						eObject).getID());
+				TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
+				
+				if (domain != null) {
+					return expectedID.equals(domain.getID());
+				}
 			}
 		}
 
