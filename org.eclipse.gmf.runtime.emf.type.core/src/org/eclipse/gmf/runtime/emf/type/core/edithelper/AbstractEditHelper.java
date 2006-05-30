@@ -321,7 +321,9 @@ public abstract class AbstractEditHelper
 	 */
 	protected ICompositeCommand createCommand(IEditCommandRequest req) {
 		
-		return new CompositeTransactionalCommand(req.getEditingDomain(), req.getLabel()) {
+		CompositeTransactionalCommand result = new CompositeTransactionalCommand(
+				req.getEditingDomain(),
+				req.getLabel()) {
 			
 			/**
 			 * Extracts the first return value out of the collection of return
@@ -353,6 +355,12 @@ public abstract class AbstractEditHelper
 				return result;
 			};
 		};
+		
+		// commands (esp. destroy) are expected to be large nested structures,
+		//   because there can be many discrete particles of advice
+		result.setTransactionNestingEnabled(false);
+		
+		return result;
 	}
 
 	/**
