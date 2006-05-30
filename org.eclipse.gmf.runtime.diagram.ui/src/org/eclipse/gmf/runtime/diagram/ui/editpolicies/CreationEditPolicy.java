@@ -36,11 +36,11 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -55,7 +55,6 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.widgets.Display;
@@ -272,13 +271,11 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 			// complete the semantic request by filling in the host's semantic
 			// element as the context
 			View view = (View)getHost().getModel();
-			EObject hostElement;
-			if (view instanceof Diagram){
-				hostElement = view.getDiagram();
-			}
-			else{
-				hostElement = ViewUtil.resolveSemanticElement(view);
-			}				
+			EObject hostElement = ViewUtil.resolveSemanticElement(view);
+			
+			if (hostElement == null && view.getElement() == null) {
+				hostElement = view;
+			}			
 
 			// Returns null if host is unresolvable so that trying to create a
 			// new element in an unresolved shape will not be allowed.
