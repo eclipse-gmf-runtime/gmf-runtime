@@ -284,7 +284,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 			existingEntryIds.put(entry.getId(), entry);
 		}
 
-		int lastExistingEntryIndex = 0;
+		int nextNewIndex = 0;
 		// cycle through the new entries
 		for (Iterator iter = newContainer.getChildren().iterator(); iter
 			.hasNext();) {
@@ -294,8 +294,8 @@ public class PaletteService extends Service implements IPaletteProvider {
 				.get(newEntry.getId());
 			if (existingEntry != null) { // is already in existing container
 				// update the index
-				lastExistingEntryIndex = existingContainer.getChildren()
-					.indexOf(existingEntry);
+				nextNewIndex = existingContainer.getChildren()
+					.indexOf(existingEntry) + 1;
 
 				// remove the entry that was just updated from the map
 				existingEntryIds.remove(existingEntry.getId());
@@ -309,7 +309,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 						(PaletteContainer) newEntry);
 				}
 			} else { // this is a new entry that did not previously exist
-				existingContainer.add(++lastExistingEntryIndex, newEntry);
+				existingContainer.add(nextNewIndex++, newEntry);
 			}
 		}
 
