@@ -69,6 +69,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEdit
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DummyEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
@@ -76,6 +77,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -105,7 +107,7 @@ import org.eclipse.ui.IActionFilter;
  */
 public abstract class GraphicalEditPart
 	extends AbstractGraphicalEditPart
-	implements IGraphicalEditPart, IAdaptableSelection, NotificationListener {
+	implements IGraphicalEditPart, IAdaptableSelection, NotificationForEditPartsListener {
   
     /** A map of listener filters ids to filter data */
 	private Map listenerFilters;
@@ -1140,6 +1142,11 @@ public abstract class GraphicalEditPart
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#isEditModeEnabled()
 	 */
 	public boolean isEditModeEnabled() {
+		// protect against deadlock - don't allow any action while write transaction
+		// is active on another thread
+		if (EditPartUtil.isWriteTransactionInProgress(this, true))
+			return false;
+		
 		return this.editableEditPart.isEditModeEnabled();
 	}
 	
@@ -1316,8 +1323,8 @@ public abstract class GraphicalEditPart
         }
         return null;
     }
-    
-    // documentation copied from superclass
+
+	// documentation copied from superclass
     public RootEditPart getRoot() {
         if (getParent() != null) {
             return super.getRoot();

@@ -68,7 +68,7 @@ public class DiagramEditingDomainFactory
 		private ResourceSetListener debWrapper = null;
 		
 		public void addResourceSetListener(ResourceSetListener l) {
-			if (l.getClass() == DiagramEventBroker.class) {
+			if (DiagramEventBroker.class.isInstance(l)) {
 				assert deb == null;
 				deb = (DiagramEventBroker)l;
 				debWrapper = new ResourceSetListenerImpl() {
@@ -105,7 +105,7 @@ public class DiagramEditingDomainFactory
 		}
 		
 		public void removeResourceSetListener(ResourceSetListener l) {
-			if (l.getClass() == DiagramEventBroker.class) {
+			if (DiagramEventBroker.class.isInstance(l)) {
 				assert deb != null;
 				deb = null;
 				super.removeResourceSetListener(debWrapper);

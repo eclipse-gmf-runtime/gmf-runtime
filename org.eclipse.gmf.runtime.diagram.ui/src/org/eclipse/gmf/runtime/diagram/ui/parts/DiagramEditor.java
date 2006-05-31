@@ -27,7 +27,6 @@ import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -42,7 +41,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
-import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -75,7 +73,6 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.common.ui.services.marker.MarkerNavigationService;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -133,7 +130,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.IShowInSource;
@@ -961,43 +957,6 @@ public abstract class DiagramEditor
                 .getMessage(), e);
         }
     }
-
-    private class DiagramEventBrokerThreadSafe extends DiagramEventBroker {
-
-        public DiagramEventBrokerThreadSafe() {
-            super();
-            // TODO Auto-generated constructor stub
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker#resourceSetChanged(org.eclipse.emf.transaction.ResourceSetChangeEvent)
-         */
-        public void resourceSetChanged(ResourceSetChangeEvent event) {
-            if (Display.getCurrent() == null) {
-                EditPartViewer viewer = getDiagramGraphicalViewer();
-                if (viewer instanceof DiagramGraphicalViewer) {
-                    DiagramGraphicalViewer dgv = (DiagramGraphicalViewer)viewer;
-                    if (!dgv.areUpdatesDisabled()) {
-                        // force synchronization with the main thread
-                        final ResourceSetChangeEvent eventToHandle = event;
-                        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() { 
-                            public void run() {
-                                internal_resourceSetChanged(eventToHandle);
-                            }
-                        });
-                        
-                        return;
-                    }
-                }
-            }
-            
-            super.resourceSetChanged(event);
-        }
-        
-        private void internal_resourceSetChanged(ResourceSetChangeEvent event) {
-            super.resourceSetChanged(event);
-        }
-    };
     
     /**
      * Installs all the listeners needed by the editor
@@ -1020,7 +979,7 @@ public abstract class DiagramEditor
             DiagramEventBroker eventBroker = DiagramEventBroker
                 .getInstance(domain);
             if (eventBroker == null) {
-                DiagramEventBroker.startListening(domain, new DiagramEventBrokerThreadSafe());
+                DiagramEventBroker.startListening(domain);
             }
         }
     }

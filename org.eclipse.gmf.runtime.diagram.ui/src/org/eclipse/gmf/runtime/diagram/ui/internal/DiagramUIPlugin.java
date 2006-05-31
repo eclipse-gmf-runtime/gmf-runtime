@@ -12,6 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal;
 
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.AppearancePreferencePage;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
@@ -72,6 +74,12 @@ public class DiagramUIPlugin
 		super.start(context);
 		
 		initializeDefaultDiagramPreferenceStore();
+		
+		DiagramEventBroker.registerDiagramEventBrokerFactory(new DiagramEventBroker.DiagramEventBrokerFactory() {
+        	public DiagramEventBroker createDiagramEventBroker(TransactionalEditingDomain editingDomain) {
+        		return new DiagramEventBrokerThreadSafe(editingDomain);
+        	}
+        });
 	}
 
 	/**

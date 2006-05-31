@@ -37,10 +37,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.impl.InternalTransaction;
-import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
@@ -64,8 +63,10 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.CanonicalStyle;
@@ -97,7 +98,7 @@ import org.eclipse.ui.PlatformUI;
  * @author mhanner
  */
 public abstract class CanonicalEditPolicy extends AbstractEditPolicy 
-implements NotificationListener {
+implements NotificationForEditPartsListener {
 	
 	/** Runs the supplied commands asyncronously. */
 	private static class AsyncCommand extends Command {
@@ -486,7 +487,7 @@ implements NotificationListener {
         
         if ( ep==null ||
             (ep!=null && ((DiagramEditPart)ep).isActivatingDiagram())||
-            !isWriteTransactionInProgress())
+            !EditPartUtil.isWriteTransactionInProgress((IGraphicalEditPart)getHost(), false))
             options = Collections.singletonMap(Transaction.OPTION_UNPROTECTED,
                 Boolean.TRUE);
   
@@ -1177,27 +1178,14 @@ implements NotificationListener {
         }
         return null;
     }
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener#getViewer()
+	 */
+	final public EditPartViewer getViewer() {
+		return getHost().getViewer();
+	}
     
-    /**
-     * Checks if the current active transaction is a Write transaction or not
-     * unprotected transaction are not considered write transaction
-     * 
-     * @return true if the current active transaction is a write transaction 
-     */
-    private boolean isWriteTransactionInProgress() {
-        TransactionalEditingDomain theEditingDomain = ((IGraphicalEditPart) getHost())
-            .getEditingDomain();
-        if (theEditingDomain instanceof InternalTransactionalEditingDomain){
-            InternalTransactionalEditingDomain internalEditingDomain = 
-                (InternalTransactionalEditingDomain)theEditingDomain;
-            InternalTransaction transaction = internalEditingDomain.getActiveTransaction();
-            if (transaction!=null && !transaction.isReadOnly()){
-                Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
-                if (unprotectedMode == null ||
-                    unprotectedMode == Boolean.FALSE)
-                return true;
-            }
-        }
-        return false;
-    }
+    
 }

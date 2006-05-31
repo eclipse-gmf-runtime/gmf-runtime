@@ -76,6 +76,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionEditPo
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectionBendpointEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
@@ -83,6 +84,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
+import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ForestRouter;
@@ -123,7 +125,7 @@ import org.eclipse.ui.IActionFilter;
 abstract public class ConnectionEditPart
 	extends AbstractConnectionEditPart
 	implements IGraphicalEditPart, PropertyChangeListener, IContainedEditPart,
-	IPrimaryEditPart, NotificationListener {
+	IPrimaryEditPart, NotificationForEditPartsListener {
 
 	/** A map of listener filters ids to filter data */
 	private Map listenerFilters;
@@ -1017,19 +1019,23 @@ abstract public class ConnectionEditPart
 	}
 
 	private void installBendpointEditPolicy() {
-		if (getConnectionFigure().getConnectionRouter() instanceof ForestRouter) {
-			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-				new TreeConnectionBendpointEditPolicy());
-			getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
-		} else if (getConnectionFigure().getConnectionRouter() instanceof OrthogonalRouter) {
-			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-				new ConnectionLineSegEditPolicy());
-			getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
-		} else {
-			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-				new ConnectionBendpointEditPolicy());
-			getConnectionFigure().setCursor(Cursors.CURSOR_SEG_ADD);
-		}
+		EditPartUtil.handleRunnableForAccessingSWT(this, new Runnable() {
+			public void run() {
+				if (getConnectionFigure().getConnectionRouter() instanceof ForestRouter) {
+					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+						new TreeConnectionBendpointEditPolicy());
+					getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
+				} else if (getConnectionFigure().getConnectionRouter() instanceof OrthogonalRouter) {
+					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+						new ConnectionLineSegEditPolicy());
+					getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
+				} else {
+					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+						new ConnectionBendpointEditPolicy());
+					getConnectionFigure().setCursor(Cursors.CURSOR_SEG_ADD);
+				}
+			};
+		});
 	}
 
 	/**
@@ -1331,6 +1337,11 @@ abstract public class ConnectionEditPart
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#isEditModeEnabled()
 	 */
 	public boolean isEditModeEnabled() {
+		// protect against deadlock - don't allow any action while write transaction
+		// is active on another thread
+		if (EditPartUtil.isWriteTransactionInProgress(this, true))
+			return false;
+		
 		return this.editableEditPart.isEditModeEnabled();
 	}
 
