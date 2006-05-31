@@ -58,7 +58,7 @@ public class EditPartUtil {
 	 * on a worker thread that needs to ensure safe access to SWT or other resources reserved for the main thread.
 	 * @param runThreadSafe the <code>Runnable</code> that is to be executed in a thread safe manner.
 	 */
-	public static void handleRunnableForAccessingSWT(IGraphicalEditPart editPart, Runnable runThreadSafe) {
+	public static void synchronizeRunnableToMainThread(IGraphicalEditPart editPart, Runnable runThreadSafe) {
 		if (Display.getCurrent() == null) {
 			EditPartViewer viewer = editPart.getViewer();
 			if (viewer instanceof DiagramGraphicalViewer) {

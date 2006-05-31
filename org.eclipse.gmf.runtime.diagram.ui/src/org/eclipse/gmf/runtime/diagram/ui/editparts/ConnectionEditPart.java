@@ -1019,7 +1019,7 @@ abstract public class ConnectionEditPart
 	}
 
 	private void installBendpointEditPolicy() {
-		EditPartUtil.handleRunnableForAccessingSWT(this, new Runnable() {
+		EditPartUtil.synchronizeRunnableToMainThread(this, new Runnable() {
 			public void run() {
 				if (getConnectionFigure().getConnectionRouter() instanceof ForestRouter) {
 					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
