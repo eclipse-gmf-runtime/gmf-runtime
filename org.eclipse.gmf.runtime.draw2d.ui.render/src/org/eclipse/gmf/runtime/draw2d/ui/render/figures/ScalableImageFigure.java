@@ -359,11 +359,24 @@ private RenderedImage getRenderedImage(Dimension dim) {
 	protected void paintFigure(Graphics graphics) {
 		Rectangle area = getClientArea().getCopy();
 
+		RenderInfo rndInfo = getRenderedImage().getRenderInfo();
+		if (!useOriginalColors()) {
+			if (rndInfo.getBackgroundColor() != getBackgroundColor().getRGB() ||
+				rndInfo.getForegroundColor() != getForegroundColor().getRGB()) {
+				rndInfo.setValues(rndInfo.getWidth(), rndInfo.getHeight(), 
+						rndInfo.shouldMaintainAspectRatio(), 
+						rndInfo.shouldAntiAlias(), getBackgroundColor().getRGB(), getForegroundColor().getRGB());
+				setRenderedImage(getRenderedImage().getNewRenderedImage(rndInfo));
+			}
+		}
+		
 		setRenderedImage(RenderHelper.getInstance(
 			DiagramMapModeUtil.getScale(MapModeUtil.getMapMode(this)), false,
 			false, null).drawRenderedImage(graphics, getRenderedImage(), area,
 			renderingListener));
 	}
+	
+	
 
 	/**
 	 * Gets the <code>RenderedImage</code> that is being displayed by this
