@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,5 +70,34 @@ public class ElementTypeIconProviderTest
 		assertTrue(Arrays.equals(iconData, providerIconData));
         
         icon.dispose();
+	}
+	
+	/**
+	 * Tests that a platform URI can be specified as the location of an element
+	 * type icon.
+	 */
+	public void test_getIconFromPlatformURI_144906() {
+
+		Bundle bundle = Platform
+			.getBundle("org.eclipse.gmf.runtime.diagram.ui.geoshapes"); //$NON-NLS-1$
+		URL iconURL = bundle.getEntry("icons/IconCircle.gif"); //$NON-NLS-1$
+		ImageDescriptor iconImageDescriptor = ImageDescriptor
+			.createFromURL(iconURL);
+        Image expectedIcon = iconImageDescriptor.createImage();
+        byte[] iconData = expectedIcon.getImageData().data;
+
+		setFixture(new ElementTypeIconProvider());
+
+		IElementType iconType = ElementTypeRegistry.getInstance().getType(
+			"org.eclipse.gmf.tests.runtime.emf.type.ui.platformIconType"); //$NON-NLS-1$
+		Image actualIcon = getFixture().getIcon(iconType, 0);
+		
+		assertNotNull(actualIcon);
+		
+		byte[] providerIconData = actualIcon.getImageData().data;
+ 
+		assertTrue(Arrays.equals(iconData, providerIconData));
+        
+		expectedIcon.dispose();
 	}
 }

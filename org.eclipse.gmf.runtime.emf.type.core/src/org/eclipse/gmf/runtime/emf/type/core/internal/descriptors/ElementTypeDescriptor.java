@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -159,7 +160,16 @@ public abstract class ElementTypeDescriptor implements IElementTypeDescriptor {
 	private URL getUrlFromPlugin(String pluginId, String imageFilePath) {
 
 		Bundle bundle = Platform.getBundle(pluginId);
-		return bundle.getEntry(imageFilePath);
+		URL result = bundle.getEntry(imageFilePath);
+
+		if (result == null) {
+			try {
+				result = new URL(imageFilePath);
+			} catch (MalformedURLException e) {
+				result = null;
+			}
+		}
+		return result;
 	}
 
 	/**
