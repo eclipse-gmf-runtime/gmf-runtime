@@ -24,7 +24,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.dynamichelpers.ExtensionTracker;
+import org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler;
+import org.eclipse.core.runtime.dynamichelpers.IExtensionTracker;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -46,7 +51,9 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
  * The registry of application element types, contributed by the
- * <code>org.eclipse.gmf.runtime.emf.type.core.elementTypes</code> extension point.
+ * <code>org.eclipse.gmf.runtime.emf.type.core.elementTypes</code> extension
+ * point, or registered directly through {@link #register(IMetamodelType)} or
+ * {@link #register(ISpecializationType)}.
  * 
  * @author ldamus
  */
@@ -99,6 +106,10 @@ public class ElementTypeRegistry {
 	 */
 	private static ElementTypeRegistry INSTANCE;
 
+	private ExtensionTracker extensionTracker;
+	
+	private IExtensionChangeHandler extensionListener;
+
 	/**
 	 * Constructs a new element type registry.
 	 */
@@ -112,7 +123,34 @@ public class ElementTypeRegistry {
 		elementTypeRegistryListeners = new ArrayList();
 
 		registerNullElementType();
+
+		if (EMFTypePlugin.isDynamicAware()) {
+			startExtensionTracking();
+		}
+		
 		load(configs);
+	}
+
+	private void startExtensionTracking() {
+		extensionListener = new IExtensionChangeHandler() {
+			
+			public void addExtension(IExtensionTracker tracker,
+					IExtension extension) {
+				load(extension.getConfigurationElements());
+			}
+
+			public void removeExtension(IExtension extension, Object[] objects) {
+				// Extension removal not supported
+			}
+		};
+		
+		IExtensionPoint point = Platform.getExtensionRegistry()
+				.getExtensionPoint(EMFTypePlugin.getPluginId(),
+						ELEMENT_TYPES_EXT_P_NAME);
+		
+		extensionTracker = new ExtensionTracker();
+		extensionTracker.registerHandler(extensionListener, ExtensionTracker
+				.createExtensionPointFilter(point));
 	}
 
 	/**
@@ -1132,7 +1170,7 @@ public class ElementTypeRegistry {
 	 * @param configs
 	 *            the configuration elements
 	 */
-	private void load(IConfigurationElement[] configs) {
+	private synchronized void load(IConfigurationElement[] configs) {
 
 		for (int i = 0; i < configs.length; i++) {
 

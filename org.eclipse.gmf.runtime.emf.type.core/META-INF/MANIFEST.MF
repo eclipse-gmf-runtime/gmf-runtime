@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.emf.type.core,
  org.eclipse.gmf.runtime.emf.type.core.commands,
  org.eclipse.gmf.runtime.emf.type.core.edithelper,
- org.eclipse.gmf.runtime.emf.type.core.internal;x-friends:="org.eclipse.gmf.tests.runtime.emf.type.core",
+ org.eclipse.gmf.runtime.emf.type.core.internal;x-friends:="org.eclipse.gmf.tests.runtime.emf.type.core,org.eclipse.gmf.tests",
  org.eclipse.gmf.runtime.emf.type.core.internal.descriptors;x-friends:="org.eclipse.gmf.tests.runtime.emf.type.core",
  org.eclipse.gmf.runtime.emf.type.core.internal.impl;x-friends:="org.eclipse.gmf.tests.runtime.emf.type.core",
  org.eclipse.gmf.runtime.emf.type.core.internal.l10n;x-friends:="org.eclipse.gmf.tests.runtime.emf.type.core",

@@ -21,7 +21,12 @@ import java.util.regex.PatternSyntaxException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.dynamichelpers.ExtensionTracker;
+import org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler;
+import org.eclipse.core.runtime.dynamichelpers.IExtensionTracker;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -69,6 +74,10 @@ public final class ClientContextManager {
 	private final Set clientContexts = new java.util.HashSet();
 
 	private final Map clientContextMap = new java.util.HashMap();
+	
+	private ExtensionTracker extensionTracker;
+	
+	private IExtensionChangeHandler extensionListener;
 
 	/**
 	 * Not instantiable by clients.
@@ -80,7 +89,33 @@ public final class ClientContextManager {
 				.getConfigurationElementsFor(EMFTypePlugin.getPluginId(),
 						ELEMENT_TYPE_BINDINGS_EXT_P_NAME);
 
+		if (EMFTypePlugin.isDynamicAware()) {
+			startExtensionTracking();
+		}
+		
 		configureElementTypeBindings(configs);
+	}
+	
+	private void startExtensionTracking() {
+		extensionListener = new IExtensionChangeHandler() {
+			
+			public void addExtension(IExtensionTracker tracker,
+					IExtension extension) {
+				configureElementTypeBindings(extension.getConfigurationElements());
+			}
+
+			public void removeExtension(IExtension extension, Object[] objects) {
+				// Extension removal not supported
+			}
+		};
+		
+		IExtensionPoint point = Platform.getExtensionRegistry()
+				.getExtensionPoint(EMFTypePlugin.getPluginId(),
+						ELEMENT_TYPE_BINDINGS_EXT_P_NAME);
+		
+		extensionTracker = new ExtensionTracker();
+		extensionTracker.registerHandler(extensionListener, ExtensionTracker
+				.createExtensionPointFilter(point));
 	}
 
 	/**
@@ -288,7 +323,7 @@ public final class ClientContextManager {
 	 *            the configuration elements representing constraint binding
 	 *            extensions
 	 */
-	private void configureElementTypeBindings(IConfigurationElement[] elements) {
+	private synchronized void configureElementTypeBindings(IConfigurationElement[] elements) {
 		// must create all of the contexts before we process the bindings.
 		// Hence, this will loop over the elements twice
 		configureClientContexts(elements);
