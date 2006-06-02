@@ -290,7 +290,7 @@ public class DiagramEventBrokerTests extends AbstractShapeTests {
 						Command arrCmd = getDiagramEditPart().getCommand(
 								arrRequest);
 						
-						result[0] = arrCmd == null || !arrCmd.canExecute();
+						result[0] = new Boolean(arrCmd == null || !arrCmd.canExecute());
 						result[1] = Boolean.TRUE;
 					}
 				});
