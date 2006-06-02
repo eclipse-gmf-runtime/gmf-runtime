@@ -88,23 +88,31 @@ public class EditPartUtil {
      * 
      * @param editPart the <code>IGraphicalEditPart</code> that is used as a context to find the currently
      * running transaction if any.
+     * @param includeUnprotected <code>boolean</code> value that if <code>true</code> will consider unprotected
+     * transactions when determining if a write transaction is in progress.
      * @param otherThread <code>boolean</code> value that if <code>true</code>, will verify whether there is
      * an active transaction only when on a different thread then the caller.  This is useful to determine if a 
      * deadlock scenario will occur.
      * @return <code>true</code> if the current active transaction is a write transaction 
      */
-    public static boolean isWriteTransactionInProgress(IGraphicalEditPart editPart, boolean otherThread) {
+    public static boolean isWriteTransactionInProgress(IGraphicalEditPart editPart, boolean includeUnprotected, boolean otherThread) {
         TransactionalEditingDomain theEditingDomain = editPart.getEditingDomain();
         if (theEditingDomain instanceof InternalTransactionalEditingDomain){
             InternalTransactionalEditingDomain internalEditingDomain = 
                 (InternalTransactionalEditingDomain)theEditingDomain;
             InternalTransaction transaction = internalEditingDomain.getActiveTransaction();
-            if (transaction!=null && !transaction.isReadOnly()){
-                Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
-                if (unprotectedMode == null || unprotectedMode == Boolean.FALSE) {
-                	if (!otherThread || (Thread.currentThread() != transaction.getOwner()))
-                		return true;
-                }
+            if (transaction!=null && !transaction.isReadOnly()) {
+            	if (!includeUnprotected) {
+	                Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
+	                if (unprotectedMode != null && unprotectedMode == Boolean.TRUE) {
+	                	return false;
+	                }
+            	}
+                
+            	if (otherThread && Thread.currentThread() != transaction.getOwner())
+            		return true;
+            	else if (!otherThread)
+            		return true;
             }
         }
         return false;

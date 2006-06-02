@@ -1339,7 +1339,7 @@ abstract public class ConnectionEditPart
 	public boolean isEditModeEnabled() {
 		// protect against deadlock - don't allow any action while write transaction
 		// is active on another thread
-		if (EditPartUtil.isWriteTransactionInProgress(this, true))
+		if (EditPartUtil.isWriteTransactionInProgress(this, true, true))
 			return false;
 		
 		return this.editableEditPart.isEditModeEnabled();

@@ -487,7 +487,7 @@ implements NotificationForEditPartsListener {
         
         if ( ep==null ||
             (ep!=null && ((DiagramEditPart)ep).isActivatingDiagram())||
-            !EditPartUtil.isWriteTransactionInProgress((IGraphicalEditPart)getHost(), false))
+            !EditPartUtil.isWriteTransactionInProgress((IGraphicalEditPart)getHost(), false, false))
             options = Collections.singletonMap(Transaction.OPTION_UNPROTECTED,
                 Boolean.TRUE);
   
