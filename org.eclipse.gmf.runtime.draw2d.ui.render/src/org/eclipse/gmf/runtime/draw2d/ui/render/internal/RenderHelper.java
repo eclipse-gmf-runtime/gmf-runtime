@@ -20,7 +20,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderInfo;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author sshaw
@@ -108,12 +107,8 @@ public class RenderHelper {
 				}
 				
 				if (img != null)
-					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-						public void run() {
-							listener.imageRendered(rndImg);
-							threadMap.remove(listener);
-						}
-					});
+					listener.imageRendered(rndImg);
+					threadMap.remove(listener);
 			}
 		});
 		

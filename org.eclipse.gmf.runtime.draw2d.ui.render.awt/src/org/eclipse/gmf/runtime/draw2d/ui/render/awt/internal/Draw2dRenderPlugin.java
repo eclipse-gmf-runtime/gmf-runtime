@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal;
 
+import java.awt.Color;
+
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -45,6 +47,14 @@ public class Draw2dRenderPlugin
 		super();
 		if (singleton == null)
 			singleton = this;
+		
+		// force loading of AWT - bugzilla 119649
+		initAWT();
+	}
+
+	private void initAWT() {
+		Color initColor = new Color(0, 0, 0);
+		initColor.getRed();
 	}
 
 }
