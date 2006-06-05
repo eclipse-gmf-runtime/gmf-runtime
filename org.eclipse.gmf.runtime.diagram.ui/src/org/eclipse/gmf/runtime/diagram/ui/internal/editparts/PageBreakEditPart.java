@@ -380,8 +380,10 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 		IPreferenceStore s = ((DiagramGraphicalViewer) getRoot().getViewer())
 		.getWorkspaceViewerPreferenceStore();
 		
-		s.setValue(WorkspaceViewerProperties.PAGEBREAK_X, r.x);
-		s.setValue(WorkspaceViewerProperties.PAGEBREAK_Y, r.y);
+		if (s != null) {
+			s.setValue(WorkspaceViewerProperties.PAGEBREAK_X, r.x);
+			s.setValue(WorkspaceViewerProperties.PAGEBREAK_Y, r.y);
+		}
 	}	
 
 	/*
