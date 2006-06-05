@@ -74,6 +74,16 @@ public class NotificationUtil {
 	}
     
     /**
+     * checks if the Notification is a custom notification or not
+     * @return <tt>true</tt> if the noptificatio is custom notification otherwise <tt>false</tt>. 
+     */
+    public static boolean isCustomNotification(Notification notification) {
+        if (notification.getEventType() < 0 || notification.getEventType() >= Notification.EVENT_TYPE_COUNT)
+            return true;
+        return false;
+    }
+    
+    /**
      * Collect the deleted objects from all the notifications in the event.
      * 
      * @param event

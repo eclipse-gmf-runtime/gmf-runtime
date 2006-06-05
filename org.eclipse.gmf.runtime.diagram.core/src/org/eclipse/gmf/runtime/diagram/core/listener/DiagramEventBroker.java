@@ -85,12 +85,12 @@ public class DiagramEventBroker
         public void addListener(EObject notifier, Object key, Object listener) {
             Map keys = (Map) listenersMap.get(notifier);
             if (keys == null) {
-                keys = new HashMap();
+                keys = new HashMap(4);
                 listenersMap.put(notifier, keys);
             }
             Set listenersSet = (Set) keys.get(key);
             if (listenersSet == null) {
-                listenersSet = new HashSet();
+                listenersSet = new HashSet(4);
                 keys.put(key, listenersSet);
             }
             listenersSet.add(listener);
@@ -292,11 +292,13 @@ public class DiagramEventBroker
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
-            if (shouldIgnoreNotification(notification))
+            boolean customNotification = NotificationUtil.isCustomNotification(notification);
+            if (!customNotification && shouldIgnoreNotification(notification))
                 continue;
             Object notifier = notification.getNotifier();
             if (notifier instanceof EObject) {
-                if (deletedObjects.contains(notification.getNotifier())) {
+                if (deletedObjects.contains(notification.getNotifier())&&
+                    !customNotification) {
                     continue;
                 }
 
