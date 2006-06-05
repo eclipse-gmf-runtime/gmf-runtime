@@ -44,6 +44,17 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	public ShapeEditPart(View view) {
 		super(view);
 	}
+    
+    
+    /**
+     * This is a HAck to avoid breaking clients who still send the Unresolved event
+     * It should be remomved in 1.1 release and replaced by a refresh edit policy 
+     * that will be installed by the clients
+     *
+     */
+    private interface EventType {
+        public static final int UNRESOLVE = 1003;
+    }
 
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
@@ -89,6 +100,9 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		else if (notification.getFeature() == NotationPackage.eINSTANCE.getView_Element()
 		 && ((EObject)notification.getNotifier())== getNotationView())
 			handleMajorSemanticChange();
+        else if (notification.getEventType() == EventType.UNRESOLVE 
+                && notification.getNotifier() == ((View)getModel()).getElement())
+            handleMajorSemanticChange();
 
 		else
 			super.handleNotificationEvent(notification);
