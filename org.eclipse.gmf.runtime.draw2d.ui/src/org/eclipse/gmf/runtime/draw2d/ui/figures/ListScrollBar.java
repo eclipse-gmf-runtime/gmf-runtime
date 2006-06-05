@@ -28,7 +28,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dUIPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -244,7 +243,7 @@ public class ListScrollBar extends ScrollBar {
 		}
 
 		private Image convert(ImageData theData, RGB[] colors) {
-			theData.palette = new PaletteData(colors);
+			//theData.palette = new PaletteData(colors);
 			return new Image(Display.getCurrent(), theData);
 		}
 	}

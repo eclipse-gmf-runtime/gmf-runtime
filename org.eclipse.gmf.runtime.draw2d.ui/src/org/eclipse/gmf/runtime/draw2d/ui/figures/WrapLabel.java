@@ -1353,10 +1353,7 @@ public class WrapLabel
 
     private int getLineCount(String s) {
         StringTokenizer tokenizer = new StringTokenizer(s, "\n"); //$NON-NLS-1$
-        int count = tokenizer.countTokens();
-        if(count==0 && s.length()>0)
-            count++;
-        return count;
+        return tokenizer.countTokens();
     }
 	
 }
