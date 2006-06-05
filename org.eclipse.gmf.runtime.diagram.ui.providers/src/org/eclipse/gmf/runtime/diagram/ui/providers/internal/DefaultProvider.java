@@ -658,6 +658,8 @@ public abstract class DefaultProvider
                 cc.add(cmd);
         }
         
+        if (cc.isEmpty())
+            return null;
         return cc;
     }
     

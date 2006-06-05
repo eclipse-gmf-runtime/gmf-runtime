@@ -1019,19 +1019,24 @@ abstract public class ConnectionEditPart
 	}
 
 	private void installBendpointEditPolicy() {
+		if (getConnectionFigure().getConnectionRouter() instanceof ForestRouter) {
+			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+				new TreeConnectionBendpointEditPolicy());
+		} else if (getConnectionFigure().getConnectionRouter() instanceof OrthogonalRouter) {
+			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+				new ConnectionLineSegEditPolicy());
+		} else {
+			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+				new ConnectionBendpointEditPolicy());
+		}
+		
 		EditPartUtil.synchronizeRunnableToMainThread(this, new Runnable() {
 			public void run() {
 				if (getConnectionFigure().getConnectionRouter() instanceof ForestRouter) {
-					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-						new TreeConnectionBendpointEditPolicy());
 					getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
 				} else if (getConnectionFigure().getConnectionRouter() instanceof OrthogonalRouter) {
-					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-						new ConnectionLineSegEditPolicy());
 					getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
 				} else {
-					installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-						new ConnectionBendpointEditPolicy());
 					getConnectionFigure().setCursor(Cursors.CURSOR_SEG_ADD);
 				}
 			};
