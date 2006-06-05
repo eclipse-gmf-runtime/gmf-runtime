@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
@@ -25,6 +26,7 @@ import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugi
 import org.eclipse.gmf.runtime.common.ui.services.internal.elementselection.ElementSelectionList;
 import org.eclipse.gmf.runtime.common.ui.services.internal.elementselection.MatchingObjectsOperation;
 import org.eclipse.gmf.runtime.common.ui.services.internal.l10n.CommonUIServicesMessages;
+import org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
@@ -36,6 +38,26 @@ import org.eclipse.ui.PlatformUI;
 public class ElementSelectionService
     extends Service
     implements IElementSelectionProvider, IElementSelectionListener {
+
+    /**
+     * A provider descriptor that will ignore providers that are contributed by
+     * a plug-in that is matched to a disabled capability.
+     */
+    private static class ProviderDescriptor
+        extends Service.ProviderDescriptor {
+
+        private ActivityFilterProviderDescriptor activityFilter;
+
+        public ProviderDescriptor(IConfigurationElement element) {
+            super(element);
+            activityFilter = new ActivityFilterProviderDescriptor(element);
+        }
+
+        public boolean provides(IOperation operation) {
+            return activityFilter.provides(operation)
+                && super.provides(operation);
+        }
+    }
 
     private IElementSelectionInput elementSelectionInput;
 
@@ -272,5 +294,10 @@ public class ElementSelectionService
             job.cancel();
             removeJob(provider);
         }
+    }
+    
+    protected Service.ProviderDescriptor newProviderDescriptor(
+            IConfigurationElement element) {
+            return new ProviderDescriptor(element);
     }
 }

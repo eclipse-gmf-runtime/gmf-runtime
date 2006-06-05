@@ -34,7 +34,7 @@ public class ActivityFilterProviderDescriptor
 	 * 
 	 * @param element
 	 */
-	protected ActivityFilterProviderDescriptor(IConfigurationElement element) {
+	public ActivityFilterProviderDescriptor(IConfigurationElement element) {
 		super(element);
 	}
 
