@@ -394,7 +394,7 @@ public class DiagramEventBroker
                 }
             }
         }
-        if (persistCmd!=null)
+        if (persistCmd!=null && persistCmd.getEditingDomain()!=null)
             cc.append(new EMFOperationCommand(persistCmd.getEditingDomain(),persistCmd));
     }
 
