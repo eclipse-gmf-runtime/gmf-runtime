@@ -17,8 +17,10 @@ import junit.framework.TestSuite;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -134,10 +136,17 @@ public class DiagramAssistantTests
 		// should not be shown if the diagram editor is not the active editor
 		IWorkbenchPage page = PlatformUI.getWorkbench()
 			.getActiveWorkbenchWindow().getActivePage();
+        IDiagramWorkbenchPart diagramPart = getDiagramWorkbenchPart();
 		if (page.getViewReferences().length > 0) {
 			// Activate the first view found, if there is one.
-			page.activate(page.getViewReferences()[0].getPart(false));
-			assertFalse(da.shouldShowDiagramAssistant());
+		    for (int i = 0; i < page.getViewReferences().length; i++) {
+                IWorkbenchPart part = page.getViewReferences()[i].getPart(false);
+                if (part != null & part != diagramPart) {
+                    page.activate(page.getViewReferences()[0].getPart(false));
+                    assertFalse(da.shouldShowDiagramAssistant());
+                    break;
+                }               
+            }
 		}
 
 		page.activate(getDiagramWorkbenchPart());
