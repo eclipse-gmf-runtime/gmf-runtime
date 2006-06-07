@@ -238,7 +238,15 @@ public abstract class AbstractModelerPropertySection
 	 */
 	protected void executeAsReadAction(final Runnable code) {
 		try {
-			getEditingDomain().runExclusive(code);
+			TransactionalEditingDomain domain = getEditingDomain();
+			
+			if (domain != null) {
+				getEditingDomain().runExclusive(code);
+			} else {
+				// if we are not in a transactional editing domain context, then
+				//    there is no notion of exclusivity.  Just run
+				code.run();
+			}
 		} catch (InterruptedException e) {
 			Trace.catching(DiagramPropertiesPlugin.getDefault(),
 				DiagramPropertiesDebugOptions.EXCEPTIONS_CATCHING, getClass(),
