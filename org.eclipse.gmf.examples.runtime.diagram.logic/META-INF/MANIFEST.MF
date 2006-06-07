@@ -44,4 +44,4 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.render;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.common.ui.services.dnd;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.emf.edit.ui;bundle-version="[2.2.0,3.0.0)"
-Eclipse-LazyStart: true
+Eclipse-LazyStart: true; exceptions="org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating"

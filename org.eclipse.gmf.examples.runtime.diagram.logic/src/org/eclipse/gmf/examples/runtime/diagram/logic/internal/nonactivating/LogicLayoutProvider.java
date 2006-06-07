@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
+package org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating;
 
 import java.util.Iterator;
 

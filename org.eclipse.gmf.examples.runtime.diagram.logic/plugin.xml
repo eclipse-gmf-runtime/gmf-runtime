@@ -460,7 +460,7 @@
         name="%ext.actionFilterProviders" 
         point="org.eclipse.gmf.runtime.common.ui.services.action.actionFilterProviders">
      <ActionFilterProvider 
-           class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions.LogicActionFilterProvider">
+           class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating.LogicActionFilterProvider">
         <Priority name="Lowest"/>
         <Attribute 
               name="org.eclipse.gmf.examples.runtime.diagram.logic.isContainerElement" 
@@ -469,7 +469,7 @@
   </extension>
    <extension
          point="org.eclipse.gmf.runtime.diagram.ui.layoutProviders">
-      <layoutProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicLayoutProvider">
+      <layoutProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating.LogicLayoutProvider">
          <Priority name="Medium"/>
       </layoutProvider>
    </extension>

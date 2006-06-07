@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.examples.runtime.diagram.logic.internal.actions;
+package org.eclipse.gmf.examples.runtime.diagram.logic.internal.nonactivating;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement;
