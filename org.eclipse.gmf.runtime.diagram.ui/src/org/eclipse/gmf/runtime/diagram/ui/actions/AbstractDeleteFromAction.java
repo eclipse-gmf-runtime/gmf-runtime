@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.actions;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
@@ -113,8 +114,11 @@ public abstract class AbstractDeleteFromAction
                 .getAdapter(IEditingDomainProvider.class);
 
             if (edProvider != null) {
-                return (TransactionalEditingDomain) edProvider
-                    .getEditingDomain();
+            	EditingDomain domain = edProvider.getEditingDomain();
+            	
+            	if (domain instanceof TransactionalEditingDomain) {
+            		return (TransactionalEditingDomain) domain;
+            	}
             }
         }
         return null;
