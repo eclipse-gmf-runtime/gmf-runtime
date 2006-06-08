@@ -20,6 +20,7 @@ import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.ui.properties.sections.UndoableModelPropertySheetEntry;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FormAttachment;
@@ -145,6 +146,23 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
                 setEditingDomain((TransactionalEditingDomain) theEditingDomain);
             }
         }
+        
+        // Set the eObject for the section, too. The workbench part may not
+		// adapt to IEditingDomainProvider, in which case the selected EObject
+		// will be used to derive the editing domain.
+		if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+            Object firstElement = ((IStructuredSelection) selection)
+                .getFirstElement();
+            
+            if (firstElement != null) {
+            	EObject adapted = unwrap(firstElement);
+            	
+	            if (adapted != null) {
+	                setEObject((EObject) adapted);
+	            }
+            }
+        }
+        
         page.selectionChanged(part, selection);
     }
 
