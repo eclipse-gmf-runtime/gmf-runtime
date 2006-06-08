@@ -651,7 +651,8 @@ public class ElementTypeRegistry {
 			for (int i = supertypes.size() - 1; i >= 0; i--) {
 				EClass nextEClass = (EClass) supertypes.get(i);
 	
-				// same nsURI is assumed because we're looking at supertypes of the eclass
+				// nsURI could be different in supertypes of the eclass
+				metamodelTypeDescriptorsByEClass = (Map) metamodelTypeDescriptorsByNsURI.get(nextEClass.getEPackage().getNsURI());
 				descriptors = metamodelTypeDescriptorsByEClass != null ? (Collection) metamodelTypeDescriptorsByEClass
 						.get(nextEClass.getName())
 						: null;
