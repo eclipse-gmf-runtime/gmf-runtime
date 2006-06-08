@@ -74,6 +74,7 @@ public class DestroyDependentsRequest extends DestroyRequest {
 			EObject elementToDestroy, boolean confirmationRequired) {
 
 		super(editingDomain, confirmationRequired);
+		dependentElementsToDestroy.add(elementToDestroy);
 		this.elementToDestroy = elementToDestroy;
 	}
     

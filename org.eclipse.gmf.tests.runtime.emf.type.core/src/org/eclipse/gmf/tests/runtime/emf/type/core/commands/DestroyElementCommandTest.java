@@ -10,6 +10,8 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.commands;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +31,7 @@ import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
@@ -123,6 +126,7 @@ public class DestroyElementCommandTest
     	ICommand cmd = type.getEditCommand(req);
     	
     	assertNotNull(cmd);
+    	assertNoDuplicates(cmd);
     	
     	execute(cmd);
     	
@@ -156,6 +160,7 @@ public class DestroyElementCommandTest
     	ICommand cmd = type.getEditCommand(req);
     	
     	assertNotNull(cmd);
+    	assertNoDuplicates(cmd);
     	
     	execute(cmd);
     	
@@ -188,9 +193,9 @@ public class DestroyElementCommandTest
     }
 
     /**
-     * Tests that we completely destroy cross-resource-contained objects, also
-     * (removing them from their resource).
-     */
+	 * Tests that we completely destroy cross-resource-contained objects, also
+	 * (removing them from their resource).
+	 */
     public void test_destroy_crossResourceContained_136738() {
     	// use the Ecore metamodel because EXTLibrary does not have any
     	//    cross-resource containment support
@@ -234,6 +239,7 @@ public class DestroyElementCommandTest
     	ICommand cmd = type.getEditCommand(req);
     	
     	assertNotNull(cmd);
+    	assertNoDuplicates(cmd);
     	
     	execute(cmd);
     	
@@ -251,6 +257,39 @@ public class DestroyElementCommandTest
     	assertDestroyed(class2);
     	assertNull(class2.eResource());
    }
+    
+    /**
+	 * Tests that the element to destroy in a DestroyRequest is the same in the
+	 * before advice as it is in the after advice.
+	 */
+    public void test_preserveElementToDestroy_142561() {
+
+		DestroyElementRequest req = new DestroyElementRequest(parentCompany,
+				false);
+		IElementType type = ElementTypeRegistry.getInstance().getElementType(
+				req.getEditHelperContext());
+
+		req.setParameter(DestroyCustomerAdvice.BEFORE, new ArrayList());
+		req.setParameter(DestroyCustomerAdvice.AFTER, new ArrayList());
+
+		assertNotNull(type);
+
+		ICommand cmd = type.getEditCommand(req);
+
+		assertNotNull(cmd);
+		assertNoDuplicates(cmd);
+
+		execute(cmd);
+
+		assertDestroyed(parentCompany);
+
+		// verify that the after advice sees the same elements to destroy in the reverse order
+		List before = (List) req.getParameter(DestroyCustomerAdvice.BEFORE);
+		List after = (List) req.getParameter(DestroyCustomerAdvice.AFTER);
+
+		Collections.reverse(after);
+		assertEquals(before, after);
+	}
     
     //
     // Test framework methods
@@ -307,34 +346,43 @@ public class DestroyElementCommandTest
     }
     
     /**
-	 * Tests that the element to destroy in a DestroyRequest is the same in the
-	 * before advice as it is in the after advice.
+	 * Tests that there are no duplicate commands to destroy the same element in
+	 * <code>cmd</code>. Used to verify Bugzilla 145763.
+	 * 
+	 * @param cmd
+	 *            the command to test
 	 */
-    public void test_preserveElementToDestroy_142561() {
+	private void assertNoDuplicates(ICommand cmd) {
+		assertNoDuplicatesImpl(cmd, new ArrayList());
+	}
 
-		DestroyElementRequest req = new DestroyElementRequest(parentCompany,
-				false);
-		IElementType type = ElementTypeRegistry.getInstance().getElementType(
-				req.getEditHelperContext());
+	private void assertNoDuplicatesImpl(ICommand cmd, List toDestroy) {
 
-		req.setParameter(DestroyCustomerAdvice.BEFORE, new ArrayList());
-		req.setParameter(DestroyCustomerAdvice.AFTER, new ArrayList());
+		if (cmd instanceof DestroyElementCommand) {
+			try {
+				Method getElementToDestroy = DestroyElementCommand.class
+						.getDeclaredMethod("getElementToDestroy", null); //$NON-NLS-1$
+				getElementToDestroy.setAccessible(true);
+				EObject element = (EObject) getElementToDestroy.invoke(
+						(DestroyElementCommand) cmd, null);
 
-		assertNotNull(type);
+				if (toDestroy.contains(element)) {
+					fail("Duplicate destroy command for: " + element); //$NON-NLS-1$
+				}
+				toDestroy.add(element);
+			} catch (NoSuchMethodException nsme) {
+				fail("Unexpected exception: " + nsme); //$NON-NLS-1$
+			} catch (IllegalAccessException iae) {
+				fail("Unexpected exception: " + iae); //$NON-NLS-1$
+			} catch (InvocationTargetException ite) {
+				fail("Unexpected exception: " + ite); //$NON-NLS-1$
+			}
 
-		ICommand cmd = type.getEditCommand(req);
-
-		assertNotNull(cmd);
-
-		execute(cmd);
-
-		assertDestroyed(parentCompany);
-
-		// verify that the after advice sees the same elements to destroy in the reverse order
-		List before = (List) req.getParameter(DestroyCustomerAdvice.BEFORE);
-		List after = (List) req.getParameter(DestroyCustomerAdvice.AFTER);
-
-		Collections.reverse(after);
-		assertEquals(before, after);
+		} else if (cmd instanceof ICompositeCommand) {
+			for (Iterator i = ((ICompositeCommand) cmd).iterator(); i.hasNext();) {
+				ICommand next = (ICommand) i.next();
+				assertNoDuplicatesImpl(next, toDestroy);
+			}
+		}
 	}
 }
