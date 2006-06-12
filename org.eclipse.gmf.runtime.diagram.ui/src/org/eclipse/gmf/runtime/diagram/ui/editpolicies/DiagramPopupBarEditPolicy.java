@@ -183,17 +183,19 @@ public class DiagramPopupBarEditPolicy
 	private void fillBasedOnOpenPaletteDrawer() {
 		PaletteViewer paletteViewer = getHost().getViewer().getEditDomain()
 			.getPaletteViewer();
-		for (Iterator iter = paletteViewer.getPaletteRoot().getChildren()
-			.iterator(); iter.hasNext();) {
-			Object child = iter.next();
-			if (child instanceof PaletteDrawer) {
-				PaletteDrawer drawer = (PaletteDrawer) child;
-				if (drawer.isInitiallyOpen()) {
-					fillWithPaletteToolsInContainer(drawer);
-					break;
-				}
-			}
-		}
+        if (paletteViewer != null) {
+            for (Iterator iter = paletteViewer.getPaletteRoot().getChildren()
+                .iterator(); iter.hasNext();) {
+                Object child = iter.next();
+                if (child instanceof PaletteDrawer) {
+                    PaletteDrawer drawer = (PaletteDrawer) child;
+                    if (drawer.isInitiallyOpen()) {
+                        fillWithPaletteToolsInContainer(drawer);
+                        break;
+                    }
+                }
+            }
+        }
 	}
 
 	/**
