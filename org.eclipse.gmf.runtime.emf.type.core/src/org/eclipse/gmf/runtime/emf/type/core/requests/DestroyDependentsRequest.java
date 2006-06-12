@@ -26,7 +26,6 @@ import org.eclipse.gmf.runtime.emf.type.core.EditHelperContext;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import org.eclipse.gmf.runtime.emf.type.core.internal.InternalRequestParameters;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 
 /**
@@ -210,7 +209,7 @@ public class DestroyDependentsRequest extends DestroyRequest {
 				
 				// propagate the dependents information to detect cycles
 				destroy.setParameter(
-						InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER,
+						DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER,
 						this);
 				setElementToDestroy(dependent);
 				

@@ -21,6 +21,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 
 /**
  * Advice that includes the client's dependent annotations in the destruction
@@ -30,6 +31,8 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
  */
 public class ClientDependentsAdvice
 	extends AbstractEditHelperAdvice {
+	
+	public static String INITIAL = "org.eclipse.gmf.tests.runtime.emf.type.core.initial"; //$NON-NLS-1$
 
 	private static EReference[] ANNOTATION_REFERENCES = new EReference[] {
 		EcorePackage.Literals.EANNOTATION__REFERENCES};
@@ -55,7 +58,16 @@ public class ClientDependentsAdvice
 				}
 			}
 		}
+		
+		// store the initial element to destroy in the INITIAL parameter to verify that
+		// the correct initial element was found in the advice
+		Object initial = request.getParameter(INITIAL);
+		if (initial == null) {
+			request.setParameter(INITIAL,
+					request.getParameter(DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER));
+		}
 			
+		
 		return result;
 	}
 }

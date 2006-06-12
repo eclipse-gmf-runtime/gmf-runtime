@@ -41,7 +41,6 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
-import org.eclipse.gmf.runtime.emf.type.core.internal.InternalRequestParameters;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
@@ -646,10 +645,20 @@ public abstract class AbstractEditHelper
 	protected ICommand getDestroyElementWithDependentsCommand(DestroyElementRequest req) {
 		ICommand result = getBasicDestroyElementCommand(req);
 		
+		EObject initial = (EObject) req.getParameter(
+				DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER);
+		
+		if (initial == null) {
+			// set the parameter to keep track of the initial element to destroy
+			req.setParameter(
+					DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER,
+					req.getElementToDestroy());
+		}
+		
 		// get elements dependent on the element we are destroying, that
 		//   must also be destroyed
 		DestroyDependentsRequest ddr = (DestroyDependentsRequest) req.getParameter(
-				InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
+				DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
 		if (ddr == null) {
 			// create the destroy-dependents request that will be propagated to
 			//    destroy requests for all elements destroyed in this operation
@@ -657,10 +666,12 @@ public abstract class AbstractEditHelper
 				req.getEditingDomain(),
 				req.getElementToDestroy(),
 				req.isConfirmationRequired());
-			ddr.addParameters(req.getParameters());
+			// propagate the parameters, including the initial element to
+			//    destroy parameter
+			ddr.addParameters(req.getParameters()); 
 			ddr.setClientContext(req.getClientContext());
 			req.setParameter(
-					InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER,
+					DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER,
 					ddr);
 		} else {
 			ddr.setElementToDestroy(req.getElementToDestroy());
@@ -705,7 +716,7 @@ public abstract class AbstractEditHelper
 				EObject next = (EObject) iter.next();
 				
 				DestroyDependentsRequest ddr = (DestroyDependentsRequest) req.getParameter(
-						InternalRequestParameters.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
+						DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
 				
 				// if another object is already destroying this one because it
 				//    is (transitively) a dependent, then don't destroy it again

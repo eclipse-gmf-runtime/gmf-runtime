@@ -35,11 +35,13 @@ import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Client;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Customer;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
+import org.eclipse.gmf.tests.runtime.emf.type.core.internal.ClientDependentsAdvice;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.DestroyCustomerAdvice;
 
 /**
@@ -290,6 +292,37 @@ public class DestroyElementCommandTest
 		Collections.reverse(after);
 		assertEquals(before, after);
 	}
+    
+    /**
+	 * Verifies the advice on the DestroyDependentsRequest (e.g.,
+	 * ClientDependentsAdvice) can access the initial element that was requested
+	 * to be destroyed.
+	 */
+    public void test_initialElementToBeDestroyed_146559() {
+    	DestroyElementRequest req = new DestroyElementRequest(parentCompany,
+				false);
+		IElementType type = ElementTypeRegistry.getInstance().getElementType(
+				req.getEditHelperContext());
+		
+		assertNotNull(type);
+
+		ICommand cmd = type.getEditCommand(req);
+
+		assertNotNull(cmd);
+		assertNoDuplicates(cmd);
+
+		execute(cmd);
+
+		assertDestroyed(parentCompany);
+
+		// verify that the dependents advice sees the same initial element to destroy
+		DestroyDependentsRequest dependentsRequest = (DestroyDependentsRequest) req
+				.getParameter(DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
+		Object initial = dependentsRequest
+				.getParameter(ClientDependentsAdvice.INITIAL);
+		
+		assertEquals(parentCompany, initial);
+    }
     
     //
     // Test framework methods

@@ -26,6 +26,25 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.impl.DefaultMetamodelType;
  * @author ldamus
  */
 public class DestroyElementRequest extends DestroyRequest {
+	
+	/**
+	 * Request parameter specifying the associated destroy-dependents request
+	 * that is propagated recursively through the processing of destroy
+	 * requests for an element, its contents, and its dependents.
+	 * <p>
+	 * The expected parameter value is an instance of type {@link DestroyDependentsRequest}. 
+	 * </p>
+	 */
+	public static final String DESTROY_DEPENDENTS_REQUEST_PARAMETER = "DestroyElementRequest.destroyDependentsRequest"; //$NON-NLS-1$
+	
+	/**
+	 * Request parameter specifying the initial element that was requested to be
+	 * destroyed.
+	 * <P>
+	 * The expected parameter value is an instance of type {@link EObject}, or
+	 * <code>null</code>.
+	 */
+	public static final String INITIAL_ELEMENT_TO_DESTROY_PARAMETER = "DestroyElementRequest.initialElementToDestroy"; //$NON-NLS-1$
 
 	/**
 	 * The element to destroy.
