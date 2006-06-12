@@ -40,27 +40,30 @@ public class UnexecutableCommand extends AbstractCommand {
 	}
 
 	/**
-	 * Does nothing.
+	 * @throws UnsupportedOperationException
 	 */
 	protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
 			IAdaptable info) throws ExecutionException {
-		return null;
+		
+		 throw new UnsupportedOperationException("doExecuteWithResult"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Does nothing.
+	 * @throws UnsupportedOperationException
 	 */
 	protected CommandResult doRedoWithResult(IProgressMonitor progressMonitor,
 			IAdaptable info) throws ExecutionException {
-		return null;
+		
+		throw new UnsupportedOperationException("doRedoWithResult"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Does nothing.
+	 * @throws UnsupportedOperationException
 	 */
 	protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor,
 			IAdaptable info) throws ExecutionException {
-		return null;
+		
+		throw new UnsupportedOperationException("doUndoWithResult"); //$NON-NLS-1$
 	}
 
 	/**

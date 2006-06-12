@@ -171,6 +171,46 @@ public class AbstractCommandTest
         assertEquals(affectedFiles.size(), c.getAffectedFiles().size());
         assertTrue(c.getAffectedFiles().containsAll(affectedFiles));
     }
+    
+    /**
+	 * Verifies that no exceptions are thrown when a command is executed, undone
+	 * or redone that has no command result.
+	 */
+    public void test_noCommandResult_146064() {
+    	 String name = "test_noCommandResult_146064"; //$NON-NLS-1$
+         TestCommand c = new TestCommandNoResults(name, null);
+         IUndoContext ctx = new ObjectUndoContext(this);
+
+         try {
+             c.addContext(ctx);
+             history.execute(c, new NullProgressMonitor(), null);
+         } catch (ExecutionException e) {
+             e.printStackTrace();
+             fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+         }
+
+         c.assertExecuted();
+
+         try {
+             assertTrue(history.canUndo(ctx));
+             history.undo(ctx, new NullProgressMonitor(), null);
+         } catch (ExecutionException e) {
+             e.printStackTrace();
+             fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+         }
+
+         c.assertUndone();
+
+         try {
+             assertTrue(history.canRedo(ctx));
+             history.redo(ctx, new NullProgressMonitor(), null);
+         } catch (ExecutionException e) {
+             e.printStackTrace();
+             fail("Should not have thrown: " + e.getLocalizedMessage()); //$NON-NLS-1$
+         }
+
+         c.assertRedone();
+    }
 
     // 
     // TEST FIXTURES
@@ -185,11 +225,11 @@ public class AbstractCommandTest
 
         private static final String REDONE = "redone"; //$NON-NLS-1$
 
-        private boolean executed;
+        protected boolean executed;
 
-        private boolean undone;
+        protected boolean undone;
 
-        private boolean redone;
+        protected boolean redone;
 
         public TestCommand(String label, List affectedFiles) {
             super(label, affectedFiles);
@@ -249,4 +289,55 @@ public class AbstractCommandTest
             assertSame(REDONE, getCommandResult().getReturnValue());
         }
     }
+    
+    protected static class TestCommandNoResults extends TestCommand {
+
+		public TestCommandNoResults(String label, List affectedFiles) {
+			super(label, affectedFiles);
+		}
+
+		protected CommandResult doExecuteWithResult(
+				IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+
+			super.doExecuteWithResult(progressMonitor, info);
+			return null;
+		}
+
+		protected CommandResult doRedoWithResult(
+				IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			super.doRedoWithResult(progressMonitor, info);
+			return null;
+		}
+
+		protected CommandResult doUndoWithResult(
+				IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			super.doUndoWithResult(progressMonitor, info);
+			return null;
+		}
+		
+        public void assertExecuted() {
+            assertTrue(executed);
+            assertFalse(undone);
+            assertFalse(redone);
+            assertNull(getCommandResult());
+        }
+
+        public void assertUndone() {
+            assertTrue(undone);
+            assertFalse(executed);
+            assertFalse(redone);
+            assertNull(getCommandResult());
+        }
+
+        public void assertRedone() {
+            assertTrue(redone);
+            assertFalse(undone);
+            assertFalse(executed);
+            assertNull(getCommandResult());
+        }
+	}
+
 }

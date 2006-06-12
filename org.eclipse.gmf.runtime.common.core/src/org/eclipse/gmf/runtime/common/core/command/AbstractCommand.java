@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * An abstract superclass for GMF {@link IUndoableOperation}s that do not
@@ -127,7 +128,8 @@ public abstract class AbstractCommand extends AbstractOperation
 
 		CommandResult result = doExecuteWithResult(monitor, info);
 		setResult(result);
-		return result.getStatus();
+		return result != null ? result.getStatus()
+	            : Status.OK_STATUS;
 	}
 
 	/**
@@ -143,7 +145,9 @@ public abstract class AbstractCommand extends AbstractOperation
 	 *            <code>null</code>, it should minimally contain an adapter
 	 *            for the org.eclipse.swt.widgets.Shell.class.
 	 * 
-	 * @return The result of executing this command.
+	 * @return The result of executing this command. May be <code>null</code>
+	 *         if the execution status is OK, but there is no meaningful result
+	 *         to be returned.
 	 * 
 	 * @throws ExecutionException
 	 *             if, for some reason, I fail to complete the operation
@@ -161,7 +165,8 @@ public abstract class AbstractCommand extends AbstractOperation
 
 		CommandResult result = doRedoWithResult(monitor, info);
 		setResult(result);
-		return result.getStatus();
+		return result != null ? result.getStatus()
+	            : Status.OK_STATUS;
 	}
 
 	/**
@@ -177,7 +182,9 @@ public abstract class AbstractCommand extends AbstractOperation
 	 *            <code>null</code>, it should minimally contain an adapter
 	 *            for the org.eclipse.swt.widgets.Shell.class.
 	 * 
-	 * @return The result of redoing this command.
+	 * @return The result of redoing this command. May be <code>null</code>
+	 *         if the execution status is OK, but there is no meaningful result
+	 *         to be returned.
 	 * 
 	 * @throws ExecutionException
 	 *             on failure to redo
@@ -194,7 +201,8 @@ public abstract class AbstractCommand extends AbstractOperation
 
 		CommandResult result = doUndoWithResult(monitor, info);
 		setResult(result);
-		return result.getStatus();
+		return result != null ? result.getStatus()
+	            : Status.OK_STATUS;
 	}
 
 	/**
@@ -210,7 +218,9 @@ public abstract class AbstractCommand extends AbstractOperation
 	 *            <code>null</code>, it should minimally contain an adapter
 	 *            for the org.eclipse.swt.widgets.Shell.class.
 	 * 
-	 * @return The result of undoing this command.
+	 * @return The result of undoing this command. May be <code>null</code>
+	 *         if the execution status is OK, but there is no meaningful result
+	 *         to be returned.
 	 * 
 	 * @throws ExecutionException
 	 *             on failure to undo
