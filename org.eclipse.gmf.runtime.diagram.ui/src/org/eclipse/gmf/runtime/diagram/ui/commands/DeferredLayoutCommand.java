@@ -13,9 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -141,6 +143,19 @@ public class DeferredLayoutCommand
 			return CommandResult.newOKCommandResult();
 		}
 
+		Set layoutSet = new HashSet(editParts.size());
+		layoutSet.addAll(editParts);
+		
+		// refresh source and target connections of any shapes in the container not being considered for layout
+		Iterator iter = containerEP.getChildren().iterator();
+		while (iter.hasNext()) {
+			Object obj = iter.next();
+			if (!layoutSet.contains(obj) && obj instanceof IGraphicalEditPart) {
+				IGraphicalEditPart ep = (IGraphicalEditPart)obj;
+				ep.refresh();
+			}
+		}
+		
 		//	add an arrange command, to layout the related shapes
 		ArrangeRequest request = new ArrangeRequest(
 			ActionIds.ACTION_ARRANGE_SELECTION, layoutType);
