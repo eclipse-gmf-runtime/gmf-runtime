@@ -49,7 +49,7 @@
    </extension>
    
    <extension id="presentationContributionItemProvider" name="%ext.presentationContributionItemProvider" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
-      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider" checkPluginLoaded="false">
+      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContributionItemProvider" checkPluginLoaded="false">
          <Priority name="Lowest">
          </Priority>
          <partContribution class="org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart"> 
