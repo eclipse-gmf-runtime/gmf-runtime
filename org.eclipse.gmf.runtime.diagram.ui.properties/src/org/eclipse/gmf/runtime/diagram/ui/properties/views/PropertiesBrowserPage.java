@@ -176,6 +176,12 @@ public class PropertiesBrowserPage
 		 */
 		MslUIPlugin.getDefault().getPreferenceStore()
 			.removePropertyChangeListener(this);
+        
+        /**
+         * Clean up
+         */
+        contributor = null;
+        selectedElements = null;
 	}
 
 	
