@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.providers.internal;
+package org.eclipse.gmf.runtime.diagram.ui.providers;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.ui.actions.GEFActionConstants;

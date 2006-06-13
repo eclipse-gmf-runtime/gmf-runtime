@@ -11,13 +11,13 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers;
 
+import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateConnectionViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateShapeViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.DiagramUIGeoshapesMessages;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n.DiagramUIGeoshapesPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DiagramContributionItemProvider;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * Creates the actions that can be performed on the various Geometric Shapes
  */
 public class GeoshapeContributionItemProvider
-	extends DiagramContributionItemProvider {
+	extends AbstractContributionItemProvider {
 
 	/**
 	 * The constructor
