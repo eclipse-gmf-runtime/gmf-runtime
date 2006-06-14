@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteDrawer;
@@ -27,6 +28,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolE
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * This is the default popup bar editpolicy installed on diagrams. The popup bar
@@ -162,8 +168,14 @@ public class DiagramPopupBarEditPolicy
 							IElementType theToolType = theXtoolsTool
 								.getElementType();
 							if ((theToolType != null)) {
-								addPopupBarDescriptor(theToolType, IconService
-									.getInstance().getIcon(theToolType));
+								
+								Image image = IconService.getInstance().getIcon(theToolType);
+								
+								// Workaround for mirroring and SWT.ICON issue
+								if (image.type == SWT.ICON && isMirrored()) {
+									image = convert(image);
+								}
+								addPopupBarDescriptor(theToolType, image);
 							}
 						}
 					} else if (theEntry instanceof PaletteStack) {
@@ -175,6 +187,39 @@ public class DiagramPopupBarEditPolicy
 			}
 		}
 	}
+	
+	private boolean isMirrored() {
+		return ((getHost().getViewer().getControl().getStyle() & SWT.MIRRORED) != 0);
+	}
+	
+	private Image convert( Image srcImage) {
+		int height = srcImage.getBounds().height;
+		int width = srcImage.getBounds().width;
+		
+		ImageData srcImageData = srcImage.getImageData();
+		
+		RGB backgroundRGB = ((GraphicalEditPart) getHost()).getFigure().getBackgroundColor().getRGB();
+		int backgroundColor = srcImageData.palette.getPixel(backgroundRGB);		
+
+		// Set the transparent pixels to the background color
+		int count = 0;
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (((srcImageData.maskData[count>>3] >> (7-(count % 8))) & 1) == 0) {
+					srcImageData.setPixel(x, y, backgroundColor);
+				}
+				count++;				
+			}
+		}
+		srcImageData.maskData = null;
+
+		Image convertedImage = ImageDescriptor.createFromImageData(srcImageData).createImage(srcImage.getDevice());
+		
+		imagesToBeDisposed.add(convertedImage);
+		
+		return convertedImage;
+	}	
+	
 
 	/**
 	 * Adds popup bar descriptors for all the shape tools in the palette drawer
