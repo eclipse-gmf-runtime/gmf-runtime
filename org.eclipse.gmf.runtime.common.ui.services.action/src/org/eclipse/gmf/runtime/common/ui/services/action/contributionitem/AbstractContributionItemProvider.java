@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
 import org.eclipse.gmf.runtime.common.ui.action.IActionWithProgress;
 import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionDebugOptions;
@@ -33,6 +34,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ProviderContributionDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.ActionGroupCache;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
 import org.eclipse.jface.action.AbstractGroupMarker;
@@ -243,7 +245,8 @@ public abstract class AbstractContributionItemProvider
 					contributeItem(
 						new ActionContributionItemAdapter(
 							item.getId(),
-							partDescriptor),
+							partDescriptor, 
+							item),
 						actionBars.getMenuManager(),
 						item.getMenubarPath(),
 						item.getMenubarGroup());
@@ -252,7 +255,8 @@ public abstract class AbstractContributionItemProvider
 				contributeItem(
 					new ActionContributionItemAdapter(
 						item.getId(),
-						partDescriptor),
+						partDescriptor, 
+						item),
 					actionBars.getToolBarManager(),
 					item.getToolbarPath(),
 					item.getToolbarGroup());
@@ -372,7 +376,8 @@ public abstract class AbstractContributionItemProvider
 				contributeItem(
 					new ActionContributionItemAdapter(
 						item.getId(),
-						partDescriptor),
+						partDescriptor,
+						item),
 					popupMenu,
 					item.getPath(),
 					item.getGroup());
@@ -800,25 +805,36 @@ public abstract class AbstractContributionItemProvider
 	private class ActionContributionItemAdapter implements IAdaptable {
 		private String actionId;
 		private IWorkbenchPartDescriptor partDescriptor;
-
+		private final IPartSelector partSelector;
+		
 		/**
 		 * Creates an instance of <code>ActionContributionItemAdapter</code>.
 		 * 
 		 * @param actionId attribute for action ID
 		 * @param partDescriptor attribute for partDescriptor
+         * @param partSelector selects parts that match this contribution item
 		 */
 		public ActionContributionItemAdapter(
 			String actionId,
-			IWorkbenchPartDescriptor partDescriptor) {
+			IWorkbenchPartDescriptor partDescriptor,
+			IPartSelector partSelector) {
+			
 			this.actionId = actionId;
 			this.partDescriptor = partDescriptor;
+			this.partSelector = partSelector;
 		}
 
 		public Object getAdapter(Class adapter) {
 			if (adapter == IContributionItem.class) {
 				IAction action = getAction(actionId, partDescriptor);
-				if (action != null)
-					return new PluginActionContributionItem(action);
+				if (action != null) {
+					PluginActionContributionItem item = new PluginActionContributionItem(action);
+					// set the part selector to minimize action refresh on parts that are not relevant
+					if (partSelector != null) {
+						item.setPartSelector(partSelector);
+					}
+					return item;
+				}
 			} else if (adapter == String.class) {
 				return actionId;
 			}
@@ -1253,6 +1269,24 @@ public abstract class AbstractContributionItemProvider
 				return false;
 			}
 			return super.isVisible();
+		}
+		
+		/**
+		 * Sets the part selector for this action. The part selector is used by
+		 * the <code>AbstractActionHandler</code> to determine whether or not
+		 * the action is applicable to a given selected part. If the part is not
+		 * applicable, the action will not be refreshed when selection changes
+		 * in the part.
+		 * 
+		 * @param partSelector
+		 *            the part selector
+		 */
+		public void setPartSelector(IPartSelector partSelector) {
+			IAction action = getAction();
+			
+			if (action instanceof AbstractActionHandler) {
+				((AbstractActionHandler) action).setPartSelector(partSelector);
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,18 +17,20 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.text.IMarkSelection;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionStatusCodes;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.text.IMarkSelection;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
  * A descriptor for an XML-based contribution made by a provider of
@@ -520,7 +522,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	 * A descriptor for a part contribution item.
 	 */
 	private static abstract class AbstractPartContributionItemDescriptor
-		extends AbstractContributionItemDescriptor {
+		extends AbstractContributionItemDescriptor implements IPartSelector {
 		/** the contribution item's menubar path */
 		private String menubarPath;
 		/** the contribution item's menubar group */
@@ -529,6 +531,10 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 		private String toolbarPath;
 		/** the contribution item's toolbar group */
 		private String toolbarGroup;
+		/** the contribution item's part ID, if specified */
+		private String targetId;
+		/** the contribution item's part class name or interface name, if specified */
+		private String targetClassName;
 
 		/**
 		 * Constructs a new part contribution item from its configuration element.
@@ -550,6 +556,14 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 			if (location != null) {
 				toolbarPath = extractMenuPath(location);
 				toolbarGroup = extractGroup(location);
+			}	
+
+			// extract the part ID or class name from the parent element
+			Object parent = configElement.getParent();
+			if (parent instanceof IConfigurationElement) {
+				IConfigurationElement parentElement = ((IConfigurationElement) parent);
+				targetId = parentElement.getAttribute(ID);
+				targetClassName = parentElement.getAttribute(CLASS);
 			}
 		}
 
@@ -587,6 +601,32 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 		 */
 		public String getToolbarGroup() {
 			return toolbarGroup;
+		}		
+		
+		/**
+		 * Determines whether or not this contribution is applicable to the
+		 * given workbench <code>part</code>.
+		 * 
+		 * @param part
+		 *            the workbench part to be tested
+		 * @return <code>true</code> if applicable, <code>false</code> if
+		 *         not
+		 */
+		public boolean selects(IWorkbenchPart part) {
+
+			IWorkbenchPartSite site = part.getSite();
+			if (site != null) {
+				String partId = site.getId();
+				if (targetId != null && partId != null) {
+					return targetId.equals(partId);
+				}
+			}
+
+			Class partClass = part.getClass();
+			if (targetClassName != null && partClass != null) {
+				return isAssignableTo(partClass, targetClassName);
+			}
+			return false;
 		}
 	}
 
@@ -594,7 +634,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	 * A descriptor for a popup menu contribution item.
 	 */
 	private static abstract class AbstractPopupContributionItemDescriptor
-		extends AbstractContributionItemDescriptor {
+		extends AbstractContributionItemDescriptor implements IPartSelector {
 		/** the contribution item's path */
 		private String path;
 		/** the contribution item's group */
@@ -634,6 +674,17 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 		 */
 		public String getGroup() {
 			return group;
+		}
+		
+		/**
+		 * Always returns <code>false</code>.
+		 * <P>
+		 * Popup contributions are always re-contributed when the menu is about
+		 * to be shown, so there is no need for them to listen for selection
+		 * change on the workbench part.
+		 */
+		public boolean selects(IWorkbenchPart part) {
+			return false;
 		}
 	}
 

@@ -25,6 +25,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIPlugin;
 import org.eclipse.gmf.runtime.common.ui.internal.CommonUIStatusCodes;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
 import org.eclipse.gmf.runtime.common.ui.util.StatusLineUtil;
 import org.eclipse.jface.action.Action;
@@ -91,6 +92,13 @@ public abstract class AbstractActionHandler
 	 * The part listener of this action
 	 */
 	private IPartListener partListener;
+	
+	/**
+	 * Selects workbench parts that match the part criteria with which I was
+	 * contributed. I will refresh myself when the selection changes on parts
+	 * that match this criteria, and when such parts are activated.
+	 */
+	private IPartSelector partSelector;
 
 	/**
 	 * Constructs a new action handler for the specified workbench part.
@@ -145,7 +153,7 @@ public abstract class AbstractActionHandler
 			 */
 			public void partActivated(IWorkbenchPart part) {
 				setWorkbenchPart(part);
-				if (part != null)
+				if (part != null && contributedToPart(part))
 					refresh();
 			}
 		};
@@ -216,21 +224,72 @@ public abstract class AbstractActionHandler
 		this.workbenchPart = workbenchPart;
 
 		if (workbenchPart != null) {
+			
+			if (contributedToPart(workbenchPart)) {
+				
+				if (isSelectionListener()) {
+					ISelectionProvider provider = getWorkbenchPart().getSite()
+							.getSelectionProvider();
+					if (provider != null) {
+						provider.addSelectionChangedListener(this);
+					}
+				}
+				if (isPropertyListener()) {
+					getWorkbenchPart().addPropertyListener(this);
+				}
+				if (isOperationHistoryListener()) {
+					getOperationHistory().addOperationHistoryListener(this);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Answers whether or not I am contributed to <code>part</code>.
+	 * 
+	 * @param part
+	 *            the workbench part to be tested
+	 * @return <code>true</code> if I am contributed to this part,
+	 *         <code>false</code> otherwise.
+	 */
+	protected boolean contributedToPart(IWorkbenchPart part) {
+		return partSelector == null || partSelector.selects(workbenchPart);
+	}
+	
+	/**
+	 * Sets my part selector. If my current workbench part doesn't match the
+	 * part selector, I stop listening to selection, property and operation
+	 * history changes on that part.
+	 * 
+	 * @param partSelector
+	 *            my new part selector
+	 */
+	public final void setPartSelector(IPartSelector partSelector) {
+		
+		if (this.partSelector == partSelector) {
+			return;
+		}
+		
+		this.partSelector = partSelector;
+		IWorkbenchPart part = getWorkbenchPart();
+		
+		if (part != null && !partSelector.selects(part)) {
 			if (isSelectionListener()) {
 				ISelectionProvider provider = getWorkbenchPart().getSite()
 					.getSelectionProvider();
 				if (provider != null) {
-					provider.addSelectionChangedListener(this);
+					provider.removeSelectionChangedListener(this);
 				}
 			}
 			if (isPropertyListener()) {
-				getWorkbenchPart().addPropertyListener(this);
+				getWorkbenchPart().removePropertyListener(this);
 			}
 			if (isOperationHistoryListener()) {
-                getOperationHistory().addOperationHistoryListener(this);
+                getOperationHistory().removeOperationHistoryListener(this);
 			}
 		}
 	}
+
 
 	/**
 	 * Retrieves the value of the <code>workbenchPart</code> instance
