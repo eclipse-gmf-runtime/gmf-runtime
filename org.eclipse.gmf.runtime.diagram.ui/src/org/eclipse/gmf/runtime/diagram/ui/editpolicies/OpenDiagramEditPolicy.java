@@ -17,7 +17,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.OpenDiagramCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -44,7 +44,7 @@ public class OpenDiagramEditPolicy extends OpenEditPolicy {
 			if (view !=null){
 				EObject element = ViewUtil.resolveSemanticElement(view);
 				if (element instanceof Diagram) {
-					return new EtoolsProxyCommand(
+					return new ICommandProxy(
 						new OpenDiagramCommand(element));
 				}
 			}

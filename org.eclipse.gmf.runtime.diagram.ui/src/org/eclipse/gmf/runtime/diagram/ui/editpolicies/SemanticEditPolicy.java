@@ -22,7 +22,7 @@ import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -142,7 +142,7 @@ public class SemanticEditPolicy
 			shouldProceed = shouldProceed((DestroyRequest) completedRequest);
 		}
 		if (shouldProceed) {
-			Command c = new EtoolsProxyCommand(semanticCommand);
+			Command c = new ICommandProxy(semanticCommand);
 			if (completedRequest instanceof DestroyRequest) {
 				ICommand ic = new DeleteCommand(((IGraphicalEditPart) getHost()).getEditingDomain(),
 					(View)getHost().getModel());
@@ -150,7 +150,7 @@ public class SemanticEditPolicy
 					.getLabel());
 				cc.compose(semanticCommand);
 				cc.compose(ic);
-				c = new EtoolsProxyCommand(cc);
+				c = new ICommandProxy(cc);
 			}
 			return c;
 		}

@@ -33,7 +33,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
@@ -110,7 +110,7 @@ public class LogicTestFixture
 
 	/** Executes the supplied command. */
 	protected Collection execute(ICommand cmd) {
-		EtoolsProxyCommand command = new EtoolsProxyCommand(cmd);
+		ICommandProxy command = new ICommandProxy(cmd);
 		execute(command);
 		return DiagramCommandStack.getReturnValues(command);
 	}

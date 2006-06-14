@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
@@ -135,7 +135,7 @@ public class AddNoteAction extends AttachShapeAction {
 		CompoundCommand cc =
 			new CompoundCommand(getToolTipText());
 		cc.add(createNoteCmd);
-		cc.add(new EtoolsProxyCommand(noteAttachmentCC));
+		cc.add(new ICommandProxy(noteAttachmentCC));
 
 		editor.getDiagramEditDomain().getDiagramCommandStack().execute(cc);
 		

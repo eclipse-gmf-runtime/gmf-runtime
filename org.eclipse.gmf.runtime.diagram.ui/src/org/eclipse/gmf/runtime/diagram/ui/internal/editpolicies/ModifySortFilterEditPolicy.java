@@ -18,7 +18,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
@@ -68,7 +68,7 @@ public class ModifySortFilterEditPolicy
 			command.compose(sortingKeysCommand);
 			command.compose(sortedObjectsCommand);
 			
-			return new EtoolsProxyCommand(command.reduce());
+			return new ICommandProxy(command.reduce());
 		}
 		return super.getCommand(request);
 	}

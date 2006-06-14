@@ -18,7 +18,7 @@ import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -92,7 +92,7 @@ public class LabelDirectEditPolicy
 		if (!prevText.equals(labelText)) {
 			ICommand iCommand = 
 				compartment.getParser().getParseCommand(elementAdapter, labelText, 0);
-			return new EtoolsProxyCommand(iCommand);
+			return new ICommandProxy(iCommand);
 		}
 
 		return null;

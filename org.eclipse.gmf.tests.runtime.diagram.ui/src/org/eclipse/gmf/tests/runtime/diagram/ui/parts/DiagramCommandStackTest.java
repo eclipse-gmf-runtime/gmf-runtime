@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 
@@ -96,7 +96,7 @@ public class DiagramCommandStackTest extends TestCase {
 	public void test_execute() {
 
 		// Verify that the progress monitor is transfered from the
-		// EtoolsProxyCommand to the execute method of the ICommand
+		// ICommandProxy to the execute method of the ICommand
 
 		final IProgressMonitor progressMonitor = new MyProgressMonitor();
 		ICommand iCommand = new AbstractCommand(getLabel(), null) {
@@ -113,7 +113,7 @@ public class DiagramCommandStackTest extends TestCase {
                 return null;
             }
 		};
-		EtoolsProxyCommand proxyCommand = new EtoolsProxyCommand(iCommand);
+		ICommandProxy proxyCommand = new ICommandProxy(iCommand);
 
 		DiagramEditDomain domain = new DiagramEditDomain(null);
 				

@@ -41,7 +41,7 @@ import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.IPropertyValueDeferred;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DiagramActionsDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -190,7 +190,7 @@ public class RadialProvider
 		// position the entire radial circle
 		OffsetRadialPartsCommand orpc = new OffsetRadialPartsCommand(
             rootEditPart.getEditingDomain(), parts);
-        cmd = new EtoolsProxyCommand(orpc);
+        cmd = new ICommandProxy(orpc);
 		if (cmd != null)
 			cc.add(cmd);
 		

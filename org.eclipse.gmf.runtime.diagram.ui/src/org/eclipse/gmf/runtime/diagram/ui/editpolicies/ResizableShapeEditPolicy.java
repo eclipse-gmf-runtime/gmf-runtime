@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.IPropertyValueDeferred;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ChangeBoundsDeferredRequest;
@@ -62,7 +62,7 @@ public class ResizableShapeEditPolicy
 			DiagramUIMessages.SetAutoSizeCommand_Label,
 			new EObjectAdapter((View) getHost().getModel()), new Dimension(-1,
 				-1));
-		return new EtoolsProxyCommand(resizeCommand);
+		return new ICommandProxy(resizeCommand);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class ResizableShapeEditPolicy
 			DiagramUIMessages.ResizableShapeEditPolicy_MoveDeferredCommand_label,
 			new EObjectAdapter(view), request
 				.getLocationAdapter());
-		return new EtoolsProxyCommand(cmd);
+		return new ICommandProxy(cmd);
 	}
 
 	public Command getCommand(Request request) {

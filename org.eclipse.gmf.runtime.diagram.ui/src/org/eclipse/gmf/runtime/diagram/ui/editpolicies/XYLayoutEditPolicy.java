@@ -30,7 +30,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -79,7 +79,7 @@ public class XYLayoutEditPolicy
 	 				DiagramUIMessages.SetLocationCommand_Label_Resize,
 	 				new EObjectAdapter((View) child.getModel()),
 					rect.getTopLeft()); 
-			return new EtoolsProxyCommand(boundsCommand);
+			return new ICommandProxy(boundsCommand);
 		}
 		return null;
 	}
@@ -107,7 +107,7 @@ public class XYLayoutEditPolicy
 						.get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
 				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, true);
 				cgm.setNewGuide(findGuideAt(guidePos.intValue(), true), hAlignment);
-				cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+				cmd = cmd.chain(new ICommandProxy(cgm));
 			} else if (DiagramGuide.getInstance().getHorizontalGuide(view) != null) {
 				// SnapToGuides didn't provide a horizontal guide, but this part is attached
 				// to a horizontal guide.  Now we check to see if the part is attached to
@@ -121,7 +121,7 @@ public class XYLayoutEditPolicy
 					edgeBeingResized = 1;
 				if (alignment == edgeBeingResized) {
 					ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, true);
-					cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+					cmd = cmd.chain(new ICommandProxy(cgm));
 				}
 			}
 		}
@@ -134,7 +134,7 @@ public class XYLayoutEditPolicy
 						.get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
 				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, false);
 				cgm.setNewGuide(findGuideAt(guidePos.intValue(), false), vAlignment);
-				cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+				cmd = cmd.chain(new ICommandProxy(cgm));
 			} else if (DiagramGuide.getInstance().getVerticalGuide(view) != null) {
 				int alignment = DiagramGuide.getInstance().getVerticalAlignment(view);
 				int edgeBeingResized = 0;
@@ -144,7 +144,7 @@ public class XYLayoutEditPolicy
 					edgeBeingResized = 1;
 				if (alignment == edgeBeingResized) {
 					ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain, view, false);
-					cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+					cmd = cmd.chain(new ICommandProxy(cgm));
 				}
 			}
 		}
@@ -167,7 +167,7 @@ public class XYLayoutEditPolicy
             // If know this creates a lot of extra commands.  They are currently
             // required for attaching/detaching shapes to guides
             if (cgm!=null)
-                cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+                cmd = cmd.chain(new ICommandProxy(cgm));
             
             guidePos = (Integer)request.getExtendedData()
                     .get(SnapToGuides.KEY_VERTICAL_GUIDE);
@@ -185,7 +185,7 @@ public class XYLayoutEditPolicy
             // If know this creates a lot of extra commands.  They are currently
             // required for attaching/detaching shapes to guides
             if (cgm!=null)
-                cmd = cmd.chain(new EtoolsProxyCommand(cgm));
+                cmd = cmd.chain(new ICommandProxy(cgm));
         }
 
 
@@ -216,7 +216,7 @@ public class XYLayoutEditPolicy
  				DiagramUIMessages.SetLocationCommand_Label_Resize,
  				new EObjectAdapter(shapeView),
 				newBounds); 
-		return new EtoolsProxyCommand(boundsCommand);
+		return new ICommandProxy(boundsCommand);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class XYLayoutEditPolicy
 			return null;
 
 		return chainGuideAttachmentCommands( request,
-			new EtoolsProxyCommand(cc.reduce()));
+			new ICommandProxy(cc.reduce()));
 	}
 
 	/**
@@ -399,7 +399,7 @@ public class XYLayoutEditPolicy
 				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain,
                     editPartViewer, desc, true);
 				cgm.setNewGuide(guide, hAlignment);
-				result = result.chain(new EtoolsProxyCommand(cgm));
+				result = result.chain(new ICommandProxy(cgm));
 			}
 		}
 
@@ -420,7 +420,7 @@ public class XYLayoutEditPolicy
 				ChangeGuideCommand cgm = new ChangeGuideCommand(editingDomain,
                     editPartViewer, desc, false);
 				cgm.setNewGuide(guide, vAlignment);
-				result = result.chain(new EtoolsProxyCommand(cgm));
+				result = result.chain(new ICommandProxy(cgm));
 			}
 		}
 

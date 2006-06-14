@@ -27,7 +27,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
@@ -145,7 +145,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 				cmc.compose(new SetCompartmentRatioCommand(editingDomain, new EObjectAdapter((View)child.getModel()), NULL_CONSTRAINT));
 			}
 		}
-		return cmc.isEmpty() ? null : new EtoolsProxyCommand(cmc.reduce());
+		return cmc.isEmpty() ? null : new ICommandProxy(cmc.reduce());
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class ConstrainedToolbarLayoutEditPolicy
 				cmc.compose(new SetCompartmentRatioCommand(editingDomain, new EObjectAdapter((View)part.getModel()), r));
 			}
 		}
-		return new EtoolsProxyCommand(cmc);
+		return new ICommandProxy(cmc);
 	}
 
 	/**

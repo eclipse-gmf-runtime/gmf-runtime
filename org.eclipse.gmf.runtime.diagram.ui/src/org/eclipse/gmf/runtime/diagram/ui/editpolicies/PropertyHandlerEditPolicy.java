@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewRefactorHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
@@ -73,7 +73,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 				}
 				if (view !=null){
 					if (ViewUtil.isPropertySupported(view,cpvr.getPropertyID())) {
-						return new EtoolsProxyCommand(
+						return new ICommandProxy(
 							new SetPropertyCommand(getEditingDomain(),
 								new EObjectAdapter(view),
 								cpvr.getPropertyID(),
@@ -103,7 +103,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 								((ChangePropertyValueRequest) request).getValue()));
 					}
 				}
-				return new EtoolsProxyCommand(compositeCommand);
+				return new ICommandProxy(compositeCommand);
 			}
 		}else if (
 			request instanceof ApplyAppearancePropertiesRequest
@@ -127,7 +127,7 @@ public class PropertyHandlerEditPolicy extends AbstractEditPolicy {
 				}
 			};
 			
-			return new EtoolsProxyCommand(viewStyleCommand);
+			return new ICommandProxy(viewStyleCommand);
 		}
 
 		return null;

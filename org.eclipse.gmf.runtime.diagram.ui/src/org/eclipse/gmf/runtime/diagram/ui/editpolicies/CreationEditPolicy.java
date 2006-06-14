@@ -39,7 +39,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
@@ -160,7 +160,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				cc.compose(getReparentCommand((IGraphicalEditPart)ep));
 			}
 		}
-		return cc.isEmpty() ? null : new EtoolsProxyCommand(cc.reduce());
+		return cc.isEmpty() ? null : new ICommandProxy(cc.reduce());
 	}
 	
 	/** 
@@ -246,7 +246,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 
 			cc.compose(createCommand);
 		}
-		return new EtoolsProxyCommand(cc.reduce());
+		return new ICommandProxy(cc.reduce());
 
 	}
 
@@ -314,7 +314,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 			cc.compose(new CommandProxy(refreshConnectionCommand));
 		}
 
-		return new EtoolsProxyCommand(cc);
+		return new ICommandProxy(cc);
 	}
 
 	/**
@@ -409,7 +409,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				}
 			};
 
-			return new EtoolsProxyCommand(selectAndCreateConnectionCmd);
+			return new ICommandProxy(selectAndCreateConnectionCmd);
 		}
 	}
 	

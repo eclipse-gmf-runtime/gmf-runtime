@@ -20,7 +20,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -109,7 +109,7 @@ public class ConnectionBendpointEditPolicy
         sbbCommand.setEdgeAdapter(new EObjectAdapter(edge));
 		sbbCommand.setNewPointList(connection.getPoints(), ptRef1, ptRef2);
 
-		return new EtoolsProxyCommand(sbbCommand);
+		return new ICommandProxy(sbbCommand);
 	}
 
 	/**
@@ -136,6 +136,6 @@ public class ConnectionBendpointEditPolicy
 				newPoints, connection.getSourceAnchor(), connection.getTargetAnchor());
 		}
 		
-		return new EtoolsProxyCommand(sbbCommand);
+		return new ICommandProxy(sbbCommand);
 	}
 }

@@ -43,7 +43,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart;
@@ -116,7 +116,7 @@ public class ContainerEditPolicy
 		if (data != null
 			&& viewContext != null
 			&& editPart instanceof ISurfaceEditPart) {
-			return new EtoolsProxyCommand(new PasteCommand(editPart
+			return new ICommandProxy(new PasteCommand(editPart
                 .getEditingDomain(), DiagramUIMessages.PasteCommand_Label,
                 viewContext, data, MapModeUtil
                     .getMapMode(((org.eclipse.gef.GraphicalEditPart) getHost())
@@ -186,7 +186,7 @@ public class ContainerEditPolicy
                 element.getEditingDomain(), (View) element.getModel()));
 		}
 		
-		return new EtoolsProxyCommand( toReturn );
+		return new ICommandProxy( toReturn );
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class ContainerEditPolicy
                 toOrder.getEditingDomain(), (View) toOrder.getModel()));
 		}
 		
-		return new EtoolsProxyCommand( toReturn );
+		return new ICommandProxy( toReturn );
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class ContainerEditPolicy
                 (View) toOrder.getModel()));
 		}
 		
-		return new EtoolsProxyCommand( toReturn );
+		return new ICommandProxy( toReturn );
 	}
 	
 	/**
@@ -246,7 +246,7 @@ public class ContainerEditPolicy
                 toOrder.getEditingDomain(), (View) toOrder.getModel()));
 		}
 		
-		return new EtoolsProxyCommand( toReturn );
+		return new ICommandProxy( toReturn );
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class ContainerEditPolicy
 			String layoutType = request.getLayoutType();
             TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
                 .getEditingDomain();
-			return new EtoolsProxyCommand(
+			return new ICommandProxy(
 				new DeferredLayoutCommand(editingDomain,
 					request.getViewAdaptersToArrange(),
 					(IGraphicalEditPart) getHost(),
@@ -311,7 +311,7 @@ public class ContainerEditPolicy
             TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
                 .getEditingDomain();
             
-			return new EtoolsProxyCommand(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+			return new ICommandProxy(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
 				protected CommandResult doExecuteWithResult(
                             IProgressMonitor progressMonitor, IAdaptable info)
                         throws ExecutionException {
@@ -407,10 +407,10 @@ public class ContainerEditPolicy
 						DiagramUIMessages.Commands_Duplicate_Label,
 						request, notationViewsToDuplicate,
 						duplicateElementsRequest.getAllDuplicatedElementsMap(), getDuplicateViewsOffset(request)));
-					return new EtoolsProxyCommand(cc);
+					return new ICommandProxy(cc);
 				}
 			} else {
-				return new EtoolsProxyCommand(new DuplicateViewsCommand(editingDomain,
+				return new ICommandProxy(new DuplicateViewsCommand(editingDomain,
 					DiagramUIMessages.Commands_Duplicate_Label,
 					request, notationViewsToDuplicate, getDuplicateViewsOffset(request)));
 			}
@@ -453,7 +453,7 @@ public class ContainerEditPolicy
 					(IGraphicalEditPart) getHost(),
 					true));
 
-			return new EtoolsProxyCommand(cc);
+			return new ICommandProxy(cc);
 		}
 
 		if (RequestConstants.REQ_PASTE.equals(request.getType())) {

@@ -14,7 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
@@ -41,7 +41,7 @@ public class NonSemanticEditPolicy extends SemanticEditPolicy {
 
 		if ( editRequest instanceof DestroyElementRequest ) {
 			if (getHost() instanceof GraphicalEditPart){
-				return new EtoolsProxyCommand(new DeleteCommand(editRequest
+				return new ICommandProxy(new DeleteCommand(editRequest
                     .getEditingDomain(), ((GraphicalEditPart) getHost())
                     .getPrimaryView()));
 			}

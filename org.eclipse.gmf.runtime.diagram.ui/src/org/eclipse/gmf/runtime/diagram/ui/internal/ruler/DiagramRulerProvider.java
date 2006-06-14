@@ -27,7 +27,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.CreateGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.DeleteGuideCommand;
@@ -175,7 +175,7 @@ public class DiagramRulerProvider extends RulerProvider {
 	 * @see org.eclipse.gef.rulers.RulerProvider#getCreateGuideCommand(int)
 	 */
 	public Command getCreateGuideCommand(int position) {
-        return new EtoolsProxyCommand(new CreateGuideCommand(
+        return new ICommandProxy(new CreateGuideCommand(
             editingDomain, theRuler, position));
     }
 
@@ -183,7 +183,7 @@ public class DiagramRulerProvider extends RulerProvider {
 	 * @see org.eclipse.gef.rulers.RulerProvider#getDeleteGuideCommand(java.lang.Object)
 	 */
 	public Command getDeleteGuideCommand(Object guide) {
-		return new EtoolsProxyCommand( new DeleteGuideCommand(editingDomain, (Guide)guide) );
+		return new ICommandProxy( new DeleteGuideCommand(editingDomain, (Guide)guide) );
 	}
 
 	/* (non-Javadoc)
@@ -193,7 +193,7 @@ public class DiagramRulerProvider extends RulerProvider {
 		CompoundCommand cmd = new CompoundCommand(DiagramUIMessages.Command_moveGuide);
 
 		// Get the Command to Move the Guide
-		cmd.add( new EtoolsProxyCommand( new MoveGuideCommand(editingDomain, (Guide)guide, pDelta) ) );
+		cmd.add( new ICommandProxy( new MoveGuideCommand(editingDomain, (Guide)guide, pDelta) ) );
 		
 		// Get the Commands to Remove attached model objects
 		Iterator iter = getAttachedModelObjects(guide).iterator();
@@ -213,7 +213,7 @@ public class DiagramRulerProvider extends RulerProvider {
 				spc = new SetPropertyCommand(editingDomain, new EObjectAdapter(part), Properties.ID_POSITIONY, Properties.ID_POSITIONY, new Integer(y));
 			}
 
-			cmd.add( new EtoolsProxyCommand(spc) );
+			cmd.add( new ICommandProxy(spc) );
 		}
 
 		return cmd.unwrap();

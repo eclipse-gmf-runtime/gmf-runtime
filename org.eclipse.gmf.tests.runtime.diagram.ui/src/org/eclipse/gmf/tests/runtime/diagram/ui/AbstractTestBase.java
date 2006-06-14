@@ -38,7 +38,7 @@ import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SelectAllAction;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
@@ -213,7 +213,7 @@ public abstract class AbstractTestBase extends TestCase {
 	protected void testCommand(
 		final ICommand command,
 		final ITestCommandCallback callback) {
-		testCommand(new EtoolsProxyCommand(command), callback);
+		testCommand(new ICommandProxy(command), callback);
 	}
 	
 	/**

@@ -25,7 +25,7 @@ import org.eclipse.gmf.runtime.common.ui.services.icon.IconOptions;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.CreateDiagramLinkCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
@@ -149,7 +149,7 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 				DiagramUIMessages.Command_CreateDiagramLink,
 					(View)getHost().getParent().getModel(), 
 					null);
-			return new EtoolsProxyCommand(com);
+			return new ICommandProxy(com);
 		}
 	}
 }

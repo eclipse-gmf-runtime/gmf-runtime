@@ -44,7 +44,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalAc
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -320,7 +320,7 @@ public class DiagramGlobalActionHandler
 			// deleteCC.add(editPart.getCommand(deleteReq));
 		}
 		if (!compositeCommand.isEmpty()) {
-			deleteCC.add(new EtoolsProxyCommand(compositeCommand));
+			deleteCC.add(new ICommandProxy(compositeCommand));
 		}
 
 		return deleteCC;

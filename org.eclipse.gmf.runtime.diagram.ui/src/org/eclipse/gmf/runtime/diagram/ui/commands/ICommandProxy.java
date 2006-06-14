@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
  *
  * An Etools Command Wrapper for an Xtools Command
  */
-public class EtoolsProxyCommand extends Command {
+public class ICommandProxy extends Command {
 
 	/** The wrapped command */
 	private ICommand iCommand;
@@ -37,7 +37,7 @@ public class EtoolsProxyCommand extends Command {
 	 * Constructor
 	 * @param iCommand the command to wrap
 	 */
-	public EtoolsProxyCommand(ICommand iCommand) {
+	public ICommandProxy(ICommand iCommand) {
 		super(iCommand.getLabel());
 		Assert.isNotNull(iCommand);
 		this.iCommand = iCommand;

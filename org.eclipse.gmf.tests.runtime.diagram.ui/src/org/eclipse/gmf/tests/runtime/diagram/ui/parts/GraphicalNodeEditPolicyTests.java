@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
@@ -104,7 +104,7 @@ public class GraphicalNodeEditPolicyTests
 
 				if (request instanceof CreateUnspecifiedTypeConnectionRequest)
 					cc
-						.add(new EtoolsProxyCommand(
+						.add(new ICommandProxy(
 							new SetPropertyCommand(
                                 ((IGraphicalEditPart) getHost()).getEditingDomain(),
 								((CreateConnectionViewRequest) ((CreateUnspecifiedTypeConnectionRequest) request)

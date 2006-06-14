@@ -388,7 +388,7 @@ public abstract class DiagramTestCase extends TestCase {
 //	protected void testCommand(
 //		final ICommand command,
 //		final ITestCommandCallback callback) {
-//		testCommand(new EtoolsProxyCommand(command), callback);
+//		testCommand(new ICommandProxy(command), callback);
 //	}
 //
 //	/**

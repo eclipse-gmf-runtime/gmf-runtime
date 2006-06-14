@@ -21,7 +21,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.ui.actions.DeleteAction;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
@@ -108,7 +108,7 @@ public class PromptingDeleteAction
 		
 		
 		if ((command != null)&&(command.size() > 0))
-			deleteCC.add(new EtoolsProxyCommand(command));
+			deleteCC.add(new ICommandProxy(command));
 		return deleteCC;
 	}	
 	

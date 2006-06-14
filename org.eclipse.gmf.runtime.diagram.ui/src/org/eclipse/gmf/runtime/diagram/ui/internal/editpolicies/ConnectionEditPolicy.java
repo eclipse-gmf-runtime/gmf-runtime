@@ -21,7 +21,7 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -129,7 +129,7 @@ public class ConnectionEditPolicy
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
             .getEditingDomain();
         
-		return new EtoolsProxyCommand(
+		return new ICommandProxy(
 			new DeleteCommand(editingDomain, (View) getHost().getModel()));
 	}
 	/**

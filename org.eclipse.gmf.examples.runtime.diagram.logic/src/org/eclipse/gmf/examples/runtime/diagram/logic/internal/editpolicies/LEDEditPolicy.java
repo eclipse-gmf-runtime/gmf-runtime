@@ -21,7 +21,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
@@ -50,7 +50,7 @@ public Command getCommand(Request request) {
 protected Command getIncrementDecrementCommand(boolean type){
 	IncrementDecrementCommand command = new IncrementDecrementCommand(((IGraphicalEditPart)getHost()).getEditingDomain(), type);
 	command.setChild(((View)(getHost().getModel())).getElement());
-	return new EtoolsProxyCommand(command);
+	return new ICommandProxy(command);
 }
 
 /* (non-Javadoc)

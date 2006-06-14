@@ -21,7 +21,7 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateViewAndOptionallyElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewAndElementCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -80,13 +80,13 @@ public class ContainerNodeEditPolicy
 		// end element.
 		PromptForConnectionAndEndCommand menuCmd = getPromptForConnectionAndEndCommand(
 			request);
-		cc.add(new EtoolsProxyCommand(menuCmd));
+		cc.add(new ICommandProxy(menuCmd));
 
 		// Adds the command to create a view (and optionally an element) for
 		// the other end.
 		CreateViewAndOptionallyElementCommand createOtherEndCmd = getCreateOtherEndCommand(
 			menuCmd.getEndAdapter(), request.getLocation());
-		cc.add(new EtoolsProxyCommand(createOtherEndCmd));
+		cc.add(new ICommandProxy(createOtherEndCmd));
 		
 		// Adds the command to create the connection view and element.
 		ICommand connectionCmd = isDirectionReversed 
@@ -101,7 +101,7 @@ public class ContainerNodeEditPolicy
 				request.getSourceEditPart(),
 				createOtherEndCmd.getResult());	
 			
-		cc.add(new EtoolsProxyCommand(connectionCmd));
+		cc.add(new ICommandProxy(connectionCmd));
 
 		return cc;
 	}

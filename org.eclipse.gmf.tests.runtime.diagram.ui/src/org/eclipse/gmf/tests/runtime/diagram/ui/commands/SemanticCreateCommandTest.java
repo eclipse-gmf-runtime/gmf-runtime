@@ -28,7 +28,7 @@ import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
@@ -66,7 +66,7 @@ public class SemanticCreateCommandTest
 		String commandLabel = "test_wrapCompositeModelCommand"; //$NON-NLS-1$
 
 		// Create:
-		// EtoolsProxyCommand(CompositeModelCommand(AbstractCommand2))
+		// ICommandProxy(CompositeModelCommand(AbstractCommand2))
 		ICommand command = new AbstractCommand(commandLabel, null) {
 
 			protected CommandResult doExecuteWithResult(
@@ -95,7 +95,7 @@ public class SemanticCreateCommandTest
 			commandLabel);
         
 		compositeModelCommand.compose(command);
-		EtoolsProxyCommand proxyCommand = new EtoolsProxyCommand(
+		ICommandProxy proxyCommand = new ICommandProxy(
 			compositeModelCommand);
 
 		// Now wrap this in a compound command
@@ -165,8 +165,8 @@ public class SemanticCreateCommandTest
 		iCommand.addContext(contextA);
 		iCommand.addContext(contextB);
 
-		// wrap the ICommand in an EToolsProxyCommand
-		Command command = new EtoolsProxyCommand(iCommand);
+		// wrap the ICommand in an ICommandProxy
+		Command command = new ICommandProxy(iCommand);
 
 		// Create the test fixture
 		TransactionalEditingDomain editingDomain = TransactionalEditingDomain.Factory.INSTANCE

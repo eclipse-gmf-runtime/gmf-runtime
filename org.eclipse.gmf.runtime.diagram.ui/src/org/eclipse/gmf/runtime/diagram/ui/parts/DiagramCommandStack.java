@@ -43,7 +43,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
@@ -239,8 +239,8 @@ public class DiagramCommandStack
             return composite.reduce();
         }
 
-        if (command instanceof EtoolsProxyCommand) {
-            return getICommand(((EtoolsProxyCommand) command).getICommand());
+        if (command instanceof ICommandProxy) {
+            return getICommand(((ICommandProxy) command).getICommand());
         }
 
         return new CommandProxy(command);
@@ -459,8 +459,8 @@ public class DiagramCommandStack
                 l.addAll(getReturnValues((Command) i.next()));
             return l;
 
-        } else if (c instanceof EtoolsProxyCommand) {
-            return getReturnValues((EtoolsProxyCommand) c);
+        } else if (c instanceof ICommandProxy) {
+            return getReturnValues((ICommandProxy) c);
         }
         return Collections.EMPTY_LIST;
     }
@@ -472,7 +472,7 @@ public class DiagramCommandStack
      *            command to use
      * @return a collection of return values
      */
-    public static Collection getReturnValues(EtoolsProxyCommand cmd) {
+    public static Collection getReturnValues(ICommandProxy cmd) {
         return getReturnValues(cmd.getICommand());
     }
 

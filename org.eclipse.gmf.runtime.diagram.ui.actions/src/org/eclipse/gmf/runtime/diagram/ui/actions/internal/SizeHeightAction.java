@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -114,7 +114,7 @@ public class SizeHeightAction extends DiagramAction {
 				.intValue();
 
 			doResizeCmd.add( 
-				new EtoolsProxyCommand(
+				new ICommandProxy(
 					new SetBoundsCommand(toResize.getEditingDomain(), "", new EObjectAdapter(resizeView), size ) ) ); //$NON-NLS-1$
 		}
 

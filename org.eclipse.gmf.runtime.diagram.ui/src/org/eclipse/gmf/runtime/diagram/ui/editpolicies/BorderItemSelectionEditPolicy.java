@@ -21,7 +21,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.AlignmentRequest;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -114,7 +114,7 @@ public class BorderItemSelectionEditPolicy
 			ICommand moveCommand = new SetBoundsCommand(borderItemEP.getEditingDomain(),
 				DiagramUIMessages.Commands_MoveElement, new EObjectAdapter(
 					(View) getHost().getModel()), location);
-			return new EtoolsProxyCommand(moveCommand);
+			return new ICommandProxy(moveCommand);
 		}
 		return null;
 	}

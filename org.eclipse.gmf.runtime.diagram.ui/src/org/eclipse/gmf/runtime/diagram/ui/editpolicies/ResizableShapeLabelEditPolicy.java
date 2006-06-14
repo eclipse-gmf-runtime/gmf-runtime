@@ -24,7 +24,7 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -100,7 +100,7 @@ public class ResizableShapeLabelEditPolicy
 		ICommand moveCommand = new SetBoundsCommand(editingDomain,
             DiagramUIMessages.MoveLabelCommand_Label_Location,
             new EObjectAdapter((View) getHost().getModel()), normalPoint);
-        return new EtoolsProxyCommand(moveCommand);
+        return new ICommandProxy(moveCommand);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class ResizableShapeLabelEditPolicy
 		ICommand resizeCommand = new SetBoundsCommand(editingDomain,
 			DiagramUIMessages.SetLocationCommand_Label_Resize,
 			new EObjectAdapter(shapeView), rect.getSize());
-		return new EtoolsProxyCommand(resizeCommand);
+		return new ICommandProxy(resizeCommand);
 	}
 
 	/**

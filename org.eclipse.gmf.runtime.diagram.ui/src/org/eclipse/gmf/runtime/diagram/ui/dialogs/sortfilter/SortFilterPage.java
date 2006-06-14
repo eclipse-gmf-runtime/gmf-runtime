@@ -21,7 +21,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
@@ -1007,7 +1007,7 @@ public class SortFilterPage extends PropertyPage {
 			}
 			
 			editPart.getRoot().getViewer().getEditDomain().getCommandStack()
-				.execute(new EtoolsProxyCommand(cc));
+				.execute(new ICommandProxy(cc));
 		}
 	}
 	

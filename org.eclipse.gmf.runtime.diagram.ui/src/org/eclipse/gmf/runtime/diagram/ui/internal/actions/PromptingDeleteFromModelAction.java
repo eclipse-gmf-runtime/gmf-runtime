@@ -19,7 +19,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -101,7 +101,7 @@ public class PromptingDeleteFromModelAction
 			while (iterator.hasNext()){
 				compositeModelActionCommand.compose(new CommandProxy((Command)iterator.next()));				
 			}
-			command = new EtoolsProxyCommand(compositeModelActionCommand); 
+			command = new ICommandProxy(compositeModelActionCommand); 
 		}
 		if (command != null)
 			execute(command, progressMonitor);

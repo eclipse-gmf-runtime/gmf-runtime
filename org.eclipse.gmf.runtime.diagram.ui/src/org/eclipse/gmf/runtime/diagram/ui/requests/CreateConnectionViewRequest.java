@@ -24,7 +24,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
@@ -376,7 +376,7 @@ public class CreateConnectionViewRequest
 		CompositeCommand cc = new CompositeCommand(null);
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
-		return new EtoolsProxyCommand(cc);
+		return new ICommandProxy(cc);
 	}
 
 	/**
@@ -406,7 +406,7 @@ public class CreateConnectionViewRequest
 		CompositeCommand cc = new CompositeCommand(null);
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
-		return new EtoolsProxyCommand(cc);
+		return new ICommandProxy(cc);
 	}
 
 }

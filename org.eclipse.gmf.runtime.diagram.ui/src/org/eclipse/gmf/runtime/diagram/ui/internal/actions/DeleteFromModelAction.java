@@ -22,7 +22,7 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AbstractDeleteFromAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -116,7 +116,7 @@ public class DeleteFromModelAction
 			|| (command.size() != operationSet.size())){
 			return UnexecutableCommand.INSTANCE;
 		}
-		return new EtoolsProxyCommand(command);
+		return new ICommandProxy(command);
 	}
     
     protected String getCommandLabel() {

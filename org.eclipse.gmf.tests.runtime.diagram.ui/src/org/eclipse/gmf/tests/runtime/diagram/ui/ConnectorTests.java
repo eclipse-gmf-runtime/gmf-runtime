@@ -22,7 +22,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gef.tools.ConnectionEndpointTracker;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeType;
@@ -177,7 +177,7 @@ public class ConnectorTests
 			bendpointsChanged.setEdgeAdapter(new EObjectAdapter(line.getNotationView()));
 			bendpointsChanged.setNewPointList(newpts, r1, r2);
 			
-			getCommandStack().execute(new EtoolsProxyCommand(bendpointsChanged));
+			getCommandStack().execute(new ICommandProxy(bendpointsChanged));
 			flushEventQueue();
 
 			assertTrue(line.getConnectionFigure().getPoints().size() == 4);

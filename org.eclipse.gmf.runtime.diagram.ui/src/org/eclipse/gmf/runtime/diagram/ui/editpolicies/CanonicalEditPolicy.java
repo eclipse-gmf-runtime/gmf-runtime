@@ -56,7 +56,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -165,7 +165,7 @@ implements NotificationForEditPartsListener {
 		 * @param cmd command to add
 		 */
 		public void add( ICommand cmd ) {
-			_cc.add( new EtoolsProxyCommand(cmd));
+			_cc.add( new ICommandProxy(cmd));
 		}
 
 		
@@ -397,7 +397,7 @@ implements NotificationForEditPartsListener {
 	 */
 	protected Command getDeleteViewCommand(View view) {
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
-		return new EtoolsProxyCommand(new DeleteCommand(editingDomain, view));
+		return new ICommandProxy(new DeleteCommand(editingDomain, view));
 	}
 
 	/**
@@ -544,7 +544,7 @@ implements NotificationForEditPartsListener {
                 cc.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
             }
         }
-        return new EtoolsProxyCommand(cc.reduce());
+        return new ICommandProxy(cc.reduce());
 	}
 	
 	/**

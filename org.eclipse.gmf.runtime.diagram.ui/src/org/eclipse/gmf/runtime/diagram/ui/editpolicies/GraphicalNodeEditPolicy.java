@@ -44,7 +44,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.EtoolsProxyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
@@ -334,7 +334,7 @@ public class GraphicalNodeEditPolicy
 			ICommand spc = new SetPropertyCommand(
                 getEditingDomain(), connection,
 				Properties.ID_ROUTING, StringStatics.BLANK, newRouterType);
-			Command cmdRouter = new EtoolsProxyCommand(spc);
+			Command cmdRouter = new ICommandProxy(spc);
 			if (cmdRouter != null) {
 				cmd = cmd == null ? cmdRouter : cmd.chain(cmdRouter);
 			}
@@ -371,7 +371,7 @@ public class GraphicalNodeEditPolicy
 			DiagramUIMessages.Commands_SetConnectionEndsCommand_Target);
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
-		Command cmd = new EtoolsProxyCommand(cc);
+		Command cmd = new ICommandProxy(cc);
 		EditPart cep = request.getConnectionEditPart();
 		RoutingStyle style = (RoutingStyle) ((View)cep.getModel()).getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
 		Routing currentRouter = Routing.MANUAL_LITERAL;		
@@ -396,7 +396,7 @@ public class GraphicalNodeEditPolicy
 			sbbCommand.setEdgeAdapter(request.getConnectionEditPart());
 			sbbCommand.setNewPointList(pointList, sourceAnchor
 					.getReferencePoint(), targetAnchor.getReferencePoint());
-			Command cmdBP = new EtoolsProxyCommand(sbbCommand);
+			Command cmdBP = new ICommandProxy(sbbCommand);
 			if (cmdBP != null) {
 				cmd = cmd == null ? cmdBP : cmd.chain(cmdBP);
 			}
@@ -429,7 +429,7 @@ public class GraphicalNodeEditPolicy
 			DiagramUIMessages.Commands_SetConnectionEndsCommand_Source);
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
-		return new EtoolsProxyCommand(cc);
+		return new ICommandProxy(cc);
 	}
 	/**
 	 * Returns a command that will create the connection.
@@ -441,7 +441,7 @@ public class GraphicalNodeEditPolicy
 	 */
 	protected Command getConnectionCompleteCommand(
 			CreateConnectionRequest request) {
-		EtoolsProxyCommand proxy = (EtoolsProxyCommand) request
+		ICommandProxy proxy = (ICommandProxy) request
 			.getStartCommand();
 		if (proxy == null) {
 			return null;
@@ -530,7 +530,7 @@ public class GraphicalNodeEditPolicy
 		cc.compose(sceCommand);
 		cc.compose(scaCommand);
 		cc.compose(sbbCommand);
-		Command c = new EtoolsProxyCommand(cc);
+		Command c = new ICommandProxy(cc);
 		request.setStartCommand(c);
 		return c;
 	}
@@ -706,7 +706,7 @@ public class GraphicalNodeEditPolicy
 		CompositeCommand cc = new CompositeCommand(semanticCommand.getLabel());
 		cc.compose( semanticCommand );
 		cc.compose( new CommandProxy(viewCommand) );
-		return new EtoolsProxyCommand(cc);
+		return new ICommandProxy(cc);
 	}
 
 	/**
@@ -733,7 +733,7 @@ public class GraphicalNodeEditPolicy
 		} else if (menuContent.size() == 1) {
 			return getConnectionCompleteCommand(menuContent.get(0), request);
 		} else {
-			return new EtoolsProxyCommand(getPromptAndCreateConnectionCommand(
+			return new ICommandProxy(getPromptAndCreateConnectionCommand(
 				menuContent, request));
 		}
 	}

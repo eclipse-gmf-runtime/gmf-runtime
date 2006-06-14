@@ -126,7 +126,7 @@ public class PopupBarTool
 			EditCommandRequestWrapper semReq = new EditCommandRequestWrapper(
 				theReq);
 
-			// an EtoolsProxyCommand that wraps the ICommand of the from the
+			// an ICommandProxy that wraps the ICommand of the from the
 			// semantic provider
 			Command theRealCmd = ((IGraphicalEditPart) getHost())
 				.getCommand(semReq);
