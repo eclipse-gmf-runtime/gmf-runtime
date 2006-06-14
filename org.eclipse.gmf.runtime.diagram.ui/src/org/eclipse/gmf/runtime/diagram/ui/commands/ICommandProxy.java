@@ -24,9 +24,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 
 /**
- * @author melaasar
+ * A Command Wrapper for a GMF ICommand.
  *
- * An Etools Command Wrapper for an Xtools Command
+ * @author melaasar
  */
 public class ICommandProxy extends Command {
 
