@@ -3,13 +3,12 @@
 <schema targetNamespace="org.eclipse.gmf.runtime.draw2d.ui.render">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.gmf.runtime.draw2d.ui.render" id="renderedImageFactory" name="extPoint.renderedImageFactory"/>
+         <meta.schema plugin="org.eclipse.gmf.runtime.draw2d.ui.render" id="renderedImageFactory" name="Rendered Image Factory"/>
       </appInfo>
       <documentation>
          This extension point is used to define an image type to allow auto detection of an image buffer.  The image type can instantiate an (&lt;tt&gt;RenderedImage&lt;/tt&gt;) which can subsequently be rendered using the (&lt;tt&gt;ScalableImageFigure&lt;/tt&gt;) class.
 
 In the extension point, the client points to a factory class which they create implementing the (&lt;tt&gt;RenderedImageType&lt;/tt&gt;) interface.  The (&lt;tt&gt;RenderedImageFactory&lt;/tt&gt;) static class calls the extension point to compile a list of image types to query.  When the client calls the (&lt;tt&gt;RenderedImageFactory&lt;/tt&gt;) to retrieve the proper (&lt;tt&gt;RenderedImage&lt;/tt&gt;), it will ask each type whether it can handle the particular image buffer.  If the image buffer is auto-detected by the type, then the type will instatiate and return a (&lt;tt&gt;RenderedImage&lt;/tt&gt;) object.
-
       </documentation>
    </annotation>
 
@@ -80,9 +79,9 @@ The following is an example plugin.xml entry for a renderedImageFactory extensio
 
 &lt;pre&gt;
     &lt;extension 
-    	point=&quot;org.eclipse.gmf.runtime.draw2d.ui.render.renderedImageFactory&quot;&gt;
+     point=&quot;org.eclipse.gmf.runtime.draw2d.ui.render.renderedImageFactory&quot;&gt;
       &lt;factory 
-      		class=&quot;org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImageType&quot;&gt;
+        class=&quot;org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImageType&quot;&gt;
       &lt;/factory&gt; 
  &lt;/extension&gt;
  &lt;/pre&gt;
