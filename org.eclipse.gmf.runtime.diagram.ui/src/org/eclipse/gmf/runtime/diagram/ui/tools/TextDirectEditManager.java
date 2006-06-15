@@ -66,7 +66,11 @@ public class TextDirectEditManager
 	 * flag used to avoid unhooking listeners twice if the UI thread is blocked
 	 */
 	private boolean listenersAttached = true;
-	
+
+
+	/** String buffer to hold initial characters **/
+	private StringBuffer initialString = new StringBuffer();
+		
 	/**
 	 * the text cell editor locator
 	 * @author mmostafa
@@ -284,6 +288,8 @@ public class TextDirectEditManager
 		// myee - RATLC00523014: crashes when queued in asyncExec()
 		eraseFeedback();
 		
+		initialString = new StringBuffer();
+		
 		Display.getCurrent().asyncExec(new Runnable() {
 
 			public void run() {
@@ -333,16 +339,15 @@ public class TextDirectEditManager
 	}
 
 	/**
-	 * Performs show and sets the edit string to be the initial character
+	 * Performs show and sets the edit string to be the initial character or string
 	 * @param initialChar
 	 */
 	public void show(char initialChar) {
-		
+		initialString = initialString.append(initialChar);
 		show();
 		if (SWT.getPlatform() != "carbon") { //$NON-NLS-1$ 
 			// Set the cell editor text to the initial character
-			String initialString = String.valueOf(initialChar);
-			setEditText(initialString);
+			setEditText(initialString.toString());
 		}
 
 	}
