@@ -23,7 +23,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.commands.Command;
@@ -33,6 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
+import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -121,39 +124,68 @@ public class DeferredLayoutCommand
             IProgressMonitor progressMonitor, IAdaptable info)
         throws ExecutionException {
 
-		containerEP.refresh();
-		
-		// The layout command requires that the figure world is updated.
-		getContainerFigure().invalidate();
-		getContainerFigure().validate();
+		RunnableWithResult refreshRunnable = new RunnableWithResult() {
+			
+			private IStatus status;
+            private Object result;
 
-		List editParts = new ArrayList(viewAdapters.size());
-		Map epRegistry = containerEP.getRoot().getViewer()
-			.getEditPartRegistry();
-		for (Iterator iter = viewAdapters.iterator(); iter.hasNext();) {
-			IAdaptable ad = (IAdaptable) iter.next();
-			View view = (View) ad.getAdapter(View.class);
-			Object ep = epRegistry.get(view);
-			if (ep != null) {
-				editParts.add(ep);
+            public Object getResult() {
+                return result;
+            }
+
+            public void setStatus(IStatus status) {
+                this.status = status;
+            }
+
+            public IStatus getStatus() {
+                return status;
+            }
+            
+			public void run() {
+				containerEP.refresh();
+				
+				// The layout command requires that the figure world is updated.
+				getContainerFigure().invalidate();
+				getContainerFigure().validate();
+
+				List editParts = new ArrayList(viewAdapters.size());
+				Map epRegistry = containerEP.getRoot().getViewer()
+					.getEditPartRegistry();
+				for (Iterator iter = viewAdapters.iterator(); iter.hasNext();) {
+					IAdaptable ad = (IAdaptable) iter.next();
+					View view = (View) ad.getAdapter(View.class);
+					Object ep = epRegistry.get(view);
+					if (ep != null) {
+						editParts.add(ep);
+					}
+				}
+
+				if (editParts.isEmpty()) {
+					result = editParts;
+					return;
+				}
+
+				Set layoutSet = new HashSet(editParts.size());
+				layoutSet.addAll(editParts);
+				
+				// refresh source and target connections of any shapes in the container not being considered for layout
+				Iterator iter = containerEP.getChildren().iterator();
+				while (iter.hasNext()) {
+					Object obj = iter.next();
+					if (!layoutSet.contains(obj) && obj instanceof IGraphicalEditPart) {
+						IGraphicalEditPart ep = (IGraphicalEditPart)obj;
+						ep.refresh();
+					}
+				}
+				
+				result = editParts;
 			}
-		}
-
-		if (editParts.isEmpty()) {
+		};
+		
+		EditPartUtil.synchronizeRunnableToMainThread(containerEP, refreshRunnable);
+		List editParts = (List)refreshRunnable.getResult();
+		if (editParts == null || editParts.isEmpty()) {
 			return CommandResult.newOKCommandResult();
-		}
-
-		Set layoutSet = new HashSet(editParts.size());
-		layoutSet.addAll(editParts);
-		
-		// refresh source and target connections of any shapes in the container not being considered for layout
-		Iterator iter = containerEP.getChildren().iterator();
-		while (iter.hasNext()) {
-			Object obj = iter.next();
-			if (!layoutSet.contains(obj) && obj instanceof IGraphicalEditPart) {
-				IGraphicalEditPart ep = (IGraphicalEditPart)obj;
-				ep.refresh();
-			}
 		}
 		
 		//	add an arrange command, to layout the related shapes

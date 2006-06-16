@@ -76,7 +76,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionEditPo
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectionBendpointEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
@@ -125,7 +124,7 @@ import org.eclipse.ui.IActionFilter;
 abstract public class ConnectionEditPart
 	extends AbstractConnectionEditPart
 	implements IGraphicalEditPart, PropertyChangeListener, IContainedEditPart,
-	IPrimaryEditPart, NotificationForEditPartsListener {
+	IPrimaryEditPart, NotificationListener {
 
 	/** A map of listener filters ids to filter data */
 	private Map listenerFilters;

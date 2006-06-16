@@ -60,21 +60,13 @@ public class EditPartUtil {
 	 */
 	public static void synchronizeRunnableToMainThread(IGraphicalEditPart editPart, Runnable runThreadSafe) {
 		if (Display.getCurrent() == null) {
-			EditPartViewer viewer = editPart.getViewer();
-			if (viewer instanceof DiagramGraphicalViewer) {
-	            if (!((DiagramGraphicalViewer)viewer).areUpdatesDisabled()) {
-	            	TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editPart.getEditingDomain();
-	                if (editingDomain != null) {
-	                    PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(runThreadSafe));
-	                    return;
-	                }
-	            }
-	            else {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(runThreadSafe);
-				}
+			TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editPart.getEditingDomain();
+	        if (editingDomain != null) {
+	        	PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(runThreadSafe));
+	            return;
 	        }
-			else {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(runThreadSafe);
+	        else {
+	        	PlatformUI.getWorkbench().getDisplay().asyncExec(runThreadSafe);
 			}
 		}
 		else {

@@ -63,7 +63,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
@@ -98,7 +97,7 @@ import org.eclipse.ui.PlatformUI;
  * @author mhanner
  */
 public abstract class CanonicalEditPolicy extends AbstractEditPolicy 
-implements NotificationForEditPartsListener {
+implements NotificationListener {
 	
 	/** Runs the supplied commands asyncronously. */
 	private static class AsyncCommand extends Command {

@@ -11,16 +11,10 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal;
 
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.Set;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
-import org.eclipse.gmf.runtime.diagram.ui.internal.parts.NotificationForEditPartsListener;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -34,8 +28,8 @@ import org.eclipse.ui.PlatformUI;
  * that has been exeucted with a progress meter, where the progress meter is displaying UI on the main
  * thread and there is a background thread that is being executed that the progress meter is monitoring.
  * For this scenario, the UI updates on the diagram viewer have been disabled so as to avoid concurrency
- * issues and it is desirable that the notifications continue to be handled on the worker thread so that
- * the progress meter doesn't lock up.
+ * issues.  When notifications are handled, they are synchronized to the main thread to avoid
+ * SWTExceptions when UI tries to access SWT resources when updating figures or other UI.
  * 
  * The second scenario is for when a job has been executed on a worker thread, but has not been executed
  * through the OperationHistory.  Consequently, there is no hook for turning off display updates.  This
@@ -60,44 +54,27 @@ class DiagramEventBrokerThreadSafe extends DiagramEventBroker {
      * @see org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker#resourceSetChanged(org.eclipse.emf.transaction.ResourceSetChangeEvent)
      */
     public void resourceSetChanged(ResourceSetChangeEvent event) {
-        if (Display.getCurrent() == null) {
-        	if (shouldSynchronizeWithMainThread(event)) {
-            	// force synchronization with the main thread
-                final ResourceSetChangeEvent eventToHandle = event;
-                TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editingDomainRef.get();
-                if (editingDomain != null) {
-	                PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(new Runnable() { 
-	                    public void run() {
-	                        internal_resourceSetChanged(eventToHandle);
-	                    }
-	                }));
+        if (shouldSynchronizeWithMainThread(event)) {
+           	// force synchronization with the main thread
+            final ResourceSetChangeEvent eventToHandle = event;
+            TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editingDomainRef.get();
+            if (editingDomain != null) {
+	            PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(new Runnable() { 
+	                public void run() {
+	                    internal_resourceSetChanged(eventToHandle);
+	                }
+	            }));
 	                
-	                return;
-                }
-        	}
+	            return;
+            }
         }
         
         super.resourceSetChanged(event);
     }
     
     private boolean shouldSynchronizeWithMainThread(ResourceSetChangeEvent event) {
-    	
-    	for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
-        	final Notification notification = (Notification) i.next();
-        	Set nlSet = getInterestedNotificationListeners(notification, false);
-        	Iterator iter = nlSet.iterator();
-        	while (iter.hasNext()) {
-        		Object listener = iter.next();
-            	if (listener instanceof NotificationForEditPartsListener) {
-            		EditPartViewer viewer = ((NotificationForEditPartsListener)listener).getViewer();
-            		if (viewer instanceof DiagramGraphicalViewer) {
-                        if (!((DiagramGraphicalViewer)viewer).areUpdatesDisabled()) {
-                        	return true;
-                        }
-                    }
-            	}
-        	}
-         }
+    	if (Display.getCurrent() == null)
+    		return true;
         
         return false;
     }
