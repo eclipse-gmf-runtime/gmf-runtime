@@ -16,9 +16,7 @@ import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransaction;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
-import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.View;
@@ -59,9 +57,10 @@ public class EditPartUtil {
 	 * @param runThreadSafe the <code>Runnable</code> that is to be executed in a thread safe manner.
 	 */
 	public static void synchronizeRunnableToMainThread(IGraphicalEditPart editPart, Runnable runThreadSafe) {
-		if (Display.getCurrent() == null) {
-			TransactionalEditingDomain editingDomain = (TransactionalEditingDomain)editPart.getEditingDomain();
-	        if (editingDomain != null) {
+		InternalTransactionalEditingDomain editingDomain = (InternalTransactionalEditingDomain)editPart.getEditingDomain();
+        
+		if (Display.getCurrent() == null && editingDomain != null && editingDomain.getActiveTransaction() != null) {
+			if (editingDomain != null) {
 	        	PlatformUI.getWorkbench().getDisplay().syncExec(editingDomain.createPrivilegedRunnable(runThreadSafe));
 	            return;
 	        }

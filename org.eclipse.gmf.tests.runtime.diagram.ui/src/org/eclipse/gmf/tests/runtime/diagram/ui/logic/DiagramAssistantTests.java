@@ -142,7 +142,7 @@ public class DiagramAssistantTests
 		    for (int i = 0; i < page.getViewReferences().length; i++) {
                 IWorkbenchPart part = page.getViewReferences()[i].getPart(false);
                 if (part != null & part != diagramPart) {
-                    page.activate(page.getViewReferences()[0].getPart(false));
+                    page.activate(part);
                     assertFalse(da.shouldShowDiagramAssistant());
                     break;
                 }               
