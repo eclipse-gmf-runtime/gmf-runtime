@@ -274,7 +274,10 @@ public abstract class ListCompartmentEditPart
 					Iterator i = filteredChildren.iterator();
 					while(i.hasNext()) {
 						EObject eObject = (EObject) i.next();
-						filteredViews.add(getModelChildByID(eObject));
+                        View modelChild = getModelChildByID(eObject);
+                        if (modelChild != null) {
+                            filteredViews.add(modelChild);
+                        }
 					}
 					return filteredViews;	
 				
@@ -313,13 +316,14 @@ public abstract class ListCompartmentEditPart
 	 * @return the view or null if not found
 	 */
 	protected View getModelChildByID(EObject eObject) {
-		for (int i = 0; i < super.getModelChildren().size(); i++) {
-			View view = (View)super.getModelChildren().get(i);
-			EObject e = ViewUtil.resolveSemanticElement(view);
-			if (eObject.equals(e))
-				return view;
-		}
-		return null;
+        List modelChildren = super.getModelChildren();
+        for (int i = 0; i < modelChildren.size(); i++) {
+            View view = (View) modelChildren.get(i);
+            EObject e = ViewUtil.resolveSemanticElement(view);
+            if (eObject.equals(e))
+                return view;
+        }
+        return null;
 	}
 	
 	/**
