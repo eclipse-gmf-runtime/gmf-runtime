@@ -478,7 +478,7 @@
             </popupAction>     
          </popupContribution>       
          
-         <popupContribution> class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider"
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
             </popupStructuredContributionCriteria>
             <popupAction path="/navigateMenu/openGroup" id="open">
