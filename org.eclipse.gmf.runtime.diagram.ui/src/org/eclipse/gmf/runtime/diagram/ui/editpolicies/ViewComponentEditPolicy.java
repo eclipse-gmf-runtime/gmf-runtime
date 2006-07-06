@@ -12,6 +12,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.requests.GroupRequest;
+
 
 /**
  * Concrete class that extends the <code>ComponentEditPolicy</code>.
@@ -28,5 +31,13 @@ public class ViewComponentEditPolicy extends ComponentEditPolicy {
 
 		return false;
 	}
+
+    /**
+     * Returns a command to delete the view. Since this command has no semantic
+     * element we want to avoid the prompt regarding "delete from model".
+     */
+    protected Command getDeleteCommand(GroupRequest request) {
+        return createDeleteViewCommand(request);
+    }
 	
 }

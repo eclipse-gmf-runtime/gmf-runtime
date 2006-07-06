@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -175,8 +176,12 @@ public class DeleteFromDiagramAction extends DiagramAction{
  				continue;
 			}
 
- 			if (((View)model).getElement() == null){
- 				continue;
+            EObject element = ((View)model).getElement();
+ 			if (element == null || element instanceof View){
+                // If there is no element or the element is a view (e.g. diagram
+                // link) than we want to support delete from diagram. See
+                // bugzilla#148453.
+                continue;
  			} 				
  			//Check if container of connection is canonical. 
  			//A connection's container is not necessarily the connection editPart's parent.
