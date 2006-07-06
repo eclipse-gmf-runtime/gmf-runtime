@@ -146,13 +146,21 @@ public class GraphicalNodeEditPolicy
 				return cmdResult;
 			}
 
-			Command cmd = getConnectionCompleteCommand(
-				cmdResult.getReturnValue(), getRequest());
+            Object connectionType = cmdResult.getReturnValue();
+
+            Command cmd = getConnectionCompleteCommand(connectionType, getRequest());
 			Assert.isTrue(cmd != null && cmd.canExecute());
 			cmd.execute();
 			createCommand = cmd;
+            
+            if (connectionType instanceof IElementType) {
+                CreateRequest createRequest = ((CreateUnspecifiedTypeConnectionRequest) request)
+                    .getRequestForType((IElementType) connectionType);
+                Object newObject = createRequest.getNewObject();
 
-			return CommandResult.newOKCommandResult();
+                return CommandResult.newOKCommandResult(newObject);
+            }
+            return CommandResult.newOKCommandResult();
 		}
 
 		protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {

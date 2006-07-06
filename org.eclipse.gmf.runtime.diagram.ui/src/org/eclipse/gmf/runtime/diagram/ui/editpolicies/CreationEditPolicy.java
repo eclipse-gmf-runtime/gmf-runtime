@@ -382,10 +382,12 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 					// Set the result in the unspecified type request.
 					CreateRequest createRequest = request
 						.getRequestForType(type);
-					request.setNewObject(((Collection) createRequest
-						.getNewObject()));
+                    
+                    Collection newObject = ((Collection) createRequest
+                            .getNewObject());
+					request.setNewObject(newObject);
 
-					return CommandResult.newOKCommandResult();
+					return CommandResult.newOKCommandResult(newObject);
 				}
 				
 				protected CommandResult doUndoWithResult(
