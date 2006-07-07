@@ -18,7 +18,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.ReconnectRequest;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -31,6 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
@@ -144,10 +144,11 @@ public class SemanticEditPolicy
 		if (shouldProceed) {
 			Command c = new ICommandProxy(semanticCommand);
 			if (completedRequest instanceof DestroyRequest) {
-				ICommand ic = new DeleteCommand(((IGraphicalEditPart) getHost()).getEditingDomain(),
-					(View)getHost().getModel());
-				CompositeCommand cc = new CompositeCommand(semanticCommand
+				TransactionalEditingDomain domain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+				ICommand ic = new DeleteCommand(domain, (View)getHost().getModel());
+				CompositeTransactionalCommand cc = new CompositeTransactionalCommand(domain, semanticCommand
 					.getLabel());
+				cc.setTransactionNestingEnabled(true);
 				cc.compose(semanticCommand);
 				cc.compose(ic);
 				c = new ICommandProxy(cc);
