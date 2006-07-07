@@ -49,6 +49,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
@@ -93,6 +94,8 @@ public class ElementTypeRegistryTest
 	private Employee financeManager;
 
 	private Student student;
+	
+	private HighSchoolStudent highSchoolStudent;
 
 	private Office employeeOffice;
 
@@ -194,7 +197,8 @@ public class ElementTypeRegistryTest
 		student = (Student) getEmployeeFactory().create(getEmployeePackage().getStudent());
 		student.setNumber(2);
 		department.getMembers().add(student);
-
+		
+		
 		studentOffice = (Office) getEmployeeFactory()
 			.create(getEmployeePackage().getOffice());
 		student.setOffice(studentOffice);
@@ -218,6 +222,9 @@ public class ElementTypeRegistryTest
 		executiveOffice.setHasDoor(true);
 		executive.setOffice(executiveOffice);
 		
+		highSchoolStudent = (HighSchoolStudent) getEmployeeFactory().create(
+				getEmployeePackage().getHighSchoolStudent());
+
 	}
     
     protected void doModelSetupWithContext(Resource resource) {
@@ -430,7 +437,7 @@ public class ElementTypeRegistryTest
 			department, EmployeePackage.eINSTANCE.getDepartment_Members());
 		List memberMatchList = Arrays.asList(memberMatches);
 		List expected = Arrays.asList(new Object[] {EmployeeType.EMPLOYEE,
-			EmployeeType.STUDENT, EmployeeType.TOP_SECRET});
+			EmployeeType.STUDENT, EmployeeType.HIGH_SCHOOL_STUDENT, EmployeeType.TOP_SECRET});
 
 		assertEquals(expected.size(), memberMatches.length);
 		assertTrue(memberMatchList.containsAll(expected));
@@ -473,7 +480,7 @@ public class ElementTypeRegistryTest
 			department, EmployeePackage.eINSTANCE.getDepartment_Manager());
 		List managerMatchList = Arrays.asList(managerMatches);
 		List expected = Arrays.asList(new Object[] {EmployeeType.EMPLOYEE,
-			EmployeeType.STUDENT, EmployeeType.MANAGER, EmployeeType.EXECUTIVE,
+			EmployeeType.STUDENT, EmployeeType.HIGH_SCHOOL_STUDENT, EmployeeType.MANAGER, EmployeeType.EXECUTIVE,
 			EmployeeType.TOP_SECRET});
 
 		assertEquals(expected.size(), managerMatches.length);
@@ -1139,5 +1146,30 @@ public class ElementTypeRegistryTest
 		assertSame(manager, department.getManager());
 		
 		assertNull(command.getCommandResult().getReturnValue());
+	}
+	
+	/**
+	 * Verifies that the original metamodel type array is not reversed by the
+	 * #getAllTypesMatching method.
+	 */
+	public void test_getAllTypesMatching_146097() {
+
+		IElementType[] superTypes = EmployeeType.HIGH_SCHOOL_STUDENT
+				.getAllSuperTypes();
+		assertEquals(2, superTypes.length);
+		assertEquals(superTypes[0], EmployeeType.EMPLOYEE);
+		assertEquals(superTypes[1], EmployeeType.STUDENT);
+
+		IElementType[] highSchoolStudentMatches = getFixture()
+				.getAllTypesMatching(highSchoolStudent);
+		assertTrue(highSchoolStudentMatches.length == 3);
+		assertTrue(highSchoolStudentMatches[0] == EmployeeType.HIGH_SCHOOL_STUDENT);
+		assertTrue(highSchoolStudentMatches[1] == EmployeeType.STUDENT);
+		assertTrue(highSchoolStudentMatches[2] == EmployeeType.EMPLOYEE);
+
+		// check that the super types array was not reversed by the call to
+		// #getAllSuperTypes
+		assertEquals(superTypes[0], EmployeeType.EMPLOYEE);
+		assertEquals(superTypes[1], EmployeeType.STUDENT);
 	}
 }

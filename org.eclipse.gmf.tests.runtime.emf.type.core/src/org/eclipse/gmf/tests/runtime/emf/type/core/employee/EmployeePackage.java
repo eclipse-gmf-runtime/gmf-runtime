@@ -525,6 +525,106 @@ public interface EmployeePackage extends EPackage {
 	int CUSTOMER_FEATURE_COUNT = EcorePackage.EMODEL_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.HighSchoolStudentImpl <em>High School Student</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.HighSchoolStudentImpl
+	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.EmployeePackageImpl#getHighSchoolStudent()
+	 * @generated
+	 */
+	int HIGH_SCHOOL_STUDENT = 7;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__EANNOTATIONS = STUDENT__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Salary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__SALARY = STUDENT__SALARY;
+
+	/**
+	 * The feature id for the '<em><b>Band</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__BAND = STUDENT__BAND;
+
+	/**
+	 * The feature id for the '<em><b>Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__NUMBER = STUDENT__NUMBER;
+
+	/**
+	 * The feature id for the '<em><b>Security Clearance</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__SECURITY_CLEARANCE = STUDENT__SECURITY_CLEARANCE;
+
+	/**
+	 * The feature id for the '<em><b>Department</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__DEPARTMENT = STUDENT__DEPARTMENT;
+
+	/**
+	 * The feature id for the '<em><b>Full Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__FULL_TIME = STUDENT__FULL_TIME;
+
+	/**
+	 * The feature id for the '<em><b>Office</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__OFFICE = STUDENT__OFFICE;
+
+	/**
+	 * The feature id for the '<em><b>Coop</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT__COOP = STUDENT__COOP;
+
+	/**
+	 * The number of structural features of the '<em>High School Student</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIGH_SCHOOL_STUDENT_FEATURE_COUNT = STUDENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band <em>Band</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -532,7 +632,7 @@ public interface EmployeePackage extends EPackage {
 	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.EmployeePackageImpl#getBand()
 	 * @generated
 	 */
-	int BAND = 7;
+	int BAND = 8;
 
 
 	/**
@@ -848,6 +948,16 @@ public interface EmployeePackage extends EPackage {
 	EReference getCustomer_Parent();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent <em>High School Student</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>High School Student</em>'.
+	 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent
+	 * @generated
+	 */
+	EClass getHighSchoolStudent();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band <em>Band</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1124,6 +1234,16 @@ public interface EmployeePackage extends EPackage {
 		 * @generated
 		 */
 		EReference CUSTOMER__PARENT = eINSTANCE.getCustomer_Parent();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.HighSchoolStudentImpl <em>High School Student</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.HighSchoolStudentImpl
+		 * @see org.eclipse.gmf.tests.runtime.emf.type.core.employee.impl.EmployeePackageImpl#getHighSchoolStudent()
+		 * @generated
+		 */
+		EClass HIGH_SCHOOL_STUDENT = eINSTANCE.getHighSchoolStudent();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.gmf.tests.runtime.emf.type.core.employee.Band <em>Band</em>}' enum.

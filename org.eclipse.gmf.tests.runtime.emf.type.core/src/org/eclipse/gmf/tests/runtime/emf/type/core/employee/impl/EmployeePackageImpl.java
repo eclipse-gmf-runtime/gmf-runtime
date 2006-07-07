@@ -24,6 +24,7 @@ import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Location;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
@@ -83,6 +84,13 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 	 * @generated
 	 */
 	private EClass customerEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass highSchoolStudentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -425,6 +433,15 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getHighSchoolStudent() {
+		return highSchoolStudentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getBand() {
 		return bandEEnum;
 	}
@@ -493,6 +510,8 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 		createEReference(customerEClass, CUSTOMER__SUBSIDIARIES);
 		createEReference(customerEClass, CUSTOMER__PARENT);
 
+		highSchoolStudentEClass = createEClass(HIGH_SCHOOL_STUDENT);
+
 		// Create enums
 		bandEEnum = createEEnum(BAND);
 	}
@@ -528,6 +547,7 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 		locationEClass.getESuperTypes().add(ecorePackage.getEModelElement());
 		clientEClass.getESuperTypes().add(ecorePackage.getEModelElement());
 		customerEClass.getESuperTypes().add(ecorePackage.getEModelElement());
+		highSchoolStudentEClass.getESuperTypes().add(this.getStudent());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(employeeEClass, Employee.class, "Employee", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -565,6 +585,8 @@ public class EmployeePackageImpl extends EPackageImpl implements EmployeePackage
 		initEReference(getCustomer_Representatives(), this.getClient(), this.getClient_Represents(), "representatives", null, 0, -1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getCustomer_Subsidiaries(), this.getCustomer(), this.getCustomer_Parent(), "subsidiaries", null, 0, -1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getCustomer_Parent(), this.getCustomer(), this.getCustomer_Subsidiaries(), "parent", null, 0, 1, Customer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(highSchoolStudentEClass, HighSchoolStudent.class, "HighSchoolStudent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(bandEEnum, Band.class, "Band"); //$NON-NLS-1$

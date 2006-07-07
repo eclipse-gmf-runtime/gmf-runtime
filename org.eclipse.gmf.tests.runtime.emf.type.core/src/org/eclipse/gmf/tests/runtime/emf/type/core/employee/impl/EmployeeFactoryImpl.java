@@ -78,6 +78,7 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 			case EmployeePackage.LOCATION: return createLocation();
 			case EmployeePackage.CLIENT: return createClient();
 			case EmployeePackage.CUSTOMER: return createCustomer();
+			case EmployeePackage.HIGH_SCHOOL_STUDENT: return createHighSchoolStudent();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -179,6 +180,16 @@ public class EmployeeFactoryImpl extends EFactoryImpl implements EmployeeFactory
 	public Customer createCustomer() {
 		CustomerImpl customer = new CustomerImpl();
 		return customer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public HighSchoolStudent createHighSchoolStudent() {
+		HighSchoolStudentImpl highSchoolStudent = new HighSchoolStudentImpl();
+		return highSchoolStudent;
 	}
 
 	/**

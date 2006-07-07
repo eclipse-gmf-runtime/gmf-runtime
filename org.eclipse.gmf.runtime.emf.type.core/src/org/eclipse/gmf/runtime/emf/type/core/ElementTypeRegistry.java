@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.emf.type.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -711,10 +710,12 @@ public class ElementTypeRegistry {
 			// Add the metamodel type
 			result.add(metamodelType);
 
-			// Add the metamodel supertypes
-			List superTypes = Arrays.asList(metamodelType.getAllSuperTypes());
-			Collections.reverse(superTypes);
-			result.addAll(superTypes);
+			// Add the metamodel supertypes in reverse order
+			IElementType[] superTypes = metamodelType.getAllSuperTypes();
+
+			for (int i = superTypes.length - 1; i >= 0; i--) {
+				result.add(superTypes[i]);
+			}
 		}
 		
 		if (result.isEmpty()) {

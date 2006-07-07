@@ -28,6 +28,8 @@ public class EmployeeType
 
 	public static final IElementType STUDENT = getElementType("org.eclipse.gmf.tests.runtime.emf.type.core.student"); //$NON-NLS-1$
 	
+	public static final IElementType HIGH_SCHOOL_STUDENT = getElementType("org.eclipse.gmf.tests.runtime.emf.type.core.highSchoolStudent"); //$NON-NLS-1$
+	
 	public static final IElementType OFFICE = getElementType("org.eclipse.gmf.tests.runtime.emf.type.core.office"); //$NON-NLS-1$
 
 	public static final ISpecializationType MANAGER = (ISpecializationType) getElementType("org.eclipse.gmf.tests.runtime.emf.type.core.manager"); //$NON-NLS-1$

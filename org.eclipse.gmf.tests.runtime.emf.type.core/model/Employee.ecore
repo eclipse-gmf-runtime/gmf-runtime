@@ -61,4 +61,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Customer"
         eOpposite="#//Customer/subsidiaries"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HighSchoolStudent" eSuperTypes="#//Student"/>
 </ecore:EPackage>
