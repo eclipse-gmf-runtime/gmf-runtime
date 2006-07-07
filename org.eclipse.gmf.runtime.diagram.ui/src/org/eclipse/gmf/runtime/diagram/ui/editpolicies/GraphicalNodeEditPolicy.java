@@ -631,27 +631,19 @@ public class GraphicalNodeEditPolicy
 				} else if (individualRequest instanceof CreateConnectionViewRequest) {
 					cmd = getConnectionCreateCommand((CreateConnectionViewRequest) individualRequest);
 				}
-				if (cmd != null) {
+				if (cmd != null && cmd.canExecute()) {
 					commands.add(cmd);
 				}
 			}
 
-			return new Command() {
-
-				/**
-				 * If at least one of the relationship types is supported, then
-				 * this is supported.
-				 */
-				public boolean canExecute() {
-					for (Iterator iter = commands.iterator(); iter.hasNext();) {
-						Command cmd = (Command) iter.next();
-						if (cmd.canExecute()) {
-							return true;
-						}
-					}
-					return false;
-				}
-			};
+			if (commands.isEmpty()) {
+				// GEF's AbstractConnectionCreationTool expects a null command
+				// when the gesture should be disabled.
+				return null;
+			}
+			
+			// return an executable command that does nothing
+			return new Command() {};
 		}
 	}	
 	
