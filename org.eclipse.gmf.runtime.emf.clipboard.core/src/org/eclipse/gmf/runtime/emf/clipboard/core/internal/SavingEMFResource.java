@@ -283,8 +283,8 @@ public class SavingEMFResource
 		EObject eContainer = eObject.eContainer();
 		while (eContainer != null) {
 			if ((copyObjects.originalObjects.contains(eContainer))
-				|| (copyObjects.copyParent2CopyMap.values().contains(eObject))
-				|| (copyObjects.combinedCopyAlwaysSet.contains(eObject))) {
+				|| (copyObjects.copyParent2CopyMap.values().contains(eContainer))
+				|| (copyObjects.combinedCopyAlwaysSet.contains(eContainer))) {
 				return true;
 			}
 			eContainer = eContainer.eContainer();
