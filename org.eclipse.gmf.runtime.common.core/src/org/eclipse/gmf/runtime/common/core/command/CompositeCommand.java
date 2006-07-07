@@ -385,10 +385,6 @@ public class CompositeCommand
 
         List result = new ArrayList(size());
 
-        if (progressMonitor == null) {
-            progressMonitor = new NullProgressMonitor();
-        }
-
         progressMonitor.beginTask(getLabel(), size());
 
         try {
@@ -499,10 +495,6 @@ public class CompositeCommand
 
         final List result = new ArrayList(size());
 
-        if (progressMonitor == null) {
-            progressMonitor = new NullProgressMonitor();
-        }
-
         progressMonitor.beginTask(getLabel(), size());
 
         try {
@@ -611,10 +603,6 @@ public class CompositeCommand
         throws ExecutionException {
 
         final List result = new ArrayList(size());
-
-        if (progressMonitor == null) {
-            progressMonitor = new NullProgressMonitor();
-        }
 
         progressMonitor.beginTask(getLabel(), size());
 
