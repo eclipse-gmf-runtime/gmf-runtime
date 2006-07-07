@@ -88,7 +88,7 @@ public class DestroyElementCommand
 					destroy.getEditHelperContext());
 			ICommand command = context.getEditCommand(destroy);
 		
-			if (command != null) {
+			if (command != null && command.canExecute()) {
 				try {
 					command.execute(new NullProgressMonitor(), null);
 				} catch (ExecutionException e) {
