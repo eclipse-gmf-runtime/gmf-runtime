@@ -1173,10 +1173,14 @@ public class AbstractProviderConfiguration {
 				successLookupTable.remove(keyString);
 			if (!failureLookupTable.contains(keyString)) {
 				try {
-					Bundle bundle = getPluginBundle(pluginId);
+					Bundle bundle = basicGetPluginBundle(pluginId);
 					if (bundle!=null){
-						found = bundle.loadClass(className);
-						successLookupTable.put(keyString, new WeakReference(found));
+                        // never load the class if the bundle is not active other wise
+                        // we will cause the plugin to load
+                        if (bundle.getState() == org.osgi.framework.Bundle.ACTIVE){
+    						found = bundle.loadClass(className);
+    						successLookupTable.put(keyString, new WeakReference(found));
+                        }
 					}else{
 						failureLookupTable.add(keyString);
 					}
@@ -1198,11 +1202,15 @@ public class AbstractProviderConfiguration {
 	 * @return the bundle, if found
 	 */
 	protected static Bundle getPluginBundle(String pluginId) {
-		Bundle bundle = Platform.getBundle(pluginId);
+		Bundle bundle = basicGetPluginBundle(pluginId);
 		if (null != bundle && bundle.getState() == org.osgi.framework.Bundle.ACTIVE)
 			return bundle;
 		return null;
 	}
+    
+    private static Bundle basicGetPluginBundle(String pluginId) {
+        return Platform.getBundle(pluginId);   
+    }
 
 	/**
 	 * Tests if the given class is assignable to the given class name. Optimized
