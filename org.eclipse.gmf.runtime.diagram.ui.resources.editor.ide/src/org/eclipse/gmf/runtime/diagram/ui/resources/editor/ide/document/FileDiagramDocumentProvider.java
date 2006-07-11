@@ -89,8 +89,7 @@ public class FileDiagramDocumentProvider
 					DiagramIOUtil.unload(diagramDoc.getEditingDomain(), existingContent);
 				}
 
-				IDiagramDocument diagramDocument = (IDiagramDocument)event.getEventInfo();
-				Diagram newContent = diagramDocument.getDiagram();
+				Diagram newContent = (Diagram)event.getEventInfo();
 				if(newContent != null && existingURI != null) {
 					newContent.eResource().setURI(existingURI);
 				}
@@ -125,8 +124,9 @@ public class FileDiagramDocumentProvider
 			DiagramIOUtil.unload(((IDiagramDocument)info.fDocument).getEditingDomain(), (Diagram)content);
 
 			assert info instanceof DiagramFileInfo;
-			((DiagramFileInfo)info).fListener.stopListening();
 		}
+        if(((DiagramFileInfo)info).fListener != null)
+            ((DiagramFileInfo)info).fListener.stopListening();
 	}
 
 	/* (non-Javadoc)
@@ -240,19 +240,28 @@ public class FileDiagramDocumentProvider
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDocumentProvider#createFileInfo(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument, org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.FileDocumentProvider.FileSynchronizer, org.eclipse.ui.IFileEditorInput)
 	 */
-	protected FileInfo createFileInfo(IDocument document, FileSynchronizer synchronizer, IFileEditorInput input) {
-		assert document instanceof DiagramDocument; 
-		
-		DiagramModificationListener diagramListener = new FileDiagramModificationListener(this, (DiagramDocument)document, input);
-		DiagramFileInfo info = new DiagramFileInfo(document, synchronizer, diagramListener);
-		
-		diagramListener.startListening();
-		return info;
-	}
+    protected FileInfo createFileInfo(IDocument document,
+            FileSynchronizer synchronizer, IFileEditorInput input) {
+        assert document instanceof DiagramDocument;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.StorageDocumentProvider#setDocumentContent(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument, org.eclipse.ui.IEditorInput)
-	 */
+        DiagramModificationListener diagramListener = null;
+        if (((DiagramDocument) document).getDiagram() != null) {
+            diagramListener = new FileDiagramModificationListener(this,
+                (DiagramDocument) document, input);
+        }
+        DiagramFileInfo info = new DiagramFileInfo(document, synchronizer,
+            diagramListener);
+
+        if (info.fListener != null)
+            info.fListener.startListening();
+        return info;
+    }
+	/*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.StorageDocumentProvider#setDocumentContent(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument,
+     *      org.eclipse.ui.IEditorInput)
+     */
 	protected boolean setDocumentContent(IDocument document,
 			IEditorInput editorInput)
 		throws CoreException {
