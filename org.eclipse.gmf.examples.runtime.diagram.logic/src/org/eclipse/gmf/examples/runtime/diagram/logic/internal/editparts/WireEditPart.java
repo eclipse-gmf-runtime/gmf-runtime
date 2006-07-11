@@ -16,7 +16,9 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -85,4 +87,11 @@ protected void refreshVisuals() {
 
 }
 
+public Object getPreferredValue(EStructuralFeature feature) {
+    if (feature == NotationPackage.eINSTANCE
+        .getLineStyle_LineColor()) {
+        return FigureUtilities.colorToInteger(dead);
+    }
+    return super.getPreferredValue(feature);
+}
 }

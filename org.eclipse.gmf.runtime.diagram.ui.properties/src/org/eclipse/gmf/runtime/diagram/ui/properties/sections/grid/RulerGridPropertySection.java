@@ -89,7 +89,10 @@ public class RulerGridPropertySection
     private static final String  DASH_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Label_Text;
     private static final String  DASH_DOT_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Dot_Label_Text;
     private static final String  SPACED_DOT_LABEL = DiagramUIPropertiesMessages.Spaced_Dot_Label_Text;
-    
+
+    // Default color for the grid.
+    private static final int LIGHT_GRAY_RGB = 12632256;
+
     // Ruler unit drop down
     private CCombo rulerUnitCombo;
 
@@ -171,9 +174,7 @@ public class RulerGridPropertySection
             public void widgetSelected(SelectionEvent event) {
                 restorePreferenceValues();
             }
-
-            private static final int LIGHT_GRAY_RGB = 12632256;
-            
+                        
             private void restorePreferenceValues() {
                 IPreferenceStore preferenceStore = getPreferenceStore();
                 
@@ -233,7 +234,7 @@ public class RulerGridPropertySection
              * Change line color property value
              */
             private void changeLineColor(SelectionEvent event) {
-                lineColor = changeColor(event, lineColorButton,null, DiagramUIPropertiesImages.DESC_LINE_COLOR);
+                lineColor = changeColor(event, lineColorButton, DiagramUIPropertiesImages.DESC_LINE_COLOR);
                 if (lineColor != null) 
                     setWorkspaceProperty(WorkspaceViewerProperties.GRIDLINECOLOR, FigureUtilities.RGBToInteger(lineColor).intValue());
             }           
@@ -279,22 +280,24 @@ public class RulerGridPropertySection
      *            selection event
      * @param button -
      *            event source
-     * @param preferenceId -
-     *            id of the preference of the default color value for that property
      * @param imageDescriptor -
      *            the image to draw overlay on the button after the new
      *            color is set
      * @return - new RGB color, or null if none selected
      */
     private RGB changeColor(SelectionEvent event, Button button,
-            String preferenceId, ImageDescriptor imageDescriptor) {
+            ImageDescriptor imageDescriptor) {
 
         ColorPalettePopup popup = new ColorPalettePopup(button.getParent()
-            .getShell(), preferenceId, IDialogConstants.BUTTON_BAR_HEIGHT);
+            .getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);
 
         Rectangle r = button.getBounds();
         Point location = button.getParent().toDisplay(r.x, r.y);
         popup.open(new Point(location.x, location.y + r.height));
+
+        if (popup.useDefaultColor()) {
+            return FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB));
+        }
         return popup.getSelectedColor();
 
     }

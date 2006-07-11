@@ -327,72 +327,119 @@ public class ColorsAndFontsPropertySection
 	}
 
 	/**
-	 * @param event -
-	 *            selection event
-	 * @param button -
-	 *            event source
-	 * @param preferenceId -
-	 *            id of the preference of the default color value for that
-	 *            property
-	 * @param propertyId -
-	 *            id of the property
-	 * @param commandName -
-	 *            name of the command
-	 * @param imageDescriptor -
-	 *            the image to draw overlay on the button after the new
-	 *            color is set
-	 * @return - new RGB color, or null if none selected
-	 */
-	protected RGB changeColor(SelectionEvent event, Button button,
-			String preferenceId, final String propertyId, String commandName,
-			ImageDescriptor imageDescriptor) {
+     * @param event -
+     *            selection event
+     * @param button -
+     *            event source
+     * @param preferenceId -
+     *            id of the preference of the default color value for that
+     *            property
+     * @param propertyId -
+     *            id of the property
+     * @param commandName -
+     *            name of the command
+     * @param imageDescriptor -
+     *            the image to draw overlay on the button after the new color is
+     *            set
+     * @return - new RGB color, or null if none selected
+     * @deprecated The preference is not being retrieved from the correct
+     *             preference store so it is not needed, use the other
+     *             <code>changeColor</code> method.
+     */
+    protected RGB changeColor(SelectionEvent event, Button button,
+            String preferenceId, final String propertyId, String commandName,
+            ImageDescriptor imageDescriptor) {
 
-		ColorPalettePopup popup = new ColorPalettePopup(button.getParent()
-			.getShell(), preferenceId, IDialogConstants.BUTTON_BAR_HEIGHT);
+        return changeColor(event, button, propertyId, commandName,
+            imageDescriptor);
+    }
+    
+    /**
+     * @param event -
+     *            selection event
+     * @param button -
+     *            event source
+     * @param propertyId -
+     *            id of the property
+     * @param commandName -
+     *            name of the command
+     * @param imageDescriptor -
+     *            the image to draw overlay on the button after the new color is
+     *            set
+     * @return - new RGB color, or null if none selected
+     */
+    protected RGB changeColor(SelectionEvent event, Button button,
+            final String propertyId, String commandName,
+            ImageDescriptor imageDescriptor) {
 
-		Rectangle r = button.getBounds();
-		Point location = button.getParent().toDisplay(r.x, r.y);
-		popup.open(new Point(location.x, location.y + r.height));
-		if (popup.getSelectedColor() != null) {
-			final RGB color = popup.getSelectedColor();
+        ColorPalettePopup popup = new ColorPalettePopup(button.getParent()
+            .getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);
 
-			// Update model in response to user
+        Rectangle r = button.getBounds();
+        Point location = button.getParent().toDisplay(r.x, r.y);
+        popup.open(new Point(location.x, location.y + r.height));
 
-			if (color != null) {
+        if (popup.getSelectedColor() == null && !popup.useDefaultColor()) {
+            return null;
+        }
 
-				List commands = new ArrayList();
-				Iterator it = getInputIterator();
+        // selectedColor should be null if we are to use the default color
+        final RGB selectedColor = popup.getSelectedColor();
 
-				while (it.hasNext()) {
-					final IGraphicalEditPart ep = (IGraphicalEditPart) it
-						.next();
-					commands.add(createCommand(commandName, ((View) ep
-						.getModel()).eResource(), new Runnable() {
+        final EStructuralFeature feature = (EStructuralFeature) PackageUtil
+            .getElement(propertyId);
 
-						public void run() {
-							ENamedElement element = PackageUtil.getElement(propertyId);
-							if (element instanceof EStructuralFeature)
-								ep.setStructuralFeatureValue((EStructuralFeature)PackageUtil.getElement(propertyId), FigureUtilities
-									.RGBToInteger(color));
-						}
-					}));
-				}
+        // Update model in response to user
 
-				executeAsCompositeCommand(commandName, commands);
-				Image overlyedImage = new ColorOverlayImageDescriptor(
-					imageDescriptor.getImageData(), color).createImage();
-                disposeImage(button.getImage());
-				button.setImage(overlyedImage);
-			}
+        List commands = new ArrayList();
+        Iterator it = getInputIterator();
 
-			return color;
-		}
-		return null;
+        RGB colorToReturn = selectedColor;
 
-	}
+        while (it.hasNext()) {
+            final IGraphicalEditPart ep = (IGraphicalEditPart) it.next();
+
+            RGB color = selectedColor;
+            if (popup.useDefaultColor()) {
+                Object preferredValue = ep.getPreferredValue(feature);
+                if (preferredValue instanceof Integer) {
+                    color = FigureUtilities
+                        .integerToRGB((Integer) preferredValue);
+                }
+            }
+                
+            // If we are using default colors, we want to return the color of the first selected element to be consistent
+            if (colorToReturn == null) {
+                colorToReturn = color;
+            }
+
+            if (color != null) {
+                final RGB finalColor = color; // need a final variable
+               commands.add(createCommand(commandName, ((View) ep.getModel())
+                    .eResource(), new Runnable() {
+
+                    public void run() {
+                        ENamedElement element = PackageUtil
+                            .getElement(propertyId);
+                        if (element instanceof EStructuralFeature)
+                            ep.setStructuralFeatureValue(feature,
+                                FigureUtilities.RGBToInteger(finalColor));
+                    }
+                }));
+            }
+
+            executeAsCompositeCommand(commandName, commands);
+            Image overlyedImage = new ColorOverlayImageDescriptor(
+                imageDescriptor.getImageData(), color).createImage();
+            disposeImage(button.getImage());
+            button.setImage(overlyedImage);
+        }
+        return colorToReturn;
+    }
+    
 	/**
-	 * Update font property
-	 */
+     * Update font property
+     */
 	protected void updateFontBold() {
 
 		// Update model in response to user

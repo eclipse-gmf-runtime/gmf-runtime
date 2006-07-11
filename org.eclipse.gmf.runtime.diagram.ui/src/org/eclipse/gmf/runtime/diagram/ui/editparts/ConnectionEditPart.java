@@ -82,8 +82,10 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ForestRouter;
@@ -106,6 +108,8 @@ import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.Smoothness;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -1520,4 +1524,27 @@ abstract public class ConnectionEditPart
         }
         return null;
     }
+
+    public Object getPreferredValue(EStructuralFeature feature) {
+        Object preferenceStore = getDiagramPreferencesHint()
+            .getPreferenceStore();
+        if (preferenceStore instanceof IPreferenceStore) {            
+            if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
+                
+                return FigureUtilities.RGBToInteger(PreferenceConverter
+                    .getColor((IPreferenceStore) preferenceStore,
+                        IPreferenceConstants.PREF_LINE_COLOR));
+                
+            } else if (feature == NotationPackage.eINSTANCE
+                .getFontStyle_FontColor()) {
+                
+                return FigureUtilities.RGBToInteger(PreferenceConverter
+                    .getColor((IPreferenceStore) preferenceStore,
+                        IPreferenceConstants.PREF_FONT_COLOR));
+                
+            }
+        }
+        return getStructuralFeatureValue(feature);
+    }       
+    
 }

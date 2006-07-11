@@ -113,4 +113,19 @@ public interface IGraphicalEditPart
      * @return my transactional EMF editing domain
      */
     public TransactionalEditingDomain getEditingDomain();
+    
+    /**
+     * Retrieves the preferred value for the supplied feature. This value could
+     * be the current value set in the preference store. Clients may override
+     * this to supply their own preferred values. The type of the return value
+     * will vary depending on the feature.
+     * 
+     * @param feature
+     *            the feature to use
+     * @return Object The preferred value for the supplied feature. The object
+     *         is of the same type as if the value of the feature were retrieved
+     *         directly from the view.
+     */
+    public Object getPreferredValue(EStructuralFeature feature);
+
 }

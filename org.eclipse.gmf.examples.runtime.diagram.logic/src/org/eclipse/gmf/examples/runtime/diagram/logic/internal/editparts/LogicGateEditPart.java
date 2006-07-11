@@ -20,10 +20,12 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.AndGateFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.AndGateTerminalFigure;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OrGateFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OrGateTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.OutputTerminalFigure;
@@ -35,6 +37,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -156,4 +159,31 @@ public class LogicGateEditPart extends TerminalOwnerShapeEditPart
 
 		return theFigure;
 	}
+
+     public Object getPreferredValue(EStructuralFeature feature) {
+        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+
+            View view = (View) getModel();
+            EObject semanticElement = view.getElement();
+            EClass eClazz = semanticElement.eClass();
+
+            if (eClazz == SemanticPackage.eINSTANCE.getOrGate()) {
+                return FigureUtilities
+                    .colorToInteger(LogicColorConstants.andGate);
+            } else if (eClazz == SemanticPackage.eINSTANCE.getAndGate()) {
+                return FigureUtilities
+                    .colorToInteger(LogicColorConstants.orGate);
+            } else if (eClazz == SemanticPackage.eINSTANCE.getXORGate()) {
+                return FigureUtilities
+                    .colorToInteger(LogicColorConstants.xorGate);
+            }
+        } else if (feature == NotationPackage.eINSTANCE
+            .getLineStyle_LineColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.logicBlack);
+        }
+        return super.getPreferredValue(feature);
+    }
+    
+    
 }
