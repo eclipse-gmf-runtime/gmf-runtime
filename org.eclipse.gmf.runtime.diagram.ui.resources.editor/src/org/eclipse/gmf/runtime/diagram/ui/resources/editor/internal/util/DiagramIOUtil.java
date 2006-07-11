@@ -170,7 +170,7 @@ public class DiagramIOUtil {
 							return null; 
 						}
 					} else {
-						throw new CoreException(new Status(IStatus.ERROR, EditorPlugin.getPluginId(), EditorStatusCodes.ERROR, UNABLE_TO_LOAD_DIAGRAM, causeError));
+                        throw e;
 					}
 				} else {
 					throw e;
@@ -193,7 +193,7 @@ public class DiagramIOUtil {
 			if(e instanceof CoreException) {
 				thrownExcp = (CoreException)e;
 			} else
-				thrownExcp = new CoreException(new Status(IStatus.ERROR, EditorPlugin.getPluginId(), EditorStatusCodes.ERROR, e.getMessage(), e));
+				thrownExcp = new CoreException(new Status(IStatus.ERROR, EditorPlugin.getPluginId(), EditorStatusCodes.ERROR, "load(IFile, boolean)", e)); //$NON-NLS-1$
 			Trace.throwing(EditorPlugin.getInstance(), EditorDebugOptions.EXCEPTIONS_THROWING, DiagramIOUtil.class, "load(IFile, boolean)", thrownExcp); //$NON-NLS-1$
 			throw thrownExcp;
 		}
