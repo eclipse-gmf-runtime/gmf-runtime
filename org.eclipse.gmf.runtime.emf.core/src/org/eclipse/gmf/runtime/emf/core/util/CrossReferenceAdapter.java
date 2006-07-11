@@ -27,12 +27,15 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.ECrossReferenceEList;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -55,6 +58,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 	private boolean resolve = true;
 
+    private static Map eClassToChangeableFeatures = new HashMap();
+
+    private static List nullList = new ArrayList(1);
+    
 	/**
 	 * Initializes me.
 	 */
@@ -291,8 +298,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			}
 		} else {
 			// deregister the outgoing references and incoming bidirectionals
-			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() ? value
-					.eCrossReferences().iterator()
+			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() 
+                    ? getOptimizedCrossReferenceIterator(value)
 					: ((InternalEList) value.eCrossReferences())
 							.basicIterator());
 			while (crossReferences.hasNext()) {
@@ -360,8 +367,8 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			Resource resource = eObject.eResource();
 
 			// register the outgoing references and incoming bidirectionals
-			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() ? eObject
-					.eCrossReferences().iterator()
+			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() 
+                    ? getOptimizedCrossReferenceIterator(eObject)
 					: ((InternalEList) eObject.eCrossReferences())
 							.basicIterator());
 			while (crossReferences.hasNext()) {
@@ -872,4 +879,49 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 		return result;
 	}
+    
+    private static List getCrossReferencesChangeableFeatures(EClass eCls) {
+        List features = (List) eClassToChangeableFeatures.get(eCls);
+        if (features == null) {
+            features = nullList;
+            EStructuralFeature[] crossReferenceFeatures =
+
+            ((EClassImpl.FeatureSubsetSupplier) eCls
+                .getEAllStructuralFeatures()).crossReferences();
+            if (crossReferenceFeatures != null) {
+                features = new ArrayList(crossReferenceFeatures.length);
+                for (int i = 0; i < crossReferenceFeatures.length; i++) {
+                    EStructuralFeature feature = crossReferenceFeatures[i];
+                    if (feature.isChangeable())
+                        features.add(feature);
+                }
+            }
+            eClassToChangeableFeatures.put(eCls, features);
+        }
+        return features != nullList ? features
+            : null;
+    }
+
+    private EContentsEList.FeatureIterator getOptimizedCrossReferenceIterator(
+            EObject eObj) {
+        List features = getCrossReferencesChangeableFeatures(eObj.eClass());
+        if (features != null) {
+            EContentsEList list = null;
+            if (features.size() > 0) {
+                list = new ECrossReferenceEList(eObj,
+                    (EStructuralFeature[]) features
+                        .toArray(new EStructuralFeature[features.size()])) {
+                    // to get to the protected constructor
+                };
+            } else {
+                list = ECrossReferenceEList.EMPTY_CROSS_REFERENCE_ELIST;
+            }
+
+            return (EContentsEList.FeatureIterator) (resolve() ? list
+                .iterator()
+                : ((InternalEList) list).basicIterator());
+        }
+        return (EContentsEList.FeatureIterator) ECrossReferenceEList.EMPTY_CROSS_REFERENCE_ELIST
+            .iterator();
+    }
 }
