@@ -88,12 +88,12 @@ public class DiagramEventBroker
                 keys = new HashMap(4);
                 listenersMap.put(notifier, keys);
             }
-            Set listenersSet = (Set) keys.get(key);
+            Map listenersSet = (Map) keys.get(key);
             if (listenersSet == null) {
-                listenersSet = new HashSet(4);
+                listenersSet = new HashMap(4);
                 keys.put(key, listenersSet);
             }
-            listenersSet.add(listener);
+            listenersSet.put(listener,null);
         }
 
         /**
@@ -117,7 +117,7 @@ public class DiagramEventBroker
         public void removeListener(EObject notifier, Object key, Object listener) {
             Map keys = (Map) listenersMap.get(notifier);
             if (keys != null) {
-                Set listenersSet = (Set) keys.get(key);
+                Map listenersSet = (Map) keys.get(key);
                 if (listenersSet != null) {
                     listenersSet.remove(listener);
                     if (listenersSet.isEmpty()) {
@@ -139,9 +139,9 @@ public class DiagramEventBroker
         public Set getListeners(Object notifier, Object key) {
             Map keys = (Map) listenersMap.get(notifier);
             if (keys != null) {
-                Set listenersSet = (Set) keys.get(key);
+                Map listenersSet = (Map) keys.get(key);
                 if (listenersSet != null) {
-                    return listenersSet;
+                    return listenersSet.keySet();
                 }
             }
             return Collections.EMPTY_SET;
@@ -162,9 +162,9 @@ public class DiagramEventBroker
             Set enteries = keys.entrySet();
             for (Iterator iter = enteries.iterator(); iter.hasNext();) {
                 Map.Entry entry = (Map.Entry) iter.next();
-                Set listenersSet = (Set) entry.getValue();
+                Map listenersSet = (Map) entry.getValue();
                 if (listenersSet != null && !listenersSet.isEmpty())
-                    listenersCollection.addAll(listenersSet);
+                    listenersCollection.addAll(listenersSet.keySet());
             }
             return listenersCollection;
         }
