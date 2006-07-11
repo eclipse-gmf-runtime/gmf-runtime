@@ -118,16 +118,6 @@ public class PrintPreviewHelper {
 	protected int numberOfColumnsToDisplay = 2;
 
 	/**
-	 * Total number of rows taken required for the diagram
-	 */
-	protected int totalNumberOfRows = -1;
-
-	/**
-	 * Total number of columns required for the diagram
-	 */
-	protected int totalNumberOfColumns = -1;
-
-	/**
 	 * The diagram edit part
 	 */
 	protected DiagramEditPart diagramEditPart;
@@ -348,9 +338,6 @@ public class PrintPreviewHelper {
 		
 		userX = 0;
 		userY = 0;
-
-		totalNumberOfRows = -1;
-		totalNumberOfColumns = -1;
 		
 		if (getTotalNumberOfRows() == 1 && getTotalNumberOfColumns() == 1) {
 			numberOfRowsToDisplay = 1;
@@ -366,8 +353,18 @@ public class PrintPreviewHelper {
 		}
 
 		Display display = Display.getDefault();
-		shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.TITLE
-			| SWT.CLOSE | SWT.BORDER);
+		
+        //check for rtl orientation...
+        int style = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getStyle();
+        if ((style & SWT.MIRRORED) != 0) {
+            shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.TITLE
+                | SWT.CLOSE | SWT.BORDER | SWT.RIGHT_TO_LEFT);
+        }
+        else
+            shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.TITLE
+                | SWT.CLOSE | SWT.BORDER);
+        
+		
 
 		shell.setSize(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 			.getShell().getSize());
@@ -510,9 +507,18 @@ public class PrintPreviewHelper {
 		new ToolItem(bar, SWT.SEPARATOR);
 
 		leftTool = new ToolItem(bar, SWT.NULL);
-		leftTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_LeftToolItem);
-		leftTool.setImage(leftImage);
-		leftTool.setDisabledImage(disabledLeftImage);
+        if ((style & SWT.MIRRORED) != 0) {
+            //switch left and right for RTL...
+            leftTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_RightToolItem);
+            leftTool.setImage(rightImage);
+            leftTool.setDisabledImage(disabledRightImage);
+        }
+        else { 
+            leftTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_LeftToolItem);
+            leftTool.setImage(leftImage);
+            leftTool.setDisabledImage(disabledLeftImage);
+        }
+		
 		leftTool.addSelectionListener(new SelectionListener() {
 
 			/**
@@ -535,10 +541,19 @@ public class PrintPreviewHelper {
 			}
 		});
 
-		rightTool = new ToolItem(bar, SWT.NULL);
-		rightTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_RightToolItem);
-		rightTool.setImage(rightImage);
-		rightTool.setDisabledImage(disabledRightImage);
+        rightTool = new ToolItem(bar, SWT.NULL);
+        if ((style & SWT.MIRRORED) != 0) {
+            //switch left and right for RTL
+            rightTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_LeftToolItem);
+            rightTool.setImage(leftImage);
+            rightTool.setDisabledImage(disabledLeftImage);
+        }
+        else { 
+            rightTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_RightToolItem);
+            rightTool.setImage(rightImage);
+            rightTool.setDisabledImage(disabledRightImage);    
+        }
+		
 		rightTool.addSelectionListener(new SelectionListener() {
 
 			/**
@@ -709,14 +724,10 @@ public class PrintPreviewHelper {
 	 * @return int total number of rows used by the diagram
 	 */
 	private int getTotalNumberOfRows() {
-		if (totalNumberOfRows < 0) {
-			float numRows = ((float) getBounds().height)
-				/ PageInfoHelper
-					.getPageSize(getPreferenceStore(), false, getMapMode()).y;
-			totalNumberOfRows = Math.max(1, (int) Math.ceil(numRows));
-		}
-
-		return totalNumberOfRows;
+		float numRows = ((float) getBounds().height)
+			/ PageInfoHelper
+				.getPageSize(getPreferenceStore(), true, getMapMode()).y;
+		return Math.max(1, (int) Math.ceil(numRows));
 	}
 
 	/**
@@ -816,14 +827,10 @@ public class PrintPreviewHelper {
 	 * @return int total number of columns used by the diagram
 	 */
 	private int getTotalNumberOfColumns() {
-		if (totalNumberOfColumns < 0) {
-			float numCols = ((float) getBounds().width)
-				/ PageInfoHelper
-					.getPageSize(getPreferenceStore(), false, getMapMode()).x;
-			totalNumberOfColumns = Math.max(1, (int) Math.ceil(numCols));
-		}
-
-		return totalNumberOfColumns;
+		float numCols = ((float) getBounds().width)
+			/ PageInfoHelper
+				.getPageSize(getPreferenceStore(), true, getMapMode()).x;
+		return Math.max(1, (int) Math.ceil(numCols));
 	}
 
 	/**
@@ -1021,7 +1028,14 @@ public class PrintPreviewHelper {
 
 		Image image = new Image(Display.getDefault(), imageWidth, imageHeight);
 
-		GC gc = new GC(image);
+        GC gc = null;
+        
+        //check for rtl orientation...
+        if ((shell.getStyle() & SWT.MIRRORED) != 0) {
+            gc = new GC(image, SWT.RIGHT_TO_LEFT);
+        }
+        else
+            gc = new GC(image);
 
 		SWTGraphics sg = new SWTGraphics(gc);
 		//for scaling
@@ -1149,10 +1163,10 @@ public class PrintPreviewHelper {
 
 		g.translate(translateX, translateY);
 		
-		Rectangle clip = new Rectangle((pageSize.x - margins.left - margins.right)
-			* (col + userX) + bounds.x, (pageSize.y - margins.top - margins.bottom)
-			* (row + userY) + bounds.y, pageSize.x - margins.left - margins.right,
-			pageSize.y - margins.top - margins.bottom);
+        Rectangle clip = new Rectangle((pageSize.x - margins.left - margins.right)
+    			* (col + userX) + bounds.x, (pageSize.y - margins.top - margins.bottom)
+    			* (row + userY) + bounds.y, pageSize.x - margins.left - margins.right,
+    			pageSize.y - margins.top - margins.bottom);
 		g.clipRect(clip);		
 		
 		//should be from printer and screen ratio and image size
