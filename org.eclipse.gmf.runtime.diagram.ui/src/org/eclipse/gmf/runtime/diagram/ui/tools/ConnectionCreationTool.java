@@ -60,7 +60,6 @@ public class ConnectionCreationTool
 
 	// temporarily disable the autoexpose helper since it interferes with menu
 	// selection.
-	// see defect RATLC00525995
 	private boolean antiScroll = false;
 
 	private IElementType elementType = null;
@@ -396,7 +395,7 @@ public class ConnectionCreationTool
 		if (!antiScroll) {
 			boolean bool = super.handleMove();
 			boolean cont = getState() == STATE_CONNECTION_STARTED
-				&& ((getCommand() == null) || ((getCommand() != null) && (getCommand()
+				&& ((getCurrentCommand() == null) || ((getCurrentCommand() != null) && (getCurrentCommand()
 					.canExecute())));
 			if (cont) {
 				if ((getTargetEditPart() != null)
