@@ -412,7 +412,7 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 			.getBoolean(WorkspaceViewerProperties.PREF_USE_DIAGRAM_SETTINGS)) {
 			return workspaceStore;
 		} else if (getRoot() instanceof IDiagramPreferenceSupport) {
-			((IDiagramPreferenceSupport) getRoot()).getPreferencesHint()
+			return (IPreferenceStore)((IDiagramPreferenceSupport) getRoot()).getPreferencesHint()
 				.getPreferenceStore();
 		}
 		return (IPreferenceStore) PreferencesHint.USE_DEFAULTS
