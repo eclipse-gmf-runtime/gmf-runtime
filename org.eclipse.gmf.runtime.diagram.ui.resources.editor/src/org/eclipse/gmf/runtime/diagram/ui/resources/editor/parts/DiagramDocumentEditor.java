@@ -171,10 +171,15 @@ public class DiagramDocumentEditor
 			fTitleImage= null;
 		}
 
+        IDocumentProvider provider = getDocumentProvider();
+        IStatus status = provider.getStatus(getEditorInput());
+
 		disposeDocumentProvider();
-		super.setInput(null);
+
+        super.setInput(null);
 		
-		super.dispose();
+        if(status != null && status.isOK())
+            super.dispose();
 	}
 	
 
@@ -501,6 +506,7 @@ public class DiagramDocumentEditor
 		return pm != null ? pm : new NullProgressMonitor();
 	}
 
+    private boolean isHandlingElementDeletion = false;
 	/**
 	 * Handles an external change of the editor's input element. Subclasses may
 	 * extend.
@@ -520,36 +526,36 @@ public class DiagramDocumentEditor
 
 		final IEditorInput input= getEditorInput();
 		if (provider.isDeleted(input)) {
-
-			if (isSaveAsAllowed()) {
-
-				title= EditorMessages.Editor_error_activated_deleted_save_title;
-				msg= EditorMessages.Editor_error_activated_deleted_save_message;
-
-				String[] buttons= {
-					EditorMessages.Editor_error_activated_deleted_save_button_save,
-					EditorMessages.Editor_error_activated_deleted_save_button_close,
-				};
-
-				MessageDialog dialog= new MessageDialog(shell, title, null, msg, MessageDialog.QUESTION, buttons, 0);
-
-				if (dialog.open() == 0) {
-					IProgressMonitor pm= getProgressMonitor();
-					performSaveAs(pm);
-					if (pm.isCanceled())
-						handleEditorInputChanged();
-				} else {
-					close(false);
-				}
-
-			} else {
-
-				title= EditorMessages.Editor_error_activated_deleted_close_title;
-				msg= EditorMessages.Editor_error_activated_deleted_close_message;
-				if (MessageDialog.openConfirm(shell, title, msg))
-					close(false);
-			}
-
+            try {
+                isHandlingElementDeletion = true;
+    			if (isSaveAsAllowed()) {
+    				title= EditorMessages.Editor_error_activated_deleted_save_title;
+    				msg= EditorMessages.Editor_error_activated_deleted_save_message;
+    
+    				String[] buttons= {
+    					EditorMessages.Editor_error_activated_deleted_save_button_save,
+    					EditorMessages.Editor_error_activated_deleted_save_button_close,
+    				};
+    
+    				MessageDialog dialog= new MessageDialog(shell, title, null, msg, MessageDialog.QUESTION, buttons, 0);
+    
+    				if (dialog.open() == 0) {
+    					IProgressMonitor pm= getProgressMonitor();
+    					performSaveAs(pm);
+    					if (pm.isCanceled())
+    						handleEditorInputChanged();
+    				} else {
+    					close(false);
+    				}
+    			} else {
+    				title= EditorMessages.Editor_error_activated_deleted_close_title;
+    				msg= EditorMessages.Editor_error_activated_deleted_close_message;
+    				if (MessageDialog.openConfirm(shell, title, msg))
+    					close(false);
+    			}
+            } finally {
+                isHandlingElementDeletion = false;
+            }
 		} else {
 
 			title= EditorMessages.Editor_error_activated_outofsync_title;
@@ -1264,7 +1270,7 @@ public class DiagramDocumentEditor
 		 * @see IElementStateListener#elementDeleted(Object)
 		 */
 		public void elementDeleted(Object deletedElement) {
-			if (deletedElement != null && deletedElement.equals(getEditorInput())) {
+			if (deletedElement != null && deletedElement.equals(getEditorInput()) && !isHandlingElementDeletion) {
 				Runnable r= new Runnable() {
 					public void run() {
 						enableSanityChecking(true);
@@ -1298,7 +1304,8 @@ public class DiagramDocumentEditor
 							final Object previousContent;
 							IDocument changed= null;
 							IEditorInput oldInput= getEditorInput();
-							if (isDirty()) {
+                            final boolean initialDirtyState = isDirty();
+							if (initialDirtyState || reuseDiagramOnMove()) {
 								changed= d.getDocument(oldInput);
 								if (changed != null) {
 									if(changed instanceof IDiagramDocument)
@@ -1319,11 +1326,22 @@ public class DiagramDocumentEditor
 								ErrorDialog.openError(shell, title, msg, e.getStatus());
 							}
 
-							if (changed != null) {
+							if (changed != null && previousContent != null) {
 								Runnable r2= new Runnable() {
 									public void run() {
 										validateState(getEditorInput());
 										getDocumentProvider().getDocument(getEditorInput()).setContent(previousContent);
+                                        
+                                        if(reuseDiagramOnMove() && !initialDirtyState) {
+                                            try {
+                                                getDocumentProvider().resetDocument(getEditorInput());
+                                            } catch (CoreException e) {
+                                                String title= EditorMessages.Editor_error_setinput_title;
+                                                String msg= EditorMessages.Editor_error_setinput_message;
+                                                Shell shell= getSite().getShell();
+                                                ErrorDialog.openError(shell, title, msg, e.getStatus());
+                                            }
+                                        }
 									}
 								};
 								execute(r2, doValidationAsync);
@@ -1482,5 +1500,9 @@ public class DiagramDocumentEditor
      */
     protected String getEditingDomainID() {
         return null;
+    }
+    
+    protected boolean reuseDiagramOnMove() {
+        return false;
     }
 }
