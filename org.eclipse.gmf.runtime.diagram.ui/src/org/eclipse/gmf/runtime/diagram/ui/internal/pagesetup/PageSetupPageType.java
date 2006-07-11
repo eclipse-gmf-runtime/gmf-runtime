@@ -46,19 +46,19 @@ public class PageSetupPageType {
 	
 	/** Represents A3 page size. */
 	public static PageSetupPageType A3 = new PageSetupPageType
-		(DiagramUIMessages.PageSetupDialog_paper_size_A3, new Point2D.Double(11.69, 16.54), 4);
+		(DiagramUIMessages.PageSetupDialog_paper_size_A3, new Point2D.Double(11.6929134d, 16.5354331d), 4);
 	
 	/** Represents A4 page size. */
 	public static PageSetupPageType A4 = new PageSetupPageType
-		(DiagramUIMessages.PageSetupDialog_paper_size_A4, new Point2D.Double(8.268, 11.69), 5);
+		(DiagramUIMessages.PageSetupDialog_paper_size_A4, new Point2D.Double(8.26771654d, 11.6929134d), 5);
 	
 	/** Represents B4 page size. */
 	public static PageSetupPageType B4 = new PageSetupPageType
-		(DiagramUIMessages.PageSetupDialog_paper_size_B4, new Point2D.Double(14.33, 10.12), 6);
+		(DiagramUIMessages.PageSetupDialog_paper_size_B4, new Point2D.Double(9.84251969d, 13.8976378d), 6);
 	
 	/** Represents B5 page size. */
 	public static PageSetupPageType B5 = new PageSetupPageType
-		(DiagramUIMessages.PageSetupDialog_paper_size_B5, new Point2D.Double(7.165, 10.12), 7);
+		(DiagramUIMessages.PageSetupDialog_paper_size_B5, new Point2D.Double(6.92913386d, 9.84251969d), 7);
 	
 	/** Represents USER_DEFINED page size. */
 	public static PageSetupPageType USER_DEFINED = new PageSetupPageType
