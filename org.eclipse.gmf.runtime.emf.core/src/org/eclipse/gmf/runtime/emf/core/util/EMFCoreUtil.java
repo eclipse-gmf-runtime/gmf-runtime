@@ -542,8 +542,12 @@ public class EMFCoreUtil {
 			if (res == null) {
 				return EMFCoreConstants.EMPTY_STRING;
 			} else {
-				return res.getID(proxy);
-			}
+                String id =  res.getID(proxy);
+                // if the object had no ID then the best we can do is to return the URI Fragment
+                if (id ==null || id.length() ==0){
+                    return res.getURIFragment(proxy);
+                }
+            }
 		}
 		
 		URI uri = EcoreUtil.getURI(proxy);
