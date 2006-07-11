@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.actions;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview.PrintPreviewHelper;
@@ -117,5 +118,22 @@ public class PrintPreviewAction
 	protected void setPrintPreviewHelper(PrintPreviewHelper printPreviewHelper) {
 		this.printPreviewHelper = printPreviewHelper;
 	}
+    
+    
+    //TODO: remove the following two methods when printing on
+    //other platforms is supported.
 
+    /**
+     * Enable the menu item if Platform is running on Windows.
+     */
+    public boolean isEnabled() {
+        return isWindows();
+    }
+    
+    private boolean isWindows() {
+        if (Platform.getOS() != null) 
+            if (Platform.getOS().startsWith(Platform.OS_WIN32))
+                return true;
+        return false;
+    }
 }
