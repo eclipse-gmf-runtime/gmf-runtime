@@ -76,8 +76,8 @@ public class StorageDiagramDocumentProvider
 			DiagramIOUtil.unload(domain, (Diagram)content);
 			
 			assert info instanceof DiagramStorageInfo;
-			((DiagramStorageInfo)info).fListener.stopListening();
 		}
+        ((DiagramStorageInfo)info).fListener.stopListening();
 	}
 	
 
