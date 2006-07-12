@@ -93,35 +93,24 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 			return;
 		}
 		
-		DiagramPrinterUtil.printWithSettings(diagramEditor, createDiagramMap(diagramEditor),
+		DiagramPrinterUtil.printWithSettings(diagramEditor, createDiagramMap(),
 			new RenderedDiagramPrinter(preferencesHint, mapMode));
 	}
 
 	/**
 	 * Return a Map with diagram name String as key and Diagram as value
-	 * All entries in the map correspond to open editors with the
-	 * diagramEditor's id.
-	 * 
-	 * @param diagramEditor, we'll check for open editors with the
-	 * diagramEditor's id.
+	 * All entries in the map correspond to open editors.
 	 * 
 	 * @return Map with diagram name String as key and Diagram as value
 	 * All entries in the map correspond to open editors with the
 	 * diagramEditor's id. 
 	 */
-	private Map createDiagramMap(DiagramEditor diagramEditor) {
-		
-		assert diagramEditor != null;
+	private Map createDiagramMap() {
 		
 		Map diagramMap = new HashMap();
 		
-		String id = diagramEditor.getEditorSite().getId();
-		
-		//you cannot have a diagram with no id
-		assert id != null;
-		
 		//get all diagram editors with the matching id 
-		List diagramEditors = EditorService.getInstance().getRegisteredEditors(id);
+		List diagramEditors = EditorService.getInstance().getRegisteredEditorParts();
 
 		Iterator it = diagramEditors.iterator();
 		while (it.hasNext()) {
@@ -134,6 +123,8 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 				
 				IEditorInput editorInput = dEditor.getEditorInput();
 				
+                
+                
 				//try to be more descriptive and get the IFile path which includes the project
 				IFile file = (IFile)(editorInput.getAdapter(IFile.class));
 				if (file != null) {
@@ -149,11 +140,11 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 				}
 				
 				if (diagramName == null) {
-					//the last choice is to use the id.
-					//not very descriptive but better than nothing.
-					diagramName = id;
+					//the last choice is to use the actual name of the diagram
+                    //this has to exist!
+					diagramName = dEditor.getDiagram().getName();
 				}
-				
+                
 				diagramMap.put(diagramName, dEditor.getDiagram());
 				
 			}
