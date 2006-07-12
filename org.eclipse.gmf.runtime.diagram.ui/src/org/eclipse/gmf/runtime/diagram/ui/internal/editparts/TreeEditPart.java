@@ -158,17 +158,11 @@ public class TreeEditPart
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
 	public final void notifyChanged(Notification event) {
-		final Notification eventToHandle = event;
-        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() { 
-            public void run() {
-                // Receiving an event while a view is deleted could only happen during "undo" of view creation,
-                // However, event handlers should be robust by using the event's value and not trying to read 
-                // the value from the model
-                if ((((View)getModel()).eResource() != null))
-                    handleNotificationEvent(eventToHandle);
-            }
-        });
-
+        // Receiving an event while a view is deleted could only happen during "undo" of view creation,
+        // However, event handlers should be robust by using the event's value and not trying to read 
+        // the value from the model
+        if ((((View)getModel()).eResource() != null))
+            handleNotificationEvent(event);
 	}
 
 	/**
