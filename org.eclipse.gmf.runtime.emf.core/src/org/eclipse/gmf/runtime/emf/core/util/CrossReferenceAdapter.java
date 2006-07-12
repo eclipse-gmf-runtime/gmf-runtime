@@ -27,6 +27,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -283,10 +284,16 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			if (adapter != null) {
 				// now, register incoming unidirectional references and
 				// opposites
-				for (Iterator iter = adapter.getInverseReferencers(value, null,
-						null).iterator(); iter.hasNext();) {
-					registerReference(((EObject) iter.next()).eResource(),
-							resource);
+				for (Iterator iter = adapter.getInverseReferences(value).iterator();
+                        iter.hasNext();) {
+                    EStructuralFeature.Setting next = (EStructuralFeature.Setting) iter.next();
+                    EReference ref = (EReference) next.getEStructuralFeature();
+                    
+                    // we ignore unchangeable references.  
+                    if (ref.isChangeable()) {
+    					registerReference(next.getEObject().eResource(),
+    							resource);
+                    }
 				}
 			}
 		} else {
@@ -312,11 +319,17 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 			// now, deregister incoming unidirectional references and opposites
 			if (adapter != null) {
-				for (Iterator iter = adapter.getInverseReferencers(value, null,
-						null).iterator(); iter.hasNext();) {
-					deregisterReference(((EObject) iter.next()).eResource(),
-							resource);
-				}
+                for (Iterator iter = adapter.getInverseReferences(value).iterator();
+                        iter.hasNext();) {
+                    EStructuralFeature.Setting next = (EStructuralFeature.Setting) iter.next();
+                    EReference ref = (EReference) next.getEStructuralFeature();
+                    
+                    // we ignore unchangeable references
+                    if (ref.isChangeable()) {
+    					deregisterReference(next.getEObject().eResource(),
+    							resource);
+    				}
+                }
 			}
 		}
 
