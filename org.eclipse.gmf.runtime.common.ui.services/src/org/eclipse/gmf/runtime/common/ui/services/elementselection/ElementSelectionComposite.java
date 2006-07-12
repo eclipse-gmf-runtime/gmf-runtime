@@ -90,9 +90,16 @@ public abstract class ElementSelectionComposite
      * The job running the element selection service.
      */
     private Job job;
+    
+    /**
+     * The element selection service to use to search for elements.
+     */
+    private final ElementSelectionService elementSelectionService;
 
     /**
-     * Constructs a new instance that will create the new composite.
+     * Constructs a new instance that will create the new composite.  I will use
+     * the default {@linkplain ElementSelectionService#getInstance() selection service}
+     * to process the <tt>input</tt>.
      * 
      * @param title
      *            the dialog title
@@ -101,9 +108,24 @@ public abstract class ElementSelectionComposite
      */
     public ElementSelectionComposite(String title,
             AbstractElementSelectionInput input) {
-        super();
-        this.title = title;
-        this.input = input;
+        this(title, input, ElementSelectionService.getInstance());
+    }
+    
+    /**
+     * Constructs a new instance that will create the new composite.
+     * 
+     * @param title the dialog title
+     * @param input the element selection input
+     * @param elementSelectionService the selection service to use to process the
+     *     <tt>input</tt>
+     */
+    public ElementSelectionComposite(String title,
+    		AbstractElementSelectionInput input,
+    		ElementSelectionService elementSelectionService) {
+    	super();
+    	this.title = title;
+    	this.input = input;
+    	this.elementSelectionService = elementSelectionService;
     }
 
     /**
@@ -250,8 +272,7 @@ public abstract class ElementSelectionComposite
                 CommonUIServicesMessages.ElementSelectionService_ProgressName,
                 IProgressMonitor.UNKNOWN);
 
-            job = ElementSelectionService.getInstance().getMatchingObjects(
-                input, this);
+            job = elementSelectionService.getMatchingObjects(input, this);
         }
 
     }

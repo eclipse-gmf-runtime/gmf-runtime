@@ -71,8 +71,7 @@ public class ElementSelectionService
     private final static ElementSelectionService instance = new ElementSelectionService();
 
     static {
-        instance.configureProviders(CommonUIServicesPlugin.getPluginId(),
-            "elementSelectionProviders"); //$NON-NLS-1$
+        instance.configureProviders();
     }
 
     /**
@@ -110,10 +109,21 @@ public class ElementSelectionService
             IElementSelectionInput input, IElementSelectionListener listener) {
         elementSelectionInput = input;
         elementSelectionListener = listener;
-        ElementSelectionServiceJob job = new ElementSelectionServiceJob(
-            getJobName(), this);
-        job.setPriority(Job.SHORT);
+        ElementSelectionServiceJob job = createSelectionJob();
         job.schedule();
+        return job;
+    }
+    
+    /**
+     * Creates the selection service job that manages the individual provider
+     * search jobs.  This method should configure the new job with the appropriate
+     * priority, scheduling rules, etc. but should not schedule it.
+     * 
+     * @return a new selection service job
+     */
+    protected ElementSelectionServiceJob createSelectionJob() {
+        ElementSelectionServiceJob job = new ElementSelectionServiceJob(getJobName(), this);
+        job.setPriority(Job.SHORT);
         return job;
     }
 
@@ -153,9 +163,12 @@ public class ElementSelectionService
         }
         for (Iterator i = jobsClone.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry) i.next();
+            IElementSelectionProvider provider = (IElementSelectionProvider) entry
+            	.getKey();
             ElementSelectionServiceJob job = (ElementSelectionServiceJob) entry
                 .getValue();
-            job.schedule();
+            
+            schedule(provider, job);
         }
 
         /**
@@ -178,6 +191,16 @@ public class ElementSelectionService
             }
         }
         monitor.done();
+    }
+    
+    /**
+     * Schedules the specified selection provider job.
+     * 
+     * @param provider a selection provider
+     * @param job the <code>provider</code>'s job
+     */
+    protected void schedule(IElementSelectionProvider provider, ElementSelectionServiceJob job) {
+    	job.schedule();
     }
 
     /**
@@ -299,5 +322,15 @@ public class ElementSelectionService
     protected Service.ProviderDescriptor newProviderDescriptor(
             IConfigurationElement element) {
             return new ProviderDescriptor(element);
+    }
+    
+    /**
+     * Configures my providers from the <tt>elementSelectionProviders</tt>
+     * extension point.
+     */
+    protected void configureProviders() {
+    	configureProviders(
+    		CommonUIServicesPlugin.getPluginId(),
+        	"elementSelectionProviders"); //$NON-NLS-1$
     }
 }
