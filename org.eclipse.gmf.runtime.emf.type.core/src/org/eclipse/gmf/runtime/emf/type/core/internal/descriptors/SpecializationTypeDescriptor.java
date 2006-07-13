@@ -328,6 +328,6 @@ public class SpecializationTypeDescriptor
 	}
 	
 	public String toString() {
-		return "SpecializationTypeDescriptor[" + getId()+ "]";
+		return "SpecializationTypeDescriptor[" + getId()+ "]";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 }

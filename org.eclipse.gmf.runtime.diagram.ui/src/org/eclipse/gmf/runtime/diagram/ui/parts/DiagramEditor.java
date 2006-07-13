@@ -126,7 +126,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -745,7 +744,7 @@ public abstract class DiagramEditor
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
 
-            action = new ToggleRouterAction((IWorkbenchPage) ((IWorkbenchPart) this).getSite().getPage());
+            action = new ToggleRouterAction(((IWorkbenchPart) this).getSite().getPage());
             action.setText(""); //$NON-NLS-1$ // no text necessary since this is not a visible action
             registry.registerAction(action);
             getSelectionActions().add(action.getId());

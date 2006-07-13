@@ -138,7 +138,7 @@ public class DiagramIOUtil {
 				notationModel = loader.load(domain, new HashMap(), monitor);
 			} catch (Resource.IOWrappedException e) {
 				if (bTryCompatible) {
-					Throwable causeError = e.getWrappedException();
+					Throwable causeError = e.getCause();
 					
 					if (causeError == null) {
 						causeError = e;
@@ -146,8 +146,8 @@ public class DiagramIOUtil {
 					
 					String errMsg = causeError.getLocalizedMessage();
 					if (causeError instanceof Resource.IOWrappedException) {
-						Exception exc = ((Resource.IOWrappedException) causeError)
-							.getWrappedException();
+						Exception exc = (Exception)((Resource.IOWrappedException) causeError)
+							.getCause();
 						if (exc != null) {
 							causeError = exc;
 						}
@@ -245,4 +245,3 @@ public class DiagramIOUtil {
 		return false;
 	}
 }
-

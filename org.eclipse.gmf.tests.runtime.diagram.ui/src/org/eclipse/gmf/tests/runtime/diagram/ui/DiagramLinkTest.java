@@ -16,13 +16,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultNodeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
-import org.eclipse.gmf.runtime.notation.View;
-
 
 /**
  * @author mmostafa
@@ -117,7 +110,7 @@ public class DiagramLinkTest
 	 * @param link1
 	 * @return
 	 */
-	private IGraphicalEditPart assertValidDiagramLinkView(View link1) {
+	/*private IGraphicalEditPart assertValidDiagramLinkView(View link1) {
 		assertNotNull(link1);
 		// try to get the edit part
 		IGraphicalEditPart gEditPart1 = EditPartService.getInstance().createGraphicEditPart(link1);
@@ -128,13 +121,13 @@ public class DiagramLinkTest
 		NoteFigure noteFigure = (NoteFigure)figure;
 		assertTrue(noteFigure.isDiagramLinkMode());
 		return gEditPart1;
-	}
+	}*/
 	
 	/**
 	 * @param link1
 	 * @return
 	 */
-	private IGraphicalEditPart assertValidNoteView(View link1) {
+	/*private IGraphicalEditPart assertValidNoteView(View link1) {
 		assertNotNull(link1);
 		// try to get the edit part
 		IGraphicalEditPart gEditPart1 = EditPartService.getInstance().createGraphicEditPart(link1);
@@ -145,13 +138,13 @@ public class DiagramLinkTest
 		NoteFigure noteFigure = (NoteFigure)figure;
 		assertFalse(noteFigure.isDiagramLinkMode());
 		return gEditPart1;
-	}
+	}*/
 	
 	/**
 	 * @param link1
 	 * @return
 	 */
-	private IGraphicalEditPart assertCorruptView(View link1) {
+	/*private IGraphicalEditPart assertCorruptView(View link1) {
 		if (link1==null)
 			return null;
 		assertNotNull(link1);
@@ -160,6 +153,6 @@ public class DiagramLinkTest
 		assertNotNull(gEditPart1);
 		assertFalse(gEditPart1 instanceof DefaultNodeEditPart);
 		return null;
-	}
+	}*/
 
 }

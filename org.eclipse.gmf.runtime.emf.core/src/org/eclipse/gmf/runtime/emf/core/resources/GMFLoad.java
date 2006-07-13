@@ -51,7 +51,7 @@ public class GMFLoad
 			super.load(r, s, o);
 
 		} catch (Resource.IOWrappedException e) {
-			if (!(e.getWrappedException() instanceof UnresolvedReferenceException))
+			if (!(e.getCause() instanceof UnresolvedReferenceException))
 				throw e;
 		} catch (AbortResourceLoadException arle) {
 			throw new Resource.IOWrappedException((Exception)arle.getCause());

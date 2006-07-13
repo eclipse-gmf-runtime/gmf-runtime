@@ -158,7 +158,7 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
             	EObject adapted = unwrap(firstElement);
             	
 	            if (adapted != null) {
-	                setEObject((EObject) adapted);
+	                setEObject(adapted);
 	            }
             }
         }

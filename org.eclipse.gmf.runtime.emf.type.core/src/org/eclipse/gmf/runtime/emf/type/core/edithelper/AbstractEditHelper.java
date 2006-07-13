@@ -329,14 +329,14 @@ public abstract class AbstractEditHelper
 			 * values from the superclass command result.
 			 */
 			public CommandResult getCommandResult() {
-				CommandResult result = super.getCommandResult();
+				CommandResult _result = super.getCommandResult();
 				
-				IStatus status = result.getStatus();
+				IStatus status = _result.getStatus();
 				
 				if (status.getSeverity() == IStatus.OK) {
 					Object returnObject = null;
 					
-					Object returnValue = result.getReturnValue();
+					Object returnValue = _result.getReturnValue();
 					
 					if (returnValue instanceof Collection) {
 						Collection collection = (Collection) returnValue;
@@ -348,10 +348,10 @@ public abstract class AbstractEditHelper
 					} else {
 						returnObject = returnValue;
 					}
-					result = new CommandResult(status, returnObject);
+					_result = new CommandResult(status, returnObject);
 				}
 				
-				return result;
+				return _result;
 			};
 		};
 		

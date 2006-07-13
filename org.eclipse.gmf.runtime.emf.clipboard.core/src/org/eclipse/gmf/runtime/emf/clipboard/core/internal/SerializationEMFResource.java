@@ -99,7 +99,7 @@ public abstract class SerializationEMFResource
 
 				} catch (Resource.IOWrappedException e) {
 
-					if (!(e.getWrappedException() instanceof UnresolvedReferenceException))
+					if (!(e.getCause() instanceof UnresolvedReferenceException))
 						throw e;
 				}
 			}};

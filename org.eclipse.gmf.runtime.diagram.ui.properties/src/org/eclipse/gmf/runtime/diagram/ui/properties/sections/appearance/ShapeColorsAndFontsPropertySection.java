@@ -77,6 +77,7 @@ public class ShapeColorsAndFontsPropertySection
 	 * Change fill color property value
 	 */
 	protected void changeFillColor(SelectionEvent event) {
+        // calling the deprectaed method in case a client overrides the deprecated method
 		fillColor = changeColor(event, fillColorButton,
 			IPreferenceConstants.PREF_FILL_COLOR, Properties.ID_FILLCOLOR,
 			FILL_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_FILL_COLOR);

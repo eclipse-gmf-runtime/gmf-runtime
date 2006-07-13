@@ -843,10 +843,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		return this.resolve;
 	}
 
-	public Collection getInverseReferences(EObject eObject, boolean resolve) {
+	public Collection getInverseReferences(EObject eObject, boolean _resolve) {
 		Collection result = new ArrayList();
 
-		if (resolve) {
+		if (_resolve) {
 			resolveAll(eObject);
 		}
 

@@ -71,18 +71,18 @@ public class ClientContext implements IClientContext {
 		return includes(elementType.getId());
 	}
 
-	private boolean includes(String id) {
+	private boolean includes(String _id) {
 		boolean result = false;
 
-		result = typeIdBindings.contains(id);
+		result = typeIdBindings.contains(_id);
 
 		if (!result && !patternBindings.isEmpty()) {
 			// look for a bound pattern
-			result = hasPatternBindingFor(id);
+			result = hasPatternBindingFor(_id);
 
 			if (result) {
 				// cache the result for this type
-				bindId(id);
+				bindId(_id);
 			}
 		}
 

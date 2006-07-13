@@ -219,7 +219,7 @@ public class AbstractCommandTest
 	 */
 	public void test_nullMonitor_149057() {
 		TestCommandWithProgress c = new TestCommandWithProgress(
-				"test_nullMonitor_149057"); // $NOn-NLS-1$
+				"test_nullMonitor_149057");  //$NON-NLS-1$
 		
 		IUndoContext ctx = new ObjectUndoContext(this);
 

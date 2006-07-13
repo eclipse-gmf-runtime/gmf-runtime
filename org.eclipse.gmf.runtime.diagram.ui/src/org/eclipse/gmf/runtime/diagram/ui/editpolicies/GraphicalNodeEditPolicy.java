@@ -643,7 +643,7 @@ public class GraphicalNodeEditPolicy
 			}
 			
 			// return an executable command that does nothing
-			return new Command() {};
+			return new Command() {/* do nothing*/};
 		}
 	}	
 	

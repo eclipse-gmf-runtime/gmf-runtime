@@ -177,7 +177,7 @@ public class ClipboardSupportManager {
 					NLS.bind(EMFClipboardCoreMessages.missing_nsUri_ERROR_,
 						new Object[] {
 							ClipboardPlugin.EXTPT_CLIPBOARDSUPPORT,
-							config.getDeclaringExtension().getNamespace()})));
+							config.getDeclaringExtension().getNamespaceIdentifier()})));
 			}
 			
 			ePackage = EPackage.Registry.INSTANCE.getEPackage(nsUri);
@@ -188,7 +188,7 @@ public class ClipboardSupportManager {
 						new Object[] {
 							ClipboardPlugin.EXTPT_CLIPBOARDSUPPORT,
 							nsUri,
-							config.getDeclaringExtension().getNamespace()})));
+							config.getDeclaringExtension().getNamespaceIdentifier()})));
 			}
 			
 			String className = config.getAttribute(E_CLASS);
@@ -198,7 +198,7 @@ public class ClipboardSupportManager {
 					NLS.bind(EMFClipboardCoreMessages.missing_class_ERROR_,
 						new Object[] {
 							ClipboardPlugin.EXTPT_CLIPBOARDSUPPORT,
-							config.getDeclaringExtension().getNamespace()})));
+							config.getDeclaringExtension().getNamespaceIdentifier()})));
 			}
 			
 			String priorityStr = config.getAttribute(E_PRIORITY);

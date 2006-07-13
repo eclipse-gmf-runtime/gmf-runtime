@@ -256,6 +256,7 @@ public class PropertyPageCellEditor extends MultiButtonCellEditor {
 	 * Copies the selected text
      */
 	public void performCopy() {
+        // default implementation do nothing
 	}
 
 	/**

@@ -37,7 +37,6 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author melaasar, mmostafa
