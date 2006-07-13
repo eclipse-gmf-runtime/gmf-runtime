@@ -71,8 +71,10 @@ public class CreateDiagramCommand
 		//IElementCollection contents = getOwnedDiagramCollection(createOwningElement(progressMonitor));
 		Diagram diagram = ViewService.getInstance().createDiagram(
 			new EObjectAdapter(getSemanticContext()), getDiagramType(), getPreferencesHint());
-
-		return new CommandResult(new Status(IStatus.OK, getPluginId(),
+        int severity = IStatus.OK;
+        if (diagram==null)
+            severity = IStatus.ERROR;
+		return new CommandResult(new Status(severity, getPluginId(),
 			DiagramStatusCodes.OK, StringStatics.BLANK, null), diagram);
 	}
 
