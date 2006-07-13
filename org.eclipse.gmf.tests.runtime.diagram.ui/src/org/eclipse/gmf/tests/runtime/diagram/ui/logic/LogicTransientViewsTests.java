@@ -313,6 +313,57 @@ public class LogicTransientViewsTests extends AbstractTestBase{
 			println("testTransientCircuitsCreation() complete.");//$NON-NLS-1$
 		}
 	}
+    
+    public void XtestPersistViewUndoTransaction(){
+        try {
+            println("testPersistViewUndoTransaction() starting ...");//$NON-NLS-1$
+            CanonicalTestFixture _testFixture = getCanonicalTestFixture();
+            IGraphicalEditPart logicCompartment = _testFixture.getCanonicalCompartment(0);
+            List properties = new ArrayList();
+            int size = logicCompartment.getChildren().size();
+            // create 4 circuits
+            int count = 4;
+            for ( int i = 0; i < count; i++ ) {
+                properties.add( _testFixture.createCircuit(ViewUtil.resolveSemanticElement(logicCompartment.getNotationView())));
+                size++;
+                assertEquals( "Unexpected Circuit count.", size, logicCompartment.getChildren().size() );//$NON-NLS-1$
+            }
+            List editParts = logicCompartment.getChildren();
+            assertTransient(editParts);
+            List views = getViewsFromEditParts(editParts);
+            
+            Rectangle rect = new Rectangle(logicCompartment.getFigure().getBounds());
+            logicCompartment.getFigure().translateToAbsolute(rect);
+            IElementType typeCircuit = ElementTypeRegistry.getInstance().getType("logic.circuit"); //$NON-NLS-1$
+            getCanonicalTestFixture().createShapeUsingTool(typeCircuit, rect.getCenter(), logicCompartment);
+            assertPersisted(logicCompartment.getChildren());
+            if (getCommandStack().canUndo()){
+                getCommandStack().undo();
+                flushEventQueue();
+                // now verify that the views are the same
+                List editParts2 = logicCompartment.getChildren();
+                List views2 = getViewsFromEditParts(editParts2);
+                for (Iterator iter = views.iterator(); iter.hasNext();) {
+                    Object element = iter.next();
+                    if (!views2.contains(element)){
+                        fail("undo operation failed"); //$NON-NLS-1$
+                    }
+                }
+            }
+        }
+        finally {
+            println("testPersistViewUndoTransaction() complete.");//$NON-NLS-1$
+        }
+    }
+
+private List getViewsFromEditParts(List editParts) {
+    List views = new ArrayList();
+        for (Iterator iter = editParts.iterator(); iter.hasNext();) {
+            GraphicalEditPart gEP  =   (GraphicalEditPart) iter.next();
+            views.add(gEP.getModel());
+        }
+        return views;
+    }
 
 //	/**
 //	 * Test that moving a transient LED will cause it to be persisted.
