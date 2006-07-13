@@ -60,9 +60,6 @@ public class DeferredLayoutCommand
 	/** the diagram editpart used to get the editpart registry */
 	protected IGraphicalEditPart containerEP;
 
-	/** the layout command saved for undo */
-	protected Command layoutCmd;
-
 	/**
 	 * Constructor for <code>DeferredLayoutCommand</code>.
 	 * 
@@ -192,7 +189,7 @@ public class DeferredLayoutCommand
 		ArrangeRequest request = new ArrangeRequest(
 			ActionIds.ACTION_ARRANGE_SELECTION, layoutType);
 		request.setPartsToArrange(editParts);
-		layoutCmd = containerEP.getCommand(request);
+		Command layoutCmd = containerEP.getCommand(request);
 
 		if (layoutCmd != null && layoutCmd.canExecute()) {
 			layoutCmd.execute();
