@@ -239,7 +239,14 @@ public final class GlobalUndoAction extends GlobalAction {
 	 */
 	protected void doRun(IProgressMonitor progressMonitor) {
 		if (delegate != null) {
-			delegate.run();
+			Object key = new Object();
+			if (GlobalUndoRedoLock.INSTANCE.acquire(key)) {
+				try {
+					delegate.run();
+				} finally {
+					GlobalUndoRedoLock.INSTANCE.release(key);
+				}
+			}
 		}
 	}
 
