@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.PointList;
@@ -27,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
@@ -60,6 +63,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnecti
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -195,6 +199,46 @@ public class GraphicalNodeEditPolicy
 				.getForegroundColor());
 		return c;
 	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy#getDummyConnectionRouter(org.eclipse.gef.requests.CreateConnectionRequest)
+	 */
+	protected ConnectionRouter getDummyConnectionRouter(CreateConnectionRequest arg0) {
+		EditPart ep = getHost();
+		if (ep instanceof IGraphicalEditPart) {
+			IGraphicalEditPart gep = ((IGraphicalEditPart)ep);
+			Routing routingVal = Routing.MANUAL_LITERAL;
+			if (gep.getNotationView() != null) {
+				Diagram dgrm = gep.getNotationView().getDiagram();
+				EditPart epfromReg = (EditPart)gep.getViewer().getEditPartRegistry().get(dgrm);
+				if (epfromReg != null)
+					routingVal = (Routing)epfromReg.getAdapter(Routing.class);
+			}
+			else {
+				IPreferenceStore store = (IPreferenceStore) ((IGraphicalEditPart)ep).getDiagramPreferencesHint().getPreferenceStore();
+				routingVal = Routing.get(store.getInt(IPreferenceConstants.PREF_LINE_STYLE));
+			}
+			
+			ConnectionLayer cLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
+			if (cLayer instanceof ConnectionLayerEx) {
+				ConnectionLayerEx cLayerEx = (ConnectionLayerEx)cLayer;
+				if (routingVal == Routing.MANUAL_LITERAL) {
+					return cLayerEx.getObliqueRouter();
+				}
+				else if (routingVal == Routing.RECTILINEAR_LITERAL) {
+					return cLayerEx.getRectilinearRouter();
+				}
+				else if (routingVal == Routing.TREE_LITERAL) {
+					return cLayerEx.getTreeRouter();
+				}
+			}
+		}
+		
+		return super.getDummyConnectionRouter(arg0);
+	}
+
+
 
 	protected ConnectionAnchor getSourceConnectionAnchor(
 			CreateConnectionRequest request) {

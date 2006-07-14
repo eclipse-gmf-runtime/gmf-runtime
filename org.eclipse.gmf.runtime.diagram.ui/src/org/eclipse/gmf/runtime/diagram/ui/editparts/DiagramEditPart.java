@@ -52,7 +52,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Scrollable;
@@ -316,6 +318,11 @@ public class DiagramEditPart
 			for (int i = 0; i < snapStrategies.size(); i++)
 				ss[i] = (SnapToHelper)snapStrategies.get(i);
 			return new CompoundSnapToHelper(ss);
+		}
+		else if (adapter == Routing.class) {
+			IPreferenceStore store = (IPreferenceStore)getDiagramPreferencesHint().getPreferenceStore();
+			Routing routingVal = Routing.get(store.getInt(IPreferenceConstants.PREF_LINE_STYLE));
+			return routingVal;	
 		}
 
 		return super.getAdapter(adapter);
