@@ -437,15 +437,19 @@ public abstract class GraphicalEditPart
 			if ( GETCOMMAND_RECURSIVE_COUNT == 0 ) {
 				if ( cmd != null 
 						&& !_disableCanonicalEditPolicyList.isEmpty() ) {
-					CompoundCommand cc = new CompoundCommand();
-					cc.setLabel( cmd.getLabel() );
-					ToggleCanonicalModeCommand tcmd = 
-						ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(_disableCanonicalEditPolicyList, false);
-					cc.add( tcmd );
-					cc.add( cmd );
-					cc.add( ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(tcmd, true));
-					_disableCanonicalEditPolicyList.clear();
-					return cc.unwrap();
+                    CompoundCommand cc = new CompoundCommand();
+                    cc.setLabel( cmd.getLabel() );
+                    ToggleCanonicalModeCommand tcmd = 
+                        ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(_disableCanonicalEditPolicyList, false);
+                    cc.add( tcmd );
+                    cc.add( cmd );
+                    ToggleCanonicalModeCommand tcmd2 = ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(tcmd, true);
+                    if (tcmd2 != null) {
+                        tcmd2.setDomain(getEditingDomain());
+                    }
+                    cc.add( tcmd2 );
+                    _disableCanonicalEditPolicyList.clear();
+                    return cc.unwrap();
 				}
 			}
 		}

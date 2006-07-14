@@ -18,7 +18,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
@@ -37,6 +44,12 @@ public class ToggleCanonicalModeCommand extends Command {
 	
 	/** list of semantic elements canonical editpolicies are listening to. */
 	private Collection _semanticHosts = new ArrayList();
+    
+    // an operation to enable undo using Transaction API is possible
+    private AbstractEMFOperation op = null;
+
+    // domain to use to record the change that will happenwhen we re-enable the edit policy
+    private TransactionalEditingDomain domain;
 	
 	/**
 	 * Create an instance.
@@ -132,7 +145,26 @@ public class ToggleCanonicalModeCommand extends Command {
 	
 	/** Removes the canonical editpolict from the target editpart. */ 
 	public void execute() {
-		DoEnable(_enable);
+        // try to record only if we are enabling the edit policy
+        if (_enable && domain != null) {
+            op = new AbstractEMFOperation(domain, "") { //$NON-NLS-1$
+
+                protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
+                    throws ExecutionException {
+                    DoEnable(_enable);
+                    return Status.OK_STATUS;
+                }
+                
+            };
+            try {
+                op.execute(null, null);
+            } catch (ExecutionException e) {
+                //I give up... just do the enable.
+                DoEnable(_enable);
+            }
+        }else{
+			DoEnable(_enable);
+		}
 	}
 
 	/** 
@@ -162,10 +194,22 @@ public class ToggleCanonicalModeCommand extends Command {
 		execute();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.commands.Command#undo()
-	 */
-	public void undo() {
-		DoEnable(!_enable);
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.commands.Command#undo()
+     */
+    public void undo() {
+        // the enable is not an EMF command, so we had to undo it manually before undo the EMF operation
+        DoEnable(!_enable);
+        if (op != null) {
+            try {
+                op.undo(null, null);
+            } catch (ExecutionException e) {
+                // Give up...
+            }
+        }
+    }
+    
+    public void setDomain(TransactionalEditingDomain d) {
+        domain = d;
+    }
 }
