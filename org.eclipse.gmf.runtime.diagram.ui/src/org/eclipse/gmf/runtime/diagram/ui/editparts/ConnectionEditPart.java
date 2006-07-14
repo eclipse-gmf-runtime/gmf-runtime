@@ -75,11 +75,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectionBendpointEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -110,13 +110,17 @@ import org.eclipse.gmf.runtime.notation.Smoothness;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.resource.DeviceResourceException;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 /**
@@ -143,7 +147,13 @@ abstract public class ConnectionEditPart
      * Cache the editing domain after it is retrieved.
      */
     private TransactionalEditingDomain editingDomain;
-
+    
+    /**
+     * Cache the font data when a font is created so that it can be
+     * disposed later.
+     */
+    private FontData cachedFontData;
+    
 	/**
 	 * gets a property change command for the passed property, using both of the
 	 * old and new values
@@ -325,6 +335,11 @@ abstract public class ConnectionEditPart
 				}
 			}
 		}
+        if (cachedFontData != null) {
+            getResourceManager().destroyFont(
+                FontDescriptor.createFrom(cachedFontData));
+            cachedFontData = null;
+        }
 	}
 
 	/**
@@ -1179,20 +1194,39 @@ abstract public class ConnectionEditPart
 	 *            the font data
 	 */
 	protected void setFont(FontData fontData) {
-		getFigure().setFont(
-			DiagramFontRegistry.getInstance().getFont(Display.getDefault(),
-				fontData));
-		getFigure().repaint();
-	}
+        if (cachedFontData != null && cachedFontData.equals(fontData)) {
+            // the font was previously set and has not changed; do nothing.
+            return;
+        }
+
+        try {
+            Font newFont = getResourceManager().createFont(
+                FontDescriptor.createFrom(fontData));
+            getFigure().setFont(newFont);
+            getFigure().repaint();
+
+            if (cachedFontData != null) {
+                getResourceManager().destroyFont(
+                    FontDescriptor.createFrom(cachedFontData));
+            }
+            cachedFontData = fontData;
+        } catch (DeviceResourceException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "setFont", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING, "setFont", e); //$NON-NLS-1$
+        }
+    }
 
 	/**
-	 * Returns an array of the appearance property ids applicable to the
-	 * receiver. Fro this type it is Properties.ID_FONT,
-	 * Properties.ID_FONTCOLOR, Properties.ID_LINECOLOR
-	 * 
-	 * @return - an array of the appearane property ids applicable to the
-	 *         receiver
-	 */
+     * Returns an array of the appearance property ids applicable to the
+     * receiver. Fro this type it is Properties.ID_FONT,
+     * Properties.ID_FONTCOLOR, Properties.ID_LINECOLOR
+     * 
+     * @return - an array of the appearane property ids applicable to the
+     *         receiver
+     */
 	protected String[] getAppearancePropertyIDs() {
 		return appearanceProperties;
 	}
@@ -1545,6 +1579,19 @@ abstract public class ConnectionEditPart
             }
         }
         return getStructuralFeatureValue(feature);
-    }       
+    }    
     
+    /**
+     * Gets the resource manager to remember the resources allocated for this
+     * graphical viewer. All resources will be disposed when the graphical
+     * viewer is closed if they have not already been disposed.
+     * 
+     * @return the resource manager
+     */
+    protected ResourceManager getResourceManager() {
+        if (getViewer() instanceof DiagramGraphicalViewer) {
+            return ((DiagramGraphicalViewer) getViewer()).getResourceManager();
+        }
+        return JFaceResources.getResources();
+    }
 }

@@ -68,9 +68,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeC
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DummyEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -94,13 +94,16 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.resource.DeviceResourceException;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 /**
@@ -129,6 +132,12 @@ public abstract class GraphicalEditPart
 	 */
 	private TransactionalEditingDomain editingDomain;
 
+    /**
+     * Cache the font data when a font is created so that it can be
+     * disposed later.
+     */
+    private FontData cachedFontData;
+    
 	/**
 	 * Create an instance.
 	 * 
@@ -271,6 +280,12 @@ public abstract class GraphicalEditPart
 			}
 		}
 		super.deactivate();
+        
+        if (cachedFontData != null) {
+            getResourceManager().destroyFont(
+                FontDescriptor.createFrom(cachedFontData));
+            cachedFontData = null;
+        }
 	}
 
 	/**
@@ -437,19 +452,19 @@ public abstract class GraphicalEditPart
 			if ( GETCOMMAND_RECURSIVE_COUNT == 0 ) {
 				if ( cmd != null 
 						&& !_disableCanonicalEditPolicyList.isEmpty() ) {
-                    CompoundCommand cc = new CompoundCommand();
-                    cc.setLabel( cmd.getLabel() );
-                    ToggleCanonicalModeCommand tcmd = 
-                        ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(_disableCanonicalEditPolicyList, false);
-                    cc.add( tcmd );
-                    cc.add( cmd );
+					CompoundCommand cc = new CompoundCommand();
+					cc.setLabel( cmd.getLabel() );
+					ToggleCanonicalModeCommand tcmd = 
+						ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(_disableCanonicalEditPolicyList, false);
+					cc.add( tcmd );
+					cc.add( cmd );
                     ToggleCanonicalModeCommand tcmd2 = ToggleCanonicalModeCommand.getToggleCanonicalModeCommand(tcmd, true);
                     if (tcmd2 != null) {
                         tcmd2.setDomain(getEditingDomain());
                     }
                     cc.add( tcmd2 );
-                    _disableCanonicalEditPolicyList.clear();
-                    return cc.unwrap();
+					_disableCanonicalEditPolicyList.clear();
+					return cc.unwrap();
 				}
 			}
 		}
@@ -861,28 +876,47 @@ public abstract class GraphicalEditPart
 	 * @param fontData the font data
 	 */
 	protected void setFont(FontData fontData) {
-        Font newFont = DiagramFontRegistry.getInstance().getFont(
-				Display.getDefault(),
-            fontData);
-        
-        if (!newFont.equals(getFigure().getFont())) {
+        if (cachedFontData != null && cachedFontData.equals(fontData)) {
+            // the font was previously set and has not changed; do nothing.
+            return;
+        }
+
+        try {
+            Font newFont = getResourceManager().createFont(
+                FontDescriptor.createFrom(fontData));
             getFigure().setFont(newFont);
-		getFigure().repaint();
-	}
-	}
+            getFigure().repaint();
+
+            if (cachedFontData != null) {
+                getResourceManager().destroyFont(
+                    FontDescriptor.createFrom(cachedFontData));
+            }
+            cachedFontData = fontData;
+        } catch (DeviceResourceException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "setFont", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING, "setFont", e); //$NON-NLS-1$
+        }
+    }
 
 	/**
-	 * sets the font color
-	 * @param color the new value of the font color
-	 */
+     * sets the font color
+     * 
+     * @param color
+     *            the new value of the font color
+     */
 	protected void setFontColor(Color color) {
 		// NULL implementation
 	}
 
 	/**
-	 * sets the fore ground color of this edit part's figure
-	 * @param color the new value of the foregroundcolor
-	 */
+     * sets the fore ground color of this edit part's figure
+     * 
+     * @param color
+     *            the new value of the foregroundcolor
+     */
 	protected void setForegroundColor(Color color) {
 		getFigure().setForegroundColor(color);
 	}
@@ -1369,4 +1403,17 @@ public abstract class GraphicalEditPart
         return getStructuralFeatureValue(feature);
     }   
     
+    /**
+     * Gets the resource manager to remember the resources allocated for this
+     * graphical viewer. All resources will be disposed when the graphical
+     * viewer is closed if they have not already been disposed.
+     * 
+     * @return the resource manager
+     */
+    protected ResourceManager getResourceManager() {
+        if (getViewer() instanceof DiagramGraphicalViewer) {
+            return ((DiagramGraphicalViewer) getViewer()).getResourceManager();
+        }
+        return JFaceResources.getResources();
+    }
 }

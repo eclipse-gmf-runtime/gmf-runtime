@@ -12,6 +12,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.tools;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -20,14 +24,23 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramFontRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
+import org.eclipse.jface.resource.DeviceResourceException;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.CellEditor;
@@ -70,6 +83,12 @@ public class TextDirectEditManager
 
 	/** String buffer to hold initial characters **/
 	private StringBuffer initialString = new StringBuffer();
+    
+    /**
+     * Cache the font descriptor when a font is created so that it can be
+     * disposed later.
+     */
+    private List cachedFontDescriptors = new ArrayList();
 		
 	/**
 	 * the text cell editor locator
@@ -205,10 +224,20 @@ public class TextDirectEditManager
 		if( Math.abs( data.getHeight() - fontSize.height ) < 2 )
 			fontSize.height = data.getHeight();
 
-		data.setHeight(fontSize.height);
-		Font newFont = DiagramFontRegistry.getInstance().getFont(null, data);
-		return newFont;
-	}
+        try {
+            FontDescriptor fontDescriptor = FontDescriptor.createFrom(data);
+            cachedFontDescriptors.add(fontDescriptor);
+            return getResourceManager().createFont(fontDescriptor);
+        } catch (DeviceResourceException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "getScaledFont", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING, "getScaledFont", e); //$NON-NLS-1$
+        }
+        return JFaceResources.getDefaultFont();
+    }
+
 	
 	protected void initCellEditor() {
 		committed = false;
@@ -300,6 +329,11 @@ public class TextDirectEditManager
 				TextDirectEditManager.super.bringDown();
 			}
 		});
+        
+        for (Iterator iter = cachedFontDescriptors.iterator(); iter.hasNext();) {
+            getResourceManager().destroyFont((FontDescriptor) iter.next());           
+        }
+        cachedFontDescriptors.clear();
 	}
 
 	/**
@@ -428,6 +462,17 @@ public class TextDirectEditManager
 			// TODO: handle exception
 		}
 		
-	}
+	}    
+    
+    /**
+     * Gets the resource manager to remember the resources allocated for this
+     * graphical viewer. All resources will be disposed when the graphical
+     * viewer is closed if they have not already been disposed.
+     * @return
+     */
+    protected ResourceManager getResourceManager() {
+        return ((DiagramGraphicalViewer) getEditPart().getViewer())
+            .getResourceManager();
+    }
 
 }
