@@ -134,4 +134,22 @@ public interface IPrintHelper {
 	 * @return int with the number of copies
 	 */
 	int getDlgNumberOfCopies();
+    
+    /**
+     * Allows to set the orientation (portrait/landscape) in the print dialog.
+     * @param isLandscape   true if orientation should be landscape, false otherwise.
+     */
+    void setDlgOrientation(boolean bLandscape);
+
+    /**
+     * Allows to set the paper size in the print dialog.
+     * @param index         index of type of paper size, @see org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType
+     *                      for the type of paper sizes available and their indices. 
+     * @param width         specifies the custom width of the paper. Leave as 0 if
+     *                      paper size index is user-defined.
+     * @param height        specifies the custom width of the paper. Leave as 0 if
+     *                      paper size index is user-defined.
+     */
+    void setDlgPaperSize(int index, double width, double length);
+    
 }

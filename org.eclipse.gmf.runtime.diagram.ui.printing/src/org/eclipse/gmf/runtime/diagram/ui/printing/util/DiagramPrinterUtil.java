@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004,2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.util;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,10 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingDebugOptions;
@@ -29,11 +34,14 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrinti
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+
+import com.ibm.icu.text.NumberFormat;
 
 /**
  * Utility for using the DiagramPrinter to print diagrams after displaying
@@ -55,10 +63,15 @@ public class DiagramPrinterUtil {
 	 */
 	private static void printDiagrams(DiagramPrinter diagramPrinter,
 			IPrintHelper helper) {
-
+        
+        if (helper.getDlgPrintRangePages()) {
+            diagramPrinter.setPrintRangePageSelection(true);
+            diagramPrinter.setPrintRangePages(helper.getDlgPagesFrom(), helper.getDlgPagesTo());
+        }
+        
 		if (helper.getDlgScalePercent() == -1) {
-			diagramPrinter.setRows(helper.getDlgScaleFitToM());
-			diagramPrinter.setColumns(helper.getDlgScaleFitToN());
+            diagramPrinter.setColumns(helper.getDlgScaleFitToM());
+			diagramPrinter.setRows(helper.getDlgScaleFitToN());
 		} else {
 			diagramPrinter.setScaledPercent(helper.getDlgScalePercent());
 		}
@@ -86,12 +99,82 @@ public class DiagramPrinterUtil {
 		List diagramNames;
 		PrinterData printerData;
 		IPrintHelper helper;
-		
+        IPreferenceStore pref = null;
+
 		try {
 			Class printhelperClass = Class
 				.forName(IPrintHelper.PRINT_HELPER_CLASS_NAME);
 			helper = (IPrintHelper) printhelperClass.newInstance();
 			diagramNames = new ArrayList(diagramMap.keySet());
+            
+            //get the preferences store currently in use...
+            
+            if (editorPart instanceof IDiagramWorkbenchPart) {
+                
+                IDiagramGraphicalViewer viewer = ((IDiagramWorkbenchPart)editorPart).getDiagramGraphicalViewer();
+                if (viewer instanceof DiagramGraphicalViewer) {
+                    
+                    //default to diagram settings...
+                    pref = ((DiagramGraphicalViewer) viewer)
+                        .getWorkspaceViewerPreferenceStore();
+                    
+                    if (pref.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
+                        
+                        //get workspace settings...
+                        if (((IDiagramWorkbenchPart)editorPart).getDiagramEditPart().
+                                getDiagramPreferencesHint().getPreferenceStore() != null)
+                            pref = (IPreferenceStore)((IDiagramWorkbenchPart)editorPart).getDiagramEditPart().
+                                getDiagramPreferencesHint().getPreferenceStore(); 
+                    }
+                }
+            }
+            
+            //set the preferences for the print dialog...
+            if (pref != null) {
+                
+                //the orientation...
+                helper.setDlgOrientation(pref.getBoolean(WorkspaceViewerProperties.PREF_USE_LANDSCAPE));
+                
+                //the paper size...
+                PageSetupPageType storedPageType = PageSetupPageType.LETTER; //default value
+                String strPageType = pref.getString(WorkspaceViewerProperties.PREF_PAGE_SIZE);
+                for (int i=0; i<PageSetupPageType.pages.length; i++) {
+                    if (strPageType.startsWith(PageSetupPageType.pages[i].getName())) {
+                        storedPageType = PageSetupPageType.pages[i];
+                        break;
+                    }
+                }
+                
+                if (storedPageType.getIndex() == PageSetupPageType.USER_DEFINED.getIndex()) { //user defined size
+                    //get the width and height...
+                    
+                    NumberFormat fNumberFormat = NumberFormat.getNumberInstance();;
+                    String strWidth = pref.getString(WorkspaceViewerProperties.PREF_PAGE_WIDTH);
+                    String strHeight= pref.getString(WorkspaceViewerProperties.PREF_PAGE_HEIGHT);
+                    double width = 0, height = 0;
+                    
+                    try {
+                        Number num = fNumberFormat.parse(strWidth);
+                        width = num.doubleValue() / 0.0394d; //convert from inches to mm
+                        
+                        num = fNumberFormat.parse(strHeight);
+                        height = num.doubleValue() / 0.0394d;
+                        
+                        helper.setDlgPaperSize(PageSetupPageType.USER_DEFINED.getIndex(), width, height);
+                    } 
+                    catch (ParseException e) {
+                        Log.warning(
+                            DiagramPrintingPlugin.getInstance(),
+                            DiagramPrintingStatusCodes.IGNORED_EXCEPTION_WARNING,
+                            e.getMessage(),
+                            e);
+                    }
+                }
+                else
+                    helper.setDlgPaperSize(storedPageType.getIndex(), 0, 0);
+
+            }
+            
 			printerData = helper.openPrintDlg(diagramNames);
 		}
 		catch (Throwable e) {
