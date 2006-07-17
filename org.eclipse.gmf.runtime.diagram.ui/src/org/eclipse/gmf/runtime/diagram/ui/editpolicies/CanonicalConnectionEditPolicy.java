@@ -678,7 +678,7 @@ public abstract class CanonicalConnectionEditPolicy
 		while (dropElements.hasNext()) {
 			Object dropElement = dropElements.next();
 			// Allow diagram links on Canonical shapes compartments
-			if (dropElement instanceof Diagram)
+			if (allowDropElement(dropElement))
 				continue;
 			if (dropElement instanceof EObject
 				&& preventDropElement(dropElement)) {
@@ -712,6 +712,23 @@ public abstract class CanonicalConnectionEditPolicy
 			: false;
 	}
 
+    /**
+     * Return <tt>true</tt> if the supplied element should be able to be
+     * dropped into this editpolicy's host; otherwise <tt>false</tt>. This
+     * method is called by {@link #getDropCommand(DropObjectsRequest)} if this
+     * editpolicy is enabled. Returning false will necessarily prevent the
+     * element from being dropped; the <code>getDropCommand</code> method will
+     * also invoke <code>preventDropElement</code>.
+     * 
+     * @param dropElement
+     *            object being dropped.
+     * @return true if dropping the supplied element is supported, false
+     *         otherwise.
+     */
+    protected boolean allowDropElement(Object dropElement) {
+        return dropElement instanceof Diagram;
+    }
+    
 	/**
 	 * Understands the following:
 	 * <UL>
