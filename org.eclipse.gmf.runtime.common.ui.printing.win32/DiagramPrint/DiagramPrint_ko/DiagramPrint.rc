@@ -1,13 +1,5 @@
 //Microsoft Developer Studio generated resource script.
 //
-// Copyright (c) 2002 - 2005 IBM Corporation and others.
-// All rights reserved. This program and the accompanying materials
-// are made available under the terms of the Eclipse Public License v1.0
-// which accompanies this distribution, and is available at
-// http://www.eclipse.org/legal/epl-v10.html
-//
-// Contributors:
-//    IBM Corporation - initial API and implementation 
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -303,6 +295,76 @@ BEGIN
     PUSHBUTTON      "취소",IDCANCEL,232,164,48,14
 END
 
+#define WS_EX_LAYOUTRTL			0x00400000
+
+
+1547 DIALOGEX 32, 32, 333, 312
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_RTLREADING | WS_EX_LAYOUTRTL
+CAPTION "인쇄"
+FONT 9, "굴림"
+BEGIN
+    GROUPBOX        "프린터",1075,8,4,295,84,WS_GROUP
+    LTEXT           "이름(&N):",1093,12,20,36,8
+    COMBOBOX        1139,54,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "특성(&P)",1025,212,17,60,14,WS_GROUP
+    LTEXT           "상태:",1095,12,32,36,10,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,36,243,10
+    LTEXT           "유형:",1094,11,46,36,10,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,48,243,10
+    LTEXT           "위치:",1097,11,60,36,10,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,60,243,10
+    LTEXT           "설명:",1096,11,74,36,9,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,74,152,10
+    CONTROL         "파일로 인쇄(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,230,72,64,12
+    GROUPBOX        "다이어그램 인쇄 범위",1072,8,95,144,109,WS_GROUP
+    CONTROL         "모든 다이어그램(L)",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,108,72,12
+    CONTROL         "현재 다이어그램(&C)",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON,16,124,76,12
+    CONTROL         "선택된 다이어그램(&D)",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,139,87,12
+    LISTBOX         IDC_DIAGRAMS,25,156,118,43,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "배율",IDC_STATIC,160,95,143,109
+    LTEXT           "퍼센트별",1104,164,111,35,8
+    CONTROL         "퍼센트",IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,172,126,43,9
+    CONTROL         "맞춤 대상",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON,
+                    163,169,42,11
+    EDITTEXT        IDC_PERCENT,218,125,32,12,ES_NUMBER | WS_GROUP
+    EDITTEXT        IDC_PAGESM,210,168,20,12,ES_NUMBER | WS_GROUP
+    LTEXT           "x",IDC_STATIC,235,170,9,8
+    EDITTEXT        IDC_PAGESN,250,168,20,12,ES_NUMBER | WS_GROUP
+    LTEXT           "페이지",1102,276,169,21,8
+    GROUPBOX        "인쇄 범위",1074,8,211,170,64,WS_GROUP
+    CONTROL         "모두(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,229,64,12
+    CONTROL         "페이지(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,245,43,
+                    12
+    RTEXT           "시작(&F):",1089,64,247,26,8
+    EDITTEXT        1152,94,245,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "끝(&T):",1090,124,247,21,8
+    EDITTEXT        1153,150,245,24,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "인쇄 매수",1073,190,211,126,64,WS_GROUP
+    LTEXT           "인쇄 매수(&U):",1092,199,227,42,8
+    EDITTEXT        1154,277,225,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,197,245,70,25,WS_GROUP
+    CONTROL         "대조(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,275,249,36,12
+    DEFPUSHBUTTON   "확인",IDOK,180,286,48,14,WS_GROUP
+    PUSHBUTTON      "취소",IDCANCEL,232,286,48,14
+    LTEXT           "페이지별",1105,165,154,30,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -313,6 +375,12 @@ END
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
     1538, DIALOG
+    BEGIN
+        RIGHTMARGIN, 287
+        BOTTOMMARGIN, 300
+    END
+
+    1547, DIALOG
     BEGIN
         RIGHTMARGIN, 287
         BOTTOMMARGIN, 300

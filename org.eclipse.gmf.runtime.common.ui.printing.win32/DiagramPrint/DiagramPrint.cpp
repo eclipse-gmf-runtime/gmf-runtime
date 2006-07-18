@@ -26,12 +26,14 @@
 #include <Afxtempl.h>
 
 #define IDD_MODELER_PRINT_DIALOG 1538
+#define IDD_MODELER_PRINT_DIALOG_RTL 1547
 #define IDC_COLLATE 1041
 #define IDC_COPIES 1154
 #define IDC_PRINT_RANGE_ALL 1056
 #define IDC_PRINT_RANGE_PAGES 1058
 #define IDC_PRINT_RANGE_PAGES_START 1152
 #define IDC_PRINT_RANGE_PAGES_END 1153
+#define IDPROPERTIES 1025
 //#include "Windows.h"
 
 #ifdef _DEBUG
@@ -89,6 +91,7 @@ CDiagramPrintApp::CDiagramPrintApp()
 /////////////////////////////////////////////////////////////////////////////
 // The one and only CDiagramPrintApp object
 CDiagramPrintApp theApp;
+PRINTDLG pd;
 
 //struct for stored values
 class DiagramListItem {
@@ -97,12 +100,20 @@ public :
 	bool selected;
 };
 
+//constants
+const int WS_EX_LAYOUTRTL	= 0x00400000;
+const int LAYOUT_RTL		= 0x00000001;
+
+
 //stored values
 CList<DiagramListItem, DiagramListItem> diagramListItems;
 UINT uiPercent = 100, uiPagesM = 1, uiPagesN = 1, uiCopies = 1, uiPagesFrom = 1, uiPagesTo = 0;
 bool bPrintRangeAll = false, bPrintRangePages = false;
 bool bDiagramPrintRangeAll = false, bDiagramPrintRangeCurrent = false, bDiagramPrintRangeSelection = false;
 bool bCollate = false;
+bool bLandscape = false;
+int  paperSizeIndex = 0; //see PageSetupPageType for page types
+short paperWidth = 0, paperLength = 0; //for user defined paper size
 
 //true when the dialog has been initialized.
 bool bInitialized = false;
@@ -189,10 +200,10 @@ UINT APIENTRY PrintHookProc(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 
 		//diagrams print range group
 
-		//select all
+		//select current diagram
 		CheckDlgButton(hdlg, IDC_CURRENT_DIAGRAM, true);
 
-		//diagarms listbox
+		//diagrams listbox
 		CWnd *wnd = CWnd::FromHandle(hdlg);
 		pDiagrams = (CListBox*) wnd->GetDlgItem(IDC_DIAGRAMS);
 		ASSERT(pDiagrams);
@@ -227,8 +238,8 @@ UINT APIENTRY PrintHookProc(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		//disable listbox since all is selected first
 		EnableWindow(hDiagrams, false);
 
-		//disable print range group since all diagrams is selected
-		enablePrintRange(false);
+		//enable print range group since current diagram is selected
+		enablePrintRange(true);
 
 		//scaling group
 
@@ -304,7 +315,6 @@ UINT APIENTRY PrintHookProc(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 					diagramListItems.GetAt(diagramListItems.FindIndex(i)).selected = pDiagramz->GetSel(i);
 				}
 			}
-
 			else if ((reinterpret_cast<HWND>(lParam)) == hSelection) { //selection radio
 				EnableWindow(hDiagrams, true);
 				//check if print range should be enabled or disabled by checking
@@ -336,6 +346,54 @@ UINT APIENTRY PrintHookProc(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 			ASSERT(bInitialized);
 			enableDiagramPrintRangeSelectionIfOnlyOneDiagramIsSelected();
 		}
+	}
+	else if (uiMsg == WM_SHOWWINDOW) {
+		//apply the settings only when the window shows, as the user 
+		//may wish to specify different settings in the properties dialog
+
+		DEVMODE* pDevMode; 
+
+		pDevMode = (DEVMODE*)::GlobalLock(pd.hDevMode); 
+		pDevMode->dmFields |= DM_ORIENTATION; 
+		if (bLandscape)
+			pDevMode->dmOrientation = DMORIENT_LANDSCAPE;
+		else
+			pDevMode->dmOrientation = DMORIENT_PORTRAIT;
+
+		switch (paperSizeIndex) {
+		case 0:
+			pDevMode->dmPaperSize = DMPAPER_LETTER;
+			break;
+		case 1:
+			pDevMode->dmPaperSize = DMPAPER_LEGAL;
+			break;
+		case 2:
+			pDevMode->dmPaperSize = DMPAPER_EXECUTIVE;
+			break;
+		case 3:
+			pDevMode->dmPaperSize = DMPAPER_TABLOID;
+			break;
+		case 4:
+			pDevMode->dmPaperSize = DMPAPER_A3;
+			break;
+		case 5:
+			pDevMode->dmPaperSize = DMPAPER_A4;
+			break;
+		case 6:
+			pDevMode->dmPaperSize = DMPAPER_B4;
+			break;
+		case 7:
+			pDevMode->dmPaperSize = DMPAPER_B5;
+			break;
+		case 8: //user defined
+			pDevMode->dmPaperWidth = paperWidth;
+			pDevMode->dmPaperLength= paperLength;
+			break;
+		default:
+			pDevMode->dmPaperSize = DMPAPER_LETTER;
+		}
+			
+		::GlobalUnlock(pd.hDevMode);
 	}
 
 	return 0L;
@@ -474,13 +532,30 @@ JNIEXPORT void JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelp
 	delete [] titleWide;
 }
 
+//Sets the orientation of the page
+JNIEXPORT void JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelper_setOrientation
+(JNIEnv * env, jclass, jboolean isLandscape) {
+	bLandscape = isLandscape;
+}
+
+//Sets the paper size (e.g. A4, Letter, Legal, etc). Refer to org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType
+JNIEXPORT void JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelper_setPaperSize
+(JNIEnv * env, jclass, jint index, jdouble width, jdouble length) {
+	paperSizeIndex = index;
+
+	//width and length are in mm...but we need values in tenths of mm for DEVMODE...
+	paperWidth  = (short)(width  * 10);
+	paperLength = (short)(length * 10);
+}
+
+
+
 //Open the print dialog.
 //Returns true if OK pressed, false if cancelled
 //If OK is pressed and true is returned, you can use the get methods to
 //get the values of the dialog.
 JNIEXPORT jboolean JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelper_open
 (JNIEnv * env, jclass, jobject printerData) {
-	PRINTDLG pd;
 
 	// Initialize PRINTDLG
 	ZeroMemory(&pd, sizeof(pd));
@@ -489,7 +564,15 @@ JNIEXPORT jboolean JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_Print
 	pd.hDevMode    = NULL;     //free later
 	pd.hDevNames   = NULL;     //free later
 	pd.Flags       = PD_ENABLEPRINTTEMPLATE | PD_ENABLEPRINTHOOK | PD_HIDEPRINTTOFILE | PD_COLLATE; 
-    pd.lpPrintTemplateName = MAKEINTRESOURCE(IDD_MODELER_PRINT_DIALOG);
+
+	//make sure the print dialog is RTL-enabled if the calling workbench is also RTL...
+	int ownerStyle = GetWindowLong(hwndOwner,GWL_EXSTYLE);
+
+	if ((ownerStyle & WS_EX_LAYOUTRTL) == WS_EX_LAYOUTRTL)
+		pd.lpPrintTemplateName = MAKEINTRESOURCE(IDD_MODELER_PRINT_DIALOG_RTL);
+	else
+		pd.lpPrintTemplateName = MAKEINTRESOURCE(IDD_MODELER_PRINT_DIALOG);
+
 	pd.hInstance = theApp.m_hInstance; //AfxGetInstanceHandle();
 	pd.lpfnPrintHook = PrintHookProc;
 	pd.nCopies     = 1;
@@ -497,6 +580,8 @@ JNIEXPORT jboolean JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_Print
 	pd.nToPage     = 0xFFFF; 
 	pd.nMinPage    = 1; 
 	pd.nMaxPage    = 0xFFFF; 
+
+	
 
 	if (PrintDlg(&pd)==TRUE) { //OK pressed
 
@@ -542,6 +627,7 @@ JNIEXPORT jboolean JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_Print
 		env->SetObjectField(printerData, env->GetFieldID(objectClass, "name", "Ljava/lang/String;"), env->NewString((LPWSTR)pDN + pDN->wDeviceOffset, wcslen(((LPWSTR)pDN + pDN->wDeviceOffset))));
 		GlobalUnlock(pd.hDevNames);
 
+		
 		//free the hDevMode and hDevNames
 		GlobalFree(pd.hDevMode);
 		GlobalFree(pd.hDevNames);

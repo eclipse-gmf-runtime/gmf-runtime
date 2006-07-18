@@ -181,6 +181,22 @@ JNIEXPORT jint JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelp
 JNIEXPORT void JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelper_setHwndOwner
 (JNIEnv * env, jclass, jstring, jstring);
 
+/*
+ * Class:     WinPrintHelper
+ * Method:    setOrientation
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelper_setOrientation
+(JNIEnv * env, jclass, jboolean isLandscape);
+
+/*
+ * Class:     WinPrintHelper
+ * Method:    setPaperSize
+ * Signature: (IDD)V
+ */
+JNIEXPORT void JNICALL Java_org_eclipse_gmf_runtime_common_ui_printing_PrintHelper_setPaperSize
+(JNIEnv * env, jclass, jint index, jdouble width, jdouble length);
+
 
 #ifdef __cplusplus
 }
