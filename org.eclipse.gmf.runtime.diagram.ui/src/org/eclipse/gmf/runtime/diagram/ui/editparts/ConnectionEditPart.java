@@ -1511,8 +1511,11 @@ abstract public class ConnectionEditPart
 			refreshBendpoints();
 		} else if (event.getFeature() == NotationPackage.eINSTANCE
 			.getView_Element()
-			&& ((EObject) event.getNotifier()) == getNotationView())
+			&& ((EObject) event.getNotifier()) == getNotationView()){
 			handleMajorSemanticChange();
+        } else if (event.getEventType() == EventType.UNRESOLVE
+                && event.getNotifier() == ((View) getModel()).getElement())
+                handleMajorSemanticChange();
 	}
 
 	/**
