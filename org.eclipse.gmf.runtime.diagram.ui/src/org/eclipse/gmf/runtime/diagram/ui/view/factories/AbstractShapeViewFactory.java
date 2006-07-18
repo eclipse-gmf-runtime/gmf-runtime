@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.RGB;
  * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory
  * @author mmostafa
  */
-public class AbstractShapeViewFactory extends BasicNodeViewFactory {
+abstract public class AbstractShapeViewFactory extends BasicNodeViewFactory {
 
 	/**
 	 * Method used to create the layout constraint that will get set on the 
