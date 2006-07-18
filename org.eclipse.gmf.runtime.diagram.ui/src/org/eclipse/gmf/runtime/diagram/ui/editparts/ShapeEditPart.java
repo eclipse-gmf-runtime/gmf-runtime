@@ -46,17 +46,7 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	}
     
     
-    /**
-     * This is a HAck to avoid breaking clients who still send the Unresolved event
-     * It should be remomved in 1.1 release and replaced by a refresh edit policy 
-     * that will be installed by the clients
-     *
-     */
-    private interface EventType {
-        public static final int UNRESOLVE = 1003;
-    }
-
-	protected void createDefaultEditPolicies() {
+    protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ContainerEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
