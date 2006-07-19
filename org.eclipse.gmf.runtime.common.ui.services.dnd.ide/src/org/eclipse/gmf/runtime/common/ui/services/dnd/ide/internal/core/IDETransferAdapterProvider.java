@@ -13,11 +13,11 @@ package org.eclipse.gmf.runtime.common.ui.services.dnd.ide.internal.core;
 
 import java.util.Hashtable;
 
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.part.MarkerTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.AbstractTransferAdapterProvider;
 import org.eclipse.gmf.runtime.common.ui.services.dnd.core.TransferAgent;
@@ -73,7 +73,7 @@ public final class IDETransferAdapterProvider
 			new Integer(IDETransferId.NAV_SELECTION_TRANSFER.hashCode()),
 			new SelectionDragAdapter(new TransferAgent(
 				IDETransferId.NAV_SELECTION_TRANSFER, LocalSelectionTransfer
-					.getInstance(), true) {
+					.getTransfer(), true) {
 
 				/*
 				 * (non-Javadoc)
@@ -81,7 +81,7 @@ public final class IDETransferAdapterProvider
 				 * @see org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent#getSelection(org.eclipse.swt.dnd.TransferData)
 				 */
 				public ISelection getSelection(TransferData transferData) {
-					return LocalSelectionTransfer.getInstance().getSelection();
+					return LocalSelectionTransfer.getTransfer().getSelection();
 				}
 
 				/*
@@ -90,7 +90,7 @@ public final class IDETransferAdapterProvider
 				 * @see org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent#setSelection(org.eclipse.jface.viewers.ISelection)
 				 */
 				public void setSelection(ISelection selection) {
-					LocalSelectionTransfer.getInstance()
+					LocalSelectionTransfer.getTransfer()
 						.setSelection(selection);
 				}
 			}));
@@ -114,7 +114,7 @@ public final class IDETransferAdapterProvider
 			new Integer(IDETransferId.NAV_SELECTION_TRANSFER.hashCode()),
 			new SelectionDropAdapter(new TransferAgent(
 				IDETransferId.NAV_SELECTION_TRANSFER, LocalSelectionTransfer
-					.getInstance(), true) {
+					.getTransfer(), true) {
 
 				/*
 				 * (non-Javadoc)
@@ -122,7 +122,7 @@ public final class IDETransferAdapterProvider
 				 * @see org.eclipse.gmf.runtime.common.ui.services.dnd.core.ITransferAgent#getSelection(org.eclipse.swt.dnd.TransferData)
 				 */
 				public ISelection getSelection(TransferData transferData) {
-					return LocalSelectionTransfer.getInstance().getSelection();
+					return LocalSelectionTransfer.getTransfer().getSelection();
 				}
 			}));
 	}
