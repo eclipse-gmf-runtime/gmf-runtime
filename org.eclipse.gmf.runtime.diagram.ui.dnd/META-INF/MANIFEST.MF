@@ -2,13 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.dnd
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.dnd.internal.DiagramDnDPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.diagram.ui.dnd.internal;x-internal:=true,
- org.eclipse.gmf.runtime.diagram.ui.dnd.internal.l10n;x-internal:=true,
- org.eclipse.gmf.runtime.diagram.ui.dnd.internal.parts;x-internal:=true,
  org.eclipse.gmf.runtime.diagram.ui.dnd.parts
 Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gef;bundle-version="[3.2.0,4.0.0)",
