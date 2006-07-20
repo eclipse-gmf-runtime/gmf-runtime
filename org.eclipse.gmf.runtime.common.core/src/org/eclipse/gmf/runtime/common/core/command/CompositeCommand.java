@@ -89,7 +89,7 @@ public class CompositeCommand
         if (children != null) {
             this.children = new ArrayList(children);
         } else {
-            this.children = new ArrayList();
+            this.children = new ArrayList(4);
         }
     }
 
