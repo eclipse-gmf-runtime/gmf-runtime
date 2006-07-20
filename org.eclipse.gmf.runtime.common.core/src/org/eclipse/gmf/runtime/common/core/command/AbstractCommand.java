@@ -74,7 +74,7 @@ public abstract class AbstractCommand extends AbstractOperation
 		super(label);
 
 		if (affectedFiles == null) {
-			this.affectedFiles = new ArrayList();
+			this.affectedFiles = new ArrayList(2);
 
 		} else {
 			this.affectedFiles = affectedFiles;
