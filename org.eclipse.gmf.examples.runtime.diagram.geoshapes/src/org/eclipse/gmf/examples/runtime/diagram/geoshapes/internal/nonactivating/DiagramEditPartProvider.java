@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers;
+package org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.nonactivating;
 
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
