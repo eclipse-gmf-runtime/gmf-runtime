@@ -657,7 +657,9 @@ public class DiagramRootEditPart
 		if (wsPrefStore != null) {
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDORDER)) {
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDORDER, true);			
-			} 
+			} else {
+				moveGridLayer(wsPrefStore.getBoolean(WorkspaceViewerProperties.GRIDORDER));
+			}
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINECOLOR)) {
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
 			} else {
