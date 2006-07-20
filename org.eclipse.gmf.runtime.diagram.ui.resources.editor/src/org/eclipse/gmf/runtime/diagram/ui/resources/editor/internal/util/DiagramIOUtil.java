@@ -192,8 +192,13 @@ public class DiagramIOUtil {
 			CoreException thrownExcp = null;
 			if(e instanceof CoreException) {
 				thrownExcp = (CoreException)e;
-			} else
-				thrownExcp = new CoreException(new Status(IStatus.ERROR, EditorPlugin.getPluginId(), EditorStatusCodes.ERROR, "load(IFile, boolean)", e)); //$NON-NLS-1$
+            } else {
+                String exceptionMessage = e.getLocalizedMessage();
+                thrownExcp = new CoreException(new Status(IStatus.ERROR,
+                    EditorPlugin.getPluginId(), EditorStatusCodes.ERROR,
+                    exceptionMessage != null ? exceptionMessage
+                        : "load(IFile, boolean)", e)); //$NON-NLS-1$
+            }
 			Trace.throwing(EditorPlugin.getInstance(), EditorDebugOptions.EXCEPTIONS_THROWING, DiagramIOUtil.class, "load(IFile, boolean)", thrownExcp); //$NON-NLS-1$
 			throw thrownExcp;
 		}
