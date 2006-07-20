@@ -74,7 +74,7 @@ public abstract class AbstractModelerPropertySection
 
 		protected void handleNotification(TransactionalEditingDomain domain,
 				Notification notification) {
-			update(notification, (EObject) notification.getNotifier());
+			update(domain, notification);
 		}
 	};
 
@@ -367,8 +367,14 @@ public abstract class AbstractModelerPropertySection
 		this.eObject = object;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
+	/**
+	 * Subclasses overriding this method should remember to override
+	 * {@link #update(TransactionalEditingDomain, Notification)} as required.
+	 * The default implementation of
+	 * {@link #update(TransactionalEditingDomain, Notification)} will only
+	 * update if the notifier is an <code>EObject</code>.
+	 * 
+	 * @return the filter for events used by my <code>eventListener</code>.
 	 */
 	public NotificationFilter getFilter() {
         return NotificationFilter.createEventTypeFilter(Notification.SET).or(
@@ -409,6 +415,26 @@ public abstract class AbstractModelerPropertySection
 
 				}
 			});
+		}
+	}
+	
+	/**
+	 * Updates me if the notifier is an <code>EObject</code> by calling
+	 * {@link #update(Notification, EObject)}. Does nothing otherwise.
+	 * Subclasses should override this method if they need to update based on
+	 * non-EObject notifiers.
+	 * 
+	 * @param domain
+	 *            the editing domain
+	 * @param notification
+	 *            the event notification
+	 */
+	protected void update(TransactionalEditingDomain domain, Notification notification) {
+
+		Object notifier = notification.getNotifier();
+		
+		if (notifier instanceof EObject) {
+			update(notification, (EObject) notifier);
 		}
 	}
 
