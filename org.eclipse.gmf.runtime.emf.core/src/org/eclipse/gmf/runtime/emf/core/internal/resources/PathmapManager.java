@@ -315,7 +315,7 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	 * Set the value of a pathmap variable.
 	 * 
 	 * @param var the path map variable name
-	 * @param val the path map variable value (a file URI)
+	 * @param val the path map variable value (must be an encoded URI)
 	 */
 	public static void setPathVariable(String var, String val) {
 		// We must try to determine if this pathmap resides in the workspace as some container
@@ -452,16 +452,16 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 				continue;
 
 			try {
-
 				url = FileLocator.resolve(url);
 
 				if (url == null)
 					continue;
-
-				paths.put(var, url.toString());
-
+				
+				// We must encode here because everything that is placed into the path
+				//  map must be encoded to match the encoded URI's on each resource
+				//  in the resource set.
+				paths.put(var, URI.createURI(url.toString(),true).toString());
 			} catch (IOException e) {
-
 				Trace.catching(EMFCorePlugin.getDefault(),
 					EMFCoreDebugOptions.EXCEPTIONS_CATCHING, PathmapManager.class,
 					"configure", e); //$NON-NLS-1$
