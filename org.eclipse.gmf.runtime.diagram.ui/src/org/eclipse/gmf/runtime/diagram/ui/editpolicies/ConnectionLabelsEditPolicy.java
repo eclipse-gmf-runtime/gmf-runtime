@@ -11,20 +11,28 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import java.util.Iterator;
-import java.util.List;
 
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
+import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ToggleConnectionLabelsRequest;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Location;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 
 /**
@@ -55,25 +63,77 @@ public class ConnectionLabelsEditPolicy extends AbstractEditPolicy {
 		if (RequestConstants.REQ_TOGGLE_CONNECTION_LABELS.equals(request.getType())) {
 			boolean showHide = ((ToggleConnectionLabelsRequest) request)
 					.showConnectionLabel();		
-			CompoundCommand cc = new CompoundCommand();
-			List children = getHost().getChildren();
-			Iterator iter = children.iterator();
-			while(iter.hasNext()) {
-				GraphicalEditPart ep = (GraphicalEditPart) iter.next();	
-				if (ep instanceof LabelEditPart) {
-					ChangePropertyValueRequest req = new ChangePropertyValueRequest(
-						DiagramUIMessages.Command_hideLabel_Label,
-						Properties.ID_ISVISIBLE,
-						Boolean.valueOf(showHide));
-					Command setLabelVisCmd = ep.getCommand(req);
-					if (setLabelVisCmd != null && setLabelVisCmd.canExecute())
-						cc.add(setLabelVisCmd);
-				}
-			}
-			return cc;
+            CompositeCommand cc = 
+                new CompositeCommand(DiagramUIMessages.Command_hideLabel_Label);
+            Object model = getHost().getModel();
+            if (model instanceof View){
+                View hostView = (View)model;
+       			Iterator iter = hostView.getChildren().iterator();
+       			while(iter.hasNext()) {
+                    View childView = (View)iter.next();
+                    if (isLabelView(getHost() ,hostView, childView)){
+                        cc.add(new SetPropertyCommand(getEditingDomain(),
+                            new EObjectAdapter(childView),
+                            Properties.ID_ISVISIBLE,
+                            DiagramUIMessages.Command_hideLabel_Label,
+                            Boolean.valueOf(showHide)));
+                    }
+        		}
+        		return new ICommandProxy(cc);
+            }
 		}
 		return null;
 	}
+    
+   protected TransactionalEditingDomain getEditingDomain() {
+       return ((IGraphicalEditPart) getHost()).getEditingDomain();
+   }
+    
+    
+   /**
+    * determines if the passed view is a label view or not
+    * the default provided implementation is just an educated/generic guss
+    * clients can override this method to provide more specific response
+    * @param node
+    * @return
+    */
+    protected boolean isLabelView(EditPart containerEditPart,View parentView, View view) {
+    	// labels are not compartments
+        // labels contained by Node Shape Edit Parts or connection edit parts
+        // labels had location constrain
+        // labels had the string Type set on them or they will not have the same
+        // semantic element as their parent
+        if ((containerEditPart instanceof ShapeNodeEditPart ||
+             containerEditPart instanceof ConnectionEditPart )
+             &&  view instanceof Node){
+            Node node = (Node)view;
+            String nodeType = node.getType();
+            if (!isCompartment(node) &&
+                (nodeType != null && nodeType.length()>0)||
+                (parentView!=null && parentView.getElement() != view.getElement())){
+                LayoutConstraint lContraint = node.getLayoutConstraint();
+                if (lContraint instanceof Location){
+                    return true;
+                }
+            }
+        }
+               
+       return false;
+    }
+    
+    /**
+     * determines if the passed view is a compartment view or not
+     * the default provided implementation is just an educated/generic guss
+     * clients can override this method to provide more specific response
+     * @param node
+     * @return
+     */
+    protected boolean isCompartment(Node node) {
+        if (node.getStyle(NotationPackage.eINSTANCE.getDrawerStyle())!=null){
+              return true;
+        }
+        return false;
+    }
 	
 	/**
 	 * If the request returns an executable command the host is returned, otherwise null.
