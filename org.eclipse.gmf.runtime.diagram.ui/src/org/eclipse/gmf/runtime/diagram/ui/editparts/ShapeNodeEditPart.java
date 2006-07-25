@@ -60,11 +60,11 @@ public abstract class ShapeNodeEditPart
 	}
 
 	protected List getModelSourceConnections() {
-		return ViewUtil.getSourceConnections((View)getModel());
+        return ViewUtil.getSourceConnectionsConnectingVisibleViews((View)getModel());
 	}
 
 	protected List getModelTargetConnections() {
-		return ViewUtil.getTargetConnections((View)getModel());
+        return ViewUtil.getTargetConnectionsConnectingVisibleViews((View)getModel());
 	}
 
 	protected void createDefaultEditPolicies() {

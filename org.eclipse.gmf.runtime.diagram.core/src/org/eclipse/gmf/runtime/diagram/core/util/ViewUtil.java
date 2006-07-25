@@ -543,7 +543,7 @@ public class ViewUtil {
             return Collections.EMPTY_LIST;
         return view.getSourceEdges();
     }
-
+    
     /**
      * gets all the <code>Edge</code>'s whose target is this view
      * 
@@ -556,6 +556,64 @@ public class ViewUtil {
             return Collections.EMPTY_LIST;
         return view.getTargetEdges();
     }
+    
+    /**
+     * gets all the <code>Edge</code>'s whose source is this view
+     * 
+     * @param view
+     *            the view to use
+     * @return List the edges list
+     */
+     public static List getSourceConnectionsConnectingVisibleViews(View view) {
+        if (!view.eIsSet(NotationPackage.Literals.VIEW__SOURCE_EDGES))
+            return Collections.EMPTY_LIST;
+        List sourceConnections = new ArrayList();
+        Iterator iter = view.getSourceEdges().iterator();
+        while (iter.hasNext()) {
+            Edge edge = (Edge)iter.next();
+            View target = edge.getTarget();
+            if (isVisible(target)){
+                sourceConnections.add(edge);
+            }
+            
+        }
+        return sourceConnections;
+     }
+    
+    
+
+     private static boolean isVisible(View target) {
+        if (target.isVisible()){
+            EObject parent = target.eContainer();
+            if (parent instanceof View){
+                return isVisible((View)parent);
+            }
+            return true;
+        }
+        return false;
+    }
+     
+    /**
+     * gets all the <code>Edge</code>'s whose target is this view
+     * 
+     * @param view
+     *            the view to use
+     * @return List the edges list
+     */
+     public static List getTargetConnectionsConnectingVisibleViews(View view) {
+        if (!view.eIsSet(NotationPackage.Literals.VIEW__TARGET_EDGES))
+            return Collections.EMPTY_LIST;
+        List targteConnections = new ArrayList();
+        Iterator iter = view.getTargetEdges().iterator();
+        while (iter.hasNext()) {
+            Edge edge = (Edge)iter.next();
+            View source = edge.getSource();
+            if (isVisible(source)){
+                targteConnections.add(edge);
+            }
+        }
+        return targteConnections;
+     }
 
     /**
      * return eClass Name of the view's semantic element, this method works only
