@@ -16,8 +16,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,7 +91,7 @@ public class DiagramEventBroker
             }
             Map listenersSet = (Map) keys.get(key);
             if (listenersSet == null) {
-                listenersSet = new HashMap(4);
+                listenersSet = new LinkedHashMap(4);
                 keys.put(key, listenersSet);
             }
             listenersSet.put(listener,null);
@@ -158,7 +159,7 @@ public class DiagramEventBroker
             if (keys == null || keys.isEmpty()) {
                 return Collections.EMPTY_SET;
             }
-            Set listenersCollection = new HashSet();
+            Set listenersCollection = new LinkedHashSet();
             Set enteries = keys.entrySet();
             for (Iterator iter = enteries.iterator(); iter.hasNext();) {
                 Map.Entry entry = (Map.Entry) iter.next();
@@ -261,7 +262,7 @@ public class DiagramEventBroker
      */
     public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
-        Set elementsInPersistQueue = new HashSet();
+        Set elementsInPersistQueue = new LinkedHashSet();
         CompoundCommand cc = new CompoundCommand();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
@@ -561,7 +562,7 @@ public class DiagramEventBroker
             : postListeners;
         if (key != null) {
             if (!key.equals(LISTEN_TO_ALL_FEATURES)) {
-                Set listenersSet = new HashSet();
+                Set listenersSet = new LinkedHashSet();
                 Collection c = listeners.getListeners(notifier, key);
                 if (c != null && !c.isEmpty())
                     listenersSet.addAll(c);
@@ -586,7 +587,7 @@ public class DiagramEventBroker
      */
     final protected Set getInterestedNotificationListeners(Notification event,
             boolean preCommit) {
-        HashSet listenerSet = new HashSet();
+        Set listenerSet = new LinkedHashSet();
 
         Collection c = getNotificationListeners(event.getNotifier(), event
             .getFeature(), preCommit);
