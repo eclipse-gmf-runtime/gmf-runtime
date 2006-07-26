@@ -18,11 +18,9 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.Orientable;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.ListScrollBar;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimatableScrollPane;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OverlayScrollPaneLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
@@ -57,16 +55,20 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
      */
     public ShapeCompartmentFigure(String title, IMapMode mm) {
         super(title, mm);
-        configureFigure(mm);
     }
+    
 
+    protected AnimatableScrollPane createScrollpane(IMapMode mm) {
+        configureFigure(mm);
+        return (AnimatableScrollPane)getScrollPane();
+    }
 	/**
 	 * The scrollpane is configured to use a {@link FreeformLayer} with a
 	 * {@link FreeformLayout} as its contents.
      * @deprecated use {@link ShapeCompartmentFigure#configureFigure(IMapMode)} instead
 	 */
 	protected void configureFigure() {
-		configureFigure(MapModeUtil.getMapMode(this));
+		configureFigure(MapModeUtil.getMapMode(this));        
 	}
     
     /**
@@ -80,19 +82,12 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
      */
     protected void configureFigure(IMapMode mm) {
         ScrollPane scrollpane = getScrollPane();
+        if(scrollpane==null){
+            scrollpane = scrollPane = new AnimatableScrollPane();
+        }
         scrollpane.setViewport(new FreeformViewport());
-        
-        Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
-            mm.DPtoLP(1), mm.DPtoLP(0));
-        Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
-        
-        scrollpane.setHorizontalScrollBar(
-            new ListScrollBar(Orientable.HORIZONTAL, insets, size, 
-            mm.DPtoLP(10), mm.DPtoLP(50)));
-        scrollpane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
-            mm.DPtoLP(10), mm.DPtoLP(50)));
-
-        scrollpane.setScrollBarVisibility(ScrollPane.AUTOMATIC);
+        scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
+        scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
         scrollpane.setLayoutManager(new OverlayScrollPaneLayout() );
 
         IFigure contents = new FreeformLayer();
@@ -105,8 +100,9 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
         scrollpane.setMinimumSize(new Dimension(SZ, SZ));
     
         this.setFont(FONT_TITLE);
-    }
-
+    }    
+   
+  
 	/**
 	 * Convenience method to registers the supplied listener to the scrollpane's 
 	 * vertical and horizonatl range models. 

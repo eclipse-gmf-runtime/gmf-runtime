@@ -18,6 +18,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -31,7 +32,7 @@ import org.eclipse.swt.SWTException;
  * Override for supporting anti-aliasing lines
  */
 public class ScalableFreeformLayeredPane
-	extends org.eclipse.draw2d.ScalableFreeformLayeredPane implements IMapMode {
+	extends org.eclipse.draw2d.ScalableFreeformLayeredPane implements IMapModeHolder {
 
 	boolean antiAlias = true;
 	private IMapMode mm;
@@ -40,7 +41,7 @@ public class ScalableFreeformLayeredPane
 	 * @return <code>IMapMode</code> that is used to map coordinate coordinates
 	 * from device to logical.
 	 */
-	protected IMapMode getMapMode() {
+	public IMapMode getMapMode() {
 		return mm;
 	}
 
