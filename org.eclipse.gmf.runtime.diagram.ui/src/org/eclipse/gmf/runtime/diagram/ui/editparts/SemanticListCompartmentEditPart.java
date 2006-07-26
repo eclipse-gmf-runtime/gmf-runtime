@@ -34,8 +34,8 @@ import org.eclipse.gmf.runtime.notation.SortingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * A List compartment Edit part that contains semantic edit parts.
- * A semantic edit part is an edit part that controls a semantic element, it does not 
+ * A List compartment Edit part that contains semantic edit parts. A semantic
+ * edit part is an edit part that controls a semantic element, it does not
  * control a Notation <code>View<code>. 
  * This list compartment is canonical by default, to turn off the canonical 
  * support just override the isCanonicalEnabled and return false
@@ -55,161 +55,198 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 
 abstract public class SemanticListCompartmentEditPart
-	extends ListCompartmentEditPart {
-	
-	/**
-	 * constructor
-	 * @param model the mdoel controlled by this edit part
-	 */
-	public SemanticListCompartmentEditPart(EObject model) {
-		super(model);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshChildren()
-	 */
-	protected void refreshChildren() {
-		int i;
-		GraphicalEditPart editPart;
-		Map modelToEditPart = new HashMap();
-		List _children = getChildren();
+    extends ListCompartmentEditPart {
 
-		for (i = 0; i < _children.size(); i++) {
-			editPart = (GraphicalEditPart)_children.get(i);
-			modelToEditPart.put(editPart.basicGetModel(), editPart);
-		}
+    /**
+     * constructor
+     * 
+     * @param model
+     *            the mdoel controlled by this edit part
+     */
+    public SemanticListCompartmentEditPart(EObject model) {
+        super(model);
+    }
 
-		List modelObjects = getModelChildren();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gef.editparts.AbstractEditPart#refreshChildren()
+     */
+    protected void refreshChildren() {
+        List childs = getChildren();
+        List modelObjects = getModelChildren();
+        int childrenSize = childs.size();
+        int modelObjectsSize = modelObjects.size();
+        if (childrenSize == 0 && modelObjectsSize == 0) {
+            return;
+        }
 
-		for (i = 0; i < modelObjects.size(); i++) {
-			EObject element  = (EObject)modelObjects.get(i);
-			//Do a quick check to see if editPart[i] == model[i]
-			if (i < _children.size()
-				&& (((GraphicalEditPart)_children.get(i)).basicGetModel()) == element)
-					continue;
+        int i;
+        GraphicalEditPart editPart;
+        Object model;
 
-			//Look to see if the EditPart is already around but in the wrong location
-			editPart = (GraphicalEditPart)modelToEditPart.get(element);
+        Map modelToEditPart = null;
 
-			if (editPart != null)
-				reorderChild (editPart, i);
-			else {
-				//An editpart for this model doesn't exist yet.  Create and insert one.
-				semanticChildAdded(element,i);
-			}
-		}
-		List trash = new ArrayList();
-		for (; i < _children.size(); i++)
-			trash.add(_children.get(i));
-		for (i = 0; i < trash.size(); i++) {
-			EditPart ep = (EditPart)trash.get(i);
-			removeChild(ep);
-		}
-	}
+        for (i = 0; i < modelObjectsSize; i++) {
+            model = modelObjects.get(i);
 
+            // Do a quick check to see if editPart[i] == model[i]
+            if (i < childrenSize
+                && ((GraphicalEditPart) childs.get(i)).basicGetModel() == model)
+                continue;
 
-	/**
-	 * @param child
-	 */
-	protected void semanticChildRemoved(EObject child){
-        if (children==null)
+            if (modelToEditPart == null) {
+                if (childrenSize == 0) {
+                    modelToEditPart = Collections.EMPTY_MAP;
+                } else {
+                    modelToEditPart = new HashMap();
+                    for (int j = 0; j < childrenSize; j++) {
+                        editPart = (GraphicalEditPart) childs.get(j);
+                        modelToEditPart.put(editPart.basicGetModel(), editPart);
+                    }
+                }
+            }
+
+            // Look to see if the EditPart is already around but in the wrong
+            // location
+            editPart = (GraphicalEditPart) modelToEditPart.get(model);
+
+            if (editPart != null)
+                reorderChild(editPart, i);
+            else {
+                // An editpart for this model doesn't exist yet. Create and
+                // insert one.
+                semanticChildAdded((EObject)model, i);
+            }
+        }
+
+        if (i < childrenSize) {
+            for (; i < childrenSize; i++) {
+                EditPart child = (EditPart) childs.get(i);
+                fireRemovingChild(child, i);
+                if (isActive()) {
+                    child.deactivate();
+                }
+                child.removeNotify();
+                removeChildVisual(child);
+                child.setParent(null);
+            }
+
+            if (i == 0) {
+                children = new ArrayList(2);
+            } else {
+                children = new ArrayList(childs.subList(0, modelObjectsSize));
+            }
+        }
+
+    }
+
+    /**
+     * @param child
+     */
+    protected void semanticChildRemoved(EObject child) {
+        if (children == null)
             return;
         for (Iterator iter = children.iterator(); iter.hasNext();) {
-			GraphicalEditPart ep = (GraphicalEditPart) iter.next();
-			if (ep.basicGetModel().equals(child)){
-				removeChild(ep);
-				break;
-			}
-		}
-	}
-	
-	/**
-	 * Updates the set of children views so that it
-	 * is in sync with the semantic children. This method is called 
-	 * in response to notification from the model.
-	 * <P>
-	 * The update is performed by comparing the exising views with the set of
-	 * semantic children returned from {@link #getViewChildren()}. Views whose
-	 * semantic element no longer exists are {@link #deleteViews(Iterator) removed}. 
-	 * New semantic children have their View {@link  #createViews(List)
-	 * created}.  Subclasses must override <code>getSemanticChildren()</code>.
-	 * <P>
-	 * Unlike <code>AbstractEditPart#refreshChildren()</code>, this refresh will not
-	 * reorder the view list to ensure both it and the semantic children are
-	 * in the same order since it is possible that this edit policy will handle
-	 * a specifc subset of the host's views.  
-	 * <P>
-	 * The host is refreshed if a view has created or deleted as a result of this
-	 * refresh.
-	 */
-	protected void refreshSemanticChildren() {
-		if (!isCanonicalEnabled())
-			return ; 
-		// Don't try to refresh children if the semantic element
-		// cannot be resolved.
-		if (resolveSemanticElement() == null) {
-			return;		
-		}
-		
-		//View viewChild;
-		EObject semanticChild;
-				
+            GraphicalEditPart ep = (GraphicalEditPart) iter.next();
+            if (ep.basicGetModel().equals(child)) {
+                removeChild(ep);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Updates the set of children views so that it is in sync with the semantic
+     * children. This method is called in response to notification from the
+     * model.
+     * <P>
+     * The update is performed by comparing the exising views with the set of
+     * semantic children returned from {@link #getViewChildren()}. Views whose
+     * semantic element no longer exists are
+     * {@link #deleteViews(Iterator) removed}. New semantic children have their
+     * View {@link  #createViews(List) created}. Subclasses must override
+     * <code>getSemanticChildren()</code>.
+     * <P>
+     * Unlike <code>AbstractEditPart#refreshChildren()</code>, this refresh
+     * will not reorder the view list to ensure both it and the semantic
+     * children are in the same order since it is possible that this edit policy
+     * will handle a specifc subset of the host's views.
+     * <P>
+     * The host is refreshed if a view has created or deleted as a result of
+     * this refresh.
+     */
+    protected void refreshSemanticChildren() {
+        if (!isCanonicalEnabled())
+            return;
+        // Don't try to refresh children if the semantic element
+        // cannot be resolved.
+        if (resolveSemanticElement() == null) {
+            return;
+        }				
 		//
 		// current EditParts
 		List editPartsChildren = getChildren();
-		List semanticChildren = new ArrayList(getModelChildren());
-
-		Iterator childrenIT = editPartsChildren.iterator();
-		List orphaned = new ArrayList();
-		while( childrenIT.hasNext() ) {
-			GraphicalEditPart eP = (GraphicalEditPart)childrenIT.next();
-			semanticChild = (EObject)eP.basicGetModel();
-			if ( semanticChildren.contains(semanticChild) ) {
-				semanticChildren.remove(semanticChild);
-			}
-			else {
-				orphaned.add(eP);
+		List modelChildren = getSemanticChildrenList();
+		if(editPartsChildren.size()==0 && modelChildren.size()==0){
+			return;
+		}
+		List semanticChildren = getModelChildren(modelChildren);
+		if (editPartsChildren.size() > 0) {
+			//View viewChild;		
+			semanticChildren = new ArrayList(semanticChildren);
+			Iterator childrenIT = editPartsChildren.iterator();
+			while (childrenIT.hasNext()) {
+				GraphicalEditPart eP = (GraphicalEditPart) childrenIT.next();
+				semanticChildren.remove(eP.basicGetModel());
 			}
 		}
-		
+
 		//
 		// create a view for each remaining semantic element.
-		if ( !semanticChildren.isEmpty()) {
+		if (!semanticChildren.isEmpty()) {
 			for (Iterator iter = semanticChildren.iterator(); iter.hasNext();) {
 				EObject element = (EObject) iter.next();
-				semanticChildAdded(element,-1);
+				semanticChildAdded(element, -1);
 			}
 		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.EditPart#activate()
-	 */
-	public void activate() {
-		super.activate();
-		refreshSemanticChildren();
-	}
-	
-	/**
-	 * This method will be called when a child is added to the
-	 * EditPart's model id Canonical is enabled
-	 * @param child	the child being added, the index where its edit part should be created 
-	 * @param index
-	 */
-	abstract protected void semanticChildAdded(EObject child,int index);
-	
-	/**
-	 * Returns a list of all semantic children inside this editpart's model
-	 * @return
-	 */
-	abstract protected List getSemanticChildrenList();
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gef.EditPart#activate()
+     */
+    public void activate() {
+        super.activate();
+        refreshSemanticChildren();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handleNotificationEvent(org.eclipse.emf.common.notify.Notification)
-	 */
-	protected void handleNotificationEvent(Notification event) {
-		Object feature = event.getFeature();
+    /**
+     * This method will be called when a child is added to the EditPart's model
+     * id Canonical is enabled
+     * 
+     * @param child
+     *            the child being added, the index where its edit part should be
+     *            created
+     * @param index
+     */
+    abstract protected void semanticChildAdded(EObject child, int index);
+
+    /**
+     * Returns a list of all semantic children inside this editpart's model
+     * 
+     * @return
+     */
+    abstract protected List getSemanticChildrenList();
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#handleNotificationEvent(org.eclipse.emf.common.notify.Notification)
+     */
+    protected void handleNotificationEvent(Notification event) {
+        Object feature = event.getFeature();
 		if (hasModelChildrenChanged(event)){
 			semanticChildrenListChanged(event);
 		}
@@ -221,151 +258,206 @@ abstract public class SemanticListCompartmentEditPart
 			refreshSemanticChildren();
 		}
 		super.handleNotificationEvent(event);
-	}
-	
-	/**
-	 * called by the <code>handlePropertyChangeEvent</code> when the semantic children list 
-	 * is changed, then this method will check if the change was add or delete of an element
-	 * and calls either <code>semanticChildAdded</code> or <code>semanticChildDeleted</code>
-	 * this could be used to implement a canonical list without a canonical edit policy
-	 * @param evt
-	 */
-	protected void semanticChildrenListChanged(Notification event) {
-		if (!isCanonicalEnabled())
-			return;
-		if (NotificationUtil.isElementAddedToSlot(event) ||
-			NotificationUtil.isMove(event)){
-			refreshChildren();
-		}
-		else if(NotificationUtil.isElementRemovedFromSlot(event) &&
-				event.getOldValue() instanceof  EObject){
-				semanticChildRemoved((EObject)event.getOldValue());
-		}
-	}
-	
-	/**
-	 * indicated is canonical is enabled or not
-	 * Canonical is disabled if the edit part's view is collapsed or hidden
-	 * @return
-	 */
-	protected boolean isCanonicalEnabled() {
-		DrawerStyle dstyle = (DrawerStyle) ((View)getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
-		boolean isCollapsed = dstyle == null ? false : dstyle.isCollapsed();
-		
-		if ( isCollapsed ) {
-			return false;
-		}
-		
-		return ((View)getModel()).isVisible();
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getSortedChildren()
-	 */
-	protected List getSortedChildren() {
-		SortingStyle style = (SortingStyle)  ((View)getModel()).getStyle(NotationPackage.eINSTANCE.getSortingStyle());
+    /**
+     * called by the <code>handlePropertyChangeEvent</code> when the semantic
+     * children list is changed, then this method will check if the change was
+     * add or delete of an element and calls either
+     * <code>semanticChildAdded</code> or <code>semanticChildDeleted</code>
+     * this could be used to implement a canonical list without a canonical edit
+     * policy
+     * 
+     * @param evt
+     */
+    protected void semanticChildrenListChanged(Notification event) {
+        if (!isCanonicalEnabled())
+            return;
+        if (NotificationUtil.isElementAddedToSlot(event)
+            || NotificationUtil.isMove(event)) {
+            refreshChildren();
+        } else if (NotificationUtil.isElementRemovedFromSlot(event)
+            && event.getOldValue() instanceof EObject) {
+            semanticChildRemoved((EObject) event.getOldValue());
+        }
+    }
 
-		if (style != null) {
-			Sorting sorting = style.getSorting();
-			if (Sorting.NONE_LITERAL == sorting) {
-				
-				return getSemanticChildrenList();
-				
-			} else if (Sorting.MANUAL_LITERAL == sorting) {
-	
-				List allChildren = getSemanticChildrenList();
-				// Return the empty list if the model children have not yet been
-				// created.
-				if (allChildren.isEmpty())
-					return allChildren;
-				
-				List sortedChildren = style.eIsSet(NotationPackage.eINSTANCE.getSortingStyle_SortedObjects())
-					? style.getSortedObjects() 
-					: Collections.EMPTY_LIST;
-	
-				List sorted = new ArrayList();
-				
-				// Get the corresponding views...
-				Iterator i = sortedChildren.iterator();
-				while(i.hasNext()) {
-					EObject eObject = (EObject) i.next();
-					if (allChildren.contains(eObject))
-						sorted.add(eObject);
-				}	
-				
-				// Add any remaining model children to the end
-				for (int j = 0; j < allChildren.size(); j++) {
-					EObject element = (EObject) allChildren.get(j);
-					if (!sorted.contains(element))
-						sorted.add(element);
-				}
-				
-				return sorted;
-				
-			} else if (Sorting.AUTOMATIC_LITERAL == sorting) {
-				Map sortingKeys = style.eIsSet(NotationPackage.eINSTANCE.getSortingStyle_SortingKeys())
-					? style.getSortingKeys() 
-					: Collections.EMPTY_MAP;
-				return getChildrenSortedBy(sortingKeys);
-			}
-		}
-		
-		return getSemanticChildrenList();		
-	}
-	
-	/**
-	 * Returns the model children sorted by the order specified by Properties.ID_SORTING_KEYS.
-	 * This is used to support dynamic list compartment sorting.
-	 * @param sortingKeys
-	 * @return the model children sorted
-	 */
-	protected List getChildrenSortedBy(Map sortingKeys) {
-		List allChildren = new ArrayList(getSemanticChildrenList());
-		// Currently only one sorting key is supported.
-		if (sortingKeys != null && !sortingKeys.isEmpty()) {
-			Collection keySet = sortingKeys.keySet();
-			Iterator i = keySet.iterator();
-			String name = (String) i.next();
-			SortingDirection direction = (SortingDirection) sortingKeys.get(name);
-			
-			Comparator comparator = getComparator(name, direction);
-			
-			if (comparator != null)
-				Collections.sort(allChildren, getComparator(name, direction));									
-		} 
-		return allChildren;
-	}
+    /**
+     * indicated is canonical is enabled or not Canonical is disabled if the
+     * edit part's view is collapsed or hidden
+     * 
+     * @return
+     */
+    protected boolean isCanonicalEnabled() {
+        DrawerStyle dstyle = (DrawerStyle) ((View) getModel())
+            .getStyle(NotationPackage.Literals.DRAWER_STYLE);
+        boolean isCollapsed = dstyle == null ? false
+            : dstyle.isCollapsed();
 
+        if (isCollapsed) {
+            return false;
+        }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getFilteredChildren()
-	 */
-	protected List getFilteredChildren() {
-		Object model = getModel();
-		if (model instanceof View){
-			View view = (View)model;
-			FilteringStyle style = (FilteringStyle)  view.getStyle(NotationPackage.eINSTANCE.getFilteringStyle());
-			if (style != null) {
-				Filtering filtering = style.getFiltering();
-				if (Filtering.NONE_LITERAL == filtering) {
-					
-					return Collections.EMPTY_LIST;
-					
-				} else if (Filtering.MANUAL_LITERAL == filtering) {
-					
-					List filteredChildren = style.eIsSet(NotationPackage.eINSTANCE.getFilteringStyle_FilteredObjects())
-						? style.getFilteredObjects() 
-						: Collections.EMPTY_LIST;
-					return filteredChildren;	
-				
-				} else if (Filtering.AUTOMATIC_LITERAL == filtering) {
-					List filteringKeys = style.eIsSet(NotationPackage.eINSTANCE.getFilteringStyle_FilteringKeys())
-						? style.getFilteringKeys() 
-						: Collections.EMPTY_LIST;
-					return getChildrenFilteredBy(filteringKeys);
-				}
-			}
-		}
-		return Collections.EMPTY_LIST;
-	}
+        return ((View) getModel()).isVisible();
+    }
+    
+    /* 
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getModelChildren()
+     */
+    protected List getModelChildren() {
+    	return getModelChildren(getSemanticChildrenList());
+    }
+    
+    /* 
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getSortedChildren(java.util.List)
+     */
+    List getSortedChildren(List modelChildren) {
+        SortingStyle style = (SortingStyle) ((View) getModel())
+            .getStyle(NotationPackage.Literals.SORTING_STYLE);
+
+        if (style != null) {
+            Sorting sorting = style.getSorting();
+            if (Sorting.NONE_LITERAL == sorting) {
+
+                return modelChildren;
+
+            } else if (Sorting.MANUAL_LITERAL == sorting) {
+
+                // Return the empty list if the model children have not yet been
+                // created.
+                if (modelChildren.isEmpty())
+                    return modelChildren;
+
+                List sortedChildren = style.eIsSet(NotationPackage.Literals
+                    .SORTING_STYLE__SORTED_OBJECTS) ? style
+                    .getSortedObjects()
+                    : Collections.EMPTY_LIST;
+
+                if (sortedChildren.isEmpty()) {
+                    return modelChildren;
+                }
+
+                List sorted = new ArrayList();
+
+                // Get the corresponding views...
+                Iterator i = sortedChildren.iterator();
+                while (i.hasNext()) {
+                    EObject eObject = (EObject) i.next();
+                    if (modelChildren.contains(eObject))
+                        sorted.add(eObject);
+                }
+
+                // Add any remaining model children to the end
+                int size = modelChildren.size();
+                for (int j = 0; j < size; j++) {
+                    EObject element = (EObject) modelChildren.get(j);
+                    if (!sorted.contains(element))
+                        sorted.add(element);
+                }
+
+                return sorted;
+
+            } else if (Sorting.AUTOMATIC_LITERAL == sorting) {
+                Map sortingKeys = style.eIsSet(NotationPackage.Literals
+                    .SORTING_STYLE__SORTING_KEYS) ? style.getSortingKeys()
+                    : Collections.EMPTY_MAP;
+                return (sortingKeys.isEmpty()) ? getSemanticChildrenList()
+                    : getChildrenSortedBy(sortingKeys, modelChildren);
+            }
+        }
+
+        return getSemanticChildrenList();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getSortedChildren()
+     */
+    protected List getSortedChildren() {
+        List modelChildren = getSemanticChildrenList();
+        if (modelChildren.isEmpty() == false) {
+            return getSortedChildren(modelChildren);
+        }
+        return modelChildren;
+    }
+
+    /**
+     * Returns the model children sorted by the order specified by
+     * Properties.ID_SORTING_KEYS. This is used to support dynamic list
+     * compartment sorting.
+     * 
+     * @param sortingKeys
+     * @return the model children sorted
+     */
+    protected List getChildrenSortedBy(Map sortingKeys) {
+        if (sortingKeys != null && !sortingKeys.isEmpty()) {
+            List allChildren = new ArrayList(getSemanticChildrenList());
+            // Currently only one sorting key is supported.
+
+            Collection keySet = sortingKeys.keySet();
+            Iterator i = keySet.iterator();
+            String name = (String) i.next();
+            SortingDirection direction = (SortingDirection) sortingKeys
+                .get(name);
+
+            Comparator comparator = getComparator(name, direction);
+
+            if (comparator != null)
+                Collections.sort(allChildren, comparator);
+            return allChildren;
+        }
+
+        return getSemanticChildrenList();
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getFilteredChildren()
+     */
+    protected List getFilteredChildren() {
+        List modelChildren = getSemanticChildrenList();
+        if (modelChildren.isEmpty() == false) {
+            return getFilteredChildren(modelChildren);
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    /* 
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getFilteredChildren(java.util.List)
+     */
+    List getFilteredChildren(List modelChildren) {
+        FilteringStyle style = (FilteringStyle) ((View) getModel())
+            .getStyle(NotationPackage.Literals.FILTERING_STYLE);
+        if (style != null) {
+            Filtering filtering = style.getFiltering();
+            if (Filtering.NONE_LITERAL == filtering) {
+
+                return Collections.EMPTY_LIST;
+
+            } else if (Filtering.MANUAL_LITERAL == filtering) {
+
+                List filteredChildren = style.eIsSet(NotationPackage.Literals
+                    .FILTERING_STYLE__FILTERED_OBJECTS) ? style
+                    .getFilteredObjects()
+                    : Collections.EMPTY_LIST;
+                return filteredChildren;
+
+            } else if (Filtering.AUTOMATIC_LITERAL == filtering) {
+                List filteringKeys = style.eIsSet(NotationPackage.Literals
+                    .FILTERING_STYLE__FILTERING_KEYS) ? style
+                    .getFilteringKeys()
+                    : Collections.EMPTY_LIST;
+                return (filteringKeys.isEmpty()) ? filteringKeys
+                    : getChildrenFilteredBy(filteringKeys, modelChildren);
+            }
+        }
+
+        return Collections.EMPTY_LIST;
+    }
 }
