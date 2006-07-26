@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
+import org.eclipse.gmf.runtime.emf.clipboard.core.CopyObjects;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 /**

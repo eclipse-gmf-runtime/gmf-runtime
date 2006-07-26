@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.clipboard.core.CopyObjects;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 
 import com.ibm.icu.util.StringTokenizer;

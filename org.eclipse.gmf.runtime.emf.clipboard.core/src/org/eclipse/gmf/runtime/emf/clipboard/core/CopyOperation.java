@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
-import org.eclipse.gmf.runtime.emf.clipboard.core.internal.CopyObjects;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.ResourceInfoProcessor;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SavingEMFResource;
 import org.eclipse.gmf.runtime.emf.clipboard.core.internal.SerializationEMFResource;
@@ -116,15 +115,21 @@ public class CopyOperation
 			return (overrideCopyOperation != null) ? overrideCopyOperation
 				.copy() : ""; //$NON-NLS-1$
 		}
-		CopyObjects copyObjects = getAuxiliaryObjects();
-		if (isCancelled()) {
-			throwCancelException();
-		}
-		
-		return saveEObjects(copyObjects, COPY_URI, "UTF-8", //$NON-NLS-1$
-			SerializationEMFResource.SAVE_OPTIONS, getEObjectsHintMap());
+        return doCopy();
+
 	}
 
+    protected String doCopy() throws Exception{
+        CopyObjects copyObjects = getAuxiliaryObjects();
+        if (isCancelled()) {
+            throwCancelException();
+        }
+        
+        return saveEObjects(copyObjects, COPY_URI, "UTF-8", //$NON-NLS-1$
+            SerializationEMFResource.SAVE_OPTIONS, getEObjectsHintMap());
+    }
+
+    
 	private String saveEObjects(CopyObjects copyObjects, URI uri,
 		String encoding, Map saveOptions, Map hints) throws Exception {
 		SavingEMFResource res = null;
@@ -330,7 +335,7 @@ public class CopyOperation
 		return getAuxiliaryObjects().combinedCopyAlwaysSet;
 	}
 	
-	private CopyObjects getAuxiliaryObjects() {
+	protected CopyObjects getAuxiliaryObjects() {
 		CopyObjects copyObjects = new CopyObjects(getEObjects());
 		extractCopyAlwaysObjects(copyObjects);
 		extractCopyParentsObjects(copyObjects);
