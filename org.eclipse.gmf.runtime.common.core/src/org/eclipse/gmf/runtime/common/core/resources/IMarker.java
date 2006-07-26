@@ -9,14 +9,26 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.common.ui.resources;
+package org.eclipse.gmf.runtime.common.core.resources;
 
 /**
  * Convenience interface for the marker type and its attributes
  * 
  * @author Michael Yee
  */
-public interface IMarker extends org.eclipse.gmf.runtime.common.core.resources.IMarker{
+public interface IMarker {
 
-	// UI version of the IMarker
+	/** marker type */
+	public static final String TYPE = "org.eclipse.gmf.runtime.common.ui.services.marker"; //$NON-NLS-1$
+
+	/** Separator between multiple IDs in the {@link #ELEMENT_ID}attribute. */
+	public static final String ELEMENT_ID_SEPARATOR = " "; //$NON-NLS-1$
+
+	/*
+	 * ====================================================================
+	 * Marker attributes:
+	 * ====================================================================
+	 */
+	/** element guid */
+	public static final String ELEMENT_ID = "elementId"; //$NON-NLS-1$
 }

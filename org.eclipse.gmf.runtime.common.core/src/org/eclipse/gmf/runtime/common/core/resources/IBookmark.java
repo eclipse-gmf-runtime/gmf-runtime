@@ -9,8 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.common.ui.resources;
-
+package org.eclipse.gmf.runtime.common.core.resources;
 
 /**
  * Convenience interface for the bookmark type and its attributes
@@ -18,7 +17,14 @@ package org.eclipse.gmf.runtime.common.ui.resources;
  * @author bagrodia Created on: Oct 2, 2003
  */
 public interface IBookmark
-	extends org.eclipse.gmf.runtime.common.core.resources.IBookmark {
+	extends IMarker {
 
-	// UI version of IBookmark
+	/** bookmark type */
+	public static final String TYPE = "org.eclipse.gmf.runtime.common.ui.services.bookmark"; //$NON-NLS-1$
+
+	/*
+	 * ====================================================================
+	 * Marker attributes:
+	 * ====================================================================
+	 */
 }
