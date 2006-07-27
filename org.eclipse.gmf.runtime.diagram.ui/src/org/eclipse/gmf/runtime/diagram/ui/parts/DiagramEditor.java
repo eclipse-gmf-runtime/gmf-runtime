@@ -1009,6 +1009,7 @@ public abstract class DiagramEditor
      */
     protected void clearGraphicalViewerContents() {
         if (getDiagramGraphicalViewer().getContents() != null) {
+            getDiagramGraphicalViewer().getContents().deactivate();
             getDiagramGraphicalViewer().getContents().removeNotify();
         }
         getDiagramGraphicalViewer().setContents(null);
