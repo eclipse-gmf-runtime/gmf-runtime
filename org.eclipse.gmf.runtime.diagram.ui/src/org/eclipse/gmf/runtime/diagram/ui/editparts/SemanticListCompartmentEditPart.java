@@ -283,7 +283,7 @@ abstract public class SemanticListCompartmentEditPart
     }
 
     /**
-     * indicated is canonical is enabled or not Canonical is disabled if the
+     * indicated if canonical is enabled or not Canonical is disabled if the
      * edit part's view is collapsed or hidden
      * 
      * @return
@@ -299,6 +299,16 @@ abstract public class SemanticListCompartmentEditPart
         }
 
         return ((View) getModel()).isVisible();
+    }
+    
+    /**
+     * indicated if canonical is enabled or not Canonical is disabled if the
+     * edit part's view is collapsed or hidden
+     * 
+     * @return
+     */
+    public boolean isCanonicalOn() {
+        return isCanonicalEnabled();
     }
     
     /* 
@@ -459,5 +469,14 @@ abstract public class SemanticListCompartmentEditPart
         }
 
         return Collections.EMPTY_LIST;
+    }
+
+    protected boolean hasModelChildrenChanged(Notification evt) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean isCanonical() {
+        return true;
     }
 }

@@ -280,8 +280,8 @@ public abstract class GraphicalEditPart
 			}
 		}
 		super.deactivate();
-        
-        if (cachedFontData != null) {
+		
+		if (cachedFontData != null) {
             getResourceManager().destroyFont(
                 FontDescriptor.createFrom(cachedFontData));
             cachedFontData = null;
@@ -1152,7 +1152,7 @@ public abstract class GraphicalEditPart
 	 * @return <tt>true</tt> a canonical editpolicy has been installed on this editpart
 	 * and it is active; otherwise <tt>false</tt>.
 	 */
-	public final boolean isCanonical() {
+	public boolean isCanonical() {
 		CanonicalEditPolicy policy = (CanonicalEditPolicy)getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
 		return policy == null ? false : policy.isActive();
 	}

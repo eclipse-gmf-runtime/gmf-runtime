@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IInsertableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -94,7 +95,14 @@ public class ComponentEditPolicy
 	 */
 	protected boolean shouldDeleteSemantic() {
 		EditPart parent = getHost().getParent();
-		if (parent instanceof IGraphicalEditPart) {
+        if (parent instanceof SemanticListCompartmentEditPart){
+            SemanticListCompartmentEditPart semListCompartment  = 
+                (SemanticListCompartmentEditPart)parent;
+            return semListCompartment.isCanonicalOn();
+            
+        }
+        
+        if (parent instanceof IGraphicalEditPart) {
 			CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
 			if ( cep != null ) {
 				return cep.isEnabled();						
