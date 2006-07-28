@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.printing.win32
 Bundle-Name: %Fragment.name
 Bundle-Vendor: %Fragment.providerName
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Localization: printingWin32Fragment
 Bundle-NativeCode: os/win32/x86/de/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=de,
  os/win32/x86/es/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=es,
