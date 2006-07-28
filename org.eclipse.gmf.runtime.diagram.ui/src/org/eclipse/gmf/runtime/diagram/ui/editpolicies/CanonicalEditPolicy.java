@@ -665,6 +665,13 @@ implements NotificationListener {
 	 * @return <tt>true</tt>
 	 */
 	public boolean isEnabled() {
+        // if the editing domain is null then there is no point in enabling the edit policy
+        // the editing domain could be null because the view is detached or if the host is detached
+        EditPart host = getHost();
+        if ( host.getRoot()==null ||
+            (host instanceof IGraphicalEditPart &&  ((IGraphicalEditPart)host).getEditingDomain()==null)){
+            return false;
+        }
 		DrawerStyle dstyle = (DrawerStyle) ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
 		boolean isCollapsed = dstyle == null ? false : dstyle.isCollapsed();
 		
