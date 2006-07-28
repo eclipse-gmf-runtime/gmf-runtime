@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -667,9 +668,7 @@ implements NotificationListener {
 	public boolean isEnabled() {
         // if the editing domain is null then there is no point in enabling the edit policy
         // the editing domain could be null because the view is detached or if the host is detached
-        EditPart host = getHost();
-        if ( host.getRoot()==null ||
-            (host instanceof IGraphicalEditPart &&  ((IGraphicalEditPart)host).getEditingDomain()==null)){
+        if ( TransactionUtil.getEditingDomain((EObject)getHost().getModel())==null){
             return false;
         }
 		DrawerStyle dstyle = (DrawerStyle) ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
