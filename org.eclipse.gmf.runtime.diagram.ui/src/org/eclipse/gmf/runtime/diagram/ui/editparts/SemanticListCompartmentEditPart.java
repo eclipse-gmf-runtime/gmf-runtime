@@ -471,11 +471,9 @@ abstract public class SemanticListCompartmentEditPart
         return Collections.EMPTY_LIST;
     }
 
-    protected boolean hasModelChildrenChanged(Notification evt) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#isCanonical()
+     */
     public boolean isCanonical() {
         return true;
     }
