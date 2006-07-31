@@ -273,6 +273,11 @@ public class TreeInlineTextEditor {
 	 * starts the editing process
 	 */
 	public void startEdit() {
+		while (Display.getCurrent().readAndDispatch()) {
+			// process handler.setEnabled(false) queued in
+			// hide() before re-entering content assist mode
+		}
+
 		if (canEdit()) {
 			cancelEdit();
 			setTreeItem(getTree().getSelection()[0]);
@@ -365,10 +370,6 @@ public class TreeInlineTextEditor {
 	 * displays the text editing widget
 	 */
 	private void show() {
-		while (Display.getCurrent().readAndDispatch()) {
-			// process handler.setEnabled(false) queued in
-			// hide() before re-entering content assist mode
-		}
 		uninstallContentAssist(false);
 
 		if (getTreeItem() != null) {
