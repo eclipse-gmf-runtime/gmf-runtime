@@ -47,6 +47,7 @@ import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
@@ -77,7 +78,7 @@ public class DiagramRootEditPart
 	 * super must be called first.  So, this pattern allows us to set the mapmode into this container after
 	 * super is called, but still have the scalable layered pane initialized with the mapmode value.
 	 */
-	private class WrapperMapMode implements IMapMode {
+	private class WrapperMapMode implements IMapModeHolder {
 
 		public WrapperMapMode() {
 			super();
@@ -114,6 +115,10 @@ public class DiagramRootEditPart
 		 */
 		public Translatable LPtoDP(Translatable t) {
 			return containedMM.LPtoDP(t);
+		}
+		
+		public IMapMode getMapMode() {
+			return containedMM;
 		}
 		
 	}
