@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -42,173 +43,178 @@ import org.eclipse.ui.IActionFilter;
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
 public class TreeEditPart
-	extends AbstractTreeEditPart
-	implements NotificationListener, IEditingDomainProvider {
+    extends AbstractTreeEditPart
+    implements NotificationListener, IEditingDomainProvider {
 
-	/** the element parser */
-	private IParser parser;
+    /** the element parser */
+    private IParser parser;
 
-	/** the element parser */
-	private IAdaptable referenceAdapter;
-	
+    /** the element parser */
+    private IAdaptable referenceAdapter;
+    
     /**
      * Cache the editing domain after it is retrieved.
      */
     private TransactionalEditingDomain editingDomain;
 
-	/**
-	 * @param model
-	 */
-	public TreeEditPart(Object model) {
-		super(model);
-		
-		EObject reference = ((View)model).getElement();
-		if (reference == null) {
-		
-			this.referenceAdapter = new EObjectAdapter((EObject)model);
-		} else {
-			this.referenceAdapter =
-				new EObjectAdapter(reference);
-		}
-	}
+    /**
+     * @param model
+     */
+    public TreeEditPart(Object model) {
+        super(model);
+        
+        EObject reference = ((View)model).getElement();
+        if (reference == null) {
+        
+            this.referenceAdapter = new EObjectAdapter((EObject)model);
+        } else {
+            this.referenceAdapter =
+                new EObjectAdapter(reference);
+        }
+    }
 
-	/**
-	 * @see org.eclipse.gef.EditPart#activate()
-	 */
-	public void activate() {
-		super.activate();
+    /**
+     * @see org.eclipse.gef.EditPart#activate()
+     */
+    public void activate() {
+        super.activate();
 
-		getDiagramEventBroker().addNotificationListener((View)getModel(),this);
-		getDiagramEventBroker().addNotificationListener(getSemanticElement(),this);
-	}
+        getDiagramEventBroker().addNotificationListener((View)getModel(),this);
+        getDiagramEventBroker().addNotificationListener(getSemanticElement(),this);
+    }
 
-	/**
-	 * @see org.eclipse.gef.EditPart#deactivate()
-	 */
-	public void deactivate() {
-		getDiagramEventBroker().removeNotificationListener((View)getModel(),this);
-		getDiagramEventBroker().removeNotificationListener(getSemanticElement(),this);
-		super.deactivate();
-	}
+    /**
+     * @see org.eclipse.gef.EditPart#deactivate()
+     */
+    public void deactivate() {
+        getDiagramEventBroker().removeNotificationListener((View)getModel(),this);
+        getDiagramEventBroker().removeNotificationListener(getSemanticElement(),this);
+        super.deactivate();
+    }
 
-	/**
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-	 */
-	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
-	}
+    /**
+     * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
+     */
+    protected void createEditPolicies() {
+        installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
+    }
 
-	/** gets the model as a <code>View</code>
-	 * @return View
-	 */
-	protected View getNotationView() {
-		if (getModel() instanceof View)
-			return (View)getModel();
-		return null;
-	}
+    /** gets the model as a <code>View</code>
+     * @return View
+     */
+    protected View getNotationView() {
+        if (getModel() instanceof View)
+            return (View)getModel();
+        return null;
+    }
 
-	/** Return the editpart's underlying semantic element. */
-	protected EObject getSemanticElement() {
-		return ViewUtil.resolveSemanticElement((View)getModel());
-	}
+    /** Return the editpart's underlying semantic element. */
+    protected EObject getSemanticElement() {
+        return ViewUtil.resolveSemanticElement((View)getModel());
+    }
 
-	/**
-	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getImage()
-	 */
-	protected Image getImage() {
-		if (referenceAdapter == null){
-			return null;
-		}
-		IconOptions options = new IconOptions();
-		options.set(IconOptions.GET_STEREOTYPE_IMAGE_FOR_ELEMENT);
-		return IconService.getInstance().getIcon(referenceAdapter, options.intValue());
-	}
+    /**
+     * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getImage()
+     */
+    protected Image getImage() {
+        if (referenceAdapter == null){
+            return null;
+        }
+        IconOptions options = new IconOptions();
+        options.set(IconOptions.GET_STEREOTYPE_IMAGE_FOR_ELEMENT);
+        return IconService.getInstance().getIcon(referenceAdapter, options.intValue());
+    }
 
-	/**
-	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getText()
-	 */
-	protected String getText() {
-		if (getParser() != null)
-			return getParser().getPrintString(referenceAdapter,
-				ParserOptions.NONE.intValue());
-		EObject eObject = ((View) getModel()).getElement();
-		if (eObject == null) {
-			return ""; //$NON-NLS-1$
-		}
-		String name = EMFCoreUtil.getName(eObject);
-		return name == null ? "" : name; //$NON-NLS-1$
-	}
+    /**
+     * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getText()
+     */
+    protected String getText() {
+        if (getParser() != null)
+            return getParser().getPrintString(referenceAdapter,
+                ParserOptions.NONE.intValue());
+        EObject eObject = ((View) getModel()).getElement();
+        if (eObject == null) {
+            return ""; //$NON-NLS-1$
+        }
+        String name = EMFCoreUtil.getName(eObject);
+        return name == null ? "" : name; //$NON-NLS-1$
+    }
 
-	/**
-	 * Method getParser.
-	 * @return IParser
-	 */
-	private IParser getParser() {
-		if (parser == null) {
-			if (referenceAdapter != null && referenceAdapter.getAdapter(EObject.class) != null)
-				parser = ParserService.getInstance().getParser(referenceAdapter);
-		}
-		return parser;
-	}
+    /**
+     * Method getParser.
+     * @return IParser
+     */
+    private IParser getParser() {
+        if (parser == null) {
+            if (referenceAdapter != null && referenceAdapter.getAdapter(EObject.class) != null)
+                parser = ParserService.getInstance().getParser(referenceAdapter);
+        }
+        return parser;
+    }
 
-	/**
-	 * Handles the passed property changed event only if the editpart's view is not deleted
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-	 */
-	public final void notifyChanged(Notification event) {
+    /**
+     * Handles the passed property changed event only if the editpart's view is not deleted
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public final void notifyChanged(Notification event) {
         // Receiving an event while a view is deleted could only happen during "undo" of view creation,
         // However, event handlers should be robust by using the event's value and not trying to read 
         // the value from the model
         if ((((View)getModel()).eResource() != null))
             handleNotificationEvent(event);
-	}
+    }
 
-	/**
-	 * Handles the supplied notification event. 
-	 * @param event
-	 */
-	protected void handleNotificationEvent( Notification notification ) {
-		if (NotationPackage.Literals.VIEW__ELEMENT==notification.getFeature()) {
-			reactivateSemanticElement();
-		} else{
-			refreshVisuals();
-		}
-	}
-	
-	/**
-	 * deactivates, activates then refreshes the editpart
-	 */
-	protected void reactivateSemanticElement() {
-		deactivate();
-		activate();
-		refresh();
-	}
+    /**
+     * Handles the supplied notification event. 
+     * @param event
+     */
+    protected void handleNotificationEvent( Notification notification ) {
+        if (NotationPackage.eINSTANCE.getView_Element()==notification.getFeature()) {
+            reactivateSemanticElement();
+        } else{
+            refreshVisuals();
+        }
+    }
+    
+    /**
+     * deactivates, activates then refreshes the editpart
+     */
+    protected void reactivateSemanticElement() {
+        deactivate();
+        activate();
+        refresh();
+    }
 
-	/**
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(Class)
-	 */
-	public Object getAdapter(Class key) {
-		// Adapt to IActionFilter
-		if (key == IActionFilter.class) {
-			return ActionFilterService.getInstance();
-		}
-		
-		Object model = getModel();
-		// Adapt to IView
-		if (key.isInstance(model)) {
-			return model;
-		}
+    /**
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(Class)
+     */
+    public Object getAdapter(Class key) {
+        // Adapt to IActionFilter
+        if (key == IActionFilter.class) {
+            return ActionFilterService.getInstance();
+        }
+        
+        Object model = getModel();
+        // Adapt to IView
+        if (key.isInstance(model)) {
+            return model;
+        }
 
-		if (model != null && model instanceof View) {
-			// Adapt to semantic element
-			EObject semanticObject = ViewUtil.resolveSemanticElement((View)model);
-			if (key.isInstance(semanticObject)) {
-				return semanticObject;
-			}
-		}
-		return super.getAdapter(key);
-	}
-	
+        if (model != null && model instanceof View) {
+            // Adapt to semantic element
+            EObject semanticObject = ViewUtil.resolveSemanticElement((View)model);
+            if (key.isInstance(semanticObject)) {
+                return semanticObject;
+            }
+        }
+
+        Object adapter = Platform.getAdapterManager().getAdapter(this, key);
+        if (adapter != null)
+            return adapter;
+
+        return super.getAdapter(key);
+    }
+    
     /**
      * Derives my editing domain from my diagram element. Subclasses may
      * override.
