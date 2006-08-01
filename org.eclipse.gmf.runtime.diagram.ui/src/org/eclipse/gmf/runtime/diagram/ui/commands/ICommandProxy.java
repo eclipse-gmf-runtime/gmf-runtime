@@ -43,7 +43,12 @@ public class ICommandProxy extends Command {
 		this.iCommand = iCommand;
 	}
 
-	/**
+	public void dispose() {
+        super.dispose();
+        iCommand.dispose();
+    }
+
+    /**
 	 * gets the warapped <code>ICommand</code>
 	 * @return the wrapped command
 	 */

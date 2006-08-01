@@ -87,4 +87,9 @@ public class CommandProxy
         return command.canExecute();
     }
 
+    public void dispose() {
+        super.dispose();
+        command.dispose();
+    }
+
 }
