@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -169,7 +168,7 @@ public class TreeEditPart
 	 * @param event
 	 */
 	protected void handleNotificationEvent( Notification notification ) {
-		if (NotationPackage.eINSTANCE.getView_Element()==notification.getFeature()) {
+		if (NotationPackage.Literals.VIEW__ELEMENT==notification.getFeature()) {
 			reactivateSemanticElement();
 		} else{
 			refreshVisuals();
@@ -207,11 +206,6 @@ public class TreeEditPart
 				return semanticObject;
 			}
 		}
-
-		Object adapter = Platform.getAdapterManager().getAdapter(this, key);
-		if (adapter != null)
-			return adapter;
-
 		return super.getAdapter(key);
 	}
 	
