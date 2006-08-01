@@ -20,7 +20,7 @@ import org.eclipse.draw2d.graph.Subgraph;
  */
 
 public class VirtualNode
-    extends Subgraph {
+    extends AdvancedSubGraph {
 
     /**
      * @param data
@@ -36,5 +36,6 @@ public class VirtualNode
     public VirtualNode(Object data, Subgraph parent) {
         super(data, parent);
     }
+    
 
 }

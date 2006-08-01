@@ -65,9 +65,7 @@ public class CompositeDirectedGraphLayout
             createVirtualNodes(nodes, edges, virtualNodesNodes);
             NodeList vituralNodes = virtualNodesNodes.getVirtualNodes();
             int size = vituralNodes.size();
-/*            if (size==1 && nodes.size()==1){
-                nodes = ((VirtualNode)vituralNodes.get(0)).members;
-            }else*/ if (size > 0){
+            if (size > 0){
                 edges = virtualNodesNodes.getEdges();
                 for (Iterator iter = vituralNodes.iterator(); iter.hasNext();) {
                     Subgraph virtualNode = (Subgraph) iter.next();
@@ -80,13 +78,19 @@ public class CompositeDirectedGraphLayout
         Map nodeToOutGoing = new HashMap();
         Map nodeToIncomingGoing = new HashMap();
         removeDisconnectedEdges(nodes, nodeToOutGoing, nodeToIncomingGoing);
-                 
         if (nodesSize >= 2){
+            Node parent  = getParent(nodes.getNode(0));
             DirectedGraph g = new DirectedGraph();
             g.nodes = nodes;
             g.edges = edges;
             DirectedGraphLayout layout = new DirectedGraphLayout();
             layout.visit(g);
+            if (parent instanceof AdvancedSubGraph)
+                adjustAutoSizeNodeWidthAndHeight((AdvancedSubGraph)parent);
+        }else if (nodesSize==1){
+            Node parent  = getParent(nodes.getNode(0));
+            if (parent instanceof AdvancedSubGraph)
+                adjustAutoSizeNodeWidthAndHeight((AdvancedSubGraph)parent);
         }
         
         restoreDisconnectedEdges(nodeToOutGoing, nodeToIncomingGoing);
@@ -238,6 +242,42 @@ public class CompositeDirectedGraphLayout
        subGraph.width = right - left;
        subGraph.height = bottom - top;
      }
+    
+    private void adjustAutoSizeNodeWidthAndHeight(AdvancedSubGraph subGraph) {
+    	
+        NodeList nodes = subGraph.members;
+        if (nodes.isEmpty())
+            return;
+        int size = nodes.size();
+        Node node = nodes.getNode(0);
+        int top=node.y,left=node.x,bottom = top + node.height ,right = left+node.width;
+        Node topNode, leftNode;
+        topNode = leftNode = node;
+        for (int index = 1 ; index<size; index++) {
+            node = (Node)nodes.get(index);
+            if (top>node.y){
+                top = node.y;
+                topNode = node;
+            }
+            if (bottom < (node.y+node.height))
+                bottom = node.y+node.height;
+            if (left>node.x){
+                left = node.x;
+                leftNode = node;
+            }
+            if (right<(node.x+node.width))
+                right = node.x+node.width;
+        }
+        int xDiff = 0 ;
+        int yDiff = 0 ;
+        if (subGraph.isHasBufferedZone()){
+             xDiff = leftNode.x;
+             yDiff = topNode.y ;
+        }
+        subGraph.width = right - left + xDiff;
+        subGraph.width = right - left + yDiff;
+        
+    }
 
     private void addNode(Subgraph parent, Node node, NodeList nodes) {
         if (node.getParent()!=null)
