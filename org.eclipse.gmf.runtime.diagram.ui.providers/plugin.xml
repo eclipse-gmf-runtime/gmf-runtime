@@ -629,7 +629,13 @@
    
    <extension id="actionSets" name="%ext.actionSets" point="org.eclipse.ui.actionSets">
       <actionSet label="%Diagram.ActionSet.Label" description="%Diagram.ActionSet.Description" visible="false" id="org.eclipse.gmf.runtime.diagram.ui.DiagramActionSet">
-         <action label="%DuplicateActionDelegate.Label" tooltip="%DuplicateActionDelegate.Tooltip" class="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate" menubarPath="edit/cut.ext" id="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate">
+         <action
+               class="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate"
+               definitionId="DuplicateNode"
+               id="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate"
+               label="%DuplicateActionDelegate.Label"
+               menubarPath="edit/cut.ext"
+               tooltip="%DuplicateActionDelegate.Tooltip">
          	<enablement>
             	<objectState name="@canDuplicate" value="enablement">
             	</objectState>
