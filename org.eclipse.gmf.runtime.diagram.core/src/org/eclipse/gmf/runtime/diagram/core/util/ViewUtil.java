@@ -572,7 +572,7 @@ public class ViewUtil {
         while (iter.hasNext()) {
             Edge edge = (Edge)iter.next();
             View target = edge.getTarget();
-            if (isVisible(target)){
+            if (edge.isVisible() && isVisible(target)){
                 sourceConnections.add(edge);
             }
             
@@ -608,7 +608,7 @@ public class ViewUtil {
         while (iter.hasNext()) {
             Edge edge = (Edge)iter.next();
             View source = edge.getSource();
-            if (isVisible(source)){
+            if (edge.isVisible() && isVisible(source)){
                 targteConnections.add(edge);
             }
         }
