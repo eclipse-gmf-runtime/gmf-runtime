@@ -251,15 +251,17 @@ public abstract class DiagramEditor
             };
             showOutlineAction
                 .setImageDescriptor(DiagramUIPluginImages.DESC_OUTLINE);
+            showOutlineAction.setToolTipText(DiagramUIMessages.OutlineView_OutlineTipText);
             tbm.add(showOutlineAction);
             showOverviewAction = new Action() {
-
+            	
                 public void run() {
                     showPage(ID_OVERVIEW);
                 }
             };
             showOverviewAction
                 .setImageDescriptor(DiagramUIPluginImages.DESC_OVERVIEW);
+            showOverviewAction.setToolTipText(DiagramUIMessages.OutlineView_OverviewTipText);
             tbm.add(showOverviewAction);
             showPage(getDefaultOutlineViewMode());
         }

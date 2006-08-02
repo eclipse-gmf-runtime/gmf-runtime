@@ -385,6 +385,8 @@ public final class DiagramUIMessages extends NLS {
 	public static String ConnectionAppearancePropertySection_Router_Rectilinear;
 	public static String ConnectionAppearancePropertySection_Router_Tree;
 	public static String InvalidView;
+	public static String OutlineView_OutlineTipText;
+	public static String OutlineView_OverviewTipText;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIMessages.class);
