@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -35,6 +34,7 @@ import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -65,7 +65,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DummyEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
@@ -124,8 +123,10 @@ public abstract class GraphicalEditPart
     /** Used for registering and unregistering the edit part */
     protected String elementGuid;
 
-    /** Used for handling the editable status of the edit part */
-    private final IEditableEditPart editableEditPart;
+    /**
+     * Flag to indicate if the edit part is in edit mode
+     */
+    private boolean isEditable = true;
     
     /**
      * Cache the editing domain after it is retrieved.
@@ -145,32 +146,42 @@ public abstract class GraphicalEditPart
      *            the underlying model.
      */
     public GraphicalEditPart(EObject model) {
-        setModel(model);
-        this.editableEditPart = new DefaultEditableEditPart(this);
+        setModel(model);        
     }
 
     /** Registers this editpart to recieve notation and semantic events. */
     public void activate() {
-        if (isActive()){
+        if (isActive()) {
             return;
         }
         addNotationalListeners();
-        
-        EObject semanticProxy = null;
-        if (hasNotationView())
-            semanticProxy = ((View) getModel()).getElement();
-        else
-            semanticProxy = (EObject)basicGetModel();
-        
-        EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(), semanticProxy);
-        
+
+        EObject semanticElement;
+        EObject semanticProxy;
+        if (hasNotationView()) {
+            semanticProxy = ((View) super.getModel()).getElement();
+            if ((semanticProxy==null)||semanticProxy.eIsProxy()) {
+                semanticElement = null;
+            } else {
+                semanticElement = semanticProxy;
+            }
+        } else {
+            semanticProxy = (EObject) basicGetModel();
+            if ((semanticProxy!=null) && semanticProxy.eIsProxy()) {
+                semanticElement = EMFCoreUtil.resolve(getEditingDomain(),
+                    semanticProxy);
+            } else {
+                semanticElement = semanticProxy;
+            }
+        }
+
         if (semanticElement != null)
             addSemanticListeners();
         else if (semanticProxy != null) {
             addListenerFilter("SemanticProxy", this, semanticProxy); //$NON-NLS-1$
         }
         GraphicalEditPart.super.activate();
-        
+
     }
 
     /**
@@ -305,24 +316,26 @@ public abstract class GraphicalEditPart
     }
 
     /** Adds the ability to adapt to the edit part's view class. */
-    public Object getAdapter(Class key) {
-        Object model = basicGetModel();
+    public Object getAdapter(Class key) {       
 
         // Adapt to IActionFilter
         if (key == IActionFilter.class) {
             return ActionFilterService.getInstance();
         }
 
-        if ( View.class.isAssignableFrom(key)) {
+        if (View.class.isAssignableFrom(key)) {
             Object _model = getModel();
             if (key.isInstance(_model))
                 return _model;
+            else
+                return null;
         }
         
+        Object model = basicGetModel();     
         if (model != null &&
             EObject.class.isAssignableFrom(key)) {
             // Adapt to semantic element
-            EObject semanticObject = null;
+            EObject semanticObject = null;            
             if (hasNotationView()){
                 semanticObject = ViewUtil.resolveSemanticElement((View)model);
             }
@@ -332,7 +345,7 @@ public abstract class GraphicalEditPart
                     semanticObject = EMFCoreUtil.resolve(getEditingDomain(), element);
                 }
             }
-            if (key.isInstance(semanticObject)) {
+            if ((semanticObject!=null) && key.isInstance(semanticObject)) {
                 return semanticObject;
             }
             else if (key.isInstance(model)){
@@ -342,10 +355,7 @@ public abstract class GraphicalEditPart
         }
 
         // Delegate
-        Object adapter = super.getAdapter(key);
-        if (adapter != null)
-            return adapter;
-        return Platform.getAdapterManager().getAdapter(this, key);
+        return super.getAdapter(key);
     }
 
     /**
@@ -372,8 +382,9 @@ public abstract class GraphicalEditPart
      * @return IGraphicalEditPart
      */
     public IGraphicalEditPart getChildBySemanticHint(String semanticHint) {
-        if (getModel()!=null){
-            View view = ViewUtil.getChildBySemanticHint((View)getModel(),semanticHint);
+        View view;
+        if (hasNotationView() && (view = (View) super.getModel()) != null) {
+            view = ViewUtil.getChildBySemanticHint(view,semanticHint);
             if (view != null){
                 IGraphicalEditPart ep =   (IGraphicalEditPart)getViewer().getEditPartRegistry().get(view);
                 // TODO remove this code after the clients change there code to 
@@ -395,8 +406,9 @@ public abstract class GraphicalEditPart
      * @return IGraphicalEditPart
      */
     public View getChildViewBySemanticHint(String semanticHint) {
-        if (getModel()!=null){
-            return ViewUtil.getChildBySemanticHint((View)getModel(),semanticHint);
+        View view;
+        if (hasNotationView() && (view = (View) super.getModel()) != null) {
+            return ViewUtil.getChildBySemanticHint(view, semanticHint);
         }
         return null;
     }
@@ -606,11 +618,7 @@ public abstract class GraphicalEditPart
 
     /** Return the editpart's diagram edit domain. */
     public IDiagramEditDomain getDiagramEditDomain() {
-        EditDomain editDomain = getEditDomain();
-        if (editDomain != null) {
-            return (IDiagramEditDomain) editDomain;
-        }
-        return null;
+        return (IDiagramEditDomain) getEditDomain();
     }
 
     /**
@@ -633,7 +641,8 @@ public abstract class GraphicalEditPart
      */
     public Object getStructuralFeatureValue(EStructuralFeature feature) {
         if (hasNotationView())
-            return ViewUtil.getStructuralFeatureValue((View) getModel(),feature);
+            return ViewUtil.getPropertyValue((View) super.getModel(), feature,
+                feature.getEContainingClass());
         else
             return null;
     }
@@ -645,6 +654,21 @@ public abstract class GraphicalEditPart
      * <code>null</code> or unresolvable 
      */
     public EObject resolveSemanticElement() {
+        EObject semanticElement = null;
+        Object basicModel = basicGetModel();
+        if (hasNotationView()) {
+            semanticElement = ((View) basicModel).getElement();
+        } else if (basicModel instanceof EObject) {
+            semanticElement = (EObject) basicModel;
+        }
+        if (semanticElement == null) {
+            return null;
+        }
+
+        if (!semanticElement.eIsProxy()) {
+            return semanticElement;
+        }
+
         try {
             return (EObject) getEditingDomain().runExclusive(
                 new RunnableWithResult.Impl() {
@@ -657,7 +681,8 @@ public abstract class GraphicalEditPart
                         } else if (model instanceof EObject) {
                             EObject element = (EObject) model;
                             if (element.eIsProxy())
-                                setResult(EMFCoreUtil.resolve(getEditingDomain(), element));
+                                setResult(EMFCoreUtil.resolve(
+                                    getEditingDomain(), element));
                             else
                                 setResult(element);
                         }
@@ -782,7 +807,7 @@ public abstract class GraphicalEditPart
 
     /** Refresh the editpart's figure background colour. */
     protected void refreshBackgroundColor() {
-        FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFillStyle());
+        FillStyle style = (FillStyle)getPrimaryView().getStyle(NotationPackage.Literals.FILL_STYLE);
         if ( style != null ) {
             setBackgroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFillColor())));
         }
@@ -790,7 +815,7 @@ public abstract class GraphicalEditPart
 
     /** Refresh the editpart's figure font. */
     protected void refreshFont() {
-        FontStyle style = (FontStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
+        FontStyle style = (FontStyle) getPrimaryView().getStyle(NotationPackage.Literals.FONT_STYLE);
         if (style != null) {
             setFont(new FontData(
                 style.getFontName(), 
@@ -802,7 +827,7 @@ public abstract class GraphicalEditPart
 
     /** Refresh the editpart's figure font colour. */
     protected void refreshFontColor() {
-        FontStyle style = (FontStyle)  getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
+        FontStyle style = (FontStyle)  getPrimaryView().getStyle(NotationPackage.Literals.FONT_STYLE);
         if ( style != null ) {
             setFontColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getFontColor())));
         }
@@ -810,7 +835,7 @@ public abstract class GraphicalEditPart
 
     /** Refresh the editpart's figure foreground colour. */
     protected void refreshForegroundColor() {
-        LineStyle style = (LineStyle)  getPrimaryView().getStyle(NotationPackage.eINSTANCE.getLineStyle());
+        LineStyle style = (LineStyle)  getPrimaryView().getStyle(NotationPackage.Literals.LINE_STYLE);
         if ( style != null ) {
             setForegroundColor(DiagramColorRegistry.getInstance().getColor(new Integer(style.getLineColor())));
         }
@@ -842,7 +867,7 @@ public abstract class GraphicalEditPart
     protected void removeListenerFilter(String filterId) {
         if (listenerFilters == null)
             return;
-        Object[] objects = (Object[]) listenerFilters.get(filterId);
+        Object[] objects = (Object[]) listenerFilters.remove(filterId);
         if (objects == null)
             return;
         if (objects.length>2){
@@ -853,7 +878,7 @@ public abstract class GraphicalEditPart
         }else{
             getDiagramEventBroker().removeNotificationListener((EObject) objects[0],(NotificationListener) objects[1]);
         }
-        listenerFilters.remove(filterId);
+        
     }
 
     /**
@@ -876,7 +901,7 @@ public abstract class GraphicalEditPart
      * @param fontData the font data
      */
     protected void setFont(FontData fontData) {
-        if (cachedFontData != null && cachedFontData.equals(fontData)) {
+         if (cachedFontData != null && cachedFontData.equals(fontData)) {
             // the font was previously set and has not changed; do nothing.
             return;
         }
@@ -903,9 +928,7 @@ public abstract class GraphicalEditPart
 
     /**
      * sets the font color
-     * 
-     * @param color
-     *            the new value of the font color
+     * @param color the new value of the font color
      */
     protected void setFontColor(Color color) {
         // NULL implementation
@@ -913,9 +936,7 @@ public abstract class GraphicalEditPart
 
     /**
      * sets the fore ground color of this edit part's figure
-     * 
-     * @param color
-     *            the new value of the foregroundcolor
+     * @param color the new value of the foregroundcolor
      */
     protected void setForegroundColor(Color color) {
         getFigure().setForegroundColor(color);
@@ -928,8 +949,10 @@ public abstract class GraphicalEditPart
      * @param value  the value of the property being set
      */
     public void setStructuralFeatureValue(EStructuralFeature feature, Object value) {
-        if (hasNotationView())
-            ViewUtil.setStructuralFeatureValue((View) getModel(), feature, value);
+        if (hasNotationView() && (feature != null)) {
+            ViewUtil.setPropertyValue((View) super.getModel(), feature, feature
+                .getEContainingClass(), value);
+        }
     }
 
     /**
@@ -1064,10 +1087,11 @@ public abstract class GraphicalEditPart
 
     /** Adds a [ref, editpart] mapping to the EditPartForElement map. */
     protected void registerModel() {
+        EditPartViewer viewer = getViewer();
         if (hasNotationView()) {
             super.registerModel();
         } else {
-            getViewer().getEditPartRegistry().put(basicGetModel(), this);
+            viewer.getEditPartRegistry().put(basicGetModel(), this);
         }
 
         // Save the elements Guid to use during unregister.
@@ -1081,17 +1105,18 @@ public abstract class GraphicalEditPart
             return;
         }
         elementGuid = EMFCoreUtil.getProxyID(ref);
-        ((IDiagramGraphicalViewer) getViewer()).registerEditPartForElement(
+        ((IDiagramGraphicalViewer) viewer).registerEditPartForElement(
             elementGuid, this);
     }
 
 
     /** Remove this editpart from the EditPartForElement map. */
     protected void unregisterModel() {
+        EditPartViewer viewer = getViewer();
         if (hasNotationView())
             super.unregisterModel();
         else {
-            Map registry = getViewer().getEditPartRegistry();
+            Map registry = viewer.getEditPartRegistry();
             if (registry.get(basicGetModel()) == this)
                 registry.remove(basicGetModel());
         }
@@ -1100,7 +1125,7 @@ public abstract class GraphicalEditPart
         if (elementGuid == null) {
             return;
         }
-        ((IDiagramGraphicalViewer) getViewer()).unregisterEditPartForElement(
+        ((IDiagramGraphicalViewer) viewer).unregisterEditPartForElement(
             elementGuid, this);
     }
 
@@ -1169,14 +1194,58 @@ public abstract class GraphicalEditPart
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#disableEditMode()
      */
     public void disableEditMode() {
-        this.editableEditPart.disableEditMode();        
+        if (!isEditModeEnabled()) {
+            return;
+        }
+
+        List l = getSourceConnections();
+        int size = l.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = l.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).disableEditMode();
+            }
+        }
+
+        List c = getChildren();
+        size = c.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = c.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).disableEditMode();
+            }
+        }
+
+        isEditable = false;
     }
     
     /* 
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#enableEditMode()
      */
     public void enableEditMode() {
-        this.editableEditPart.enableEditMode();
+        if (isEditModeEnabled()) {
+            return;
+        }
+
+        isEditable = true;
+
+        List c = getChildren();
+        int size = c.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = c.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).enableEditMode();
+            }
+        }
+
+        List l = getSourceConnections();
+        size = l.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = l.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).enableEditMode();
+            }
+        }
     }
     
     /* 
@@ -1187,8 +1256,7 @@ public abstract class GraphicalEditPart
         // is active on another thread
         if (EditPartUtil.isWriteTransactionInProgress(this, true, true))
             return false;
-        
-        return this.editableEditPart.isEditModeEnabled();
+        return isEditable;
     }
     
     /* 
@@ -1248,8 +1316,9 @@ public abstract class GraphicalEditPart
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#getDiagramPreferencesHint()
      */
     public PreferencesHint getDiagramPreferencesHint() {
-        if (getRoot() instanceof IDiagramPreferenceSupport) {
-            return ((IDiagramPreferenceSupport) getRoot()).getPreferencesHint();
+        RootEditPart root = getRoot();
+        if (root instanceof IDiagramPreferenceSupport) {
+            return ((IDiagramPreferenceSupport) root).getPreferencesHint();
         }
         return PreferencesHint.USE_DEFAULTS;
     }
@@ -1279,11 +1348,11 @@ public abstract class GraphicalEditPart
      * @param event
      *            the <code>Notification</code> object that is the property changed event
      */
-    protected void handleNotificationEvent(Notification event) {
-        if (NotationPackage.eINSTANCE.getView_PersistedChildren().equals(event.getFeature())||
-                NotationPackage.eINSTANCE.getView_TransientChildren().equals(event.getFeature())) {
+    protected void handleNotificationEvent(Notification event) {        
+        if (NotationPackage.Literals.VIEW__PERSISTED_CHILDREN.equals(event.getFeature())||
+                NotationPackage.Literals.VIEW__TRANSIENT_CHILDREN.equals(event.getFeature())) {
             refreshChildren();
-        }else if (NotationPackage.eINSTANCE.getView_Visible().equals(event.getFeature())) {
+        }else if (NotationPackage.Literals.VIEW__VISIBLE.equals(event.getFeature())) {
             Object notifier = event.getNotifier();
             if (notifier== getModel())
                 refreshVisibility();
@@ -1291,7 +1360,7 @@ public abstract class GraphicalEditPart
                 refreshChildren();
             }
         }
-        else if (NotationPackage.eINSTANCE.getView_Element().equals(event.getFeature())) {
+        else if (NotationPackage.Literals.VIEW__ELEMENT.equals(event.getFeature())) {
             handleMajorSemanticChange();
         } 
     }
@@ -1300,7 +1369,7 @@ public abstract class GraphicalEditPart
      * @return <code>IMapMode</code> that allows for the coordinate mapping from device to
      * logical units. 
      */
-    final protected IMapMode getMapMode() {
+     protected IMapMode getMapMode() {
         RootEditPart root = getRoot();
         if (root instanceof DiagramRootEditPart) {
             DiagramRootEditPart dgrmRoot = (DiagramRootEditPart)root;
@@ -1372,8 +1441,8 @@ public abstract class GraphicalEditPart
         }
         return null;
     }
-
-    public Object getPreferredValue(EStructuralFeature feature) {
+    
+   public Object getPreferredValue(EStructuralFeature feature) {
         Object preferenceStore = getDiagramPreferencesHint()
             .getPreferenceStore();
         if (preferenceStore instanceof IPreferenceStore) {
@@ -1401,8 +1470,7 @@ public abstract class GraphicalEditPart
         }
 
         return getStructuralFeatureValue(feature);
-    }   
-    
+    }    
     /**
      * Gets the resource manager to remember the resources allocated for this
      * graphical viewer. All resources will be disposed when the graphical
@@ -1411,9 +1479,11 @@ public abstract class GraphicalEditPart
      * @return the resource manager
      */
     protected ResourceManager getResourceManager() {
-        if (getViewer() instanceof DiagramGraphicalViewer) {
-            return ((DiagramGraphicalViewer) getViewer()).getResourceManager();
+        EditPartViewer viewer = getViewer();
+        if (viewer instanceof DiagramGraphicalViewer) {
+            return ((DiagramGraphicalViewer) viewer).getResourceManager();
         }
         return JFaceResources.getResources();
-    }
+    }    
+    
 }

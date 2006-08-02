@@ -39,6 +39,7 @@ import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
@@ -69,7 +70,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DefaultEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionEditPolicy;
@@ -140,14 +140,20 @@ abstract public class ConnectionEditPart
     /** Used for registering and unregistering the edit part */
     private String elementGuid;
 
+    /**
+     * Flag to indicate if the edit part is in edit mode
+     */
+    private boolean isEditable = true;
+
     /** Used for accessibility. */
     protected AccessibleEditPart accessibleEP;
-    
+
     /**
      * Cache the editing domain after it is retrieved.
      */
     private TransactionalEditingDomain editingDomain;
-    
+
+     
     /**
      * Cache the font data when a font is created so that it can be
      * disposed later.
@@ -173,9 +179,6 @@ abstract public class ConnectionEditPart
         return null;
     }
 
-    /** Used for handling the editable status of the edit part */
-    private final IEditableEditPart editableEditPart;
-
     /**
      * Register the adapters for the standard properties.
      */
@@ -192,7 +195,8 @@ abstract public class ConnectionEditPart
         addNotationalListeners();
 
         EObject semanticProxy = ((View) getModel()).getElement();
-        EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(), semanticProxy);
+        EObject semanticElement = EMFCoreUtil.resolve(getEditingDomain(),
+            semanticProxy);
 
         if (semanticElement != null)
             addSemanticListeners();
@@ -224,8 +228,7 @@ abstract public class ConnectionEditPart
         if (listenerFilters == null)
             listenerFilters = new HashMap();
 
-        getDiagramEventBroker().addNotificationListener(element,
-            listener);
+        getDiagramEventBroker().addNotificationListener(element, listener);
         listenerFilters.put(filterId, new Object[] {element, listener});
     }
 
@@ -252,8 +255,8 @@ abstract public class ConnectionEditPart
         if (listenerFilters == null)
             listenerFilters = new HashMap();
 
-        getDiagramEventBroker().addNotificationListener(element,
-            feature, listener);
+        getDiagramEventBroker().addNotificationListener(element, feature,
+            listener);
         listenerFilters
             .put(filterId, new Object[] {element, feature, listener});
     }
@@ -319,7 +322,7 @@ abstract public class ConnectionEditPart
      * 
      * @see org.eclipse.gef.EditPart#deactivate()
      */
-    public void deactivate() {
+   public void deactivate() {
         boolean wasActive = isActive();
         super.deactivate();
         if (listenerFilters != null && wasActive != isActive()) {
@@ -435,7 +438,7 @@ abstract public class ConnectionEditPart
                         aEP.getName(event);
                         targetName = event.result;
                     }
-                    
+
                     if (sourceName != null && targetName != null) {
                         e.result = NLS
                             .bind(
@@ -469,17 +472,17 @@ abstract public class ConnectionEditPart
             return adapter;
         }
 
-        if (adapter == SnapToHelper.class) {
+        if (key == SnapToHelper.class) {
 
             List snapStrategies = new ArrayList();
-
-            Boolean val = (Boolean) getViewer().getProperty(
-                RulerProvider.PROPERTY_RULER_VISIBILITY);
+            EditPartViewer viewer = getViewer();
+            Boolean val = (Boolean) viewer
+                .getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
             if (val != null && val.booleanValue())
                 snapStrategies.add(new SnapToGuides(this));
 
-            val = (Boolean) getViewer().getProperty(
-                SnapToGeometry.PROPERTY_SNAP_ENABLED);
+            val = (Boolean) viewer
+                .getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
             if (val != null && val.booleanValue())
                 snapStrategies.add(new SnapToGrid(this));
 
@@ -497,8 +500,8 @@ abstract public class ConnectionEditPart
 
         Object model = getModel();
 
-        if (View.class.isAssignableFrom(key) && key.isInstance(model) ) {
-            return getModel();
+        if (View.class.isAssignableFrom(key) && key.isInstance(model)) {
+            return model;
         }
 
         if (model != null && model instanceof View) {
@@ -507,7 +510,7 @@ abstract public class ConnectionEditPart
                 .resolveSemanticElement((View) model);
             if (key.isInstance(semanticObject)) {
                 return semanticObject;
-            } else if (key.isInstance(model)) {
+            }else if (key.isInstance(model)) {
                 return model;
             }
         }
@@ -546,19 +549,20 @@ abstract public class ConnectionEditPart
             Command cmd = (Command) getEditingDomain().runExclusive(
                 new RunnableWithResult.Impl() {
 
-                public void run() {
-                    setResult(ConnectionEditPart.super.getCommand(request));
-                }
+                    public void run() {
+                        setResult(ConnectionEditPart.super.getCommand(request));
+                    }
 
-            });
+                });
             return cmd;
         } catch (InterruptedException e) {
             Trace.catching(DiagramUIPlugin.getInstance(),
                 DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
                 "getCommand", e); //$NON-NLS-1$
-            Log.error(DiagramUIPlugin.getInstance(),
-                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-                "getCommand", e); //$NON-NLS-1$
+            Log
+                .error(DiagramUIPlugin.getInstance(),
+                    DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+                    "getCommand", e); //$NON-NLS-1$
             return null;
         }
     }
@@ -630,14 +634,24 @@ abstract public class ConnectionEditPart
      * @return non proxy EObject or NULL
      */
     public EObject resolveSemanticElement() {
+        EObject eObj = ((View) getModel()).getElement();
+        if (eObj == null) {
+            return null;
+        }
+
+        if (!eObj.eIsProxy()) {
+            return eObj;
+        }
+
         try {
             return (EObject) getEditingDomain().runExclusive(
                 new RunnableWithResult.Impl() {
-    
-                public void run() {
-                    setResult(ViewUtil.resolveSemanticElement((View) getModel()));
-                }
-            });
+
+                    public void run() {
+                        setResult(ViewUtil
+                            .resolveSemanticElement((View) getModel()));
+                    }
+                });
         } catch (InterruptedException e) {
             Trace.catching(DiagramUIPlugin.getInstance(),
                 DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
@@ -647,7 +661,6 @@ abstract public class ConnectionEditPart
                 "resolveSemanticElement", e); //$NON-NLS-1$
             return null;
         }
-
     }
 
     /**
@@ -687,18 +700,19 @@ abstract public class ConnectionEditPart
     }
 
     /**
-     * Handles the property changed event.  Clients should override to
-     * respond to the specific notification events they are interested.
+     * Handles the property changed event. Clients should override to respond to
+     * the specific notification events they are interested.
      * 
-     * Note: This method may get called on a non-UI thread.  Clients should
+     * Note: This method may get called on a non-UI thread. Clients should
      * either ensure that their code is thread safe and/or doesn't make
-     * unsupported calls (i.e. Display.getCurrent() ) assuming they are on
-     * the main thread.  Alternatively if this is not possible, then the
-     * client can wrap their handler within the Display.synchExec runnable
-     * to ensure synchronization and subsequent execution on the main thread.
+     * unsupported calls (i.e. Display.getCurrent() ) assuming they are on the
+     * main thread. Alternatively if this is not possible, then the client can
+     * wrap their handler within the Display.synchExec runnable to ensure
+     * synchronization and subsequent execution on the main thread.
      * 
      * @param event
-     *            the <code>Notification</code> object that is the property changed event
+     *            the <code>Notification</code> object that is the property
+     *            changed event
      */
     protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
         if (event.getPropertyName().equals(
@@ -765,10 +779,10 @@ abstract public class ConnectionEditPart
      */
     protected void refreshForegroundColor() {
         LineStyle style = (LineStyle) getPrimaryView().getStyle(
-            NotationPackage.eINSTANCE.getLineStyle());
+            NotationPackage.Literals.LINE_STYLE);
         if (style != null)
-            setForegroundColor(DiagramColorRegistry
-                .getInstance().getColor(new Integer(style.getLineColor())));
+            setForegroundColor(DiagramColorRegistry.getInstance().getColor(
+                new Integer(style.getLineColor())));
     }
 
     /**
@@ -794,7 +808,7 @@ abstract public class ConnectionEditPart
         }
 
         if (objects.length > 2) {
-            DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(
+            getDiagramEventBroker().removeNotificationListener(
                 (EObject) objects[0], (EStructuralFeature) objects[1],
                 (NotificationListener) objects[2]);
         } else {
@@ -853,9 +867,10 @@ abstract public class ConnectionEditPart
     }
 
     /**
-     * This method adds all listeners to the semantic element behind this EditPart 
-     * Override this method to add more semantic listeners down the hierarchy
-     * This method is called only if the semantic element is resolvable
+     * This method adds all listeners to the semantic element behind this
+     * EditPart Override this method to add more semantic listeners down the
+     * hierarchy This method is called only if the semantic element is
+     * resolvable
      */
     protected void addSemanticListeners() {
         addListenerFilter("SemanticModel",//$NON-NLS-1$
@@ -874,9 +889,9 @@ abstract public class ConnectionEditPart
     }
 
     /**
-     * This method removes all listeners to the semantic element behind this EditPart
-     * Override this method to remove semantic listeners
-     * down the hierarchy
+     * This method removes all listeners to the semantic element behind this
+     * EditPart Override this method to remove semantic listeners down the
+     * hierarchy
      */
     protected void removeSemanticListeners() {
         removeListenerFilter("SemanticModel");//$NON-NLS-1$
@@ -906,7 +921,6 @@ abstract public class ConnectionEditPart
      */
     public ConnectionEditPart(View view) {
         setModel(view);
-        this.editableEditPart = new DefaultEditableEditPart(this);
     }
 
     /**
@@ -930,17 +944,17 @@ abstract public class ConnectionEditPart
             try {
                 getEditingDomain().runExclusive(new Runnable() {
 
-                        public void run() {
-                            ConnectionEditPart.super.refresh();
-                            EditPolicyIterator i = getEditPolicyIterator();
-                            while (i.hasNext()) {
-                                EditPolicy policy = i.next();
-                                if (policy instanceof GraphicalEditPolicyEx) {
-                                    ((GraphicalEditPolicyEx) policy).refresh();
-                                }
+                    public void run() {
+                        ConnectionEditPart.super.refresh();
+                        EditPolicyIterator i = getEditPolicyIterator();
+                        while (i.hasNext()) {
+                            EditPolicy policy = i.next();
+                            if (policy instanceof GraphicalEditPolicyEx) {
+                                ((GraphicalEditPolicyEx) policy).refresh();
                             }
                         }
-                    });
+                    }
+                });
             } catch (InterruptedException e) {
                 Trace.catching(DiagramUIPlugin.getInstance(),
                     DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
@@ -993,11 +1007,11 @@ abstract public class ConnectionEditPart
     protected void installRouter() {
         ConnectionLayer cLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
         RoutingStyle style = (RoutingStyle) ((View) getModel())
-            .getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
+            .getStyle(NotationPackage.Literals.ROUTING_STYLE);
 
         if (style != null && cLayer instanceof ConnectionLayerEx) {
 
-            ConnectionLayerEx cLayerEx = (ConnectionLayerEx)cLayer;
+            ConnectionLayerEx cLayerEx = (ConnectionLayerEx) cLayer;
             Routing routing = style.getRouting();
             if (Routing.MANUAL_LITERAL == routing) {
                 getConnectionFigure().setConnectionRouter(
@@ -1047,8 +1061,9 @@ abstract public class ConnectionEditPart
             installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
                 new ConnectionBendpointEditPolicy());
         }
-        
+
         EditPartUtil.synchronizeRunnableToMainThread(this, new Runnable() {
+
             public void run() {
                 if (getConnectionFigure().getConnectionRouter() instanceof ForestRouter) {
                     getConnectionFigure().setCursor(Cursors.CURSOR_SEG_MOVE);
@@ -1076,10 +1091,10 @@ abstract public class ConnectionEditPart
         Connection connection = getConnectionFigure();
         if (!(connection instanceof PolylineConnectionEx))
             return;
-        
+
         PolylineConnectionEx poly = (PolylineConnectionEx) connection;
         RoutingStyle style = (RoutingStyle) ((View) getModel())
-            .getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
+            .getStyle(NotationPackage.Literals.ROUTING_STYLE);
         if (style != null) {
             Smoothness smoothness = style.getSmoothness();
 
@@ -1102,10 +1117,10 @@ abstract public class ConnectionEditPart
         Connection connection = getConnectionFigure();
         if (!(connection instanceof PolylineConnectionEx))
             return;
-        
+
         PolylineConnectionEx poly = (PolylineConnectionEx) connection;
         RoutingStyle style = (RoutingStyle) ((View) getModel())
-            .getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
+            .getStyle(NotationPackage.Literals.ROUTING_STYLE);
 
         JumpLinkStatus status = JumpLinkStatus.NONE_LITERAL;
         JumpLinkType type = JumpLinkType.SEMICIRCLE_LITERAL;
@@ -1140,11 +1155,11 @@ abstract public class ConnectionEditPart
         Connection connection = getConnectionFigure();
         if (!(connection instanceof PolylineConnectionEx))
             return;
-        
+
         PolylineConnectionEx poly = (PolylineConnectionEx) connection;
 
         RoutingStyle style = (RoutingStyle) ((View) getModel())
-            .getStyle(NotationPackage.eINSTANCE.getRoutingStyle());
+            .getStyle(NotationPackage.Literals.ROUTING_STYLE);
         if (style != null) {
 
             boolean closestDistance = style.isClosestDistance();
@@ -1175,7 +1190,7 @@ abstract public class ConnectionEditPart
      */
     protected void refreshFont() {
         FontStyle style = (FontStyle) getPrimaryView().getStyle(
-            NotationPackage.eINSTANCE.getFontStyle());
+            NotationPackage.Literals.FONT_STYLE);
         if (style != null) {
             setFont(new FontData(style.getFontName(), style.getFontHeight(),
                 (style.isBold() ? SWT.BOLD
@@ -1268,10 +1283,10 @@ abstract public class ConnectionEditPart
             EditPart primaryChildEditPart = (EditPart) getEditingDomain()
                 .runExclusive(new RunnableWithResult.Impl() {
 
-                        public void run() {
-                            setResult(getPrimaryChildEditPart());
-                        }
-                    });
+                    public void run() {
+                        setResult(getPrimaryChildEditPart());
+                    }
+                });
             if (primaryChildEditPart != null) {
                 primaryChildEditPart.performRequest(request);
             }
@@ -1365,26 +1380,68 @@ abstract public class ConnectionEditPart
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#disableEditMode()
      */
     public void disableEditMode() {
-        this.editableEditPart.disableEditMode();
+        if (isEditable == false) {
+            return;
+        }
+
+        List l = getSourceConnections();
+        int size = l.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = l.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).disableEditMode();
+            }
+        }
+
+        List c = getChildren();
+        size = c.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = c.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).disableEditMode();
+            }
+        }
+
+        isEditable = false;
     }
 
     /*
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#enableEditMode()
      */
     public void enableEditMode() {
-        this.editableEditPart.enableEditMode();
+        if (isEditable) {
+            return;
+        }
+        isEditable = true;
+        List c = getChildren();
+        int size = c.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = c.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).enableEditMode();
+            }
+        }
+
+        List l = getSourceConnections();
+        size = l.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = l.get(i);
+            if (obj instanceof IEditableEditPart) {
+                ((IEditableEditPart) obj).enableEditMode();
+            }
+        }
     }
 
     /*
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#isEditModeEnabled()
      */
     public boolean isEditModeEnabled() {
-        // protect against deadlock - don't allow any action while write transaction
+        // protect against deadlock - don't allow any action while write
+        // transaction
         // is active on another thread
         if (EditPartUtil.isWriteTransactionInProgress(this, true, true))
             return false;
-        
-        return this.editableEditPart.isEditModeEnabled();
+        return isEditable;
     }
 
     /*
@@ -1448,8 +1505,9 @@ abstract public class ConnectionEditPart
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart#getDiagramPreferencesHint()
      */
     public PreferencesHint getDiagramPreferencesHint() {
-        if (getRoot() instanceof IDiagramPreferenceSupport) {
-            return ((IDiagramPreferenceSupport) getRoot()).getPreferencesHint();
+        RootEditPart root = getRoot();
+        if (root instanceof IDiagramPreferenceSupport) {
+            return ((IDiagramPreferenceSupport) root).getPreferencesHint();
         }
         return PreferencesHint.USE_DEFAULTS;
     }
@@ -1473,65 +1531,64 @@ abstract public class ConnectionEditPart
      */
     protected void handleNotificationEvent(Notification event) {
         Object feature = event.getFeature();
-        if (NotationPackage.eINSTANCE.getView_PersistedChildren().equals(
+        if (NotationPackage.Literals.VIEW__PERSISTED_CHILDREN.equals(
             feature)
-            || NotationPackage.eINSTANCE.getView_TransientChildren().equals(
+            || NotationPackage.Literals.VIEW__TRANSIENT_CHILDREN.equals(
                 feature)) {
             refreshChildren();
-        } else if (NotationPackage.eINSTANCE.getView_Visible().equals(feature)) {
+        } else if (NotationPackage.Literals.VIEW__VISIBLE.equals(feature)) {
             Object notifier = event.getNotifier();
-            if (notifier== getModel())
-            setVisibility(((Boolean) event.getNewValue()).booleanValue());
+            if (notifier == getModel())
+                setVisibility(((Boolean) event.getNewValue()).booleanValue());
             // Reactivating in response to semantic model reference change
             // However, we need to verify that the event belongs to this
             // editpart's view
-        } else if (NotationPackage.eINSTANCE.getRoutingStyle_Routing().equals(
+        } else if (NotationPackage.Literals.ROUTING_STYLE__ROUTING.equals(
             feature)) {
             installRouter();
-        } else if (NotationPackage.eINSTANCE.getRoutingStyle_Smoothness()
+        } else if (NotationPackage.Literals.ROUTING_STYLE__SMOOTHNESS
             .equals(feature)
-            || NotationPackage.eINSTANCE.getRoutingStyle_AvoidObstructions()
+            || NotationPackage.Literals.ROUTING_STYLE__AVOID_OBSTRUCTIONS
                 .equals(feature)
-            || NotationPackage.eINSTANCE.getRoutingStyle_ClosestDistance()
+            || NotationPackage.Literals.ROUTING_STYLE__CLOSEST_DISTANCE
                 .equals(feature)
-            || NotationPackage.eINSTANCE.getRoutingStyle_JumpLinkStatus()
+            || NotationPackage.Literals.ROUTING_STYLE__JUMP_LINK_STATUS
                 .equals(feature)
-            || NotationPackage.eINSTANCE.getRoutingStyle_JumpLinkType().equals(
+            || NotationPackage.Literals.ROUTING_STYLE__JUMP_LINK_TYPE.equals(
                 feature)
-            || NotationPackage.eINSTANCE.getRoutingStyle_JumpLinksReverse()
+            || NotationPackage.Literals.ROUTING_STYLE__JUMP_LINKS_REVERSE
                 .equals(feature)) {
             refreshVisuals();
-        } else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(
+        } else if (NotationPackage.Literals.LINE_STYLE__LINE_COLOR.equals(
             feature)) {
             Integer c = (Integer) event.getNewValue();
-            setForegroundColor(DiagramColorRegistry
-                .getInstance().getColor(c));
-        } else if (NotationPackage.eINSTANCE.getRelativeBendpoints_Points()
+            setForegroundColor(DiagramColorRegistry.getInstance().getColor(c));
+        } else if (NotationPackage.Literals.RELATIVE_BENDPOINTS__POINTS
             .equals(feature)) {
             refreshBendpoints();
-        } else if (event.getFeature() == NotationPackage.eINSTANCE
-            .getView_Element()
+        } else if (event.getFeature() == NotationPackage.Literals
+            .VIEW__ELEMENT
             && ((EObject) event.getNotifier()) == getNotationView()){
             handleMajorSemanticChange();
-        } else if (event.getEventType() == EventType.UNRESOLVE
+       } else if (event.getEventType() == EventType.UNRESOLVE
                 && event.getNotifier() == ((View) getModel()).getElement())
                 handleMajorSemanticChange();
     }
 
     /**
-     * @return <code>IMapMode</code> that allows for the coordinate mapping from device to
-     * logical units. 
+     * @return <code>IMapMode</code> that allows for the coordinate mapping
+     *         from device to logical units.
      */
-    final protected IMapMode getMapMode() {
+    protected IMapMode getMapMode() {
         RootEditPart root = getRoot();
         if (root instanceof DiagramRootEditPart) {
-            DiagramRootEditPart dgrmRoot = (DiagramRootEditPart)root;
+            DiagramRootEditPart dgrmRoot = (DiagramRootEditPart) root;
             return dgrmRoot.getMapMode();
         }
 
         return MapModeUtil.getMapMode();
     }
-    
+
     /**
      * Derives my editing domain from my diagram element. Subclasses may
      * override.
@@ -1540,15 +1597,16 @@ abstract public class ConnectionEditPart
         if (editingDomain == null) {
             // try to get the editing domain for the model
             editingDomain = TransactionUtil.getEditingDomain(getModel());
-            
+
             if (editingDomain == null) {
                 // try to get the editing domain from the diagram view
-                editingDomain = TransactionUtil.getEditingDomain(getDiagramView());
+                editingDomain = TransactionUtil
+                    .getEditingDomain(getDiagramView());
             }
         }
         return editingDomain;
-    }   
-    
+    }
+
     /**
      * Gets the diagram event broker from the editing domain.
      * 
@@ -1561,7 +1619,8 @@ abstract public class ConnectionEditPart
         }
         return null;
     }
-
+    
+    
     public Object getPreferredValue(EStructuralFeature feature) {
         Object preferenceStore = getDiagramPreferencesHint()
             .getPreferenceStore();
@@ -1582,7 +1641,8 @@ abstract public class ConnectionEditPart
             }
         }
         return getStructuralFeatureValue(feature);
-    }    
+    }
+    
     
     /**
      * Gets the resource manager to remember the resources allocated for this
@@ -1592,9 +1652,11 @@ abstract public class ConnectionEditPart
      * @return the resource manager
      */
     protected ResourceManager getResourceManager() {
-        if (getViewer() instanceof DiagramGraphicalViewer) {
-            return ((DiagramGraphicalViewer) getViewer()).getResourceManager();
+        EditPartViewer viewer = getViewer();
+        if (viewer instanceof DiagramGraphicalViewer) {
+            return ((DiagramGraphicalViewer) viewer).getResourceManager();
         }
         return JFaceResources.getResources();
-    }
+    }   
+  
 }
