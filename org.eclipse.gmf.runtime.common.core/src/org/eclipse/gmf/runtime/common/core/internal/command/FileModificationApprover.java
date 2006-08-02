@@ -88,6 +88,9 @@ public class FileModificationApprover
             .hasNext();) {
             IFile nextFile = (IFile) i.next();
             
+            if ( nextFile == null ) 
+                continue;
+            
             if (nextFile.exists()) {
                 // the file is in the workspace
                 files.add(nextFile);
