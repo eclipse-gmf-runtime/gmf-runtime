@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -56,6 +57,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.part.CellEditorActionHandler;
 
 /**
  * @author melaasar
@@ -89,6 +94,10 @@ public class TextDirectEditManager
      * disposed later.
      */
     private List cachedFontDescriptors = new ArrayList();
+    
+    private IActionBars actionBars;
+    private CellEditorActionHandler actionHandler;
+    private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
 		
 	/**
 	 * the text cell editor locator
@@ -272,6 +281,15 @@ public class TextDirectEditManager
 					processor);
 			}
 		}
+		
+		//Hook the cell editor's copy/paste actions to the actionBars so that they can
+		// be invoked via keyboard shortcuts.
+		actionBars = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getActiveEditor().getEditorSite().getActionBars();
+		saveCurrentActions(actionBars);
+		actionHandler = new CellEditorActionHandler(actionBars);
+		actionHandler.addCellEditor(getCellEditor());
+		actionBars.updateActionBars();
 	}
 
 	/**
@@ -334,6 +352,16 @@ public class TextDirectEditManager
             getResourceManager().destroyFont((FontDescriptor) iter.next());           
         }
         cachedFontDescriptors.clear();
+        
+        if (actionHandler != null) {
+    		actionHandler.dispose();
+    		actionHandler = null;
+    	}
+    	if (actionBars != null) {
+    		restoreSavedActions(actionBars);
+    		actionBars.updateActionBars();
+    		actionBars = null;
+    	}
 	}
 
 	/**
@@ -473,6 +501,28 @@ public class TextDirectEditManager
     protected ResourceManager getResourceManager() {
         return ((DiagramGraphicalViewer) getEditPart().getViewer())
             .getResourceManager();
+    }
+    
+    private void saveCurrentActions(IActionBars _actionBars) {
+    	copy = _actionBars.getGlobalActionHandler(ActionFactory.COPY.getId());
+    	paste = _actionBars.getGlobalActionHandler(ActionFactory.PASTE.getId());
+    	delete = _actionBars.getGlobalActionHandler(ActionFactory.DELETE.getId());
+    	selectAll = _actionBars.getGlobalActionHandler(ActionFactory.SELECT_ALL.getId());
+    	cut = _actionBars.getGlobalActionHandler(ActionFactory.CUT.getId());
+    	find = _actionBars.getGlobalActionHandler(ActionFactory.FIND.getId());
+    	undo = _actionBars.getGlobalActionHandler(ActionFactory.UNDO.getId());
+    	redo = _actionBars.getGlobalActionHandler(ActionFactory.REDO.getId());
+    }
+    
+    private void restoreSavedActions(IActionBars _actionBars){
+    	_actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
+    	_actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
+    	_actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), delete);
+    	_actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAll);
+    	_actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cut);
+    	_actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), find);
+    	_actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undo);
+    	_actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redo);
     }
 
 }
