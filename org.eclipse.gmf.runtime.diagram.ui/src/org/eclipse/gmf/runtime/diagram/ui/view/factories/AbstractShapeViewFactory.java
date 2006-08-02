@@ -14,9 +14,9 @@ package org.eclipse.gmf.runtime.diagram.ui.view.factories;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -50,12 +50,17 @@ abstract public class AbstractShapeViewFactory extends BasicNodeViewFactory {
 		super.initializeFromPreferences(view);
 
 		IPreferenceStore store = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
+		
+		FillStyle fillStyle = (FillStyle) view
+			.getStyle(NotationPackage.Literals.FILL_STYLE);
+		if (fillStyle != null) {
+			// fill color
+			RGB fillRGB = PreferenceConverter.getColor(store,
+				IPreferenceConstants.PREF_FILL_COLOR);
 
-		// fill color
-		RGB fillRGB = PreferenceConverter.getColor(store,
-			IPreferenceConstants.PREF_FILL_COLOR);
-		ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getFillStyle_FillColor(),
-			FigureUtilities.RGBToInteger(fillRGB));
+			fillStyle.setFillColor(FigureUtilities.RGBToInteger(fillRGB)
+				.intValue());
+		}		
 	}
 	
 	/**

@@ -16,11 +16,12 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.FillStyle;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -65,20 +66,30 @@ public class NoteViewFactory
 	protected void initializeFromPreferences(View view) {
 		super.initializeFromPreferences(view);
 		// support the diagram link mode
-		if (!(view.getElement() instanceof Diagram)){
-			IPreferenceStore store = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
-			// fill color
-			RGB fillRGB =
-				PreferenceConverter.getColor(
-					store,
+		if (!(view.getElement() instanceof Diagram)) {
+			IPreferenceStore store = (IPreferenceStore) getPreferencesHint()
+				.getPreferenceStore();
+			FillStyle fillStyle = (FillStyle) view
+				.getStyle(NotationPackage.Literals.FILL_STYLE);
+			if (fillStyle != null) {
+				// fill color
+				RGB fillRGB = PreferenceConverter.getColor(store,
 					IPreferenceConstants.PREF_NOTE_FILL_COLOR);
-			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFillStyle_FillColor(), FigureUtilities.RGBToInteger(fillRGB));
 
-			//line color
-			RGB lineRGB =
-				PreferenceConverter.getColor(
-					store,
+				fillStyle.setFillColor(FigureUtilities.RGBToInteger(fillRGB)
+					.intValue());
+			}
+
+			LineStyle lineStyle = (LineStyle) view
+				.getStyle(NotationPackage.Literals.LINE_STYLE);
+			if (lineStyle != null) {
+				// line color
+				RGB lineRGB = PreferenceConverter.getColor(store,
 					IPreferenceConstants.PREF_NOTE_LINE_COLOR);
-			ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.RGBToInteger(lineRGB));
-		}	}
+
+				lineStyle.setLineColor(FigureUtilities.RGBToInteger(lineRGB)
+					.intValue());
+			}
+		}
+	}
 }

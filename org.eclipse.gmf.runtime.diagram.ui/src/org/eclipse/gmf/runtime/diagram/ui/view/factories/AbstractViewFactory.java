@@ -20,10 +20,11 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.core.view.factories.ViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -39,6 +40,7 @@ import org.eclipse.swt.graphics.RGB;
  * @author mmostafa
  */
 abstract public class AbstractViewFactory implements ViewFactory {
+	
 
 	/**
 	 * The hint used to find the appropriate preference store from which general
@@ -74,11 +76,9 @@ abstract public class AbstractViewFactory implements ViewFactory {
 	 * @param containerView
 	 * @return
 	 */
-	protected boolean requiresElement(IAdaptable semanticAdapter, View view) {
-		EObject semanticElement = null;
-		if (semanticAdapter!=null){
-			semanticElement = (EObject)semanticAdapter.getAdapter(EObject.class);
-			return requiresElement(semanticElement,view);
+	protected boolean requiresElement(IAdaptable semanticAdapter, View view) {		
+		if (semanticAdapter!=null){			
+			return requiresElement((EObject)semanticAdapter.getAdapter(EObject.class),view);
 		}
 		return true;
 	}
@@ -91,11 +91,8 @@ abstract public class AbstractViewFactory implements ViewFactory {
 	 * @param containerView
 	 * @return
 	 */
-	protected boolean requiresElement(EObject semanticElement, View view) {
-		EObject containerSemanticElement = view.getElement();
-		if (containerSemanticElement==semanticElement)
-			return false;
-		return true;
+	protected boolean requiresElement(EObject semanticElement, View view) {		
+		return !(semanticElement == view.getElement());		
 	}
 	
 	/**
@@ -109,29 +106,35 @@ abstract public class AbstractViewFactory implements ViewFactory {
 			return;
 		}
 
-		// line color
-		RGB lineRGB =
-			PreferenceConverter.getColor(
-				store,
+        LineStyle lineStyle = (LineStyle) view
+			.getStyle(NotationPackage.Literals.LINE_STYLE);
+		if (lineStyle != null) {
+			// line color
+			RGB lineRGB = PreferenceConverter.getColor(store,
 				IPreferenceConstants.PREF_LINE_COLOR);
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.RGBToInteger(lineRGB));
 
-		//default font
-		FontData fontData =
-			PreferenceConverter.getFontData(
-				store,
+			lineStyle.setLineColor(FigureUtilities.RGBToInteger(lineRGB)
+				.intValue());
+		}
+
+		FontStyle fontStyle = (FontStyle) view
+			.getStyle(NotationPackage.Literals.FONT_STYLE);
+
+		if (fontStyle != null) {
+			// default font
+			FontData fontData = PreferenceConverter.getFontData(store,
 				IPreferenceConstants.PREF_DEFAULT_FONT);
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontName(), fontData.getName());
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontHeight(), new Integer(fontData.getHeight()));
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_Bold(), Boolean.valueOf((fontData.getStyle() & SWT.BOLD) != 0));
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_Italic(), Boolean.valueOf((fontData.getStyle() & SWT.ITALIC) != 0));
-
-		//font color
-		RGB fontRGB =
-			PreferenceConverter.getColor(
-				store,
+			fontStyle.setFontName(fontData.getName());
+			fontStyle.setFontHeight(fontData.getHeight());
+			fontStyle.setBold((fontData.getStyle() & SWT.BOLD) != 0);
+			fontStyle.setItalic((fontData.getStyle() & SWT.ITALIC) != 0);
+			// font color
+			RGB fontRGB = PreferenceConverter.getColor(store,
 				IPreferenceConstants.PREF_FONT_COLOR);
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontColor(), FigureUtilities.RGBToInteger(fontRGB));
+			fontStyle.setFontColor(FigureUtilities.RGBToInteger(fontRGB)
+				.intValue());
+		}
+
 	}
 	
 	

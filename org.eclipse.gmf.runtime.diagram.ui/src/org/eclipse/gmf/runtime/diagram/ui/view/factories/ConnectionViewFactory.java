@@ -42,6 +42,7 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -59,7 +60,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 
 public class ConnectionViewFactory
-	extends AbstractViewFactory implements ViewFactory {
+	extends AbstractViewFactory implements ViewFactory {	
+	
+	private static final Map options = new HashMap();	
+    static {
+        options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
+    }
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.core.view.factories.ViewFactory#createView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, java.lang.String)
@@ -72,8 +80,15 @@ public class ConnectionViewFactory
 		setPreferencesHint(preferencesHint);
 
 		final Edge edge = NotationFactory.eINSTANCE.createEdge();
-		edge.getStyles().addAll(createStyles(edge));
-		edge.setBendpoints(createBendpoints());
+		List styles = createStyles(edge);
+        if (styles.size() > 0) {
+        	edge.getStyles().addAll(styles);
+        }
+        
+        Bendpoints bendPoints = createBendpoints();
+        if (bendPoints != null) {
+			edge.setBendpoints(bendPoints);
+		}
 
 		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
 		if (semanticEl==null)
@@ -89,11 +104,7 @@ public class ConnectionViewFactory
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView,edge, index, persisted);
 		
-		Map options = new HashMap();
-		options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
-		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
-		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
-
+		
 		AbstractEMFOperation operation = new AbstractEMFOperation(
 			getEditingDomain(semanticEl, containerView), StringStatics.BLANK,
 			options) {
@@ -181,8 +192,14 @@ public class ConnectionViewFactory
 		IPreferenceStore store = (IPreferenceStore) getPreferencesHint()
 			.getPreferenceStore();
 
-		ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getRoutingStyle_Routing(), Routing
-			.get(store.getInt(IPreferenceConstants.PREF_LINE_STYLE)));
+		RoutingStyle routingStyle = (RoutingStyle)view.getStyle(NotationPackage.Literals.ROUTING_STYLE);
+		if (routingStyle != null) {
+			Routing routing = Routing.get(store
+				.getInt(IPreferenceConstants.PREF_LINE_STYLE));
+			if (routing != null) {
+				routingStyle.setRouting(routing);
+			}
+		}				
 	}
 
 }

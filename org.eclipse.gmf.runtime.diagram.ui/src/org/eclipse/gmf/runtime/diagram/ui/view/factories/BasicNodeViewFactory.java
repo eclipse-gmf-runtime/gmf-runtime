@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.view.factories; 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -49,6 +50,13 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  */
 public class BasicNodeViewFactory extends AbstractViewFactory {
+	
+	private static final Map options = new HashMap();	
+    static {
+        options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
+    }
 
 	/**
 	 * factory method, that will be called by the view service to creat
@@ -67,8 +75,15 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		boolean persisted, final PreferencesHint preferencesHint) {
 		setPreferencesHint(preferencesHint);
 		final Node node = createNode();
-		node.getStyles().addAll(createStyles(node));
-		node.setLayoutConstraint(createLayoutConstraint());
+		List styles = createStyles(node);
+        if (styles.size() > 0) {
+            node.getStyles().addAll(styles);
+        }
+		
+        LayoutConstraint layoutConstraint = createLayoutConstraint();
+        if (layoutConstraint != null) {
+            node.setLayoutConstraint(layoutConstraint);
+        }
 
 		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
 		if (semanticEl==null)
@@ -82,13 +97,8 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		
 	    // decorate view assumes that the view had been inserted already, so
 		// we had to call insert child before calling decorate view
-		ViewUtil.insertChildView(containerView, node, index, persisted);
+		ViewUtil.insertChildView(containerView, node, index, persisted);		
 		
-		Map options = new HashMap();
-		options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
-		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
-		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
-
         TransactionalEditingDomain domain = getEditingDomain(semanticEl,
             containerView);
         

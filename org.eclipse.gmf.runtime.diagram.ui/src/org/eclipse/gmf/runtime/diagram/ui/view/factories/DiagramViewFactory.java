@@ -18,11 +18,12 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.core.view.factories.DiagramFactory;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -71,11 +72,12 @@ public class DiagramViewFactory implements DiagramFactory{
 	public Diagram createDiagram(IAdaptable semanticAdapter,
 						 String diagramKind, PreferencesHint thePreferencesHint) {
 
-		setPreferencesHint(thePreferencesHint);
-
-		Diagram diagram = (Diagram)  NotationPackage.eINSTANCE.getDiagram().getEPackage().getEFactoryInstance().create(
-			NotationPackage.eINSTANCE.getDiagram());
-		diagram.getStyles().addAll(createStyles(diagram));
+		setPreferencesHint(thePreferencesHint);		
+		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
+		List styles = createStyles(diagram);
+		if (styles.size() > 0) {
+			diagram.getStyles().addAll(styles);
+		}
 
 		if (diagramKind != null)
 			diagram.setType(diagramKind);
@@ -144,30 +146,35 @@ public class DiagramViewFactory implements DiagramFactory{
 		
 		IPreferenceStore store = (IPreferenceStore) getPreferencesHint().getPreferenceStore();
 
-		// line color
-		RGB lineRGB =
-			PreferenceConverter.getColor(
-				store,
-				IPreferenceConstants.PREF_LINE_COLOR);
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.RGBToInteger(lineRGB));
-
-		//default font
-		FontData fontData =
-			PreferenceConverter.getFontData(
-				store,
-				IPreferenceConstants.PREF_DEFAULT_FONT);
 		
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontName(), fontData.getName());
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontHeight(), new Integer(fontData.getHeight()));
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_Bold(), Boolean.valueOf((fontData.getStyle() & SWT.BOLD) != 0));
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_Italic(), Boolean.valueOf((fontData.getStyle() & SWT.ITALIC) != 0));
+		LineStyle lineStyle = (LineStyle) view
+			.getStyle(NotationPackage.Literals.LINE_STYLE);
+		if (lineStyle != null) {
+			// line color
+			RGB lineRGB = PreferenceConverter.getColor(store,
+				IPreferenceConstants.PREF_LINE_COLOR);
 
-		//font color
-		RGB fontRGB =
-			PreferenceConverter.getColor(
-				store,
+			lineStyle.setLineColor(FigureUtilities.RGBToInteger(lineRGB)
+				.intValue());
+		}
+
+
+		FontStyle fontStyle = (FontStyle) view
+			.getStyle(NotationPackage.Literals.FONT_STYLE);
+		if (fontStyle != null) {
+			// default font
+			FontData fontData = PreferenceConverter.getFontData(store,
+				IPreferenceConstants.PREF_DEFAULT_FONT);
+			fontStyle.setFontName(fontData.getName());
+			fontStyle.setFontHeight(fontData.getHeight());
+			fontStyle.setBold((fontData.getStyle() & SWT.BOLD) != 0);
+			fontStyle.setItalic((fontData.getStyle() & SWT.ITALIC) != 0);
+			// font color
+			RGB fontRGB = PreferenceConverter.getColor(store,
 				IPreferenceConstants.PREF_FONT_COLOR);
-		ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getFontStyle_FontColor(), FigureUtilities.RGBToInteger(fontRGB));
+			fontStyle.setFontColor(FigureUtilities.RGBToInteger(fontRGB)
+				.intValue());
+		}
 	}
 	
 			
