@@ -273,7 +273,7 @@ public abstract class ElementSelectionComposite
     /**
      * Handles a filter change.
      */
-    private void handleFilterChange() {
+    public void handleFilterChange() {
         if (filterText.getText().equals(StringStatics.BLANK)) {
             /* no filter, no results */
             cancel();
