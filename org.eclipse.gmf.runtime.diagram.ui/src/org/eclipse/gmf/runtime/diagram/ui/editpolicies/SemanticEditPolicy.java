@@ -124,6 +124,12 @@ public class SemanticEditPolicy
 	 */
 	protected Command getSemanticCommand(IEditCommandRequest request) {
 
+		if ((request instanceof DestroyRequest)  && (getHost() instanceof ConnectionEditPart)
+				&& !((ConnectionEditPart) getHost()).isSemanticConnection()) {
+			// no semantic meaning to the connection being destroyed
+			return null;
+		}
+		
 		IEditCommandRequest completedRequest = completeRequest(request);
 		
 		IElementType elementType = ElementTypeRegistry.getInstance()
@@ -339,8 +345,16 @@ public class SemanticEditPolicy
 	protected Command getReorientRefRelationshipSourceCommand(
 			ReconnectRequest request) {
 
-		EditPart sourceEditPart = request.getConnectionEditPart().getSource();
-		EditPart targetEditPart = request.getConnectionEditPart().getTarget();
+		org.eclipse.gef.ConnectionEditPart connectionEP = (request).getConnectionEditPart();
+		
+		if (connectionEP instanceof ConnectionEditPart) {
+			if (!((ConnectionEditPart) connectionEP).isSemanticConnection()) {
+				return null;
+			}
+		}
+
+		EditPart sourceEditPart = connectionEP.getSource();
+		EditPart targetEditPart = connectionEP.getTarget();
 		EObject referenceOwner = ViewUtil
 			.resolveSemanticElement((View) sourceEditPart.getModel());
 		EObject oldTarget = ViewUtil
@@ -369,9 +383,17 @@ public class SemanticEditPolicy
 	 */
 	protected Command getReorientRefRelationshipTargetCommand(
 			ReconnectRequest request) {
+		
+		org.eclipse.gef.ConnectionEditPart connectionEP = (request).getConnectionEditPart();
+		
+		if (connectionEP instanceof ConnectionEditPart) {
+			if (!((ConnectionEditPart) connectionEP).isSemanticConnection()) {
+				return null;
+			}
+		}
 
-		EditPart sourceEditPart = request.getConnectionEditPart().getSource();
-		EditPart targetEditPart = request.getConnectionEditPart().getTarget();
+		EditPart sourceEditPart = connectionEP.getSource();
+		EditPart targetEditPart = connectionEP.getTarget();
 		EObject referenceOwner = ViewUtil
 			.resolveSemanticElement((View) sourceEditPart.getModel());
 		EObject oldTarget = ViewUtil

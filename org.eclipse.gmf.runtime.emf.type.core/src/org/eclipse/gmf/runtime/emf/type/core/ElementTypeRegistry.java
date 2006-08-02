@@ -744,6 +744,29 @@ public class ElementTypeRegistry {
 		
 		return getAllTypesMatching(eObject, clientContext);
 	}
+	
+	/**
+	 * Gets an array containing all specializations of the element type for
+	 * <code>id</code>, in breadth-first order.
+	 * 
+	 * @param id
+	 *            the element type ID
+	 * @return the list of all specializations of this element type
+	 */
+	public ISpecializationType[] getSpecializationsOf(String id) {
+		
+		IElementTypeDescriptor descriptor = getTypeDescriptor(id);
+		
+		if (descriptor == null) {
+			return new ISpecializationType[] {};
+		}
+		
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getBinding(descriptor);
+
+		return specializationTypeRegistry
+				.getAllSpecializationTypes(descriptor, clientContext);
+	}
 
 	/**
 	 * Gets the element type for <code>id</code>. May return

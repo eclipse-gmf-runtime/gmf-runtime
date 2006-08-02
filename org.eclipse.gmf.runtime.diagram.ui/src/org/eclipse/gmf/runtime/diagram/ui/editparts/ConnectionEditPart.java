@@ -77,6 +77,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionLineSe
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectionBendpointEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
+import org.eclipse.gmf.runtime.diagram.ui.internal.type.NotationTypeUtil;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
@@ -159,6 +160,12 @@ abstract public class ConnectionEditPart
      * disposed later.
      */
     private FontData cachedFontData;
+    
+    /**
+	 * Cache the answer to whether or not this is a semantic connection after it
+	 * is retrieved.
+	 */
+    private Boolean semanticConnection;
     
     /**
      * gets a property change command for the passed property, using both of the
@@ -1657,6 +1664,34 @@ abstract public class ConnectionEditPart
             return ((DiagramGraphicalViewer) viewer).getResourceManager();
         }
         return JFaceResources.getResources();
-    }   
+    } 
+    
+    /**
+	 * Answers whether or not this connection represents a part of the semantic
+	 * model.
+	 * 
+	 * @return <code>true</code> if this connection has semantic meaning,
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean isSemanticConnection() {
+
+		if (semanticConnection == null) {
+			if (getEdge() != null && (getEdge().getElement() != null
+					|| !NotationTypeUtil.hasNotationType(getEdge()))) {
+				semanticConnection = Boolean.TRUE;
+			} else {
+				semanticConnection = Boolean.FALSE;
+			}
+		}
+		return semanticConnection.booleanValue();
+	}
+	
+	/**
+	 * Clear the semantic connection value when the model changes.
+	 */
+	public void setModel(Object model) {
+		super.setModel(model);
+		semanticConnection = null;
+	}
   
 }

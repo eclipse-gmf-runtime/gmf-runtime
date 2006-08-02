@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IContainerDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementMatcher;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.IElementTypeDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationType;
 import org.eclipse.gmf.runtime.emf.type.core.ISpecializationTypeDescriptor;
@@ -272,6 +273,30 @@ public class SpecializationTypeRegistry {
 			ElementTypeDescriptor type, IClientContext clientContext) {
 		return getSpecializationTypeDescriptors(type, false, clientContext);
 	}
+	
+	/**
+	 * Gets a list containing all specializations of <code>type</code>, in
+	 * breadth-first order.
+	 * 
+	 * @param type
+	 *            the element type
+	 * @param clientContext
+	 *            the client context
+	 * @return the array of all specializations of <code>type</code>
+	 */
+	public ISpecializationType[] getAllSpecializationTypes(
+			IElementTypeDescriptor type, IClientContext clientContext) {
+
+		List descriptors = getSpecializationTypeDescriptors(type, true, clientContext);
+		ISpecializationType[] result = new ISpecializationType[descriptors.size()];
+		int index = 0;
+		
+		for (Iterator i = descriptors.iterator(); i.hasNext(); index++) {
+			SpecializationTypeDescriptor next = (SpecializationTypeDescriptor) i.next();
+			result[index] = (ISpecializationType) next.getElementType();
+		}
+		return result;
+	}
 
 	/**
 	 * Gets a list containing all specializations of <code>type</code>, in
@@ -284,7 +309,7 @@ public class SpecializationTypeRegistry {
 	 * @return the list of all specializations of <code>type</code>
 	 */
 	private List getAllSpecializationTypeDescriptors(
-			ElementTypeDescriptor type, IClientContext clientContext) {
+			IElementTypeDescriptor type, IClientContext clientContext) {
 
 		return getSpecializationTypeDescriptors(type, true, clientContext);
 	}
@@ -303,37 +328,39 @@ public class SpecializationTypeRegistry {
 	 * @return the collection of <code>SpecializationTypeDescriptors</code> of
 	 *         <code>type</code>
 	 */
-	private List getSpecializationTypeDescriptors(ElementTypeDescriptor type,
+	private List getSpecializationTypeDescriptors(IElementTypeDescriptor type,
 			boolean deep, IClientContext clientContext) {
 
 		LinkedHashSet result = new LinkedHashSet();
-
-		// Get the immediate specializations
-		Set specializationDescriptors = (Set) specializationsForTypeId.get(type
-			.getId());
-
-		if (specializationDescriptors != null) {
-			Set specializations = new HashSet();
-
-			for (Iterator i = specializationDescriptors.iterator(); i.hasNext();) {
-				SpecializationTypeDescriptor nextDescriptor = (SpecializationTypeDescriptor) i
-					.next();
-
-				if (clientContext.includes(nextDescriptor)) {
-					if (nextDescriptor != null) {
-						specializations.add(nextDescriptor);
+		
+		if (type != null) {
+			// Get the immediate specializations
+			Set specializationDescriptors = (Set) specializationsForTypeId.get(type
+				.getId());
 	
-						if (deep) {
-							// Recursively search for specializations
-							result.addAll(getSpecializationTypeDescriptors(
-								nextDescriptor, deep, clientContext));
+			if (specializationDescriptors != null) {
+				Set specializations = new HashSet();
+	
+				for (Iterator i = specializationDescriptors.iterator(); i.hasNext();) {
+					SpecializationTypeDescriptor nextDescriptor = (SpecializationTypeDescriptor) i
+						.next();
+	
+					if (clientContext.includes(nextDescriptor)) {
+						if (nextDescriptor != null) {
+							specializations.add(nextDescriptor);
+		
+							if (deep) {
+								// Recursively search for specializations
+								result.addAll(getSpecializationTypeDescriptors(
+									nextDescriptor, deep, clientContext));
+							}
 						}
 					}
 				}
+				// Add the immediate specializations last, so that a breadth-first
+				// order is maintained
+				result.addAll(specializations);
 			}
-			// Add the immediate specializations last, so that a breadth-first
-			// order is maintained
-			result.addAll(specializations);
 		}
 		return new ArrayList(result);
 	}

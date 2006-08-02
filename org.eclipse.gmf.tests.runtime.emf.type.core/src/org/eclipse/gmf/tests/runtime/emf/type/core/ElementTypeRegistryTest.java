@@ -324,6 +324,27 @@ public class ElementTypeRegistryTest
 		return unboundClientContext;
 	}
 
+	
+	/**
+	 * Verifies that the #getSpecializationsOf API returns the correct
+	 * specializations.
+	 */
+	public void test_getSpecializationsOf_151097() {
+
+		ISpecializationType[] specializations = ElementTypeRegistry
+				.getInstance().getSpecializationsOf(
+						"org.eclipse.gmf.tests.runtime.emf.type.core.employee"); // $NON_NLS_1$
+
+		assertEquals(3, specializations.length);
+		for (int i = 0; i < specializations.length; i++) {
+			if (specializations[i].getId().equals("org.eclipse.gmf.tests.runtime.emf.type.core.manager") //$NON-NLS-1$
+				&& specializations[i].getClass().equals("org.eclipse.gmf.tests.runtime.emf.type.core.topSecret") //$NON-NLS-1$
+				&& specializations[i].getClass().equals("org.eclipse.gmf.tests.runtime.emf.type.core.executive")) { //$NON-NLS-1$
+				fail("expected manager, top-secret and executive specializations"); //$NON-NLS-1$
+			}
+		}
+	}
+
 	public void test_getAllTypesMatching_eObject_metamodel() {
 
 		IElementType[] officeMatches = getFixture().getAllTypesMatching(
