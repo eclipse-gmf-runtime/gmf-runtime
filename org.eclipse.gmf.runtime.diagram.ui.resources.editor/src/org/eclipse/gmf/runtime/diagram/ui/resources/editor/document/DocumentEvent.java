@@ -29,7 +29,7 @@ public class DocumentEvent {
 	public Object fEventInfo;
 	/**
 	 * The modification stamp of the document when firing this event.
-	 * @since 3.1
+	 * 
 	 */
 	protected long fModificationStamp;
 	

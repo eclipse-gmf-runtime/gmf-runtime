@@ -96,7 +96,7 @@ public class DiagramInputDocumentProvider
 	/**
 	 * Factory method for creating empty documents.
 	 * @return the newly created document
-	 * @since 2.1
+	 * 
 	 */
 	protected IDocument createEmptyDocument() {
 		return new DiagramDocument();
@@ -144,7 +144,7 @@ public class DiagramInputDocumentProvider
 	 * @param encoding the character encoding used to read the editor input
 	 * @return <code>true</code> if the document content could be set, <code>false</code> otherwise
 	 * @throws CoreException if the given editor input cannot be accessed
-	 * @since 2.0
+	 * 
 	 */
 	protected boolean setDocumentContent(IDocument document, IEditorInput editorInput) throws CoreException {
 		if (editorInput instanceof IDiagramEditorInput) {
@@ -168,7 +168,7 @@ public class DiagramInputDocumentProvider
 	 *
 	 * @param exception the exception to be logged
 	 * @param message the message to be logged
-	 * @since 2.0
+	 * 
 	 */
 	protected void handleCoreException(CoreException exception, String message) {
 
@@ -186,7 +186,7 @@ public class DiagramInputDocumentProvider
 	 *
 	 * @param input the input whose cache will be updated
 	 * @throws CoreException if the storage cannot be retrieved from the input
-	 * @since 2.0
+	 * 
 	 */
 	protected void updateCache(IDiagramEditorInput input) throws CoreException {
 		DiagramResourceInfo info= (DiagramResourceInfo) getElementInfo(input);
@@ -203,7 +203,7 @@ public class DiagramInputDocumentProvider
 
 	/*
 	 * @see IDocumentProviderExtension#isReadOnly(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isReadOnly(Object element) {
 		if (element instanceof IDiagramEditorInput) {
@@ -224,7 +224,7 @@ public class DiagramInputDocumentProvider
 
 	/*
 	 * @see IDocumentProviderExtension#isModifiable(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isModifiable(Object element) {
 		if (element instanceof IDiagramEditorInput) {
@@ -245,7 +245,7 @@ public class DiagramInputDocumentProvider
 
 	/*
 	 * @see AbstractDocumentProvider#doUpdateStateCache(Object)
-	 * @since 2.0
+	 * 
 	 */
 	protected void doUpdateStateCache(Object element) throws CoreException {
 		if (element instanceof IDiagramEditorInput) {

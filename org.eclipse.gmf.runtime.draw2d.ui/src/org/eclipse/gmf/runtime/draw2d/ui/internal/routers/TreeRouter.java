@@ -280,7 +280,7 @@ public class TreeRouter extends BendpointConnectionRouter implements OrthogonalR
 	/**
 	 * Returns the branch router in the chain.
 	 * @return The getBranchRouter router
-	 * @since 2.0
+	 * 
 	 */
 	protected BranchRouter getBranchRouter() {
 		return branchRouter;

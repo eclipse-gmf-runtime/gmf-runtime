@@ -54,7 +54,7 @@ public class BorderItemContainerFigure
 	 * 
 	 * @param graphics
 	 *            The Graphics used to paint
-	 * @since 2.0
+	 * 
 	 */
 	protected void paintClientArea(Graphics graphics) {
 		if (getChildren().isEmpty() || !isVisible())

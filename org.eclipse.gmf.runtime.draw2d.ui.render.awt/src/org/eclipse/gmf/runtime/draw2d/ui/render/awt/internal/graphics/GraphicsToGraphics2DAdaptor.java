@@ -950,7 +950,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * feature is rarely used, the dash pattern may not be preserved when calling
 	 * {@link #pushState()} and {@link #popState()}.
 	 * @param dash the pixel pattern
-	 * @since 3.1
+	 * 
 	 */
 	public void setLineDash(int dash[]) {
 		float dashFlt[] = new float[dash.length];

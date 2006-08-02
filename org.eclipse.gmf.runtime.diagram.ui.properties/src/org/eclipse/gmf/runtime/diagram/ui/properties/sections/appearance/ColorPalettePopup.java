@@ -86,7 +86,7 @@ public class ColorPalettePopup {
 		 * 
 		 * @return a new image or <code>null</code> if the image could not be
 		 *         created
-		 * @since 2.0
+		 * 
 		 */
 		public Image createImage() {
 

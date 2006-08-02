@@ -43,7 +43,7 @@ public class RectangularDropShadowLineBorder
 	 * of the specified width.
 	 *
 	 * @param w  Width of inset for border
-	 * @since 2.0
+	 * 
 	 */
 	public RectangularDropShadowLineBorder(int w) {
 		super(w);
@@ -53,7 +53,7 @@ public class RectangularDropShadowLineBorder
 	 * Constructs a DropShadowLineBorder with the foreground color and backgroud color
 	 * of the figure that it is drawing the border for.
 	 *
-	 * @since 2.0
+	 * 
 	 */
 	public RectangularDropShadowLineBorder() {
 		super();

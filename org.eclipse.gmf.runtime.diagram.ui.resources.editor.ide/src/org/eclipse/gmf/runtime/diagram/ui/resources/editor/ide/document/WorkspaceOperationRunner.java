@@ -26,7 +26,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.ISchedulingR
 
 
 /**
- * @since 3.0
+ * 
  */
 public class WorkspaceOperationRunner implements IRunnableContext {
 
