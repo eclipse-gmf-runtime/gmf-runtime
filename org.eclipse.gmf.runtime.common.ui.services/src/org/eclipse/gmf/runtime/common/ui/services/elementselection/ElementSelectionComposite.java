@@ -116,6 +116,7 @@ public abstract class ElementSelectionComposite
      * service for "b".
      */
     private char firstCharacter = Character.MIN_VALUE;
+    private String lastSearchedFor = StringStatics.BLANK;
 
     /**
      * matching objects from the element selection service.
@@ -126,7 +127,7 @@ public abstract class ElementSelectionComposite
      * Pattern for the input filter.
      */
     private Pattern pattern;
-
+    
     /**
      * Constructs a new instance that will create the new composite.  I will use
      * the default {@linkplain ElementSelectionService#getInstance() selection service}
@@ -300,7 +301,9 @@ public abstract class ElementSelectionComposite
             }
         }
 
-        if (firstCharacter == Character.MIN_VALUE) {
+        if ((firstCharacter == Character.MIN_VALUE) ||
+        	(firstCharacter != filterText.getText().charAt(0)) ||
+        	(filterText.getText().indexOf(lastSearchedFor) == -1)) {
             firstCharacter = filterText.getText().charAt(0);
             startElementSelectionService();
         }
@@ -315,6 +318,8 @@ public abstract class ElementSelectionComposite
          * service.
          */
         input.setInput(filterText.getText());
+        lastSearchedFor = filterText.getText();
+        
         progressBar.setVisible(true);
         progressBar.beginTask(
             CommonUIServicesMessages.ElementSelectionService_ProgressName,
