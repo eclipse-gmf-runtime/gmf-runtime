@@ -86,8 +86,7 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
             scrollpane = scrollPane = new AnimatableScrollPane();
         }
         scrollpane.setViewport(new FreeformViewport());
-        scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
-        scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
+        scrollPane.setScrollBarVisibility(ScrollPane.AUTOMATIC);
         scrollpane.setLayoutManager(new OverlayScrollPaneLayout() );
 
         IFigure contents = new FreeformLayer();
