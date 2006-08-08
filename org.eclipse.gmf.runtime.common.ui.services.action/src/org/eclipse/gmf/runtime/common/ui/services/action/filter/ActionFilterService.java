@@ -25,7 +25,6 @@ import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.IProvider;
 import org.eclipse.gmf.runtime.common.core.service.Service;
-import org.eclipse.gmf.runtime.common.core.util.HashUtil;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
@@ -48,6 +47,35 @@ import org.eclipse.ui.PlatformUI;
 public class ActionFilterService
 	extends Service
 	implements IActionFilterProvider, IOperationHistoryListener {
+	
+	private static class CacheKey {
+
+		public String name;
+
+		public String value;
+
+		public CacheKey() {
+			this(null,null);
+		}
+
+		public CacheKey(String name, String value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public boolean equals(Object obj) {
+			//This is our key, and it won't never be called except with another CacheKey,
+			//therefore is no need to check for either null, or, instanceof CacheKey
+			CacheKey other = (CacheKey) obj;
+			return value.equals(other.value) && name.equals(other.name);
+		}
+
+		public int hashCode() {
+			return name.hashCode() ^ value.hashCode();
+		}
+	}
+	
+	private static final CacheKey TEST_KEY = new CacheKey();
 
 	/**
 	 * A descriptor for action filter providers defined by a configuration
@@ -295,8 +323,8 @@ public class ActionFilterService
 
 		selection = (null == selection ? StructuredSelection.EMPTY
 			: selection);
-
-		if (!getCachedSelection().equals(selection)) {
+        ISelection cachedSel = getCachedSelection();
+		if ((cachedSel != selection) && !cachedSel.equals(selection)) {
 			clearCachedResults();
 			setCachedSelection(selection);
 		}
@@ -319,19 +347,13 @@ public class ActionFilterService
 	 *  
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
-		Object[] parameters = new Object[] {String.valueOf(target), name, value};
 
-		if (Trace.shouldTrace(CommonUIServicesActionPlugin.getDefault(),
-			CommonUIServicesActionDebugOptions.METHODS_ENTERING)) {
-			Trace.entering(CommonUIServicesActionPlugin.getDefault(),
-				CommonUIServicesActionDebugOptions.METHODS_ENTERING, getClass(),
-				"testAttribute", parameters); //$NON-NLS-1$
-		}
-
-		updateCachedData();
-
-		Integer key = new Integer(HashUtil.hash(HashUtil.hash(name), value));
-		Boolean result = (Boolean) getCachedResults().get(key);
+		updateCachedData();		
+	
+		TEST_KEY.name = name;
+		TEST_KEY.value = value;	
+		
+		Boolean result = (Boolean) getCachedResults().get(TEST_KEY);
 
 		if (null == result) {
 			
@@ -346,7 +368,7 @@ public class ActionFilterService
 			result = results.isEmpty() ? Boolean.FALSE
 				: (Boolean) results.get(0);
 
-			getCachedResults().put(key, result);
+			getCachedResults().put(new CacheKey(name, value), result);
 		} // if
 
 		return result.booleanValue();
@@ -358,5 +380,5 @@ public class ActionFilterService
     public void historyNotification(OperationHistoryEvent event) {
         clearCachedResults();
         setCachedSelection(StructuredSelection.EMPTY);
-    }
+    }   
 }
