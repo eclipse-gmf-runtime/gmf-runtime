@@ -313,5 +313,12 @@ public final class GlobalRedoAction extends GlobalAction {
 
 		super.dispose();
 	}
+	
+	/**
+	 * No work indicator type since my delegate takes care of showing progress.
+	 */
+	public WorkIndicatorType getWorkIndicatorType() {
+		return WorkIndicatorType.NONE;
+	}
 
 }
