@@ -1173,6 +1173,13 @@ abstract public class ConnectionEditPart
             boolean avoidObstruction = style.isAvoidObstructions();
 
             poly.setRoutingStyles(closestDistance, avoidObstruction);
+            
+			if (avoidObstruction)
+				installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,null);
+			else
+				installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
+							new ConnectionBendpointEditPolicy());
+
         }
     }
 

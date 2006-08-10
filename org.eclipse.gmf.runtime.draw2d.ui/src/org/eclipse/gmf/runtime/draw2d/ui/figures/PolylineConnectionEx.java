@@ -40,6 +40,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DelegatingLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -1237,5 +1239,23 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
 		super.paintFigure(graphics);
 		graphics.popState();
 	}
+	
+	/**
+	* Currently we cannot create bendpoints with avoid obstructions 
+	* routing style turned on. Hence we need to define a special cursor
+	* to give user feedback about the disabled bendpoint editing 
+	*/
+	static private final Cursor NO_COMMAND_SPECIAL_CURSOR = 
+		new Cursor(Display.getDefault(), SWT.CURSOR_ARROW);
+
+	/**
+	 * Overriden to display special cursor when needed. Fix for bug #145467 
+	 */
+	public Cursor getCursor() {
+		if (isAvoidObstacleRouting())
+			return NO_COMMAND_SPECIAL_CURSOR;
+		return super.getCursor();
+	}
+	
 }
 
