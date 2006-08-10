@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -103,7 +104,11 @@ public class AbstractProviderConfiguration {
 	 * A map to store previously failed class lookups.
 	 */
 	private static Map isNotAssignableTable = new HashMap();
-	
+    
+    /**
+     * A map to hold the bundle to exception list
+     */
+    private static Map bundleToExceptionsSetMap = new HashMap();	
 	/**
 	 * a map of classes that get asked for methods they do not contain, by
 	 * the provider, the map is a class to a Set of method signatures
@@ -1177,9 +1182,14 @@ public class AbstractProviderConfiguration {
 					if (bundle!=null){
                         // never load the class if the bundle is not active other wise
                         // we will cause the plugin to load
-                        if (bundle.getState() == org.osgi.framework.Bundle.ACTIVE){
+                        // unless the class is in the exception list
+                        int state = bundle.getState();
+                        if ( state == org.osgi.framework.Bundle.ACTIVE || isInExceptionList(bundle,className)){
     						found = bundle.loadClass(className);
     						successLookupTable.put(keyString, new WeakReference(found));
+                            if (state == org.osgi.framework.Bundle.ACTIVE){
+                                bundleToExceptionsSetMap.remove(bundle);
+                            }
                         }
 					}else{
 						failureLookupTable.add(keyString);
@@ -1193,7 +1203,36 @@ public class AbstractProviderConfiguration {
 	}
 	
 	
-	/**
+	private static boolean isInExceptionList(Bundle bundle, String className) {
+        String packageName = className.substring(0,className.lastIndexOf('.'));
+        Set exceptionSet = (Set)bundleToExceptionsSetMap.get(bundle);
+        if (exceptionSet==null){
+            Dictionary dict = bundle.getHeaders();
+            String value = (String)dict.get("Eclipse-LazyStart"); //$NON-NLS-1$
+            if (value!=null){
+                int index  = value.indexOf("exceptions"); //$NON-NLS-1$
+                if (index!=-1){
+                    int start = value.indexOf('"',index+1);
+                    int end = value.indexOf('"',start+1);
+                    String exceptions = value.substring(start+1,end);
+                    exceptionSet = new HashSet(2);
+                    StringTokenizer tokenizer = new StringTokenizer(exceptions, ","); //$NON-NLS-1$
+                    while (tokenizer.hasMoreTokens()) {
+                        exceptionSet.add(tokenizer.nextToken().trim());
+                    }
+                    
+                }else{
+                    exceptionSet = Collections.EMPTY_SET;
+                }
+            }else{
+                exceptionSet = Collections.EMPTY_SET;
+            }
+            bundleToExceptionsSetMap.put(bundle, exceptionSet);
+        }
+        return exceptionSet.contains(packageName);
+    }
+
+    /**
 	 * Given a bundle id, it checks if the bundle is found and activated. If it
 	 * is, the method returns the bundle, otherwise it returns <code>null</code>.
 	 * 
