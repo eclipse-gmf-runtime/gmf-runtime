@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRe
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalRevertAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalSaveAction;
 import org.eclipse.gmf.runtime.common.ui.action.internal.actions.global.GlobalSelectAllAction;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 
 /**
  * This class manages all the global actions. It has methods to create
@@ -259,7 +260,7 @@ public class GlobalActionManager {
 	 * 
 	 * @return GlobalAction
 	 */
-	public GlobalAction createActionHandler(IWorkbenchPart part, String id) {
+	public GlobalAction createActionHandler(final IWorkbenchPart part, String id) {
 		GlobalAction action = null;
 
 		if (id.equals(GlobalActionId.CUT))
@@ -297,9 +298,17 @@ public class GlobalActionManager {
 		else if (id.equals(GlobalActionId.SAVE))
 			action = new GlobalSaveAction(part);
 
-		// this initialization should be moved to the client to call
-		if (action != null)
-			action.init();
+		if (action != null) {
+			// this initialization should be moved to the client to call
+			action.init();  
+			
+			// the action will only refresh on selection changes in the specified part
+			action.setPartSelector(new IPartSelector() {
+				public boolean selects(IWorkbenchPart p) {
+					return part == p;
+				}
+			});
+		}
 		return action;
 	}
 

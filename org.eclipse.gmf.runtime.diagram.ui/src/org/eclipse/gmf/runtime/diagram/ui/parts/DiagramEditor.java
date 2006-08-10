@@ -73,6 +73,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -747,6 +748,11 @@ public abstract class DiagramEditor
             getSelectionActions().add(action.getId());
 
             action = new ToggleRouterAction(((IWorkbenchPart) this).getSite().getPage());
+            ((ToggleRouterAction) action).setPartSelector(new IPartSelector() {
+            	public boolean selects(IWorkbenchPart part) {
+            		return part == DiagramEditor.this;
+            	}
+            });
             action.setText(""); //$NON-NLS-1$ // no text necessary since this is not a visible action
             registry.registerAction(action);
             getSelectionActions().add(action.getId());

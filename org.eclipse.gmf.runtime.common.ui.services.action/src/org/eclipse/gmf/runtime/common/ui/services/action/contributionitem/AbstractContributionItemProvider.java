@@ -264,7 +264,7 @@ public abstract class AbstractContributionItemProvider
 				if (item.isGlobal())
 					actionBars.setGlobalActionHandler(
 						item.getId(),
-						getAction(item.getId(), partDescriptor));
+						getAction(item.getId(), partDescriptor, item));
 			} else if (
 				c
 					instanceof ProviderContributionDescriptor.PartCustomDescriptor) {
@@ -479,6 +479,35 @@ public abstract class AbstractContributionItemProvider
 			}
 		}
 		return action;
+	}
+
+	/**
+	 * Returns the action with the given id that is created for the given part
+	 * id. An action is created once and cached for each unique part's id.
+	 * <P>
+	 * The part selector is used is when the new action is an
+	 * <code>AbstractActionHandler</code> to determine whether or not the
+	 * action is applicable to a given selected part. If the part is not
+	 * applicable, the action will not be refreshed when selection changes in
+	 * the part.
+	 * 
+	 * @param actionId
+	 *            The request action id
+	 * @param partDescriptor
+	 *            The workbench part descriptor
+	 * @param partSelector
+	 *            The part selector
+	 * @return The action with the given id
+	 */
+	protected final IAction getAction(String actionId,
+			IWorkbenchPartDescriptor partDescriptor, IPartSelector partSelector) {
+		
+		IAction result = getAction(actionId, partDescriptor);
+		
+		if (result instanceof AbstractActionHandler) {
+			((AbstractActionHandler) result).setPartSelector(partSelector);
+		}
+		return result;
 	}
 	/**
 	 * Returns the ActionGroup with the given id that is created for the given part id
