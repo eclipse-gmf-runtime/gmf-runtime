@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.ecore.xmi.PackageNotFoundException;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
@@ -85,9 +86,25 @@ public class DiagramIOUtil {
                 	throw e;
                 }
 			}
+			
+			logResourceErrorsAndWarnings(resource);
+						
 			return resource;
 		}
 	}
+
+	private static void logResourceErrorsAndWarnings(Resource resource) {
+		for (Iterator iter = resource.getErrors().iterator(); iter.hasNext();) {
+			Resource.Diagnostic diagnostic = (Resource.Diagnostic) iter.next();
+			Log.error(EditorPlugin.getInstance(), EditorStatusCodes.ERROR, diagnostic.getMessage());				
+		}
+
+		for (Iterator iter = resource.getWarnings().iterator(); iter.hasNext();) {
+			Resource.Diagnostic diagnostic = (Resource.Diagnostic) iter.next();
+			Log.warning(EditorPlugin.getInstance(), EditorStatusCodes.WARNING, diagnostic.getMessage());				
+		}
+	}
+
 	
 	private static class StorageLoader implements ILoader {
 		private IStorage fStorage;
@@ -104,6 +121,9 @@ public class DiagramIOUtil {
  
 			Resource resource = editingDomain.getResourceSet().getResource(
 				URI.createPlatformResourceURI(storagePath, true), true);
+			
+			logResourceErrorsAndWarnings(resource);
+			
 			return resource;
 		}
 	}
@@ -230,6 +250,8 @@ public class DiagramIOUtil {
 
 		if (progressMonitor != null)
 			progressMonitor.done();
+		
+		logResourceErrorsAndWarnings(notationModel);
 	}
 	
 		/**
