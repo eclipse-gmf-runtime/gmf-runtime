@@ -1421,6 +1421,17 @@ public abstract class GraphicalEditPart
         return editingDomain;
     }
     
+    protected IFigure createFigure() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void setModel(Object model) {
+        // reset the editing domain cache
+        editingDomain = null;
+        super.setModel(model);
+    }
+
     /**
      * Gets the diagram event broker from the editing domain.
      * 

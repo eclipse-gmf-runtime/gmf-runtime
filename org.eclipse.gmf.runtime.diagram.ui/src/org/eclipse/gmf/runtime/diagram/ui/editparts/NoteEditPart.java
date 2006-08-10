@@ -11,8 +11,17 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.lang.ref.WeakReference;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.NotificationFilter;
+import org.eclipse.emf.transaction.ResourceSetChangeEvent;
+import org.eclipse.emf.transaction.ResourceSetListenerImpl;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
@@ -41,6 +50,11 @@ import org.eclipse.jface.preference.PreferenceConverter;
  * @author jcorchis
  */
 public class NoteEditPart extends ShapeNodeEditPart {
+    
+    // resource listener
+    private ResourceListener listener = null;
+    
+    private boolean diagramLinkMode = false;
 
 	/**
 	 * constructor
@@ -63,8 +77,10 @@ public class NoteEditPart extends ShapeNodeEditPart {
 			if ( notationView!=null && 
 				 (notationView.getEAnnotation(Properties.DIAGRAMLINK_ANNOTATION)!=null ||
 				  notationView.getType() == null ||
-				  notationView.getType().length() == 0))
+				  notationView.getType().length() == 0)){
+                diagramLinkMode = true;
 				noteFigure.setDiagramLinkMode(true);
+            }
 		}
 		return noteFigure;
 	}
@@ -125,4 +141,71 @@ public class NoteEditPart extends ShapeNodeEditPart {
 
         return super.getPreferredValue(feature);
     } 
+    
+    private class ResourceListener extends ResourceSetListenerImpl{
+        private WeakReference resourceRef = null; 
+        private EditPart editPart= null;
+        public ResourceListener(Resource resource, EditPart editPart){
+            resourceRef = new WeakReference(resource);
+            this.editPart = editPart;
+        }
+        
+        /**
+         * Disposes my context from the operation history when a resource is
+         * unloaded from my editing domain.
+         */
+        public void resourceSetChanged(ResourceSetChangeEvent event) {
+            if (editPart ==null || resourceRef.get()==null)
+                return;
+            boolean unloaded = isResourceUnloaded(event.getNotifications());
+            if (unloaded && editPart.isActive()) {
+                editPart.refresh();
+            }
+        }
+        
+        /**
+         * Finds resources that have sent unload notifications.
+         * 
+         * @param notifications
+         *            notifications received from a transaction
+         * @return a set of resources that the notifications indicate have been
+         *         unloaded, or <code>null</code> if none
+         */
+        private boolean isResourceUnloaded(Collection notifications) {
+            for (Iterator iter = notifications.iterator(); iter.hasNext();) {
+                Notification next = (Notification) iter.next();
+                if (next.getNotifier()!=resourceRef.get())
+                    return false;
+                if (NotificationFilter.RESOURCE_UNLOADED.matches(next)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean isPostcommitOnly() {
+            // only interested in post-commit "resourceSetChanged" event
+            return true;
+        }
+
+    }
+    
+    protected void addSemanticListeners() {
+        // the resource listener is needed only in diagram link mode
+        if (diagramLinkMode){
+            if (listener==null){
+                listener = new ResourceListener(getNotationView().getElement().eResource(),this);
+            }
+            getEditingDomain().addResourceSetListener(listener);
+        }
+        super.addSemanticListeners();
+    }
+
+    protected void removeSemanticListeners() {
+        //the resource listener is needed only in diagram link mode
+        if (listener!=null)
+            getEditingDomain().removeResourceSetListener(listener);
+        super.removeSemanticListeners();
+    }
+
 }
