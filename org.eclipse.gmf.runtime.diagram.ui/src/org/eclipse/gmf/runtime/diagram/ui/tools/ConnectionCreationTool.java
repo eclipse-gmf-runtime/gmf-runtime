@@ -27,6 +27,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
@@ -78,6 +80,8 @@ public class ConnectionCreationTool
 		.getDefault(), DiagramUIPluginImages.DESC_NO_CONNECTION_CURSOR_SOURCE
 		.getImageData(), DiagramUIPluginImages.DESC_NO_CONNECTION_CURSOR_MASK
 		.getImageData(), 0, 0);
+	
+	static private Cursor CURSOR_TARGET_MENU = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 
 	/**
 	 * Creates a new ConnectionCreationTool, the elementTypeInfo and
@@ -435,5 +439,21 @@ public class ConnectionCreationTool
 			return super.getCommand();
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.tools.AbstractConnectionCreationTool#calculateCursor()
+	 */
+	protected Cursor calculateCursor() {
+		Command command = getCurrentCommand();
+		if (command != null && command.canExecute())
+		{
+			EditPart ep = getTargetEditPart();
+			if (ep instanceof DiagramEditPart || ep instanceof CompartmentEditPart)
+				return CURSOR_TARGET_MENU;
+		}
+		return super.calculateCursor();
+	}
+	
+	
 
 }
