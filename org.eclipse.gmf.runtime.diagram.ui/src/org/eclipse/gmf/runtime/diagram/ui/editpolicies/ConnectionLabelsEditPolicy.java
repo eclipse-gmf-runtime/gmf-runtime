@@ -101,16 +101,14 @@ public class ConnectionLabelsEditPolicy extends AbstractEditPolicy {
     	// labels are not compartments
         // labels contained by Node Shape Edit Parts or connection edit parts
         // labels had location constrain
-        // labels had the string Type set on them or they will not have the same
-        // semantic element as their parent
+        // labels had the string Type set on them 
         if ((containerEditPart instanceof ShapeNodeEditPart ||
              containerEditPart instanceof ConnectionEditPart )
              &&  view instanceof Node){
             Node node = (Node)view;
             String nodeType = node.getType();
             if (!isCompartment(node) &&
-                (nodeType != null && nodeType.length()>0)||
-                (parentView!=null && parentView.getElement() != view.getElement())){
+                (nodeType != null && nodeType.length()>0)){
                 LayoutConstraint lContraint = node.getLayoutConstraint();
                 if (lContraint instanceof Location){
                     return true;
