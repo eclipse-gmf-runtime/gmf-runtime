@@ -368,6 +368,7 @@
        <binding context="org.eclipse.gmf.example.runtime.diagram.logic.context">
           <elementType pattern="logic.*"/>
           <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+          <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.removeBookmarks"/>
        </binding>
     </extension>
    

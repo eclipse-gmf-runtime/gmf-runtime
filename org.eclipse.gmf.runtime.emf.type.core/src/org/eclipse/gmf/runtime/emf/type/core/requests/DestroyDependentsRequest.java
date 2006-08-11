@@ -94,6 +94,7 @@ public class DestroyDependentsRequest extends DestroyRequest {
 	 */
 	public final void setElementToDestroy(EObject elementToDestroy) {
 		this.elementToDestroy = elementToDestroy;
+		dependentElementsToDestroy.add(elementToDestroy);
 	}
 
 	public EObject getContainer() {
