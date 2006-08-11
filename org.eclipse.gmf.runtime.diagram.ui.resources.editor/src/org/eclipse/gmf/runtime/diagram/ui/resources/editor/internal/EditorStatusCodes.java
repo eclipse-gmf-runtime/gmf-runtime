@@ -40,5 +40,7 @@ public final class EditorStatusCodes {
 	 */
 	public static final int RESOURCE_FAILURE = 5;
 
+	public static final int WARNING = 7;
+
 
 }
