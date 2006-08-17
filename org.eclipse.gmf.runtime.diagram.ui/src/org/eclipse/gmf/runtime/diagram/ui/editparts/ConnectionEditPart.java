@@ -1177,8 +1177,7 @@ abstract public class ConnectionEditPart
 			if (avoidObstruction)
 				installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,null);
 			else
-				installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-							new ConnectionBendpointEditPolicy());
+				installBendpointEditPolicy();
 
         }
     }
