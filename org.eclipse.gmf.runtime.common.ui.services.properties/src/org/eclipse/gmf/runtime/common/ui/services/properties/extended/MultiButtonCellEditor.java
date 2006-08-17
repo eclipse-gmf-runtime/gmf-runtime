@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * Cell editor that provides for a read-only label representation of the value
@@ -55,7 +56,7 @@ public abstract class MultiButtonCellEditor
 	/**
 	 * The label part of the editor
 	 */
-	private Label label;
+	private Control label;
 
 	/**
 	 * Array of the editor's buttons
@@ -170,7 +171,11 @@ public abstract class MultiButtonCellEditor
 		editor.setLayout(new MultiButtonCellLayout());
 
 		// create the label
-		label = new Label(editor, SWT.LEFT);
+        if (isModifiable()) {
+            label = (new Text(editor, SWT.LEFT));
+        } else {
+            label = (new Label(editor, SWT.LEFT));
+        }
 		label.setFont(font);
 		label.setBackground(bg);
 		updateLabel(value);
@@ -184,6 +189,16 @@ public abstract class MultiButtonCellEditor
 		return editor;
 	}
 
+    /**
+     * Determine if the label in the cell editor is modifiable. The default is a
+     * read-only label representation of the value.
+     * 
+     * @return <code>true</code> if the label is modifiable
+     */
+    protected boolean isModifiable() {
+        return false;
+    }
+    
 	/**
 	 * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
 	 */
@@ -272,7 +287,11 @@ public abstract class MultiButtonCellEditor
 		if (val != null) {
 			text = val.toString();
 		}
-		label.setText(text);
+        if (label instanceof Label) {
+            ((Label)label).setText(text);
+        } else if (label instanceof Text) {
+            ((Text)label).setText(text);
+        }
 	}
 
 	/**
@@ -285,9 +304,20 @@ public abstract class MultiButtonCellEditor
 	protected abstract void initButtons();
 
 	/**
-	 * @return Returns the label.
+     * Get the label widget.
+	 * @return the label widget.
 	 */
 	protected Label getLabel() {
-		return label;
+        return (label != null && label instanceof Label) ? (Label) label
+            : null;
 	}
+	
+    /**
+     * Get the text widget in the case where the label is modifiable.
+     * @return the label widget.
+     */
+	protected Text getText() {
+	    return (label != null && label instanceof Text) ? (Text) label
+            : null;
+    }
 }
