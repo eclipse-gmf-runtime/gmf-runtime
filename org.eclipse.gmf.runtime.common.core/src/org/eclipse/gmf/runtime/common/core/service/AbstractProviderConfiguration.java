@@ -1212,13 +1212,19 @@ public class AbstractProviderConfiguration {
             if (value!=null){
                 int index  = value.indexOf("exceptions"); //$NON-NLS-1$
                 if (index!=-1){
-                    int start = value.indexOf('"',index+1);
-                    int end = value.indexOf('"',start+1);
-                    String exceptions = value.substring(start+1,end);
-                    exceptionSet = new HashSet(2);
-                    StringTokenizer tokenizer = new StringTokenizer(exceptions, ","); //$NON-NLS-1$
-                    while (tokenizer.hasMoreTokens()) {
-                        exceptionSet.add(tokenizer.nextToken().trim());
+                    try {
+                        int start = value.indexOf('"',index+1);
+                        int end = value.indexOf('"',start+1);
+                        String exceptions = value.substring(start+1,end);
+                        exceptionSet = new HashSet(2);
+                        StringTokenizer tokenizer = new StringTokenizer(exceptions, ","); //$NON-NLS-1$
+                        while (tokenizer.hasMoreTokens()) {
+                            exceptionSet.add(tokenizer.nextToken().trim());
+                        }
+                    }catch(IndexOutOfBoundsException exception){
+                        // this means the MF did not follow the documented format for the exceptions list
+                        // so i'll consider it empty
+                        exceptionSet = Collections.EMPTY_SET;
                     }
                     
                 }else{
