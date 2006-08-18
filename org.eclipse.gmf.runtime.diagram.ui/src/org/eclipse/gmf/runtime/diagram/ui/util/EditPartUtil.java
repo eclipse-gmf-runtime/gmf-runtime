@@ -11,12 +11,18 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.util;
 
+import java.util.Iterator;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransaction;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.View;
@@ -44,6 +50,39 @@ public class EditPartUtil {
 		}
 		return null;
 	}
+    
+    /**
+     * remove all the canonical edit policies on the passed edit part, if the considerChildren 
+     * flag is ON, it will remove the canonical editpolicies on every edit part in the 
+     * passed edit part hirarchy
+     * @param editPart the edit part to remove the edit policy from
+     * @param considerChildren determine the the canonical edit policies will be removed from 
+     *        children as well or not
+     */
+    public static void removeCanonicalEditPolicies(EditPart editPart, boolean considerChildren) {
+        EditPolicy ep = editPart.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
+        if (ep!=null){
+            editPart.removeEditPolicy(ep);
+        }
+        if (considerChildren){
+            Iterator childrenIterator = editPart.getChildren().iterator();
+            removeCanonicalEditPolicies(childrenIterator);
+            if (editPart instanceof AbstractGraphicalEditPart){
+                AbstractGraphicalEditPart gEP = (AbstractGraphicalEditPart)editPart;
+                Iterator sourceConnectionsIterator = gEP.getSourceConnections().iterator();
+                removeCanonicalEditPolicies(sourceConnectionsIterator);
+                Iterator targetConnectionsIterator = gEP.getTargetConnections().iterator();
+                removeCanonicalEditPolicies(targetConnectionsIterator);
+            }
+        }
+    }
+
+    private static void removeCanonicalEditPolicies(Iterator childrenIterator) {
+        while (childrenIterator.hasNext()) {
+            EditPart child = (EditPart)childrenIterator.next();
+            removeCanonicalEditPolicies(child,true);
+        }
+    }
 	
 	/**
 	 * Used as general utility usually in the context of handling notifications to ensure that a runnable will
