@@ -156,6 +156,17 @@ public abstract class AbstractActionHandler
 				if (part != null && contributedToPart(part))
 					refresh();
 			}
+
+			/**
+			 * Listens to part deactivation and disables the action
+			 * Could be improved to only consider toolbar actions
+			 */
+			public void partDeactivated(IWorkbenchPart part) {
+				if (part != null && contributedToPart(part)) {
+					setEnabled(false);
+				}
+			}
+			
 		};
 		workbenchPage.addPartListener(partListener);
 	}
