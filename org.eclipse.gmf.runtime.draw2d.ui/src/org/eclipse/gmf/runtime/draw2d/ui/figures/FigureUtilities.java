@@ -11,10 +11,13 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
@@ -175,4 +178,60 @@ public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 			constraint);
 	}
 
+	
+	/**
+	 * Helper method to paint a grid.  Painting is optimized as it is restricted to the
+	 * Graphics' clip.
+	 * 
+	 * @param	g			The Graphics object to be used for painting
+	 * @param	f			The figure in which the grid is to be painted
+	 * @param	origin		Any point where the grid lines are expected to intersect
+	 * @param	distanceX	Distance between vertical grid lines; if 0 or less, vertical grid
+	 * 						lines will not be drawn
+	 * @param	distanceY	Distance between horizontal grid lines; if 0 or less, horizontal
+	 * 						grid lines will not be drawn
+	 * @param	lineStyle   Line style to be used for painting the grid lines
+	 * @param   dashes      Dash pattern to be used for the grid line (ignored if lineStyle != LINE_CUSTOM)
+	 * 
+	 */
+	public static void paintGridWithStyle(Graphics g, IFigure f, 
+			org.eclipse.draw2d.geometry.Point origin, int distanceX, int distanceY, int lineStyle, int[] dashes) {
+		Rectangle clip = g.getClip(Rectangle.SINGLETON);
+		
+		int origLineStyle = g.getLineStyle();		
+		
+		if (distanceX > 0) {
+			if (origin.x >= clip.x)
+				while (origin.x - distanceX >= clip.x)
+					origin.x -= distanceX;
+			else
+				while (origin.x < clip.x)
+					origin.x += distanceX;
+			for (int i = origin.x; i < clip.x + clip.width; i += distanceX) {
+				g.setLineStyle(lineStyle);
+				if ((dashes != null) && (lineStyle == SWT.LINE_CUSTOM)) g.setLineDash(dashes);
+				g.drawLine(i, clip.y, i, clip.y + clip.height);
+				g.setLineStyle(origLineStyle);
+			}
+		}
+		
+		if (distanceY > 0) {
+			if (origin.y >= clip.y)
+				while (origin.y - distanceY >= clip.y)
+					origin.y -= distanceY;
+			else
+				while (origin.y < clip.y)
+					origin.y += distanceY;
+			for (int i = origin.y; i < clip.y + clip.height; i += distanceY) {
+				g.setLineStyle(lineStyle);
+				if ((dashes != null) && (lineStyle == SWT.LINE_CUSTOM)) g.setLineDash(dashes);
+				g.drawLine(clip.x, i, clip.x + clip.width, i);
+				g.setLineStyle(origLineStyle);
+			}
+		}
+	}
+
+	
+	
+	
 }
