@@ -117,6 +117,7 @@ public abstract class ElementSelectionComposite
      */
     private char firstCharacter = Character.MIN_VALUE;
     private String lastSearchedFor = StringStatics.BLANK;
+    private int lastScopeSearchedFor = 0;
 
     /**
      * matching objects from the element selection service.
@@ -158,6 +159,7 @@ public abstract class ElementSelectionComposite
     	this.title = title;
     	this.input = input;
     	this.elementSelectionService = elementSelectionService;
+        this.lastScopeSearchedFor = input.getScope().intValue();
     }
 
     /**
@@ -283,7 +285,14 @@ public abstract class ElementSelectionComposite
             firstCharacter = Character.MIN_VALUE;
             return;
         }
-
+        
+        if (this.input.getScope().intValue() != this.lastScopeSearchedFor) {
+            //scope changes, start from scratch...
+            
+            tableViewer.getTable().removeAll();
+            matchingObjects.clear();
+        }
+        
         /*
          * clear the existing matches in the table and refilter results we have
          * received
@@ -303,8 +312,12 @@ public abstract class ElementSelectionComposite
 
         if ((firstCharacter == Character.MIN_VALUE) ||
         	(firstCharacter != filterText.getText().charAt(0)) ||
-        	(filterText.getText().indexOf(lastSearchedFor) == -1)) {
+        	(filterText.getText().indexOf(lastSearchedFor) == -1) ||
+            this.input.getScope().intValue() != this.lastScopeSearchedFor) {
+            
             firstCharacter = filterText.getText().charAt(0);
+            this.lastScopeSearchedFor = this.input.getScope().intValue();
+            
             startElementSelectionService();
         }
     }
