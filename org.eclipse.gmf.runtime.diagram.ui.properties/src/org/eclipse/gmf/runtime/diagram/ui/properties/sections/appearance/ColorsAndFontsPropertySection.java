@@ -485,7 +485,6 @@ public class ColorsAndFontsPropertySection
 		}
 
 		executeAsCompositeCommand(FONT_COMMAND_NAME, commands);
-		getSingleInput().refresh();
 	}
 
 	/**
