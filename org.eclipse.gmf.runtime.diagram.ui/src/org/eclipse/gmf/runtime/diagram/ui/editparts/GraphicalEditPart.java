@@ -291,12 +291,17 @@ public abstract class GraphicalEditPart
             }
         }
         super.deactivate();
+    }
+
+    public void removeNotify() {
+        super.removeNotify();
         
         if (cachedFontData != null) {
             getResourceManager().destroyFont(
                 FontDescriptor.createFrom(cachedFontData));
             cachedFontData = null;
         }
+
     }
 
     /**

@@ -345,6 +345,11 @@ abstract public class ConnectionEditPart
                 }
             }
         }
+    }
+
+    public void removeNotify() {
+        super.removeNotify();
+        
         if (cachedFontData != null) {
             getResourceManager().destroyFont(
                 FontDescriptor.createFrom(cachedFontData));
