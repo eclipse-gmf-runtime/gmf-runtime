@@ -19,9 +19,11 @@ import java.util.List;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -34,6 +36,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
@@ -61,6 +64,8 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.CellEditorActionHandler;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @author melaasar
@@ -98,6 +103,8 @@ public class TextDirectEditManager
     private IActionBars actionBars;
     private CellEditorActionHandler actionHandler;
     private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
+    
+    private Font zoomLevelFont = null;
 		
 	/**
 	 * the text cell editor locator
@@ -413,9 +420,83 @@ public class TextDirectEditManager
 			// Set the cell editor text to the initial character
 			setEditText(initialString.toString());
 		}
-
+	}
+	
+    /**
+     * This method obtains the fonts that are being used by the figure at its zoom level.
+     * @param gep the associated <code>GraphicalEditPart</code> of the figure
+     * @param actualFont font being used by the figure
+     * @param display
+     * @return <code>actualFont</code> if zoom level is 1.0 (or when there's an error),
+     * new Font otherwise.
+     */
+	private Font getZoomLevelFont(Font actualFont, Display display) {
+		Object zoom = getEditPart().getViewer().getProperty(ZoomManager.class.toString());
+		
+		if (zoom != null) {
+			double zoomLevel = ((ZoomManager)zoom).getZoom();
+			
+			if (zoomLevel == 1.0f) 
+				return actualFont;
+			
+			FontData[] fd = new FontData[actualFont.getFontData().length];
+			FontData tempFD = null;
+			
+			for (int i=0; i < fd.length; i++) {
+				tempFD = actualFont.getFontData()[i];
+				
+				fd[i] = new FontData(tempFD.getName(),(int)(zoomLevel * tempFD.getHeight()),tempFD.getStyle());
+			}
+			
+            try {
+                FontDescriptor fontDescriptor = FontDescriptor.createFrom(fd);
+                cachedFontDescriptors.add(fontDescriptor);
+                return getResourceManager().createFont(fontDescriptor);
+            } catch (DeviceResourceException e) {
+                Trace.catching(DiagramUIPlugin.getInstance(),
+                    DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "getZoomLevelFonts", e); //$NON-NLS-1$
+                Log.error(DiagramUIPlugin.getInstance(),
+                    DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING, "getZoomLevelFonts", e); //$NON-NLS-1$
+                
+                return actualFont;
+            }
+		}
+		else
+			return actualFont;
+	}
+	
+	/**
+	 * Gets the tex extent scaled to the mapping mode
+	 */
+	private Dimension getTextExtents(String s, Font font, IMapMode mm) {
+		Dimension d = FigureUtilities.getTextExtents(s, font);
+        // height should be set using the font height and the number of lines
+        // in the string 
+        int lineCount = getLineCount(s);
+        d.height = FigureUtilities.getFontMetrics(font).getHeight()*lineCount;
+        
+     	return new Dimension(mm.DPtoLP(d.width), mm.DPtoLP(d.height));
 	}
 
+    private int getLineCount(String s) {
+        StringTokenizer tokenizer = new StringTokenizer(s, "\n"); //$NON-NLS-1$
+        return tokenizer.countTokens();
+    }
+
+    public void show() {
+    	super.show();
+    	
+    	WrapLabel fig = ((TextCompartmentEditPart)this.getEditPart()).getLabel();
+		Text textControl = (Text)getCellEditor().getControl();
+		this.zoomLevelFont = getZoomLevelFont(fig.getFont(), textControl.getDisplay());
+		
+		textControl.setFont(this.zoomLevelFont);
+        
+        //since the font's have been resized, we need to resize the  Text control...
+        getTextCellEditorLocator((ITextAwareEditPart)getEditPart()).relocate(getCellEditor());
+    }
+    
 	/**
 	 * 
 	 * Performs show and sends an extra mouse click to the point location so 
@@ -428,9 +509,93 @@ public class TextDirectEditManager
 	 */
 	public void show(Point location) {		
 		show();
-		// Send another click if the previous one is within the editor bounds 
+		
+		if (!(getEditPart() instanceof TextCompartmentEditPart)) {
+			sendClickToCellEditor(location);
+			return;
+		}
+		
+		WrapLabel fig = ((TextCompartmentEditPart)this.getEditPart()).getLabel();
+		Text textControl = (Text)getCellEditor().getControl();
+		
+		//we need to restore our wraplabel figure bounds after we are done
+		Rectangle restoreRect = fig.getBounds().getCopy();
+		
+		Rectangle rect = fig.getBounds();
+		fig.translateToAbsolute(rect);
+		
+		Rectangle iconBounds = fig.getIconBounds().getCopy();
+		fig.translateToAbsolute(iconBounds);
+
+		double avrLines =  fig.getBounds().height / (double)FigureUtilities.getFontMetrics(this.zoomLevelFont).getHeight();
+		
+		int xWidth = location.x - rect.x;
+		
+		if (fig.getIcon() != null && fig.getTextPlacement() == PositionConstants.EAST) 
+			xWidth -= iconBounds.width;
+		
+		double yPercentage = (location.y - rect.y) / (double)rect.height;
+		
+		//calculate the line number the mouse clicked on.
+		int lineNum = (int)Math.ceil(avrLines * yPercentage);
+		
+		//character count for caret positioning...
+		int charCount = 0;
+		
+		StringTokenizer tokenizer = new StringTokenizer(fig.getSubStringText(), "\n"); //$NON-NLS-1$
+
+		//calculate the total characters before linePos...
+		for (int lineCount = 1; lineCount < lineNum; lineCount++) {
+			if (tokenizer.hasMoreTokens()) {
+				charCount += tokenizer.nextToken().length();
+				
+				//check if there is a user-inserted new line which will be accounted in the Text control...
+				String newLineCheck = fig.getText().substring(charCount,charCount+1); 
+				if (newLineCheck.equals("\r") || newLineCheck.equals("\n"))	//$NON-NLS-1$ //$NON-NLS-2$
+					charCount++;
+			}
+			else {
+				//our linePos calculation was wrong...revert to sending a mouse click...
+				sendClickToCellEditor(location);
+				fig.setBounds(restoreRect);
+				return;
+			}
+		}
+		
+		//now count the last line's characters till the point where the mouse clicked...
+		if (tokenizer.hasMoreTokens()) {
+			String currentLineText = tokenizer.nextToken();
+			
+			IMapMode mm = MapModeUtil.getMapMode(fig);
+			
+			for (int i = 1; i < currentLineText.length(); i++) {
+				Dimension textExtent = getTextExtents(currentLineText.substring(0, i), this.zoomLevelFont, mm);
+				fig.translateToAbsolute(textExtent);
+				
+				charCount++;
+				
+				if (textExtent.width >= xWidth)
+					break;
+			}
+			
+			textControl.setSelection(charCount);
+			
+			fig.setBounds(restoreRect);
+			
+		}
+		else {
+			//our linePos calculation was wrong...revert to sending a mouse click...
+			sendClickToCellEditor(location);
+			fig.setBounds(restoreRect);
+		}
+	}
+	
+	private void sendClickToCellEditor(final Point location) {
+		//make sure the diagram doesn't receive the click event..
+		getCellEditor().getControl().setCapture(true);
+		
 		if (getCellEditor() != null && getCellEditor().getControl().getBounds().contains(location))
-			sendMouseClick(location);	
+			sendMouseClick(location);
 	}
 
 	
