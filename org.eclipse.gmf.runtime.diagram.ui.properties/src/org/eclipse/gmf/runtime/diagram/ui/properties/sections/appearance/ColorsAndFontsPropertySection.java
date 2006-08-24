@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesImages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
@@ -37,6 +38,8 @@ import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -234,10 +237,20 @@ public class ColorsAndFontsPropertySection
 
 		fontBoldButton = new Button(toolBar, SWT.TOGGLE);
 		fontBoldButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_BOLD));
+        fontBoldButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FontStyle_Bold;
+            }
+        });
 	
 		
 		fontItalicButton = new Button(toolBar, SWT.TOGGLE );
 		fontItalicButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_ITALIC));
+        fontItalicButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FontStyle_Italic;
+            }
+        });
 
 		fontBoldButton.addSelectionListener(new SelectionAdapter() {
 
@@ -257,7 +270,11 @@ public class ColorsAndFontsPropertySection
 
 		fontColorButton = new Button(toolBar, SWT.PUSH);
 		fontColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FONT_COLOR));
-
+        fontColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FontColor;
+            }
+        });
 		fontColorButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -269,7 +286,11 @@ public class ColorsAndFontsPropertySection
 
 		lineColorButton = new Button(toolBar, SWT.PUSH);
 		lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
-
+        lineColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
+            }
+        });
 		lineColorButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -279,7 +300,11 @@ public class ColorsAndFontsPropertySection
 
 		fillColorButton = new Button(toolBar, SWT.PUSH);
 		fillColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FILL_COLOR));
-
+		fillColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FillColor;
+            }
+        });
 		fillColorButton.setEnabled(false);
 
 		if (isReadOnly()) {

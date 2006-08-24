@@ -4,6 +4,7 @@ import java.text.ParseException;
 
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -19,15 +20,14 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
-import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import com.ibm.icu.text.NumberFormat;
@@ -220,10 +219,17 @@ public class RulerGridPropertySection
     }
 
     private void createLineColorControl(Composite composite) {
+        getWidgetFactory().createLabel(composite, LINE_COLOR_LABEL);
         
         lineColorButton = new Button(composite, SWT.PUSH);
         lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
 
+        lineColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
+            }
+        });
+        
         lineColorButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent event) {
@@ -240,17 +246,12 @@ public class RulerGridPropertySection
             }           
         });
 
-        FormData data = new FormData();
-        data.left = new FormAttachment(0,80);
-        data.right = new FormAttachment(100, 0);
-        data.top = new FormAttachment(0, 0);
-        lineColorButton.setLayoutData(data);
-        lineColorButton.setEnabled(true);
-        
-        createLabelWidget(composite, LINE_COLOR_LABEL, lineColorButton);
+        lineColorButton.setEnabled(true);   
     }
 
     private void createLineStyleControl(Composite composite) {
+        getWidgetFactory().createLabel(composite, LINE_STYLE_LABEL); 
+
         lineStyleCombo = getWidgetFactory().createCCombo(composite,
             SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
         lineStyleCombo.setItems(getStyles());
@@ -265,14 +266,7 @@ public class RulerGridPropertySection
                 setWorkspaceProperty(WorkspaceViewerProperties.GRIDLINESTYLE, style + SWT.LINE_SOLID);
             }
         });
-        
-        FormData data = new FormData();
-        data.left = new FormAttachment(0,80);
-        data.right = new FormAttachment(100, 0);
-        data.top = new FormAttachment(0, 0);
-        lineStyleCombo.setLayoutData(data);
-        
-        createLabelWidget(composite, LINE_STYLE_LABEL, lineStyleCombo); 
+
     }   
     
     /**
@@ -321,7 +315,7 @@ public class RulerGridPropertySection
     private void createMeasurementGroup(Composite composite) {
 
         measurementGroup = getWidgetFactory().createGroup(composite, MEASUREMENT_LABEL);        
-        measurementGroup.setLayout(new GridLayout(2, true));
+        measurementGroup.setLayout(new GridLayout(2, false));
                 
         // Create ruler unit combo
         getWidgetFactory().createLabel(measurementGroup, RULER_UNITS_LABEL);
@@ -567,24 +561,6 @@ public class RulerGridPropertySection
     private Text getTextWidget() {
         return textWidget;
     }
-        
-    /**
-     * Create a label for property name
-     * 
-     * @param parent -
-     *            parent composite
-     * @return - label to show property name
-     */
-    private CLabel createLabelWidget(Composite parent, String labelText, Control control) {
-        CLabel label = getWidgetFactory().createCLabel(parent, labelText);
-        FormData data = new FormData();
-        data.left = new FormAttachment(0, 0);
-        data.right = new FormAttachment(control,
-            -ITabbedPropertyConstants.HSPACE);
-        data.top = new FormAttachment(control, 0, SWT.CENTER);
-        label.setLayoutData(data);
-        return label;
-    }
     
     /**
      * @return Returns the listener.
@@ -641,14 +617,11 @@ public class RulerGridPropertySection
      */
     private void createGridlineGroup(Composite composite) { 
 
-        gridlineGroup = getWidgetFactory().createGroup(composite, GRIDLINE_LABEL);      
-        gridlineGroup.setLayout(new GridLayout(1, true));
-
-        Composite sectionComposite3 = getWidgetFactory().createFlatFormComposite(gridlineGroup);
-        createLineColorControl(sectionComposite3);
-
-        Composite sectionComposite4 = getWidgetFactory().createFlatFormComposite(gridlineGroup);
-        createLineStyleControl(sectionComposite4);
+        gridlineGroup = getWidgetFactory().createGroup(composite, GRIDLINE_LABEL);  
+        GridLayout gridLayout = new GridLayout(2, false);
+        gridlineGroup.setLayout(gridLayout);
+        createLineColorControl(gridlineGroup);
+        createLineStyleControl(gridlineGroup);
                 
     }
     
