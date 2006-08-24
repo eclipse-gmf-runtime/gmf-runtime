@@ -24,7 +24,6 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -181,14 +180,6 @@ public class PropertyPageCellEditor extends MultiButtonCellEditor {
 			}
 		}
 
-		return null;
-	}
-
-	/**
-	 * Returns the text widget
-	 * @return the text widget
-     */
-	protected Text getText() {
 		return null;
 	}
 
