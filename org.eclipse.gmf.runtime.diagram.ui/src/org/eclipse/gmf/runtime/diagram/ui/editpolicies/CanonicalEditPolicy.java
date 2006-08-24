@@ -629,9 +629,6 @@ implements NotificationListener {
 		EObject semanticHost = getSemanticHost();
 		if ( semanticHost != null && !isActive() ) {
 			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
-			
-			// listen to persisted children to eliminate duplicate views.
-			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
 			// add listener to host view (handle case when user changes "visibility" property)
 			addListenerFilter("NotationListener_Visibility", //$NON-NLS-1$
 							  this,
