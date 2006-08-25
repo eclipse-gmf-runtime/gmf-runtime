@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
@@ -50,7 +51,7 @@ public class TreeEditPart
 
     /** the element parser */
     private IAdaptable referenceAdapter;
-    
+
     /**
      * Cache the editing domain after it is retrieved.
      */
@@ -168,9 +169,11 @@ public class TreeEditPart
      * @param event
      */
     protected void handleNotificationEvent( Notification notification ) {
+        Object notifier = notification.getNotifier();
         if (NotationPackage.Literals.VIEW__ELEMENT==notification.getFeature()) {
             reactivateSemanticElement();
-        } else{
+        } else if (notification.getNotifier() == getSemanticElement() ||
+                   notifier instanceof Style){
             refreshVisuals();
         }
     }
