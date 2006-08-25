@@ -80,7 +80,7 @@ public class CommandProxy
     }
 
     public boolean canRedo() {
-        return command.canUndo();
+        return CommandUtilities.canRedo(command);
     }
 
     public boolean canExecute() {
