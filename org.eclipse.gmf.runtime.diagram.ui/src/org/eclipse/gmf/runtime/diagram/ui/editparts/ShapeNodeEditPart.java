@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterCompartmentItem
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NoteAttachmentReorientEditPolicy;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
@@ -79,6 +80,10 @@ public abstract class ShapeNodeEditPart
 			new SortFilterCompartmentItemsEditPolicy());
 			installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE,
 				new ConnectionHandleEditPolicy());
+
+        // Disable note attachment reorient between two shapes where neither is a note.
+        installEditPolicy("NoteAttachmentReorient", //$NON-NLS-1$
+            new NoteAttachmentReorientEditPolicy());
 	}
 
 	protected final IFigure createFigure() {

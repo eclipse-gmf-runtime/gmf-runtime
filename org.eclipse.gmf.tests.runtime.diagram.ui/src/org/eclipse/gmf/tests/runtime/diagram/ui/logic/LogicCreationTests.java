@@ -22,6 +22,7 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -29,7 +30,9 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.Circuit
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicGateEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
@@ -42,6 +45,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.util.AbstractPresentationTestFix
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
+
 
 /**
  * Tests the canonical editpolicies installed on the class attribute and 
@@ -163,5 +167,49 @@ public class LogicCreationTests extends AbstractTestBase {
 
 		return cc;
 	}
+    
+    public void test_reorientingNoteAttachments() {
+        
+        // Add two LEDs.
+        IElementType typeLED = ElementTypeRegistry.getInstance().getType("logic.led"); //$NON-NLS-1$        
+        LEDEditPart led1 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, new Point(100, 10), getDiagramEditPart());        
+        LEDEditPart led2 = (LEDEditPart)getLogicTestFixture().createShapeUsingTool(typeLED, new Point(200, 10), getDiagramEditPart());
+
+        // Add two notes.
+        NoteEditPart note1 = (NoteEditPart)getLogicTestFixture().createShapeUsingTool(DiagramNotationType.NOTE, new Point(100, 100), getDiagramEditPart());        
+        NoteEditPart note2 = (NoteEditPart)getLogicTestFixture().createShapeUsingTool(DiagramNotationType.NOTE, new Point(200, 100), getDiagramEditPart());
+
+        // Create a note attachment from note1 to led1.
+        ConnectionEditPart noteAttachment = getLogicTestFixture()
+            .createConnectorUsingTool(note1,
+                led1, DiagramNotationType.NOTE_ATTACHMENT);
+        
+        // Reorient the note attachment to led2.
+        reorientConnectionTarget(noteAttachment, led2, true);
+
+        // Reorient the note attachment to note2.
+        reorientConnectionSource(noteAttachment, note2, true);
+                
+        // Test that we cannot reorient a note attachment between two LEDs.
+        reorientConnectionSource(noteAttachment, led1, false);
+        
+        // Now test this all again but creating the note attachment from the LED
+        // to the note.
+        
+        // Create a note attachment from led1 to note1.
+        noteAttachment = getLogicTestFixture()
+            .createConnectorUsingTool(led1,
+                note1, DiagramNotationType.NOTE_ATTACHMENT);
+        
+        // Reorient the note attachment to led2.
+        reorientConnectionSource(noteAttachment, led2, true);
+
+        // Reorient the note attachment to note2.
+        reorientConnectionTarget(noteAttachment, note2, true);
+                
+        // Test that we cannot reorient a note attachment between two LEDs.
+        reorientConnectionTarget(noteAttachment, led1, false);
+    }
+
 }
 

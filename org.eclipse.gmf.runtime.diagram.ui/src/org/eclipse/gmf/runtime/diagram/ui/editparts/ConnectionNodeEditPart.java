@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NoteAttachmentReorientEditPolicy;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
@@ -62,6 +63,10 @@ abstract public class ConnectionNodeEditPart
 		//installEditPolicy(EditPolicy.NODE_ROLE, new NodeEditPolicy());
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new GraphicalNodeEditPolicy());
+
+        // Disable note attachment reorient between two shapes where neither is a note.
+        installEditPolicy("NoteAttachmentReorient", //$NON-NLS-1$
+            new NoteAttachmentReorientEditPolicy());
 	}
 
 	/* (non-Javadoc)
