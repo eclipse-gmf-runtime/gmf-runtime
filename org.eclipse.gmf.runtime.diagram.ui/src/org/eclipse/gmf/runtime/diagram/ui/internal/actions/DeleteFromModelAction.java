@@ -65,6 +65,37 @@ public class DeleteFromModelAction
 		super(workbenchPage);
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
+	 */
+	protected boolean calculateEnabled() {
+		List operationSet = getOperationSet();
+		if (operationSet.isEmpty()) {
+			return false;
+		}
+		Request request = getTargetRequest();
+		Iterator editParts = operationSet.iterator();
+		while (editParts.hasNext()) {
+			EditPart editPart = (EditPart) editParts.next();
+			// disable on diagram links 
+			if (editPart instanceof IGraphicalEditPart) {
+				IGraphicalEditPart gEditPart = (IGraphicalEditPart) editPart;
+				View view = (View) gEditPart.getModel();
+				EObject element = ViewUtil.resolveSemanticElement(view);
+				if ((element == null) || (element.eIsProxy())
+					|| (element instanceof Diagram)) {
+					return false;
+				}
+			} else {
+				Command curCommand = editPart.getCommand(request);
+				if (curCommand == null || (curCommand.canExecute() == false)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * Initializes this action's text and images.
