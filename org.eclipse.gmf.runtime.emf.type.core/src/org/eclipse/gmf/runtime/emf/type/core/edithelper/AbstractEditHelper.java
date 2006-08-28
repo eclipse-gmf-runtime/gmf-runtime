@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
@@ -41,6 +42,7 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
+import org.eclipse.gmf.runtime.emf.type.core.internal.requests.RequestCacheEntries;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
@@ -145,9 +147,12 @@ public abstract class AbstractEditHelper
      * <LI>'after' commands from matching element type specializations</LI>
      * </OL>
      */
-    private ICommand getEditCommand(IEditCommandRequest req, IEditHelperAdvice[] advice) { 
-        ICompositeCommand command = createCommand(req);
 
+	
+    private ICommand getEditCommand(IEditCommandRequest req, IEditHelperAdvice[] advice) {
+    
+		ICompositeCommand command = createCommand(req);
+   
         // Get 'before' commands from matching element type
         // specializations
         if (advice != null) {
@@ -304,10 +309,22 @@ public abstract class AbstractEditHelper
 	 * @return the edit helper advice, or <code>null</code> if there is none
 	 */
 	protected IEditHelperAdvice[] getEditHelperAdvice(IEditCommandRequest req) {
-
+		IEditHelperAdvice[] advices = null;
 		Object editHelperContext = req.getEditHelperContext();
-		return ElementTypeRegistry.getInstance().getEditHelperAdvice(
-			editHelperContext);
+		Map cacheMaps = (Map) req
+			.getParameter(RequestCacheEntries.Cache_Maps);
+		if (cacheMaps != null) {
+			Map contextMap = (Map) cacheMaps.get(editHelperContext);
+			if (contextMap != null) {
+				advices = (IEditHelperAdvice[]) contextMap.get(RequestCacheEntries.EditHelper_Advice);
+			}			
+		}		
+		
+		if (advices == null) {			
+			advices = ElementTypeRegistry.getInstance().getEditHelperAdvice(
+				editHelperContext);			
+		}
+		return advices;
 	}
 
 	/**
@@ -319,46 +336,43 @@ public abstract class AbstractEditHelper
 	 * @return a new composite command
 	 */
 	protected ICompositeCommand createCommand(IEditCommandRequest req) {
-		
 		CompositeTransactionalCommand result = new CompositeTransactionalCommand(
-				req.getEditingDomain(),
-				req.getLabel()) {
-			
+			req.getEditingDomain(), req.getLabel()) {
+
 			/**
 			 * Extracts the first return value out of the collection of return
 			 * values from the superclass command result.
 			 */
 			public CommandResult getCommandResult() {
 				CommandResult _result = super.getCommandResult();
-				
+
 				IStatus status = _result.getStatus();
-				
+
 				if (status.getSeverity() == IStatus.OK) {
 					Object returnObject = null;
-					
+
 					Object returnValue = _result.getReturnValue();
-					
+
 					if (returnValue instanceof Collection) {
 						Collection collection = (Collection) returnValue;
-						
+
 						if (!collection.isEmpty()) {
 							returnObject = collection.iterator().next();
 						}
-						
+
 					} else {
 						returnObject = returnValue;
 					}
 					_result = new CommandResult(status, returnObject);
 				}
-				
+
 				return _result;
 			};
 		};
-		
+
 		// commands (esp. destroy) are expected to be large nested structures,
 		//   because there can be many discrete particles of advice
 		result.setTransactionNestingEnabled(false);
-		
 		return result;
 	}
 
@@ -619,7 +633,7 @@ public abstract class AbstractEditHelper
 	 */
 	protected ICommand getBasicDestroyElementCommand(DestroyElementRequest req) {
 		ICommand result = req.getBasicDestroyCommand();
-		
+
 		if (result == null) {
 			result = new DestroyElementCommand(req);
 		} else {
@@ -627,9 +641,11 @@ public abstract class AbstractEditHelper
 			//    propagate this command, which would destroy the wrong object
 			req.setBasicDestroyCommand(null);
 		}
-		
+
 		return result;
 	}
+	
+	
 	
 	/**
 	 * Gets the command to destroy a single child of an element of my kind along
@@ -642,52 +658,64 @@ public abstract class AbstractEditHelper
 	 *    {@linkplain DestroyElementRequest#getElementToDestroy() element to destroy}
 	 *    and its non-containment dependents
 	 */
-	protected ICommand getDestroyElementWithDependentsCommand(DestroyElementRequest req) {
+	protected ICommand getDestroyElementWithDependentsCommand(
+			DestroyElementRequest req) {
 		ICommand result = getBasicDestroyElementCommand(req);
-		
-		EObject initial = (EObject) req.getParameter(
-				DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER);
-		
+
+		EObject initial = (EObject) req
+			.getParameter(DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER);
+
 		if (initial == null) {
 			// set the parameter to keep track of the initial element to destroy
 			req.setParameter(
-					DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER,
-					req.getElementToDestroy());
+				DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER, req
+					.getElementToDestroy());
 		}
-		
-		// get elements dependent on the element we are destroying, that
+
+		//	 get elements dependent on the element we are destroying, that
 		//   must also be destroyed
-		DestroyDependentsRequest ddr = (DestroyDependentsRequest) req.getParameter(
-				DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
+		DestroyDependentsRequest ddr = (DestroyDependentsRequest) req
+			.getParameter(DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
 		if (ddr == null) {
 			// create the destroy-dependents request that will be propagated to
 			//    destroy requests for all elements destroyed in this operation
-			ddr = new DestroyDependentsRequest(
-				req.getEditingDomain(),
-				req.getElementToDestroy(),
-				req.isConfirmationRequired());
+			ddr = new DestroyDependentsRequest(req.getEditingDomain(), req
+				.getElementToDestroy(), req.isConfirmationRequired());
 			// propagate the parameters, including the initial element to
 			//    destroy parameter
-			ddr.addParameters(req.getParameters()); 
+			ddr.addParameters(req.getParameters());
 			ddr.setClientContext(req.getClientContext());
-			req.setParameter(
+			req
+				.setParameter(
 					DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER,
 					ddr);
 		} else {
 			ddr.setElementToDestroy(req.getElementToDestroy());
 		}
-		
-		IElementType typeToDestroy = ElementTypeRegistry.getInstance().getElementType(
+
+		IElementType typeToDestroy = null;
+		Map cacheMaps = (Map) req.getParameter(RequestCacheEntries.Cache_Maps);
+		if (cacheMaps != null) {
+			Map map = (Map) cacheMaps.get(req.getElementToDestroy());
+			if (map != null) {
+				typeToDestroy = (IElementType) map
+					.get(RequestCacheEntries.Element_Type);
+			}
+		}
+
+		if (typeToDestroy == null) {
+			typeToDestroy = ElementTypeRegistry.getInstance().getElementType(
 				req.getElementToDestroy());
-		
+		}
+
 		if (typeToDestroy != null) {
 			ICommand command = typeToDestroy.getEditCommand(ddr);
-		
+
 			if (command != null) {
 				result = result.compose(command);
 			}
 		}
-		
+
 		return result;
 	}
 	
@@ -703,13 +731,28 @@ public abstract class AbstractEditHelper
 	 *    along with its contents and other dependents
 	 */
 	protected ICommand getDestroyElementCommand(DestroyElementRequest req) {
-		ICommand result = null;
+		ICommand result = null;	
+
+		ICommand destroyParent = getDestroyElementWithDependentsCommand(req);	
 		
-		ICommand destroyParent = getDestroyElementWithDependentsCommand(req);
+		EObject parent = req.getElementToDestroy();		
 		
-		EObject parent = req.getElementToDestroy();
-		IElementType parentType = ElementTypeRegistry.getInstance().getElementType(
+		IElementType parentType = null;	
+		
+		Map cacheMaps = (Map) req
+			.getParameter(RequestCacheEntries.Cache_Maps);
+		Set checkedElement = null;
+		if (cacheMaps != null) {
+			checkedElement = (Set) cacheMaps
+			.get(RequestCacheEntries.Checked_Elements);
+			checkedElement.add(parent);
+			Map parentMap = (Map) cacheMaps.get(parent);
+			parentType = (IElementType) parentMap
+				.get(RequestCacheEntries.Element_Type);			
+		} else {
+			parentType = ElementTypeRegistry.getInstance().getElementType(
 				parent);
+		}
 
 		if (parentType != null) {
 			for (Iterator iter = parent.eContents().iterator(); iter.hasNext();) {
@@ -719,8 +762,8 @@ public abstract class AbstractEditHelper
 						DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
 				
 				// if another object is already destroying this one because it
-				//    is (transitively) a dependent, then don't destroy it again
-				if ((ddr == null) || !ddr.getDependentElementsToDestroy().contains(next)) {
+				// is (transitively) a dependent, then don't destroy it again .
+				if ((ddr == null) || ((checkedElement != null) && checkedElement.add(next)) || (!ddr.getDependentElementsToDestroy().contains(next))) {
 					// set the element to be destroyed
 					req.setElementToDestroy(next);
 					
@@ -741,8 +784,8 @@ public abstract class AbstractEditHelper
 				}
 			}
 		}
-		
-		// bottom-up destruction:  destroy children before parent
+
+		//bottom-up destruction:  destroy children before parent
 		if (result == null) {
 			result = destroyParent;
 		} else {

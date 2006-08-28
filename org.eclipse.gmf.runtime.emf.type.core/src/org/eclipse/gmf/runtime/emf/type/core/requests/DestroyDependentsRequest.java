@@ -13,10 +13,14 @@ package org.eclipse.gmf.runtime.emf.type.core.requests;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -27,6 +31,7 @@ import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IClientContext;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
+import org.eclipse.gmf.runtime.emf.type.core.internal.requests.RequestCacheEntries;
 
 /**
  * Request to destroy the dependents of a model element.  It is expected that
@@ -46,17 +51,18 @@ import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
  * @author Christian W. Damus (cdamus)
  */
 public class DestroyDependentsRequest extends DestroyRequest {
-
+	
 	/**
 	 * The element to destroy.
 	 */
 	private EObject elementToDestroy;
+	private EObject ctorElementToDestroy;
 	
 	/**
 	 * Other objects dependent on the primary object that should also be destroyed.
 	 */
-	private final Set dependentElementsToDestroy = new java.util.HashSet();
-	private final Set immutableViewOfDependents = Collections.unmodifiableSet(dependentElementsToDestroy);
+	private Set dependentElementsToDestroy;
+	private Set immutableViewOfDependents;
 	
 	/**
 	 * Constructs a new request to destroy the dependents of a model element.
@@ -72,10 +78,12 @@ public class DestroyDependentsRequest extends DestroyRequest {
 	public DestroyDependentsRequest(TransactionalEditingDomain editingDomain,
 			EObject elementToDestroy, boolean confirmationRequired) {
 
-		super(editingDomain, confirmationRequired);
-		dependentElementsToDestroy.add(elementToDestroy);
+		super(editingDomain, confirmationRequired);		
 		this.elementToDestroy = elementToDestroy;
-	}
+		// keep it until we populate the set, beacuse someone might construct us with some element but later call
+		// setElementToDestroy(...) with a different element and the original behaviour would have added them both to the set
+		ctorElementToDestroy = elementToDestroy;
+	}	
     
 	/**
 	 * Gets the element to be destroyed.
@@ -94,7 +102,9 @@ public class DestroyDependentsRequest extends DestroyRequest {
 	 */
 	public final void setElementToDestroy(EObject elementToDestroy) {
 		this.elementToDestroy = elementToDestroy;
-		dependentElementsToDestroy.add(elementToDestroy);
+		if (elementToDestroy != null) {
+			internalGetDependentElementsToDestroy().add(elementToDestroy);
+		}
 	}
 
 	public EObject getContainer() {
@@ -149,6 +159,9 @@ public class DestroyDependentsRequest extends DestroyRequest {
 
         if (result == null) {
             result = TransactionUtil.getEditingDomain(getElementToDestroy());
+            if (result != null) {
+				setEditingDomain(result);
+			}
         }
         return result;
     }
@@ -158,9 +171,33 @@ public class DestroyDependentsRequest extends DestroyRequest {
      * 
      * @return the set of dependent elements
      */
+    
     protected final Set internalGetDependentElementsToDestroy() {
-    	return dependentElementsToDestroy;
-    }
+		if (dependentElementsToDestroy == null) {
+			Map cacheMaps = (Map) getParameter(RequestCacheEntries.Cache_Maps);
+			if (cacheMaps != null) {
+				dependentElementsToDestroy = (Set) cacheMaps
+					.get(RequestCacheEntries.Dependent_Elements);
+			} else {
+				dependentElementsToDestroy = new HashSet();
+			}
+			
+			immutableViewOfDependents = Collections.unmodifiableSet(dependentElementsToDestroy);
+			
+			if (ctorElementToDestroy != null) {
+				dependentElementsToDestroy.add(ctorElementToDestroy);
+				populateCacheMap(null, ctorElementToDestroy);				
+			}
+
+			if (elementToDestroy != null
+				&& (elementToDestroy != ctorElementToDestroy)) {
+				dependentElementsToDestroy.add(elementToDestroy);
+				populateCacheMap(null, ctorElementToDestroy);	
+			}
+			ctorElementToDestroy = null;
+		}
+		return dependentElementsToDestroy;
+	}
     
     /**
      * Obtains an immutable view of the set of dependent elements to destroy.
@@ -168,8 +205,11 @@ public class DestroyDependentsRequest extends DestroyRequest {
      * @return the immutable set of dependent elements
      */
     public final Set getDependentElementsToDestroy() {
-    	return immutableViewOfDependents;
-    }
+		if (immutableViewOfDependents == null) {
+			internalGetDependentElementsToDestroy();//this should ensure we are initialized
+		}
+		return immutableViewOfDependents;
+	}
 	
     /**
      * Obtains a command that destroys the specified <code>dependent</code> of
@@ -194,17 +234,15 @@ public class DestroyDependentsRequest extends DestroyRequest {
      */
 	public ICommand getDestroyDependentCommand(EObject dependent) {
 		ICommand result = null;
-		
+
 		if (addDependentElementToDestroy(dependent)) {
-			// record the element that we are destroying, for later restoration
+			//record the element that we are destroying, for later restoration
 			EObject elementBeingDestroyed = getElementToDestroy();
 			
 			try {
 				DestroyElementRequest destroy = new DestroyElementRequest(
-						getEditingDomain(),
-						dependent,
-						isConfirmationRequired());
-				
+					getEditingDomain(), dependent, isConfirmationRequired());
+
 				// propagate my parameters
 				destroy.addParameters(getParameters());
 				
@@ -214,9 +252,15 @@ public class DestroyDependentsRequest extends DestroyRequest {
 						this);
 				setElementToDestroy(dependent);
 				
-				IElementType context = ElementTypeRegistry.getInstance().getElementType(
-						destroy.getEditHelperContext());
+				Object eHelperContext = destroy.getEditHelperContext();
 				
+				IElementType context = populateCacheMap(eHelperContext, dependent);				
+
+				if (context == null) {
+					context = ElementTypeRegistry.getInstance().getElementType(
+						eHelperContext);
+				}
+
 				if (context != null) {
 					result = context.getEditCommand(destroy);
 				}
@@ -225,9 +269,55 @@ public class DestroyDependentsRequest extends DestroyRequest {
 				setElementToDestroy(elementBeingDestroyed);
 			}
 		}
-		
+
 		return result;
 	}
+	
+	private IElementType populateCacheMap(Object eHelperContext, EObject dependent) {
+		IElementType context = null;
+		Map cacheMaps = (Map) getParameter(RequestCacheEntries.Cache_Maps);
+		if (cacheMaps != null) {
+			//beacareful, this one here call populateCacheMap(...) if the set was null and cacheMaps exist,
+			//so before that you should instantiate the DependentElementsToDestroy set
+			Set dependents = internalGetDependentElementsToDestroy(); 
+			//May be this guy was a context-of-a-dependent, and we had populated its cache map already
+			if (cacheMaps.get(dependent) == null) {
+				Map parentMap = new HashMap();
+				cacheMaps.put(dependent, parentMap);
+				RequestCacheEntries.initializeEObjCache(dependent, parentMap);
+			}
+
+			TreeIterator it = dependent.eAllContents();
+			while (it.hasNext()) {
+				EObject eObj = (EObject) it.next();
+				dependents.add(eObj);
+				if (cacheMaps.get(eObj) == null) {
+					Map map = new HashMap();
+					cacheMaps.put(eObj, map);
+					RequestCacheEntries.initializeEObjCache(eObj, map);
+				}
+			}
+			
+			if (eHelperContext != null) {
+				Map eHelperMap = (Map) cacheMaps.get(eHelperContext);
+				if (eHelperMap == null && (eHelperContext instanceof EObject)) {
+					eHelperMap = new HashMap();
+					cacheMaps.put(eHelperContext, eHelperMap);
+					RequestCacheEntries.initializeEObjCache(
+						(EObject) eHelperContext, eHelperMap);
+				}
+
+				if (eHelperMap != null) {
+					context = (IElementType) eHelperMap
+						.get(RequestCacheEntries.Element_Type);
+				}
+			}
+		}//if (cacheMaps != null)
+
+		return context;
+	}
+	
+
 	
 	/**
      * Obtains a command that destroys the specified <code>dependents</code> of
@@ -314,13 +404,13 @@ public class DestroyDependentsRequest extends DestroyRequest {
      */
     protected boolean isElementToBeDestroyed(EObject eObject) {
     	boolean result = false;
+    	EObject eObj = getElementToDestroy();
+    	Set set = internalGetDependentElementsToDestroy();
     	
     	while (!(result || (eObject == null))) {
-    		result = (eObject == getElementToDestroy())
-    			|| internalGetDependentElementsToDestroy().contains(eObject);
-    		
-    		eObject = eObject.eContainer();
-    	}
+			result = (eObject == eObj) || set.contains(eObject);
+			eObject = eObject.eContainer();
+		}
     	
     	return result;
     }

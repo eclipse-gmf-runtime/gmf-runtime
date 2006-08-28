@@ -77,17 +77,15 @@ public class DestroyReferenceCommand
 
 		for (Iterator i = features.iterator(); i.hasNext();) {
 			EReference nextReference = (EReference) i.next();
-
-			if (FeatureMapUtil.isMany(getContainer(), nextReference)) {
-				Collection referenceCollection = (Collection) getContainer()
-					.eGet(nextReference);
-
-				if (referenceCollection.contains(getReferencedObject())) {
+			if (nextReference.isChangeable() && !nextReference.isDerived()
+				&& getContainer().eIsSet(nextReference)) {
+				if (FeatureMapUtil.isMany(getContainer(), nextReference)) {
+					Collection referenceCollection = (Collection) getContainer()
+						.eGet(nextReference);
 					referenceCollection.remove(getReferencedObject());
+				} else if (getContainer().eGet(nextReference) == getReferencedObject()) {
+					getContainer().eSet(nextReference, null);
 				}
-
-			} else if (getContainer().eGet(nextReference) == getReferencedObject()) {
-				getContainer().eSet(nextReference, null);
 			}
 		}
 		return CommandResult.newOKCommandResult();

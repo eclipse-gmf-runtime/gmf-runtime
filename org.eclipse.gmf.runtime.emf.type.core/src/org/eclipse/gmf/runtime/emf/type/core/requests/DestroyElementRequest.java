@@ -180,6 +180,9 @@ public class DestroyElementRequest extends DestroyRequest {
 
         if (result == null) {
             result = TransactionUtil.getEditingDomain(getElementToDestroy());
+            if (result != null) {
+				setEditingDomain(result);
+			}
         }
         return result;
     }

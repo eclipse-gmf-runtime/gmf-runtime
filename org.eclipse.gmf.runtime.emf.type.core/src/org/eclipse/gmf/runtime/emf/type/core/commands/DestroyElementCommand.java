@@ -11,8 +11,8 @@
 
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -27,7 +28,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.emf.core.internal.util.ReferenceVisitor;
+import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypeDebugOptions;
@@ -105,6 +106,9 @@ public class DestroyElementCommand
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+	 */
 	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 	    throws ExecutionException {
 
@@ -139,9 +143,31 @@ public class DestroyElementCommand
 	 * @param destructee the object being destroyed
 	 */
 	protected void tearDownIncomingReferences(EObject destructee) {
-		TearDownVisitor visitor = new TearDownVisitor(getElementToDestroy());
-		visitor.visitReferencers();    // gather the tear-down actions
-		visitor.tearDownReferences();  // execute them
+		CrossReferenceAdapter crossReferencer = CrossReferenceAdapter
+			.getExistingCrossReferenceAdapter(destructee);
+		if (crossReferencer != null) {
+			Collection inverseReferences = crossReferencer
+				.getInverseReferences(destructee);
+			if (inverseReferences != null) {
+				int size = inverseReferences.size();
+				if (size > 0) {
+					Setting setting;
+					EReference eRef;
+					Setting[] settings = (Setting[]) inverseReferences
+						.toArray(new Setting[size]);
+					for (int i = 0; i < size; ++i) {
+						setting = settings[i];
+						eRef = (EReference) setting.getEStructuralFeature();
+						if (eRef.isChangeable() && (eRef.isDerived() == false)
+							&& (eRef.isContainment() == false)
+							&& (eRef.isContainer() == false)) {
+							EcoreUtil.remove(setting.getEObject(), eRef,
+								destructee);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -180,56 +206,4 @@ public class DestroyElementCommand
 		return (elementToDestroy != null) && (elementToDestroy.eResource() != null);
 	}
 	
-	/**
-	 * A reference visitor that creates a list of deferred tear-down actions,
-	 * to tear down references to the element being destroyed.  These actions
-	 * are deferred to avoid concurrently updating the cross-reference map while
-	 * we are walking the cross-references.
-	 *
-	 * @author Christian W. Damus (cdamus)
-	 */
-	private static class TearDownVisitor extends ReferenceVisitor {
-		private List tearDownActions = null;
-		
-		TearDownVisitor(EObject elementToRemove) {
-			super(elementToRemove);
-		}
-		
-		/**
-		 * Gather up the list of deferred tear-down actions.
-		 */
-		protected void visitedReferencer(final EReference reference,
-				final EObject referencer) {
-
-			// container references will be handled by recursive detachment of
-			//   the contents, and unchangeable/derived features can't be
-			//   updated directly
-			if (reference.isChangeable() && !reference.isDerived()
-					&& !reference.isContainer()) {
-				
-				if (tearDownActions == null) {
-					tearDownActions = new java.util.ArrayList();
-				}
-				
-				tearDownActions.add(new Runnable() {
-					public void run() {
-						// remove the referenced object from the reference
-						EcoreUtil.remove(referencer, reference, referencedObject);
-					}});
-			}
-		}
-		
-		/**
-		 * Execute the list of deferred tear-down actions, if any, to actually
-		 * delete references.
-		 */
-		void tearDownReferences() {
-			if (tearDownActions != null) {
-				for (Iterator iter = tearDownActions.iterator(); iter.hasNext();) {
-					((Runnable) iter.next()).run();
-				}
-			}
-		}
-	}
-
 }

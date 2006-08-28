@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
  * Edit helper advice that provides commands to remove associated bookmarks 
@@ -63,7 +64,7 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 		if (fileResourceMap.containsKey(eResource))
 			resource = (IFile)fileResourceMap.get(eResource);
 		else {
-			resource = (IFile)WorkspaceSynchronizer.getFile(eResource);
+			resource = WorkspaceSynchronizer.getFile(eResource);
 			fileResourceMap.put(eResource, resource);
 		}
 		
@@ -88,7 +89,7 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 
 		for (int i = 0; i < bookmarks.length; i++) {
 			
-			IMarker bookmark = (IMarker) bookmarks[i];
+			IMarker bookmark = bookmarks[i];
 			
 			String bookmarkElementID = bookmark.getAttribute(IBookmark.ELEMENT_ID,StringStatics.BLANK);
 			
@@ -124,6 +125,18 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 		return retSet;
 	}
 	
+	
+	public ICommand getBeforeEditCommand(IEditCommandRequest request) {		
+		return null;
+	}
+	
+	public ICommand getAfterEditCommand(IEditCommandRequest request) {
+		if (request instanceof DestroyElementRequest) {
+			return getAfterDestroyElementCommand((DestroyElementRequest) request);
+		}
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getAfterDestroyElementCommand(org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest)
 	 */
@@ -135,7 +148,7 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 		
 		if (oInitialDestructee != null && 
 			oInitialDestructee instanceof EObject && 
-			request.getElementToDestroy().equals((EObject)oInitialDestructee)) {
+			request.getElementToDestroy().equals(oInitialDestructee)) {
 			
 			Object oDependentElements = request.getParameter(DestroyElementRequest.DESTROY_DEPENDENTS_REQUEST_PARAMETER);
 			
@@ -144,7 +157,7 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 			
 			HashMap fileResourceMap = new HashMap();
 			Set	bookmarksItems = gatherAllBookmarks(
-					(Set)((DestroyDependentsRequest)oDependentElements).getDependentElementsToDestroy(), fileResourceMap),
+					((DestroyDependentsRequest)oDependentElements).getDependentElementsToDestroy(), fileResourceMap),
 				bookmarksDestructee = gatherSingleBookmark(request.getElementToDestroy(), fileResourceMap);
 			
 			if (bookmarksDestructee != null) 

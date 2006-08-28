@@ -13,8 +13,9 @@ package org.eclipse.gmf.runtime.emf.type.core.commands;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.type.core.internal.requests.RequestCacheEntries;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 /**
@@ -66,28 +68,46 @@ public abstract class EditElementCommand
 		this.elementToEdit = elementToEdit;
 		this.request = request;
 	}
-    
+	
     protected static List getAffectedFiles(IEditCommandRequest request) {
-        
-        List result = new ArrayList();
-        List elements = request.getElementsToEdit();
-        
-        if (elements != null) {
-            
-            for (Iterator i = elements.iterator(); i.hasNext();) {
-                Resource resource = ((EObject) i.next()).eResource();
-                
-                if (resource != null) {
-                    IFile file = WorkspaceSynchronizer.getFile(resource);
-                    
-                    if (file != null) {
-                        result.add(file);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+		Map cacheMaps = (Map) request
+			.getParameter(RequestCacheEntries.Cache_Maps);
+		if (cacheMaps != null) {
+			return (List) cacheMaps.get(RequestCacheEntries.Affected_Files);
+		}
+
+		List result = new ArrayList();
+		List elements = request.getElementsToEdit();
+		int size;
+		if (elements != null && ((size = elements.size()) > 0)) {
+			if (size == 1) {
+				Resource resource = ((EObject) elements.get(0)).eResource();
+				if (resource != null) {
+					IFile file = WorkspaceSynchronizer.getFile(resource);
+					if (file != null) {
+						result.add(file);
+					}
+				}
+			} else {
+				Map resourcesToFileMap = new HashMap();
+				for (int i = 0; i < size; ++i) {
+					Resource resource = ((EObject) elements.get(i)).eResource();
+					if (resource != null) {
+						Object file = resourcesToFileMap.get(resource);
+						//if it is in the Map, then it is in the List already as well
+						if (file == null) {
+							file = WorkspaceSynchronizer.getFile(resource);
+							if (file != null) {
+								resourcesToFileMap.put(resource, file);
+								result.add(file);
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Checks that the element to be modified by this command is of the correct
