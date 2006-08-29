@@ -25,6 +25,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.ProgressMonitorPart;
 import org.eclipse.swt.SWT;
@@ -254,7 +255,15 @@ public abstract class ElementSelectionComposite
                 return ((AbstractMatchingObject) element).getDisplayName();
             }
         });
-        tableViewer.setSorter(new ViewerSorter());
+        tableViewer.setSorter(new ViewerSorter() {
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                if (e1 instanceof IMatchingObject && e2 instanceof IMatchingObject)
+                    return ((IMatchingObject)e1).getName().toLowerCase().compareTo(
+                        ((IMatchingObject)e2).getName().toLowerCase());
+                
+                return super.compare(viewer, e1, e2);
+            }
+        });
 
         createCompositeAdditions(result);
 
