@@ -141,7 +141,10 @@ public abstract class ListCompartmentEditPart
 			if (!modeAutomatic() && listening) { // stop listening...
 				removeSemanticChildrenListeners();
 			}
-		} else {
+		} else if  (event.getEventType() == EventType.UNRESOLVE 
+                && event.getNotifier() == ((View)getModel()).getElement()){
+            handleMajorSemanticChange();
+        }  else {
 			super.handleNotificationEvent(event);
 		}
 		
