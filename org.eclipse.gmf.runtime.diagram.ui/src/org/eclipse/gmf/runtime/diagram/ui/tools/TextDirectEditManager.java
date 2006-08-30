@@ -523,6 +523,12 @@ public class TextDirectEditManager
 		
 		Rectangle rect = fig.getBounds();
 		fig.translateToAbsolute(rect);
+        
+        if (!rect.contains(new org.eclipse.draw2d.geometry.Point(location.x,location.y))) {
+            textControl.setSelection(0, textControl.getText().length());
+            fig.setBounds(restoreRect);
+            return;
+        }
 		
 		Rectangle iconBounds = fig.getIconBounds().getCopy();
 		fig.translateToAbsolute(iconBounds);
@@ -568,7 +574,7 @@ public class TextDirectEditManager
 			
 			IMapMode mm = MapModeUtil.getMapMode(fig);
 			
-			for (int i = 1; i < currentLineText.length(); i++) {
+			for (int i = 1; i <= currentLineText.length(); i++) {
 				Dimension textExtent = getTextExtents(currentLineText.substring(0, i), this.zoomLevelFont, mm);
 				fig.translateToAbsolute(textExtent);
 				
