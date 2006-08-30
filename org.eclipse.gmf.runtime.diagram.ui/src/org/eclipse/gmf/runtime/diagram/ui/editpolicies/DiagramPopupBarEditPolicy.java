@@ -19,7 +19,9 @@ import org.eclipse.gef.Tool;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteDrawer;
 import org.eclipse.gef.palette.PaletteEntry;
+import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteListener;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.ui.palette.PaletteViewer;
@@ -53,14 +55,6 @@ public class DiagramPopupBarEditPolicy
 	 * Holds the last active palette tool.
 	 */
 	private ToolEntry theLastTool = null;
-
-	// /**
-	// * Creates a new instance.
-	// */
-	// public DiagramPopupBarEditPolicy() {
-	// super();
-	// this.setIsDisplayAtMouseHoverLocation(true);
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -140,11 +134,19 @@ public class DiagramPopupBarEditPolicy
 		if (theLastTool == null)
 			return;
 
-		PaletteContainer palContainer = theLastTool.getParent();
-		fillWithPaletteToolsInContainer(palContainer);
+        // Find the palette group or drawer containing the last active tool.
+        PaletteContainer container = theLastTool.getParent();
+        while (!(container instanceof PaletteDrawer)
+            && !(container instanceof PaletteGroup)
+            && !(container instanceof PaletteRoot)
+            && container.getParent() != null) {
+            container = container.getParent();
+        }
+        
+		fillWithPaletteToolsInContainer(container);
 	}
 
-	/**
+    /**
 	 * Adds popup bar descriptors for all the shape tools in the given palette
 	 * container.
 	 * 
@@ -179,7 +181,7 @@ public class DiagramPopupBarEditPolicy
 							}
 						}
 					} else if (theEntry instanceof PaletteStack) {
-						// RATLC00524208: fix for the pallete stack optimzation
+						// add all the entries from a palette stack as well
 						PaletteStack theStack = (PaletteStack) theEntry;
 						fillWithPaletteToolsInContainer(theStack);
 					}
