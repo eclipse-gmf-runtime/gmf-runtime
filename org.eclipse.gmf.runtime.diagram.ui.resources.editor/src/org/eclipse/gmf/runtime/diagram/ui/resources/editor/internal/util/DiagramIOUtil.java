@@ -116,14 +116,16 @@ public class DiagramIOUtil {
 		public Resource load(TransactionalEditingDomain editingDomain,
 				Map loadOptions, IProgressMonitor monitor)
 			throws IOException, CoreException {
-            
-			String storagePath = fStorage.getFullPath().toString();
- 
-			Resource resource = editingDomain.getResourceSet().getResource(
-				URI.createPlatformResourceURI(storagePath, true), true);
-			
+            String storageName = fStorage.getName();
+            URI uri = URI.createPlatformResourceURI(storageName);
+            Resource resource = editingDomain.getResourceSet().getResource(uri,false);
+            if (resource == null) {
+                resource = editingDomain.getResourceSet().createResource(uri);
+            }
+            if (!resource.isLoaded()) {
+                resource.load(fStorage.getContents(), loadOptions);
+            }
 			logResourceErrorsAndWarnings(resource);
-			
 			return resource;
 		}
 	}
