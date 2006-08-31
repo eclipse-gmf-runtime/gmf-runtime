@@ -568,21 +568,6 @@ public class DiagramEventBroker
         }
     }
 
-    public final void finalize() {
-        try {
-            for (Iterator iter = instanceMap.keySet().iterator(); iter
-                .hasNext();) {
-                TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) iter
-                    .next();
-                editingDomain
-                    .removeResourceSetListener((DiagramEventBroker) ((WeakReference) instanceMap
-                        .get(editingDomain)).get());
-            }
-        } catch (Throwable ignored) {
-            // intentionally ignored
-        }
-    }
-
     private Set getNotificationListeners(Object notifier, NotifierToKeyToListenersSetMap listeners) {       
         return listeners.getListeners(notifier, LISTEN_TO_ALL_FEATURES);
     }
