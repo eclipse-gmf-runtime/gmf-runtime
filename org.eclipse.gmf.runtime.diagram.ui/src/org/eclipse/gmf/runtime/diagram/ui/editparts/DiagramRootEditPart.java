@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayeredPane;
 import org.eclipse.draw2d.LayeredPane;
@@ -40,11 +41,11 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
@@ -394,7 +395,7 @@ public class DiagramRootEditPart
 	 * @param gridSpacing
 	 */
 	public void setGridColor(Integer rgbValue) {
-		gridLayer.setForegroundColor(FigureUtilities.integerToColor(rgbValue));
+		gridLayer.setForegroundColor(DiagramColorRegistry.getInstance().getColor(rgbValue));
 	}
 
 	/**
