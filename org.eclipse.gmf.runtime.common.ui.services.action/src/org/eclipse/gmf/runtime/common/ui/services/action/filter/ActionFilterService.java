@@ -311,7 +311,7 @@ public class ActionFilterService
 	/**
 	 * Updates the cached results and selection based on the current selection.
 	 *  
-	 */
+	 */	
 	protected void updateCachedData() {
 		ISelection selection = null;
 		IWorkbenchWindow window = PlatformUI.getWorkbench()
@@ -324,8 +324,10 @@ public class ActionFilterService
 		selection = (null == selection ? StructuredSelection.EMPTY
 			: selection);
         ISelection cachedSel = getCachedSelection();
-		if ((cachedSel != selection) && !cachedSel.equals(selection)) {
-			clearCachedResults();
+        if (cachedSel != selection) {
+			if (!cachedSel.equals(selection)) {
+				clearCachedResults();
+			}
 			setCachedSelection(selection);
 		}
 	}
