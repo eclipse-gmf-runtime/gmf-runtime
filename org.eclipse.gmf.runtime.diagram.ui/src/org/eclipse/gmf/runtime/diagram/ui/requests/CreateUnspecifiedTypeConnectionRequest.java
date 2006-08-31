@@ -125,6 +125,13 @@ public class CreateUnspecifiedTypeConnectionRequest
 		return null;
 	}
 
+    
+    public void addRequest(IElementType relationshipType, Request request) {
+        if (requests != null) {
+            requests.put(relationshipType, request);
+        }        
+    }
+    
 	/**
 	 * Returns a list of all the requests.
 	 * 
