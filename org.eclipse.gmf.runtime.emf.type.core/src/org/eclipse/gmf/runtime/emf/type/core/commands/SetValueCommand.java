@@ -74,7 +74,7 @@ public class SetValueCommand
      */
     public boolean canExecute() {
 
-        if (!super.canExecute()) {
+        if (getElementToEdit() == null || !super.canExecute()) {
             return false;
         }
 
