@@ -333,7 +333,7 @@ public class ElementTypeRegistryTest
 
 		ISpecializationType[] specializations = ElementTypeRegistry
 				.getInstance().getSpecializationsOf(
-						"org.eclipse.gmf.tests.runtime.emf.type.core.employee"); // $NON_NLS_1$
+						"org.eclipse.gmf.tests.runtime.emf.type.core.employee"); //$NON-NLS-1$
 
 		assertEquals(3, specializations.length);
 		for (int i = 0; i < specializations.length; i++) {
@@ -417,6 +417,87 @@ public class ElementTypeRegistryTest
 			cManager, getUnboundClientContext());
 		assertEquals(1, managerMatches.length);
 		assertTrue(managerMatches[0] == DefaultMetamodelType.getInstance());
+	}
+
+	/**
+	 * Verifies that the metamodel types bound to a specified context can be
+	 * retrieved from the registry.
+	 */
+	public void test_getMetamodelTypes_155601() {
+
+		IMetamodelType[] metamodelTypes = ElementTypeRegistry.getInstance()
+				.getMetamodelTypes(getClientContext());
+
+		assertEquals(EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length,
+				metamodelTypes.length);
+
+		for (int i = 0; i < metamodelTypes.length; i++) {
+			boolean match = false;
+			for (int j = 0; j < EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length; j++) {
+				if (metamodelTypes[i] == EmployeeType.METAMODEL_TYPES_WITH_CONTEXT[j]) {
+					match = true;
+					break;
+				}
+			}
+			assertTrue("missing metamodel type", match); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Verifies that the specialization types bound to a specified context can be
+	 * retrieved from the registry.
+	 */
+	public void test_getSpecializationTypes_155601() {
+		
+		ISpecializationType[] specializationTypes = ElementTypeRegistry
+				.getInstance().getSpecializationTypes(getClientContext());
+
+		assertEquals(EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length,
+				specializationTypes.length);
+
+		for (int i = 0; i < specializationTypes.length; i++) {
+			boolean match = false;
+			for (int j = 0; j < EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length; j++) {
+				if (specializationTypes[i] == EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT[j]) {
+					match = true;
+					break;
+				}
+			}
+			assertTrue("missing specialization type", match); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Verifies that the element types bound to a specified context can be
+	 * retrieved from the registry.
+	 */
+	public void test_getElementTypes_155601() {
+
+		IElementType[] elementTypes = ElementTypeRegistry.getInstance()
+				.getElementTypes(getClientContext());
+
+		assertEquals(EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length
+				+ EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length,
+				elementTypes.length);
+
+		for (int i = 0; i < elementTypes.length; i++) {
+			boolean match = false;
+			for (int j = 0; j < EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length; j++) {
+				if (elementTypes[i] == EmployeeType.METAMODEL_TYPES_WITH_CONTEXT[j]) {
+					match = true;
+					break;
+				}
+			}
+			if (!match) {
+				for (int j = 0; j < EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length; j++) {
+					if (elementTypes[i] == EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT[j]) {
+						match = true;
+						break;
+					}
+				}
+			}
+			assertTrue("missing element type", match); //$NON-NLS-1$
+		}
 	}
 
 	public void test_getContainedTypes_metamodel() {

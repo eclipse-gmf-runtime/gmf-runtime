@@ -767,6 +767,79 @@ public class ElementTypeRegistry {
 		return specializationTypeRegistry
 				.getAllSpecializationTypes(descriptor, clientContext);
 	}
+	
+	/**
+	 * Gets the metamodel types in the registry that are bound to the
+	 * <code>clientContext</code>.
+	 * 
+	 * @param clientContext
+	 *            the client context
+	 * @return the metamodel types
+	 */
+	public IMetamodelType[] getMetamodelTypes(IClientContext clientContext) {
+
+		List result = new ArrayList();
+		for (Iterator i = metamodelTypeDescriptorsById.values().iterator(); i
+				.hasNext();) {
+			MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) i
+					.next();
+
+			if (clientContext.includes(descriptor)) {
+				result.add(descriptor.getElementType());
+			}
+		}
+
+		return (IMetamodelType[]) result.toArray(new IMetamodelType[result.size()]);
+	}
+	
+	/**
+	 * Gets the specialization types in the registry that are bound to the
+	 * <code>clientContext</code>.
+	 * 
+	 * @param clientContext
+	 *            the client context
+	 * @return the specialization types
+	 */
+	public ISpecializationType[] getSpecializationTypes(
+			IClientContext clientContext) {
+
+		List result = new ArrayList();
+		Collection specializations = specializationTypeRegistry
+				.getSpecializationTypeDescriptors(clientContext);
+		
+		for (Iterator i = specializations.iterator(); i.hasNext();) {
+			result.add(((SpecializationTypeDescriptor) i.next())
+					.getElementType());
+		}
+
+		return (ISpecializationType[]) result.toArray(new ISpecializationType[result.size()]);
+	}
+	
+	/**
+	 * Gets the element types (both metamodel types and specialization types) in
+	 * the registry that are bound to the <code>clientContext</code>.
+	 * 
+	 * @param clientContext
+	 *            the client context
+	 * @return the element types
+	 */
+	public IElementType[] getElementTypes(IClientContext clientContext) {
+
+		IMetamodelType[] metamodelTypes = getMetamodelTypes(clientContext);
+		ISpecializationType[] specializationTypes = getSpecializationTypes(clientContext);
+
+		IElementType[] result = new IElementType[metamodelTypes.length
+				+ specializationTypes.length];
+		
+		for (int i = 0; i < metamodelTypes.length; i++) {
+			result[i] = metamodelTypes[i];
+		}
+		
+		for (int i = 0; i < specializationTypes.length; i++) {
+			result[i + metamodelTypes.length] = specializationTypes[i];
+		}
+		return result;
+	}
 
 	/**
 	 * Gets the element type for <code>id</code>. May return
