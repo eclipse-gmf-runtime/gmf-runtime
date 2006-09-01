@@ -346,9 +346,9 @@ public abstract class AbstractEditHelper
 			public CommandResult getCommandResult() {
 				CommandResult _result = super.getCommandResult();
 
-				IStatus status = _result.getStatus();
+				IStatus status = (_result == null) ? null : _result.getStatus();
 
-				if (status.getSeverity() == IStatus.OK) {
+				if (status != null && status.getSeverity() == IStatus.OK) {
 					Object returnObject = null;
 
 					Object returnValue = _result.getReturnValue();

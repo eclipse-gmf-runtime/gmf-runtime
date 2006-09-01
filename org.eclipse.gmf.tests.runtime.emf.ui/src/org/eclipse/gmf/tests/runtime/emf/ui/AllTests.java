@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.gmf.tests.runtime.emf.ui.action.AbstractModelActionDelegateTest;
 import org.eclipse.gmf.tests.runtime.emf.ui.services.action.AbstractModelActionFilterProviderTest;
 
 
@@ -34,6 +35,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite();
+        suite.addTestSuite(AbstractModelActionDelegateTest.class);
         suite.addTestSuite(AbstractModelActionFilterProviderTest.class);
 		suite.addTestSuite(ModelingAssistantServiceTests.class);
 		return suite;
