@@ -163,7 +163,8 @@ public class DiagramEditingDomainFactory
             runExclusive(new Runnable() {
                 public void run() {
                     try {
-                        deb.resourceSetChanged(unbatchedChangeEvent);
+                        if (deb!=null)
+                            deb.resourceSetChanged(unbatchedChangeEvent);
                     }catch (Exception e) {
                         // do nothing for now  
                     }
