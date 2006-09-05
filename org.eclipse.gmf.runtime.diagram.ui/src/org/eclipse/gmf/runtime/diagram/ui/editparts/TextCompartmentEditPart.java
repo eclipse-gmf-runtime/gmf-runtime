@@ -406,45 +406,49 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 
 	protected void handleNotificationEvent(Notification event) {
 		Object feature = event.getFeature();
-		if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)){
+		if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)) {
 			Integer c = (Integer) event.getNewValue();
+
 			setFontColor(DiagramColorRegistry.getInstance().getColor(c));
-		}
+		} 
 		else if (NotationPackage.eINSTANCE.getFontStyle_Underline().equals(feature))
 			refreshUnderline();
 		else if (NotationPackage.eINSTANCE.getFontStyle_StrikeThrough().equals(feature))
 			refreshStrikeThrough();
-        else if (NotationPackage.eINSTANCE.getFontStyle_FontHeight().equals(feature) ||
-                NotationPackage.eINSTANCE.getFontStyle_FontName().equals(feature) ||
-                NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
-                NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
+		else if (NotationPackage.eINSTANCE.getFontStyle_FontHeight().equals(feature) ||
+				NotationPackage.eINSTANCE.getFontStyle_FontName().equals(feature) || 
+				NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
+				NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
 			refreshFont();
 		} 
 		else if (isAffectingParserOptions(event)) {
 			refreshParserOptions();
 			refreshLabel();
-		} 
-		else {
-			if (getParser() != null
-				&& getParser().isAffectingEvent(event,
-				getParserOptions().intValue())) {
-			refreshLabel();
-			return;
-			}
-			if (getParser() instanceof ISemanticParser) {
-				ISemanticParser modelParser = (ISemanticParser) getParser();
-				if (modelParser.areSemanticElementsAffected(null,
-						event)) {
-					removeSemanticListeners();
-					if (resolveSemanticElement() != null)
-						addSemanticListeners();
-					refreshLabel();
-					return;
+			
+		} else if (getParser() != null) {
+			
+			boolean sematicsAffected = getParser() instanceof ISemanticParser
+					&& ((ISemanticParser) getParser())
+							.areSemanticElementsAffected(null, event);
+							
+			boolean parserAffected = getParser().isAffectingEvent(event,
+					getParserOptions().intValue());
+
+			if (sematicsAffected) {
+				removeSemanticListeners();
+				
+				if (resolveSemanticElement() != null) {
+					addSemanticListeners();
 				}
+			}
+			
+			if (sematicsAffected || parserAffected) {
+				refreshLabel();
 			}
 		}
 		super.handleNotificationEvent(event);
 	}
+
 
 	protected void refreshVisuals() {
 		super.refreshVisuals();
