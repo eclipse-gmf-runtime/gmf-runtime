@@ -748,7 +748,7 @@ abstract public class ConnectionBendpointEditPolicy
 
 		LineSeg moveLine = getLineSeg(constraint, index + 1);
 		LineSeg newLine = moveLine.getParallelLineSegThroughPoint(ptLoc);
-		if (!newLine.isHorizontal() || !newLine.isVertical()) {
+		if (!newLine.isHorizontal() && !newLine.isVertical()) {
 			if (Math.abs(newLine.getOrigin().x - newLine.getTerminus().x) < 
 				Math.abs(newLine.getOrigin().y - newLine.getTerminus().y)) {
 				newLine.setTerminus(new Point(newLine.getOrigin().x, newLine.getTerminus().y));
