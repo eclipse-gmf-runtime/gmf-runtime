@@ -203,7 +203,7 @@ public final class ClientContextManager {
 								EMFTypeCoreMessages
 										.bind(
 												EMFTypeCoreMessages.client_matcherFailure_ERROR_,
-												next.getId()));
+												next.getId()), e);
 			}
 		}
 
@@ -381,7 +381,7 @@ public final class ClientContextManager {
 													sourcePluginId, ce
 															.getStatus()
 															.getMessage()),
-									null);
+									ce);
 
 				} catch (Exception e) {
 					// this client context will not participate in extensible
@@ -553,7 +553,7 @@ public final class ClientContextManager {
 													EMFTypeCoreMessages
 															.bind(
 																	EMFTypeCoreMessages.pattern_invalid_syntax_ERROR_,
-																	patternString)));
+																	patternString)), pse);
 				}
 			}
 		}
