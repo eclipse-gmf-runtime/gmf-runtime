@@ -318,7 +318,7 @@ public abstract class ExecutionStrategy extends EnumeratedType {
 		try {
 			return provider.provides(operation);
 		}
-		catch (Exception e) {
+		catch (Throwable e) {
 			
 			List ignoredProviders = Service.getIgnoredProviders();
 			String providerClassName = provider.getClass().getName();
