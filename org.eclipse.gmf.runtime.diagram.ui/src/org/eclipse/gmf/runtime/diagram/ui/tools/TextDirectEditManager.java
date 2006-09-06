@@ -105,6 +105,8 @@ public class TextDirectEditManager
     private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
     
     private Font zoomLevelFont = null;
+    
+    private CellEditorLocator locator;
 		
 	/**
 	 * the text cell editor locator
@@ -177,7 +179,7 @@ public class TextDirectEditManager
 	 * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
 	 */
 	public TextDirectEditManager(ITextAwareEditPart source) {
-		super(source, getTextCellEditorClass(source), getTextCellEditorLocator(source));
+		this(source, getTextCellEditorClass(source), getTextCellEditorLocator(source));
 	}
 
 	/**
@@ -186,7 +188,8 @@ public class TextDirectEditManager
 	 * @param locator
 	 */
 	public TextDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator) {
-		super(source, editorType, locator);		
+		super(source, editorType, locator);
+		this.locator = locator;
 	}
 
     /**
@@ -488,13 +491,13 @@ public class TextDirectEditManager
     	super.show();
     	
     	WrapLabel fig = ((TextCompartmentEditPart)this.getEditPart()).getLabel();
-		Text textControl = (Text)getCellEditor().getControl();
-		this.zoomLevelFont = getZoomLevelFont(fig.getFont(), textControl.getDisplay());
+		Control control = getCellEditor().getControl();
+		this.zoomLevelFont = getZoomLevelFont(fig.getFont(), control.getDisplay());
 		
-		textControl.setFont(this.zoomLevelFont);
+        control.setFont(this.zoomLevelFont);
         
         //since the font's have been resized, we need to resize the  Text control...
-        getTextCellEditorLocator((ITextAwareEditPart)getEditPart()).relocate(getCellEditor());
+        locator.relocate(getCellEditor());
     }
     
 	/**
@@ -694,6 +697,11 @@ public class TextDirectEditManager
     	_actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), find);
     	_actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undo);
     	_actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redo);
+    }
+
+    public void setLocator(CellEditorLocator locator) {
+        super.setLocator(locator);
+        this.locator = locator;
     }
 
 }
