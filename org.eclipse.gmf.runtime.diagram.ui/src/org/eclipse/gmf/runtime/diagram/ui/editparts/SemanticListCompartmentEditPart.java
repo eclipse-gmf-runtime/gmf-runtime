@@ -175,7 +175,7 @@ abstract public class SemanticListCompartmentEditPart
 		while( childrenIT.hasNext() ) {
 			GraphicalEditPart eP = (GraphicalEditPart)childrenIT.next();
 			semanticChild = (EObject)eP.basicGetModel();
-			semanticChildren.remove(semanticChild);			
+			semanticChildren.remove(semanticChild);
 		}
 		
 		//
@@ -237,14 +237,19 @@ abstract public class SemanticListCompartmentEditPart
 	 * @param evt
 	 */
 	protected void semanticChildrenListChanged(Notification event) {
-		if (!isCanonicalEnabled())
-			return;
-		if (NotificationUtil.isElementAddedToSlot(event) ||
-			NotificationUtil.isMove(event)){
-			refreshChildren();
-		}
-		else if(NotificationUtil.isElementRemovedFromSlot(event) &&
+		if (isCanonicalEnabled()){
+			if (NotificationUtil.isElementAddedToSlot(event) ||
+				NotificationUtil.isMove(event)){
+				refreshChildren();
+			}
+			else if(NotificationUtil.isElementRemovedFromSlot(event) &&
 				event.getOldValue() instanceof  EObject){
+				semanticChildRemoved((EObject)event.getOldValue());
+			
+			}
+		}else if(NotificationUtil.isElementRemovedFromSlot(event) &&
+				event.getOldValue() instanceof  EObject &&
+				!getChildren().isEmpty()){
 				semanticChildRemoved((EObject)event.getOldValue());
 		}
 	}
@@ -390,6 +395,6 @@ abstract public class SemanticListCompartmentEditPart
 	
 	public boolean isCanonical() {
         return true;
-    }	
+    }
 	
 }
