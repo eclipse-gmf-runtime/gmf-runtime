@@ -4,16 +4,26 @@ Bundle-Name: %Fragment.name
 Bundle-Vendor: %Fragment.providerName
 Bundle-Version: 1.0.1.qualifier
 Bundle-Localization: printingWin32Fragment
-Bundle-NativeCode: os/win32/x86/de/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=de,
- os/win32/x86/es/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=es,
- os/win32/x86/fr/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=fr,
- os/win32/x86/it/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=it,
- os/win32/x86/ja/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=ja,
- os/win32/x86/ko/DiagramPrint.dll;osname=WindowsXP;processor=x86;language=ko,
- os/win32/x86/pt_BR/DiagramPrint.dll;osname=WindowsXP;processor=x86;selection-filter="(osgi.nl=pt_BR)",	
- os/win32/x86/zh_CN/DiagramPrint.dll;osname=WindowsXP;processor=x86;selection-filter="(osgi.nl=zh_CN)",
- os/win32/x86/zh_TW/DiagramPrint.dll;osname=WindowsXP;processor=x86;selection-filter="(osgi.nl=zh_TW)",
- os/win32/x86/en/DiagramPrint.dll;osname=WindowsXP;processor=x86
+Bundle-NativeCode: os/win32/x86/de/DiagramPrint.dll;processor=x86;language=de;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/es/DiagramPrint.dll;processor=x86;language=es;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/fr/DiagramPrint.dll;processor=x86;language=fr;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/it/DiagramPrint.dll;processor=x86;language=it;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/ja/DiagramPrint.dll;processor=x86;language=ja;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/ko/DiagramPrint.dll;processor=x86;language=ko;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/pt_BR/DiagramPrint.dll;processor=x86;selection-filter="(osgi.nl=pt_BR)";
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/zh_CN/DiagramPrint.dll;processor=x86;selection-filter="(osgi.nl=zh_CN)";
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/zh_TW/DiagramPrint.dll;processor=x86;selection-filter="(osgi.nl=zh_TW)";
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95",
+ os/win32/x86/en/DiagramPrint.dll;processor=x86;
+ osname="WindowsXP";osname="Windows2000";osname="Windows2003";osname="Windows Server 2003";osname="WindowsNT";osname="Windows98";osname="Windows95"
 Fragment-Host: org.eclipse.gmf.runtime.common.ui.printing;bundle-version="1.0.0"
 Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)"
