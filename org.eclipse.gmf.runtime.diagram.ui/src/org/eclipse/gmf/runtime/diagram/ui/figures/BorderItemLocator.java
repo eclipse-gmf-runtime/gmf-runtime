@@ -321,8 +321,7 @@ public class BorderItemLocator
 			} else if (suggestedSide == PositionConstants.EAST) {
 				// move up the east side
 				do {
-					recommendedLocation.y -= borderItemBounds.height
-						- vertical_gap;
+					recommendedLocation.y -= (borderItemBounds.height + vertical_gap);
 				} while (conflicts(recommendedLocation, borderItem));
 				if (recommendedLocation.y < getParentBorder().getTopRight().y) {
 					// east is full, try north.
@@ -331,8 +330,7 @@ public class BorderItemLocator
 				}
 			} else { // NORTH
 				do {
-					recommendedLocation.x -= borderItemBounds.width
-						- horizontal_gap;
+					recommendedLocation.x -= (borderItemBounds.width + horizontal_gap);
 				} while (conflicts(recommendedLocation, borderItem));
 				if (recommendedLocation.x < getParentBorder().getTopLeft().x) {
 					return locateOnBorder(recommendedLocation,
