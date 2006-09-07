@@ -196,16 +196,21 @@ public class TreeEditPart
             return ActionFilterService.getInstance();
         }
         
-        Object model = getModel();
-        // Adapt to IView
-        if (key.isInstance(model)) {
-            return model;
+        if (View.class.isAssignableFrom(key)) {
+            Object _model = getModel();
+            if (key.isInstance(_model))
+                return _model;
+            else
+                return null;
         }
-
-        if (model != null && model instanceof View) {
+        
+        Object model = getModel();
+        
+        if (model != null && model instanceof View &&
+            EObject.class.isAssignableFrom(key)) {
             // Adapt to semantic element
-            EObject semanticObject = ViewUtil.resolveSemanticElement((View)model);
-            if (key.isInstance(semanticObject)) {
+            EObject semanticObject = ((View)model).getElement();
+            if (semanticObject!= null && !semanticObject.eIsProxy() && key.isInstance(semanticObject)){
                 return semanticObject;
             }
         }
