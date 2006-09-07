@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCoreDebugOptions;
 import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
-import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.internal.util.Util;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
@@ -47,25 +46,25 @@ public class CopyingResource
 	extends XMIResourceImpl {
 
 	private XMLResource xmlResource;
+	
+	private CopyingResourceSet copyingResourceSet;
 
-	private CopyingResourceSet mslCopyingResourceSet;
-
-	public CopyingResource(XMLResource mslResource, URI uri,
-			CopyingResourceSet mslCopyingResourceSet) {
-		this(mslResource, uri, mslCopyingResourceSet, true);
+	public CopyingResource(XMLResource resource, URI uri,
+			CopyingResourceSet copyingResourceSet) {
+		this(resource, uri, copyingResourceSet, true);
 	}
 
-	public CopyingResource(XMLResource mslResource, URI uri,
-			CopyingResourceSet mslCopyingResourceSet, boolean regenerateIds) {
+	public CopyingResource(XMLResource resource, URI uri,
+			CopyingResourceSet copyingResourceSet, boolean regenerateIds) {
 		super(uri);
-		this.xmlResource = mslResource;
-		this.mslCopyingResourceSet = mslCopyingResourceSet;
-		setEncoding(mslResource.getEncoding());
+		this.xmlResource = resource;
+		this.copyingResourceSet = copyingResourceSet;
+		setEncoding(resource.getEncoding());
 		//needed to allow calls to unload() to proceed
 		setLoaded(true);
-		getDefaultSaveOptions().putAll(mslResource.getDefaultSaveOptions());
-		mslCopyingResourceSet.getResources().add(this);
-		mslCopyingResourceSet.getResourcesMap().put(mslResource, this);
+		getDefaultSaveOptions().putAll(resource.getDefaultSaveOptions());
+		copyingResourceSet.getResources().add(this);
+		copyingResourceSet.getResourcesMap().put(resource, this);
 		if (regenerateIds) {
 			createNewIDs();
 		} else {
@@ -79,7 +78,7 @@ public class CopyingResource
 	private void createNewIDs() {
 		// OK to get all contents because we have to copy
 		//    the entire model content of this resource
-		Iterator it = xmlResource.getAllContents();
+		Iterator it = getXMLResource().getAllContents();
 		while (it.hasNext()) {
 			setID((EObject) it.next(), EcoreUtil.generateUUID());
 		}
@@ -88,77 +87,12 @@ public class CopyingResource
 	protected XMLLoad createXMLLoad() {
 		throwUnsupportedOperationException("createXMLLoad", //$NON-NLS-1$
 			new UnsupportedOperationException(
-				"Can't call load on MSLCopyingResource resource"));//$NON-NLS-1$
+				"Can't call load on CopyingResource resource"));//$NON-NLS-1$
 		return null;
 	}
 
 	protected XMLHelper createXMLHelper() {
-		return new XMIHelperImpl(this) {
-
-			/**
-			 * @see org.eclipse.emf.ecore.xmi.XMLHelper#deresolve(org.eclipse.emf.common.util.URI)
-			 */
-			public URI deresolve(URI anUri) {
-
-				// if this both target and container are within a platform resource and
-				// projects
-				// or plugins are different then do not deresolve.
-				if (((EMFCoreConstants.PLATFORM_SCHEME.equals(anUri.scheme())) && (EMFCoreConstants.PLATFORM_SCHEME
-					.equals(resourceURI.scheme())))
-					&& ((anUri.segmentCount() > 2) && (resourceURI.segmentCount() > 2))
-					&& ((!anUri.segments()[0].equals(resourceURI.segments()[0])) || (!anUri
-						.segments()[1].equals(resourceURI.segments()[1]))))
-					return anUri;
-
-				return super.deresolve(anUri);
-			}
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl#getHREF(org.eclipse.emf.ecore.EObject)
-			 */
-			public String getHREF(EObject obj) {
-				EObject eObj = obj;
-				
-				if (obj.eIsProxy()) {
-					eObj = EcoreUtil.resolve(obj, xmlResource);
-					if (eObj == null) {
-						eObj = null;
-					}
-				}
-				
-				if ((eObj != null) && (eObj.eResource() != null)) {
-					URI objectURI = getHREF(eObj.eResource(), eObj);
-					objectURI = deresolve(objectURI);
-					return objectURI.toString();
-				}
-				return super.getHREF(obj);
-			}
-
-			protected URI getHREF(Resource otherResource, EObject obj) {
-				if ((otherResource instanceof CopyingResource) == false) {
-					CopyingResource copyingResource = (CopyingResource) getResourcesMap()
-						.get(otherResource);
-					if (copyingResource != null) {
-						otherResource = copyingResource;
-					}
-				}
-				if (otherResource instanceof GMFResource) {
-					String qName = EMFCoreUtil.getQualifiedName(obj, true);
-					if (qName.length() > 0) {
-						StringBuffer buffer = new StringBuffer(otherResource
-							.getURIFragment(obj));
-						buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
-						buffer.append(Util.encodeQualifiedName(qName));
-						return otherResource.getURI().appendFragment(
-							buffer.toString());
-					}
-				}
-				
-				return super.getHREF(otherResource, obj);
-			}
-		};
+		return new CopyingHelper(this);
 	}
 
 	protected void unloaded(InternalEObject internalEObject) {
@@ -190,49 +124,11 @@ public class CopyingResource
 		throws IOException {
 		throwUnsupportedOperationException("doLoad", //$NON-NLS-1$
 			new UnsupportedOperationException(
-				"Can't call load on MSLCopyingResource resource"));//$NON-NLS-1$
+				"Can't call load on CopyingResource resource"));//$NON-NLS-1$
 	}
 
 	protected XMLSave createXMLSave() {
-		return new XMISaveImpl(createXMLHelper()) {
-
-			/**
-			 * @see org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl#sameDocMany(org.eclipse.emf.ecore.EObject,
-			 *      org.eclipse.emf.ecore.EStructuralFeature)
-			 */
-			protected int sameDocMany(EObject o, EStructuralFeature f) {
-				InternalEList values = (InternalEList) helper.getValue(o, f);
-				if (values.isEmpty()) {
-					return SKIP;
-				}
-
-				for (Iterator i = values.basicIterator(); i.hasNext();) {
-					EObject value = (EObject) i.next();
-					if (value.eIsProxy() || (isInResource(value) == false)) {
-						return CROSS_DOC;
-					}
-				}
-
-				return SAME_DOC;
-			}
-
-			/**
-			 * @see org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl#sameDocSingle(org.eclipse.emf.ecore.EObject,
-			 *      org.eclipse.emf.ecore.EStructuralFeature)
-			 */
-			protected int sameDocSingle(EObject o, EStructuralFeature f) {
-				EObject value = (EObject) helper.getValue(o, f);
-				if (value == null) {
-					return SKIP;
-				} else if (value.eIsProxy()) {
-					return CROSS_DOC;
-				} else {
-					return (isInResource(value)) ? SAME_DOC
-						: CROSS_DOC;
-				}
-			}
-
-		};
+		return new CopyingSave(createXMLHelper());
 	}
 
 	private boolean isInResource(EObject eObject) {
@@ -240,7 +136,7 @@ public class CopyingResource
 		//     different resource than xmlResource, though one of its containers
 		//     may be
 		while (eObject != null) {
-			if (((InternalEObject) eObject).eDirectResource() == xmlResource) {
+			if (((InternalEObject) eObject).eDirectResource() == getXMLResource()) {
 				return true;
 			}
 			
@@ -251,7 +147,7 @@ public class CopyingResource
 	}
 
 	public EList getContents() {
-		return xmlResource.getContents();
+		return getXMLResource().getContents();
 	}
 
 	/**
@@ -273,7 +169,7 @@ public class CopyingResource
 	 * Returns the object based on the fragment as an ID.
 	 */
 	protected EObject getEObjectByID(String id) {
-		EObject eObj = xmlResource.getEObject(id);
+		EObject eObj = getXMLResource().getEObject(id);
 		if (eObj == null) {
 			return super.getEObjectByID(id);
 		}
@@ -281,10 +177,10 @@ public class CopyingResource
 	}
 
 	/**
-	 * @return Returns the mslCopyingResourceSet.
+	 * @return Returns the CopyingResourceSet.
 	 */
 	public CopyingResourceSet getMslCopyingResourceSet() {
-		return mslCopyingResourceSet;
+		return copyingResourceSet;
 	}
 
 	/*
@@ -320,7 +216,7 @@ public class CopyingResource
 	 * @see org.eclipse.emf.ecore.xmi.XMLResource#getEObjectToExtensionMap()
 	 */
 	public Map getEObjectToExtensionMap() {
-		return xmlResource.getEObjectToExtensionMap();
+		return getXMLResource().getEObjectToExtensionMap();
 	}
 
 	/*
@@ -337,7 +233,7 @@ public class CopyingResource
 		//    the entire model content of this resource
 		XMLResource lastRes = null;
 		
-		for (Iterator iter = xmlResource.getAllContents(); iter.hasNext(); ) {
+		for (Iterator iter = getXMLResource().getAllContents(); iter.hasNext(); ) {
 			InternalEObject eObject = (InternalEObject)iter.next();
 			
 			if (eObject.eDirectResource() != null) {
@@ -350,4 +246,152 @@ public class CopyingResource
 			getIDToEObjectMap().put(lastRes.getID(eObject), eObject);
 		}
 	}
+	
+	/**
+	 * Gets the XML resource that contains the model content to be copied.
+	 * 
+	 * @return the XML resource
+	 */
+	protected XMLResource getXMLResource() {
+		return xmlResource;
+	}
+	
+	/**
+	 * Helper implementation for the CopyingResource.
+	 */
+	protected class CopyingHelper extends XMIHelperImpl {
+		
+		public CopyingHelper() {
+			super();
+		}
+		  
+		public CopyingHelper(XMLResource resource) {
+		    super(resource);
+		}
+
+		/**
+		 * @see org.eclipse.emf.ecore.xmi.XMLHelper#deresolve(org.eclipse.emf.common.util.URI)
+		 */
+		public URI deresolve(URI anUri) {
+
+			// if this both target and container are within a platform resource and
+			// projects
+			// or plugins are different then do not deresolve.
+			if (((EMFCoreConstants.PLATFORM_SCHEME.equals(anUri.scheme())) && (EMFCoreConstants.PLATFORM_SCHEME
+				.equals(resourceURI.scheme())))
+				&& ((anUri.segmentCount() > 2) && (resourceURI.segmentCount() > 2))
+				&& ((!anUri.segments()[0].equals(resourceURI.segments()[0])) || (!anUri
+					.segments()[1].equals(resourceURI.segments()[1]))))
+				return anUri;
+
+			return super.deresolve(anUri);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl#getHREF(org.eclipse.emf.ecore.EObject)
+		 */
+		public String getHREF(EObject obj) {
+			EObject eObj = obj;
+			
+			if (obj.eIsProxy()) {
+				eObj = EcoreUtil.resolve(obj, getXMLResource());
+				if (eObj == obj) {
+					// use super.getHREF() if we can't resolve the proxy
+					eObj = null;
+				}
+			}
+			
+			if (eObj != null) {
+				Resource resource = eObj.eResource();
+				if (resource != null) {
+					URI objectURI = getHREF(resource, eObj);
+					objectURI = deresolve(objectURI);
+					return objectURI.toString();
+				}
+			}
+			
+			return super.getHREF(obj);
+		}
+
+		protected URI getHREF(Resource otherResource, EObject obj) {
+			if (!(otherResource instanceof CopyingResource)) {
+				CopyingResource copyingResource = (CopyingResource) getResourcesMap()
+					.get(otherResource);
+				if (copyingResource != null) {
+					otherResource = copyingResource;
+				}
+			}
+
+			String qName = EMFCoreUtil.getQualifiedName(obj, true);
+			if (qName.length() > 0) {
+				StringBuffer buffer = new StringBuffer(otherResource
+					.getURIFragment(obj));
+				buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
+				buffer.append(Util.encodeQualifiedName(qName));
+				buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
+				return otherResource.getURI().appendFragment(
+					buffer.toString());
+			}
+			
+			return super.getHREF(otherResource, obj);
+		}
+	};
+	
+	/**
+	 * Save implementation for the CopyingResource.
+	 */
+	public class CopyingSave extends XMISaveImpl {
+		
+		public CopyingSave(XMLHelper helper) {
+			super(helper);
+		}
+		
+		public CopyingSave(Map options, XMLHelper helper, String encoding) {
+			super(options, helper, encoding);
+		}
+
+		public CopyingSave(Map options, XMLHelper helper, String encoding,
+				String xmlVersion) {
+			super(options, helper, encoding, xmlVersion);
+		}
+
+		/**
+		 * @see org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl#sameDocMany(org.eclipse.emf.ecore.EObject,
+		 *      org.eclipse.emf.ecore.EStructuralFeature)
+		 */
+		protected int sameDocMany(EObject o, EStructuralFeature f) {
+			InternalEList values = (InternalEList) helper.getValue(o, f);
+			if (values.isEmpty()) {
+				return SKIP;
+			}
+
+			for (Iterator i = values.basicIterator(); i.hasNext();) {
+				EObject value = (EObject) i.next();
+				if (value.eIsProxy() || (isInResource(value) == false)) {
+					return CROSS_DOC;
+				}
+			}
+
+			return SAME_DOC;
+		}
+
+		/**
+		 * @see org.eclipse.emf.ecore.xmi.impl.XMLSaveImpl#sameDocSingle(org.eclipse.emf.ecore.EObject,
+		 *      org.eclipse.emf.ecore.EStructuralFeature)
+		 */
+		protected int sameDocSingle(EObject o, EStructuralFeature f) {
+			EObject value = (EObject) helper.getValue(o, f);
+			if (value == null) {
+				return SKIP;
+			} else if (value.eIsProxy()) {
+				return CROSS_DOC;
+			} else {
+				return (isInResource(value)) ? SAME_DOC
+					: CROSS_DOC;
+			}
+		}
+
+	};
 }
