@@ -127,23 +127,35 @@ public class TextDirectEditManager
 			return wrapLabel;
 		}
 
-		public void relocate(CellEditor celleditor) {
-			Text text = (Text) celleditor.getControl();
-			Rectangle rect = getWrapLabel().getTextBounds().getCopy();
-			getWrapLabel().translateToAbsolute(rect);
-			
-			if (getWrapLabel().isTextWrapped() && getWrapLabel().getText().length() > 0)
-				rect.setSize(new Dimension(text.computeSize(rect.width, SWT.DEFAULT)));
-			else {
-				int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
-				rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr*2, 0));
-			}
-
-			org.eclipse.swt.graphics.Rectangle newRect = text.computeTrim(rect.x, rect.y, rect.width, rect.height);
-			if (!newRect.equals(new Rectangle(text.getBounds())))
-				text.setBounds(newRect.x, newRect.y, newRect.width, newRect.height);
-		}
-
+        public void relocate(CellEditor celleditor) {
+            Text text = (Text) celleditor.getControl();
+            WrapLabel fig = getWrapLabel();
+            
+            Rectangle rect = fig.getTextBounds().getCopy();
+            fig.translateToAbsolute(rect);
+            
+            int avrWidth = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
+            
+            
+            if (fig.isTextWrapped() && fig.getText().length() > 0)
+                rect.setSize(new Dimension(rect.width, rect.height + FigureUtilities.getFontMetrics(text.getFont()).getDescent()));
+            else
+                rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avrWidth*2, 0));
+            
+            org.eclipse.swt.graphics.Rectangle newRect = text.computeTrim(rect.x, rect.y, rect.width, rect.height);
+            
+            Rectangle textBounds = new Rectangle(text.getBounds());
+            if (!newRect.equals(textBounds)) {
+                if (!(fig.getTextWrapAlignment() == PositionConstants.LEFT || fig.getTextAlignment() == PositionConstants.LEFT))
+                    text.setBounds(newRect.x, newRect.y, newRect.width + avrWidth*3, newRect.height);
+                else {
+                    if (text.getBounds().x == 0 || Math.abs(text.getBounds().x - newRect.x) >= avrWidth)
+                        text.setBounds(newRect.x, newRect.y, newRect.width + avrWidth*3, newRect.height);
+                    else
+                        text.setBounds(text.getBounds().x, newRect.y, newRect.width + avrWidth*3, newRect.height);
+                }   
+            }
+        }
 	}
 
 	private static class LabelCellEditorLocator implements CellEditorLocator {
