@@ -666,6 +666,12 @@
          </context>
          <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints="NoteAttachment">
          </context>
+         <object class="org.eclipse.gmf.runtime.emf.type.core.IMetamodelType(org.eclipse.gmf.runtime.emf.type.core)" id="DiagramLink">
+            <method name="getEClass().getName()" value="Diagram">
+            </method>
+         </object>         
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="" elements="DiagramLink">
+         </context>                  
       </viewProvider>
    </extension> 
    
