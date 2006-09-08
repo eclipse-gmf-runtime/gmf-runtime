@@ -49,12 +49,12 @@ public abstract class DiagramAssistantEditPolicy
 		private Point originalMouseLocation;
 
 		/**
-		 * Creates a new instance.
+		 * Sets mouse location
 		 * 
 		 * @param originalMouseLocation
 		 *            the current mouse location
 		 */
-		protected ShowDiagramAssistantRunnable(Point originalMouseLocation) {
+		public void setOriginalMouseLocation(Point originalMouseLocation) {
 			this.originalMouseLocation = originalMouseLocation;
 		}
 
@@ -80,7 +80,8 @@ public abstract class DiagramAssistantEditPolicy
 	 * The <code>Runnable</code> used when a timer is started to hide the
 	 * diagram assistant after a certain amount of time has passed.
 	 */
-	private Runnable hideDiagramAssistantRunnable = new Runnable() {
+	private class HideDiagramAssistantRunnable implements Runnable
+	{
 
 		/**
 		 * The diagram assistant is removed when this task is run if the mouse
@@ -92,7 +93,7 @@ public abstract class DiagramAssistantEditPolicy
 				hideDiagramAssistant();
 			}
 		}
-	};
+	}
 	
 	/**
 	 * Listens to the focus events on the owner editpart so that the diagram
@@ -146,6 +147,9 @@ public abstract class DiagramAssistantEditPolicy
 
 	/** Flag to indicate that the diagram assistant should not be hidden. */
 	private boolean avoidHidingDiagramAssistant = true;
+	
+	private ShowDiagramAssistantRunnable showDiagramAssistantRunnable = new ShowDiagramAssistantRunnable();
+	private HideDiagramAssistantRunnable hideDiagramAssistantRunnable = new HideDiagramAssistantRunnable();
 
 	/**
 	 * Creates a new instance.
@@ -286,10 +290,8 @@ public abstract class DiagramAssistantEditPolicy
 	 *            the delay in milliseconds
 	 */
 	protected void showDiagramAssistantAfterDelay(int delay) {
-		if (shouldShowDiagramAssistant()) {
-			Display.getCurrent().timerExec(delay,
-				new ShowDiagramAssistantRunnable(getMouseLocation()));
-		}
+		showDiagramAssistantRunnable.setOriginalMouseLocation(getMouseLocation());
+		Display.getCurrent().timerExec(delay,showDiagramAssistantRunnable);
 	}
 
 	/**
