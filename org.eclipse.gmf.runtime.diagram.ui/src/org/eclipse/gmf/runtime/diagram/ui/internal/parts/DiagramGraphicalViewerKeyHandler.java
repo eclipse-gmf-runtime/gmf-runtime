@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -61,6 +62,7 @@ public class DiagramGraphicalViewerKeyHandler
 					if (navigateEndSibling(event, PositionConstants.NORTH))
 						return true;
 				}
+                break;
 			case SWT.END :
 				if ((event.stateMask & SWT.ALT) != 0) {
 					if (navigateEndSibling(event, PositionConstants.EAST))
@@ -69,6 +71,7 @@ public class DiagramGraphicalViewerKeyHandler
 					if (navigateEndSibling(event, PositionConstants.SOUTH))
 						return true;
 				}
+                break;
 			case SWT.PAGE_UP :
 				if ((event.stateMask & SWT.ALT) != 0) {
 					if (navigatePageSibling(event, PositionConstants.WEST))
@@ -77,6 +80,7 @@ public class DiagramGraphicalViewerKeyHandler
 					if (navigatePageSibling(event, PositionConstants.NORTH))
 						return true;
 				}
+                break;
 			case SWT.PAGE_DOWN :
 				if ((event.stateMask & SWT.ALT) != 0) {
 					if (navigatePageSibling(event, PositionConstants.EAST))
@@ -120,7 +124,11 @@ public class DiagramGraphicalViewerKeyHandler
 	 * @return
 	 */
 	protected List getPartNavigationSiblings() {
-		return getFocusPart().getParent().getChildren();
+        EditPart epParent = findParent(getFocusPart());
+        if (epParent != null)
+            return epParent.getChildren();
+        else
+            return null;
 	}
 
 	/**
@@ -132,6 +140,9 @@ public class DiagramGraphicalViewerKeyHandler
 	}
 
 	protected Viewport findViewport(GraphicalEditPart part) {
+        if (part == null) 
+            return null;
+        
 		IFigure figure = null;
 		Viewport port = null;
 		do {
@@ -160,7 +171,7 @@ public class DiagramGraphicalViewerKeyHandler
 		Point pStart = getFigureInterestingPoint(figure);
 		figure.translateToAbsolute(pStart);
 
-		GraphicalEditPart epParent = (GraphicalEditPart) epStart.getParent();
+		GraphicalEditPart epParent = (GraphicalEditPart) findParent(epStart);
 		Viewport viewport = findViewport(epParent);
 		Rectangle bounds =
 			(viewport != null)
@@ -324,4 +335,18 @@ public class DiagramGraphicalViewerKeyHandler
 		}
 		return selection;
 	}
+    
+    
+    /**
+     * @param child
+     * @return EditPart
+     */
+    private EditPart findParent(EditPart child) {
+        //check to see if we are not looking for a parent on RootEditPart, 
+        //as it does not have a parent.
+        if (child instanceof RootEditPart)
+            return child;
+        else
+            return child.getParent(); //any other EditPart    
+    }
 }
