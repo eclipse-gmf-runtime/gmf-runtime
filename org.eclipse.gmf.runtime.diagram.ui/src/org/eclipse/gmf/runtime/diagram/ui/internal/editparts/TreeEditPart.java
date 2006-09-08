@@ -51,6 +51,8 @@ public class TreeEditPart
 
     /** the element parser */
     private IAdaptable referenceAdapter;
+    
+    private EObject[] objectListenningTo = new EObject[2];
 
     /**
      * Cache the editing domain after it is retrieved.
@@ -77,18 +79,27 @@ public class TreeEditPart
      * @see org.eclipse.gef.EditPart#activate()
      */
     public void activate() {
+        if (isActive())
+            return;
         super.activate();
-
-        getDiagramEventBroker().addNotificationListener((View)getModel(),this);
-        getDiagramEventBroker().addNotificationListener(getSemanticElement(),this);
+        View view = (View)getModel();
+        EObject semanticElement = getSemanticElement();
+        getDiagramEventBroker().addNotificationListener(view,this);
+        getDiagramEventBroker().addNotificationListener(semanticElement,this);
+        objectListenningTo[0] = view ;
+        objectListenningTo[1] = semanticElement;
     }
 
     /**
      * @see org.eclipse.gef.EditPart#deactivate()
      */
     public void deactivate() {
-        getDiagramEventBroker().removeNotificationListener((View)getModel(),this);
-        getDiagramEventBroker().removeNotificationListener(getSemanticElement(),this);
+        if (!isActive())
+            return;
+        for (int index = 0; index < objectListenningTo.length; index++) {
+            getDiagramEventBroker().removeNotificationListener( objectListenningTo[index],this);
+            objectListenningTo[index] = null;
+        }
         super.deactivate();
     }
 
