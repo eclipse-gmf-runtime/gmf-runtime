@@ -40,16 +40,12 @@ public class DiagramDocumentEditorMatchingStrategy
 	public boolean matches(IEditorReference editorRef, IEditorInput input) {
 		IEditorInput existingEditorInput;
 		IEditorPart editor = editorRef.getEditor(false);
-			
 		// If the editor is not instanceof DiagramDocumentEditor
 		// then don't match it, This indicates that the client shouldn't
 		// use this strategy for non-DiagramDocumentEditor.
-		if (editor != null) {
-    		if (!(editor instanceof DiagramDocumentEditor)) {
-    			return false;
-    		}
-        }
-		
+		if (!(editor instanceof DiagramDocumentEditor)) {
+			return false;
+		}
 
 		try {
 			existingEditorInput = editorRef.getEditorInput();
