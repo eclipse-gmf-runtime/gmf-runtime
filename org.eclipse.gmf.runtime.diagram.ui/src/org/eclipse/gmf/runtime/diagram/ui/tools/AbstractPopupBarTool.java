@@ -166,16 +166,30 @@ public abstract class AbstractPopupBarTool
 			final List editparts) {
 		if (editparts.isEmpty())
 			return;
-		// automatically put the first shape into edit-mode
-		Display.getCurrent().asyncExec(new Runnable() {
-
-			public void run() {
-				viewer.setSelection(new StructuredSelection(editparts));
-				EditPart editpart = (EditPart) editparts.get(0);
-				editpart.performRequest(new Request(
-					RequestConstants.REQ_DIRECT_EDIT));
-			}
-		});
+        
+        // Don't change the selection unless at least one editpart is
+        // selectable.
+        boolean selectable = false;
+        for (Iterator iter = editparts.iterator(); iter.hasNext();) {
+            EditPart editpart = (EditPart) iter.next();
+            if (editpart.isSelectable()) {
+                selectable = true;
+                break;
+            }
+         }
+        
+        if (selectable) {
+    		// automatically put the first shape into edit-mode
+    		Display.getCurrent().asyncExec(new Runnable() {
+    
+    			public void run() {
+    				viewer.setSelection(new StructuredSelection(editparts));
+    				EditPart editpart = (EditPart) editparts.get(0);
+    				editpart.performRequest(new Request(
+    					RequestConstants.REQ_DIRECT_EDIT));
+    			}
+    		});
+        }
 	}
 
 	/**
