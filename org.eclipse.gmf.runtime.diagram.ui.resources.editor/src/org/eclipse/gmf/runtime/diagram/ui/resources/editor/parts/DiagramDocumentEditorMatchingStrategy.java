@@ -38,47 +38,40 @@ public class DiagramDocumentEditorMatchingStrategy
 	 *      org.eclipse.ui.IEditorInput)
 	 */
 	public boolean matches(IEditorReference editorRef, IEditorInput input) {
-		IEditorInput existingEditorInput;
-		IEditorPart editor = editorRef.getEditor(false);
-		// If the editor is not instanceof DiagramDocumentEditor
-		// then don't match it, This indicates that the client shouldn't
-		// use this strategy for non-DiagramDocumentEditor.
-		if (!(editor instanceof DiagramDocumentEditor)) {
-			return false;
-		}
+        IEditorInput existingEditorInput;
+        IEditorPart editor = editorRef.getEditor(false);
 
-		try {
-			existingEditorInput = editorRef.getEditorInput();
-		} catch (PartInitException e) {
-			return false;
-		}
+        try {
+            existingEditorInput = editorRef.getEditorInput();
+        } catch (PartInitException e) {
+            return false;
+        }
 
-		// If the ExistingEditorInput is same as the passed input,
-		// return true
-		if (existingEditorInput.equals(input))
-			return true;
-		else if (!(input instanceof MEditingDomainElement)) {
-			// If the input isn't an instanceof MEditingDomainElement,
-			// only then do it.
-			IDiagramDocumentProvider docProvider = (IDiagramDocumentProvider) DocumentProviderRegistry
-				.getDefault().getDocumentProvider(input,
-					new IDocumentProviderSelector() {
+        // If the ExistingEditorInput is same as the passed input,
+        // return true
+        if (existingEditorInput.equals(input))
+            return true;
+        else if (!(input instanceof MEditingDomainElement) && (editor instanceof DiagramDocumentEditor)) {
+            // If the input isn't an instanceof MEditingDomainElement, and the editor is instanceof DiagramDocumentEditor
+            // then don't match it, This indicates that the client shouldn't use this strategy for non-DiagramDocumentEditor.
+            IDiagramDocumentProvider docProvider = (IDiagramDocumentProvider) DocumentProviderRegistry
+            .getDefault().getDocumentProvider(input,
+                new IDocumentProviderSelector() {
 
-						public boolean select(String documentType) {
-							// Only checking of the interface name
-							return documentType.equals(IDiagramDocument.class
-								.getName());
-						}
-					});
+                public boolean select(String documentType) {
+                    // Only checking of the interface name
+                    return documentType.equals(IDiagramDocument.class
+                        .getName());
+                }
+            });
 
-			if (docProvider != null) {
-				IEditorInput editorInput = docProvider
-					.createInputWithEditingDomain(input,
-						((DiagramDocumentEditor) editor).getEditingDomain());
-				return editorInput.equals(existingEditorInput);
-			}
-		}
-		return false;
+            if (docProvider != null) {
+                IEditorInput editorInput = docProvider
+                .createInputWithEditingDomain(input,
+                    ((DiagramDocumentEditor) editor).getEditingDomain());
+                return editorInput.equals(existingEditorInput);
+            }
+        }
+        return false;
 	}
-
 }
