@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ZOrderRequest;
 import org.eclipse.ui.IWorkbenchPage;
@@ -184,6 +185,12 @@ public class ZOrderAction
 		if (parentEditPart == null)
 			return false;
 
+		// bugzilla 156733: disable this action if the parent is not editable
+		if ((parentEditPart instanceof IEditableEditPart)
+				&& !((IEditableEditPart) parentEditPart).isEditModeEnabled()) {
+			return false;
+		}
+		
 		// disable this action if the parent doesn't have an XYLayout
 		if (!(parentEditPart.getContentPane().getLayoutManager() instanceof XYLayout))
 			return false;
@@ -196,6 +203,13 @@ public class ZOrderAction
 
 			// Verify that the editparts share the same parent
 			if (parentEditPart != selectedEditPart.getParent()) {
+				return false;
+			}
+			
+			// bugzilla 156733: disable this action if the selected edit part is not editable
+			if ((selectedEditPart instanceof IEditableEditPart)
+					&& !((IEditableEditPart) selectedEditPart)
+							.isEditModeEnabled()) {
 				return false;
 			}
 		}

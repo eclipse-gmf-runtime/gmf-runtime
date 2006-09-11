@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActions
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -116,14 +117,33 @@ public class ArrangeAction extends DiagramAction {
 	 */
 	protected boolean calculateEnabled() {
 		
+		List operationSet = getOperationSet();
+		
 		//arrange all, always enable
-		if( isArrangeAll() && !getOperationSet().isEmpty()){
+		if( isArrangeAll() && !operationSet.isEmpty()){
 			return true;
 		}
 
+		EditPart parentEP = getSelectionParent(operationSet);
+		
+		// bugzilla 156733: disable this action if the parent or selected edit parts are not editable
+		if ((parentEP instanceof IEditableEditPart)
+				&& !((IEditableEditPart) parentEP)
+						.isEditModeEnabled()) {
+			return false;
+		}
+		
+		for (Iterator i = operationSet.iterator(); i.hasNext();) {
+			Object next = i.next();
+			if ((next instanceof IEditableEditPart)
+					&& !((IEditableEditPart) next)
+							.isEditModeEnabled()) {
+				return false;
+			}
+		}
+		
 		//arrange selection
-		if (getOperationSet().size() >= 2) {
-			EditPart parentEP = getSelectionParent(getOperationSet());
+		if (operationSet.size() >= 2) {
 			if (parentEP instanceof GraphicalEditPart) {
 				GraphicalEditPart parent = (GraphicalEditPart)parentEP;
 				if ((parent != null) &&(parent.getContentPane().getLayoutManager() instanceof XYLayout))
