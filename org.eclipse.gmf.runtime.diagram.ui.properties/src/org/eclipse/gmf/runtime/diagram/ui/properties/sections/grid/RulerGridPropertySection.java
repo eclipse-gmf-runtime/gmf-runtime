@@ -303,10 +303,18 @@ public class RulerGridPropertySection
             value = forceDouble(numberFormatter.parse(strValue));
         } catch (ParseException e) {
             // default value
-            value = new Double(getPreferenceStore().getDouble(IPreferenceConstants.PREF_GRID_SPACING));
+            value = new Double(getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING));
+            setGridSpacing(value.doubleValue());
         }
         return value;
     }   
+
+    private void setGridSpacing(double value) {
+        // Set grid spacing back to the input value
+        NumberFormat numberFormater = NumberFormat.getInstance();
+        textWidget.setText(numberFormater.format(value));
+        textWidget.selectAll();
+    }       
     
     /**
      * Creates group with ruler units and grid spacing controls
@@ -432,10 +440,11 @@ public class RulerGridPropertySection
                 String currentText = ((Text) control).getText();
                 try {
                     
-                    double value = new Double(currentText).doubleValue();
+                    double value = convertStringToDouble(currentText).doubleValue();
                     double pixels = convertToBase(value);
                     if (pixels >= minValidValue && pixels <= maxValidValue) {
-                        setWorkspaceProperty(WorkspaceViewerProperties.GRIDSPACING, new Double(currentText).doubleValue());
+                        setWorkspaceProperty(WorkspaceViewerProperties.GRIDSPACING, value);                       
+                        setGridSpacing(value);
                     } else {
                         resetGridSpacing();
                     }
@@ -446,14 +455,13 @@ public class RulerGridPropertySection
                 textModified = false;
             }
         }
-
+        
         private void resetGridSpacing() {
             // Set grid spacing back to original value
             double value = getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING);
-            NumberFormat numberFormater = NumberFormat.getInstance();
-            textWidget.setText(numberFormater.format(value));
-            textWidget.selectAll();
+            setGridSpacing(value);
         }       
+        
     };
     
     /**
