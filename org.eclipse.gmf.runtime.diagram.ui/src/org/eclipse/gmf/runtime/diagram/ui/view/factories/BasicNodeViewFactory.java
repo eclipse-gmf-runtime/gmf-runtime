@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.InternalTransaction;
+import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -50,7 +52,6 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  */
 public class BasicNodeViewFactory extends AbstractViewFactory {
-	
 	private static final Map options = new HashMap();	
     static {
         options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
@@ -103,32 +104,40 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
             containerView);
         
         if (domain != null) {
-    		AbstractEMFOperation operation = new AbstractEMFOperation(
-                domain, StringStatics.BLANK, options) {
-    
-    			protected IStatus doExecute(IProgressMonitor monitor,
-    					IAdaptable info)
-    				throws ExecutionException {
-    
-    				// decorate view had to run as a silent operation other wise
-    				// it will generate too many events
-    				decorateView(containerView, node, semanticAdapter,
-    					semanticHint, index, true);
-    
-    				return Status.OK_STATUS;
-    			}
-    		};
-    		try {
-    			operation.execute(new NullProgressMonitor(), null);
-    		} catch (ExecutionException e) {
-    			Trace.catching(DiagramUIPlugin.getInstance(),
-    				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-    				"createView", e); //$NON-NLS-1$
-    			Log
-    				.warning(DiagramUIPlugin.getInstance(),
-    					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-    					"createView", e); //$NON-NLS-1$
-    		}
+            // try to reuse the transaction
+            if (isUnProtectedSilentTransactionInProgress(domain)){
+                // decorate view had to run as a silent operation other wise
+                // it will generate too many events
+                decorateView(containerView, node, semanticAdapter,
+                    semanticHint, index, true);
+                
+            }else{
+        		AbstractEMFOperation operation = new AbstractEMFOperation(
+                    domain, StringStatics.BLANK, options) {
+        
+        			protected IStatus doExecute(IProgressMonitor monitor,
+        					IAdaptable info)
+        				throws ExecutionException {
+        				// decorate view had to run as a silent operation otherwise
+        				// it will generate too many events
+        				decorateView(containerView, node, semanticAdapter,
+        					semanticHint, index, true);
+        
+        				return Status.OK_STATUS;
+        			}
+        		};
+        		try {
+        			operation.execute(new NullProgressMonitor(), null);
+        		} catch (ExecutionException e) {
+        			Trace.catching(DiagramUIPlugin.getInstance(),
+        				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+        				"createView", e); //$NON-NLS-1$
+        			Log
+        				.warning(DiagramUIPlugin.getInstance(),
+        					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+        					"createView", e); //$NON-NLS-1$
+        		}
+            }
         }
 		return node;
 	}
@@ -183,6 +192,33 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 	protected Node createNode(){
 		return NotationFactory.eINSTANCE.createNode();
 	}
+    
+     /**
+     * Checks if the current active transaction is a unprotected amd silent
+     * 
+     * @param domain , the domain to use during the check
+     * @return <code>true</code> if the current active transaction is unprotected and silent 
+     */
+    protected static boolean isUnProtectedSilentTransactionInProgress(TransactionalEditingDomain domain) {
+        if (domain instanceof InternalTransactionalEditingDomain){
+            InternalTransactionalEditingDomain internalEditingDomain = 
+                (InternalTransactionalEditingDomain)domain;
+            InternalTransaction transaction = internalEditingDomain.getActiveTransaction();
+            if (transaction!=null && !transaction.isReadOnly()) {
+                Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
+                if (unprotectedMode != null && unprotectedMode == Boolean.TRUE) {
+                    // check for silent
+                    Object noNotificationMode = transaction.getOptions().get(Transaction.OPTION_NO_NOTIFICATIONS);
+                    Object noTriggersMode = transaction.getOptions().get(Transaction.OPTION_NO_TRIGGERS);
+                    if (unprotectedMode != null && noNotificationMode == Boolean.TRUE &&
+                        noTriggersMode !=null &&  noTriggersMode == Boolean.TRUE           ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 	
 
 }
