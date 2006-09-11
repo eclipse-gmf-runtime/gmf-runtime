@@ -922,7 +922,10 @@ public abstract class AbstractContributionItemProvider
 
 		public Object getAdapter(Class adapter) {
 			if (adapter == IContributionItem.class) {
-				return new PluginMenuManager(createMenuManager(menuId, partDescriptor));
+                IMenuManager manager = createMenuManager(menuId, partDescriptor);
+                if (manager != null) {
+                    return new PluginMenuManager(manager);
+                }
 			} else if (adapter == String.class) {
 				return menuId;
 			}
