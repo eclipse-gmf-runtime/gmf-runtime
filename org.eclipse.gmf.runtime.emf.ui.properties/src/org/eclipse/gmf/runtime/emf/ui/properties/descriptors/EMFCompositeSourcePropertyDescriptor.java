@@ -481,6 +481,10 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
      * @return an property source for the given object
      */
     protected IItemPropertySource getPropertySource(Object value) {
+        if (value instanceof IItemPropertySource) {
+            return (IItemPropertySource) value;
+        }
+        
         TransactionalEditingDomain editingDomain = TransactionUtil
             .getEditingDomain(getObject());
 
