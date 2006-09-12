@@ -221,6 +221,11 @@ public class SelectAllAction extends DiagramAction {
 		return true;
 	}
 
+    protected boolean isOperationHistoryListener() {
+        //certain undo/redo actions can cause selection to change. see bugzilla#156261
+        return true;
+    }
+
 	/**
 	 * Create the SelectAll action
 	 * 
@@ -310,5 +315,4 @@ public class SelectAllAction extends DiagramAction {
 		action.setDisabledImageDescriptor(DiagramUIActionsPluginImages.DESC_SELECTCONNECTIONS_DISABLED);
 		return action;
 	}
-
 }
