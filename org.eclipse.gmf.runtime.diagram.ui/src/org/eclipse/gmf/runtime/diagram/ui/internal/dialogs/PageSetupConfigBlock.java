@@ -604,10 +604,10 @@ public class PageSetupConfigBlock implements ILabels {
                         fBlockPrint.fTextWidth.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(
                             PageSetupPageType.pages[fBlockPrint.fComboSize.getSelectionIndex()].getWidth())));                
                     else
-                        text.setText(fNumberFormat.format(fConvertor.convertToMillimetres(controlType)));
+                        text.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(value)));
                 }
                 else
-                    text.setText(fNumberFormat.format(fConvertor.convertToMillimetres(controlType)));
+                    text.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(value)));
             }
 		}
 	
