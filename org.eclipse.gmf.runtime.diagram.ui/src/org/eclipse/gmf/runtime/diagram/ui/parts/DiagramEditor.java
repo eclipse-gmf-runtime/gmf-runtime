@@ -1493,4 +1493,22 @@ public abstract class DiagramEditor
     protected PreferencesHint getPreferencesHint() {
         return new PreferencesHint(getEditorSite().getId());
     };
+    
+    /**
+     * Returns false if the editor is read only and returns true if the editor
+     * is writable.
+     * 
+     * By default, edit parts have their edit mode enabled and this method
+     * returns true.
+     * 
+     * Subclasses may override and disable the edit mode on parts.
+     * 
+     * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart.
+     * 
+     * @return false if the editor is read only and returns true if the editor
+     * is writable.
+     */
+    public boolean isWritable() {
+        return (getDiagramEditPart() != null && getDiagramEditPart().isEditModeEnabled());
+    }
 }

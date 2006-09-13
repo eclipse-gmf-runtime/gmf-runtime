@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
@@ -590,9 +591,11 @@ public abstract class AbstractModelerPropertySection
 			PropertiesBrowserPage propertiesBrowserPage = (PropertiesBrowserPage) tabbedPropertySheetPage;
 			ITabbedPropertySheetPageContributor contributor = propertiesBrowserPage
 				.getContributor();
-			if (contributor instanceof IReadOnlyDiagramPropertySheetPageContributor) {
-				return true;
-			}
+            if (contributor instanceof IReadOnlyDiagramPropertySheetPageContributor
+                    || (contributor instanceof DiagramEditor && !((DiagramEditor) contributor)
+                        .isWritable())) {
+                return true;
+            }
 		}
 		return false;
 	}
