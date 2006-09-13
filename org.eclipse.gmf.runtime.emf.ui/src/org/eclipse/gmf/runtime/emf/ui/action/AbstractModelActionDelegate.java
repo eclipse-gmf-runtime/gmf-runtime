@@ -255,7 +255,7 @@ public abstract class AbstractModelActionDelegate
 
 				try {
 					runnable.run();
-					history.closeOperation(status.isOK(), false,
+					history.closeOperation(getStatus().isOK(), false,
 							IOperationHistory.EXECUTE);
 
 				} catch (RuntimeException e) {
