@@ -165,7 +165,7 @@
             </partAction>           
             <partAction menubarPath="/diagramMenu/copyAppearanceGroup" toolbarPath="/toolbarCopyAppearanceGroup" id="copyAppearancePropertiesAction">
             </partAction>
-            <partMenu menubarPath="/diagramMenu/formatGroup" toolbarPath="/toolbarViewGroup" id="selectMenu">
+            <partMenu menubarPath="/diagramMenu/formatGroup" toolbarPath="/toolbarViewGroup" id="selectMenuToolbar">
             </partMenu>
             <partMenuGroup menubarPath="/diagramMenu/selectMenu/" toolbarPath="/selectMenu/" id="selectGroup">
             </partMenuGroup>
@@ -203,7 +203,7 @@
                   id="noCompartmentsAction">
             </partAction> 
 
-            <partMenu menubarPath="/diagramMenu/formatGroup" toolbarPath="/toolbarViewGroup" id="arrangeMenu">
+            <partMenu menubarPath="/diagramMenu/formatGroup" toolbarPath="/toolbarViewGroup" id="arrangeMenuToolbar">
             </partMenu>
             <partMenuGroup menubarPath="/diagramMenu/arrangeMenu/" toolbarPath="/arrangeMenu/" id="arrangeGroup">
             </partMenuGroup>            

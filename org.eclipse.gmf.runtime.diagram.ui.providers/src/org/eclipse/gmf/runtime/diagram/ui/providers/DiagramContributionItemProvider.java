@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -140,10 +140,14 @@ public class DiagramContributionItemProvider
 			// Should use a custom ActionMenuManager, but the color menu
 			// is causing "out of index" problems.  Will investigate.			
 			return new MenuManager(DiagramUIProvidersMessages.FormatMenuManager_Format_ActionLabelText, ActionIds.MENU_FORMAT);
-		if (menuId.equals(ActionIds.MENU_ARRANGE))
-			return new ArrangeMenuManager();
-		if (menuId.equals(ActionIds.MENU_SELECT))
-			return new SelectMenuManager();
+        if (menuId.equals(ActionIds.MENU_ARRANGE))
+            return new ArrangeMenuManager();
+        if (menuId.equals(ActionIds.MENU_ARRANGE_TOOLBAR))
+            return new ArrangeMenuManager(getAction(ActionIds.ACTION_TOOLBAR_ARRANGE_ALL, partDescriptor));
+        if (menuId.equals(ActionIds.MENU_SELECT))
+            return new SelectMenuManager();
+        if (menuId.equals(ActionIds.MENU_SELECT_TOOLBAR))
+            return new SelectMenuManager(getAction(ActionIds.ACTION_TOOLBAR_SELECT_ALL, partDescriptor));
 		if (menuId.equals(ActionIds.MENU_ALIGN))
 			return new AlignMenuManager();
 		if (menuId.equals(ActionIds.MENU_COMPARTMENT))

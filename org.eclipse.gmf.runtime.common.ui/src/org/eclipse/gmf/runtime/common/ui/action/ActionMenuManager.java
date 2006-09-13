@@ -73,8 +73,10 @@ public class ActionMenuManager extends MenuManager {
 					&& !event.widget.isDisposed()) {
 					ActionContributionItem item =
 						(ActionContributionItem) event.widget.getData();
-					if (retargetLastAction)
+					if (retargetLastAction) {
 						setActionHandler(item.getAction());
+						setDefaultAction(item.getAction());
+                    }
 					subActionSelected(item.getAction());
 				}
 			}
@@ -185,6 +187,10 @@ public class ActionMenuManager extends MenuManager {
 		public void run() {
 			if (getActionHandler() != null && getActionHandler().isEnabled())
 				super.run();
+            else if (getDefaultAction().isEnabled()) {
+                setActionHandler(getDefaultAction());
+                super.run();
+           }
 		}
 
 		/**
@@ -194,12 +200,19 @@ public class ActionMenuManager extends MenuManager {
 		public void runWithEvent(Event event) {
 			if (getActionHandler() != null && getActionHandler().isEnabled())
 				super.runWithEvent(event);
+            else if (getDefaultAction().isEnabled()) {
+                 setActionHandler(getDefaultAction());
+                 super.runWithEvent(event);
+            }
 		}
 
 	}
 
 	/** the associated menu action */
 	protected final MenuCreatorAction action;
+
+    /** the associated menu action */
+    protected IAction defaultAction = null;
 
 	/** the delege action contribution item */
 	private final ActionContributionItem actionContributionItem;
@@ -235,6 +248,7 @@ public class ActionMenuManager extends MenuManager {
 		super(actionHandler.getText(), id);
 		assert null != actionHandler;
 		action = new MenuCreatorAction(actionHandler);
+        defaultAction = actionHandler;
 		actionContributionItem = new ActionContributionItem(action);
 		this.retargetLastAction = retargetLastAction;
 	}
@@ -433,5 +447,15 @@ public class ActionMenuManager extends MenuManager {
 		}
 		return realItems;
 	}
+
+    
+    public IAction getDefaultAction() {
+        return defaultAction;
+    }
+
+    
+    protected void setDefaultAction(IAction defaultAction) {
+        this.defaultAction = defaultAction;
+    }
 
 }
