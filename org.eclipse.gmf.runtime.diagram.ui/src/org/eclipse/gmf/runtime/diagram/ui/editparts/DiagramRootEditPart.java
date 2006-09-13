@@ -604,7 +604,7 @@ public class DiagramRootEditPart
 			(IPreferenceStore) getPreferencesHint().getPreferenceStore();
 		boolean antiAlias = preferenceStore.getBoolean(
 			IPreferenceConstants.PREF_ENABLE_ANTIALIAS);
-		if (layers instanceof org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane)
+		if (getLayers() instanceof org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane)
 			((org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane) layers).setAntiAlias(antiAlias);
 	}
 

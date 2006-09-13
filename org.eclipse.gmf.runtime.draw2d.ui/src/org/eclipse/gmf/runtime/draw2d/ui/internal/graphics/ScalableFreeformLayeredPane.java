@@ -20,7 +20,6 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 
@@ -60,9 +59,9 @@ public class ScalableFreeformLayeredPane
     * @see org.eclipse.draw2d.Figure#paintClientArea(Graphics)
     */
     protected void paintClientArea(Graphics graphics) {
-        boolean RTL = (Window.getDefaultOrientation()==SWT.RIGHT_TO_LEFT);
-    	// Use Anti-Aliasing
-    	if ((graphics instanceof SWTGraphics) && antiAlias && !RTL) {
+        // Use Anti-Aliasing
+    	if ((graphics instanceof SWTGraphics) && antiAlias && 
+    		GCUtilities.supportsAdvancedGraphics()) {
             graphics.setAntialias(SWT.ON);			
 		} else if (graphics.getAntialias()==SWT.ON){
 			graphics.setAntialias(SWT.OFF);		

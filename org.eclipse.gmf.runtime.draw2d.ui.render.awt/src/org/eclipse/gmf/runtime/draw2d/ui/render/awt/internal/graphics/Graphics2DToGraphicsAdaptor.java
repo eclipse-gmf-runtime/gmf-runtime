@@ -72,6 +72,10 @@ public class Graphics2DToGraphicsAdaptor
 		super(true);
 		gc = new GraphicContext();
 		this.swtGC = swtGC;
+		swtGC.setAdvanced(true);
+		if (swtGC.getAdvanced() != true)
+			throw new UnsupportedOperationException("Advanced graphics support is required"); //$NON-NLS-1$
+		
 		this.swtGraphics = new SWTGraphics(swtGC);
 		this.transparency = transparency;
 		this.transparency_replace = transparency_replace;

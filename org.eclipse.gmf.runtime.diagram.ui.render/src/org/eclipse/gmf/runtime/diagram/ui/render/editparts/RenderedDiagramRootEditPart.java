@@ -20,9 +20,7 @@ import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.figures.ScalableImageFigure;
@@ -30,7 +28,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapMod
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatedZoomListener;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -141,17 +138,5 @@ public class RenderedDiagramRootEditPart
 	protected org.eclipse.draw2d.ScalableFreeformLayeredPane createScalableFreeformLayeredPane() {
 		setLayers(new DiagramRenderedScalableFreeformLayeredPane(getMapMode()));
 		return getLayers();
-	}
-
-	/**
-	 * 
-	 */
-	protected void refreshEnableAntiAlias() {
-		IPreferenceStore preferenceStore = (IPreferenceStore) getPreferencesHint()
-			.getPreferenceStore();
-		boolean antiAlias = preferenceStore
-			.getBoolean(IPreferenceConstants.PREF_ENABLE_ANTIALIAS);
-		if (getLayers() instanceof ScalableFreeformLayeredPane)
-			((ScalableFreeformLayeredPane) getLayers()).setAntiAlias(antiAlias);
 	}
 }
