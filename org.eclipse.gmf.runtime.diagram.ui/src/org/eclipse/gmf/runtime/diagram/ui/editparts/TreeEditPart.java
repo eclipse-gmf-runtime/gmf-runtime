@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
+package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
@@ -60,6 +60,7 @@ public class TreeEditPart
     private TransactionalEditingDomain editingDomain;
 
     /**
+     * Constructor
      * @param model
      */
     public TreeEditPart(Object model) {
@@ -119,7 +120,10 @@ public class TreeEditPart
         return null;
     }
 
-    /** Return the editpart's underlying semantic element. */
+    /**
+     * Return the editpart's underlying semantic element.
+     * @return semantic element
+     */
     protected EObject getSemanticElement() {
         return ViewUtil.resolveSemanticElement((View)getModel());
     }
@@ -244,7 +248,7 @@ public class TreeEditPart
      * 
      * @return the diagram event broker
      */
-    private DiagramEventBroker getDiagramEventBroker() {
+    protected DiagramEventBroker getDiagramEventBroker() {
         EditingDomain theEditingDomain = getEditingDomain();
         if (theEditingDomain instanceof TransactionalEditingDomain) {
             return DiagramEventBroker

@@ -81,6 +81,8 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeDiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
@@ -89,8 +91,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteAction
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ToggleRouterAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
@@ -218,16 +218,8 @@ public abstract class DiagramEditor
          */
         protected void configureOutlineViewer() {
             getViewer().setEditDomain(getEditDomain());
-            getViewer().setEditPartFactory(new EditPartFactory() {
-
-                public EditPart createEditPart(EditPart context, Object model) {
-                    if (model instanceof Diagram) {
-                        return new TreeDiagramEditPart(model);
-                    } else {
-                        return new TreeEditPart(model);
-                    }
-                }
-            });
+            getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
+            
             // No support for a context menu on the outline view for
             // release 6.0. See RATLC00529151, RATLC00529144
             // The selected item is a TreeEditPart which is not an
@@ -1511,4 +1503,23 @@ public abstract class DiagramEditor
     public boolean isWritable() {
         return (getDiagramEditPart() != null && getDiagramEditPart().isEditModeEnabled());
     }
+    
+    /**
+     * Creates edit part factory that will be creating tree edit parts in
+     * the tree viewer
+     * @return <code>EditPartFactory</code> factory for the tree viewer
+     */
+    protected EditPartFactory getOutlineViewEditPartFactory() {
+		return new EditPartFactory() {
+
+			public EditPart createEditPart(EditPart context, Object model) {
+				if (model instanceof Diagram) {
+					return new TreeDiagramEditPart(model);
+				} else {
+					return new TreeEditPart(model);
+				}
+			}
+		};
+	}
+
 }
