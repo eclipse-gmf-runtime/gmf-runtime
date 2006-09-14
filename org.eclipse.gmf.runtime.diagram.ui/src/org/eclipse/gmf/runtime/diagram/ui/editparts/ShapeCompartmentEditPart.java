@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
@@ -36,6 +37,7 @@ import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -83,6 +85,31 @@ public abstract class ShapeCompartmentEditPart
 	private boolean _refreshQueued = false;
 
 	private boolean isSupportingViewActions = false;
+    
+    // Listen to editparts being added to or removed from this compartment
+    // editpart so that when a figure moves within the compartment we can call
+    // refreshConnections(). See bugzilla#146581.
+    private EditPartListener editpartListener = new EditPartListener.Stub() {
+
+        private FigureListener childFigureListener = new FigureListener() {
+
+            public void figureMoved(IFigure source) {
+                refreshConnections();
+            }
+        };
+
+        public void childAdded(EditPart child, int index) {
+            ((GraphicalEditPart) child).getFigure().addFigureListener(
+                childFigureListener);
+        }
+
+        public void removingChild(EditPart child, int index) {
+            ((GraphicalEditPart) child).getFigure().removeFigureListener(
+                childFigureListener);
+
+        }
+
+    };
 
 	/**
 	 * Class used to refresh the connections associated to the shape
@@ -102,7 +129,6 @@ public abstract class ShapeCompartmentEditPart
 		 *            edit part to consider
 		 */
 		protected void refreshConnections(ShapeCompartmentEditPart scep) {
-
 			Iterator connectionNodes = getConnectionNodes(scep).iterator();
 			while (connectionNodes.hasNext()) {
 				ConnectionNodeEditPart cep = (ConnectionNodeEditPart) connectionNodes
@@ -754,5 +780,15 @@ public abstract class ShapeCompartmentEditPart
 			getBorderItemEditParts(child, retval);
 		}
 	}
+    
+    public void addNotify() {
+        addEditPartListener(editpartListener);
+        super.addNotify();
+    }
+
+    public void removeNotify() {
+        removeEditPartListener(editpartListener);
+        super.removeNotify();
+    }
 
 }
