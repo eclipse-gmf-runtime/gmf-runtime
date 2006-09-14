@@ -37,19 +37,19 @@ import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.internal.command.BaseModificationValidator;
-import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
-import org.eclipse.jface.action.Action;
+import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionHandler;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.operations.UndoActionHandler;
 
 /**
- * Tests the AbstractModelActionDelegate.
+ * Tests the AbstractModelActionHandler.
  * 
  * @author ldamus
  */
-public class AbstractModelActionDelegateTest extends TestCase {
+public class AbstractModelActionHandlerTest extends TestCase {
 
 	private IProject project;
 
@@ -58,6 +58,8 @@ public class AbstractModelActionDelegateTest extends TestCase {
 	private IOperationHistory history;
 
 	private TransactionalEditingDomain editingDomain;
+	
+	private IWorkbenchPart part;
 
 	private IWorkbenchPartSite site;
 
@@ -69,8 +71,10 @@ public class AbstractModelActionDelegateTest extends TestCase {
 		FileModificationValidator
 				.setModificationValidator(new BaseModificationValidator());
 
-		site = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().getActivePart().getSite();
+		part = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage().getActivePart();
+
+		site = part.getSite();
 
 		editingDomain = TransactionalEditingDomain.Factory.INSTANCE
 				.createEditingDomain();
@@ -83,7 +87,7 @@ public class AbstractModelActionDelegateTest extends TestCase {
 			project.create(null);
 			project.open(null);
 
-			file = project.getFile("AbstractModelActionDelegateTest.txt"); //$NON-NLS-1$
+			file = project.getFile("AbstractModelActionHandlerTest.txt"); //$NON-NLS-1$
 			InputStream contents = new ByteArrayInputStream(new byte[0]);
 
 			file.create(contents, false, new NullProgressMonitor());
@@ -124,11 +128,11 @@ public class AbstractModelActionDelegateTest extends TestCase {
 
 	/**
 	 * Tests that validation is done for file modification when commands that
-	 * change the model are executed through an AbstractModelActionDelegate.
+	 * change the model are executed through an AbstractModelActionHandler.
 	 */
 	public void test_fileModificationValidation_155418() {
 
-		TestModelActionDelegate action = new TestModelActionDelegate();
+		TestModelActionHandler action = new TestModelActionHandler(part);
 
 		// create an undo action handler for the undo context so that we can
 		// test that the history is flushed correctly
@@ -173,17 +177,15 @@ public class AbstractModelActionDelegateTest extends TestCase {
 
 	// test fixtures
 
-	private class TestModelActionDelegate extends AbstractModelActionDelegate {
+	private class TestModelActionHandler extends AbstractModelActionHandler {
 
 		private TestCommand command;
 
 		private IUndoContext undoContext;
 
-		public TestModelActionDelegate() {
-			super();
-			setAction(new Action("TestModelActionDelegate") { //$NON-NLS-1$
-				// nothing
-			});
+		public TestModelActionHandler(IWorkbenchPart part) {
+			super(part);
+			setText("TestModelActionHandler"); //$NON-NLS-1$
 		}
 
 		protected TransactionalEditingDomain getEditingDomain() {
@@ -212,6 +214,10 @@ public class AbstractModelActionDelegateTest extends TestCase {
 		public IStatus getCommandStatus() {
 			return super.getStatus();
 		}
+		
+		public void refresh() {
+			// do nothing
+		}
 	}
 
 	private class TestCommand extends AbstractCommand {
@@ -223,7 +229,7 @@ public class AbstractModelActionDelegateTest extends TestCase {
 		private boolean redone = false;
 
 		public TestCommand() {
-			super("AbstractModelActionDelegateTest", //$NON-NLS-1$
+			super("AbstractModelActionHandlerTest", //$NON-NLS-1$
 					Collections.singletonList(file));
 		}
 
