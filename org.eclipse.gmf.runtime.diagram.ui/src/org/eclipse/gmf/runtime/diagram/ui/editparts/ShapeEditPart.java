@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -90,11 +91,23 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		else if (notification.getFeature() == NotationPackage.eINSTANCE.getView_Element()
 		 && ((EObject)notification.getNotifier())== getNotationView())
 			handleMajorSemanticChange();
-        else if (notification.getEventType() == EventType.UNRESOLVE 
-                && notification.getNotifier() == ((View)getModel()).getElement())
-            handleMajorSemanticChange();
-
-		else
+        else if (notification.getEventType() == EventType.UNRESOLVE && hasNotationView()){
+            // make sure we refresh if the unresolved element is the edit
+            // part's semantic element the comparison should be id based not
+            // instance based, since get element will resolve the element
+            // and resolving the element will  result in returning a different
+            // instance than the proxy we had as a notifier
+            EObject notifier = (EObject) notification.getNotifier();
+            EObject viewElement = getNotationView().getElement();
+            if (viewElement!=null){
+                String id1 = EMFCoreUtil.getProxyID(notifier);
+                String id2 = EMFCoreUtil.getProxyID(viewElement);
+                if (id1.equals(id2)) {
+                    handleMajorSemanticChange();
+                }
+            }
+         }
+         else
 			super.handleNotificationEvent(notification);
 	}
 
