@@ -361,11 +361,16 @@ public abstract class DiagramAction
 	}
 
 	/**
-	 * Does this action need to listen to selection change events? If the
-	 * enablement state of the context menu or the operation set depends on what
-	 * is selected in a diagram, then this needs to return true. If this action
-	 * targets the diagram only, then it should return false.
-	 */
+     * Does this action need to listen to selection change events? If the
+     * enablement state of the context menu or the operation set depends on what
+     * is selected in a diagram, then this needs to return true. If this action
+     * targets the diagram only, then it should return false.
+     * <p>
+     * Actions that are only contributed to the popup menu (and not toolbar or
+     * main menus) will not receive selection events at all. The refresh()
+     * method will be called when the context menu is about to show.
+     * </p>
+     */
 	protected abstract boolean isSelectionListener();
 
 	/**

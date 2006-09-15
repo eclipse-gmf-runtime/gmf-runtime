@@ -264,7 +264,7 @@ public abstract class AbstractActionHandler
 	 *         <code>false</code> otherwise.
 	 */
 	protected boolean contributedToPart(IWorkbenchPart part) {
-		return partSelector == null || partSelector.selects(workbenchPart);
+		return partSelector == null || partSelector.selects(part);
 	}
 	
 	/**
