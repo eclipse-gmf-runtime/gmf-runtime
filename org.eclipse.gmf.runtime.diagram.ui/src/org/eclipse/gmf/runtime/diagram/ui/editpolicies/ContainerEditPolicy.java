@@ -350,19 +350,7 @@ public class ContainerEditPolicy
 			Object ep = iter.next();
 			if (ep instanceof ConnectionEditPart || ep instanceof ShapeEditPart
 				|| ep instanceof ListItemEditPart) {
-				
-				// More work needs to be done to duplicate connections whose
-				// source or target isn't also duplicated, so disable for now.
-				if (ep instanceof ConnectionEditPart) {
-					ConnectionEditPart connectionEP = (ConnectionEditPart) ep;
-					if (!request.getEditParts().contains(
-						connectionEP.getSource())
-						|| !request.getEditParts().contains(
-							connectionEP.getTarget())) {
-						return null;
-					}
-				}
-				
+								
 				View notationView = (View)((IGraphicalEditPart) ep).getModel();
 				if (notationView != null) {
 					notationViewsToDuplicate.add(notationView);

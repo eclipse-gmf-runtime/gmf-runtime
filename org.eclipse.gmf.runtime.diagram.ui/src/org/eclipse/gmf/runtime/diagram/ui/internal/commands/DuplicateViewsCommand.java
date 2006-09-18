@@ -27,6 +27,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DuplicateEObjectsCommand;
 import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
@@ -126,7 +127,7 @@ public class DuplicateViewsCommand
 		if (!result.getStatus().isOK()) {
 			return result;
 		}
-
+        
 		// Update the duplicated views to reference the duplicated elements.
 		if (duplicatedElements != null && !duplicatedElements.isEmpty()) {
 			EcoreUtil.Copier copier = new EcoreUtil.Copier();
@@ -168,7 +169,24 @@ public class DuplicateViewsCommand
 					int y = bounds.getY();
 					bounds.setY(y + offset.y);
 				}
-			}
+			} else if (duplicateView instanceof Edge) {
+                assert originalView instanceof Edge;
+                
+                // If the source/target wasn't duplicated, then the copier
+                // would not have set the source/target.
+                Edge duplicateEdge = (Edge) duplicateView;
+                Edge originalEdge = (Edge) originalView;
+
+                boolean sourceDuplicated = duplicateEdge.getSource() != null;
+                boolean targetDuplicated = duplicateEdge.getTarget() != null;
+
+                if (!sourceDuplicated) {
+                    duplicateEdge.setSource(originalEdge.getSource());
+                }
+                if (!targetDuplicated) {
+                    duplicateEdge.setTarget(originalEdge.getTarget());
+                }
+            }
 
 			if (duplicateView != null) {
 				duplicatedViewsToBeReturned.add(duplicateView);
@@ -177,5 +195,6 @@ public class DuplicateViewsCommand
 
 		return CommandResult.newOKCommandResult(duplicatedViewsToBeReturned);
 
-	}
+	}  
+    
 }
