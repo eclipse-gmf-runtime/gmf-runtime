@@ -13,26 +13,21 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TopGraphicEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHandle;
-import org.eclipse.jface.util.Assert;
 
 /**
  * A resizable editpolicy for resizable compartments. The editpolicy could be
@@ -44,33 +39,7 @@ public class ResizableCompartmentEditPolicy
 	extends ResizableEditPolicyEx {
 
 	private boolean horizontal;
-	
-	/**
-	 * Listener to determine bounds changes of compartment figure and/or its container
-	 * to display or hide collapse handles accordingly (Bugzilla #115905)
-	 */
-	private FigureListener figureListener = new FigureListener() {
-		public void figureMoved(IFigure source) {
-			if (handles != null) {
-				ResizableCompartmentFigure compartment = getCompartmentFigure();
-				Dimension minClientDimension = compartment.getMinClientDimension();
-				if (source.equals(compartment))
-				{
-					Rectangle intersection = getGraphicalEditPart()
-							.getTopGraphicEditPart().getFigure().getBounds().getCopy()
-							.intersect(source.getBounds());
-					
-					refreshCollapseHandles(intersection.height>minClientDimension.height && intersection.width>minClientDimension.width);					
-				}
-				else if (source.equals(getGraphicalEditPart().getTopGraphicEditPart().getFigure()))
-				{
-					Rectangle intersection = source.getBounds().getCopy().intersect(compartment.getBounds());
-					refreshCollapseHandles(intersection.height>minClientDimension.height && intersection.width>minClientDimension.width);
-				}
-			}
-		}
-	};
-	
+
 	/**
 	 * Creates a new vertical ResizableCompartmentEditPolicy
 	 */
@@ -104,23 +73,10 @@ public class ResizableCompartmentEditPolicy
 		IGraphicalEditPart part = (IGraphicalEditPart) getHost();
 
 		List collapseHandles = new ArrayList();
-		
-		CompartmentCollapseHandle collapseHandle = new CompartmentCollapseHandle(part);
-		
-		TopGraphicEditPart wrapper = part.getTopGraphicEditPart();
-		Rectangle intersection = null;
-		ResizableCompartmentFigure compartment = getCompartmentFigure();		
-		if (wrapper != null && compartment != null)
-			intersection = wrapper.getFigure().getBounds().getCopy().intersect(
-					compartment.getBounds());
-		collapseHandle.setVisible(intersection == null
-				|| (intersection.width > compartment.getMinClientDimension().width && intersection.height > compartment
-						.getMinClientDimension().height));
-		
-		collapseHandles.add(collapseHandle);
+		collapseHandles.add(new CompartmentCollapseHandle(part));
 		return collapseHandles;
 	}
-	
+
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#createSelectionHandles()
 	 */
@@ -131,7 +87,6 @@ public class ResizableCompartmentEditPolicy
 		int d2 = isHorizontal() ? PositionConstants.EAST
 			: PositionConstants.SOUTH;
 		List selectionHandles = new ArrayList();
-		
 		selectionHandles.addAll(createCollapseHandles());
 		selectionHandles.add(new CompartmentResizeHandle(part, d1));
 		selectionHandles.add(new CompartmentResizeHandle(part, d2));
@@ -172,16 +127,9 @@ public class ResizableCompartmentEditPolicy
 	 */
 	protected void showSelection() {
 		super.showSelection();
-		IGraphicalEditPart part = getGraphicalEditPart();
-		TopGraphicEditPart topPart = part.getTopGraphicEditPart();
-		ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
-		if (compartmentFigure != null) {
-			if (topPart != null)
-			{
-				topPart.getFigure().addFigureListener(figureListener);
-				compartmentFigure.addFigureListener(figureListener);
-			}
-			if (getHost().getSelected() != EditPart.SELECTED_NONE) {
+		if (getHost().getSelected() != EditPart.SELECTED_NONE) {
+			ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+			if (compartmentFigure != null) {
 				compartmentFigure.setSelected(true);
 			}
 		}
@@ -192,22 +140,24 @@ public class ResizableCompartmentEditPolicy
 	 */
 	protected void hideSelection() {
 		super.hideSelection();
-		IGraphicalEditPart part = getGraphicalEditPart();
-		TopGraphicEditPart topPart = part.getTopGraphicEditPart();
-		ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
-		if (compartmentFigure != null) {
-			if (topPart != null)
-			{
-				topPart.getFigure().removeFigureListener(figureListener);
-				compartmentFigure.removeFigureListener(figureListener);
-			}
-			if (getHost().getSelected() == EditPart.SELECTED_NONE) {
+		if (getHost().getSelected() == EditPart.SELECTED_NONE) {
+			ResizableCompartmentFigure compartmentFigure = getCompartmentFigure();
+			if (compartmentFigure != null) {
 				compartmentFigure.setSelected(false);
 			}
 		}
 	}
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#activate()
+     */
+    public void activate() {
+        super.activate();
+        if (getHost().getParent().getSelected() != EditPart.SELECTED_NONE)
+            setSelectedState();
+    }
 
-	private EditPartListener hostListener;
+    private EditPartListener hostListener;
 
 	private EditPartListener parentListener;
 
@@ -231,17 +181,9 @@ public class ResizableCompartmentEditPolicy
 			}
 		};
 		getParentGraphicEditPart().addEditPartListener(parentListener);
-				
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#activate()
-	 */
-	public void activate() {
-		super.activate();
-		setSelectedState();
-	}
-	
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
@@ -259,10 +201,8 @@ public class ResizableCompartmentEditPolicy
 		int hostState = getHost().getSelected();
 		int topState = EditPart.SELECTED_NONE;
 
-		if (getGraphicalEditPart()
-			.getTopGraphicEditPart() != null) {
-			topState = getGraphicalEditPart()
-				.getTopGraphicEditPart().getSelected();
+		if (getGraphicalEditPart().getTopGraphicEditPart() != null) {
+			topState = getGraphicalEditPart().getTopGraphicEditPart().getSelected();
 		}
 
 		boolean vis = getGraphicalEditPart().getNotationView().isVisible();
@@ -330,23 +270,4 @@ public class ResizableCompartmentEditPolicy
 		return req;
 	}
 	
-    /**
-     * Refreshes collapse handles - displays them if they need to be displayed but not displaying
-     * and removes them if they shouldn't be displayed, but are displayed.
-     * Method assumes that handles are not <code>null</code>, i.e. handles are being displayed
-     *  
-     * @param shouldHaveHandles <code>true</code> if collapse handles need to be displayed 
-     */
-    private void refreshCollapseHandles(boolean shouldHaveHandles)
-    {
-    	Assert.isTrue(handles!=null);
-
-    	for (ListIterator handlesIterator = handles.listIterator(); handlesIterator.hasNext();)
-		{
-    		Object handle = handlesIterator.next();
-			if (handle instanceof CompartmentCollapseHandle)
-				((CompartmentCollapseHandle)handle).setVisible(shouldHaveHandles);
-		}
-    }
-        
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -25,10 +27,32 @@ import org.eclipse.swt.graphics.Image;
 public class CollapseFigure extends RectangleFigure {
 
 	private boolean collapsed = false;
+    private IFigure containerFigure = null;
+    
+
+    /**
+     * Constrcuts an instance
+     */
+    public CollapseFigure() {
+        super();
+    }
+
+    /**
+     * Constrcuts an instance
+     * 
+     * @param containerFigure
+     *            containers's figure
+     */
+    public CollapseFigure(IFigure containerFigure) {
+        super();
+        this.containerFigure = containerFigure;
+    }
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.draw2d.Shape#fillShape(org.eclipse.draw2d.Graphics)
-	 */
+	/*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.Shape#fillShape(org.eclipse.draw2d.Graphics)
+     */
 	protected void fillShape(Graphics graphics) {
 		
 		Image img;
@@ -70,5 +94,28 @@ public class CollapseFigure extends RectangleFigure {
 		revalidate();
 		repaint();
 	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.Figure#isVisible()
+     */
+    public boolean isVisible() {
+        boolean visibility = super.isVisible();
+        if (visibility && containerFigure != null) {
+            /*
+             * Try to hide the handle if it's to be drawn outside of the
+             * container edit part figure
+             */
+            Rectangle containerBounds = containerFigure.getClientArea()
+                .getCopy();
+            containerFigure.translateToAbsolute(containerBounds);
+            translateToRelative(containerBounds);
+            return containerBounds.contains(getBounds());
+        }
+        return visibility;
+    }
+    
+    
 
 }

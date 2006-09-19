@@ -25,8 +25,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.handles.AbstractHandle;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.CollapseFigure;
@@ -50,10 +50,10 @@ public class CompartmentCollapseHandle
 	 */
 	private class CollapseHandleLocator implements Locator {
 		public void relocate(IFigure target) {
-			Rectangle theBounds = getOwnerFigure().getClientArea().getCopy();
+			Rectangle theBounds = getOwnerFigure().getClientArea().getCopy();          
 			getOwnerFigure().translateToAbsolute(theBounds);
-			target.translateToRelative(theBounds);
-			target.setLocation(theBounds.getLocation());
+            target.translateToRelative(theBounds);
+			target.setLocation(theBounds.getLocation());            
 		}
 	}
 
@@ -64,27 +64,36 @@ public class CompartmentCollapseHandle
 	protected CollapseFigure collapseFigure = null;
 
 	/**
-	 * Creates a new Compartment Collapse Handle 
-	 * @param owner
-	 */
-	public CompartmentCollapseHandle(IGraphicalEditPart owner) {
-		setOwner(owner);
-		setLocator(new CollapseHandleLocator());
-		setCursor(Cursors.ARROW);
-		
-		setSize(SIZE);
-		setLayoutManager(new StackLayout());
-		add(collapseFigure = new CollapseFigure());
-		View view = owner.getNotationView();
-		if (view!=null){
-			DrawerStyle style = (DrawerStyle) view.getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
-			if (style != null){
-				collapseFigure.setCollapsed(style.isCollapsed());
-				return;
-			}
-		}
-		collapseFigure.setCollapsed(false);
-	}
+     * Creates a new Compartment Collapse Handle
+     * 
+     * @param owner
+     */
+    public CompartmentCollapseHandle(IGraphicalEditPart owner) {
+        setOwner(owner);
+        setLocator(new CollapseHandleLocator());
+        setCursor(Cursors.ARROW);
+
+        setSize(SIZE);
+        setLayoutManager(new StackLayout());
+
+        if (owner != null && owner.getParent() != null
+            && owner.getParent() instanceof IGraphicalEditPart)
+            add(collapseFigure = new CollapseFigure(((IGraphicalEditPart) owner
+                .getParent()).getFigure()));
+        else
+            add(collapseFigure = new CollapseFigure());
+
+        View view = owner.getNotationView();
+        if (view != null) {
+            DrawerStyle style = (DrawerStyle) view
+                .getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
+            if (style != null) {
+                collapseFigure.setCollapsed(style.isCollapsed());
+                return;
+            }
+        }
+        collapseFigure.setCollapsed(false);
+    }
 
 	/**
 	 * @see org.eclipse.draw2d.IFigure#findFigureAt(int, int, TreeSearch)
