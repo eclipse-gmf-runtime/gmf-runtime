@@ -765,7 +765,7 @@ public class WrapLabel
 		if (layoutManager != null)
 			minSize.setSize(layoutManager.getMinimumSize(this, w, h));
 		Font f = getFont();
-		Dimension d = getEllipseTextSize().intersect(
+		Dimension d = getEllipseTextSize().getIntersected(
 			getTextExtents(getText(), f, getMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())));		
 		
 		Dimension labelSize = calculateLabelSize(d);
