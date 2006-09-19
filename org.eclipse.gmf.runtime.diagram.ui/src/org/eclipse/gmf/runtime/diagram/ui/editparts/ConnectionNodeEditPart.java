@@ -11,17 +11,22 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.DropRequest;
+import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -231,4 +236,128 @@ abstract public class ConnectionNodeEditPart
 		refreshSourceAnchor();
 		refreshTargetAnchor();
 	}
+    
+    /**
+     * Retrieve the list of all source and target connections for the connection.
+     * @param set HashSet to add the connections to.
+     * @param connectionEditPart the connection edit part.
+     */
+    private void getSourceAndTargetConnections(HashSet set, 
+            org.eclipse.gef.ConnectionEditPart connectionEditPart) {
+        
+        if (connectionEditPart == null || set == null)
+            return;
+            
+        for (Iterator i = connectionEditPart.getSourceConnections().iterator(); 
+        i.hasNext();) {
+            
+            org.eclipse.gef.ConnectionEditPart next = 
+                (org.eclipse.gef.ConnectionEditPart) i.next();
+            Connection sourceConnection = (Connection) next.getFigure();
+            set.add(sourceConnection);
+            getSourceAndTargetConnections(set, next);
+        }
+
+        for (Iterator i = connectionEditPart.getTargetConnections().iterator(); 
+        i.hasNext();) {
+            
+            org.eclipse.gef.ConnectionEditPart next = 
+                (org.eclipse.gef.ConnectionEditPart) i.next();
+            Connection targetConnection = (Connection) next.getFigure();
+            set.add(targetConnection);
+            getSourceAndTargetConnections(set, next);
+        }
+    }
+    
+    /**
+     * Figure out if a cyclic dependency will arise if target connection edit part
+     * is connected to the source connection edit part.
+     * @param targetCEP the target connection edit part
+     * @param sourceCEP the source connection edit part
+     * @param checkSourceAndTargetEditParts check both the source and taret edit parts 
+     * for cyclic dependencies
+     * @param doNotCheckSourceEditPart (if checkSourceAndTargetEditParts is false) check 
+     * only the target edit part if true, otherwise check only the source edit part
+     * @return true if a cyclic dependency would be create when targetCEP and 
+     * sourceCEP were to be connected, false otherwise.  
+     */
+    private boolean isCyclicConnectionRequest(org.eclipse.gef.ConnectionEditPart targetCEP,
+            org.eclipse.gef.ConnectionEditPart sourceCEP, 
+            boolean checkSourceAndTargetEditParts, boolean doNotCheckSourceEditPart) {
+        
+        if (targetCEP == null || sourceCEP == null)
+            return false;
+        
+        // first, do a cyclic check on source and target connections 
+        // of the source connection itself.
+        // (as every connection is also a node).
+        
+        HashSet set = new HashSet();
+        getSourceAndTargetConnections(set, sourceCEP);
+        if (set.contains(targetCEP.getFigure()))
+            return true;
+        
+        
+        // now do the cyclic check on the source and target of the source connection...  
+        EditPart sourceEP = sourceCEP.getSource(),
+                 targetEP = sourceCEP.getTarget();
+                 
+        if ((sourceEP == targetCEP) || (targetEP == targetCEP)) {
+            return true;
+        }
+        else {
+            
+            if (!checkSourceAndTargetEditParts && doNotCheckSourceEditPart) {
+                // .
+            }
+            else
+                if (sourceEP instanceof org.eclipse.gef.ConnectionEditPart && 
+                        isCyclicConnectionRequest(targetCEP, 
+                            (org.eclipse.gef.ConnectionEditPart)sourceEP,
+                            true, doNotCheckSourceEditPart))
+                        return true;
+            
+            if (!checkSourceAndTargetEditParts && !doNotCheckSourceEditPart) {
+                // .
+            }
+            else
+                if (targetEP instanceof org.eclipse.gef.ConnectionEditPart &&
+                     isCyclicConnectionRequest(targetCEP, 
+                         (org.eclipse.gef.ConnectionEditPart)targetEP,
+                         true, doNotCheckSourceEditPart))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.editparts.AbstractEditPart#getTargetEditPart(org.eclipse.gef.Request)
+     */
+    public EditPart getTargetEditPart(Request request) {
+        EditPart ep = super.getTargetEditPart(request);
+        //TODO: this is a workaround for a GEf issue; the actual fix should be in GEF's ConnectionEndPointTracker
+        //      the work around should be removed after the gef problem is fixed
+        
+        /* see bugzilla# 155243
+         * 
+         * we do not want to target a connection that is already connected to us 
+         * so that we do not introduce a cyclic connection.
+         */
+        if (ep != null && ep instanceof org.eclipse.gef.ConnectionEditPart) {
+            if (request instanceof ReconnectRequest) {
+                ReconnectRequest rRequest = (ReconnectRequest)request; 
+                
+                // If source anchor is moved, the connection's source edit part should not
+                // be taken into account for a cyclic dependency check so as to avoid
+                // false checks. Same goes for the target anchor.
+                
+                if (isCyclicConnectionRequest((org.eclipse.gef.ConnectionEditPart)ep, 
+                    rRequest.getConnectionEditPart(), false, rRequest.isMovingStartAnchor()))
+                    return null;
+            }
+        }
+        
+        return ep;
+    }
 }
