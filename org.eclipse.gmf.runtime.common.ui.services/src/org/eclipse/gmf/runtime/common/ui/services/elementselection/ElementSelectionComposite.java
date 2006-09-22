@@ -17,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.internal.l10n.CommonUIServicesMessages;
 import org.eclipse.jface.dialogs.Dialog;
@@ -92,7 +91,7 @@ public abstract class ElementSelectionComposite
     /**
      * The job running the element selection service.
      */
-    private Job job;
+    private ElementSelectionServiceJob job;
     
     /**
      * The element selection service to use to search for elements.
@@ -289,45 +288,41 @@ public abstract class ElementSelectionComposite
         if (filterText.getText().equals(StringStatics.BLANK)) {
             /* no filter, no results */
             cancel();
-            tableViewer.getTable().removeAll();
             matchingObjects.clear();
+            tableViewer.getTable().removeAll();            
             firstCharacter = Character.MIN_VALUE;
             return;
         }
         
-        if (this.input.getScope().intValue() != this.lastScopeSearchedFor) {
-            //scope changes, start from scratch...
-            
-            tableViewer.getTable().removeAll();
-            matchingObjects.clear();
-        }
-        
-        /*
-         * clear the existing matches in the table and refilter results we have
-         * received
-         */
         String filter = validatePattern(filterText.getText());
         pattern = Pattern.compile(filter);
-        tableViewer.getTable().removeAll();
-        for (Iterator i = matchingObjects.iterator(); i.hasNext();) {
-            IMatchingObject matchingObject = (IMatchingObject) i.next();
-            Matcher matcher = pattern.matcher(matchingObject.getName()
-                .toLowerCase());
-            if (matcher.matches()) {
-                tableViewer.add(matchingObject);
-                setSelection();
-            }
-        }
-
-        if ((firstCharacter == Character.MIN_VALUE) ||
-        	(firstCharacter != filterText.getText().charAt(0)) ||
-        	(filterText.getText().indexOf(lastSearchedFor) == -1) ||
-            this.input.getScope().intValue() != this.lastScopeSearchedFor) {
+        if (firstCharacter != filterText.getText().charAt(0) ||
+                this.input.getScope().intValue() != this.lastScopeSearchedFor ||
+                !filterText.getText().startsWith(lastSearchedFor)) {
+            //scope changes, start from scratch...
+            cancel();
+            matchingObjects.clear();
+            tableViewer.getTable().removeAll();
             
             firstCharacter = filterText.getText().charAt(0);
             this.lastScopeSearchedFor = this.input.getScope().intValue();
             
             startElementSelectionService();
+        } else {
+            /*
+             * clear the existing matches in the table and refilter results we have
+             * received
+             */
+            tableViewer.getTable().removeAll();
+            for (Iterator i = matchingObjects.iterator(); i.hasNext();) {
+                IMatchingObject matchingObject = (IMatchingObject) i.next();
+                Matcher matcher = pattern.matcher(matchingObject.getName()
+                    .toLowerCase());
+                if (matcher.matches()) {
+                    tableViewer.add(matchingObject);
+                    setSelection();
+                }
+            }
         }
     }
 
@@ -414,10 +409,10 @@ public abstract class ElementSelectionComposite
                     .getMatchingObject();
                 progressBar.worked(1);
                 progressBar.subTask(matchingObject.getName());
+                matchingObjects.add(matchingObject);
                 Matcher matcher = pattern.matcher(matchingObject.getName()
                     .toLowerCase());
                 if (matcher.matches()) {
-                    matchingObjects.add(matchingObject);
                     tableViewer.add(matchingObject);
                     setSelection();
                 }
@@ -430,8 +425,10 @@ public abstract class ElementSelectionComposite
      */
     public void cancel() {
         if (job != null) {
-            job.cancel();
+            elementSelectionService.cancelJob(job);
             job = null;
+            progressBar.done();
+            progressBar.setVisible(false);
         }
     }
 
@@ -476,5 +473,13 @@ public abstract class ElementSelectionComposite
             tableViewer.getTable().setSelection(0);
             handleSelectionChange();
         }
+    }
+
+    
+    /**
+     * @return the job
+     */
+    public ElementSelectionServiceJob getSelectionServiceJob() {
+        return job;
     }
 }

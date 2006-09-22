@@ -50,8 +50,8 @@ public abstract class AbstractElementSelectionProvider
     public ElementSelectionServiceJob getMatchingObjects(
             IElementSelectionInput input, IElementSelectionListener listener) {
         elementSelectionInput = input;
-        elementSelectionListener = listener;
         ElementSelectionServiceJob job = createSelectionJob();
+        elementSelectionListener = listener;
         return job;
     }
     
