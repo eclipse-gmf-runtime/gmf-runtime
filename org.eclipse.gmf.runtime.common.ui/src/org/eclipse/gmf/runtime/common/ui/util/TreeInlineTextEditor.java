@@ -383,8 +383,10 @@ public class TreeInlineTextEditor {
 						proposalPopupBackgroundColor, processor);
 			}
 		}
-
+        getTextEditorParent().setEnabled(true);
 		getTextEditorParent().setVisible(true);
+        getTextEditor().setEnabled(true);
+        getTextEditor().setVisible(true);
 		adjustTextEditorBounds();
 		getTextEditorParent().redraw();
 		getTextEditor().selectAll();
@@ -401,9 +403,14 @@ public class TreeInlineTextEditor {
 	private void hide() {
 		setTreeItem(null);
 		getTreeEditor().setItem(null);
-		getTextEditorParent().setBounds(getNullRectangle());
-		getTextEditorParent().setVisible(false);
-
+		
+        getTextEditor().setVisible(false);
+        getTextEditor().setEnabled(false);
+		
+        getTextEditorParent().setBounds(getNullRectangle());
+        getTextEditorParent().setVisible(false);
+        getTextEditorParent().setEnabled(false);
+        
 		if (getTextActionHandler() != null) {
 			getTextActionHandler().unHookHandlers();
 		}
