@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
@@ -127,14 +126,6 @@ public class DuplicateViewsCommand
 		if (!result.getStatus().isOK()) {
 			return result;
 		}
-        
-		// Update the duplicated views to reference the duplicated elements.
-		if (duplicatedElements != null && !duplicatedElements.isEmpty()) {
-			EcoreUtil.Copier copier = new EcoreUtil.Copier();
-			copier.putAll(duplicatedElements);
-			copier.putAll(getAllDuplicatedObjectsMap());
-			copier.copyReferences();
-		}
 
 		for (Iterator iter = getObjectsToBeDuplicated().iterator(); iter
 			.hasNext();) {
@@ -142,6 +133,16 @@ public class DuplicateViewsCommand
 			View duplicateView = (View) getAllDuplicatedObjectsMap().get(
 				originalView);
 
+            // Update the duplicated views to reference the duplicated elements.
+			EObject originalElement = duplicateView.getElement();
+            if (duplicatedElements != null) {
+                Object duplicateElement = duplicatedElements
+                    .get(originalElement);
+                if (duplicateElement != null) {
+                    duplicateView.setElement((EObject) duplicateElement);
+                }
+            }
+            
 			// Remove source and target edges that were not duplicated.
 			List sourceRefs = new ArrayList(duplicateView.getSourceEdges());
 			for (Iterator iterator = sourceRefs.iterator(); iterator.hasNext();) {
