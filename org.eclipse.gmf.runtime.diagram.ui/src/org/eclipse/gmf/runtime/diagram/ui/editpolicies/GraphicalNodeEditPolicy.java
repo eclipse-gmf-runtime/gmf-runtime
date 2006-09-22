@@ -323,7 +323,7 @@ public class GraphicalNodeEditPolicy
 			// get the semantic request
 			CreateRelationshipRequest createElementRequest = (CreateRelationshipRequest) requestAdapter
 					.getAdapter(CreateRelationshipRequest.class);
-			hint = PackageUtil.getDisplayName(createElementRequest.getElementType().getEClass());
+			hint = PackageUtil.getID(createElementRequest.getElementType().getEClass());
 		} else if (request instanceof ReconnectRequest) {
 			ReconnectRequest rr = (ReconnectRequest) request;
 			hint = ViewUtil.getSemanticElementClassId((View)rr.getConnectionEditPart().getModel());
