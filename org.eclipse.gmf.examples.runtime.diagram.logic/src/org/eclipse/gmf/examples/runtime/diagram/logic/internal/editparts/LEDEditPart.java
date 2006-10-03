@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,13 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.LEDEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LEDFigure;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
@@ -32,6 +34,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -169,4 +172,12 @@ public class LEDEditPart extends TerminalOwnerShapeEditPart
 
 		return theFigure;
 	}
+    
+    public Object getPreferredValue(EStructuralFeature feature) {
+        if (feature == NotationPackage.eINSTANCE.getFontStyle_FontColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.displayText);
+        }
+        return super.getPreferredValue(feature);
+    }
 }

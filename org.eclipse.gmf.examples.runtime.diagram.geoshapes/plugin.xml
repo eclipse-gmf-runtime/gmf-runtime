@@ -36,13 +36,13 @@
       <viewProvider class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers.DiagramViewProvider">
          <Priority name="Low">
          </Priority>
-         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="">
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="Geoshape">
          </context>         
       </viewProvider>
    </extension>
   
   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
-      <editpartProvider class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.providers.DiagramEditPartProvider">
+      <editpartProvider class="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.nonactivating.DiagramEditPartProvider">
          <Priority name="Medium">
          </Priority>     
 	      <context providesRootEditPart="true"/>

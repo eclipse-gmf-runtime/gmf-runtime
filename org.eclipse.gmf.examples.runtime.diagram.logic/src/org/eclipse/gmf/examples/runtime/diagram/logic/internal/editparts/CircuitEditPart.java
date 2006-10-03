@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,18 +17,22 @@ import java.util.Map;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.ContainerHighlightEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.CircuitFigure;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 /**
  * Holds a circuit, which is a container capable of 
@@ -110,4 +114,16 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart
 				.DPtoLP(100)), side));		
 		return theFigure;
 	}
+    
+    public Object getPreferredValue(EStructuralFeature feature) {
+        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.logicGreen);
+        } else if (feature == NotationPackage.eINSTANCE
+            .getLineStyle_LineColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.connectorGreen);
+        }
+        return super.getPreferredValue(feature);
+    }
 }

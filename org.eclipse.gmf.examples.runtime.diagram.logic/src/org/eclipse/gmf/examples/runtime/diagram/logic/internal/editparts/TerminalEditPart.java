@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,15 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
 import org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -83,4 +87,16 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 	public void setLocator(BorderItemLocator locator) {
 		this.locator = locator;
 	}
+    
+    public Object getPreferredValue(EStructuralFeature feature) {
+        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.connectorGreen);
+        } else if (feature == NotationPackage.eINSTANCE
+            .getLineStyle_LineColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.logicBlack);
+        }
+        return super.getPreferredValue(feature);
+    }
 }

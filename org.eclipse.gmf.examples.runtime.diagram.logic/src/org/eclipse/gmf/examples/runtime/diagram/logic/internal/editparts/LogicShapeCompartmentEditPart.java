@@ -12,9 +12,11 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.CircuitCompartmentCanonicalEditPolicy;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.l10n.ExampleDiagramLogicMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.action.Action;
 
 /**
  * @author qili
@@ -36,6 +38,10 @@ public class LogicShapeCompartmentEditPart extends ShapeCompartmentEditPart{
 	 */
 	protected boolean supportsDragSelection() {
 		return false;
+	}
+	
+	public String getCompartmentName() {
+		return Action.removeMnemonics(ExampleDiagramLogicMessages.logic_CircuitTool_Label);
 	}
 	
 	//install ContainerHighlightEditPolicy to highlight circuit figure

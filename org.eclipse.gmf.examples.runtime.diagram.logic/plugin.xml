@@ -258,9 +258,15 @@
         <metamodel
                 nsURI="http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic">
            <metamodelType
-                   id="logic.model" 
-                   eclass="Model"
-                   edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.ContainerElementEditHelper">
+                 eclass="Model"
+                 edithelper="org.eclipse.gmf.examples.runtime.diagram.logic.internal.edithelpers.ContainerElementEditHelper"
+                 icon="icons/logic.gif"
+                 id="logic.model"
+                 kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+                 name="%ModelTool.Label">
+              <param
+                    name="semanticHint"
+                    value="model"/>
            </metamodelType>
            <metamodelType
                    id="logic.led"     
@@ -368,6 +374,7 @@
        <binding context="org.eclipse.gmf.example.runtime.diagram.logic.context">
           <elementType pattern="logic.*"/>
           <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+          <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.removeBookmarks"/>
        </binding>
     </extension>
    

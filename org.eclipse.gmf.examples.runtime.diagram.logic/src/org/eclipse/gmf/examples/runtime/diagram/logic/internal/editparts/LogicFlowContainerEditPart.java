@@ -12,11 +12,15 @@
 package org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts;
 
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicFlowFigure;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -50,4 +54,16 @@ public class LogicFlowContainerEditPart
 		newFigure.setLayoutManager(layout);
 		return newFigure;
 	} 
+    
+    public Object getPreferredValue(EStructuralFeature feature) {
+        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.logicGreen);
+        } else if (feature == NotationPackage.eINSTANCE
+            .getLineStyle_LineColor()) {
+            return FigureUtilities
+                .colorToInteger(LogicColorConstants.logicBlack);
+        }
+        return super.getPreferredValue(feature);
+    }
 }
