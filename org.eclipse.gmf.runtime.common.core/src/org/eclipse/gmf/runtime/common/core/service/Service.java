@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -242,13 +242,23 @@ public abstract class Service
 				try {
 					return policy.provides(operation);
 				}
-				catch (Exception e) {
+				catch (Throwable e) {
 					Log.log(
 						CommonCorePlugin.getDefault(),
 						IStatus.ERROR,
 						CommonCoreStatusCodes.SERVICE_FAILURE,
-						"Ignoring provider since policy " + policy + " threw an exception in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
+						"Ignoring provider since policy " + policy + " threw an exception or error in the provides() method",  //$NON-NLS-1$ //$NON-NLS-2$
 						e);
+					
+					// re-throw fatal errors
+					if (e instanceof ThreadDeath) {
+						throw (ThreadDeath) e;
+					}
+
+					if (e instanceof VirtualMachineError) {
+						throw (VirtualMachineError) e;
+					}
+					
 					return false;
 				}
 			}
@@ -843,13 +853,13 @@ public abstract class Service
 	 * returns true.  Returns false if an exception was thrown or the provides()
 	 * method returns false.
 	 */
-	private static boolean safeProvides(IProvider provider, IOperation operation) {
+	static boolean safeProvides(IProvider provider, IOperation operation) {
 		assert provider != null;
 		
 		try {
 			return provider.provides(operation);
 		}
-		catch (Exception e) {
+		catch (Throwable e) {
 			
 			String providerClassName = provider.getClass().getName();
 			
@@ -861,10 +871,18 @@ public abstract class Service
 					CommonCorePlugin.getDefault(),
 					IStatus.ERROR,
 					CommonCoreStatusCodes.SERVICE_FAILURE,
-					"Ignoring provider " + provider + " since it threw an exception in the provides() method", //$NON-NLS-1$ //$NON-NLS-2$
+					"Ignoring provider " + provider + " since it threw an exception or error in the provides() method", //$NON-NLS-1$ //$NON-NLS-2$
 					e);
 			}
 			
+			// re-throw fatal errors
+			if (e instanceof ThreadDeath) {
+				throw (ThreadDeath) e;
+			}
+
+			if (e instanceof VirtualMachineError) {
+				throw (VirtualMachineError) e;
+			}
 			return false;
 		}
 		
@@ -872,7 +890,7 @@ public abstract class Service
 	
 	/**
 	 * Package private access to the list of ignored providers. Providers are
-	 * ignored when they cause a runtime exception to be thrown in their {{@link #provides(IOperation)}}
+	 * ignored when they cause a runtime exception  or error to be thrown in their {{@link #provides(IOperation)}}
 	 * method.
 	 * 
 	 * @return the list of ignored providers.

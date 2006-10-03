@@ -29,7 +29,9 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -37,6 +39,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
 import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -59,9 +62,6 @@ public class DeferredLayoutCommand
 
 	/** the diagram editpart used to get the editpart registry */
 	protected IGraphicalEditPart containerEP;
-
-	/** the layout command saved for undo */
-	protected Command layoutCmd;
 
 	/**
 	 * Constructor for <code>DeferredLayoutCommand</code>.
@@ -192,14 +192,37 @@ public class DeferredLayoutCommand
 		ArrangeRequest request = new ArrangeRequest(
 			ActionIds.ACTION_ARRANGE_SELECTION, layoutType);
 		request.setPartsToArrange(editParts);
-		layoutCmd = containerEP.getCommand(request);
+		Command layoutCmd = containerEP.getCommand(request);
 
 		if (layoutCmd != null && layoutCmd.canExecute()) {
-			layoutCmd.execute();
+            ICommand optimizedCommand = optimizeCommand(layoutCmd);
+			optimizedCommand.execute(progressMonitor, info);
+            optimizedCommand = null;
 		}
 		return CommandResult.newOKCommandResult();
 	}
 
+    private ICommand optimizeCommand(Command command) {
+        if (command instanceof ICommandProxy) {
+            ICommand icmd = ((ICommandProxy)command).getICommand();
+            return icmd; 
+        } else {
+            if(command instanceof CompoundCommand) {
+                CompositeTransactionalCommand transactionalCommand = new CompositeTransactionalCommand(getEditingDomain(), command.getLabel());
+                transactionalCommand.setTransactionNestingEnabled(false);
+                
+                CompoundCommand compound = (CompoundCommand)command;
+                Iterator commandIter = compound.getCommands().iterator();
+                while(commandIter.hasNext()) {
+                    Command iteredCommand = (Command)commandIter.next();
+                    ICommand iteredICommand = optimizeCommand(iteredCommand);
+                    transactionalCommand.compose(iteredICommand);
+                }
+                return transactionalCommand;
+            }
+            return new CommandProxy(command);
+        }
+    }
 	protected void cleanup() {
 		containerEP = null;//for garbage collection
 		viewAdapters = null;

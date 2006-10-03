@@ -17,11 +17,14 @@ import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
 import org.eclipse.gmf.runtime.common.ui.preferences.FontFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -156,6 +159,55 @@ protected void addFontAndColorFields(Composite composite) {
 	        NOTE_LINE_COLOR_LABEL,
 			composite);
 	addField(noteLineColorEditor);
+    
+    
+    //Accessibility helpers...  See bugzilla#142826 ///////////////////////
+    
+    fontColorEditor.getColorSelector().getButton().
+    getAccessible().addAccessibleListener(new AccessibleAdapter() {
+       public void getName(AccessibleEvent e) {
+            String labelText = fontColorEditor.getLabelText();
+            labelText = Action.removeMnemonics(labelText);
+            e.result = labelText;
+        } 
+    });
+    
+    fillColorEditor.getColorSelector().getButton().
+    getAccessible().addAccessibleListener(new AccessibleAdapter() {
+       public void getName(AccessibleEvent e) {
+           String labelText = fillColorEditor.getLabelText();
+           labelText = Action.removeMnemonics(labelText);
+           e.result = labelText;
+        } 
+    });
+    
+    lineColorEditor.getColorSelector().getButton().
+    getAccessible().addAccessibleListener(new AccessibleAdapter() {
+       public void getName(AccessibleEvent e) {
+           String labelText = lineColorEditor.getLabelText();
+           labelText = Action.removeMnemonics(labelText);
+           e.result = labelText;
+        } 
+    });
+    
+    noteFillColorEditor.getColorSelector().getButton().
+    getAccessible().addAccessibleListener(new AccessibleAdapter() {
+       public void getName(AccessibleEvent e) {
+           String labelText = noteFillColorEditor.getLabelText();
+           labelText = Action.removeMnemonics(labelText);
+           e.result = labelText;
+        } 
+    });
+    
+    noteLineColorEditor.getColorSelector().getButton().
+    getAccessible().addAccessibleListener(new AccessibleAdapter() {
+       public void getName(AccessibleEvent e) {
+           String labelText = noteLineColorEditor.getLabelText();
+           labelText = Action.removeMnemonics(labelText);
+           e.result = labelText;
+        } 
+    });
+    
 }
 
 	/**

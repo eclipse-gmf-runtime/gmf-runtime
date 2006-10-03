@@ -17,8 +17,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 /**
@@ -81,5 +81,13 @@ class LoadingEMFResource
 			eObjectToIDMapCopy = new HashMap();
 		}
 		return eObjectToIDMapCopy;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl#detachedHelper(org.eclipse.emf.ecore.EObject)
+	 */
+	protected void detachedHelper(EObject eObject) {		
+		super.detachedHelper(eObject);
+		DETACHED_EOBJECT_TO_ID_MAP.remove(eObject);
 	}
 }

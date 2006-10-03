@@ -59,7 +59,7 @@ public abstract class StorageDocumentProvider
 	/**
 	 * Creates a new document provider.
 	 *
-	 * @since 2.0
+	 * 
 	 */
 	public StorageDocumentProvider() {
 		super();
@@ -97,7 +97,7 @@ public abstract class StorageDocumentProvider
 	/**
 	 * Factory method for creating empty documents.
 	 * @return the newly created document
-	 * @since 2.1
+	 * 
 	 */
 	protected abstract IDocument createEmptyDocument();
 
@@ -144,7 +144,7 @@ public abstract class StorageDocumentProvider
 	 * @param encoding the character encoding used to read the editor input
 	 * @return <code>true</code> if the document content could be set, <code>false</code> otherwise
 	 * @throws CoreException if the given editor input cannot be accessed
-	 * @since 2.0
+	 * 
 	 */
 	protected boolean setDocumentContent(IDocument document, IEditorInput editorInput) throws CoreException {
 		if (editorInput instanceof IStorageEditorInput) {
@@ -162,7 +162,7 @@ public abstract class StorageDocumentProvider
 	 * @param contentStream the stream which delivers the document content
 	 * @param encoding the character encoding for reading the given stream
 	 * @throws CoreException if the given stream can not be read
-	 * @since 2.0
+	 * 
 	 */
 	protected abstract void setDocumentContentFromStorage(IDocument document, IStorage storage) throws CoreException;
 
@@ -179,7 +179,7 @@ public abstract class StorageDocumentProvider
 	 *
 	 * @param exception the exception to be logged
 	 * @param message the message to be logged
-	 * @since 2.0
+	 * 
 	 */
 	protected void handleCoreException(CoreException exception, String message) {
 
@@ -197,7 +197,7 @@ public abstract class StorageDocumentProvider
 	 *
 	 * @param input the input whose cache will be updated
 	 * @throws CoreException if the storage cannot be retrieved from the input
-	 * @since 2.0
+	 * 
 	 */
 	protected void updateCache(IStorageEditorInput input) throws CoreException {
 		StorageInfo info= (StorageInfo) getElementInfo(input);
@@ -218,7 +218,7 @@ public abstract class StorageDocumentProvider
 
 	/*
 	 * @see IDocumentProvider#isReadOnly(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isReadOnly(Object element) {
 		if (element instanceof IStorageEditorInput) {
@@ -239,7 +239,7 @@ public abstract class StorageDocumentProvider
 
 	/*
 	 * @see IDocumentProvider#isModifiable(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isModifiable(Object element) {
 		if (element instanceof IStorageEditorInput) {
@@ -260,7 +260,7 @@ public abstract class StorageDocumentProvider
 
 	/*
 	 * @see AbstractDocumentProvider#doUpdateStateCache(Object)
-	 * @since 2.0
+	 * 
 	 */
 	protected void doUpdateStateCache(Object element) throws CoreException {
 		if (element instanceof IStorageEditorInput) {

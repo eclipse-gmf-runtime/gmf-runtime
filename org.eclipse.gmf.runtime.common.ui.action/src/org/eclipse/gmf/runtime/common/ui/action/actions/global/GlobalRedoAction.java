@@ -238,7 +238,14 @@ public final class GlobalRedoAction extends GlobalAction {
 	 */
 	protected void doRun(IProgressMonitor progressMonitor) {
 		if (delegate != null) {
-			delegate.run();
+			Object key = new Object();
+			if (GlobalUndoRedoLock.INSTANCE.acquire(key)) {
+				try {
+					delegate.run();
+				} finally {
+					GlobalUndoRedoLock.INSTANCE.release(key);
+				}
+			}
 		}
 	}
 
@@ -305,6 +312,13 @@ public final class GlobalRedoAction extends GlobalAction {
 		}
 
 		super.dispose();
+	}
+	
+	/**
+	 * No work indicator type since my delegate takes care of showing progress.
+	 */
+	public WorkIndicatorType getWorkIndicatorType() {
+		return WorkIndicatorType.NONE;
 	}
 
 }

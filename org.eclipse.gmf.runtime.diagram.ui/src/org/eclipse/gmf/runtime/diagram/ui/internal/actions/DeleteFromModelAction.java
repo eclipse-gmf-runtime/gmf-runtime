@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,37 @@ public class DeleteFromModelAction
 	public DeleteFromModelAction(IWorkbenchPage workbenchPage) {
 		super(workbenchPage);
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
+	 */
+	protected boolean calculateEnabled() {
+		List operationSet = getOperationSet();
+		if (operationSet.isEmpty()) {
+			return false;
+		}
+		Request request = getTargetRequest();
+		Iterator editParts = operationSet.iterator();
+		while (editParts.hasNext()) {
+			EditPart editPart = (EditPart) editParts.next();
+			// disable on diagram links 
+			if (editPart instanceof IGraphicalEditPart) {
+				IGraphicalEditPart gEditPart = (IGraphicalEditPart) editPart;
+				View view = (View) gEditPart.getModel();
+				EObject element = ViewUtil.resolveSemanticElement(view);
+				if ((element == null) || (element.eIsProxy())
+					|| (element instanceof Diagram)) {
+					return false;
+				}
+			} else {
+				Command curCommand = editPart.getCommand(request);
+				if (curCommand == null || (curCommand.canExecute() == false)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

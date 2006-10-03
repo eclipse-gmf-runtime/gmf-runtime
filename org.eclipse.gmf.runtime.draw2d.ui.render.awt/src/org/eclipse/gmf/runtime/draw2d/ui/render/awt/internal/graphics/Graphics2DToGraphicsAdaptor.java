@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,6 +72,10 @@ public class Graphics2DToGraphicsAdaptor
 		super(true);
 		gc = new GraphicContext();
 		this.swtGC = swtGC;
+		swtGC.setAdvanced(true);
+		if (swtGC.getAdvanced() != true)
+			throw new UnsupportedOperationException("Advanced graphics support is required"); //$NON-NLS-1$
+		
 		this.swtGraphics = new SWTGraphics(swtGC);
 		this.transparency = transparency;
 		this.transparency_replace = transparency_replace;

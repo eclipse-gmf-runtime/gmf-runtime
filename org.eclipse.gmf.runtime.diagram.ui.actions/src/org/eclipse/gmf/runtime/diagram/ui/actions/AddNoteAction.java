@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
@@ -28,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
@@ -83,6 +85,22 @@ public class AddNoteAction extends AttachShapeAction {
 				if (!(nodeEditPart.canAttachNote())){
 					return false;
 				}
+				
+				// consider edit mode of selected edit part
+				if (nodeEditPart instanceof IEditableEditPart
+						&& !((IEditableEditPart) nodeEditPart)
+								.isEditModeEnabled()) {
+					return false;
+				}
+
+				// consider edit mode of selected edit part's container
+				EditPart parentPart = nodeEditPart.getParent();
+				if (parentPart instanceof IEditableEditPart
+						&& !((IEditableEditPart) parentPart)
+								.isEditModeEnabled()) {
+					return false;
+				}
+				
 			}
 		}
 		return true;
@@ -137,9 +155,10 @@ public class AddNoteAction extends AttachShapeAction {
 		cc.add(createNoteCmd);
 		cc.add(new ICommandProxy(noteAttachmentCC));
 
-		editor.getDiagramEditDomain().getDiagramCommandStack().execute(cc);
-		
-		selectAddedObject(editor.getDiagramGraphicalViewer(), noteRequest);
+		if (cc.canExecute()) {
+			editor.getDiagramEditDomain().getDiagramCommandStack().execute(cc);
+			selectAddedObject(editor.getDiagramGraphicalViewer(), noteRequest);
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
+
 
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayeredPane;
@@ -40,13 +41,14 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramRuler;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeTypes;
 import org.eclipse.gmf.runtime.gef.ui.internal.editparts.AnimatableZoomManager;
@@ -77,7 +79,7 @@ public class DiagramRootEditPart
 	 * super must be called first.  So, this pattern allows us to set the mapmode into this container after
 	 * super is called, but still have the scalable layered pane initialized with the mapmode value.
 	 */
-	private class WrapperMapMode implements IMapMode {
+	private class WrapperMapMode implements IMapModeHolder {
 
 		public WrapperMapMode() {
 			super();
@@ -114,6 +116,10 @@ public class DiagramRootEditPart
 		 */
 		public Translatable LPtoDP(Translatable t) {
 			return containedMM.LPtoDP(t);
+		}
+		
+		public IMapMode getMapMode() {
+			return containedMM;
 		}
 		
 	}
@@ -389,7 +395,7 @@ public class DiagramRootEditPart
 	 * @param gridSpacing
 	 */
 	public void setGridColor(Integer rgbValue) {
-		gridLayer.setForegroundColor(FigureUtilities.integerToColor(rgbValue));
+		gridLayer.setForegroundColor(DiagramColorRegistry.getInstance().getColor(rgbValue));
 	}
 
 	/**
@@ -598,7 +604,7 @@ public class DiagramRootEditPart
 			(IPreferenceStore) getPreferencesHint().getPreferenceStore();
 		boolean antiAlias = preferenceStore.getBoolean(
 			IPreferenceConstants.PREF_ENABLE_ANTIALIAS);
-		if (layers instanceof org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane)
+		if (getLayers() instanceof org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane)
 			((org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane) layers).setAntiAlias(antiAlias);
 	}
 
@@ -657,7 +663,9 @@ public class DiagramRootEditPart
 		if (wsPrefStore != null) {
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDORDER)) {
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDORDER, true);			
-			} 
+			} else {
+				moveGridLayer(wsPrefStore.getBoolean(WorkspaceViewerProperties.GRIDORDER));
+			}
 			if (! wsPrefStore.contains(WorkspaceViewerProperties.GRIDLINECOLOR)) {
 				wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);			
 			} else {

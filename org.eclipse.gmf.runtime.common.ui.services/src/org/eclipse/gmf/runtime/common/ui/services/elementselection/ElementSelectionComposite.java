@@ -13,9 +13,10 @@ package org.eclipse.gmf.runtime.common.ui.services.elementselection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.internal.l10n.CommonUIServicesMessages;
 import org.eclipse.jface.dialogs.Dialog;
@@ -23,6 +24,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.ProgressMonitorPart;
 import org.eclipse.swt.SWT;
@@ -89,10 +91,48 @@ public abstract class ElementSelectionComposite
     /**
      * The job running the element selection service.
      */
-    private Job job;
+    private ElementSelectionServiceJob job;
+    
+    /**
+     * The element selection service to use to search for elements.
+     */
+    private final ElementSelectionService elementSelectionService;
 
     /**
-     * Constructs a new instance that will create the new composite.
+     * Control character for the filter.
+     * <p>
+     * When the user enters the first character into the filterText, element
+     * selection service is called. When the user enters the second character
+     * after the first, we can use the existing results returned by the service.
+     * If the user enters text such that the first character has been changed,
+     * we need to query the service again.
+     * <p>
+     * For example, if the user enters "a" then "ab", we can use the existing
+     * results from "a". If the user enters "a" then "b", then we must query a
+     * second time.
+     * <p>
+     * We also must remember if the service has already been called. If the user
+     * enters "a" and then "b", we must cancel "a" and wait before calling the
+     * service for "b".
+     */
+    private char firstCharacter = Character.MIN_VALUE;
+    private String lastSearchedFor = StringStatics.BLANK;
+    private int lastScopeSearchedFor = 0;
+
+    /**
+     * matching objects from the element selection service.
+     */
+    private List matchingObjects = new ArrayList();
+
+    /**
+     * Pattern for the input filter.
+     */
+    private Pattern pattern;
+    
+    /**
+     * Constructs a new instance that will create the new composite.  I will use
+     * the default {@linkplain ElementSelectionService#getInstance() selection service}
+     * to process the <tt>input</tt>.
      * 
      * @param title
      *            the dialog title
@@ -101,9 +141,25 @@ public abstract class ElementSelectionComposite
      */
     public ElementSelectionComposite(String title,
             AbstractElementSelectionInput input) {
-        super();
-        this.title = title;
-        this.input = input;
+        this(title, input, ElementSelectionService.getInstance());
+    }
+    
+    /**
+     * Constructs a new instance that will create the new composite.
+     * 
+     * @param title the dialog title
+     * @param input the element selection input
+     * @param elementSelectionService the selection service to use to process the
+     *     <tt>input</tt>
+     */
+    public ElementSelectionComposite(String title,
+    		AbstractElementSelectionInput input,
+    		ElementSelectionService elementSelectionService) {
+    	super();
+    	this.title = title;
+    	this.input = input;
+    	this.elementSelectionService = elementSelectionService;
+        this.lastScopeSearchedFor = input.getScope().intValue();
     }
 
     /**
@@ -198,7 +254,15 @@ public abstract class ElementSelectionComposite
                 return ((AbstractMatchingObject) element).getDisplayName();
             }
         });
-        tableViewer.setSorter(new ViewerSorter());
+        tableViewer.setSorter(new ViewerSorter() {
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                if (e1 instanceof IMatchingObject && e2 instanceof IMatchingObject)
+                    return ((IMatchingObject)e1).getName().toLowerCase().compareTo(
+                        ((IMatchingObject)e2).getName().toLowerCase());
+                
+                return super.compare(viewer, e1, e2);
+            }
+        });
 
         createCompositeAdditions(result);
 
@@ -220,40 +284,65 @@ public abstract class ElementSelectionComposite
     /**
      * Handles a filter change.
      */
-    private void handleFilterChange() {
-        input.setInput(filterText.getText());
-        fillTableViewer();
-        Object element = tableViewer.getElementAt(0);
-        if (element != null) {
-            tableViewer.setSelection(new StructuredSelection(element), true);
+    public void handleFilterChange() {
+        if (filterText.getText().equals(StringStatics.BLANK)) {
+            /* no filter, no results */
+            cancel();
+            matchingObjects.clear();
+            tableViewer.getTable().removeAll();            
+            firstCharacter = Character.MIN_VALUE;
+            return;
         }
-        handleSelectionChange();
+        
+        String filter = validatePattern(filterText.getText());
+        pattern = Pattern.compile(filter);
+        if (firstCharacter != filterText.getText().charAt(0) ||
+                this.input.getScope().intValue() != this.lastScopeSearchedFor ||
+                !filterText.getText().startsWith(lastSearchedFor)) {
+            //scope changes, start from scratch...
+            cancel();
+            matchingObjects.clear();
+            tableViewer.getTable().removeAll();
+            
+            firstCharacter = filterText.getText().charAt(0);
+            this.lastScopeSearchedFor = this.input.getScope().intValue();
+            
+            startElementSelectionService();
+        } else {
+            /*
+             * clear the existing matches in the table and refilter results we have
+             * received
+             */
+            tableViewer.getTable().removeAll();
+            for (Iterator i = matchingObjects.iterator(); i.hasNext();) {
+                IMatchingObject matchingObject = (IMatchingObject) i.next();
+                Matcher matcher = pattern.matcher(matchingObject.getName()
+                    .toLowerCase());
+                if (matcher.matches()) {
+                    tableViewer.add(matchingObject);
+                    setSelection();
+                }
+            }
+        }
     }
 
     /**
      * Fill the table viewer with results from the element selection service.
      */
-    private void fillTableViewer() {
-        /*
-         * Clean the previous list
-         */
-        tableViewer.getTable().removeAll();
-
+    private void startElementSelectionService() {
         /*
          * Initialize all possible matching objects from the select element
          * service.
          */
-        if (!input.getInput().equals(StringStatics.BLANK)) {
-            filterText.setEnabled(false);
-            progressBar.setVisible(true);
-            progressBar.beginTask(
-                CommonUIServicesMessages.ElementSelectionService_ProgressName,
-                IProgressMonitor.UNKNOWN);
+        input.setInput(filterText.getText());
+        lastSearchedFor = filterText.getText();
+        
+        progressBar.setVisible(true);
+        progressBar.beginTask(
+            CommonUIServicesMessages.ElementSelectionService_ProgressName,
+            IProgressMonitor.UNKNOWN);
 
-            job = ElementSelectionService.getInstance().getMatchingObjects(
-                input, this);
-        }
-
+        job = elementSelectionService.getMatchingObjects(input, this);
     }
 
     /**
@@ -314,13 +403,19 @@ public abstract class ElementSelectionComposite
             if (matchingObjectEvent.getEventType() == MatchingObjectEventType.END_OF_MATCHES) {
                 progressBar.done();
                 progressBar.setVisible(false);
-                filterText.setEnabled(true);
-                filterText.setFocus();
+                job = null;
             } else {
+                IMatchingObject matchingObject = matchingObjectEvent
+                    .getMatchingObject();
                 progressBar.worked(1);
-                progressBar.subTask(matchingObjectEvent.getMatchingObject()
-                    .getName());
-                tableViewer.add(matchingObjectEvent.getMatchingObject());
+                progressBar.subTask(matchingObject.getName());
+                matchingObjects.add(matchingObject);
+                Matcher matcher = pattern.matcher(matchingObject.getName()
+                    .toLowerCase());
+                if (matcher.matches()) {
+                    tableViewer.add(matchingObject);
+                    setSelection();
+                }
             }
         }
     }
@@ -330,7 +425,61 @@ public abstract class ElementSelectionComposite
      */
     public void cancel() {
         if (job != null) {
-            job.cancel();
+            elementSelectionService.cancelJob(job);
+            job = null;
+            progressBar.done();
+            progressBar.setVisible(false);
         }
+    }
+
+    /**
+     * Convert the UNIX style pattern entered by the user to a Java regex
+     * pattern (? = any character, * = any string).
+     * 
+     * @param string
+     *            the UNIX style pattern.
+     * @return a Java regex pattern.
+     */
+    private String validatePattern(String string) {
+        if (string.equals(StringStatics.BLANK)) {
+            return string;
+        }
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < string.length(); i++) {
+            char c = Character.toLowerCase(string.charAt(i));
+            if (c == '?') {
+                result.append('.');
+            } else if (c == '*') {
+                result.append(".*"); //$NON-NLS-1$
+            } else {
+                result.append(c);
+            }
+        }
+        result.append(".*"); //$NON-NLS-1$
+        return result.toString();
+    }
+
+    /**
+     * If there is no selection in the composite, set the selection to the
+     * provided MatchingObject.
+     * 
+     * @param matchingObject
+     *            the MatchingObject to select.
+     */
+    protected void setSelection() {
+        StructuredSelection selection = (StructuredSelection) tableViewer
+            .getSelection();
+        if (selection.isEmpty()) {
+            tableViewer.getTable().setSelection(0);
+            handleSelectionChange();
+        }
+    }
+
+    
+    /**
+     * @return the job
+     */
+    public ElementSelectionServiceJob getSelectionServiceJob() {
+        return job;
     }
 }

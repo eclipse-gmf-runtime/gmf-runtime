@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -127,7 +126,7 @@ public final class ClipboardSupportUtil {
 			if (reference.isContainment()) {
                 for (Iterator referenced = referencedObjects.iterator();referenced.hasNext();) {
                     EObject referencedObject = (EObject)referenced.next();
-                    EcoreUtil.remove(referencedObject);
+                    ((InternalEObject)referencedObject).eSetResource(null,null);
                 }
 				sendCreateEvent(referencedObjects);
 			}
@@ -228,7 +227,7 @@ public final class ClipboardSupportUtil {
 			return null;
 		}
 		if (reference.isContainment()) {
-            EcoreUtil.remove(referencedObject);
+            ((InternalEObject)referencedObject).eSetResource(null,null);
 			sendCreateEvent(referencedObject);
 		}
 		((Collection) eObject.eGet(reference)).add(referencedObject);
@@ -246,7 +245,7 @@ public final class ClipboardSupportUtil {
 	 * 
 	 */
 	public static EObject appendEObject(Resource resource, EObject referencedObject) {
-        EcoreUtil.remove(referencedObject);
+        ((InternalEObject)referencedObject).eSetResource(null,null);
 		sendCreateEvent(referencedObject);
 		resource.getContents().add(referencedObject);
 		return referencedObject;
@@ -271,7 +270,7 @@ public final class ClipboardSupportUtil {
 			return null;
 		}
 		if (reference.isContainment()) {
-            EcoreUtil.remove(referencedObject);
+            ((InternalEObject)referencedObject).eSetResource(null,null);
 			sendCreateEvent(referencedObject);
 		}
 		eObject.eSet(reference, referencedObject);

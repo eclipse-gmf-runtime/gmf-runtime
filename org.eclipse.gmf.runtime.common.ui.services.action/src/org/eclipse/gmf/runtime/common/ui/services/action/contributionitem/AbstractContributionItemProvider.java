@@ -264,7 +264,7 @@ public abstract class AbstractContributionItemProvider
 				if (item.isGlobal())
 					actionBars.setGlobalActionHandler(
 						item.getId(),
-						getAction(item.getId(), partDescriptor));
+						getAction(item.getId(), partDescriptor, item));
 			} else if (
 				c
 					instanceof ProviderContributionDescriptor.PartCustomDescriptor) {
@@ -479,6 +479,52 @@ public abstract class AbstractContributionItemProvider
 			}
 		}
 		return action;
+	}
+
+	/**
+	 * Returns the action with the given id that is created for the given part
+	 * id. An action is created once and cached for each unique part's id.
+	 * <P>
+	 * The part selector is used is when the new action is an
+	 * <code>AbstractActionHandler</code> to determine whether or not the
+	 * action is applicable to a given selected part. If the part is not
+	 * applicable, the action will not be refreshed when selection changes in
+	 * the part.
+	 * 
+	 * @param actionId
+	 *            The request action id
+	 * @param partDescriptor
+	 *            The workbench part descriptor
+	 * @param partSelector
+	 *            The part selector
+	 * @return The action with the given id
+	 */
+	protected final IAction getAction(String actionId,
+			IWorkbenchPartDescriptor partDescriptor, IPartSelector partSelector) {
+
+        boolean actionExistsAlready = false;
+        ActionRegistry registry = (ActionRegistry) actionCache.get(partDescriptor);
+        if (registry != null) {
+            if (getActionFromRegistry(actionId, partDescriptor, registry) != null) {
+                actionExistsAlready = true;
+            }
+        }
+        
+		IAction result = getAction(actionId, partDescriptor);
+        
+        // If the action already existed in the registry and this is a popup
+        // menu contribution, we do not want to override the part selector
+        // already set as we could override the part selector for a toolbar
+        // action.  See bugzilla#157471.
+        if (actionExistsAlready
+            && partSelector instanceof ProviderContributionDescriptor.AbstractPopupContributionItemDescriptor) {
+            return result;
+        }
+		
+		if (result instanceof AbstractActionHandler && partSelector != null) {
+			((AbstractActionHandler) result).setPartSelector(partSelector);
+		}
+		return result;
 	}
 	/**
 	 * Returns the ActionGroup with the given id that is created for the given part id
@@ -826,14 +872,9 @@ public abstract class AbstractContributionItemProvider
 
 		public Object getAdapter(Class adapter) {
 			if (adapter == IContributionItem.class) {
-				IAction action = getAction(actionId, partDescriptor);
+				IAction action = getAction(actionId, partDescriptor, partSelector);
 				if (action != null) {
-					PluginActionContributionItem item = new PluginActionContributionItem(action);
-					// set the part selector to minimize action refresh on parts that are not relevant
-					if (partSelector != null) {
-						item.setPartSelector(partSelector);
-					}
-					return item;
+					return new PluginActionContributionItem(action);
 				}
 			} else if (adapter == String.class) {
 				return actionId;
@@ -893,7 +934,10 @@ public abstract class AbstractContributionItemProvider
 
 		public Object getAdapter(Class adapter) {
 			if (adapter == IContributionItem.class) {
-				return new PluginMenuManager(createMenuManager(menuId, partDescriptor));
+                IMenuManager manager = createMenuManager(menuId, partDescriptor);
+                if (manager != null) {
+                    return new PluginMenuManager(manager);
+                }
 			} else if (adapter == String.class) {
 				return menuId;
 			}
@@ -1271,23 +1315,6 @@ public abstract class AbstractContributionItemProvider
 			return super.isVisible();
 		}
 		
-		/**
-		 * Sets the part selector for this action. The part selector is used by
-		 * the <code>AbstractActionHandler</code> to determine whether or not
-		 * the action is applicable to a given selected part. If the part is not
-		 * applicable, the action will not be refreshed when selection changes
-		 * in the part.
-		 * 
-		 * @param partSelector
-		 *            the part selector
-		 */
-		public void setPartSelector(IPartSelector partSelector) {
-			IAction action = getAction();
-			
-			if (action instanceof AbstractActionHandler) {
-				((AbstractActionHandler) action).setPartSelector(partSelector);
-			}
-		}
 	}
 }
 

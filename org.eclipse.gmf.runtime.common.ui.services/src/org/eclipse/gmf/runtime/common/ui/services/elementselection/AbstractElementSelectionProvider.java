@@ -50,9 +50,20 @@ public abstract class AbstractElementSelectionProvider
     public ElementSelectionServiceJob getMatchingObjects(
             IElementSelectionInput input, IElementSelectionListener listener) {
         elementSelectionInput = input;
+        ElementSelectionServiceJob job = createSelectionJob();
         elementSelectionListener = listener;
-        ElementSelectionServiceJob job = new ElementSelectionServiceJob(
-            getJobName(), this);
+        return job;
+    }
+    
+    /**
+     * Creates the selection service job that runs the provider's search.
+     * This method should configure the new job with the appropriate
+     * priority, scheduling rules, etc. but should not schedule it.
+     * 
+     * @return a new selection provider job
+     */
+    protected ElementSelectionServiceJob createSelectionJob() {
+        ElementSelectionServiceJob job = new ElementSelectionServiceJob(getJobName(), this);
         job.setPriority(Job.SHORT);
         return job;
     }

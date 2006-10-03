@@ -140,8 +140,8 @@ public class AnimatableZoomManager
 	 * current zoom level.
 	 */
 	private AnimationModel calculateAnimationModel(double zoom) {
-		double dmod = zoom / getZoom();
-		int steps = (int)Math.round(dmod > 0 ? dmod : 1/dmod);
+        double dmod = Math.pow(zoom / getZoom(),(double)1/8);
+		int steps = (int)Math.round(dmod > 1 ? dmod : 1/dmod);
 		
 		int duration = Math.max(DURATION_INCREMENT, steps * DURATION_INCREMENT);
 		AnimationModel animationModel = new AnimationModel(duration, true);

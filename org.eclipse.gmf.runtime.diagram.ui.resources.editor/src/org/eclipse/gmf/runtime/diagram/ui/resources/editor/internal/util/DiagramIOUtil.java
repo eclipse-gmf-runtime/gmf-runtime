@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.ecore.xmi.PackageNotFoundException;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.internal.EditorPlugin;
@@ -85,9 +86,25 @@ public class DiagramIOUtil {
                 	throw e;
                 }
 			}
+			
+			logResourceErrorsAndWarnings(resource);
+						
 			return resource;
 		}
 	}
+
+	private static void logResourceErrorsAndWarnings(Resource resource) {
+		for (Iterator iter = resource.getErrors().iterator(); iter.hasNext();) {
+			Resource.Diagnostic diagnostic = (Resource.Diagnostic) iter.next();
+			Log.error(EditorPlugin.getInstance(), EditorStatusCodes.ERROR, diagnostic.getMessage());				
+		}
+
+		for (Iterator iter = resource.getWarnings().iterator(); iter.hasNext();) {
+			Resource.Diagnostic diagnostic = (Resource.Diagnostic) iter.next();
+			Log.warning(EditorPlugin.getInstance(), EditorStatusCodes.WARNING, diagnostic.getMessage());				
+		}
+	}
+
 	
 	private static class StorageLoader implements ILoader {
 		private IStorage fStorage;
@@ -99,11 +116,16 @@ public class DiagramIOUtil {
 		public Resource load(TransactionalEditingDomain editingDomain,
 				Map loadOptions, IProgressMonitor monitor)
 			throws IOException, CoreException {
-            
-			String storagePath = fStorage.getFullPath().toString();
- 
-			Resource resource = editingDomain.getResourceSet().getResource(
-				URI.createPlatformResourceURI(storagePath, true), true);
+            String storageName = fStorage.getName();
+            URI uri = URI.createPlatformResourceURI(storageName);
+            Resource resource = editingDomain.getResourceSet().getResource(uri,false);
+            if (resource == null) {
+                resource = editingDomain.getResourceSet().createResource(uri);
+            }
+            if (!resource.isLoaded()) {
+                resource.load(fStorage.getContents(), loadOptions);
+            }
+			logResourceErrorsAndWarnings(resource);
 			return resource;
 		}
 	}
@@ -138,7 +160,7 @@ public class DiagramIOUtil {
 				notationModel = loader.load(domain, new HashMap(), monitor);
 			} catch (Resource.IOWrappedException e) {
 				if (bTryCompatible) {
-					Throwable causeError = e.getWrappedException();
+					Throwable causeError = e.getCause();
 					
 					if (causeError == null) {
 						causeError = e;
@@ -146,8 +168,8 @@ public class DiagramIOUtil {
 					
 					String errMsg = causeError.getLocalizedMessage();
 					if (causeError instanceof Resource.IOWrappedException) {
-						Exception exc = ((Resource.IOWrappedException) causeError)
-							.getWrappedException();
+						Exception exc = (Exception)((Resource.IOWrappedException) causeError)
+							.getCause();
 						if (exc != null) {
 							causeError = exc;
 						}
@@ -170,7 +192,7 @@ public class DiagramIOUtil {
 							return null; 
 						}
 					} else {
-						throw new CoreException(new Status(IStatus.ERROR, EditorPlugin.getPluginId(), EditorStatusCodes.ERROR, UNABLE_TO_LOAD_DIAGRAM, causeError));
+                        throw e;
 					}
 				} else {
 					throw e;
@@ -192,8 +214,13 @@ public class DiagramIOUtil {
 			CoreException thrownExcp = null;
 			if(e instanceof CoreException) {
 				thrownExcp = (CoreException)e;
-			} else
-				thrownExcp = new CoreException(new Status(IStatus.ERROR, EditorPlugin.getPluginId(), EditorStatusCodes.ERROR, e.getMessage(), e));
+            } else {
+                String exceptionMessage = e.getLocalizedMessage();
+                thrownExcp = new CoreException(new Status(IStatus.ERROR,
+                    EditorPlugin.getPluginId(), EditorStatusCodes.ERROR,
+                    exceptionMessage != null ? exceptionMessage
+                        : "load(IFile, boolean)", e)); //$NON-NLS-1$
+            }
 			Trace.throwing(EditorPlugin.getInstance(), EditorDebugOptions.EXCEPTIONS_THROWING, DiagramIOUtil.class, "load(IFile, boolean)", thrownExcp); //$NON-NLS-1$
 			throw thrownExcp;
 		}
@@ -225,6 +252,8 @@ public class DiagramIOUtil {
 
 		if (progressMonitor != null)
 			progressMonitor.done();
+		
+		logResourceErrorsAndWarnings(notationModel);
 	}
 	
 		/**
@@ -245,4 +274,3 @@ public class DiagramIOUtil {
 		return false;
 	}
 }
-

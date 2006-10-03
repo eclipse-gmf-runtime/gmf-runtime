@@ -633,8 +633,8 @@ public class DiagramGlobalActionHandler
 	protected void selectAddedObject(EditPartViewer viewer, Collection objects) {
 		final List editparts = new ArrayList();
 		for (Iterator i = objects.iterator(); i.hasNext();) {
-			Object editPart = getEditPart(viewer, i.next());
-			if (editPart != null)
+			EditPart editPart = getEditPart(viewer, i.next());
+			if (editPart != null && editPart.isSelectable())
 				editparts.add(editPart);
 		}
 		if (!editparts.isEmpty()) {

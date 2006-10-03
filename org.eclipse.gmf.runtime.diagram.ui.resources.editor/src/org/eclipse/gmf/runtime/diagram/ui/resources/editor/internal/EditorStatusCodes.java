@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,8 @@ public final class EditorStatusCodes {
 	 * Set to 5 to be consistent with CommonUIStatusCodes.
 	 */
 	public static final int RESOURCE_FAILURE = 5;
+
+	public static final int WARNING = 7;
 
 
 }

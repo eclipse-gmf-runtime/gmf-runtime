@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2003  IBM Corporation and others.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,13 +17,10 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.Orientable;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.ListScrollBar;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.OneLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimatableScrollPane;
@@ -141,20 +138,14 @@ public class ResizableCompartmentFigure extends NodeFigure {
         scrollPane.getViewport().setContentsTracksWidth(true);
         scrollPane.getViewport().setContentsTracksHeight(false);
         scrollPane.setLayoutManager(new OverlayScrollPaneLayout());
-        
-        Insets insets = new Insets(mm.DPtoLP(1), mm.DPtoLP(2),
-            mm.DPtoLP(1), mm.DPtoLP(0));
-        Dimension size = new Dimension(mm.DPtoLP(15), mm.DPtoLP(15));
-        
-        scrollPane.setVerticalScrollBar(new ListScrollBar(Orientable.VERTICAL, insets, size, 
-                                    mm.DPtoLP(10), mm.DPtoLP(50)));
         scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
         scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
         scrollPane.setContents(new Figure());
+        int half_minClient = getMinClientSize()/2;
         scrollPane.getContents().setBorder(
-                new MarginBorder(1, getMinClientSize()/2, 1, getMinClientSize()/2));            
+                new MarginBorder(1, half_minClient, 1, half_minClient));            
         return (AnimatableScrollPane)scrollPane;
-    }
+    }    
     
     /**
      * Creates the animatable scroll pane
@@ -347,7 +338,8 @@ public class ResizableCompartmentFigure extends NodeFigure {
 		super.paintFigure(graphics);
 		if (selected) {
 			graphics.setLineWidth(2);
-			graphics.drawRectangle(getClientArea().shrink(MapModeUtil.getMapMode(this).DPtoLP(1), MapModeUtil.getMapMode(this).DPtoLP(1)));
+            int shrink = MapModeUtil.getMapMode(this).DPtoLP(1);
+			graphics.drawRectangle(getClientArea().shrink(shrink, shrink));
 		}
 	}
 	

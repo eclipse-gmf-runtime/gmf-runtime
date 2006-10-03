@@ -116,7 +116,11 @@ public class SetRequest extends AbstractEditCommandRequest {
 	 * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.IEditCommandRequest#getElementsToEdit()
 	 */
 	public List getElementsToEdit() {
-		return Collections.singletonList(elementToEdit);
+		if (elementToEdit != null) {
+			return Collections.singletonList(elementToEdit);
+		}
+		
+		return Collections.EMPTY_LIST;
 	}
 
 	/*

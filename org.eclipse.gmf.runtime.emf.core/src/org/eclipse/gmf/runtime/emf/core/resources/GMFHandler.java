@@ -143,8 +143,8 @@ public class GMFHandler
 	public void error(XMIException e) {
 		super.error(e);
 		if (abortOnError) {
-			if (e.getWrappedException() != null) {
-				throw new AbortResourceLoadException(e.getWrappedException());
+			if (e.getCause() != null) {
+				throw new AbortResourceLoadException(e.getCause());
 			}
 			throw new AbortResourceLoadException(e);
 		}

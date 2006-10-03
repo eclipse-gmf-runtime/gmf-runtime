@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -73,7 +74,7 @@ public abstract class AbstractCommand extends AbstractOperation
 		super(label);
 
 		if (affectedFiles == null) {
-			this.affectedFiles = new ArrayList();
+			this.affectedFiles = new ArrayList(2);
 
 		} else {
 			this.affectedFiles = affectedFiles;
@@ -123,8 +124,11 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * Delegates to {@link #doExecuteWithResult(IProgressMonitor, IAdaptable)} and sets
 	 * the command result.
 	 */
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info)
+	public IStatus execute(IProgressMonitor progressMonitor, IAdaptable info)
 			throws ExecutionException {
+		
+		IProgressMonitor monitor = progressMonitor != null ? progressMonitor
+				: new NullProgressMonitor();
 
 		CommandResult result = doExecuteWithResult(monitor, info);
 		setResult(result);
@@ -137,7 +141,8 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * implement this method to perform some operation.
 	 * 
 	 * @param progressMonitor
-	 *            the progress monitor provided by the operation history
+	 *            the progress monitor provided by the operation history. Must
+	 *            never be <code>null</code>.
 	 * @param info
 	 *            the IAdaptable (or <code>null</code>) provided by the
 	 *            caller in order to supply UI information for prompting the
@@ -160,9 +165,12 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * Delegates to {@link #doRedoWithResult(IProgressMonitor, IAdaptable)} and sets the
 	 * command result.
 	 */
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info)
+	public IStatus redo(IProgressMonitor progressMonitor, IAdaptable info)
 			throws ExecutionException {
 
+		IProgressMonitor monitor = progressMonitor != null ? progressMonitor
+				: new NullProgressMonitor();
+		
 		CommandResult result = doRedoWithResult(monitor, info);
 		setResult(result);
 		return result != null ? result.getStatus()
@@ -174,7 +182,8 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * implement this method to perform the redo.
 	 * 
 	 * @param progressMonitor
-	 *            the progress monitor provided by the operation history
+	 *            the progress monitor provided by the operation history. Must
+	 *            never be <code>null</code>.
 	 * @param info
 	 *            the IAdaptable (or <code>null</code>) provided by the
 	 *            caller in order to supply UI information for prompting the
@@ -196,8 +205,11 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * Delegates to {@link #doUndoWithResult(IProgressMonitor, IAdaptable)} and sets the
 	 * command result.
 	 */
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info)
+	public IStatus undo(IProgressMonitor progressMonitor, IAdaptable info)
 			throws ExecutionException {
+		
+		IProgressMonitor monitor = progressMonitor != null ? progressMonitor
+				: new NullProgressMonitor();
 
 		CommandResult result = doUndoWithResult(monitor, info);
 		setResult(result);
@@ -210,7 +222,8 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * implement this method to perform the undo.
 	 * 
 	 * @param progressMonitor
-	 *            the progress monitor provided by the operation history
+	 *            the progress monitor provided by the operation history. Must
+	 *            never be <code>null</code>.
 	 * @param info
 	 *            the IAdaptable (or <code>null</code>) provided by the
 	 *            caller in order to supply UI information for prompting the

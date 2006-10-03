@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ElementToEditPartsMap;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -37,6 +40,12 @@ public class DiagramGraphicalViewer
     extends ScrollingGraphicalViewer
     implements IDiagramGraphicalViewer {
 
+    /**
+     * Resource manager to remember the resources allocated for this graphical
+     * viewer.
+     */
+    private ResourceManager resourceManager;
+    
     /**
      * Constructor
      */
@@ -184,6 +193,11 @@ public class DiagramGraphicalViewer
      */
     protected void hookControl() {
         super.hookControl();
+        
+        if (resourceManager == null) {
+            resourceManager = new LocalResourceManager(JFaceResources
+                .getResources());
+        }          
     }
 
     /**
@@ -328,6 +342,15 @@ public class DiagramGraphicalViewer
         return workspacePreferenceStore;
     }
 
+    /**
+     * Gets the resource manager to remember the resources allocated for this
+     * graphical viewer. All resources will be disposed when the graphical
+     * viewer is closed if they have not already been disposed.
+     */
+    public final ResourceManager getResourceManager() {
+        return resourceManager;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -336,5 +359,11 @@ public class DiagramGraphicalViewer
     protected void unhookControl() {
         fireEmptySelection();
         super.unhookControl();
+        
+        if (resourceManager != null) {
+            resourceManager.dispose();
+        }
     }
+    
+    
 }

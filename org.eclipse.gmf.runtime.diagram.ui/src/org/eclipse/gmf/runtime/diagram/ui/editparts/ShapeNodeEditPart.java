@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SortFilterCompartmentItem
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NoteAttachmentReorientEditPolicy;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
@@ -60,11 +61,11 @@ public abstract class ShapeNodeEditPart
 	}
 
 	protected List getModelSourceConnections() {
-		return ViewUtil.getSourceConnections((View)getModel());
+        return ViewUtil.getSourceConnectionsConnectingVisibleViews((View)getModel());
 	}
 
 	protected List getModelTargetConnections() {
-		return ViewUtil.getTargetConnections((View)getModel());
+        return ViewUtil.getTargetConnectionsConnectingVisibleViews((View)getModel());
 	}
 
 	protected void createDefaultEditPolicies() {
@@ -79,6 +80,10 @@ public abstract class ShapeNodeEditPart
 			new SortFilterCompartmentItemsEditPolicy());
 			installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE,
 				new ConnectionHandleEditPolicy());
+
+        // Disable note attachment reorient between two shapes where neither is a note.
+        installEditPolicy("NoteAttachmentReorient", //$NON-NLS-1$
+            new NoteAttachmentReorientEditPolicy());
 	}
 
 	protected final IFigure createFigure() {

@@ -157,4 +157,9 @@ public class SemanticCreateCommand extends AbstractCommand {
     	realSemanticCommand.removeContext(context);
     }
 
+    public void dispose() {
+        super.dispose();
+        realSemanticCommand.dispose();
+    }
+
 }

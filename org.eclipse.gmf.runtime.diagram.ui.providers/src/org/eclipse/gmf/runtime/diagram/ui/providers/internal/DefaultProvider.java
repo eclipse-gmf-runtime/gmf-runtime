@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -616,7 +616,7 @@ public abstract class DefaultProvider
             return null;
 
         PointList routePoints = points;
-        if (source.data != connectEP.getSource()) {
+        if (source.data == connectEP.getTarget()) {
             routePoints = new PointList(points.size());
             reverse(points, routePoints);
             Node tmpNode = source;
@@ -624,11 +624,24 @@ public abstract class DefaultProvider
             target = tmpNode;
         }
         
+        int totalEdgeDiffX = diffX ;
+        int totalEdgeDiffY = diffY ;
+        Node parent=  null;
+        parent = source.getParent();
+        if (parent==null)
+            parent = target.getParent();
+        if (parent!=null){
+            Rectangle targetExt = getNodeMetrics(parent);
+            totalEdgeDiffX += targetExt.x;
+            totalEdgeDiffY += targetExt.y;
+        }
+        
+        
         PointList allPoints = new PointList(routePoints.size());
         for (int i = 0; i < routePoints.size(); i++) {
-            allPoints.addPoint(routePoints.getPoint(i).x + diffX, routePoints
+            allPoints.addPoint(routePoints.getPoint(i).x + totalEdgeDiffX, routePoints
                 .getPoint(i).y
-                + diffY);
+                + totalEdgeDiffY);
         }
 
         Rectangle sourceExt = getNodeMetrics(source);

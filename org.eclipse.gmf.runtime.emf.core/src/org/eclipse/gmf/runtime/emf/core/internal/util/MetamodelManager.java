@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -211,11 +211,15 @@ public class MetamodelManager {
 	 */
 	public static String getLocalName(ENamedElement element) {
 
+		tryRegisterElement(element);
+		
 		MetaModelDescriptor descriptor = (MetaModelDescriptor) METAMODEL_MAP
 			.get(element);
 
 		if (descriptor != null)
 			return descriptor.localName;
+		
+		
 
 		return element.getName();
 	}
@@ -224,6 +228,8 @@ public class MetamodelManager {
 	 * Get the localized name of a meta-model object. Name may contain spaces.
 	 */
 	public static String getDisplayName(ENamedElement element) {
+
+		tryRegisterElement(element);
 
 		MetaModelDescriptor descriptor = (MetaModelDescriptor) METAMODEL_MAP
 			.get(element);
@@ -262,6 +268,7 @@ public class MetamodelManager {
 		int dot = id.indexOf('.');
 		
 		String pkgName = (dot >= 0)? id.substring(0, dot) : id;
+		
 		for (Iterator iter = EPackage.Registry.INSTANCE.values().iterator(); iter.hasNext();) {
 			Object next = iter.next();
 			
@@ -366,5 +373,46 @@ public class MetamodelManager {
 			this.localName = displayName.replaceAll(" ", "").intern(); //$NON-NLS-1$//$NON-NLS-2$
 			this.displayName = displayName.intern();
 		}
+	}
+	
+	/**
+	 * Registers the package an element belongs to. All elements of the package
+	 * are registered with the package
+	 * 
+	 * @param element An element that will be tried to get registered
+	 */
+	private static void tryRegisterElement(ENamedElement element)
+	{
+		// EOperation and EParameter can't have ids and hence cannot be registered
+		if (element instanceof EOperation || element instanceof EParameter)
+			return;
+		
+		String id = getID(element);
+		
+		if (id == null)
+			return;
+		
+		int dot = id.indexOf('.');
+		
+		// It is assumed that package names are equal to their IDs
+		String pkgName = (dot >= 0)? id.substring(0, dot) : id;
+		
+		// If package is registered than no need to register it again
+		if (REVERSE_METAMODEL_MAP.get(pkgName)!=null)
+			return;
+		
+		for (Iterator iter = EPackage.Registry.INSTANCE.values().iterator(); iter.hasNext();) {
+			Object next = iter.next();
+			
+			if (next instanceof EPackage) {
+				// skip descriptors because if the EPackage hasn't been
+				//    instantiated then it cannot be in use by the client
+				EPackage pkg = (EPackage) next;
+				
+				if (pkgName.equals(pkg.getName())) {
+					register(pkg, null);
+				}
+			}
+		}		
 	}
 }

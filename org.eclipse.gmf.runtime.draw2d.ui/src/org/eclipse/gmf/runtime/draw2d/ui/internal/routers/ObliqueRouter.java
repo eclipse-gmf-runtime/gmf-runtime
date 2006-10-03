@@ -182,7 +182,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	 * @see org.eclipse.draw2d.ConnectionRouter#route(org.eclipse.draw2d.Connection)
 	 */
 	final public void route(Connection conn) {
-		routeBendpoints(conn);
+        if (conn.isVisible())
+            routeBendpoints(conn);
 	}
 	
 	/**

@@ -31,13 +31,18 @@ import org.eclipse.draw2d.graph.NodeList;
 import org.eclipse.draw2d.graph.Subgraph;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graph.AdvancedSubGraph;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graph.CompositeDirectedGraphLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graph.VirtualNode;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Size;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Provider that creates a command for the CompoundDirectedGraph layout in GEF.
@@ -73,10 +78,16 @@ public abstract class CompositeLayoutProvider
                 }
                 Node n = null;
                 if (hasChildren) {
+                    AdvancedSubGraph subGraph = null;
                     if (rootGraph != null)
-                        n = new Subgraph(ep, rootGraph);
+                        subGraph = new AdvancedSubGraph(ep, rootGraph);
                     else
-                        n = new Subgraph(ep);
+                        subGraph = new AdvancedSubGraph(ep);
+                    subGraph.setAutoSize(isAutoSizeOn(subGraph,ep));
+                    if (gep instanceof CompartmentEditPart){
+                        subGraph.setHasBufferedZone(true);
+                    }
+                    n = subGraph;
                 } else {
                     if (rootGraph != null)
                         n = new Node(ep, rootGraph);
@@ -96,6 +107,27 @@ public abstract class CompositeLayoutProvider
             }
         }
         return nodes;
+    }
+
+    private boolean isAutoSizeOn(AdvancedSubGraph subGraph, IGraphicalEditPart gEP) {
+        if (gEP instanceof CompartmentEditPart && subGraph.getParent() instanceof AdvancedSubGraph){
+            if (((AdvancedSubGraph)subGraph.getParent()).isAutoSize())
+                return true;
+        }else {
+            View notationView = gEP.getNotationView();
+            if (notationView !=null && notationView instanceof org.eclipse.gmf.runtime.notation.Node){
+                org.eclipse.gmf.runtime.notation.Node node = (org.eclipse.gmf.runtime.notation.Node)notationView;
+                LayoutConstraint contraint = node.getLayoutConstraint();
+                if (contraint instanceof Size){
+                    Size size = (Size)contraint;
+                    if (size.getHeight() != -1 || size.getWidth()!=-1){
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /* (non-Javadoc)

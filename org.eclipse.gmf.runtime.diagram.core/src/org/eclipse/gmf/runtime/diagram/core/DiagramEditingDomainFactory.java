@@ -22,6 +22,7 @@ import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.transaction.NotificationFilter;
@@ -154,7 +155,26 @@ public class DiagramEditingDomainFactory
 			}
 		}
 		
-		protected void postcommit(InternalTransaction tx) {
+		public void broadcastUnbatched(Notification notification) {
+            super.broadcastUnbatched(notification);
+            final ResourceSetChangeEvent unbatchedChangeEvent =
+                new ResourceSetChangeEvent(this, null, Collections.singletonList(notification));
+            try {
+            runExclusive(new Runnable() {
+                public void run() {
+                    try {
+                        if (deb!=null)
+                            deb.resourceSetChanged(unbatchedChangeEvent);
+                    }catch (Exception e) {
+                        // do nothing for now  
+                    }
+                }});
+            } catch (InterruptedException e) {
+                // do ntohing for now
+            }
+        }
+
+        protected void postcommit(InternalTransaction tx) {
 			try {
 				List notifications = getValidator().getNotificationsForPostcommit(tx);
 				

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,8 +34,8 @@ import org.eclipse.gmf.runtime.notation.SortingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * A List compartment Edit part that contains semantic edit parts.
- * A semantic edit part is an edit part that controls a semantic element, it does not 
+ * A List compartment Edit part that contains semantic edit parts. A semantic
+ * edit part is an edit part that controls a semantic element, it does not
  * control a Notation <code>View<code>. 
  * This list compartment is canonical by default, to turn off the canonical 
  * support just override the isCanonicalEnabled and return false
@@ -70,16 +70,21 @@ abstract public class SemanticListCompartmentEditPart
 	 */
 	protected void refreshChildren() {
 		int i;
-		GraphicalEditPart editPart;
-		Map modelToEditPart = new HashMap();
+		GraphicalEditPart editPart;		
+		List modelObjects = getModelChildren();
 		List _children = getChildren();
-
+		
+		if ((modelObjects.size() == 0) && (_children.size() == 0)) {
+			return;
+		}
+		
+		Map modelToEditPart = new HashMap();
 		for (i = 0; i < _children.size(); i++) {
 			editPart = (GraphicalEditPart)_children.get(i);
 			modelToEditPart.put(editPart.basicGetModel(), editPart);
 		}
 
-		List modelObjects = getModelChildren();
+		
 
 		for (i = 0; i < modelObjects.size(); i++) {
 			EObject element  = (EObject)modelObjects.get(i);
@@ -151,25 +156,26 @@ abstract public class SemanticListCompartmentEditPart
 			return;		
 		}
 		
-		//View viewChild;
-		EObject semanticChild;
-				
 		//
 		// current EditParts
 		List editPartsChildren = getChildren();
-		List semanticChildren = new ArrayList(getModelChildren());
+		List modelChildren = getModelChildren();
+		if ((editPartsChildren.size() == 0) && (modelChildren.size() == 0)) {
+			return;
+		}		
+		
+		List semanticChildren = new ArrayList(modelChildren);
+		
+		//View viewChild;
+		EObject semanticChild;
+				
+		
 
-		Iterator childrenIT = editPartsChildren.iterator();
-		List orphaned = new ArrayList();
+		Iterator childrenIT = editPartsChildren.iterator();		
 		while( childrenIT.hasNext() ) {
 			GraphicalEditPart eP = (GraphicalEditPart)childrenIT.next();
 			semanticChild = (EObject)eP.basicGetModel();
-			if ( semanticChildren.contains(semanticChild) ) {
-				semanticChildren.remove(semanticChild);
-			}
-			else {
-				orphaned.add(eP);
-			}
+			semanticChildren.remove(semanticChild);
 		}
 		
 		//
@@ -231,33 +237,51 @@ abstract public class SemanticListCompartmentEditPart
 	 * @param evt
 	 */
 	protected void semanticChildrenListChanged(Notification event) {
-		if (!isCanonicalEnabled())
-			return;
-		if (NotificationUtil.isElementAddedToSlot(event) ||
-			NotificationUtil.isMove(event)){
-			refreshChildren();
-		}
-		else if(NotificationUtil.isElementRemovedFromSlot(event) &&
+		if (isCanonicalEnabled()){
+			if (NotificationUtil.isElementAddedToSlot(event) ||
+				NotificationUtil.isMove(event)){
+				refreshChildren();
+			}
+			else if(NotificationUtil.isElementRemovedFromSlot(event) &&
 				event.getOldValue() instanceof  EObject){
+				semanticChildRemoved((EObject)event.getOldValue());
+			
+			}
+		}else if(NotificationUtil.isElementRemovedFromSlot(event) &&
+				event.getOldValue() instanceof  EObject &&
+				!getChildren().isEmpty()){
 				semanticChildRemoved((EObject)event.getOldValue());
 		}
 	}
 	
 	/**
-	 * indicated is canonical is enabled or not
-	 * Canonical is disabled if the edit part's view is collapsed or hidden
-	 * @return
-	 */
-	protected boolean isCanonicalEnabled() {
-		DrawerStyle dstyle = (DrawerStyle) ((View)getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
-		boolean isCollapsed = dstyle == null ? false : dstyle.isCollapsed();
-		
-		if ( isCollapsed ) {
-			return false;
-		}
-		
-		return ((View)getModel()).isVisible();
-	}
+     * indicated if canonical is enabled or not Canonical is disabled if the
+     * edit part's view is collapsed or hidden
+     * 
+     * @return
+     */
+    protected boolean isCanonicalEnabled() {
+        DrawerStyle dstyle = (DrawerStyle) ((View) getModel())
+            .getStyle(NotationPackage.Literals.DRAWER_STYLE);
+        boolean isCollapsed = dstyle == null ? false
+            : dstyle.isCollapsed();
+
+        if (isCollapsed) {
+            return false;
+        }
+
+        return ((View) getModel()).isVisible();
+    }
+	
+	/**
+     * indicated if canonical is enabled or not Canonical is disabled if the
+     * edit part's view is collapsed or hidden
+     * 
+     * @return
+     */
+    public boolean isCanonicalOn() {
+        return isCanonicalEnabled();
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart#getSortedChildren()
@@ -368,4 +392,9 @@ abstract public class SemanticListCompartmentEditPart
 		}
 		return Collections.EMPTY_LIST;
 	}
+	
+	public boolean isCanonical() {
+        return true;
+    }
+	
 }

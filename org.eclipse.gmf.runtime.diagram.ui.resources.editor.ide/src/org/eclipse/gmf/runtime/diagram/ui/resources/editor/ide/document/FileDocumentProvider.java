@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2005  IBM Corporation and others.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,7 +66,7 @@ public abstract class FileDocumentProvider
 	 * that a element change failed message is sent out to the element state listeners
 	 * in case an exception occurred.
 	 *
-	 * @since 2.0
+	 * 
 	 */
 	protected class SafeChange implements Runnable {
 
@@ -122,7 +122,7 @@ public abstract class FileDocumentProvider
 		/**
 		 * A flag indicating whether this synchronizer is installed or not.
 		 *
-		 * @since 2.1
+		 * 
 		 */
 		protected boolean fIsInstalled= false;
 
@@ -398,7 +398,7 @@ public abstract class FileDocumentProvider
 	 * @param contentStream the stream which delivers the document content
 	 * @param encoding the character encoding for reading the given stream
 	 * @throws CoreException if the given stream can not be read
-	 * @since 2.0
+	 * 
 	 */
 	protected abstract void saveDocumentToFile(IDocument document, IFile file, boolean overwrite, IProgressMonitor monitor) throws CoreException;
 
@@ -618,7 +618,7 @@ public abstract class FileDocumentProvider
 	 * @param contentStream the stream which delivers the document content
 	 * @param encoding the character encoding for reading the given stream
 	 * @throws CoreException if the given stream can not be read
-	 * @since 2.0
+	 * 
 	 */
 	protected void setDocumentContent(IDocument document, Object content) throws CoreException {
 		document.setContent(content);
@@ -703,7 +703,7 @@ public abstract class FileDocumentProvider
 	 *
 	 * @param file
 	 * @throws CoreException if the refresh fails
-	 * @since 2.1
+	 * 
 	 */
 	protected void refreshFile(IFile file) throws CoreException {
 		refreshFile(file, getProgressMonitor());
@@ -715,7 +715,7 @@ public abstract class FileDocumentProvider
 	 * @param file the file to be refreshed
 	 * @param monitor the progress monitor
 	 * @throws  org.eclipse.core.runtime.CoreException if the refresh fails
-	 * @since 3.0
+	 * 
 	 */
 	protected void refreshFile(IFile file, IProgressMonitor monitor) throws CoreException {
 		try {

@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -23,7 +24,6 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -140,10 +140,10 @@ public class ResourceDropTargetListener
 			}
 		}
 
-		if (LocalSelectionTransfer.getInstance().isSupportedType(transferType)) {
+		if (LocalSelectionTransfer.getTransfer().isSupportedType(transferType)) {
 			// validate that the source is IResource, otherwise superclass's
 			// call fails
-			ISelection selection = LocalSelectionTransfer.getInstance()
+			ISelection selection = LocalSelectionTransfer.getTransfer()
 				.getSelection();
 			if (selection instanceof IStructuredSelection) {
 				List selectionList = ((IStructuredSelection) selection)

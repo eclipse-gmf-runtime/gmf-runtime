@@ -134,7 +134,7 @@ public class LabelLocator extends AbstractLocator {
 	/**
 	 * Returns the alignment of ConnectionLocator. 
 	 * @return The alignment
-	 * @since 2.0
+	 * 
 	 */
 	public int getAlignment() {
 		return alignment;

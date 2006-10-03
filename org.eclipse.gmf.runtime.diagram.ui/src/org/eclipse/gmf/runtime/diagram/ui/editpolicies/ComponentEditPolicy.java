@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IInsertableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -94,7 +95,14 @@ public class ComponentEditPolicy
 	 */
 	protected boolean shouldDeleteSemantic() {
 		EditPart parent = getHost().getParent();
-		if (parent instanceof IGraphicalEditPart) {
+        if (parent instanceof SemanticListCompartmentEditPart){
+            SemanticListCompartmentEditPart semListCompartment  = 
+                (SemanticListCompartmentEditPart)parent;
+            return semListCompartment.isCanonicalOn();
+            
+        }
+        
+        if (parent instanceof IGraphicalEditPart) {
 			CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
 			if ( cep != null ) {
 				return cep.isEnabled();						

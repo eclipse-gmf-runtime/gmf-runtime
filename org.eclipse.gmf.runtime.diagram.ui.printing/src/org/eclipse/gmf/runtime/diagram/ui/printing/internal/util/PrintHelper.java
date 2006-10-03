@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -219,9 +219,18 @@ public class PrintHelper {
 		
 		Rectangle pageBreakBounds = null;
 		assert dgrmEP.getViewer() instanceof DiagramGraphicalViewer;
-		DiagramGraphicalViewer viewer = (DiagramGraphicalViewer)dgrmEP.getViewer();
-		IPreferenceStore fPreferences = viewer.getWorkspaceViewerPreferenceStore();
-		
+        
+        
+        //get the preferences in use...
+        IPreferenceStore fPreferences = ((DiagramGraphicalViewer)dgrmEP.getViewer()).getWorkspaceViewerPreferenceStore();
+        
+        if (fPreferences.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
+            
+            //get workspace settings...
+            if (dgrmEP.getDiagramPreferencesHint().getPreferenceStore() != null)
+                fPreferences = (IPreferenceStore)dgrmEP.getDiagramPreferencesHint().getPreferenceStore(); 
+        }
+        
 		RootEditPart rootEditPart = dgrmEP.getRoot();
 		if (rootEditPart instanceof DiagramRootEditPart) {
 			DiagramRootEditPart diagramRootEditPart = (DiagramRootEditPart) rootEditPart;

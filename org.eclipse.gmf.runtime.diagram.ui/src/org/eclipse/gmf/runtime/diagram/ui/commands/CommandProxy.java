@@ -80,11 +80,16 @@ public class CommandProxy
     }
 
     public boolean canRedo() {
-        return command.canUndo();
+        return CommandUtilities.canRedo(command);
     }
 
     public boolean canExecute() {
         return command.canExecute();
+    }
+
+    public void dispose() {
+        super.dispose();
+        command.dispose();
     }
 
 }

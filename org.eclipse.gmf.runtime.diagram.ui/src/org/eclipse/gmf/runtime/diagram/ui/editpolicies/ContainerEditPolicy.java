@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -350,19 +350,7 @@ public class ContainerEditPolicy
 			Object ep = iter.next();
 			if (ep instanceof ConnectionEditPart || ep instanceof ShapeEditPart
 				|| ep instanceof ListItemEditPart) {
-				
-				// More work needs to be done to duplicate connections whose
-				// source or target isn't also duplicated, so disable for now.
-				if (ep instanceof ConnectionEditPart) {
-					ConnectionEditPart connectionEP = (ConnectionEditPart) ep;
-					if (!request.getEditParts().contains(
-						connectionEP.getSource())
-						|| !request.getEditParts().contains(
-							connectionEP.getTarget())) {
-						return null;
-					}
-				}
-				
+								
 				View notationView = (View)((IGraphicalEditPart) ep).getModel();
 				if (notationView != null) {
 					notationViewsToDuplicate.add(notationView);

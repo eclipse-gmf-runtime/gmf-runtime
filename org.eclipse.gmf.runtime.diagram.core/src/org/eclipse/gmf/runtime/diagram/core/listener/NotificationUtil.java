@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
  * Contributors:
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
-
 
 package org.eclipse.gmf.runtime.diagram.core.listener;
 
@@ -29,7 +28,7 @@ import org.eclipse.emf.transaction.ResourceSetChangeEvent;
  * @author mmostafa
  */
 public class NotificationUtil {
-	
+
 	/**
 	 * checks if the event resulted in a slot modification (set/unset event)
 	 * @return <tt>true</tt> if the event type is
@@ -40,7 +39,7 @@ public class NotificationUtil {
 		return notification.getEventType() == Notification.SET || 
 			   notification.getEventType() == Notification.UNSET;
 	}
-	
+
 	/**
 	 * checks if the event resulted in adding an element
 	 * @return <tt>true</tt> if the event type is
@@ -51,7 +50,6 @@ public class NotificationUtil {
 		return notification.getEventType() == Notification.ADD ||
 			   notification.getEventType() == Notification.ADD_MANY;
 	}
-	
 
 	/**
 	 * checks if the event resulted in removing an element
@@ -63,7 +61,7 @@ public class NotificationUtil {
 		return notification.getEventType() == Notification.REMOVE ||
 			   notification.getEventType() == Notification.REMOVE_MANY;
 	}
-	
+
 	/**
 	 * checks if the event is an {@link Notification.MOVE} event.
 	 * @return <tt>true</tt> if the event type equals
@@ -72,7 +70,7 @@ public class NotificationUtil {
 	public static boolean isMove(Notification notification) {
 		return notification.getEventType() == Notification.MOVE;
 	}
-    
+
     /**
      * checks if the Notification is a custom notification or not
      * @return <tt>true</tt> if the noptificatio is custom notification otherwise <tt>false</tt>. 
@@ -82,7 +80,7 @@ public class NotificationUtil {
             return true;
         return false;
     }
-    
+
     /**
      * Collect the deleted objects from all the notifications in the event.
      * 
@@ -93,23 +91,28 @@ public class NotificationUtil {
         HashSet deletedObjects = new HashSet();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             Notification notification = (Notification) i.next();
-            if (notification.getFeature() instanceof EReference
-                && ((EReference) notification.getFeature()).isContainment()) {
-                if (notification.getEventType() == Notification.REMOVE_MANY) {
-                    for (Iterator iter = ((Collection) notification
-                        .getOldValue()).iterator(); iter.hasNext();) {
-                        EObject removedObject = (EObject) iter.next();
-                        if (removedObject.eResource() == null) {
-                            deletedObjects.add(notification.getOldValue());
+            int eventType = notification.getEventType();
+            if ((eventType == Notification.REMOVE_MANY)
+                || (eventType == Notification.REMOVE)) {
+                Object feature = notification.getFeature();
+                if (feature instanceof EReference
+                    && ((EReference) feature).isContainment()) {                    
+                    if (eventType == Notification.REMOVE_MANY) {
+                        for (Iterator iter = ((Collection) notification
+                            .getOldValue()).iterator(); iter.hasNext();) {
+                            EObject removedObject = (EObject) iter.next();
+                            if (removedObject.eResource() == null) {
+                                deletedObjects.add(removedObject);
+                            }
                         }
+                    } else if (((EObject) notification.getOldValue())
+                        .eResource() == null) {
+                        deletedObjects.add(notification.getOldValue());
                     }
                 }
-                if (notification.getEventType() == Notification.REMOVE
-                    && ((EObject) notification.getOldValue()).eResource() == null) {
-                    deletedObjects.add(notification.getOldValue());
-                }
-            }
+            }            
         }
         return deletedObjects;
     }
+    
 }

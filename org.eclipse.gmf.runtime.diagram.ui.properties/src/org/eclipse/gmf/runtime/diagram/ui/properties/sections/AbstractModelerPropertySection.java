@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesStatusCodes;
@@ -74,7 +75,7 @@ public abstract class AbstractModelerPropertySection
 
 		protected void handleNotification(TransactionalEditingDomain domain,
 				Notification notification) {
-			update(notification, (EObject) notification.getNotifier());
+			update(domain, notification);
 		}
 	};
 
@@ -367,8 +368,14 @@ public abstract class AbstractModelerPropertySection
 		this.eObject = object;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.emf.core.edit.IDemuxedMListener#getFilter()
+	/**
+	 * Subclasses overriding this method should remember to override
+	 * {@link #update(TransactionalEditingDomain, Notification)} as required.
+	 * The default implementation of
+	 * {@link #update(TransactionalEditingDomain, Notification)} will only
+	 * update if the notifier is an <code>EObject</code>.
+	 * 
+	 * @return the filter for events used by my <code>eventListener</code>.
 	 */
 	public NotificationFilter getFilter() {
         return NotificationFilter.createEventTypeFilter(Notification.SET).or(
@@ -409,6 +416,26 @@ public abstract class AbstractModelerPropertySection
 
 				}
 			});
+		}
+	}
+	
+	/**
+	 * Updates me if the notifier is an <code>EObject</code> by calling
+	 * {@link #update(Notification, EObject)}. Does nothing otherwise.
+	 * Subclasses should override this method if they need to update based on
+	 * non-EObject notifiers.
+	 * 
+	 * @param domain
+	 *            the editing domain
+	 * @param notification
+	 *            the event notification
+	 */
+	protected void update(TransactionalEditingDomain domain, Notification notification) {
+
+		Object notifier = notification.getNotifier();
+		
+		if (notifier instanceof EObject) {
+			update(notification, (EObject) notifier);
 		}
 	}
 
@@ -564,9 +591,11 @@ public abstract class AbstractModelerPropertySection
 			PropertiesBrowserPage propertiesBrowserPage = (PropertiesBrowserPage) tabbedPropertySheetPage;
 			ITabbedPropertySheetPageContributor contributor = propertiesBrowserPage
 				.getContributor();
-			if (contributor instanceof IReadOnlyDiagramPropertySheetPageContributor) {
-				return true;
-			}
+            if (contributor instanceof IReadOnlyDiagramPropertySheetPageContributor
+                    || (contributor instanceof DiagramEditor && !((DiagramEditor) contributor)
+                        .isWritable())) {
+                return true;
+            }
 		}
 		return false;
 	}

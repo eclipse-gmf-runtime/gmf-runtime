@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.PointList;
@@ -27,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
@@ -60,6 +63,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnecti
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -146,13 +150,21 @@ public class GraphicalNodeEditPolicy
 				return cmdResult;
 			}
 
-			Command cmd = getConnectionCompleteCommand(
-				cmdResult.getReturnValue(), getRequest());
+            Object connectionType = cmdResult.getReturnValue();
+
+            Command cmd = getConnectionCompleteCommand(connectionType, getRequest());
 			Assert.isTrue(cmd != null && cmd.canExecute());
 			cmd.execute();
 			createCommand = cmd;
+            
+            if (connectionType instanceof IElementType) {
+                CreateRequest createRequest = ((CreateUnspecifiedTypeConnectionRequest) request)
+                    .getRequestForType((IElementType) connectionType);
+                Object newObject = createRequest.getNewObject();
 
-			return CommandResult.newOKCommandResult();
+                return CommandResult.newOKCommandResult(newObject);
+            }
+            return CommandResult.newOKCommandResult();
 		}
 
 		protected CommandResult doUndoWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
@@ -187,6 +199,46 @@ public class GraphicalNodeEditPolicy
 				.getForegroundColor());
 		return c;
 	}
+	
+	/* 
+	 * (non-Javadoc)
+	 * @see org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy#getDummyConnectionRouter(org.eclipse.gef.requests.CreateConnectionRequest)
+	 */
+	protected ConnectionRouter getDummyConnectionRouter(CreateConnectionRequest arg0) {
+		EditPart ep = getHost();
+		if (ep instanceof IGraphicalEditPart) {
+			IGraphicalEditPart gep = ((IGraphicalEditPart)ep);
+			Routing routingVal = Routing.MANUAL_LITERAL;
+			if (gep.getNotationView() != null) {
+				Diagram dgrm = gep.getNotationView().getDiagram();
+				EditPart epfromReg = (EditPart)gep.getViewer().getEditPartRegistry().get(dgrm);
+				if (epfromReg != null)
+					routingVal = (Routing)epfromReg.getAdapter(Routing.class);
+			}
+			else {
+				IPreferenceStore store = (IPreferenceStore) ((IGraphicalEditPart)ep).getDiagramPreferencesHint().getPreferenceStore();
+				routingVal = Routing.get(store.getInt(IPreferenceConstants.PREF_LINE_STYLE));
+			}
+			
+			ConnectionLayer cLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
+			if (cLayer instanceof ConnectionLayerEx) {
+				ConnectionLayerEx cLayerEx = (ConnectionLayerEx)cLayer;
+				if (routingVal == Routing.MANUAL_LITERAL) {
+					return cLayerEx.getObliqueRouter();
+				}
+				else if (routingVal == Routing.RECTILINEAR_LITERAL) {
+					return cLayerEx.getRectilinearRouter();
+				}
+				else if (routingVal == Routing.TREE_LITERAL) {
+					return cLayerEx.getTreeRouter();
+				}
+			}
+		}
+		
+		return super.getDummyConnectionRouter(arg0);
+	}
+
+
 
 	protected ConnectionAnchor getSourceConnectionAnchor(
 			CreateConnectionRequest request) {
@@ -271,7 +323,7 @@ public class GraphicalNodeEditPolicy
 			// get the semantic request
 			CreateRelationshipRequest createElementRequest = (CreateRelationshipRequest) requestAdapter
 					.getAdapter(CreateRelationshipRequest.class);
-			hint = PackageUtil.getDisplayName(createElementRequest.getElementType().getEClass());
+			hint = PackageUtil.getID(createElementRequest.getElementType().getEClass());
 		} else if (request instanceof ReconnectRequest) {
 			ReconnectRequest rr = (ReconnectRequest) request;
 			hint = ViewUtil.getSemanticElementClassId((View)rr.getConnectionEditPart().getModel());
@@ -623,27 +675,19 @@ public class GraphicalNodeEditPolicy
 				} else if (individualRequest instanceof CreateConnectionViewRequest) {
 					cmd = getConnectionCreateCommand((CreateConnectionViewRequest) individualRequest);
 				}
-				if (cmd != null) {
+				if (cmd != null && cmd.canExecute()) {
 					commands.add(cmd);
 				}
 			}
 
-			return new Command() {
-
-				/**
-				 * If at least one of the relationship types is supported, then
-				 * this is supported.
-				 */
-				public boolean canExecute() {
-					for (Iterator iter = commands.iterator(); iter.hasNext();) {
-						Command cmd = (Command) iter.next();
-						if (cmd.canExecute()) {
-							return true;
-						}
-					}
-					return false;
-				}
-			};
+			if (commands.isEmpty()) {
+				// GEF's AbstractConnectionCreationTool expects a null command
+				// when the gesture should be disabled.
+				return null;
+			}
+			
+			// return an executable command that does nothing
+			return new Command() {/* do nothing*/};
 		}
 	}	
 	
@@ -798,71 +842,76 @@ public class GraphicalNodeEditPolicy
 	 * @return the list of connector items to appear in the popup menu
 	 */
 	protected List getConnectionMenuContent(CreateConnectionRequest request) {
-		List validRelTypes = new ArrayList();
-		if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
-			CreateUnspecifiedTypeConnectionRequest unspecifiedRequest = (CreateUnspecifiedTypeConnectionRequest) request;
-			List allRequests = unspecifiedRequest.getAllRequests();
-		if (allRequests.isEmpty()) {
-			return null;
-		}
-		IGraphicalEditPart sourceEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
-			.get(0)).getSourceEditPart();
-		IGraphicalEditPart targetEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
-			.get(0)).getTargetEditPart();
+        List validRelTypes = new ArrayList();
+        if (request instanceof CreateUnspecifiedTypeConnectionRequest) {
+            CreateUnspecifiedTypeConnectionRequest unspecifiedRequest = (CreateUnspecifiedTypeConnectionRequest) request;
+            List allRequests = unspecifiedRequest.getAllRequests();
+            if (allRequests.isEmpty()) {
+                return null;
+            }
+            IGraphicalEditPart sourceEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
+                .get(0)).getSourceEditPart();
+            IGraphicalEditPart targetEP = (IGraphicalEditPart) ((CreateConnectionRequest) allRequests
+                .get(0)).getTargetEditPart();
 
-			List allRelTypes = unspecifiedRequest.useModelingAssistantService() ? ModelingAssistantService
-			.getInstance().getRelTypesOnSourceAndTarget(sourceEP, targetEP)
-				: unspecifiedRequest.getElementTypes();
+            List allRelTypes = unspecifiedRequest.useModelingAssistantService() ? ModelingAssistantService
+                .getInstance().getRelTypesOnSourceAndTarget(sourceEP, targetEP)
+                : unspecifiedRequest.getElementTypes();
 
-			for (Iterator iter = allRelTypes.iterator(); iter.hasNext();) {
-			IElementType type = (IElementType) iter.next();
+            for (Iterator iter = allRelTypes.iterator(); iter.hasNext();) {
+                IElementType type = (IElementType) iter.next();
 
-				Command individualCmd = null;
+                Command individualCmd = null;
 
-				Request createConnectionRequest = unspecifiedRequest
-				.getRequestForType(type);
-			if (createConnectionRequest != null) {
-					individualCmd = getHost().getCommand(
-					createConnectionRequest);
-		} else {
-					// This type may not have been given when the connection
-					// creation occurred. In this case, use the deferred
-					// connection creation mechanism.
-				
-					// First, setup the request to initialize the connection
-					// start command.
-					CreateConnectionViewRequest connectionRequest = CreateViewRequestFactory
-						.getCreateConnectionRequest(type,
-							((IGraphicalEditPart) getHost())
-								.getDiagramPreferencesHint());
-					connectionRequest.setSourceEditPart(null);
-					connectionRequest.setTargetEditPart(sourceEP);
-					connectionRequest
-						.setType(RequestConstants.REQ_CONNECTION_START);
-					sourceEP.getCommand(connectionRequest);
+                Request createConnectionRequest = unspecifiedRequest
+                    .getRequestForType(type);
+                if (createConnectionRequest != null) {
+                    individualCmd = getHost().getCommand(
+                        createConnectionRequest);
+                    
+                    if (individualCmd != null && individualCmd.canExecute()) {
+                        validRelTypes.add(type);
+                    }
+                } else {
+                    // This type may not have been given when the connection
+                    // creation occurred. In this case, use the deferred
+                    // connection creation mechanism.
 
-					// Now, setup the request in preparation to get the
-					// connection end
-					// command.
-					connectionRequest.setSourceEditPart(sourceEP);
-					connectionRequest.setTargetEditPart(targetEP);
-					connectionRequest
-						.setType(RequestConstants.REQ_CONNECTION_END);
-					individualCmd = targetEP.getCommand(connectionRequest);
-					}
+                    // First, setup the request to initialize the connection
+                    // start command.
+                    CreateConnectionViewRequest connectionRequest = CreateViewRequestFactory
+                        .getCreateConnectionRequest(type,
+                            ((IGraphicalEditPart) getHost())
+                                .getDiagramPreferencesHint());
+                    connectionRequest.setSourceEditPart(null);
+                    connectionRequest.setTargetEditPart(sourceEP);
+                    connectionRequest
+                        .setType(RequestConstants.REQ_CONNECTION_START);
+                    sourceEP.getCommand(connectionRequest);
 
-				if (individualCmd != null && individualCmd.canExecute()) {
-					validRelTypes.add(type);
-				}
-					}
-				
-					}
-		return validRelTypes;
-				}
+                    // Now, setup the request in preparation to get the
+                    // connection end
+                    // command.
+                    connectionRequest.setSourceEditPart(sourceEP);
+                    connectionRequest.setTargetEditPart(targetEP);
+                    connectionRequest
+                        .setType(RequestConstants.REQ_CONNECTION_END);
+                    individualCmd = targetEP.getCommand(connectionRequest);                   
+
+                    if (individualCmd != null && individualCmd.canExecute()) {
+                        validRelTypes.add(type);
+                        unspecifiedRequest.addRequest(type, connectionRequest);
+                    }
+                }
+            }
+
+        }
+        return validRelTypes;
+    }
 				
 	/**
 	 * Gets the command to complete the creation of a new connection and
-	 * relationship (if applicable) for a unspecified type request. This command
+	 * relationship (if applicable) for an unspecified type request. This command
 	 * includes a command to popup a menu to prompt the user for the type of
 	 * relationship to be created.
 	 * 

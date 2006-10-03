@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.ReconnectRequest;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -31,6 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
@@ -124,6 +124,12 @@ public class SemanticEditPolicy
 	 */
 	protected Command getSemanticCommand(IEditCommandRequest request) {
 
+		if ((request instanceof DestroyRequest)  && (getHost() instanceof ConnectionEditPart)
+				&& !((ConnectionEditPart) getHost()).isSemanticConnection()) {
+			// no semantic meaning to the connection being destroyed
+			return null;
+		}
+		
 		IEditCommandRequest completedRequest = completeRequest(request);
 		
 		IElementType elementType = ElementTypeRegistry.getInstance()
@@ -144,10 +150,11 @@ public class SemanticEditPolicy
 		if (shouldProceed) {
 			Command c = new ICommandProxy(semanticCommand);
 			if (completedRequest instanceof DestroyRequest) {
-				ICommand ic = new DeleteCommand(((IGraphicalEditPart) getHost()).getEditingDomain(),
-					(View)getHost().getModel());
-				CompositeCommand cc = new CompositeCommand(semanticCommand
+				TransactionalEditingDomain domain = ((IGraphicalEditPart) getHost()).getEditingDomain();
+				ICommand ic = new DeleteCommand(domain, (View)getHost().getModel());
+				CompositeTransactionalCommand cc = new CompositeTransactionalCommand(domain, semanticCommand
 					.getLabel());
+				cc.setTransactionNestingEnabled(true);
 				cc.compose(semanticCommand);
 				cc.compose(ic);
 				c = new ICommandProxy(cc);
@@ -338,8 +345,16 @@ public class SemanticEditPolicy
 	protected Command getReorientRefRelationshipSourceCommand(
 			ReconnectRequest request) {
 
-		EditPart sourceEditPart = request.getConnectionEditPart().getSource();
-		EditPart targetEditPart = request.getConnectionEditPart().getTarget();
+		org.eclipse.gef.ConnectionEditPart connectionEP = (request).getConnectionEditPart();
+		
+		if (connectionEP instanceof ConnectionEditPart) {
+			if (!((ConnectionEditPart) connectionEP).isSemanticConnection()) {
+				return null;
+			}
+		}
+
+		EditPart sourceEditPart = connectionEP.getSource();
+		EditPart targetEditPart = connectionEP.getTarget();
 		EObject referenceOwner = ViewUtil
 			.resolveSemanticElement((View) sourceEditPart.getModel());
 		EObject oldTarget = ViewUtil
@@ -368,9 +383,17 @@ public class SemanticEditPolicy
 	 */
 	protected Command getReorientRefRelationshipTargetCommand(
 			ReconnectRequest request) {
+		
+		org.eclipse.gef.ConnectionEditPart connectionEP = (request).getConnectionEditPart();
+		
+		if (connectionEP instanceof ConnectionEditPart) {
+			if (!((ConnectionEditPart) connectionEP).isSemanticConnection()) {
+				return null;
+			}
+		}
 
-		EditPart sourceEditPart = request.getConnectionEditPart().getSource();
-		EditPart targetEditPart = request.getConnectionEditPart().getTarget();
+		EditPart sourceEditPart = connectionEP.getSource();
+		EditPart targetEditPart = connectionEP.getTarget();
 		EObject referenceOwner = ViewUtil
 			.resolveSemanticElement((View) sourceEditPart.getModel());
 		EObject oldTarget = ViewUtil

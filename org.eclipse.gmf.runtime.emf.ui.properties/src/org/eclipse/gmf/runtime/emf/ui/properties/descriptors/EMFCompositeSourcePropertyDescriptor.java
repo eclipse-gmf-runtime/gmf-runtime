@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.ui.celleditor.ExtendedComboBoxCellEditor;
+import org.eclipse.emf.common.ui.celleditor.ExtendedDialogCellEditor;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EReference;
@@ -27,6 +28,7 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
+import org.eclipse.emf.edit.ui.celleditor.FeatureEditorDialog;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.emf.edit.ui.provider.PropertyDescriptor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -38,6 +40,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 /**
@@ -192,12 +195,10 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
 
             final EStructuralFeature feature = (EStructuralFeature) genericFeature;
             final EClassifier eType = feature.getEType();
-            final Collection choiceOfValues = getChoiceOfValues();
+            final List choiceOfValues = getChoiceOfValues();
 
             if (!choiceOfValues.isEmpty()) {
-
-            	// TODO We need to properly handle unspecified multiplicities on the structural feature
-                if (feature.isMany()) {
+            	if (getItemDescriptor().isMany(getObject())) {
                     boolean valid = true;
                     for (Iterator i = choiceOfValues.iterator(); i.hasNext();) {
                         Object choice = i.next();
@@ -206,8 +207,9 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
                             break;
                         }
                     }
-                    if (valid)
-                        result = createComboBoxCellEditor(composite);
+                    if (valid) {
+                    	result = createDialogCellEditor(composite, feature, choiceOfValues);
+					}
                 }
                 if (result == null)
                     result = createComboBoxCellEditor(composite);
@@ -217,9 +219,8 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
 
                     EDataType eDataType = (EDataType) eType;
                     if (eDataType.isSerializable()) {
-                    	// TODO We need to properly handle unspecified multiplicities on the structural feature
-                        if (feature.isMany()) {
-                            result = createComboBoxCellEditor(composite);
+                        if (getItemDescriptor().isMany(getObject())) {
+                        	result = createDialogCellEditor(composite, feature, choiceOfValues);
                         } else if (eDataType == EcorePackage.eINSTANCE
                                 .getEBoolean()
                                 || eDataType == EcorePackage.eINSTANCE
@@ -356,10 +357,39 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
                 getChoiceOfValues()), getLabelProvider(), true);
 
     }
+    
+    /**
+	 * Creates a dialog cell editor for editing multivalued features.
+	 * 
+	 * @param composite
+	 *            the composite to contain the new cell editor
+	 * @param feature
+	 *            the feature being edited
+	 * @param choiceOfValues
+	 *            the possible values for that feature
+	 * @return the new cell editor
+	 */
+    protected CellEditor createDialogCellEditor(Composite composite,
+			final EStructuralFeature feature, final List choiceOfValues) {
+    	
+		return new ExtendedDialogCellEditor(composite, getEditLabelProvider()) {
+			protected Object openDialogBox(Control cellEditorWindow) {
+				FeatureEditorDialog dialog = new FeatureEditorDialog(
+						cellEditorWindow.getShell(), getLabelProvider(),
+						getObject(), feature.getEType(),
+						(List) ((IItemPropertySource) itemPropertyDescriptor
+								.getPropertyValue(object))
+								.getEditableValue(object), getDisplayName(),
+						choiceOfValues);
+				dialog.open();
+				return dialog.getResult();
+			}
+		};
+	}
 
     /*
-     * @param composite @return
-     */
+	 * @param composite @return
+	 */
     protected CellEditor createBooleanCellEditor(Composite composite) {
         return new ExtendedComboBoxCellEditor(composite,
                 Arrays.asList(new Object[] { Boolean.FALSE,
@@ -451,6 +481,10 @@ public class EMFCompositeSourcePropertyDescriptor extends PropertyDescriptor
      * @return an property source for the given object
      */
     protected IItemPropertySource getPropertySource(Object value) {
+        if (value instanceof IItemPropertySource) {
+            return (IItemPropertySource) value;
+        }
+        
         TransactionalEditingDomain editingDomain = TransactionUtil
             .getEditingDomain(getObject());
 

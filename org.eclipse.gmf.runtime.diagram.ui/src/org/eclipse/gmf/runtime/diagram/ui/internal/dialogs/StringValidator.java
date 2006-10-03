@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import com.ibm.icu.text.NumberFormat;
 
 /**
  * StringValidator verifies the integrity of the user input.  It is used by
- * page setup dialog to verify the integrity of margin abd page size values.
+ * page setup dialog to verify the integrity of margin and page size values.
  * 
  * @author etworkow
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -60,10 +60,10 @@ class StringValidator {
 			return false;
 		
 		try {
-			Double.parseDouble(input);
-		} catch (NumberFormatException e) {
-			return false;
-		}
+            NumberFormat.getNumberInstance().parse(input);
+		} catch (ParseException e) {
+            return false;
+        }
 		
 		return true;
 	}
@@ -78,7 +78,7 @@ class StringValidator {
 		if (isDouble(input)) {
 			try {
 				// Verify input is a positive number
-				Number n = NumberFormat.getInstance().parse(input);
+				Number n = NumberFormat.getNumberInstance().parse(input);
 				if (n.doubleValue() >= 0) 
 					return true;
 			} catch (ParseException e) {

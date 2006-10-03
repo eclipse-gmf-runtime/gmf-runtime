@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.draw2d.ui
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.draw2d.ui.Activator
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin

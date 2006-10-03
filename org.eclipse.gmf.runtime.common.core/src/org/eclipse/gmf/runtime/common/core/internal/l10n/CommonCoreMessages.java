@@ -22,6 +22,8 @@ public final class CommonCoreMessages extends NLS {
 
 	public static String XToolsPlugin__ERROR__startupErrorMessage;
 	public static String XToolsPlugin__ERROR__shutdownErrorMessage;
+    public static String NavigatorCategoryDescriptor__ERROR__invalidXML;
+    public static String NavigatorContentTypeDescriptor__ERROR__invalidXML;
 	public static String AbstractCommand__INFO__cancelOperation;
 
     public static String workspaceCommandInterrupted;

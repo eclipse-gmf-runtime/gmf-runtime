@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,18 +14,12 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -55,12 +49,12 @@ public abstract class DiagramAssistantEditPolicy
 		private Point originalMouseLocation;
 
 		/**
-		 * Creates a new instance.
+		 * Sets mouse location
 		 * 
 		 * @param originalMouseLocation
 		 *            the current mouse location
 		 */
-		protected ShowDiagramAssistantRunnable(Point originalMouseLocation) {
+		public void setOriginalMouseLocation(Point originalMouseLocation) {
 			this.originalMouseLocation = originalMouseLocation;
 		}
 
@@ -86,7 +80,8 @@ public abstract class DiagramAssistantEditPolicy
 	 * The <code>Runnable</code> used when a timer is started to hide the
 	 * diagram assistant after a certain amount of time has passed.
 	 */
-	private Runnable hideDiagramAssistantRunnable = new Runnable() {
+	private class HideDiagramAssistantRunnable implements Runnable
+	{
 
 		/**
 		 * The diagram assistant is removed when this task is run if the mouse
@@ -98,7 +93,7 @@ public abstract class DiagramAssistantEditPolicy
 				hideDiagramAssistant();
 			}
 		}
-	};
+	}
 	
 	/**
 	 * Listens to the focus events on the owner editpart so that the diagram
@@ -152,6 +147,9 @@ public abstract class DiagramAssistantEditPolicy
 
 	/** Flag to indicate that the diagram assistant should not be hidden. */
 	private boolean avoidHidingDiagramAssistant = true;
+	
+	private ShowDiagramAssistantRunnable showDiagramAssistantRunnable = new ShowDiagramAssistantRunnable();
+	private HideDiagramAssistantRunnable hideDiagramAssistantRunnable = new HideDiagramAssistantRunnable();
 
 	/**
 	 * Creates a new instance.
@@ -254,29 +252,10 @@ public abstract class DiagramAssistantEditPolicy
 	 */
 	private boolean isHostResolvable() {
 		final View view = (View) getHost().getModel();
-		if (view.getElement() != null) {
-			Boolean retval;
-			try {
-				retval = (Boolean) ((IGraphicalEditPart) getHost())
-					.getEditingDomain().runExclusive(
-						new RunnableWithResult.Impl() {
-
-					public void run() {
-						setResult(ViewUtil.resolveSemanticElement(view) != null ? Boolean.TRUE
-							: Boolean.FALSE);
-					}
-				});
-				return retval.booleanValue();
-			} catch (InterruptedException e) {
-				   Trace.catching(DiagramUIPlugin.getInstance(),
-						DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-						"isHostResolvable", e); //$NON-NLS-1$
-					Log.error(DiagramUIPlugin.getInstance(),
-						DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-						"isHostResolvable", e); //$NON-NLS-1$
-				   return false;
-			}
-		}
+        EObject element = view.getElement();
+		if (element != null) {
+			return !element.eIsProxy();
+		} 
 		return true;
 	}
 	
@@ -311,10 +290,8 @@ public abstract class DiagramAssistantEditPolicy
 	 *            the delay in milliseconds
 	 */
 	protected void showDiagramAssistantAfterDelay(int delay) {
-		if (shouldShowDiagramAssistant()) {
-			Display.getCurrent().timerExec(delay,
-				new ShowDiagramAssistantRunnable(getMouseLocation()));
-		}
+		showDiagramAssistantRunnable.setOriginalMouseLocation(getMouseLocation());
+		Display.getCurrent().timerExec(delay,showDiagramAssistantRunnable);
 	}
 
 	/**

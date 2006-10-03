@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 - 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,6 +73,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -80,6 +81,8 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeDiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
@@ -88,8 +91,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteAction
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ToggleRouterAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeDiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
@@ -126,7 +127,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -218,16 +218,8 @@ public abstract class DiagramEditor
          */
         protected void configureOutlineViewer() {
             getViewer().setEditDomain(getEditDomain());
-            getViewer().setEditPartFactory(new EditPartFactory() {
-
-                public EditPart createEditPart(EditPart context, Object model) {
-                    if (model instanceof Diagram) {
-                        return new TreeDiagramEditPart(model);
-                    } else {
-                        return new TreeEditPart(model);
-                    }
-                }
-            });
+            getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
+            
             // No support for a context menu on the outline view for
             // release 6.0. See RATLC00529151, RATLC00529144
             // The selected item is a TreeEditPart which is not an
@@ -252,15 +244,17 @@ public abstract class DiagramEditor
             };
             showOutlineAction
                 .setImageDescriptor(DiagramUIPluginImages.DESC_OUTLINE);
+            showOutlineAction.setToolTipText(DiagramUIMessages.OutlineView_OutlineTipText);
             tbm.add(showOutlineAction);
             showOverviewAction = new Action() {
-
+            	
                 public void run() {
                     showPage(ID_OVERVIEW);
                 }
             };
             showOverviewAction
                 .setImageDescriptor(DiagramUIPluginImages.DESC_OVERVIEW);
+            showOverviewAction.setToolTipText(DiagramUIMessages.OutlineView_OverviewTipText);
             tbm.add(showOverviewAction);
             showPage(getDefaultOutlineViewMode());
         }
@@ -745,7 +739,12 @@ public abstract class DiagramEditor
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
 
-            action = new ToggleRouterAction((IWorkbenchPage) ((IWorkbenchPart) this).getSite().getPage());
+            action = new ToggleRouterAction(((IWorkbenchPart) this).getSite().getPage());
+            ((ToggleRouterAction) action).setPartSelector(new IPartSelector() {
+            	public boolean selects(IWorkbenchPart part) {
+            		return part == DiagramEditor.this;
+            	}
+            });
             action.setText(""); //$NON-NLS-1$ // no text necessary since this is not a visible action
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
@@ -1010,6 +1009,7 @@ public abstract class DiagramEditor
      */
     protected void clearGraphicalViewerContents() {
         if (getDiagramGraphicalViewer().getContents() != null) {
+            getDiagramGraphicalViewer().getContents().deactivate();
             getDiagramGraphicalViewer().getContents().removeNotify();
         }
         getDiagramGraphicalViewer().setContents(null);
@@ -1485,4 +1485,41 @@ public abstract class DiagramEditor
     protected PreferencesHint getPreferencesHint() {
         return new PreferencesHint(getEditorSite().getId());
     };
+    
+    /**
+     * Returns false if the editor is read only and returns true if the editor
+     * is writable.
+     * 
+     * By default, edit parts have their edit mode enabled and this method
+     * returns true.
+     * 
+     * Subclasses may override and disable the edit mode on parts.
+     * 
+     * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart.
+     * 
+     * @return false if the editor is read only and returns true if the editor
+     * is writable.
+     */
+    public boolean isWritable() {
+        return (getDiagramEditPart() != null && getDiagramEditPart().isEditModeEnabled());
+    }
+    
+    /**
+     * Creates edit part factory that will be creating tree edit parts in
+     * the tree viewer
+     * @return <code>EditPartFactory</code> factory for the tree viewer
+     */
+    protected EditPartFactory getOutlineViewEditPartFactory() {
+		return new EditPartFactory() {
+
+			public EditPart createEditPart(EditPart context, Object model) {
+				if (model instanceof Diagram) {
+					return new TreeDiagramEditPart(model);
+				} else {
+					return new TreeEditPart(model);
+				}
+			}
+		};
+	}
+
 }

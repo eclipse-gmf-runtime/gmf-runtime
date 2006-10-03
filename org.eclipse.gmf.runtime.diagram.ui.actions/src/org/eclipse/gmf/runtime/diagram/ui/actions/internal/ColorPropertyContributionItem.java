@@ -16,15 +16,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Assert;
@@ -182,8 +183,6 @@ public class ColorPropertyContributionItem
 	private static final String CHOOSE = "Choose"; //$NON-NLS-1$
 	/** a color value that indicates to browse for a color */
 	private static final String CLEAR = "Clear"; //$NON-NLS-1$
-	/** the preference id */
-	private String preferenceId;
 	/** the basic image data */
 	private ImageData basicImageData;
 	/** the disabledbasic image data */
@@ -210,7 +209,6 @@ public class ColorPropertyContributionItem
 	 * @param id The item id
 	 * @param propertyName The color property name (externalizable)
 	 * @param propertyId The color property id
-	 * @param preferenceId The id of color property in pref store (optionl)
 	 * @param toolTipText The tool tip text
 	 * @param basicImageData The basic image data
 	 */
@@ -219,14 +217,12 @@ public class ColorPropertyContributionItem
 		String id,
 		String propertyId,
 		String propertyName,
-		String preferenceId,
 		String toolTipText,
 		ImageData basicImageData,
 		ImageData disabledBasicImageData) {
 		super(workbenchPage, id, propertyId, propertyName);
 		Assert.isNotNull(toolTipText);
 		Assert.isNotNull(basicImageData);
-		this.preferenceId = preferenceId;
 		this.basicImageData = basicImageData;
 		this.disabledBasicImageData = disabledBasicImageData;
 		setLabel(toolTipText);
@@ -556,19 +552,32 @@ public class ColorPropertyContributionItem
 	}
 
 	/**
-	 * Returns the color to use in the default mode. By default,
-	 * this comes from the preference store
-	 * 
-	 * @return The color to use in default mode
-	 */
-	protected RGB getDefaultColor() {
-		IPreferenceStore store = (IPreferenceStore) getDiagramEditPart()
-			.getDiagramPreferencesHint().getPreferenceStore();
-		RGB color = null;
-		if (preferenceId != null)
-			color = PreferenceConverter.getColor(store, preferenceId);
-		return color != null ? color : DEFAULT_PREF_COLOR;
-	}
+     * Returns the color to use in the default mode. A limitation is that if
+     * there are multiple editparts with different default colors only the
+     * default color of the first is returned.
+     * 
+     * @return The color to use in default mode
+     */
+    protected RGB getDefaultColor() {
+        for (Iterator iter = getOperationSet().iterator(); iter.hasNext();) {
+            EditPart editpart = (EditPart) iter.next();
+            if (editpart instanceof IGraphicalEditPart) {
+                final EStructuralFeature feature = (EStructuralFeature) PackageUtil
+                    .getElement(getPropertyId());
+
+                Object preferredValue = ((IGraphicalEditPart) editpart)
+                    .getPreferredValue(feature);
+                if (preferredValue instanceof Integer) {
+                    return FigureUtilities
+                        .integerToRGB((Integer) preferredValue);
+                }
+
+            }
+
+        }
+
+        return DEFAULT_PREF_COLOR;
+    }
 	
 	/**
 	 * Gets the basic image data.
@@ -597,7 +606,6 @@ public class ColorPropertyContributionItem
 			ActionIds.CUSTOM_FONT_COLOR,
 			Properties.ID_FONTCOLOR,
 			propertyName,
-			null,
 			toolTipText,
 			basicImageData,
 			disabledBasicImageData);
@@ -622,7 +630,6 @@ public class ColorPropertyContributionItem
 			ActionIds.CUSTOM_LINE_COLOR,
 			Properties.ID_LINECOLOR,
 			propertyName,
-			IPreferenceConstants.PREF_LINE_COLOR,
 			toolTipText,
 			basicImageData,
 			disabledBasicImageData);
@@ -647,7 +654,6 @@ public class ColorPropertyContributionItem
 			ActionIds.CUSTOM_FILL_COLOR,
 			Properties.ID_FILLCOLOR,
 			propertyName,
-			IPreferenceConstants.PREF_FILL_COLOR,
 			toolTipText,
 			basicImageData,
 			disabledBasicImageData);

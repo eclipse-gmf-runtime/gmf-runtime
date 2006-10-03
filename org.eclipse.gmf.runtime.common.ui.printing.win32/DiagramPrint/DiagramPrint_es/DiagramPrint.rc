@@ -296,6 +296,76 @@ BEGIN
     PUSHBUTTON      "Cancelar",IDCANCEL,232,164,48,14
 END
 
+#define WS_EX_LAYOUTRTL			0x00400000
+
+
+1547 DIALOGEX 32, 32, 290, 312
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_RTLREADING | WS_EX_LAYOUTRTL
+CAPTION "Imprimir"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Impresora",1075,8,4,272,84,WS_GROUP
+    LTEXT           "&Nombre:",1093,16,20,36,8
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&Propiedades",1025,212,17,60,14,WS_GROUP
+    LTEXT           "Estado:",1095,16,36,36,10,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,36,224,10
+    LTEXT           "Tipo:",1094,16,48,36,10,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,48,224,10
+    LTEXT           "Lugar:",1097,16,60,36,10,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,60,224,10
+    LTEXT           "Comentario:",1096,16,72,39,10,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,58,72,137,10
+    CONTROL         "Imprimir a ar&chivo",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,208,70,68,12
+    GROUPBOX        "Rango de impresión del diagrama",1072,8,95,144,109,
+                    WS_GROUP
+    CONTROL         "Todos &los diagramas",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,110,83,12
+    CONTROL         "Diagrama a&ctual",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON,16,124,76,12
+    CONTROL         "&Diagramas seleccionados",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,139,97,12
+    LISTBOX         IDC_DIAGRAMS,25,153,118,43,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "Ajuste",IDC_STATIC,160,95,119,109
+    LTEXT           "Por porcentaje",1104,168,111,52,8
+    CONTROL         "por ciento",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,172,126,43,9
+    CONTROL         "Ajustar a",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON,
+                    171,169,61,9
+    EDITTEXT        IDC_PERCENT,220,125,32,12,ES_NUMBER | WS_GROUP
+    EDITTEXT        IDC_PAGESM,190,180,20,12,ES_NUMBER | WS_GROUP
+    LTEXT           "x",IDC_STATIC,212,182,8,8
+    EDITTEXT        IDC_PAGESN,220,180,20,12,ES_NUMBER | WS_GROUP
+    LTEXT           "páginas",1102,241,181,21,8
+    GROUPBOX        "Rango de impresión",1074,8,211,144,64,WS_GROUP
+    CONTROL         "&Todo",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,229,64,12
+    CONTROL         "Pá&ginas",1058,"Button",BS_AUTORADIOBUTTON,16,245,48,12
+    RTEXT           "&desde:",1089,28,259,24,8
+    EDITTEXT        1152,54,257,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "&hasta:",1090,82,259,22,8
+    EDITTEXT        1153,106,257,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Copias",1073,159,211,120,64,WS_GROUP
+    LTEXT           "Número de &copias:",1092,167,227,68,8
+    EDITTEXT        1154,239,225,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,160,244,70,25,WS_GROUP
+    CONTROL         "C&lasificar",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,232,249,43,12
+    DEFPUSHBUTTON   "Bien",IDOK,180,286,48,14,WS_GROUP
+    PUSHBUTTON      "Cancelar",IDCANCEL,232,286,48,14
+    LTEXT           "Por páginas",1105,168,154,50,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -306,6 +376,12 @@ END
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
     1538, DIALOG
+    BEGIN
+        RIGHTMARGIN, 287
+        BOTTOMMARGIN, 300
+    END
+
+    1547, DIALOG
     BEGIN
         RIGHTMARGIN, 287
         BOTTOMMARGIN, 300

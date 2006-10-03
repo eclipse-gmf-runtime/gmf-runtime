@@ -633,7 +633,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 	/**
 	 * A descriptor for a popup menu contribution item.
 	 */
-	private static abstract class AbstractPopupContributionItemDescriptor
+	public static abstract class AbstractPopupContributionItemDescriptor
 		extends AbstractContributionItemDescriptor implements IPartSelector {
 		/** the contribution item's path */
 		private String path;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -46,17 +47,7 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	}
     
     
-    /**
-     * This is a HAck to avoid breaking clients who still send the Unresolved event
-     * It should be remomved in 1.1 release and replaced by a refresh edit policy 
-     * that will be installed by the clients
-     *
-     */
-    private interface EventType {
-        public static final int UNRESOLVE = 1003;
-    }
-
-	protected void createDefaultEditPolicies() {
+    protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
 		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ContainerEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
@@ -100,11 +91,23 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 		else if (notification.getFeature() == NotationPackage.eINSTANCE.getView_Element()
 		 && ((EObject)notification.getNotifier())== getNotationView())
 			handleMajorSemanticChange();
-        else if (notification.getEventType() == EventType.UNRESOLVE 
-                && notification.getNotifier() == ((View)getModel()).getElement())
-            handleMajorSemanticChange();
-
-		else
+        else if (notification.getEventType() == EventType.UNRESOLVE && hasNotationView()){
+            // make sure we refresh if the unresolved element is the edit
+            // part's semantic element the comparison should be id based not
+            // instance based, since get element will resolve the element
+            // and resolving the element will  result in returning a different
+            // instance than the proxy we had as a notifier
+            EObject notifier = (EObject) notification.getNotifier();
+            EObject viewElement = getNotationView().getElement();
+            if (viewElement!=null){
+                String id1 = EMFCoreUtil.getProxyID(notifier);
+                String id2 = EMFCoreUtil.getProxyID(viewElement);
+                if (id1.equals(id2)) {
+                    handleMajorSemanticChange();
+                }
+            }
+         }
+         else
 			super.handleNotificationEvent(notification);
 	}
 

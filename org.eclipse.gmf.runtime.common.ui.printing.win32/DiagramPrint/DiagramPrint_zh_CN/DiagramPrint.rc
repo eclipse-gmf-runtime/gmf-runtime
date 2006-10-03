@@ -1,13 +1,5 @@
 //Microsoft Developer Studio generated resource script.
 //
-// Copyright (c) 2002 - 2005 IBM Corporation and others.
-// All rights reserved. This program and the accompanying materials
-// are made available under the terms of the Eclipse Public License v1.0
-// which accompanies this distribution, and is available at
-// http://www.eclipse.org/legal/epl-v10.html
-//
-// Contributors:
-//    IBM Corporation - initial API and implementation 
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -301,6 +293,75 @@ BEGIN
     PUSHBUTTON      "取消",IDCANCEL,232,164,48,14
 END
 
+#define WS_EX_LAYOUTRTL			0x00400000
+
+
+1547 DIALOGEX 32, 32, 290, 312
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_RTLREADING | WS_EX_LAYOUTRTL
+CAPTION "打印"
+FONT 9, "宋体"
+BEGIN
+    GROUPBOX        "打印机",1075,8,4,272,84,WS_GROUP
+    LTEXT           "名称(&N)：",1093,16,20,36,8
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "属性(&P)",1025,212,17,60,14,WS_GROUP
+    LTEXT           "状态：",1095,16,36,36,10,SS_NOPREFIX
+    CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,36,224,10
+    LTEXT           "类型：",1094,16,48,36,10,SS_NOPREFIX
+    CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,48,224,10
+    LTEXT           "位置：",1097,16,60,36,10,SS_NOPREFIX
+    CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,60,224,10
+    LTEXT           "注释：",1096,16,72,36,10,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,72,152,10
+    CONTROL         "打印到文件(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,208,71,69,12
+    GROUPBOX        "图打印范围",1072,8,95,144,109,WS_GROUP
+    CONTROL         "所有图(&L)",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,110,64,12
+    CONTROL         "当前图(&C)",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON,16,124,76,12
+    CONTROL         "选中的图(&D)",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,139,99,12
+    LISTBOX         IDC_DIAGRAMS,25,153,118,43,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "缩放",IDC_STATIC,160,95,119,109
+    LTEXT           "按百分比",1104,168,111,35,8
+    CONTROL         "百分比",IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,172,126,36,9
+    CONTROL         "适印",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON,171,169,
+                    30,9
+    EDITTEXT        IDC_PERCENT,209,125,32,12,ES_NUMBER | WS_GROUP
+    EDITTEXT        IDC_PAGESM,204,168,20,12,ES_NUMBER | WS_GROUP
+    EDITTEXT        IDC_PAGESN,234,168,20,12,ES_NUMBER | WS_GROUP
+    LTEXT           "页",1102,257,169,8,8
+    CONTROL         "全部(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,229,64,12
+    CONTROL         "页码(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,245,43,12
+    RTEXT           "从(&F)：",1089,65,246,31,8
+    EDITTEXT        1152,106,245,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "到(&T)：",1090,67,263,29,8
+    EDITTEXT        1153,105,260,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "打印范围",1074,8,211,144,64,WS_GROUP
+    LTEXT           "按页数",1105,168,154,30,8
+    LTEXT           "x",IDC_STATIC,226,170,8,8
+    GROUPBOX        "份数",1073,159,211,120,64,WS_GROUP
+    LTEXT           "份数(&C)：",1092,167,227,68,8
+    EDITTEXT        1154,239,225,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,163,244,70,25,WS_GROUP
+    CONTROL         "逐份(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,236,242,41,27
+    DEFPUSHBUTTON   "确定",IDOK,180,286,48,14,WS_GROUP
+    PUSHBUTTON      "取消",IDCANCEL,232,286,48,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -311,6 +372,12 @@ END
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
     1538, DIALOG
+    BEGIN
+        RIGHTMARGIN, 287
+        BOTTOMMARGIN, 300
+    END
+
+    1547, DIALOG
     BEGIN
         RIGHTMARGIN, 287
         BOTTOMMARGIN, 300

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.IMapModeHolder;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 
@@ -31,7 +31,7 @@ import org.eclipse.swt.SWTException;
  * Override for supporting anti-aliasing lines
  */
 public class ScalableFreeformLayeredPane
-	extends org.eclipse.draw2d.ScalableFreeformLayeredPane implements IMapMode {
+	extends org.eclipse.draw2d.ScalableFreeformLayeredPane implements IMapModeHolder {
 
 	boolean antiAlias = true;
 	private IMapMode mm;
@@ -40,7 +40,7 @@ public class ScalableFreeformLayeredPane
 	 * @return <code>IMapMode</code> that is used to map coordinate coordinates
 	 * from device to logical.
 	 */
-	protected IMapMode getMapMode() {
+	public IMapMode getMapMode() {
 		return mm;
 	}
 
@@ -59,9 +59,9 @@ public class ScalableFreeformLayeredPane
     * @see org.eclipse.draw2d.Figure#paintClientArea(Graphics)
     */
     protected void paintClientArea(Graphics graphics) {
-        boolean RTL = (Window.getDefaultOrientation()==SWT.RIGHT_TO_LEFT);
-    	// Use Anti-Aliasing
-    	if ((graphics instanceof SWTGraphics) && antiAlias && !RTL) {
+        // Use Anti-Aliasing
+    	if ((graphics instanceof SWTGraphics) && antiAlias && 
+    		GCUtilities.supportsAdvancedGraphics()) {
             graphics.setAntialias(SWT.ON);			
 		} else if (graphics.getAntialias()==SWT.ON){
 			graphics.setAntialias(SWT.OFF);		

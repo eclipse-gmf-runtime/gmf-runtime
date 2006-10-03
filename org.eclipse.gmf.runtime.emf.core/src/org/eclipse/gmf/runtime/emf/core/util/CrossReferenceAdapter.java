@@ -27,12 +27,15 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.ECrossReferenceEList;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -54,6 +57,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	private Map exports = new HashMap();
 
 	private boolean resolve = true;
+	
+    private static Map eClassToChangeableFeatures = new HashMap();
+
+    private static List nullList = new ArrayList(1);
 
 	/**
 	 * Initializes me.
@@ -114,7 +121,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		}
 
 		EReference reference = (EReference) feature;
-		if (reference.isContainment()) {
+		if (!isImportExportCapable(reference, (EObject) notifier)) {
 			return;
 		}
 
@@ -283,18 +290,22 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			if (adapter != null) {
 				// now, register incoming unidirectional references and
 				// opposites
-				for (Iterator iter = adapter.getInverseReferencers(value, null,
-						null).iterator(); iter.hasNext();) {
-					registerReference(((EObject) iter.next()).eResource(),
-							resource);
+				for (Iterator iter = adapter.getInverseReferences(value).iterator();
+                        iter.hasNext();) {
+                    EStructuralFeature.Setting next = (EStructuralFeature.Setting) iter.next();
+                    EReference ref = (EReference) next.getEStructuralFeature();
+                    EObject owner = next.getEObject();
+                    
+                    if (isImportExportCapable(ref, owner)) {
+                        registerReference(owner.eResource(), resource);
+                    }
 				}
 			}
 		} else {
 			// deregister the outgoing references and incoming bidirectionals
-			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() ? value
-					.eCrossReferences().iterator()
-					: ((InternalEList) value.eCrossReferences())
-							.basicIterator());
+            EContentsEList.FeatureIterator crossReferences = getOptimizedCrossReferenceIterator(
+            		value);
+            
 			while (crossReferences.hasNext()) {
 				EObject referent = (EObject) crossReferences.next();
 
@@ -302,8 +313,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 					EReference eReference = (EReference) crossReferences
 							.feature();
 
-					// we ignore unchangeable references
-					if (eReference.isChangeable()) {
+					if (isImportExportCapable(eReference, referent)) {
 						Resource referencedResource = referent.eResource();
 						deregisterReference(resource, referencedResource);
 					}
@@ -312,11 +322,16 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 			// now, deregister incoming unidirectional references and opposites
 			if (adapter != null) {
-				for (Iterator iter = adapter.getInverseReferencers(value, null,
-						null).iterator(); iter.hasNext();) {
-					deregisterReference(((EObject) iter.next()).eResource(),
-							resource);
-				}
+                for (Iterator iter = adapter.getInverseReferences(value).iterator();
+                        iter.hasNext();) {
+                    EStructuralFeature.Setting next = (EStructuralFeature.Setting) iter.next();
+                    EReference ref = (EReference) next.getEStructuralFeature();
+                    EObject owner = next.getEObject();
+                    
+                    if (isImportExportCapable(ref, owner)) {
+                        deregisterReference(owner.eResource(), resource);
+                    }
+                }
 			}
 		}
 
@@ -360,10 +375,9 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			Resource resource = eObject.eResource();
 
 			// register the outgoing references and incoming bidirectionals
-			EContentsEList.FeatureIterator crossReferences = (EContentsEList.FeatureIterator) (resolve() ? eObject
-					.eCrossReferences().iterator()
-					: ((InternalEList) eObject.eCrossReferences())
-							.basicIterator());
+			EContentsEList.FeatureIterator crossReferences = getOptimizedCrossReferenceIterator(
+					eObject);
+			
 			while (crossReferences.hasNext()) {
 				EObject referent = (EObject) crossReferences.next();
 
@@ -371,8 +385,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 					EReference eReference = (EReference) crossReferences
 							.feature();
 
-					// we ignore unchangeable references
-					if (eReference.isChangeable()) {
+					if (isImportExportCapable(eReference, referent)) {
 						Resource referencedResource = referent.eResource();
 						registerReference(resource, referencedResource);
 					}
@@ -678,6 +691,43 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 	}
 
 	/**
+     * Like the {@link #getInverseReferencers(EObject, EReference, EClass)} method,
+     * obtains referencing objects (optionally filtered by reference and type),
+     * except that it additionally only considers references that are
+     * {@linkplain EStructuralFeature#isChangeable() changeable} and can
+     * {@linkplain EReference#isResolveProxies() reference other resources}.
+     * 
+     * @param referenced
+     *            the referenced EObject
+     * @param reference
+     *            the reference to find referencers on, null for any reference
+     * @param type
+     *            the type of the referencers, use null for any type
+     * @return a Set of referencers on potentially cross-resource references
+     */
+    public Set getInverseReferencersCrossResource(EObject referenced, EReference reference,
+            EClass type) {
+        return getReferencers(getInverseReferencesCrossResource(referenced), reference, type);
+    }
+    
+
+	/**
+     * Like the {@link #getInverseReferences(EObject)} method,
+     * obtains settings implementing references to the specified object,
+     * except that it only considers references that are
+     * {@linkplain EStructuralFeature#isChangeable() changeable} and can
+     * {@linkplain EReference#isResolveProxies() reference other resources}.
+     * 
+     * @param eObject the referenced EObject
+     * 
+     * @return a collection of {@link EStructuralFeature.Setting}s on
+     *     potentially cross-resource references
+     */
+    public Collection getInverseReferencesCrossResource(EObject eObject) {
+        return getInverseReferencesCrossResource(eObject, !resolve());
+    }
+
+	/**
 	 * Returns a Set of EObjects that reference the given EObject through a uni
 	 * directional EReferences. If an EReference is specified, the scope of the
 	 * search is limited only to that EReference. To include all references
@@ -824,10 +874,10 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 		return this.resolve;
 	}
 
-	public Collection getInverseReferences(EObject eObject, boolean resolve) {
+	public Collection getInverseReferences(EObject eObject, boolean _resolve) {
 		Collection result = new ArrayList();
 
-		if (resolve) {
+		if (_resolve) {
 			resolveAll(eObject);
 		}
 
@@ -872,4 +922,158 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 
 		return result;
 	}
+
+	/**
+	 * Computes the references defined by the specified EClass that are
+	 * {@linkplain EStructuralFeature#isChangeable() changeable}.
+	 * 
+	 * @param eCls an EClass
+	 * @return a list of its {@link EReference}s that are changeable
+	 */
+    private static List getCrossReferencesChangeableFeatures(EClass eCls) {
+        List features = (List) eClassToChangeableFeatures.get(eCls);
+        if (features == null) {
+            features = nullList;
+            EStructuralFeature[] crossReferenceFeatures =
+
+            ((EClassImpl.FeatureSubsetSupplier) eCls
+                .getEAllStructuralFeatures()).crossReferences();
+            if (crossReferenceFeatures != null) {
+                features = new ArrayList(crossReferenceFeatures.length);
+                for (int i = 0; i < crossReferenceFeatures.length; i++) {
+                    EStructuralFeature feature = crossReferenceFeatures[i];
+                    if (feature.isChangeable())
+                        features.add(feature);
+                }
+            }
+            eClassToChangeableFeatures.put(eCls, features);
+        }
+        return features != nullList ? features
+            : null;
+    }
+
+	/**
+	 * An iterator over the references defined by the specified EObject that
+	 * are {@linkplain EStructuralFeature#isChangeable() changeable}.
+	 * 
+	 * @param eObj an EObject
+	 * @return an iterator over its {@link EReference}s that are changeable
+	 */
+    private EContentsEList.FeatureIterator getOptimizedCrossReferenceIterator(
+            EObject eObj) {
+        List features = getCrossReferencesChangeableFeatures(eObj.eClass());
+        if (features != null) {
+            EContentsEList list = null;
+            if (features.size() > 0) {
+                list = new ECrossReferenceEList(eObj,
+                    (EStructuralFeature[]) features
+                        .toArray(new EStructuralFeature[features.size()])) {
+                    // to get to the protected constructor
+                };
+            } else {
+                list = ECrossReferenceEList.EMPTY_CROSS_REFERENCE_ELIST;
+            }
+
+            return (EContentsEList.FeatureIterator) (resolve() ? list
+                .iterator()
+                : ((InternalEList) list).basicIterator());
+        }
+        return (EContentsEList.FeatureIterator) ECrossReferenceEList.EMPTY_CROSS_REFERENCE_ELIST
+            .iterator();
+    }
+
+	/**
+     * Like the {@link #getInverseReferences(EObject, boolean)} method,
+     * obtains settings implementing references to the specified object,
+     * except that it only considers references that are
+     * {@linkplain EStructuralFeature#isChangeable() changeable} and can
+     * {@linkplain EReference#isResolveProxies() reference other resources}.
+     * 
+     * @param eObject the referenced EObject
+     * @param resolve whether to resolve proxies or not
+     * 
+     * @return a collection of {@link EStructuralFeature.Setting}s on
+     *     potentially cross-resource references
+     */
+    public Collection getInverseReferencesCrossResource(EObject eObject, boolean resolve) {
+        Collection result = new ArrayList();
+
+        if (resolve) {
+            resolveAll(eObject);
+        }
+
+        EObject eContainer = eObject.eContainer();
+        if (eContainer != null) {
+            result.add(((InternalEObject) eContainer).eSetting(eObject
+                    .eContainmentFeature()));
+        }
+
+        Collection nonNavigableInverseReferences = (Collection) inverseCrossReferencer
+                .get(eObject);
+        if (nonNavigableInverseReferences != null) {
+            result.addAll(nonNavigableInverseReferences);
+        }
+
+        for (Iterator i = eObject.eClass().getEAllReferences().iterator(); i
+                .hasNext();) {
+            EReference eReference = (EReference) i.next();
+            EReference eOpposite = eReference.getEOpposite();
+            
+            if (eOpposite != null
+            		&& isImportExportCapable(eReference, eObject)
+            		&& eObject.eIsSet(eReference)) {
+                if (FeatureMapUtil.isMany(eObject, eReference)) {
+                    Object collection = eObject.eGet(eReference);
+                    for (Iterator j = resolve() ? ((Collection) collection)
+                            .iterator() : ((InternalEList) collection)
+                            .basicIterator(); j.hasNext();) {
+                        InternalEObject referencingEObject = (InternalEObject) j
+                                .next();
+                        result.add(referencingEObject.eSetting(eOpposite));
+                    }
+                } else {
+                    // although the reference is set, the value could be null
+                    InternalEObject referencingEObject = ((InternalEObject) eObject
+                            .eGet(eReference, resolve()));
+                    if (referencingEObject != null) {
+                        result.add(referencingEObject.eSetting(eOpposite));
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+    
+    /**
+     * Queries whether the specified reference, applied to the given owner
+     * object, is capable of establishing a resource import or export by
+     * virtue of being a mutable cross-resource reference.
+     * <p>
+     * A reference is considered to support resource imports and exports if
+     * all of the following apply:
+     * </p>
+     * <ul>
+     *   <li>the reference is not a container or containment reference.  Note
+     *       that this excludes cross-resource containment from registering
+     *       as an import/export dependency</li>
+     *   <li>the reference resolves proxies</li>
+     *   <li>the reference is changeable</li>
+     * </ul>
+     * 
+     * @param reference a reference feature
+     * @param owner an object under consideration that defines this reference.
+     *     Subclasses may need to introspect the object or its EClass to further
+     *     refine their criteria
+     * 
+     * @return <code>true</code> if this reference in the context of this
+     *     owner should be counted for resource imports and exports;
+     *     false, otherwise
+     */
+   protected boolean isImportExportCapable(EReference reference, EObject owner) {
+    	return !reference.isContainer()
+        	&& !reference.isContainment()
+        	&& reference.isResolveProxies() // can be cross-resource
+        	&& reference.isChangeable();    // not computed
+    }
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.GCUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
@@ -61,8 +62,15 @@ public final class SVGImage extends AbstractRenderedImage {
 	protected Image renderImage() {
 		// otherwise render the image.
 		try {
-			SVGImageConverter converter = new SVGImageConverter();
-			return converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
+			if (GCUtilities.supportsAdvancedGraphics()) {
+				SVGImageConverter converter = new SVGImageConverter();
+				return converter.renderSVGtoSWTImage(getDocument(), getRenderInfo());
+			}
+			else {
+				SVGImageConverter converter = new SVGImageConverter();
+				BufferedImage img = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
+				return ImageConverter.convert(img);
+			}
 		} catch (Exception e) {
 			try {
 				// try rendering to awt since the SWT renderered may not support the SVG image capabilities

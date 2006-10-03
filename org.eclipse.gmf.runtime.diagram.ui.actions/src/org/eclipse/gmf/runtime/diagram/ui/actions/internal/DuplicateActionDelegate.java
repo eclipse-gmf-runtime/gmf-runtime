@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,33 +77,17 @@ public class DuplicateActionDelegate
 				(DuplicateElementsRequest) request);
 		}
 		if (cmd != null && cmd.canExecute()) {
-            try {
-                IStatus status = cmd.execute(progressMonitor, null);
-                setStatus(status);
+            IStatus status = execute(cmd, progressMonitor, null);
 
-    			if (status.isOK()) {
-    				if (request instanceof DuplicateRequest) {
-    					selectViews(((DuplicateRequest) request)
-    						.getDuplicatedViews());
-    				} else {
-    					// This should select the new elements in ME. Once
-    					// RATLC00533879 is fixed, this can be implemented.
-    				}
-    			}
-            } catch (ExecutionException e) {
-                IStatus status = new Status(Status.ERROR, DiagramUIPlugin
-                    .getPluginId(), DiagramUIStatusCodes.COMMAND_FAILURE, e
-                    .getLocalizedMessage(), e);
-                setStatus(status);
-
-                Trace.catching(DiagramUIPlugin.getInstance(),
-                    DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-                    "doRun", e); //$NON-NLS-1$
-
-                Log.error(DiagramUIPlugin.getInstance(),
-                    DiagramUIStatusCodes.COMMAND_FAILURE, e
-                        .getLocalizedMessage(), e);
-            }
+			if (status.isOK()) {
+				if (request instanceof DuplicateRequest) {
+					selectViews(((DuplicateRequest) request)
+						.getDuplicatedViews());
+				} else {
+					// This should select the new elements in ME. Once
+					// RATLC00533879 is fixed, this can be implemented.
+				}
+			}
 		}
 	}
 

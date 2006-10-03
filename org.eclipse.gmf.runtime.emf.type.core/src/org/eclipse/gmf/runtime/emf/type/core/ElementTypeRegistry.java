@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.emf.type.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -711,10 +710,12 @@ public class ElementTypeRegistry {
 			// Add the metamodel type
 			result.add(metamodelType);
 
-			// Add the metamodel supertypes
-			List superTypes = Arrays.asList(metamodelType.getAllSuperTypes());
-			Collections.reverse(superTypes);
-			result.addAll(superTypes);
+			// Add the metamodel supertypes in reverse order
+			IElementType[] superTypes = metamodelType.getAllSuperTypes();
+
+			for (int i = superTypes.length - 1; i >= 0; i--) {
+				result.add(superTypes[i]);
+			}
 		}
 		
 		if (result.isEmpty()) {
@@ -742,6 +743,102 @@ public class ElementTypeRegistry {
 				.getClientContextFor(eObject);
 		
 		return getAllTypesMatching(eObject, clientContext);
+	}
+	
+	/**
+	 * Gets an array containing all specializations of the element type for
+	 * <code>id</code>, in breadth-first order.
+	 * 
+	 * @param id
+	 *            the element type ID
+	 * @return the list of all specializations of this element type
+	 */
+	public ISpecializationType[] getSpecializationsOf(String id) {
+		
+		IElementTypeDescriptor descriptor = getTypeDescriptor(id);
+		
+		if (descriptor == null) {
+			return new ISpecializationType[] {};
+		}
+		
+		IClientContext clientContext = ClientContextManager.getInstance()
+				.getBinding(descriptor);
+
+		return specializationTypeRegistry
+				.getAllSpecializationTypes(descriptor, clientContext);
+	}
+	
+	/**
+	 * Gets the metamodel types in the registry that are bound to the
+	 * <code>clientContext</code>.
+	 * 
+	 * @param clientContext
+	 *            the client context
+	 * @return the metamodel types
+	 */
+	public IMetamodelType[] getMetamodelTypes(IClientContext clientContext) {
+
+		List result = new ArrayList();
+		for (Iterator i = metamodelTypeDescriptorsById.values().iterator(); i
+				.hasNext();) {
+			MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) i
+					.next();
+
+			if (clientContext.includes(descriptor)) {
+				result.add(descriptor.getElementType());
+			}
+		}
+
+		return (IMetamodelType[]) result.toArray(new IMetamodelType[result.size()]);
+	}
+	
+	/**
+	 * Gets the specialization types in the registry that are bound to the
+	 * <code>clientContext</code>.
+	 * 
+	 * @param clientContext
+	 *            the client context
+	 * @return the specialization types
+	 */
+	public ISpecializationType[] getSpecializationTypes(
+			IClientContext clientContext) {
+
+		List result = new ArrayList();
+		Collection specializations = specializationTypeRegistry
+				.getSpecializationTypeDescriptors(clientContext);
+		
+		for (Iterator i = specializations.iterator(); i.hasNext();) {
+			result.add(((SpecializationTypeDescriptor) i.next())
+					.getElementType());
+		}
+
+		return (ISpecializationType[]) result.toArray(new ISpecializationType[result.size()]);
+	}
+	
+	/**
+	 * Gets the element types (both metamodel types and specialization types) in
+	 * the registry that are bound to the <code>clientContext</code>.
+	 * 
+	 * @param clientContext
+	 *            the client context
+	 * @return the element types
+	 */
+	public IElementType[] getElementTypes(IClientContext clientContext) {
+
+		IMetamodelType[] metamodelTypes = getMetamodelTypes(clientContext);
+		ISpecializationType[] specializationTypes = getSpecializationTypes(clientContext);
+
+		IElementType[] result = new IElementType[metamodelTypes.length
+				+ specializationTypes.length];
+		
+		for (int i = 0; i < metamodelTypes.length; i++) {
+			result[i] = metamodelTypes[i];
+		}
+		
+		for (int i = 0; i < specializationTypes.length; i++) {
+			result[i + metamodelTypes.length] = specializationTypes[i];
+		}
+		return result;
 	}
 
 	/**

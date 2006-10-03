@@ -156,6 +156,17 @@ public abstract class AbstractActionHandler
 				if (part != null && contributedToPart(part))
 					refresh();
 			}
+
+			/**
+			 * Listens to part deactivation and disables the action
+			 * Could be improved to only consider toolbar actions
+			 */
+			public void partDeactivated(IWorkbenchPart part) {
+				if (part != null && contributedToPart(part)) {
+					setEnabled(false);
+				}
+			}
+			
 		};
 		workbenchPage.addPartListener(partListener);
 	}
@@ -253,7 +264,7 @@ public abstract class AbstractActionHandler
 	 *         <code>false</code> otherwise.
 	 */
 	protected boolean contributedToPart(IWorkbenchPart part) {
-		return partSelector == null || partSelector.selects(workbenchPart);
+		return partSelector == null || partSelector.selects(part);
 	}
 	
 	/**
@@ -562,19 +573,41 @@ public abstract class AbstractActionHandler
 	}
     
     /**
-     * Refreshes me if the history event has my workbench part's context.
-     */
+	 * Refreshes me if the history event has my workbench part's context, and
+	 * the event is one of:
+	 * <UL>
+	 * <LI>{@link OperationHistoryEvent#UNDONE}</LI>
+	 * <LI>{@link OperationHistoryEvent#REDONE}</LI>
+	 * <LI>{@link OperationHistoryEvent#OPERATION_ADDED}</LI>
+	 * <LI>{@link OperationHistoryEvent#OPERATION_CHANGED}</LI>
+	 * <LI>{@link OperationHistoryEvent#OPERATION_NOT_OK}</LI>
+	 * <LI>{@link OperationHistoryEvent#OPERATION_REMOVED}</LI>
+	 * </UL>
+	 * The other operation history events are ignored because they are
+	 * intermediate events that will be followed by one of those listed above.
+	 * We only want to refresh the action handler once for each change to the
+	 * operation history.
+	 */
     public void historyNotification(OperationHistoryEvent event) {
 
-        IUndoableOperation operation = event.getOperation();
-
-        if (operation != null) {
-            IUndoContext partContext = getUndoContext();
-
-            if (partContext != null && operation.hasContext(partContext)) {
-                refresh();
-            }
-        }
+    	int type = event.getEventType();
+    	if (type == OperationHistoryEvent.UNDONE
+				|| type == OperationHistoryEvent.REDONE
+				|| type == OperationHistoryEvent.OPERATION_ADDED
+				|| type == OperationHistoryEvent.OPERATION_CHANGED
+				|| type == OperationHistoryEvent.OPERATION_NOT_OK
+				|| type == OperationHistoryEvent.OPERATION_REMOVED) {
+        
+    		IUndoableOperation operation = event.getOperation();
+        
+	        if (operation != null) {
+	            IUndoContext partContext = getUndoContext();
+	
+	            if (partContext != null && operation.hasContext(partContext)) {
+	                refresh();
+	            }
+	        }
+    	}
     }
     
     /**

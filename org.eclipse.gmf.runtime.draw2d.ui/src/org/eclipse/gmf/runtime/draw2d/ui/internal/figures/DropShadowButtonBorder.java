@@ -19,6 +19,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
@@ -28,8 +30,6 @@ import org.eclipse.swt.graphics.RGB;
 public class DropShadowButtonBorder 
 	extends AbstractBorder
 {
-
-protected Insets insets = new Insets(26,26,80,80);
 
 private static final Color
 	highlight   = ColorConstants.menuBackgroundSelected,
@@ -44,8 +44,12 @@ private static final Color
  * @param figure  Figure for which this is the border.
  * @return  Insets for this border.
  */
-public Insets getInsets(IFigure figure){
-	return insets;
+public Insets getInsets(IFigure figure) {
+    IMapMode mm = MapModeUtil.getMapMode(figure);
+
+    int DPtoLP_1 = mm.DPtoLP(1);
+    int DPtoLP_3 = mm.DPtoLP(3);
+    return new Insets(DPtoLP_1, DPtoLP_1, DPtoLP_3, DPtoLP_3);
 }
 
 public boolean isOpaque(){
@@ -53,11 +57,18 @@ public boolean isOpaque(){
 }
 
 public void paint(IFigure figure, Graphics g, Insets theInsets){
+    
 	ButtonModel model = ((Clickable)figure).getModel();
 	Rectangle r = getPaintRectangle(figure, theInsets);
 	g.setLineWidth(1);
-	r.width  -= 80;
-	r.height -= 80;
+    
+    IMapMode mm = MapModeUtil.getMapMode(figure);
+
+    int DPtoLP_3 = mm.DPtoLP(3);
+	r.width  -= DPtoLP_3;
+	r.height -= DPtoLP_3;
+
+    int DPtoLP_1 = mm.DPtoLP(1);
 
 	if (model.isMouseOver() && !model.isArmed()){
 
@@ -76,24 +87,24 @@ public void paint(IFigure figure, Graphics g, Insets theInsets){
 	}
 
 	else if (model.isPressed()){
-		r.translate(26,26);
+		r.translate(DPtoLP_1, DPtoLP_1);
 
 		g.setForegroundColor(highlight);
 		g.drawRectangle(r);
 
-		r.translate(26,26);
+		r.translate(DPtoLP_1, DPtoLP_1);
 		g.setForegroundColor(dropshadow2);
 		g.drawLine(r.x      , r.bottom(), r.right(), r.bottom());
 		g.drawLine(r.right(), r.y       , r.right(), r.bottom());
 	}
 
 	else {
-		r.translate(26,26);
+		r.translate(DPtoLP_1, DPtoLP_1);
 
 		g.setForegroundColor(dropshadow3);
 		g.drawRectangle(r);
 
-		r.translate(26,26);
+		r.translate(DPtoLP_1, DPtoLP_1);
 		g.drawLine(r.x      , r.bottom(), r.right(), r.bottom());
 		g.drawLine(r.right(), r.y       , r.right(), r.bottom());
 	}

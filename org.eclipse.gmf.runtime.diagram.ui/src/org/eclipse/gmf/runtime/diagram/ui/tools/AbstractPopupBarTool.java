@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -166,16 +166,30 @@ public abstract class AbstractPopupBarTool
 			final List editparts) {
 		if (editparts.isEmpty())
 			return;
-		// automatically put the first shape into edit-mode
-		Display.getCurrent().asyncExec(new Runnable() {
-
-			public void run() {
-				viewer.setSelection(new StructuredSelection(editparts));
-				EditPart editpart = (EditPart) editparts.get(0);
-				editpart.performRequest(new Request(
-					RequestConstants.REQ_DIRECT_EDIT));
-			}
-		});
+        
+        // Don't change the selection unless at least one editpart is
+        // selectable.
+        boolean selectable = false;
+        for (Iterator iter = editparts.iterator(); iter.hasNext();) {
+            EditPart editpart = (EditPart) iter.next();
+            if (editpart.isSelectable()) {
+                selectable = true;
+                break;
+            }
+         }
+        
+        if (selectable) {
+    		// automatically put the first shape into edit-mode
+    		Display.getCurrent().asyncExec(new Runnable() {
+    
+    			public void run() {
+    				viewer.setSelection(new StructuredSelection(editparts));
+    				EditPart editpart = (EditPart) editparts.get(0);
+    				editpart.performRequest(new Request(
+    					RequestConstants.REQ_DIRECT_EDIT));
+    			}
+    		});
+        }
 	}
 
 	/**

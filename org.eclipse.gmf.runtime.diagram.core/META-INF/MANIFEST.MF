@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.core; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.core.internal.DiagramPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -13,7 +13,6 @@ Export-Package: org.eclipse.gmf.runtime.diagram.core,
  org.eclipse.gmf.runtime.diagram.core.internal.commands;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.providers,org.eclipse.gmf.runtime.diagram.ui",
  org.eclipse.gmf.runtime.diagram.core.internal.l10n;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.providers,org.eclipse.gmf.runtime.diagram.ui",
  org.eclipse.gmf.runtime.diagram.core.internal.listener;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.providers,org.eclipse.gmf.runtime.diagram.ui",
- org.eclipse.gmf.runtime.diagram.core.internal.util;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.providers,org.eclipse.gmf.runtime.diagram.ui",
  org.eclipse.gmf.runtime.diagram.core.listener,
  org.eclipse.gmf.runtime.diagram.core.preferences,
  org.eclipse.gmf.runtime.diagram.core.providers,

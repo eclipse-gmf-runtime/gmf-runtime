@@ -49,6 +49,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.HighSchoolStudent;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Student;
 import org.eclipse.gmf.tests.runtime.emf.type.core.internal.EmployeeType;
@@ -93,6 +94,8 @@ public class ElementTypeRegistryTest
 	private Employee financeManager;
 
 	private Student student;
+	
+	private HighSchoolStudent highSchoolStudent;
 
 	private Office employeeOffice;
 
@@ -194,7 +197,8 @@ public class ElementTypeRegistryTest
 		student = (Student) getEmployeeFactory().create(getEmployeePackage().getStudent());
 		student.setNumber(2);
 		department.getMembers().add(student);
-
+		
+		
 		studentOffice = (Office) getEmployeeFactory()
 			.create(getEmployeePackage().getOffice());
 		student.setOffice(studentOffice);
@@ -218,6 +222,9 @@ public class ElementTypeRegistryTest
 		executiveOffice.setHasDoor(true);
 		executive.setOffice(executiveOffice);
 		
+		highSchoolStudent = (HighSchoolStudent) getEmployeeFactory().create(
+				getEmployeePackage().getHighSchoolStudent());
+
 	}
     
     protected void doModelSetupWithContext(Resource resource) {
@@ -317,6 +324,27 @@ public class ElementTypeRegistryTest
 		return unboundClientContext;
 	}
 
+	
+	/**
+	 * Verifies that the #getSpecializationsOf API returns the correct
+	 * specializations.
+	 */
+	public void test_getSpecializationsOf_151097() {
+
+		ISpecializationType[] specializations = ElementTypeRegistry
+				.getInstance().getSpecializationsOf(
+						"org.eclipse.gmf.tests.runtime.emf.type.core.employee"); //$NON-NLS-1$
+
+		assertEquals(3, specializations.length);
+		for (int i = 0; i < specializations.length; i++) {
+			if (specializations[i].getId().equals("org.eclipse.gmf.tests.runtime.emf.type.core.manager") //$NON-NLS-1$
+				&& specializations[i].getClass().equals("org.eclipse.gmf.tests.runtime.emf.type.core.topSecret") //$NON-NLS-1$
+				&& specializations[i].getClass().equals("org.eclipse.gmf.tests.runtime.emf.type.core.executive")) { //$NON-NLS-1$
+				fail("expected manager, top-secret and executive specializations"); //$NON-NLS-1$
+			}
+		}
+	}
+
 	public void test_getAllTypesMatching_eObject_metamodel() {
 
 		IElementType[] officeMatches = getFixture().getAllTypesMatching(
@@ -391,6 +419,87 @@ public class ElementTypeRegistryTest
 		assertTrue(managerMatches[0] == DefaultMetamodelType.getInstance());
 	}
 
+	/**
+	 * Verifies that the metamodel types bound to a specified context can be
+	 * retrieved from the registry.
+	 */
+	public void test_getMetamodelTypes_155601() {
+
+		IMetamodelType[] metamodelTypes = ElementTypeRegistry.getInstance()
+				.getMetamodelTypes(getClientContext());
+
+		assertEquals(EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length,
+				metamodelTypes.length);
+
+		for (int i = 0; i < metamodelTypes.length; i++) {
+			boolean match = false;
+			for (int j = 0; j < EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length; j++) {
+				if (metamodelTypes[i] == EmployeeType.METAMODEL_TYPES_WITH_CONTEXT[j]) {
+					match = true;
+					break;
+				}
+			}
+			assertTrue("missing metamodel type", match); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Verifies that the specialization types bound to a specified context can be
+	 * retrieved from the registry.
+	 */
+	public void test_getSpecializationTypes_155601() {
+		
+		ISpecializationType[] specializationTypes = ElementTypeRegistry
+				.getInstance().getSpecializationTypes(getClientContext());
+
+		assertEquals(EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length,
+				specializationTypes.length);
+
+		for (int i = 0; i < specializationTypes.length; i++) {
+			boolean match = false;
+			for (int j = 0; j < EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length; j++) {
+				if (specializationTypes[i] == EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT[j]) {
+					match = true;
+					break;
+				}
+			}
+			assertTrue("missing specialization type", match); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Verifies that the element types bound to a specified context can be
+	 * retrieved from the registry.
+	 */
+	public void test_getElementTypes_155601() {
+
+		IElementType[] elementTypes = ElementTypeRegistry.getInstance()
+				.getElementTypes(getClientContext());
+
+		assertEquals(EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length
+				+ EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length,
+				elementTypes.length);
+
+		for (int i = 0; i < elementTypes.length; i++) {
+			boolean match = false;
+			for (int j = 0; j < EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length; j++) {
+				if (elementTypes[i] == EmployeeType.METAMODEL_TYPES_WITH_CONTEXT[j]) {
+					match = true;
+					break;
+				}
+			}
+			if (!match) {
+				for (int j = 0; j < EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length; j++) {
+					if (elementTypes[i] == EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT[j]) {
+						match = true;
+						break;
+					}
+				}
+			}
+			assertTrue("missing element type", match); //$NON-NLS-1$
+		}
+	}
+
 	public void test_getContainedTypes_metamodel() {
 
 		IElementType[] officeMatches = getFixture().getContainedTypes(employee,
@@ -430,7 +539,7 @@ public class ElementTypeRegistryTest
 			department, EmployeePackage.eINSTANCE.getDepartment_Members());
 		List memberMatchList = Arrays.asList(memberMatches);
 		List expected = Arrays.asList(new Object[] {EmployeeType.EMPLOYEE,
-			EmployeeType.STUDENT, EmployeeType.TOP_SECRET});
+			EmployeeType.STUDENT, EmployeeType.HIGH_SCHOOL_STUDENT, EmployeeType.TOP_SECRET});
 
 		assertEquals(expected.size(), memberMatches.length);
 		assertTrue(memberMatchList.containsAll(expected));
@@ -473,7 +582,7 @@ public class ElementTypeRegistryTest
 			department, EmployeePackage.eINSTANCE.getDepartment_Manager());
 		List managerMatchList = Arrays.asList(managerMatches);
 		List expected = Arrays.asList(new Object[] {EmployeeType.EMPLOYEE,
-			EmployeeType.STUDENT, EmployeeType.MANAGER, EmployeeType.EXECUTIVE,
+			EmployeeType.STUDENT, EmployeeType.HIGH_SCHOOL_STUDENT, EmployeeType.MANAGER, EmployeeType.EXECUTIVE,
 			EmployeeType.TOP_SECRET});
 
 		assertEquals(expected.size(), managerMatches.length);
@@ -1139,5 +1248,30 @@ public class ElementTypeRegistryTest
 		assertSame(manager, department.getManager());
 		
 		assertNull(command.getCommandResult().getReturnValue());
+	}
+	
+	/**
+	 * Verifies that the original metamodel type array is not reversed by the
+	 * #getAllTypesMatching method.
+	 */
+	public void test_getAllTypesMatching_146097() {
+
+		IElementType[] superTypes = EmployeeType.HIGH_SCHOOL_STUDENT
+				.getAllSuperTypes();
+		assertEquals(2, superTypes.length);
+		assertEquals(superTypes[0], EmployeeType.EMPLOYEE);
+		assertEquals(superTypes[1], EmployeeType.STUDENT);
+
+		IElementType[] highSchoolStudentMatches = getFixture()
+				.getAllTypesMatching(highSchoolStudent);
+		assertTrue(highSchoolStudentMatches.length == 3);
+		assertTrue(highSchoolStudentMatches[0] == EmployeeType.HIGH_SCHOOL_STUDENT);
+		assertTrue(highSchoolStudentMatches[1] == EmployeeType.STUDENT);
+		assertTrue(highSchoolStudentMatches[2] == EmployeeType.EMPLOYEE);
+
+		// check that the super types array was not reversed by the call to
+		// #getAllSuperTypes
+		assertEquals(superTypes[0], EmployeeType.EMPLOYEE);
+		assertEquals(superTypes[1], EmployeeType.STUDENT);
 	}
 }

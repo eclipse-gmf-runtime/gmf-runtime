@@ -150,7 +150,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * Indicates whether this provider should behave as described in
 	 * use case 5 of http://bugs.eclipse.org/bugs/show_bug.cgi?id=10806.
 	 * Current value: <code>true</code> since 3.0
-	 * @since 2.0
+	 * 
 	 */
 	static final protected boolean PR10806_UC5_ENABLED= true;
 
@@ -160,19 +160,19 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * http://bugs.eclipse.org/bugs/show_bug.cgi?id=14469
 	 * Notes: This contradicts <code>PR10806_UC5_ENABLED</code>.
 	 * Current value: <code>false</code> since 3.0
-	 * @since 2.0
+	 * 
 	 */
 	static final protected boolean PR14469_ENABLED= false;
 
 	/**
 	 * Constant for representing the OK status. This is considered a value object.
-	 * @since 2.0
+	 * 
 	 */
 	static final public IStatus STATUS_OK= new Status(IStatus.OK, EditorPlugin.getPluginId(), IStatus.OK, EditorMessages.AbstractDocumentProvider_ok, null);
 
 	/**
 	 * Constant for representing the error status. This is considered a value object.
-	 * @since 2.0
+	 * 
 	 */
 	static final public IStatus STATUS_ERROR= new Status(IStatus.ERROR, EditorPlugin.getPluginId(), IStatus.INFO, EditorMessages.AbstractDocumentProvider_error, null);
 
@@ -235,7 +235,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param monitor a progress monitor to track the operation
 	 * @return the runnable context for this document provider
-	 * @since 3.0
+	 * 
 	 */
 	protected abstract IRunnableContext getOperationRunner(IProgressMonitor monitor);
 
@@ -246,7 +246,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @return the scheduling rule for <code>synchronize</code>
-	 * @since 3.0
+	 * 
 	 */
 	protected ISchedulingRule getSynchronizeRule(Object element) {
 		return null;
@@ -259,7 +259,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @return the scheduling rule for <code>validateState</code>
-	 * @since 3.0
+	 * 
 	 */
 	protected ISchedulingRule getValidateStateRule(Object element) {
 		return null;
@@ -272,7 +272,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @return the scheduling rule for <code>save</code>
-	 * @since 3.0
+	 * 
 	 */
 	protected ISchedulingRule getSaveRule(Object element) {
 		return null;
@@ -285,7 +285,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @return the scheduling rule for <code>reset</code>
-	 * @since 3.0
+	 * 
 	 */
 	protected ISchedulingRule getResetRule(Object element) {
 		return null;
@@ -403,7 +403,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * This hook method is called when this provider starts managing documents for
 	 * elements. I.e. it is called when the first element gets connected to this provider.
 	 * Subclasses may extend.
-	 * @since 2.0
+	 * 
 	 */
 	protected void connected() {
 		// for subclasses
@@ -435,7 +435,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * This hook method is called when this provider stops managing documents for
 	 * element. I.e. it is called when the last element gets disconnected from this provider.
 	 * Subclasses may extend.
-	 * @since 2.0
+	 * 
 	 */
 	protected void disconnected() {
 		// for subclasses
@@ -483,7 +483,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * @param element the element
 	 * @param monitor the progress monitor
 	 * @throws CoreException
-	 * @since 3.0
+	 * 
 	 */
 	protected void doResetDocument(Object element, IProgressMonitor monitor) throws CoreException {
 		ElementInfo info= (ElementInfo) fElementInfoMap.get(element);
@@ -519,7 +519,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * @param operation the operation to be executes
 	 * @param monitor the progress monitor
 	 * @exception CoreException the operation's core exception
-	 * @since 3.0
+	 * 
 	 */
 	protected void executeOperation(DocumentProviderOperation operation, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -731,7 +731,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 
 	/*
 	 * @see IDocumentProvider#getModificationStamp(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public long getModificationStamp(Object element) {
 		return 0;
@@ -739,7 +739,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 
 	/*
 	 * @see IDocumentProvider#getSynchronizationStamp(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public long getSynchronizationStamp(Object element) {
 		return 0;
@@ -747,7 +747,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 
 	/*
 	 * @see IDocumentProvider#isDeleted(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isDeleted(Object element) {
 		return false;
@@ -755,7 +755,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 
 	/*
 	 * @see IDocumentProviderExtension#isReadOnly(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isReadOnly(Object element) {
 		return true;
@@ -763,7 +763,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 
 	/*
 	 * @see IDocumentProviderExtension#isModifiable(Object)
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isModifiable(Object element) {
 		return false;
@@ -775,7 +775,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @return whether <code>validateState</code> has been called for the given element
-	 * @since 2.0
+	 * 
 	 */
 	public boolean isStateValidated(Object element) {
 		ElementInfo info= (ElementInfo) fElementInfoMap.get(element);
@@ -791,7 +791,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * @param element the element
 	 * @param computationContext the context in which validation happens
 	 * @exception CoreException in case validation fails
-	 * @since 2.0
+	 * 
 	 */
 	protected void doValidateState(Object  element, Object computationContext) throws CoreException {
 		// empty block
@@ -799,7 +799,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 
 	/*
 	 * @see IDocumentProviderExtension#validateState(Object, Object)
-	 * @since 2.0
+	 * 
 	 */
 	public void validateState(final Object element, final Object computationContext) throws CoreException {
 		if (element == null)
@@ -833,7 +833,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @exception CoreException in case state cache updating fails
-	 * @since 2.0
+	 * 
 	 */
 	protected void doUpdateStateCache(Object element) throws CoreException {
 		// for subclasses
@@ -846,7 +846,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * @param element the element
 	 * @param wasReadOnly the previous read-only state
 	 * @return <code>true</code> if the state of the given element must be invalidated
-	 * @since 2.0
+	 * 
 	 */
 	protected boolean invalidatesState(Object element, boolean wasReadOnly) {
 		assert PR10806_UC5_ENABLED != PR14469_ENABLED;
@@ -892,7 +892,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * @param element the element
 	 * @param isStateValidated
 	 * @see IElementStateListenerExtension#elementStateValidationChanged(Object, boolean)
-	 * @since 2.0
+	 * 
 	 */
 	protected void fireElementStateValidationChanged(Object element, boolean isStateValidated) {
 		Iterator e= new ArrayList(fElementStateListeners).iterator();
@@ -911,7 +911,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @see IElementStateListenerExtension#elementStateChanging(Object)
-	 * @since 2.0
+	 * 
 	 */
 	protected void fireElementStateChanging(Object element) {
 		Iterator e= new ArrayList(fElementStateListeners).iterator();
@@ -930,7 +930,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 *
 	 * @param element the element
 	 * @see IElementStateListenerExtension#elementStateChangeFailed(Object)
-	 * @since 2.0
+	 * 
 	 */
 	protected void fireElementStateChangeFailed(Object element) {
 		Iterator e= new ArrayList(fElementStateListeners).iterator();
@@ -963,7 +963,7 @@ public abstract class AbstractDocumentProvider implements IDocumentProvider {
 	 * @param element the element
 	 * @param monitor the progress monitor
 	 * @exception CoreException in the case that synchronization fails
-	 * @since 3.0
+	 * 
 	 */
 	protected void doSynchronize(Object element, IProgressMonitor monitor) throws CoreException {
 		// for subclasses

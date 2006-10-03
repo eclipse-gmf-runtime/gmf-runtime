@@ -211,6 +211,48 @@ public class AbstractCommandTest
 
          c.assertRedone();
     }
+    
+    /**
+	 * Verifies that subclasses of AbstractCommand don't need to check whether
+	 * or not the progress monitor input to #doExecute, #doUndo and #doRedo is
+	 * null.
+	 */
+	public void test_nullMonitor_149057() {
+		TestCommandWithProgress c = new TestCommandWithProgress(
+				"test_nullMonitor_149057");  //$NON-NLS-1$
+		
+		IUndoContext ctx = new ObjectUndoContext(this);
+
+        try {
+            c.addContext(ctx);
+            history.execute(c, null, null);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            fail("Should not have thrown: " + e.getCause()); //$NON-NLS-1$
+        }
+
+        c.assertExecuted();
+
+        try {
+            assertTrue(history.canUndo(ctx));
+            history.undo(ctx, null, null);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            fail("Should not have thrown: " + e.getCause()); //$NON-NLS-1$
+        }
+
+        c.assertUndone();
+
+        try {
+            assertTrue(history.canRedo(ctx));
+            history.redo(ctx, null, null);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            fail("Should not have thrown: " + e.getCause()); //$NON-NLS-1$
+        }
+
+        c.assertRedone();
+	}
 
     // 
     // TEST FIXTURES
@@ -338,6 +380,34 @@ public class AbstractCommandTest
             assertFalse(executed);
             assertNull(getCommandResult());
         }
+	}
+    
+    protected static class TestCommandWithProgress extends TestCommand {
+
+		public TestCommandWithProgress(String label) {
+			super(label, null);
+		}
+
+		protected CommandResult doExecuteWithResult(
+				IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			progressMonitor.worked(1);
+			return super.doExecuteWithResult(progressMonitor, info);
+		}
+
+		protected CommandResult doRedoWithResult(
+				IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			progressMonitor.worked(1);
+			return super.doRedoWithResult(progressMonitor, info);
+		}
+
+		protected CommandResult doUndoWithResult(
+				IProgressMonitor progressMonitor, IAdaptable info)
+				throws ExecutionException {
+			progressMonitor.worked(1);
+			return super.doUndoWithResult(progressMonitor, info);
+		}
 	}
 
 }

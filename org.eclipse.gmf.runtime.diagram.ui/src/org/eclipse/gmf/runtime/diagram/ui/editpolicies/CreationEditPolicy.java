@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -382,10 +382,12 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 					// Set the result in the unspecified type request.
 					CreateRequest createRequest = request
 						.getRequestForType(type);
-					request.setNewObject(((Collection) createRequest
-						.getNewObject()));
+                    
+                    Collection newObject = ((Collection) createRequest
+                            .getNewObject());
+					request.setNewObject(newObject);
 
-					return CommandResult.newOKCommandResult();
+					return CommandResult.newOKCommandResult(newObject);
 				}
 				
 				protected CommandResult doUndoWithResult(

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
 f * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,8 +76,8 @@ public class StorageDiagramDocumentProvider
 			DiagramIOUtil.unload(domain, (Diagram)content);
 			
 			assert info instanceof DiagramStorageInfo;
-			((DiagramStorageInfo)info).fListener.stopListening();
 		}
+        ((DiagramStorageInfo)info).fListener.stopListening();
 	}
 	
 

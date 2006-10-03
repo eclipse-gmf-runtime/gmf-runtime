@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002 - 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -748,7 +748,7 @@ abstract public class ConnectionBendpointEditPolicy
 
 		LineSeg moveLine = getLineSeg(constraint, index + 1);
 		LineSeg newLine = moveLine.getParallelLineSegThroughPoint(ptLoc);
-		if (!newLine.isHorizontal() || !newLine.isVertical()) {
+		if (!newLine.isHorizontal() && !newLine.isVertical()) {
 			if (Math.abs(newLine.getOrigin().x - newLine.getTerminus().x) < 
 				Math.abs(newLine.getOrigin().y - newLine.getTerminus().y)) {
 				newLine.setTerminus(new Point(newLine.getOrigin().x, newLine.getTerminus().y));

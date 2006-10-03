@@ -50,4 +50,23 @@
         </specializationType>
    </extension>
 
+   <extension
+         point="org.eclipse.ui.commands">
+		<command
+        categoryId="org.eclipse.ui.category.edit"
+        defaultHandler="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate"
+        description="%DuplicateActionDelegate.Description"
+        id="DuplicateNode"
+        name="%DuplicateActionDelegate.Name">
+		</command>
+	         
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="DuplicateNode"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+D"/>
+   </extension>   
+
 </plugin>

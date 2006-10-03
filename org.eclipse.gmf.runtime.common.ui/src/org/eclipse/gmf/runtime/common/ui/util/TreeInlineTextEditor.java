@@ -273,6 +273,11 @@ public class TreeInlineTextEditor {
 	 * starts the editing process
 	 */
 	public void startEdit() {
+		while (Display.getCurrent().readAndDispatch()) {
+			// process handler.setEnabled(false) queued in
+			// hide() before re-entering content assist mode
+		}
+
 		if (canEdit()) {
 			cancelEdit();
 			setTreeItem(getTree().getSelection()[0]);
@@ -365,10 +370,6 @@ public class TreeInlineTextEditor {
 	 * displays the text editing widget
 	 */
 	private void show() {
-		while (Display.getCurrent().readAndDispatch()) {
-			// process handler.setEnabled(false) queued in
-			// hide() before re-entering content assist mode
-		}
 		uninstallContentAssist(false);
 
 		if (getTreeItem() != null) {
@@ -382,8 +383,10 @@ public class TreeInlineTextEditor {
 						proposalPopupBackgroundColor, processor);
 			}
 		}
-
+        getTextEditorParent().setEnabled(true);
 		getTextEditorParent().setVisible(true);
+        getTextEditor().setEnabled(true);
+        getTextEditor().setVisible(true);
 		adjustTextEditorBounds();
 		getTextEditorParent().redraw();
 		getTextEditor().selectAll();
@@ -400,9 +403,14 @@ public class TreeInlineTextEditor {
 	private void hide() {
 		setTreeItem(null);
 		getTreeEditor().setItem(null);
-		getTextEditorParent().setBounds(getNullRectangle());
-		getTextEditorParent().setVisible(false);
-
+		
+        getTextEditor().setVisible(false);
+        getTextEditor().setEnabled(false);
+		
+        getTextEditorParent().setBounds(getNullRectangle());
+        getTextEditorParent().setVisible(false);
+        getTextEditorParent().setEnabled(false);
+        
 		if (getTextActionHandler() != null) {
 			getTextActionHandler().unHookHandlers();
 		}

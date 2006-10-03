@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,22 +18,16 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.handles.CompartmentCollapseHandle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.handles.CompartmentResizeHandle;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
  * A resizable editpolicy for resizable compartments. The editpolicy could be
@@ -153,12 +147,19 @@ public class ResizableCompartmentEditPolicy
 			}
 		}
 	}
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#activate()
+     */
+    public void activate() {
+        super.activate();
+        if (getHost().getParent().getSelected() != EditPart.SELECTED_NONE)
+            setSelectedState();
+    }
 
-	private EditPartListener hostListener;
+    private EditPartListener hostListener;
 
 	private EditPartListener parentListener;
-
-	private NotificationListener propertyListener;
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#addSelectionListener()
@@ -181,24 +182,12 @@ public class ResizableCompartmentEditPolicy
 		};
 		getParentGraphicEditPart().addEditPartListener(parentListener);
 
-		propertyListener = new NotificationListener() {
-
-			public void notifyChanged(Notification notification) {
-				if (NotationPackage.eINSTANCE.getView_Visible().equals(
-					notification.getFeature()))
-					setSelectedState();
-			}
-		};
-		getDiagramEventBroker().addNotificationListener(
-			getGraphicalEditPart().getNotationView(), propertyListener);
 	}
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#removeSelectionListener()
 	 */
 	protected void removeSelectionListener() {
-		getDiagramEventBroker().removeNotificationListener(
-			getGraphicalEditPart().getNotationView(), propertyListener);
 		getHost().removeEditPartListener(hostListener);
 		getParentGraphicEditPart().removeEditPartListener(parentListener);
 	}
@@ -212,10 +201,8 @@ public class ResizableCompartmentEditPolicy
 		int hostState = getHost().getSelected();
 		int topState = EditPart.SELECTED_NONE;
 
-		if (((GraphicalEditPart) getGraphicalEditPart())
-			.getTopGraphicEditPart() != null) {
-			topState = ((GraphicalEditPart) getGraphicalEditPart())
-				.getTopGraphicEditPart().getSelected();
+		if (getGraphicalEditPart().getTopGraphicEditPart() != null) {
+			topState = getGraphicalEditPart().getTopGraphicEditPart().getSelected();
 		}
 
 		boolean vis = getGraphicalEditPart().getNotationView().isVisible();
@@ -227,8 +214,8 @@ public class ResizableCompartmentEditPolicy
 			setSelectedState(EditPart.SELECTED_NONE);
 	}
 
-	private GraphicalEditPart getParentGraphicEditPart() {
-		return (GraphicalEditPart) getGraphicalEditPart().getParent();
+	private IGraphicalEditPart getParentGraphicEditPart() {
+		return (IGraphicalEditPart) getGraphicalEditPart().getParent();
 	}
 
 	private IGraphicalEditPart getGraphicalEditPart() {
@@ -283,12 +270,4 @@ public class ResizableCompartmentEditPolicy
 		return req;
 	}
 	
-    private DiagramEventBroker getDiagramEventBroker() {
-        TransactionalEditingDomain theEditingDomain = ((IGraphicalEditPart) getHost())
-            .getEditingDomain();
-        if (theEditingDomain != null) {
-            return DiagramEventBroker.getInstance(theEditingDomain);
-        }
-        return null;
-    }
 }

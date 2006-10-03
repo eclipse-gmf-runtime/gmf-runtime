@@ -35,127 +35,12 @@ import org.eclipse.gmf.runtime.common.ui.printing.internal.PrintingPlugin;
 public class PrintHelper
 	implements IPrintHelper {
 
-	/**
-	 * Dynamic link library name without the extension
-	 */
-	private static final String DLL_NAME = "DiagramPrint"; //$NON-NLS-1$
-
-	/**
-	 * Country and language separator
-	 */
-	private static final String SEPARATOR = StringStatics.UNDER_SCORE;
-
-	//to avoid throwing exceptions because of trying to load dlls for
-	//unsupported locales, maintain an array of supported countries and
-	//languages
-	
-	//in the array below, if there are multiple entries for the same
-	//language, put the country specific one first
-	
-	/**
-	 * Supported languages strings.  Default locale is SUPPORTED[0].
-	 */
-	private static final String SUPPORTED[] = {"en", "de", "es", "fr", "it", "ja", "ko", "pt_BR", "zh_CN", "zh_TW"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
-
-	/**
-	 * Default locale, English language
-	 */
-	private static final String DEFAULT_LOCALE = SUPPORTED[0];
-	
-	
 	/*
 	 * Load the dll
 	 */
 	static {
-		
-		//Although a far nicer way to do this dll loading is by using
-		//Bundle-NativeCode in manifest.mf, I am not doing it that way
-		//because of Bugzilla https://bugs.eclipse.org/bugs/show_bug.cgi?id=116497
-		
-		//When the Bugzilla has been fixed, this static block can be replaced
-		//with one line of code
-		//System.loadLibrary("DiagramPrint");
-
-		//These lines would need to be added to the manifest.mf
-		//Bundle-NativeCode: os/win32/x86/de/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=de,
-		// os/win32/x86/es/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=es,
-		// os/win32/x86/fr/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=fr,
-		// os/win32/x86/it/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=it,
-		// os/win32/x86/ja/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=ja,
-		// os/win32/x86/ko/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; language=ko,
-		// os/win32/x86/pt_BR/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; selection-filter = "(osgi.nl = pt_BR)",	
-		// os/win32/x86/zh_CN/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; selection-filter = "(osgi.nl = zh_CN)",
-		// os/win32/x86/zh_TW/DiagramPrint.dll ; osname=WindowsXP ; processor = x86 ; selection-filter = "(osgi.nl = zh_TW)",
-		// os/win32/x86/en/DiagramPrint.dll ; osname=WindowsXP ; processor = x86		
-
-		
-		boolean success = false;
-		String language = Locale.getDefault().getLanguage().toLowerCase();
-		String country = Locale.getDefault().getCountry().toUpperCase();
-
-		//try from most specific to least specific, following osgi
-		//guidelines
-
-		if (language != null) {
-
-			String localizedVersion = (country != null) ? language + SEPARATOR + country : language;
-
-			for (int i = 0; i < SUPPORTED.length; i++) {
-				
-				if (localizedVersion.equals(SUPPORTED[i])) {
-					success = true;
-				}
-				else if (language.equals(SUPPORTED[i])) {
-					//this check is redundant in the unlikely event that country
-					//is null and language equals the localizedVersion
-					localizedVersion = language;
-					success = true;
-				}
-				
-				if (success) {
-					success = false;
-					//Runtime.getRuntime().findLibrary() is protected,
-					//surround loadLibrary() with try catch
-					try {
-						System.loadLibrary(DLL_NAME + SEPARATOR
-							+ localizedVersion);
-						success = true;
-						break;
-					} catch (UnsatisfiedLinkError ule) {
-						//try without the country
-						//loadedDLL is still false
-						Trace.catching(PrintingPlugin.getDefault(),
-							CommonPrintingDebugOptions.EXCEPTIONS_CATCHING,
-							PrintHelper.class, "Link", ule); //$NON-NLS-1$
-						Log.error(PrintingPlugin.getDefault(),
-							CommonPrintingStatusCodes.RESOURCE_FAILURE,
-							"Failed to load DiagramPrint dll for " //$NON-NLS-1$
-								+ localizedVersion);
-						Trace.throwing(PrintingPlugin.getDefault(),
-							CommonPrintingDebugOptions.EXCEPTIONS_THROWING,
-							PrintHelper.class, "Link", ule); //$NON-NLS-1$*/
-					}
-				}
-			}
-		}
-
-		if (!success) {
-			try {
-				System.loadLibrary(DLL_NAME + SEPARATOR + DEFAULT_LOCALE);
-			} catch (UnsatisfiedLinkError ule) {
-				Trace.catching(PrintingPlugin.getDefault(),
-					CommonPrintingDebugOptions.EXCEPTIONS_CATCHING,
-					PrintHelper.class, "Link", ule); //$NON-NLS-1$
-				Log.error(PrintingPlugin.getDefault(),
-					CommonPrintingStatusCodes.RESOURCE_FAILURE,
-					"Failed to load DiagramPrint_en.dll for language " + ((language == null) ? "null" : language) + " and country " + ((country == null) ? "null" : country), ule); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				Trace.throwing(PrintingPlugin.getDefault(),
-					CommonPrintingDebugOptions.EXCEPTIONS_THROWING,
-					PrintHelper.class, "Link", ule); //$NON-NLS-1$*/
-				throw ule;
-			}
-		}
-
+		//Note: DiagramPrint dll(s) defined in the manifest
+		System.loadLibrary("DiagramPrint"); //$NON-NLS-1$
 	}
 
 	/*
@@ -201,6 +86,23 @@ public class PrintHelper
 	 * @param title			String with shell title
 	 */
 	public static native void setHwndOwner(String windowClass, String title);
+    
+    /**
+     * Allows to set the orientation (portrait/landscape) in the print dialog.
+     * @param isLandscape   true if orientation should be landscape, false otherwise.
+     */
+    public static native void setOrientation(boolean isLandscape);
+     
+    /**
+     * Allows to set the paper size in the print dialog.
+     * @param index         index of type of paper size, @see org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType
+     *                      for the type of paper sizes available and their indices. 
+     * @param width         specifies the custom width of the paper. Leave as 0 if
+     *                      paper size index is user-defined.
+     * @param height        specifies the custom width of the paper. Leave as 0 if
+     *                      paper size index is user-defined.
+     */
+    public static native void setPaperSize(int index, double width, double height);
 
 	/*
 	 * Get methods
@@ -509,4 +411,26 @@ public class PrintHelper
 	public int getDlgNumberOfCopies() {
 		return getNumberOfCopies();
 	}
+    
+    /**
+     * Allows to set the orientation (portrait/landscape) in the print dialog.
+     * @param isLandscape   true if orientation should be landscape, false otherwise.
+     */
+    public void setDlgOrientation(boolean bLandscape) {
+        setOrientation(bLandscape);
+    }
+    
+    /**
+     * Allows to set the paper size in the print dialog.
+     * @param index         index of type of paper size, @see org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType
+     *                      for the type of paper sizes available and their indices. 
+     * @param width         specifies the custom width of the paper. Leave as 0 if
+     *                      paper size index is user-defined.
+     * @param height        specifies the custom width of the paper. Leave as 0 if
+     *                      paper size index is user-defined.
+     */
+    public void setDlgPaperSize(int index, double width, double height) {
+        setPaperSize(index, width, height);
+    }
+    
 }

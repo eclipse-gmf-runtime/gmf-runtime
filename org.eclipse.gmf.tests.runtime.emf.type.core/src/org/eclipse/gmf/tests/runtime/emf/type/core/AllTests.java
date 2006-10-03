@@ -20,8 +20,10 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.CreateElementCommandTest;
+import org.eclipse.gmf.tests.runtime.emf.type.core.commands.DeferredSetValueCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.DestroyElementCommandTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.commands.SetValueCommandTest;
+import org.eclipse.gmf.tests.runtime.emf.type.core.requests.SetRequestTest;
 
 public class AllTests
 	extends TestCase
@@ -39,10 +41,12 @@ public class AllTests
 		suite.addTest(ClientContextManagerTest.suite());
 		suite.addTest(CreateElementCommandTest.suite());
 		suite.addTest(CreateElementRequestTest.suite());
+		suite.addTest(DeferredSetValueCommandTest.suite());
 		suite.addTest(DestroyElementCommandTest.suite());
 		suite.addTest(MetamodelTypeDescriptorTest.suite());
 		suite.addTest(MoveRequestTest.suite());
 		suite.addTest(MultiClientContextTest.suite());
+        suite.addTest(SetRequestTest.suite());
         suite.addTest(SetValueCommandTest.suite());
 		suite.addTest(SpecializationTypeDescriptorTest.suite());
         suite.addTest(SpecializationTypeTest.suite());

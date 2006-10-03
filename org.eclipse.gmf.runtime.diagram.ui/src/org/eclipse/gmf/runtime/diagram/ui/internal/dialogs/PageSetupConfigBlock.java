@@ -259,7 +259,7 @@ public class PageSetupConfigBlock implements ILabels {
 				
 				if (isConversionNeeded()) {
 					fTextHeight.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getHeight())));
-					fTextHeight.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getWidth())));
+					fTextWidth.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(PageSetupPageType.pages[index].getWidth())));
 				} else {
 					fTextHeight.setText(fNumberFormat.format(PageSetupPageType.pages[index].getHeight()));
 					fTextWidth.setText(fNumberFormat.format(PageSetupPageType.pages[index].getWidth()));
@@ -297,6 +297,26 @@ public class PageSetupConfigBlock implements ILabels {
 		fControls.add(fLabelHeight);
 		fControls.add(fTextHeight);
 	}
+    
+    
+    /**
+     * Converts a given string into double format 
+     * @param strNum the string containing the number (should contain only numbers)
+     * @return double value
+     */
+    private double getDblFromString(String strNum) {
+        try {
+            Number num = null;
+            num = fNumberFormat.parse(strNum);
+            return num.doubleValue();
+            
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 	
 	/**
 	 * Sets the status of the OK button.  If the user input is invalid, OK button's
@@ -312,13 +332,36 @@ public class PageSetupConfigBlock implements ILabels {
 			StringValidator.isValid(fTextMarginBottom.getText()) &&
 			StringValidator.isValid(fTextMarginLeft.getText()) &&
 			StringValidator.isValid(fTextMarginRight.getText());
+        
+        boolean marginsValid = false;
+        
+        if (allValid) {
+            
+            //check to see if the right and left margins together are not greater than the page width
+            //(same goes for top and bottom margins as compared to the page height).
+            //Note: since width and height are swapped when in landscape, we check the other way around 
+            //when landscape is selected.
+            
+            if (fButtonPortrait.getSelection())
+                marginsValid = 
+                    ((getDblFromString(fTextMarginTop.getText()) + getDblFromString(fTextMarginBottom.getText())) 
+                            < getDblFromString(fTextHeight.getText())) && 
+                    ((getDblFromString(fTextMarginLeft.getText()) + getDblFromString(fTextMarginRight.getText())) 
+                            < getDblFromString(fTextWidth.getText()));
+            else
+                marginsValid = 
+                    ((getDblFromString(fTextMarginTop.getText()) + getDblFromString(fTextMarginBottom.getText())) 
+                            < getDblFromString(fTextWidth.getText())) && 
+                    ((getDblFromString(fTextMarginLeft.getText()) + getDblFromString(fTextMarginRight.getText())) 
+                            < getDblFromString(fTextHeight.getText()));
+        }
 		
 		// Set the status of the OK button
 		if (null == fPreferencePage) {
-			if (allValid) {
-				fParentDialog.getOkButton().setEnabled(true);
-				fButtonInches.setEnabled(true);
-				fButtonMillimetres.setEnabled(true);
+			if (allValid && marginsValid) {
+                fParentDialog.getOkButton().setEnabled(true);
+                fButtonInches.setEnabled(true);
+                fButtonMillimetres.setEnabled(true);
 			}
 			else {
 				fParentDialog.getOkButton().setEnabled(false);
@@ -326,11 +369,11 @@ public class PageSetupConfigBlock implements ILabels {
 				fButtonMillimetres.setEnabled(false);
 			}
 		} else {
-			if (allValid) {
-				fPreferencePage.setValid(true);
-				fPreferencePage.setErrorMessage(null);
-				fButtonInches.setEnabled(true);
-				fButtonMillimetres.setEnabled(true);
+			if (allValid && marginsValid) {
+                fPreferencePage.setValid(true);
+                fPreferencePage.setErrorMessage(null);
+                fButtonInches.setEnabled(true);
+                fButtonMillimetres.setEnabled(true);
 			}
 			else {
 				fPreferencePage.setValid(false);
@@ -544,18 +587,28 @@ public class PageSetupConfigBlock implements ILabels {
 		private void initText(PageSetupConfigBlock block, PageSetupControlType controlType, String key) {
 			Text text = (Text) block.getControl(controlType);
 			
-			String value = fStore.getString(key);
-			try {
-				Number num = fNumberFormat.parse(value);
-				
-				//text.setText(numberFormatter.format(Double.parseDouble(fStore.getString(key))));
-				text.setText(fNumberFormat.format(num.doubleValue()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			double value = fStore.getDouble(key);
+			text.setText(fNumberFormat.format(value));
 			
-			if (isConversionNeeded()) 
-				text.setText(fNumberFormat.format(fConvertor.convertToMillimetres(controlType)));
+            
+            if (isConversionNeeded()) {
+                //get the values directly from the hardcoded values if the option is not user defined (more accurate)
+                
+                if (fBlockPrint.fComboSize.getSelectionIndex() != PageSetupPageType.USER_DEFINED.getIndex()) {
+                    
+                    if (text == fBlockPrint.fTextHeight) 
+                        fBlockPrint.fTextHeight.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(
+                            PageSetupPageType.pages[fBlockPrint.fComboSize.getSelectionIndex()].getHeight())));
+                    
+                    else if (text == fBlockPrint.fTextWidth)
+                        fBlockPrint.fTextWidth.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(
+                            PageSetupPageType.pages[fBlockPrint.fComboSize.getSelectionIndex()].getWidth())));                
+                    else
+                        text.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(value)));
+                }
+                else
+                    text.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(value)));
+            }
 		}
 	
 		private void initCombo(PageSetupConfigBlock block, PageSetupControlType controlType, String key) {
@@ -617,7 +670,7 @@ public class PageSetupConfigBlock implements ILabels {
 				
 			else {
 				Text text = (Text) block.getControl(controlType);
-				fStore.setValue(key, text.getText());
+				fStore.setValue(key, getDblFromString(text.getText()));
 			}
 		}
 		
@@ -680,11 +733,11 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		public double convertInchesToMilim(double inches) {
-			return inches / 0.0394; 
+			return inches * 25.4d; 
 		}
 		
-		private double convertMilimToInches(double milim) {
-			return milim * 0.0394;
+		public double convertMilimToInches(double milim) {
+			return milim / 25.4d;
 		}
 	}
 	
@@ -777,8 +830,18 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 		private void convertValuesToMillimetres() {
-			fTextWidth.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_WIDTH)));
-			fTextHeight.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_HEIGHT)));
+            //get the values directly from the hardcoded values if the option is not user defined (more accurate)
+            
+            if (fComboSize.getSelectionIndex() == PageSetupPageType.USER_DEFINED.getIndex()) {
+    			fTextWidth.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_WIDTH)));
+    			fTextHeight.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_PAGE_HEIGHT)));
+            }
+            else {
+                fTextWidth.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(
+                    PageSetupPageType.pages[fComboSize.getSelectionIndex()].getWidth())));
+                fTextHeight.setText(fNumberFormat.format(fConvertor.convertInchesToMilim(
+                    PageSetupPageType.pages[fComboSize.getSelectionIndex()].getHeight())));
+            }
 			fTextMarginTop.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_TOP)));
 			fTextMarginBottom.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_BOTTOM)));
 			fTextMarginLeft.setText(fNumberFormat.format(fConvertor.convertToMillimetres(PageSetupControlType.TEXT_MARGIN_LEFT)));

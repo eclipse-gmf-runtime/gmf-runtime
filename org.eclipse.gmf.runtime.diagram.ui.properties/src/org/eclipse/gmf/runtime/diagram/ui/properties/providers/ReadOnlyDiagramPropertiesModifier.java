@@ -12,19 +12,20 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.properties.providers;
 
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.properties.ApplyModifiersOperation;
 import org.eclipse.gmf.runtime.common.ui.services.properties.ICompositePropertySource;
 import org.eclipse.gmf.runtime.common.ui.services.properties.IPropertiesModifier;
 import org.eclipse.gmf.runtime.common.ui.services.properties.descriptors.ICompositeSourcePropertyDescriptor;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.IReadOnlyDiagramPropertySheetPageContributor;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 /**
  * Install this properties provider for Browse Diagrams where the selected item
@@ -57,9 +58,14 @@ public class ReadOnlyDiagramPropertiesModifier
 
 				if (window != null) {
 					IWorkbenchPage page = window.getActivePage();
+                    
+                    if (page != null) {
+                        IEditorPart part = page.getActiveEditor();
 
-					return page != null
-						&& page.getActiveEditor() instanceof IReadOnlyDiagramPropertySheetPageContributor;
+                        return part instanceof IReadOnlyDiagramPropertySheetPageContributor
+                            || (part instanceof DiagramEditor && !((DiagramEditor) part)
+                                .isWritable());
+                    }
 
 				}
 			}

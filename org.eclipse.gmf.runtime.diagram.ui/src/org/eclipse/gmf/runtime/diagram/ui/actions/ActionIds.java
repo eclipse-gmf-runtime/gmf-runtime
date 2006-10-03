@@ -30,9 +30,11 @@ public interface ActionIds {
 	public final String MENU_FILTERS = "filtersMenu"; //$NON-NLS-1$
 	public final String MENU_FORMAT = "formatMenu"; //$NON-NLS-1$
 
-	public final String MENU_ARRANGE = "arrangeMenu"; //$NON-NLS-1$		
+    public final String MENU_ARRANGE = "arrangeMenu"; //$NON-NLS-1$     
+    public final String MENU_ARRANGE_TOOLBAR = "arrangeMenuToolbar"; //$NON-NLS-1$     
 	public final String MENU_SELECT = "selectMenu"; //$NON-NLS-1$
-	public final String MENU_ALIGN = "alignMenu"; //$NON-NLS-1$
+    public final String MENU_SELECT_TOOLBAR = "selectMenuToolbar"; //$NON-NLS-1$
+    public final String MENU_ALIGN = "alignMenu"; //$NON-NLS-1$
 	public final String MENU_SHOW_IN = "showInMenu"; //$NON-NLS-1$
 	public final String MENU_COMPARTMENT = "compartmentMenu"; //$NON-NLS-1$
 	public final String MENU_CONNECTION_LABEL = "connectorLabelMenu"; //$NON-NLS-1$

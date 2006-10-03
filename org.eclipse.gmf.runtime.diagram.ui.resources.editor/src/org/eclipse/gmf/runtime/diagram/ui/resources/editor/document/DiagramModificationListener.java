@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,13 @@
 package org.eclipse.gmf.runtime.diagram.ui.resources.editor.document;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.transaction.DemultiplexingListener;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.transaction.NotificationFilter;
-import org.eclipse.emf.transaction.ResourceSetListener;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -29,11 +30,13 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * 
  * @author mgoyal, wdiu
  */
-public class DiagramModificationListener {
-	
-	private ResourceSetListener diagramChangeListener = null;
-	
+public class DiagramModificationListener extends EContentAdapter {
+
 	private TransactionalEditingDomain editingDomain;
+
+	private NotificationFilter diagramResourceModifiedFilter;
+	
+	private DiagramDocument document;
 	
 	/**
 	 * Constructs a modification listener which listens to modifications on
@@ -45,61 +48,30 @@ public class DiagramModificationListener {
 	 * @param element the IFileEditorInput that contains the file being saved
 	 */
 	public DiagramModificationListener(
-			final AbstractDocumentProvider documentProvider,
-			final DiagramDocument document) {
-		
-		final Diagram diagram = document.getDiagram();
+			AbstractDocumentProvider documentProvider,
+			DiagramDocument document) {
+		this.document = document;
+		Diagram diagram = document.getDiagram();
 		editingDomain = TransactionUtil.getEditingDomain(diagram);
 
-		NotificationFilter diagramResourceModifiedFilter = NotificationFilter
+		diagramResourceModifiedFilter = NotificationFilter
             .createNotifierFilter(diagram.eResource()).and(
                 NotificationFilter.createEventTypeFilter(Notification.SET).or(
                     NotificationFilter
                         .createEventTypeFilter(Notification.UNSET))).and(
                 NotificationFilter.createFeatureFilter(Resource.class,
                     Resource.RESOURCE__IS_MODIFIED));
-
-		if (diagramChangeListener == null) {
-			diagramChangeListener = new DemultiplexingListener(
-				diagramResourceModifiedFilter) {
-
-				protected void handleNotification(TransactionalEditingDomain domain,
-						Notification notification) {
-					// provide further filtering not available with the
-					// NotificationFilter
-					if (diagram != null
-						&& notification.getNotifier() instanceof Resource) {
-						Resource notifierResource = (Resource) notification
-							.getNotifier();
-
-						EList contents = notifierResource.getContents();
-						if (!contents.isEmpty()) {
-							Object root = contents.get(0);
-							if (notification.getNewBooleanValue() == true
-								&& notification.getOldBooleanValue() == false) {
-								if (root instanceof EObject
-									&& ((EObject) root).eResource() != null
-									&& ((EObject) root).eResource().equals(
-										notifierResource)
-									&& notifierResource.isLoaded()) {
-
-									document.setContent(document.getContent());
-								}
-							}
-						}
-					}
-				}
-
-			};
-		}
 	}
 
 	public void startListening() {
-		getEditingDomain().addResourceSetListener(diagramChangeListener);
+		EList adapters = getEditingDomain().getResourceSet().eAdapters();
+		if (!adapters.contains(this)) {
+				adapters.add(this);
+		}
 	}
 	
 	public void stopListening() {
-		getEditingDomain().removeResourceSetListener(diagramChangeListener);
+		getEditingDomain().getResourceSet().eAdapters().remove(this);
 	}
 	
 	/**
@@ -110,4 +82,60 @@ public class DiagramModificationListener {
 		return editingDomain;
 	}
 
+	protected DiagramDocument getDiagramDocument() {
+		return document;
+	}
+	
+	public boolean isAdapterForType(Object type) {
+		return type == DiagramModificationListener.class;
+	}
+
+	public void notifyChanged(Notification notification) {
+		if (notification.getNotifier() instanceof ResourceSet) {
+			super.notifyChanged(notification);
+		}
+		
+		if (diagramResourceModifiedFilter.matches(notification)) {
+			// provide further filtering not available with the
+			// NotificationFilter
+			if (getDiagramDocument().getDiagram() != null
+				&& notification.getNotifier() instanceof Resource) {
+				Resource notifierResource = (Resource) notification
+					.getNotifier();
+	
+				EList contents = notifierResource.getContents();
+				if (!contents.isEmpty()) {
+					Object root = contents.get(0);
+					if (notification.getNewBooleanValue() == true
+						&& notification.getOldBooleanValue() == false) {
+						if (root instanceof EObject
+							&& ((EObject) root).eResource() != null
+							&& ((EObject) root).eResource().equals(
+								notifierResource)
+							&& notifierResource.isLoaded()) {
+	
+							getDiagramDocument().setContent(getDiagramDocument().getContent());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void unsetTarget(Notifier oldTarget) {
+		if (oldTarget instanceof ResourceSet) {
+		    super.unsetTarget(oldTarget);
+		}
+	}
+
+	public Notifier getTarget() {
+		return null;
+	}
+
+	public void setTarget(Notifier newTarget) {
+		if (newTarget instanceof ResourceSet) {
+		    super.setTarget(newTarget);
+		}
+	}
+	
 }

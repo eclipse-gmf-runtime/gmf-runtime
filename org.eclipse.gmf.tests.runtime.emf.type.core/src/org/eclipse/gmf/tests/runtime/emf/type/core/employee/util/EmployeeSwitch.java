@@ -143,6 +143,15 @@ public class EmployeeSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case EmployeePackage.HIGH_SCHOOL_STUDENT: {
+				HighSchoolStudent highSchoolStudent = (HighSchoolStudent)theEObject;
+				Object result = caseHighSchoolStudent(highSchoolStudent);
+				if (result == null) result = caseStudent(highSchoolStudent);
+				if (result == null) result = caseEmployee(highSchoolStudent);
+				if (result == null) result = caseEModelElement(highSchoolStudent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -249,6 +258,21 @@ public class EmployeeSwitch {
 	 * @generated
 	 */
 	public Object caseCustomer(Customer object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>High School Student</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>High School Student</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseHighSchoolStudent(HighSchoolStudent object) {
 		return null;
 	}
 

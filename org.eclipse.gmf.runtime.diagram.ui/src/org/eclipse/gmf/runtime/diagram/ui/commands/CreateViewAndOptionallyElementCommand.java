@@ -241,7 +241,7 @@ public class CreateViewAndOptionallyElementCommand
 	}
 
     public boolean canRedo() {
-		return getCommand() != null && getCommand().canExecute();
+		return CommandUtilities.canRedo(command);
 	}
 
     

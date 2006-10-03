@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.InternalTransaction;
+import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
@@ -42,6 +45,7 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Routing;
+import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -60,6 +64,12 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class ConnectionViewFactory
 	extends AbstractViewFactory implements ViewFactory {
+	private static final Map options = new HashMap();	
+    static {
+        options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
+    }
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.core.view.factories.ViewFactory#createView(org.eclipse.core.runtime.IAdaptable, org.eclipse.gmf.runtime.notation.View, java.lang.String, int, boolean, java.lang.String)
@@ -72,8 +82,15 @@ public class ConnectionViewFactory
 		setPreferencesHint(preferencesHint);
 
 		final Edge edge = NotationFactory.eINSTANCE.createEdge();
-		edge.getStyles().addAll(createStyles(edge));
-		edge.setBendpoints(createBendpoints());
+		List styles = createStyles(edge);
+        if (styles.size() > 0) {
+        	edge.getStyles().addAll(styles);
+        }
+        
+        Bendpoints bendPoints = createBendpoints();
+        if (bendPoints != null) {
+			edge.setBendpoints(bendPoints);
+		}
 
 		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
 		if (semanticEl==null)
@@ -88,39 +105,41 @@ public class ConnectionViewFactory
 		// decorate view assumes the view had been inserted already, so 
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView,edge, index, persisted);
+        
+        TransactionalEditingDomain domain = getEditingDomain(semanticEl, containerView);
 		
-		Map options = new HashMap();
-		options.put(Transaction.OPTION_UNPROTECTED, Boolean.TRUE);
-		options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
-		options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
-
-		AbstractEMFOperation operation = new AbstractEMFOperation(
-			getEditingDomain(semanticEl, containerView), StringStatics.BLANK,
-			options) {
-
-			protected IStatus doExecute(IProgressMonitor monitor,
-					IAdaptable info)
-				throws ExecutionException {
-
-				//	decorate view had to run as a silent operation other wise
-				//	it will generate too many events
-				decorateView(containerView, edge, semanticAdapter,
-					semanticHint, index, true);
-
-				return Status.OK_STATUS;
-			}
-		};
-		try {
-			operation.execute(new NullProgressMonitor(), null);
-		} catch (ExecutionException e) {
-			Trace.catching(DiagramUIPlugin.getInstance(),
-				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-				"createView", e); //$NON-NLS-1$
-			Log
-				.warning(DiagramUIPlugin.getInstance(),
-					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-					"createView", e); //$NON-NLS-1$
-		}
+        if (isUnProtectedSilentTransactionInProgress(domain)){
+            // decorate view had to run as a silent operation other wise
+            // it will generate too many events
+            decorateView(containerView, edge, semanticAdapter,
+                semanticHint, index, true);
+            
+        }else{
+    		AbstractEMFOperation operation = new AbstractEMFOperation(
+                domain, StringStatics.BLANK,
+    			options) {
+    
+    			protected IStatus doExecute(IProgressMonitor monitor,
+    					IAdaptable info)
+    				throws ExecutionException {
+    			    decorateView(containerView, edge, semanticAdapter,
+    					semanticHint, index, true);
+    
+    				return Status.OK_STATUS;
+    			}
+    		};
+    		try {
+    			operation.execute(new NullProgressMonitor(), null);
+    		} catch (ExecutionException e) {
+    			Trace.catching(DiagramUIPlugin.getInstance(),
+    				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+    				"createView", e); //$NON-NLS-1$
+    			Log
+    				.warning(DiagramUIPlugin.getInstance(),
+    					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+    					"createView", e); //$NON-NLS-1$
+    		}
+        }
 
 		return edge;
 	}
@@ -181,8 +200,41 @@ public class ConnectionViewFactory
 		IPreferenceStore store = (IPreferenceStore) getPreferencesHint()
 			.getPreferenceStore();
 
-		ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getRoutingStyle_Routing(), Routing
-			.get(store.getInt(IPreferenceConstants.PREF_LINE_STYLE)));
+		RoutingStyle routingStyle = (RoutingStyle)view.getStyle(NotationPackage.Literals.ROUTING_STYLE);
+		if (routingStyle != null) {
+			Routing routing = Routing.get(store
+				.getInt(IPreferenceConstants.PREF_LINE_STYLE));
+			if (routing != null) {
+				routingStyle.setRouting(routing);
+			}
+		}				
 	}
+    
+    /**
+     * Checks if the current active transaction is a unprotected amd silent
+     * 
+     * @param domain , the domain to use during the check
+     * @return <code>true</code> if the current active transaction is unprotected and silent 
+     */
+    protected static boolean isUnProtectedSilentTransactionInProgress(TransactionalEditingDomain domain) {
+        if (domain instanceof InternalTransactionalEditingDomain){
+            InternalTransactionalEditingDomain internalEditingDomain = 
+                (InternalTransactionalEditingDomain)domain;
+            InternalTransaction transaction = internalEditingDomain.getActiveTransaction();
+            if (transaction!=null && !transaction.isReadOnly()) {
+                Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
+                if (unprotectedMode != null && unprotectedMode == Boolean.TRUE) {
+                    // check for silent
+                    Object noNotificationMode = transaction.getOptions().get(Transaction.OPTION_NO_NOTIFICATIONS);
+                    Object noTriggersMode = transaction.getOptions().get(Transaction.OPTION_NO_TRIGGERS);
+                    if (unprotectedMode != null && noNotificationMode == Boolean.TRUE &&
+                        noTriggersMode !=null &&  noTriggersMode == Boolean.TRUE           ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 }

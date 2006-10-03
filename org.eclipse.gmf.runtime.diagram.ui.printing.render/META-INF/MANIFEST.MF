@@ -2,16 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.printing.render
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.DiagramUIPrintingRenderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.diagram.ui.printing.render.actions,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.internal;x-internal:=true,
- org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.l10n;x-internal:=true,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview;x-internal:=true,
- org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.providers;x-internal:=true,
- org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.util;x-internal:=true,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.providers,
  org.eclipse.gmf.runtime.diagram.ui.printing.render.util
 Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",

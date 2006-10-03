@@ -102,6 +102,11 @@
                    edithelper="org.eclipse.gmf.tests.runtime.emf.type.core.internal.StudentEditHelper"> 
            </metamodelType>
            <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.core.highSchoolStudent"     
+                   name="High School Student"
+                   eclass="HighSchoolStudent"> 
+           </metamodelType>
+           <metamodelType
                    id="org.eclipse.gmf.tests.runtime.emf.type.core.office"     
                    name="Office"
                    eclass="Office"

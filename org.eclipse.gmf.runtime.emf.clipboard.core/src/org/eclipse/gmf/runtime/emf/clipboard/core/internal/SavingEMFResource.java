@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
+import org.eclipse.gmf.runtime.emf.clipboard.core.CopyObjects;
 import org.eclipse.gmf.runtime.emf.clipboard.core.IClipboardSupport;
 
 /**
@@ -283,8 +284,8 @@ public class SavingEMFResource
 		EObject eContainer = eObject.eContainer();
 		while (eContainer != null) {
 			if ((copyObjects.originalObjects.contains(eContainer))
-				|| (copyObjects.copyParent2CopyMap.values().contains(eObject))
-				|| (copyObjects.combinedCopyAlwaysSet.contains(eObject))) {
+				|| (copyObjects.copyParent2CopyMap.values().contains(eContainer))
+				|| (copyObjects.combinedCopyAlwaysSet.contains(eContainer))) {
 				return true;
 			}
 			eContainer = eContainer.eContainer();

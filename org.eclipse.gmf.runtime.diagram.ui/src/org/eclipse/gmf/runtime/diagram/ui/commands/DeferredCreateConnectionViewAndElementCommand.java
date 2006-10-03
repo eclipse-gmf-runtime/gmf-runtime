@@ -161,7 +161,7 @@ public class DeferredCreateConnectionViewAndElementCommand
 	}
 
 	public boolean canRedo() {
-		return command != null && command.canExecute();
+		return CommandUtilities.canRedo(command);
 	}
 
 	/**

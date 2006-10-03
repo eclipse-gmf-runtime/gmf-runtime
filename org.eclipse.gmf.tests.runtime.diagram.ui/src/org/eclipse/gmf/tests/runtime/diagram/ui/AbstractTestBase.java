@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.Disposable;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -32,6 +33,7 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.action.IDisposableAction;
@@ -46,6 +48,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RefreshConnectionsRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -543,4 +546,72 @@ public abstract class AbstractTestBase extends TestCase {
 			tearDown();
 		}
 	}
+    
+    /**
+     * Reorients the connection to a new target.
+     * 
+     * @param connectionEditPart
+     *            the connection editpart to be reoriented
+     * @param targetEditPart
+     *            the new target editpart
+     * @param supported
+     *            should this gesture be supported?
+     * @return the command that was executed
+     */
+    protected Command reorientConnectionTarget(
+            final ConnectionEditPart connectionEditPart,
+            final IGraphicalEditPart targetEditPart, boolean supported) {
+        ReconnectRequest reconnectReq = new ReconnectRequest(
+            RequestConstants.REQ_RECONNECT_TARGET);
+        reconnectReq.setConnectionEditPart(connectionEditPart);
+        reconnectReq.setTargetEditPart(targetEditPart);
+        reconnectReq.setLocation(targetEditPart.getFigure().getBounds()
+            .getTopRight());
+        Command cmd = targetEditPart.getCommand(reconnectReq);
+        if (supported) {
+            testCommand(cmd, new ITestCommandCallback() {
+
+                public void onCommandExecution() {
+                    assertTrue(connectionEditPart.getTarget() == targetEditPart);
+                }
+            });
+        } else {
+            assertTrue(cmd == null || !cmd.canExecute());
+        }
+        return cmd;
+    }
+
+    /**
+     * Reorients the connection to a new source.
+     * 
+     * @param connectionEditPart
+     *            the connection editpart to be reoriented
+     * @param sourceEditPart
+     *            the new source editpart
+     * @param supported
+     *            should this gesture be supported?
+     * @return the command that was executed
+     */
+    protected Command reorientConnectionSource(
+            final ConnectionEditPart connectionEditPart,
+            final IGraphicalEditPart sourceEditPart, boolean supported) {
+        ReconnectRequest reconnectReq = new ReconnectRequest(
+            RequestConstants.REQ_RECONNECT_SOURCE);
+        reconnectReq.setConnectionEditPart(connectionEditPart);
+        reconnectReq.setTargetEditPart(sourceEditPart);
+        reconnectReq.setLocation(sourceEditPart.getFigure().getBounds()
+            .getTopRight());
+        Command cmd = sourceEditPart.getCommand(reconnectReq);
+        if (supported) {
+            testCommand(cmd, new ITestCommandCallback() {
+
+                public void onCommandExecution() {
+                    assertTrue(connectionEditPart.getSource() == sourceEditPart);
+                }
+            });
+        } else {
+            assertTrue(cmd == null || !cmd.canExecute());
+        }
+        return cmd;
+    }
 }

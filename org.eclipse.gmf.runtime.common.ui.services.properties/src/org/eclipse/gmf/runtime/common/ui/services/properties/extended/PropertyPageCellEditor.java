@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,6 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -185,14 +184,6 @@ public class PropertyPageCellEditor extends MultiButtonCellEditor {
 	}
 
 	/**
-	 * Returns the text widget
-	 * @return the text widget
-     */
-	protected Text getText() {
-		return null;
-	}
-
-	/**
 	 * Determines if there is text to copy.
 	 * 
 	 * @return <code>true</code> if the text selection is not empty, 
@@ -256,6 +247,7 @@ public class PropertyPageCellEditor extends MultiButtonCellEditor {
 	 * Copies the selected text
      */
 	public void performCopy() {
+        // default implementation do nothing
 	}
 
 	/**

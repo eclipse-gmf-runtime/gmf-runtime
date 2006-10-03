@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,10 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
-import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -89,7 +86,7 @@ public class ColorPalettePopup {
 		 * 
 		 * @return a new image or <code>null</code> if the image could not be
 		 *         created
-		 * @since 2.0
+		 * 
 		 */
 		public Image createImage() {
 
@@ -188,22 +185,26 @@ public class ColorPalettePopup {
 
 	private Shell shell;
 
-	private String preferenceId;
-
 	private RGB selectedColor = null;
 
-	/**
-	 * Creates a PopupList above the specified shell.
-	 * 
-	 * @param parent
-	 *            a Shell control which will be the parent of the new instance
-	 *            (cannot be null)
-	 */
-	public ColorPalettePopup(Shell parent, String preferenceId, int rowHeight) {
-		this(parent, rowHeight);
-		this.preferenceId = preferenceId;
-	}
+    /**
+     * The default color to be used if the user presses the default button.
+     */
+    private boolean useDefaultColor = false;
 
+	/**
+     * Creates a color palette popup above the specified shell.
+     * 
+     * @param parent
+     *            a Shell control which will be the parent of the new instance
+     *            (cannot be null)
+     * @deprecated Use the other constructor. This one does not retrieve the
+     *             default value from the correct preference store.
+     */
+    public ColorPalettePopup(Shell parent, String preferenceId, int rowHeight) {
+        this(parent, rowHeight);
+    }
+    
 	/**
 	 * Creates a PopupList above the specified shell.
 	 * 
@@ -212,10 +213,8 @@ public class ColorPalettePopup {
 	 *            be null)
 	 * @param style
 	 *            the style of widget to construct
-	 * 
-	 * @since 3.0
 	 */
-	private ColorPalettePopup(Shell parent, int rowHeight) {
+	public ColorPalettePopup(Shell parent, int rowHeight) {
 		shell = new Shell(parent, checkStyle(SWT.NONE));
 		GridLayout layout = new GridLayout(4, true);
 		layout.horizontalSpacing = 0;
@@ -243,25 +242,20 @@ public class ColorPalettePopup {
 			});
 		}
 
-		Button defaultColor = new Button(shell, SWT.PUSH);
-		defaultColor.setText(DEAFULT_COLOR_STRING);
+		Button defaultButton = new Button(shell, SWT.PUSH);
+		defaultButton.setText(DEAFULT_COLOR_STRING);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
 		data.heightHint = rowHeight;
-		defaultColor.setLayoutData(data);
+		defaultButton.setLayoutData(data);
 
-		defaultColor.addSelectionListener(new SelectionAdapter() {
+		defaultButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-
-				IPreferenceStore store = DiagramPropertiesPlugin.getDefault()
-					.getPreferenceStore();
-				if (preferenceId != null)
-					selectedColor = PreferenceConverter.getColor(store,
-						preferenceId);
-				shell.dispose();
-			}
-		});
+            public void widgetSelected(SelectionEvent event) {
+                useDefaultColor = true;
+                shell.dispose();
+            }
+        });
 
 		Button moreColors = new Button(shell, SWT.PUSH);
 		moreColors.setText(CUSTOM_COLOR_STRING);
@@ -331,8 +325,23 @@ public class ColorPalettePopup {
 		return getSelectedColor();
 	}
 
-	public RGB getSelectedColor() {
-		return selectedColor;
-	}
+	/**
+     * Gets the color the user selected. Could be null as the user may have
+     * cancelled the gesture or they may have selected the default color button.
+     * See {@link #useDefaultColor()}.
+     * 
+     * @return the selected color or null
+     */
+    public RGB getSelectedColor() {
+        return selectedColor;
+    }
 
+    /**
+     * Returns true if the user selected to use the default color
+     * 
+     * @return true if the default color is to be used; false otherwise
+     */
+    public boolean useDefaultColor() {
+        return useDefaultColor;
+    }
 }

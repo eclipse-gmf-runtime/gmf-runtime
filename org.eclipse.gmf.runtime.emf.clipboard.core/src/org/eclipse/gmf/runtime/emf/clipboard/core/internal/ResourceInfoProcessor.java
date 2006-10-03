@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.emf.clipboard.core.CopyObjects;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 
 import com.ibm.icu.util.StringTokenizer;

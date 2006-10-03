@@ -171,10 +171,15 @@ public class DiagramDocumentEditor
 			fTitleImage= null;
 		}
 
+        IDocumentProvider provider = getDocumentProvider();
+        IStatus status = provider.getStatus(getEditorInput());
+
 		disposeDocumentProvider();
-		super.setInput(null);
+
+        super.setInput(null);
 		
-		super.dispose();
+        if(status != null && status.isOK())
+            super.dispose();
 	}
 	
 
@@ -304,7 +309,7 @@ public class DiagramDocumentEditor
 	 * reimplement.
 	 *
 	 * @param input the input of this editor.
-	 * @since 3.0
+	 * 
 	 */
 	protected void setDocumentProvider(IEditorInput input) {
 		IDocumentProvider provider = DocumentProviderRegistry.getDefault().getDocumentProvider(input, new IDocumentProviderSelector() {
@@ -322,7 +327,7 @@ public class DiagramDocumentEditor
 	 * reimplement.
 	 *
 	 * @param input the input of this editor.
-	 * @since 3.0
+	 * 
 	 */
 	protected IDocumentProvider getDocumentProvider(IEditorInput input) {
 		IDocumentProvider provider = DocumentProviderRegistry.getDefault().getDocumentProvider(input, new IDocumentProviderSelector() {
@@ -465,7 +470,7 @@ public class DiagramDocumentEditor
 	 * Disposes of the connection with the document provider. Subclasses
 	 * may extend.
 	 *
-	 * @since 3.0
+	 * 
 	 */
 	protected void disposeDocumentProvider() {
 		IDocumentProvider provider= getDocumentProvider();
@@ -489,7 +494,7 @@ public class DiagramDocumentEditor
 	 * necessary to extend this method.
 	 *
 	 * @return the progress monitor related to this editor
-	 * @since 2.1
+	 * 
 	 */
 	protected IProgressMonitor getProgressMonitor() {
 
@@ -501,6 +506,7 @@ public class DiagramDocumentEditor
 		return pm != null ? pm : new NullProgressMonitor();
 	}
 
+    private boolean isHandlingElementDeletion = false;
 	/**
 	 * Handles an external change of the editor's input element. Subclasses may
 	 * extend.
@@ -520,36 +526,36 @@ public class DiagramDocumentEditor
 
 		final IEditorInput input= getEditorInput();
 		if (provider.isDeleted(input)) {
-
-			if (isSaveAsAllowed()) {
-
-				title= EditorMessages.Editor_error_activated_deleted_save_title;
-				msg= EditorMessages.Editor_error_activated_deleted_save_message;
-
-				String[] buttons= {
-					EditorMessages.Editor_error_activated_deleted_save_button_save,
-					EditorMessages.Editor_error_activated_deleted_save_button_close,
-				};
-
-				MessageDialog dialog= new MessageDialog(shell, title, null, msg, MessageDialog.QUESTION, buttons, 0);
-
-				if (dialog.open() == 0) {
-					IProgressMonitor pm= getProgressMonitor();
-					performSaveAs(pm);
-					if (pm.isCanceled())
-						handleEditorInputChanged();
-				} else {
-					close(false);
-				}
-
-			} else {
-
-				title= EditorMessages.Editor_error_activated_deleted_close_title;
-				msg= EditorMessages.Editor_error_activated_deleted_close_message;
-				if (MessageDialog.openConfirm(shell, title, msg))
-					close(false);
-			}
-
+            try {
+                isHandlingElementDeletion = true;
+    			if (isSaveAsAllowed()) {
+    				title= EditorMessages.Editor_error_activated_deleted_save_title;
+    				msg= EditorMessages.Editor_error_activated_deleted_save_message;
+    
+    				String[] buttons= {
+    					EditorMessages.Editor_error_activated_deleted_save_button_save,
+    					EditorMessages.Editor_error_activated_deleted_save_button_close,
+    				};
+    
+    				MessageDialog dialog= new MessageDialog(shell, title, null, msg, MessageDialog.QUESTION, buttons, 0);
+    
+    				if (dialog.open() == 0) {
+    					IProgressMonitor pm= getProgressMonitor();
+    					performSaveAs(pm);
+    					if (pm.isCanceled())
+    						handleEditorInputChanged();
+    				} else {
+    					close(false);
+    				}
+    			} else {
+    				title= EditorMessages.Editor_error_activated_deleted_close_title;
+    				msg= EditorMessages.Editor_error_activated_deleted_close_message;
+    				if (MessageDialog.openConfirm(shell, title, msg))
+    					close(false);
+    			}
+            } finally {
+                isHandlingElementDeletion = false;
+            }
 		} else {
 
 			title= EditorMessages.Editor_error_activated_outofsync_title;
@@ -644,7 +650,7 @@ public class DiagramDocumentEditor
 	/**
 	 * Enables/disables sanity checking.
 	 * @param enable <code>true</code> if sanity checking should be enabled, <code>false</code> otherwise
-	 * @since 2.0
+	 * 
 	 */
 	protected void enableSanityChecking(boolean enable) {
 		synchronized (this) {
@@ -655,7 +661,7 @@ public class DiagramDocumentEditor
 	/**
 	 * Checks the state of the given editor input if sanity checking is enabled.
 	 * @param input the editor input whose state is to be checked
-	 * @since 2.0
+	 * 
 	 */
 	protected void safelySanityCheckState(IEditorInput input) {
 		boolean enabled= false;
@@ -671,7 +677,7 @@ public class DiagramDocumentEditor
 	/**
 	 * Checks the state of the given editor input.
 	 * @param input the editor input whose state is to be checked
-	 * @since 2.0
+	 * 
 	 */
 	protected void sanityCheckState(IEditorInput input) {
 
@@ -691,7 +697,7 @@ public class DiagramDocumentEditor
 	/**
 	 * Enables/disables state validation.
 	 * @param enable <code>true</code> if state validation should be enabled, <code>false</code> otherwise
-	 * @since 2.1
+	 * 
 	 */
 	protected void enableStateValidation(boolean enable) {
 		synchronized (this) {
@@ -705,7 +711,7 @@ public class DiagramDocumentEditor
 	 * the input can persistently be changed.
 	 *
 	 * @param input the input to be validated
-	 * @since 2.0
+	 * 
 	 */
 	protected void validateState(IEditorInput input) {
 
@@ -776,7 +782,7 @@ public class DiagramDocumentEditor
 	 * Updates the state of the given editor input such as read-only flag.
 	 *
 	 * @param input the input to be validated
-	 * @since 2.0
+	 * 
 	 */
 	protected void updateState(IEditorInput input) {
 		IDocumentProvider provider= getDocumentProvider();
@@ -804,7 +810,7 @@ public class DiagramDocumentEditor
 	 *
 	 * @param overwrite indicates whether or not overwriting is allowed
 	 * @param progressMonitor the monitor in which to run the operation
-	 * @since 3.0
+	 * 
 	 */
 	protected void performSave(boolean overwrite, IProgressMonitor progressMonitor) {
 
@@ -830,7 +836,7 @@ public class DiagramDocumentEditor
 
 	/**
 	 * The number of re-entrances into error correction code while saving.
-	 * @since 2.0
+	 * 
 	 */
 	private int fErrorCorrectionOnSave;
 
@@ -898,7 +904,7 @@ public class DiagramDocumentEditor
 	 * @param ex the core exception
 	 * @return <code>true</code> iff the given core exception is exactly the
 	 *			exception which is thrown for a non-synchronized element
-	 * @since 3.1
+	 * 
 	 */
 	private boolean isNotSynchronizedException(CoreException ex) {
 		if (ex == null)
@@ -940,7 +946,7 @@ public class DiagramDocumentEditor
 	 * <p>
 	 * Clients may extended this method.
 	 *
-	 * @since 3.0
+	 * 
 	 */
 	protected void handleElementContentReplaced() {
 		initializeGraphicalViewerContents();
@@ -952,7 +958,7 @@ public class DiagramDocumentEditor
 	 * <p>
 	 * Clients may extended this method.
 	 *
-	 * @since 3.0
+	 * 
 	 */
 	protected void handleElementContentAboutToBeReplaced() {
 		releaseInput();
@@ -961,7 +967,7 @@ public class DiagramDocumentEditor
 	/**
 	 * Returns the status line manager of this editor.
 	 * @return the status line manager of this editor
-	 * @since 2.0
+	 * 
 	 */
 	private IStatusLineManager getStatusLineManager() {
 
@@ -978,7 +984,7 @@ public class DiagramDocumentEditor
 	/**
 	 * Hook which gets called when the editor has been saved.
 	 * Subclasses may extend.
-	 * @since 2.1
+	 * 
 	 */
 	protected void editorSaved() {
 		// nothing to do
@@ -1009,7 +1015,7 @@ public class DiagramDocumentEditor
 
 	/**
 	 * The editor's activation listener.
-	 * @since 2.0
+	 * 
 	 */
 	private ActivationListener fActivationListener;
 //	private final String fReadOnlyLabel= EditorMessages.Editor_statusline_state_readonly_label;
@@ -1022,22 +1028,22 @@ public class DiagramDocumentEditor
 	private IDocumentProvider fExplicitDocumentProvider;
 	/**
 	 * Indicates whether sanity checking in enabled.
-	 * @since 2.0
+	 * 
 	 */
 	private boolean fIsSanityCheckEnabled= true;
 	/**
 	 * Indicates whether state validation is enabled.
-	 * @since 2.1
+	 * 
 	 */
 	private boolean fIsStateValidationEnabled= true;
 	/**
 	 * Cached modification stamp of the editor's input.
-	 * @since 2.0
+	 * 
 	 */
 	private long fModificationStamp= IResource.NULL_STAMP;
 	/**
 	 * Internal part and shell activation listener for triggering state validation.
-	 * @since 2.0
+	 * 
 	 */
 	class ActivationListener implements IPartListener, IWindowListener {
 
@@ -1047,7 +1053,7 @@ public class DiagramDocumentEditor
 		private boolean fIsHandlingActivation= false;
 		/**
 		 * The part service.
-		 * @since 3.1
+		 * 
 		 */
 		private IPartService fPartService;
 
@@ -1055,7 +1061,7 @@ public class DiagramDocumentEditor
 		 * Creates this activation listener.
 		 *
 		 * @param partService the part service on which to add the part listener
-		 * @since 3.1
+		 * 
 		 */
 		public ActivationListener(IPartService partService) {
 			fPartService= partService;
@@ -1064,7 +1070,7 @@ public class DiagramDocumentEditor
 		/**
 		 * Disposes this activation listener.
 		 *
-		 * @since 3.1
+		 * 
 		 */
 		public void dispose() {
 			fPartService= null;
@@ -1135,7 +1141,7 @@ public class DiagramDocumentEditor
 
 		/*
 		 * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
-		 * @since 3.1
+		 * 
 		 */
 		public void windowActivated(IWorkbenchWindow window) {
 			if (window == getEditorSite().getWorkbenchWindow()) {
@@ -1154,7 +1160,7 @@ public class DiagramDocumentEditor
 
 		/*
 		 * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.IWorkbenchWindow)
-		 * @since 3.1
+		 * 
 		 */
 		public void windowDeactivated(IWorkbenchWindow window) {
 			// nothing to do
@@ -1162,7 +1168,7 @@ public class DiagramDocumentEditor
 
 		/*
 		 * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
-		 * @since 3.1
+		 * 
 		 */
 		public void windowClosed(IWorkbenchWindow window) {
 			// nothing to do
@@ -1170,7 +1176,7 @@ public class DiagramDocumentEditor
 
 		/*
 		 * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
-		 * @since 3.1
+		 * 
 		 */
 		public void windowOpened(IWorkbenchWindow window) {
 			// nothing to do
@@ -1184,7 +1190,7 @@ public class DiagramDocumentEditor
 
 		/**
 		 * The display used for posting runnable into the UI thread.
-		 * @since 3.0
+		 * 
 		 */
 		private Display fDisplay;
 
@@ -1264,7 +1270,7 @@ public class DiagramDocumentEditor
 		 * @see IElementStateListener#elementDeleted(Object)
 		 */
 		public void elementDeleted(Object deletedElement) {
-			if (deletedElement != null && deletedElement.equals(getEditorInput())) {
+			if (deletedElement != null && deletedElement.equals(getEditorInput()) && !isHandlingElementDeletion) {
 				Runnable r= new Runnable() {
 					public void run() {
 						enableSanityChecking(true);
@@ -1298,7 +1304,8 @@ public class DiagramDocumentEditor
 							final Object previousContent;
 							IDocument changed= null;
 							IEditorInput oldInput= getEditorInput();
-							if (isDirty()) {
+                            final boolean initialDirtyState = isDirty();
+							if (initialDirtyState || reuseDiagramOnMove()) {
 								changed= d.getDocument(oldInput);
 								if (changed != null) {
 									if(changed instanceof IDiagramDocument)
@@ -1319,11 +1326,22 @@ public class DiagramDocumentEditor
 								ErrorDialog.openError(shell, title, msg, e.getStatus());
 							}
 
-							if (changed != null) {
+							if (changed != null && previousContent != null) {
 								Runnable r2= new Runnable() {
 									public void run() {
 										validateState(getEditorInput());
 										getDocumentProvider().getDocument(getEditorInput()).setContent(previousContent);
+                                        
+                                        if(reuseDiagramOnMove() && !initialDirtyState) {
+                                            try {
+                                                getDocumentProvider().resetDocument(getEditorInput());
+                                            } catch (CoreException e) {
+                                                String title= EditorMessages.Editor_error_setinput_title;
+                                                String msg= EditorMessages.Editor_error_setinput_message;
+                                                Shell shell= getSite().getShell();
+                                                ErrorDialog.openError(shell, title, msg, e.getStatus());
+                                            }
+                                        }
 									}
 								};
 								execute(r2, doValidationAsync);
@@ -1345,7 +1363,7 @@ public class DiagramDocumentEditor
 		 * @param movedElement the moved element
 		 * @return whether this editor can handle the move of the original element
 		 *         so that it ends up being the moved element
-		 * @since 2.0
+		 * 
 		 */
 		protected boolean canHandleMove(IEditorInput originalElement, IEditorInput movedElement) {
 			return true;
@@ -1353,7 +1371,7 @@ public class DiagramDocumentEditor
 
 		/*
 		 * @see IElementStateListenerExtension#elementStateChanging(Object)
-		 * @since 2.0
+		 * 
 		 */
 		public void elementStateChanging(Object element) {
 			if (element != null && element.equals(getEditorInput()))
@@ -1362,7 +1380,7 @@ public class DiagramDocumentEditor
 
 		/*
 		 * @see IElementStateListenerExtension#elementStateChangeFailed(Object)
-		 * @since 2.0
+		 * 
 		 */
 		public void elementStateChangeFailed(Object element) {
 			if (element != null && element.equals(getEditorInput()))
@@ -1378,7 +1396,7 @@ public class DiagramDocumentEditor
 		 *
 		 * @param runnable runnable to be executed
 		 * @param postAsync <code>true</code> if the runnable must be posted asynchronous, <code>false</code> otherwise
-		 * @since 3.0
+		 * 
 		 */
 		private void execute(Runnable runnable, boolean postAsync) {
 			if (postAsync || Display.getCurrent() == null) {
@@ -1482,5 +1500,9 @@ public class DiagramDocumentEditor
      */
     protected String getEditingDomainID() {
         return null;
+    }
+    
+    protected boolean reuseDiagramOnMove() {
+        return false;
     }
 }

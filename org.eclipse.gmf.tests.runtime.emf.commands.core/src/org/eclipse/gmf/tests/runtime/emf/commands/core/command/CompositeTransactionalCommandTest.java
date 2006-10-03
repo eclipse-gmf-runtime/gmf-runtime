@@ -32,6 +32,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -82,9 +86,13 @@ public class CompositeTransactionalCommandTest
         TransactionalEditingDomain domain = TransactionalEditingDomain.Factory.INSTANCE
             .createEditingDomain();
 
-        TransactionalTestCommand child1 = new TransactionalTestCommand(domain);
+        // create a resource to modify
+        Resource res = new ResourceImpl(org.eclipse.emf.common.util.URI.createURI("file:/foo")); //$NON-NLS-1$
+        domain.getResourceSet().getResources().add(res);
+        
+        TransactionalTestCommand child1 = new TransactionalTestCommand(domain, res);
         TestCommand child2 = new TestCommand();
-        TransactionalTestCommand child3 = new TransactionalTestCommand(domain);
+        TransactionalTestCommand child3 = new TransactionalTestCommand(domain, res);
 
         IUndoContext ctx = new UndoContext();
 
@@ -189,7 +197,7 @@ public class CompositeTransactionalCommandTest
 
         composite.remove(child);
 
-        child = new TransactionalTestCommand(domain);
+        child = new TransactionalTestCommand(domain, null);
         composite.compose(child);
         reduction = composite.reduce();
 
@@ -205,29 +213,42 @@ public class CompositeTransactionalCommandTest
 
         private static final String EXECUTED = "executed"; //$NON-NLS-1$
 
+        private final Resource resource;
+        private EObject testObject;
+        
         private boolean executed;
 
         private boolean undone;
 
         private boolean redone;
 
-        public TransactionalTestCommand(TransactionalEditingDomain domain) {
+        public TransactionalTestCommand(TransactionalEditingDomain domain, Resource resource) {
             super(domain, "CompositeTransactionalCommandTest", //$NON-NLS-1$
                 null);
+            this.resource = resource;
         }
 
         public TransactionalTestCommand(List affectedFiles) {
             super(TransactionalEditingDomain.Factory.INSTANCE
                 .createEditingDomain(), "CompositeTransactionalCommandTest", //$NON-NLS-1$
                 affectedFiles);
+            this.resource = null;
         }
 
         protected CommandResult doExecuteWithResult(
                 IProgressMonitor progressMonitor, IAdaptable info)
             throws ExecutionException {
+        	
+        	if (resource != null) {
+	        	// change my resource
+	        	testObject = EcoreFactory.eINSTANCE.createEPackage();
+	        	resource.getContents().add(testObject);
+        	}
+        	
             executed = true;
             undone = false;
             redone = false;
+            
             return CommandResult.newOKCommandResult(EXECUTED);
         }
 
@@ -238,18 +259,35 @@ public class CompositeTransactionalCommandTest
             assertEquals(IStatus.OK, getCommandResult().getStatus()
                 .getSeverity());
             assertSame(EXECUTED, getCommandResult().getReturnValue());
+            
+            if (resource != null) {
+            	// check that the model change was committed
+            	assertTrue(resource.getContents().contains(testObject));
+            }
         }
 
         public void assertUndone() {
             assertEquals(IStatus.OK, getCommandResult().getStatus()
                 .getSeverity());
-            assertNull(getCommandResult().getReturnValue());
+            
+            if (resource != null) {
+            	// check that the model change was undone
+            	assertFalse(resource.getContents().contains(testObject));
+            } else {
+            	assertNull(getCommandResult().getReturnValue());
+            }
         }
 
         public void assertRedone() {
             assertEquals(IStatus.OK, getCommandResult().getStatus()
                 .getSeverity());
-            assertNull(getCommandResult().getReturnValue());
+            
+            if (resource != null) {
+            	// check that the model change was redone
+            	assertTrue(resource.getContents().contains(testObject));
+            } else {
+            	assertNull(getCommandResult().getReturnValue());
+            }
         }
     }
 

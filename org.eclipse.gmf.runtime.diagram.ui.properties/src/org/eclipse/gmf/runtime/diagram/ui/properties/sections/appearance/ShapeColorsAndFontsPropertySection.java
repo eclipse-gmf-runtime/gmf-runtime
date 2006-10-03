@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,6 +77,7 @@ public class ShapeColorsAndFontsPropertySection
 	 * Change fill color property value
 	 */
 	protected void changeFillColor(SelectionEvent event) {
+        // calling the deprectaed method in case a client overrides the deprecated method
 		fillColor = changeColor(event, fillColorButton,
 			IPreferenceConstants.PREF_FILL_COLOR, Properties.ID_FILLCOLOR,
 			FILL_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_FILL_COLOR);

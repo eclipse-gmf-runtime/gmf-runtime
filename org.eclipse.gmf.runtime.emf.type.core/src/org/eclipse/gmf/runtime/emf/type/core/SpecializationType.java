@@ -291,7 +291,7 @@ public class SpecializationType
 	}
 	
 	public String toString() {
-		return "SpecializationType[" + getId()+ "]";
+		return "SpecializationType[" + getId()+ "]";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }

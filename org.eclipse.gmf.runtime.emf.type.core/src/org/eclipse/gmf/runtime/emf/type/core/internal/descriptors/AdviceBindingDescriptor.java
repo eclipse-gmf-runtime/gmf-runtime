@@ -285,6 +285,6 @@ public class AdviceBindingDescriptor
 	}
 	
 	public String toString() {
-		return "AdviceBindingDescriptor[" + getId()+ "]";
+		return "AdviceBindingDescriptor[" + getId()+ "]";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 }

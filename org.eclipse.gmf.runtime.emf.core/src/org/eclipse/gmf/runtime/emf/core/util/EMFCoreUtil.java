@@ -25,7 +25,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
@@ -201,29 +203,33 @@ public class EMFCoreUtil {
 			}
 		}
 		
-		if ((features != null) && (features.length != 0)) {
-
-			Collection referencers = new ArrayList();
-
-			for (int i = 0, count = features.length; i < count; i++) {
-
-				EReference feature = features[i];
-
-				Iterator j = crossReferenceAdapter.getInverseReferencers(eObject,
-						feature, null).iterator();
-
-				while (j.hasNext()) {
-
-					EObject referencer = (EObject) j.next();
-
-					referencers.add(referencer);
+		Collection settings  = crossReferenceAdapter.getInverseReferences(eObject);
+		
+		if (settings.isEmpty() == false) {
+			ArrayList referencers = new ArrayList();
+			int count;
+			if ((features != null) && ((count = features.length) != 0)) {				
+				Iterator it = settings.iterator();
+				while (it.hasNext()) {
+					Setting setting = (Setting) it.next();
+					EStructuralFeature feature = setting
+					.getEStructuralFeature();
+					for(int i = 0; i< count;++i){
+						if (feature == features[i]) {
+							referencers.add(setting.getEObject());
+							break;
+						}						
+					}					
+				}
+			} else {
+				Iterator it = settings.iterator();
+				while (it.hasNext()) {
+					referencers.add(((Setting) it.next()).getEObject());
 				}
 			}
-
 			return referencers;
-
-		} else
-			return crossReferenceAdapter.getInverseReferencers(eObject, null, null);
+		}
+		return Collections.EMPTY_LIST;
 	}
 	
 	/**
@@ -542,8 +548,12 @@ public class EMFCoreUtil {
 			if (res == null) {
 				return EMFCoreConstants.EMPTY_STRING;
 			} else {
-				return res.getID(proxy);
-			}
+                String id =  res.getID(proxy);
+                // if the object had no ID then the best we can do is to return the URI Fragment
+                if (id ==null || id.length() ==0){
+                    return res.getURIFragment(proxy);
+                }
+            }
 		}
 		
 		URI uri = EcoreUtil.getURI(proxy);

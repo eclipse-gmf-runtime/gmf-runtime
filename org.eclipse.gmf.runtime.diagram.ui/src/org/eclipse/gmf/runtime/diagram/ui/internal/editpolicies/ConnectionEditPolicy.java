@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -91,13 +91,13 @@ public class ConnectionEditPolicy
 		
 		
 		AbstractConnectionEditPart cep = (AbstractConnectionEditPart) getHost();
-
-		if (cep instanceof IGraphicalEditPart) {
-			if (ViewUtil
-				.resolveSemanticElement((View) ((IGraphicalEditPart) cep)
-					.getModel()) == null)
+		
+		if (cep instanceof ConnectionEditPart) {
+			if (!((ConnectionEditPart) cep).isSemanticConnection()) {
 				return false;
+			}
 		}
+
 		boolean isCanonical = false;
 		if (cep.getSource() != null)
 			isCanonical = IsCanonical(cep.getSource());

@@ -12,13 +12,13 @@
 package org.eclipse.gmf.runtime.emf.ui.action;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler;
@@ -36,6 +36,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * command.
  * 
  * @author khussey
+ * @auther ldamus
  */
 public abstract class AbstractModelActionHandler
 	extends AbstractActionHandler {
@@ -93,33 +94,28 @@ public abstract class AbstractModelActionHandler
             }
 
         } else {
-            // run in an EMF operation so that subclasses can both read and
-            // write to the model
-            AbstractEMFOperation operation = new AbstractEMFOperation(
-                getEditingDomain(), getLabel()) {
-
-                protected IStatus doExecute(IProgressMonitor monitor,
-                        IAdaptable info)
-                    throws ExecutionException {
-
-                    AbstractModelActionHandler.super.run(progressMonitor);
-                    return getStatus();
-                };
-            };
-
-            try {
-                getActionManager().getOperationHistory().execute(operation,
-                    new NullProgressMonitor(), null);
-
-            } catch (ExecutionException e) {
-                Trace
-                    .catching(MslUIPlugin.getDefault(),
-                        MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-                        "run", e); //$NON-NLS-1$
-                Log.error(MslUIPlugin.getDefault(),
-                    MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
-                        .getLocalizedMessage(), e);
-            }
+        	// Run in a composite transactional operation so that subclasses can
+			// both read and write to the model. Commands executed by subclasses
+			// to modify the model will be appended to this composite
+			// transactional operation.
+        	
+        	Runnable runnable = new Runnable() {
+				public void run() {
+					AbstractModelActionHandler.super
+							.run(progressMonitor);
+				}
+			};
+			
+        	WriteCommand write = new WriteCommand(getEditingDomain(),
+					getLabel(), getActionManager().getOperationHistory(),
+					runnable) {
+        		
+				public IStatus getStatus() {
+					return AbstractModelActionHandler.this.getStatus();
+				}
+			};
+			
+            execute(write, new NullProgressMonitor(), null);
         }
         
 	}
@@ -164,5 +160,40 @@ public abstract class AbstractModelActionHandler
     protected void setStatus(IStatus status) {
         this.status = status;
     }
+    
+    /**
+	 * Convenience method for subclasses to execute an undoable operation on the
+	 * action manager's operation history. Sets my status to the status of the
+	 * operation execution, and returns that status.
+	 * 
+	 * @param operation
+	 *            the operation to be executed
+	 * @param progressMonitor
+	 *            the progress monitor
+	 * @param info
+	 *            the adaptable info, may be <code>null</code>
+	 * @return the status of the operation execution.
+	 */
+	protected IStatus execute(IUndoableOperation operation,
+			IProgressMonitor progressMonitor, IAdaptable info) {
+
+		try {
+			setStatus(getActionManager().getOperationHistory().execute(
+					operation, progressMonitor, info));
+
+		} catch (ExecutionException e) {
+			setStatus(new Status(Status.ERROR, MslUIPlugin.getPluginId(),
+					MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+							.getLocalizedMessage(), e));
+			Trace
+					.catching(MslUIPlugin.getDefault(),
+							MslUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+							"run", e); //$NON-NLS-1$
+			Log.error(MslUIPlugin.getDefault(),
+					MslUIStatusCodes.IGNORED_EXCEPTION_WARNING, e
+							.getLocalizedMessage(), e);
+		}
+		return getStatus();
+	}
 
 }

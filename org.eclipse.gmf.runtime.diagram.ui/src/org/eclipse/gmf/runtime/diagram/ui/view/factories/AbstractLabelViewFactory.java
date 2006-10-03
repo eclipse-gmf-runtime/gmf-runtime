@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
  * @see  org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory
  * @author mmostafa
  */
-public class AbstractLabelViewFactory
+abstract public class AbstractLabelViewFactory
 	extends BasicNodeViewFactory {
 
 	protected LayoutConstraint createLayoutConstraint() {

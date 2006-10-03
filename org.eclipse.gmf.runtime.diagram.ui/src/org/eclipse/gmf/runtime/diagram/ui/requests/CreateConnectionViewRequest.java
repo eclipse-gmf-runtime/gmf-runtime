@@ -19,7 +19,6 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreationFactory;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
@@ -28,6 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
+import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -373,7 +373,7 @@ public class CreateConnectionViewRequest
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);
 		sceCommand.setNewTargetAdaptor(targetViewAdapter);
 
-		CompositeCommand cc = new CompositeCommand(null);
+		CompositeTransactionalCommand cc = new CompositeTransactionalCommand(diagramEditPart.getEditingDomain(), null);
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
 		return new ICommandProxy(cc);
@@ -403,10 +403,9 @@ public class CreateConnectionViewRequest
 		sceCommand.setEdgeAdaptor(viewAdapter);
 		sceCommand.setNewSourceAdaptor(sourceViewAdapter);
 		sceCommand.setNewTargetAdaptor(targetViewAdapter);
-		CompositeCommand cc = new CompositeCommand(null);
+		CompositeTransactionalCommand cc = new CompositeTransactionalCommand(diagramEditPart.getEditingDomain(), null);
 		cc.compose(createCommand);
 		cc.compose(sceCommand);
 		return new ICommandProxy(cc);
 	}
-
 }

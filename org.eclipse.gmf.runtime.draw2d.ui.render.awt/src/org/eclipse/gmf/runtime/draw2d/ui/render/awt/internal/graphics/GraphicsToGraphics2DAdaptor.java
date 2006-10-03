@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,9 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Composite;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -115,6 +117,11 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		 * cached background color
 		 */
 		public Color bgColor;
+        
+        /**
+         * cached alpha value
+         */
+        public int alpha;
 
 		/**
 		 * Copy the values from a given state to this state
@@ -138,6 +145,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			fgColor = state.fgColor;
 			bgColor = state.bgColor;
 			XorMode = state.XorMode;
+            alpha = state.alpha;
 		}
 	}
 
@@ -268,7 +276,10 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		currentState.clipY = appliedState.clipY = relativeClipRegion.y;
 		currentState.clipW = appliedState.clipW = relativeClipRegion.width;
 		currentState.clipH = appliedState.clipH = relativeClipRegion.height;
-	}
+
+        currentState.alpha = appliedState.alpha = getAlpha();
+
+    }
 
 	/**
 	 * Verifies that the applied state is up to date with the current state and updates
@@ -299,6 +310,12 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 				currentState.clipW + 2,
 				currentState.clipH + 2);
 		}
+        
+        if( appliedState.alpha != currentState.alpha ) {
+            appliedState.alpha = currentState.alpha;
+            
+            setAlpha(currentState.alpha);
+        }
 	}
 
 	/*
@@ -826,6 +843,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		relativeClipRegion.height = state.clipH;
 		
 		currentState.font = state.font;
+        currentState.alpha = state.alpha;
+
 	}
 
 	/*
@@ -950,7 +969,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 * feature is rarely used, the dash pattern may not be preserved when calling
 	 * {@link #pushState()} and {@link #popState()}.
 	 * @param dash the pixel pattern
-	 * @since 3.1
+	 * 
 	 */
 	public void setLineDash(int dash[]) {
 		float dashFlt[] = new float[dash.length];
@@ -1184,6 +1203,22 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
         }
         else if (value == SWT.OFF) {
             getGraphics2D().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        }
+    }
+
+    public int getAlpha() {
+        return swtGraphics.getAlpha();
+    }
+
+    public void setAlpha(int alpha) {
+        swtGraphics.setAlpha(alpha);
+        currentState.alpha = alpha;
+        
+        Composite composite = getGraphics2D().getComposite();
+        if (composite instanceof AlphaComposite) {
+            AlphaComposite newComposite = AlphaComposite.getInstance(
+                ((AlphaComposite) composite).getRule(), (float) alpha / (float) 255);
+            getGraphics2D().setComposite(newComposite);
         }
     }
 

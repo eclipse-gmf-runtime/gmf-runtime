@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005,  IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -628,9 +629,6 @@ implements NotificationListener {
 		EObject semanticHost = getSemanticHost();
 		if ( semanticHost != null && !isActive() ) {
 			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
-			
-			// listen to persisted children to eliminate duplicate views.
-			addListenerFilter(SEMANTIC_FILTER_ID, this, semanticHost);
 			// add listener to host view (handle case when user changes "visibility" property)
 			addListenerFilter("NotationListener_Visibility", //$NON-NLS-1$
 							  this,
@@ -665,6 +663,11 @@ implements NotificationListener {
 	 * @return <tt>true</tt>
 	 */
 	public boolean isEnabled() {
+        // if the editing domain is null then there is no point in enabling the edit policy
+        // the editing domain could be null because the view is detached or if the host is detached
+        if ( TransactionUtil.getEditingDomain((EObject)getHost().getModel())==null){
+            return false;
+        }
 		DrawerStyle dstyle = (DrawerStyle) ((View)host().getModel()).getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
 		boolean isCollapsed = dstyle == null ? false : dstyle.isCollapsed();
 		

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,7 +94,7 @@ public abstract class ListCompartmentEditPart
 	 * in their natural ordering and size use getBaseModelChildren();
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
-	protected final List getModelChildren() {
+	protected List getModelChildren() {
 		List sortedFilteredChildren = new ArrayList(getSortedChildren());
 		sortedFilteredChildren.removeAll(getFilteredChildren());
 		return sortedFilteredChildren;
@@ -141,7 +141,10 @@ public abstract class ListCompartmentEditPart
 			if (!modeAutomatic() && listening) { // stop listening...
 				removeSemanticChildrenListeners();
 			}
-		} else {
+		} else if  (event.getEventType() == EventType.UNRESOLVE 
+                && event.getNotifier() == ((View)getModel()).getElement()){
+            handleMajorSemanticChange();
+        }  else {
 			super.handleNotificationEvent(event);
 		}
 		
@@ -274,7 +277,10 @@ public abstract class ListCompartmentEditPart
 					Iterator i = filteredChildren.iterator();
 					while(i.hasNext()) {
 						EObject eObject = (EObject) i.next();
-						filteredViews.add(getModelChildByID(eObject));
+                        View modelChild = getModelChildByID(eObject);
+                        if (modelChild != null) {
+                            filteredViews.add(modelChild);
+                        }
 					}
 					return filteredViews;	
 				
@@ -313,13 +319,14 @@ public abstract class ListCompartmentEditPart
 	 * @return the view or null if not found
 	 */
 	protected View getModelChildByID(EObject eObject) {
-		for (int i = 0; i < super.getModelChildren().size(); i++) {
-			View view = (View)super.getModelChildren().get(i);
-			EObject e = ViewUtil.resolveSemanticElement(view);
-			if (eObject.equals(e))
-				return view;
-		}
-		return null;
+        List modelChildren = super.getModelChildren();
+        for (int i = 0; i < modelChildren.size(); i++) {
+            View view = (View) modelChildren.get(i);
+            EObject e = ViewUtil.resolveSemanticElement(view);
+            if (eObject.equals(e))
+                return view;
+        }
+        return null;
 	}
 	
 	/**

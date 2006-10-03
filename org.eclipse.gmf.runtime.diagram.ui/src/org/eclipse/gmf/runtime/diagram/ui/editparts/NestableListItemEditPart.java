@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,11 +59,11 @@ public class NestableListItemEditPart
 		super(view);
 
 		setFlag(IS_RESIZABLE_FLAG, false);
-		Object model = getModel();
+		Object model = basicGetModel();
 		if (model instanceof Node) {
 			Node node = (Node) model;
-			Style style = node.getStyle(NotationPackage.eINSTANCE
-				.getDrawerStyle());
+			Style style = node.getStyle(NotationPackage.Literals
+				.DRAWER_STYLE);
 			if (style != null)
 				setFlag(IS_RESIZABLE_FLAG, true);
 		}
@@ -100,9 +100,9 @@ public class NestableListItemEditPart
 	 * compartment.
 	 */
 	protected IFigure createFigure() {
-
 		if (isResizable()) {
-			ResizableCompartmentFigure compartmentFigure = new NestedResizableCompartmentFigure(getMapMode());
+            IMapMode mm = getMapMode();
+			ResizableCompartmentFigure compartmentFigure = new NestedResizableCompartmentFigure(mm);
 			ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 			layout.setStretchMajorAxis(false);
 			layout.setStretchMinorAxis(false);
@@ -114,15 +114,16 @@ public class NestableListItemEditPart
 			// if the compartment is resizeable then we need to put a border
 			// around the text compartment so that we have enough room for the
 			// collpase handle.
-			IMapMode mm = getMapMode();
+			
 			int one = mm.DPtoLP(1);
+            int half_15 = mm.DPtoLP(15) / 2;
 
 			// indent to make room for collapse handle for each nested list item
 			compartmentFigure.getTextPane().setBorder(
-				new MarginBorder(one, mm.DPtoLP(15) / 2, one, mm.DPtoLP(15) / 2));
+				new MarginBorder(one, half_15, one, half_15));
 			// indent for visual appearance
 			compartmentFigure.getContentPane().setBorder(
-				new MarginBorder(one, mm.DPtoLP(15), one, mm.DPtoLP(15) / 2));
+				new MarginBorder(one, mm.DPtoLP(15), one, half_15));
 
 			WrapLabel label = getLabel();
 			label.setLabelAlignment(PositionConstants.LEFT);
@@ -228,11 +229,11 @@ public class NestableListItemEditPart
 	 */
 	protected void handleNotificationEvent(Notification evt) {
 		Object feature = evt.getFeature();
-		if (NotationPackage.eINSTANCE.getRatio_Value().equals(feature)
+		if (NotationPackage.Literals.RATIO__VALUE.equals(feature)
 			|| evt.getOldValue() instanceof Ratio
 			|| evt.getNewValue() instanceof Ratio)
 			refreshRatio();
-		else if (NotationPackage.eINSTANCE.getDrawerStyle_Collapsed().equals(
+		else if (NotationPackage.Literals.DRAWER_STYLE__COLLAPSED.equals(
 			feature)) {
 			setCollapsed(((Boolean) evt.getNewValue()).booleanValue(), true);
 			this.getFigure().revalidate();
@@ -247,7 +248,7 @@ public class NestableListItemEditPart
 		if (ViewUtil
 			.isPropertySupported((View) getModel(), Properties.ID_RATIO))
 			setRatio((Double) ViewUtil.getStructuralFeatureValue(
-				(View) getModel(), NotationPackage.eINSTANCE.getRatio_Value()));
+				(View) getModel(), NotationPackage.Literals.RATIO__VALUE));
 		else
 			setRatio(new Double(-1));
 	}
@@ -257,7 +258,7 @@ public class NestableListItemEditPart
 	 */
 	protected void refreshCollapsed() {
 		DrawerStyle style = (DrawerStyle) ((View) getModel())
-			.getStyle(NotationPackage.eINSTANCE.getDrawerStyle());
+			.getStyle(NotationPackage.Literals.DRAWER_STYLE);
 		if (style != null)
 			setCollapsed(style.isCollapsed(), false);
 	}

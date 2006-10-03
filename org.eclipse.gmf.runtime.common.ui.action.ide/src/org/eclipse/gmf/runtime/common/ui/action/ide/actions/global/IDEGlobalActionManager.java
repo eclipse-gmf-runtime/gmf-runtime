@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.ide.global.IDEGlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 
 
 /**
@@ -104,7 +105,7 @@ public class IDEGlobalActionManager extends GlobalActionManager {
 	 * 
 	 * @return GlobalAction
 	 */
-	public GlobalAction createActionHandler(IWorkbenchPart part, String id) {
+	public GlobalAction createActionHandler(final IWorkbenchPart part, String id) {
 		GlobalAction action = null;
 
 		if (id.equals(IDEGlobalActionId.BOOKMARK))
@@ -116,9 +117,17 @@ public class IDEGlobalActionManager extends GlobalActionManager {
 		else
 			action = globalActionManager.createActionHandler(part, id);
 
-		// this initialization should be moved to the client to call
-		if (action != null)
+		if (action != null) {
+			// this initialization should be moved to the client to call
 			action.init();
+			
+			// the action will only refresh on selection changes in the specified part
+			action.setPartSelector(new IPartSelector() {
+				public boolean selects(IWorkbenchPart p) {
+					return part == p;
+				}
+			});
+		}
 		return action;
 	}
 	

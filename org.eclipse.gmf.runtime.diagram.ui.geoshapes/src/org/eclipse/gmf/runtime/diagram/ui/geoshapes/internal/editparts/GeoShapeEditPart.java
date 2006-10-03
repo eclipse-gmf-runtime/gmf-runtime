@@ -12,6 +12,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -25,8 +26,13 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ViewComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeConstants;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NonSemanticEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 
 /**
  * This is a base class for all Geometric Shapes
@@ -102,4 +108,27 @@ public abstract class GeoShapeEditPart extends ShapeNodeEditPart {
 	public EditPart getPrimaryChildEditPart(){
 		return getChildBySemanticHint(CommonParserHint.DESCRIPTION);
 	}
+    
+    public Object getPreferredValue(EStructuralFeature feature) {
+        Object preferenceStore = getDiagramPreferencesHint()
+            .getPreferenceStore();
+        if (preferenceStore instanceof IPreferenceStore) {
+            if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
+
+                return FigureUtilities.RGBToInteger(PreferenceConverter
+                    .getColor((IPreferenceStore) preferenceStore,
+                        IPreferenceConstants.PREF_NOTE_LINE_COLOR));
+
+            } else if (feature == NotationPackage.eINSTANCE
+                .getFillStyle_FillColor()) {
+
+                return FigureUtilities.RGBToInteger(PreferenceConverter
+                    .getColor((IPreferenceStore) preferenceStore,
+                        IPreferenceConstants.PREF_NOTE_FILL_COLOR));
+
+            }
+        }
+
+        return super.getPreferredValue(feature);
+    } 
 }

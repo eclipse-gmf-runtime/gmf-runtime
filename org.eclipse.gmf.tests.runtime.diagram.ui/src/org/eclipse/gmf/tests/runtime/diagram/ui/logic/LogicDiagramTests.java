@@ -46,6 +46,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.ContainerElement;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.LED;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanticType;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
@@ -232,17 +233,15 @@ public class LogicDiagramTests
 		throws Exception {
 
 		getTestFixture().openDiagram();
-
+		
+		LEDEditPart editPartToDelete = (LEDEditPart) getLogicTestFixture()
+				.createShapeUsingTool(LogicSemanticType.LED, new Point(0,0),
+						getDiagramEditPart());
+		
 		List primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
-		int initialCount = primaryEditParts.size();
-
-		if (initialCount < 1) {
-			fail("Test requires at least one edit part on the diagram"); //$NON-NLS-1$
-		}
-
-		// Get the element to be deleted.
-		IGraphicalEditPart editPartToDelete = (IGraphicalEditPart) primaryEditParts
-			.get(0);
+		
+		assertTrue(primaryEditParts.contains(editPartToDelete));
+		
 		EObject semanticElement = (EObject) editPartToDelete
 			.getAdapter(EObject.class);
 		EObject semanticContainer = semanticElement.eContainer();
@@ -274,9 +273,6 @@ public class LogicDiagramTests
 		// Verify that the edit part and the semantic element have been deleted.
 		primaryEditParts = getDiagramEditPart().getPrimaryEditParts();
 
-		assertTrue(
-			"Size of primary edit parts should have decreased.", primaryEditParts.size() < initialCount); //$NON-NLS-1$
-		
 		assertFalse(
 			"Primary edit part not deleted.", primaryEditParts.contains(editPartToDelete)); //$NON-NLS-1$
 

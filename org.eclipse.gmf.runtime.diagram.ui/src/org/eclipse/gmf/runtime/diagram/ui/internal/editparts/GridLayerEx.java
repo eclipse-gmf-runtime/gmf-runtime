@@ -50,9 +50,7 @@ public class GridLayerEx
 	 * @see org.eclipse.gef.editparts.GridLayer#paintGrid(org.eclipse.draw2d.Graphics)
 	 */
 	protected void paintGrid(Graphics g) {
-		g.setLineStyle(lineStyle);
-		if ((dashes != null) && (lineStyle == SWT.LINE_CUSTOM)) g.setLineDash(dashes);		
-		FigureUtilities.paintGrid(g, this, origin, gridX, gridY);
+		FigureUtilities.paintGridWithStyle(g, this, origin, gridX, gridY, lineStyle, dashes);
 	}
 
 	
@@ -66,3 +64,4 @@ public class GridLayerEx
 
 	
 }
+

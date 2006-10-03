@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
@@ -36,6 +37,7 @@ import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -83,6 +85,31 @@ public abstract class ShapeCompartmentEditPart
 	private boolean _refreshQueued = false;
 
 	private boolean isSupportingViewActions = false;
+    
+    // Listen to editparts being added to or removed from this compartment
+    // editpart so that when a figure moves within the compartment we can call
+    // refreshConnections(). See bugzilla#146581.
+    private EditPartListener editpartListener = new EditPartListener.Stub() {
+
+        private FigureListener childFigureListener = new FigureListener() {
+
+            public void figureMoved(IFigure source) {
+                refreshConnections();
+            }
+        };
+
+        public void childAdded(EditPart child, int index) {
+            ((GraphicalEditPart) child).getFigure().addFigureListener(
+                childFigureListener);
+        }
+
+        public void removingChild(EditPart child, int index) {
+            ((GraphicalEditPart) child).getFigure().removeFigureListener(
+                childFigureListener);
+
+        }
+
+    };
 
 	/**
 	 * Class used to refresh the connections associated to the shape
@@ -102,7 +129,6 @@ public abstract class ShapeCompartmentEditPart
 		 *            edit part to consider
 		 */
 		protected void refreshConnections(ShapeCompartmentEditPart scep) {
-
 			Iterator connectionNodes = getConnectionNodes(scep).iterator();
 			while (connectionNodes.hasNext()) {
 				ConnectionNodeEditPart cep = (ConnectionNodeEditPart) connectionNodes
@@ -131,6 +157,8 @@ public abstract class ShapeCompartmentEditPart
 					.get(diagram);
 				IFigure stopFigure = dep == null ? null
 					: dep.getContentPane();
+                boolean noSource = false;
+                boolean noTarget = false;
 
 				//
 				// if sContainer is null, then the source connection is a child
@@ -139,6 +167,7 @@ public abstract class ShapeCompartmentEditPart
 				if (sContainer != null) {
 					ShapeCompartmentFigure fig = sContainer
 						.getShapeCompartmentFigure();
+                    noSource  = !fig.isVisible();
 					sfVisible = isFigureVisible(fig, sLoc, stopFigure);
 					if (!sfVisible) {
 						sfVisible = isBorderItem(sContainer, source);
@@ -151,16 +180,49 @@ public abstract class ShapeCompartmentEditPart
 				if (tContainer != null) {
 					ShapeCompartmentFigure fig = tContainer
 						.getShapeCompartmentFigure();
-					tfVisible = isFigureVisible(fig, tLoc, stopFigure);
+                    noTarget = !fig.isVisible();
+                    tfVisible = isFigureVisible(fig, tLoc, stopFigure);
 					if (!tfVisible) {
 						tfVisible = isBorderItem(tContainer, target);
 					}
 				}
 				// set connection visibility true iff both anchor points are
-				// visible
-				connection.setVisible(sfVisible && tfVisible);
+                // visible
+                if (noSource || noTarget){
+                  if (noSource && cep.getTarget()!=null)
+                      cep.getTarget().refresh();
+                  if (noTarget && cep.getSource()!=null)
+                        cep.getSource().refresh();
+                }else{
+                    connection.setVisible(sfVisible && tfVisible);
+                    refreshConnectionEnds(cep);
+                }
 			}
 		}
+        
+        private void refreshConnectionEnds(ConnectionEditPart cEP){
+            EditPart srcEditPart = cEP.getSource();
+            EditPart trgEditPart = cEP.getTarget();
+            Object model = cEP.getModel();
+            if (model instanceof Edge){
+                Edge edge = (Edge)model;
+                View source = edge.getSource();
+                View target = edge.getTarget();
+                if (srcEditPart==null){
+                    refreshEditPart(cEP.getViewer(), source);
+                }
+                if (trgEditPart==null){
+                    refreshEditPart(cEP.getViewer(), target);
+                }
+            }
+        }
+
+        private void refreshEditPart(EditPartViewer  viewer, View view) {
+            EditPart ep = (EditPart)viewer.getEditPartRegistry().get(view);
+            if (ep!=null){
+                ep.refresh();
+            }
+        }
 
 		/**
 		 * Return the set of {@link ConnectionNodeEditPart}s contained in the
@@ -503,22 +565,31 @@ public abstract class ShapeCompartmentEditPart
 			Display.getDefault().asyncExec(new Runnable() {
 
 				public void run() {
-					try {
-						//
-						// test if active since the editpartg may have been
-						// deleted
-						// by the time this method is executed.
-						if (ShapeCompartmentEditPart.this.isActive()) {
-							getConnectionRefreshMgr().refreshConnections(
-								ShapeCompartmentEditPart.this);
-						}
-					} finally {
-						ShapeCompartmentEditPart.this._refreshQueued = false;
-					}
+					forceRefreshConnections();
 				}
 			});
 		}
 	}
+    
+    /**
+     * Refresh the connections associated the the children of this shape
+     * compartment.
+     */
+    protected void forceRefreshConnections() {
+      try {
+            //
+            // test if active since the editpartg may have been
+            // deleted
+            // by the time this method is executed.
+            if (ShapeCompartmentEditPart.this.isActive()) {
+                getConnectionRefreshMgr().refreshConnections(
+                    ShapeCompartmentEditPart.this);
+            }
+        } finally {
+            ShapeCompartmentEditPart.this._refreshQueued = false;
+        }
+        
+    }
 
 	/** Unregisters this instance as a PropertyChangeListener on its figure. */
 	protected void unregister() {
@@ -623,7 +694,11 @@ public abstract class ShapeCompartmentEditPart
 	/** Also calls {@link #refreshConnections()}. */
 	protected void refreshVisibility() {
 		super.refreshVisibility();
-		refreshConnections();
+        View view  = getNotationView();
+        if (view !=null && !view.isVisible())
+            forceRefreshConnections();
+        else
+            refreshConnections();
 	}
 
 	/*
@@ -705,5 +780,15 @@ public abstract class ShapeCompartmentEditPart
 			getBorderItemEditParts(child, retval);
 		}
 	}
+    
+    public void addNotify() {
+        addEditPartListener(editpartListener);
+        super.addNotify();
+    }
+
+    public void removeNotify() {
+        removeEditPartListener(editpartListener);
+        super.removeNotify();
+    }
 
 }

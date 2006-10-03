@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,17 +77,15 @@ public class DestroyReferenceCommand
 
 		for (Iterator i = features.iterator(); i.hasNext();) {
 			EReference nextReference = (EReference) i.next();
-
-			if (FeatureMapUtil.isMany(getContainer(), nextReference)) {
-				Collection referenceCollection = (Collection) getContainer()
-					.eGet(nextReference);
-
-				if (referenceCollection.contains(getReferencedObject())) {
+			if (nextReference.isChangeable() && !nextReference.isDerived()
+				&& getContainer().eIsSet(nextReference)) {
+				if (FeatureMapUtil.isMany(getContainer(), nextReference)) {
+					Collection referenceCollection = (Collection) getContainer()
+						.eGet(nextReference);
 					referenceCollection.remove(getReferencedObject());
+				} else if (getContainer().eGet(nextReference) == getReferencedObject()) {
+					getContainer().eSet(nextReference, null);
 				}
-
-			} else if (getContainer().eGet(nextReference) == getReferencedObject()) {
-				getContainer().eSet(nextReference, null);
 			}
 		}
 		return CommandResult.newOKCommandResult();

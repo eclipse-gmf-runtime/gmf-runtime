@@ -13,6 +13,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
 import java.text.ParseException;
+import java.text.ParsePosition;
 
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
@@ -63,11 +64,20 @@ public class RulerGridPreferencePage
 				return false;
 			
 			try {
-				NumberFormat numberFormatter = NumberFormat.getInstance();				
-				Double pageHeight = forceDouble(numberFormatter.parse(text.getText()));
+				NumberFormat numberFormatter = NumberFormat.getInstance();
+				ParsePosition parsePosition = new ParsePosition(0);
+				Number parsedNumber = numberFormatter.parse(text.getText(), parsePosition);
+				
+				if (parsedNumber == null) {
+					showErrorMessage();
+					return false;
+				}
+				
+				Double pageHeight = forceDouble(parsedNumber);
 				double number = pageHeight.doubleValue();
 				number = convertToBase(number);
-				if (number >= minValidValue && number <= maxValidValue) {
+				if (number >= minValidValue && number <= maxValidValue 
+						&& parsePosition.getIndex() == text.getText().length()) {
 					clearErrorMessage();
 					return true;
 				} else {
@@ -75,8 +85,6 @@ public class RulerGridPreferencePage
 					return false;
 				}
 			} catch (NumberFormatException e1) {
-				showErrorMessage();
-			} catch (ParseException e2) {
 				showErrorMessage();
 			}
 

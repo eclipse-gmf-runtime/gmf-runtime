@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -103,7 +104,11 @@ public class AbstractProviderConfiguration {
 	 * A map to store previously failed class lookups.
 	 */
 	private static Map isNotAssignableTable = new HashMap();
-	
+    
+    /**
+     * A map to hold the bundle to exception list
+     */
+    private static Map bundleToExceptionsSetMap = new HashMap();	
 	/**
 	 * a map of classes that get asked for methods they do not contain, by
 	 * the provider, the map is a class to a Set of method signatures
@@ -396,6 +401,8 @@ public class AbstractProviderConfiguration {
 	 * name and its formal parameters.
 	 */
 	private static class MethodDescriptor {
+        
+        protected String dataForIntialize = NULL;
 		
 		/**
 		 * The method call.
@@ -462,72 +469,87 @@ public class AbstractProviderConfiguration {
 		 *            the method invocation string
 		 */
 		public MethodDescriptor(String string) {
-			// set method name
-			string = parseName(string.trim());
-			// set method parameters
-			string = parseParameterList(string.trim());
-
-			// fill the parameter objects and types arrays
-			if (parameters != null && !parameters.isEmpty()) {
-				Collections.reverse(parameters);
-				parameterObjects = parameters.toArray();
-				parameterTypes = new Class[parameterObjects.length];
-				for (int i = 0; i < parameterObjects.length; i++) {
-					String p = (String) parameterObjects[i];
-					int objIndex = p.indexOf("[object]"); //$NON-NLS-1$
-					boolean isObject = objIndex >= 0;
-					int parseAsIndex = p.indexOf(":::"); //$NON-NLS-1$
-					try {
-						if (isObject && (parseAsIndex >= 0))
-							// assume order: [object] before type:::param
-							assert (objIndex < parseAsIndex);
-						if (parseAsIndex >= 0) {
-							// "type:::param"
-							String parseAs =
-								p.substring((isObject ? 8 : 0), parseAsIndex);
-							String value =
-								p.substring(parseAsIndex + 3, p.length());
-							if (parseAs.equalsIgnoreCase("int")) { //$NON-NLS-1$
-								parameterTypes[i] = Integer.class;
-								parameterObjects[i] = Integer.decode(value);
-							} else if (parseAs.equalsIgnoreCase("bool")) { //$NON-NLS-1$
-								parameterTypes[i] = Boolean.class;
-								parameterObjects[i] = Boolean.valueOf(value);
-							} else if (parseAs.equalsIgnoreCase("double")) { //$NON-NLS-1$
-								parameterTypes[i] = Double.class;
-								parameterObjects[i] = Double.valueOf(value);
-							}
-							// if [object] present, set type to Object
-							if (isObject)
-								parameterTypes[i] = Object.class;
-						} else if (isObject) { // "[object]param"
-							String value = p.substring(8, p.length());
-							parameterTypes[i] = Object.class;
-							parameterObjects[i] = value;
-						} else // "param"
-							parameterTypes[i] = String.class;
-					} catch (Exception e) {
-						String value =
-							p.substring(
-								((parseAsIndex >= 0) ? parseAsIndex + 3 : 0),
-								p.length());
-						parameterObjects[i] = value;
-						parameterTypes[i] = String.class;
-					}
-				}
-			}
-			parameters = null;
-
-			// set method parameters
-			if (string.length() != 0) {
-				if (string.charAt(0) != '.')
-					throw new IllegalArgumentException();
-				next = new MethodDescriptor(string.substring(1).trim());
-			}
-			
-		 if (this.name != null)
-				name = name.intern();
+            dataForIntialize = string;
 		}
+        
+        protected boolean isInitialized(){
+            return (dataForIntialize==null);
+        }
+
+        protected void initialize() {
+            //check if already initialized
+            if (isInitialized())
+                return;
+            try {
+                // set method name
+                dataForIntialize = parseName(dataForIntialize.trim());
+    			// set method parameters
+                dataForIntialize = parseParameterList(dataForIntialize.trim());
+    
+    			// fill the parameter objects and types arrays
+    			if (parameters != null && !parameters.isEmpty()) {
+    				Collections.reverse(parameters);
+    				parameterObjects = parameters.toArray();
+    				parameterTypes = new Class[parameterObjects.length];
+    				for (int i = 0; i < parameterObjects.length; i++) {
+    					String p = (String) parameterObjects[i];
+    					int objIndex = p.indexOf("[object]"); //$NON-NLS-1$
+    					boolean isObject = objIndex >= 0;
+    					int parseAsIndex = p.indexOf(":::"); //$NON-NLS-1$
+    					try {
+    						if (isObject && (parseAsIndex >= 0))
+    							// assume order: [object] before type:::param
+    							assert (objIndex < parseAsIndex);
+    						if (parseAsIndex >= 0) {
+    							// "type:::param"
+    							String parseAs =
+    								p.substring((isObject ? 8 : 0), parseAsIndex);
+    							String value =
+    								p.substring(parseAsIndex + 3, p.length());
+    							if (parseAs.equalsIgnoreCase("int")) { //$NON-NLS-1$
+    								parameterTypes[i] = Integer.class;
+    								parameterObjects[i] = Integer.decode(value);
+    							} else if (parseAs.equalsIgnoreCase("bool")) { //$NON-NLS-1$
+    								parameterTypes[i] = Boolean.class;
+    								parameterObjects[i] = Boolean.valueOf(value);
+    							} else if (parseAs.equalsIgnoreCase("double")) { //$NON-NLS-1$
+    								parameterTypes[i] = Double.class;
+    								parameterObjects[i] = Double.valueOf(value);
+    							}
+    							// if [object] present, set type to Object
+    							if (isObject)
+    								parameterTypes[i] = Object.class;
+    						} else if (isObject) { // "[object]param"
+    							String value = p.substring(8, p.length());
+    							parameterTypes[i] = Object.class;
+    							parameterObjects[i] = value;
+    						} else // "param"
+    							parameterTypes[i] = String.class;
+    					} catch (Exception e) {
+    						String value =
+    							p.substring(
+    								((parseAsIndex >= 0) ? parseAsIndex + 3 : 0),
+    								p.length());
+    						parameterObjects[i] = value;
+    						parameterTypes[i] = String.class;
+    					}
+    				}
+    			}
+    			parameters = null;
+    
+    			// set method parameters
+    			if (dataForIntialize.length() != 0) {
+    				if (dataForIntialize.charAt(0) != '.')
+    					throw new IllegalArgumentException();
+    				next = new MethodDescriptor(dataForIntialize.substring(1).trim());
+    			}
+    			
+    		 if (this.name != null)
+    				name = name.intern();
+            }finally{
+                dataForIntialize = null;
+            }
+        }
 
 		/**
 		 * Parses and returns the method name in a method invocation string.
@@ -718,6 +740,7 @@ public class AbstractProviderConfiguration {
 
 	
 	private static class StaticMethodDescriptor extends MethodDescriptor {
+        
 		/**
 		 * the plugin Name
 		 */
@@ -753,84 +776,95 @@ public class AbstractProviderConfiguration {
 		 *            the method invocation string
 		 */
 		public StaticMethodDescriptor(String string) {
-			// set plugin ID
-			string = parsePluginID(string.trim());
-			// set class Name 
-			string = parseClassName(string.trim());
-			// set method name
-			string = parseName(string.trim());
-			// set method parameters
-			string = parseParameterList(string.trim());
-
-			List parameters = getParamtersList();
-			
-			// fill the parameter objects and types arrays
-			if (parameters != null && !parameters.isEmpty()) {
-				Collections.reverse(parameters);
-				Object[] parameterObjects = parameters.toArray();
-				Class[] parameterTypes = new Class[parameterObjects.length];
-				for (int i = 0; i < parameterObjects.length; i++) {
-					String p = (String) parameterObjects[i];
-					int objIndex = p.indexOf("[object]"); //$NON-NLS-1$
-					boolean isObject = objIndex >= 0;
-					int parseAsIndex = p.indexOf(":::"); //$NON-NLS-1$
-					try {
-						if (isObject && (parseAsIndex >= 0))
-							// assume order: [object] before type:::param
-							assert (objIndex < parseAsIndex);
-						if (parseAsIndex >= 0) {
-							// "type:::param"
-							String parseAs =
-								p.substring((isObject ? 8 : 0), parseAsIndex);
-							String value =
-								p.substring(parseAsIndex + 3, p.length());
-							if (parseAs.equalsIgnoreCase("int")) { //$NON-NLS-1$
-								parameterTypes[i] = Integer.class;
-								parameterObjects[i] = Integer.decode(value);
-							} else if (parseAs.equalsIgnoreCase("bool")) { //$NON-NLS-1$
-								parameterTypes[i] = Boolean.class;
-								parameterObjects[i] = Boolean.valueOf(value);
-							} else if (parseAs.equalsIgnoreCase("double")) { //$NON-NLS-1$
-								parameterTypes[i] = Double.class;
-								parameterObjects[i] = Double.valueOf(value);
-							}
-							// if [object] present, set type to Object
-							if (isObject)
-								parameterTypes[i] = Object.class;
-						} else if (isObject) { // "[object]param"
-							String value = p.substring(8, p.length());
-							parameterTypes[i] = Object.class;
-							parameterObjects[i] = value;
-						} else if (p.startsWith(contextParam)){// "param" 
-							parameterTypes[i] = getParameterType(p);
-							parameterObjects[i] = "%Context"; //$NON-NLS-1$
-						}
-						else
-							parameterTypes[i] = String.class;
-					} catch (Exception e) {
-						String value =
-							p.substring(
-								((parseAsIndex >= 0) ? parseAsIndex + 3 : 0),
-								p.length());
-						parameterObjects[i] = value;
-						parameterTypes[i] = String.class;
-					}
-				}
-				setParameters(parameterObjects);
-				setParameterTypes(parameterTypes);
-			}
-			parameters = null;
-
-			// set method parameters
-			if (string.length() != 0) {
-				if (string.charAt(0) != '.')
-					throw new IllegalArgumentException();
-				setNext(new MethodDescriptor(string.substring(1).trim()));
-			}
-			
-		 if (getName() != null)
-				setName(getName().intern());
+            dataForIntialize = string;
 		}
+        
+        public void initialize() {
+            // check if already initialized
+            if (isInitialized())
+                return;
+            try {
+                // set plugin ID
+                dataForIntialize = parsePluginID(dataForIntialize.trim());
+    			// set class Name 
+                dataForIntialize = parseClassName(dataForIntialize.trim());
+    			// set method name
+                dataForIntialize = parseName(dataForIntialize.trim());
+    			// set method parameters
+                dataForIntialize = parseParameterList(dataForIntialize.trim());
+    
+    			List parameters = getParamtersList();
+    			
+    			// fill the parameter objects and types arrays
+    			if (parameters != null && !parameters.isEmpty()) {
+    				Collections.reverse(parameters);
+    				Object[] parameterObjects = parameters.toArray();
+    				Class[] parameterTypes = new Class[parameterObjects.length];
+    				for (int i = 0; i < parameterObjects.length; i++) {
+    					String p = (String) parameterObjects[i];
+    					int objIndex = p.indexOf("[object]"); //$NON-NLS-1$
+    					boolean isObject = objIndex >= 0;
+    					int parseAsIndex = p.indexOf(":::"); //$NON-NLS-1$
+    					try {
+    						if (isObject && (parseAsIndex >= 0))
+    							// assume order: [object] before type:::param
+    							assert (objIndex < parseAsIndex);
+    						if (parseAsIndex >= 0) {
+    							// "type:::param"
+    							String parseAs =
+    								p.substring((isObject ? 8 : 0), parseAsIndex);
+    							String value =
+    								p.substring(parseAsIndex + 3, p.length());
+    							if (parseAs.equalsIgnoreCase("int")) { //$NON-NLS-1$
+    								parameterTypes[i] = Integer.class;
+    								parameterObjects[i] = Integer.decode(value);
+    							} else if (parseAs.equalsIgnoreCase("bool")) { //$NON-NLS-1$
+    								parameterTypes[i] = Boolean.class;
+    								parameterObjects[i] = Boolean.valueOf(value);
+    							} else if (parseAs.equalsIgnoreCase("double")) { //$NON-NLS-1$
+    								parameterTypes[i] = Double.class;
+    								parameterObjects[i] = Double.valueOf(value);
+    							}
+    							// if [object] present, set type to Object
+    							if (isObject)
+    								parameterTypes[i] = Object.class;
+    						} else if (isObject) { // "[object]param"
+    							String value = p.substring(8, p.length());
+    							parameterTypes[i] = Object.class;
+    							parameterObjects[i] = value;
+    						} else if (p.startsWith(contextParam)){// "param" 
+    							parameterTypes[i] = getParameterType(p);
+    							parameterObjects[i] = "%Context"; //$NON-NLS-1$
+    						}
+    						else
+    							parameterTypes[i] = String.class;
+    					} catch (Exception e) {
+    						String value =
+    							p.substring(
+    								((parseAsIndex >= 0) ? parseAsIndex + 3 : 0),
+    								p.length());
+    						parameterObjects[i] = value;
+    						parameterTypes[i] = String.class;
+    					}
+    				}
+    				setParameters(parameterObjects);
+    				setParameterTypes(parameterTypes);
+    			}
+    			parameters = null;
+    
+    			// set method parameters
+    			if (dataForIntialize.length() != 0) {
+    				if (dataForIntialize.charAt(0) != '.')
+    					throw new IllegalArgumentException();
+    				setNext(new MethodDescriptor(dataForIntialize.substring(1).trim()));
+    			}
+    			
+    		 if (getName() != null)
+    				setName(getName().intern());
+            }finally{
+                dataForIntialize = null;
+            }
+        }
 
 		
 		/**
@@ -1173,10 +1207,19 @@ public class AbstractProviderConfiguration {
 				successLookupTable.remove(keyString);
 			if (!failureLookupTable.contains(keyString)) {
 				try {
-					Bundle bundle = getPluginBundle(pluginId);
+					Bundle bundle = basicGetPluginBundle(pluginId);
 					if (bundle!=null){
-						found = bundle.loadClass(className);
-						successLookupTable.put(keyString, new WeakReference(found));
+                        // never load the class if the bundle is not active other wise
+                        // we will cause the plugin to load
+                        // unless the class is in the exception list
+                        int state = bundle.getState();
+                        if ( state == org.osgi.framework.Bundle.ACTIVE || isInExceptionList(bundle,className)){
+    						found = bundle.loadClass(className);
+    						successLookupTable.put(keyString, new WeakReference(found));
+                            if (state == org.osgi.framework.Bundle.ACTIVE){
+                                bundleToExceptionsSetMap.remove(bundle);
+                            }
+                        }
 					}else{
 						failureLookupTable.add(keyString);
 					}
@@ -1189,7 +1232,42 @@ public class AbstractProviderConfiguration {
 	}
 	
 	
-	/**
+	private static boolean isInExceptionList(Bundle bundle, String className) {
+        String packageName = className.substring(0,className.lastIndexOf('.'));
+        Set exceptionSet = (Set)bundleToExceptionsSetMap.get(bundle);
+        if (exceptionSet==null){
+            Dictionary dict = bundle.getHeaders();
+            String value = (String)dict.get("Eclipse-LazyStart"); //$NON-NLS-1$
+            if (value!=null){
+                int index  = value.indexOf("exceptions"); //$NON-NLS-1$
+                if (index!=-1){
+                    try {
+                        int start = value.indexOf('"',index+1);
+                        int end = value.indexOf('"',start+1);
+                        String exceptions = value.substring(start+1,end);
+                        exceptionSet = new HashSet(2);
+                        StringTokenizer tokenizer = new StringTokenizer(exceptions, ","); //$NON-NLS-1$
+                        while (tokenizer.hasMoreTokens()) {
+                            exceptionSet.add(tokenizer.nextToken().trim());
+                        }
+                    }catch(IndexOutOfBoundsException exception){
+                        // this means the MF did not follow the documented format for the exceptions list
+                        // so i'll consider it empty
+                        exceptionSet = Collections.EMPTY_SET;
+                    }
+                    
+                }else{
+                    exceptionSet = Collections.EMPTY_SET;
+                }
+            }else{
+                exceptionSet = Collections.EMPTY_SET;
+            }
+            bundleToExceptionsSetMap.put(bundle, exceptionSet);
+        }
+        return exceptionSet.contains(packageName);
+    }
+
+    /**
 	 * Given a bundle id, it checks if the bundle is found and activated. If it
 	 * is, the method returns the bundle, otherwise it returns <code>null</code>.
 	 * 
@@ -1198,11 +1276,15 @@ public class AbstractProviderConfiguration {
 	 * @return the bundle, if found
 	 */
 	protected static Bundle getPluginBundle(String pluginId) {
-		Bundle bundle = Platform.getBundle(pluginId);
+		Bundle bundle = basicGetPluginBundle(pluginId);
 		if (null != bundle && bundle.getState() == org.osgi.framework.Bundle.ACTIVE)
 			return bundle;
 		return null;
 	}
+    
+    private static Bundle basicGetPluginBundle(String pluginId) {
+        return Platform.getBundle(pluginId);   
+    }
 
 	/**
 	 * Tests if the given class is assignable to the given class name. Optimized
@@ -1332,6 +1414,9 @@ public class AbstractProviderConfiguration {
 		try {
 			if (methodDescriptor == null || object == null)
 				return null;
+            if (!methodDescriptor.isInitialized()){
+                methodDescriptor.initialize();
+            }
 			methodSignature = methodDescriptor.getSignature();
 			clazz = object.getClass();
 			if (passiveClasses.contains(clazz,methodSignature))
@@ -1367,6 +1452,9 @@ public class AbstractProviderConfiguration {
 		try {
 			if (methodDescriptor == null)
 				return null;
+            if (!methodDescriptor.isInitialized()){
+                methodDescriptor.initialize();
+            }
 			
 			Object[] valuesCopy = null;
             if (methodDescriptor.getParameters() != null) {

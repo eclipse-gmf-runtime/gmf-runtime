@@ -343,11 +343,11 @@ public class DestroyElementCommandTest
         jimBobAnnotation = createAnnotation(jimBob);
     }
     
-    protected Client createClient(String firstName, String lastName, Customer customer) {
+    protected Client createClient(String firstName, String lastName, Customer _customer) {
     	Client result = EmployeeFactory.eINSTANCE.createClient();
         result.setFirstName(firstName);
         result.setLastName(lastName);
-        customer.getRepresentatives().add(result);
+        _customer.getRepresentatives().add(result);
         
         return result;
     }
@@ -397,7 +397,7 @@ public class DestroyElementCommandTest
 						.getDeclaredMethod("getElementToDestroy", null); //$NON-NLS-1$
 				getElementToDestroy.setAccessible(true);
 				EObject element = (EObject) getElementToDestroy.invoke(
-						(DestroyElementCommand) cmd, null);
+						cmd, null);
 
 				if (toDestroy.contains(element)) {
 					fail("Duplicate destroy command for: " + element); //$NON-NLS-1$

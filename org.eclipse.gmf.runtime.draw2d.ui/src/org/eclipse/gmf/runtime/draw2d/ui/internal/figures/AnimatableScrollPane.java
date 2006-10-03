@@ -12,8 +12,14 @@
 package org.eclipse.gmf.runtime.draw2d.ui.internal.figures;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Orientable;
+import org.eclipse.draw2d.ScrollBar;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.ListScrollBar;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 
 /**
@@ -119,11 +125,45 @@ public class AnimatableScrollPane extends ScrollPane {
 		
 		for (int i = 0; i < getChildren().size(); i++)
 			((IFigure)getChildren().get(i)).validate();
-		if (getHorizontalScrollBarVisibility()!= NEVER)
+		if ((hBar != null) && getHorizontalScrollBarVisibility()!= NEVER)
 			getHorizontalScrollBar().validate();
-		if (getVerticalScrollBarVisibility()!= NEVER)
+		if ((vBar != null) && getVerticalScrollBarVisibility()!= NEVER)
 			getVerticalScrollBar().validate();
 	}
+    
+    
+    protected void createVerticalScrollBar() {
+        IMapMode mm= MapModeUtil.getMapMode(this);
+        int mm_1 = mm.DPtoLP(1);
+        Insets insets = new Insets(mm_1, mm.DPtoLP(2),
+            mm_1, mm.DPtoLP(0));
+        int mm_15 = mm.DPtoLP(15);
+        Dimension size = new Dimension(mm_15, mm_15);
+        setVerticalScrollBar( new ListScrollBar(Orientable.VERTICAL, insets, size, 
+            mm.DPtoLP(10), mm.DPtoLP(50)));
+    }
+    
+    
+    protected void createHorizontalScrollBar() {
+        IMapMode mm= MapModeUtil.getMapMode(this);
+        int mm_1 = mm.DPtoLP(1);
+        Insets insets = new Insets(mm_1, mm.DPtoLP(2),
+            mm_1, mm.DPtoLP(0));
+        int mm_15 = mm.DPtoLP(15);
+        Dimension size = new Dimension(mm_15, mm_15);
+        setHorizontalScrollBar( new ListScrollBar(Orientable.HORIZONTAL, insets, size, 
+            mm.DPtoLP(10), mm.DPtoLP(50)));
+    }
+    
+    public ScrollBar basicGetVerticalScrollBar() {
+        return vBar;
+    }
+    
+    
+    public ScrollBar basicGetHorizontalScrollBar() {        
+        return hBar;
+    }
+
 
 
 }

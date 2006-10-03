@@ -25,6 +25,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.AccessibleEditPart;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -315,6 +317,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 		}
 		return false;
 	}
+    
 
 	/**
 	 * performas direct edit
@@ -330,7 +333,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	 *  @param eventLocation
 	 */
 	protected void performDirectEdit(Point eventLocation) {
-		if (getManager().getClass() == TextDirectEditManager.class) {			
+		if (getManager().getClass() == TextDirectEditManager.class) {
 			((TextDirectEditManager) getManager()).show(eventLocation.getSWTPoint());
 		}
 	}
@@ -344,12 +347,23 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	private void performDirectEdit(char initialCharacter) {
 		// Run the TextDirectEditManager show with the initial character
 		// This will not send an extra mouse click
-		if (getManager() instanceof TextDirectEditManager) {									
+		if (getManager() instanceof TextDirectEditManager) {
 			((TextDirectEditManager) getManager()).show(initialCharacter);
 		} else {
 			performDirectEdit();
 		}
 	}
+    
+    private void showEditPart(){
+        EditPart parent = getParent();
+        if (parent!=null){
+            EditPartViewer viewer = parent.getViewer();
+            if (viewer!=null){
+                viewer.reveal(this);
+            }
+        }
+    }
+
 	
 	/**
 	 * 
@@ -365,7 +379,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 			getEditingDomain().runExclusive(new Runnable() {
 				public void run() {
 					if (isActive() && isEditable()) {
-
+                        showEditPart();
 						// IF the direct edit request has an initial character...
 						if (theRequest.getExtendedData().get(RequestConstants.REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR) instanceof Character) {							
 							Character initialChar = (Character) theRequest.getExtendedData().get(RequestConstants.REQ_DIRECTEDIT_EXTENDEDDATA_INITIAL_CHAR);
@@ -392,45 +406,49 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 
 	protected void handleNotificationEvent(Notification event) {
 		Object feature = event.getFeature();
-		if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)){
+		if (NotationPackage.eINSTANCE.getFontStyle_FontColor().equals(feature)) {
 			Integer c = (Integer) event.getNewValue();
+
 			setFontColor(DiagramColorRegistry.getInstance().getColor(c));
-		}
+		} 
 		else if (NotationPackage.eINSTANCE.getFontStyle_Underline().equals(feature))
 			refreshUnderline();
 		else if (NotationPackage.eINSTANCE.getFontStyle_StrikeThrough().equals(feature))
 			refreshStrikeThrough();
-        else if (NotationPackage.eINSTANCE.getFontStyle_FontHeight().equals(feature) ||
-                NotationPackage.eINSTANCE.getFontStyle_FontName().equals(feature) ||
-                NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
-                NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
+		else if (NotationPackage.eINSTANCE.getFontStyle_FontHeight().equals(feature) ||
+				NotationPackage.eINSTANCE.getFontStyle_FontName().equals(feature) || 
+				NotationPackage.eINSTANCE.getFontStyle_Bold().equals(feature) ||
+				NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
 			refreshFont();
 		} 
 		else if (isAffectingParserOptions(event)) {
 			refreshParserOptions();
 			refreshLabel();
-		} 
-		else {
-			if (getParser() != null
-				&& getParser().isAffectingEvent(event,
-				getParserOptions().intValue())) {
-			refreshLabel();
-			return;
-			}
-			if (getParser() instanceof ISemanticParser) {
-				ISemanticParser modelParser = (ISemanticParser) getParser();
-				if (modelParser.areSemanticElementsAffected(null,
-						event)) {
-					removeSemanticListeners();
-					if (resolveSemanticElement() != null)
-						addSemanticListeners();
-					refreshLabel();
-					return;
+			
+		} else if (getParser() != null) {
+			
+			boolean sematicsAffected = getParser() instanceof ISemanticParser
+					&& ((ISemanticParser) getParser())
+							.areSemanticElementsAffected(null, event);
+							
+			boolean parserAffected = getParser().isAffectingEvent(event,
+					getParserOptions().intValue());
+
+			if (sematicsAffected) {
+				removeSemanticListeners();
+				
+				if (resolveSemanticElement() != null) {
+					addSemanticListeners();
 				}
+			}
+			
+			if (sematicsAffected || parserAffected) {
+				refreshLabel();
 			}
 		}
 		super.handleNotificationEvent(event);
 	}
+
 
 	protected void refreshVisuals() {
 		super.refreshVisuals();
