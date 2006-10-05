@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.NotificationFilter;
@@ -144,8 +145,8 @@ public class NoteEditPart extends ShapeNodeEditPart {
     
     private class ResourceListener extends ResourceSetListenerImpl{
         private WeakReference resourceRef = null; 
-        private EditPart editPart= null;
-        public ResourceListener(Resource resource, EditPart editPart){
+        private NoteEditPart editPart= null;
+        public ResourceListener(Resource resource, NoteEditPart editPart){
             resourceRef = new WeakReference(resource);
             this.editPart = editPart;
         }
@@ -155,11 +156,20 @@ public class NoteEditPart extends ShapeNodeEditPart {
          * unloaded from my editing domain.
          */
         public void resourceSetChanged(ResourceSetChangeEvent event) {
-            if (editPart ==null || resourceRef.get()==null)
+            if (editPart ==null || resourceRef.get()==null) {
+                if (editPart != null && editPart.listener!=null) {
+                    getEditingDomain().removeResourceSetListener(editPart.listener);
+                    editPart.listener = null;
+                }
                 return;
+            }
             boolean unloaded = isResourceUnloaded(event.getNotifications());
             if (unloaded && editPart.isActive()) {
                 editPart.refresh();
+                if (editPart.listener!=null) {
+                    getEditingDomain().removeResourceSetListener(editPart.listener);
+                    editPart.listener = null;
+                }
             }
         }
         
@@ -203,9 +213,21 @@ public class NoteEditPart extends ShapeNodeEditPart {
 
     protected void removeSemanticListeners() {
         //the resource listener is needed only in diagram link mode
-        if (listener!=null)
+        if (listener!=null) {
             getEditingDomain().removeResourceSetListener(listener);
+            listener = null;
+        }
         super.removeSemanticListeners();
     }
 
+    protected void handleNotificationEvent(Notification notification) {
+        Object feature = notification.getFeature();
+        if (feature == NotationPackage.eINSTANCE.getView_Element() && notification.getEventType() == Notification.RESOLVE
+                 && ((EObject)notification.getNotifier())== getNotationView() && listener != null) {
+            // skipping the resolve event whenever the editpart is already resolved.
+            return;
+        }
+        
+        super.handleNotificationEvent(notification);
+    }
 }
