@@ -139,7 +139,7 @@ public class FileModificationValidator {
 					NLS
 						.bind(
 							CommonUIMessages.FileModificationValidator_SaveProblemDialogMessage,
-							status.getMessage()));
+							status.getMessage(), status.getMessage()));
 			return false;
 		}
 	}
