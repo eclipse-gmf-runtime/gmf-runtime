@@ -46,6 +46,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gef.requests.TargetRequest;
 import org.eclipse.gmf.runtime.common.core.util.IAdaptableSelection;
 import org.eclipse.gmf.runtime.common.core.util.Log;
@@ -520,6 +521,26 @@ public abstract class GraphicalEditPart
             hosts.add(this);
             hosts.add(getParent());
         }
+        if((request instanceof ReconnectRequest)) {
+            ReconnectRequest reconnect = (ReconnectRequest)request;
+            hosts.add(this);
+            hosts.add(getParent());
+            if(reconnect.getTarget() != null) {
+                EditPart target  = reconnect.getTarget();
+                addEditPartAndParent(hosts, target);
+            }
+            if(reconnect.getConnectionEditPart() != null) {
+                org.eclipse.gef.ConnectionEditPart connectionEditPart = reconnect.getConnectionEditPart();
+                if(connectionEditPart.getSource() != null) {
+                    EditPart srcEP = connectionEditPart.getSource();
+                    addEditPartAndParent(hosts, srcEP);
+                }
+                if(connectionEditPart.getTarget() != null) {
+                    EditPart trgEP = connectionEditPart.getTarget();
+                    addEditPartAndParent(hosts, trgEP);
+                }
+            }
+        }
         if ((request instanceof CreateConnectionRequest) ) {
             CreateConnectionRequest ccvr = (CreateConnectionRequest)request;
             hosts.add(this);
@@ -541,8 +562,7 @@ public abstract class GraphicalEditPart
             Iterator editparts = parts == null ? Collections.EMPTY_LIST.iterator() : parts.iterator();  
             while ( editparts.hasNext() ) {
                 EditPart ep = (EditPart)editparts.next();
-                hosts.add(ep);
-                hosts.add(ep.getParent());
+                addEditPartAndParent(hosts, ep);
             }
         }
         
@@ -565,6 +585,11 @@ public abstract class GraphicalEditPart
         /////////////////////////////////////////////////////////////
 
         return hosts;
+    }
+
+    private void addEditPartAndParent(Set hosts, EditPart editPart) {
+        hosts.add(editPart);
+        hosts.add(editPart.getParent());
     }
 
     /**
