@@ -500,37 +500,43 @@ public class TextDirectEditManager
     }
 
     public void show() {
-    	super.show();
-    	
-    	WrapLabel fig = ((TextCompartmentEditPart)this.getEditPart()).getLabel();
-		Control control = getCellEditor().getControl();
+        super.show();
+
+         if (!(getEditPart().getFigure() instanceof WrapLabel)) {
+            return;
+        }
+
+        WrapLabel fig = (WrapLabel) getEditPart().getFigure();
+
+        Control control = getCellEditor().getControl();
 		this.zoomLevelFont = getZoomLevelFont(fig.getFont(), control.getDisplay());
-		
+
         control.setFont(this.zoomLevelFont);
-        
+
         //since the font's have been resized, we need to resize the  Text control...
         locator.relocate(getCellEditor());
+
     }
     
 	/**
-	 * 
-	 * Performs show and sends an extra mouse click to the point location so 
-	 * that cursor appears at the mouse click point
-	 * 
+     * 
+     * Performs show and sends an extra mouse click to the point location so
+     * that cursor appears at the mouse click point
+     * 
 	 * The Text control does not allow for the cursor to appear at point location but
 	 * at a character location
-	 * 
-	 * @param location
-	 */
+     * 
+     * @param location
+     */
 	public void show(Point location) {		
 		show();
+        
+        if (!(getEditPart().getFigure() instanceof WrapLabel)) {
+          sendClickToCellEditor(location);
+          return;        
+        }
 		
-		if (!(getEditPart() instanceof TextCompartmentEditPart)) {
-			sendClickToCellEditor(location);
-			return;
-		}
-		
-		WrapLabel fig = ((TextCompartmentEditPart)this.getEditPart()).getLabel();
+		WrapLabel fig = (WrapLabel) getEditPart().getFigure();
 		Text textControl = (Text)getCellEditor().getControl();
 		
 		//we need to restore our wraplabel figure bounds after we are done
