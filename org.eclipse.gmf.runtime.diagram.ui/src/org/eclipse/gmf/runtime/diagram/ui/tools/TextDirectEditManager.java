@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    IBM Corporation - initial API and implementation 
- * 	  Dmitry Stadnik (Borland) - contribution for bugzilla 135694
+ *    Dmitry Stadnik (Borland) - contribution for bugzilla 135694
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.tools;
@@ -52,6 +52,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
@@ -71,28 +72,28 @@ import com.ibm.icu.util.StringTokenizer;
  * @author melaasar
  */
 public class TextDirectEditManager
-	extends DirectEditManager {
-	
-	/**
-	 * content assist background color
-	 */
-	private Color proposalPopupBackgroundColor = null;
+    extends DirectEditManager {
+    
+    /**
+     * content assist background color
+     */
+    private Color proposalPopupBackgroundColor = null;
 
-	/**
-	 * content assist foreground color
-	 */
-	private Color proposalPopupForegroundColor = null;
-	
-	private boolean committed = false;
-	
-	/**
-	 * flag used to avoid unhooking listeners twice if the UI thread is blocked
-	 */
-	private boolean listenersAttached = true;
+    /**
+     * content assist foreground color
+     */
+    private Color proposalPopupForegroundColor = null;
+    
+    private boolean committed = false;
+    
+    /**
+     * flag used to avoid unhooking listeners twice if the UI thread is blocked
+     */
+    private boolean listenersAttached = true;
 
 
-	/** String buffer to hold initial characters **/
-	private StringBuffer initialString = new StringBuffer();
+    /** String buffer to hold initial characters **/
+    private StringBuffer initialString = new StringBuffer();
     
     /**
      * Cache the font descriptor when a font is created so that it can be
@@ -107,25 +108,25 @@ public class TextDirectEditManager
     private Font zoomLevelFont = null;
     
     private CellEditorLocator locator;
-		
-	/**
-	 * the text cell editor locator
-	 * @author mmostafa
-	 *
-	 */
-	static private class TextCellEditorLocator implements CellEditorLocator {
+        
+    /**
+     * the text cell editor locator
+     * @author mmostafa
+     *
+     */
+    static private class TextCellEditorLocator implements CellEditorLocator {
 
-		private WrapLabel wrapLabel;
-		
-		public TextCellEditorLocator(WrapLabel wrapLabel) {
-			super();
-			this.wrapLabel = wrapLabel;
-		}
+        private WrapLabel wrapLabel;
+        
+        public TextCellEditorLocator(WrapLabel wrapLabel) {
+            super();
+            this.wrapLabel = wrapLabel;
+        }
 
-		
-		public WrapLabel getWrapLabel() {
-			return wrapLabel;
-		}
+        
+        public WrapLabel getWrapLabel() {
+            return wrapLabel;
+        }
 
         public void relocate(CellEditor celleditor) {
             Text text = (Text) celleditor.getControl();
@@ -156,53 +157,53 @@ public class TextDirectEditManager
                 }   
             }
         }
-	}
+    }
 
-	private static class LabelCellEditorLocator implements CellEditorLocator {
+    private static class LabelCellEditorLocator implements CellEditorLocator {
 
-		private Label label;
+        private Label label;
 
-		public LabelCellEditorLocator(Label label) {
-			this.label = label;
-		}
+        public LabelCellEditorLocator(Label label) {
+            this.label = label;
+        }
 
-		public Label getLabel() {
-			return label;
-		}
+        public Label getLabel() {
+            return label;
+        }
 
-		public void relocate(CellEditor celleditor) {
-			Text text = (Text) celleditor.getControl();
-			Rectangle rect = getLabel().getTextBounds().getCopy();
-			getLabel().translateToAbsolute(rect);
+        public void relocate(CellEditor celleditor) {
+            Text text = (Text) celleditor.getControl();
+            Rectangle rect = getLabel().getTextBounds().getCopy();
+            getLabel().translateToAbsolute(rect);
 
-			int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
-			rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr * 2, 0));
+            int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
+            rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr * 2, 0));
 
-			org.eclipse.swt.graphics.Rectangle newRect = text.computeTrim(rect.x, rect.y, rect.width, rect.height);
-			if (!newRect.equals(new Rectangle(text.getBounds())))
-				text.setBounds(newRect.x, newRect.y, newRect.width, newRect.height);
-		}
-	}
+            org.eclipse.swt.graphics.Rectangle newRect = text.computeTrim(rect.x, rect.y, rect.width, rect.height);
+            if (!newRect.equals(new Rectangle(text.getBounds())))
+                text.setBounds(newRect.x, newRect.y, newRect.width, newRect.height);
+        }
+    }
 
-	/**
-	 * constructor
-	 * 
-	 * @param source <code>GraphicalEditPart</code> to support direct edit of.  The figure of
-	 * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
-	 */
-	public TextDirectEditManager(ITextAwareEditPart source) {
-		this(source, getTextCellEditorClass(source), getTextCellEditorLocator(source));
-	}
+    /**
+     * constructor
+     * 
+     * @param source <code>GraphicalEditPart</code> to support direct edit of.  The figure of
+     * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
+     */
+    public TextDirectEditManager(ITextAwareEditPart source) {
+        this(source, getTextCellEditorClass(source), getTextCellEditorLocator(source));
+    }
 
-	/**
-	 * @param source
-	 * @param editorType
-	 * @param locator
-	 */
-	public TextDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator) {
-		super(source, editorType, locator);
-		this.locator = locator;
-	}
+    /**
+     * @param source
+     * @param editorType
+     * @param locator
+     */
+    public TextDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator) {
+        super(source, editorType, locator);
+        this.locator = locator;
+    }
 
     /**
      * @param source the <code>ITextAwareEditPart</code> to determine the cell editor for
@@ -219,41 +220,41 @@ public class TextDirectEditManager
         }
     }
     
-	/**
-	 * @param source the <code>GraphicalEditPart</code> that is used to determine which
+    /**
+     * @param source the <code>GraphicalEditPart</code> that is used to determine which
      * <code>CellEditor</code> class to use.
-	 * @return the <code>Class</code> of the <code>CellEditor</code> to use for the text editing.
-	 */
-	public static Class getTextCellEditorClass(GraphicalEditPart source){
-		IFigure figure = source.getFigure();
-				
-		if (figure instanceof WrapLabel && ((WrapLabel) figure).isTextWrapped())
-			return WrapTextCellEditor.class;
-		
-		return TextCellEditorEx.class;
-	}
-	
+     * @return the <code>Class</code> of the <code>CellEditor</code> to use for the text editing.
+     */
+    public static Class getTextCellEditorClass(GraphicalEditPart source){
+        IFigure figure = source.getFigure();
+                
+        if (figure instanceof WrapLabel && ((WrapLabel) figure).isTextWrapped())
+            return WrapTextCellEditor.class;
+        
+        return TextCellEditorEx.class;
+    }
+    
 
-	/**
-	 * Given a <code>WrapLabel</code> object, this will calculate the 
-	 * correct Font needed to display into screen coordinates, taking into 
-	 * account the current mapmode.  This will typically be used by direct
-	 * edit cell editors that need to display independent of the zoom or any
-	 * coordinate mapping that is taking place on the drawing surface.
-	 * 
-	 * @param label the <code>WrapLabel</code> to use for the font calculation
-	 * @return the <code>Font</code> that is scaled to the screen coordinates.  
-	 * Note: the returned <code>Font</code> should not be disposed since it is
-	 * cached by a common resource manager.
-	 */
-	protected Font getScaledFont(IFigure label) {
-		Font scaledFont = label.getFont();
-		FontData data = scaledFont.getFontData()[0];
-		Dimension fontSize = new Dimension(0, MapModeUtil.getMapMode(label).DPtoLP(data.getHeight()));
-		label.translateToAbsolute(fontSize);
-		
-		if( Math.abs( data.getHeight() - fontSize.height ) < 2 )
-			fontSize.height = data.getHeight();
+    /**
+     * Given a <code>WrapLabel</code> object, this will calculate the 
+     * correct Font needed to display into screen coordinates, taking into 
+     * account the current mapmode.  This will typically be used by direct
+     * edit cell editors that need to display independent of the zoom or any
+     * coordinate mapping that is taking place on the drawing surface.
+     * 
+     * @param label the <code>WrapLabel</code> to use for the font calculation
+     * @return the <code>Font</code> that is scaled to the screen coordinates.  
+     * Note: the returned <code>Font</code> should not be disposed since it is
+     * cached by a common resource manager.
+     */
+    protected Font getScaledFont(IFigure label) {
+        Font scaledFont = label.getFont();
+        FontData data = scaledFont.getFontData()[0];
+        Dimension fontSize = new Dimension(0, MapModeUtil.getMapMode(label).DPtoLP(data.getHeight()));
+        label.translateToAbsolute(fontSize);
+        
+        if( Math.abs( data.getHeight() - fontSize.height ) < 2 )
+            fontSize.height = data.getHeight();
 
         try {
             FontDescriptor fontDescriptor = FontDescriptor.createFrom(data);
@@ -269,106 +270,106 @@ public class TextDirectEditManager
         return JFaceResources.getDefaultFont();
     }
 
-	
-	protected void initCellEditor() {
-		committed = false;
+    
+    protected void initCellEditor() {
+        committed = false;
 
-		// Get the Text Compartments Edit Part
-		ITextAwareEditPart textEP = (ITextAwareEditPart) getEditPart();
+        // Get the Text Compartments Edit Part
+        ITextAwareEditPart textEP = (ITextAwareEditPart) getEditPart();
 
-		setEditText(textEP.getEditText());
+        setEditText(textEP.getEditText());
 
-		IFigure label = textEP.getFigure();
-		Assert.isNotNull(label);
-		Text text = (Text) getCellEditor().getControl();
-		// scale the font accordingly to the zoom level
-		text.setFont(getScaledFont(label));
-		
-		
-		// register a validator on the cell editor
-		getCellEditor().setValidator(textEP.getEditTextValidator());
+        IFigure label = textEP.getFigure();
+        Assert.isNotNull(label);
+        Text text = (Text) getCellEditor().getControl();
+        // scale the font accordingly to the zoom level
+        text.setFont(getScaledFont(label));
+        
+        
+        // register a validator on the cell editor
+        getCellEditor().setValidator(textEP.getEditTextValidator());
 
-		if (textEP.getParser() != null) {
-			IContentAssistProcessor processor = textEP.getCompletionProcessor();
-			if (processor != null) {
-				// register content assist
-				proposalPopupBackgroundColor = new Color(getCellEditor()
-					.getControl().getShell().getDisplay(), new RGB(254, 241,
-					233));
-				proposalPopupForegroundColor = new Color(getCellEditor()
-					.getControl().getShell().getDisplay(), new RGB(0, 0, 0));
+        if (textEP.getParser() != null) {
+            IContentAssistProcessor processor = textEP.getCompletionProcessor();
+            if (processor != null) {
+                // register content assist
+                proposalPopupBackgroundColor = new Color(getCellEditor()
+                    .getControl().getShell().getDisplay(), new RGB(254, 241,
+                    233));
+                proposalPopupForegroundColor = new Color(getCellEditor()
+                    .getControl().getShell().getDisplay(), new RGB(0, 0, 0));
 
-				ContentAssistantHelper.createTextContentAssistant(text,
-					proposalPopupForegroundColor, proposalPopupBackgroundColor,
-					processor);
-			}
-		}
-		
-		//Hook the cell editor's copy/paste actions to the actionBars so that they can
-		// be invoked via keyboard shortcuts.
-		actionBars = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getActiveEditor().getEditorSite().getActionBars();
-		saveCurrentActions(actionBars);
-		actionHandler = new CellEditorActionHandler(actionBars);
-		actionHandler.addCellEditor(getCellEditor());
-		actionBars.updateActionBars();
-	}
+                ContentAssistantHelper.createTextContentAssistant(text,
+                    proposalPopupForegroundColor, proposalPopupBackgroundColor,
+                    processor);
+            }
+        }
+        
+        //Hook the cell editor's copy/paste actions to the actionBars so that they can
+        // be invoked via keyboard shortcuts.
+        actionBars = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor().getEditorSite().getActionBars();
+        saveCurrentActions(actionBars);
+        actionHandler = new CellEditorActionHandler(actionBars);
+        actionHandler.addCellEditor(getCellEditor());
+        actionBars.updateActionBars();
+    }
 
-	/**
-	 * @see org.eclipse.gef.tools.DirectEditManager#commit()
-	 */
-	protected void commit() {
-		Shell activeShell = Display.getCurrent().getActiveShell();
-		if (activeShell != null
-			&& getCellEditor().getControl().getShell().equals(
-				activeShell.getParent())) {
-			Control[] children = activeShell.getChildren();
-			if (children.length == 1 && children[0] instanceof Table) {
-				/*
-				 * CONTENT ASSIST: focus is lost to the content assist pop up -
-				 * stay in focus
-				 */
-				getCellEditor().getControl().setVisible(true);
-				((TextCellEditorEx) getCellEditor()).setDeactivationLock(true);
-				return;
-			}
-		}
+    /**
+     * @see org.eclipse.gef.tools.DirectEditManager#commit()
+     */
+    protected void commit() {
+        Shell activeShell = Display.getCurrent().getActiveShell();
+        if (activeShell != null
+            && getCellEditor().getControl().getShell().equals(
+                activeShell.getParent())) {
+            Control[] children = activeShell.getChildren();
+            if (children.length == 1 && children[0] instanceof Table) {
+                /*
+                 * CONTENT ASSIST: focus is lost to the content assist pop up -
+                 * stay in focus
+                 */
+                getCellEditor().getControl().setVisible(true);
+                ((TextCellEditorEx) getCellEditor()).setDeactivationLock(true);
+                return;
+            }
+        }
 
-		// content assist hacks
-		if (committed) {
-			bringDown();
-			return;
-		}
-		committed = true;
-		super.commit();
-	}
+        // content assist hacks
+        if (committed) {
+            bringDown();
+            return;
+        }
+        committed = true;
+        super.commit();
+    }
 
-	/**
-	 * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
-	 */
-	protected void bringDown() {
-		if (proposalPopupForegroundColor != null) {
-			proposalPopupForegroundColor.dispose();
-			proposalPopupForegroundColor = null;
-		}
-		if (proposalPopupBackgroundColor != null) {
-			proposalPopupBackgroundColor.dispose();
-			proposalPopupBackgroundColor = null;
-		}
+    /**
+     * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
+     */
+    protected void bringDown() {
+        if (proposalPopupForegroundColor != null) {
+            proposalPopupForegroundColor.dispose();
+            proposalPopupForegroundColor = null;
+        }
+        if (proposalPopupBackgroundColor != null) {
+            proposalPopupBackgroundColor.dispose();
+            proposalPopupBackgroundColor = null;
+        }
 
-		// myee - RATLC00523014: crashes when queued in asyncExec()
-		eraseFeedback();
-		
-		initialString = new StringBuffer();
-		
-		Display.getCurrent().asyncExec(new Runnable() {
+        // myee - RATLC00523014: crashes when queued in asyncExec()
+        eraseFeedback();
+        
+        initialString = new StringBuffer();
+        
+        Display.getCurrent().asyncExec(new Runnable() {
 
-			public void run() {
-				// Content Assist hack - allow proper cleanup on childen
-				// controls
-				TextDirectEditManager.super.bringDown();
-			}
-		});
+            public void run() {
+                // Content Assist hack - allow proper cleanup on childen
+                // controls
+                TextDirectEditManager.super.bringDown();
+            }
+        });
         
         for (Iterator iter = cachedFontDescriptors.iterator(); iter.hasNext();) {
             getResourceManager().destroyFont((FontDescriptor) iter.next());           
@@ -376,67 +377,67 @@ public class TextDirectEditManager
         cachedFontDescriptors.clear();
         
         if (actionHandler != null) {
-    		actionHandler.dispose();
-    		actionHandler = null;
-    	}
-    	if (actionBars != null) {
-    		restoreSavedActions(actionBars);
-    		actionBars.updateActionBars();
-    		actionBars = null;
-    	}
-	}
+            actionHandler.dispose();
+            actionHandler = null;
+        }
+        if (actionBars != null) {
+            restoreSavedActions(actionBars);
+            actionBars.updateActionBars();
+            actionBars = null;
+        }
+    }
 
-	/**
-	 * This method is used to set the cell editors text
-	 * 
-	 * @param toEdit
-	 *            String to be set in the cell editor
-	 */
-	public void setEditText(String toEdit) {
+    /**
+     * This method is used to set the cell editors text
+     * 
+     * @param toEdit
+     *            String to be set in the cell editor
+     */
+    public void setEditText(String toEdit) {
 
-		// Get the cell editor
-		CellEditor cellEditor = getCellEditor();
+        // Get the cell editor
+        CellEditor cellEditor = getCellEditor();
 
-		// IF the cell editor doesn't exist yet...
-		if (cellEditor == null) {
-			// Do nothing
-			return;
-		}
+        // IF the cell editor doesn't exist yet...
+        if (cellEditor == null) {
+            // Do nothing
+            return;
+        }
 
-		// Get the Text Compartment Edit Part
-		ITextAwareEditPart textEP = (ITextAwareEditPart) getEditPart();
+        // Get the Text Compartment Edit Part
+        ITextAwareEditPart textEP = (ITextAwareEditPart) getEditPart();
 
-		// Get the Text control
-		Text textControl = (Text) cellEditor.getControl();
+        // Get the Text control
+        Text textControl = (Text) cellEditor.getControl();
 
-		// Set the Figures text
-		textEP.setLabelText(toEdit);
-		
-		
-		// See RATLC00522324
-		if (cellEditor instanceof TextCellEditorEx){
-			((TextCellEditorEx)cellEditor).setValueAndProcessEditOccured(toEdit);
-		} else {
-			cellEditor.setValue(toEdit);
-		}
-		
-		// Set the controls text and position the caret at the end of the text
-		textControl.setSelection(toEdit.length());
-	}
+        // Set the Figures text
+        textEP.setLabelText(toEdit);
+        
+        
+        // See RATLC00522324
+        if (cellEditor instanceof TextCellEditorEx){
+            ((TextCellEditorEx)cellEditor).setValueAndProcessEditOccured(toEdit);
+        } else {
+            cellEditor.setValue(toEdit);
+        }
+        
+        // Set the controls text and position the caret at the end of the text
+        textControl.setSelection(toEdit.length());
+    }
 
-	/**
-	 * Performs show and sets the edit string to be the initial character or string
-	 * @param initialChar
-	 */
-	public void show(char initialChar) {
-		initialString = initialString.append(initialChar);
-		show();
-		if (SWT.getPlatform() != "carbon") { //$NON-NLS-1$ 
-			// Set the cell editor text to the initial character
-			setEditText(initialString.toString());
-		}
-	}
-	
+    /**
+     * Performs show and sets the edit string to be the initial character or string
+     * @param initialChar
+     */
+    public void show(char initialChar) {
+        initialString = initialString.append(initialChar);
+        show();
+        if (SWT.getPlatform() != "carbon") { //$NON-NLS-1$ 
+            // Set the cell editor text to the initial character
+            setEditText(initialString.toString());
+        }
+    }
+    
     /**
      * This method obtains the fonts that are being used by the figure at its zoom level.
      * @param gep the associated <code>GraphicalEditPart</code> of the figure
@@ -445,24 +446,24 @@ public class TextDirectEditManager
      * @return <code>actualFont</code> if zoom level is 1.0 (or when there's an error),
      * new Font otherwise.
      */
-	private Font getZoomLevelFont(Font actualFont, Display display) {
-		Object zoom = getEditPart().getViewer().getProperty(ZoomManager.class.toString());
-		
-		if (zoom != null) {
-			double zoomLevel = ((ZoomManager)zoom).getZoom();
-			
-			if (zoomLevel == 1.0f) 
-				return actualFont;
-			
-			FontData[] fd = new FontData[actualFont.getFontData().length];
-			FontData tempFD = null;
-			
-			for (int i=0; i < fd.length; i++) {
-				tempFD = actualFont.getFontData()[i];
-				
-				fd[i] = new FontData(tempFD.getName(),(int)(zoomLevel * tempFD.getHeight()),tempFD.getStyle());
-			}
-			
+    private Font getZoomLevelFont(Font actualFont, Display display) {
+        Object zoom = getEditPart().getViewer().getProperty(ZoomManager.class.toString());
+        
+        if (zoom != null) {
+            double zoomLevel = ((ZoomManager)zoom).getZoom();
+            
+            if (zoomLevel == 1.0f) 
+                return actualFont;
+            
+            FontData[] fd = new FontData[actualFont.getFontData().length];
+            FontData tempFD = null;
+            
+            for (int i=0; i < fd.length; i++) {
+                tempFD = actualFont.getFontData()[i];
+                
+                fd[i] = new FontData(tempFD.getName(),(int)(zoomLevel * tempFD.getHeight()),tempFD.getStyle());
+            }
+            
             try {
                 FontDescriptor fontDescriptor = FontDescriptor.createFrom(fd);
                 cachedFontDescriptors.add(fontDescriptor);
@@ -476,23 +477,23 @@ public class TextDirectEditManager
                 
                 return actualFont;
             }
-		}
-		else
-			return actualFont;
-	}
-	
-	/**
-	 * Gets the tex extent scaled to the mapping mode
-	 */
-	private Dimension getTextExtents(String s, Font font, IMapMode mm) {
-		Dimension d = FigureUtilities.getTextExtents(s, font);
+        }
+        else
+            return actualFont;
+    }
+    
+    /**
+     * Gets the tex extent scaled to the mapping mode
+     */
+    private Dimension getTextExtents(String s, Font font, IMapMode mm) {
+        Dimension d = FigureUtilities.getTextExtents(s, font);
         // height should be set using the font height and the number of lines
         // in the string 
         int lineCount = getLineCount(s);
         d.height = FigureUtilities.getFontMetrics(font).getHeight()*lineCount;
         
-     	return new Dimension(mm.DPtoLP(d.width), mm.DPtoLP(d.height));
-	}
+        return new Dimension(mm.DPtoLP(d.width), mm.DPtoLP(d.height));
+    }
 
     private int getLineCount(String s) {
         StringTokenizer tokenizer = new StringTokenizer(s, "\n"); //$NON-NLS-1$
@@ -502,14 +503,10 @@ public class TextDirectEditManager
     public void show() {
         super.show();
 
-         if (!(getEditPart().getFigure() instanceof WrapLabel)) {
-            return;
-        }
-
-        WrapLabel fig = (WrapLabel) getEditPart().getFigure();
+        IFigure fig = getEditPart().getFigure();
 
         Control control = getCellEditor().getControl();
-		this.zoomLevelFont = getZoomLevelFont(fig.getFont(), control.getDisplay());
+        this.zoomLevelFont = getZoomLevelFont(fig.getFont(), control.getDisplay());
 
         control.setFont(this.zoomLevelFont);
 
@@ -518,171 +515,190 @@ public class TextDirectEditManager
 
     }
     
-	/**
+    /**
      * 
      * Performs show and sends an extra mouse click to the point location so
      * that cursor appears at the mouse click point
      * 
-	 * The Text control does not allow for the cursor to appear at point location but
-	 * at a character location
+     * The Text control does not allow for the cursor to appear at point location but
+     * at a character location
      * 
      * @param location
      */
-	public void show(Point location) {		
-		show();
+    public void show(Point location) {      
+        show();
         
-        if (!(getEditPart().getFigure() instanceof WrapLabel)) {
-          sendClickToCellEditor(location);
-          return;        
+        Rectangle iconBounds;
+        Image icon;
+        int textPlacement;
+        String subStringText;
+        String text;
+
+        IFigure fig = getEditPart().getFigure();
+        if (fig instanceof WrapLabel) {
+            WrapLabel label = (WrapLabel) fig;
+            iconBounds = label.getIconBounds().getCopy();
+            icon = label.getIcon();
+            textPlacement = label.getTextPlacement();
+            subStringText = label.getSubStringText();
+            text = label.getText();
+        } else if (fig instanceof Label) {
+            Label label = (Label) fig;
+            iconBounds = label.getIconBounds().getCopy();
+            icon = label.getIcon();
+            textPlacement = label.getTextPlacement();
+            subStringText = label.getSubStringText();
+            text = label.getText();
+        } else {
+            sendClickToCellEditor(location);
+            return;
         }
-		
-		WrapLabel fig = (WrapLabel) getEditPart().getFigure();
-		Text textControl = (Text)getCellEditor().getControl();
-		
-		//we need to restore our wraplabel figure bounds after we are done
-		Rectangle restoreRect = fig.getBounds().getCopy();
-		
-		Rectangle rect = fig.getBounds();
-		fig.translateToAbsolute(rect);
+
+        Text textControl = (Text)getCellEditor().getControl();
+        
+        //we need to restore our wraplabel figure bounds after we are done
+        Rectangle restoreRect = fig.getBounds().getCopy();
+        
+        Rectangle rect = fig.getBounds();
+        fig.translateToAbsolute(rect);
         
         if (!rect.contains(new org.eclipse.draw2d.geometry.Point(location.x,location.y))) {
             textControl.setSelection(0, textControl.getText().length());
             fig.setBounds(restoreRect);
             return;
         }
-		
-		Rectangle iconBounds = fig.getIconBounds().getCopy();
-		fig.translateToAbsolute(iconBounds);
+        
+        fig.translateToAbsolute(iconBounds);
 
-		double avrLines =  fig.getBounds().height / (double)FigureUtilities.getFontMetrics(this.zoomLevelFont).getHeight();
-		
-		int xWidth = location.x - rect.x;
-		
-		if (fig.getIcon() != null && fig.getTextPlacement() == PositionConstants.EAST) 
-			xWidth -= iconBounds.width;
-		
-		double yPercentage = (location.y - rect.y) / (double)rect.height;
-		
-		//calculate the line number the mouse clicked on.
-		int lineNum = (int)Math.ceil(avrLines * yPercentage);
-		
-		//character count for caret positioning...
-		int charCount = 0;
-		
-		StringTokenizer tokenizer = new StringTokenizer(fig.getSubStringText(), "\n"); //$NON-NLS-1$
+        double avrLines =  fig.getBounds().height / (double)FigureUtilities.getFontMetrics(this.zoomLevelFont).getHeight();
+        
+        int xWidth = location.x - rect.x;
+        
+        if (icon != null && textPlacement == PositionConstants.EAST) 
+            xWidth -= iconBounds.width;
+        
+        double yPercentage = (location.y - rect.y) / (double)rect.height;
+        
+        //calculate the line number the mouse clicked on.
+        int lineNum = (int)Math.ceil(avrLines * yPercentage);
+        
+        //character count for caret positioning...
+        int charCount = 0;
+        
+        StringTokenizer tokenizer = new StringTokenizer(subStringText, "\n"); //$NON-NLS-1$
 
-		//calculate the total characters before linePos...
-		for (int lineCount = 1; lineCount < lineNum; lineCount++) {
-			if (tokenizer.hasMoreTokens()) {
-				charCount += tokenizer.nextToken().length();
-				
-				//check if there is a user-inserted new line which will be accounted in the Text control...
-				String newLineCheck = fig.getText().substring(charCount,charCount+1); 
-				if (newLineCheck.equals("\r") || newLineCheck.equals("\n"))	//$NON-NLS-1$ //$NON-NLS-2$
-					charCount++;
-			}
-			else {
-				//our linePos calculation was wrong...revert to sending a mouse click...
-				sendClickToCellEditor(location);
-				fig.setBounds(restoreRect);
-				return;
-			}
-		}
-		
-		//now count the last line's characters till the point where the mouse clicked...
-		if (tokenizer.hasMoreTokens()) {
-			String currentLineText = tokenizer.nextToken();
-			
-			IMapMode mm = MapModeUtil.getMapMode(fig);
-			
-			for (int i = 1; i <= currentLineText.length(); i++) {
-				Dimension textExtent = getTextExtents(currentLineText.substring(0, i), this.zoomLevelFont, mm);
-				fig.translateToAbsolute(textExtent);
-				
-				charCount++;
-				
-				if (textExtent.width >= xWidth)
-					break;
-			}
-			
-			textControl.setSelection(charCount);
-			
-			fig.setBounds(restoreRect);
-			
-		}
-		else {
-			//our linePos calculation was wrong...revert to sending a mouse click...
-			sendClickToCellEditor(location);
-			fig.setBounds(restoreRect);
-		}
-	}
-	
-	private void sendClickToCellEditor(final Point location) {
-		//make sure the diagram doesn't receive the click event..
-		getCellEditor().getControl().setCapture(true);
-		
-		if (getCellEditor() != null && getCellEditor().getControl().getBounds().contains(location))
-			sendMouseClick(location);
-	}
+        //calculate the total characters before linePos...
+        for (int lineCount = 1; lineCount < lineNum; lineCount++) {
+            if (tokenizer.hasMoreTokens()) {
+                charCount += tokenizer.nextToken().length();
+                
+                //check if there is a user-inserted new line which will be accounted in the Text control...
+                String newLineCheck = text.substring(charCount,charCount+1); 
+                if (newLineCheck.equals("\r") || newLineCheck.equals("\n")) //$NON-NLS-1$ //$NON-NLS-2$
+                    charCount++;
+            }
+            else {
+                //our linePos calculation was wrong...revert to sending a mouse click...
+                sendClickToCellEditor(location);
+                fig.setBounds(restoreRect);
+                return;
+            }
+        }
+        
+        //now count the last line's characters till the point where the mouse clicked...
+        if (tokenizer.hasMoreTokens()) {
+            String currentLineText = tokenizer.nextToken();
+            
+            IMapMode mm = MapModeUtil.getMapMode(fig);
+            
+            for (int i = 1; i <= currentLineText.length(); i++) {
+                Dimension textExtent = getTextExtents(currentLineText.substring(0, i), this.zoomLevelFont, mm);
+                fig.translateToAbsolute(textExtent);
+                
+                charCount++;
+                
+                if (textExtent.width >= xWidth)
+                    break;
+            }
+            
+            textControl.setSelection(charCount);
+            
+            fig.setBounds(restoreRect);
+            
+        }
+        else {
+            //our linePos calculation was wrong...revert to sending a mouse click...
+            sendClickToCellEditor(location);
+            fig.setBounds(restoreRect);
+        }
+    }
+    
+    private void sendClickToCellEditor(final Point location) {
+        //make sure the diagram doesn't receive the click event..
+        getCellEditor().getControl().setCapture(true);
+        
+        if (getCellEditor() != null && getCellEditor().getControl().getBounds().contains(location))
+            sendMouseClick(location);
+    }
 
-	
-	/**
-	 * 
-	 * Sends a SWT MouseUp and MouseDown event to the point location 
-	 * to the current Display
-	 * 
-	 * @param location
-	 */
-	private void sendMouseClick(final Point location) {		
-		
-		final Display currDisplay = Display.getCurrent();
-		
-		new Thread() {
-			Event event;
-			public void run() {
-					event = new Event();
-					event.type = SWT.MouseDown;
-					event.button = 1;
-					event.x = location.x;
-					event.y = location.y;
-					currDisplay.post(event);
-					event.type = SWT.MouseUp;
-					currDisplay.post(event);
-			}
-		}.start();
-	}
+    
+    /**
+     * 
+     * Sends a SWT MouseUp and MouseDown event to the point location 
+     * to the current Display
+     * 
+     * @param location
+     */
+    private void sendMouseClick(final Point location) {     
+        
+        final Display currDisplay = Display.getCurrent();
+        
+        new Thread() {
+            Event event;
+            public void run() {
+                    event = new Event();
+                    event.type = SWT.MouseDown;
+                    event.button = 1;
+                    event.x = location.x;
+                    event.y = location.y;
+                    currDisplay.post(event);
+                    event.type = SWT.MouseUp;
+                    currDisplay.post(event);
+            }
+        }.start();
+    }
 
-	/* 
-	 * Overrides super unhookListeners to set listeners attached flag
-	 * This method prevents unhooking listeners twice if the UI thread is blocked.
-	 * For example, a validation dialog may block the thread
-	 */
-	protected void unhookListeners() {
-		if (listenersAttached) {
-			listenersAttached = false;
-			super.unhookListeners();
-		}
-	}
+    /* 
+     * Overrides super unhookListeners to set listeners attached flag
+     * This method prevents unhooking listeners twice if the UI thread is blocked.
+     * For example, a validation dialog may block the thread
+     */
+    protected void unhookListeners() {
+        if (listenersAttached) {
+            listenersAttached = false;
+            super.unhookListeners();
+        }
+    }
 
-	/* 
-	 * Sets the listeners attached flag if the cell editor exists
-	 */
-	protected void setCellEditor(CellEditor editor) {
-		super.setCellEditor(editor);
-		if (editor != null) {
-			listenersAttached = true;
-		}
-	}
+    /* 
+     * Sets the listeners attached flag if the cell editor exists
+     */
+    protected void setCellEditor(CellEditor editor) {
+        super.setCellEditor(editor);
+        if (editor != null) {
+            listenersAttached = true;
+        }
+    }
 
-	public void showFeedback() {
-		try {
-			getEditPart().getRoot();
-			super.showFeedback();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-	}    
+    public void showFeedback() {
+        try {
+            getEditPart().getRoot();
+            super.showFeedback();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+    }    
     
     /**
      * Gets the resource manager to remember the resources allocated for this
@@ -696,25 +712,25 @@ public class TextDirectEditManager
     }
     
     private void saveCurrentActions(IActionBars _actionBars) {
-    	copy = _actionBars.getGlobalActionHandler(ActionFactory.COPY.getId());
-    	paste = _actionBars.getGlobalActionHandler(ActionFactory.PASTE.getId());
-    	delete = _actionBars.getGlobalActionHandler(ActionFactory.DELETE.getId());
-    	selectAll = _actionBars.getGlobalActionHandler(ActionFactory.SELECT_ALL.getId());
-    	cut = _actionBars.getGlobalActionHandler(ActionFactory.CUT.getId());
-    	find = _actionBars.getGlobalActionHandler(ActionFactory.FIND.getId());
-    	undo = _actionBars.getGlobalActionHandler(ActionFactory.UNDO.getId());
-    	redo = _actionBars.getGlobalActionHandler(ActionFactory.REDO.getId());
+        copy = _actionBars.getGlobalActionHandler(ActionFactory.COPY.getId());
+        paste = _actionBars.getGlobalActionHandler(ActionFactory.PASTE.getId());
+        delete = _actionBars.getGlobalActionHandler(ActionFactory.DELETE.getId());
+        selectAll = _actionBars.getGlobalActionHandler(ActionFactory.SELECT_ALL.getId());
+        cut = _actionBars.getGlobalActionHandler(ActionFactory.CUT.getId());
+        find = _actionBars.getGlobalActionHandler(ActionFactory.FIND.getId());
+        undo = _actionBars.getGlobalActionHandler(ActionFactory.UNDO.getId());
+        redo = _actionBars.getGlobalActionHandler(ActionFactory.REDO.getId());
     }
     
     private void restoreSavedActions(IActionBars _actionBars){
-    	_actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
-    	_actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
-    	_actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), delete);
-    	_actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAll);
-    	_actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cut);
-    	_actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), find);
-    	_actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undo);
-    	_actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redo);
+        _actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
+        _actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
+        _actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), delete);
+        _actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAll);
+        _actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cut);
+        _actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), find);
+        _actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undo);
+        _actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redo);
     }
 
     public void setLocator(CellEditorLocator locator) {
