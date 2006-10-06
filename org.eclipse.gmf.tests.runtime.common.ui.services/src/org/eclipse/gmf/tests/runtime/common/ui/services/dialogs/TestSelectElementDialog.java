@@ -70,11 +70,11 @@ public class TestSelectElementDialog
             public boolean select(Object toTest) {
                 return true;
             }
-            
+
         };
-        
+
         /*
-         *  The input for the element selection service.
+         * The input for the element selection service.
          */
         AbstractElementSelectionInput input = new AbstractElementSelectionInput(filter,
             context, scope, StringStatics.BLANK);
@@ -82,6 +82,10 @@ public class TestSelectElementDialog
         selectElementComposite = new ElementSelectionComposite(
             "Select an element (? = any character, * = any string):", //$NON-NLS-1$
             input) {
+
+            protected void handleWidgetDefaultSelected() {
+                okPressed();
+            }
 
             protected boolean isValidSelection(List currentSelectedElements) {
                 return true;
