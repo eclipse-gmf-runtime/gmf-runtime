@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.CommandUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
@@ -404,7 +405,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
                         IProgressMonitor progressMonitor, IAdaptable info)
                     throws ExecutionException {
                     
-					if (_createCmd != null && _createCmd.canExecute() ) {
+					if (_createCmd != null && CommandUtilities.canRedo(_createCmd)) {
 						_createCmd.redo();
 					}
 					return super.doRedoWithResult(progressMonitor, info);
