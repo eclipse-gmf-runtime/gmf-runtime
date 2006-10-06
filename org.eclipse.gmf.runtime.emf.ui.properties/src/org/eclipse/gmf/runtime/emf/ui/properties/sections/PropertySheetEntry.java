@@ -525,8 +525,11 @@ public class PropertySheetEntry implements IPropertySheetEntry,
         // cache old entries by their descriptor id
         Map entryCache = new HashMap(childEntries.length * 2 + 1);
         for (int i = 0; i < childEntries.length; i++) {
-            entryCache.put(childEntries[i].getDescriptor().getId(),
-                    childEntries[i]);
+            if (childEntries[i] != null
+                    && childEntries[i].getDescriptor() != null) {
+                    entryCache.put(childEntries[i].getDescriptor().getId(),
+                        childEntries[i]);
+                }
         }
 
         // create a list of entries to dispose
