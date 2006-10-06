@@ -92,7 +92,7 @@ public abstract class ElementSelectionComposite
      * The job running the element selection service.
      */
     private ElementSelectionServiceJob job;
-    
+
     /**
      * The element selection service to use to search for elements.
      */
@@ -116,7 +116,9 @@ public abstract class ElementSelectionComposite
      * service for "b".
      */
     private char firstCharacter = Character.MIN_VALUE;
+
     private String lastSearchedFor = StringStatics.BLANK;
+
     private int lastScopeSearchedFor = 0;
 
     /**
@@ -128,9 +130,9 @@ public abstract class ElementSelectionComposite
      * Pattern for the input filter.
      */
     private Pattern pattern;
-    
+
     /**
-     * Constructs a new instance that will create the new composite.  I will use
+     * Constructs a new instance that will create the new composite. I will use
      * the default {@linkplain ElementSelectionService#getInstance() selection service}
      * to process the <tt>input</tt>.
      * 
@@ -143,7 +145,7 @@ public abstract class ElementSelectionComposite
             AbstractElementSelectionInput input) {
         this(title, input, ElementSelectionService.getInstance());
     }
-    
+
     /**
      * Constructs a new instance that will create the new composite.
      * 
@@ -153,12 +155,12 @@ public abstract class ElementSelectionComposite
      *     <tt>input</tt>
      */
     public ElementSelectionComposite(String title,
-    		AbstractElementSelectionInput input,
-    		ElementSelectionService elementSelectionService) {
-    	super();
-    	this.title = title;
-    	this.input = input;
-    	this.elementSelectionService = elementSelectionService;
+            AbstractElementSelectionInput input,
+            ElementSelectionService elementSelectionService) {
+        super();
+        this.title = title;
+        this.input = input;
+        this.elementSelectionService = elementSelectionService;
         this.lastScopeSearchedFor = input.getScope().intValue();
     }
 
@@ -234,7 +236,7 @@ public abstract class ElementSelectionComposite
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
-                // method not implemented
+                handleWidgetDefaultSelected();
             }
         });
 
@@ -255,11 +257,12 @@ public abstract class ElementSelectionComposite
             }
         });
         tableViewer.setSorter(new ViewerSorter() {
+
             public int compare(Viewer viewer, Object e1, Object e2) {
                 if (e1 instanceof IMatchingObject && e2 instanceof IMatchingObject)
                     return ((IMatchingObject)e1).getName().toLowerCase().compareTo(
-                        ((IMatchingObject)e2).getName().toLowerCase());
-                
+                            ((IMatchingObject) e2).getName().toLowerCase());
+
                 return super.compare(viewer, e1, e2);
             }
         });
@@ -289,24 +292,24 @@ public abstract class ElementSelectionComposite
             /* no filter, no results */
             cancel();
             matchingObjects.clear();
-            tableViewer.getTable().removeAll();            
+            tableViewer.getTable().removeAll();
             firstCharacter = Character.MIN_VALUE;
             return;
         }
-        
+
         String filter = validatePattern(filterText.getText());
         pattern = Pattern.compile(filter);
         if (firstCharacter != filterText.getText().charAt(0) ||
                 this.input.getScope().intValue() != this.lastScopeSearchedFor ||
                 !filterText.getText().startsWith(lastSearchedFor)) {
-            //scope changes, start from scratch...
+            // scope changes, start from scratch...
             cancel();
             matchingObjects.clear();
             tableViewer.getTable().removeAll();
-            
+
             firstCharacter = filterText.getText().charAt(0);
             this.lastScopeSearchedFor = this.input.getScope().intValue();
-            
+
             startElementSelectionService();
         } else {
             /*
@@ -336,7 +339,7 @@ public abstract class ElementSelectionComposite
          */
         input.setInput(filterText.getText());
         lastSearchedFor = filterText.getText();
-        
+
         progressBar.setVisible(true);
         progressBar.beginTask(
             CommonUIServicesMessages.ElementSelectionService_ProgressName,
@@ -475,11 +478,28 @@ public abstract class ElementSelectionComposite
         }
     }
 
-    
     /**
-     * @return the job
+     * Retreive the filter text field.
+     * 
+     * @return the filter text field.
+     */
+    public Text getFilterText() {
+        return filterText;
+    }
+
+    /**
+     * Retreive the element selection service job.
+     * 
+     * @return the element selection service job.
      */
     public ElementSelectionServiceJob getSelectionServiceJob() {
         return job;
+    }
+
+    /**
+     * Handle the double click of a selection in the table viewer.
+     */
+    protected void handleWidgetDefaultSelected() {
+        /** Default behavior is to do nothing. Subclasses can override. */
     }
 }
