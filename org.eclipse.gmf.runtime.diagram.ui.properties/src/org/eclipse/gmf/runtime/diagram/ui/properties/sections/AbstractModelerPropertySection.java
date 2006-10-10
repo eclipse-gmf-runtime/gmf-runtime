@@ -338,8 +338,11 @@ public abstract class AbstractModelerPropertySection
 		 * if (getUpdateRequestCollapser() != null) {
 		 * getUpdateRequestCollapser().stop(); updateRequestCollapser = null; }
 		 */
+		if (eObjectList != null) {
+			eObjectList.clear();
+		}
+		eObject = null;
 		disposed = true;
-
 	}
 	
 	/**
