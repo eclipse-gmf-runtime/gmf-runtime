@@ -80,7 +80,7 @@ public class FontSizeContributionItem
 	 */
 	protected void refreshItem() {
 		Combo box = (Combo) getControl();
-		Integer fontSize = (Integer) getOperationSetPropertyValue(getPropertyId());
+		Integer fontSize = (Integer) getOperationSetPropertyValue(getPropertyId(),false);
 
 		if (fontSize != null) {
 			int index = box.indexOf(Integer.toString(fontSize.intValue()));

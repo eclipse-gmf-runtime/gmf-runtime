@@ -134,6 +134,24 @@ public abstract class PropertyChangeContributionItem
 		}
 		return null;
 	}
+    
+    /**
+     * Returns the property value of the given property id of the current operation set's
+     * 
+     * The default implementation returns the current property value of the 
+     * primary object in the operation set if not empty and <code>null</code> otherwise
+     *  
+     * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction#getNewPropertyValue()
+     */
+    protected Object getOperationSetPropertyValue(String id,boolean useReadExeclusive) {
+        List set = getOperationSet();
+        if (!set.isEmpty()) {
+            IGraphicalEditPart primaryEditPart =
+                (IGraphicalEditPart) set.get(set.size() - 1);
+            return getPropertyValue(primaryEditPart, id,useReadExeclusive);
+        }
+        return null;
+    }
 
 	/**
 	 * A utility method to return the value of a given property for a given editpart
@@ -167,6 +185,29 @@ public abstract class PropertyChangeContributionItem
 			return null;
 		}
 	}
+    
+    /**
+     * A utility method to return the value of a given property for a given editpart
+     * 
+     * @param  editPart The editpart
+     * @param  useExclusiveRead indicates if the read process willl be run in a read execlusive 
+     *         operation or not
+     * @return The current value of the editpart's given property
+     */
+    protected Object getPropertyValue(
+        final IGraphicalEditPart editPart,
+        final String thePropertyId, boolean useExclusiveRead) {
+        if (useExclusiveRead){
+            return getPropertyValue(editPart,thePropertyId);
+        }
+        else {
+             ENamedElement element = PackageUtil.getElement(thePropertyId);
+             if (element instanceof EStructuralFeature){
+                 return editPart.getStructuralFeatureValue((EStructuralFeature) element);
+             }
+        }
+        return null;
+    }
 
 	/**
 	 * Gets the new property value (usualy from the item's control)

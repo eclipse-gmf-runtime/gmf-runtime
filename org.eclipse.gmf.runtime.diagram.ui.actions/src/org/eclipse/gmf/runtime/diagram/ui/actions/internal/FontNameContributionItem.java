@@ -81,7 +81,7 @@ public class FontNameContributionItem
 	 */
 	protected void refreshItem() {
 		Combo box = (Combo) getControl();
-		String fontName = (String) getOperationSetPropertyValue(getPropertyId());
+		String fontName = (String) getOperationSetPropertyValue(getPropertyId(),false);
 
 		if (fontName != null) {
 			int index = box.indexOf(fontName);
