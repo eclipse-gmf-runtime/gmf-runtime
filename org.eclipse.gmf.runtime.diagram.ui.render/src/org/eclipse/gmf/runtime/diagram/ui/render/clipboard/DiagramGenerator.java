@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
@@ -299,7 +300,12 @@ abstract public class DiagramGenerator {
 			return;
 
 		// Calculate the Relative bounds and absolute bounds
-		Rectangle relBounds = figure.getBounds().getCopy();
+		Rectangle relBounds = null;
+        if (figure instanceof IExpandableFigure)
+            relBounds = ((IExpandableFigure)figure).getExtendedBounds().getCopy();
+        else
+            relBounds = figure.getBounds().getCopy();
+        
 		Rectangle abBounds = relBounds.getCopy();
 		translateToPrintableLayer(figure, abBounds);
 
@@ -559,7 +565,11 @@ abstract public class DiagramGenerator {
 			IGraphicalEditPart editPart = (IGraphicalEditPart) editparts.get(i);
 
 			IFigure figure = editPart.getFigure();
-			Rectangle bounds = figure.getBounds().getCopy();
+			Rectangle bounds = null;
+            if (figure instanceof IExpandableFigure)
+                bounds = ((IExpandableFigure)figure).getExtendedBounds();
+            else
+                bounds = figure.getBounds().getCopy();
 			translateToPrintableLayer(figure, bounds);
 			bounds = bounds.getExpanded(getImageMargin(), getImageMargin());
 
