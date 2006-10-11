@@ -20,6 +20,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
@@ -31,7 +32,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * @author jbruck, cmahoney
  */
 public class BorderedNodeFigure
-	extends NodeFigure {
+	extends NodeFigure implements IExpandableFigure{
 
 	private BorderItemContainerFigure borderItemContainer;
 
@@ -162,12 +163,11 @@ public class BorderedNodeFigure
 		return super.findMouseEventTargetAt(x, y);
 	}
 
-	public boolean intersects(Rectangle rect) {
-		if (borderItemContainer.intersects(rect)) {
-			return true;
-		}
-		return super.intersects(rect);
-	}
+    public boolean intersects(Rectangle rect) {
+        if (getExtendedBounds().intersects(rect))
+            return true;
+        return super.intersects(rect);
+    }
 
 	public Dimension getMinimumSize(int wHint, int hHint) {
 		return getMainFigure().getMinimumSize(wHint, hHint);
@@ -233,5 +233,12 @@ public class BorderedNodeFigure
 		}
 		return parent;
 	}
+    
 
+    public Rectangle getExtendedBounds() {
+        if (borderItemContainer!=null){
+            return borderItemContainer.getExtendedBounds().getCopy();
+        }
+        return getBounds().getCopy();
+    }
 }

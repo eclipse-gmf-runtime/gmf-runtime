@@ -11,8 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 
+import java.util.Iterator;
 import java.util.ListIterator;
 
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
@@ -34,10 +36,14 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * implementation kept border items in a separate list ( not as children ) and
  * painted them after, requiring explicit moving of children.
  * 
- * @author tisrar, jbruck, cmahoney
+ * @author tisrar, jbruck, cmahoney, mmostafa
  */
 public class BorderItemContainerFigure
 	extends NodeFigure {
+    
+    // rectangle indicating the extended bounds of the figure
+    // extended bounds include the border items in the calculations 
+    private Rectangle extendedBounds = new Rectangle();
 
 	/**
 	 * Constructor
@@ -210,24 +216,28 @@ public class BorderItemContainerFigure
 		Rectangle rectangle = getParentRectangle();
 		return rectangle.intersects(rect);
 	}
+    
+    private Rectangle getParentRectangle() {
+        Rectangle rect = _getParentRectangle();
+        return rect.union(getExtendedBounds());
+    }
+    
+    /**
+     * Return the area of the parent viewport if there is one, otherwise, return
+     * the client area of the parent.
+     */
+    private Rectangle _getParentRectangle() {
+        Rectangle rect = getParent().getParent().getClientArea().getCopy();
 
-	/**
-	 * Return the area of the parent viewport if there is one, otherwise, return
-	 * the client area of the parent.
-	 */
-	private Rectangle getParentRectangle() {
-		Rectangle rect = getParent().getParent().getClientArea().getCopy();
-
-		IFigure port = getViewport();
-		if (port != null) {
-			Rectangle portRect = port.getClientArea().getCopy();
-			if (portRect.height != 0 && portRect.width != 0) {
-				rect = portRect;
-			}
-		}
-		return rect;
-//		return getHandleBounds().getCopy();
-	}
+        IFigure port = getViewport();
+        if (port != null) {
+            Rectangle portRect = port.getClientArea().getCopy();
+            if (portRect.height != 0 && portRect.width != 0) {
+                rect = portRect;
+            }
+        }
+        return rect;
+    }
 
 	private IFigure getMainFigure(BorderItemContainerFigure gf) {
 		BorderedNodeFigure gpf = (BorderedNodeFigure) gf.getParent();
@@ -282,5 +292,53 @@ public class BorderItemContainerFigure
 			}
 		}
 	}
+    
+    public void invalidate() {
+        extendedBounds = null;
+        super.invalidate();
+    }
+    
+    
+
+    public void validate() {
+        extendedBounds = null;
+        super.validate();
+    }
+    
+    public Rectangle getExtendedBounds(){
+        if (extendedBounds == null)
+            extendedBounds = getExtendedBounds(getParent()).getCopy();
+        return extendedBounds;
+    }
+    
+       
+    private Rectangle getExtendedBounds(IFigure figure) {
+        if (figure == null)
+            return getBounds().getCopy();
+        else {
+            Rectangle _bounds = figure.getBounds().getCopy();
+            if (figure instanceof BorderedNodeFigure){
+                BorderedNodeFigure borderedFigure = (BorderedNodeFigure)figure;
+                BorderItemContainerFigure borderedItemContainer = (BorderItemContainerFigure)borderedFigure.getBorderItemContainer();
+                if (borderedItemContainer!=null){
+                    Iterator iterator = borderedItemContainer.getChildren().iterator();
+                    while (iterator.hasNext()) {
+                        Figure element = (Figure) iterator.next();
+                        if (element instanceof BorderedNodeFigure){
+                            BorderedNodeFigure childbFigure = (BorderedNodeFigure)element;
+                            BorderItemContainerFigure childBorderedItemContainer = (BorderItemContainerFigure)childbFigure.getBorderItemContainer();
+                            if (childBorderedItemContainer!=null)
+                                _bounds.union(childBorderedItemContainer.getExtendedBounds());
+                            else
+                                _bounds.union(childbFigure.getBounds());
+                        }
+                        else
+                            _bounds.union(element.getBounds());
+                     }
+                }
+            }
+            return _bounds;
+        }
+    }
 
 }
