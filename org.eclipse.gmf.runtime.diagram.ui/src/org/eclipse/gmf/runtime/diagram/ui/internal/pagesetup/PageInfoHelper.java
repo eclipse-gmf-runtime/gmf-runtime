@@ -27,6 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -68,8 +69,18 @@ public class PageInfoHelper {
                 continue;
             }
 
-            Rectangle r = childFigure.getBounds();
-            Point childLocation = childFigure.getLocation();
+            Rectangle r = null;
+            Point childLocation = null;
+            if (childFigure instanceof IExpandableFigure){
+                r = ((IExpandableFigure)childFigure).getExtendedBounds();
+                childLocation = r.getLocation();
+                
+            }else {
+                r = childFigure.getBounds();
+                childLocation = childFigure.getLocation();
+            }
+            
+            
             if (init) {
                 location.x = childLocation.x;
                 location.y = childLocation.y;
