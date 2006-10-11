@@ -32,6 +32,7 @@ import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.GridLayerEx;
@@ -166,7 +167,7 @@ public class DiagramRootEditPart
 	static protected class DiagramScalableFreeformLayeredPane extends
 		org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane implements ZoomListener {
 	
-		public DiagramScalableFreeformLayeredPane(IMapMode mm) {
+        public DiagramScalableFreeformLayeredPane(IMapMode mm) {
 			super(mm);
 		}
 
@@ -232,15 +233,16 @@ public class DiagramRootEditPart
 	/**
 	 * Identifies the layers containing Unprintable decoration layer.
 	 */
-	final public static String DECORATION_UNPRINTABLE_LAYER = "Decoration Unprintable Layer"; //$NON-NLS-1$   
-   
+	final public static String DECORATION_UNPRINTABLE_LAYER = "Decoration Unprintable Layer"; //$NON-NLS-1$
+    
+    
     /* (non-Javadoc)
      * @see org.eclipse.gef.ui.parts.FreeformGraphicalRootEditPart#createPrintableLayers()
      */
     protected LayeredPane createPrintableLayers() {
     	FreeformLayeredPane layeredPane = new FreeformLayeredPane();
               
-    	layeredPane.add(new FreeformLayer(), PRIMARY_LAYER);
+    	layeredPane.add(new BorderItemsAwareFreeFormLayer(), PRIMARY_LAYER);
     	layeredPane.add(new ConnectionLayerEx(), CONNECTION_LAYER);
 		layeredPane.add(new FreeformLayer(), DECORATION_PRINTABLE_LAYER);
 
