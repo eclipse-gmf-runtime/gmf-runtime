@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.internal.command.ICommandWithSettableResult;
 
 /**
  * An abstract superclass for GMF {@link IUndoableOperation}s that do not
@@ -45,7 +46,7 @@ import org.eclipse.core.runtime.Status;
  * @canBeSeenBy %partners
  */
 public abstract class AbstractCommand extends AbstractOperation
-		implements ICommand {
+		implements ICommand, ICommandWithSettableResult {
 
 	private final List affectedFiles;
 
@@ -249,5 +250,15 @@ public abstract class AbstractCommand extends AbstractOperation
         for (int i = 0; i < contexts.length; i++) {
             removeContext(contexts[i]);
         }
+    }
+    
+    /**
+     * Internal method to set the command result.
+     * 
+     * @param result CommandResult to set
+     * @deprecated internal API
+     */
+    public void internalSetResult(CommandResult result) {
+        this.commandResult = result;
     }
 }

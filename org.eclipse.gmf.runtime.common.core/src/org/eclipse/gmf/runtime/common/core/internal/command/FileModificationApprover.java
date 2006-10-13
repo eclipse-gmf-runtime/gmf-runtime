@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 
@@ -100,18 +101,40 @@ public class FileModificationApprover
             	IPath path = nextFile.getRawLocation();
             	if (path == null) {
 					// cancel if we can't find the file
+                    setCommandResult(fileModifier, Status.CANCEL_STATUS);
 					return Status.CANCEL_STATUS;
 				}
 				File file = path.toFile();
 				if (file != null && file.exists() && !file.canWrite()) {
 					// cancel if we find a read-only file outside the
 					// workspace
+                    setCommandResult(fileModifier, Status.CANCEL_STATUS);
 					return Status.CANCEL_STATUS;
 				}	
             }
         }
 
-        return FileModificationValidator
+        IStatus status = FileModificationValidator
             .approveFileModification((IFile[]) files.toArray(new IFile[] {}));
+        
+        if (!status.isOK()) {
+            setCommandResult(fileModifier, status);
+        }
+        
+        return status;
+    }
+    
+    /**
+     * Sets the command result of the specified command to a CommandResult
+     * having the specified status.
+     * 
+     * @param command ICommand to set the CommandResult for
+     * @param status IStatus of the CommandResult that will be set on the
+     * command
+     */
+    private void setCommandResult(ICommand command, IStatus status) {
+        if (command instanceof ICommandWithSettableResult) {
+            ((ICommandWithSettableResult) command).internalSetResult(new CommandResult(status));
+        }
     }
 }

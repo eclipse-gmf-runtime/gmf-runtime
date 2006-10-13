@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.internal.command.ICommandWithSettableResult;
 
 /**
  * An abstract superclass for GMF {@link IUndoableOperation}s that modify EMF
@@ -54,7 +55,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
  */
 public abstract class AbstractTransactionalCommand
     extends AbstractEMFOperation
-    implements ICommand {
+    implements ICommand, ICommandWithSettableResult {
 
     /**
      * Convenience method to get a list of workspaces files associated with
@@ -306,5 +307,15 @@ public abstract class AbstractTransactionalCommand
 	 */
     protected void cleanup() {
         // subclasses can use this to cleanup
+    }
+    
+    /**
+     * Internal method to set the command result.
+     * 
+     * @param result CommandResult to set
+     * @deprecated internal API
+     */
+    public void internalSetResult(CommandResult result) {
+        this.commandResult = result;
     }
 }

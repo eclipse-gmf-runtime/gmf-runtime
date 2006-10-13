@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -286,7 +286,8 @@ public class FileModificationApproverTest
         
         public void assertNotExecuted() {
             assertFalse(executed);
-            assertNull(getCommandResult());
+            //our validator should have marked it invalid
+            assertFalse(getCommandResult().getStatus().isOK());
         }
 
         public void assertUndone() {
@@ -298,7 +299,8 @@ public class FileModificationApproverTest
         
         public void assertNotUndone() {
             assertFalse(undone);
-            assertNull(getCommandResult());
+            //our validator should have marked it invalid
+            assertFalse(getCommandResult().getStatus().isOK());
         }
 
         public void assertRedone() {
@@ -310,7 +312,8 @@ public class FileModificationApproverTest
         
         public void assertNotRedone() {
             assertFalse(redone);
-            assertNull(getCommandResult());
+            //our validator should have marked it invalid
+            assertFalse(getCommandResult().getStatus().isOK());
         }
         
         public void reset() {
