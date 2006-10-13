@@ -29,6 +29,11 @@ public class CommonUIPlugin
 	 * This plug-in's shared instance.
 	 */
 	private static CommonUIPlugin plugin;
+    
+    /**
+     * UIModificationValidator
+     */
+    private UIModificationValidator uiValidator;
 
 	/**
 	 * Creates a new plug-in runtime object.
@@ -65,8 +70,20 @@ public class CommonUIPlugin
 		
 		// Make sure validateEdit for resources affected by GMF operations is
 		// done with UI context.
-		UIModificationValidator uiValidator = new UIModificationValidator();
+		uiValidator = new UIModificationValidator();
 		FileModificationValidator.setModificationValidator(uiValidator);
 	}
+    
+    /**
+     * Override to dispose the modification validator.
+     */
+    public void stop(BundleContext context)
+        throws Exception {
+        if (uiValidator != null) {
+            uiValidator.dispose();
+        }
+        
+        super.stop(context);
+    }
 
 }

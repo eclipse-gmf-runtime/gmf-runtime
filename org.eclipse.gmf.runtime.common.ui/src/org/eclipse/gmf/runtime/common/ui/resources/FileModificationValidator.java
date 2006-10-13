@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,7 +68,26 @@ public class FileModificationValidator {
 	 * @see org.eclipse.core.resources.IFileModificationValidator#validateEdit
 	 */
 	public boolean okToEdit(final IFile[] files, final String modificationReason) {
-		Shell shell = null;
+        return okToEdit(files, modificationReason, null);
+    }
+
+    /**
+     * Validates that the given files can be modified using the Team
+     * validateEdit support.
+     * 
+     * @param files
+     *            files that are to be modified; these files must all exist in
+     *            the workspace.
+     * @param modificationReason
+     *            a String describing the reason for modifying the file, usually
+     *            the command text.
+     * @param shell
+     *            UI context for UI that could be presented to the user to
+     *            determine whether the file may be edited.
+     * @return true if it is OK to edit the files.
+     * @see org.eclipse.core.resources.IFileModificationValidator#validateEdit
+     */
+    public boolean okToEdit(final IFile[] files, final String modificationReason, Shell shell) {
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && Display.getCurrent() != null) {
 			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getShell();
@@ -139,7 +158,7 @@ public class FileModificationValidator {
 					NLS
 						.bind(
 							CommonUIMessages.FileModificationValidator_SaveProblemDialogMessage,
-							status.getMessage()));
+							status.getMessage(), status.getMessage()));
 			return false;
 		}
 	}
