@@ -134,6 +134,24 @@ public abstract class PropertyChangeContributionItem
 		}
 		return null;
 	}
+    
+    /**
+     * Returns the property value of the given property id of the current operation set's
+     * 
+     * The default implementation returns the current property value of the 
+     * primary object in the operation set if not empty and <code>null</code> otherwise
+     *  
+     * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction#getNewPropertyValue()
+     */
+    protected Object getOperationSetPropertyValue(String id,boolean useReadExeclusive) {
+        List set = getOperationSet();
+        if (!set.isEmpty()) {
+            IGraphicalEditPart primaryEditPart =
+                (IGraphicalEditPart) set.get(set.size() - 1);
+            return getPropertyValue(primaryEditPart, id,useReadExeclusive);
+        }
+        return null;
+    }
 
 	/**
 	 * A utility method to return the value of a given property for a given editpart
@@ -167,38 +185,6 @@ public abstract class PropertyChangeContributionItem
 			return null;
 		}
 	}
-
-	/**
-	 * Gets the new property value (usualy from the item's control)
-	 * 
-	 * @return the new property value
-	 */
-	protected abstract Object getNewPropertyValue();
-
-	/**
-	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractContributionItem#isSelectionListener()
-	 */
-	protected boolean isSelectionListener() {
-		return true;
-	}
-    
-    /**
-     * Returns the property value of the given property id of the current operation set's
-     * 
-     * The default implementation returns the current property value of the 
-     * primary object in the operation set if not empty and <code>null</code> otherwise
-     *  
-     * @see org.eclipse.gmf.runtime.diagram.ui.internal.actions.PropertyChangeAction#getNewPropertyValue()
-     */
-    protected Object getOperationSetPropertyValue(String id,boolean useReadExeclusive) {
-        List set = getOperationSet();
-        if (!set.isEmpty()) {
-            IGraphicalEditPart primaryEditPart =
-                (IGraphicalEditPart) set.get(set.size() - 1);
-            return getPropertyValue(primaryEditPart, id,useReadExeclusive);
-        }
-        return null;
-    }
     
     /**
      * A utility method to return the value of a given property for a given editpart
@@ -222,5 +208,19 @@ public abstract class PropertyChangeContributionItem
         }
         return null;
     }
+
+	/**
+	 * Gets the new property value (usualy from the item's control)
+	 * 
+	 * @return the new property value
+	 */
+	protected abstract Object getNewPropertyValue();
+
+	/**
+	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractContributionItem#isSelectionListener()
+	 */
+	protected boolean isSelectionListener() {
+		return true;
+	}
 
 }
