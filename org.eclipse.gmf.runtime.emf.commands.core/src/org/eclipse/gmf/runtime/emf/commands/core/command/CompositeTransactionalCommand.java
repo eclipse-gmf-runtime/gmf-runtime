@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.emf.workspace.CompositeEMFOperation;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
+import org.eclipse.gmf.runtime.common.core.internal.command.ICommandWithSettableResult;
 
 /**
  * An undoable operation that is composed of child {@link IUndoableOperation}s
@@ -45,7 +46,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
  */
 public class CompositeTransactionalCommand
     extends CompositeEMFOperation
-    implements ICompositeCommand {
+    implements ICompositeCommand, ICommandWithSettableResult {
 
     private CommandResult commandResult;
 
@@ -266,5 +267,15 @@ public class CompositeTransactionalCommand
      */
     public boolean canUndo() {
     	return !isEmpty() && super.canUndo();
+    }
+    
+    /**
+     * Internal method to set the command result.
+     * 
+     * @param result CommandResult to set
+     * @deprecated internal API
+     */
+    public void internalSetResult(CommandResult result) {
+        this.commandResult = result;
     }
 }
