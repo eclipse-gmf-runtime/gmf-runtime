@@ -224,13 +224,11 @@ public class DiagramPrinter
             Object obj = it.next();
             //the diagrams List is only supposed to have Diagram objects
             Assert.isTrue(obj instanceof Diagram);
-            DiagramEditPart dgrmEP = PrintHelper.createDiagramEditPart((Diagram) obj, null);
+            DiagramEditPart dgrmEP = PrintHelper.createDiagramEditPart((Diagram) obj, preferencesHint);
             
             RootEditPart rep = dgrmEP.getRoot();
             if (rep instanceof DiagramRootEditPart) 
                 this.mm = ((DiagramRootEditPart)rep).getMapMode();
-            if (rep instanceof IDiagramPreferenceSupport)
-                this.preferencesHint = ((IDiagramPreferenceSupport)rep).getPreferencesHint();
             
             initialize();
             

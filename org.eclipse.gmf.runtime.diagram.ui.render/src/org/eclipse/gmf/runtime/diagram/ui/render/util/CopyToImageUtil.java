@@ -262,7 +262,11 @@ public class CopyToImageUtil {
         throws CoreException {
 
         monitor.worked(1);
-        ImageData imageData = createImageData(image);
+        
+        ImageData imageData = image.getImageData();
+        
+        if (imageFormat.equals(ImageFileFormat.GIF))
+            imageData = createImageData(image); 
 
         monitor.worked(1);
         createFile(destination);
