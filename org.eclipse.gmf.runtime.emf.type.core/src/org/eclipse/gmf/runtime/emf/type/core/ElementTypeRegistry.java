@@ -643,27 +643,25 @@ public class ElementTypeRegistry {
 					return descriptor;
 				}
 			}
-			
-		} else {
-			// Find the metamodel type for the nearest supertype.
-			List supertypes = eClass.getEAllSuperTypes();
-			for (int i = supertypes.size() - 1; i >= 0; i--) {
-				EClass nextEClass = (EClass) supertypes.get(i);
+		} 
+		// Find the metamodel type for the nearest supertype.
+		List supertypes = eClass.getEAllSuperTypes();
+		for (int i = supertypes.size() - 1; i >= 0; i--) {
+			EClass nextEClass = (EClass) supertypes.get(i);
+
+			// nsURI could be different in supertypes of the eclass
+			metamodelTypeDescriptorsByEClass = (Map) metamodelTypeDescriptorsByNsURI.get(nextEClass.getEPackage().getNsURI());
+			descriptors = metamodelTypeDescriptorsByEClass != null ? (Collection) metamodelTypeDescriptorsByEClass
+					.get(nextEClass.getName())
+					: null;
+
+			if (descriptors != null) {
+				for (Iterator j = descriptors.iterator(); j.hasNext();) {
+					MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) j
+							.next();
 	
-				// nsURI could be different in supertypes of the eclass
-				metamodelTypeDescriptorsByEClass = (Map) metamodelTypeDescriptorsByNsURI.get(nextEClass.getEPackage().getNsURI());
-				descriptors = metamodelTypeDescriptorsByEClass != null ? (Collection) metamodelTypeDescriptorsByEClass
-						.get(nextEClass.getName())
-						: null;
-	
-				if (descriptors != null) {
-					for (Iterator j = descriptors.iterator(); j.hasNext();) {
-						MetamodelTypeDescriptor descriptor = (MetamodelTypeDescriptor) j
-								.next();
-		
-						if (clientContext.includes(descriptor)) {
-							return descriptor;
-						}
+					if (clientContext.includes(descriptor)) {
+						return descriptor;
 					}
 				}
 			}

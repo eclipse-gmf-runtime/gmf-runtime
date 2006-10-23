@@ -20,6 +20,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -1273,5 +1274,52 @@ public class ElementTypeRegistryTest
 		// #getAllSuperTypes
 		assertEquals(superTypes[0], EmployeeType.EMPLOYEE);
 		assertEquals(superTypes[1], EmployeeType.STUDENT);
+	}
+	
+	/**
+	 * Tests that when finding the nearest metamodel type that matches a given
+	 * model object (when there is no type registered specifically against its
+	 * EClass in current client context), the ElementTypeRegistry finds the type
+	 * for the nearest supertype EClass in the current client context.
+	 */
+	public void test_getMetamodelType_157788() {
+
+		final Resource r = getEditingDomain()
+				.getResourceSet()
+				.createResource(
+						URI
+								.createURI("null://org.eclipse.gmf.tests.runtime.emf.type.core.157788")); //$NON-NLS-1$
+
+		final Student[] s = new Student[1];
+		
+		RecordingCommand command = new RecordingCommand(getEditingDomain()) {
+
+            protected void doExecute() {
+            	Department d = (Department) getEmployeeFactory().create(
+        				getEmployeePackage().getDepartment());
+        		d.setName("Department_157788"); //$NON-NLS-1$
+        		r.getContents().add(d);
+
+        		s[0] = (Student) getEmployeeFactory().create(
+        				getEmployeePackage().getStudent());
+        		s[0].setNumber(157788);
+        		d.getMembers().add(s[0]);
+            };
+        };
+
+        try {
+            ((TransactionalCommandStack) getEditingDomain().getCommandStack()).execute(command,
+                null);
+
+        } catch (RollbackException re) {
+            fail("test_getMetamodelType_157788 setup failed:" + re.getLocalizedMessage()); //$NON-NLS-1$
+        } catch (InterruptedException ie) {
+        	fail("test_getMetamodelType_157788 setup failed:" + ie.getLocalizedMessage()); //$NON-NLS-1$
+        }
+
+		IElementType type = ElementTypeRegistry.getInstance().getElementType(s[0]);
+		assertNotNull(type);
+		assertEquals(
+				"org.eclipse.gmf.tests.runtime.emf.type.core.157788.employee", type.getId()); //$NON-NLS-1$
 	}
 }

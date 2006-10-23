@@ -64,7 +64,6 @@
             class="org.eclipse.gmf.runtime.emf.type.core.NullElementMatcher">
          </matcher>
       </clientContext> 
-      
    </extension>
 
    <!-- Types and advice contributed in this extension are NOT bound to a client context -->
@@ -369,6 +368,38 @@
         </metamodel>
    </extension>
    
+   <!-- Employee type for testing bugzilla 157788 -->
+   <extension
+         point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+         <metamodel
+                nsURI="http:///org.eclipse.gmf.tests.runtime.emf.type.core/Employee.ecore">
+           <metamodelType
+                   id="org.eclipse.gmf.tests.runtime.emf.type.core.157788.employee"     
+                   name="Employee"
+                   eclass="Employee"> 
+           </metamodelType>
+         </metamodel>
+   </extension> 
+   
+   <!-- client context that is bound to the employee type for bugzilla 157788 -->
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+      <clientContext id="org.eclipse.gmf.tests.runtime.emf.type.core.157788_context">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="org.eclipse.gmf.tests.runtime.emf.type.core.EditingDomain"/>
+            <test
+               property="org.eclipse.gmf.tests.runtime.emf.type.core.resourceURI"
+               value="null://org.eclipse.gmf.tests.runtime.emf.type.core.157788"/>
+         </enablement>
+      </clientContext> 
+
+      <binding 
+            context="org.eclipse.gmf.tests.runtime.emf.type.core.157788_context">
+         <elementType ref="org.eclipse.gmf.tests.runtime.emf.type.core.157788.employee"/>
+      </binding> 
+   </extension>
+      
    <extension point="org.eclipse.core.expressions.propertyTesters">
        <propertyTester
            id="org.eclipse.gmf.tests.runtime.emf.type.core.OfficeTester"
