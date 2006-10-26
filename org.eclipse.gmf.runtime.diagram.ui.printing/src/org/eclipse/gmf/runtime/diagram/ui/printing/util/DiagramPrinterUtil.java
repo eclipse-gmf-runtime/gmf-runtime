@@ -67,13 +67,16 @@ public class DiagramPrinterUtil {
         if (helper.getDlgPrintRangePages()) {
             diagramPrinter.setPrintRangePageSelection(true);
             diagramPrinter.setPrintRangePages(helper.getDlgPagesFrom(), helper.getDlgPagesTo());
+            diagramPrinter.setFitToPage(false);
         }
         
 		if (helper.getDlgScalePercent() == -1) {
             diagramPrinter.setColumns(helper.getDlgScaleFitToM());
 			diagramPrinter.setRows(helper.getDlgScaleFitToN());
+            diagramPrinter.setFitToPage(true);
 		} else {
 			diagramPrinter.setScaledPercent(helper.getDlgScalePercent());
+            diagramPrinter.setFitToPage(false);
 		}
 
 		diagramPrinter.run();

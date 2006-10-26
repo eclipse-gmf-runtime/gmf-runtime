@@ -22,7 +22,6 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
@@ -81,6 +80,16 @@ public class DiagramPrinter
     protected Rectangle logicalClientArea;
 
     private float userScale;
+    
+    private boolean fitToPage = false;
+    
+    /**
+     * change the fit to page state
+     * @param fitToPage the new fit to page state
+     */
+    public void setFitToPage(boolean fitToPage){
+        this.fitToPage = fitToPage;
+    }
 
     /**
      * Used when a Collection of Diagram objects are passed in instead of an
@@ -543,7 +552,6 @@ public class DiagramPrinter
         boolean rtlEnabled = ((this.gc.getStyle() & SWT.MIRRORED) != 0);
         
         int width = pageSize.x, height = pageSize.y;
-        
         //draw everything on an offscreen image first and then draw that image
         //onto the printer gc...this takes care of certain drawing bugs.
         
@@ -627,17 +635,32 @@ public class DiagramPrinter
 
         Rectangle figureBounds = PrintHelper.getPageBreakBounds(dgrmEP,
             loadedPreferences);
+        
+        PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
+        //do not include margins
+        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
+            .getPageSize(fPreferences, false, getMapMode());
+        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageSize, false);
+        int numCols = pageCount.x;
+        int numRows = pageCount.y;
+        
+        float actualWidth = 0;
+        float actualHeight = 0;
+        if (this.rows==1 && this.columns==1 && fitToPage){
+            Rectangle rectangle = dgrmEP.getChildrenBounds();
+            figureBounds.width = rectangle.x + rectangle.width + (numCols)*margins.right + numCols*margins.left ;
+            figureBounds.height = rectangle.y + rectangle.height + (numRows)*margins.top + numRows*margins.bottom;
+            actualWidth = figureBounds.width;
+            actualHeight = figureBounds.height;
+        }else {
+            actualWidth = numCols * pageSize.x;
+            actualHeight = numRows * pageSize.y;
+        }
 
         org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
             .getPageSize(fPreferences, getMapMode());
         
-        //do not include margins
-        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-            .getPageSize(fPreferences, false, getMapMode());
-         
-        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageSize, false);
-        int numCols = pageCount.x;
-        int numRows = pageCount.y;
+
         
         Rectangle translate = new Rectangle(Math.min(0, figureBounds.x), Math
             .min(0, figureBounds.y),
@@ -647,8 +670,8 @@ public class DiagramPrinter
         int totalHeight = (this.rows * pageSize.y);
         int totalWidth  = (this.columns * pageSize.x);
 
-        float vScale = ((float) totalHeight) / ((float)(numRows * pageSize.y));
-        float hScale = ((float) totalWidth) / ((float)(numCols * pageSize.x));
+        float vScale =  totalHeight / actualHeight;
+        float hScale = totalWidth / actualWidth;
 
         this.userScale = Math.min(hScale, vScale);
 
@@ -656,7 +679,6 @@ public class DiagramPrinter
         translated = new Point((int) (-translate.x * userScale),
             (int) (-translate.y * userScale));
 
-        PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
         adjustMargins(margins, userScale, getPrinterOffset());
 
         GC gc_ = new GC(Display.getDefault());
