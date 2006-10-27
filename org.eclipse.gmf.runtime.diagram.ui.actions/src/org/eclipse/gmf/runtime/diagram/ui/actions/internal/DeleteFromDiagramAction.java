@@ -196,7 +196,8 @@ public class DeleteFromDiagramAction extends DiagramAction{
  			if (selectedObject instanceof ConnectionEditPart){
  				ConnectionEditPart ePart = (ConnectionEditPart)selectedObject;
  				EditPart sEditPart = ePart.getSource();
- 				if (isCanonical(sEditPart))
+                EditPart tEditPart = ePart.getTarget();
+ 				if (isCanonical(sEditPart) && isCanonical(tEditPart))
  					return true;
  			}
  			//Check if container of shape is canonical.
