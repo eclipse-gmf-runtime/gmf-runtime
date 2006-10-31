@@ -102,7 +102,7 @@ public class ConnectionEditPolicy
 		if (cep.getSource() != null)
 			isCanonical = IsCanonical(cep.getSource());
 		if (cep.getTarget() != null)
-			return isCanonical ? isCanonical : IsCanonical(cep.getTarget());
+			isCanonical = isCanonical && IsCanonical(cep.getTarget());
 		return isCanonical;
 		
 	}
