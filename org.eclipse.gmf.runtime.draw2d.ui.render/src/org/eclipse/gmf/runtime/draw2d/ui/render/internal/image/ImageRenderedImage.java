@@ -73,15 +73,15 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 			int bufferHeight = getKey().getHeight() == 0 ? origHeight : getKey().getHeight();
 			
 			int newWidth = bufferWidth;
-			int newHeight = bufferWidth;
-			
-			if (getKey().shouldMaintainAspectRatio()) {
-				if (newWidth > newHeight) {
-					newHeight = (int)Math.round(newWidth * origHeight / (double)origWidth);
-				}
-				else {
-					newWidth = (int)Math.round(newHeight * origWidth / (double)origHeight);
-				}
+            int newHeight = bufferHeight;
+            
+            if (getKey().shouldMaintainAspectRatio()) {
+                double origAspectRatio = origHeight / (double)origWidth;
+                if (origAspectRatio > newHeight / (double)newWidth) {
+                    newWidth = (int)Math.round(newHeight / origAspectRatio);
+                } else {
+                    newHeight = (int)Math.round(newWidth * origAspectRatio);
+                }
 				
 				double scale = 1.0;
 				if (newWidth > bufferWidth)
