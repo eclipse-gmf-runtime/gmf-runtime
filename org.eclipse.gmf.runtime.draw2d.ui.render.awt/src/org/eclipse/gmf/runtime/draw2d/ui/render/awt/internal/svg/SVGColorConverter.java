@@ -128,7 +128,7 @@ public class SVGColorConverter {
 			int nStart = style.indexOf(attributeName + COLON);
 			if (nStart != -1) {
 				if (nStart > 0)
-					preColor = style.substring(0, nStart - 1);
+					preColor = style.substring(0, nStart);
 								
 				String postColor = ""; //$NON-NLS-1$
 				int nEnd = style.indexOf(SEMICOLON, nStart);
