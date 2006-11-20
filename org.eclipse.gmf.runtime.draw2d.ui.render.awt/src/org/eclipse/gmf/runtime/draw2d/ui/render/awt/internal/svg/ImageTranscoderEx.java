@@ -202,10 +202,15 @@ public class ImageTranscoderEx extends ImageTranscoder {
 			if (Px.isIdentity() && (newWidth != docWidth || newHeight != docHeight)) {
 				// The document has no viewBox, we need to resize it by hand.
 				// we want to keep the document size ratio
-				float d = Math.max(docWidth, docHeight);
-				float dd = Math.max(newWidth, newHeight);
-				float scale = dd/d;
-				Px = AffineTransform.getScaleInstance(scale, scale);
+				float xscale = newWidth / docWidth;
+                float yscale = newHeight / docHeight;
+                if (docHeight / docWidth > newHeight / newWidth) {
+                    xscale = yscale;
+                } else {
+                    yscale = xscale;
+                }
+                
+				Px = AffineTransform.getScaleInstance(xscale, yscale);
 			}
 		}
 		else {
