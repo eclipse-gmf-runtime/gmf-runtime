@@ -265,7 +265,8 @@ public class CopyToImageUtil {
         
         ImageData imageData = image.getImageData();
         
-        if (imageFormat.equals(ImageFileFormat.GIF))
+        if (imageFormat.equals(ImageFileFormat.GIF) ||
+                imageFormat.equals(ImageFileFormat.BMP))
             imageData = createImageData(image); 
 
         monitor.worked(1);
