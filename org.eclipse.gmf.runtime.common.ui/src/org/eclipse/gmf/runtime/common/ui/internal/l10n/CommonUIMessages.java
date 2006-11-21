@@ -49,6 +49,7 @@ public final class CommonUIMessages extends NLS {
 	public static String ShowRelatedElementsPredefinedComposite_CustomQuery;
 	public static String ShowRelatedElementsPredefinedComposite_Delete;
 	public static String ShowRelatedElementsPredefinedComposite_SaveAs;
+    public static String ShowRelatedElementsPredefinedComposite_SaveAs_Title;
 	public static String ShowRelatedElementsPredefinedComposite_UserCustomQuery;
 	public static String ShowRelatedElementsPredefinedComposite_ShowDetails;
 	public static String ShowRelatedElementsPredefinedComposite_HideDetails;

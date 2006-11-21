@@ -137,7 +137,7 @@ public class ShowRelatedElementsPredefinedComposite
 	 */
 	protected InputDialog saveAsDialog = new InputDialog(
 		Display.getDefault().getActiveShell(),
-			CommonUIMessages.ShowRelatedElementsPredefinedComposite_SaveAs, 
+			CommonUIMessages.ShowRelatedElementsPredefinedComposite_SaveAs_Title, 
 			CommonUIMessages.ShowRelatedElementsPredefinedComposite_ChooseName, 
 			StringStatics.BLANK, new IInputValidator() {  
 
