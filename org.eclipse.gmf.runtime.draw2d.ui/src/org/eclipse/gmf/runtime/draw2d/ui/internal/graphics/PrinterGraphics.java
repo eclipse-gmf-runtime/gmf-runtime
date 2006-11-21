@@ -66,13 +66,14 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
 	 */
 	public void dispose() {
 		
-		Iterator it = collapseImageCache.keySet().iterator();
-		while (it.hasNext()) {
-			Object key = it.next();
-			Image img = (Image)collapseImageCache.get(key);
-			img.dispose();
+		for (Iterator it = collapseImageCache.values().iterator(); it.hasNext();)
+		{
+	        Image img = (Image) it.next();
+	        img.dispose();
 		}
-		
+
+		collapseImageCache.clear();
+
 		super.dispose();
 	}
 	
