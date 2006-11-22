@@ -174,6 +174,7 @@ public class SelectAllAction extends DiagramAction {
 	 */
 	protected List addSelectableConnections(List editparts) {
 		List selectableConnections = new ArrayList();
+
 		DiagramEditPart diagramEditPart = getDiagramEditPart();
 		Set connnectableEditParts = new HashSet(editparts);
 		ListIterator li = editparts.listIterator();
@@ -186,14 +187,44 @@ public class SelectAllAction extends DiagramAction {
 			while (connections.hasNext()) {
 				ConnectionEditPart connection =
 					(ConnectionEditPart) connections.next();
-				if (connnectableEditParts.contains(connection.getSource())
-					|| connnectableEditParts.contains(connection.getTarget()))
+				if (canSelectConnection(connection, connnectableEditParts))
 					selectableConnections.add(connection);
 			}
 		}
 		return selectableConnections;
 	}
-
+    
+    /**
+     * Determines whether the given connection can be selected.  First checks
+     * whether the source or target of the connection is in the given
+     * connetableEditPart list. If it isn't it checks recursively whether the source
+     * or target of the connection is another connection and if that connection's
+     * source or target is in the given connectableEditPart list.  This is in 
+     * response to Bugzilla #162083.
+     * 
+     * @param connection connection to check
+     * @param connectableEditParts 
+     */
+    private boolean canSelectConnection(ConnectionEditPart connection, Set connectableEditParts)
+    {
+        EditPart connectionSource = connection.getSource();
+        EditPart connectionTarget = connection.getTarget();
+        boolean sourceHasSelectable = false;
+        boolean targetHasSelectable = false;
+        
+        if (connectableEditParts.contains(connectionSource)
+                    || connectableEditParts.contains(connectionTarget))
+            return true;
+        
+        if (connectionSource instanceof ConnectionEditPart)
+            sourceHasSelectable = canSelectConnection((ConnectionEditPart)connectionSource, connectableEditParts);
+              
+        if (!sourceHasSelectable && connectionTarget instanceof ConnectionEditPart)
+            targetHasSelectable = canSelectConnection((ConnectionEditPart)connectionTarget, connectableEditParts);
+        
+        return sourceHasSelectable || targetHasSelectable;
+    }
+    
 	/**
 	 * @return The Selection Conditional which tests if the editpart is selectable
 	 */
