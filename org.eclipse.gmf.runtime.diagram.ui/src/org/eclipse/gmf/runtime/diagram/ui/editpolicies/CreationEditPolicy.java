@@ -19,8 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
@@ -32,6 +35,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
@@ -378,6 +382,13 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 
 					_createCmd = (Command) createCmds.get(type);
 					Assert.isTrue(_createCmd != null && _createCmd.canExecute());
+					
+					// validate the affected files
+					IStatus status = validateAffectedFiles(_createCmd);
+					if (!status.isOK()) {
+						return new CommandResult(status);
+					}
+					
 					_createCmd.execute();
 
 					// Set the result in the unspecified type request.
@@ -396,6 +407,11 @@ public class CreationEditPolicy extends AbstractEditPolicy {
                     throws ExecutionException {
                     
 					if (_createCmd != null && _createCmd.canUndo() ) {
+						// validate the affected files
+						IStatus status = validateAffectedFiles(_createCmd);
+						if (!status.isOK()) {
+							return new CommandResult(status);
+						}
 						_createCmd.undo();
 					}
 					return super.doUndoWithResult(progressMonitor, info);
@@ -406,9 +422,26 @@ public class CreationEditPolicy extends AbstractEditPolicy {
                     throws ExecutionException {
                     
 					if (_createCmd != null && CommandUtilities.canRedo(_createCmd)) {
+						// validate the affected files
+						IStatus status = validateAffectedFiles(_createCmd);
+						if (!status.isOK()) {
+							return new CommandResult(status);
+						}
 						_createCmd.redo();
 					}
 					return super.doRedoWithResult(progressMonitor, info);
+				}
+				
+				private IStatus validateAffectedFiles(Command command) {
+					Collection affectedFiles = CommandUtilities
+							.getAffectedFiles(command);
+					int fileCount = affectedFiles.size();
+					if (fileCount > 0) {
+						return FileModificationValidator
+								.approveFileModification((IFile[]) affectedFiles
+										.toArray(new IFile[fileCount]));
+					}
+					return Status.OK_STATUS;
 				}
 			};
 
