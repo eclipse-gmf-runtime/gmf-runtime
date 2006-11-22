@@ -11,11 +11,15 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.commands;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 
 /**
  * Class containing commands utility methods.
@@ -65,6 +69,38 @@ public class CommandUtilities {
 			return ((ICommandProxy)command).getICommand().canRedo();
 		}
 		return command.canUndo();
+	}
+	
+	/**
+	 * Determines the files affected by <code>command</code>. Since GEF
+	 * command API has no support for #getAffectedFiles, this utility will
+	 * traverse the contents of GEF wrapper commands and determine the files
+	 * affected by the <code>ICommands</code> it contains.
+	 * 
+	 * @param command
+	 *            the command
+	 * @return the affected files
+	 */
+	public static Collection getAffectedFiles(Command command)
+	{
+		if (command == null)
+			return Collections.EMPTY_LIST;
+		
+		if (command instanceof ICommand) {
+			return ((ICommand) command).getAffectedFiles();
+			
+		} else if (command instanceof ICommandProxy) {
+			return ((ICommandProxy)command).getICommand().getAffectedFiles();
+			
+		} else if (command instanceof CompoundCommand) {
+			LinkedHashSet result = new LinkedHashSet();
+			
+			for (Iterator iter = ((CompoundCommand)command).getCommands().iterator(); iter.hasNext();) {
+				result.addAll(getAffectedFiles((Command) iter.next()));
+			}
+			return result;
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 }
