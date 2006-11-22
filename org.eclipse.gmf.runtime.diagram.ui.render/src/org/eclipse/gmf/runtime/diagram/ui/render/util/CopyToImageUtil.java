@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -270,8 +272,13 @@ public class CopyToImageUtil {
             imageData = createImageData(image); 
 
         monitor.worked(1);
-        createFile(destination);
-
+        
+        IStatus fileModificationStatus = createFile(destination);
+        if (!fileModificationStatus.isOK()) {
+        	// can't write to the file
+        	return;
+        }
+        
         monitor.worked(1);
         ImageLoader imageLoader = new ImageLoader();
         imageLoader.data = new ImageData[] {imageData};
@@ -299,7 +306,12 @@ public class CopyToImageUtil {
             DiagramSVGGenerator generator, IProgressMonitor monitor)
         throws CoreException {
 
-        createFile(destination);
+        IStatus fileModificationStatus = createFile(destination);
+        if (!fileModificationStatus.isOK()) {
+        	// can't write to the file
+        	return;
+        }
+        
         monitor.worked(1);
 
         try {
@@ -325,10 +337,11 @@ public class CopyToImageUtil {
      * 
      * @param destination
      *            the destination file.
+     * @return the status from validating the file for editing
      * @exception CoreException
      *                if this method fails
      */
-    private void createFile(IPath destination)
+    private IStatus createFile(IPath destination)
         throws CoreException {
         IFile file = ResourcesPlugin.getWorkspace().getRoot()
             .getFileForLocation(destination);
@@ -343,6 +356,11 @@ public class CopyToImageUtil {
                 file.create(input, false, null);
             }
         }
+
+        if (file != null) {
+        	return FileModificationValidator.approveFileModification(new IFile[] {file});
+        }
+        return Status.OK_STATUS;
     }
 
     /**

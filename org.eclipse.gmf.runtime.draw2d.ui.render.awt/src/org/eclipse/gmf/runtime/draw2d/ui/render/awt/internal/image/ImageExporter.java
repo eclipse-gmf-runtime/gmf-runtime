@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin;
 
@@ -58,7 +59,13 @@ public class ImageExporter {
             String imageFormat, IProgressMonitor monitor) 
         throws CoreException {
 
-        createFile(destination);
+        IStatus fileModificationStatus = createFile(destination);
+        
+        if (!fileModificationStatus.isOK()) {
+        	// can't write to the file
+        	return;
+        }
+        
         monitor.worked(1);
 
         try {
@@ -121,9 +128,10 @@ public class ImageExporter {
      * 
      * @param destination
      *            the destination file.
+     * @return the status from validating the file for editing
      * @exception CoreException if this method fails
      */
-    private static void createFile(IPath destination)
+    private static IStatus createFile(IPath destination)
         throws CoreException {
         IFile file = ResourcesPlugin.getWorkspace().getRoot()
             .getFileForLocation(destination);
@@ -138,6 +146,11 @@ public class ImageExporter {
                 file.create(input, false, null);
             }
         }
+        
+        if (file != null) {
+        	return FileModificationValidator.approveFileModification(new IFile[] {file});
+        }
+        return Status.OK_STATUS;
     }
 
     /**
