@@ -323,17 +323,6 @@ public class CopyingResource
 					otherResource = copyingResource;
 				}
 			}
-
-			String qName = EMFCoreUtil.getQualifiedName(obj, true);
-			if (qName.length() > 0) {
-				StringBuffer buffer = new StringBuffer(otherResource
-					.getURIFragment(obj));
-				buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
-				buffer.append(Util.encodeQualifiedName(qName));
-				buffer.append(EMFCoreConstants.FRAGMENT_SEPARATOR);
-				return otherResource.getURI().appendFragment(
-					buffer.toString());
-			}
 			
 			return super.getHREF(otherResource, obj);
 		}
