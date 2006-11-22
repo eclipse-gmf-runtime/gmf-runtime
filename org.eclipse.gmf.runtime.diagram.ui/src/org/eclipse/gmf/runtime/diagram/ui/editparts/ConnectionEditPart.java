@@ -199,6 +199,11 @@ abstract public class ConnectionEditPart
      * @see org.eclipse.gef.EditPart#activate()
      */
     public void activate() {
+    	
+    	if (isActive()) {
+            return;
+        }
+    	
         addNotationalListeners();
 
         EObject semanticProxy = ((View) getModel()).getElement();
@@ -330,6 +335,11 @@ abstract public class ConnectionEditPart
      * @see org.eclipse.gef.EditPart#deactivate()
      */
    public void deactivate() {
+	   
+	   if (!isActive()) {
+           return;
+       }
+	   
         boolean wasActive = isActive();
         super.deactivate();
         if (listenerFilters != null && wasActive != isActive()) {
