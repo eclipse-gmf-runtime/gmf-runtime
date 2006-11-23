@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -138,14 +140,47 @@ public class CreateViewAndOptionallyElementCommand
 	 * @param element
 	 * @return IView the view if found; or null
 	 */
-	protected View getExistingView(EObject element) 
-	{
-		IGraphicalEditPart theTarget =(IGraphicalEditPart)getContainerEP().findEditPart(null, element);
-		if(theTarget != null)
-			return (View)theTarget.getModel();
-		return null;
-		
-	}
+    protected View getExistingView(EObject element) {
+        IGraphicalEditPart theTarget = (IGraphicalEditPart) findChildEditPart(
+            getContainerEP(), element);
+        if (theTarget != null)
+            return (View) theTarget.getModel();
+        return null;
+    }
+
+    /**
+     * Returns an immediate child editpart of the editpart passed in whose
+     * element is the same as the element passed in if it exists; returns null
+     * if such an editpart does not exist.
+     * 
+     * @param editpart
+     *            the parent editpart
+     * @param theElement
+     *            the element to match
+     * @return an immediate child editpart of the editpart passed in whose
+     *         element is the same as the element passed in if it exists; null
+     *         otherwise
+     */
+    private EditPart findChildEditPart(EditPart editpart, EObject theElement) {
+        if (theElement == null) {
+            return null;
+        }
+
+        ListIterator childLI = editpart.getChildren().listIterator();
+        while (childLI.hasNext()) {
+            EditPart epChild = (EditPart) childLI.next();
+            Object model = epChild.getModel();
+
+            if (model instanceof View) {
+                EObject el = ((View) model).getElement();
+
+                if ((el != null) && el.equals(theElement)) {
+                    return epChild;
+                }
+            }
+        }
+        return null;
+    }
 
 	/**
      * Prompts the user to see if they would like to use an existing view on the
