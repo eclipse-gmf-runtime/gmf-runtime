@@ -22,7 +22,6 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
@@ -544,70 +543,110 @@ public class DiagramPrinter
         
         int width = pageSize.x, height = pageSize.y;
         
-        //draw everything on an offscreen image first and then draw that image
-        //onto the printer gc...this takes care of certain drawing bugs.
-        
-        Image image = new Image(Display.getDefault(), getMapMode().LPtoDP(pageSize.x), getMapMode().LPtoDP(pageSize.y));
-        
-        GC imgGC = new GC(image, (rtlEnabled) ? SWT.RIGHT_TO_LEFT : SWT.LEFT_TO_RIGHT);
-        imgGC.setXORMode(false);
+        if (rtlEnabled) 
+        {
+            // draw everything on an offscreen image first and then draw that image
+            // onto the printer gc...this takes care of certain drawing bugs.
+            // This causes issues with printing resolution as it uses a display image
+            // which is typically 72dpi
+            // This code should be removed when a resolution to Bugzilla 162459 is found
 
-        SWTGraphics sg = new SWTGraphics(imgGC);
+            Image image = new Image(Display.getDefault(), getMapMode().LPtoDP(pageSize.x), getMapMode().LPtoDP(pageSize.y));
+
+            GC imgGC = new GC(image, (rtlEnabled) ? SWT.RIGHT_TO_LEFT : SWT.LEFT_TO_RIGHT);
+            imgGC.setXORMode(false);
+      
+            SWTGraphics sg = new SWTGraphics(imgGC);
+              
+            //for scaling
+            ScaledGraphics g1 = new ScaledGraphics(sg);
+          
+            //for himetrics and svg
+            MapModeGraphics mmg = createMapModeGraphics(g1);
+              
+            //if mmg's font is null, gc.setFont will use a default font
+            imgGC.setFont(mmg.getFont());
+              
+            mmg.translate(translated.x,translated.y);
+            mmg.scale(userScale);
+            
+            mmg.pushState();
+            
+            int translateX = -(width * (colIndex - 1));
+            int translateY = -(height * (rowIndex - 1));
         
-        //for scaling
-        ScaledGraphics g1 = new ScaledGraphics(sg);
-    
-        //for himetrics and svg
-        MapModeGraphics mmg = createMapModeGraphics(g1);
+            int scaledTranslateX = (int) (translateX / userScale);
+            int scaledTranslateY = (int) (translateY / userScale);
         
-        //if mmg's font is null, gc.setFont will use a default font
-        imgGC.setFont(mmg.getFont());
-        
-        mmg.translate(translated.x,translated.y);
-        mmg.scale(userScale);
-        
-        mmg.pushState();
-        
-        int translateX = -(width * (colIndex - 1));
-        int translateY = -(height * (rowIndex - 1));
-    
-        int scaledTranslateX = (int) (translateX / userScale);
-        int scaledTranslateY = (int) (translateY / userScale);
-    
-        int scaledWidth = (int) (width / userScale);
-        int scaledHeight = (int) (height / userScale);
-        
-        if (rtlEnabled) {
+            int scaledWidth = (int) (width / userScale);
+            int scaledHeight = (int) (height / userScale);
+            
             scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
             scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-        }
-        else {
-            scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
-            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-        }
+           
+            mmg.translate(scaledTranslateX, scaledTranslateY);
             
-        mmg.translate(scaledTranslateX, scaledTranslateY);
-        
-        Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
-            * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
-            * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
-            scaledHeight - margins.top - margins.bottom);
-        mmg.clipRect(clip);
-        
-        dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(mmg);
-        
-        mmg.popState();
-        
-        this.graphics.pushState();
+            Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
+                * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
+                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
+                scaledHeight - margins.top - margins.bottom);
+            
+            mmg.clipRect(clip);
+            
+            dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(mmg);
 
-        this.graphics.drawImage(image, 0, 0);
+            mmg.popState();
+            
+            this.graphics.pushState();
         
-        this.graphics.popState();
+            this.graphics.drawImage(image, 0, 0);
+              
+            this.graphics.popState();
+
+            //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
+            drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
+          
+            disposeImageVars(imgGC, image, sg, g1, mmg);
+        } else {
         
-        //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
-        drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
+            this.graphics.translate(translated.x,translated.y);
+            this.graphics.scale(userScale);
+            
+            this.graphics.pushState();
+    
+            int translateX = -(width * (colIndex - 1));
+            int translateY = -(height * (rowIndex - 1));
         
-        disposeImageVars(imgGC, image, sg, g1, mmg);
+            int scaledTranslateX = (int) (translateX / userScale);
+            int scaledTranslateY = (int) (translateY / userScale);
+        
+            int scaledWidth = (int) (width / userScale);
+            int scaledHeight = (int) (height / userScale);
+            
+            if (rtlEnabled) {
+                scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
+                scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
+            }
+            else {
+                scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
+                scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
+            }
+                
+            this.graphics.translate(scaledTranslateX, scaledTranslateY);
+            
+            Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
+                * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
+                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
+                scaledHeight - margins.top - margins.bottom);
+            this.graphics.clipRect(clip);
+
+            dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(this.graphics);
+    
+            this.graphics.popState();
+            
+            //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
+            drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
+        }
     }
 
     /**
