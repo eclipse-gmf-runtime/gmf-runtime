@@ -101,6 +101,16 @@ public class DiagramPrinter
      */
     private PreferencesHint preferencesHint;
     private IMapMode mm;
+    
+    private boolean fitToPage = false;
+    
+    /**
+     * change the fit to page state
+     * @param fitToPage the new fit to page state
+     */
+    public void setFitToPage(boolean fitToPage){
+        this.fitToPage = fitToPage;
+    }
 
     /**
      * Creates a new instance. The following variables must be initialized
@@ -538,11 +548,7 @@ public class DiagramPrinter
 
         org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
             .getPageSize(fPreferences, false, getMapMode());
-        
         boolean rtlEnabled = ((this.gc.getStyle() & SWT.MIRRORED) != 0);
-        
-        int width = pageSize.x, height = pageSize.y;
-        
         if (rtlEnabled) 
         {
             // draw everything on an offscreen image first and then draw that image
@@ -567,35 +573,7 @@ public class DiagramPrinter
             //if mmg's font is null, gc.setFont will use a default font
             imgGC.setFont(mmg.getFont());
               
-            mmg.translate(translated.x,translated.y);
-            mmg.scale(userScale);
-            
-            mmg.pushState();
-            
-            int translateX = -(width * (colIndex - 1));
-            int translateY = -(height * (rowIndex - 1));
-        
-            int scaledTranslateX = (int) (translateX / userScale);
-            int scaledTranslateY = (int) (translateY / userScale);
-        
-            int scaledWidth = (int) (width / userScale);
-            int scaledHeight = (int) (height / userScale);
-            
-            scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
-            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-           
-            mmg.translate(scaledTranslateX, scaledTranslateY);
-            
-            Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
-                * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
-                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
-                scaledHeight - margins.top - margins.bottom);
-            
-            mmg.clipRect(clip);
-            
-            dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(mmg);
-
-            mmg.popState();
+            internalDrawPage(dgrmEP,figureBounds,fPreferences,margins,mmg,rowIndex, colIndex,true);
             
             this.graphics.pushState();
         
@@ -605,48 +583,57 @@ public class DiagramPrinter
 
             //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
             drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
-          
             disposeImageVars(imgGC, image, sg, g1, mmg);
         } else {
-        
-            this.graphics.translate(translated.x,translated.y);
-            this.graphics.scale(userScale);
-            
-            this.graphics.pushState();
-    
-            int translateX = -(width * (colIndex - 1));
-            int translateY = -(height * (rowIndex - 1));
-        
-            int scaledTranslateX = (int) (translateX / userScale);
-            int scaledTranslateY = (int) (translateY / userScale);
-        
-            int scaledWidth = (int) (width / userScale);
-            int scaledHeight = (int) (height / userScale);
-            
-            if (rtlEnabled) {
-                scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
-                scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-            }
-            else {
-                scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
-                scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-            }
-                
-            this.graphics.translate(scaledTranslateX, scaledTranslateY);
-            
-            Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
-                * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
-                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
-                scaledHeight - margins.top - margins.bottom);
-            this.graphics.clipRect(clip);
-
-            dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(this.graphics);
-    
-            this.graphics.popState();
-            
+            internalDrawPage(dgrmEP,figureBounds,fPreferences,margins,this.graphics,rowIndex, colIndex,false);
             //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
             drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
         }
+    }
+    
+    private void internalDrawPage(DiagramEditPart dgrmEP,
+            Rectangle figureBounds, IPreferenceStore fPreferences,
+            PageMargins margins, Graphics g, int rowIndex, int colIndex,
+            boolean RTL_ENABLED) {
+        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
+            .getPageSize(fPreferences, false, getMapMode());
+
+        int width = pageSize.x, height = pageSize.y;
+        g.translate(translated.x, translated.y);
+        g.scale(userScale);
+
+        g.pushState();
+
+        int translateX = -(width * (colIndex - 1));
+        int translateY = -(height * (rowIndex - 1));
+
+        int scaledTranslateX = (int) (translateX / userScale);
+        int scaledTranslateY = (int) (translateY / userScale);
+
+        int scaledWidth = (int) (width / userScale);
+        int scaledHeight = (int) (height / userScale);
+
+        if (RTL_ENABLED) {
+            scaledTranslateX += (margins.left * (colIndex - 1))
+                + (margins.right * (colIndex));
+            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
+        } else {
+            scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
+            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
+        }
+
+        g.translate(scaledTranslateX, scaledTranslateY);
+
+        Rectangle clip = new Rectangle(
+            (scaledWidth - margins.left - margins.right) * (colIndex - 1)
+                + figureBounds.x, (scaledHeight - margins.bottom - margins.top)
+                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right
+                - margins.left, scaledHeight - margins.top - margins.bottom);
+        g.clipRect(clip);
+
+        dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(g);
+
+        g.popState();
     }
 
     /**
@@ -666,17 +653,32 @@ public class DiagramPrinter
 
         Rectangle figureBounds = PrintHelper.getPageBreakBounds(dgrmEP,
             loadedPreferences);
+        
+        PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
+        //do not include margins
+        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
+            .getPageSize(fPreferences, false, getMapMode());
+        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageSize, false);
+        int numCols = pageCount.x;
+        int numRows = pageCount.y;
+        
+        float actualWidth = 0;
+        float actualHeight = 0;
+        if (this.rows==1 && this.columns==1 && fitToPage){
+            Rectangle rectangle = dgrmEP.getChildrenBounds();
+            figureBounds.width = rectangle.x + rectangle.width + (numCols)*margins.right + numCols*margins.left ;
+            figureBounds.height = rectangle.y + rectangle.height + (numRows)*margins.top + numRows*margins.bottom;
+            actualWidth = figureBounds.width;
+            actualHeight = figureBounds.height;
+        }else {
+            actualWidth = numCols * pageSize.x;
+            actualHeight = numRows * pageSize.y;
+        }
 
         org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
             .getPageSize(fPreferences, getMapMode());
         
-        //do not include margins
-        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-            .getPageSize(fPreferences, false, getMapMode());
-         
-        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageSize, false);
-        int numCols = pageCount.x;
-        int numRows = pageCount.y;
+
         
         Rectangle translate = new Rectangle(Math.min(0, figureBounds.x), Math
             .min(0, figureBounds.y),
@@ -686,8 +688,8 @@ public class DiagramPrinter
         int totalHeight = (this.rows * pageSize.y);
         int totalWidth  = (this.columns * pageSize.x);
 
-        float vScale = ((float) totalHeight) / ((float)(numRows * pageSize.y));
-        float hScale = ((float) totalWidth) / ((float)(numCols * pageSize.x));
+        float vScale =  totalHeight / actualHeight;
+        float hScale = totalWidth / actualWidth;
 
         this.userScale = Math.min(hScale, vScale);
 
@@ -695,7 +697,6 @@ public class DiagramPrinter
         translated = new Point((int) (-translate.x * userScale),
             (int) (-translate.y * userScale));
 
-        PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
         adjustMargins(margins, userScale, getPrinterOffset());
 
         GC gc_ = new GC(Display.getDefault());
