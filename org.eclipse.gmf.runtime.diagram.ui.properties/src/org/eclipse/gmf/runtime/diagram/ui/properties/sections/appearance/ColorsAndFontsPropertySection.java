@@ -420,11 +420,11 @@ public class ColorsAndFontsPropertySection
         Iterator it = getInputIterator();
 
         RGB colorToReturn = selectedColor;
-
+        RGB color = selectedColor;
         while (it.hasNext()) {
             final IGraphicalEditPart ep = (IGraphicalEditPart) it.next();
 
-            RGB color = selectedColor;
+            color = selectedColor;
             if (popup.useDefaultColor()) {
                 Object preferredValue = ep.getPreferredValue(feature);
                 if (preferredValue instanceof Integer) {
@@ -452,13 +452,14 @@ public class ColorsAndFontsPropertySection
                     }
                 }));
             }
-
-            executeAsCompositeCommand(commandName, commands);
-            Image overlyedImage = new ColorOverlayImageDescriptor(
-                imageDescriptor.getImageData(), color).createImage();
-            disposeImage(button.getImage());
-            button.setImage(overlyedImage);
         }
+        if (!commands.isEmpty()){
+	        executeAsCompositeCommand(commandName, commands);
+    	    Image overlyedImage = new ColorOverlayImageDescriptor(
+            imageDescriptor.getImageData(), color).createImage();
+        	disposeImage(button.getImage());
+	        button.setImage(overlyedImage);
+	    }
         return colorToReturn;
     }
     
