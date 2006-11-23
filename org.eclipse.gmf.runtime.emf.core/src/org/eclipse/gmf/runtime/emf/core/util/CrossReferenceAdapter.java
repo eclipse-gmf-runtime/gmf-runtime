@@ -252,6 +252,12 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
 			Resource resource;
 			if (notifier instanceof Resource) {
 				resource = (Resource) notifier;
+                
+                if (!resource.isLoaded()) {
+                    // purge the resource from the imports/exports map
+                    deregisterReferences(resource);
+                    return;
+                }
 			} else {
 				resource = ((EObject) notification.getNotifier()).eResource();
 			}
