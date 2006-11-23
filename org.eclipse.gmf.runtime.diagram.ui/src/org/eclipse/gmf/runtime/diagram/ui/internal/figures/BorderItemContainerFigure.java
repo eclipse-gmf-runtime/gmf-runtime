@@ -22,6 +22,8 @@ import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsUtil;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
@@ -218,16 +220,7 @@ public class BorderItemContainerFigure
 	}
     
     private Rectangle getParentRectangle() {
-        Rectangle rect = _getParentRectangle();
-        return rect.union(getExtendedBounds());
-    }
-    
-    /**
-     * Return the area of the parent viewport if there is one, otherwise, return
-     * the client area of the parent.
-     */
-    private Rectangle _getParentRectangle() {
-        Rectangle rect = getParent().getParent().getClientArea().getCopy();
+         Rectangle rect = getParent().getParent().getClientArea().getCopy();
 
         IFigure port = getViewport();
         if (port != null) {
@@ -238,6 +231,8 @@ public class BorderItemContainerFigure
         }
         return rect;
     }
+    
+   
 
 	private IFigure getMainFigure(BorderItemContainerFigure gf) {
 		BorderedNodeFigure gpf = (BorderedNodeFigure) gf.getParent();
@@ -296,15 +291,11 @@ public class BorderItemContainerFigure
     public void invalidate() {
         extendedBounds = null;
         super.invalidate();
+        updateLayerExtents();
     }
     
     
 
-    public void validate() {
-        extendedBounds = null;
-        super.validate();
-    }
-    
     public Rectangle getExtendedBounds(){
         if (extendedBounds == null)
             extendedBounds = getExtendedBounds(getParent()).getCopy();
@@ -340,5 +331,17 @@ public class BorderItemContainerFigure
             return _bounds;
         }
     }
+    
+    protected void fireFigureMoved() {
+        super.fireFigureMoved();
+        extendedBounds = null;
+        updateLayerExtents();
+    }
 
+    private void updateLayerExtents() {
+        BorderItemsAwareFreeFormLayer layer = BorderItemsUtil.getBorderItemLayer(this);
+        if (layer!=null){
+            layer.borderFigureMoved();
+        }
+    }
 }

@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
  * border items. The border item container applies a delegating layout manager
  * to allow border item children to lay themselves out.
  * 
- * @author jbruck, cmahoney
+ * @author jbruck, cmahoney, mmostafa
  */
 public class BorderedNodeFigure
 	extends NodeFigure implements IExpandableFigure{
@@ -236,9 +236,10 @@ public class BorderedNodeFigure
     
 
     public Rectangle getExtendedBounds() {
-        if (borderItemContainer!=null){
-            return borderItemContainer.getExtendedBounds().getCopy();
+        Rectangle rect = getBounds().getCopy();
+         if (borderItemContainer!=null){
+            return rect.union(borderItemContainer.getExtendedBounds().getCopy());
         }
-        return getBounds().getCopy();
+        return rect;
     }
 }
