@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -277,19 +278,30 @@ public class DiagramEventBroker
      */
     public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
+        Set existingObjects = new HashSet();
         Set elementsInPersistQueue = new LinkedHashSet();
         CompoundCommand cc = new CompoundCommand();
         TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) editingDomainRef
             .get();
         boolean hasPreListeners = (preListeners.isEmpty() == false);
         List viewsToPersistList = new ArrayList();
+        boolean deleteElementCheckRequired = !deletedObjects.isEmpty();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
             if (shouldIgnoreNotification(notification))
                 continue;
             Object notifier = notification.getNotifier();            
             if (notifier instanceof EObject) {
-            	if (deletedObjects.contains(notifier)) {
+                boolean deleted = false;
+                if (deleteElementCheckRequired){
+                    deleted = !existingObjects.contains(notifier);
+                    if (deleted){
+                        deleted = isDeleted(deletedObjects, (EObject)notifier);
+                        if (!deleted)
+                            existingObjects.add(notifier);
+                    }
+                }
+            	if (deleted) {
                     continue;
                 }
                 if (editingDomain != null) {
@@ -328,6 +340,8 @@ public class DiagramEventBroker
             return;
         }
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
+        Set existingObjects = new HashSet();
+        boolean deleteElementCheckRequired = !deletedObjects.isEmpty();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
             boolean customNotification = NotificationUtil.isCustomNotification(notification);
@@ -335,7 +349,16 @@ public class DiagramEventBroker
                 continue;
             Object notifier = notification.getNotifier();
             if (notifier instanceof EObject) {
-                if (!customNotification && deletedObjects.contains(notifier)) {
+                boolean deleted = false;
+                if (deleteElementCheckRequired && !customNotification){
+                    deleted = !existingObjects.contains(notifier);
+                    if (deleted){
+                        deleted = isDeleted(deletedObjects, (EObject)notifier);
+                        if (!deleted)
+                            existingObjects.add(notifier);
+                    }
+                }
+                if (!customNotification && deleted) {
                     continue;
                 }
 
@@ -343,7 +366,44 @@ public class DiagramEventBroker
             }
         }
     }
+
+
+    /**
+     * decide if the passed object is deleted or not; the decision is done by 
+     * checking is the passed notifier or any of its ancestors exists in the passed
+     * deletedObjects Set, if it find the obnject to be deleted it will add it 
+     * to the deleted objects set.
+     * @param deletedObjects
+     * @param notifier
+     * @return
+     */
+    private boolean isDeleted(Set deletedObjects, EObject notifier) {
+        EObject object = notifier;
+        while (object!=null){
+            if (deletedObjects.contains(object)){
+                if (object != notifier){
+                    //so we do not waste time on the second call
+                    addDeletedBranch(deletedObjects,notifier);
+                }
+                return true;
+            }
+            object = object.eContainer();
+        }
+        return false;
+    }
     
+    private void addDeletedBranch(Set deletedObjects, EObject notifier) {
+        EObject object = notifier;
+        while (object != null){
+            if (!deletedObjects.add(object)){
+                break;
+            }
+            object = object.eContainer();
+        }
+        
+    }
+
+
     /**
      * determine if the passed notification can be ignored or not the default
      * implementation will ignore touch event if it is not a resolve event, also
