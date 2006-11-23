@@ -577,35 +577,7 @@ public class DiagramPrinter
             //if mmg's font is null, gc.setFont will use a default font
             imgGC.setFont(mmg.getFont());
               
-            mmg.translate(translated.x,translated.y);
-            mmg.scale(userScale);
-            
-            mmg.pushState();
-            
-            int translateX = -(width * (colIndex - 1));
-            int translateY = -(height * (rowIndex - 1));
-        
-            int scaledTranslateX = (int) (translateX / userScale);
-            int scaledTranslateY = (int) (translateY / userScale);
-        
-            int scaledWidth = (int) (width / userScale);
-            int scaledHeight = (int) (height / userScale);
-            
-            scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
-            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-           
-            mmg.translate(scaledTranslateX, scaledTranslateY);
-            
-            Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
-                * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
-                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
-                scaledHeight - margins.top - margins.bottom);
-            
-            mmg.clipRect(clip);
-            
-            dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(mmg);
-
-            mmg.popState();
+            internalDrawPage(dgrmEP,figureBounds,fPreferences,margins,mmg,rowIndex, colIndex,true);
             
             this.graphics.pushState();
         
@@ -619,44 +591,55 @@ public class DiagramPrinter
             disposeImageVars(imgGC, image, sg, g1, mmg);
         } else {
         
-            this.graphics.translate(translated.x,translated.y);
-            this.graphics.scale(userScale);
-            
-            this.graphics.pushState();
-    
-            int translateX = -(width * (colIndex - 1));
-            int translateY = -(height * (rowIndex - 1));
-        
-            int scaledTranslateX = (int) (translateX / userScale);
-            int scaledTranslateY = (int) (translateY / userScale);
-        
-            int scaledWidth = (int) (width / userScale);
-            int scaledHeight = (int) (height / userScale);
-            
-            if (rtlEnabled) {
-                scaledTranslateX += (margins.left * (colIndex - 1)) + (margins.right * (colIndex));
-                scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-            }
-            else {
-                scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
-                scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
-            }
-                
-            this.graphics.translate(scaledTranslateX, scaledTranslateY);
-            
-            Rectangle clip = new Rectangle((scaledWidth - margins.left - margins.right) 
-                * (colIndex - 1) + figureBounds.x, (scaledHeight - margins.bottom - margins.top) 
-                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right - margins.left, 
-                scaledHeight - margins.top - margins.bottom);
-            this.graphics.clipRect(clip);
-
-            dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(this.graphics);
-    
-            this.graphics.popState();
-            
+            internalDrawPage(dgrmEP,figureBounds,fPreferences,margins,this.graphics,rowIndex, colIndex,false);
             //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
             drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
         }
+    }
+    
+    private void internalDrawPage(DiagramEditPart dgrmEP,
+            Rectangle figureBounds, IPreferenceStore fPreferences,
+            PageMargins margins, Graphics g, int rowIndex, int colIndex,
+            boolean RTL_ENABLED) {
+        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
+            .getPageSize(fPreferences, false, getMapMode());
+
+        int width = pageSize.x, height = pageSize.y;
+        g.translate(translated.x, translated.y);
+        g.scale(userScale);
+
+        g.pushState();
+
+        int translateX = -(width * (colIndex - 1));
+        int translateY = -(height * (rowIndex - 1));
+
+        int scaledTranslateX = (int) (translateX / userScale);
+        int scaledTranslateY = (int) (translateY / userScale);
+
+        int scaledWidth = (int) (width / userScale);
+        int scaledHeight = (int) (height / userScale);
+
+        if (RTL_ENABLED) {
+            scaledTranslateX += (margins.left * (colIndex - 1))
+                + (margins.right * (colIndex));
+            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
+        } else {
+            scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));
+            scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
+        }
+
+        g.translate(scaledTranslateX, scaledTranslateY);
+
+        Rectangle clip = new Rectangle(
+            (scaledWidth - margins.left - margins.right) * (colIndex - 1)
+                + figureBounds.x, (scaledHeight - margins.bottom - margins.top)
+                * (rowIndex - 1) + figureBounds.y, scaledWidth - margins.right
+                - margins.left, scaledHeight - margins.top - margins.bottom);
+        g.clipRect(clip);
+
+        dgrmEP.getLayer(LayerConstants.PRINTABLE_LAYERS).paint(g);
+
+        g.popState();
     }
 
     /**
