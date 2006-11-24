@@ -172,11 +172,12 @@ public class DiagramPopupBarEditPolicy
 							if ((theToolType != null)) {
 								
 								Image image = IconService.getInstance().getIcon(theToolType);
+                                
+                                // Workaround for mirroring and SWT.ICON issue
+                                if (image != null && image.type == SWT.ICON && isMirrored()) {
+                                    image = convert(image);
+                                }
 								
-								// Workaround for mirroring and SWT.ICON issue
-								if (image.type == SWT.ICON && isMirrored()) {
-									image = convert(image);
-								}
 								addPopupBarDescriptor(theToolType, image);
 							}
 						}
