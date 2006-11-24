@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
@@ -59,8 +60,13 @@ public abstract class AbstractBorderItemEditPart
 			int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
 				.getLocation_Y())).intValue();
 			Point loc = new Point(x, y);
+			
+			int width = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Width())).intValue();
+			int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
+			Dimension size = new Dimension(width, height);
+
 			getBorderItemLocator().setConstraint(new Rectangle(
-				loc, getFigure().getPreferredSize()));
+				loc, size));
 		} else {
 			super.refreshBounds();
 		}

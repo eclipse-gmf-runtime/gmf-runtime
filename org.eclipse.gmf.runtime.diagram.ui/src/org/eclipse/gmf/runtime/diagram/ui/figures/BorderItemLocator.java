@@ -161,17 +161,17 @@ public class BorderItemLocator
 		int x = parentFigureX;
 		int y = parentFigureY;
 
-		Rectangle borderItemBounds = borderItem.getBounds();
+		Dimension borderItemSize = getSize(borderItem);
 
 		if (side == PositionConstants.WEST) {
-			x = parentFigureX - borderItemBounds.width
+			x = parentFigureX - borderItemSize.width
 				+ getBorderItemOffset().width;
 			y += parentFigureHeight / 2;
 		} else if (side == PositionConstants.EAST) {
 			x = parentFigureX + parentFigureWidth - getBorderItemOffset().width;
 			y += parentFigureHeight / 2;
 		} else if (side == PositionConstants.NORTH) {
-			y = parentFigureY - borderItemBounds.height
+			y = parentFigureY - borderItemSize.height
 				+ getBorderItemOffset().height;
 			x += parentFigureWidth / 2;
 		} else if (side == PositionConstants.SOUTH) {
@@ -196,56 +196,56 @@ public class BorderItemLocator
 		int parentFigureHeight = bounds.height;
 		int parentFigureX = bounds.x;
 		int parentFigureY = bounds.y;
-		Rectangle borderItemBounds = borderItem.getBounds();
+		Dimension borderItemSize = getSize(borderItem);
 		int newX = suggestedLocation.x;
 		int newY = suggestedLocation.y;
-		int westX = parentFigureX - borderItemBounds.width
+		int westX = parentFigureX - borderItemSize.width
 			+ getBorderItemOffset().width;
 		int eastX = parentFigureX + parentFigureWidth
 			- getBorderItemOffset().width;
 		int southY = parentFigureY + parentFigureHeight
 			- getBorderItemOffset().height;
-		int northY = parentFigureY - borderItemBounds.height
+		int northY = parentFigureY - borderItemSize.height
 			+ getBorderItemOffset().height;
 		if (suggestedSide == PositionConstants.WEST) {
 			if (suggestedLocation.x != westX) {
 				newX = westX;
 			}
 			if (suggestedLocation.y < bounds.getTopLeft().y) {
-				newY = northY + borderItemBounds.height;
+				newY = northY + borderItemSize.height;
 			} else if (suggestedLocation.y > bounds.getBottomLeft().y
-				- borderItemBounds.height) {
-				newY = southY - borderItemBounds.height;
+				- borderItemSize.height) {
+				newY = southY - borderItemSize.height;
 			}
 		} else if (suggestedSide == PositionConstants.EAST) {
 			if (suggestedLocation.x != eastX) {
 				newX = eastX;
 			}
 			if (suggestedLocation.y < bounds.getTopLeft().y) {
-				newY = northY + borderItemBounds.height;
+				newY = northY + borderItemSize.height;
 			} else if (suggestedLocation.y > bounds.getBottomLeft().y
-				- borderItemBounds.height) {
-				newY = southY - borderItemBounds.height;
+				- borderItemSize.height) {
+				newY = southY - borderItemSize.height;
 			}
 		} else if (suggestedSide == PositionConstants.SOUTH) {
 			if (suggestedLocation.y != southY) {
 				newY = southY;
 			}
 			if (suggestedLocation.x < bounds.getBottomLeft().x) {
-				newX = westX + borderItemBounds.width;
+				newX = westX + borderItemSize.width;
 			} else if (suggestedLocation.x > bounds.getBottomRight().x
-				- borderItemBounds.width) {
-				newX = eastX - borderItemBounds.width;
+				- borderItemSize.width) {
+				newX = eastX - borderItemSize.width;
 			}
 		} else { // NORTH
 			if (suggestedLocation.y != northY) {
 				newY = northY;
 			}
 			if (suggestedLocation.x < bounds.getBottomLeft().x) {
-				newX = westX + borderItemBounds.width;
+				newX = westX + borderItemSize.width;
 			} else if (suggestedLocation.x > bounds.getBottomRight().x
-				- borderItemBounds.width) {
-				newX = eastX - borderItemBounds.width;
+				- borderItemSize.width) {
+				newX = eastX - borderItemSize.width;
 			}
 		}
 		return new Point(newX, newY);
@@ -294,34 +294,34 @@ public class BorderItemLocator
 		int vertical_gap = MapModeUtil.getMapMode(getParentFigure()).DPtoLP(8);
 		int horizontal_gap = MapModeUtil.getMapMode(getParentFigure())
 			.DPtoLP(8);
-		Rectangle borderItemBounds = borderItem.getBounds();
+		Dimension borderItemSize = getSize(borderItem);
 
 		if (circuitCount < 4 && conflicts(recommendedLocation, borderItem)) {
 			if (suggestedSide == PositionConstants.WEST) {
 				do {
-					recommendedLocation.y += borderItemBounds.height
+					recommendedLocation.y += borderItemSize.height
 						+ vertical_gap;
 				} while (conflicts(recommendedLocation, borderItem));
 				if (recommendedLocation.y > getParentBorder().getBottomLeft().y
-					- borderItemBounds.height) { // off the bottom,
+					- borderItemSize.height) { // off the bottom,
 					// wrap south
 					return locateOnBorder(recommendedLocation,
 						PositionConstants.SOUTH, circuitCount + 1, borderItem);
 				}
 			} else if (suggestedSide == PositionConstants.SOUTH) {
 				do {
-					recommendedLocation.x += borderItemBounds.width
+					recommendedLocation.x += borderItemSize.width
 						+ horizontal_gap;
 				} while (conflicts(recommendedLocation, borderItem));
 				if (recommendedLocation.x > getParentBorder().getBottomRight().x
-					- borderItemBounds.width) {
+					- borderItemSize.width) {
 					return locateOnBorder(recommendedLocation,
 						PositionConstants.EAST, circuitCount + 1, borderItem);
 				}
 			} else if (suggestedSide == PositionConstants.EAST) {
 				// move up the east side
 				do {
-					recommendedLocation.y -= (borderItemBounds.height + vertical_gap);
+					recommendedLocation.y -= (borderItemSize.height + vertical_gap);
 				} while (conflicts(recommendedLocation, borderItem));
 				if (recommendedLocation.y < getParentBorder().getTopRight().y) {
 					// east is full, try north.
@@ -330,7 +330,7 @@ public class BorderItemLocator
 				}
 			} else { // NORTH
 				do {
-					recommendedLocation.x -= (borderItemBounds.width + horizontal_gap);
+					recommendedLocation.x -= (borderItemSize.width + horizontal_gap);
 				} while (conflicts(recommendedLocation, borderItem));
 				if (recommendedLocation.x < getParentBorder().getTopLeft().x) {
 					return locateOnBorder(recommendedLocation,
@@ -425,8 +425,9 @@ public class BorderItemLocator
 	 * @see org.eclipse.draw2d.Locator#relocate(org.eclipse.draw2d.IFigure)
 	 */
 	public void relocate(IFigure borderItem) {
+        Dimension size = getSize(borderItem);
 		Rectangle rectSuggested = new Rectangle(
-			getPreferredLocation(borderItem), borderItem.getBounds().getSize());
+			getPreferredLocation(borderItem), size);
 		int closestSide = findClosestSideOfParent(rectSuggested,
 			getParentBorder());
 		setPreferredSideOfParent(closestSide);
@@ -434,9 +435,9 @@ public class BorderItemLocator
 		Point ptNewLocation = locateOnBorder(getPreferredLocation(borderItem),
 			getPreferredSideOfParent(), 0, borderItem);
 		borderItem.setLocation(ptNewLocation);
+        borderItem.setSize(size);
 
-		setCurrentSideOfParent(findClosestSideOfParent(new Rectangle(ptNewLocation, borderItem
-			.getBounds().getSize()), getParentBorder()));
+		setCurrentSideOfParent(findClosestSideOfParent(new Rectangle(ptNewLocation, size), getParentBorder()));
 	}
 
 	/**
@@ -504,5 +505,18 @@ public class BorderItemLocator
 	 */
 	public void setCurrentSideOfParent(int side) {
 		this.currentSide = side;
+	}
+	
+	/**
+	 * Gets the size of the border item figure.
+	 * @param borderItem
+	 * @return the size of the border item figure.
+	 */
+	protected final Dimension getSize(IFigure borderItem) {
+        Dimension size = getConstraint().getSize();
+        if (LayoutHelper.UNDEFINED.getSize().equals(size)) {
+        	size = borderItem.getPreferredSize();
+        }
+        return size;
 	}
 }
