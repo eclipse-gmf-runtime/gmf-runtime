@@ -478,7 +478,7 @@ public class WrapLabel
 	 *         <code>IMapMode</code> that allows for the coordinate mapping
 	 *         from device to logical units.
 	 */
-	private IMapMode getMapMode() {
+	private IMapMode getFigureMapMode() {
 		return (IMapMode) getMapModeConstants().mapModeRef.get();
 	}
 
@@ -656,7 +656,7 @@ public class WrapLabel
 	 */
 	protected Dimension calculateSubStringTextSize() {
 		Font f = getFont();
-		return getTextExtents(getSubStringText(), f, getMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())); 
+		return getTextExtents(getSubStringText(), f, getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())); 
 	}
 
 	/**
@@ -672,7 +672,7 @@ public class WrapLabel
 	 */
 	protected Dimension calculateTextSize(int wHint, int hHint) {
 		Font f = getFont();
-		return getTextExtents(getWrappedText(wHint, hHint), f,getMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight()));
+		return getTextExtents(getWrappedText(wHint, hHint), f,getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight()));
 	}
 
 	private void clearLocations() {
@@ -766,7 +766,7 @@ public class WrapLabel
 			minSize.setSize(layoutManager.getMinimumSize(this, w, h));
 		Font f = getFont();
 		Dimension d = getEllipseTextSize().getIntersected(
-			getTextExtents(getText(), f, getMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())));		
+			getTextExtents(getText(), f, getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight())));		
 		
 		Dimension labelSize = calculateLabelSize(d);
 		Insets insets = getInsets();
@@ -830,7 +830,7 @@ public class WrapLabel
 		
 		Font f = getFont();
 		FontMetrics metrics = FigureUtilities.getFontMetrics(f);
-		IMapMode mm = getMapMode();
+		IMapMode mm = getFigureMapMode();
 		int fontHeight = mm.DPtoLP(metrics.getHeight());
 		int charAverageWidth = mm.DPtoLP(metrics.getAverageCharWidth());
 		int maxLines = (int) (effectiveSize.height / (double) fontHeight);
@@ -899,7 +899,7 @@ public class WrapLabel
 		}
 		
 		Font f = getFont();
-		int fontHeight = getMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
+		int fontHeight = getFigureMapMode().DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
 		int maxLines = Integer.MAX_VALUE;
 		if (hHint != -1) {			
 			maxLines = (int) (hHint / (double) fontHeight);
@@ -1129,7 +1129,7 @@ public class WrapLabel
 		StringTokenizer tokenizer = new StringTokenizer(subString, "\n"); //$NON-NLS-1$
 		Font f = getFont();
 		FontMetrics fontMetrics = FigureUtilities.getFontMetrics(f);
-		int fontHeight = getMapMode().DPtoLP(fontMetrics.getHeight());
+		int fontHeight = getFigureMapMode().DPtoLP(fontMetrics.getHeight());
 		int fontHeightHalf = fontHeight / 2;
 		int textWidth = getTextExtents(subString, f, fontHeight).width;
 		Point p = getTextLocation();
@@ -1273,7 +1273,7 @@ public class WrapLabel
 	protected Dimension getIconSize(int index) {
 		if (iconInfo == null)
 			return EMPTY_DIMENSION;
-		return iconInfo.getIconSize(getMapMode(), index);
+		return iconInfo.getIconSize(getFigureMapMode(), index);
 	}
 	
 	/**
@@ -1294,7 +1294,7 @@ public class WrapLabel
 	protected Dimension getTotalIconSize() {
 		if (iconInfo == null)
 			return EMPTY_DIMENSION;
-		return iconInfo.getTotalIconSize(getMapMode());
+		return iconInfo.getTotalIconSize(getFigureMapMode());
 	}
 
 	/**
@@ -1702,7 +1702,7 @@ public class WrapLabel
 			// height should be set using the font height and the number of
 			// lines in the string			
 			Dimension d = FigureUtilities.getTextExtents(s, f);
-			IMapMode mapMode = getMapMode();
+			IMapMode mapMode = getFigureMapMode();
 			d.width = mapMode.DPtoLP(d.width);
 			d.height = fontHeight * new StringTokenizer(s, "\n").countTokens();//$NON-NLS-1$
 			return d;			
