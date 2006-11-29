@@ -592,6 +592,9 @@ public class TextDirectEditManager
             if (tokenizer.hasMoreTokens()) {
                 charCount += tokenizer.nextToken().length();
                 
+                if (charCount >= text.length())
+                    break;
+                
                 //check if there is a user-inserted new line which will be accounted in the Text control...
                 String newLineCheck = text.substring(charCount,charCount+1); 
                 if (newLineCheck.equals("\r") || newLineCheck.equals("\n")) //$NON-NLS-1$ //$NON-NLS-2$
