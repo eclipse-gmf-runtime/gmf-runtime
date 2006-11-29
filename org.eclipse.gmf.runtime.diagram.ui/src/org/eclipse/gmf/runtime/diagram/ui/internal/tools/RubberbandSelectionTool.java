@@ -281,7 +281,7 @@ protected boolean handleButtonDown(int button) {
 
 /**
  * Effectively clears the current focus edit part by deliberately setting the
- * diagram root edit part as the focus.  This ensures that the rubber band
+ * diagram contents edit part as the focus.  This ensures that the rubber band
  * won't mistakenly select the selectable compartments and items in the current
  * focus edit part.
  */
@@ -289,10 +289,10 @@ private void clearFocus() {
 	EditPart focusPart = getCurrentViewer().getFocusEditPart();
 	
 	if (focusPart != null) {
-		// replace the current focus with the root edit part, which effectively
+		// replace the current focus with the contents edit part, which effectively
 		//   blocks unwanted selectability of compartments within the previous
 		//  focus edit part
-		getCurrentViewer().setFocus(getCurrentViewer().getRootEditPart());
+		getCurrentViewer().setFocus(getCurrentViewer().getContents());
 	}
 }
 
