@@ -22,8 +22,8 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AbstractDeleteFromAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
@@ -82,9 +82,12 @@ public class DeleteFromModelAction
 			if (editPart instanceof IGraphicalEditPart) {
 				IGraphicalEditPart gEditPart = (IGraphicalEditPart) editPart;
 				View view = (View) gEditPart.getModel();
+				// Disallow diagram deletion from model only if it is the top most diagram
+				EObject container = view.eContainer();
 				EObject element = ViewUtil.resolveSemanticElement(view);
 				if ((element == null) || (element.eIsProxy())
-					|| (element instanceof Diagram)) {
+						|| (element instanceof Diagram)
+						|| (view instanceof Diagram && (container == null || !(container instanceof View)))) {
 					return false;
 				}
 			} else {
@@ -133,9 +136,13 @@ public class DeleteFromModelAction
 				IGraphicalEditPart gEditPart = 
 					(IGraphicalEditPart) editPart;
 				View view = (View)gEditPart.getModel();
+				// Don't delete diagram from model only if it is the top most diagram
+				EObject container = view.eContainer();
 				EObject element = ViewUtil.resolveSemanticElement(view);
-				if(element instanceof Diagram)
+				if ((element instanceof Diagram)
+						|| (view instanceof Diagram && (container == null || !(container instanceof View)))) {
 					return null;
+				}
 			}
 			Command curCommand = editPart.getCommand(request);
 			if (curCommand != null) {

@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -409,17 +410,20 @@ public abstract class AbstractActionHandler
 	 * @return The current selection.
 	 */
 	protected ISelection getSelection() {
-		ISelection selection = null;
-		ISelectionProvider selectionProvider = getWorkbenchPart().getSite()
-			.getSelectionProvider();
+        ISelection selection = null;
+        ISelectionService selectionService = null;
+        if (getWorkbenchPart() != null && getWorkbenchPart().getSite().getWorkbenchWindow() != null) {
+            selectionService = getWorkbenchPart().getSite()
+                .getWorkbenchWindow().getSelectionService();
+        }
 
-		if (selectionProvider != null) {
-			selection = selectionProvider.getSelection();
-		}
+        if (selectionService != null) {
+            selection = selectionService.getSelection();
+        }
 
-		return (selection != null) ? selection
-			: StructuredSelection.EMPTY;
-	}
+        return (selection != null) ? selection
+            : StructuredSelection.EMPTY;
+    }
 
 	/**
 	 * Retrieves the current structured selection.
@@ -427,20 +431,10 @@ public abstract class AbstractActionHandler
 	 * @return The current structured selection.
 	 */
 	protected IStructuredSelection getStructuredSelection() {
-		IStructuredSelection selection = null;
-		ISelectionProvider selectionProvider = null;
-		if (getWorkbenchPart() != null) {
-			selectionProvider = getWorkbenchPart().getSite()
-				.getSelectionProvider();
-		}
-
-		if (selectionProvider != null
-			&& selectionProvider.getSelection() instanceof IStructuredSelection) {
-			selection = (IStructuredSelection) selectionProvider.getSelection();
-		}
-		return (selection != null) ? selection
-			: StructuredSelection.EMPTY;
-	}
+        ISelection selection = getSelection();
+        return (selection instanceof StructuredSelection) ? (StructuredSelection) selection
+            : StructuredSelection.EMPTY;
+    }
 
 	/**
 	 * Retrieves a Boolean indicating whether this action handler can be run.
