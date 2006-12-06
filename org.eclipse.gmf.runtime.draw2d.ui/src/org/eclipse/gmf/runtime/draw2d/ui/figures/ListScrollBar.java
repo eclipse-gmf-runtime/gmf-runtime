@@ -18,7 +18,12 @@ import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.ChangeEvent;
 import org.eclipse.draw2d.ChangeListener;
 import org.eclipse.draw2d.Clickable;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.Panel;
+import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.ScrollBar;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
@@ -136,9 +141,28 @@ public class ListScrollBar extends ScrollBar {
 		super.initialize();
 		setPageUp(null);
 		setPageDown(null);
-		setThumb(null);
 		setOpaque(false);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.ScrollBar#createDefaultThumb()
+	 */
+	protected IFigure createDefaultThumb() {
+		Panel thumb = new Panel() {
+
+			public void paint(Graphics graphics) {
+				graphics.setAlpha(128);
+				super.paint(graphics);
+			}
+			
+		};
+		thumb.setMinimumSize(new Dimension(6, 6));
+		thumb.setBackgroundColor(ColorConstants.button);
+
+		thumb.setBorder(new SchemeBorder(SchemeBorder.SCHEMES.RIDGED));
+		return thumb;
+	}
+
 
 	private void updateDownLabel() {
 		Image icon = null;

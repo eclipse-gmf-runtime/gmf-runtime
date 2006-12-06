@@ -79,14 +79,8 @@ public class OverlayScrollPaneLayout extends ScrollPaneLayout {
 		Viewport viewport = scrollpane.getViewport();
 		Dimension available = clientArea.getSize();
 		Dimension preferred = viewport.getPreferredSize(available.width, available.height).getCopy();
-		boolean none = available.contains(preferred);
-		boolean both =
-			!none
-				&& vVis != NEVER
-				&& hVis != NEVER
-				&& preferred.contains(available);
-		boolean showV = both || (preferred.height > available.height && (available.height > 0));
-		boolean showH = both || (preferred.width > available.width && (available.width > 0));
+		boolean showV = preferred.height > available.height && available.height > 0;
+		boolean showH = preferred.width > available.width && available.width > 0;
 		//Adjust for visibility override flags
 		showV = !(vVis == NEVER) && (showV || vVis == ALWAYS);
 		showH = !(hVis == NEVER) && (showH || hVis == ALWAYS);
