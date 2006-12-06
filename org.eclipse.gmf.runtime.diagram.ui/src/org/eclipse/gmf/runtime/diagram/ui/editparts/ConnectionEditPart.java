@@ -185,6 +185,24 @@ abstract public class ConnectionEditPart
         // change the property
         return null;
     }
+    
+    
+
+    protected void addChild(EditPart child, int index) {
+        super.addChild(child, index);
+        if (child instanceof GraphicalEditPart){
+            GraphicalEditPart gEP = (GraphicalEditPart)child;
+            boolean editMode = isEditModeEnabled(); 
+            if (editMode != gEP.isEditModeEnabled()){
+                if (editMode)
+                    gEP.enableEditMode();
+                else
+                    gEP.disableEditMode();
+            }
+        }
+    }
+
+
 
     /**
      * Register the adapters for the standard properties.
