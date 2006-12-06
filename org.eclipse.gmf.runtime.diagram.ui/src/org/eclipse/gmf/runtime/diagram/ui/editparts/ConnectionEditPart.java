@@ -115,7 +115,6 @@ import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -185,6 +184,24 @@ abstract public class ConnectionEditPart
         // change the property
         return null;
     }
+    
+    
+
+    protected void addChild(EditPart child, int index) {
+        super.addChild(child, index);
+        if (child instanceof GraphicalEditPart){
+            GraphicalEditPart gEP = (GraphicalEditPart)child;
+            boolean editMode = isEditModeEnabled(); 
+            if (editMode != gEP.isEditModeEnabled()){
+                if (editMode)
+                    gEP.enableEditMode();
+                else
+                    gEP.disableEditMode();
+            }
+        }
+    }
+
+
 
     /**
      * Register the adapters for the standard properties.
@@ -234,8 +251,8 @@ abstract public class ConnectionEditPart
         if (element == null)
             return;
 
-        Assert.isNotNull(filterId);
-        Assert.isNotNull(listener);
+    	assert filterId != null;
+    	assert listener != null;
 
         if (listenerFilters == null)
             listenerFilters = new HashMap();
@@ -261,8 +278,8 @@ abstract public class ConnectionEditPart
         if (element == null)
             return;
 
-        Assert.isNotNull(filterId);
-        Assert.isNotNull(listener);
+    	assert filterId != null;
+    	assert listener != null;
 
         if (listenerFilters == null)
             listenerFilters = new HashMap();
