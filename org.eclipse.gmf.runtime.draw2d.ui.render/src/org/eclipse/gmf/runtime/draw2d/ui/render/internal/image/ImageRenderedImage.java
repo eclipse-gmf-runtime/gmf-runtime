@@ -15,10 +15,10 @@ package org.eclipse.gmf.runtime.draw2d.ui.render.internal.image;
 import java.io.ByteArrayInputStream;
 import java.security.InvalidParameterException;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.SWTGraphics;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.factory.RenderedImageKey;
 import org.eclipse.swt.graphics.GC;
@@ -108,9 +108,8 @@ public final class ImageRenderedImage extends AbstractRenderedImage {
 				return new Image(PlatformUI.getWorkbench().getDisplay(), scaledImgData);
 			}
 		} catch (Exception e) {
-			Trace.throwing(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, ImageRenderedImage.class, 
-				"ImageRenderedImage.renderImage() : couldn't load image from buffer", //$NON-NLS-1$
-				e);
+            Log.error(Draw2dRenderPlugin.getInstance(),
+                IStatus.ERROR, e.toString(), e);
 			return null;
 		}
 

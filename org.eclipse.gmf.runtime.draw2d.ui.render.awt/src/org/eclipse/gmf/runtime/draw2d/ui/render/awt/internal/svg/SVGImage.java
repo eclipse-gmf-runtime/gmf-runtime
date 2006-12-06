@@ -20,6 +20,7 @@ import java.io.InputStream;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.util.XMLResourceDescriptor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.GCUtilities;
@@ -78,9 +79,8 @@ public final class SVGImage extends AbstractRenderedImage {
 				BufferedImage img = converter.renderSVGToAWTImage(getDocument(), getRenderInfo());
 				return ImageConverter.convert(img);
 			} catch (Exception e1) {
-				Trace.catching(Draw2dRenderPlugin.getInstance(), Draw2dRenderDebugOptions.EXCEPTIONS_THROWING, getClass(), "getSWTImage()", //$NON-NLS-1$
-					e1);
-
+                Log.error(Draw2dRenderPlugin.getInstance(),
+                    IStatus.ERROR, e.toString(), e);
 				// handle failure gracefully - we can't predict all the failures
 				// that
 				// may occur in the 3rd party library.
