@@ -16,23 +16,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.common.core.util.Log;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
-import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
@@ -56,8 +53,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class DuplicateActionDelegate
 	extends AbstractModelActionDelegate
-	implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-
+	implements IObjectActionDelegate, IWorkbenchWindowActionDelegate, IHandler{
+    
 	/**
 	 * Runs this duplicate action delegate by executing a duplicate command on
 	 * the selected model elements or views.
@@ -228,6 +225,28 @@ public class DuplicateActionDelegate
     // Documentation copied from superclass
     protected TransactionalEditingDomain getEditingDomain() {
         return getEditingDomain(getStructuredSelection());
+    }
+
+    public void addHandlerListener(IHandlerListener handlerListener) {
+        // nothing
+    }
+
+    public Object execute(ExecutionEvent event)
+        throws ExecutionException {
+        return null;
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public boolean isHandled() {
+        return true;
+    }
+
+    public void removeHandlerListener(IHandlerListener handlerListener) {
+        // nothing
+        
     }
 
 }
