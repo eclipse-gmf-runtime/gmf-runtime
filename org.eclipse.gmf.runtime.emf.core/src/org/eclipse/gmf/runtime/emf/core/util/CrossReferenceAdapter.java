@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.ECrossReferenceEList;
+import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -948,7 +949,7 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
                 features = new ArrayList(crossReferenceFeatures.length);
                 for (int i = 0; i < crossReferenceFeatures.length; i++) {
                     EStructuralFeature feature = crossReferenceFeatures[i];
-                    if (feature.isChangeable())
+                    if (isMutable(feature))
                         features.add(feature);
                 }
             }
@@ -956,6 +957,32 @@ public class CrossReferenceAdapter extends ECrossReferenceAdapter {
         }
         return features != nullList ? features
             : null;
+    }
+
+    /**
+     * Queries whether a feature is mutable.  A feature is considered
+     * mutable if and only if it is changeable and it is either not derived
+     * or it is a member of a feature map (though not itself a feature map).
+     * 
+     * @param feature the feature to test
+     * 
+     * @return <code>true</code> if the reference is mutable;
+     *     <code>false</code>, otherwise
+     */
+    static boolean isMutable(EStructuralFeature feature) {
+        boolean result = feature.isChangeable();
+        
+        if (result) {
+            if (feature.isDerived()) {
+                // check whether it is a feature-map member that is not, itself,
+                //    a feature map
+                EStructuralFeature group = ExtendedMetaData.INSTANCE.getGroup(feature);
+                
+                result = (group != null) && !FeatureMapUtil.isFeatureMap(feature);
+            }
+        }
+        
+        return result;
     }
 
 	/**
