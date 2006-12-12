@@ -243,18 +243,27 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		// check whether the method should be executed.
 		if (newLine.size() < 3)
 			return false;
-		if (conn.getSourceAnchor().getOwner() == null)
+        
+        IFigure sourceOwner = conn.getSourceAnchor().getOwner();
+        IFigure targetOwner = conn.getTargetAnchor().getOwner();
+		if (sourceOwner == null)
 			return false;
-		if (conn.getTargetAnchor().getOwner() == null)
+		if (targetOwner == null)
 			return false;
 	
-		Rectangle startRect = new Rectangle(conn.getSourceAnchor().getOwner().getBounds());
-		conn.getSourceAnchor().getOwner().translateToAbsolute(startRect);
-		conn.translateToRelative(startRect);
+		Rectangle startRect = null;        
+        if (!(sourceOwner instanceof Connection)) {
+            startRect = new Rectangle(sourceOwner.getBounds());
+            sourceOwner.translateToAbsolute(startRect);
+            conn.translateToRelative(startRect);
+        }
 
-		Rectangle endRect = new Rectangle(conn.getTargetAnchor().getOwner().getBounds());
-		conn.getTargetAnchor().getOwner().translateToAbsolute(endRect);
-		conn.translateToRelative(endRect);
+        Rectangle endRect = null;        
+        if (!(targetOwner instanceof Connection)) {
+    		endRect = new Rectangle(targetOwner.getBounds());
+            targetOwner.translateToAbsolute(endRect);
+    		conn.translateToRelative(endRect);
+        }
 
 		// Ignore the first and last points
 		PointList newPoints = new PointList(newLine.size());
@@ -263,9 +272,10 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			Point pt = newLine.getPoint(i);
 			if (i == 0 || i == newLine.size() - 1)
 				newPoints.addPoint(pt);
-			else if (!startRect.contains(pt) && !endRect.contains(pt)) {
-				newPoints.addPoint(pt);
-			}
+			else if ((startRect == null || !startRect.contains(pt))
+                && (endRect == null || !endRect.contains(pt))) {
+                newPoints.addPoint(pt);
+            }
             else {
                 bChanged = true;
             }
