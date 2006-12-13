@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.LayoutListener;
@@ -52,6 +51,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
+import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Routing;
@@ -167,7 +167,7 @@ public class DiagramEditPart
 				}
 			}
 		};
-		f.setLayoutManager(new FreeformLayout());
+		f.setLayoutManager(new FreeFormLayoutEx());
 		f.addLayoutListener(LayoutAnimator.getDefault());
 		f.addLayoutListener(new PageBreaksLayoutListener());
 		return f;

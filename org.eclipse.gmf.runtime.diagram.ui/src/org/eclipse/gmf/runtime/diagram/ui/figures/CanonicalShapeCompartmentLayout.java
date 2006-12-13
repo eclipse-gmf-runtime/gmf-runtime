@@ -13,8 +13,8 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 import java.util.Map;
 
-import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 
 /**
  * Layouts the shape compartment's children.  This class provides utility methods
@@ -25,7 +25,7 @@ import org.eclipse.draw2d.IFigure;
  * @author mhanner
  */
 public class CanonicalShapeCompartmentLayout
-	extends FreeformLayout
+	extends FreeFormLayoutEx
 	implements ICanonicalShapeCompartmentLayout {
 
 

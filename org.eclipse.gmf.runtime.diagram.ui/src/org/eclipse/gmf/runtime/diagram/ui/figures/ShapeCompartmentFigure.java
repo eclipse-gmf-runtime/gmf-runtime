@@ -20,6 +20,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimatableScrollPane;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OverlayScrollPaneLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -90,7 +91,7 @@ public class ShapeCompartmentFigure extends ResizableCompartmentFigure {
         scrollpane.setLayoutManager(new OverlayScrollPaneLayout() );
 
         IFigure contents = new BorderItemsAwareFreeFormLayer();
-        contents.setLayoutManager(new FreeformLayout());
+        contents.setLayoutManager(new FreeFormLayoutEx());
         scrollpane.setContents(contents);
         
         int MB = mm.DPtoLP(5);
