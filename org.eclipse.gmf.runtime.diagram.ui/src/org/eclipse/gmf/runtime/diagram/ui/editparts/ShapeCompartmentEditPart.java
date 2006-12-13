@@ -61,6 +61,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
+import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -448,7 +449,7 @@ public abstract class ShapeCompartmentEditPart
 	 * @return a layout manager.
 	 */
 	protected LayoutManager getLayoutManager() {
-		return new FreeformLayout();
+		return new FreeFormLayoutEx();
 	}
 
 	/**
