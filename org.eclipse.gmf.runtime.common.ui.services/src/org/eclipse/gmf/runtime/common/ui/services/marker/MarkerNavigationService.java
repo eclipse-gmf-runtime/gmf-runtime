@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesDebug
 import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.internal.CommonUIServicesStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.services.internal.marker.IMarkerNavigationProvider;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -177,25 +176,8 @@ public class MarkerNavigationService
 	public void gotoMarker(final IEditorPart editor, final IMarker marker) {
 		assert null != editor;
 		assert null != marker;
-
-		// RATLC00524228
-		// Do the operation in an asyncExec to work around a concurrent
-		// modification problem in the core Eclipse Problems view.
-		// When the Problems view is in the same part site as the Property
-		// sheet (or any other Aurora view that shows model elements), the
-		// marker navigation operation triggered by selection changed in the
-		// Problems view causes the Model Explorer part to become active
-		// and all AbstractActionHandlers to remove their selection listeners
-		// from the Problems view's selection provider. Because this selection
-		// provider stores listeners in an ArrayList instead of a JFace
-		// ListenerList, a ConcurrentModificationException is thrown when the
-		// selection provider attempts to notify the next selection listener
-		Display.getDefault().asyncExec(new Runnable() {
-
-			public void run() {
-				execute(new GotoMarkerOperation(editor, marker));
-			}
-		});
+		if (marker.exists())
+			execute(new GotoMarkerOperation(editor, marker));
 	}
 
 }
