@@ -13,6 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
 import java.util.Iterator;
 
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
@@ -20,9 +23,10 @@ import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
-
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
  * A resizable edit policy that understands REQ_DRAG and REQ_DROP requests 
@@ -85,4 +89,34 @@ public class ResizableEditPolicyEx extends ResizableEditPolicy {
 		return super.getTargetEditPart(request);
 	}
 
-}
+    protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
+        IFigure feedback = getDragSourceFeedbackFigure();
+        
+        PrecisionRectangle rect = new PrecisionRectangle(getInitialFeedbackBounds().getCopy());
+        getHostFigure().translateToAbsolute(rect);
+        rect.translate(request.getMoveDelta());
+        rect.resize(request.getSizeDelta());
+        
+        IFigure f = getHostFigure();
+        Dimension min = f.getMinimumSize().getCopy();
+        Dimension max = f.getMaximumSize().getCopy();
+        IMapMode mmode = MapModeUtil.getMapMode(f);
+        min.height = mmode.LPtoDP(min.height);
+        min.width = mmode.LPtoDP(min.width);
+        max.height = mmode.LPtoDP(max.height);
+        max.width = mmode.LPtoDP(max.width);
+        
+        if (min.width>rect.width)
+            rect.width = min.width;
+        else if (max.width < rect.width)
+            rect.width = max.width;
+        
+        if (min.height>rect.height)
+            rect.height = min.height;
+        else if (max.height < rect.height)
+            rect.height = max.height;
+        
+        feedback.translateToRelative(rect);
+        feedback.setBounds(rect);
+    }
+  }
