@@ -485,11 +485,11 @@ abstract public class DiagramGenerator {
 	private void getNestedEditParts(IGraphicalEditPart childEditPart,
 			List editParts) {
 
-		editParts.add(childEditPart);
 		for (Iterator iter = childEditPart.getChildren().iterator(); iter
 			.hasNext();) {
 
 			IGraphicalEditPart child = (IGraphicalEditPart) iter.next();
+			editParts.add(child);
 			getNestedEditParts(child, editParts);
 		}
 	}
@@ -528,8 +528,7 @@ abstract public class DiagramGenerator {
 					AbstractEditPart toEditPart = (AbstractEditPart) viewer
 						.getEditPartRegistry().get(toView);
 
-					if (!element.equals(toEditPart)
-						&& editParts.contains(toEditPart)) {
+					if (editParts.contains(toEditPart)) {
 
 						ConnectionNodeEditPart connectionEditPart = (ConnectionNodeEditPart) viewer
 							.getEditPartRegistry().get(edge);
