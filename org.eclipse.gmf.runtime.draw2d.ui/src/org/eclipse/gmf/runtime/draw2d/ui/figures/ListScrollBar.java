@@ -29,6 +29,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DropShadowButtonBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.GCUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dUIPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -151,7 +152,9 @@ public class ListScrollBar extends ScrollBar {
 		Panel thumb = new Panel() {
 
 			public void paint(Graphics graphics) {
-				graphics.setAlpha(128);
+				if (GCUtilities.supportsAdvancedGraphics()){
+					graphics.setAlpha(128);
+				}
 				super.paint(graphics);
 			}
 			
