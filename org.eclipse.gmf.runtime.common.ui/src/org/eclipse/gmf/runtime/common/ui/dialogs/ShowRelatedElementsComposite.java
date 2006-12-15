@@ -464,10 +464,19 @@ public class ShowRelatedElementsComposite
 		gridLayout.marginHeight = gridLayout.marginWidth = 0;
 		this.expansionComposite.setLayout(gridLayout);
 
-		new Label(this.expansionComposite, SWT.NULL).setText(
-			CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_Text);
+		Label label1 = new Label(this.expansionComposite, SWT.NULL);
+		gridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		label1.setLayoutData(gridData);
+		label1.setText(CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_Text);
+		
+		Composite expansionGroupComposite = new Composite(this.expansionComposite, SWT.NONE);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		expansionGroupComposite.setLayoutData(gridData);
+		gridLayout = new GridLayout();
+		gridLayout.marginHeight = gridLayout.marginWidth = 0;
+		expansionGroupComposite.setLayout(gridLayout);
 
-		consumerToSelection = new Button(this.expansionComposite, SWT.RADIO);
+		consumerToSelection = new Button(expansionGroupComposite, SWT.RADIO);
 		consumerToSelection.setText(
 			CommonUIMessages.ShowRelatedElementsDialog_Incoming); 
 		consumerToSelection.addSelectionListener(new SelectionListener() {
@@ -481,9 +490,7 @@ public class ShowRelatedElementsComposite
 			}
 		});
 
-		new Label(this.expansionComposite, SWT.NULL);
-
-		selectionToSupplier = new Button(this.expansionComposite, SWT.RADIO);
+		selectionToSupplier = new Button(expansionGroupComposite, SWT.RADIO);
 		selectionToSupplier.setText(
 			CommonUIMessages.ShowRelatedElementsDialog_Outgoing);
 		selectionToSupplier.addSelectionListener(new SelectionListener() {
@@ -497,12 +504,8 @@ public class ShowRelatedElementsComposite
 			}
 		});
 
-		if (showAllConnected) {
-			new Label(this.expansionComposite, SWT.NULL);
-		}
-
 		//TODO temporarily hide the all connected radio button
-		allConnected = new Button(this.expansionComposite, SWT.RADIO);
+		allConnected = new Button(expansionGroupComposite, SWT.RADIO);
 		allConnected.setText(
 			CommonUIMessages.ShowRelatedElementsDialog_AllConnected);
 		allConnected.addSelectionListener(new SelectionListener() {
@@ -516,13 +519,17 @@ public class ShowRelatedElementsComposite
 			}
 		});
 
-		if (!showAllConnected) {
-			allConnected.setVisible(false);
-		} else {
-			new Label(this.expansionComposite, SWT.NULL);
-		}
+		gridData = new GridData();
+		gridData.exclude = !showAllConnected;
+		allConnected.setLayoutData(gridData);
+		/*
+		 * We have to set the visibility also to ensure screen readers
+		 * read the grouped controls properly. JAWS, for example, requires
+		 * controls to be invisible if they are to be skipped.
+		 */
+		allConnected.setVisible(showAllConnected);
 
-		both = new Button(this.expansionComposite, SWT.RADIO);
+		both = new Button(expansionGroupComposite, SWT.RADIO);
 		both
 			.setText(
 				CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_RadioButton_Both);
@@ -542,11 +549,19 @@ public class ShowRelatedElementsComposite
 		//subclasses will override this method if they need to contribute
 		contributeToExpansionGroupComposite(this.expansionComposite);
 
-		new Label(expansionComposite, SWT.NULL)
-			.setText(
-				CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_Label_Levels);
+		Label label2 = new Label(this.expansionComposite, SWT.NULL);
+		gridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		label2.setLayoutData(gridData);
+		label2.setText(CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_Label_Levels);
+		
+		Composite levelsGroupComposite = new Composite(this.expansionComposite, SWT.NONE);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		levelsGroupComposite.setLayoutData(gridData);
+		gridLayout = new GridLayout();
+		gridLayout.marginHeight = gridLayout.marginWidth = 0;
+		levelsGroupComposite.setLayout(gridLayout);
 
-		levels = new Text(this.expansionComposite, SWT.BORDER);
+		levels = new Text(levelsGroupComposite, SWT.BORDER);
 		gridData = new GridData();
 		//just pick a small, reasonable number, no need to externalize levels
 		// size
@@ -565,9 +580,7 @@ public class ShowRelatedElementsComposite
 			}
 		});
 
-		new Label(this.expansionComposite, SWT.NULL);
-
-		expandIndefinitely = new Button(this.expansionComposite, SWT.CHECK);
+		expandIndefinitely = new Button(levelsGroupComposite, SWT.CHECK);
 		expandIndefinitely
 			.setText(
 				CommonUIMessages.ShowRelatedElementsDialog_ExpansionGroup_CheckBox_Expand_Indefinitely); 
