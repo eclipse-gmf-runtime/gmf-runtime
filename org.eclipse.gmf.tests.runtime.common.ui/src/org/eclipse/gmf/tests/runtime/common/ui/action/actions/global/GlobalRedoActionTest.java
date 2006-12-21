@@ -82,6 +82,7 @@ public class GlobalRedoActionTest
         try {
             operation.addContext(undoContext);
             history.execute(operation, new NullProgressMonitor(), null);
+            history.execute(operation, new NullProgressMonitor(), null);
             history.undo(undoContext, new NullProgressMonitor(), null);
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -103,6 +104,15 @@ public class GlobalRedoActionTest
         // that closing the part doesn't cause the RedoActionHandler's part
         // listener to throw an NPE.
         redoAction.setUndoContext(redoAction.getUndoContext());
+        
+        try {
+            OperationHistoryFactory.getOperationHistory().undo(
+                redoAction.getUndoContext(), new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }       
+        
         assertTrue(redoAction.isEnabled());
 
         // Close the view
