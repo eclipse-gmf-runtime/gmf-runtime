@@ -70,17 +70,18 @@ public class GlobalUndoActionTest
 
             public IStatus undo(IProgressMonitor monitor, IAdaptable info)
                 throws ExecutionException {
-                return null;
+                return Status.OK_STATUS;
             }
 
             public IStatus redo(IProgressMonitor monitor, IAdaptable info)
                 throws ExecutionException {
-                return null;
+                return Status.OK_STATUS;
             }
         };
 
         try {
             operation.addContext(undoContext);
+            history.execute(operation, new NullProgressMonitor(), null);
             history.execute(operation, new NullProgressMonitor(), null);
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -102,6 +103,15 @@ public class GlobalUndoActionTest
         // that closing the part doesn't cause the UndoActionHandler's part
         // listener to throw an NPE.
         undoAction.setUndoContext(undoAction.getUndoContext());
+        
+        try {
+            OperationHistoryFactory.getOperationHistory().undo(
+               undoAction.getUndoContext(), new NullProgressMonitor(), null);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            fail("Unexpected exception: " + e.getLocalizedMessage()); //$NON-NLS-1$
+        }  
+        
         assertTrue(undoAction.isEnabled());
         
         // Close the view
