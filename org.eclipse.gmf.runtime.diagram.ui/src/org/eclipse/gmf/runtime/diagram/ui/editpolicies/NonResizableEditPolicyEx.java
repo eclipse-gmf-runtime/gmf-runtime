@@ -90,6 +90,12 @@ public class NonResizableEditPolicyEx extends NonResizableEditPolicy {
 		return super.getTargetEditPart(request);
 	}
 
+    /**
+     * Shows or updates feedback for a change bounds request.
+     * This method had been overriden to make sure that the feed back never
+     * go below the min size also it make sure it never exceed the max size
+     * @param request the request
+     */
     protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
         IFigure feedback = getDragSourceFeedbackFigure();
         
