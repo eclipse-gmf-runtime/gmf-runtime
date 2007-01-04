@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005  IBM Corporation and others.                       -->
+<!-- Copyright (c) 2005, 2007  IBM Corporation and others.                       -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -53,7 +53,7 @@
          <Priority name="Lowest">
          </Priority>
          <partContribution class="org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart"> 
-            <partMenu menubarPath="/project" id="diagramMenu">
+            <partMenu menubarPath="/edit" id="diagramMenu">
             </partMenu>
             <!-- toolbar menu groups -->
             <partMenuGroup toolbarPath="/" id="toolbarFontGroup">
