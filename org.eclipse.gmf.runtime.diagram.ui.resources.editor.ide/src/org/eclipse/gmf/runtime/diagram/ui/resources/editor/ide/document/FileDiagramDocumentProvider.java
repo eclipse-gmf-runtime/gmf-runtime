@@ -1,4 +1,5 @@
 /******************************************************************************
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +21,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -364,4 +366,27 @@ public class FileDiagramDocumentProvider
             DiagramIOUtil.save(domain, file, diagram, monitor, options);
         }
     }
+    
+    /**
+     * Additionally handles updating the URI of the diagram's resource when on
+     * an element moved event.
+     *
+     * @param fileEditorInput the input of an document editor
+     * @param path the path of the new location of the file
+     */
+    protected void handleElementMoved(IFileEditorInput fileEditorInput, IPath path) {
+        if (path != null) {
+            IDiagramDocument diagramDocument = getDiagramDocument(fileEditorInput);
+            Diagram diagram = null;
+            if (diagramDocument != null) {
+                diagram = diagramDocument.getDiagram();
+            }
+            if (diagram != null) {
+                //not to os string!
+                diagram.eResource().setURI(URI.createPlatformResourceURI(path.toString()));
+            }
+        }
+        
+        super.handleElementMoved(fileEditorInput, path);
+    }    
 }
