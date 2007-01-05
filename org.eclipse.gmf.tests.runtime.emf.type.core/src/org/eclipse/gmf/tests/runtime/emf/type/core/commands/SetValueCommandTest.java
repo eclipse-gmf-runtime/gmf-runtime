@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006,2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,33 @@
  ****************************************************************************/
 package org.eclipse.gmf.tests.runtime.emf.type.core.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.AbstractEMFTypeTest;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Department;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Employee;
+import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeeFactory;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.EmployeePackage;
 import org.eclipse.gmf.tests.runtime.emf.type.core.employee.Office;
 
 /**
  * Tests the SetValueCommand.
  * 
- * @author ldamus
+ * @author ldamus, mmostafa
  */
 public class SetValueCommandTest
     extends AbstractEMFTypeTest {
@@ -116,5 +126,103 @@ public class SetValueCommandTest
 
         command = new SetValueCommand(request);
         assertFalse(command.canExecute());
+    }
+    
+    /**
+     * Most probably the problem is in the SetValueCommand#canExecute, line 89
+     * @see SetValueCommand
+     */
+    public void testSetValueCommandForManyFeatureUsingList(){
+        EStructuralFeature members = EmployeePackage.eINSTANCE.getDepartment_Members();
+        Employee e1 = EmployeeFactory.eINSTANCE.createEmployee();
+        Employee e2 = EmployeeFactory.eINSTANCE.createEmployee();
+        List list = new LinkedList(Arrays.asList(new Employee[] {e1, e2}));
+        SetRequest usingNewListInstance = new SetRequest(department, members, list);
+        SetValueCommand cmd = new SetValueCommand(usingNewListInstance);
+        verifyExecution(cmd,list);
+    }
+    
+    /**
+     * Most probably the problem is in the SetValueCommand#canExecute, line 89
+     * @see SetValueCommand
+     */
+    public void testSetValueCommandForManyFeatureUsingEmptyList(){
+        EStructuralFeature members = EmployeePackage.eINSTANCE.getDepartment_Members();
+        Employee e1 = EmployeeFactory.eINSTANCE.createEmployee();
+        Employee e2 = EmployeeFactory.eINSTANCE.createEmployee();
+        List list = new LinkedList(Arrays.asList(new Employee[] {e1, e2}));
+        SetRequest usingNewListInstance = new SetRequest(department, members, list);
+        SetValueCommand cmd = new SetValueCommand(usingNewListInstance);
+        verifyExecution(cmd,list);
+        List list2 = new ArrayList();
+        SetRequest usingNewEmptyListInstance = new SetRequest(department, members, list2);
+        SetValueCommand cmd2 = new SetValueCommand(usingNewEmptyListInstance);
+        verifyExecution(cmd2,list2);
+    }
+    
+    /**
+     * Most probably the problem is in the SetValueCommand#canExecute, line 89
+     * @see SetValueCommand
+     */
+    public void testSetValueCommandForManyFeatureUsingList_VerifyOldValuesRemoved(){
+        EStructuralFeature members = EmployeePackage.eINSTANCE.getDepartment_Members();
+        Employee e1 = EmployeeFactory.eINSTANCE.createEmployee();
+        Employee e2 = EmployeeFactory.eINSTANCE.createEmployee();
+        List list = new LinkedList(Arrays.asList(new Employee[] {e1, e2}));
+        SetRequest usingNewListInstance = new SetRequest(department, members, list);
+        SetValueCommand cmd = new SetValueCommand(usingNewListInstance);
+        verifyExecution(cmd,list);
+        Employee e3 = EmployeeFactory.eINSTANCE.createEmployee();
+        Employee e4 = EmployeeFactory.eINSTANCE.createEmployee();
+        List list2 = new LinkedList(Arrays.asList(new Employee[] {e3, e4}));
+        SetRequest usingNewEmptyListInstance = new SetRequest(department, members, list2);
+        SetValueCommand cmd2 = new SetValueCommand(usingNewEmptyListInstance);
+        verifyExecution(cmd2,list2);
+    }
+ 
+    /**
+     * Most probably the problem is in the SetValueCommand#canExecute, line 89
+     * @see SetValueCommand
+     */
+    public void testSetValueCommandForManyFeatureUsingSingleValue(){
+        EStructuralFeature members = EmployeePackage.eINSTANCE.getDepartment_Members();
+        Employee e1 = EmployeeFactory.eINSTANCE.createEmployee();
+        Employee e2 = EmployeeFactory.eINSTANCE.createEmployee();
+        SetRequest usingSingleValue1 = new SetRequest(department, members, e1);
+        SetValueCommand cmd1 = new SetValueCommand(usingSingleValue1);
+        verifyExecution(cmd1,e1,1);
+        SetRequest usingSingleValue2 = new SetRequest(department, members, e2);
+        SetValueCommand cmd2 = new SetValueCommand(usingSingleValue2);
+        verifyExecution(cmd2,e2,2);
+        
+    }
+    
+    private void verifyExecution(SetValueCommand cmd, List list) {
+        try {
+            assertTrue("Cannot Execute command",cmd.canExecute()); //$NON-NLS-1$
+            cmd.execute(new NullProgressMonitor(), null);
+            List list2 = department.getMembers();
+            assertTrue("UnexpectedSize", list2.size()==list.size()); //$NON-NLS-1$
+            for (Iterator itr = list.iterator(); itr.hasNext();) {
+                Object element = itr.next();
+                assertTrue("Element not added", list2.contains(element)); //$NON-NLS-1$
+            }
+        } catch (ExecutionException e) {
+            assertTrue("failed to exectue the command",false); //$NON-NLS-1$
+            e.printStackTrace();
+        }
+    }
+    
+    private void verifyExecution(SetValueCommand cmd, Object object,int size) {
+        try {
+            assertTrue("Cannot Execute command",cmd.canExecute()); //$NON-NLS-1$
+            cmd.execute(new NullProgressMonitor(), null);
+            List list2 = department.getMembers();
+            assertTrue("UnexpectedSize", list2.size()==size); //$NON-NLS-1$
+            assertTrue("Element not added", list2.contains(object)); //$NON-NLS-1$
+        } catch (ExecutionException e) {
+            assertTrue("failed to exectue the command",false); //$NON-NLS-1$
+            e.printStackTrace();
+        }
     }
 }

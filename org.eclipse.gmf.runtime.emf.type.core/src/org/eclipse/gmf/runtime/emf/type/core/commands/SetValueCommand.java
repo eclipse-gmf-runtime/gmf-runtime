@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,21 +12,22 @@
 package org.eclipse.gmf.runtime.emf.type.core.commands;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
-
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 
 /**
  * Command to set the value of a feature of a model element.
  * 
- * @author ldamus
+ * @author ldamus, mmostafa
  */
 public class SetValueCommand
 	extends EditElementCommand {
@@ -58,13 +59,21 @@ public class SetValueCommand
 	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 	    throws ExecutionException {
 
-		if (FeatureMapUtil.isMany(getElementToEdit(),feature)) {
-			((Collection) getElementToEdit().eGet(feature)).add(value);
-
-		} else {
-			getElementToEdit().eSet(feature, value);
-		}
-		return CommandResult.newOKCommandResult();
+        EObject elementToEdit = getElementToEdit();
+        boolean many = FeatureMapUtil.isMany(elementToEdit,feature);
+        if (many) {
+            Collection collection = ((Collection)elementToEdit.eGet(feature));
+            if (value instanceof List){
+                List values = (List)value;
+                collection.clear();
+                collection.addAll(values);
+            }else {
+                collection.add(value);
+            }
+        } else {
+            getElementToEdit().eSet(feature, value);
+        }
+        return CommandResult.newOKCommandResult();
 	}
     
     /**
@@ -73,20 +82,37 @@ public class SetValueCommand
      * the correct type for the feature.
      */
     public boolean canExecute() {
-
-        if (getElementToEdit() == null || !super.canExecute()) {
+        EObject elementToEdit = getElementToEdit();
+        if (elementToEdit == null || !super.canExecute()) {
             return false;
         }
-
-        if (value == null && FeatureMapUtil.isMany(getElementToEdit(), feature)) {
+        boolean many = FeatureMapUtil.isMany(elementToEdit, feature);
+        if (value == null && many) {
             return false;
         }
-
         List allFeatures = getElementToEdit().eClass()
             .getEAllStructuralFeatures();
-
-        return allFeatures.contains(feature) && feature.isChangeable()
-            && (value == null || feature.getEType().isInstance(value));
+        if (allFeatures.contains(feature) && feature.isChangeable()){
+            if (!many && (value==null || feature.getEType().isInstance(value)))
+                return true;
+            else {
+                return verifyMany();
+            }
+        }
+        return false;
+    }
+    
+    private boolean verifyMany() {
+        if (value instanceof List){
+            List values = (List)value;
+            for (Iterator iter = values.iterator(); iter.hasNext();) {
+                Object element = iter.next();
+                if (!feature.getEType().isInstance(element))
+                    return false;
+            }
+            return true;
+        }
+        return feature.getEType().isInstance(value);
     }
 
 }
