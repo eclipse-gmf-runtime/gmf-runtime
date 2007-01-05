@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,8 +48,10 @@ public abstract class ListCompartmentEditPart
 	
 	static long count = 0;
 	
-	/** list of model children that this edit part is listening */
-	protected List modelChildrenListeners;
+    
+    // semantic chil;dren count
+    protected int  modelChildrenListenersCount = 0 ;
+    
 	/** State of listening */
 	protected boolean listening;
 
@@ -362,9 +364,10 @@ public abstract class ListCompartmentEditPart
 	 * updated.
 	 */
 	protected void addSemanticChildrenListeners() {
-		modelChildrenListeners = super.getModelChildren();
-		for (int i = 0; i < modelChildrenListeners.size(); i++) {
-			EObject eObject = ViewUtil.resolveSemanticElement((View)modelChildrenListeners.get(i));
+		List modelChildren = super.getModelChildren();
+        modelChildrenListenersCount = modelChildren.size();
+		for (int i = 0; i < modelChildrenListenersCount; i++) {
+			EObject eObject = ViewUtil.resolveSemanticElement((View)modelChildren.get(i));
 			if (eObject != null)
 				addListenerFilter(
 					"SemanticModel" + i, this, eObject); //$NON-NLS-1$
@@ -376,11 +379,8 @@ public abstract class ListCompartmentEditPart
 	 * Remove the listeners on the children of this list compartment.
 	 */
 	protected void removeSemanticChildrenListeners() {
-		if (modelChildrenListeners != null) {
-			for (int i = 0; i < modelChildrenListeners.size(); i++)
-				removeListenerFilter("SemanticModel" + i); //$NON-NLS-1$
-			modelChildrenListeners.clear();
-		}
+		for (int i = 0; i < modelChildrenListenersCount; i++)
+			removeListenerFilter("SemanticModel" + i); //$NON-NLS-1$
 		listening = false;
 	}
 	
@@ -399,7 +399,6 @@ public abstract class ListCompartmentEditPart
 	 */
 	protected void removeSemanticListeners() {
 		removeSemanticChildrenListeners();
-		modelChildrenListeners = null;
 		listening = false;
 		super.removeSemanticListeners();
 	}
