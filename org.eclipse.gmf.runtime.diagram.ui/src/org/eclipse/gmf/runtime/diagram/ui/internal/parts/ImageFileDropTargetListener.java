@@ -57,6 +57,7 @@ public class ImageFileDropTargetListener
 			if (FileTransfer.getInstance().isSupportedType(data[i])) {
 				// FileTransfers from the PE are supported, but an 
 				// SWT exception is thrown when using nativeToJava call.
+                System.out.println("here");
 				try {
 					Object files = FileTransfer.getInstance().nativeToJava(data[i]);
 					if (files instanceof String[]) {
