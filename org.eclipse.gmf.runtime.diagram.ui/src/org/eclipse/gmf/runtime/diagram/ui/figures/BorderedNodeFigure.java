@@ -148,6 +148,8 @@ public class BorderedNodeFigure
 	}
 
 	public IFigure findFigureAt(int x, int y, TreeSearch search) {
+		if (search.prune(this))
+			return null;
 		IFigure result = borderItemContainer.findFigureAt(x, y, search);
 		if (result != null) {
 			return result;
