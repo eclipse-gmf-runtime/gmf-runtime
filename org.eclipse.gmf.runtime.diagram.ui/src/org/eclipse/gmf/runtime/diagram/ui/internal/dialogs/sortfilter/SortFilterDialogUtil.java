@@ -52,7 +52,7 @@ public class SortFilterDialogUtil {
 			
 		SortFilterDialog sortFilterDialog =
 			new SortFilterDialog(
-				Display.getCurrent().getActiveShell());
+				Display.getCurrent().getActiveShell(), editPart.getViewer().getEditDomain().getCommandStack());
 				
 		rootPage.setTitle(ROOT_NAME);
 
