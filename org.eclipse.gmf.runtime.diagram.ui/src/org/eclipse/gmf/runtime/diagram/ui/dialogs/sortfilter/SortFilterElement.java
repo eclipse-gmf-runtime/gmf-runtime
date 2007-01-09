@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,9 @@ public class SortFilterElement {
 	private Object data = null;	
 	
 
+	public SortFilterElement(Object data) {
+		this.data = data;
+	}
 	
 	/**
 	 * Constructor for the 
@@ -33,7 +36,8 @@ public class SortFilterElement {
 	 * @param data the data associated with the filter element
 	 */	
 	public SortFilterElement(boolean visible, Object data) {
-		this.data = data;	
+		this.data = data;
+		this.visible = visible;
 	}
 	
 	
@@ -63,13 +67,17 @@ public class SortFilterElement {
 	
 	/**
 	 * check if this filter equals the passed filter
-	 * @param other the other filter to check againest
+	 * @param other the other sort filter element to check against
 	 * @return <tt>true</tt> if thery are equal other wise <tt>false</tt>
 	 */
-	public boolean equals(SortFilterElement other) {
-		return data.equals(other.getData());
+	public boolean equals(Object o) {
+		if (o instanceof SortFilterElement) {
+			SortFilterElement other = (SortFilterElement)o;
+			return visible == other.isVisible() && data.equals(other.getData());
+		}
+		return super.equals(o);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.dialogs.sortfilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,13 +21,11 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterDialog;
-import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterRootPreferenceNode;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
@@ -45,7 +44,6 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -127,17 +125,11 @@ public class SortFilterPage extends PropertyPage {
 
 	/** The collection Column list for this page */
 	private List collectionColumns = null;
-	private LabelProvider labelProvider = null;
+	private SortFilterLabelProvider labelProvider = null;
 	private Map filterMap = null;
 	private String[] filterStrings = null;
 	private String filterAppliesTo = null;
-
-	/** State variables */
-	/** Used to indicate a user gesture changed the compartment children order */
-	private boolean sortChanged = false;
-	/** Used to indicate a user gesture changed the visibility of a compartment child */
-	private boolean filterChanged = false;
-
+	
 	private Sorting _sorting = Sorting.NONE_LITERAL;
 	private List _sortedObjects = Collections.EMPTY_LIST;	
 	private Map _sortingKeys = Collections.EMPTY_MAP;
@@ -147,6 +139,11 @@ public class SortFilterPage extends PropertyPage {
 	private Filtering _filtering = Filtering.NONE_LITERAL;
 	private List _filteredObjects = Collections.EMPTY_LIST;
 	private List _filteringKeys = Collections.EMPTY_LIST;
+	
+	private List elementCollectionBackUp = Collections.EMPTY_LIST;
+	private Sorting _sortingBackUp = _sorting;
+	private Filtering _filteringBackUp = _filtering;
+	
 	
 
 	/**
@@ -231,8 +228,8 @@ public class SortFilterPage extends PropertyPage {
 			}
 
 			if (_filtering == Filtering.AUTOMATIC_LITERAL)
-				filterItemsFromList();
-
+				refreshList();
+			
 			tableViewer.getTable().setFocus();
 			handleSelection();
 		}
@@ -362,7 +359,7 @@ public class SortFilterPage extends PropertyPage {
 			}
 		});
 
-		initFilterLists();
+		populateFilterLists();
 	}
 
 	/**
@@ -435,10 +432,36 @@ public class SortFilterPage extends PropertyPage {
 				}
 				break;
 		}
+		updateFilteringKeysFromControls();
 		if (pageType == CHILD_PAGE) {
-			filterItemsFromList();			
+			refreshList();			
+		} else if (pageType == ROOT_PAGE) {
+			PreferenceManager preferenceManager =
+				((SortFilterDialog) getContainer()).getPreferenceManager();
+			Iterator nodes =
+				preferenceManager
+					.getElements(PreferenceManager.PRE_ORDER)
+					.iterator();
+            while (nodes.hasNext()) {
+				PreferenceNode node = (PreferenceNode) nodes.next();
+				SortFilterPage page = (SortFilterPage) node.getPage();
+				if (page == this) {
+					continue;
+				}
+
+				if (Arrays.equals(filterStrings, page.getFilterList())) {
+					page._filteringKeys = new ArrayList(_filteringKeys.size());
+					page._filteringKeys.addAll(_filteringKeys);
+					page._filtering = _filtering;
+					page.populateFilterLists();
+					page.refreshList();
+					page.updateApplyButton();
+				}				
+				
+            }
+			
 		}
-		filterChanged = true;
+		updateApplyButton();
 	}
 
 	/**
@@ -456,48 +479,9 @@ public class SortFilterPage extends PropertyPage {
 		return columnProperties;
 	}
 
-	/**
-	 * Updates the table items to reflect the change in the filtering lists.
-	 */
-	void filterItemsFromList() {
+	private void updateFilteringKeysFromControls() {
 		String[] theFilterStrings = filters.getItems();
-		String[] nontheFilterStrings = filterList.getItems();
-		TableItem[] tableItems = tableViewer.getTable().getItems();
-		int filterColumn = findColumnIndexFromProperty(filterAppliesTo);
-		if (filterColumn == -1)
-			return;
-		// Set the matching items in this list as not visible
-		for (int i = 0; i < theFilterStrings.length; i++) {
-			for (int j = 0; j < tableItems.length; j++) {
-				String cell = tableItems[j].getText(filterColumn);
-				if (theFilterStrings[i].equals(cell)) {
-					(
-						(SortFilterElement) tableViewer.getElementAt(
-							j)).setVisible(
-						false);
-					tableViewer.update(
-						new Object[] { tableViewer.getElementAt(j)},
-						new String[] { getColumnProperties()[0] });
-				}
-			}
-		}
-		// Set the matching items in this list as visible
-		for (int i = 0; i < nontheFilterStrings.length; i++) {
-			for (int j = 0; j < tableItems.length; j++) {
-				String cell = tableItems[j].getText(filterColumn);
-				if (nontheFilterStrings[i].equals(cell)) {
-					(
-						(SortFilterElement) tableViewer.getElementAt(
-							j)).setVisible(
-						true);
-					tableViewer.update(
-						new Object[] { tableViewer.getElementAt(j)},
-						new String[] { getColumnProperties()[0] });
-				}
-			}
-		}
 		
-		filterChanged = true;
 		if (theFilterStrings.length == 0) {
 			_filtering = Filtering.NONE_LITERAL;
 			_filteringKeys = Collections.EMPTY_LIST;
@@ -510,9 +494,24 @@ public class SortFilterPage extends PropertyPage {
 				_filteringKeys.add(theFilterStrings[i]);
 			}
 		}
-
-		if (getApplyButton() != null)
-			getApplyButton().setEnabled(sortChanged || filterChanged);
+	}
+	
+	/**
+	 * Updates the table items to reflect the change in the filtering lists.
+	 */
+	void refreshList() {
+		int filterColumn = findColumnIndexFromProperty(filterAppliesTo);
+		if (filterColumn == -1)
+			return;
+		// Set the matching items in this list as not visible
+		for (int j = 0; j < elementCollection.size(); j++) {
+			String cell = labelProvider.getColumnText(elementCollection.get(j),
+					filterColumn);
+			((SortFilterElement) elementCollection.get(j))
+					.setVisible(!_filteringKeys.contains(cell));
+		}
+		if (tableViewer != null)
+			tableViewer.refresh();
 	}
 
 	/**
@@ -616,7 +615,8 @@ public class SortFilterPage extends PropertyPage {
 			newModel.add(i, ey);
 		}
 		tableViewer.setInput(newModel);
-
+		elementCollection = newModel;
+		createBackUp();
 		// pack column widths
 		TableColumn[] tableColumns = table.getColumns();
 		for (i = 0; i < tableColumns.length; i++) {
@@ -664,7 +664,7 @@ public class SortFilterPage extends PropertyPage {
 			}
 		});
 	}
-
+	
 	/**
 	 * Move up the selected items from the table
 	 */
@@ -674,7 +674,7 @@ public class SortFilterPage extends PropertyPage {
 			return;
 
 		int[] selectionIndexes = tableViewer.getTable().getSelectionIndices();
-		List model = (ArrayList) ((ArrayList) tableViewer.getInput()).clone();
+		List model = (ArrayList) ((ArrayList) tableViewer.getInput());
 		for (int i = 0; i < selectionIndexes.length; i++) {
 			SortFilterElement element =
 				(SortFilterElement) model.get(selectionIndexes[i] - 1);
@@ -682,15 +682,15 @@ public class SortFilterPage extends PropertyPage {
 			model.set(selectionIndexes[i], element);
 		}
 		tableViewer.setSorter(null);
-		tableViewer.setInput(model);
+		tableViewer.refresh();
 
-		_sorting = Sorting.MANUAL_LITERAL;
+		_sorting = isSameOrder(elementCollection, baseElements) ? Sorting.NONE_LITERAL
+				: Sorting.MANUAL_LITERAL;
 		_sortingKeys = Collections.EMPTY_MAP;
 
 		handleSelection();
 
-		sortChanged = true;
-		getApplyButton().setEnabled(sortChanged || filterChanged);
+		updateApplyButton();
 	}
 
 	/**
@@ -702,7 +702,7 @@ public class SortFilterPage extends PropertyPage {
 		if (selectionCount == 0)
 			return;
 
-		List model = (ArrayList) ((ArrayList) tableViewer.getInput()).clone();
+		List model = (ArrayList) ((ArrayList) tableViewer.getInput());
 		int[] selectionIndexes = tableViewer.getTable().getSelectionIndices();
 		for (int i = selectionIndexes.length - 1; i >= 0; i--) {
 			SortFilterElement element =
@@ -711,15 +711,34 @@ public class SortFilterPage extends PropertyPage {
 			model.set(selectionIndexes[i], element);
 		}
 		tableViewer.setSorter(null);
-		tableViewer.setInput(model);
-
-		_sorting = Sorting.MANUAL_LITERAL;
+		tableViewer.refresh();
+		
+		_sorting = isSameOrder(elementCollection, baseElements) ? Sorting.NONE_LITERAL
+				: Sorting.MANUAL_LITERAL;
 		_sortingKeys = Collections.EMPTY_MAP;
-
+		
 		handleSelection();
 
-		sortChanged = true;
-		getApplyButton().setEnabled(sortChanged || filterChanged);
+		updateApplyButton();
+	}
+
+	/**
+	 * Compares two sort filter element lists based on the equality of data fields
+	 * only. 
+	 * @param elements1 <code>List</code> of sort filter elements
+	 * @param elements2 <code>List</code> of sort filter elements
+	 * @return <code>true</code> if both lists are e
+	 */
+	private boolean isSameOrder(List elements1, List elements2) {
+		Iterator itr1 = elements1.iterator();
+		Iterator itr2 = elements2.iterator();
+		while (itr1.hasNext() && itr2.hasNext()) {
+			SortFilterElement element1 = (SortFilterElement)itr1.next();
+			SortFilterElement element2 = (SortFilterElement)itr2.next();
+			if (!element1.getData().equals(element2.getData()))
+				return false;
+		}
+		return !itr1.hasNext() && !itr2.hasNext();
 	}
 
 	/**
@@ -762,7 +781,7 @@ public class SortFilterPage extends PropertyPage {
 			moveDownToolItem.setEnabled(!lastRowSelected && !selectionEmpty);
 		}
 	}
-
+	
 	/**
 	 * Used to populate to
 	 * @return the list used to populate the possible filter list
@@ -794,9 +813,8 @@ public class SortFilterPage extends PropertyPage {
 	 * @return the column index
 	 */
 	private int findColumnIndexFromProperty(String property) {
-		Object[] columnNames = tableViewer.getColumnProperties();
-		for (int i = 0; i < columnNames.length; i++) {
-			if (((String) columnNames[i]).equals(property))
+		for (int i = 0; i < collectionColumns.size(); i++) {
+			if (((SortFilterCollectionColumn)collectionColumns.get(i)).getCaption().equals(property))
 				return i;
 		}
 		return -1;
@@ -816,7 +834,10 @@ public class SortFilterPage extends PropertyPage {
 		}
 
 		// Cache the provided elements for the Reset Default button
-		baseElements = updatedSortFilterElements;
+		baseElements = new ArrayList(updatedSortFilterElements.size());
+		for (Iterator itr = updatedSortFilterElements.iterator(); itr.hasNext();) {
+			baseElements.add(new SortFilterElement(((SortFilterElement)itr.next()).getData()));
+		}
 
 		// For the manual Ahoc sorting and filtering we manually initialize the
 		// items
@@ -871,6 +892,7 @@ public class SortFilterPage extends PropertyPage {
 		} else { // Use semantic order
 			elementCollection = updatedSortFilterElements;
 		}
+		createBackUp();
 	}
 	
 	/**
@@ -889,40 +911,16 @@ public class SortFilterPage extends PropertyPage {
 	 * ordering for the sorting.
 	 */
 	protected void performDefaults() {
-		// Reset the filter list if they exist
-		if (filterStrings != null) {
-			String[] filterItems = filters.getItems();
-			for (int i = 0; i < filterItems.length; i++) {
-				filterList.add(filterItems[i]);
-				filters.remove(filterItems[i]);
-				filterChanged = true;
-			}
-		}
-		
 		_filtering = Filtering.NONE_LITERAL;
-		_filteringKeys = Collections.EMPTY_LIST;
 		_filteredObjects = Collections.EMPTY_LIST;
 			
-		// Set all elements as visible
-		TableItem[] tableItems = tableViewer.getTable().getItems();
-		for (int j = 0; j < tableItems.length; j++) {
-			if (!((SortFilterElement) tableViewer.getElementAt(j))
-				.isVisible()) {
-				filterChanged = true;
-				((SortFilterElement) tableViewer.getElementAt(j)).setVisible(
-					true);
-				tableViewer.update(
-					new Object[] { tableViewer.getElementAt(j)},
-					new String[] { getColumnProperties()[0] });
-
-			}
-			if (!((SortFilterElement)tableViewer.getElementAt(j)).equals(baseElements.get(j))) {
-				sortChanged = true;
+		// Reset the filter list if they exist
+		if (filterStrings != null) {
+			if (!_filteringKeys.isEmpty()) {
+				_filteringKeys = Collections.EMPTY_LIST;
+				populateFilterLists();
 			}
 		}
-		
-		if (tableViewer.getSorter() != null)
-			sortChanged = true;
 		
 		_sorting = Sorting.NONE_LITERAL;
 		_sortingKeys = Collections.EMPTY_MAP;
@@ -934,9 +932,14 @@ public class SortFilterPage extends PropertyPage {
 			columns[i].setImage(null);
 		}
 
-		tableViewer.setInput(baseElements);
+		List input = (List)tableViewer.getInput();
+		input.clear();
+		for (int i=0; i<baseElements.size(); i++) {
+			input.add(new SortFilterElement( ((SortFilterElement)baseElements.get(i)).getData() ));
+		}
+		tableViewer.refresh();
 
-		getApplyButton().setEnabled(sortChanged || filterChanged);
+		updateApplyButton();
 
 	}
 
@@ -944,32 +947,42 @@ public class SortFilterPage extends PropertyPage {
 	 * Writes the sorting/filtering specified by the dialog
 	 */
 	protected void performApply() {
-
-		Command filteringCommand = getApplyCommand();
-		if (filteringCommand != null && filteringCommand.canExecute()) {				
-			editPart
-				.getRoot()
-				.getViewer()
-				.getEditDomain()
-				.getCommandStack()
-				.execute(
-				filteringCommand);
-		}	
+		Command sortAndFilteringCommand = getApplyCommand();
+		if (sortAndFilteringCommand != null
+				&& sortAndFilteringCommand.canExecute()) {
+			editPart.getRoot().getViewer().getEditDomain().getCommandStack()
+					.execute(sortAndFilteringCommand);
+			createBackUp();
+		}
+		updateApplyButton();            
 	}
 	
 	/**
-	 * Returns a <code>Command</code> that set both the sorting and
-	 * filtering for this particular list compartment.
+	 * Creates the command that needs to be executed for this page when "Ok" is
+	 * pressed. It's different from {@link #getApplyCommand()}, because it checks
+	 * whether the page is dirty or not.
+	 * @return <code>Command</code> to be executed per this page
+	 */
+	public Command getCommand() {
+		if (isDirty())
+			return getApplyCommand();
+		return null;
+	}
+	
+	/**
+	 * Returns a <code>Command</code> that set both the sorting and filtering
+	 * for this particular list compartment.
+	 * 
 	 * @return the command
 	 */
 	public Command getApplyCommand() {
-		if (pageType == CHILD_PAGE) {
+		Command cmd = UnexecutableCommand.INSTANCE;
+		if (CHILD_PAGE.equals(pageType)) {
 			List newSortedObjects = Collections.EMPTY_LIST; 
 			if (_sorting.equals(Sorting.MANUAL_LITERAL)) {
 					newSortedObjects = new ArrayList();
-					List model = (ArrayList) tableViewer.getInput();
-					for (int j = 0; j < model.size(); j++) {
-						SortFilterElement element = (SortFilterElement) model.get(j);
+					for (Iterator itr = elementCollection.iterator(); itr.hasNext();) {
+						SortFilterElement element = (SortFilterElement) itr.next();
 						newSortedObjects.add(element.getData());
 					}
 			}
@@ -977,9 +990,8 @@ public class SortFilterPage extends PropertyPage {
 			List newFilteredObjects = Collections.EMPTY_LIST;
 			if (_filtering.equals(Filtering.MANUAL_LITERAL)) {
 				newFilteredObjects = new ArrayList();
-				List model = (ArrayList) tableViewer.getInput();			
-				for (int i = 0; i < model.size(); i++) {
-					SortFilterElement element = (SortFilterElement) model.get(i);
+				for (Iterator itr = elementCollection.iterator(); itr.hasNext();) {
+					SortFilterElement element = (SortFilterElement) itr.next();
 					if (!element.isVisible()) {
 						newFilteredObjects.add(element.getData());
 					}
@@ -1000,55 +1012,19 @@ public class SortFilterPage extends PropertyPage {
 				_filtering, newFilteredObjects, _filteringKeys, _sorting,
 				newSortedObjects, _sortingKeys);
 			
-			sortChanged = false;
-			filterChanged = false;
-			getApplyButton().setEnabled(sortChanged || filterChanged);
-	
-			return editPart.getCommand(request);
-		} else if (pageType == ROOT_PAGE) {
-			PreferenceManager preferenceManager =
-				((SortFilterDialog) getContainer()).getPreferenceManager();
-			Iterator nodes =
-				preferenceManager
-					.getElements(PreferenceManager.PRE_ORDER)
-					.iterator();
-			SortFilterRootPreferenceNode rootNode = null;
-			CompoundCommand cc = new CompoundCommand(
-	            DiagramUIMessages.Command_SortFilterCommand);
-	        while (nodes.hasNext()) {
-				PreferenceNode node = (PreferenceNode) nodes.next();
-				SortFilterPage page = (SortFilterPage) node.getPage();
-				if (page == this) {
-					rootNode = (SortFilterRootPreferenceNode) node;
-					continue;
-				}
-	
-				// We must build the page if it is already not done because each
-				// page
-				// in the dialog knows how to filter itself.
-				((SortFilterDialog) rootNode.getPreferenceDialog()).showPage(
-					node);
-	
-				// We set the child's filter criteria to the root's
-				// criteria if the child is using the same filtering criteria.
-				if (compareFilters(page.getFilterList())) {
-					page.setFilterCriteria(filters.getItems());
-					page.setCriteria(filterList.getItems());
-					page.filterItemsFromList();
-				}				
-				cc.add(page.getApplyCommand());
-			}
-	        return cc;
+			cmd = editPart.getCommand(request);		
 		}
-		return UnexecutableCommand.INSTANCE;
+		return cmd;
 	}
 
 	/**
 	 * Populates the filter lists based on the _filteringKeys
 	 * and the filter criteria.
 	 */
-	private void initFilterLists() {
-		if (filterMap != null && !filterMap.isEmpty()) {
+	private void populateFilterLists() {
+		if (filterMap != null && !filterMap.isEmpty() && filterList != null && filters != null) {
+			filterList.removeAll();
+			filters.removeAll();
 			Set keySet = filterMap.keySet();
 			Iterator i = keySet.iterator();
 			if (_filtering == Filtering.AUTOMATIC_LITERAL) {
@@ -1170,11 +1146,11 @@ public class SortFilterPage extends PropertyPage {
 		 * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
 		 */
 		public void modify(Object element, String property, Object value) {
+			boolean newValue = ((Boolean) value).booleanValue();
 			TableItem tableItem = (TableItem) element;
 			SortFilterElement item = (SortFilterElement) tableItem.getData();
 			int columnIndex = findPropertyIndex(property);
 			if (columnIndex == 0) {
-				boolean newValue = ((Boolean) value).booleanValue();
 				TableItem[] tableItems = tableViewer.getTable().getItems();
 				for (int j = 0; j < tableItems.length; j++) {
 					SortFilterElement data =
@@ -1187,7 +1163,6 @@ public class SortFilterPage extends PropertyPage {
 						tableViewer.update(
 							new Object[] { tableViewer.getElementAt(j)},
 							new String[] { getColumnProperties()[0] });
-						filterChanged = true;
 					}
 				}
 
@@ -1204,12 +1179,19 @@ public class SortFilterPage extends PropertyPage {
 						filters.remove(items[i]);
 					}
 				}
-
-				_filtering = Filtering.MANUAL_LITERAL;
 				_filteringKeys = Collections.EMPTY_LIST;
-
-				filterChanged = true;
-				getApplyButton().setEnabled(sortChanged || filterChanged);
+				
+				_filtering = newValue ? Filtering.NONE_LITERAL : Filtering.MANUAL_LITERAL;
+				if (newValue) {
+					Iterator itr = elementCollection.iterator();
+					while (itr.hasNext()) {
+						if (!baseElements.contains(itr.next())) {
+							_filtering = Filtering.MANUAL_LITERAL;
+							break;
+						}
+					}
+				}
+				updateApplyButton();
 			}
 		}
 
@@ -1316,7 +1298,8 @@ public class SortFilterPage extends PropertyPage {
 						(SortFilterElement) tableItems[i].getData();
 					newModel.add(i, ey);
 				}
-				_tableViewer.setInput(newModel);
+				elementCollection.clear();
+				elementCollection.addAll(newModel);
 				_tableViewer.refresh();
 
 				_sorting = Sorting.AUTOMATIC_LITERAL;
@@ -1331,8 +1314,7 @@ public class SortFilterPage extends PropertyPage {
 
 				handleSelection();
 
-				sortChanged = true;
-				getApplyButton().setEnabled(sortChanged || filterChanged);
+				updateApplyButton();
 			}
 
 		}
@@ -1371,35 +1353,48 @@ public class SortFilterPage extends PropertyPage {
 		filterList.setItems(criteriaList);
 	}
 
-	/**
-	 * Returns <code>true</code> if the filter criteria are the same and
-	 * <code>false</code> otherwise.
-	 * @param other
-	 * @return <code>true</code> if the filter criteria are the same
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#updateApplyButton()
 	 */
-	private boolean compareFilters(String[] other) {
-		if (filterStrings == null
-			|| other == null
-			|| filterStrings.length != other.length)
-			return false;
+	protected void updateApplyButton() {
+		if (getApplyButton() != null)
+			getApplyButton().setEnabled(isValid() && isDirty());
+	}
 
-		for (int i = 0; i < filterStrings.length; i++) {
-			if (filterStrings[i] != other[i])
-				return false;
-		}
-		return true;
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#createControl(org.eclipse.swt.widgets.Composite)
+	 */
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		updateApplyButton();
 	}
 	
 	/**
-	 * Creates the command that needs to be executed for this page when "Ok" is
-	 * pressed. It's different from {@link #getApplyCommand()}, because it checks
-	 * whether the page is dirty or not.
-	 * @return <code>Command</code> to be executed per this page
+	 * Determines whether the page contains changes that can be applied.
+	 * @return <code>true</code> if page is dirty
 	 */
-	public Command getCommand() {
-		if (filterChanged || sortChanged)
-			return getApplyCommand();
-		return null;
+	protected boolean isDirty() {
+		if (pageType == ROOT_PAGE
+			|| _filteringBackUp != _filtering
+			|| _sortingBackUp != _sorting)
+			return true;
+		
+		return !elementCollection.equals(elementCollectionBackUp);
 	}
 	
+	/**
+	 * Creates the back up of the initial data to determine whether the page
+	 * has applicable changes later on.
+	 */
+	private void createBackUp() {
+		_filteringBackUp = _filtering;
+		_sortingBackUp = _sorting;
+		elementCollectionBackUp = new ArrayList(elementCollection.size());
+		for (Iterator itr = elementCollection.iterator(); itr.hasNext();) {
+			SortFilterElement element = (SortFilterElement) itr.next();
+			elementCollectionBackUp.add(new SortFilterElement(element
+					.isVisible(), element.getData()));
+		}
+	}
+
 }
