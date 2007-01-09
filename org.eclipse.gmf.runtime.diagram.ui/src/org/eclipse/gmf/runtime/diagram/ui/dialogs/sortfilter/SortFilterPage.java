@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilterContentProvider;
@@ -30,7 +30,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.dialogs.sortfilter.SortFilter
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangeSortFilterRequest;
-import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Filtering;
 import org.eclipse.gmf.runtime.notation.FilteringStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -942,73 +941,20 @@ public class SortFilterPage extends PropertyPage {
 	}
 
 	/**
-	 * Applies changes to all pages in the dialog
-	 */
-	public boolean performOk() {
-		if (sortChanged || filterChanged)
-			performApply();
-		return true;
-	}
-
-	/**
 	 * Writes the sorting/filtering specified by the dialog
 	 */
 	protected void performApply() {
 
-		if (pageType == CHILD_PAGE) {
-			Command filteringCommand = getApplyCommand();
-			if (filteringCommand != null && filteringCommand.canExecute()) {				
-				editPart
-					.getRoot()
-					.getViewer()
-					.getEditDomain()
-					.getCommandStack()
-					.execute(
-					filteringCommand);
-			}	
-		} else if (pageType == ROOT_PAGE) {
-
-			PreferenceManager preferenceManager =
-				((SortFilterDialog) getContainer()).getPreferenceManager();
-			Iterator nodes =
-				preferenceManager
-					.getElements(PreferenceManager.PRE_ORDER)
-					.iterator();
-			SortFilterRootPreferenceNode rootNode = null;
-			CompositeTransactionalCommand cc = new CompositeTransactionalCommand(
-                editPart.getEditingDomain(),
-                DiagramUIMessages.Command_SortFilterCommand);
-            while (nodes.hasNext()) {
-				PreferenceNode node = (PreferenceNode) nodes.next();
-				SortFilterPage page = (SortFilterPage) node.getPage();
-				if (page == this) {
-					rootNode = (SortFilterRootPreferenceNode) node;
-					continue;
-				}
-
-				// We must build the page if it is already not done because each
-				// page
-				// in the dialog knows how to filter itself.
-				((SortFilterDialog) rootNode.getPreferenceDialog()).showPage(
-					node);
-
-				// We set the child's filter criteria to the root's
-				// criteria if the child is using the same filtering criteria.
-				if (compareFilters(page.getFilterList())) {
-					page.setFilterCriteria(filters.getItems());
-					page.setCriteria(filterList.getItems());
-					page.filterItemsFromList();
-				}
-				
-				
-				//page.performApply();
-				
-				cc.compose(new CommandProxy(page.getApplyCommand()));
-			}
-			
-			editPart.getRoot().getViewer().getEditDomain().getCommandStack()
-				.execute(new ICommandProxy(cc));
-		}
+		Command filteringCommand = getApplyCommand();
+		if (filteringCommand != null && filteringCommand.canExecute()) {				
+			editPart
+				.getRoot()
+				.getViewer()
+				.getEditDomain()
+				.getCommandStack()
+				.execute(
+				filteringCommand);
+		}	
 	}
 	
 	/**
@@ -1017,47 +963,84 @@ public class SortFilterPage extends PropertyPage {
 	 * @return the command
 	 */
 	public Command getApplyCommand() {
-		List newSortedObjects = Collections.EMPTY_LIST; 
-		if (_sorting.equals(Sorting.MANUAL_LITERAL)) {
-				newSortedObjects = new ArrayList();
-				List model = (ArrayList) tableViewer.getInput();
-				for (int j = 0; j < model.size(); j++) {
-					SortFilterElement element = (SortFilterElement) model.get(j);
-					newSortedObjects.add(element.getData());
-				}
-		}
-		
-		List newFilteredObjects = Collections.EMPTY_LIST;
-		if (_filtering.equals(Filtering.MANUAL_LITERAL)) {
-			newFilteredObjects = new ArrayList();
-			List model = (ArrayList) tableViewer.getInput();			
-			for (int i = 0; i < model.size(); i++) {
-				SortFilterElement element = (SortFilterElement) model.get(i);
-				if (!element.isVisible()) {
-					newFilteredObjects.add(element.getData());
-				}
+		if (pageType == CHILD_PAGE) {
+			List newSortedObjects = Collections.EMPTY_LIST; 
+			if (_sorting.equals(Sorting.MANUAL_LITERAL)) {
+					newSortedObjects = new ArrayList();
+					List model = (ArrayList) tableViewer.getInput();
+					for (int j = 0; j < model.size(); j++) {
+						SortFilterElement element = (SortFilterElement) model.get(j);
+						newSortedObjects.add(element.getData());
+					}
 			}
-			if (_filtering.equals(Filtering.MANUAL_LITERAL) && newFilteredObjects.size() == 0) {
-				_filtering = Filtering.NONE_LITERAL;
+			
+			List newFilteredObjects = Collections.EMPTY_LIST;
+			if (_filtering.equals(Filtering.MANUAL_LITERAL)) {
+				newFilteredObjects = new ArrayList();
+				List model = (ArrayList) tableViewer.getInput();			
+				for (int i = 0; i < model.size(); i++) {
+					SortFilterElement element = (SortFilterElement) model.get(i);
+					if (!element.isVisible()) {
+						newFilteredObjects.add(element.getData());
+					}
+				}
+				if (_filtering.equals(Filtering.MANUAL_LITERAL) && newFilteredObjects.size() == 0) {
+					_filtering = Filtering.NONE_LITERAL;
+				}
+			}	
+			
+			// Add the objects filtered otherwise.
+			if (!_shownAsAlternateViewItems.isEmpty()
+				&& Collections.EMPTY_LIST.equals(newFilteredObjects)) {
+				newFilteredObjects = new ArrayList();
 			}
-		}	
-		
-		// Add the objects filtered otherwise.
-		if (!_shownAsAlternateViewItems.isEmpty()
-			&& Collections.EMPTY_LIST.equals(newFilteredObjects)) {
-			newFilteredObjects = new ArrayList();
+			newFilteredObjects.addAll(_shownAsAlternateViewItems);
+	
+			ChangeSortFilterRequest request = new ChangeSortFilterRequest(
+				_filtering, newFilteredObjects, _filteringKeys, _sorting,
+				newSortedObjects, _sortingKeys);
+			
+			sortChanged = false;
+			filterChanged = false;
+			getApplyButton().setEnabled(sortChanged || filterChanged);
+	
+			return editPart.getCommand(request);
+		} else if (pageType == ROOT_PAGE) {
+			PreferenceManager preferenceManager =
+				((SortFilterDialog) getContainer()).getPreferenceManager();
+			Iterator nodes =
+				preferenceManager
+					.getElements(PreferenceManager.PRE_ORDER)
+					.iterator();
+			SortFilterRootPreferenceNode rootNode = null;
+			CompoundCommand cc = new CompoundCommand(
+	            DiagramUIMessages.Command_SortFilterCommand);
+	        while (nodes.hasNext()) {
+				PreferenceNode node = (PreferenceNode) nodes.next();
+				SortFilterPage page = (SortFilterPage) node.getPage();
+				if (page == this) {
+					rootNode = (SortFilterRootPreferenceNode) node;
+					continue;
+				}
+	
+				// We must build the page if it is already not done because each
+				// page
+				// in the dialog knows how to filter itself.
+				((SortFilterDialog) rootNode.getPreferenceDialog()).showPage(
+					node);
+	
+				// We set the child's filter criteria to the root's
+				// criteria if the child is using the same filtering criteria.
+				if (compareFilters(page.getFilterList())) {
+					page.setFilterCriteria(filters.getItems());
+					page.setCriteria(filterList.getItems());
+					page.filterItemsFromList();
+				}				
+				cc.add(page.getApplyCommand());
+			}
+	        return cc;
 		}
-		newFilteredObjects.addAll(_shownAsAlternateViewItems);
-
-		ChangeSortFilterRequest request = new ChangeSortFilterRequest(
-			_filtering, newFilteredObjects, _filteringKeys, _sorting,
-			newSortedObjects, _sortingKeys);
-		
-		sortChanged = false;
-		filterChanged = false;
-		getApplyButton().setEnabled(sortChanged || filterChanged);
-
-		return editPart.getCommand(request);		
+		return UnexecutableCommand.INSTANCE;
 	}
 
 	/**
@@ -1405,6 +1388,18 @@ public class SortFilterPage extends PropertyPage {
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Creates the command that needs to be executed for this page when "Ok" is
+	 * pressed. It's different from {@link #getApplyCommand()}, because it checks
+	 * whether the page is dirty or not.
+	 * @return <code>Command</code> to be executed per this page
+	 */
+	public Command getCommand() {
+		if (filterChanged || sortChanged)
+			return getApplyCommand();
+		return null;
 	}
 	
 }
