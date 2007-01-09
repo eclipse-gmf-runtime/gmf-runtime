@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -307,15 +307,6 @@ public class ColorsAndFontsPropertySection
         });
 		fillColorButton.setEnabled(false);
 
-		if (isReadOnly()) {
-			lineColorButton.setEnabled(false);
-			fontFamilyCombo.setEnabled(false);
-			fontSizeCombo.setEnabled(false);
-			fontBoldButton.setEnabled(false);
-			fontItalicButton.setEnabled(false);
-			fontColorButton.setEnabled(false);
-		}
-
 		return toolBar;
 	}
 
@@ -593,10 +584,14 @@ public class ColorsAndFontsPropertySection
 				IGraphicalEditPart ep = getSingleInput();
 				if (ep != null) {
 
+                    boolean isReadOnly = isReadOnly();
+                    lineColorButton.setEnabled(!isReadOnly);
+                    fillColorButton.setEnabled(!isReadOnly);
+
 					Style style = ep.getNotationView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
-					boolean enableFontWidgets = style != null;
-					
-					fontFamilyCombo.setEnabled(enableFontWidgets);
+					boolean enableFontWidgets = (style != null) && !isReadOnly;
+                    
+                    fontFamilyCombo.setEnabled(enableFontWidgets);
 					fontSizeCombo.setEnabled(enableFontWidgets);
 					fontBoldButton.setEnabled(enableFontWidgets);
 					fontItalicButton.setEnabled(enableFontWidgets);
