@@ -127,10 +127,11 @@ public class DiagramPopupBarEditPolicy
 	}
 
 	/**
-	 * Adds popup bar descriptors for all the shape tools in the palette
-	 * container of the last active palette tool.
-	 */
-	private void fillBasedOnLastActivePaletteTool() {
+     * Adds popup bar descriptors for all the shape tools in the palette
+     * container of the last active palette tool. Subclasses may override if
+     * they wish to customize this behavior for their diagram.
+     */
+	protected void fillBasedOnLastActivePaletteTool() {
 		if (theLastTool == null)
 			return;
 
@@ -147,13 +148,14 @@ public class DiagramPopupBarEditPolicy
 	}
 
     /**
-	 * Adds popup bar descriptors for all the shape tools in the given palette
-	 * container.
-	 * 
-	 * @param palContainer
-	 *            the <code>PaletteContainer</code>
-	 */
-	private void fillWithPaletteToolsInContainer(PaletteContainer palContainer) {
+     * Adds popup bar descriptors for all the shape tools in the given palette
+     * container. Subclasses may override if they wish to customize this
+     * behavior for their diagram.
+     * 
+     * @param palContainer
+     *            the <code>PaletteContainer</code>
+     */
+    protected void fillWithPaletteToolsInContainer(PaletteContainer palContainer) {
 		if (palContainer != null) {
 			List theEntries = palContainer.getChildren();
 			int isz = theEntries.size();
@@ -225,10 +227,11 @@ public class DiagramPopupBarEditPolicy
 	
 
 	/**
-	 * Adds popup bar descriptors for all the shape tools in the palette drawer
-	 * that is initially open.
-	 */
-	private void fillBasedOnOpenPaletteDrawer() {
+     * Adds popup bar descriptors for all the shape tools in the palette drawer
+     * that is initially open. Subclasses may override if they wish to customize
+     * this behavior for their diagram.
+     */
+    protected void fillBasedOnOpenPaletteDrawer() {
 		PaletteViewer paletteViewer = getHost().getViewer().getEditDomain()
 			.getPaletteViewer();
         if (paletteViewer != null) {
