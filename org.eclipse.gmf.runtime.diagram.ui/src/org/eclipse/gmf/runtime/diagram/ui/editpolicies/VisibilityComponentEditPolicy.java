@@ -71,6 +71,15 @@ public class VisibilityComponentEditPolicy
 	protected Command createDeleteSemanticCommand(GroupRequest deleteRequest) {
 		return null;
 	}
+    
+	protected Command getDeleteCommand(GroupRequest deleteRequest) {
+        // Override this method to avoid prompt when deleting views with no
+        // semantic meaning. See bugzilla 158845.
+        if (shouldDeleteSemantic()) {
+            return createDeleteSemanticCommand(deleteRequest);
+        }
+        return createDeleteViewCommand(deleteRequest);
+    }
 
 
 }
