@@ -108,13 +108,29 @@
       </paletteProvider>
    </extension>
    
-   <!-- Palette providers for contributing predefined palette entries -->
+   <!-- Verify that this does not remove the predefined entry -->
    <extension
          point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
       <paletteProvider
             class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
          <Priority
                name="Low">
+         </Priority>
+         <contribution>
+            <predefinedEntry
+                  id="/ovalDrawer"
+                  remove="true"/>
+         </contribution>
+      </paletteProvider>
+   </extension>
+   
+   <!-- testPredefineAndContributeEntries -->
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Medium">
          </Priority>
          <editor
                class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor">
@@ -132,7 +148,7 @@
       <paletteProvider
             class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
          <Priority
-               name="Medium">
+               name="High">
          </Priority>
          <editor
                class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor">
@@ -150,6 +166,20 @@
                   id="cylinder"
                   path="/ovalAndCylinderDrawer"/>
          </contribution>
+         <contribution>
+            <entry
+            	  defineOnly="true"
+                  id="ovalAndCylinderDrawerDefinedOnly"
+                  kind="drawer"
+                  label="ovalAndCylinderDrawerDefinedOnly"
+                  path="/"/>
+            <predefinedEntry
+                  id="/ovalDrawer/oval"
+                  path="/ovalAndCylinderDrawerDefinedOnly"/>
+            <predefinedEntry
+                  id="cylinder"
+                  path="/ovalAndCylinderDrawerDefinedOnly"/>
+         </contribution>
       </paletteProvider>
    </extension>
    
@@ -158,11 +188,16 @@
       <paletteProvider
             class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
          <Priority
-               name="High">
+               name="Highest">
          </Priority>
          <contribution>
             <predefinedEntry
                   id="ovalAndCylinderDrawer">
+               <expand force="true"/>
+            </predefinedEntry>
+            <predefinedEntry
+                  id="ovalAndCylinderDrawerDefinedOnly"
+                  path="/">
                <expand force="true"/>
             </predefinedEntry>
             <predefinedEntry
@@ -171,6 +206,57 @@
          </contribution>
       </paletteProvider>
    </extension>
+   
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+         <editor
+               class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor">
+         </editor>
+         <contribution>
+            <entry
+                  id="squareDrawer"
+                  kind="drawer"
+                  label="squareDrawer"
+                  path="/"/>
+            <entry
+                  label="square"
+                  kind="tool"
+                  path="squareDrawer/"
+                  id="square">
+            </entry>
+         </contribution>
+      </paletteProvider>
+   </extension>
+
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Low">
+         </Priority>
+         <editor
+               class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor">
+         </editor>
+         <contribution>
+            <entry
+                  id="rectangleDrawer"
+                  kind="drawer"
+                  label="rectangleDrawer"
+                  path="/"/>
+            <predefinedEntry
+                  id="/squareDrawer/square"
+                  path="/rectangleDrawer"/>
+         </contribution>
+      </paletteProvider>
+   </extension>   
+   
+   <!-- testStaticMethodInPaletteExtension -->
    <extension
          point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
       <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
@@ -190,4 +276,5 @@
          </contribution>
       </paletteProvider>
    </extension>
+    
 </plugin>

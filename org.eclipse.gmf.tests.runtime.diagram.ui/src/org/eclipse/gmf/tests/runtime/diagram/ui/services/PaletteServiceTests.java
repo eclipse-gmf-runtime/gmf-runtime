@@ -455,6 +455,8 @@ public class PaletteServiceTests
         
         boolean ovalDrawerFound = false;
         boolean ovalAndCylinderDrawerFound = false;
+        boolean ovalAndCylinderDrawerFoundDefinedOnly = false;
+        boolean rectangleDrawerFound = false;
         
         for (Iterator iter = paletteRoot.getChildren().iterator(); iter.hasNext();) {
             Object paletteEntry = iter.next();
@@ -480,15 +482,33 @@ public class PaletteServiceTests
                         "cylinder", ((PaletteEntry) drawer.getChildren().get(1)).getId()); //$NON-NLS-1$
                      assertTrue(drawer.isInitiallyOpen());      
                      
-                }
+                } else if (drawer.getId().equals("ovalAndCylinderDrawerDefinedOnly")) { //$NON-NLS-1$
+                    
+                    ovalAndCylinderDrawerFoundDefinedOnly = true;
+                    
+                    assertEquals(
+                        "oval", ((PaletteEntry) drawer.getChildren().get(0)).getId()); //$NON-NLS-1$
+                    assertEquals(
+                        "cylinder", ((PaletteEntry) drawer.getChildren().get(1)).getId()); //$NON-NLS-1$
+                     assertTrue(drawer.isInitiallyOpen());      
+                     
+                } else if (drawer.getId().equals("rectangleDrawer")) { //$NON-NLS-1$
+
+                    rectangleDrawerFound = true;
+
+                    assertEquals(
+                        "square", ((PaletteEntry) drawer.getChildren().get(0)).getId()); //$NON-NLS-1$
+                } 
             }           
         }
         
         assertTrue(ovalDrawerFound);
         assertTrue(ovalAndCylinderDrawerFound);
+        assertTrue(ovalAndCylinderDrawerFoundDefinedOnly);
+        assertTrue(rectangleDrawerFound);
 
      }
-    
+  
     /**
      * Tests the ability of a client to use a static method to assist in
      * identifying the editor in the extension point XML.This test uses the
