@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.Disposable;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -34,6 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -394,5 +396,23 @@ public abstract class DiagramAction
 			return getDiagramEditPart().getDiagramPreferencesHint();
 		}
 		return PreferencesHint.USE_DEFAULTS;
+	}
+	
+	/**
+	 * Gets the location of the mouse pointer relative to the viewer.
+	 * 
+	 * @return the location of the mouse pointer or null if it cannot be
+	 *         determined
+	 */
+	protected final Point getMouseLocation() {
+		Display display = Display.getCurrent();
+		if (display != null) {
+			IDiagramGraphicalViewer viewer = getDiagramGraphicalViewer();
+			if (viewer != null) {
+				return new Point(viewer.getControl().toControl(
+						display.getCursorLocation()));
+			}
+		}
+		return null;
 	}
 }
