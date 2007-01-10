@@ -92,8 +92,14 @@ public abstract class AbstractBorderedShapeEditPart
 			addBorderItem(borderItemContainer,
 				(IBorderItemEditPart) childEditPart);
 		} else {
-			IFigure fig = getContentPaneFor((IGraphicalEditPart) childEditPart);
-			fig.add(childFigure, index);
+			IFigure parent = getContentPaneFor((IGraphicalEditPart) childEditPart);
+
+            // If there are a mixture of border items and other contained
+            // figures, the index may be incorrect and could result in out of
+            // bounds exceptions.
+            index = Math.min(parent.getChildren().size(), index);
+            
+            parent.add(childFigure, index);
 		}
 	}
 
