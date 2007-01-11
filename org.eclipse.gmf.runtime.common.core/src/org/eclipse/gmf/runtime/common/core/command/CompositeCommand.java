@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -313,31 +313,44 @@ public class CompositeCommand
 	}
 
     /**
-     * Returns the simplest form of this command that is equivalent. This is
-     * useful for removing unnecessary nesting of commands.
-     * <P>
-     * If the composite has a single command, it returns the reduction of that
-     * single command. Otherwise, it returns itself.
-     * 
-     * @return the simplest form of this command that is equivalent
-     */
-    public ICommand reduce() {
-        switch (size()) {
-            case 1:
-                IUndoableOperation child = (IUndoableOperation) iterator()
-                    .next();
+	 * Returns the simplest form of this command that is equivalent. This is
+	 * useful for removing unnecessary nesting of commands.
+	 * <P>
+	 * If the composite has a single command, it returns the reduction of that
+	 * single command. Otherwise, it returns itself.
+	 * 
+	 * @return the simplest form of this command that is equivalent
+	 */
+	public ICommand reduce() {
+		switch (size()) {
+		case 1:
+			IUndoableOperation child = (IUndoableOperation) iterator().next();
 
-                if (child instanceof ICommand) {
-                    return ((ICommand) child).reduce();
-                }
-        }
-        return this;
-    }
+			if (child instanceof ICommand) {
+				ICommand cmd = ((ICommand) child).reduce();
+				/*
+				 * TODO: If label is missing on the resultant reduced command
+				 * and it is present on this command, then just copy the label
+				 * from this command to the resultant. Currently there is no
+				 * setLabel method on the ICommand, hence, as workaround, we add
+				 * resultant command to this command and return this command.
+				 */
+				if ((cmd.getLabel() == null || cmd.getLabel().length() == 0)
+						&& getLabel() != null && getLabel().length() > 0) {
+					children.clear();
+					add(cmd);
+				} else {
+					return cmd;
+				}
+			}
+		}
+		return this;
+	}
 
     /**
-     * Returns a list containing all of the return values from
-     * <code>ICommand</code> children.
-     */
+	 * Returns a list containing all of the return values from
+	 * <code>ICommand</code> children.
+	 */
     protected List getReturnValues() {
 
         List returnValues = new ArrayList();
