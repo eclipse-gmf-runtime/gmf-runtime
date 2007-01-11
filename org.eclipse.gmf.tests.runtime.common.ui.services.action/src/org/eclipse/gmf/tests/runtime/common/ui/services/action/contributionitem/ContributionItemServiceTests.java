@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,10 @@
 
 package org.eclipse.gmf.tests.runtime.common.ui.services.action.contributionitem;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -28,8 +31,20 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IKeyBindingService;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.services.IServiceLocator;
@@ -37,7 +52,7 @@ import org.eclipse.ui.services.IServiceLocator;
 /**
  * Tests for the Contribution Item Service.
  * 
- * @author cmahoney
+ * @author cmahoney, mmostafa
  */
 public class ContributionItemServiceTests
 	extends TestCase {
@@ -84,6 +99,175 @@ public class ContributionItemServiceTests
         }
 
 	}
+    
+    class MySelection
+        implements ISelection, IStructuredSelection {
+
+        public boolean isEmpty() {
+            return true;
+        }
+
+        public Object getFirstElement() {
+            return null;
+        }
+
+        public Iterator iterator() {
+            return Collections.EMPTY_LIST.iterator();
+        }
+
+        public int size() {
+            return 0;
+        }
+
+        public Object[] toArray() {
+            return null;
+        }
+
+        public List toList() {
+            return null;
+        }
+
+    }
+
+    class MySelectionProvider
+        implements ISelectionProvider {
+
+        public void addSelectionChangedListener(
+                ISelectionChangedListener listener) {
+            // nothing to do here
+        }
+
+        public ISelection getSelection() {
+            return new MySelection();
+        }
+
+        public void removeSelectionChangedListener(
+                ISelectionChangedListener listener) {
+            // nothing to do here
+        }
+
+        public void setSelection(ISelection selection) {
+            // nothing to do here
+        }
+
+    }
+
+    class MySite
+        implements IWorkbenchPartSite {
+
+        public String getId() {
+            return null;
+        }
+
+        public IKeyBindingService getKeyBindingService() {
+            return null;
+        }
+
+        public IWorkbenchPart getPart() {
+            return null;
+        }
+
+        public String getPluginId() {
+            return null;
+        }
+
+        public String getRegisteredName() {
+            return null;
+        }
+
+        public void registerContextMenu(MenuManager menuManager,
+                ISelectionProvider selectionProvider) {
+            // nothing to do here
+        }
+
+        public void registerContextMenu(String menuId, MenuManager menuManager,
+                ISelectionProvider selectionProvider) {
+            // nothing to do here
+        }
+
+        public IWorkbenchPage getPage() {
+            return null;
+        }
+
+        public ISelectionProvider getSelectionProvider() {
+            return new MySelectionProvider();
+        }
+
+        public Shell getShell() {
+            return null;
+        }
+
+        public IWorkbenchWindow getWorkbenchWindow() {
+            return null;
+        }
+
+        public void setSelectionProvider(ISelectionProvider provider) {
+            // nothing to do here
+        }
+
+        public Object getAdapter(Class adapter) {
+            return null;
+        }
+
+        public Object getService(Class api) {
+            return null;
+        }
+
+        public boolean hasService(Class api) {
+            return false;
+        }
+
+    }
+
+    class MyWorkBenchPart
+        implements IWorkbenchPart {
+
+        public void addPropertyListener(IPropertyListener listener) {
+            // nothing to do here
+
+        }
+
+        public void createPartControl(Composite parent) {
+            // nothing to do here
+
+        }
+
+        public void dispose() {
+            // nothing to do here
+
+        }
+
+        public IWorkbenchPartSite getSite() {
+            return new MySite();
+        }
+
+        public String getTitle() {
+            return null;
+        }
+
+        public Image getTitleImage() {
+            return null;
+        }
+
+        public String getTitleToolTip() {
+            return null;
+        }
+
+        public void removePropertyListener(IPropertyListener listener) {
+            // nothing to do here
+
+        }
+
+        public void setFocus() {
+            // nothing to do here
+
+        }
+
+        public Object getAdapter(Class adapter) {
+            return null;
+        }
+
+    }
 
 	class MyWorkbenchPartDescriptor
 		implements IWorkbenchPartDescriptor {
@@ -198,6 +382,21 @@ public class ContributionItemServiceTests
 		validateActionBars(editor2ActionBars, true, true);
 
 	}
+    
+    /**
+     * Tests the loading of the class provided by the Policy_Class attribute
+     * 
+     * @throws Exception
+     */
+    public void testPolicy_ClassAttribute()
+        throws Exception {
+        toggleActivity(true);
+        ContributionItemService.getInstance().contributeToPopupMenu(
+            new MenuManager(), new MyWorkBenchPart());
+        assertTrue(
+            "The policy should be called at least once", ContributionPolicy.getCallCount() >= 1); //$NON-NLS-1$
+
+    }
 
 	/**
 	 * Toggles the enablement of the activity <code>MY_ACTIVITY_ID</code>
