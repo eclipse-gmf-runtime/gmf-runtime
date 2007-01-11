@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.IPopupMenuContributionPolicy;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.CommonUIServicesActionStatusCodes;
@@ -977,7 +978,7 @@ public class ProviderContributionDescriptor extends AbstractProviderConfiguratio
 				try {
 					Object extension =
 						configElement.createExecutableExtension(
-							policyClassName);
+                            POLICY_CLASS);
 					if (extension instanceof IPopupMenuContributionPolicy)
 						policy = (IPopupMenuContributionPolicy) extension;
 					else

@@ -57,4 +57,26 @@
             activityId="MyActivityID"
             pattern="org\.eclipse\.gmf\.tests\.runtime\.common\.ui\.services\.action/ContributionItemProvider2"/>
    </extension>
+   <extension
+         id="ContributionItemProvider2"
+         name="ContributionItemProvider2"
+         point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider
+            checkPluginLoaded="false"
+            class="org.eclipse.gmf.tests.runtime.common.ui.services.action.contributionitem.ContributionItemProvider2">
+         <Priority name="Lowest"/>
+         <popupContribution class="org.eclipse.jface.action.MenuManager">
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart"
+                  policyClass="org.eclipse.gmf.tests.runtime.common.ui.services.action.contributionitem.ContributionPolicy"/>
+            <popupMenu
+                  id="org.eclipse.gmf.tests.runtime.common.ui.services.action.popupMenu1"
+                  path="/additionsGroup"/>
+            <popupMenuGroup
+                  id="org.eclipse.gmf.tests.runtime.common.ui.services.action.popupMenuGroup1"
+                  path="/"
+                  separator="true"/>
+         </popupContribution>
+      </contributionItemProvider>
+   </extension>
 </plugin>
