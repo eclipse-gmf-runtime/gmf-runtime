@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
@@ -82,37 +81,32 @@ public class ArrangeAction extends DiagramAction {
 		return !selectionOnly;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getCommand()
-	 */
 	protected Command getCommand() {
-		if (isArrangeAll()){
-			CompoundCommand arrangeCC = new CompoundCommand(getLabel());
+		CompoundCommand arrangeCC = new CompoundCommand(getLabel());
+		if (isArrangeAll()) {
 			List elements = getOperationSet();
 			for (Iterator iter = elements.iterator(); iter.hasNext();) {
 				EditPart element = (EditPart) iter.next();
-                Command cmd = element.getCommand(getTargetRequest());
-                if (cmd !=null)
-                    arrangeCC.add(cmd);
+				Command cmd = element.getCommand(getTargetRequest());
+				if (cmd != null)
+					arrangeCC.add(cmd);
 			}
-            if (!arrangeCC.isEmpty())
-                return arrangeCC;
-            else
-                return UnexecutableCommand.INSTANCE;
-        }
-		else if (getOperationSet().size() >= 2) {
+		} else if (getOperationSet().size() >= 2) {
 			EditPart parent = getSelectionParent(getOperationSet());
-			if (parent != null)
-				return parent.getCommand(getTargetRequest());
+			if (parent != null) {
+				Command cmd = parent.getCommand(getTargetRequest());
+				if (cmd != null)
+					arrangeCC.add(cmd);
+			}
 		}
-		return UnexecutableCommand.INSTANCE;
+		return arrangeCC;
 	}
 
 	/**
-	 * Action is enabled if arrange all.   
-	 * If arrange selection, action is enabled if the 
-	 * operation set's parent has XYLayout 
-	 * and there is atleast 2 siblings to arrange
+	 * Action is enabled if arrange all. If arrange selection, action is enabled
+	 * if the operation set's parent has XYLayout and there is atleast 2
+	 * siblings to arrange
+	 * 
 	 * @see org.eclipse.gef.ui.actions.EditorPartAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {

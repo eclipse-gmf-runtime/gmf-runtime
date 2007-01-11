@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,4 +82,14 @@ public interface ICommand extends IUndoableOperation {
      * @return the simplest form of this command that is equivalent
      */
     public abstract ICommand reduce();
+    
+    /**
+     * Since not all commands have names, reduce() should propogate label from an
+     * upper command that may be thrown away to the resultant reduced command. The
+     * method is needed to assign the label to a nameless command, because
+     * <code>IUndoableOperation</code> is missing this method.
+     * 
+     * @param label command's new label
+     */
+    public abstract void setLabel(String label);
 }
