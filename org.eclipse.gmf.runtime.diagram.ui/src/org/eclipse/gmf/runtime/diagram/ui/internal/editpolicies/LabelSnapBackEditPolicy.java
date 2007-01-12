@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
@@ -74,5 +75,11 @@ public class LabelSnapBackEditPolicy
 			return new ICommandProxy(moveCommand);
 		}
 		return null;
+	}
+
+	public EditPart getTargetEditPart(Request request) {
+		if (understandsRequest(request))
+			return getHost();
+		return super.getTargetEditPart(request);
 	}
 }
