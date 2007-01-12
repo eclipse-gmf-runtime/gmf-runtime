@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -502,7 +502,21 @@ public abstract class CanonicalConnectionEditPolicy
 
 		return viewDescriptors;
 	}
-
+    
+    protected boolean isOrphaned(Collection semanticChildren, View view) {
+        EObject element = view.getElement();
+        if (semanticChildren.contains(element)) {
+            if (view instanceof Edge) {
+                Edge edge = (Edge) view;
+                if (edge.getSource().getElement() != getSourceElement(element)
+                    || edge.getTarget().getElement() != getTargetElement(element))
+                    return true;
+            }
+        } else
+            return true;
+        return false;
+    }
+    
 
 	/*
 	 * (non-Javadoc)

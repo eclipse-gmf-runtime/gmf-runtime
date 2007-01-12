@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1119,7 +1119,7 @@ implements NotificationListener {
 		while( viewChildrenIT.hasNext() ) {
 			viewChild = (View)viewChildrenIT.next();
 			semanticChild = viewChild.getElement();
-			if (semanticChildren.contains(semanticChild)) {
+			if (!isOrphaned(semanticChildren, viewChild)) {
 				semanticChildren.remove(semanticChild);
 				viewToSemanticMap.put(semanticChild, viewChild);
 			}
@@ -1138,6 +1138,19 @@ implements NotificationListener {
 		}
 		return orphaned;
 	}
+
+    /**
+     * Decide if the passed view is orphened or not
+     * 
+     * @param semanticChildren
+     *            semantic children to check againest
+     * @param view
+     *            the view that shoudlbe checked
+     * @return true if orphaned other wise false
+     */
+    protected boolean isOrphaned(Collection semanticChildren, View view) {
+        return !semanticChildren.contains(view.getElement());
+    }
 	
 	/**
 	 * Allow for post processing of the refresh semantic to set the view mutable
