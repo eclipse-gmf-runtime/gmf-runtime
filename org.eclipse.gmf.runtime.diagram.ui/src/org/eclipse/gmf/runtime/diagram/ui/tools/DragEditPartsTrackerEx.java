@@ -14,9 +14,13 @@ package org.eclipse.gmf.runtime.diagram.ui.tools;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -26,6 +30,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * A dervied DragEditPartsTRacker that sends REQ_DRAG instead of REQ_ORPHAN
@@ -35,7 +41,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
  */
 public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 
-	/**
+    /**
 	 * @param sourceEditPart
 	 */
 	public DragEditPartsTrackerEx(EditPart sourceEditPart) {
@@ -150,5 +156,47 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 	protected void reveal(EditPart editpart){
 		editpart.getViewer().reveal(editpart);
 	}
+   
+    protected boolean handleDragInProgress() {
+        boolean returnValue = super.handleDragInProgress();
+        if (isInState(STATE_DRAG_IN_PROGRESS)
+            || isInState(STATE_ACCESSIBLE_DRAG_IN_PROGRESS)) {
+            
+            // Expose the diagram as the user scrolls in the area handled by the
+            // autoexpose helper.
+            updateAutoexposeHelper();
+        }
+        return returnValue;
+    }
+
+    protected Cursor calculateCursor() {
+        if (isInState(STATE_DRAG_IN_PROGRESS)
+            || isInState(STATE_ACCESSIBLE_DRAG_IN_PROGRESS)) {
+
+            // Give some feedback so the user knows the area where autoscrolling
+            // will occur.
+            if (getAutoexposeHelper() != null) {
+                return SharedCursors.HAND;
+            } else {
+
+                // Give some feedback so the user knows that they can't drag
+                // outside the viewport.
+                Control control = getCurrentViewer().getControl();
+                if (control instanceof FigureCanvas) {
+                    Viewport viewport = ((FigureCanvas) control).getViewport();
+                    Rectangle rect = Rectangle.SINGLETON;
+                    viewport.getClientArea(rect);
+                    viewport.translateToParent(rect);
+                    viewport.translateToAbsolute(rect);
+
+                    if (!rect.contains(getLocation())) {
+                        return getDisabledCursor();
+                    }
+                }
+            }
+        }
+        return super.calculateCursor();
+    }
+
     
 }
