@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
@@ -41,13 +40,8 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.SnapToGeometry;
-import org.eclipse.gef.SnapToGrid;
-import org.eclipse.gef.SnapToGuides;
-import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.requests.SelectionRequest;
-import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.tools.DeselectAllTracker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
@@ -657,39 +651,6 @@ public abstract class ShapeCompartmentEditPart
 					getViewer().select(ShapeCompartmentEditPart.this);
 			}
 		};
-	}
-
-	/** Adds the ability to adapt to {@link SnapToHelper}. */
-	public Object getAdapter(Class adapter) {
-
-		if (adapter == SnapToHelper.class) {
-
-			List snapStrategies = new ArrayList();
-
-			Boolean val = (Boolean) getViewer().getProperty(
-				RulerProvider.PROPERTY_RULER_VISIBILITY);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGuides(this));
-
-			val = (Boolean) getViewer().getProperty(
-				SnapToGeometry.PROPERTY_SNAP_ENABLED);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGrid((GraphicalEditPart) this
-					.getParent()));
-
-			if (snapStrategies.size() == 0)
-				return null;
-
-			if (snapStrategies.size() == 1)
-				return snapStrategies.get(0);
-
-			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
-			for (int i = 0; i < snapStrategies.size(); i++)
-				ss[i] = (SnapToHelper) snapStrategies.get(i);
-			return new CompoundSnapToHelper(ss);
-		}
-
-		return super.getAdapter(adapter);
 	}
 
 	/** Also calls {@link #refreshConnections()}. */

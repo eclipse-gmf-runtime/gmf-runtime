@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -68,6 +69,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DummyEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.SanpToHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
@@ -335,12 +337,16 @@ public abstract class GraphicalEditPart
             else
                 return null;
         }
-        
-        Object model = basicGetModel();     
+
+        if (key == SnapToHelper.class) {
+            return SanpToHelperUtil.getSnapHelper(this);
+        }
+
+        Object model = basicGetModel();
         if (model != null &&
             EObject.class.isAssignableFrom(key)) {
             // Adapt to semantic element
-            EObject semanticObject = null;            
+            EObject semanticObject = null;
             if (hasNotationView()){
                 semanticObject = ViewUtil.resolveSemanticElement((View)model);
             }

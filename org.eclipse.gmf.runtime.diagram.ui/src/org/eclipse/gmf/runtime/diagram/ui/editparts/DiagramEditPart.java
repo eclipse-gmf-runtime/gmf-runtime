@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,19 +23,14 @@ import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.SnapToGeometry;
-import org.eclipse.gef.SnapToGrid;
-import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.requests.SelectionRequest;
-import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.tools.DeselectAllTracker;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerNodeEditPolicy;
@@ -49,7 +44,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.RubberbandDragTracker;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -296,30 +290,7 @@ public class DiagramEditPart
 	 */
 	public Object getAdapter(Class adapter) {
 
-		if (adapter == SnapToHelper.class) {
-
-			List snapStrategies = new ArrayList();
-
-			Boolean val = (Boolean)getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGuidesEx(this));
-
-			val = (Boolean)getViewer().getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGrid(this));
-
-			if (snapStrategies.size() == 0)
-				return null;
-
-			if (snapStrategies.size() == 1)
-				return snapStrategies.get(0);
-
-			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
-			for (int i = 0; i < snapStrategies.size(); i++)
-				ss[i] = (SnapToHelper)snapStrategies.get(i);
-			return new CompoundSnapToHelper(ss);
-		}
-		else if (adapter == Routing.class) {
+		if (adapter == Routing.class) {
 			IPreferenceStore store = (IPreferenceStore)getDiagramPreferencesHint().getPreferenceStore();
 			Routing routingVal = Routing.get(store.getInt(IPreferenceConstants.PREF_LINE_STYLE));
 			return routingVal;	

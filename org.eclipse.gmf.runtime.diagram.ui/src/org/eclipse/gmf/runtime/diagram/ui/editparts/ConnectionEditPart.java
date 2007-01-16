@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,6 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.AccessibleEditPart;
-import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
@@ -45,15 +44,11 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.gef.SnapToGeometry;
-import org.eclipse.gef.SnapToGrid;
-import org.eclipse.gef.SnapToGuides;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
-import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
@@ -72,6 +67,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.SanpToHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.ConnectionLineSegEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.TreeConnectionBendpointEditPolicy;
@@ -512,29 +508,7 @@ abstract public class ConnectionEditPart
         }
 
         if (key == SnapToHelper.class) {
-
-            List snapStrategies = new ArrayList();
-            EditPartViewer viewer = getViewer();
-            Boolean val = (Boolean) viewer
-                .getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
-            if (val != null && val.booleanValue())
-                snapStrategies.add(new SnapToGuides(this));
-
-            val = (Boolean) viewer
-                .getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
-            if (val != null && val.booleanValue())
-                snapStrategies.add(new SnapToGrid(this));
-
-            if (snapStrategies.size() == 0)
-                return null;
-
-            if (snapStrategies.size() == 1)
-                return snapStrategies.get(0);
-
-            SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
-            for (int i = 0; i < snapStrategies.size(); i++)
-                ss[i] = (SnapToHelper) snapStrategies.get(i);
-            return new CompoundSnapToHelper(ss);
+            return SanpToHelperUtil.getSnapHelper(this);
         }
 
         Object model = getModel();
