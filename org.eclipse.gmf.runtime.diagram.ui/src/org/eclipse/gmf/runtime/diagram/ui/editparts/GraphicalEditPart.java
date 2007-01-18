@@ -508,7 +508,7 @@ public abstract class GraphicalEditPart
      * @param request a request that has returned a command.
      * @return list of editparts.
      */
-    Collection disableCanonicalFor( final Request request ) {
+    protected Collection disableCanonicalFor( final Request request ) {
         //
         // not the most generic of solution; however, it will have to do for now...
         //
