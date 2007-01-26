@@ -189,6 +189,7 @@ public class PageBreakEditPart extends AbstractGraphicalEditPart {
 				pageBreakBounds.width,
 				pageBreakBounds.height);
 		getPageBreaksFigure().setBounds(centeredRec);
+		updatePreferenceStore();
 	}
 
 	/**

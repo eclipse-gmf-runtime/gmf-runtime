@@ -499,7 +499,11 @@ public class DiagramRootEditPart
 		if (WorkspaceViewerProperties.VIEWPAGEBREAKS.equals(event.getProperty())) {
 			refreshPageBreaks();
 		} else if (isPageSizeChange(event.getProperty())) {
-			getPageBreakEditPart().calculatePageBreakFigureBounds(false);
+			Rectangle diagramBounds = PageInfoHelper.getChildrenBounds(
+					(DiagramEditPart) getContents(),
+					PageBreaksFigure.class);
+			getPageBreakEditPart().resize(diagramBounds);
+			getPageBreakEditPart().updatePreferenceStore();
 			refreshPageBreaks();			
 		} else if (WorkspaceViewerProperties.VIEWGRID.equals(event.getProperty())) {		
 			// Set the state of the Grid Enabled Property

@@ -181,6 +181,11 @@ public class PrintHelper {
 					.getDiagramEditPart().getDiagramView()))) {
 					IDiagramGraphicalViewer viewer = diagramEditor
 						.getDiagramGraphicalViewer();
+					if (diagramEditor.getDiagramEditPart().getRoot() instanceof DiagramRootEditPart) {
+						PageBreakEditPart pageBreakEditPart = ((DiagramRootEditPart)diagramEditor.getDiagramEditPart().getRoot()).getPageBreakEditPart();
+						pageBreakEditPart.resize(diagramEditor.getDiagramEditPart().getChildrenBounds());
+						pageBreakEditPart.updatePreferenceStore();
+					}
 					if (viewer instanceof DiagramGraphicalViewer) {
 						DiagramGraphicalViewer diagramGraphicalViewer = (DiagramGraphicalViewer) viewer;
 
