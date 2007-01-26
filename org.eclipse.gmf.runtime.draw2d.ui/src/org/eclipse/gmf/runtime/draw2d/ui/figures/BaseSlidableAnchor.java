@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.draw2d.ui.figures;
 
 import org.eclipse.draw2d.AbstractConnectionAnchor;
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -273,11 +274,12 @@ public class BaseSlidableAnchor
 	 * in absolute coordinates
 	 */
 	protected Rectangle getBox() {
-		Rectangle rBox = getOwner().getBounds().getCopy();
-		
-		getOwner().translateToAbsolute(rBox);
-		return rBox;
-	}
+        Rectangle rBox = (getOwner() instanceof Connection) ? ((Connection) getOwner())
+            .getPoints().getBounds().getCopy()
+            : getOwner().getBounds().getCopy();
+        getOwner().translateToAbsolute(rBox);
+        return rBox;
+    }
 	
 	/**
 	 * Returns true if the <Code>SlidableAnchor</Code> is default one with a reference at the center
