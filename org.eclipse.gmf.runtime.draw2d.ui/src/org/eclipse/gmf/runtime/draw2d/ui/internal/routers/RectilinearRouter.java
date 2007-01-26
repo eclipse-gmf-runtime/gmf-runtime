@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,11 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -158,19 +160,15 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 			
 			Rectangle bBoxF, bBoxT;
 			if (conn.getSourceAnchor().getOwner() != null) {
-				bBoxF =
-					new Rectangle(
-						conn.getSourceAnchor().getOwner().getBounds());
+				bBoxF = getBounds(conn.getSourceAnchor().getOwner());
 				conn.getSourceAnchor().getOwner().translateToAbsolute(bBoxF);
 				conn.translateToRelative(bBoxF);
 			} else
 				bBoxF = new Rectangle(ptOrig.x - offsets.width / 2, ptOrig.y - offsets.height / 2, 
 											offsets.width, offsets.height);
 
-			if (conn.getTargetAnchor().getOwner() != null) {
-				bBoxT =
-					new Rectangle(
-						conn.getTargetAnchor().getOwner().getBounds());
+            if (conn.getTargetAnchor().getOwner() != null) {
+                bBoxT = getBounds(conn.getTargetAnchor().getOwner());
 				conn.getTargetAnchor().getOwner().translateToAbsolute(bBoxT);
 				conn.translateToRelative(bBoxT);
 			} else
@@ -228,53 +226,74 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 
 		return retVal;
 	}
-
+    
 	/**
      * resetEndPointsToEdge
      * Resets both of the end points in the polyline to be anchored properly on the
      * edge of the start and end figures.
      * @see org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter#resetEndPointsToEdge(org.eclipse.draw2d.Connection, org.eclipse.draw2d.geometry.PointList)
-	 */
-	protected void resetEndPointsToEdge(Connection conn, PointList newLine) {
+     */   
+    protected void resetEndPointsToEdge(Connection conn, PointList newLine) {
 
-		// if we are reorienting, then just default to the super class implementation and
-		// don't try to do rectilinear routing.
-		if (isReorienting(conn)) {
-			super.resetEndPointsToEdge(conn, newLine);
-			return;
-		}
- 
-		LineSeg edgeLine1 =
-			OrthogonalRouterUtilities.getOrthogonalLineSegToAnchorLoc(conn, conn.getSourceAnchor(), newLine.getPoint(1));
+        // if we are reorienting, then just default to the super class implementation and
+        // don't try to do rectilinear routing.
+        if (isReorienting(conn)) {
+            super.resetEndPointsToEdge(conn, newLine);
+            return;
+        }
         
-		LineSeg edgeLine2 =
-			OrthogonalRouterUtilities.getOrthogonalLineSegToAnchorLoc(conn, conn.getTargetAnchor(), newLine.getPoint(newLine.size() - 2));
+        Point origin = null;
+        if (conn.getSourceAnchor().getOwner() instanceof Connection) {
+            origin = getIntersectionPoint((Connection) conn.getSourceAnchor()
+                .getOwner(), new LineSeg(newLine.getPoint(1), newLine
+                .getPoint(0)));
+        }
+        if (origin == null) {
+            LineSeg edgeLine1 = OrthogonalRouterUtilities
+                .getOrthogonalLineSegToAnchorLoc(conn, conn.getSourceAnchor(),
+                    newLine.getPoint(1));
+            origin = edgeLine1.getOrigin();
+        }
 
-		if (edgeLine1 != null && edgeLine2 != null) {
-			newLine.setPoint(edgeLine1.getOrigin(), 0);
-			if (newLine.size() > 2) {
-				for (int i=0; i<2; i++) {
-		            Point ptCurrent = newLine.getPoint(i);
-		            Point ptNext = newLine.getPoint(i+1);
-		            makeOrthogonal(ptCurrent, ptNext);
-		            
-		            newLine.setPoint(ptNext, i+1);
-		        }
-			}
-			
-			newLine.setPoint(edgeLine2.getOrigin(), newLine.size() - 1);
-			if (newLine.size() > 2) {
-				for (int i=newLine.size() - 1; i>=newLine.size() - 2; i--) {
-		            Point ptCurrent = newLine.getPoint(i);
-		            Point ptNext = newLine.getPoint(i-1);
-		            makeOrthogonal(ptCurrent, ptNext);
-		            
-		            newLine.setPoint(ptNext, i-1);
-		        }
-			}
-		} else
-			super.resetEndPointsToEdge(conn, newLine);
-	}
+        Point terminus = null;
+        if (conn.getTargetAnchor().getOwner() instanceof Connection) {
+            int numPoints = newLine.size();
+            terminus = getIntersectionPoint((Connection) conn.getTargetAnchor()
+                .getOwner(), new LineSeg(newLine.getPoint(numPoints - 2),
+                newLine.getPoint(numPoints - 1)));
+        }
+        if (terminus == null) {
+            LineSeg edgeLine2 = OrthogonalRouterUtilities
+                .getOrthogonalLineSegToAnchorLoc(conn, conn.getTargetAnchor(),
+                    newLine.getPoint(newLine.size() - 2));
+            terminus = edgeLine2.getOrigin();
+        }
+
+        if (origin != null && terminus != null) {
+            newLine.setPoint(origin, 0);
+            if (newLine.size() > 2) {
+                for (int i=0; i<2; i++) {
+                    Point ptCurrent = newLine.getPoint(i);
+                    Point ptNext = newLine.getPoint(i+1);
+                    makeOrthogonal(ptCurrent, ptNext);
+                    
+                    newLine.setPoint(ptNext, i+1);
+                }
+            }
+            
+            newLine.setPoint(terminus, newLine.size() - 1);
+            if (newLine.size() > 2) {
+                for (int i=newLine.size() - 1; i>=newLine.size() - 2; i--) {
+                    Point ptCurrent = newLine.getPoint(i);
+                    Point ptNext = newLine.getPoint(i-1);
+                    makeOrthogonal(ptCurrent, ptNext);
+                    
+                    newLine.setPoint(ptNext, i-1);
+                }
+            }
+        } else
+            super.resetEndPointsToEdge(conn, newLine);
+    }
 
 	private void makeOrthogonal(Point ptCurrent, Point ptNext) {
 		if (Math.abs(ptNext.x - ptCurrent.x) < Math.abs(ptNext.y - ptCurrent.y)) {
@@ -306,80 +325,86 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 				break;
 			}
 		}
+        
+        // first see if it is already rectilinear already
+        if (isRectilinear && areEndsInBounds(conn, newLine)) {
+            return;
+        }
 
-		// If this thing isn't rectilinear, then first try to turn it into a
-		// biterminal and if that doesn't work, then try to route it.
-		if (!isRectilinear && !updateToBiTerminal(conn, newLine)) {
-			// We've got a line that isn't rectilinear, so let's route
-			// General rules based on number of segments starting with
-			// if starting with two points (one segment) take shortest distance first.
-			// if starting with three points (two segments) put longest segment
-			//	as the middle segment
-			OrthogonalRouterUtilities.resetEndPointsToCenter(conn, newLine);
+        // now try to turn it into a biterminal (i.e. one straight line)
+        if (updateToBiTerminal(conn, newLine) && areEndsInBounds(conn, newLine)) {
+            return;
+        }
 
-			PointList oldPoints = PointListUtilities.copyPoints(newLine);
+		// We've got a line that isn't rectilinear, so let's route
+		// General rules based on number of segments starting with
+		// if starting with two points (one segment) take shortest distance first.
+		// if starting with three points (two segments) put longest segment
+		//	as the middle segment
+		OrthogonalRouterUtilities.resetEndPointsToCenter(conn, newLine);
 
-			PointList newPoints = new PointList();
-			newPoints.addPoint(oldPoints.removePoint(0));
-			while (oldPoints.size() > 0) {
-				if (oldPoints.size() >= 2) {
-					// This starts at point where last left off,
-					// or the starting point if first time through.
-					Point p0 = newPoints.getLastPoint();
-					Point p1 = oldPoints.removePoint(0);
-					Point p2 = oldPoints.removePoint(0);
+		PointList oldPoints = PointListUtilities.copyPoints(newLine);
 
-					// make the shortest segment first.
-					if (Math.abs(p2.y - p0.y) > Math.abs(p2.x - p0.x)) {
-						// x has shortest segment
-						newPoints.addPoint(new Point(p1.x, p0.y));
-						newPoints.addPoint(new Point(p1.x, p2.y));
-					} else // y has shortest segment first. 
-						{
-						newPoints.addPoint(new Point(p0.x, p1.y));
-						newPoints.addPoint(new Point(p2.x, p1.y));
-					}
-					newPoints.addPoint(p2);
-				} else if (oldPoints.size() == 1) {
-					Point p0 = newPoints.getLastPoint();
-					Point p1 = oldPoints.removePoint(0);
-					if (Math.abs(p1.y - p0.y) > Math.abs(p1.x - p0.x)) {
-						newPoints.addPoint(new Point(p1.x, p0.y));
-					} else {
-						newPoints.addPoint(new Point(p0.x, p1.y));
-					}
-					newPoints.addPoint(p1);
+		PointList newPoints = new PointList();
+		newPoints.addPoint(oldPoints.removePoint(0));
+		while (oldPoints.size() > 0) {
+			if (oldPoints.size() >= 2) {
+				// This starts at point where last left off,
+				// or the starting point if first time through.
+				Point p0 = newPoints.getLastPoint();
+				Point p1 = oldPoints.removePoint(0);
+				Point p2 = oldPoints.removePoint(0);
+
+				// make the shortest segment first.
+				if (Math.abs(p2.y - p0.y) > Math.abs(p2.x - p0.x)) {
+					// x has shortest segment
+					newPoints.addPoint(new Point(p1.x, p0.y));
+					newPoints.addPoint(new Point(p1.x, p2.y));
+				} else // y has shortest segment first. 
+					{
+					newPoints.addPoint(new Point(p0.x, p1.y));
+					newPoints.addPoint(new Point(p2.x, p1.y));
 				}
-
-			}
-			oldPoints.removeAllPoints();
-			// Now make a pass through to collapse any redundent segments.
-			oldPoints.addPoint(newPoints.removePoint(0));
-			while (newPoints.size() >= 2) {
-				Point p0 = oldPoints.getLastPoint();
-				Point p1 = newPoints.getPoint(0);
-				Point p2 = newPoints.getPoint(1);
-				if (p0.x == p1.x && p0.x == p2.x) {
-					// Have two vertical segments in a row
-					// get rid of the point between
-					newPoints.removePoint(0);
-				} else if (p0.y == p1.y && p0.y == p2.y) {
-					// Have two horizontal segments in a row
-					// get rid of the point between
-					newPoints.removePoint(0);
+				newPoints.addPoint(p2);
+			} else if (oldPoints.size() == 1) {
+				Point p0 = newPoints.getLastPoint();
+				Point p1 = oldPoints.removePoint(0);
+				if (Math.abs(p1.y - p0.y) > Math.abs(p1.x - p0.x)) {
+					newPoints.addPoint(new Point(p1.x, p0.y));
 				} else {
-					oldPoints.addPoint(newPoints.removePoint(0));
+					newPoints.addPoint(new Point(p0.x, p1.y));
 				}
+				newPoints.addPoint(p1);
 			}
-			while (newPoints.size() > 0) {
+
+		}
+		oldPoints.removeAllPoints();
+		// Now make a pass through to collapse any redundent segments.
+		oldPoints.addPoint(newPoints.removePoint(0));
+		while (newPoints.size() >= 2) {
+			Point p0 = oldPoints.getLastPoint();
+			Point p1 = newPoints.getPoint(0);
+			Point p2 = newPoints.getPoint(1);
+			if (p0.x == p1.x && p0.x == p2.x) {
+				// Have two vertical segments in a row
+				// get rid of the point between
+				newPoints.removePoint(0);
+			} else if (p0.y == p1.y && p0.y == p2.y) {
+				// Have two horizontal segments in a row
+				// get rid of the point between
+				newPoints.removePoint(0);
+			} else {
 				oldPoints.addPoint(newPoints.removePoint(0));
 			}
-
-			// set the newly routed line back into newLine
-			newLine.removeAllPoints();
-			for (int i = 0; i < oldPoints.size(); i++)
-				newLine.addPoint(oldPoints.getPoint(i));
 		}
+		while (newPoints.size() > 0) {
+			oldPoints.addPoint(newPoints.removePoint(0));
+		}
+
+		// set the newly routed line back into newLine
+		newLine.removeAllPoints();
+		for (int i = 0; i < oldPoints.size(); i++)
+			newLine.addPoint(oldPoints.getPoint(i));
 	}
 
 	/**
@@ -489,7 +514,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		PointList newLine) {
 		boolean skipNormalization =
 			(routerFlags & ROUTER_FLAG_SKIPNORMALIZATION) != 0;
-
+        
         int nStartSize = newLine.size();
         
 		// if we are reorienting, then just default to the super class implementation and
@@ -530,9 +555,9 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		
         // check the end segments to ensure they conform to a minimum distance.
         checkEndSegments(conn, newLine);
-                 
+          
 		resetEndPointsToEdge(conn, newLine); 
-        
+                
         // final fix-up to ensure straight lines  
         straightenPoints(newLine);
          
@@ -549,7 +574,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 			}
 		}
         else {
-            Rectangle startRect = new Rectangle(conn.getSourceAnchor().getOwner().getBounds());
+            Rectangle startRect = getBounds(conn.getSourceAnchor().getOwner());
             conn.getSourceAnchor().getOwner().translateToAbsolute(startRect);
             conn.translateToRelative(startRect);
             
@@ -557,8 +582,8 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
     		conn.translateToRelative(buffer);
     		
             startRect.expand(buffer.width, buffer.height);
-            
-            Rectangle endRect = new Rectangle(conn.getTargetAnchor().getOwner().getBounds());
+              
+            Rectangle endRect = getBounds(conn.getTargetAnchor().getOwner());
             conn.getTargetAnchor().getOwner().translateToAbsolute(endRect);
             conn.translateToRelative(endRect);
             endRect.expand(buffer.width, buffer.height);
@@ -582,4 +607,69 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
         }
 		//## end RectRouter::routeLine%803842153.body
 	}
+    
+    /**
+     * Returns true if the ends of the line passed in our within the bounds of
+     * the connection's source and target ends.
+     * 
+     * @param connection
+     *            the connection whose source and target ends will be looked at
+     * @param line
+     *            the line in question
+     * @return true if the two ends of the lines are within the bounds; false
+     *         otherwise
+     */
+    private boolean areEndsInBounds(Connection connection, PointList line) {
+        Rectangle startRect = new PrecisionRectangle(getBounds(connection
+            .getSourceAnchor().getOwner()));
+        connection.getSourceAnchor().getOwner().translateToAbsolute(startRect);
+        connection.translateToRelative(startRect);
+
+        Rectangle endRect = new PrecisionRectangle(getBounds(connection
+            .getTargetAnchor().getOwner()));
+        connection.getTargetAnchor().getOwner().translateToAbsolute(endRect);
+        connection.translateToRelative(endRect);
+
+        if (!startRect.contains(line.getPoint(0))
+            || !endRect.contains(line.getPoint(line.size() - 1))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns a copy of the bounds of this figure or if the figure is a
+     * <code>Connection</code> the bounds of the pointlist will be returned.
+     * 
+     * @param figure
+     * @return a copy of the bounds
+     */
+    private Rectangle getBounds(IFigure figure) {
+        return figure instanceof Connection ? ((Connection) figure).getPoints()
+            .getBounds().getCopy()
+            : figure.getBounds().getCopy();
+    }
+
+    /**
+     * Returns the closest intersection point from the line segment given that
+     * will extend to hit the connection passed in.
+     * 
+     * @param connection
+     *            the connection
+     * @param lineSeg
+     *            the line segment to extend to find intersections with the
+     *            connection
+     * @return the closeest intersecting point or null if there are none
+     */
+    private Point getIntersectionPoint(Connection connection, LineSeg lineSeg) {
+
+        PointList intersections = lineSeg
+            .getLineIntersectionsWithLineSegs(connection.getPoints());
+        if (intersections.size() > 0) {
+            return PointListUtilities.pickClosestPoint(intersections, lineSeg
+                .getOrigin());
+        }
+
+        return null;
+    }
 }

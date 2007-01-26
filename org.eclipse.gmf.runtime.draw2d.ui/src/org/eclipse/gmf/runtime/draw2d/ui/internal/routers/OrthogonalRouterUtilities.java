@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,10 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 
 
@@ -62,19 +62,18 @@ public class OrthogonalRouterUtilities {
 	public static void resetEndPointsToCenter(
 		Connection conn,
 		PointList newLine) {
-		Rectangle startRect =
-			new Rectangle(conn.getSourceAnchor().getOwner().getBounds());
-		conn.getSourceAnchor().getOwner().translateToAbsolute(startRect);
+        
+        Rectangle startRect = getBounds(conn.getSourceAnchor().getOwner());
+        conn.getSourceAnchor().getOwner().translateToAbsolute(startRect);
 
 		Point ptStart = newLine.getPoint(1);
 		conn.translateToAbsolute(ptStart);
 		ptStart = getAdjustedCenterPoint(startRect, ptStart);
 		conn.translateToRelative(ptStart);
 		newLine.setPoint(ptStart, 0);
-
-		Rectangle endRect =
-			new Rectangle(conn.getTargetAnchor().getOwner().getBounds());
-		conn.getTargetAnchor().getOwner().translateToAbsolute(endRect);
+        
+        Rectangle endRect = getBounds(conn.getTargetAnchor().getOwner());
+        conn.getTargetAnchor().getOwner().translateToAbsolute(endRect);
 
 		Point ptEnd = newLine.getPoint(newLine.size() - 2);
 		conn.translateToAbsolute(ptEnd);
@@ -96,7 +95,7 @@ public class OrthogonalRouterUtilities {
 		Connection conn,
 		ConnectionAnchor anchor,
 		Point ptRef) {
-		Rectangle rect = new Rectangle(anchor.getOwner().getBounds());
+		Rectangle rect = getBounds(anchor.getOwner());
 		anchor.getOwner().translateToAbsolute(rect);
 		conn.translateToRelative(rect);
 		
@@ -158,4 +157,17 @@ public class OrthogonalRouterUtilities {
 			
 			return result;
 	}
+    
+    /**
+     * Returns a copy of the bounds of this figure or if the figure is a
+     * <code>Connection</code> the bounds of the pointlist will be returned.
+     * 
+     * @param figure
+     * @return a copy of the bounds
+     */
+    private static Rectangle getBounds(IFigure figure) {
+        return figure instanceof Connection ? ((Connection) figure).getPoints()
+            .getBounds().getCopy()
+            : figure.getBounds().getCopy();
+    }
 }
