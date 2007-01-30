@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -270,11 +270,10 @@ public class PropertiesBrowserPage
 	 * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
 	 */
 	public void labelProviderChanged(LabelProviderChangedEvent event) {
-		
-		if(event.getElements() == null){
-			super.labelProviderChanged(event);
-			return;
-		}
+		if (event.getElements() == null && getControl() != null) {
+            super.labelProviderChanged(event);
+            return;
+        }
 
 		IStructuredSelection structuredSelection = getSelectedElements();
 		if (structuredSelection == null) {
