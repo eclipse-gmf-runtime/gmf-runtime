@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,22 @@ public class DiagramEventBroker
     private static final Map instanceMap = new WeakHashMap();
     
     private WeakReference editingDomainRef;
+    
+    /**
+     * returns the pre commit listeners map
+     * @return pre commit listeners map
+     */
+    protected NotifierToKeyToListenersSetMap getPreCommitListenersMap() {
+        return preListeners;
+    }
+    
+    /**
+     * returns the post commit listeners map
+     * @return post commit listeners map
+     */
+    protected NotifierToKeyToListenersSetMap getPostCommitListenersMap() {
+        return postListeners;
+    }
 
     /**
      * Utility class representing a Map of Notifier to a Map of Keys to a Set of
@@ -69,7 +85,7 @@ public class DiagramEventBroker
      * 
      * @author mmostafa
      */
-    private final class NotifierToKeyToListenersSetMap {
+    public final class NotifierToKeyToListenersSetMap {
 
         /**
          * internal map to hold the listeners
@@ -359,12 +375,25 @@ public class DiagramEventBroker
                     }
                 }
                 if (!customNotification && deleted) {
+                    handleNotificationOnDeletedElement(event);
                     continue;
                 }
 
                 fireNotification(notification);
             }
         }
+    }
+
+
+    /**
+     * This method allows clients to customize the Diagram event broker behavior when
+     * it comes to handling events on deleted objects.
+     * The default behavior will just ignore them
+     * @param event event being handled
+     */
+    protected void handleNotificationOnDeletedElement(ResourceSetChangeEvent event) {
+        // default implementation does nothing
+        
     }
 
 
@@ -377,7 +406,7 @@ public class DiagramEventBroker
      * @param notifier
      * @return
      */
-    private boolean isDeleted(Set deletedObjects, EObject notifier) {
+    protected boolean isDeleted(Set deletedObjects, EObject notifier) {
         EObject object = notifier;
         while (object!=null){
             if (deletedObjects.contains(object)){
@@ -431,7 +460,7 @@ public class DiagramEventBroker
      * ElementEvent (for backwards compatibility). The ElementEvent will be
      * removed one the MSL migration is complete.
      */
-    private void fireNotification(Notification event) {
+    protected void fireNotification(Notification event) {
         Collection listenerList = getInterestedNotificationListeners(event,
         	postListeners);
         if (!listenerList.isEmpty()) {			
@@ -506,7 +535,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void addNotificationListener(EObject target,
+    public void addNotificationListener(EObject target,
             NotificationPreCommitListener listener) {
         if (target != null) {
             preListeners.addListener(target, LISTEN_TO_ALL_FEATURES, listener);
@@ -521,7 +550,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void addNotificationListener(EObject target,
+    public void addNotificationListener(EObject target,
             NotificationListener listener) {
         if (target != null) {
             postListeners.addListener(target, LISTEN_TO_ALL_FEATURES, listener);
@@ -538,7 +567,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void addNotificationListener(EObject target,
+    public void addNotificationListener(EObject target,
             EStructuralFeature key, NotificationPreCommitListener listener) {
         if (target != null) {
             preListeners.addListener(target, key, listener);
@@ -555,7 +584,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void addNotificationListener(EObject target,
+    public void addNotificationListener(EObject target,
             EStructuralFeature key, NotificationListener listener) {
         if (target != null) {
             postListeners.addListener(target, key, listener);
@@ -570,7 +599,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void removeNotificationListener(EObject target,
+    public void removeNotificationListener(EObject target,
             NotificationPreCommitListener listener) {
         if (target != null) {
             preListeners.removeListener(target, LISTEN_TO_ALL_FEATURES,
@@ -586,7 +615,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void removeNotificationListener(EObject target,
+    public void removeNotificationListener(EObject target,
             NotificationListener listener) {
         if (target != null) {
             postListeners.removeListener(target, LISTEN_TO_ALL_FEATURES,
@@ -604,7 +633,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void removeNotificationListener(EObject target, Object key,
+    public void removeNotificationListener(EObject target, Object key,
             NotificationPreCommitListener listener) {
         if (target != null) {
             preListeners.removeListener(target, key, listener);
@@ -621,7 +650,7 @@ public class DiagramEventBroker
      * @param listener
      *            the listener
      */
-    public final void removeNotificationListener(EObject target, Object key,
+    public void removeNotificationListener(EObject target, Object key,
             NotificationListener listener) {
         if (target != null) {
             postListeners.removeListener(target, key, listener);
@@ -665,7 +694,7 @@ public class DiagramEventBroker
      *            the event to use
      * @return the interested listeners in the event
      */
-    final protected Set getInterestedNotificationListeners(Notification event,
+     protected Set getInterestedNotificationListeners(Notification event,
     		NotifierToKeyToListenersSetMap listeners) {
         Set listenerSet = new LinkedHashSet();
 
