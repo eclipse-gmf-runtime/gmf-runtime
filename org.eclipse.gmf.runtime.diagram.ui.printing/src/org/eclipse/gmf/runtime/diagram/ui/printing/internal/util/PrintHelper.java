@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -55,8 +56,15 @@ public class PrintHelper {
 	 */
 	public static DiagramEditPart createDiagramEditPart(Diagram diagram,
             PreferencesHint preferencesHint) {
-        return OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+        DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
             diagram, new Shell(), preferencesHint);
+        // since some of the diagram updates are ASync we need to give the 
+        // inter-thread messages a chance to get processed processed before we
+        // continue; check bugzilla 170332
+        while (Display.getDefault().readAndDispatch ()){
+            // nothing special to do 
+        }
+        return diagramEditPart;
     }
 	
 	/**
@@ -173,6 +181,11 @@ public class PrintHelper {
 					.getDiagramEditPart().getDiagramView()))) {
 					IDiagramGraphicalViewer viewer = diagramEditor
 						.getDiagramGraphicalViewer();
+					if (diagramEditor.getDiagramEditPart().getRoot() instanceof DiagramRootEditPart) {
+						PageBreakEditPart pageBreakEditPart = ((DiagramRootEditPart)diagramEditor.getDiagramEditPart().getRoot()).getPageBreakEditPart();
+						pageBreakEditPart.resize(diagramEditor.getDiagramEditPart().getChildrenBounds());
+						pageBreakEditPart.updatePreferenceStore();
+					}
 					if (diagramEditor.getDiagramEditPart().getRoot() instanceof DiagramRootEditPart) {
 						PageBreakEditPart pageBreakEditPart = ((DiagramRootEditPart)diagramEditor.getDiagramEditPart().getRoot()).getPageBreakEditPart();
 						pageBreakEditPart.resize(diagramEditor.getDiagramEditPart().getChildrenBounds());
