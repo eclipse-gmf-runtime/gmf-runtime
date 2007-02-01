@@ -186,11 +186,6 @@ public class PrintHelper {
 						pageBreakEditPart.resize(diagramEditor.getDiagramEditPart().getChildrenBounds());
 						pageBreakEditPart.updatePreferenceStore();
 					}
-					if (diagramEditor.getDiagramEditPart().getRoot() instanceof DiagramRootEditPart) {
-						PageBreakEditPart pageBreakEditPart = ((DiagramRootEditPart)diagramEditor.getDiagramEditPart().getRoot()).getPageBreakEditPart();
-						pageBreakEditPart.resize(diagramEditor.getDiagramEditPart().getChildrenBounds());
-						pageBreakEditPart.updatePreferenceStore();
-					}
 					if (viewer instanceof DiagramGraphicalViewer) {
 						DiagramGraphicalViewer diagramGraphicalViewer = (DiagramGraphicalViewer) viewer;
 
