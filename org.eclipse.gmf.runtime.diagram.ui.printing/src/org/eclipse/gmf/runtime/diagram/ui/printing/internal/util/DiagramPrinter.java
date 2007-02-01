@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,16 +80,6 @@ public class DiagramPrinter
     protected Rectangle logicalClientArea;
 
     private float userScale;
-    
-    private boolean fitToPage = false;
-    
-    /**
-     * change the fit to page state
-     * @param fitToPage the new fit to page state
-     */
-    public void setFitToPage(boolean fitToPage){
-        this.fitToPage = fitToPage;
-    }
 
     /**
      * Used when a Collection of Diagram objects are passed in instead of an
@@ -111,6 +101,16 @@ public class DiagramPrinter
      */
     private PreferencesHint preferencesHint;
     private IMapMode mm;
+    
+    private boolean fitToPage = false;
+    
+    /**
+     * change the fit to page state
+     * @param fitToPage the new fit to page state
+     */
+    public void setFitToPage(boolean fitToPage){
+        this.fitToPage = fitToPage;
+    }
 
     /**
      * Creates a new instance. The following variables must be initialized
@@ -422,7 +422,7 @@ public class DiagramPrinter
 
         assert null != printer : "printer must be set"; //$NON-NLS-1$
         Rectangle figureBounds = PrintHelper.getPageBreakBounds(dgrmEP, loadedPreferences);
-        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper.getPageSize(fPreferences, false, getMapMode());
+        org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper.getPageSize(fPreferences, getMapMode());
 
         //translate to offset initial figure position
         translated = new Point((int) (-figureBounds.x * userScale), (int) (-figureBounds.y * userScale));
@@ -439,7 +439,7 @@ public class DiagramPrinter
         FontData fontData = JFaceResources.getDefaultFont().getFontData()[0];
         Font font = new Font(printer, fontData);
         
-        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageSize, true);
+        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageBounds, true);
         numCols = pageCount.x;
         numRows = pageCount.y;
 
@@ -548,11 +548,7 @@ public class DiagramPrinter
 
         org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
             .getPageSize(fPreferences, false, getMapMode());
-        
         boolean rtlEnabled = ((this.gc.getStyle() & SWT.MIRRORED) != 0);
-        
-        int width = pageSize.x, height = pageSize.y;
-        
         if (rtlEnabled) 
         {
             // draw everything on an offscreen image first and then draw that image
@@ -587,10 +583,8 @@ public class DiagramPrinter
 
             //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
             drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
-          
             disposeImageVars(imgGC, image, sg, g1, mmg);
         } else {
-        
             internalDrawPage(dgrmEP,figureBounds,fPreferences,margins,this.graphics,rowIndex, colIndex,false);
             //draw the header and footer after drawing the image to avoid getting the image getting drawn over them
             drawHeaderAndFooter(gc_, dgrmEP, figureBounds, font, rowIndex, colIndex);
@@ -605,10 +599,11 @@ public class DiagramPrinter
             .getPageSize(fPreferences, false, getMapMode());
 
         int width = pageSize.x, height = pageSize.y;
-        g.translate(translated.x, translated.y);
-        g.scale(userScale);
 
         g.pushState();
+
+        g.translate(translated.x, translated.y);
+        g.scale(userScale);
 
         int translateX = -(width * (colIndex - 1));
         int translateY = -(height * (rowIndex - 1));
@@ -662,37 +657,25 @@ public class DiagramPrinter
         
         PageMargins margins = PageInfoHelper.getPageMargins(fPreferences, getMapMode());
         //do not include margins
-        org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-            .getPageSize(fPreferences, false, getMapMode());
-        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageSize, false);
+        org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
+            .getPageSize(fPreferences, getMapMode());
+        org.eclipse.draw2d.geometry.Point pageCount = getPageCount(dgrmEP, figureBounds, pageBounds, false);
         int numCols = pageCount.x;
         int numRows = pageCount.y;
         
         float actualWidth = 0;
         float actualHeight = 0;
         if (this.rows==1 && this.columns==1 && fitToPage){
-            Rectangle rectangle = dgrmEP.getChildrenBounds();
-            figureBounds.width = rectangle.x + rectangle.width + (numCols)*margins.right + numCols*margins.left ;
-            figureBounds.height = rectangle.y + rectangle.height + (numRows)*margins.top + numRows*margins.bottom;
+        	figureBounds = dgrmEP.getChildrenBounds();
             actualWidth = figureBounds.width;
             actualHeight = figureBounds.height;
         }else {
-            actualWidth = numCols * pageSize.x;
-            actualHeight = numRows * pageSize.y;
+            actualWidth = numCols * pageBounds.x;
+            actualHeight = numRows * pageBounds.y;
         }
 
-        org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
-            .getPageSize(fPreferences, getMapMode());
-        
-
-        
-        Rectangle translate = new Rectangle(Math.min(0, figureBounds.x), Math
-            .min(0, figureBounds.y),
-            Math.max(pageBounds.x, numCols * pageSize.x), Math.max(pageBounds.y,
-                numRows * pageSize.y));
-        
-        int totalHeight = (this.rows * pageSize.y);
-        int totalWidth  = (this.columns * pageSize.x);
+        int totalHeight = (this.rows * pageBounds.y);
+        int totalWidth  = (this.columns * pageBounds.x);
 
         float vScale =  totalHeight / actualHeight;
         float hScale = totalWidth / actualWidth;
@@ -700,8 +683,8 @@ public class DiagramPrinter
         this.userScale = Math.min(hScale, vScale);
 
         // translate to offset figure position
-        translated = new Point((int) (-translate.x * userScale),
-            (int) (-translate.y * userScale));
+        translated = new Point((int) (-figureBounds.x * userScale),
+            (int) (-figureBounds.y * userScale));
 
         adjustMargins(margins, userScale, getPrinterOffset());
 
@@ -727,7 +710,7 @@ public class DiagramPrinter
             for (; row <= rows; row++) {
                 for (; col <= columns; col++) {
                     printer.startPage();
-                    drawPage(gc_, dgrmEP, fPreferences, translate, margins,
+                    drawPage(gc_, dgrmEP, fPreferences, figureBounds, margins,
                         font, row, col);
                     printer.endPage();
                     
