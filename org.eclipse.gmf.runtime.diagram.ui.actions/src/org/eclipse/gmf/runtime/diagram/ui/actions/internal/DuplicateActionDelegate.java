@@ -28,6 +28,9 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.action.AbstractActionDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -36,7 +39,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
-import org.eclipse.gmf.runtime.emf.ui.action.AbstractModelActionDelegate;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -52,7 +54,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.actions.*
  */
 public class DuplicateActionDelegate
-	extends AbstractModelActionDelegate
+	extends AbstractActionDelegate
 	implements IObjectActionDelegate, IWorkbenchWindowActionDelegate, IHandler{
     
 	/**
@@ -74,17 +76,23 @@ public class DuplicateActionDelegate
 				(DuplicateElementsRequest) request);
 		}
 		if (cmd != null && cmd.canExecute()) {
-            IStatus status = execute(cmd, progressMonitor, null);
-
-			if (status.isOK()) {
-				if (request instanceof DuplicateRequest) {
-					selectViews(((DuplicateRequest) request)
-						.getDuplicatedViews());
-				} else {
-					// This should select the new elements in ME. Once
-					// RATLC00533879 is fixed, this can be implemented.
-				}
-			}
+            try {
+                IStatus status = getActionManager().getOperationHistory()
+                    .execute(cmd, progressMonitor, null);
+                if (status.isOK()) {
+                    if (request instanceof DuplicateRequest) {
+                        selectViews(((DuplicateRequest) request)
+                            .getDuplicatedViews());
+                    }
+                }
+            } catch (ExecutionException e) {
+                Trace.catching(DiagramActionsPlugin.getInstance(),
+                    DiagramActionsDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "doRun", e); //$NON-NLS-1$
+                Log.error(DiagramActionsPlugin.getInstance(),
+                    DiagramActionsStatusCodes.IGNORED_EXCEPTION_WARNING,
+                    "doRun", e); //$NON-NLS-1$
+            }
 		}
 	}
 
