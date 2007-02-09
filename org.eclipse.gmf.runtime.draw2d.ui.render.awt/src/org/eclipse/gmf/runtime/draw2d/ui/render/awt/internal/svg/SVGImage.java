@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.GCUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.GCUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageConverter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.AbstractRenderedImage;

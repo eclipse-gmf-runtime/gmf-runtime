@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,9 +27,9 @@ import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.ScrollBar;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.GCUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.DropShadowButtonBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ImageFigureEx;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.GCUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.l10n.Draw2dUIPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;

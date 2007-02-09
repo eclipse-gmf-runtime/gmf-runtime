@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,12 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.GCUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -130,6 +136,8 @@ protected static class State {
 		this.lineWidth = lineWidth;
 	}
 }
+
+static private boolean advancedGraphicsWarningLogged = false;
 
 private static int[][] intArrayCache = new int[8][];
 private final Rectangle tempRECT = new Rectangle();
@@ -550,16 +558,32 @@ public void scale(double amount) {
 }
 
 /**
+ * This method requires advanced graphics support. A check should be made to
+ * ensure advanced graphics is supported in the user's environment before
+ * calling this method. See {@link GCUtilities#supportsAdvancedGraphics()}.
+ * 
  * @see Graphics#setAlpha(int)
  */
 public void setAlpha(int alpha) {
+    if (!GCUtilities.supportsAdvancedGraphics()) { 
+        logAdvancedGraphicsWarning();
+        return;
+    }
 	graphics.setAlpha(alpha);
 }
 
 /**
+ * This method requires advanced graphics support. A check should be made to
+ * ensure advanced graphics is supported in the user's environment before
+ * calling this method. See {@link GCUtilities#supportsAdvancedGraphics()}.
+ * 
  * @see Graphics#setAntialias(int)
  */
 public void setAntialias(int value) {
+    if (!GCUtilities.supportsAdvancedGraphics()) { 
+        logAdvancedGraphicsWarning();
+        return;
+    }
 	graphics.setAntialias(value);
 }
 
@@ -591,9 +615,17 @@ public void setForegroundColor(Color rgb) {
 }
 
 /**
+ * This method requires advanced graphics support. A check should be made to
+ * ensure advanced graphics is supported in the user's environment before
+ * calling this method. See {@link GCUtilities#supportsAdvancedGraphics()}.
+ * 
  * @see org.eclipse.draw2d.Graphics#setInterpolation(int)
  */
 public void setInterpolation(int interpolation) {
+    if (!GCUtilities.supportsAdvancedGraphics()) { 
+        logAdvancedGraphicsWarning();
+        return;
+    }
 	graphics.setInterpolation(interpolation);
 }
 
@@ -647,9 +679,17 @@ void setScale(double value) {
 }
 
 /**
+ * This method requires advanced graphics support. A check should be made to
+ * ensure advanced graphics is supported in the user's environment before
+ * calling this method. See {@link GCUtilities#supportsAdvancedGraphics()}.
+ * 
  * @see Graphics#setTextAntialias(int)
  */
 public void setTextAntialias(int value) {
+    if (!GCUtilities.supportsAdvancedGraphics()) { 
+        logAdvancedGraphicsWarning();
+        return;
+    }
 	graphics.setTextAntialias(value);
 }	
 
@@ -812,4 +852,25 @@ protected Graphics getGraphics() {
 	return graphics;
 }
 
+/**
+ * Logs a warning once if advanced graphics support is not available.
+ */
+private void logAdvancedGraphicsWarning() {
+    if (!advancedGraphicsWarningLogged) {
+        if (Window.getDefaultOrientation() == SWT.RIGHT_TO_LEFT) {
+            Log
+                .warning(
+                    Draw2dPlugin.getInstance(),
+                    IStatus.WARNING,
+                    "Advanced graphics support is not available in right-to-left mode.  Diagrams might not look as nice as they could in left-to-right mode."); //$NON-NLS-1$
+        } else {
+            Log
+                .warning(
+                    Draw2dPlugin.getInstance(),
+                    IStatus.WARNING,
+                    "Unable to load advanced graphics library.  Diagrams might not look as nice as they could with an advanced graphics library installed (e.g. Cairo or GDI+)"); //$NON-NLS-1$
+        }
+        advancedGraphicsWarningLogged = true;
+    }
+}
 }
