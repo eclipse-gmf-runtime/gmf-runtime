@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,8 @@
 
 package org.eclipse.gmf.tests.runtime.emf.commands.core.command;
 
-import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Test;
@@ -26,6 +26,7 @@ import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.commands.operations.UndoContext;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
@@ -52,6 +53,7 @@ public class CompositeTransactionalCommandTest
     extends TestCase {
 
     private IOperationHistory history;
+    private IProject project;
 
     public static void main(String[] args) {
         TestRunner.run(suite());
@@ -68,13 +70,28 @@ public class CompositeTransactionalCommandTest
     protected void setUp()
         throws Exception {
         super.setUp();
+
         history = OperationHistoryFactory.getOperationHistory();
+
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        project = root.getProject("AbstractCommandTest"); //$NON-NLS-1$
+        project.create(null);
+        project.open(null);
+    }
+
+    protected void tearDown()
+        throws Exception {
+        super.tearDown();
+
+        project.close(new NullProgressMonitor());
+        project.delete(true, true, new NullProgressMonitor());
+        project = null;
+        history = null;
     }
 
     private List getFiles(String str) {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IFile[] files = workspaceRoot.findFilesForLocationURI(URI.create(str));
-        return Arrays.asList(files);
+        IFile file = project.getFile(str);
+        return Collections.singletonList(file);
     }
 
     /**
@@ -155,10 +172,10 @@ public class CompositeTransactionalCommandTest
         IUndoContext ctx1 = new UndoContext();
         IUndoContext ctx2 = new UndoContext();
 
-        ICommand child1 = new TestCommand("child1", getFiles("null:/compose1")); //$NON-NLS-1$ //$NON-NLS-2$
+        ICommand child1 = new TestCommand("child1", getFiles("compose1")); //$NON-NLS-1$ //$NON-NLS-2$
         child1.addContext(ctx1);
 
-        ICommand child2 = new TestCommand("child2", getFiles("null:/compose1")); //$NON-NLS-1$ //$NON-NLS-2$
+        ICommand child2 = new TestCommand("child2", getFiles("compose1")); //$NON-NLS-1$ //$NON-NLS-2$
         child1.addContext(ctx2);
 
         ICommand composition = c.compose(child1);
@@ -169,8 +186,9 @@ public class CompositeTransactionalCommandTest
         List affectedFiles = composition.getAffectedFiles();
         assertTrue(affectedFiles.containsAll(child1.getAffectedFiles()));
         assertTrue(affectedFiles.containsAll(child2.getAffectedFiles()));
-        assertEquals(child1.getAffectedFiles().size()
-            + child2.getAffectedFiles().size(), affectedFiles.size());
+        
+        // should be no duplicates
+        assertEquals(1, affectedFiles.size());
 
         List contexts = Arrays.asList(composition.getContexts());
         assertTrue(contexts.contains(ctx1));
