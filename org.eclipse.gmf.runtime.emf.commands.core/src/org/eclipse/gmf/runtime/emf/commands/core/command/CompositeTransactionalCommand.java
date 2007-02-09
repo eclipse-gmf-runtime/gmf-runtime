@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.emf.commands.core.command;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +121,7 @@ public class CompositeTransactionalCommand
      */
     public List getAffectedFiles() {
 
-        List result = new ArrayList();
+        HashSet result = new HashSet();
 
         for (Iterator i = iterator(); i.hasNext();) {
             IUndoableOperation nextOperation = (IUndoableOperation) i.next();
@@ -134,7 +135,7 @@ public class CompositeTransactionalCommand
                 }
             }
         }
-        return result;
+        return new ArrayList(result);
     }
 
     // Documentation copied from the interface

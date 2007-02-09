@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.common.core.command;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -783,7 +784,7 @@ public class CompositeCommand
      */
     public List getAffectedFiles() {
 
-        List result = new ArrayList();
+        HashSet result = new HashSet();
 
         for (Iterator i = iterator(); i.hasNext();) {
             IUndoableOperation nextOperation = (IUndoableOperation) i.next();
@@ -797,7 +798,7 @@ public class CompositeCommand
                 }
             }
         }
-        return result;
+        return new ArrayList(result);
     }
 
     /**

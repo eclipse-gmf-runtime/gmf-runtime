@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,9 @@
 
 package org.eclipse.gmf.tests.runtime.common.core.internal.command;
 
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Test;
@@ -27,6 +28,7 @@ import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.commands.operations.UndoContext;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
@@ -46,6 +48,7 @@ public class AbstractCommandTest
     extends TestCase {
 
     private IOperationHistory history;
+    private IProject project;
 
     public static void main(String[] args) {
         TestRunner.run(suite());
@@ -62,13 +65,28 @@ public class AbstractCommandTest
     protected void setUp()
         throws Exception {
         super.setUp();
+
         history = OperationHistoryFactory.getOperationHistory();
+
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        project = root.getProject("AbstractCommandTest"); //$NON-NLS-1$
+        project.create(null);
+        project.open(null);
+    }
+
+    protected void tearDown()
+        throws Exception {
+        super.tearDown();
+
+        project.close(new NullProgressMonitor());
+        project.delete(true, true, new NullProgressMonitor());
+        project = null;
+        history = null;
     }
 
     private List getFiles(String str) {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IFile[] files = workspaceRoot.findFilesForLocationURI(URI.create(str));
-        return Arrays.asList(files);
+        IFile file = project.getFile(str);
+        return Collections.singletonList(file);
     }
 
     /**
@@ -121,19 +139,26 @@ public class AbstractCommandTest
         IUndoContext ctx1 = new UndoContext();
         IUndoContext ctx2 = new UndoContext();
 
-        ICommand c1 = new TestCommand(name, getFiles("null:/compose1")); //$NON-NLS-1$
+        ICommand c1 = new TestCommand(name, getFiles("compose1")); //$NON-NLS-1$
         c1.addContext(ctx1);
 
-        ICommand c2 = new TestCommand(name, getFiles("null:/compose2")); //$NON-NLS-1$
+        ICommand c2 = new TestCommand(name, getFiles("compose2")); //$NON-NLS-1$
         c2.addContext(ctx2);
 
-        ICommand composition = c1.compose(c2);
+        List threeFiles = new ArrayList(3);
+        threeFiles.addAll(c1.getAffectedFiles());
+        threeFiles.addAll(c2.getAffectedFiles());
+        threeFiles.add(getFiles("compose3")); //$NON-NLS-1$
+        ICommand c3 = new TestCommand(name, threeFiles);
+
+        ICommand composition = c1.compose(c2).compose(c3);
 
         List affectedFiles = composition.getAffectedFiles();
         assertTrue(affectedFiles.containsAll(c1.getAffectedFiles()));
         assertTrue(affectedFiles.containsAll(c2.getAffectedFiles()));
-        assertEquals(c1.getAffectedFiles().size()
-            + c2.getAffectedFiles().size(), affectedFiles.size());
+        
+        // should be no duplicates
+        assertEquals(3, affectedFiles.size());
 
         List contexts = Arrays.asList(composition.getContexts());
         assertTrue(contexts.contains(ctx1));
