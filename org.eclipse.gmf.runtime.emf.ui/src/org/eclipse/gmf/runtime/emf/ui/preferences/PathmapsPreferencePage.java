@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
+import org.eclipse.gmf.runtime.emf.ui.internal.MslUIPlugin;
 import org.eclipse.gmf.runtime.emf.ui.internal.l10n.EMFUIMessages;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.IColorProvider;
@@ -52,7 +53,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -574,6 +574,8 @@ public class PathmapsPreferencePage
 	
 	private static class StringsLabelProvider implements ITableLabelProvider, IColorProvider {
 		private final boolean isReferencedPathVariables;
+        
+        private Image lockImage = null;
 		
 		StringsLabelProvider() {
 			this(false);
@@ -584,15 +586,31 @@ public class PathmapsPreferencePage
 		}
 		
 		public Image getColumnImage(Object element, int columnIndex) {
+            if (isReferencedPathVariables && PathmapManager.isRegisteredPathVariable((String) element)) {
+                return getLockImage();
+            }
+            
 			return null;
 		}
+        
+        private Image getLockImage() {
+            if (lockImage == null) {
+                lockImage = MslUIPlugin.imageDescriptorFromPlugin(
+                    MslUIPlugin.getPluginId(), "/icons/full/lock.gif").createImage(); //$NON-NLS-1$
+            }
+            
+            return lockImage;
+        }
 
 		public String getColumnText(Object element, int columnIndex) {
 			return (columnIndex == 0) ? (String) element : null;
 		}
 
 		public void dispose() {
-			// nothing to dispose (the colors are all shared system colors)
+			if (lockImage != null) {
+			    lockImage.dispose();
+                lockImage = null;
+            }
 		}
 
 		public boolean isLabelProperty(Object element, String property) {
@@ -608,11 +626,6 @@ public class PathmapsPreferencePage
 		}
 
 		public Color getBackground(Object element) {
-			if (isReferencedPathVariables && PathmapManager.isRegisteredPathVariable((String) element)) {
-				return Display.getDefault().getSystemColor(
-						SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
-			}
-			
 			return null;
 		}
 
