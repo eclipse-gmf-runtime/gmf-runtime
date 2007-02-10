@@ -14,6 +14,7 @@ package org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers;
 import org.eclipse.gef.Tool;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanticType;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory;
+import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 
 /**
@@ -43,7 +44,7 @@ public class LogicPaletteFactory
             return new CreationTool(LogicSemanticType.FLOWCONTAINER);
         
         }else if (toolId.equals(LogicConstants.TOOL_CONNECTION)) {
-            return new CreationTool(LogicSemanticType.WIRE);
+            return new ConnectionCreationTool(LogicSemanticType.WIRE);
         }
         return null;
 	}
