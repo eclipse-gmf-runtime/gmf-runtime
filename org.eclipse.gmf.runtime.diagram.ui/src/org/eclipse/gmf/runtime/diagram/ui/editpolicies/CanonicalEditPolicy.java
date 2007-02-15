@@ -919,7 +919,7 @@ implements NotificationListener {
               return false;
           }
           Set features = getFeaturesToSynchronize();
-          if (features!=null){
+          if (features!=null && !features.isEmpty()){
               if (features.contains(event.getFeature())&&
                   (addOrDelete||NotificationUtil.isSlotModified(event))){
                   return true;
@@ -1232,7 +1232,7 @@ implements NotificationListener {
      */
 
     protected Set getFeaturesToSynchronize(){
-        return null;
+        return Collections.EMPTY_SET;
     }
     
     /**
