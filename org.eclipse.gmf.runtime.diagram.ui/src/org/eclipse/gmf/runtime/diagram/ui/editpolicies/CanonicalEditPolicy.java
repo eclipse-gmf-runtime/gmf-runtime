@@ -95,7 +95,7 @@ import org.eclipse.ui.PlatformUI;
  * as required.
  * @see #getCreateViewCommand(CreateRequest)
  * @see #shouldDeleteView(View)
- * @author mhanner
+ * @author mhanner, mmostafa
  */
 public abstract class CanonicalEditPolicy extends AbstractEditPolicy 
 implements NotificationListener {
@@ -907,10 +907,32 @@ implements NotificationListener {
 	  }
 
 	  Object element = event.getNotifier();
-	  return (element instanceof EObject 
-			  && !(element instanceof View) 
-	         && (NotificationUtil.isElementAddedToSlot(event) 
-	            || NotificationUtil.isElementRemovedFromSlot(event)));
+      if (element instanceof EObject && !(element instanceof View)){
+          boolean addOrDelete = (NotificationUtil.isElementAddedToSlot(event) 
+                  || NotificationUtil.isElementRemovedFromSlot(event));
+          EStructuralFeature feature = getFeatureToSynchronize();
+          if (feature!=null){
+              if (feature.equals(event.getFeature()) && 
+                  (addOrDelete||NotificationUtil.isSlotModified(event))){
+                      return true;
+              }
+              return false;
+          }
+          Set features = getFeaturesToSynchronize();
+          if (features!=null){
+              if (features.contains(event.getFeature())&&
+                  (addOrDelete||NotificationUtil.isSlotModified(event))){
+                  return true;
+              }
+              return false;
+          }
+          
+          // just for backward compatibility will not be needed when all clients migrate
+          if (addOrDelete){
+                  return true;
+          }
+      }
+      return false;      
 	}
 
 			
@@ -1202,5 +1224,24 @@ implements NotificationListener {
 		return getHost().getViewer();
 	}
     
+    /**
+     * This method should be overridden by sub classes to provide the features the canonical edit policy
+     * will use to synchronize the views with the semantic element
+     * This method should be overridden only if the edit policy synchronizes more than one EStructuralFeature  
+     * @return Set of EStructuralFeature features
+     */
+
+    protected Set getFeaturesToSynchronize(){
+        return null;
+    }
     
+    /**
+     * This method should be overridden by sub classes to provide the feature the canonical edit policy
+     * will use to synchronize the views with the semantic element
+     * This method should be overridden only if the edit policy synchronizes only one EStructuralFeature  
+     * @return  EStructuralFeature 
+     */
+    protected EStructuralFeature getFeatureToSynchronize(){
+        return null;
+    }
 }
