@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,15 +45,33 @@ public final class EMFUIMessages extends NLS {
 	public static String Validation_dontShowCheck;
 	public static String Validation_outputProviderCategory;
 	public static String PathmapsPreferencePage_availablePathVariables;
-	public static String PathmapsPreferencePage_pathVariablesUsedInModeling;
-	public static String PathmapsPreferencePage_addChevron;
-	public static String PathmapsPreferencePage_removeChevron;
+	public static String PathmapsPreferencePage_newVariable;
+	public static String PathmapsPreferencePage_editVariable;
+    public static String PathmapsPreferencePage_removeVariable;
 	public static String PathmapsPreferencePage_incompatiblePathVariableErrorMessage;
 	public static String PathmapsPreferencePage_registeredPathVariableErrorMessage;
 	public static String PathmapsPreferencePage_mainDescription;
-	public static String PathmapsPreferencePage_addAllChevron;
-	public static String PathmapsPreferencePage_removeAllChevron;
+    public static String PathmapsPreferencePage_promptTitle;
+    public static String PathmapsPreferencePage_updateFailed;
+    public static String PathmapsPreferencePage_variablePattern;
+    public static String PathVariableDialog_newDialogTitle;
+    public static String PathVariableDialog_editDialogTitle;
+    public static String PathVariableDialog_newTitle;
+    public static String PathVariableDialog_editTitle;
+    public static String PathVariableDialog_newMessage;
+    public static String PathVariableDialog_editMessage;
+    public static String PathVariableDialog_nameLabel;
+    public static String PathVariableDialog_locationLabel;
+    public static String PathVariableDialog_browseButton;
+    public static String PathVariableDialog_browseDialogTitle;
+    public static String PathVariableDialog_browseDialogMessage;
+    public static String PathVariableDialog_alreadyDefined_ERROR_;
+    public static String PathVariableDialog_invalidSegment_ERROR_;
+    public static String PathVariableDialog_notFolder_ERROR_;
+    public static String PathVariableDialog_noSuchFolder_ERROR_;
+    public static String PathVariableDialog_sameLocation_WARN_;
 
+    
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EMFUIMessages.class);
 	}
