@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.gmf.runtime.rcp"
+      label="GMF RCP Runtime"
+      version="2.0.0"
+      provider-name="Eclipse.org">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="org.eclipse.rcp"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.gef"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.rcp"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.gmf.platform"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.core.commands" version="3.2.0" match="compatible"/>
+      <import plugin="com.ibm.icu" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.views" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.console" version="3.1.0" match="compatible"/>
+      <import plugin="org.eclipse.jface.text" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.team.core" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.services.action" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.swt" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.services" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.notation" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.type.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.draw2d" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gef" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.commands.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.ui" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.gef.ui" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.action" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.common" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.aspectj.runtime"/>
+      <import plugin="org.eclipse.gmf.dev"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.services.dnd" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui.providers" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui.actions" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.printing" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui.printing" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.ui.properties" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.services.properties" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui.properties" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render.awt" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.draw2d.ui" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.batik" version="1.6.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore.xmi" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.edit" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.workspace" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore.edit" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.clipboard.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.core.expressions" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.edit.ui" version="2.2.0" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui.action"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui.printing"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui.services"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui.services.action"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui.services.dnd"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.common.ui.services.properties"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.actions"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.dnd"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.geoshapes"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.printing"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.printing.render"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.properties"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.providers"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.render"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.diagram.ui.resources.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.draw2d.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.draw2d.ui.render"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.draw2d.ui.render.awt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.clipboard.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.commands.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.type.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.type.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.emf.ui.properties"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.gef.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.notation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.notation.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.notation.providers"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
