@@ -15,7 +15,8 @@
 
   <!-- sets the properties eclipse-home, and library-file -->
   <property name="plugin-name" value="org.eclipse.gmf.tests.runtime.diagram.ui"/>
-  <property name="library-file" value="${libraryFile}"/>
+  <property name="classname" value="org.eclipse.gmf.tests.runtime.diagram.ui.AllTests"/>
+  <property name="library-file" value="${baseLocation}/plugins/org.eclipse.test_${testPluginVersion}/library.xml"/>
 
   <!-- This target holds all initialization code that needs to be done for -->
   <!-- all tests that are to be run. Initialization for individual tests -->
@@ -29,13 +30,17 @@
 
   <!-- This target defines the tests that need to be run. -->
   <target name="suite">
-    <property name="gmf-folder" value="${eclipse-home}/gmf_folder"/>
-    <delete dir="${gmf-folder}" quiet="true"/>
+    <property name="test-folder" value="${eclipse-home}/test_folder"/>
+    <delete dir="${test-folder}" quiet="true"/>
     <ant target="ui-test" antfile="${library-file}" dir="${eclipse-home}">
-      <property name="data-dir" value="${gmf-folder}"/>
+      <property name="data-dir" value="${test-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
-      <property name="classname" value="org.eclipse.gmf.tests.runtime.diagram.ui.AllTests"/>
-    	<property name="vmargs" value="-ea"/>    	
+      <property name="os" value="${baseos}"/>
+      <property name="ws" value="${basews}"/>
+      <property name="arch" value="${basearch}"/>
+      <property name="report" value="${plugin-name}"/>
+      <property name="classname" value="${classname}"/>
+      <property name="vmargs" value="-ea -XX:MaxPermSize=128m -Xmx1024m"/>
     </ant>
   </target>
 
