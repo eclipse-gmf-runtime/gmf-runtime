@@ -144,8 +144,24 @@ public class DiagramPopupBarEditPolicy
             container = container.getParent();
         }
         
-		fillWithPaletteToolsInContainer(container);
-	}
+        // Make sure the palette container is still in the palette root and has
+        // not been removed.  See bugzilla#176752.
+        PaletteRoot realPaletteRoot = getHost().getViewer().getEditDomain()
+            .getPaletteViewer().getPaletteRoot();
+        PaletteContainer paletteRoot = container;
+        boolean sameRoot = false;
+        while (paletteRoot != null) {
+            paletteRoot = paletteRoot.getParent();
+            if (paletteRoot == realPaletteRoot) {
+                sameRoot = true;
+                break;
+            }
+        }
+
+        if (sameRoot) {
+            fillWithPaletteToolsInContainer(container);
+        }
+ 	}
 
     /**
      * Adds popup bar descriptors for all the shape tools in the given palette
@@ -234,6 +250,7 @@ public class DiagramPopupBarEditPolicy
     protected void fillBasedOnOpenPaletteDrawer() {
 		PaletteViewer paletteViewer = getHost().getViewer().getEditDomain()
 			.getPaletteViewer();
+        
         if (paletteViewer != null) {
             for (Iterator iter = paletteViewer.getPaletteRoot().getChildren()
                 .iterator(); iter.hasNext();) {
