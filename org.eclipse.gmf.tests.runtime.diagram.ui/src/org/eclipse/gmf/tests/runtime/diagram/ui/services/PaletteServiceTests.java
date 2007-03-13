@@ -11,8 +11,10 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.services;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -37,6 +39,8 @@ import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteDrawer;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
 import org.eclipse.gmf.tests.runtime.common.core.internal.util.TestingConfigurationElement;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 
 /**
  * Tests for the Palette Service.
@@ -362,7 +366,98 @@ public class PaletteServiceTests
 
 	}
 
-	/**
+    /**
+     * Tests that the UI contributions made by a provider affected by a
+     * capability will be shown/hidden as the capability is enabled/disabled.
+     * 
+     * @throws Exception
+     */
+    public void testCapabilityFilteringOfSpecificEntries()
+        throws Exception {
+
+        toggleActivity("MyPaletteActivityProviderID", true); //$NON-NLS-1$
+        toggleActivity("MyPaletteActivityEntriesID", true); //$NON-NLS-1$          
+
+        PaletteServiceTestEditor editor = new PaletteServiceTestEditor();
+        PaletteRoot paletteRoot = PaletteService.getInstance().createPalette(
+            editor, "DUMMY CONTENT"); //$NON-NLS-1$
+
+        validateSpecificEntries(paletteRoot, true, true);        
+
+        toggleActivity("MyPaletteActivityEntriesID", false); //$NON-NLS-1$        
+        PaletteService.getInstance().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
+        
+        validateSpecificEntries(paletteRoot, true, false);
+
+        toggleActivity("MyPaletteActivityProviderID", false); //$NON-NLS-1$
+        PaletteService.getInstance().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
+        
+        validateSpecificEntries(paletteRoot, false, false);
+
+        toggleActivity("MyPaletteActivityEntriesID", true); //$NON-NLS-1$     
+        PaletteService.getInstance().updatePalette(paletteRoot, editor, "DUMMY CONTENT"); //$NON-NLS-1$
+
+        validateSpecificEntries(paletteRoot, false, true);
+
+    }
+    
+    private void validateSpecificEntries(PaletteRoot paletteRoot,
+            boolean activityProviderIDEnabled, boolean activityEntriesIDEnabled) {
+
+        PaletteDrawer nonActivityDrawer = null;
+        PaletteDrawer activityEnabledDrawer = null;
+
+        for (Iterator iter = paletteRoot.getChildren().iterator(); iter
+            .hasNext();) {
+            Object paletteEntry = iter.next();
+            if (paletteEntry instanceof PaletteDrawer) {
+                PaletteDrawer drawer = (PaletteDrawer) paletteEntry;
+                if (drawer.getId().equals("nonActivityDrawerID")) { //$NON-NLS-1$
+                    nonActivityDrawer = drawer;
+                } else if (drawer.getId().equals("activityEnabledDrawerID")) { //$NON-NLS-1$
+                    activityEnabledDrawer = drawer;
+                }
+            }
+        }
+
+        if (!activityProviderIDEnabled) {
+            assertNull(nonActivityDrawer);
+            assertNull(activityEnabledDrawer);
+        } else {
+            assertNotNull(nonActivityDrawer);
+
+            PaletteEntry nonActivityTool = findChildPaletteEntry(
+                nonActivityDrawer, "nonActivityToolID"); //$NON-NLS-1$
+            PaletteContainer nonActivityStack = (PaletteContainer) findChildPaletteEntry(
+                nonActivityDrawer, "nonActivityStackID"); //$NON-NLS-1$
+            PaletteEntry nonActivitySeparator = findChildPaletteEntry(
+                nonActivityDrawer, "nonActivitySeparatorID"); //$NON-NLS-1$
+            
+            PaletteEntry activityEnabledTool = findChildPaletteEntry(
+                nonActivityStack, "activityEnabledToolID"); //$NON-NLS-1$
+            PaletteContainer activityEnabledStack = (PaletteContainer) findChildPaletteEntry(
+                nonActivityDrawer, "activityEnabledStackID"); //$NON-NLS-1$
+            PaletteEntry activityEnabledSeparator = findChildPaletteEntry(
+                nonActivityDrawer, "activityEnabledSeparatorID"); //$NON-NLS-1$
+
+            if (activityEntriesIDEnabled) {
+                assertNotNull(activityEnabledDrawer);
+                assertNotNull(activityEnabledTool);
+                assertNotNull(activityEnabledStack);
+                assertNotNull(activityEnabledSeparator);
+                assertNotNull(nonActivityTool);
+                assertNotNull(nonActivityStack);
+                assertNotNull(nonActivitySeparator);
+            } else {
+                assertNull(activityEnabledDrawer);
+                assertNull(activityEnabledTool);
+                assertNull(activityEnabledStack);
+                assertNull(activityEnabledSeparator);
+            }
+        }
+    }
+    
+    /**
 	 * Validates many of the palette entries.
 	 * 
 	 * @param providerBEnabled
@@ -436,6 +531,8 @@ public class PaletteServiceTests
 
 		}
 	}
+    
+    
     
     /**
      * Tests the abilities of the palette relating to predefining palette
@@ -572,25 +669,44 @@ public class PaletteServiceTests
             }           
         }        
         assertFalse(staticMethodDrawerFound);
+     }   
 
-     }
+    /**
+     * Toggles the enablement of the activity id
+     * which is defined in the plugin.xml.
+     * 
+     * @param activityID
+     * @param enabled
+     */
+    private void toggleActivity(String activityID, boolean enabled) {
+        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
+            .getWorkbench().getActivitySupport();
 
+        Set enabledActivityIds = new HashSet(workbenchActivitySupport
+            .getActivityManager().getEnabledActivityIds());
+
+        boolean changeMade = enabled ? enabledActivityIds.add(activityID)
+            : enabledActivityIds.remove(activityID);
+
+        if (changeMade) {
+            workbenchActivitySupport.setEnabledActivityIds(enabledActivityIds);
+        }
+    }
     
-	// /**
-	// * Prints out the palette entries to the console. Used for debugging.
-	// *
-	// * @param paletteContainer
-	// */
-	// private void printPalette(PaletteContainer paletteContainer, String
-	// prefix) {
-	// for (Iterator iter = paletteContainer.getChildren().iterator(); iter
-	// .hasNext();) {
-	// PaletteEntry entry = (PaletteEntry) iter.next();
-	// System.out.println(prefix + entry.getLabel());
-	// if (entry instanceof PaletteContainer) {
-	// printPalette((PaletteContainer) entry, prefix + " "); //$NON-NLS-1$
-	// }
-	// }
-	// }
+//	 /**
+//         * Prints out the palette entries to the console. Used for debugging.
+//         * 
+//         * @param paletteContainer
+//         */
+//    private void printPalette(PaletteContainer paletteContainer, String prefix) {
+//        for (Iterator iter = paletteContainer.getChildren().iterator(); iter
+//            .hasNext();) {
+//            PaletteEntry entry = (PaletteEntry) iter.next();
+//            System.out.println(prefix + entry.getLabel());
+//            if (entry instanceof PaletteContainer) {
+//                printPalette((PaletteContainer) entry, prefix + " "); //$NON-NLS-1$
+//            }
+//        }
+//    }
 
 }

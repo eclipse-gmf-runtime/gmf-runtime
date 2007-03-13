@@ -276,5 +276,84 @@
          </contribution>
       </paletteProvider>
    </extension>
+   
+   <!-- testCapabilityFilteringOfSpecificEntries -->
+   <extension
+         point="org.eclipse.ui.activities">
+      <activity
+            id="MyPaletteActivityProviderID"
+            name="MyPaletteActivityProvider"/>
+      <activityPatternBinding
+            activityId="MyPaletteActivityProviderID"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.diagram\.ui/activityEnabledProviderID"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.activities">
+      <activity
+            id="MyPaletteActivityEntriesID"
+            name="MyPaletteActivityEntries"/>
+      <activityPatternBinding
+            activityId="MyPaletteActivityEntriesID"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.diagram\.ui/activityEnabledDrawerID"/>
+      <activityPatternBinding
+            activityId="MyPaletteActivityEntriesID"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.diagram\.ui/activityEnabledToolID"/>
+      <activityPatternBinding
+            activityId="MyPaletteActivityEntriesID"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.diagram\.ui/activityEnabledStackID"/>
+      <activityPatternBinding
+            activityId="MyPaletteActivityEntriesID"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.diagram\.ui/activityEnabledSeparatorID"/>
+   </extension>
+   <extension
+         id="activityEnabledProviderID"
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority name="Medium"/>
+         <editor class="org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests$PaletteServiceTestEditor"/>
+         <contribution>
+            <entry
+                  id="nonActivityDrawerID"
+                  kind="drawer"
+                  label="nonActivityDrawer"
+                  path="/"/>
+            <entry
+                  label="nonActivityTool"
+                  kind="tool"
+                  path="nonActivityDrawerID/"
+                  id="nonActivityToolID"/>
+            <entry
+                  label="nonActivityStack"
+                  kind="stack"
+                  path="nonActivityDrawerID/"
+                  id="nonActivityStackID"/>
+            <entry
+                  label="nonActivitySeparator"
+                  kind="separator"
+                  path="nonActivityDrawerID/"
+                  id="nonActivitySeparatorID"/>
+            <entry
+                  id="activityEnabledDrawerID"
+                  kind="drawer"
+                  label="activityEnabledDrawer"
+                  path="/"/>
+            <entry
+                  label="activityEnabledTool"
+                  kind="tool"
+                  path="/nonActivityDrawerID/nonActivityStackID"
+                  id="activityEnabledToolID"/>
+            <entry
+                  label="activityEnabledStack"
+                  kind="stack"
+                  path="/nonActivityDrawerID/nonActivitySeparatorID"
+                  id="activityEnabledStackID"/>
+            <entry
+                  label="activityEnabledSeparator"
+                  kind="separator"
+                  path="nonActivityDrawerID/"
+                  id="activityEnabledSeparatorID"/>                                  
+         </contribution>
+      </paletteProvider>
+   </extension>
     
 </plugin>

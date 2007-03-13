@@ -47,6 +47,11 @@ import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.IIdentifier;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.osgi.framework.Bundle;
 
 import com.ibm.icu.util.StringTokenizer;
@@ -145,20 +150,21 @@ public class DefaultPaletteProvider
          *            map of predefined palette entries where the key is the
          *            palette entry id and the value is the palette entry
          */
-        public void contribute(Object content, PaletteRoot root, Map predefinedEntries) {
+        public void contribute(Object content, PaletteRoot root, Map predefinedEntries, String pluginID) {
             Iterator iter = entries.iterator();
             while (iter.hasNext()) {
-                ((IEntryDescriptor) iter.next()).contribute(
-                    content,
-                    root,
-                    paletteFactory, predefinedEntries);
+                IEntryDescriptor descriptor = (IEntryDescriptor) iter.next();
+                if (areActivitiesEnabled(descriptor.getID(), pluginID)) {
+                    descriptor.contribute(content, root, paletteFactory,
+                        predefinedEntries);
+                }
             }
         }
     }
     
     /**
      * An interface describing the types of palette entries in the schema.
-     *
+     * 
      * @author cmahoney
      */
     private static interface IEntryDescriptor {
@@ -176,6 +182,13 @@ public class DefaultPaletteProvider
          */
         public void contribute(Object content, PaletteRoot root,
                 PaletteFactoryProxy paletteFactory, Map predefinedEntries);
+        
+        /**
+         * Gets the ID of this entry descriptor.
+         * 
+         * @return the id
+         */
+        public String getID();
     }
 
     /**
@@ -338,6 +351,10 @@ public class DefaultPaletteProvider
             }
         }
 
+        public String getID() {
+            return id;
+        }
+
     }
 
     /**
@@ -422,6 +439,10 @@ public class DefaultPaletteProvider
                     }
                 }
             }
+        }
+
+        public String getID() {
+            return id;
         }
     }
 
@@ -647,6 +668,11 @@ public class DefaultPaletteProvider
      * The list of palette provider XML contributions
      */
     private List contributions = new ArrayList();
+    
+    /**
+     * The pluginID of the XML contributions
+     */
+    private String pluginID;
 
     /**
      * 
@@ -656,6 +682,8 @@ public class DefaultPaletteProvider
      * @param configElement
      */
     public void setContributions(IConfigurationElement configElement) {
+        
+        pluginID = configElement.getContributor().getName();
         IConfigurationElement configChildren[] =
             configElement.getChildren(CONTRIBUTION);
 
@@ -673,7 +701,7 @@ public class DefaultPaletteProvider
         PaletteRoot root, Map predefinedEntries) {
         Iterator iter = contributions.iterator();
         while (iter.hasNext()) {
-            ((ContributionDescriptor) iter.next()).contribute(content, root, predefinedEntries);
+            ((ContributionDescriptor) iter.next()).contribute(content, root, predefinedEntries, pluginID);
         }
     }
 
@@ -682,6 +710,42 @@ public class DefaultPaletteProvider
      */
     public boolean provides(IOperation operation) {
         return false; // all logic is done in the service
+    }
+    
+    /**
+     * Checks if there are activities that have been matched to the plug-in in
+     * which the provider has been contributed and if those activities are
+     * enabled.  
+     * 
+     * @return true if matching activities are enabled
+     */
+    private static boolean areActivitiesEnabled(final String paletteEntryID, final String pluginID) {
+        // Note: This is a duplicate of the areActivitiesEnabled() method in
+        // org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor.
+        
+        if (!WorkbenchActivityHelper.isFiltering())
+            return true;
+
+        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
+            .getWorkbench().getActivitySupport();
+        IIdentifier id = workbenchActivitySupport.getActivityManager()
+            .getIdentifier(
+                WorkbenchActivityHelper
+                    .createUnifiedId(new IPluginContribution() {
+
+                        public String getLocalId() {
+                            return paletteEntryID;
+                        }
+
+                        public String getPluginId() {
+                            return pluginID;
+                        }
+                    }));
+        if (id != null && !id.isEnabled()) {
+            return false;
+        }
+
+        return true;
     }
     
 }
