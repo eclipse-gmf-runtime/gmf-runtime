@@ -149,6 +149,11 @@ public class PrintPreviewHelper {
 	 * Shell for the new pop up
 	 */
 	protected Shell shell;
+    
+    /**
+     * Temporary shell to be used when creating the diagram editpart.
+     */
+    private Shell tempShell;
 
 	/* Toolbar items are in left to right order */
 
@@ -802,13 +807,24 @@ public class PrintPreviewHelper {
 		if (diagramEditPart == null) {
 			Diagram diagram = getDiagramEditorPart().getDiagram(); //do not getDiagramEditPart
 			PreferencesHint preferencesHint = getPreferencesHint(getDiagramEditorPart());
-			diagramEditPart = PrintHelper.createDiagramEditPart(diagram, preferencesHint);
+			diagramEditPart = PrintHelper.createDiagramEditPart(diagram, preferencesHint, getTempShell());
 			PrintHelper.initializePreferences(diagramEditPart, preferencesHint);
 		}
 		return diagramEditPart;
 	}
 	
-	protected PreferencesHint getPreferencesHint(IEditorPart editorPart) {
+    /**
+     * Lazily creates a new shell.
+     * @return
+     */
+    private Shell getTempShell() {
+        if (tempShell == null) {
+            tempShell = new Shell();
+        }
+        return tempShell;
+    }
+
+    protected PreferencesHint getPreferencesHint(IEditorPart editorPart) {
 		if (editorPart instanceof IDiagramWorkbenchPart) {
 			RootEditPart rootEP = ((IDiagramWorkbenchPart) editorPart)
 				.getDiagramGraphicalViewer().getRootEditPart();
@@ -1202,6 +1218,8 @@ public class PrintPreviewHelper {
 		safeDisposeImage(downImage);
 		safeDisposeImage(disabledDownImage);
 		safeDisposeImage(closeImage);
+        tempShell.dispose();
+        tempShell = null;
 	}
 
 	/**

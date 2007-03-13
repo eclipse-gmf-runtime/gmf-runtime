@@ -46,25 +46,51 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class PrintHelper {
 	/**
-	 * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
-	 * without opening an editor.
-	 * 
+     * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
+     * without opening an editor.
+     * 
 	 * @param diagram the <code>Diagram</code>
 	 * @param preferencesHint the preferences hint to use for intiializing the
 	 * preferences of the root edit part
 	 * @return the new populated <code>DiagramEditPart</code>
-	 */
+     * @deprecated Please use
+     *             {@link #createDiagramEditPart(Diagram, PreferencesHint, Shell)}
+     *             instead as this method does not dispose the new Shell that it
+     *             creates.
+     */
 	public static DiagramEditPart createDiagramEditPart(Diagram diagram,
             PreferencesHint preferencesHint) {
-        DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+            DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
             diagram, new Shell(), preferencesHint);
+            // since some of the diagram updates are ASync we need to give the 
+            // inter-thread messages a chance to get processed processed before we
+            // continue; check bugzilla 170332
+            while (Display.getDefault().readAndDispatch ()){
+                // nothing special to do 
+            }
+             return diagramEditPart;
+        }
+    
+    /**
+     * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
+     * without opening an editor.
+     * 
+     * @param diagram the <code>Diagram</code>
+     * @param preferencesHint the preferences hint to use for intiializing the
+     * preferences of the root edit part
+     * @return the new populated <code>DiagramEditPart</code>
+     */
+    public static DiagramEditPart createDiagramEditPart(Diagram diagram,
+        PreferencesHint preferencesHint, Shell shell) {
+        DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+            diagram, shell, preferencesHint);
         // since some of the diagram updates are ASync we need to give the 
         // inter-thread messages a chance to get processed processed before we
         // continue; check bugzilla 170332
         while (Display.getDefault().readAndDispatch ()){
             // nothing special to do 
         }
-        return diagramEditPart;
+         return diagramEditPart;
     }
 	
 	/**

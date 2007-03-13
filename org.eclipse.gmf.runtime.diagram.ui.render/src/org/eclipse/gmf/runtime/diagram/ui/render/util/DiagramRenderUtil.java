@@ -15,6 +15,7 @@ import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Provides miscellaneous utilities for this plug-in.
@@ -40,12 +41,17 @@ public class DiagramRenderUtil {
 			throw new NullPointerException("Argument 'diagram' is null"); //$NON-NLS-1$
 		}
 
-		DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
-			.createDiagramEditPart(diagram);
-		DiagramImageGenerator imageGenerator = new DiagramImageGenerator(
-			diagramEP);
+        Shell shell = new Shell();
+        try {
+            DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
+                .createDiagramEditPart(diagram, shell);
+            DiagramImageGenerator imageGenerator = new DiagramImageGenerator(
+                diagramEP);
 
-		return imageGenerator.createAWTImageForDiagram();
+            return imageGenerator.createAWTImageForDiagram();
+        } finally {
+            shell.dispose();
+        }
 	}
 
 	/**
@@ -67,12 +73,18 @@ public class DiagramRenderUtil {
 			throw new NullPointerException("Argument 'diagram' is null"); //$NON-NLS-1$
 		}
 
-		DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
-			.createDiagramEditPart(diagram);
-		DiagramImageGenerator imageGenerator = new DiagramImageGenerator(
-			diagramEP);
-
-		return imageGenerator.createSWTImageDescriptorForDiagram()
-			.createImage();
+        Shell shell = new Shell();
+        try {
+    		DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
+    			.createDiagramEditPart(diagram, shell);
+    		DiagramImageGenerator imageGenerator = new DiagramImageGenerator(
+    			diagramEP);
+    
+    		return imageGenerator.createSWTImageDescriptorForDiagram()
+    			.createImage();
+        } finally {
+            shell.dispose();
+        }
+            
 	}
 }

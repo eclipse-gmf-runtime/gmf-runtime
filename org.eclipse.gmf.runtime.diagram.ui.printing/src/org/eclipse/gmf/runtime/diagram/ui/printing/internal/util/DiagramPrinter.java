@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /*
@@ -229,39 +230,43 @@ public class DiagramPrinter
         assert diagrams != null;
         Iterator it = diagrams.iterator();
 
-        while (it.hasNext()) {
-            Object obj = it.next();
-            //the diagrams List is only supposed to have Diagram objects
-            Assert.isTrue(obj instanceof Diagram);
-            DiagramEditPart dgrmEP = PrintHelper.createDiagramEditPart((Diagram) obj, preferencesHint);
-            
-            RootEditPart rep = dgrmEP.getRoot();
-            if (rep instanceof DiagramRootEditPart) 
-                this.mm = ((DiagramRootEditPart)rep).getMapMode();
-            
-            initialize();
-            
-            boolean loadedPreferences = PrintHelper.initializePreferences(dgrmEP, preferencesHint);
-            
-            IPreferenceStore pref = null;
-            
-            assert dgrmEP.getViewer() instanceof DiagramGraphicalViewer;
-    
-            pref = ((DiagramGraphicalViewer)dgrmEP.getViewer()).getWorkspaceViewerPreferenceStore();
-            
-            if (pref.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
+        Shell shell = new Shell();
+        try {
+            while (it.hasNext()) {
+                Object obj = it.next();
+                //the diagrams List is only supposed to have Diagram objects
+                Assert.isTrue(obj instanceof Diagram);
+                DiagramEditPart dgrmEP = PrintHelper.createDiagramEditPart((Diagram) obj, preferencesHint, shell);
                 
-                //get workspace settings...
-                if (dgrmEP.getDiagramPreferencesHint().getPreferenceStore() != null)
-                    pref = (IPreferenceStore)dgrmEP.getDiagramPreferencesHint().getPreferenceStore(); 
-            }
-            
-            doPrintDiagram(dgrmEP, loadedPreferences, pref);
-            
-            dispose();
-        }
-        printer.endJob();
+                RootEditPart rep = dgrmEP.getRoot();
+                if (rep instanceof DiagramRootEditPart) 
+                    this.mm = ((DiagramRootEditPart)rep).getMapMode();
+                
+                initialize();
+                
+                boolean loadedPreferences = PrintHelper.initializePreferences(dgrmEP, preferencesHint);
+                
+                IPreferenceStore pref = null;
+                
+                assert dgrmEP.getViewer() instanceof DiagramGraphicalViewer;
         
+                pref = ((DiagramGraphicalViewer)dgrmEP.getViewer()).getWorkspaceViewerPreferenceStore();
+                
+                if (pref.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS)) {
+                    
+                    //get workspace settings...
+                    if (dgrmEP.getDiagramPreferencesHint().getPreferenceStore() != null)
+                        pref = (IPreferenceStore)dgrmEP.getDiagramPreferencesHint().getPreferenceStore(); 
+                }
+                
+                doPrintDiagram(dgrmEP, loadedPreferences, pref);
+                
+                dispose();
+            }
+            printer.endJob();
+        } finally {
+            shell.dispose();
+        }        
     }
     
     /**
