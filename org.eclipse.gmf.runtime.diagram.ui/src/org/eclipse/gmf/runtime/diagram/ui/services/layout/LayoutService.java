@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * A service that provides for diagram layout.
@@ -81,14 +82,19 @@ final public class LayoutService extends Service implements
 			throw new NullPointerException("Argument 'node' is null"); //$NON-NLS-1$
 		}
 
-		Diagram diagram = node.getDiagram();
-		DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
-				.createDiagramEditPart(diagram);
-		Map registry = diagramEP.getViewer().getEditPartRegistry();
-		GraphicalEditPart gep = (GraphicalEditPart) registry.get(node);
-		Dimension size = gep.getFigure().getBounds().getSize();
+        Shell shell = new Shell();
+        try {
+            Diagram diagram = node.getDiagram();
+            DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
+                .createDiagramEditPart(diagram, shell);
+            Map registry = diagramEP.getViewer().getEditPartRegistry();
+            GraphicalEditPart gep = (GraphicalEditPart) registry.get(node);
+            Dimension size = gep.getFigure().getBounds().getSize();
 
-		return new LayoutNode(node, size.width, size.height);
+            return new LayoutNode(node, size.width, size.height);
+        } finally {
+            shell.dispose();
+        }
 	}
 
 	private void checkValidLayoutNodes(List nodes) {
@@ -151,24 +157,32 @@ final public class LayoutService extends Service implements
 	public List getLayoutNodes(DiagramEditPart diagramEP, List nodes) {
 		checkValidNodes(nodes);
 
-		if (diagramEP == null) {
-			Diagram diagram = ((Node) nodes.get(0)).getDiagram();
-			diagramEP = OffscreenEditPartFactory.getInstance()
-					.createDiagramEditPart(diagram);
-		}
-		Map registry = diagramEP.getViewer().getEditPartRegistry();
+        Shell shell = null;
+        try {
+            if (diagramEP == null) {
+                shell = new Shell();
+                Diagram diagram = ((Node) nodes.get(0)).getDiagram();
+                diagramEP = OffscreenEditPartFactory.getInstance()
+                    .createDiagramEditPart(diagram, shell);
+            }
+            Map registry = diagramEP.getViewer().getEditPartRegistry();
 
-		List layoutNodes = new ArrayList(nodes.size());
-		ListIterator li = nodes.listIterator();
-		while (li.hasNext()) {
-			Node node = (Node) li.next();
-			GraphicalEditPart gep = (GraphicalEditPart) registry.get(node);
-			Dimension size = gep.getFigure().getBounds().getSize();
+            List layoutNodes = new ArrayList(nodes.size());
+            ListIterator li = nodes.listIterator();
+            while (li.hasNext()) {
+                Node node = (Node) li.next();
+                GraphicalEditPart gep = (GraphicalEditPart) registry.get(node);
+                Dimension size = gep.getFigure().getBounds().getSize();
 
-			layoutNodes.add(new LayoutNode(node, size.width, size.height));
-		}
+                layoutNodes.add(new LayoutNode(node, size.width, size.height));
+            }
 
-		return layoutNodes;
+            return layoutNodes;
+        } finally {
+            if (shell != null) {
+                shell.dispose();
+            }
+        }
 	}
 
 	/**
@@ -196,19 +210,25 @@ final public class LayoutService extends Service implements
 			throw new NullPointerException("Argument 'hint' is null"); //$NON-NLS-1$
 		}
 
-		Diagram diagram = container.getDiagram();
-		DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
-				.createDiagramEditPart(diagram);
+        Shell shell = new Shell();
+        try {
+            Diagram diagram = container.getDiagram();
+            DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
+                .createDiagramEditPart(diagram, shell);
 
-		List hints = new ArrayList(2);
-		hints.add(hint);
-		hints.add(diagramEP);
-		IAdaptable layoutHint = new ObjectAdapter(hints);
-		final Runnable layoutRun = LayoutService.getInstance().layoutLayoutNodes(
-				getLayoutNodes(diagramEP, container.getChildren()), false,
-				layoutHint);
-		layoutRun.run();
-	}
+            List hints = new ArrayList(2);
+            hints.add(hint);
+            hints.add(diagramEP);
+            IAdaptable layoutHint = new ObjectAdapter(hints);
+            final Runnable layoutRun = LayoutService.getInstance()
+                .layoutLayoutNodes(
+                    getLayoutNodes(diagramEP, container.getChildren()), false,
+                    layoutHint);
+            layoutRun.run();
+        } finally {
+            shell.dispose();
+        }
+    }
 
 	/**
 	 * Utility method to layout a list of Node children on a diagram.
@@ -246,19 +266,25 @@ final public class LayoutService extends Service implements
 			throw new NullPointerException("Argument 'hint' is null"); //$NON-NLS-1$
 		}
 
-		Node nodeFirst = (Node) nodes.get(0);
-		Diagram diagram = nodeFirst.getDiagram();
-		DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
-				.createDiagramEditPart(diagram);
+        Shell shell = new Shell();
+        try {
+            Node nodeFirst = (Node) nodes.get(0);
+            Diagram diagram = nodeFirst.getDiagram();
+            DiagramEditPart diagramEP = OffscreenEditPartFactory.getInstance()
+                .createDiagramEditPart(diagram, shell);
 
-		List hints = new ArrayList(2);
-		hints.add(hint);
-		hints.add(diagramEP);
-		IAdaptable layoutHint = new ObjectAdapter(hints);
-		final Runnable layoutRun = LayoutService.getInstance().layoutLayoutNodes(
-				getLayoutNodes(diagramEP, nodes), true, layoutHint);
-		layoutRun.run();
-	}
+            List hints = new ArrayList(2);
+            hints.add(hint);
+            hints.add(diagramEP);
+            IAdaptable layoutHint = new ObjectAdapter(hints);
+            final Runnable layoutRun = LayoutService.getInstance()
+                .layoutLayoutNodes(getLayoutNodes(diagramEP, nodes), true,
+                    layoutHint);
+            layoutRun.run();
+        } finally {
+            shell.dispose();
+        }
+    }
 	
 	public Runnable layoutLayoutNodes(List layoutNodes,
 			boolean offsetFromBoundingBox, IAdaptable layoutHint) {

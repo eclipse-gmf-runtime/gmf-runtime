@@ -46,17 +46,36 @@ public class OffscreenEditPartFactory {
 	}
 	
 	/**
-	 * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
-	 * without opening an editor.
-	 * 
-	 * @param diagram the <code>Diagram</code>
-	 * @return the new populated <code>DiagramEditPart</code>
-	 */
+     * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
+     * without opening an editor.
+     * 
+     * @param diagram
+     *            the <code>Diagram</code>
+     * @return the new populated <code>DiagramEditPart</code>
+     * @deprecated Please use {@link #createDiagramEditPart(Diagram, Shell)}
+     *             instead as this method does not dispose the new Shell that it
+     *             creates.
+     */
 	public DiagramEditPart createDiagramEditPart(
 		Diagram diagram) {	
         
         return createDiagramEditPart(diagram, new Shell(), null);
 	}
+    
+    /**
+     * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
+     * without opening an editor.
+     * 
+     * @param diagram the <code>Diagram</code>
+     * @param shell
+     *            the shell
+     * @return the new populated <code>DiagramEditPart</code>
+     */
+    public DiagramEditPart createDiagramEditPart(
+        Diagram diagram, Shell shell) {  
+        
+        return createDiagramEditPart(diagram, shell, null);
+    }
     
     /**
      * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>

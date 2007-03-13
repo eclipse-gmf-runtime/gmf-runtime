@@ -53,6 +53,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -85,7 +86,11 @@ public abstract class AbstractPresentationTestFixture
 	private Edge connectorView = null; 
 	// connector view for the test fixture
 
-	
+    /**
+     * Temporary shell to be used when creating the diagram editpart.
+     */
+    private Shell tempShell;
+    
 	/** verbose flag. */
 	private static boolean _verbose = Boolean.getBoolean(AbstractTestBase.SYSPROP_VERBOSE);
 	
@@ -199,7 +204,10 @@ public abstract class AbstractPresentationTestFixture
 	 * Will delete the project that was used for the test and removed all the resources in it.
 	 */
 	public final void tearDown() throws Exception { 
-		
+        if (tempShell != null) {
+            tempShell.dispose();
+            tempShell = null;
+        }	
 //		flushEventQueue();
 		boolean diagramClosed = false;
 		Throwable cde = null; // close diagram exception
@@ -221,6 +229,7 @@ public abstract class AbstractPresentationTestFixture
 			}
 		}
 		finally {
+            
 			// erasing all the data
 			setDiagramWorkbenchPart(null);
             // unload resource
@@ -385,7 +394,7 @@ public abstract class AbstractPresentationTestFixture
 	{
 		if (getDiagramEditPart() == null) {
 			setDiagramEditPart(OffscreenEditPartFactory.getInstance()
-				.createDiagramEditPart(getDiagram()));
+				.createDiagramEditPart(getDiagram(), getTempShell()));
 		}
 	}
 	
@@ -584,6 +593,17 @@ public abstract class AbstractPresentationTestFixture
     
     protected void setResource(Resource resource) {
         this.resource = resource;
+    }
+    
+    /**
+     * Lazily creates a new shell.
+     * @return
+     */
+    private Shell getTempShell() {
+        if (tempShell == null) {
+            tempShell = new Shell();
+        }
+        return tempShell;
     }
 
 }
