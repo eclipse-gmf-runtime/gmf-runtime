@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ZOrderRequest;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -78,8 +77,8 @@ public class ZOrderAction
 		theAction.setText(DiagramUIActionsMessages.ZOrderAction_BringForward_ActionLabelText);
 		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_BringForward_ActionToolTipText);
 		
-		theAction.setImageDescriptor(DiagramUIPluginImages.DESC_BRING_FORWARD);
-		theAction.setHoverImageDescriptor(DiagramUIPluginImages.DESC_BRING_FORWARD);
+		theAction.setImageDescriptor(DiagramUIActionsPluginImages.DESC_BRING_FORWARD);
+		theAction.setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_BRING_FORWARD);
 		return theAction;
 	}
 
@@ -95,8 +94,8 @@ public class ZOrderAction
 		theAction.setId(ActionIds.ACTION_SEND_TO_BACK);
 		theAction.setText(DiagramUIActionsMessages.ZOrderAction_SendToBack_ActionLabelText);
 		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_SendToBack_ActionToolTipText);
-		theAction.setImageDescriptor(DiagramUIPluginImages.DESC_SEND_TO_BACK);
-		theAction.setHoverImageDescriptor(DiagramUIPluginImages.DESC_SEND_TO_BACK);
+		theAction.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SEND_TO_BACK);
+		theAction.setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_SEND_TO_BACK);
 		return theAction;
 	}
 
@@ -112,8 +111,8 @@ public class ZOrderAction
 		theAction.setId(ActionIds.ACTION_SEND_BACKWARD);
 		theAction.setText(DiagramUIActionsMessages.ZOrderAction_SendBackward_ActionLabelText);
 		theAction.setToolTipText(DiagramUIActionsMessages.ZOrderAction_SendBackward_ActionToolTipText);
-		theAction.setImageDescriptor(DiagramUIPluginImages.DESC_SEND_BACWARD);
-		theAction.setHoverImageDescriptor(DiagramUIPluginImages.DESC_SEND_BACWARD);
+		theAction.setImageDescriptor(DiagramUIActionsPluginImages.DESC_SEND_BACWARD);
+		theAction.setHoverImageDescriptor(DiagramUIActionsPluginImages.DESC_SEND_BACWARD);
 		return theAction;
 	}
 

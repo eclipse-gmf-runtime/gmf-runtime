@@ -161,11 +161,6 @@ public class DiagramUIPluginImages {
 		
 	public static final ImageDescriptor DESC_SORT_FILTER = create(PREFIX_ENABLED + "sortfilter.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_SORT_FILTER_DISABLED = create(PREFIX_DISABLED + "sortfilter.gif"); //$NON-NLS-1$
-	
-	public static final ImageDescriptor DESC_BRING_TO_FRONT = create(PREFIX_ROOT + "bring_to_front.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor DESC_BRING_FORWARD  = create(PREFIX_ROOT + "bring_forward.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor DESC_SEND_TO_BACK   = create(PREFIX_ROOT + "send_to_back.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor DESC_SEND_BACWARD   = create(PREFIX_ROOT + "send_backward.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_MAKE_SAME_SIZE_BOTH = create(PREFIX_ROOT + "size_to_control.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_MAKE_SAME_SIZE_HEIGHT = create(PREFIX_ROOT + "size_to_control_height.gif"); //$NON-NLS-1$
