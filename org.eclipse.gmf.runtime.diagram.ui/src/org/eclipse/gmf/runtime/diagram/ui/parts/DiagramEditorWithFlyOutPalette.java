@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 	/**
 	 * The activity listener.
 	 */
-	private ActivityManagerListener activityManagerListener;
+	private IActivityManagerListener activityManagerListener;
 
 	boolean fHasFlyoutPalette = true;
 	public DiagramEditorWithFlyOutPalette() {
@@ -571,18 +571,24 @@ public abstract class DiagramEditorWithFlyOutPalette
 
 	protected void startListening() {
 		super.startListening();
-		activityManagerListener = new ActivityManagerListener();
-		PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
-			.addActivityManagerListener(activityManagerListener);
+		activityManagerListener = createActivityManagerListener();
+		if (activityManagerListener != null) {
+			PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
+				.addActivityManagerListener(activityManagerListener);
+		}
 	}
 
 	protected void stopListening() {
 		if (activityManagerListener != null) {
 			PlatformUI.getWorkbench().getActivitySupport().getActivityManager()
 				.removeActivityManagerListener(activityManagerListener);
+			activityManagerListener = null;
 		}
-		activityManagerListener = null;
 		super.stopListening();
 	}
+	
+    protected IActivityManagerListener createActivityManagerListener() {
+        return new ActivityManagerListener();
+    }
 	
 }
