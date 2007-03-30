@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -453,14 +453,18 @@ public class FileObserverFilterTest
 		}
 
 		public boolean isLinked(int options) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		public IResourceProxy createProxy() {
-			// TODO Auto-generated method stub
 			return null;
 		}
+
+        public int findMaxProblemSeverity(String type, boolean includeSubtypes,
+                int depth)
+            throws CoreException {
+            return 0;
+        }
 	}
 
 	protected class Folder
@@ -1139,14 +1143,18 @@ public class FileObserverFilterTest
 		}
 
 		public boolean isLinked(int options) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		public IResourceProxy createProxy() {
-			// TODO Auto-generated method stub
 			return null;
 		}
+
+        public int findMaxProblemSeverity(String type, boolean includeSubtypes,
+                int depth)
+            throws CoreException {
+            return 0;
+        }
 	}
 
 	public static void main(String[] args) {
