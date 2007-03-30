@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
-Bundle-SymbolicName: org.eclipse.gmf.runtime.emf.type.core; singleton:=true
+Bundle-SymbolicName: org.eclipse.gmf.runtime.emf.type.core;singleton:=true
 Bundle-Version: 1.0.100.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin
 Bundle-Vendor: %Plugin.providerName
