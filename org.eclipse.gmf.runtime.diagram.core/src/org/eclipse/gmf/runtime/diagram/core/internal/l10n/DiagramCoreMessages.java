@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,9 @@ public final class DiagramCoreMessages extends NLS {
     public static String BringToFrontCommand_Label;
     public static String SendBackwardCommand_Label;
     public static String SendToBackCommand_Label;
+    
+    public static String GroupCommand_Label;
+    public static String UngroupCommand_Label;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramCoreMessages.class);

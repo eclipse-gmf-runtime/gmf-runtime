@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,10 @@ public final class DiagramUIActionsMessages extends NLS {
 	public static String ArrangeAction_ArrangeSelection_ActionToolTipText;
 	public static String ArrangeAction_ArrangeAll_ActionLabelText;
 	public static String ArrangeAction_ArrangeAll_ActionToolTipText;
+    public static String GroupAction_Group_ActionLabelText;
+    public static String GroupAction_Group_ActionToolTipText;
+    public static String GroupAction_Ungroup_ActionLabelText;
+    public static String GroupAction_Ungroup_ActionToolTipText;
 	public static String ArrangeAction_toolbar_ArrangeSelection_ActionLabelText;
 	public static String ArrangeAction_toolbar_ArrangeSelection_ActionToolTipText;
 	public static String ArrangeAction_toolbar_ArrangeAll_ActionLabelText;
