@@ -7,6 +7,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerPro
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesImages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
@@ -733,7 +734,7 @@ public class RulerGridPropertySection
      * listener.
      */
     private void initWorkspacePropertyListener() {
-        DiagramEditor editor = (DiagramEditor) getPart();
+        IDiagramWorkbenchPart editor = (IDiagramWorkbenchPart) getPart();
         if (editor == null) return;
         DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
         workspaceViewerProperties = viewer.getWorkspaceViewerPreferenceStore();
