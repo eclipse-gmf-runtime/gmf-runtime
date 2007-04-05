@@ -60,7 +60,7 @@ import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 public class DiagramEditingDomainFactory
     extends GMFEditingDomainFactory {
 	
-	private static class DiagramEditingDomain extends TransactionalEditingDomainImpl {
+	protected static class DiagramEditingDomain extends TransactionalEditingDomainImpl {
 		// The following variable acts as a special latch for the DiagramEventBroker
 		//  listener so that we can allow it to execute in a write transaction context
 		//  while handling a post-commit event.
