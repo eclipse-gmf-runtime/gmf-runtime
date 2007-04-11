@@ -49,4 +49,13 @@
              <param name="semanticHint" value="Text"/> 
         </specializationType>
    </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="%GMFDiagramContext.description"
+            id="org.eclipse.gmf.runtime.diagram.ui.diagramContext"
+            name="%GMFDiagramContext.name"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
 </plugin>

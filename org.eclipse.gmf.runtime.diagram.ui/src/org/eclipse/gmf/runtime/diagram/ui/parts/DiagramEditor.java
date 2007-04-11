@@ -131,6 +131,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.PageBook;
@@ -148,6 +150,8 @@ public abstract class DiagramEditor
     extends GraphicalEditor
     implements IDiagramWorkbenchPart, ITabbedPropertySheetPageContributor,
     IShowInSource {
+	
+	public static String DIAGRAM_CONTEXT_ID = "org.eclipse.gmf.runtime.diagram.ui.diagramContext";
 
     /**
      * teh ID of the outline
@@ -1520,6 +1524,17 @@ public abstract class DiagramEditor
 				}
 			}
 		};
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#createPartControl(org.eclipse.swt.widgets.Composite)
+	 */
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		IContextService contextService = (IContextService) getSite()
+		  .getService(IContextService.class);
+		if (contextService != null)
+			contextService.activateContext(DIAGRAM_CONTEXT_ID);
 	}
 
 }

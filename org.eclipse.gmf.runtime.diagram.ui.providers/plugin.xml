@@ -631,7 +631,7 @@
       <actionSet label="%Diagram.ActionSet.Label" description="%Diagram.ActionSet.Description" visible="false" id="org.eclipse.gmf.runtime.diagram.ui.DiagramActionSet">
          <action
                class="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate"
-               definitionId="DuplicateNode"
+               definitionId="org.eclipse.gmf.runtime.diagram.ui.providers.duplicateNode"
                id="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate"
                label="%DuplicateActionDelegate.Label"
                menubarPath="edit/cut.ext"
@@ -775,14 +775,15 @@
       <command
             categoryId="org.eclipse.ui.category.edit"
             defaultHandler="org.eclipse.gmf.runtime.diagram.ui.actions.internal.DuplicateActionDelegate"
-            description="%DuplicateActionDelegate.Description"
-            id="DuplicateNode"
-            name="%DuplicateActionDelegate.Name"/>
+            description="%DuplicateActionDelegate.description"
+            id="org.eclipse.gmf.runtime.diagram.ui.providers.duplicateNode"
+            name="%DuplicateActionDelegate.name"/>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="DuplicateNode"
+            commandId="org.eclipse.gmf.runtime.diagram.ui.providers.duplicateNode"
+            contextId="org.eclipse.gmf.runtime.diagram.ui.diagramContext"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+D"/>
    </extension>
