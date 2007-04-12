@@ -210,7 +210,8 @@ class NewPathVariableDialog
         data = new GridData(SWT.BEGINNING);
         label.setLayoutData(data);
 
-        locationText = new Text(composite, SWT.BORDER);
+        // force left-to-right orientation because file paths are always LTR
+        locationText = new Text(composite, SWT.BORDER  | SWT.LEFT_TO_RIGHT);
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.grabExcessHorizontalSpace = true;
         locationText.setLayoutData(data);

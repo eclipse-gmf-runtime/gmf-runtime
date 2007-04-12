@@ -25,6 +25,15 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class MslUIPlugin
 	extends AbstractUIPlugin {
 
+    /**
+     * Characters in a URI that separate segments that individually may contain
+     * BiDi text.  Use with the {@link org.eclipse.osgi.util.TextProcessor} API
+     * for handling URIs in bi-directional locales.
+     * 
+     * @since 2.0
+     */
+    public static final String URI_BIDI_SEPARATORS = ":/?#@.!"; //$NON-NLS-1$
+
 	/**
 	 * This plug-in's shared instance.
 	 */

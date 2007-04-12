@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -894,9 +895,17 @@ public class PathmapsPreferencePage
             }
 
             PathVariableEntry entry = (PathVariableEntry) element;
+
+            // use the TextProcessor's default separators for file paths
+            // if the entry is not required, because only if it is, will
+            // it possibly be a URI
+            String pathString = entry.isRequired() ? TextProcessor.process(
+                entry.getLocation(), MslUIPlugin.URI_BIDI_SEPARATORS)
+                : TextProcessor.process(entry.getLocation());
+
             return NLS.bind(
                 EMFUIMessages.PathmapsPreferencePage_variablePattern, entry
-                    .getName(), entry.getLocation());
+                    .getName(), pathString);
         }
 
         public void dispose() {
