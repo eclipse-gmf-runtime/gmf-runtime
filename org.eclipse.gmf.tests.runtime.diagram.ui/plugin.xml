@@ -355,5 +355,14 @@
          </contribution>
       </paletteProvider>
    </extension>
+   
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.core.diagramEventBrokerProviders">
+      <diagramEventBrokerProvider class="org.eclipse.gmf.tests.runtime.diagram.ui.services.LogicDiagramEventBrokerProvider">
+         <Priority name="Lowest"/>
+         <editingDomain ID="org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"/>
+      </diagramEventBrokerProvider>
+      
+   </extension>
     
 </plugin>

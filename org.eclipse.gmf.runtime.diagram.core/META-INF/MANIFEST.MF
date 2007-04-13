@@ -17,6 +17,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.core,
  org.eclipse.gmf.runtime.diagram.core.preferences,
  org.eclipse.gmf.runtime.diagram.core.providers,
  org.eclipse.gmf.runtime.diagram.core.services,
+ org.eclipse.gmf.runtime.diagram.core.services.eventbroker,
  org.eclipse.gmf.runtime.diagram.core.services.view,
  org.eclipse.gmf.runtime.diagram.core.util,
  org.eclipse.gmf.runtime.diagram.core.view.factories

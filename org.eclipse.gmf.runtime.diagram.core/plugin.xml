@@ -11,6 +11,7 @@
 <plugin>
 
      <extension-point id="viewProviders" name="%extPoint.viewProviders" schema="schema/viewProviders.exsd"/>
+     <extension-point id="diagramEventBrokerProviders" name="%extPoint.diagramEventBrokerProviders" schema="schema/diagramEventBrokerProviders.exsd"/>
      
      <extension
            point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">

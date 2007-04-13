@@ -37,6 +37,7 @@ import org.eclipse.emf.transaction.ResourceSetListenerImpl;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.EMFOperationCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.PersistViewsCommand;
+import org.eclipse.gmf.runtime.diagram.core.services.DiagramEventBrokerService;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -230,9 +231,11 @@ public class DiagramEventBroker
     }
 
 	private static DiagramEventBroker initializeDiagramEventBroker(TransactionalEditingDomain editingDomain) {
-		WeakReference reference = (WeakReference) instanceMap.get(editingDomain);
-		if (reference == null) {
-            DiagramEventBroker diagramEventBroker = debFactory.createDiagramEventBroker(editingDomain);
+        WeakReference reference = (WeakReference) instanceMap.get(editingDomain);
+        if (reference == null) {
+            DiagramEventBroker diagramEventBroker = DiagramEventBrokerService.getInstance().createDiagramEventBroker(editingDomain);
+            if (null == diagramEventBroker)
+                diagramEventBroker = debFactory.createDiagramEventBroker(editingDomain);
             if (diagramEventBroker.editingDomainRef == null) {
 				diagramEventBroker.editingDomainRef = new WeakReference(
 					editingDomain);
@@ -241,8 +244,7 @@ public class DiagramEventBroker
             reference = new WeakReference(diagramEventBroker);
             instanceMap.put(editingDomain, reference);
         }
-		
-		return (DiagramEventBroker) reference.get();
+        return (DiagramEventBroker) reference.get();
 	}
     
     /**
