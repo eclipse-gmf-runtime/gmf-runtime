@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,7 +93,7 @@ public abstract class AbstractContributionItemProvider
 	 * the plugin is disabled.
 	 */
 	private IPluginContribution pluginContribution;
-	
+    
 	/**
 	 * A list of part descriptors ids for which actionbar contributions have
 	 * already been made.
@@ -1010,28 +1010,46 @@ public abstract class AbstractContributionItemProvider
 	}
 	
 	/**
-	 * Checks if there are activities that have been matched to the plug-in in
-	 * which the provider has been contributed and if those activities are
-	 * enabled.
-	 * 
-	 * @return true if matching activities are enabled
-	 */
-	private boolean areActivitiesEnabled() {
-		if (!WorkbenchActivityHelper.isFiltering())
-			return true;
+     * Checks if there are activities that have been matched to the plug-in or
+     * id in which the item has been contributed and if at least one of those
+     * matching activities are enabled.
+     * 
+     * @return true if at least one matching activity is enabled
+     */
+    private boolean areActivitiesEnabled(final String itemID) {
+        if (!WorkbenchActivityHelper.isFiltering())
+            return true;
 
-		IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
-			.getWorkbench().getActivitySupport();
-		IIdentifier id = workbenchActivitySupport.getActivityManager()
-			.getIdentifier(
-				WorkbenchActivityHelper
-					.createUnifiedId(getPluginContribution()));
-		if (id != null && !id.isEnabled()) {
-			return false;
-		}
+        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
+            .getWorkbench().getActivitySupport();
 
-		return true;
-	}
+        // check if the provider has been matched to a disabled activity id
+        IIdentifier id = workbenchActivitySupport.getActivityManager()
+            .getIdentifier(
+                WorkbenchActivityHelper
+                    .createUnifiedId(getPluginContribution()));
+        if (id != null && !id.isEnabled()) {
+            return false;
+        }
+
+        // now check if the item has been matched to a disabled activity id
+        id = workbenchActivitySupport.getActivityManager().getIdentifier(
+            WorkbenchActivityHelper.createUnifiedId(new IPluginContribution() {
+
+                public String getLocalId() {
+                    return itemID;
+                }
+
+                public String getPluginId() {
+                    return getPluginContribution().getPluginId();
+                }
+            }));
+        if (id != null && !id.isEnabled()) {
+            return false;
+        }
+
+        return true;
+    }
 
 	/**
 	 * Sets the plugin contribution which identifies the plugin where the
@@ -1180,7 +1198,7 @@ public abstract class AbstractContributionItemProvider
 		}
 
 		public boolean isVisible() {
-			if (!areActivitiesEnabled()) {
+			if (!areActivitiesEnabled(getId())) {
 				return false;
 			}
 			return realMenuManager.isVisible();
@@ -1265,7 +1283,7 @@ public abstract class AbstractContributionItemProvider
 		}
 
 		public boolean isVisible() {
-			if (!areActivitiesEnabled()) {
+			if (!areActivitiesEnabled(getId())) {
 				return false;
 			}
 			return super.isVisible();
@@ -1287,7 +1305,7 @@ public abstract class AbstractContributionItemProvider
 		}
 
 		public boolean isVisible() {
-			if (!areActivitiesEnabled()) {
+			if (!areActivitiesEnabled(getId())) {
 				return false;
 			}
 			return super.isVisible();
@@ -1309,12 +1327,14 @@ public abstract class AbstractContributionItemProvider
 		}
 
 		public boolean isVisible() {
-			if (!areActivitiesEnabled()) {
+			if (!areActivitiesEnabled(getId())) {
 				return false;
 			}
 			return super.isVisible();
 		}
 		
 	}
+    
+    
 }
 

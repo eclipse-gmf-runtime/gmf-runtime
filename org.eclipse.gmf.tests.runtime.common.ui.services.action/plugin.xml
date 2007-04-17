@@ -47,7 +47,8 @@
          </partContribution>         
       </contributionItemProvider>
    </extension>
-   
+
+   <!-- testCapabilityFiltering -->   
    <extension
          point="org.eclipse.ui.activities">
       <activity
@@ -57,9 +58,11 @@
             activityId="MyActivityID"
             pattern="org\.eclipse\.gmf\.tests\.runtime\.common\.ui\.services\.action/ContributionItemProvider2"/>
    </extension>
+   
+   <!-- testPolicy_ClassAttribute -->
    <extension
-         id="ContributionItemProvider2"
-         name="ContributionItemProvider2"
+         id="ContributionItemProvider3"
+         name="ContributionItemProvider3"
          point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
       <contributionItemProvider
             checkPluginLoaded="false"
@@ -79,4 +82,19 @@
          </popupContribution>
       </contributionItemProvider>
    </extension>
+   
+   <!-- testCapabilityFilteringOfSpecificEntries -->
+   <extension
+         point="org.eclipse.ui.activities">
+      <activity
+            id="MyActivityIDOfSpecificEntries"
+            name="MyActivityIDOfSpecificEntries"/>
+      <activityPatternBinding
+            activityId="MyActivityIDOfSpecificEntries"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.common\.ui\.services\.action/menu2"/>
+      <activityPatternBinding
+            activityId="MyActivityIDOfSpecificEntries"
+            pattern="org\.eclipse\.gmf\.tests\.runtime\.common\.ui\.services\.action/action2"/>
+   </extension>  
+   
 </plugin>

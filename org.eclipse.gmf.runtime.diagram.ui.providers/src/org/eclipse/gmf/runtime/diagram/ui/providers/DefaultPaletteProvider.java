@@ -713,11 +713,11 @@ public class DefaultPaletteProvider
     }
     
     /**
-     * Checks if there are activities that have been matched to the plug-in in
-     * which the provider has been contributed and if those activities are
-     * enabled.  
+     * Checks if there are activities that have been matched to the plug-in or
+     * id in which the item has been contributed and if at least one of those
+     * matching activities are enabled.
      * 
-     * @return true if matching activities are enabled
+     * @return true if at least one matching activity is enabled
      */
     private static boolean areActivitiesEnabled(final String paletteEntryID, final String pluginID) {
         // Note: This is a duplicate of the areActivitiesEnabled() method in
