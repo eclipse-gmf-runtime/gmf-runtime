@@ -23,6 +23,7 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -35,12 +36,11 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.tools.AbstractTool;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 
 /**
  * A Tool which selects multiple objects inside a rectangular area of a Graphical Viewer. 
@@ -123,11 +123,24 @@ private List calculateNewSelection() {
 		getMarqueeFeedbackFigure().translateToRelative(r);
 		if (marqueeBounds.contains(r.getTopLeft())
 		  && marqueeBounds.contains(r.getBottomRight())		  
-		  && child.getTargetEditPart(MARQUEE_REQUEST) == child){
+		  && child.getTargetEditPart(MARQUEE_REQUEST) == child
+		  && isFigureVisible(figure)){
 			newSelections.add(child);
 		}
 	}
 	return newSelections;
+}
+
+private boolean isFigureVisible(IFigure fig) {
+	Rectangle figBounds = fig.getBounds().getCopy();
+	IFigure walker = fig.getParent();
+	Viewport topViewport = ((FigureCanvas)getCurrentViewer().getControl()).getViewport();
+	while (!figBounds.isEmpty() && walker != null && walker != topViewport) {
+		walker.translateToParent(figBounds);
+		figBounds.intersect(walker.getBounds());
+		walker = walker.getParent();
+	}
+	return !figBounds.isEmpty();
 }
 
 private Request createTargetRequest() {
