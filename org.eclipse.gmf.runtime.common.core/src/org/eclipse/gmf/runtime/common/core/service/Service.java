@@ -284,7 +284,7 @@ public abstract class Service
 		public String toString() {
 
 			if (providerClassName == null) {
-				if (getElement() != null) {
+				if (getElement() != null && getElement().isValid()) {
 					// get the provider class name
 					providerClassName = getElement().getAttribute(A_CLASS);
 				}

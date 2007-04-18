@@ -133,6 +133,8 @@ public class ActionFilterService
 		 *  
 		 */
 		public boolean provides(IOperation operation) {
+			if (!getElement().isValid())
+				return false;
 			IConfigurationElement[] elements = getElement().getChildren(
 				E_ATTRIBUTE);
 

@@ -84,6 +84,12 @@ public class ContributionItemService
 		 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
 		 */
 		public boolean provides(IOperation operation) {
+
+			// If contributions are to be disposed, dispose them regardless whether the plugin is loaded or not 
+			if (operation instanceof DisposeContributionsOperation) {
+				if (provider != null)
+					return provider.provides(operation);
+			}
 			
 			// filter providers based on disabled capabilities
 			if (!super.provides(operation)) {
@@ -127,9 +133,6 @@ public class ContributionItemService
 				return contributionDescriptor.hasContributionsFor(
 					op.getPopupMenu(),
 					selection);
-			} else if (operation instanceof DisposeContributionsOperation) {
-				if (provider != null)
-					return provider.provides(operation);
 			}
 			return false;
 		}
@@ -171,6 +174,8 @@ public class ContributionItemService
 		 *         provider is loaded, <code>false</code> otherwise
 		 */
 		private boolean isPluginLoaded() {
+			if (!getElement().isValid())
+				return false;
 			String pluginId = getElement().getDeclaringExtension().getContributor().getName();
 			Bundle bundle = Platform.getBundle(pluginId);
 			return null != bundle

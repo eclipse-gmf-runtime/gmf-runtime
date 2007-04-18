@@ -39,10 +39,12 @@ public class ActivityFilterProviderDescriptor
 	}
 
 	/**
-	 * Returns true if and only if any matching activites are enabled.
+	 * Returns false if and only if any matching activites are disabled.
 	 */
 	public boolean provides(IOperation operation) {
-		return areActivitiesEnabled();
+		if (getElement().isValid())
+			return areActivitiesEnabled();
+		return true;
 	}
 
 	/**
