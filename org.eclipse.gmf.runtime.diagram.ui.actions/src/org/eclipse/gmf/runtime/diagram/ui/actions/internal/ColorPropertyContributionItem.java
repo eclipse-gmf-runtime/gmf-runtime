@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -90,7 +89,7 @@ public class ColorPropertyContributionItem
 			if (rgb != null) {
 				ImageData colorBar =
 					new ImageData(14, 4, 1, new PaletteData(new RGB[] { rgb }));
-				drawImage(colorBar, 1, 13);
+				drawImage(colorBar, 1, height - 4);
 			}
 		}
 
@@ -221,8 +220,8 @@ public class ColorPropertyContributionItem
 		ImageData basicImageData,
 		ImageData disabledBasicImageData) {
 		super(workbenchPage, id, propertyId, propertyName);
-		Assert.isNotNull(toolTipText);
-		Assert.isNotNull(basicImageData);
+        assert null != toolTipText;
+        assert null != basicImageData;
 		this.basicImageData = basicImageData;
 		this.disabledBasicImageData = disabledBasicImageData;
 		setLabel(toolTipText);
@@ -334,8 +333,8 @@ public class ColorPropertyContributionItem
 			menu = new Menu(menuItem.getParent());
 			menuItem.setMenu(menu);
 		}
-
-		Assert.isNotNull(menu, "falid to create menu"); //$NON-NLS-1$
+        
+        assert null != menu : "falid to create menu"; //$NON-NLS-1$
 		buildMenu(menu);
 	}
 
