@@ -477,10 +477,15 @@ public class ElementTypeRegistryTest
 		IElementType[] elementTypes = ElementTypeRegistry.getInstance()
 				.getElementTypes(getClientContext());
 
+		System.err.println("TRACE: Element types: ");
+		for (IElementType elementType:elementTypes) {
+			System.err.print(elementType + " : ");
+		}
+		
 		assertEquals(EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length
 				+ EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length,
 				elementTypes.length);
-
+		
 		for (int i = 0; i < elementTypes.length; i++) {
 			boolean match = false;
 			for (int j = 0; j < EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length; j++) {
