@@ -420,6 +420,32 @@ public class ElementTypeRegistryTest
 		assertTrue(managerMatches[0] == DefaultMetamodelType.getInstance());
 	}
 
+	public void test_getElementType_eObject_eClass() {
+
+		MetamodelType eClassType = new MetamodelType(
+				"dynamic.org.eclipse.gmf.tests.runtime.emf.type.core.eclass", null, null, //$NON-NLS-1$
+				EcorePackage.eINSTANCE.getEClass(), null);
+
+		IClientContext context = ClientContextManager.getInstance()
+			.getClientContext(
+				"org.eclipse.gmf.tests.runtime.emf.type.core.ClientContext2"); //$NON-NLS-1$
+		
+		// EClass type conflicts with the one in the ECore example editor
+		context.bindId(
+				"dynamic.org.eclipse.gmf.tests.runtime.emf.type.core.eclass"); //$NON-NLS-1$
+
+		boolean wasRegistered = getFixture().register(eClassType);
+		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
+
+		IElementType metamodelType = getFixture().getElementType(
+				myEClassInstance, context);
+		assertNotNull(metamodelType);
+
+		if (wasRegistered) {
+			assertSame(eClassType, metamodelType);
+		}
+	}
+	
 	/**
 	 * Verifies that the metamodel types bound to a specified context can be
 	 * retrieved from the registry.
@@ -477,11 +503,6 @@ public class ElementTypeRegistryTest
 		IElementType[] elementTypes = ElementTypeRegistry.getInstance()
 				.getElementTypes(getClientContext());
 
-		System.err.println("TRACE: Element types: ");
-		for (IElementType elementType:elementTypes) {
-			System.err.print(elementType + " : ");
-		}
-		
 		assertEquals(EmployeeType.METAMODEL_TYPES_WITH_CONTEXT.length
 				+ EmployeeType.SPECIALIZATION_TYPES_WITH_CONTEXT.length,
 				elementTypes.length);
@@ -1001,29 +1022,6 @@ public class ElementTypeRegistryTest
 		assertSame(DefaultMetamodelType.getInstance(), metamodelType);
 	}
 	
-	public void test_getElementType_eObject_eClass() {
-
-		MetamodelType eClassType = new MetamodelType(
-				"dynamic.org.eclipse.gmf.tests.runtime.emf.type.core.eclass", null, null, //$NON-NLS-1$
-				EcorePackage.eINSTANCE.getEClass(), null);
-
-		// EClass type conflicts with the one in the ECore example editor
-		getClientContext().bindId(
-				"dynamic.org.eclipse.gmf.tests.runtime.emf.type.core.eclass"); //$NON-NLS-1$
-
-		boolean wasRegistered = getFixture().register(eClassType);
-		EObject myEClassInstance = EcoreFactory.eINSTANCE.createEClass();
-
-		IElementType metamodelType = getFixture().getElementType(
-				myEClassInstance, getClientContext());
-		assertNotNull(metamodelType);
-
-		if (wasRegistered) {
-			assertSame(eClassType, metamodelType);
-		}
-	}
-	
-
 	public void test_getElementType_overridesEditHelper() {
 
 		IElementType elementType = getFixture().getElementType(
