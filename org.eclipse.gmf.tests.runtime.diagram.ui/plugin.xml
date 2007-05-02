@@ -273,6 +273,11 @@
                   kind="drawer"
                   label="staticMethodDrawer"
                   path="/"/>
+            <entry
+                  label="staticMethodDrawer_Tool1"
+                  kind="tool"
+                  path="staticMethodDrawer/"
+                  id="staticMethodDrawer_Tool1"/>
          </contribution>
       </paletteProvider>
    </extension>
@@ -328,15 +333,30 @@
                   path="nonActivityDrawerID/"
                   id="nonActivityStackID"/>
             <entry
+                  label="dummyToolSoContainerIsNotEmpty"
+                  kind="tool"
+                  path="nonActivityDrawerID/nonActivityStackID/"
+                  id="dummyToolSoContainerIsNotEmptyID"/>
+            <entry
                   label="nonActivitySeparator"
                   kind="separator"
                   path="nonActivityDrawerID/"
                   id="nonActivitySeparatorID"/>
             <entry
+                  id="emptyDrawerID"
+                  kind="drawer"
+                  label="emptyDrawer"
+                  path="/"/>
+            <entry
                   id="activityEnabledDrawerID"
                   kind="drawer"
                   label="activityEnabledDrawer"
                   path="/"/>
+            <entry
+                  label="dummyToolSoContainerIsNotEmpty"
+                  kind="tool"
+                  path="activityEnabledDrawerID/"
+                  id="dummyToolSoContainerIsNotEmptyID"/>
             <entry
                   label="activityEnabledTool"
                   kind="tool"
@@ -347,6 +367,11 @@
                   kind="stack"
                   path="/nonActivityDrawerID/nonActivitySeparatorID"
                   id="activityEnabledStackID"/>
+            <entry
+                  label="dummyToolSoContainerIsNotEmpty"
+                  kind="tool"
+                  path="/nonActivityDrawerID/activityEnabledStackID/"
+                  id="dummyToolSoContainerIsNotEmptyID"/>
             <entry
                   label="activityEnabledSeparator"
                   kind="separator"

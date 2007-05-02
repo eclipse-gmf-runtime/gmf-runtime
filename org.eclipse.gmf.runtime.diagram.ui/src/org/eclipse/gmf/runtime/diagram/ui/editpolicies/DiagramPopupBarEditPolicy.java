@@ -137,6 +137,10 @@ public class DiagramPopupBarEditPolicy
 
         // Find the palette group or drawer containing the last active tool.
         PaletteContainer container = theLastTool.getParent();
+        if (container == null) {
+            return;
+        }
+        
         while (!(container instanceof PaletteDrawer)
             && !(container instanceof PaletteGroup)
             && !(container instanceof PaletteRoot)

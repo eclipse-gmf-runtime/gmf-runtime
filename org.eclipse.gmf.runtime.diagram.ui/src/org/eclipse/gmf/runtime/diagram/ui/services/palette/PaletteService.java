@@ -11,11 +11,13 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
@@ -38,7 +40,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteProvi
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteGroup;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -188,9 +189,15 @@ public class PaletteService extends Service implements IPaletteProvider {
 		root.setDefaultEntry(selectTool);
 
 		execute(new ContributeToPaletteOperation(editor, content, root, predefinedEntries));
+        
+        // Remove any palette containers (drawers or stacks that do not have any
+        // tool entries).
+        removeEmptyContainers(root);
+        
 	}
 
-	/**
+
+    /**
 	 * Executes the palette operation using 
 	 * the REVERSE execution strategy.
 	 * 
@@ -321,5 +328,40 @@ public class PaletteService extends Service implements IPaletteProvider {
 		}
 
 	}
+
+    /**
+     * A recursive method that removes all empty children palette containers and
+     * checks if there is at least one tool entry in this palette container
+     * 
+     * @param container
+     *            a palette container
+     * @return true if there is at least one tool entry in this palette
+     *         container; false otherwise
+     */
+    private boolean removeEmptyContainers(PaletteContainer container) {
+        List childrenToRemove = new ArrayList();
+        boolean containsToolEntries = false;
+        for (Iterator iter = container.getChildren().iterator(); iter.hasNext();) {
+            PaletteEntry entry = (PaletteEntry) iter.next();
+            if (entry instanceof PaletteSeparator) {
+                // ignore separators
+                continue;
+            } else if (entry instanceof PaletteContainer) {
+                if (removeEmptyContainers((PaletteContainer) entry)) {
+                    containsToolEntries = true;
+                } else {
+                    childrenToRemove.add(entry);
+                }
+            } else {
+                // some sort of tool entry
+                containsToolEntries = true;
+            }
+        }
+
+        for (Iterator iter = childrenToRemove.iterator(); iter.hasNext();) {
+            container.remove((PaletteEntry) iter.next());
+        }
+        return containsToolEntries;
+    }
 	
 }
