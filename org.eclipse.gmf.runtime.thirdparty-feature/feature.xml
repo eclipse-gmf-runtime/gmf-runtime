@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.gmf.runtime.thirdparty"
-      label="Third-party libraries required by GMF runtime"
-      version="1.0.0">
+      label="%featureName"
+      version="1.0.0.qualifier"
+      provider-name="%providerName"
+      image="eclipse_update_120.jpg">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://www.eclipse.org/gmf">
+      %description
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      Copyright (c) 2006 Borland Software Corporation
+
+ All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="%licenseURL">
+      %license
    </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmf/update-site/releases/site.xml"/>
+   </url>
 
    <plugin
          id="org.apache.batik.dom.svg"
