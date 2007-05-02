@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionit
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.IContributionItemProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.internal.contributionitem.ProviderContributionDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.ActionGroupCache;
+import org.eclipse.gmf.runtime.common.ui.util.ActivityUtil;
 import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
 import org.eclipse.gmf.runtime.common.ui.util.WorkbenchPartDescriptor;
@@ -58,11 +59,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.ui.activities.IIdentifier;
-import org.eclipse.ui.activities.IWorkbenchActivitySupport;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
  * An abstract implementation of the IContributionItemProvider interface
@@ -1017,34 +1014,15 @@ public abstract class AbstractContributionItemProvider
      * @return true if at least one matching activity is enabled
      */
     private boolean areActivitiesEnabled(final String itemID) {
-        if (!WorkbenchActivityHelper.isFiltering())
-            return true;
-
-        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
-            .getWorkbench().getActivitySupport();
-
         // check if the provider has been matched to a disabled activity id
-        IIdentifier id = workbenchActivitySupport.getActivityManager()
-            .getIdentifier(
-                WorkbenchActivityHelper
-                    .createUnifiedId(getPluginContribution()));
-        if (id != null && !id.isEnabled()) {
+        if (!ActivityUtil.isEnabled(getPluginContribution().getLocalId(),
+            getPluginContribution().getPluginId())) {
             return false;
         }
 
         // now check if the item has been matched to a disabled activity id
-        id = workbenchActivitySupport.getActivityManager().getIdentifier(
-            WorkbenchActivityHelper.createUnifiedId(new IPluginContribution() {
-
-                public String getLocalId() {
-                    return itemID;
-                }
-
-                public String getPluginId() {
-                    return getPluginContribution().getPluginId();
-                }
-            }));
-        if (id != null && !id.isEnabled()) {
+        if (!ActivityUtil.isEnabled(itemID, getPluginContribution()
+            .getPluginId())) {
             return false;
         }
 

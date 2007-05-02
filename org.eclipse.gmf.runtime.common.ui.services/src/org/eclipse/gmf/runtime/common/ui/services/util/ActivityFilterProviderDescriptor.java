@@ -14,11 +14,7 @@ package org.eclipse.gmf.runtime.common.ui.services.util;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.Service;
-import org.eclipse.ui.IPluginContribution;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.activities.IIdentifier;
-import org.eclipse.ui.activities.IWorkbenchActivitySupport;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
+import org.eclipse.gmf.runtime.common.ui.util.ActivityUtil;
 
 /**
  * A provider descriptor that will ignore providers that are contributed by a
@@ -39,45 +35,16 @@ public class ActivityFilterProviderDescriptor
 	}
 
 	/**
-	 * Returns false if and only if any matching activites are disabled.
-	 */
-	public boolean provides(IOperation operation) {
-		if (getElement().isValid())
-			return areActivitiesEnabled();
-		return true;
-	}
+     * Returns false if and only if any matching activites are disabled.
+     */
+    public boolean provides(IOperation operation) {
+        if (getElement().isValid()) {
+            return ActivityUtil
+                .isEnabled(getElement().getDeclaringExtension()
+                    .getSimpleIdentifier(), getElement().getContributor()
+                    .getName());
+        }
+        return true;
+    }
 
-	/**
-	 * Checks if there are activities that have been matched to the plug-in in
-	 * which the provider has been contributed and if those activities are
-	 * enabled.
-	 * 
-	 * @return true if matching activities are enabled
-	 */
-	private boolean areActivitiesEnabled() {
-		if (!WorkbenchActivityHelper.isFiltering())
-			return true;
-
-		IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
-			.getWorkbench().getActivitySupport();
-		IIdentifier id = workbenchActivitySupport.getActivityManager()
-			.getIdentifier(
-				WorkbenchActivityHelper
-					.createUnifiedId(new IPluginContribution() {
-
-						public String getLocalId() {
-							return getElement().getDeclaringExtension()
-								.getSimpleIdentifier();
-						}
-
-						public String getPluginId() {
-							return getElement().getContributor().getName();
-						}
-					}));
-		if (id != null && !id.isEnabled()) {
-			return false;
-		}
-
-		return true;
-	}
 }

@@ -32,6 +32,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProviderConfiguration.ObjectDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.util.ActivityUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
@@ -47,11 +48,6 @@ import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteStack;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPluginContribution;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.activities.IIdentifier;
-import org.eclipse.ui.activities.IWorkbenchActivitySupport;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.osgi.framework.Bundle;
 
 import com.ibm.icu.util.StringTokenizer;
@@ -154,7 +150,7 @@ public class DefaultPaletteProvider
             Iterator iter = entries.iterator();
             while (iter.hasNext()) {
                 IEntryDescriptor descriptor = (IEntryDescriptor) iter.next();
-                if (areActivitiesEnabled(descriptor.getID(), pluginID)) {
+                if (ActivityUtil.isEnabled(descriptor.getID(), pluginID)) {
                     descriptor.contribute(content, root, paletteFactory,
                         predefinedEntries);
                 }
@@ -712,40 +708,5 @@ public class DefaultPaletteProvider
         return false; // all logic is done in the service
     }
     
-    /**
-     * Checks if there are activities that have been matched to the plug-in or
-     * id in which the item has been contributed and if at least one of those
-     * matching activities are enabled.
-     * 
-     * @return true if at least one matching activity is enabled
-     */
-    private static boolean areActivitiesEnabled(final String paletteEntryID, final String pluginID) {
-        // Note: This is a duplicate of the areActivitiesEnabled() method in
-        // org.eclipse.gmf.runtime.common.ui.services.util.ActivityFilterProviderDescriptor.
-        
-        if (!WorkbenchActivityHelper.isFiltering())
-            return true;
-
-        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI
-            .getWorkbench().getActivitySupport();
-        IIdentifier id = workbenchActivitySupport.getActivityManager()
-            .getIdentifier(
-                WorkbenchActivityHelper
-                    .createUnifiedId(new IPluginContribution() {
-
-                        public String getLocalId() {
-                            return paletteEntryID;
-                        }
-
-                        public String getPluginId() {
-                            return pluginID;
-                        }
-                    }));
-        if (id != null && !id.isEnabled()) {
-            return false;
-        }
-
-        return true;
-    }
     
 }
