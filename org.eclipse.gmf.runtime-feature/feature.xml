@@ -26,6 +26,10 @@ http://www.eclipse.org/legal/epl-v10.html
       <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmf/update-site/releases/site.xml"/>
    </url>
 
+   <includes
+         id="org.eclipse.gmf.runtime.thirdparty"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -331,13 +335,6 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.eclipse.gmf.runtime.diagram.ui.printing.render"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.w3c.dom.svg"
          download-size="0"
          install-size="0"
          version="0.0.0"
