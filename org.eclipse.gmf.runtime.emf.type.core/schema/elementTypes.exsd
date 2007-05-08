@@ -180,7 +180,7 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
       <complexType>
          <sequence>
             <element ref="specializes" minOccurs="1" maxOccurs="unbounded"/>
-            <choice>
+            <choice minOccurs="0" maxOccurs="1">
                <element ref="matcher"/>
                <element ref="enablement"/>
             </choice>
@@ -239,11 +239,11 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
       </annotation>
       <complexType>
          <sequence>
-            <choice>
+            <choice minOccurs="0" maxOccurs="1">
                <element ref="matcher"/>
                <element ref="enablement"/>
             </choice>
-            <element ref="eContainer"/>
+            <element ref="eContainer" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="typeId" type="string" use="required">
             <annotation>
@@ -339,7 +339,7 @@ Custom element types may be created by declaring an &lt;code&gt;IElementTypeFact
       <complexType>
          <sequence>
             <element ref="eContainmentFeature" minOccurs="0" maxOccurs="unbounded"/>
-            <choice>
+            <choice minOccurs="0" maxOccurs="1">
                <element ref="matcher"/>
                <element ref="enablement"/>
             </choice>
