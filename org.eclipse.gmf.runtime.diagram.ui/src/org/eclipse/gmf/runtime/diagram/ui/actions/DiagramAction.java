@@ -299,16 +299,26 @@ public abstract class DiagramAction
 	}
 
 	/**
-	 * A utility method to return the active part if it implements the
-	 * <code>IDiagramWorkbenchPart</code> interface
+	 * A utility method to return the active part if it implements 
+	 * or adapts to the <code>IDiagramWorkbenchPart</code> interface
 	 * 
-	 * @return The current part if it implements
+	 * @return The current part if it implements or adapts to
 	 *         <code>IDiagramWorkbenchPart</code>; <code>null</code>
 	 *         otherwise
 	 */
 	protected IDiagramWorkbenchPart getDiagramWorkbenchPart() {
-		return getWorkbenchPart() instanceof IDiagramWorkbenchPart ? (IDiagramWorkbenchPart) getWorkbenchPart()
-			: null;
+		IDiagramWorkbenchPart diagramPart = null;
+		IWorkbenchPart part = getWorkbenchPart();
+		
+		if (part instanceof IDiagramWorkbenchPart) {
+			diagramPart = (IDiagramWorkbenchPart) part;
+			
+		} else {
+			diagramPart = (IDiagramWorkbenchPart) part
+					.getAdapter(IDiagramWorkbenchPart.class);
+		}
+
+		return diagramPart;
 	}
 
 	/**
