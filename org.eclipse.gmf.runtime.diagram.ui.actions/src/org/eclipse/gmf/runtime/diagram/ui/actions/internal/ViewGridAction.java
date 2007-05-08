@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,11 +109,20 @@ public class ViewGridAction extends DiagramAction {
 		super.setWorkbenchPart(workbenchPart);
 		
 		if ( (workbenchPart != null) && (isSelectionListener())){
+			// set checked to 'false' if the IDiagramWorkbenchPart doesn't have a
+			// graphical viewer or the viewer doesn't have a preference store
+			boolean shouldBeChecked = false;
 			
 			if (workbenchPart instanceof IDiagramWorkbenchPart){
 				IDiagramGraphicalViewer viewer = ((IDiagramWorkbenchPart)workbenchPart).getDiagramGraphicalViewer();
-				IPreferenceStore preferenceStore = ((DiagramGraphicalViewer)viewer).getWorkspaceViewerPreferenceStore();
-				boolean shouldBeChecked = preferenceStore.getBoolean(WorkspaceViewerProperties.VIEWGRID);
+				
+				if (viewer != null) {
+					IPreferenceStore preferenceStore = ((DiagramGraphicalViewer)viewer).getWorkspaceViewerPreferenceStore();
+					
+					if (preferenceStore != null) {
+						shouldBeChecked = preferenceStore.getBoolean(WorkspaceViewerProperties.VIEWGRID);
+					}
+				}
 				this.setChecked(shouldBeChecked);
 			}			
 		}
