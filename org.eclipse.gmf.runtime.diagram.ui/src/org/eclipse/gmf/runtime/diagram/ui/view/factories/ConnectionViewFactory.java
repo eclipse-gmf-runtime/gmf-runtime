@@ -92,19 +92,19 @@ public class ConnectionViewFactory
 			edge.setBendpoints(bendPoints);
 		}
 
-		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
-		if (semanticEl==null)
-			// enforce a set to NULL
-			edge.setElement(null);
-		else if (requiresElement(semanticAdapter,containerView)){
-			edge.setElement(semanticEl);
-		}
-
 		edge.setType(semanticHint);
 		
 		// decorate view assumes the view had been inserted already, so 
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView,edge, index, persisted);
+        
+        EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
+        if (semanticEl==null)
+            // enforce a set to NULL
+            edge.setElement(null);
+        else if (requiresElement(semanticAdapter,containerView)){
+            edge.setElement(semanticEl);
+        }
         
         TransactionalEditingDomain domain = getEditingDomain(semanticEl, containerView);
 		

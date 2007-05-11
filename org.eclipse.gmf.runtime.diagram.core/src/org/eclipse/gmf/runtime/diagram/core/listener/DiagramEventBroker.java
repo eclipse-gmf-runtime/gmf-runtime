@@ -296,6 +296,7 @@ public class DiagramEventBroker
      */
     public Command transactionAboutToCommit(ResourceSetChangeEvent event) {
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
+        Set addedObjects = NotificationUtil.getAddedObjects(event);
         Set existingObjects = new HashSet();
         Set elementsInPersistQueue = new LinkedHashSet();
         CompoundCommand cc = new CompoundCommand();
@@ -319,7 +320,9 @@ public class DiagramEventBroker
                             existingObjects.add(notifier);
                     }
                 }
-            	if (deleted) {
+                // see bugzilla [186637]
+            	if (deleted || 
+                     (addedObjects.contains(notifier) && NotationPackage.Literals.VIEW__ELEMENT.equals(notification.getFeature()))) {
                     continue;
                 }
                 if (editingDomain != null) {
@@ -358,6 +361,7 @@ public class DiagramEventBroker
             return;
         }
         Set deletedObjects = NotificationUtil.getDeletedObjects(event);
+        Set addedObjects = NotificationUtil.getAddedObjects(event);
         Set existingObjects = new HashSet();
         boolean deleteElementCheckRequired = !deletedObjects.isEmpty();
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
@@ -376,16 +380,31 @@ public class DiagramEventBroker
                             existingObjects.add(notifier);
                     }
                 }
-                if (!customNotification && deleted) {
-                    handleNotificationOnDeletedElement(event);
-                    continue;
+                if (!customNotification) {
+                    if (deleted){
+                        handleNotificationOnDeletedElement(event);
+                        continue;
+                    }// see bugzilla [186637]
+                    else if (addedObjects.contains(notifier) && NotationPackage.Literals.VIEW__ELEMENT.equals(notification.getFeature())){
+                        handleNotificationOnAddedElement(event);
+                        continue;
+                    }
                 }
-
                 fireNotification(notification);
             }
         }
     }
 
+    /**
+     * This method allows clients to customize the Diagram event broker behavior when
+     * it comes to handling events on added objects.
+     * The default behavior will just ignore them
+     * @param event being handled
+     */
+    protected void handleNotificationOnAddedElement(ResourceSetChangeEvent event) {
+        // default implementation does nothing
+        
+    }
 
     /**
      * This method allows clients to customize the Diagram event broker behavior when

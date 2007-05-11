@@ -114,5 +114,37 @@ public class NotificationUtil {
         }
         return deletedObjects;
     }
+
+    /**
+     * Collect the added objects from all the notifications in the event.
+     * 
+     * @param event
+     * @return Set contains all added objects
+     */
+    public static Set getAddedObjects(ResourceSetChangeEvent event) {
+        HashSet addedObjects = new HashSet();
+        for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
+            Notification notification = (Notification) i.next();
+            int eventType = notification.getEventType();
+            if ((eventType == Notification.ADD_MANY)
+                || (eventType == Notification.ADD)) {
+                Object feature = notification.getFeature();
+                if (feature instanceof EReference
+                    && ((EReference) feature).isContainment()) {                    
+                    if (eventType == Notification.ADD_MANY) {
+                        // Mutli value add handling
+                        for (Iterator iter = ((Collection) notification
+                            .getNewValue()).iterator(); iter.hasNext();) {
+                            addedObjects.add(iter.next());
+                        }
+                    } else {
+                        // single value add handling
+                        addedObjects.add(notification.getNewValue());
+                    }
+                }
+            }            
+        }
+        return addedObjects;
+    }
     
 }

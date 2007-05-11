@@ -86,19 +86,21 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
             node.setLayoutConstraint(layoutConstraint);
         }
 
-		EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
-		if (semanticEl==null)
-			// enforce a set to NULL
-			node.setElement(null);
-		else if (requiresElement(semanticAdapter,containerView)){
-			node.setElement(semanticEl);
-		}
+		
 		
 		node.setType(semanticHint);
 		
 	    // decorate view assumes that the view had been inserted already, so
 		// we had to call insert child before calling decorate view
-		ViewUtil.insertChildView(containerView, node, index, persisted);		
+		ViewUtil.insertChildView(containerView, node, index, persisted);	
+        
+        EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
+        if (semanticEl==null)
+            // enforce a set to NULL
+            node.setElement(null);
+        else if (requiresElement(semanticAdapter,containerView)){
+            node.setElement(semanticEl);
+        }
 		
         TransactionalEditingDomain domain = getEditingDomain(semanticEl,
             containerView);
