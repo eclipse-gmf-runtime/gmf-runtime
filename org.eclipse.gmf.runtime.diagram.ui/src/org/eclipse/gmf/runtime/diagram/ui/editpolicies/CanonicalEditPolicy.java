@@ -59,12 +59,12 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
@@ -481,12 +481,17 @@ implements NotificationListener {
 	protected void executeCommand( final Command cmd ) {
         Map options = null;
         EditPart ep = getHost();
-        while (ep !=null && !(ep instanceof DiagramEditPart)){
-            ep = ep.getParent();
+        boolean isActivating = true;
+        // use the viewer to determine if we are still initializing the diagram
+        // do not use the DiagramEditPart.isActivating since ConnectionEditPart's
+        // parent will not be a diagram edit part
+        EditPartViewer viewer = ep.getViewer();
+        if (viewer instanceof DiagramGraphicalViewer){
+            isActivating = ((DiagramGraphicalViewer)viewer).isInitializing();
         }
         
-        if ( ep==null ||
-            (ep!=null && ((DiagramEditPart)ep).isActivatingDiagram())||
+       
+        if (isActivating||
             !EditPartUtil.isWriteTransactionInProgress((IGraphicalEditPart)getHost(), false, false))
             options = Collections.singletonMap(Transaction.OPTION_UNPROTECTED,
                 Boolean.TRUE);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -321,6 +321,8 @@ public class DiagramGraphicalViewer
     /** The work space preference store */
     private IPreferenceStore workspacePreferenceStore;
 
+    private boolean initializing;
+
     /**
      * The editor manages the workspaces preferences store. So viewers not using
      * a editor do not need to create a preference store. This method provides a
@@ -364,6 +366,28 @@ public class DiagramGraphicalViewer
             resourceManager.dispose();
         }
     }
-    
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#setContents(org.eclipse.gef.EditPart)
+     */
+    public void setContents(EditPart editpart) {
+        initializing = true;
+        try {
+            super.setContents(editpart);
+        } finally {
+            initializing = false;
+        }
+    }
+
+    /**
+     * checks if the viewer is still in the process of initializing itself
+     * 
+     * @return true if initializing; false if the initializing process is
+     *         finished
+     */
+    public boolean isInitializing() {
+        return initializing;
+    }
 }
