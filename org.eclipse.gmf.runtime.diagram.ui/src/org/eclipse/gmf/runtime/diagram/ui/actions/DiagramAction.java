@@ -313,7 +313,7 @@ public abstract class DiagramAction
 		if (part instanceof IDiagramWorkbenchPart) {
 			diagramPart = (IDiagramWorkbenchPart) part;
 			
-		} else {
+		} else if (part!=null){
 			diagramPart = (IDiagramWorkbenchPart) part
 					.getAdapter(IDiagramWorkbenchPart.class);
 		}
