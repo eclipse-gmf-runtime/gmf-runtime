@@ -63,7 +63,6 @@ http://www.eclipse.org/legal/epl-v10.html
       <import feature="org.eclipse.emf.query" version="1.0.0"/>
       <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import feature="org.eclipse.emf.workspace" version="1.0.0"/>
-      <import feature="org.apache.batik" version="1.6.0"/>
    </requires>
 
    <plugin
