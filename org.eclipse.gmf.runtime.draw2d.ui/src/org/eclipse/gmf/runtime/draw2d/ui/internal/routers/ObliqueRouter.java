@@ -23,12 +23,13 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.jface.util.Assert;
 
 /*
  * @canBeSeenBy org.eclipse.gmf.runtime.draw2d.ui.*
@@ -194,8 +195,21 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			|| (conn.getTargetAnchor() == null))
 			return;
 
-        PointList points = new PointList();
+        PointList points = calculateBendPoints(conn);
              
+        routeLine(conn, 0, points);
+		conn.setPoints(points);
+	}
+	
+	/**
+     * Return a point list that contains the bend points on the connections
+     * clients can override this method to introduce calculated bend points 
+     * on the connection 
+	 * @param conn the connection to get the bend points for
+	 * @return bend points as a Point List
+	 */
+	protected PointList calculateBendPoints(Connection conn) {
+        PointList points = new PointList();        
 		if (isAvoidingObstructions(conn)) {
             points = RouterHelper.getInstance().routeAroundObstructions(conn);	
 		} 
@@ -205,9 +219,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
         else {
             points = RouterHelper.getInstance().routeFromConstraint(conn);
         }
-        
-        routeLine(conn, 0, points);
-		conn.setPoints(points);
+		return points;
 	}
 
 
@@ -251,18 +263,14 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		if (targetOwner == null)
 			return false;
 	
-		Rectangle startRect = null;        
+		PointList startPolygon = null;
         if (!(sourceOwner instanceof Connection)) {
-            startRect = new Rectangle(sourceOwner.getBounds());
-            sourceOwner.translateToAbsolute(startRect);
-            conn.translateToRelative(startRect);
+            startPolygon = getFigurePolygon(sourceOwner,conn);
         }
 
-        Rectangle endRect = null;        
+        PointList endPolygon = null;
         if (!(targetOwner instanceof Connection)) {
-    		endRect = new Rectangle(targetOwner.getBounds());
-            targetOwner.translateToAbsolute(endRect);
-    		conn.translateToRelative(endRect);
+            endPolygon = getFigurePolygon(targetOwner,conn);
         }
 
 		// Ignore the first and last points
@@ -272,8 +280,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			Point pt = newLine.getPoint(i);
 			if (i == 0 || i == newLine.size() - 1)
 				newPoints.addPoint(pt);
-			else if ((startRect == null || !startRect.contains(pt))
-                && (endRect == null || !endRect.contains(pt))) {
+			else if ((startPolygon == null || !PointListUtilities.containsPoint(startPolygon,pt))
+                && (endPolygon == null || !PointListUtilities.containsPoint(endPolygon,pt))) {
                 newPoints.addPoint(pt);
             }
             else {
@@ -289,6 +297,29 @@ public class ObliqueRouter extends BendpointConnectionRouter {
         
         return bChanged;
 	}
+    
+     protected PointList getFigurePolygon(IFigure owner, Connection conn) {
+        PointList polygon = new PointList();
+        if (owner instanceof IPolygonAnchorableFigure){
+            PointList points =  ((IPolygonAnchorableFigure)owner).getPolygonPoints();
+            for(int index = 0 ; index < points.size(); index++){
+                Point point  = points.getPoint(index).getCopy();
+                owner.translateToAbsolute(point);
+                conn.translateToRelative(point);
+                polygon.addPoint(point);
+            }
+        }else {
+           Rectangle rect =  owner.getBounds().getCopy();
+           owner.translateToAbsolute(rect);
+           conn.translateToRelative(rect);
+           polygon.addPoint(rect.getTopLeft());
+           polygon.addPoint(rect.getTopRight());
+           polygon.addPoint(rect.getBottomRight());
+           polygon.addPoint(rect.getBottomLeft());
+           polygon.addPoint(rect.getTopLeft());
+        }
+        return polygon;
+    }
 	
 	/**
 	 * Helper method for "route" to just do the core routing of this router without any
@@ -409,7 +440,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			}
 
 			nIndex = connectionList.indexOf(conn);
-			Assert.isTrue(nIndex >= 0);
+            assert nIndex >= 0;
 		} else {
 			selfRelConnections.put(connectionKey, conn);
 		}

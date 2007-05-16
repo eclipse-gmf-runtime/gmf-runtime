@@ -62,19 +62,17 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		int count = 0;
 		boolean found = false;
         boolean bChanged = false;
+        IFigure sourceFigure = conn.getSourceAnchor().getOwner();
 
-		if (conn.getSourceAnchor().getOwner() == null)
+		if (sourceFigure == null)
 			return false;
 
-		Rectangle startRect =
-			new Rectangle(conn.getSourceAnchor().getOwner().getBounds());
-		conn.getSourceAnchor().getOwner().translateToAbsolute(startRect);
-		conn.translateToRelative(startRect);
-
+		PointList startPolygon = getFigurePolygon(sourceFigure,conn);
+		
 		for (int i = 0; i < newPoints.size() - 1; i++) {
-			boolean in1 = startRect.contains(newPoints.getPoint(i));
-			boolean in2 = startRect.contains(newPoints.getPoint(i + 1));
-			if (in1 != in2) {
+            boolean in1 = PointListUtilities.containsPoint(startPolygon, newPoints.getPoint(i));
+ 			boolean in2 = PointListUtilities.containsPoint(startPolygon, newPoints.getPoint(i+1));
+ 			if (in1 != in2) {
 				lastIntersect = count;
 				found = true;
 			} else if (!(in1 || in2)) // Neither intersect, so skip out
@@ -95,18 +93,14 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 
 		lastIntersect = count = newLine.size() - 1;
 		found = false;
-
-		if (conn.getTargetAnchor().getOwner() == null)
+		IFigure targetFigure = conn.getTargetAnchor().getOwner();
+		if (targetFigure == null)
 			return false;
 
-		Rectangle endRect =
-			new Rectangle(conn.getTargetAnchor().getOwner().getBounds());
-		conn.getTargetAnchor().getOwner().translateToAbsolute(endRect);
-		conn.translateToRelative(endRect);
-
+        PointList endPolygon = getFigurePolygon(targetFigure,conn);
 		for (int i = newPoints.size() - 1; i > 0; i--) {
-			boolean in1 = endRect.contains(newPoints.getPoint(i));
-			boolean in2 = endRect.contains(newPoints.getPoint(i - 1));
+		    boolean in1 = PointListUtilities.containsPoint(endPolygon,newPoints.getPoint(i));
+			boolean in2 = PointListUtilities.containsPoint(endPolygon,newPoints.getPoint(i - 1));
 			if (in1 != in2) {
 				lastIntersect = count;
 				found = true;
@@ -514,7 +508,7 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 		PointList newLine) {
 		boolean skipNormalization =
 			(routerFlags & ROUTER_FLAG_SKIPNORMALIZATION) != 0;
-        
+			
         int nStartSize = newLine.size();
         
 		// if we are reorienting, then just default to the super class implementation and
@@ -672,4 +666,5 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 
         return null;
     }
+   
 }

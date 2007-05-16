@@ -1845,4 +1845,41 @@ public class PointListUtilities {
 		Point pt = line.perpIntersect(pt2.x, pt2.y);
 		return Math.round(pt.getDistance(new Point(pt2.x, pt2.y))) < straightLineTolerance;
 	}
+    
+    /**
+     * Utility method used to check if a point is contained inside a polygon
+     * @param points    the polygon
+     * @param point     point to check
+     * @return          true is the pointis inside the polygon, otherwise false
+     */
+    public static boolean containsPoint(PointList points, Point point){
+        boolean isOdd = false;
+        int[] pointsxy = points.toIntArray();
+        int n = pointsxy.length;
+        if (n > 3) { //If there are at least 2 Points (4 ints)
+            int x1, y1;
+            int x0 = pointsxy[n - 2];
+            int y0 = pointsxy[n - 1];
+
+            for (int i = 0; i < n; x0 = x1, y0 = y1) {
+                x1 = pointsxy[i++];
+                y1 = pointsxy[i++];
+                
+                if (y0 <= point.y && point.y < y1
+                  && crossProduct(x1, y1, x0, y0, point.x, point.y) > 0)
+                    isOdd = !isOdd;
+                if (y1 <= point.y && point.y < y0
+                  && crossProduct(x0, y0, x1, y1, point.x, point.y) > 0)
+                    isOdd = !isOdd;
+            }
+            if (isOdd)
+                return true;
+        }
+        return false;
+    }
+    
+    static private int crossProduct(int ax, int ay, int bx, int by, int cx, int cy) {
+        return (ax - cx) * (by - cy) - (ay - cy) * (bx - cx);
+    }
+
 }

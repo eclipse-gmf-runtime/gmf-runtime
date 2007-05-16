@@ -20,8 +20,6 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.jface.util.Assert;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 
@@ -68,7 +66,8 @@ public class FeedbackConnection extends PolylineConnectionEx {
 			newConstraint.add( new AbsoluteBendpoint(bp.getLocation()) );
 		}
 		
-		Assert.isTrue(newConstraint.size() >= 2 && newConstraint.size() == masterConstraint.size());
+        assert newConstraint.size() >= 2;
+        assert newConstraint.size() == masterConstraint.size(); 
 		setRoutingConstraint(newConstraint);
 	}
 	
