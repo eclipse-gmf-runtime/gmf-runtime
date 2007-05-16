@@ -212,6 +212,10 @@ public final class DiagramUIActionsMessages extends NLS {
 	public static String ColorPropertyChangeAction_default;
 	public static String ColorPropertyChangeAction_moreColors;
 	public static String ColorPropertyChangeAction_clearColors;
+    public static String SelectConnectionEndAction_SelectSource_ActionLabelText;
+    public static String SelectConnectionEndAction_SelectSource_ActionToolTipText;
+    public static String SelectConnectionEndAction_SelectTarget_ActionLabelText;
+    public static String SelectConnectionEndAction_SelectTarget_ActionToolTipText;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIActionsMessages.class);

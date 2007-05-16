@@ -49,6 +49,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RecalculatePageBreaks
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RouterAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RouterMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SelectAllAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SelectConnectionEndAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SelectMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ShowCompartmentTitleAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ShowConnectionLabelsAction;
@@ -345,6 +346,10 @@ public class DiagramContributionItemProvider
 			return new SizeWidthAction(workbenchPage);
 		if (actionId.equals(ActionIds.OPEN))
 			return new OpenAction(workbenchPage);
+        if (actionId.equals(ActionIds.SELECT_CONNECTION_SOURCE))
+            return new SelectConnectionEndAction(workbenchPage,true);
+        if (actionId.equals(ActionIds.SELECT_CONNECTION_TARGET))
+            return new SelectConnectionEndAction(workbenchPage,false);
 
 		return super.createAction(actionId, partDescriptor);
 	}

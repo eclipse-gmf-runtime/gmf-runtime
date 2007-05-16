@@ -77,7 +77,9 @@ public interface ActionIds {
 	public final String ACTION_ARRANGE_SELECTION = "arrangeSelectionAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_ARRANGE_ALL = "toolbarArrangeAllAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_ARRANGE_SELECTION = "toolbarArrangeSelectionAction"; //$NON-NLS-1$
-	public final String ACTION_SELECT_ALL_SHAPES = "selectAllShapesAction"; //$NON-NLS-1$
+    public final String SELECT_CONNECTION_SOURCE = "selectConnectionSource"; //$NON-NLS-1$
+    public final String SELECT_CONNECTION_TARGET = "selectConnectionTarget"; //$NON-NLS-1$
+    public final String ACTION_SELECT_ALL_SHAPES = "selectAllShapesAction"; //$NON-NLS-1$
 	public final String ACTION_SELECT_ALL_CONNECTIONS = "selectAllConnectorsAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_SELECT_ALL = "toolbarSelectAllAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_SELECT_ALL_SHAPES = "toolbarSelectAllShapesAction"; //$NON-NLS-1$

@@ -611,7 +611,29 @@
             </popupStructuredContributionCriteria> 
             <popupAction path="/navigateMenu/openGroup" id="OpenAction">
             </popupAction>
-         </popupContribution>    
+         </popupContribution>   
+		   <popupContribution
+                 class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+              <popupStructuredContributionCriteria
+                    objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart"
+                    objectCount="1">
+              </popupStructuredContributionCriteria>
+              <popupAction
+                    id="selectConnectionSource"
+                    path="/navigateMenu/showGroup">
+              </popupAction>
+           </popupContribution>
+           <popupContribution
+                 class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+              <popupStructuredContributionCriteria
+                    objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart"
+                    objectCount="1">
+              </popupStructuredContributionCriteria>
+              <popupAction
+                    id="selectConnectionTarget"
+                    path="/navigateMenu/showGroup">
+              </popupAction>
+           </popupContribution>    
                                                     
       </contributionItemProvider>
    </extension> 
