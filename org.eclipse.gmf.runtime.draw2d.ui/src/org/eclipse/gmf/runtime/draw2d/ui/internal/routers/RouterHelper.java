@@ -12,10 +12,13 @@
 package org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.eclipse.draw2d.Bendpoint;
@@ -49,7 +52,7 @@ class RouterHelper {
     static public RouterHelper getInstance() {
         return sprm;
     }
-
+    
     private Map routers = new WeakHashMap();
 
     private Map lastUsedRouter = new WeakHashMap();
@@ -175,126 +178,177 @@ class RouterHelper {
                 newLine.addAll(conn.getPoints());
             }
         } else {
-            newLine = routeClosestDistance(conn);
-            
-            Point infimumPoint = PointListUtilities.getPointsInfimum(newLine);
-            Point supremumPoint = PointListUtilities.getPointsSupremum(newLine);
+        newLine = routeClosestDistance(conn);
+        
+        Point infimumPoint = PointListUtilities.getPointsInfimum(newLine);
+        Point supremumPoint = PointListUtilities.getPointsSupremum(newLine);
 
-            Ray diameter = new Ray(infimumPoint, supremumPoint);
-            Rectangle rPoly = new Rectangle(infimumPoint.x, infimumPoint.y,
-                diameter.x, diameter.y);
+        Ray diameter = new Ray(infimumPoint, supremumPoint);
+        Rectangle rPoly = new Rectangle(infimumPoint.x, infimumPoint.y,
+            diameter.x, diameter.y);
 
-            List collectObstructs = new LinkedList();
+        List collectObstructs = new LinkedList();
 
-            IFigure parent = getRouterContainerFigure(conn);
+        IFigure parent = getRouterContainerFigure(conn);     
 
-            // don't bother routing if there is no attachments
-            if (parent == null)
-                return routeFromConstraint(conn);
+        // don't bother routing if there is no attachments
+        if (parent == null)
+            return routeFromConstraint(conn);
 
-            // set the end points back to the reference points - this will avoid
-            // errors, where
-            // an edge point is erroneously aligned with a specific edge, even
-            // though the avoid
-            // obstructions would suggest attachment to another edge is more
-            // appropriate
-            Point ptRef = conn.getSourceAnchor().getReferencePoint();
-            conn.translateToRelative(ptRef);
-            newLine.setPoint(ptRef, 0);
-            ptRef = conn.getTargetAnchor().getReferencePoint();
-            conn.translateToRelative(ptRef);
-            newLine.setPoint(ptRef, newLine.size() - 1);
+        // set the end points back to the reference points - this will avoid
+        // errors, where
+        // an edge point is erroneously aligned with a specific edge, even
+        // though the avoid
+        // obstructions would suggest attachment to another edge is more
+        // appropriate
+        Point ptRef = conn.getSourceAnchor().getReferencePoint();
+        conn.translateToRelative(ptRef);
+        newLine.setPoint(ptRef, 0);
+        ptRef = conn.getTargetAnchor().getReferencePoint();
+        conn.translateToRelative(ptRef);
+        newLine.setPoint(ptRef, newLine.size() - 1);
 
-            // TBD - optimize this
-            // increase connect view rect by width or height of diagram
-            // to maximize views included in the obstruction calculation
-            // without including all views in the diagram
-            Rectangle rBoundingRect = new Rectangle(parent.getBounds());
-            parent.translateToAbsolute(rBoundingRect);
-            conn.translateToRelative(rBoundingRect);
+        // TBD - optimize this
+        // increase connect view rect by width or height of diagram
+        // to maximize views included in the obstruction calculation
+        // without including all views in the diagram
+        Rectangle rBoundingRect = new Rectangle(parent.getBounds());
+        parent.translateToAbsolute(rBoundingRect);
+        conn.translateToRelative(rBoundingRect);
 
-            if (rPoly.width > rPoly.height) {
-                rPoly.y = rBoundingRect.y;
-                rPoly.setSize(rPoly.width, rBoundingRect.height);
-            } else {
-                rPoly.x = rBoundingRect.x;
-                rPoly.setSize(rBoundingRect.width, rPoly.height);
+        if (rPoly.width > rPoly.height) {
+            rPoly.y = rBoundingRect.y;
+            rPoly.setSize(rPoly.width, rBoundingRect.height);
+        } else {
+            rPoly.x = rBoundingRect.x;
+            rPoly.setSize(rBoundingRect.width, rPoly.height);
+        }
+        
+        collectObstructions(conn, rPoly, collectObstructs);
+
+        // parse through obstruction collect and combine rectangle that
+        // intersect with each other
+        if (collectObstructs.size() > 0) {
+            Dimension buffer = new Dimension(ROUTER_OBSTRUCTION_BUFFER + 1,
+                0);
+            if (!isFeedback(conn))
+                buffer = (Dimension) MapModeUtil.getMapMode(conn).DPtoLP(
+                    buffer);
+            final int inflate = buffer.width;
+
+            List collapsedRects = collapseRects(collectObstructs, inflate);
+            collectObstructs.clear();
+
+            // Loop through the collapsedRects list until there are no more
+            // intersections
+            boolean bRouted = true;
+            while (bRouted && !collapsedRects.isEmpty()) {
+                ListIterator listIter = collapsedRects.listIterator();
+                bRouted = false;
+
+                while (listIter.hasNext()) {
+                    Rectangle rObstruct = (Rectangle) listIter.next();
+                    PointList routedPoly = PointListUtilities
+                        .routeAroundRect(newLine, rObstruct, 0, false,
+                            inflate);
+
+                    if (routedPoly != null) {
+                        bRouted = true;
+                        newLine.removeAllPoints();
+                        newLine.addAll(routedPoly);
+                    } else
+                        collectObstructs.add(rObstruct);
+                }
+
+                List tempList = collapsedRects;
+                collapsedRects = collectObstructs;
+                tempList.clear();
+                collectObstructs = tempList;
+
+                if (bRouted && !collapsedRects.isEmpty())
+                    resetEndPointsToEdge(conn, newLine);
             }
+        }
+        }
+        
+        return newLine;
+        }
+    
+    /**
+     * Finds all the children shapes of the parent figure passed in that are in
+     * the way of the connection. This method will dig into children of
+     * container shapes if one of the connection ends is also in that container.
+     * 
+     * @param connection
+     *            the connection being routed
+     * @param connectionRect
+     *            the rectangle representing the connection bounds that is used
+     *            to determine if a shape intersects with the connection
+     * @param obstructionsToReturn
+     *            the list of figures that the connection should be routed
+     *            around
+     */
+    protected void collectObstructions(Connection connection,
+            Rectangle connectionRect, List obstructionsToReturn) {
 
-            List children = parent.getChildren();
-            for (int i = 0; i < children.size(); i++) {
-                IFigure child = (IFigure) children.get(i);
+        Set containerFiguresToSearch = new HashSet();
+        Set figuresToExclude = new HashSet();
 
-                if (child != conn.getSourceAnchor().getOwner() 
-                    && child != conn.getTargetAnchor().getOwner() 
-                    && !FigureUtilities.isAncestor(child, conn.getSourceAnchor().getOwner())
-                    && !FigureUtilities.isAncestor(child, conn.getTargetAnchor().getOwner())) {
-                    Rectangle rObstruct = new Rectangle(child.getBounds());
-                    child.translateToAbsolute(rObstruct);
-                    conn.translateToRelative(rObstruct);
+        IFigure figure = connection.getSourceAnchor().getOwner();
+        figuresToExclude.add(figure);
+        figure = figure.getParent();
+        while (figure != null) {
+            if (figure.getLayoutManager() instanceof XYLayout) {
+                containerFiguresToSearch.add(figure);
+            }
+            figuresToExclude.add(figure);
+            figure = figure.getParent();
+        }
+
+        figure = connection.getTargetAnchor().getOwner();
+        figuresToExclude.add(figure);
+        figure = figure.getParent();
+        while (figure != null) {
+            if (figure.getLayoutManager() instanceof XYLayout) {
+                containerFiguresToSearch.add(figure);
+            }
+            figuresToExclude.add(figure);
+            figure = figure.getParent();
+        }
+
+        for (Iterator iter = containerFiguresToSearch.iterator(); iter
+            .hasNext();) {
+            IFigure containerFigure = (IFigure) iter.next();
+
+            for (Iterator iterator = containerFigure.getChildren().iterator(); iterator
+                .hasNext();) {
+                IFigure childFigure = (IFigure) iterator.next();
+
+                if (!figuresToExclude.contains(childFigure)) {
+
+                    Rectangle rObstruct = new Rectangle(childFigure.getBounds());
+                    childFigure.translateToAbsolute(rObstruct);
+                    connection.translateToRelative(rObstruct);
 
                     // inflate slightly
                     rObstruct.expand(1, 1);
 
-                    if (rPoly.intersects(rObstruct)) {
-                        collectObstructs.add(rObstruct);
+                    if (connectionRect.intersects(rObstruct)) {
+                        obstructionsToReturn.add(rObstruct);
                     }
-                }
-            }
-
-            // parse through obstruction collect and combine rectangle that
-            // intersect with each other
-            if (collectObstructs.size() > 0) {
-                Dimension buffer = new Dimension(ROUTER_OBSTRUCTION_BUFFER + 1,
-                    0);
-                if (!isFeedback(conn))
-                    buffer = (Dimension) MapModeUtil.getMapMode(conn).DPtoLP(
-                        buffer);
-                final int inflate = buffer.width;
-
-                List collapsedRects = collapseRects(collectObstructs, inflate);
-                collectObstructs.clear();
-
-                // Loop through the collapsedRects list until there are no more
-                // intersections
-                boolean bRouted = true;
-                while (bRouted && !collapsedRects.isEmpty()) {
-                    ListIterator listIter = collapsedRects.listIterator();
-                    bRouted = false;
-
-                    while (listIter.hasNext()) {
-                        Rectangle rObstruct = (Rectangle) listIter.next();
-                        PointList routedPoly = PointListUtilities
-                            .routeAroundRect(newLine, rObstruct, 0, false,
-                                inflate);
-
-                        if (routedPoly != null) {
-                            bRouted = true;
-                            newLine.removeAllPoints();
-                            newLine.addAll(routedPoly);
-                        } else
-                            collectObstructs.add(rObstruct);
-                    }
-
-                    List tempList = collapsedRects;
-                    collapsedRects = collectObstructs;
-                    tempList.clear();
-                    collectObstructs = tempList;
-
-                    if (bRouted && !collapsedRects.isEmpty())
-                        resetEndPointsToEdge(conn, newLine);
                 }
             }
         }
-        
-        return newLine;
     }
-
+    
     /**
-     * @param conn the <code>Connection</code> that is to have used to determine the end
-     * points for reseting the <code>newLine</code> parameter.
-     * @param newLine the <code>PointList</code> to reset the end points of to be on the
-     * edge of the connection source and target nodes.
+     * @param conn
+     *            the <code>Connection</code> that is to have used to
+     *            determine the end points for reseting the <code>newLine</code>
+     *            parameter.
+     * @param newLine
+     *            the <code>PointList</code> to reset the end points of to be
+     *            on the edge of the connection source and target nodes.
      */
     public void resetEndPointsToEdge(Connection conn, PointList newLine) {
         if (newLine.size() <= 1)
@@ -510,8 +564,7 @@ class RouterHelper {
         int sourceDistance = foundSourceDistance ? distances.getFirstPoint().x
             : 0;
         return sourceDistance;
-    }
-
+}
     private ShortestPathConnectionRouter getRouter(IFigure figContainer) {
         ShortestPathConnectionRouter shortestPathRouter = (ShortestPathConnectionRouter) routers
             .get(figContainer);
