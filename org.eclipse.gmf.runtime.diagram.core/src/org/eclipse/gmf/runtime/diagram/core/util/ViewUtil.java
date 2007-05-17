@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -746,4 +746,21 @@ public class ViewUtil {
         }
         return null;
     }
+    
+    /**
+	 * Goes up through the containers of the passed in <code>EObject</code>
+	 * and returns the first container that is a <code>View</code>
+	 * 
+	 * @param obj
+	 *            the <code>EObject</code>
+	 * @return the first found <code>View</code> container of the object
+	 */
+	static public View getViewContainer(EObject obj) {
+		while (obj != null) {
+			if (obj.eContainer() instanceof View)
+				return (View) obj.eContainer();
+			obj = obj.eContainer();
+		}
+		return null;
+	}
 }

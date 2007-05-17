@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.tests.runtime.diagram.ui.logic;
 
+import java.util.Iterator;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -19,10 +21,13 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.TerminalEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.StringConstants;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.ApplyAppearancePropertiesRequest;
@@ -35,6 +40,7 @@ import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractShapeTests;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
 
 public class LogicShapeTests extends AbstractShapeTests {
@@ -129,5 +135,31 @@ public class LogicShapeTests extends AbstractShapeTests {
 		ISurfaceEditPart logicCompartmentEP = (ISurfaceEditPart) circuitEP
 			.getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
 		assertEquals(8, logicCompartmentEP.getPrimaryEditParts().size());
+	}
+	
+	public void testPropertiesSetStyle() throws Exception {
+		IElementType typeLED = ElementTypeRegistry.getInstance().getType(
+				"logic.led"); //$NON-NLS-1$
+
+		Point createPt = new Point(200, 200);
+		LEDEditPart ledEP = (LEDEditPart) getLogicTestFixture()
+				.createShapeUsingTool(typeLED, createPt, getDiagramEditPart());
+		Request request = new Request(StringConstants.PORTSCOLOR_REQUEST);
+		Integer color = FigureUtilities.RGBToInteger(new RGB(100, 100, 100));
+		request.getExtendedData().put(
+				StringConstants.PORTS_COLOR_PROPERTY_NAME, color);
+		Command cmd = ledEP.getCommand(request);
+		getCommandStack().execute(cmd);
+		flushEventQueue();
+
+		for (Iterator itr = ledEP.getChildren().iterator(); itr.hasNext();) {
+			Object obj = itr.next();
+			if (obj instanceof TerminalEditPart) {
+				Integer currentColor = FigureUtilities
+						.colorToInteger(((TerminalEditPart) obj).getFigure()
+								.getBackgroundColor());
+				assertEquals(color, currentColor);
+			}
+		}
 	}
 }

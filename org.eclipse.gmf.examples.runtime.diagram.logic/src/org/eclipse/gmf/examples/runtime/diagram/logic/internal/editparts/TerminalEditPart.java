@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,15 +15,19 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.StringConstants;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.AbstractBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemLocator;
 import org.eclipse.gmf.runtime.diagram.ui.figures.IBorderItemLocator;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.PropertiesSetStyle;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -47,31 +51,31 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 		EditPart host = getParent();
 		if (host instanceof ITerminalOwnerEditPart) {
 			return ((ITerminalOwnerEditPart) host)
-				.createOwnedTerminalFigure(this);
+					.createOwnedTerminalFigure(this);
 		}
 		return null;
 	}
-	
+
 	/* 
 	 * Don't allow terminal editparts to be selectable
 	 */
 	public boolean isSelectable() {
 		return false;
 	}
-	
+
 	public void activate() {
 		super.activate();
 		Insets parentInset = new Insets(0);
-		IFigure fig = ((BorderItemLocator)getLocator()).getParentFigure();
+		IFigure fig = ((BorderItemLocator) getLocator()).getParentFigure();
 		if (fig != null) {
 			parentInset = fig.getInsets();
 		}
 		Rectangle rBounds = ((NodeFigure) getFigure()).getHandleBounds();
-		((BorderItemLocator)getLocator()).setBorderItemOffset(new Dimension(
-			rBounds.width / 2 + parentInset.getWidth() / 2, rBounds.height / 2
-				+ parentInset.getHeight() / 2));
+		((BorderItemLocator) getLocator()).setBorderItemOffset(new Dimension(
+				rBounds.width / 2 + parentInset.getWidth() / 2, rBounds.height
+						/ 2 + parentInset.getHeight() / 2));
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart#getLocator()
 	 */
@@ -79,7 +83,6 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 		return locator;
 	}
 
-	
 	/**
 	 * Sets the locator.
 	 * @param locator The locator to set.
@@ -87,16 +90,46 @@ public class TerminalEditPart extends AbstractBorderItemEditPart {
 	public void setLocator(BorderItemLocator locator) {
 		this.locator = locator;
 	}
-    
-    public Object getPreferredValue(EStructuralFeature feature) {
-        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
-            return FigureUtilities
-                .colorToInteger(LogicColorConstants.connectorGreen);
-        } else if (feature == NotationPackage.eINSTANCE
-            .getLineStyle_LineColor()) {
-            return FigureUtilities
-                .colorToInteger(LogicColorConstants.logicBlack);
-        }
-        return super.getPreferredValue(feature);
-    }
+
+	public Object getPreferredValue(EStructuralFeature feature) {
+		if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+			return FigureUtilities
+					.colorToInteger(LogicColorConstants.connectorGreen);
+		} else if (feature == NotationPackage.eINSTANCE
+				.getLineStyle_LineColor()) {
+			return FigureUtilities
+					.colorToInteger(LogicColorConstants.logicBlack);
+		}
+		return super.getPreferredValue(feature);
+	}
+
+	protected void refreshBackgroundColor() {
+		View view = ViewUtil.getViewContainer(getNotationView());
+		if (view != null) {
+			PropertiesSetStyle propertiesStyle = (PropertiesSetStyle) view
+					.getNamedStyle(NotationPackage.eINSTANCE
+							.getPropertiesSetStyle(),
+							StringConstants.PORTS_PROPERTIES_STYLE_NAME);
+			if (propertiesStyle != null
+					&& propertiesStyle
+							.hasProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME)) {
+				try {
+					Integer value = (Integer) propertiesStyle
+							.getProperty(StringConstants.PORTS_COLOR_PROPERTY_NAME);
+					if (value != null) {
+						getFigure().setBackgroundColor(
+								FigureUtilities.integerToColor(value));
+						return;
+					}
+				} catch (Exception e) {
+					super.refreshBackgroundColor();
+				}
+			}
+		}
+		super.refreshBackgroundColor();
+	}
+
+	public void notifyChanged(Notification notification) {
+		super.notifyChanged(notification);
+	}
 }

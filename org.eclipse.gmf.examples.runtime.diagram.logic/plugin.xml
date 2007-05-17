@@ -225,6 +225,20 @@
             <partAction menubarPath="/file/print" id="printPreviewAction">
             </partAction>
          </partContribution>
+         <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider"
+               id="PortsColorMenuItem">
+            <popupStructuredContributionCriteria
+                  policyClass="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicPortsColorPopupPolicy">
+            </popupStructuredContributionCriteria>
+            <popupMenuGroup
+                  id="valueChangeGroup">
+            </popupMenuGroup>
+            <popupAction
+                  id="modifyPortsColorAction"
+                  path="/valueChangeGroup">
+            </popupAction>
+         </popupContribution>
        </contributionItemProvider>
    </extension>
    
