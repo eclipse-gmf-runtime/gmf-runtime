@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -398,60 +399,78 @@ public abstract class AbstractPresentationTestFixture
 		}
 	}
 	
-	/**
-	 * Creates a new shape using the request created by the
-	 * <code>CreationTool</code>.
-	 * 
-	 * @param elementType
-	 *            the type of the shape/element to be created
-	 * @param location
-	 *            the location for the new shape
-	 * @return the new shape's editpart
-	 */
-	public ShapeEditPart createShapeUsingTool(IElementType elementType,
-			Point location, IGraphicalEditPart containerEP) {
+       /**
+     * Creates a new shape using the request created by the
+     * <code>CreationTool</code>.
+     * 
+     * @param elementType
+     *            the type of the shape/element to be created
+     * @param location
+     *            the location for the new shape
+     * @return the new shape's editpart
+     */
+    public ShapeEditPart createShapeUsingTool(IElementType elementType,
+            Point location, IGraphicalEditPart containerEP) {
+        return createShapeUsingTool(elementType, location, containerEP, null);
+    }
+    
+    /**
+     * Creates a new shape using the request created by the
+     * <code>CreationTool</code>.
+     * 
+     * @param elementType
+     *            the type of the shape/element to be created
+     * @param location
+     *            the location for the new shape
+     * @param size
+     *            the initial size of the new shape
+     * @return the new shape's editpart
+     */
+    public ShapeEditPart createShapeUsingTool(IElementType elementType,
+            Point location, IGraphicalEditPart containerEP, Dimension size) {
 
-		CreateRequest request = getCreationRequest(elementType);
-		request.setLocation(location);
-		Command cmd = containerEP.getCommand(request);
+        CreateRequest request = getCreationRequest(elementType);
+        request.setLocation(location);
+        request.setSize(size);
+        Command cmd = containerEP.getCommand(request);
 
-		int previousNumChildren = containerEP.getChildren().size();
+        int previousNumChildren = containerEP.getChildren().size();
 
-		getCommandStack().execute(cmd);
-		assertEquals(previousNumChildren + 1, containerEP.getChildren().size());
+        getCommandStack().execute(cmd);
+        assertEquals(previousNumChildren + 1, containerEP.getChildren().size());
 
-		Object newView = ((IAdaptable) ((List) request.getNewObject()).get(0)).getAdapter(View.class);
-		assertNotNull(newView);
-		assertTrue(!ViewUtil.isTransient((View)newView));
-		
-		EObject element = ((View)newView).getElement();
-		
-		getCommandStack().undo();
-		assertEquals(previousNumChildren, containerEP.getChildren().size());
+        Object newView = ((IAdaptable) ((List) request.getNewObject()).get(0)).getAdapter(View.class);
+        assertNotNull(newView);
+        assertTrue(!ViewUtil.isTransient((View)newView));
+        
+        EObject element = ((View)newView).getElement();
+        
+        getCommandStack().undo();
+        assertEquals(previousNumChildren, containerEP.getChildren().size());
 
-		getCommandStack().redo();
-		assertEquals(previousNumChildren + 1, containerEP.getChildren().size());
+        getCommandStack().redo();
+        assertEquals(previousNumChildren + 1, containerEP.getChildren().size());
 
-		IGraphicalEditPart newShape = null;
-		if (element != null) {
-			List children = containerEP.getChildren();
-			ListIterator li = children.listIterator();
-			while (li.hasNext()) {
-				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
-				if (gep.getNotationView().getElement().equals(element)) {
-					newShape = gep;
-				}
-			}
-		}
-		else {
-			newShape = (ShapeEditPart) getDiagramEditPart()
-			.getViewer().getEditPartRegistry().get(newView);
-			assertNotNull(newShape);
-		}
-		
-		assertTrue(newShape != null && newShape instanceof ShapeEditPart);
-		return (ShapeEditPart)newShape;
-	}
+        IGraphicalEditPart newShape = null;
+        if (element != null) {
+            List children = containerEP.getChildren();
+            ListIterator li = children.listIterator();
+            while (li.hasNext()) {
+                IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
+                if (gep.getNotationView() != null && element.equals(gep.getNotationView().getElement())) {
+                    newShape = gep;
+                }
+            }
+        }
+        else {
+            newShape = (ShapeEditPart) getDiagramEditPart()
+            .getViewer().getEditPartRegistry().get(newView);
+            assertNotNull(newShape);
+        }
+        
+        assertTrue(newShape != null && newShape instanceof ShapeEditPart);
+        return (ShapeEditPart)newShape;
+    }
 
 	/**
 	 * Given an <code>IElementType</code>, gets the creation request that can be used to 
@@ -483,22 +502,43 @@ public abstract class AbstractPresentationTestFixture
 		return request;
 	}
 
-	/**
-	 * Creates a new shape using the request created by the
-	 * <code>CreationTool</code>.
-	 * 
-	 * @param elementType
-	 *            the type of the shape/element to be created
-	 * @param location
-	 *            the location for the new shape
-	 * @return the new shape's editpart
-	 */
-	public ShapeEditPart createShapeUsingTool(IElementType elementType,
-			Point location) {
+    /**
+     * Creates a new shape using the request created by the
+     * <code>CreationTool</code>.
+     * 
+     * @param elementType
+     *            the type of the shape/element to be created
+     * @param location
+     *            the location for the new shape
+     * @return the new shape's editpart
+     */
+    public ShapeEditPart createShapeUsingTool(IElementType elementType,
+            Point location) {
 
-		return createShapeUsingTool(elementType, location, getDiagramEditPart());
+        return createShapeUsingTool(elementType, location, getDiagramEditPart());
 
-	}
+    }
+
+    /**
+     * Creates a new shape using the request created by the
+     * <code>CreationTool</code>.
+     * 
+     * @param elementType
+     *            the type of the shape/element to be created
+     * @param location
+     *            the location for the new shape
+     * @param size
+     *            the initial size of the new shape
+     * @return the new shape's editpart
+     */
+    public ShapeEditPart createShapeUsingTool(IElementType elementType,
+            Point location, Dimension size) {
+
+        ShapeEditPart shapeEP = createShapeUsingTool(elementType, location, getDiagramEditPart(), size);
+        
+        return shapeEP;
+
+    }
 	
 	/**
 	 * Creates a new connector using the request created by the

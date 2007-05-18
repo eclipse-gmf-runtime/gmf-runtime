@@ -22,12 +22,14 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.graph.CompoundDirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraphLayout;
 import org.eclipse.draw2d.graph.Edge;
@@ -44,6 +46,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderedShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -59,7 +62,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.util.Assert;
 
 /**
  * Provider that creates a command for the DirectedGraph layout in GEF.
@@ -199,26 +201,26 @@ public abstract class DefaultProvider
 
                 Point position = shapeEP.getLocation();
 
-                // determine topleft most point, layout of items will be placed
-                // starting at topleft point
-                if (minX == -1) {
-                    minX = position.x;
-                    minY = position.y;
-                } else {
-                    minX = Math.min(minX, position.x);
-                    minY = Math.min(minY, position.y);
-                }
+        // determine topleft most point, layout of items will be placed
+        // starting at topleft point
+        if (minX == -1) {
+            minX = position.x;
+            minY = position.y;
+        } else {
+            minX = Math.min(minX, position.x);
+            minY = Math.min(minY, position.y);
+        }
 
                 Node n = new Node(shapeEP);
-                n.setPadding(new Insets(NODE_PADDING));
+        n.setPadding(new Insets(NODE_PADDING));
                 Dimension size = shapeEP.getSize();
 
-                setNodeMetrics(n, new Rectangle(position.x, position.y,
-                    size.width, size.height));
+        setNodeMetrics(n, new Rectangle(position.x, position.y,
+            size.width, size.height));
 
                 editPartToNodeDict.put(shapeEP, n);
                 nodes.add(n);
-            }
+    }
         }
 
         return nodes;
@@ -340,13 +342,8 @@ public abstract class DefaultProvider
                         to = to.getParent();
                     else if (shouldHandleListItems && to instanceof ListItemEditPart)
                         to = getFirstAnscestorinNodesMap(to, editPartToNodeDict);
-                    Node fromNode = (Node) editPartToNodeDict.get(from);
-                    Node toNode = (Node) editPartToNodeDict.get(to);
 
-                    if (fromNode != null && toNode != null
-                        && !fromNode.equals(toNode)) {
-                        addEdge(edges, poly, toNode, fromNode);
-                    }
+                        addEdge(edges, poly, to, from, editPartToNodeDict);
                 }else{
                     notTopDownEdges.add(poly);
                 }
@@ -367,13 +364,7 @@ public abstract class DefaultProvider
                 to = to.getParent();
             else if (shouldHandleListItems && to instanceof ListItemEditPart)
                 to = getFirstAnscestorinNodesMap(to, editPartToNodeDict);
-            Node fromNode = (Node) editPartToNodeDict.get(from);
-            Node toNode = (Node) editPartToNodeDict.get(to);
-            
-            if (fromNode != null && toNode != null
-                && !fromNode.equals(toNode)) {
-                addEdge(edges, poly, fromNode, toNode);
-            }
+            addEdge(edges, poly, from, to, editPartToNodeDict);
         }
         return edges;
     }
@@ -385,11 +376,39 @@ public abstract class DefaultProvider
      * @param toNode
      */
     private void addEdge(EdgeList edges, ConnectionEditPart connectionEP,
-            Node fromNode, Node toNode) {
-        Edge edge = new Edge(connectionEP, fromNode, toNode);
-        initializeEdge(connectionEP, edge);
-        
-        edges.add(edge);
+            EditPart fromEP, EditPart toEP, Map editPartToNodeDict) {
+
+        Node fromNode = (Node) editPartToNodeDict.get(fromEP);
+        Node toNode = (Node) editPartToNodeDict.get(toEP);
+
+        if (fromNode != null && toNode != null && !fromNode.equals(toNode)) {
+
+            Edge edge = new Edge(connectionEP, fromNode, toNode);
+            initializeEdge(connectionEP, edge);
+            edges.add(edge);
+
+            // create edges to/from groups
+            boolean foundGroup = false;
+            if (fromEP.getParent() instanceof GroupEditPart) {
+                fromEP = fromEP.getParent();
+                foundGroup = true;
+            }
+            if (toEP.getParent() instanceof GroupEditPart) {
+                toEP = toEP.getParent();
+                foundGroup = true;
+            }
+            if (foundGroup) {
+                fromNode = (Node) editPartToNodeDict.get(fromEP);
+                toNode = (Node) editPartToNodeDict.get(toEP);
+
+                if (fromNode != null && toNode != null
+                    && !fromNode.equals(toNode)) {
+
+                    edges.add(new Edge("ImpliedGroupConnection", fromNode, //$NON-NLS-1$
+                        toNode));
+                }
+            }
+        }
     }
 
     /**
@@ -740,11 +759,12 @@ public abstract class DefaultProvider
             Node source = null, target = null;
             
             collectPoints(points, edge);
-            cep = (ConnectionEditPart)edge.data;
-            source = edge.source;
-            target = edge.target;
             
-            if (cep != null) {
+            if (edge.data instanceof ConnectionEditPart) {
+                cep = (ConnectionEditPart) edge.data;
+                source = edge.source;
+                target = edge.target;
+
                 PointListUtilities.normalizeSegments(points, MapModeUtil.getMapMode(cep.getFigure()).DPtoLP(3));
                     
                 // Reset the points list
@@ -852,8 +872,8 @@ public abstract class DefaultProvider
     /**
      * Creates the graph that will be used by the layouy provider
      * Clients can override this method create different kind of graphs
-     * This method is called by {@link DefaultProvider#layoutEditParts(GraphicalEditPart, IAdaptable) } 
-     * and {@link DefaultProvider#layoutEditParts(List, IAdaptable)}  
+     * This method is called by {@link CopyOfDefaultProvider#layoutEditParts(GraphicalEditPart, IAdaptable) } 
+     * and {@link CopyOfDefaultProvider#layoutEditParts(List, IAdaptable)}  
      * @return the Graph that will be used by the layout algorithm
      */
     protected DirectedGraph createGraph(){
@@ -862,8 +882,8 @@ public abstract class DefaultProvider
     
     /**
      * Creates the graph layout algorithm that will be used to layout the diagram
-     * This method is called by {@link DefaultProvider#layoutEditParts(GraphicalEditPart, IAdaptable) } 
-     * and {@link DefaultProvider#layoutEditParts(List, IAdaptable)}  
+     * This method is called by {@link CopyOfDefaultProvider#layoutEditParts(GraphicalEditPart, IAdaptable) } 
+     * and {@link CopyOfDefaultProvider#layoutEditParts(List, IAdaptable)}  
      * @return the graph layout 
      */
     protected DirectedGraphLayout createGraphLayout() {

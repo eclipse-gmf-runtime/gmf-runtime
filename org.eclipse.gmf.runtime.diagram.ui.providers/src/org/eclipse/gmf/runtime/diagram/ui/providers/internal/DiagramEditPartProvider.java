@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DescriptionCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramNameCompartmentEditPart;
@@ -46,6 +47,7 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 	{
 		shapeMap.put(ViewType.NOTE, NoteEditPart.class);
 		shapeMap.put(ViewType.TEXT, TextEditPart.class);
+        shapeMap.put(ViewType.GROUP, GroupEditPart.class);
 	}
 	/** list of supportted text editparts. */
 	private Map textCompartmentMap = new HashMap();
@@ -75,7 +77,7 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 	protected Class getNodeEditPartClass(View view){
 		String type = view.getType();
 		Class clazz = null;
-		if(type!=null && type.length()>0){
+        if(type!=null && type.length()>0){
 			clazz = (Class)textCompartmentMap.get(type);
 			if(clazz==null)
 				clazz = (Class)shapeMap.get(type);
@@ -84,6 +86,7 @@ public class DiagramEditPartProvider extends AbstractEditPartProvider {
 				clazz = NoteEditPart.class;
 			}
 		}
+            
 	    return clazz;
 	}
 	

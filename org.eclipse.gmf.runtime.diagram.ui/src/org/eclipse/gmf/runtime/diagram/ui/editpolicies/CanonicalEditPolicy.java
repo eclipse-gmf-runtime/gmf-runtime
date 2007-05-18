@@ -54,6 +54,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
@@ -942,17 +943,40 @@ implements NotificationListener {
 
 			
 	/**
-	 * Return the host's model children.
-	 * @return list of <code>View</Code>s
-	 */
-	protected List getViewChildren() {
-		return new ArrayList(((View)host().getModel()).getChildren());
-		
-	}
+     * Return the host's model children.
+     * 
+     * @return list of <code>View</Code>s
+     */
+    protected List getViewChildren() {
+        return getViewChildren((View) host().getModel());
+    }
+
+    /**
+     * Return the host's model children. This is a recursive method that handles
+     * groups.
+     * 
+     * @param view
+     *            the view to find the children for
+     * @return list of children views with groups removed.
+     */
+    private List getViewChildren(View view) {
+        ArrayList list = new ArrayList();
+        for (Iterator iter = view.getChildren().iterator(); iter.hasNext();) {
+
+            Object child = iter.next();
+            if (child instanceof Node
+                && ViewType.GROUP.equals(((Node) child).getType())) {
+                list.addAll(getViewChildren((View) child));
+            } else {
+                list.add(child);
+            }
+        }
+        return list;
+    }
 
 	/**
-	 * Resynchronize the canonical container.
-	 */
+     * Resynchronize the canonical container.
+     */
 	public final void refresh() {
 		try {
 			if ( isEnabled() ) {

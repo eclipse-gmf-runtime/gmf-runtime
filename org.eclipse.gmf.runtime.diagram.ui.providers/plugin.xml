@@ -214,7 +214,7 @@
             <partAction menubarPath="/diagramMenu/arrangeMenu/arrangeGroup" id="arrangeSelectionAction">
             </partAction>  
             <partAction toolbarPath="/arrangeMenu/arrangeGroup" id="toolbarArrangeSelectionAction">
-            </partAction>                
+            </partAction>                                
             <partMenu menubarPath="/diagramMenu/formatGroup" toolbarPath="/toolbarViewGroup" id="alignMenu">
             </partMenu><partMenuGroup menubarPath="/diagramMenu/alignMenu/" toolbarPath="/alignMenu/" id="alignHorizontalGroup">
             </partMenuGroup>
@@ -243,8 +243,7 @@
             <partAction menubarPath="/diagramMenu/zorderMenu/zorderGroup" id="bringForwardAction">
             </partAction>
             <partAction menubarPath="/diagramMenu/zorderMenu/zorderGroup" id="sendBackwardAction">
-            </partAction>     
-            
+            </partAction>    
             <partMenu menubarPath="/diagramMenu/viewGroup" id="viewMenu">
             </partMenu> 
             <partMenuGroup menubarPath="/diagramMenu/viewMenu/" id="gridGroup">
@@ -416,18 +415,23 @@
              <popupCustom path="/formatMenu/fontFillLineGroup" id="fillColorContributionItem">
             </popupCustom>
             <popupCustom path="/formatMenu/fontFillLineGroup" id="lineColorContributionItem">
-            </popupCustom>           
-            <popupAction path="/addGroup" id="addNoteLinkAction">
-            </popupAction>                         
+            </popupCustom>                               
             <popupMenu path="/formatMenu/miscellaneousGroup" id="arrangeMenu">
             </popupMenu>    
             <popupMenuGroup path="/formatMenu/arrangeMenu/" id="arrangeGroup">
             </popupMenuGroup>             
             <popupAction path="/formatMenu/arrangeMenu/arrangeGroup" id="arrangeAllAction">
             </popupAction>   
-             <popupAction path="/formatMenu/arrangeMenu/arrangeGroup" id="arrangeSelectionAction">
-            </popupAction>              
+            <popupAction path="/formatMenu/arrangeMenu/arrangeGroup" id="arrangeSelectionAction">
+            </popupAction>    
          </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.INotableEditPart">
+            </popupStructuredContributionCriteria>           
+            <popupAction path="/addGroup" id="addNoteLinkAction">   
+            </popupAction>    
+         </popupContribution>  
+         
          
 <!-- format and filter menu actions -->         
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
@@ -462,7 +466,7 @@
             <popupAction path="/formatMenu/zorderMenu/zorderGroup" id="bringForwardAction">
             </popupAction>
             <popupAction path="/formatMenu/zorderMenu/zorderGroup" id="sendBackwardAction">
-            </popupAction>                        			
+            </popupAction>
             <popupAction path="/formatMenu/sizeGroup" id="autoSizeAction">
             </popupAction>  
             
@@ -477,7 +481,23 @@
             <popupAction path="/filtersMenu/compartmentMenu/allCompartmentsGroup" id="noCompartmentsAction">
             </popupAction>     
          </popupContribution>       
-         
+           
+<!-- REMOVE ME BEFORE COMMITTING -->
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart"
+                  objectCount="2+">
+            </popupStructuredContributionCriteria>     
+            <popupAction path="/formatMenu/miscellaneousGroup" id="groupAction">
+            </popupAction>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart">
+            </popupStructuredContributionCriteria>                    
+            <popupAction path="/formatMenu/miscellaneousGroup" id="ungroupAction">
+            </popupAction>   
+         </popupContribution>   
+                   
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
             </popupStructuredContributionCriteria>
@@ -595,7 +615,7 @@
             </popupStructuredContributionCriteria> 
             <popupAction path="/editGroup" id="deleteFromDiagramAction">
             </popupAction>            
-          </popupContribution>                   
+          </popupContribution>       
           <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IContainedEditPart">
                <method name="getNotationView().getElement()" notValue="null">                  
@@ -604,6 +624,7 @@
             <popupAction path="/editGroup" id="deleteFromModelAction">
             </popupAction>            
           </popupContribution>
+          
            <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart" objectCount="1">
             </popupStructuredContributionCriteria> 
@@ -611,7 +632,7 @@
             </popupStructuredContributionCriteria> 
             <popupAction path="/navigateMenu/openGroup" id="OpenAction">
             </popupAction>
-         </popupContribution>   
+         </popupContribution>    
 		   <popupContribution
                  class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
               <popupStructuredContributionCriteria
@@ -702,7 +723,7 @@
          <Priority name="Lowest">
          </Priority>
          <object class="org.eclipse.gmf.runtime.notation.View" id="ShapesByType">
-            <method name="getType()" value="Note, Text, NoteAttachment, DiagramName, Description">
+            <method name="getType()" value="Note, Text, NoteAttachment, DiagramName, Description, Group">
             </method>
          </object>
          <context views="ShapesByType">

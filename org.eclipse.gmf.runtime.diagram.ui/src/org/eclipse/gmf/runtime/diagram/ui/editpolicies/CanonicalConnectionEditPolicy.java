@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetViewMutabilityCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ICanonicalShapeCompartmentLayout;
@@ -125,9 +126,18 @@ public abstract class CanonicalConnectionEditPolicy
 			View tgt = (View) tep.getAdapter(View.class);
 			if (src != null && tgt != null) {
 
-				return sep.getParent().getEditPolicy(
+                EditPart sourceParent = sep.getParent();
+                while (sourceParent instanceof GroupEditPart) {
+                    sourceParent = sourceParent.getParent();
+                }
+                EditPart targetParent = sep.getParent();
+                while (targetParent instanceof GroupEditPart) {
+                    targetParent = targetParent.getParent();
+                }
+				
+                return sourceParent.getEditPolicy(
 					EditPolicyRoles.CANONICAL_ROLE) != null
-					&& tep.getParent().getEditPolicy(
+					&& targetParent.getEditPolicy(
 						EditPolicyRoles.CANONICAL_ROLE) != null;
 			}
 		}

@@ -242,6 +242,33 @@
        </contributionItemProvider>
    </extension>
    
+   <extension id="LogicExampleGroupContributionItemProvider" name="LogicExampleGroupContributionItemProvider" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContributionItemProvider">
+         <Priority name="Low">
+         </Priority>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart"
+                  objectCount="2+">
+               <method
+                     name="getDiagramEditDomain().getEditorPart().getEditorSite().getId()"
+                     value="LogicEditor"/>     
+            </popupStructuredContributionCriteria>     
+            <popupAction path="/formatMenu/miscellaneousGroup" id="groupAction">
+            </popupAction>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart">
+            	<method
+                     name="getDiagramEditDomain().getEditorPart().getEditorSite().getId()"
+                     value="LogicEditor"/>     
+            </popupStructuredContributionCriteria>                    
+            <popupAction path="/formatMenu/miscellaneousGroup" id="ungroupAction">
+            </popupAction>   
+         </popupContribution>                                 
+      </contributionItemProvider>
+   </extension>  
+   
    <extension id="LogicModelingAssistantProvider" name="%logic.provider.modelingassistant" point="org.eclipse.gmf.runtime.emf.ui.modelingAssistantProviders">
       <modelingAssistantProvider class="org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicModelingAssistantProvider">
          <Priority name="Low"/>

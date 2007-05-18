@@ -721,4 +721,8 @@ public class ColorsAndFontsPropertySection
         }
         super.dispose();
     }
+    
+    protected boolean digIntoGroups() {
+        return true;
+    }
 }

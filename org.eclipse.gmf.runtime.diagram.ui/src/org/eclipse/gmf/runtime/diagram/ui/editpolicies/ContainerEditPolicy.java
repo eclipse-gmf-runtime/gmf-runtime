@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -36,6 +37,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
+import org.eclipse.gmf.runtime.diagram.core.commands.GroupCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringForwardCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringToFrontCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendBackwardCommand;
@@ -45,12 +47,14 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.DuplicateViewsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.PasteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.RefreshEditPartCommand;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
@@ -420,8 +424,11 @@ public class ContainerEditPolicy
 	 * @see org.eclipse.gef.EditPolicy#getCommand(Request)
 	 */
 	public Command getCommand(Request request) {
-		
-		if (request instanceof ArrangeRequest) {
+        if (ActionIds.ACTION_GROUP.equals(request.getType())
+            && request instanceof GroupRequest) {
+            return getGroupCommand((GroupRequest) request);
+        } 
+        else if (request instanceof ArrangeRequest) {
 			return getArrangeCommand((ArrangeRequest)request);
 		}
 
@@ -471,7 +478,55 @@ public class ContainerEditPolicy
 		return super.getCommand(request);
 	}
 
-	/**
+    /**
+     * Returns a command to group the editparts in the request.
+     * 
+     * @param request
+     *            the request containing the editparts to be grouped.
+     * @return the command to perform the grouping
+     */
+    protected Command getGroupCommand(GroupRequest request) {
+        List shapeViews = new LinkedList();
+        IGraphicalEditPart parentEP = null;
+        for (Iterator iter = request.getEditParts().iterator(); iter.hasNext();) {
+            Object editpart = iter.next();
+
+            if (editpart instanceof ShapeEditPart) {
+
+                if (!((IEditableEditPart) editpart).isEditModeEnabled()) {
+                    return null;
+                }
+                
+                if (editpart instanceof IBorderItemEditPart) {
+                    return null;
+                }
+
+                if (parentEP != null) {
+                    if (parentEP != ((ShapeEditPart) editpart).getParent()) {
+                        // can only group shapes with the same parent
+                        return null;
+                    }
+                } else {
+                    parentEP = (IGraphicalEditPart) ((ShapeEditPart) editpart)
+                        .getParent();
+                }
+
+                if (((ShapeEditPart) editpart).getModel() instanceof Node) {
+                    shapeViews.add(((ShapeEditPart) editpart).getModel());
+                }
+            }
+        }
+
+        if (parentEP == null || !parentEP.isEditModeEnabled()) {
+            return null;
+        }
+
+        GroupCommand cmd = new GroupCommand(((IGraphicalEditPart) getHost())
+            .getEditingDomain(), shapeViews);
+        return new ICommandProxy(cmd);
+    }
+
+    /**
 	 * @see org.eclipse.gef.EditPolicy#getTargetEditPart(org.eclipse.gef.Request)
 	 */
 	public EditPart getTargetEditPart(Request request) {
@@ -486,6 +541,7 @@ public class ContainerEditPolicy
 			ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())
 				|| ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType())
 				|| ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
+                || ActionIds.ACTION_GROUP.equals(request.getType())
 				|| ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType())
 				|| RequestConstants.REQ_ARRANGE_RADIAL.equals(request.getType())
 				|| RequestConstants.REQ_ARRANGE_DEFERRED.equals(request.getType())

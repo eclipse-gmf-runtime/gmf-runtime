@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FontDialogAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FontNameContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FontSizeContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FontStyleAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.GroupAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.HideConnectionLabelsAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.MakeSameSizeMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.OpenWithMenuManager;
@@ -61,6 +62,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SizeWidthAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SnapBackAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SnapToGridAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SortFilterAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.UngroupAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ViewGridAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ViewMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ViewPageBreaksAction;
@@ -350,6 +352,12 @@ public class DiagramContributionItemProvider
             return new SelectConnectionEndAction(workbenchPage,true);
         if (actionId.equals(ActionIds.SELECT_CONNECTION_TARGET))
             return new SelectConnectionEndAction(workbenchPage,false);
+        
+        if (actionId.equals(ActionIds.ACTION_GROUP))
+            return new GroupAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_UNGROUP))
+            return new UngroupAction(workbenchPage);
+
 
 		return super.createAction(actionId, partDescriptor);
 	}

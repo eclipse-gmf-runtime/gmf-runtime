@@ -27,6 +27,7 @@ import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IInsertableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.SemanticListCompartmentEditPart;
@@ -100,7 +101,15 @@ public class ComponentEditPolicy
                 (SemanticListCompartmentEditPart)parent;
             return semListCompartment.isCanonicalOn();
             
+        } else {
+
+            // If the parent is a group, then we want to get the first parent
+            // that isn't a group and test for a canonical editpolicy there.
+            while (parent instanceof GroupEditPart) {
+                parent = parent.getParent();
+            }
         }
+        
         
         if (parent instanceof IGraphicalEditPart) {
 			CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);

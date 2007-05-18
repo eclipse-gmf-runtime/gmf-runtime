@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,16 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.BooleanPropertyAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.ui.IWorkbenchPage;
@@ -76,5 +82,18 @@ public class FontStyleAction extends BooleanPropertyAction {
 		action.setDisabledImageDescriptor(DiagramUIPluginImages.DESC_ITALIC_DISABLED);
 		return action;
 	}
-
+    
+    protected List getTargetEditParts(EditPart editpart) {
+        if (editpart instanceof GroupEditPart) {
+            List targetedEPs = new ArrayList();
+            for (Iterator iter = ((GroupEditPart) editpart)
+                .getFlattenedChildren().iterator(); iter.hasNext();) {
+                EditPart childEP = (EditPart) iter.next();
+                targetedEPs.addAll(getTargetEditParts(childEP));
+            }
+            return targetedEPs;
+        } else {
+            return super.getTargetEditParts(editpart);
+        }
+    }
 }

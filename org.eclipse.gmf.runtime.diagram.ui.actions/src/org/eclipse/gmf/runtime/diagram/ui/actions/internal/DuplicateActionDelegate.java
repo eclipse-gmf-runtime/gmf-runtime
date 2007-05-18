@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.action.AbstractActionDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
@@ -170,6 +171,12 @@ public class DuplicateActionDelegate
 		List eps = new ArrayList();
 		for (Iterator i = selection.iterator(); i.hasNext();) {
 			Object selectedItem = i.next();
+            
+            // Disable duplicate on groups for now.  See bugzilla 182972.
+            if (selectedItem instanceof GroupEditPart) {
+                return null;
+            }
+            
 			if (selectedItem instanceof IGraphicalEditPart) {
 				eps.add(selectedItem);
 			}

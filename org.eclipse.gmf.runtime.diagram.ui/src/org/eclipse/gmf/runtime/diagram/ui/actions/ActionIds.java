@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,7 @@ public interface ActionIds {
 	public final String ACTION_TOOLBAR_ARRANGE_SELECTION = "toolbarArrangeSelectionAction"; //$NON-NLS-1$
     public final String SELECT_CONNECTION_SOURCE = "selectConnectionSource"; //$NON-NLS-1$
     public final String SELECT_CONNECTION_TARGET = "selectConnectionTarget"; //$NON-NLS-1$
-    public final String ACTION_SELECT_ALL_SHAPES = "selectAllShapesAction"; //$NON-NLS-1$
+	public final String ACTION_SELECT_ALL_SHAPES = "selectAllShapesAction"; //$NON-NLS-1$
 	public final String ACTION_SELECT_ALL_CONNECTIONS = "selectAllConnectorsAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_SELECT_ALL = "toolbarSelectAllAction"; //$NON-NLS-1$
 	public final String ACTION_TOOLBAR_SELECT_ALL_SHAPES = "toolbarSelectAllShapesAction"; //$NON-NLS-1$
@@ -102,6 +102,8 @@ public interface ActionIds {
 	public final String ACTION_SHOW_CONNECTION_LABELS = "showConnectorLabels"; //$NON-NLS-1$
 	public final String ACTION_HIDE_CONNECTION_LABELS = "hideConnectorLabels"; //$NON-NLS-1$	
 	public final String ACTION_SHOW_COMPARTMENT_TITLE = "showCompartmentTitle"; //$NON-NLS-1$	
+    public final String ACTION_GROUP = "groupAction"; //$NON-NLS-1$
+    public final String ACTION_UNGROUP = "ungroupAction"; //$NON-NLS-1$
 	
 	/* The menu ID for the diagram editor popup menu */
 	public final String DIAGRAM_EDITOR_CONTEXT_MENU = "org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu"; //$NON-NLS-1$

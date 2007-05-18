@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -46,6 +47,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -61,7 +63,6 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -151,6 +152,9 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 			if ( ep instanceof LabelEditPart ) {
 				continue;
 			}
+            if (ep instanceof GroupEditPart) {
+                cc.compose(getReparentGroupCommand((GroupEditPart) ep));
+            }
 			
 			View view = (View)ep.getAdapter(View.class);
 			if ( view == null ) {
@@ -167,13 +171,57 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		}
 		return cc.isEmpty() ? null : new ICommandProxy(cc.reduce());
 	}
-	
-	/** 
-	 * Return the command to reparent the supplied editpart's semantic and notation
-	 * elements.
-	 * @param gep the editpart being reparented
-	 * @return A CompositeCommand2 that will reparent both the semantic and notation elements.
-	 */
+    
+    /**
+     * Return the command to reparent the supplied group editpart's semantic and
+     * notation elements.
+     * 
+     * @param gep
+     *            the groupEP editpart being reparented
+     * @return A composite command that will reparent both the semantic and
+     *         notation elements of the group.
+     */
+    protected ICommand getReparentGroupCommand(GroupEditPart groupEP) {
+        CompositeCommand cc = new CompositeCommand(
+            DiagramUIMessages.AddCommand_Label);
+        View container = (View) getHost().getModel();
+        EObject context = ViewUtil.resolveSemanticElement(container);
+
+        // semantic
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        for (Iterator iter = groupEP.getFlattenedChildren().iterator(); iter
+            .hasNext();) {
+            IGraphicalEditPart childEP = (IGraphicalEditPart) iter.next();
+            EObject element = ViewUtil.resolveSemanticElement((View) childEP
+                .getModel());
+            if (element != null) {
+                Command moveSemanticCmd = getHost().getCommand(
+                    new EditCommandRequestWrapper(new MoveRequest(
+                        editingDomain, context, element)));
+
+                if (moveSemanticCmd == null) {
+                    return org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand.INSTANCE;
+                }
+
+                cc.compose(new CommandProxy(moveSemanticCmd));
+            }
+        }
+
+        // notation
+        cc.compose(getReparentViewCommand(groupEP));
+        return cc;
+    }
+
+    /**
+     * Return the command to reparent the supplied editpart's semantic and
+     * notation elements.
+     * 
+     * @param gep
+     *            the editpart being reparented
+     * @return A CompositeCommand2 that will reparent both the semantic and
+     *         notation elements.
+     */
 	protected ICommand getReparentCommand( IGraphicalEditPart gep ) {
         CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label); 
 		View container = (View)getHost().getModel();

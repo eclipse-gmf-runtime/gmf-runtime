@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.FontHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.IUIConstants;
@@ -105,5 +111,17 @@ public class FontSizeContributionItem
     protected boolean isOperationHistoryListener() {
         return true;
     }
-
+    
+    protected List getTargetEditParts(EditPart editpart) {
+        if (editpart instanceof GroupEditPart) {
+            List list = new ArrayList();
+            for (Iterator iter = ((GroupEditPart) editpart)
+                .getFlattenedChildren().iterator(); iter.hasNext();) {
+                list.addAll(getTargetEditParts((EditPart) iter.next()));
+            }
+            return list;
+        } else {
+            return super.getTargetEditParts(editpart);
+        }
+    }
 }

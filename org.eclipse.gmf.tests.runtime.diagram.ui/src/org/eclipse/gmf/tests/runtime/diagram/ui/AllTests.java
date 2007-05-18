@@ -25,6 +25,8 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.commands.SemanticCreateCommandTe
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramAssistantTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramEventBrokerTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramGraphicalViewerTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.GroupTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.GroupsInCompartmentTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCanonicalTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCreationTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicDiagramTests;
@@ -78,7 +80,9 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         suite.addTest(DiagramEditingDomainTestCase.suite());
         suite.addTest(CommandUtilitiesTest.suite());
         suite.addTest(DiagramEventBrokerServiceTests.suite());        
-		
+        suite.addTest(GroupTests.suite());
+        suite.addTest(GroupsInCompartmentTests.suite());
+        
 		return suite;
 	}
 

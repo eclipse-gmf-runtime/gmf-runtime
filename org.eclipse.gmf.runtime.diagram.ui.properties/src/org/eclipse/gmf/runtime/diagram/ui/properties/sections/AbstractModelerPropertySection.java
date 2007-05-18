@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.DiagramPropertiesPlugin;
@@ -119,10 +120,22 @@ public abstract class AbstractModelerPropertySection
 			.hasNext();) {
 			Object next = it.next();
 			
-			// unwrap down to EObject and add to the eObjects list
-			if (addToEObjectList(next)) {
-				input.add(next);
-			}
+            if (digIntoGroups() && next instanceof GroupEditPart) {
+                for (Iterator iter = ((GroupEditPart) next)
+                    .getFlattenedChildren().iterator(); iter.hasNext();) {
+                    Object childEP = iter.next();
+                    // unwrap down to EObject and add to the eObjects list
+                    if (addToEObjectList(childEP)) {
+                        input.add(childEP);
+                    }
+                    continue;
+                }
+            }
+            // unwrap down to EObject and add to the eObjects list
+            if (addToEObjectList(next)) {
+                input.add(next);
+            }
+            
 		}
 
 
@@ -635,5 +648,15 @@ public abstract class AbstractModelerPropertySection
 		return DiagramPropertiesPlugin.getDefault()
 			.getUpdateRequestCollapser();
 	}
+    
+    /**
+     * Override to return true to have this property section work on the shapes
+     * in a <code>GroupEditPart</code> as if the shapes were multi-selected.
+     * 
+     * @return true if this property section is to dig into the shapes of groups
+     */
+    protected boolean digIntoGroups() {
+        return false;
+    }
 	
 }
