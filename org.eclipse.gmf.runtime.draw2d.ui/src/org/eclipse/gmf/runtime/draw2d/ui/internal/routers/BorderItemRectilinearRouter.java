@@ -54,7 +54,7 @@ public class BorderItemRectilinearRouter
     protected PointList calculateBendPoints(Connection conn) {
         IFigure source = conn.getSourceAnchor().getOwner();
         IFigure target = conn.getTargetAnchor().getOwner();
-        if (source == null || target == null) {
+        if (source == null || target == null || isAvoidingObstructions(conn) || isClosestDistance(conn)) {
             // reorient
             return super.calculateBendPoints(conn);
         }
@@ -250,7 +250,7 @@ public class BorderItemRectilinearRouter
      */
     protected int getBorderFigurePosition(IFigure borderFigure) {
         IFigure child = borderFigure;
-        IFigure parent = borderFigure.getParent().getParent();
+        IFigure parent = borderFigure.getParent();
         if (parent != null && parent.getLayoutManager() != null) {
             LayoutManager layoutManager = parent.getLayoutManager();
             Object layoutConstraint = layoutManager.getConstraint(child);
