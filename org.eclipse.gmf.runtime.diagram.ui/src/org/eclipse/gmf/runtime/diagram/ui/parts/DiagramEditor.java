@@ -1534,7 +1534,16 @@ public abstract class DiagramEditor
 		IContextService contextService = (IContextService) getSite()
 		  .getService(IContextService.class);
 		if (contextService != null)
-			contextService.activateContext(DIAGRAM_CONTEXT_ID);
+			contextService.activateContext(getContextID());
+	}
+	
+	/**
+	 * Get the context identifier for this diagram editor.
+	 * 
+	 * @return the context identifier.
+	 */
+	protected String getContextID() {
+		return DIAGRAM_CONTEXT_ID;
 	}
 
 }
