@@ -285,7 +285,6 @@ public class FileDiagramDocumentProvider
 	public IEditorInput createInputWithEditingDomain(IEditorInput editorInput, TransactionalEditingDomain domain) {
 		if(editorInput instanceof IFileEditorInput)
 			return new FileEditorInputProxy((IFileEditorInput)editorInput, domain);
-		assert false;
 		return null;
 	}
 	
