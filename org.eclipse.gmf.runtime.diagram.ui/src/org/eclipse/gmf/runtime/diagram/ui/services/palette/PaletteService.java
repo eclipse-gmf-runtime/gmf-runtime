@@ -188,12 +188,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 		standardGroup.add(selectTool);
 		root.setDefaultEntry(selectTool);
 
-		execute(new ContributeToPaletteOperation(editor, content, root, predefinedEntries));
-        
-        // Remove any palette containers (drawers or stacks that do not have any
-        // tool entries).
-        removeEmptyContainers(root);
-        
+		execute(new ContributeToPaletteOperation(editor, content, root, predefinedEntries));       
 	}
 
 
@@ -328,40 +323,5 @@ public class PaletteService extends Service implements IPaletteProvider {
 		}
 
 	}
-
-    /**
-     * A recursive method that removes all empty children palette containers and
-     * checks if there is at least one tool entry in this palette container
-     * 
-     * @param container
-     *            a palette container
-     * @return true if there is at least one tool entry in this palette
-     *         container; false otherwise
-     */
-    private boolean removeEmptyContainers(PaletteContainer container) {
-        List childrenToRemove = new ArrayList();
-        boolean containsToolEntries = false;
-        for (Iterator iter = container.getChildren().iterator(); iter.hasNext();) {
-            PaletteEntry entry = (PaletteEntry) iter.next();
-            if (entry instanceof PaletteSeparator) {
-                // ignore separators
-                continue;
-            } else if (entry instanceof PaletteContainer) {
-                if (removeEmptyContainers((PaletteContainer) entry)) {
-                    containsToolEntries = true;
-                } else {
-                    childrenToRemove.add(entry);
-                }
-            } else {
-                // some sort of tool entry
-                containsToolEntries = true;
-            }
-        }
-
-        for (Iterator iter = childrenToRemove.iterator(); iter.hasNext();) {
-            container.remove((PaletteEntry) iter.next());
-        }
-        return containsToolEntries;
-    }
 	
 }

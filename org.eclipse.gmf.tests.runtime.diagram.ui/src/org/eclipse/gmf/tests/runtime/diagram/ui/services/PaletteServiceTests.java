@@ -406,7 +406,6 @@ public class PaletteServiceTests
 
         PaletteDrawer nonActivityDrawer = null;
         PaletteDrawer activityEnabledDrawer = null;
-        PaletteDrawer emptyDrawer = null;
 
         for (Iterator iter = paletteRoot.getChildren().iterator(); iter
             .hasNext();) {
@@ -417,14 +416,10 @@ public class PaletteServiceTests
                     nonActivityDrawer = drawer;
                 } else if (drawer.getId().equals("activityEnabledDrawerID")) { //$NON-NLS-1$
                     activityEnabledDrawer = drawer;
-                } else if (drawer.getId().equals("emptyDrawerID")) { //$NON-NLS-1$
-                    emptyDrawer = drawer;
                 }
             }
         }
 
-        assertNull(emptyDrawer);
-        
         if (!activityProviderIDEnabled) {
             assertNull(nonActivityDrawer);
             assertNull(activityEnabledDrawer);
