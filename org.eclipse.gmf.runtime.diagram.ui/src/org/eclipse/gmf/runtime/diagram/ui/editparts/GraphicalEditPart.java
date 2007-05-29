@@ -87,6 +87,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
@@ -296,6 +297,12 @@ public abstract class GraphicalEditPart
     }
 
     public void removeNotify() {
+        
+        View view = getNotationView();
+        if (view != null && !view.isVisible()){
+            setConnectionsVisibility(false);
+        }
+        
         super.removeNotify();
         
         if (cachedFontData != null) {
@@ -997,11 +1004,36 @@ public abstract class GraphicalEditPart
     protected void setVisibility(boolean vis) {
         if (!vis && getSelected() != SELECTED_NONE)
             getViewer().deselect(this);
-
-        getFigure().setVisible(vis);
-        getFigure().revalidate();
+        
+        IFigure _figure = getFigure();
+        if (_figure.isVisible()==vis){
+            return;
+        }
+        
+        // if we are going to hide the node then connections comming to the
+        // node or outside it should be hidden as well
+        setConnectionsVisibility(vis);
+        _figure.setVisible(vis);
+        _figure.revalidate();
     }
     
+    protected void setConnectionsVisibility(boolean visibility) {
+        List _srcConnections = getSourceConnections();
+        for (Iterator iter = _srcConnections.iterator(); iter.hasNext();) {
+            ConnectionEditPart connection = (ConnectionEditPart) iter.next();
+            if (connection.getFigure().isVisible()!=visibility)
+                connection.setVisibility(visibility);
+        }
+        
+        List _targetConnections = getTargetConnections();
+        for (Iterator iter = _targetConnections.iterator(); iter.hasNext();) {
+            ConnectionEditPart connection = (ConnectionEditPart) iter.next();
+            if (connection.getFigure().isVisible()!=visibility)
+                connection.setVisibility(visibility);
+        }
+        
+    }
+
     /**
      * This method adds all listeners to the notational world (views, figures,
      * editpart...etc) Override this method to add more notational listeners
@@ -1407,8 +1439,11 @@ public abstract class GraphicalEditPart
             Object notifier = event.getNotifier();
             if (notifier== getModel())
                 refreshVisibility();
-            else {
-                refreshChildren();
+            else{
+                // refresh the children only if the notificatino is not comming for and edge
+                // sincethe children list had no edges
+                if (!(event.getNotifier() instanceof Edge))
+                    refreshChildren();
             }
         }
         else if (NotationPackage.Literals.VIEW__ELEMENT.equals(event.getFeature())) {
