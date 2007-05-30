@@ -169,16 +169,16 @@ public class DiagramUIPluginImages {
 	public static final ImageDescriptor DESC_COPY_APPEARANCE = create(PREFIX_ENABLED + PREFIX_ROOT + "copy_appearance_properties.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_COPY_APPEARANCE_DISABLED = create(PREFIX_DISABLED + PREFIX_ROOT + "copy_appearance_properties.gif"); //$NON-NLS-1$	
 	
-	public static final ImageDescriptor DESC_SHAPECURSOR_MASK = create(PREFIX_ENABLED + "shapecursor_mask.bmp");//$NON-NLS-1$
-	public static final ImageDescriptor DESC_SHAPECURSOR_SOURCE = create(PREFIX_ENABLED + "shapecursor_source.bmp");//$NON-NLS-1$	
+	public static final ImageDescriptor DESC_SHAPECURSOR_MASK = create(PREFIX_ENABLED + "shapecursor_mask.gif");//$NON-NLS-1$
+	public static final ImageDescriptor DESC_SHAPECURSOR_SOURCE = create(PREFIX_ENABLED + "shapecursor_source.gif");//$NON-NLS-1$	
 	
-	public static final ImageDescriptor DESC_NOSHAPECURSOR_MASK = create(PREFIX_DISABLED + "noshapecursor_mask.bmp");//$NON-NLS-1$
-	public static final ImageDescriptor DESC_NOSHAPECURSOR_SOURCE = create(PREFIX_DISABLED + "noshapecursor_source.bmp");//$NON-NLS-1$	
+	public static final ImageDescriptor DESC_NOSHAPECURSOR_MASK = create(PREFIX_DISABLED + "noshapecursor_mask.gif");//$NON-NLS-1$
+	public static final ImageDescriptor DESC_NOSHAPECURSOR_SOURCE = create(PREFIX_DISABLED + "noshapecursor_source.gif");//$NON-NLS-1$	
 	
-	public static final ImageDescriptor DESC_CONNECTION_CURSOR_MASK = create(PREFIX_ENABLED + "connectcursor_mask.bmp");//$NON-NLS-1$
-	public static final ImageDescriptor DESC_CONNECTION_CURSOR_SOURCE = create(PREFIX_ENABLED + "connectcursor_source.bmp");//$NON-NLS-1$	
-	public static final ImageDescriptor DESC_NO_CONNECTION_CURSOR_MASK = create(PREFIX_DISABLED + "noconnectcursor_mask.bmp");//$NON-NLS-1$
-	public static final ImageDescriptor DESC_NO_CONNECTION_CURSOR_SOURCE = create(PREFIX_DISABLED + "noconnectcursor_source.bmp");//$NON-NLS-1$	
+	public static final ImageDescriptor DESC_CONNECTION_CURSOR_MASK = create(PREFIX_ENABLED + "connectcursor_mask.gif");//$NON-NLS-1$
+	public static final ImageDescriptor DESC_CONNECTION_CURSOR_SOURCE = create(PREFIX_ENABLED + "connectcursor_source.gif");//$NON-NLS-1$
+	public static final ImageDescriptor DESC_NO_CONNECTION_CURSOR_MASK = create(PREFIX_DISABLED + "noconnectcursor_mask.gif");//$NON-NLS-1$
+	public static final ImageDescriptor DESC_NO_CONNECTION_CURSOR_SOURCE = create(PREFIX_DISABLED + "noconnectcursor_source.gif");//$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_CHECKBOX_SELECTED = create(PREFIX_ROOT + "checkboxselected.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_CHECKBOX_CLEARED = create(PREFIX_ROOT + "checkboxcleared.gif"); //$NON-NLS-1$
