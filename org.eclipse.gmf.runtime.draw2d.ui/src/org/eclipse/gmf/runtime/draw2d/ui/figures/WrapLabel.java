@@ -1148,6 +1148,7 @@ public class WrapLabel
 		}				
 
 		while (tokenizer.hasMoreTokens()) {
+            x = p.x;
 			String token = tokenizer.nextToken();
 			int tokenWidth = getTextExtents(token, f, fontHeight).width;
 			
