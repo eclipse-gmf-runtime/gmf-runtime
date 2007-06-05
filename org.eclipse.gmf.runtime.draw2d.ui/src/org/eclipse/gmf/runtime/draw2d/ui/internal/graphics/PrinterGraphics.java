@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,7 +100,6 @@ public class PrinterGraphics extends org.eclipse.draw2d.PrinterGraphics {
         GC gc = new GC(newImg);
         gc.setForeground(getForegroundColor());
         gc.setBackground(getBackgroundColor());
-        gc.fillRectangle(0, 0, r1.width, r1.height);
         gc.drawImage(srcImage, 0, 0);
         gc.dispose();
 		
