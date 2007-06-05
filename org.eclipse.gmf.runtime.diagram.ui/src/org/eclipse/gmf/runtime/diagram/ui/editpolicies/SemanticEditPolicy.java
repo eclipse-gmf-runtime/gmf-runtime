@@ -133,7 +133,7 @@ public class SemanticEditPolicy
 		IEditCommandRequest completedRequest = completeRequest(request);
         
         boolean shouldPromptOnDestroy = false;
-        if (completedRequest instanceof DestroyRequest) {
+        if (completedRequest instanceof DestroyRequest && !isParentCanonical(getHost())) {
             shouldPromptOnDestroy = ((DestroyRequest) completedRequest).isConfirmationRequired();
             ((DestroyRequest) completedRequest).setConfirm(false);
         }
@@ -428,17 +428,9 @@ public class SemanticEditPolicy
 	 * @return true or false
 	 */
 	protected boolean shouldProceed(DestroyRequest destroyRequest) {
-		EditPart parent = null;
-		if ((getHost() instanceof ConnectionEditPart)&&
-				(((ConnectionEditPart)getHost()).getSource() != null)){
-			parent = ((ConnectionEditPart)getHost()).getSource().getParent();
-		}else{
-			parent = getHost().getParent();
-		}
-		if ((parent instanceof GraphicalEditPart)&& 
-				((GraphicalEditPart) parent).isCanonical()){
-			return true;
-		}
+		if (isParentCanonical(getHost())) {
+		    return true;
+        }
 		
 		if (!(destroyRequest.isConfirmationRequired())){
 			return true;
@@ -447,6 +439,24 @@ public class SemanticEditPolicy
 			return showMessageDialog();					
 		}
 	}
+
+    /**
+     * Checks if the parent container is canonical
+     * 
+     * @param editpart the editpart in question
+     * @return true if the parent shape is canonical
+     */
+    private static boolean isParentCanonical(EditPart editpart) {
+        EditPart parent = null;
+        if ((editpart instanceof ConnectionEditPart)
+            && (((ConnectionEditPart) editpart).getSource() != null)) {
+            parent = ((ConnectionEditPart) editpart).getSource().getParent();
+        } else {
+            parent = editpart.getParent();
+        }
+        return ((parent instanceof GraphicalEditPart) && ((GraphicalEditPart) parent)
+            .isCanonical());
+    }
 
 
 	/**
