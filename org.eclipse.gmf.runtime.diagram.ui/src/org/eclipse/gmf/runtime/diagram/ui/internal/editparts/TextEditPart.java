@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,20 +11,21 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
+import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Color;
 
-/*
- * @canBeSeenBy %level1
+/**
+ * A freeform text shape editpart.
  */
-public class TextEditPart extends ShapeEditPart {
+public class TextEditPart extends ShapeNodeEditPart {
 
 	private static final int TEXT_DEFAULT_WIDTH_DP  = 100;
 	private static final int TEXT_DEFAULT_HEIGHT_DP =  13;
@@ -33,7 +34,7 @@ public class TextEditPart extends ShapeEditPart {
 		super(view);
 	}
 
-	protected IFigure createFigure() {
+	protected NodeFigure createNodeFigure() {
 		Dimension defaultSize = new Dimension(getMapMode().DPtoLP(TEXT_DEFAULT_WIDTH_DP), getMapMode().DPtoLP(TEXT_DEFAULT_HEIGHT_DP));
 		DefaultSizeNodeFigure nodeFigure = new DefaultSizeNodeFigure(defaultSize.width, defaultSize.height);
 		nodeFigure.setBorder(null);
@@ -64,5 +65,11 @@ public class TextEditPart extends ShapeEditPart {
 	public EditPart getPrimaryChildEditPart(){
 		return getChildBySemanticHint(CommonParserHint.DESCRIPTION);
 	}
+
+    protected void createDefaultEditPolicies() {
+        super.createDefaultEditPolicies();
+        removeEditPolicy(EditPolicyRoles.SORT_FILTER_ROLE);
+        removeEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE);
+    }
 
 }
