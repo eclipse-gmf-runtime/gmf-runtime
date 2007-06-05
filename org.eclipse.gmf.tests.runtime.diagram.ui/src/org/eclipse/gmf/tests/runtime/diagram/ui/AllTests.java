@@ -70,7 +70,8 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(SemanticCreateCommandTest.suite());
 		suite.addTest(PaletteTests.suite());
 		suite.addTest(GraphicalNodeEditPolicyTests.suite());
-		suite.addTest(DiagramEventBrokerTests.suite());
+		// temporarily removed to check if it's causing problems on a build server
+		//suite.addTest(DiagramEventBrokerTests.suite());
 		suite.addTest(LogicTransientViewsTests.suite());
 		suite.addTest(RequestTests.suite());
 		suite.addTest(ConnectionToolTests.suite());
