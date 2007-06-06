@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -359,16 +359,18 @@ private RenderedImage getRenderedImage(Dimension dim) {
 	protected void paintFigure(Graphics graphics) {
 		Rectangle area = getClientArea().getCopy();
 
-		RenderInfo rndInfo = getRenderedImage().getRenderInfo();
-		if (!useOriginalColors()) {
-			if (rndInfo.getBackgroundColor() != getBackgroundColor().getRGB() ||
-				rndInfo.getForegroundColor() != getForegroundColor().getRGB()) {
-				rndInfo.setValues(rndInfo.getWidth(), rndInfo.getHeight(), 
-						rndInfo.shouldMaintainAspectRatio(), 
-						rndInfo.shouldAntiAlias(), getBackgroundColor().getRGB(), getForegroundColor().getRGB());
-				setRenderedImage(getRenderedImage().getNewRenderedImage(rndInfo));
-			}
-		}
+        RenderInfo rndInfo = getRenderedImage().getRenderInfo();
+        if (!useOriginalColors()) {
+            RGB backgroundColor = getBackgroundColor().getRGB();
+            RGB foregroundColor = getForegroundColor().getRGB();
+            if ((backgroundColor != null && !backgroundColor.equals(rndInfo.getBackgroundColor())) ||
+                    (foregroundColor != null && !foregroundColor.equals(rndInfo.getForegroundColor()))) {
+                rndInfo.setValues(rndInfo.getWidth(), rndInfo.getHeight(), 
+                        rndInfo.shouldMaintainAspectRatio(), 
+                        rndInfo.shouldAntiAlias(), getBackgroundColor().getRGB(), getForegroundColor().getRGB());
+                setRenderedImage(getRenderedImage().getNewRenderedImage(rndInfo));
+            }
+        }
 		
 		setRenderedImage(RenderHelper.getInstance(
 			DiagramMapModeUtil.getScale(MapModeUtil.getMapMode(this)), false,

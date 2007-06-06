@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.awt.Dimension;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMDocument;
+import org.apache.batik.dom.util.DOMUtilities;
 import org.apache.batik.svggen.DOMTreeManager;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.util.SVGConstants;
@@ -136,6 +137,10 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 	    // Get the Root element of the SVG document to export
 	    if (srcImage instanceof SVGImage) {
 	    	Document document = ((SVGImage)srcImage).getDocument();
+            
+          DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+          document = DOMUtilities.deepCloneDocument(document, impl);
+            
 	    	if (document instanceof SVGOMDocument) {
 	    		RenderInfo info = srcImage.getRenderInfo();
 				SVGColorConverter.getInstance().replaceDocumentColors((SVGOMDocument)document, 
@@ -146,7 +151,7 @@ public class GraphicsSVG extends GraphicsToGraphics2DAdaptor implements Drawable
 						info.getForegroundColor().green,
 						info.getForegroundColor().blue));
 			}
-			Element root = ((SVGImage)srcImage).getDocument().getDocumentElement();
+			Element root = document.getDocumentElement();
 
 			// Create a "deep" copy of the document
 			Element toAppend = (Element)doc.importNode(root, true);
