@@ -781,7 +781,9 @@ public class PageSetupConfigBlock implements ILabels {
                 fLabelMarginTop.setText(LABEL_MARGIN_TOP_INCHES);
             }
 
-            fLabelHeight.getShell().pack();
+            fLabelHeight.getParent().layout(true);
+            fLabelMarginBottom.getParent().layout(true);
+            fLabelHeight.getShell().pack(true);
 		}	
 	}
 	
