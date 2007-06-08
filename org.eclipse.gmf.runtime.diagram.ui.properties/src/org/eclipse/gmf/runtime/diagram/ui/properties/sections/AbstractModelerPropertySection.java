@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -277,9 +277,11 @@ public abstract class AbstractModelerPropertySection
             IStatus status = history.execute(command,
                 new NullProgressMonitor(), null);
 
-            if (status.getCode() == DiagramPropertiesStatusCodes.CANCELLED) {
-			refresh();
-            }
+			if (status.getCode() == DiagramPropertiesStatusCodes.CANCELLED
+					|| status.getCode() == IStatus.CANCEL
+					|| status.getCode() == IStatus.ERROR) {
+				refresh();
+			}
 
         } catch (ExecutionException e) {
             Trace.catching(DiagramPropertiesPlugin.getDefault(),
