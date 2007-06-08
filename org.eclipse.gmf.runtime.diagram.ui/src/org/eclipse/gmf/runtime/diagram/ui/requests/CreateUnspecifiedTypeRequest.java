@@ -216,8 +216,14 @@ public class CreateUnspecifiedTypeRequest
 	}
 
 	public Object getNewObject() {
-		return newObjectList;
-	}
+        if (newObjectList.isEmpty() && requests.size() == 1) {
+            Object createRequest = requests.values().toArray()[0];
+            if (createRequest instanceof CreateRequest) {
+                return ((CreateRequest) createRequest).getNewObject();
+            }
+        }
+        return newObjectList;
+    }
 
 	public Object getNewObjectType() {
 		return List.class;
