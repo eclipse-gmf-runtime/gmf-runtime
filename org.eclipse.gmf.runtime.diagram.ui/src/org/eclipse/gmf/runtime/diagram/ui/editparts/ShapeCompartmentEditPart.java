@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureCanvas;
@@ -31,6 +32,7 @@ import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.ConnectionEditPart;
@@ -112,7 +114,6 @@ public abstract class ShapeCompartmentEditPart
 	 * whose endpoints are not visible inside the shape compartment.
 	 */
 	public static class ConnectionRefreshMgr {
-
 		/**
 		 * Cycles through all the connections associated to the editparts
 		 * contained within the passed shape compartment and sets their
@@ -139,13 +140,27 @@ public abstract class ShapeCompartmentEditPart
 				}
 				boolean sfVisible = source != null;
 				boolean tfVisible = target != null;
-				ConnectionAnchor sc = cep.getSourceConnectionAnchor();
-				ConnectionAnchor tc = cep.getTargetConnectionAnchor();
-				//
-				// get the connection locations
-				Point sLoc = sc.getLocation(tc.getReferencePoint());
-				Point tLoc = tc.getLocation(sc.getReferencePoint());
-
+                
+                ConnectionAnchor sc = cep.getSourceConnectionAnchor();
+                ConnectionAnchor tc = cep.getTargetConnectionAnchor();
+                Point sRefPoint;
+                Point tRefPoint;
+                List bendpoints = (List) connection.getConnectionRouter()
+                    .getConstraint(connection);
+                if (bendpoints.size() >= 2) {
+                    sRefPoint = ((Bendpoint) bendpoints.get(0)).getLocation()
+                        .getCopy();
+                    connection.translateToAbsolute(sRefPoint);
+                    tRefPoint = ((Bendpoint) bendpoints
+                        .get(bendpoints.size() - 1)).getLocation().getCopy();
+                    connection.translateToAbsolute(tRefPoint);
+                } else {
+                    sRefPoint = tc.getReferencePoint();
+                    tRefPoint = sc.getReferencePoint();
+                }
+                Point sLoc = sc.getLocation(sRefPoint);
+                Point tLoc = tc.getLocation(tRefPoint);
+               
 				Diagram diagram = ((View) scep.getModel()).getDiagram();
 				Map registry = scep.getViewer().getEditPartRegistry();
 				IGraphicalEditPart dep = (IGraphicalEditPart) registry
@@ -300,18 +315,21 @@ public abstract class ShapeCompartmentEditPart
 		}
 
 		/**
-		 * This method can be overridden to allow connections between border
-		 * items to be drawn to items within the interior of the compartment.
-		 * 
-		 * @param scep
-		 * @param itemEditPart
-		 * @return false by default. Override to allow connections to border
-		 *         items.
-		 */
-		protected boolean isBorderItem(ShapeCompartmentEditPart scep,
-				IGraphicalEditPart itemEditPart) {
-			return false;
-		}
+         * This method can be overridden to allow connections between border
+         * items around the container of the compartment to be drawn to items
+         * within the interior of the compartment. This method should not return
+         * true for all border items, only for those may be outside of the area
+         * within the shape compartment.
+         * 
+         * @param scep
+         * @param itemEditPart
+         * @return true if the itemEditPart is a border item around or outside
+         *         the shape compartment editpart passed in; false otherwise.
+         */
+        protected boolean isBorderItem(ShapeCompartmentEditPart scep,
+                IGraphicalEditPart itemEditPart) {
+            return false;
+        }
 
 		/**
 		 * Returns source edit part.
