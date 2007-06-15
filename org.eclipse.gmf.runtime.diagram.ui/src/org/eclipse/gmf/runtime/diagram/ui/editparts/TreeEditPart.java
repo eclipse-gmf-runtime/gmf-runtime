@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconOptions;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
@@ -31,10 +32,13 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @author melaasar, mmostafa
@@ -139,11 +143,30 @@ public class TreeEditPart
             return getParser().getPrintString(referenceAdapter,
                 ParserOptions.NONE.intValue());
         EObject eObject = ((View) getModel()).getElement();
-        if (eObject == null) {
-            return ""; //$NON-NLS-1$
+        if (eObject != null) {
+            String name = EMFCoreUtil.getName(eObject);
+            if (name != null) {
+                return name;
+            }
         }
-        String name = EMFCoreUtil.getName(eObject);
-        return name == null ? "" : name; //$NON-NLS-1$
+
+        ShapeStyle shapeStyle = (ShapeStyle) ((View) getModel())
+            .getStyle(NotationPackage.eINSTANCE.getDescriptionStyle());
+
+        if (shapeStyle != null) {
+            String text = shapeStyle.getDescription();
+            StringTokenizer tokenizer = new StringTokenizer(text, "\n\r\f"); //$NON-NLS-1$
+            if (tokenizer.hasMoreTokens()) {
+                text = tokenizer.nextToken();
+            }
+            if (text.length() > 50) {
+                text = text.substring(0, 50);
+                text = text.concat(StringStatics.ELLIPSIS);
+            }
+            return text;
+        }
+
+        return ""; //$NON-NLS-1$
     }
 
     /**
