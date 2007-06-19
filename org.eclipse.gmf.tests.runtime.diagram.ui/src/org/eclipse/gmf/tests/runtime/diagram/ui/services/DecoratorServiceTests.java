@@ -242,6 +242,7 @@ public class DecoratorServiceTests
 		assertTrue(noteEP.getFigure().getBounds().contains(
 			decoration.getBounds()));
 		assertEquals(NoteDecorator.DIAMETER, decoration.getSize().height);
+        assertTrue(getFixture().getDiagramEditPart().getViewer().getVisualPartMap().containsKey(decoration));
 
 		// verify decoration is hidden if owner figure is not visible
 		noteEP.getFigure().setVisible(false);
@@ -254,8 +255,10 @@ public class DecoratorServiceTests
 		// verify decoration is removed when shape is deleted
 		noteEP.getCommand(new GroupRequest(RequestConstants.REQ_DELETE))
 			.execute();
-		decoration = myDecorator.getDecoration();
-		assertNull(decoration);
+		assertNull(myDecorator.getDecoration());
+        
+        // verify decoration is removed from viewer -- bugzilla 193190
+        assertFalse(getFixture().getDiagramEditPart().getViewer().getVisualPartMap().containsKey(decoration));
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
@@ -33,7 +34,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.figures.RelativeToBorderLocator;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -119,6 +119,8 @@ public class DecorationEditPolicy
 			if (decoration instanceof IFigure) {
 				((IFigure) decoration).getParent().remove((IFigure) decoration);
 			}
+            GraphicalEditPart ownerEditPart = (GraphicalEditPart) getAdapter(GraphicalEditPart.class);
+            ownerEditPart.getViewer().getVisualPartMap().remove(decoration);           
 		}
 
 		public IDecoration addShapeDecoration(IFigure figure,
