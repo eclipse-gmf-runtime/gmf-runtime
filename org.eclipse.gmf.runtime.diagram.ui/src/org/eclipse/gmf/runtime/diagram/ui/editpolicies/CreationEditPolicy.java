@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -61,7 +62,6 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -359,13 +359,14 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		} else if (createCmds.size() == 1) {
 			return (Command) createCmds.values().toArray()[0];
 		} else {
-			CreateOrSelectElementCommand selectAndCreateConnectionCmd = new CreateOrSelectElementCommand(
-				Display.getCurrent().getActiveShell(), validTypes) {
+			CreateOrSelectElementCommand selectAndCreateViewCmd = new CreateOrSelectElementCommand(
+                DiagramUIMessages.CreateCommand_Label, Display.getCurrent()
+                    .getActiveShell(), validTypes) {
 				
 				private Command _createCmd;
 				/**
 				 * Execute the command that prompts the user with the popup
-				 * menu, then executes the command prepared for the relationship
+				 * menu, then executes the command prepared for the element
 				 * type that the user selected.
 				 */
 				protected CommandResult doExecuteWithResult(
@@ -445,7 +446,7 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 				}
 			};
 
-			return new ICommandProxy(selectAndCreateConnectionCmd);
+			return new ICommandProxy(selectAndCreateViewCmd);
 		}
 	}
 	
