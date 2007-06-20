@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ public class ListIndexComparator
 
 	private Map map;
 
-	ListIndexComparator(List list) {
+	public ListIndexComparator(List list) {
 		this.list = list;
 
 		// use an identity hash map because we are sorting based on the

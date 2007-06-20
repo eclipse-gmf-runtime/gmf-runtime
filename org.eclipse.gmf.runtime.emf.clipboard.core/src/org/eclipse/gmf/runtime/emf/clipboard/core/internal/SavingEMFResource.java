@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,7 +66,7 @@ public class SavingEMFResource
 		this.eObjectToIDMap = new HashMap();
 		this.idToEObjectMap = new HashMap();
 		this.copy2ObjectMap = copy2ObjectMap;
-		this.contentSet = new HashSet(copyObjects.totalCopyObjects);
+		this.contentSet = new LinkedHashSet(copyObjects.totalCopyObjects);
 		this.copyObjects = copyObjects;
 		this.excludedObjects = clipboardOperationHelper
 			.getExcludedCopyObjects(copyObjects.totalCopyObjects);
@@ -77,7 +78,9 @@ public class SavingEMFResource
 		setContainmentFeatures();
 		//needed to allow calls to unload() to proceed
 		setLoaded(true);
-		sortContentSetOnOriginalStorageOrder();
+		if (copyObjects.sortTotalCopyObjects) {
+			sortContentSetOnOriginalStorageOrder();
+		}
 	}
 
 	private void sortContentSetOnOriginalStorageOrder() {
