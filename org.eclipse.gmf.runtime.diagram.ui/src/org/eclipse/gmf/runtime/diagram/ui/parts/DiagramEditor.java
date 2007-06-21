@@ -27,6 +27,7 @@ import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -113,7 +114,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -131,7 +131,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.IShowInSource;
@@ -151,7 +150,7 @@ public abstract class DiagramEditor
     implements IDiagramWorkbenchPart, ITabbedPropertySheetPageContributor,
     IShowInSource {
 	
-	public static String DIAGRAM_CONTEXT_ID = "org.eclipse.gmf.runtime.diagram.ui.diagramContext";
+	public static String DIAGRAM_CONTEXT_ID = "org.eclipse.gmf.runtime.diagram.ui.diagramContext"; //$NON-NLS-1$
 
     /**
      * teh ID of the outline
@@ -1016,6 +1015,22 @@ public abstract class DiagramEditor
             getDiagramGraphicalViewer().getContents().deactivate();
             getDiagramGraphicalViewer().getContents().removeNotify();
         }
+
+        /*
+         * DiagramRulerProvider needs to be uninitialized in case the input has
+         * been changed during editor life cycle.
+         * 
+         * https://bugs.eclipse.org/bugs/show_bug.cgi?id=167523
+         */
+        DiagramRulerProvider vertProvider = (DiagramRulerProvider) getDiagramGraphicalViewer()
+            .getProperty(RulerProvider.PROPERTY_VERTICAL_RULER);
+        if (vertProvider != null)
+            vertProvider.uninit();
+        DiagramRulerProvider horzProvider = (DiagramRulerProvider) getDiagramGraphicalViewer()
+            .getProperty(RulerProvider.PROPERTY_HORIZONTAL_RULER);
+        if (horzProvider != null)
+            horzProvider.uninit();
+
         getDiagramGraphicalViewer().setContents(null);
     }
 
