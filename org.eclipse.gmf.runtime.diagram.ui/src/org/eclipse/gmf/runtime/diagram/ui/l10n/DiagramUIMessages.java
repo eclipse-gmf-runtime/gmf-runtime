@@ -267,6 +267,9 @@ public final class DiagramUIMessages extends NLS {
 	public static String CopyToImageDialog_validateFolderText_folderBlank;
 	public static String CopyToImageDialog_validateFolderText_folderInvalid;
 	public static String CopyToImageDialog_validateFolderText_folderNotExist;
+	public static String CopyToImageDialog_exportToHTML_label;
+	public static String CopyToHTMLImageTask_generateImageFile;
+	public static String CopyToHTMLImageTask_exportingToHTML;
 	public static String SortFilterDialog_title;
 	public static String SortFilterDialog_rootTitle;
 	public static String SortFilter_moveItemUp;

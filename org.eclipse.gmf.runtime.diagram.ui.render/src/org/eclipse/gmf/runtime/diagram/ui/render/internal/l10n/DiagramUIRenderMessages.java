@@ -35,6 +35,8 @@ public final class DiagramUIRenderMessages extends NLS {
 	public static String CopyToImageAction_outOfMemoryMessage;
 	public static String CopyToImageAction_overwriteExistingConfirmDialogTitle;
 	public static String CopyToImageAction_overwriteExistingConfirmDialogMessage;
+	public static String CopyToImageOutOfMemoryDialog_title;
+	public static String CopyToImageOutOfMemoryDialog_message;
 
 
 	static {

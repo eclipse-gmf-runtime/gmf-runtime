@@ -32,7 +32,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -44,8 +43,6 @@ import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.IExpandableFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.decorator.Decoration;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
-import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderDebugOptions;
-import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.Sign;
@@ -141,7 +138,10 @@ abstract public class DiagramGenerator {
 	 *            rendered to the Image
 	 * @return an image in AWT format
 	 */
-	abstract public Image createAWTImageForParts(List editparts);
+	public Image createAWTImageForParts(List editparts) {
+		org.eclipse.swt.graphics.Rectangle diagramArea = calculateImageRectangle(editparts);
+		return createAWTImageForParts(editparts, diagramArea);
+	}
 
 	/**
 	 * Creates an SWT image descriptor for the contents of the diagram editpart.
@@ -166,53 +166,7 @@ abstract public class DiagramGenerator {
 	 */
 	final public ImageDescriptor createSWTImageDescriptorForParts(List editparts) {
 		org.eclipse.swt.graphics.Rectangle sourceRect = calculateImageRectangle(editparts);
-
-		// initialize imageDesc to the error icon
-		ImageDescriptor imageDesc = new ImageDescriptor() {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.eclipse.jface.resource.ImageDescriptor#getImageData()
-			 */
-			public ImageData getImageData() {
-				return SharedImages.get(
-					SharedImages.IMG_ERROR).getImageData();
-			}
-		};
-
-		Graphics graphics = null;
-		try {
-			IMapMode mm = getMapMode();
-			
-			// Create the graphics and wrap it with the HiMetric graphics object
-			graphics = setUpGraphics(mm.LPtoDP(sourceRect.width), mm
-				.LPtoDP(sourceRect.height));
-
-			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
-				graphics, getMapMode());
-
-			renderToGraphics(mapModeGraphics, new Point(sourceRect.x, sourceRect.y), editparts);
-			imageDesc = getImageDescriptor(graphics);
-		} catch (Error e) {
-			// log the Error but allow execution to continue
-			Trace.catching(DiagramUIRenderPlugin.getInstance(),
-				DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"createSWTImageDescriptorForParts() failed to generate image", //$NON-NLS-1$
-				e);
-
-		} catch (Exception ex) {
-			// log the Exception but allow execution to continue
-			Trace.catching(DiagramUIRenderPlugin.getInstance(),
-				DiagramUIRenderDebugOptions.EXCEPTIONS_THROWING, getClass(),
-				"createSWTImageDescriptorForParts() failed to generate image", //$NON-NLS-1$
-				ex);
-		}
-
-		if (graphics != null)
-			disposeGraphics(graphics);
-
-		return imageDesc;
+		return createSWTImageDescriptorForParts(editparts, sourceRect);
 	}
 
 	/**
@@ -229,9 +183,10 @@ abstract public class DiagramGenerator {
 	 * 
 	 * @param graphics
 	 *            the graphics object on which to draw
-	 * @param translateOffset 
-	 * 			  a <code>Point</code> that the value the <code>graphics</code> object
-	 * 		   	  will be translated by in relative coordinates.
+	 * @param translateOffset
+	 *            a <code>Point</code> that the value the
+	 *            <code>graphics</code> object will be translated by in
+	 *            relative coordinates.
 	 * @param editparts
 	 *            the list of <code>IGraphicalEditParts</code> that will be
 	 *            rendered to the graphics object
@@ -250,7 +205,7 @@ abstract public class DiagramGenerator {
 
 		for (int i = 0; i < editparts.size(); i++) {
 			IGraphicalEditPart editPart = (IGraphicalEditPart) sortedEditparts
-				.get(i);
+					.get(i);
 
 			// do not paint selected connection part
 			if (editPart instanceof ConnectionNodeEditPart) {
@@ -277,7 +232,7 @@ abstract public class DiagramGenerator {
 
 		for (int i = 0; i < connectionsToPaint.size(); i++) {
 			IGraphicalEditPart editPart = (IGraphicalEditPart) connectionsToPaint
-				.get(i);
+					.get(i);
 			IFigure figure = editPart.getFigure();
 			paintFigure(graphics, figure);
 
@@ -301,11 +256,12 @@ abstract public class DiagramGenerator {
 
 		// Calculate the Relative bounds and absolute bounds
 		Rectangle relBounds = null;
-        if (figure instanceof IExpandableFigure)
-            relBounds = ((IExpandableFigure)figure).getExtendedBounds().getCopy();
-        else
-            relBounds = figure.getBounds().getCopy();
-        
+		if (figure instanceof IExpandableFigure)
+			relBounds = ((IExpandableFigure) figure).getExtendedBounds()
+					.getCopy();
+		else
+			relBounds = figure.getBounds().getCopy();
+
 		Rectangle abBounds = relBounds.getCopy();
 		translateToPrintableLayer(figure, abBounds);
 
@@ -341,7 +297,7 @@ abstract public class DiagramGenerator {
 			IGraphicalEditPart first = (IGraphicalEditPart) editparts.get(0);
 
 			IFigure decorationLayer = LayerManager.Helper.find(first).getLayer(
-				DiagramRootEditPart.DECORATION_PRINTABLE_LAYER);
+					DiagramRootEditPart.DECORATION_PRINTABLE_LAYER);
 
 			if (decorationLayer != null) {
 				// compute the figures of the shapes
@@ -352,7 +308,7 @@ abstract public class DiagramGenerator {
 
 				// find the decorations on figures that were selected
 				for (Iterator iter = decorationLayer.getChildren().iterator(); iter
-					.hasNext();) {
+						.hasNext();) {
 					Object next = iter.next();
 
 					if (next instanceof Decoration) {
@@ -419,7 +375,7 @@ abstract public class DiagramGenerator {
 		if (decoration != null) {
 			if (decoration instanceof Collection) {
 				for (Iterator iter = ((Collection) decoration).iterator(); iter
-					.hasNext();) {
+						.hasNext();) {
 					paintFigure(graphics, (IFigure) iter.next());
 				}
 			} else {
@@ -486,7 +442,7 @@ abstract public class DiagramGenerator {
 			List editParts) {
 
 		for (Iterator iter = childEditPart.getChildren().iterator(); iter
-			.hasNext();) {
+				.hasNext();) {
 
 			IGraphicalEditPart child = (IGraphicalEditPart) iter.next();
 			editParts.add(child);
@@ -526,12 +482,12 @@ abstract public class DiagramGenerator {
 					View toView = (edge).getTarget();
 
 					AbstractEditPart toEditPart = (AbstractEditPart) viewer
-						.getEditPartRegistry().get(toView);
+							.getEditPartRegistry().get(toView);
 
 					if (editParts.contains(toEditPart)) {
 
 						ConnectionNodeEditPart connectionEditPart = (ConnectionNodeEditPart) viewer
-							.getEditPartRegistry().get(edge);
+								.getEditPartRegistry().get(edge);
 
 						connectionsToPaint.add(connectionEditPart);
 					}
@@ -551,7 +507,7 @@ abstract public class DiagramGenerator {
 	 * @return Rectangle the minimal rectangle that can bound the figures of the
 	 *         list of editparts
 	 */
-	protected org.eclipse.swt.graphics.Rectangle calculateImageRectangle(
+	public org.eclipse.swt.graphics.Rectangle calculateImageRectangle(
 			List editparts) {
 		int minX = 0;
 		int maxX = 0;
@@ -559,16 +515,16 @@ abstract public class DiagramGenerator {
 		int maxY = 0;
 
 		IMapMode mm = getMapMode();
-		
+
 		for (int i = 0; i < (editparts.size()); i++) {
 			IGraphicalEditPart editPart = (IGraphicalEditPart) editparts.get(i);
 
 			IFigure figure = editPart.getFigure();
 			Rectangle bounds = null;
-            if (figure instanceof IExpandableFigure)
-                bounds = ((IExpandableFigure)figure).getExtendedBounds();
-            else
-                bounds = figure.getBounds().getCopy();
+			if (figure instanceof IExpandableFigure)
+				bounds = ((IExpandableFigure) figure).getExtendedBounds();
+			else
+				bounds = figure.getBounds().getCopy();
 			translateToPrintableLayer(figure, bounds);
 			bounds = bounds.getExpanded(getImageMargin(), getImageMargin());
 
@@ -596,7 +552,7 @@ abstract public class DiagramGenerator {
 			// diagram does not contain child
 		}
 		org.eclipse.swt.graphics.Rectangle imageRect = new org.eclipse.swt.graphics.Rectangle(
-			minX, minY, width, height);
+				minX, minY, width, height);
 		return imageRect;
 	}
 
@@ -640,46 +596,46 @@ abstract public class DiagramGenerator {
 			// and shape compartments, too, because these sometimes
 			// correspond to distinct semantic elements
 			if (part instanceof ShapeEditPart
-				|| part instanceof ShapeCompartmentEditPart) {
+					|| part instanceof ShapeCompartmentEditPart) {
 
-				    PartPositionInfo position = new PartPositionInfo();
-
-					position.setSemanticElement(ViewUtil
-						.resolveSemanticElement((View) part.getModel()));
-
-					Rectangle bounds = figure.getBounds().getCopy();
-					translateToPrintableLayer( figure, bounds );
-					bounds.translate( -imageRect.x, -imageRect.y );
-
-					position.setPartHeight(mm.LPtoDP(bounds.height));
-					position.setPartWidth(mm.LPtoDP(bounds.width));
-					position.setPartX(mm.LPtoDP(bounds.x));
-					position.setPartY(mm.LPtoDP(bounds.y));
-					result.add(0, position);
-			}
-			else if (part instanceof ConnectionEditPart) {
-				// find a way to get (P1, P2, ... PN) for connection edit part
-				// add MARGIN and calculate "stripe" for the polyline instead of 
-				// bounding box.
-			    PartPositionInfo position = new PartPositionInfo();
+				PartPositionInfo position = new PartPositionInfo();
 
 				position.setSemanticElement(ViewUtil
-					.resolveSemanticElement((View) part.getModel()));
+						.resolveSemanticElement((View) part.getModel()));
+
+				Rectangle bounds = figure.getBounds().getCopy();
+				translateToPrintableLayer(figure, bounds);
+				bounds.translate(-imageRect.x, -imageRect.y);
+
+				position.setPartHeight(mm.LPtoDP(bounds.height));
+				position.setPartWidth(mm.LPtoDP(bounds.width));
+				position.setPartX(mm.LPtoDP(bounds.x));
+				position.setPartY(mm.LPtoDP(bounds.y));
+				result.add(0, position);
+			} else if (part instanceof ConnectionEditPart) {
+				// find a way to get (P1, P2, ... PN) for connection edit part
+				// add MARGIN and calculate "stripe" for the polyline instead of
+				// bounding box.
+				PartPositionInfo position = new PartPositionInfo();
+
+				position.setSemanticElement(ViewUtil
+						.resolveSemanticElement((View) part.getModel()));
 
 				if (figure instanceof PolylineConnection) {
-					PolylineConnection mainPoly = (PolylineConnection)figure;
+					PolylineConnection mainPoly = (PolylineConnection) figure;
 					PointList mainPts = mainPoly.getPoints();
-					
-					translateToPrintableLayer( figure, mainPts );
-					List envelopingPts = calculateEnvelopingPolyline(mainPts, new Point(imageRect.x, imageRect.y));
+
+					translateToPrintableLayer(figure, mainPts);
+					List envelopingPts = calculateEnvelopingPolyline(mainPts,
+							new Point(imageRect.x, imageRect.y));
 					List transformedPts = convertPolylineUnits(envelopingPts);
-					
+
 					position.setPolyline(transformedPts);
 					result.add(0, position);
 				}
 			}
 		}
-	
+
 		return result;
 	}
 
@@ -696,7 +652,7 @@ abstract public class DiagramGenerator {
 			Translatable translatable) {
 
 		IFigure printableLayer = getDiagramEditPart().getLayer(
-			LayerConstants.PRINTABLE_LAYERS);
+				LayerConstants.PRINTABLE_LAYERS);
 		if (figure == null || figure.equals(printableLayer)) {
 			return;
 		}
@@ -704,7 +660,7 @@ abstract public class DiagramGenerator {
 		figure.translateToParent(translatable);
 		translateToPrintableLayer(figure.getParent(), translatable);
 	}
-	
+
 	/**
 	 * Calculates enveloping polyline for a given polyline with margin MARGIN
 	 * 
@@ -716,54 +672,59 @@ abstract public class DiagramGenerator {
 	 *     +----------------+
 	 *   E4                  E3
 	 * 
-	 * On the figure above: AB is a given polyline. E1E2E3E4 is enveloping polyline
-	 * built around AB perimeter using margin MARGIN.
+	 * On the figure above: AB is a given polyline. E1E2E3E4 is enveloping
+	 * polyline built around AB perimeter using margin MARGIN.
 	 * 
 	 * 
 	 * @param polyPts
-	 * @param origin location of the main diagram bounding box used to shift coordinates 
-	 * 				to be relative against diagram
+	 * @param origin
+	 *            location of the main diagram bounding box used to shift
+	 *            coordinates to be relative against diagram
 	 * 
-	 * @return List of Point type objects (that carry X and Y coordinate pair) representing the polyline
+	 * @return List of Point type objects (that carry X and Y coordinate pair)
+	 *         representing the polyline
 	 * @author Barys Dubauski
 	 */
 	private List calculateEnvelopingPolyline(PointList polyPts, Point origin) {
 		ArrayList result = new ArrayList();
 		List mainSegs = PointListUtilities.getLineSegments(polyPts);
-		
+
 		int mainSegsLength = mainSegs.size();
-		
+
 		LineSeg segment = null;
 		Point orthoPoint1 = null;
 		Point orthoPoint2 = null;
-		
+
 		// collect points clockwise
 		for (int i = 0; i < mainSegsLength; i++) {
 			segment = (LineSeg) mainSegs.get(i);
-			orthoPoint1 = segment.locatePoint(0.0, getImageMargin(), Sign.POSITIVE);
-			orthoPoint1.translate(-origin.x, -origin.y );
-			orthoPoint2 = segment.locatePoint(1.0, getImageMargin(), Sign.POSITIVE);
-			orthoPoint2.translate(-origin.x, -origin.y );
+			orthoPoint1 = segment.locatePoint(0.0, getImageMargin(),
+					Sign.POSITIVE);
+			orthoPoint1.translate(-origin.x, -origin.y);
+			orthoPoint2 = segment.locatePoint(1.0, getImageMargin(),
+					Sign.POSITIVE);
+			orthoPoint2.translate(-origin.x, -origin.y);
 
 			result.add(orthoPoint1);
 			result.add(orthoPoint2);
 		}
-		
+
 		// now add the original poly
 		for (int i = mainSegsLength - 1; i >= 0; i--) {
 			segment = (LineSeg) mainSegs.get(i);
 			orthoPoint1 = segment.getTerminus();
-			orthoPoint1.translate(-origin.x, -origin.y );
+			orthoPoint1.translate(-origin.x, -origin.y);
 			result.add(orthoPoint1);
 			orthoPoint2 = segment.getOrigin();
-			orthoPoint2.translate(-origin.x, -origin.y );
+			orthoPoint2.translate(-origin.x, -origin.y);
 			result.add(orthoPoint2);
 		}
-		
-		// add first point to close the polyline per "poly" area type HTML requirements
+
+		// add first point to close the polyline per "poly" area type HTML
+		// requirements
 		Object first = result.get(0);
 		result.add(first);
-		
+
 		return result;
 	}
 
@@ -771,29 +732,81 @@ abstract public class DiagramGenerator {
 	 * transforms coordinates of the polyline from logical units to device units
 	 * 
 	 * @param polyPts
-	 * @return List of Point type objects (that carry X and Y coordinate pair) representing the polyline
+	 * @return List of Point type objects (that carry X and Y coordinate pair)
+	 *         representing the polyline
 	 * @author Barys Dubauski
 	 */
 	private List convertPolylineUnits(List polyPts) {
 		ArrayList result = new ArrayList();
 		Iterator iter = polyPts.iterator();
-		
+
 		IMapMode mm = getMapMode();
-		
+
 		while (iter.hasNext()) {
 			Point point = (Point) iter.next();
 			Point newPoint = new Point(mm.LPtoDP(point.x), mm.LPtoDP(point.y));
 			result.add(newPoint);
 		}
-		
+
 		return result;
 	}
-	
-	
+
 	/**
-	 * @return <code>int</code> value that is the margin around the generated image in logical coordinates.
+	 * @return <code>int</code> value that is the margin around the generated
+	 *         image in logical coordinates.
 	 */
 	protected int getImageMargin() {
 		return image_margin;
-}	
+	}
+
+	/**
+	 * Generates AWT image of specified editparts on the specified rectangle.
+	 * 
+	 * @param editParts editparts
+	 * @param diagramArea clipping rectangle
+	 * @return AWT image
+	 */
+	public Image createAWTImageForParts(List editParts,
+			org.eclipse.swt.graphics.Rectangle diagramArea) {
+		return null;
+	}
+
+	final public ImageDescriptor createSWTImageDescriptorForParts(
+			List editparts, org.eclipse.swt.graphics.Rectangle sourceRect) {
+
+		// initialize imageDesc to the error icon
+		ImageDescriptor imageDesc = new ImageDescriptor() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.jface.resource.ImageDescriptor#getImageData()
+			 */
+			public ImageData getImageData() {
+				return SharedImages.get(SharedImages.IMG_ERROR).getImageData();
+			}
+		};
+
+		Graphics graphics = null;
+		try {
+			IMapMode mm = getMapMode();
+
+			// Create the graphics and wrap it with the HiMetric graphics object
+			graphics = setUpGraphics(mm.LPtoDP(sourceRect.width), mm
+					.LPtoDP(sourceRect.height));
+
+			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
+					graphics, getMapMode());
+
+			renderToGraphics(mapModeGraphics, new Point(sourceRect.x,
+					sourceRect.y), editparts);
+			imageDesc = getImageDescriptor(graphics);
+		} finally {
+			if (graphics != null)
+				disposeGraphics(graphics);
+		}
+
+		return imageDesc;
+	}
+
 }

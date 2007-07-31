@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.dialogs.CopyToImageDialog;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
+import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToHTMLImageUtil;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -129,9 +130,17 @@ public class CopyToImageAction
 				}
 			}
 		}
-
 		dialog = new CopyToImageDialog(Display.getCurrent().getActiveShell(),
-			path, fileName);
+				path, fileName);
+		runCopyToImageUI(dialog);
+	}
+	
+	/**
+	 * Displays the dialog and performs <code>OutOfMemoryError</code> checking
+	 * 
+	 * @param dialog the copy to image dialog
+	 */
+	private void runCopyToImageUI(CopyToImageDialog dialog) {
 		if (dialog.open() == CopyToImageDialog.CANCEL) {
 			return;
 		}
@@ -141,33 +150,54 @@ public class CopyToImageAction
 		}
 
 		Trace
-			.trace(
-				DiagramUIRenderPlugin.getInstance(),
-				"Copy Diagram to " + dialog.getDestination().toOSString() + " as " + dialog.getImageFormat().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+				.trace(
+						DiagramUIRenderPlugin.getInstance(),
+						"Copy Diagram to " + dialog.getDestination().toOSString() + " as " + dialog.getImageFormat().toString()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		final MultiStatus status = new MultiStatus(DiagramUIRenderPlugin
-			.getPluginId(), DiagramUIRenderStatusCodes.OK,
-			DiagramUIRenderMessages.CopyToImageAction_Label, null);
+				.getPluginId(), DiagramUIRenderStatusCodes.OK,
+				DiagramUIRenderMessages.CopyToImageAction_Label, null);
 
 		IRunnableWithProgress runnable = createRunnable(status);
 
 		ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(
-			Display.getCurrent().getActiveShell());
+				Display.getCurrent().getActiveShell());
 		try {
 			progressMonitorDialog.run(false, true, runnable);
 		} catch (InvocationTargetException e) {
 			Log.warning(DiagramUIRenderPlugin.getInstance(),
-				DiagramUIRenderStatusCodes.IGNORED_EXCEPTION_WARNING, e
-					.getTargetException().getMessage(), e.getTargetException());
+					DiagramUIRenderStatusCodes.IGNORED_EXCEPTION_WARNING, e
+							.getTargetException().getMessage(), e
+							.getTargetException());
 
 			if (e.getTargetException() instanceof OutOfMemoryError) {
-				openErrorDialog(DiagramUIRenderMessages.CopyToImageAction_outOfMemoryMessage);
+				if (dialog.exportToHTML()) {
+					openErrorDialog(DiagramUIRenderMessages.CopyToImageAction_outOfMemoryMessage);
+				} else {
+					if (MessageDialog
+							.openQuestion(
+									Display.getDefault().getActiveShell(),
+									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_title,
+									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_message)) {
+						runCopyToImageUI(dialog);
+					}
+				}					
 			} else if (e.getTargetException() instanceof SWTError) {
 				/**
 				 * SWT returns an out of handles error when processing large
 				 * diagrams
 				 */
-				openErrorDialog(DiagramUIRenderMessages.CopyToImageAction_outOfMemoryMessage);
+				if (dialog.exportToHTML()) {
+					openErrorDialog(DiagramUIRenderMessages.CopyToImageAction_outOfMemoryMessage);
+				} else {
+					if (MessageDialog
+							.openQuestion(
+									Display.getDefault().getActiveShell(),
+									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_title,
+									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_message)) {
+						runCopyToImageUI(dialog);
+					}
+				}					
 			} else {
 				openErrorDialog(e.getTargetException().getMessage());
 			}
@@ -175,8 +205,8 @@ public class CopyToImageAction
 		} catch (InterruptedException e) {
 			/* the user pressed cancel */
 			Log.warning(DiagramUIRenderPlugin.getInstance(),
-				DiagramUIRenderStatusCodes.IGNORED_EXCEPTION_WARNING, e
-					.getMessage(), e);
+					DiagramUIRenderStatusCodes.IGNORED_EXCEPTION_WARNING, e
+							.getMessage(), e);
 		}
 
 		if (!status.isOK()) {
@@ -204,6 +234,12 @@ public class CopyToImageAction
 				try {
 					List editparts = getOperationSet();
 
+					CopyToImageUtil copyToImageUtil = null;
+					if (dialog.exportToHTML()) {
+						copyToImageUtil = new CopyToHTMLImageUtil();
+					} else {
+						copyToImageUtil = new CopyToImageUtil();
+					}
 					if (editparts.size() == 1
 						&& editparts.get(0) instanceof DiagramEditPart) {
 						monitor.beginTask("", 6); //$NON-NLS-1$
@@ -213,7 +249,7 @@ public class CopyToImageAction
 								.bind(
 									DiagramUIRenderMessages.CopyToImageAction_copyingDiagramToImageFileMessage,
 									dialog.getDestination().toOSString()));
-						new CopyToImageUtil().copyToImage(
+						copyToImageUtil.copyToImage(
 							(DiagramEditPart) editparts.get(0), dialog
 								.getDestination(), dialog.getImageFormat(),
 							monitor);
@@ -225,7 +261,7 @@ public class CopyToImageAction
 								.bind(
 									DiagramUIRenderMessages.CopyToImageAction_copyingSelectedElementsToImageFileMessage,
 									dialog.getDestination().toOSString()));
-						new CopyToImageUtil().copyToImage(getDiagramEditPart(),
+						copyToImageUtil.copyToImage(getDiagramEditPart(),
 							editparts, dialog.getDestination(), dialog
 								.getImageFormat(), monitor);
 					}

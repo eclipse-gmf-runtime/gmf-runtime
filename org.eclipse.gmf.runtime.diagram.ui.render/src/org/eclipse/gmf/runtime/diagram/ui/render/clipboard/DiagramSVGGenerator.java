@@ -137,8 +137,8 @@ public class DiagramSVGGenerator
 	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.clipboard.DiagramGenerator#createAWTImageForParts(java.util.List)
 	 */
-	public Image createAWTImageForParts(List editparts) {
-		createSWTImageDescriptorForParts(editparts);
+	public Image createAWTImageForParts(List editparts, org.eclipse.swt.graphics.Rectangle sourceRect) {
+		createSWTImageDescriptorForParts(editparts, sourceRect);
 		if (getSVGImage() != null) {
 			try {
 				BufferedImage bufImg = (BufferedImage)getSVGImage().getAdapter(BufferedImage.class);

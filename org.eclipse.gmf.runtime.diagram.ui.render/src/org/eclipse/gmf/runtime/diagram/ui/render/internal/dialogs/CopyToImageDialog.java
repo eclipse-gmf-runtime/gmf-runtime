@@ -74,6 +74,11 @@ public class CopyToImageDialog extends Dialog {
 	private boolean overwriteExisting = false;
 
 	/**
+	 * true to export to HTML.
+	 */
+	private boolean exportToHTML = false;
+	
+	/**
 	 * the folder text field
 	 */
 	private Text folderText = null;
@@ -93,6 +98,11 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	private Button overwriteExistingCheckbox = null;
 
+	/**
+	 * the export to HTML checkbox.
+	 */
+	private Button exportToHTMLCheckbox = null;
+	
 	/**
 	 * the message image field, displays the error (X) icon when the file 
 	 * name or folder is invalid
@@ -144,6 +154,11 @@ public class CopyToImageDialog extends Dialog {
 	 * the overwrite existing file checkbox text
 	 */
 	private static final String OVERWRITE_EXISTING_LABEL = DiagramUIMessages.CopyToImageDialog_overwriteExisting_label;
+
+	/**
+	 * the export to HTML file checkbox text
+	 */
+	private static final String EXPORT_TO_HTML_LABEL = DiagramUIMessages.CopyToImageDialog_exportToHTML_label;
 
 	/**
 	 * the directory dialog text
@@ -206,6 +221,11 @@ public class CopyToImageDialog extends Dialog {
 	private static final String DIALOG_SETTINGS_OVERWRITE = "CopyToImageDialog.overwriteExisting"; //$NON-NLS-1$
 
 	/**
+	 * The id for the persistent overwrite existing setting for this dialog.
+	 */
+	private static final String DIALOG_SETTINGS_HTML = "CopyToImageDialog.exportToHTML"; //$NON-NLS-1$
+	
+	/**
 	 * Creates an instance of the copy to image dialog.
 	 * @param shell the parent shell
 	 * @param path the default path to store the image or null
@@ -234,6 +254,7 @@ public class CopyToImageDialog extends Dialog {
 		createFileNameGroup(composite);
 		createImageFormatGroup(composite);
 		createOverwriteExistingGroup(composite);
+		createGenerateHTMLGroup(composite);
 		createMessageGroup(composite);
         
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, 
@@ -290,7 +311,7 @@ public class CopyToImageDialog extends Dialog {
 		createLabel(composite, FILE_NAME_LABEL);
 
 		fileNameText = new Text(composite, SWT.BORDER);
-		fileNameText.setText(fileName + DOT_STRING + imageFormat.getName().toLowerCase());
+		updateFileNameText(false);
 		fileNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				validateFileNameText();
@@ -321,8 +342,9 @@ public class CopyToImageDialog extends Dialog {
 						imageFormatCombo.getSelectionIndex());
                 
                 // update filename to reflect new format
-                fileNameText.setText(fileName + DOT_STRING + imageFormat.getName().toLowerCase());
-                validateFileNameText();
+				if (!exportToHTML) {
+					updateFileNameText(true);
+				}
 			}
 		});
 		GridData gridData =
@@ -331,6 +353,13 @@ public class CopyToImageDialog extends Dialog {
 		gridData.widthHint = 250;
 		imageFormatCombo.setLayoutData(gridData);
 
+	}
+	
+	private void updateFileNameText(boolean validate) {
+		String extension = exportToHTML ? "html" : imageFormat.getName().toLowerCase();
+		fileNameText.setText(fileName + DOT_STRING + extension);
+		if (validate)
+			validateFileNameText();
 	}
 
 	/**
@@ -348,6 +377,21 @@ public class CopyToImageDialog extends Dialog {
 		overwriteExistingCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				overwriteExisting = overwriteExistingCheckbox.getSelection();
+			}
+		});
+	}
+
+	private void createGenerateHTMLGroup(Composite parent) {
+		Composite composite = createComposite(parent, 1);
+		exportToHTMLCheckbox = new Button(composite, SWT.CHECK | SWT.LEFT);
+		exportToHTMLCheckbox.setText(EXPORT_TO_HTML_LABEL);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		exportToHTMLCheckbox.setLayoutData(data);
+		exportToHTMLCheckbox.setSelection(exportToHTML);
+		exportToHTMLCheckbox.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				exportToHTML = exportToHTMLCheckbox.getSelection();
+				updateFileNameText(false);
 			}
 		});
 	}
@@ -430,7 +474,11 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	public IPath getDestination() {
 		StringBuffer extension = new StringBuffer(DOT_STRING);
-		extension.append(imageFormat.getName().toLowerCase());
+		if (!exportToHTML) {
+			extension.append(imageFormat.getName().toLowerCase());
+		} else {
+			extension.append("html");
+		}
 		StringBuffer f = new StringBuffer(fileName);
 		if (!f.toString().endsWith(extension.toString())) {
 			f.append(extension);
@@ -452,6 +500,10 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	public boolean overwriteExisting() {
 		return overwriteExisting;
+	}
+	
+	public boolean exportToHTML() {
+		return exportToHTML;
 	}
 
 	/**
@@ -610,6 +662,8 @@ public class CopyToImageDialog extends Dialog {
 
 		overwriteExisting =
 			dialogSettings.getBoolean(DIALOG_SETTINGS_OVERWRITE);
+		exportToHTML =
+			dialogSettings.getBoolean(DIALOG_SETTINGS_HTML);
 	}
 
 	/**
@@ -622,6 +676,7 @@ public class CopyToImageDialog extends Dialog {
 			DIALOG_SETTINGS_IMAGE_FORMAT,
 			imageFormat.getName().toLowerCase());
 		dialogSettings.put(DIALOG_SETTINGS_OVERWRITE, overwriteExisting);
+		dialogSettings.put(DIALOG_SETTINGS_HTML, exportToHTML);
 	}
 
 	/**
