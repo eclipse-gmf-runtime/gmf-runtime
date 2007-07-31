@@ -31,8 +31,8 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.DescriptionStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
@@ -150,11 +150,11 @@ public class TreeEditPart
             }
         }
 
-        ShapeStyle shapeStyle = (ShapeStyle) ((View) getModel())
+        DescriptionStyle descriptionStyle = (DescriptionStyle) ((View) getModel())
             .getStyle(NotationPackage.eINSTANCE.getDescriptionStyle());
 
-        if (shapeStyle != null) {
-            String text = shapeStyle.getDescription();
+        if (descriptionStyle != null) {
+            String text = descriptionStyle.getDescription();
             StringTokenizer tokenizer = new StringTokenizer(text, "\n\r\f"); //$NON-NLS-1$
             if (tokenizer.hasMoreTokens()) {
                 text = tokenizer.nextToken();
