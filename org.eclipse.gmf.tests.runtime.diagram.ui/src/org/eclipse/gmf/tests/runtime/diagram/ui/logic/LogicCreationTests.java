@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,13 +31,13 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEdit
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicGateEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers.GeoshapeType;
-import org.eclipse.gmf.runtime.diagram.ui.internal.util.DiagramNotationType;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.type.GeoshapeType;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;

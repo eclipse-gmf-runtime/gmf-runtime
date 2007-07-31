@@ -12,7 +12,8 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal;x-friends:
  org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.l10n;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui",
  org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.providers;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui",
  org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.ui.actions;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui",
- org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui"
+ org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui",
+ org.eclipse.gmf.runtime.diagram.ui.geoshapes.type
 Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.draw2d;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gef;bundle-version="[3.2.0,4.0.0)",

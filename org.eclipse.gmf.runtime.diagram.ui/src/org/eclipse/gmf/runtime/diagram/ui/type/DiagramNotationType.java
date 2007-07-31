@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.util;
+package org.eclipse.gmf.runtime.diagram.ui.type;
 
 import org.eclipse.gmf.runtime.diagram.ui.util.INotationType;
 import org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeEnumerator;
@@ -18,7 +18,6 @@ import org.eclipse.gmf.runtime.emf.type.core.AbstractElementTypeEnumerator;
  * Element types for notation elements defined in the Diagram UI plugin.
  * 
  * @author cmahoney, ldamus
- * @canBeSeenBy %level1
  */
 public class DiagramNotationType
 	extends AbstractElementTypeEnumerator {
