@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,17 +12,24 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.ui.actions.DeleteAction;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -124,15 +131,39 @@ public class PromptingDeleteAction
 		return true;
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.ui.actions.DeleteAction#run()
-	 */
 	public void run() {
-		Command command = createCommand(getSelectedObjects());
-		if (command != null)
-			execute(command);
-	}
+        TransactionalEditingDomain editingDomain = null;
+        for (Iterator iterator = getSelectedObjects().iterator(); iterator
+            .hasNext();) {
+            EditPart editPart = (EditPart) iterator.next();
+            if (editPart instanceof IGraphicalEditPart) {
+                editingDomain = ((IGraphicalEditPart) editPart)
+                    .getEditingDomain();
+                break;
+            }
+        }
+        final Command command[] = new Command[1];
+        AbstractEMFOperation operation = new AbstractEMFOperation(
+            editingDomain, DiagramUIMessages.DeleteCommand_Label) {
+
+            protected IStatus doExecute(IProgressMonitor monitor,
+                    IAdaptable info)
+                throws ExecutionException {
+                command[0] = createCommand(getSelectedObjects());
+                return CommandResult.newOKCommandResult().getStatus();
+
+            }
+
+        };
+        try {
+            operation.execute(null, null);
+        } catch (ExecutionException e) {
+            // do nothing
+        }
+
+        if (command[0] != null)
+            execute(command[0]);
+    }
 
 
 }
