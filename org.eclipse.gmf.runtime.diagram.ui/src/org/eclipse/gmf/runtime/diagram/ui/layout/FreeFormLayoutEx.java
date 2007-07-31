@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,15 +38,17 @@ public class FreeFormLayoutEx
             Rectangle bounds = (Rectangle)getConstraint(f);
             if (bounds == null) continue;
 
-            if (bounds.width == -1 || bounds.height == -1) {
-                Dimension _preferredSize = f.getPreferredSize(bounds.width, bounds.height);
+            int widthHint = bounds.width;
+            int heightHint = bounds.height;
+            if (widthHint == -1 || heightHint == -1) {
+                Dimension _preferredSize = f.getPreferredSize(widthHint, heightHint);
                 bounds = bounds.getCopy();
-                if (bounds.width == -1)
+                if (widthHint == -1)
                     bounds.width = _preferredSize.width;
-                if (bounds.height == -1)
+                if (heightHint == -1)
                     bounds.height = _preferredSize.height;
             }
-            Dimension min = f.getMinimumSize();
+            Dimension min = f.getMinimumSize(widthHint, heightHint);
             Dimension max = f.getMaximumSize();
             
             if (min.width>bounds.width)
