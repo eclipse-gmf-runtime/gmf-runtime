@@ -17,8 +17,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
@@ -277,8 +277,9 @@ public class BaseSlidableAnchor
         Rectangle rBox = (getOwner() instanceof Connection) ? ((Connection) getOwner())
             .getPoints().getBounds().getCopy()
             : getOwner().getBounds().getCopy();
-        getOwner().translateToAbsolute(rBox);
-        return rBox;
+        PrecisionRectangle box = new PrecisionRectangle(rBox);
+        getOwner().translateToAbsolute(box);
+        return box;
     }
 	
 	/**
