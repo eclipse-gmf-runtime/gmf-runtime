@@ -525,6 +525,12 @@ public class RectilinearRouter extends ObliqueRouter implements OrthogonalRouter
 			 resetEndPointsToEdge(conn, newLine);
 			return;
 		}
+		
+		if (checkShapesIntersect(conn, newLine)) {
+			 checkEndSegments(conn, newLine);
+			 resetEndPointsToEdge(conn, newLine);
+			return;
+		}
 
 		// We've eliminated any unnecessary segments,
 		// Now let's make sure everything is rectilinear

@@ -18,9 +18,12 @@ import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
@@ -29,6 +32,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /*
@@ -95,6 +99,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	}
 
 	private ArrayListMap selfRelConnections = new ArrayListMap();
+	private ArrayListMap intersectingShapesConnections = new ArrayListMap();
+	
 	private class ArrayListKey {
 
 		private ConnectionAnchor connectAnchor1;
@@ -133,7 +139,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			return isEqual;
 		}
 	}
-
+	
 	public static final int ROUTER_FLAG_SKIPNORMALIZATION = 1;
 
 	protected int routerFlags;
@@ -331,12 +337,428 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		PointList newLine) {
 
 		// get the original line	
-		if (!checkSelfRelConnection(conn, newLine)) {
+		if (!checkSelfRelConnection(conn, newLine) && !checkShapesIntersect(conn, newLine)) {
 			removePointsInViews(conn, newLine);
 		}
 		resetEndPointsToEdge(conn, newLine);
 	}
+	
+	/**
+	 * Checks if source shape and target shape of the connection intersect (only intersect - not one contained in another)
+	 * and if they are calculates the bendpoints for the connection. Calculated bendpoints are stored in <code>newLine</code>.
+	 * Initially <code>newLine</code> contains the list of bendpoints calculated by the router, however
+	 * if for intersecting shapes we have a default connection (i.e. no extra bendpoints), bendpoints will
+	 * be calculated and <code>newLine</code> will be cleared and calculated bendpoints will be stored there.
+	 * 
+	 * Criterias for calculation of bendpoints for connection between 2 intersecting shapes:
+	 * 1. No extra bendpoints introduced by user (only source and target anchor points present)
+	 * 2. Source and target shapes intersect (one contained in another = do not intersect) 
+	 * 
+	 * @param conn connection
+	 * @param newLine list to store calculated bendpoints (contains bendpoints read from the model initially
+	 * @return <code>true</code> if bendpoints were calculated here for intersecting shapes
+	 */
+	protected boolean checkShapesIntersect(Connection conn, PointList newLine) {
+		if (conn.getSourceAnchor().getOwner() == null
+				|| conn.getTargetAnchor().getOwner() == null)
+			return false;
+		
+		if (newLine.size() < 3) {
+			PrecisionRectangle sourceBounds = new PrecisionRectangle(conn.getSourceAnchor().getOwner().getBounds()); 
+			PrecisionRectangle targetBounds = new PrecisionRectangle(conn.getTargetAnchor().getOwner().getBounds());
+			conn.getSourceAnchor().getOwner().translateToAbsolute(sourceBounds);
+			conn.getTargetAnchor().getOwner().translateToAbsolute(targetBounds);
+			if (sourceBounds.intersects(targetBounds) && !sourceBounds.contains(targetBounds) && !targetBounds.contains(sourceBounds)) {
+				getVerticesForIntersectingShapes(conn, newLine);
+				return true;
+			}
+		} else {
+			removeIntersectingShapesConnection(conn);
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines geographic position of the source figure relative to the
+	 * connection area
+	 * 
+	 * @param connRectangle
+	 *            connection area
+	 * @param sourceRect
+	 *            bounds of the source figure
+	 * @param position
+	 *            geographic position of the connection area relative to the
+	 *            union of intersecting source and target figures
+	 * @return geographic position of the source figure relative to the
+	 *         connection area
+	 */
+	private int getSourcePositionFromConnectionRectangle(
+			Rectangle connRectangle, Rectangle sourceRect, int position) {
+		Dimension diff = null;
+		switch (position) {
+		case PositionConstants.NORTH_WEST:
+			diff = connRectangle.getBottomRight().getDifference(
+					sourceRect.getTopLeft());
+			if (diff.width == 0) {
+				return PositionConstants.EAST;
+			} else {
+				return PositionConstants.SOUTH;
+			}
+		case PositionConstants.NORTH_EAST:
+			diff = connRectangle.getBottomLeft().getDifference(
+					sourceRect.getTopRight());
+			if (diff.width == 0) {
+				return PositionConstants.WEST;
+			} else {
+				return PositionConstants.SOUTH;
+			}
+		case PositionConstants.SOUTH_EAST:
+			diff = connRectangle.getTopLeft().getDifference(
+					sourceRect.getBottomRight());
+			if (diff.width == 0) {
+				return PositionConstants.WEST;
+			} else {
+				return PositionConstants.NORTH;
+			}
+		case PositionConstants.SOUTH_WEST:
+			diff = connRectangle.getTopRight().getDifference(
+					sourceRect.getBottomLeft());
+			if (diff.width == 0) {
+				return PositionConstants.EAST;
+			} else {
+				return PositionConstants.NORTH;
+			}
+		}
+		return PositionConstants.NONE;
+	}
+	
+	/**
+	 * Stores bendpoints for the connection in <code>line</code> based on the
+	 * precise connection area, geographic position of the source figure
+	 * relative to the connection area and geographic position of the connection
+	 * area relative to the union of intersecting shapes
+	 * 
+	 * @param connRect
+	 *            precise connection area
+	 * @param position
+	 *            geographic position of the connection area relative to the
+	 *            union of intersecting shapes
+	 * @param sourcePosition
+	 *            geographic position of the source figure relative to the
+	 *            connection area
+	 * @param line
+	 *            list for storing bendpoints (cleared at the start)
+	 */
+	private void getConnectionPoints(Rectangle connRect, int position,
+			int sourcePosition, PointList line) {
+		line.removeAllPoints();
+		switch (position) {
+		case PositionConstants.NORTH_WEST:
+			if (sourcePosition == PositionConstants.EAST) {
+				line.addPoint(connRect.getTopRight());
+				line.addPoint(connRect.getTopLeft());
+				line.addPoint(connRect.getBottomLeft());
+			} else {
+				line.addPoint(connRect.getBottomLeft());
+				line.addPoint(connRect.getTopLeft());
+				line.addPoint(connRect.getTopRight());
+			}
+			break;
+		case PositionConstants.NORTH_EAST:
+			if (sourcePosition == PositionConstants.WEST) {
+				line.addPoint(connRect.getTopLeft());
+				line.addPoint(connRect.getTopRight());
+				line.addPoint(connRect.getBottomRight());
+			} else {
+				line.addPoint(connRect.getBottomRight());
+				line.addPoint(connRect.getTopRight());
+				line.addPoint(connRect.getTopLeft());
+			}
+			break;
+		case PositionConstants.SOUTH_EAST:
+			if (sourcePosition == PositionConstants.WEST) {
+				line.addPoint(connRect.getBottomLeft());
+				line.addPoint(connRect.getBottomRight());
+				line.addPoint(connRect.getTopRight());
+			} else {
+				line.addPoint(connRect.getTopRight());
+				line.addPoint(connRect.getBottomRight());
+				line.addPoint(connRect.getBottomLeft());
+			}
+			break;
+		case PositionConstants.SOUTH_WEST:
+			if (sourcePosition == PositionConstants.EAST) {
+				line.addPoint(connRect.getBottomRight());
+				line.addPoint(connRect.getBottomLeft());
+				line.addPoint(connRect.getTopLeft());
+			} else {
+				line.addPoint(connRect.getTopLeft());
+				line.addPoint(connRect.getBottomLeft());
+				line.addPoint(connRect.getBottomRight());
+			}
+			break;
+		}
+	}
+	
+	/**
+	 * Transforms width and height of the dimension into absolute values
+	 * 
+	 * @param d
+	 *            dimension
+	 */
+	private void absDimension(Dimension d) {
+		d.width = Math.abs(d.width);
+		d.height = Math.abs(d.height);
+	}
+	
+	/**
+	 * Calculates and stores bendpoints (or vertices) for the connection between
+	 * 2 intersecting shapes and stores them in <code>newLine</code>
+	 * 
+	 * @param conn
+	 *            connection
+	 * @param newLine
+	 *            list to store calculated bendpoints (oe vertices)
+	 */
+	private void getVerticesForIntersectingShapes(Connection conn,
+			PointList newLine) {
+		Object key = getIntersectingShapesConnectionKey(conn);
+		int nSelfIncr = 0;
+		int nIndex = 0;
+		/*
+		 * Check if this connection is 2nd, 3rd, ..., or n-th connection between
+		 * the same 2 intersecting shapes. If yes, determine what's the index.
+		 * (i.e the n>1)
+		 */
+		ArrayList connectionList = intersectingShapesConnections.get(key);
+		if (connectionList != null) {
+			if (!connectionList.contains(conn)) {
+				intersectingShapesConnections.put(key, conn);
+				connectionList = intersectingShapesConnections.get(key);
+			}
 
+			nIndex = connectionList.indexOf(conn);
+			assert nIndex >= 0;
+		} else {
+			intersectingShapesConnections.put(key, conn);
+		}
+
+		/*
+		 * Translate properly the default offset value between multiple
+		 * connections connecting the same 2 intersecting shapes. The default
+		 * value is in pixels, hence for feedback connection it must stay the
+		 * same and translated to logical units otherwise.
+		 */
+		PrecisionPoint selfrelsizeincr = new PrecisionPoint(SELFRELSIZEINCR, 0);
+		boolean isFeedbackConn = RouterHelper.getInstance().isFeedback(conn);
+		if (!isFeedbackConn)
+			selfrelsizeincr = (PrecisionPoint) MapModeUtil.getMapMode(conn)
+					.DPtoLP(selfrelsizeincr);
+
+		/*
+		 * Translate bounds of the source and target figures into coordinates
+		 * relative to the connection figure. (PrecisionRectangle is used to
+		 * avoid precision losses during non-integer scaling) Also calculate the
+		 * union of the source and target figures bounds and their intersection
+		 * rectangle for further calculations. All geometric figures are
+		 * translated to the coordinates relative to the connection figure!
+		 */
+		IFigure sourceFig = conn.getSourceAnchor().getOwner();
+		PrecisionRectangle sourceRect = new PrecisionRectangle(sourceFig
+				.getBounds());
+		sourceFig.translateToAbsolute(sourceRect);
+		conn.translateToRelative(sourceRect);
+
+		IFigure targetFig = conn.getTargetAnchor().getOwner();
+		PrecisionRectangle targetRect = new PrecisionRectangle(targetFig
+				.getBounds());
+		targetFig.translateToAbsolute(targetRect);
+		conn.translateToRelative(targetRect);
+		PrecisionRectangle union = sourceRect.getPreciseCopy()
+				.union(targetRect);
+
+		/*
+		 * Calculate the final offset value to space out multiple connections
+		 * between 2 intersecting shapes
+		 */
+		nSelfIncr = selfrelsizeincr.x * (nIndex);
+
+		Rectangle intersection = sourceRect.getCopy().intersect(targetRect);
+
+		/*
+		 * Determine the rough connection area and its geographic position
+		 * relative to the union of the intersecting shapes. This is the area
+		 * around which the connection will be routed. It's rough because it
+		 * will be expanded and spaced out from other connections connecting the
+		 * same shapes. The rough connection area is the smallest blank
+		 * rectangle located within the union rectangle but not intersecting
+		 * both source and traget figures bounds. The possible geographic
+		 * locations for connection area are: NW, NE, SW, SE.
+		 */
+		Rectangle connArea = new Rectangle();
+		int position = PositionConstants.NONE;
+		int minArea = 0;
+		Point unionTopLeft = union.getTopLeft();
+		Point unionTopRight = union.getTopRight();
+		Point unionBottomRight = union.getBottomRight();
+		Point unionBottomLeft = union.getBottomLeft();
+
+		if (!unionTopLeft.equals(sourceRect.getTopLeft())
+				&& !unionTopLeft.equals(targetRect.getTopLeft())) {
+			Dimension diffVector = unionTopLeft.getDifference(intersection
+					.getTopLeft());
+			absDimension(diffVector);
+			int areaTopLeft = diffVector.getArea();
+			if (minArea == 0 || minArea > areaTopLeft) {
+				position = PositionConstants.NORTH_WEST;
+				connArea.setSize(diffVector);
+				connArea.setLocation(unionTopLeft.x, unionTopLeft.y);
+				minArea = areaTopLeft;
+			}
+		}
+
+		if (!unionTopRight.equals(sourceRect.getTopRight())
+				&& !unionTopRight.equals(targetRect.getTopRight())) {
+			Dimension diffVector = unionTopRight.getDifference(intersection
+					.getTopRight());
+			absDimension(diffVector);
+			int areaTopRight = diffVector.getArea();
+			if (minArea == 0 || minArea > areaTopRight) {
+				position = PositionConstants.NORTH_EAST;
+				connArea.setSize(diffVector);
+				connArea.setLocation(unionTopRight.x - connArea.width,
+						unionTopRight.y);
+				minArea = areaTopRight;
+			}
+		}
+
+		if (!unionBottomRight.equals(sourceRect.getBottomRight())
+				&& !unionBottomRight.equals(targetRect.getBottomRight())) {
+			Dimension diffVector = unionBottomRight.getDifference(intersection
+					.getBottomRight());
+			absDimension(diffVector);
+			int areaBottomRight = diffVector.getArea();
+			if (minArea == 0 || minArea > areaBottomRight) {
+				position = PositionConstants.SOUTH_EAST;
+				connArea.setSize(diffVector);
+				connArea.setLocation(unionBottomRight.x - connArea.width,
+						unionBottomRight.y - connArea.height);
+				minArea = areaBottomRight;
+			}
+		}
+
+		if (!unionBottomLeft.equals(sourceRect.getBottomLeft())
+				&& !unionBottomLeft.equals(targetRect.getBottomLeft())) {
+			Dimension diffVector = unionBottomLeft.getDifference(intersection
+					.getBottomLeft());
+			absDimension(diffVector);
+			int areaBottomLeft = diffVector.getArea();
+			if (minArea == 0 || minArea > areaBottomLeft) {
+				position = PositionConstants.SOUTH_WEST;
+				connArea.setSize(diffVector);
+				connArea.setLocation(unionBottomLeft.x, unionBottomLeft.y
+						- connArea.height);
+				minArea = areaBottomLeft;
+			}
+		}
+
+		/*
+		 * Determine the geographic position of the source figure relative to
+		 * the rough connection area. This will help determining the order for
+		 * bendpoints list from the precise connection area
+		 */
+		int sourcePosition = getSourcePositionFromConnectionRectangle(connArea,
+				sourceRect, position);
+
+		/*
+		 * Determine the value by which the connection area has to become
+		 * primary precise connection area. The value is chosen to be such that
+		 * connections made from shapes intersecting on the same edge don't
+		 * overlap
+		 */
+		PrecisionPoint translateExpansion = new PrecisionPoint(Math.max(connArea.width,
+				connArea.height), 0);
+		if (!isFeedbackConn) {
+			IMapMode mm = MapModeUtil.getMapMode(conn);
+			translateExpansion = (PrecisionPoint) mm.LPtoDP(translateExpansion);
+			translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
+					0.8);
+			translateExpansion = (PrecisionPoint) mm.DPtoLP(translateExpansion);
+		} else {
+			translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
+					0.8);
+		}
+		translateExpansion.updateInts();
+
+		/*
+		 * Transform rough connection area to primary precise connection area
+		 */
+		getPrimaryPreciseConnectionArea(connArea, translateExpansion.x, position);
+
+		/*
+		 * Transform the primary precise connection area to precise connection
+		 * area by accounting for multiple connection between the same 2
+		 * intersecting shapes
+		 */
+		connArea.expand(nSelfIncr, nSelfIncr);
+
+		/*
+		 * Calculates the bendpoints for the connection from the precise
+		 * connection area
+		 */
+		getConnectionPoints(connArea, position, sourcePosition, newLine);
+
+		Point ptS2 = newLine.getPoint(0);
+		Point ptS1 = conn.getSourceAnchor().getReferencePoint();
+		conn.translateToRelative(ptS1);
+		Point ptAbsS2 = new Point(ptS2);
+		conn.translateToAbsolute(ptAbsS2);
+		Point ptEdge = conn.getSourceAnchor().getLocation(ptAbsS2);
+		conn.translateToRelative(ptEdge);
+		ptS1 = getStraightEdgePoint(ptEdge, ptS1, ptS2);
+
+		Point ptE2 = newLine.getPoint(newLine.size() - 1);
+		Point ptE1 = conn.getTargetAnchor().getReferencePoint();
+		conn.translateToRelative(ptE1);
+		Point ptAbsE2 = new Point(ptE2);
+		conn.translateToAbsolute(ptAbsE2);
+		ptEdge = conn.getTargetAnchor().getLocation(ptAbsE2);
+		conn.translateToRelative(ptEdge);
+		ptE1 = getStraightEdgePoint(ptEdge, ptE1, ptE2);
+
+		newLine.insertPoint(ptS1, 0);
+		newLine.insertPoint(ptE1, newLine.size());
+
+	}
+	
+	/**
+	 * Transforms rough connection area into primary precise connection area.
+	 * Primary precise connection area is the one that doesn't account for
+	 * multiple connections between same intersecting shapes
+	 * 
+	 * @param r
+	 *            rough connection area rectangle
+	 * @param size
+	 *            size used for expansion
+	 * @param positionOfConnArea
+	 *            geographic position of the connection area relative to the
+	 *            union of intersecting shapes
+	 */
+	private void getPrimaryPreciseConnectionArea(Rectangle r, int size, int positionOfConnArea) {
+		r.expand(size, size);
+		if (r.width < r.height) {
+			r.height -= size;
+			if ((positionOfConnArea & PositionConstants.SOUTH) != 0) {
+				r.y += size;
+			}
+		} else {
+			r.width -= size;
+			if ((positionOfConnArea & PositionConstants.EAST) != 0) {
+				r.x += size;
+			}
+		}
+	}
+	
 	/**
 	 * getStraightEdgePoint
 	 * Gets the anchored edge point that intersects with the given line segment.
@@ -418,6 +840,41 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			selfRelConnections.remove(connectionKey, conn);
 		}
 	}
+	
+	/**
+	 * Method removeIntersectingShapesConnection.
+	 * Removes the given connection from the intersecting shapes connections hash map
+	 * @param conn Connection to remove from the map
+	 */
+	private void removeIntersectingShapesConnection(Connection conn) {
+		if (conn.getSourceAnchor() == null || conn.getTargetAnchor() == null
+				|| conn.getSourceAnchor().getOwner() == null
+				|| conn.getTargetAnchor().getOwner() == null)
+				return;
+		Object key = getIntersectingShapesConnectionKey(conn);
+		ArrayList connectionList = intersectingShapesConnections.get(key);
+		if (connectionList != null) {
+			int index = connectionList.indexOf(conn);
+			if (index == -1)
+				return;
+			intersectingShapesConnections.remove(key, conn);
+		}
+	}
+	
+	/**
+	 * Calculates the key for a connection made between 2 intersecting shapes.
+	 * Key is determined from the key of the source and target figures hash
+	 * codes, since we want connections made between the same 2 intersected
+	 * shapes to be mapped to one value
+	 * 
+	 * @param conn
+	 *            connection
+	 * @return hash code
+	 */
+	private Object getIntersectingShapesConnectionKey(Connection conn) {
+		return new Integer(conn.getSourceAnchor().getOwner().hashCode()
+				^ conn.getTargetAnchor().getOwner().hashCode());
+	}
 
 	/**
 	 * Method insertSelfRelVertices.
@@ -428,7 +885,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	protected void getSelfRelVertices(Connection conn, PointList newLine) {
 		if (conn.getSourceAnchor().getOwner() == null)
 			return;
-
+		
 		ArrayListKey connectionKey = new ArrayListKey(conn);
 		int nSelfIncr = 0;
 		int nIndex = 0;
@@ -649,6 +1106,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		
         RouterHelper.getInstance().remove(connection);
 		removeSelfRelConnection(connection);
+		removeIntersectingShapesConnection(connection);
 	}
 
 	/* 
