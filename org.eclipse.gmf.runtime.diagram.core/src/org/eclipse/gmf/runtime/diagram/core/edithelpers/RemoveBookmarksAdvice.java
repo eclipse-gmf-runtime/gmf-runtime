@@ -73,7 +73,7 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 		
 		String elementID = ((XMLResource)eResource).getID(bookmarkedObject);
 		
-		IMarker[] bookmarks = null;
+		IMarker[] bookmarks = new IMarker[0];
 		
 		try {
 			bookmarks = resource.findMarkers(IBookmark.TYPE, true,
@@ -83,7 +83,6 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 					getClass(), "gatherSingleBookmark", e); //$NON-NLS-1$
 			Log.error(DiagramPlugin.getInstance(), IStatus.ERROR, "gatherSingleBookmark"); //$NON-NLS-1$
 		}
-		Assert.isNotNull(bookmarks);
 		
 		Set retSet = new HashSet();
 
