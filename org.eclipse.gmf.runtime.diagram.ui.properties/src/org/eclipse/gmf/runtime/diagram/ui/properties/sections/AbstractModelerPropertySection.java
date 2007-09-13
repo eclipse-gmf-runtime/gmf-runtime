@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.DemultiplexingListener;
 import org.eclipse.emf.transaction.NotificationFilter;
@@ -212,15 +213,14 @@ public abstract class AbstractModelerPropertySection
 				}
 			}
 
-			if (eventObject == null) {
-				// the annotation has been removed - check the old owner
-				Object tmpObj = notification.getOldValue();
-				if (tmpObj != null && tmpObj instanceof EObject) {
-					eventObject = (EObject) tmpObj;
-				} else {
-					return false;
-				}
-			}
+            if (notification.getFeature() == EcorePackage.Literals.EANNOTATION__EMODEL_ELEMENT) {
+                Object oldObj = notification.getOldValue();
+                Object newObj = notification.getNewValue();
+                if (oldObj instanceof EObject && newObj == null) {
+                    // the annotation has been removed - check the old owner
+                    eventObject = (EObject) oldObj;
+                }
+            }
 
 			if (eventObject != element) {
 				return eObjectList.contains(eventObject);
