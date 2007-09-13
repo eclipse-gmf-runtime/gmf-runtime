@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,7 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 		
 		String elementID = ((XMLResource)eResource).getID(bookmarkedObject);
 		
-		IMarker[] bookmarks = null;
+		IMarker[] bookmarks = new IMarker[0];
 		
 		try {
 			bookmarks = resource.findMarkers(IBookmark.TYPE, true,
@@ -83,7 +83,6 @@ public class RemoveBookmarksAdvice extends AbstractEditHelperAdvice {
 					getClass(), "gatherSingleBookmark", e); //$NON-NLS-1$
 			Log.error(DiagramPlugin.getInstance(), IStatus.ERROR, "gatherSingleBookmark"); //$NON-NLS-1$
 		}
-		Assert.isNotNull(bookmarks);
 		
 		Set retSet = new HashSet();
 
