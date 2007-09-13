@@ -364,6 +364,8 @@ public class DiagramEventBroker
         Set addedObjects = NotificationUtil.getAddedObjects(event);
         Set existingObjects = new HashSet();
         boolean deleteElementCheckRequired = !deletedObjects.isEmpty();
+        boolean handleNotificationOnAddedElement = false;
+        boolean handleNotificationOnDeletedElement = false;
         for (Iterator i = event.getNotifications().iterator(); i.hasNext();) {
             final Notification notification = (Notification) i.next();
             boolean customNotification = NotificationUtil.isCustomNotification(notification);
@@ -372,26 +374,32 @@ public class DiagramEventBroker
             Object notifier = notification.getNotifier();
             if (notifier instanceof EObject) {
                 boolean deleted = false;
-                if (deleteElementCheckRequired && !customNotification){
+                if (deleteElementCheckRequired && !customNotification) {
                     deleted = !existingObjects.contains(notifier);
-                    if (deleted){
-                        deleted = isDeleted(deletedObjects, (EObject)notifier);
+                    if (deleted) {
+                        deleted = isDeleted(deletedObjects, (EObject) notifier);
                         if (!deleted)
                             existingObjects.add(notifier);
                     }
                 }
                 if (!customNotification) {
-                    if (deleted){
-                        handleNotificationOnDeletedElement(event);
+                    if (deleted) {
+                        handleNotificationOnDeletedElement = true;
                         continue;
                     }// see bugzilla [186637]
                     else if (addedObjects.contains(notifier) && NotationPackage.Literals.VIEW__ELEMENT.equals(notification.getFeature())){
-                        handleNotificationOnAddedElement(event);
+                        handleNotificationOnAddedElement = true;
                         continue;
                     }
                 }
                 fireNotification(notification);
             }
+        }
+        if (handleNotificationOnAddedElement) {
+            handleNotificationOnAddedElement(event);
+        }
+        if (handleNotificationOnDeletedElement) {
+            handleNotificationOnDeletedElement(event);
         }
     }
 
