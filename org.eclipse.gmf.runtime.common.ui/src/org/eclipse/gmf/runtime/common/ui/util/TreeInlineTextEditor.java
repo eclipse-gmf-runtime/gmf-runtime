@@ -363,7 +363,8 @@ public class TreeInlineTextEditor {
 	 * @return boolean indicating if it is ok to continue operation
 	 */
 	private boolean canProceed() {
-		return ((isDisposed() == false) && (getTreeItem() != null));
+		return isDisposed() == false && getTreeItem() != null
+				&& !getTreeItem().isDisposed();
 	}
 
 	/**
