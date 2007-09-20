@@ -34,6 +34,7 @@ http://www.eclipse.org/legal/epl-v10.html
       <import feature="org.eclipse.platform" version="3.3.0"/>
       <import feature="org.eclipse.gef" version="3.2.0"/>
       <import feature="org.eclipse.emf" version="2.2.0"/>
+      <import feature="org.eclipse.emf.transaction" version="1.0.0"/>
       <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import feature="org.eclipse.emf.workspace" version="1.0.0"/>
    </requires>
