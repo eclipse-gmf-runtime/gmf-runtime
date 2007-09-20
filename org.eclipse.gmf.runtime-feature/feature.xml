@@ -31,36 +31,10 @@ http://www.eclipse.org/legal/epl-v10.html
          version="0.0.0"/>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="com.ibm.icu"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.team.core"/>
-      <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.draw2d"/>
+      <import feature="org.eclipse.platform" version="3.3.0"/>
       <import feature="org.eclipse.gef" version="3.2.0"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.emf.ecore.edit"/>
-      <import plugin="org.eclipse.emf.ecore.change"/>
-      <import plugin="org.eclipse.emf.ecore.change.edit"/>
-      <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="org.eclipse.emf.edit.ui"/>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
-      <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.swt"/>
       <import feature="org.eclipse.emf" version="2.2.0"/>
-      <import feature="org.eclipse.emf.ocl" version="1.0.0"/>
-      <import feature="org.eclipse.emf.query" version="1.0.0"/>
+      <import feature="org.eclipse.emf.transaction" version="1.0.0"/>
       <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import feature="org.eclipse.emf.workspace" version="1.0.0"/>
    </requires>
