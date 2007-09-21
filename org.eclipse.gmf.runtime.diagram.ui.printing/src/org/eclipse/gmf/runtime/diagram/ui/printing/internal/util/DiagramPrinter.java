@@ -14,12 +14,14 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.internal.util;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
@@ -27,7 +29,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
@@ -36,7 +40,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -236,15 +239,22 @@ public class DiagramPrinter
                 Object obj = it.next();
                 //the diagrams List is only supposed to have Diagram objects
                 Assert.isTrue(obj instanceof Diagram);
-                DiagramEditPart dgrmEP = PrintHelper.createDiagramEditPart((Diagram) obj, preferencesHint, shell);
+                Diagram diagram = (Diagram)obj;
+                DiagramEditor openedDiagramEditor = DiagramEditorUtil
+						.findOpenedDiagramEditorForID(ViewUtil
+								.getIdStr(diagram));
+				DiagramEditPart dgrmEP = openedDiagramEditor == null ? PrintHelper
+						.createDiagramEditPart(diagram, preferencesHint, shell)
+						: openedDiagramEditor.getDiagramEditPart();
                 
+                boolean loadedPreferences = openedDiagramEditor != null || PrintHelper.initializePreferences(dgrmEP, preferencesHint);
+
                 RootEditPart rep = dgrmEP.getRoot();
                 if (rep instanceof DiagramRootEditPart) 
                     this.mm = ((DiagramRootEditPart)rep).getMapMode();
                 
                 initialize();
                 
-                boolean loadedPreferences = PrintHelper.initializePreferences(dgrmEP, preferencesHint);
                 
                 IPreferenceStore pref = null;
                 

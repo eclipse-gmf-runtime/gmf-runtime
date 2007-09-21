@@ -12,13 +12,10 @@
 package org.eclipse.gmf.runtime.diagram.ui.printing.internal.util;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
@@ -32,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerPro
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -60,6 +58,7 @@ public class PrintHelper {
      */
 	public static DiagramEditPart createDiagramEditPart(Diagram diagram,
             PreferencesHint preferencesHint) {
+			
             DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
             diagram, new Shell(), preferencesHint);
             // since some of the diagram updates are ASync we need to give the 
@@ -82,10 +81,10 @@ public class PrintHelper {
      */
     public static DiagramEditPart createDiagramEditPart(Diagram diagram,
         PreferencesHint preferencesHint, Shell shell) {
-        DiagramEditPart diagramEditPart =  OffscreenEditPartFactory.getInstance().createDiagramEditPart(
-            diagram, shell, preferencesHint);
+        DiagramEditPart diagramEditPart = OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+                diagram, shell, preferencesHint);
         // since some of the diagram updates are ASync we need to give the 
-        // inter-thread messages a chance to get processed processed before we
+        // inter-thread messages a chance to get processed before we
         // continue; check bugzilla 170332
         while (Display.getDefault().readAndDispatch ()){
             // nothing special to do 
@@ -193,43 +192,30 @@ public class PrintHelper {
 	 */
 	private static IPreferenceStore loadPreferencesFromOpenDiagram(String id) {
 
-		List diagramEditors = EditorService.getInstance()
-			.getRegisteredEditorParts();
-		Iterator it = diagramEditors.iterator();
-		while (it.hasNext()) {
-			Object obj = it.next();
-			if (obj instanceof DiagramEditor) {
-				DiagramEditor diagramEditor = (DiagramEditor) obj;
+		DiagramEditor diagramEditor = DiagramEditorUtil.findOpenedDiagramEditorForID(id);
+		if (diagramEditor != null) {
+			IDiagramGraphicalViewer viewer = diagramEditor
+					.getDiagramGraphicalViewer();
+			if (diagramEditor.getDiagramEditPart().getRoot() instanceof DiagramRootEditPart) {
+				PageBreakEditPart pageBreakEditPart = ((DiagramRootEditPart) diagramEditor
+						.getDiagramEditPart().getRoot()).getPageBreakEditPart();
+				pageBreakEditPart.resize(diagramEditor.getDiagramEditPart()
+						.getChildrenBounds());
+				pageBreakEditPart.updatePreferenceStore();
+			}
+			if (viewer instanceof DiagramGraphicalViewer) {
+				DiagramGraphicalViewer diagramGraphicalViewer = (DiagramGraphicalViewer) viewer;
 
-				//diagram edit part and view should not be null for an open
-				// diagram
-				if (id.equals(ViewUtil.getIdStr(diagramEditor
-					.getDiagramEditPart().getDiagramView()))) {
-					IDiagramGraphicalViewer viewer = diagramEditor
-						.getDiagramGraphicalViewer();
-					if (diagramEditor.getDiagramEditPart().getRoot() instanceof DiagramRootEditPart) {
-						PageBreakEditPart pageBreakEditPart = ((DiagramRootEditPart)diagramEditor.getDiagramEditPart().getRoot()).getPageBreakEditPart();
-						pageBreakEditPart.resize(diagramEditor.getDiagramEditPart().getChildrenBounds());
-						pageBreakEditPart.updatePreferenceStore();
-					}
-					if (viewer instanceof DiagramGraphicalViewer) {
-						DiagramGraphicalViewer diagramGraphicalViewer = (DiagramGraphicalViewer) viewer;
-
-						//preferences loaded
-						return diagramGraphicalViewer
-							.getWorkspaceViewerPreferenceStore();
-					}
-
-					//id was equal, but we couldn't load it, so don't continue
-					return null;
-				}
+				// preferences loaded
+				return diagramGraphicalViewer
+						.getWorkspaceViewerPreferenceStore();
 			}
 		}
 
-		//no matching guid found
+		// no matching guid found
 		return null;
 	}
-
+	
 	/**
 	 * Return the preference store for the given PreferenceHint
 	 * @param preferencesHint to return the preference store for.

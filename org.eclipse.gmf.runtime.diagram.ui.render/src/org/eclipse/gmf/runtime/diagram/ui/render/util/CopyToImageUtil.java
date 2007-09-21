@@ -33,14 +33,17 @@ import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
 import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.graphics.Image;
@@ -106,25 +109,33 @@ public class CopyToImageUtil {
         throws CoreException {
 
         Trace.trace(DiagramUIRenderPlugin.getInstance(),
-            "Copy diagram to Image " + destination + " as " + format); //$NON-NLS-1$ //$NON-NLS-2$ 
-
-        Shell shell = new Shell();
+            "Copy diagram to Image " + destination + " as " + format); //$NON-NLS-1$ //$NON-NLS-2$
+        
         List partInfo = Collections.EMPTY_LIST;
-
-        try {
-            DiagramEditPart diagramEditPart = createDiagramEditPart(diagram,
-                shell, preferencesHint);
-            Assert.isNotNull(diagramEditPart);
-            DiagramGenerator generator = copyToImage(diagramEditPart,
-                destination, format, monitor);
-            partInfo = generator.getDiagramPartInfo(diagramEditPart);
-        } finally {
-            shell.dispose();
+        
+        DiagramEditor openedDiagramEditor = DiagramEditorUtil.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+        if (openedDiagramEditor != null) {
+            DiagramGenerator generator = copyToImage(openedDiagramEditor.getDiagramEditPart(),
+                    destination, format, monitor);
+                partInfo = generator.getDiagramPartInfo(openedDiagramEditor.getDiagramEditPart());
+        } else {
+	
+	        Shell shell = new Shell();
+	        try {
+	            DiagramEditPart diagramEditPart = createDiagramEditPart(diagram,
+	                shell, preferencesHint);
+	            Assert.isNotNull(diagramEditPart);
+	            DiagramGenerator generator = copyToImage(diagramEditPart,
+	                destination, format, monitor);
+	            partInfo = generator.getDiagramPartInfo(diagramEditPart);
+	        } finally {
+	            shell.dispose();
+	        }
         }
 
         return partInfo;
     }
-
+    
     /**
      * Copies the diagram to an image file in the specified format.
      * 

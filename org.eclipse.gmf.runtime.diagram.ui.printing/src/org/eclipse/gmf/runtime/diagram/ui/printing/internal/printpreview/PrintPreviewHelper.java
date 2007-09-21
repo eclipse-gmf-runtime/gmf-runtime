@@ -805,6 +805,9 @@ public class PrintPreviewHelper {
 	 */
 	protected DiagramEditPart getDiagramEditPart() {
 		if (diagramEditPart == null) {
+			diagramEditPart = getDiagramEditorPart().getDiagramEditPart();
+		}
+		if (diagramEditPart == null) {
 			Diagram diagram = getDiagramEditorPart().getDiagram(); //do not getDiagramEditPart
 			PreferencesHint preferencesHint = getPreferencesHint(getDiagramEditorPart());
 			diagramEditPart = PrintHelper.createDiagramEditPart(diagram, preferencesHint, getTempShell());
@@ -1218,8 +1221,10 @@ public class PrintPreviewHelper {
 		safeDisposeImage(downImage);
 		safeDisposeImage(disabledDownImage);
 		safeDisposeImage(closeImage);
-        tempShell.dispose();
-        tempShell = null;
+		if (tempShell != null) {
+	        tempShell.dispose();
+	        tempShell = null;
+		}
 	}
 
 	/**
