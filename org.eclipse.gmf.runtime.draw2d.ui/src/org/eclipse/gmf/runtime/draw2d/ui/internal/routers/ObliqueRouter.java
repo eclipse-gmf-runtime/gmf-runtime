@@ -368,7 +368,8 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			PrecisionRectangle targetBounds = new PrecisionRectangle(conn.getTargetAnchor().getOwner().getBounds());
 			conn.getSourceAnchor().getOwner().translateToAbsolute(sourceBounds);
 			conn.getTargetAnchor().getOwner().translateToAbsolute(targetBounds);
-			if (sourceBounds.intersects(targetBounds) && !sourceBounds.contains(targetBounds) && !targetBounds.contains(sourceBounds)) {
+			if (sourceBounds.intersects(targetBounds) && !sourceBounds.contains(targetBounds) && !targetBounds.contains(sourceBounds)
+					|| sourceBounds.equals(targetBounds)) {
 				getVerticesForIntersectingShapes(conn, newLine);
 				return true;
 			}
@@ -427,6 +428,13 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 				return PositionConstants.EAST;
 			} else {
 				return PositionConstants.NORTH;
+			}
+		case PositionConstants.NONE:
+			diff = connRectangle.getCenter().getDifference(sourceRect.getCenter());
+			if (diff.width == 0) {
+				return diff.height < 0 ? PositionConstants.SOUTH : PositionConstants.NORTH;  
+			} else {
+				return diff.width < 0 ? PositionConstants.EAST : PositionConstants.WEST;
 			}
 		}
 		return PositionConstants.NONE;
@@ -497,6 +505,20 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 				line.addPoint(connRect.getBottomRight());
 			}
 			break;
+		case PositionConstants.NONE:
+			if (sourcePosition == PositionConstants.NORTH) {
+				line.addPoint(connRect.getTopLeft());
+				line.addPoint(connRect.getBottomLeft());
+			} else if (sourcePosition == PositionConstants.SOUTH) {
+				line.addPoint(connRect.getBottomLeft());
+				line.addPoint(connRect.getTopLeft());
+			} else if (sourcePosition == PositionConstants.WEST) {
+				line.addPoint(connRect.getTopLeft());
+				line.addPoint(connRect.getTopRight());
+			} else {
+				line.addPoint(connRect.getTopRight());
+				line.addPoint(connRect.getTopLeft());
+			}
 		}
 	}
 	
@@ -661,6 +683,10 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 				minArea = areaBottomLeft;
 			}
 		}
+		
+		if (position == PositionConstants.NONE) {
+			connArea = intersection;
+		}
 
 		/*
 		 * Determine the geographic position of the source figure relative to
@@ -670,30 +696,34 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		int sourcePosition = getSourcePositionFromConnectionRectangle(connArea,
 				sourceRect, position);
 
-		/*
-		 * Determine the value by which the connection area has to become
-		 * primary precise connection area. The value is chosen to be such that
-		 * connections made from shapes intersecting on the same edge don't
-		 * overlap
-		 */
-		PrecisionPoint translateExpansion = new PrecisionPoint(Math.max(connArea.width,
-				connArea.height), 0);
-		if (!isFeedbackConn) {
-			IMapMode mm = MapModeUtil.getMapMode(conn);
-			translateExpansion = (PrecisionPoint) mm.LPtoDP(translateExpansion);
-			translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
-					0.8);
-			translateExpansion = (PrecisionPoint) mm.DPtoLP(translateExpansion);
+		if (position != PositionConstants.NONE) {
+			/*
+			 * Determine the value by which the connection area has to become
+			 * primary precise connection area. The value is chosen to be such that
+			 * connections made from shapes intersecting on the same edge don't
+			 * overlap
+			 */
+			PrecisionPoint translateExpansion = new PrecisionPoint(Math.max(connArea.width,
+					connArea.height), 0);
+			if (!isFeedbackConn) {
+				IMapMode mm = MapModeUtil.getMapMode(conn);
+				translateExpansion = (PrecisionPoint) mm.LPtoDP(translateExpansion);
+				translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
+						0.8);
+				translateExpansion = (PrecisionPoint) mm.DPtoLP(translateExpansion);
+			} else {
+				translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
+						0.8);
+			}
+			translateExpansion.updateInts();
+	
+			/*
+			 * Transform rough connection area to primary precise connection area
+			 */
+			getPrimaryPreciseConnectionArea(connArea, translateExpansion.x, position);
 		} else {
-			translateExpansion.preciseX = Math.pow(translateExpansion.preciseX,
-					0.8);
+			connArea.expand(selfrelsizeincr.x<<1, selfrelsizeincr.x<<1);
 		}
-		translateExpansion.updateInts();
-
-		/*
-		 * Transform rough connection area to primary precise connection area
-		 */
-		getPrimaryPreciseConnectionArea(connArea, translateExpansion.x, position);
 
 		/*
 		 * Transform the primary precise connection area to precise connection
@@ -708,26 +738,26 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		 */
 		getConnectionPoints(connArea, position, sourcePosition, newLine);
 
-		Point ptS2 = newLine.getPoint(0);
-		Point ptS1 = conn.getSourceAnchor().getReferencePoint();
+		PrecisionPoint ptS2 = new PrecisionPoint(newLine.getPoint(0));
+		PrecisionPoint ptS1 = new PrecisionPoint(conn.getSourceAnchor().getReferencePoint());
 		conn.translateToRelative(ptS1);
 		Point ptAbsS2 = new Point(ptS2);
 		conn.translateToAbsolute(ptAbsS2);
-		Point ptEdge = conn.getSourceAnchor().getLocation(ptAbsS2);
+		PrecisionPoint ptEdge = new PrecisionPoint(conn.getSourceAnchor().getLocation(ptAbsS2));
 		conn.translateToRelative(ptEdge);
-		ptS1 = getStraightEdgePoint(ptEdge, ptS1, ptS2);
+		ptS1 = new PrecisionPoint(getStraightEdgePoint(ptEdge, ptS1, ptS2));
 
-		Point ptE2 = newLine.getPoint(newLine.size() - 1);
-		Point ptE1 = conn.getTargetAnchor().getReferencePoint();
+		PrecisionPoint ptE2 = new PrecisionPoint(newLine.getPoint(newLine.size() - 1));
+		PrecisionPoint ptE1 = new PrecisionPoint(conn.getTargetAnchor().getReferencePoint());
 		conn.translateToRelative(ptE1);
-		Point ptAbsE2 = new Point(ptE2);
+		PrecisionPoint ptAbsE2 = (PrecisionPoint)ptE2.getCopy();
 		conn.translateToAbsolute(ptAbsE2);
-		ptEdge = conn.getTargetAnchor().getLocation(ptAbsE2);
+		ptEdge = new PrecisionPoint(conn.getTargetAnchor().getLocation(ptAbsE2));
 		conn.translateToRelative(ptEdge);
-		ptE1 = getStraightEdgePoint(ptEdge, ptE1, ptE2);
+		ptE1 = new PrecisionPoint(getStraightEdgePoint(ptEdge, ptE1, ptE2));
 
-		newLine.insertPoint(ptS1, 0);
-		newLine.insertPoint(ptE1, newLine.size());
+		newLine.insertPoint(new Point(Math.round(ptS1.preciseX), Math.round(ptS1.preciseY)), 0);
+		newLine.insertPoint(new Point(Math.round(ptE1.preciseX), Math.round(ptE1.preciseY)), newLine.size());
 
 	}
 	
