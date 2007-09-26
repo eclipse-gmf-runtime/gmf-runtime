@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -159,6 +159,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	private Rectangle relativeClipRegion;
 	
 	private org.eclipse.swt.graphics.Rectangle viewBox;
+	private Image image;
 	
 	/**
 	 * x coordinate for graphics translation
@@ -220,7 +221,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 			0,
 			10,
 			10);
-		Image image = new Image(Display.getDefault(), tempRect);		
+		image = new Image(Display.getDefault(), tempRect);		
 		GC gc = new GC(image);
 		swtGraphics = new SWTGraphics(gc);
 	}
@@ -339,6 +340,11 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	 */
 	public void dispose() {
 		swtGraphics.dispose();
+		
+		if (image != null) {
+			image.dispose();
+		}
+		
 		states.clear();
 	}
 
