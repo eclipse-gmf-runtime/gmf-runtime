@@ -18,6 +18,7 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 
@@ -33,7 +34,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
  * @author sshaw, mmostafa
  *
  */
-public class NoteFigure extends DefaultSizeNodeFigure {
+public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure {
 
 	private boolean diagrsamLinkMode = false;;
 
@@ -164,5 +165,13 @@ public class NoteFigure extends DefaultSizeNodeFigure {
 	public boolean isDiagramLinkMode() {
 		return diagrsamLinkMode;
 	}
+
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure#getPolygonPoints()
+    */ 
+    public PointList getPolygonPoints() {
+        return getPointList(getBounds());
+    }
 
 }

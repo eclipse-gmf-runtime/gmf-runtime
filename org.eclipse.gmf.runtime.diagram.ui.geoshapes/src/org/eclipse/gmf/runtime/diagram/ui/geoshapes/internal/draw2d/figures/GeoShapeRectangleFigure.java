@@ -13,7 +13,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * @author jschofie
@@ -37,26 +36,6 @@ public class GeoShapeRectangleFigure extends GeoShapeFigure {
 	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 	 */
 	protected void paintFigure(Graphics g) {
-
-		Rectangle r = getBounds().getCopy();
-		
-		// IF this figure has a border...
-		if( isOpaque() && getBorder() != null ) {
-
-			// Crop the rectangle to the insets
-			r.crop( getBorder().getInsets( this ) );
-			
-			// Draw the rectangle with the fill color
-			g.fillRectangle(r);
-			
-		} else {	
-			// Otherwise draw and fill the rectangle
-
-			// Draw the rectangle with the fill color
-			g.fillRectangle(r);
-		
-			// Draw the rectangle outline
-			g.drawRectangle(r.x, r.y, r.width - 1, r.height - 1);
-		}
-	}
+       g.fillRectangle(getBounds().getCopy());
+    }
 }

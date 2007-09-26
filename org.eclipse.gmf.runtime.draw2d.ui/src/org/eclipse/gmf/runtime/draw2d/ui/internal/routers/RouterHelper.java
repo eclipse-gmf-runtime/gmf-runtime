@@ -30,6 +30,7 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
@@ -354,33 +355,32 @@ class RouterHelper {
         if (newLine.size() <= 1)
             return;
 
-        Point ptS2 = newLine.getPoint(1);
-        Point ptAbsS2 = new Point(ptS2);
+        PrecisionPoint ptS2 = new PrecisionPoint(newLine.getPoint(1));
+        PrecisionPoint ptAbsS2 = new PrecisionPoint(ptS2);
         conn.translateToAbsolute(ptAbsS2);
         if (newLine.size() == 2)
-            ptAbsS2 = conn.getTargetAnchor().getReferencePoint();
-        Point ptAbsS1 = conn.getSourceAnchor().getLocation(ptAbsS2);
-        Point ptS1 = new Point(ptAbsS1);
+            ptAbsS2 = new PrecisionPoint(conn.getTargetAnchor().getReferencePoint());
+        PrecisionPoint ptAbsS1 = new PrecisionPoint(conn.getSourceAnchor().getLocation(ptAbsS2));
+        PrecisionPoint ptS1 = new PrecisionPoint(ptAbsS1);
         conn.translateToRelative(ptS1);
-
-        Point ptE2 = newLine.getPoint(newLine.size() - 2);
-        Point ptAbsE2 = new Point(ptE2);
+        PrecisionPoint ptE2 = new PrecisionPoint(newLine.getPoint(newLine.size() - 2));
+        PrecisionPoint ptAbsE2 = new PrecisionPoint(ptE2);
         conn.translateToAbsolute(ptAbsE2);
         if (newLine.size() == 2)
             ptAbsE2 = ptAbsS1;
-        Point ptE1 = new Point(conn.getTargetAnchor().getLocation(ptAbsE2));
+        PrecisionPoint ptE1 = new PrecisionPoint(conn.getTargetAnchor().getLocation(ptAbsE2));
         conn.translateToRelative(ptE1);
-
-        newLine.setPoint(ptS1, 0);
+        newLine.setPoint(new PrecisionPoint(Math.round(ptS1.preciseX), Math.round(ptS1.preciseY)), 0);
+        
         // convert reference points back to relative to avoid rounding issues.
-        newLine.setPoint(ptE1, newLine.size() - 1);
+        newLine.setPoint(new PrecisionPoint(Math.round(ptE1.preciseX), Math.round(ptE1.preciseY)), newLine.size() - 1);
         if (newLine.size() != 2) {
             ptS2 = ptAbsS2;
             conn.translateToRelative(ptS2);
-            newLine.setPoint(ptS2, 1);
+            newLine.setPoint(new PrecisionPoint(Math.round(ptS2.preciseX), Math.round(ptS2.preciseY)), 1);
             ptE2 = ptAbsE2;
             conn.translateToRelative(ptE2);
-            newLine.setPoint(ptE2, newLine.size() - 2);
+            newLine.setPoint(new PrecisionPoint(Math.round(ptE2.preciseX), Math.round(ptE2.preciseY)), newLine.size() - 2);
         }
     }
 

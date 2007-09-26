@@ -13,7 +13,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
 import org.eclipse.draw2d.IFigure;
-
+import org.eclipse.draw2d.LineBorder;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeRectangleFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
@@ -38,8 +38,10 @@ public class RectangleEditPart extends GeoShapeEditPart {
 	}
 			
 	protected NodeFigure createNodeFigure() {
-		return new GeoShapeRectangleFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
-	}
+		NodeFigure nodeFigure = new GeoShapeRectangleFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
+		nodeFigure.setBorder(new LineBorder(1));
+        return nodeFigure;
+    }
 
 	public IFigure getContentPane() {
 		return ((GeoShapeFigure) getFigure()).getContentPane();
