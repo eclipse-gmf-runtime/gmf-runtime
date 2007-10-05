@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,19 +87,23 @@ public class LabelLocator extends AbstractLocator {
 	 * given offsets.
 	 */
 	public void relocate(IFigure target) {
+	    
+	    // The calculation of the location depends on the size of the shape so
+        // the size must be set first.
+
+       if (extent != null) {
+            LabelLocator currentConstraint = (LabelLocator)target.getParent().getLayoutManager().getConstraint(target);
+            Dimension currentExtent = currentConstraint.getSize();
+            Dimension size = new Dimension(currentExtent);
+            if (currentExtent.width == -1) size.width = target.getPreferredSize().width;
+            if (currentExtent.height == -1) size.height = target.getPreferredSize().height;
+            target.setSize(size);
+        } else {
+            target.setSize(new Dimension(target.getPreferredSize().width, target.getPreferredSize().height));           
+        }
+	       
 		Point location = LabelHelper.relativeCoordinateFromOffset(target, getReferencePoint(), offSet);
 		target.setLocation(location);
-				
-		if (extent != null) {
-			LabelLocator currentConstraint = (LabelLocator)target.getParent().getLayoutManager().getConstraint(target);
-			Dimension currentExtent = currentConstraint.getSize();
-			Dimension size = new Dimension(currentExtent);
-			if (currentExtent.width == -1) size.width = target.getPreferredSize().width;
-			if (currentExtent.height == -1) size.height = target.getPreferredSize().height;
-			target.setSize(size);
-		} else {
-			target.setSize(new Dimension(target.getPreferredSize().width, target.getPreferredSize().height));			
-		}
 	}
 	
 	/**
