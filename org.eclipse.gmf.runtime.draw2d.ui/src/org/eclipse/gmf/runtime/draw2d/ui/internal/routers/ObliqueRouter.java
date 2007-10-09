@@ -359,8 +359,10 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 	 * @return <code>true</code> if bendpoints were calculated here for intersecting shapes
 	 */
 	protected boolean checkShapesIntersect(Connection conn, PointList newLine) {
-		if (conn.getSourceAnchor().getOwner() == null
-				|| conn.getTargetAnchor().getOwner() == null)
+		if (conn.getSourceAnchor().getOwner() == null 
+				|| conn.getSourceAnchor().getOwner() instanceof Connection
+				|| conn.getTargetAnchor().getOwner() == null
+				|| conn.getTargetAnchor().getOwner() instanceof Connection)
 			return false;
 		
 		if (newLine.size() < 3) {
