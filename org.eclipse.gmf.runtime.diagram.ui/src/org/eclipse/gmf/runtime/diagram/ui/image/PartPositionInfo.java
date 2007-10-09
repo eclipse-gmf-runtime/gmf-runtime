@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.diagram.ui.image;
 
 import java.util.List;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -30,7 +31,7 @@ public class PartPositionInfo {
 	private int m_iPartX;
 	private int m_iPartY;
 	private EObject m_semanticElement;
-	private List m_polyline = null; // List contains objects of type Point (x,y coordinate pairs)
+	private List<Point> m_polyline = null; // List contains objects of type Point (x,y coordinate pairs)
 
 	/**
 	 * get the part Height
@@ -117,13 +118,14 @@ public class PartPositionInfo {
 	/**
 	 * @return List of Point type objects (that carry X and Y coordinate pair) representing the polyline
 	 */
-	public List getPolyline() {
+	public List<Point> getPolyline() {
 		return m_polyline;
 	}
+	
 	/**
 	 * @param List of Point type objects (that carry X and Y coordinate pair) representing the polyline
 	 */
-	public void setPolyline(List m_polyline) {
+	public void setPolyline(List<Point> m_polyline) {
 		this.m_polyline = m_polyline;
 	}
 	
