@@ -22,12 +22,17 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.RenderedImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.factory.RenderedImageFactory;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
+import org.eclipse.swt.widgets.Shell;
 
 public class CopyToImageUtilTests
     extends AbstractTestBase {
@@ -115,25 +120,47 @@ public class CopyToImageUtilTests
             monitor);
 
         RenderedImage ri = RenderedImageFactory.getInstance(tmpDest.toString());
-        assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
-        assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$ 
         file.delete();
+        assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
+        assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$
+        /*
+         * Entries in the RenederdImageFactory#instanceMap may not get a chance to be garbage collected.
+         * Hence, schedule a garbage collection.
+         */
+        System.gc();
     }
 
-    private void copyToImageOffscreenTestForFormat(String suffix, ImageFileFormat type)
-        throws IOException, CoreException {
-        IProgressMonitor monitor = new NullProgressMonitor();
-        File file = File.createTempFile("test", suffix);//$NON-NLS-1$ 
-        IPath tmpDest = new Path(file.getPath());
+    private void copyToImageOffscreenTestForFormat(String suffix,
+			ImageFileFormat type) throws IOException, CoreException {
+		IProgressMonitor monitor = new NullProgressMonitor();
+		File file = File.createTempFile("test", suffix);//$NON-NLS-1$ 
+		IPath tmpDest = new Path(file.getPath());
 
-        // export to each file type
-        new CopyToImageUtil().copyToImage(getDiagramEditPart().getDiagramView(), tmpDest, type,
-            monitor, getDiagramEditPart().getDiagramPreferencesHint());
-
-        RenderedImage ri = RenderedImageFactory.getInstance(tmpDest.toString());
-        assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
-        assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$ 
-        file.delete();
-    }
+		// export to each file type
+		Diagram diagram = getDiagram();
+		PreferencesHint hint = getDiagramEditPart().getDiagramPreferencesHint();
+		Shell shell = new Shell();
+		try {
+			DiagramEditPart diagramEditPart = OffscreenEditPartFactory
+					.getInstance().createDiagramEditPart(diagram, shell, hint);
+			assertNotNull(
+					"Offsreen editpart factory failed to generate diagram editpart. Diagram EditPart is null.", //$NON-NLS-1$
+					diagramEditPart);
+			new CopyToImageUtil().copyToImage(diagramEditPart, tmpDest, type,
+					monitor);
+		} finally {
+			shell.dispose();
+			RenderedImage ri = RenderedImageFactory.getInstance(tmpDest
+					.toString());
+			file.delete();
+			assertTrue("RenderedImage is null", ri != null);//$NON-NLS-1$ 
+			assertTrue("SWTImage is null", ri.getSWTImage() != null);//$NON-NLS-1$ 
+	        /*
+	         * Entries in the RenederdImageFactory#instanceMap may not get a chance to be garbage collected.
+	         * Hence, schedule a garbage collection.
+	         */
+			System.gc();
+		}
+	}
 
 }
