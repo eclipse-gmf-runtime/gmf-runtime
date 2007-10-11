@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1458,7 +1458,7 @@ public class AbstractProviderConfiguration {
 			
 			Object[] valuesCopy = null;
             if (methodDescriptor.getParameters() != null) {
-                valuesCopy = (Object[]) methodDescriptor.getParameters()
+                valuesCopy = methodDescriptor.getParameters()
                     .clone();
                 for (int i = 0; i < valuesCopy.length; i++) {
                     if (valuesCopy[i].equals(contextParam)) {
@@ -1468,8 +1468,9 @@ public class AbstractProviderConfiguration {
             }
 			
 			Method method = getStaticMethod(methodDescriptor);
-			Object valueObj = 
-				method.invoke(object, valuesCopy);
+			Object valueObj = (method != null) ? method.invoke(object,
+                valuesCopy)
+                : null;
 
 			if (methodDescriptor.getNext() == null)
 				return valueObj == null ? NULL : valueObj;
