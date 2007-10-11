@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class ExampleDiagramGeoshapePluginImages {
 
 	// Prefixes
-	private static final String PREFIX_WIZARD = "icons/wizard/"; //$NON-NLS-1$
+	private static final String PREFIX_WIZARD = "icons/wizards/"; //$NON-NLS-1$
 
 	// Image descriptors.
 	public static final ImageDescriptor DESC_GEOSHAPES_WIZARD = create(PREFIX_WIZARD
