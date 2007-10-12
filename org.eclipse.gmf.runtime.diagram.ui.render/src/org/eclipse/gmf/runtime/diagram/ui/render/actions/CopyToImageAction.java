@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.internal.dialogs.CopyToImageDia
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.l10n.DiagramUIRenderMessages;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToHTMLImageUtil;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -174,11 +175,13 @@ public class CopyToImageAction
 				if (dialog.exportToHTML()) {
 					openErrorDialog(DiagramUIRenderMessages.CopyToImageAction_outOfMemoryMessage);
 				} else {
-					if (MessageDialog
-							.openQuestion(
-									Display.getDefault().getActiveShell(),
-									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_title,
-									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_message)) {
+					if (new MessageDialog(Display.getDefault().getActiveShell(),
+							DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_title,
+							null,
+							DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_message,
+							MessageDialog.ERROR,
+							new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0
+							).open() == 0) {
 						runCopyToImageUI(dialog);
 					}
 				}					
@@ -190,11 +193,13 @@ public class CopyToImageAction
 				if (dialog.exportToHTML()) {
 					openErrorDialog(DiagramUIRenderMessages.CopyToImageAction_outOfMemoryMessage);
 				} else {
-					if (MessageDialog
-							.openQuestion(
-									Display.getDefault().getActiveShell(),
-									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_title,
-									DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_message)) {
+					if (new MessageDialog(Display.getDefault().getActiveShell(),
+							DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_title,
+							null,
+							DiagramUIRenderMessages.CopyToImageOutOfMemoryDialog_message,
+							MessageDialog.ERROR,
+							new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0
+							).open() == 0) {
 						runCopyToImageUI(dialog);
 					}
 				}					
