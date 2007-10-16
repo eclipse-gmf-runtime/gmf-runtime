@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.diagram.ui; singleton:=true
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.diagram.ui.util.TestsPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -11,6 +11,7 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.render.editparts;x-internal:=
  org.eclipse.gmf.tests.runtime.diagram.ui.action;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui.commands;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui.framework;x-internal:=true,
+ org.eclipse.gmf.tests.runtime.diagram.ui.label,
  org.eclipse.gmf.tests.runtime.diagram.ui.logic;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui.parts;x-internal:=true,
  org.eclipse.gmf.tests.runtime.diagram.ui.render.util;x-internal:=true,
@@ -40,5 +41,6 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.examples.runtime.diagram.logic;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.gmf.examples.runtime.diagram.logic.model;bundle-version="[1.0.0,2.0.0)"
+ org.eclipse.gmf.examples.runtime.diagram.logic.model;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.gmf.runtime.diagram.ui.properties
 Eclipse-LazyStart: true

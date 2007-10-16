@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,10 +46,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
+import org.eclipse.gmf.runtime.diagram.ui.label.WrappingLabelDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
@@ -89,6 +92,8 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 
 	/** Label that is displayed as the tooltip. */
 	private Label toolTipLabel = new Label();
+	  
+	private ILabelDelegate labelDelegate;
 
 	/**
 	 * coinstructor
@@ -108,40 +113,127 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 		
 	}
 
-	/**
-	 * @return WrapLabelFigure
-	 */
-	protected IFigure createFigure() {
-		return createWrapLabel();
-	}
+    /**
+     * Override to use a different figure for this editpart.
+     * <p>
+     * IMPORTANT NOTES:
+     * <li> If you override this to create a different type of figure, you
+     * should also override {@link #createLabelDelegate()} and make sure you no
+     * longer call {@link #getLabel()}.
+     * <li> Do not call {@link #getLabelDelegate()} from within this method. Any
+     * initialization of the label delegate should be done in the
+     * {@link #createLabelDelegate()} method.
+     * </p>
+     */
+    protected IFigure createFigure() {
+        return createWrapLabel();
+    }
+    
+    /**
+     * @return WrapLabel, the created wrap label
+     * @deprecated This method has been deprecated to remove the assumption that
+     *             the figure of a <code>TextCompartmentEditPart</code> is a
+     *             <code>WrapLabel</code>. Create your figure in the
+     *             {@link #createFigure()} method instead and don't forget to
+     *             stop calling {@link #getLabel()}.
+     */
+    protected WrapLabel createWrapLabel() {
+        // alignment properties are set in createLabelDelegate().
+        return new WrapLabel();
+    }
+    
+    /**
+     * Creates the label delegate that will be used to interact with the label
+     * figure.
+     * 
+     * @return the new label delegate
+     * @since 2.1
+     */
+    protected ILabelDelegate createLabelDelegate() {
 
-	/**
-	 * @return WrapLabel, the created wrap label
-	 */
-	protected WrapLabel createWrapLabel() {
-		WrapLabel label = new WrapLabel(""); //$NON-NLS-1$
-		label.setLabelAlignment(PositionConstants.TOP);
-		label.setTextAlignment(PositionConstants.TOP);
-		return label;
-	}
+        // just in case the client has overridden getLabel()...
+        WrapLabel label = getLabel();
+        ILabelDelegate newLabelDelegate = null;
+        if (label != null) {
+            newLabelDelegate = new WrappingLabelDelegate(label);
+        } else {
 
+            // this should be a WrappingLabel since this is what is created in
+            // createFigure()...
+            newLabelDelegate = new WrappingLabelDelegate(
+                (WrappingLabel) getFigure());
+        }
+
+        newLabelDelegate.setTextJustification(PositionConstants.CENTER);
+        newLabelDelegate.setAlignment(PositionConstants.CENTER);
+        newLabelDelegate.setTextAlignment(PositionConstants.TOP);
+        return newLabelDelegate;
+    }
+    
+    public IFigure getFigure() {
+        if (figure == null) {
+            setFigure(createFigure());
+            setLabelDelegate(createLabelDelegate());
+        }
+        return figure;
+    }
+
+    /**
+     * Returns the label delegate that can be used to interact with the label
+     * figure.
+     * 
+     * @return the label delegate
+     * @since 2.1
+     */
+    public ILabelDelegate getLabelDelegate() {
+        if (labelDelegate == null) {
+            // this means that getFigure() has never been called as getFigure()
+            // sets the label delegate. Call getFigure() first.
+            getFigure();
+
+            // check if the label delegate is null, just in case getFigure() was
+            // overridden
+            if (labelDelegate == null) {
+                setLabelDelegate(createLabelDelegate());
+            }
+
+            return labelDelegate;
+        }
+        return labelDelegate;
+    }
+
+    /**
+     * Sets the label delegate.
+     * 
+     * @param labelDelegate
+     *            the label delegate to be set
+     * @since 2.1
+     */
+    protected void setLabelDelegate(ILabelDelegate labelDelegate) {
+        this.labelDelegate = labelDelegate;
+    }
+    
+    public Object getAdapter(Class key) {
+        if (key == ILabelDelegate.class) {
+            return getLabelDelegate();
+        }
+        return super.getAdapter(key);
+    }  
 	
 	/**
-	 * Use getLabel() instead if you which to get the WrapLabel
-	 * for the the text compartent
-	 * @see org.eclipse.gef.GraphicalEditPart#getFigure()
-	 */
-	public IFigure getFigure() {
-		return super.getFigure();
-	}
-	
-	/**
-	 * This should be used instead of getFigure() to get the figure
-	 * @return Return the WrapLabel for the TextCompartment 
-	 */
-	public WrapLabel getLabel() {
-		return (WrapLabel) getFigure();
-	}
+     * This should be used instead of getFigure() to get the figure
+     * 
+     * @return Return the WrapLabel for the TextCompartment
+     * @deprecated This method has been deprecated to remove the assumption that
+     *             the figure of a <code>TextCompartmentEditPart</code> is a
+     *             <code>WrapLabel</code>. Use {@link #getLabelDelegate()} if
+     *             the behavior you need is available from the label delegate,
+     *             if not use {@link #getFigure()} and cast to the type of label
+     *             that you created in the {@link #createFigure()} method.
+     */
+    public WrapLabel getLabel() {
+        return (WrapLabel) getFigure();
+    }
 
 	/**
 	 * gets the label Icon for this edit part
@@ -179,7 +271,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart#editTextModified(java.lang.String)
 	 */
 	public void setLabelText(String text) {
-		getLabel().setText(text);
+        getLabelDelegate().setText(text);
 	}
 
 	/* 
@@ -485,7 +577,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
     }
 
 	protected void setFontColor(Color color) {
-		getLabel().setForegroundColor(color);
+		getFigure().setForegroundColor(color);
 	}
 
 	protected void addNotationalListeners() {
@@ -567,14 +659,14 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	 */
 	protected void refreshLabel() {
 		// refreshes the label text
-		getLabel().setText(getLabelText());
+		getLabelDelegate().setText(getLabelText());
 
 		// refreshes the label icon(s)
 		for (int i = 0; i < numIcons; i++)
-			getLabel().setIcon(getLabelIcon(i), i);
+			getLabelDelegate().setIcon(getLabelIcon(i), i);
 
 		// refreshes the label tool tip
-		getLabel().setToolTip(getLabelToolTip());
+		getFigure().setToolTip(getLabelToolTip());
 	}
 
 	/**
@@ -583,7 +675,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	protected void refreshUnderline() {
 		FontStyle style = (FontStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
 		if (style != null)
-			getLabel().setTextUnderline(style.isUnderline());
+			getLabelDelegate().setTextUnderline(style.isUnderline());
 	}
 
 	/**
@@ -592,7 +684,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 	protected void refreshStrikeThrough() {
 		FontStyle style = (FontStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getFontStyle());
 		if (style != null)
-			getLabel().setTextStrikeThrough(style.isStrikeThrough());
+			getLabelDelegate().setTextStrikeThrough(style.isStrikeThrough());
 	}
 
 	/**
@@ -602,10 +694,11 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 		if (accessibleEP == null)
 			accessibleEP = new AccessibleGraphicalEditPart() {
 			public void getName(AccessibleEvent e) {
-				IFigure fig = getFigure();
-				if (fig instanceof WrapLabel) {
-					e.result = ((WrapLabel)fig).getText();
-				}
+                ILabelDelegate label = getLabelDelegate();
+                if (label != null) {
+                    e.result = label.getText();
+                }
+
 			}
 		};
 		return accessibleEP;

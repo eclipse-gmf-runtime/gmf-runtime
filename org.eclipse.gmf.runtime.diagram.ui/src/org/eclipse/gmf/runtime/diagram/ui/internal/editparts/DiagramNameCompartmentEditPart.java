@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RunnableWithResult;
@@ -33,7 +32,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -62,15 +61,15 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
 		iconOptions.set(IconOptions.NO_DEFAULT_STEREOTYPE_IMAGE);
 		setNumIcons(NUM_ICONS);
 	}
-
-    protected IFigure createFigure() {
-        WrapLabel label = new WrapLabel();
-        label.setLabelAlignment(PositionConstants.TOP);
-        label.setIconAlignment(PositionConstants.TOP);
-        label.setTextAlignment(PositionConstants.TOP);
-        label.setTextWrap(true);
-        label.setTextWrapAlignment(PositionConstants.CENTER);
-        return label;
+    
+    protected ILabelDelegate createLabelDelegate() {
+        ILabelDelegate labelDelegate = super.createLabelDelegate();
+        labelDelegate.setIconAlignment(PositionConstants.TOP);
+        labelDelegate.setTextAlignment(PositionConstants.TOP);
+        labelDelegate.setAlignment(PositionConstants.TOP);
+        labelDelegate.setTextWrapOn(true);
+        labelDelegate.setTextJustification(PositionConstants.CENTER);
+        return labelDelegate;
     }
 
     /** Return the semantic element associated to this editpart. */

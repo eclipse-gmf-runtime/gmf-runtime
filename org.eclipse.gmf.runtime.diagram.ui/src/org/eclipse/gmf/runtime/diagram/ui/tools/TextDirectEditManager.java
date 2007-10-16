@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.draw2d.AncestorListener;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -30,13 +30,14 @@ import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.contentassist.ContentAssistantHelper;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.WrapTextCellEditor;
@@ -46,15 +47,14 @@ import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -66,14 +66,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.CellEditorActionHandler;
 
-import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @author melaasar
  */
 public class TextDirectEditManager
     extends DirectEditManager {
-    
+
     /**
      * content assist background color
      */
@@ -83,116 +82,54 @@ public class TextDirectEditManager
      * content assist foreground color
      */
     private Color proposalPopupForegroundColor = null;
-    
+
     private boolean committed = false;
-    
+
     /**
      * flag used to avoid unhooking listeners twice if the UI thread is blocked
      */
     private boolean listenersAttached = true;
 
-
-    /** String buffer to hold initial characters **/
+    /** String buffer to hold initial characters * */
     private StringBuffer initialString = new StringBuffer();
-    
+
     /**
      * Cache the font descriptor when a font is created so that it can be
      * disposed later.
      */
     private List cachedFontDescriptors = new ArrayList();
-    
+
     private IActionBars actionBars;
+
     private CellEditorActionHandler actionHandler;
+
     private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
-    
+
     private Font zoomLevelFont = null;
-    
-    private CellEditorLocator locator;
-        
+
     /**
-     * the text cell editor locator
-     * @author mmostafa
-     *
+     * The superclass only relocates the cell editor when the location of the
+     * editpart's figure moves, but we need to also relocate the cell editor
+     * when the text figure's location changes.
      */
-    static private class TextCellEditorLocator implements CellEditorLocator {
+    private AncestorListener textFigureListener;
 
-        private WrapLabel wrapLabel;
-        
-        public TextCellEditorLocator(WrapLabel wrapLabel) {
-            super();
-            this.wrapLabel = wrapLabel;
-        }
-
-        
-        public WrapLabel getWrapLabel() {
-            return wrapLabel;
-        }
-
-        public void relocate(CellEditor celleditor) {
-            Text text = (Text) celleditor.getControl();
-            WrapLabel fig = getWrapLabel();
-            
-            Rectangle rect = fig.getTextBounds().getCopy();
-            fig.translateToAbsolute(rect);
-            
-            int avrWidth = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
-            
-            
-            if (fig.isTextWrapped() && fig.getText().length() > 0)
-                rect.setSize(new Dimension(rect.width, rect.height + FigureUtilities.getFontMetrics(text.getFont()).getDescent()));
-            else
-                rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avrWidth*2, 0));
-            
-            org.eclipse.swt.graphics.Rectangle newRect = text.computeTrim(rect.x, rect.y, rect.width, rect.height);
-            
-            Rectangle textBounds = new Rectangle(text.getBounds());
-            if (!newRect.equals(textBounds)) {
-                if (!(fig.getTextWrapAlignment() == PositionConstants.LEFT || fig.getTextAlignment() == PositionConstants.LEFT))
-                    text.setBounds(newRect.x, newRect.y, newRect.width + avrWidth*3, newRect.height);
-                else {
-                    if (text.getBounds().x == 0 || Math.abs(text.getBounds().x - newRect.x) >= avrWidth)
-                        text.setBounds(newRect.x, newRect.y, newRect.width + avrWidth*3, newRect.height);
-                    else
-                        text.setBounds(text.getBounds().x, newRect.y, newRect.width + avrWidth*3, newRect.height);
-                }   
-            }
-        }
-    }
-
-    private static class LabelCellEditorLocator implements CellEditorLocator {
-
-        private Label label;
-
-        public LabelCellEditorLocator(Label label) {
-            this.label = label;
-        }
-
-        public Label getLabel() {
-            return label;
-        }
-
-        public void relocate(CellEditor celleditor) {
-            Text text = (Text) celleditor.getControl();
-            Rectangle rect = getLabel().getTextBounds().getCopy();
-            getLabel().translateToAbsolute(rect);
-
-            int avr = FigureUtilities.getFontMetrics(text.getFont()).getAverageCharWidth();
-            rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT, SWT.DEFAULT)).expand(avr * 2, 0));
-
-            org.eclipse.swt.graphics.Rectangle newRect = text.computeTrim(rect.x, rect.y, rect.width, rect.height);
-            if (!newRect.equals(new Rectangle(text.getBounds())))
-                text.setBounds(newRect.x, newRect.y, newRect.width, newRect.height);
-        }
-    }
+    /**
+     * Cache locally so we can check if the user specified an editorType.
+     */
+    private Class editorType;
 
     /**
      * constructor
      * 
-     * @param source <code>GraphicalEditPart</code> to support direct edit of.  The figure of
-     * the <code>source</code> edit part must be of type <code>WrapLabel</code>.
+     * @param source
+     *            <code>GraphicalEditPart</code> to support direct edit of.
+     *            The figure of the <code>source</code> edit part must be of
+     *            type <code>WrapLabel</code>.
      */
     public TextDirectEditManager(ITextAwareEditPart source) {
-        this(source, getTextCellEditorClass(source), getTextCellEditorLocator(source));
+        this(source, null,
+            getTextCellEditorLocator(source));
     }
 
     /**
@@ -200,32 +137,112 @@ public class TextDirectEditManager
      * @param editorType
      * @param locator
      */
-    public TextDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator) {
+    public TextDirectEditManager(GraphicalEditPart source, Class editorType,
+            CellEditorLocator locator) {
         super(source, editorType, locator);
-        this.locator = locator;
+        this.editorType = editorType;
     }
 
     /**
-     * @param source the <code>ITextAwareEditPart</code> to determine the cell editor for
-     * @return the <code>CellEditorLocator</code> that is appropriate for the source <code>EditPart</code>
+     * @param source
+     *            the <code>ITextAwareEditPart</code> to determine the cell
+     *            editor for
+     * @return the <code>CellEditorLocator</code> that is appropriate for the
+     *         source <code>EditPart</code>
      */
-    public static CellEditorLocator getTextCellEditorLocator(ITextAwareEditPart source){
-               
-        if (source instanceof TextCompartmentEditPart)
-            return new TextCellEditorLocator(((TextCompartmentEditPart)source).getLabel());
-        else {
-            IFigure figure = source.getFigure();
-            assert figure instanceof Label;
-            return new LabelCellEditorLocator((Label)figure);
+    public static CellEditorLocator getTextCellEditorLocator(
+            final ITextAwareEditPart source) {
+
+        final ILabelDelegate label = (ILabelDelegate) source
+            .getAdapter(ILabelDelegate.class);
+        if (label != null) {
+            return new CellEditorLocator() {
+
+                public void relocate(CellEditor celleditor) {
+                    Text text = (Text) celleditor.getControl();
+
+                    Rectangle rect = label.getTextBounds().getCopy();
+                    if (label.getText().length() <= 0) {
+                        // if there is no text, let's assume a default size
+                        // because it looks silly when the cell editor it tiny.
+                        rect.setSize(new Dimension(text.computeSize(
+                            SWT.DEFAULT, SWT.DEFAULT)));
+
+                        if (label.isTextWrapOn()) {
+                            // adjust the location of the cell editor based on text
+                            // justification (i.e. where the cursor will be
+                            if (label.getTextJustification() == PositionConstants.RIGHT) {
+                                rect.translate(-rect.width, 0);
+                            } else 
+                                if (label.getTextJustification() == PositionConstants.CENTER) {
+                                rect.translate(-rect.width / 2, 0);
+                            }
+                        }
+                    }
+
+                    if (label.isTextWrapOn()) {
+                        // When zoomed in, the height of this rectangle is not
+                        // sufficient because the text is shifted downwards a
+                        // little bit. Add some to the height to compensate for
+                        // this. I'm not sure why this is happening, but I can
+                        // see the text shifting down even in a label on a GEF
+                        // logic diagram when zoomed into 400%.
+                        int charHeight = FigureUtilities.getFontMetrics(
+                            text.getFont()).getHeight();
+                        rect.resize(0, charHeight / 2);
+                        
+                    } else {
+                        
+                      rect.setSize(new Dimension(text.computeSize(
+                            SWT.DEFAULT, SWT.DEFAULT)));
+
+                        // If SWT.WRAP is not passed in as a style of the
+                        // TextCellEditor, then for some reason the first
+                        // character disappears upon entering the second 
+                        // character. This should be investigated and an 
+                        // SWT bug logged.
+                        int avr = FigureUtilities
+                            .getFontMetrics(text.getFont())
+                            .getAverageCharWidth();
+                        rect.setSize(new Dimension(text.computeSize(
+                            SWT.DEFAULT, SWT.DEFAULT)).expand(avr * 2, 0));
+                    }
+
+                    org.eclipse.swt.graphics.Rectangle newRect = text
+                        .computeTrim(rect.x, rect.y, rect.width, rect.height);
+                    if (!newRect.equals(text.getBounds())) {
+                        text.setBounds(newRect.x, newRect.y, newRect.width,
+                            newRect.height);
+                    }
+                }
+            };
         }
+
+        // return a default figure locator
+        return new CellEditorLocator() {
+            public void relocate(CellEditor celleditor) {
+                Text text = (Text) celleditor.getControl();
+                Rectangle rect = source.getFigure().getBounds().getCopy();
+                source.getFigure().translateToAbsolute(rect);
+                if (!rect.equals(new Rectangle(text.getBounds()))) {
+                    text.setBounds(rect.x, rect.y, rect.width, rect.height);
+                }
+            }
+        };
     }
-    
+
     /**
-     * @param source the <code>GraphicalEditPart</code> that is used to determine which
-     * <code>CellEditor</code> class to use.
-     * @return the <code>Class</code> of the <code>CellEditor</code> to use for the text editing.
+     * @param source
+     *            the <code>GraphicalEditPart</code> that is used to determine
+     *            which <code>CellEditor</code> class to use.
+     * @return the <code>Class</code> of the <code>CellEditor</code> to use
+     *         for the text editing.
+     * @deprecated to override the cell editor class, use
+     *             {@link #createCellEditorOn(Composite)}, this provides the
+     *             flexibility necessary to initialize the cell editor with a
+     *             style.
      */
-    public static Class getTextCellEditorClass(GraphicalEditPart source){
+    public static Class getTextCellEditorClass(GraphicalEditPart source) {
         IFigure figure = source.getFigure();
                 
         if (figure instanceof WrapLabel && ((WrapLabel) figure).isTextWrapped())
@@ -233,17 +250,55 @@ public class TextDirectEditManager
         
         return TextCellEditorEx.class;
     }
-    
 
     /**
-     * Given a <code>WrapLabel</code> object, this will calculate the 
+     * This method is overridden so that the editor class can have a style as
+     * the style needs to be passed into the editor class when it is created. It
+     * will default to the super behavior if an <code>editorType</code> was
+     * passed into the constructor.
+     * @since 2.1
+     */
+    protected CellEditor createCellEditorOn(Composite composite) {
+
+        // if the client has overridden this class and provided their own editor
+        // type, then we should use that
+        if (editorType != null) {
+            return super.createCellEditorOn(composite);
+        }
+
+        ILabelDelegate label = (ILabelDelegate) getEditPart().getAdapter(
+            ILabelDelegate.class);
+        if (label != null && label.isTextWrapOn()) {
+            int style = SWT.WRAP | SWT.MULTI;
+            
+            switch (label.getTextJustification()) {
+                case PositionConstants.LEFT:
+                    style = style | SWT.LEAD;
+                    break;
+                case PositionConstants.RIGHT:
+                    style = style | SWT.TRAIL;
+                    break;
+                case PositionConstants.CENTER:
+                    style = style | SWT.CENTER;
+                    break;
+                default:
+                    break;
+            }
+            return new WrapTextCellEditor(composite, style);
+        } else {
+            return new TextCellEditorEx(composite);
+        }
+    }
+
+    /**
+     * Given a label figure object, this will calculate the 
      * correct Font needed to display into screen coordinates, taking into 
      * account the current mapmode.  This will typically be used by direct
      * edit cell editors that need to display independent of the zoom or any
      * coordinate mapping that is taking place on the drawing surface.
      * 
-     * @param label the <code>WrapLabel</code> to use for the font calculation
-     * @return the <code>Font</code> that is scaled to the screen coordinates.  
+     * @param label the label to use for the font calculation
+     * @return the <code>Font</code> that is scaled to the screen coordinates.
      * Note: the returned <code>Font</code> should not be disposed since it is
      * cached by a common resource manager.
      */
@@ -481,24 +536,6 @@ public class TextDirectEditManager
         else
             return actualFont;
     }
-    
-    /**
-     * Gets the tex extent scaled to the mapping mode
-     */
-    private Dimension getTextExtents(String s, Font font, IMapMode mm) {
-        Dimension d = FigureUtilities.getTextExtents(s, font);
-        // height should be set using the font height and the number of lines
-        // in the string 
-        int lineCount = getLineCount(s);
-        d.height = FigureUtilities.getFontMetrics(font).getHeight()*lineCount;
-        
-        return new Dimension(mm.DPtoLP(d.width), mm.DPtoLP(d.height));
-    }
-
-    private int getLineCount(String s) {
-        StringTokenizer tokenizer = new StringTokenizer(s, "\n"); //$NON-NLS-1$
-        return tokenizer.countTokens();
-    }
 
     public void show() {
         super.show();
@@ -511,7 +548,7 @@ public class TextDirectEditManager
         control.setFont(this.zoomLevelFont);
 
         //since the font's have been resized, we need to resize the  Text control...
-        locator.relocate(getCellEditor());
+        getLocator().relocate(getCellEditor());
 
     }
     
@@ -527,115 +564,9 @@ public class TextDirectEditManager
      */
     public void show(Point location) {      
         show();
-        
-        Rectangle iconBounds;
-        Image icon;
-        int textPlacement;
-        String subStringText;
-        String text;
-
-        IFigure fig = getEditPart().getFigure();
-        if (fig instanceof WrapLabel) {
-            WrapLabel label = (WrapLabel) fig;
-            iconBounds = label.getIconBounds().getCopy();
-            icon = label.getIcon();
-            textPlacement = label.getTextPlacement();
-            subStringText = label.getSubStringText();
-            text = label.getText();
-        } else if (fig instanceof Label) {
-            Label label = (Label) fig;
-            iconBounds = label.getIconBounds().getCopy();
-            icon = label.getIcon();
-            textPlacement = label.getTextPlacement();
-            subStringText = label.getSubStringText();
-            text = label.getText();
-        } else {
-            sendClickToCellEditor(location);
-            return;
-        }
-
-        Text textControl = (Text)getCellEditor().getControl();
-        
-        //we need to restore our wraplabel figure bounds after we are done
-        Rectangle restoreRect = fig.getBounds().getCopy();
-        
-        Rectangle rect = fig.getBounds();
-        fig.translateToAbsolute(rect);
-        
-        if (!rect.contains(new org.eclipse.draw2d.geometry.Point(location.x,location.y))) {
-            textControl.setSelection(0, textControl.getText().length());
-            fig.setBounds(restoreRect);
-            return;
-        }
-        
-        fig.translateToAbsolute(iconBounds);
-
-        double avrLines =  fig.getBounds().height / (double)FigureUtilities.getFontMetrics(this.zoomLevelFont).getHeight();
-        
-        int xWidth = location.x - rect.x;
-        
-        if (icon != null && textPlacement == PositionConstants.EAST) 
-            xWidth -= iconBounds.width;
-        
-        double yPercentage = (location.y - rect.y) / (double)rect.height;
-        
-        //calculate the line number the mouse clicked on.
-        int lineNum = (int)Math.ceil(avrLines * yPercentage);
-        
-        //character count for caret positioning...
-        int charCount = 0;
-        
-        StringTokenizer tokenizer = new StringTokenizer(subStringText, "\n"); //$NON-NLS-1$
-
-        //calculate the total characters before linePos...
-        for (int lineCount = 1; lineCount < lineNum; lineCount++) {
-            if (tokenizer.hasMoreTokens()) {
-                charCount += tokenizer.nextToken().length();
-                
-                if (charCount >= text.length())
-                    break;
-                
-                //check if there is a user-inserted new line which will be accounted in the Text control...
-                String newLineCheck = text.substring(charCount,charCount+1); 
-                if (newLineCheck.equals("\r") || newLineCheck.equals("\n")) //$NON-NLS-1$ //$NON-NLS-2$
-                    charCount++;
-            }
-            else {
-                //our linePos calculation was wrong...revert to sending a mouse click...
-                sendClickToCellEditor(location);
-                fig.setBounds(restoreRect);
-                return;
-            }
-        }
-        
-        //now count the last line's characters till the point where the mouse clicked...
-        if (tokenizer.hasMoreTokens()) {
-            String currentLineText = tokenizer.nextToken();
-            
-            IMapMode mm = MapModeUtil.getMapMode(fig);
-            
-            for (int i = 1; i <= currentLineText.length(); i++) {
-                Dimension textExtent = getTextExtents(currentLineText.substring(0, i), this.zoomLevelFont, mm);
-                fig.translateToAbsolute(textExtent);
-                
-                charCount++;
-                
-                if (textExtent.width >= xWidth)
-                    break;
-            }
-            
-            textControl.setSelection(charCount);
-            
-            fig.setBounds(restoreRect);
-            
-        }
-        else {
-            //our linePos calculation was wrong...revert to sending a mouse click...
-            sendClickToCellEditor(location);
-            fig.setBounds(restoreRect);
-        }
+        sendClickToCellEditor(location);
     }
-    
+
     private void sendClickToCellEditor(final Point location) {
         //make sure the diagram doesn't receive the click event..
         getCellEditor().getControl().setCapture(true);
@@ -671,15 +602,47 @@ public class TextDirectEditManager
         }.start();
     }
 
-    /* 
-     * Overrides super unhookListeners to set listeners attached flag
-     * This method prevents unhooking listeners twice if the UI thread is blocked.
+    protected void hookListeners() {
+        super.hookListeners();
+
+        // TODO: This gets around the problem of the cell editor not growing big
+        // enough when in autosize mode because it doesn't listen to textflow
+        // size changes. The superclass should be modified to not assume we want
+        // to listen to the editpart's figure.
+        ILabelDelegate label = (ILabelDelegate) getEditPart().getAdapter(
+            ILabelDelegate.class);
+        if (label != null && getEditPart().getFigure() instanceof WrappingLabel) {
+
+            textFigureListener = new AncestorListener.Stub() {
+
+                public void ancestorMoved(IFigure ancestor) {
+                    getLocator().relocate(getCellEditor());
+                }
+            };
+            ((IFigure) ((WrappingLabel) getEditPart().getFigure())
+                .getTextFigure().getChildren().get(0))
+                .addAncestorListener(textFigureListener);
+        }
+    }
+
+    /*
+     * Overrides super unhookListeners to set listeners attached flag This
+     * method prevents unhooking listeners twice if the UI thread is blocked.
      * For example, a validation dialog may block the thread
      */
     protected void unhookListeners() {
         if (listenersAttached) {
             listenersAttached = false;
             super.unhookListeners();
+
+            ILabelDelegate label = (ILabelDelegate) getEditPart().getAdapter(
+                ILabelDelegate.class);
+            if (label != null && textFigureListener != null) {
+                ((IFigure) ((WrappingLabel) getEditPart().getFigure())
+                    .getTextFigure().getChildren().get(0))
+                    .removeAncestorListener(textFigureListener);
+                textFigureListener = null;
+            }
         }
     }
 
@@ -734,11 +697,6 @@ public class TextDirectEditManager
         _actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), find);
         _actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undo);
         _actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redo);
-    }
-
-    public void setLocator(CellEditorLocator locator) {
-        super.setLocator(locator);
-        this.locator = locator;
     }
 
 }

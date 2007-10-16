@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ListItemComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableTextEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 
 /**
  * @author melaasar
@@ -41,13 +41,18 @@ public class ListItemEditPart
 	}
 
 	protected IFigure createFigure() {
-		WrapLabel label = (WrapLabel) super.createFigure();
-		label.setLabelAlignment(PositionConstants.LEFT);
-		label.setVisible(false);
-		return label;
+	    IFigure theFigure = super.createFigure();
+	    theFigure.setVisible(false);
+		return theFigure;
 	}
 
-	public DragTracker getDragTracker(Request request) {
+	protected ILabelDelegate createLabelDelegate() {
+	    ILabelDelegate labelDelegate = super.createLabelDelegate();
+	    labelDelegate.setAlignment(PositionConstants.LEFT);
+        return labelDelegate;
+    }
+
+    public DragTracker getDragTracker(Request request) {
 		if (request instanceof SelectionRequest
 			&& ((SelectionRequest) request).getLastButtonPressed() == 3)
 			return null;

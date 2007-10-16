@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -398,6 +399,11 @@ public abstract class AbstractPresentationTestFixture
 		}
 	}
 	
+    public ShapeEditPart createShapeUsingTool(IElementType elementType,
+            Point location, IGraphicalEditPart containerEP) {
+        return createShapeUsingTool(elementType, location, null, containerEP);
+    }
+    
 	/**
 	 * Creates a new shape using the request created by the
 	 * <code>CreationTool</code>.
@@ -409,10 +415,13 @@ public abstract class AbstractPresentationTestFixture
 	 * @return the new shape's editpart
 	 */
 	public ShapeEditPart createShapeUsingTool(IElementType elementType,
-			Point location, IGraphicalEditPart containerEP) {
+			Point location, Dimension size, IGraphicalEditPart containerEP) {
 
 		CreateRequest request = getCreationRequest(elementType);
 		request.setLocation(location);
+		if (size != null) {
+		    request.setSize(size);
+		}
 		Command cmd = containerEP.getCommand(request);
 
 		int previousNumChildren = containerEP.getChildren().size();

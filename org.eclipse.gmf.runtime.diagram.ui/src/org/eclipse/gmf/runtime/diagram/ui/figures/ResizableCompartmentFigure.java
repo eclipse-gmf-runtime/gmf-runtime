@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.OneLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.AnimatableScrollPane;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OverlayScrollPaneLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -59,7 +60,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 	/**
 	 * The compartment title label
 	 */
-	private WrapLabel titleLabel;
+	private WrappingLabel titleLabel;
 	
 	/**
 	 * the minimum size the client area can occupy in logical coordinates
@@ -243,7 +244,7 @@ public class ResizableCompartmentFigure extends NodeFigure {
 			if (titleLabel != null)
 				getTextPane().remove(titleLabel);
 		} else if (titleLabel == null) {
-			getTextPane().add(titleLabel = new WrapLabel(title));
+			getTextPane().add(titleLabel = new WrappingLabel(title));
 		} else
 			titleLabel.setText(title);
 	}

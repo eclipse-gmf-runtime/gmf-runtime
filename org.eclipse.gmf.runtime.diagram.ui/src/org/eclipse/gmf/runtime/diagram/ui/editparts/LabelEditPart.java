@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,9 +45,9 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEdi
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.ResizableLabelLocator;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -313,14 +313,13 @@ public class LabelEditPart extends TopGraphicEditPart {
 	protected String getAccessibleText() {
 		String accessibleString = ""; //$NON-NLS-1$
 		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
-			IGraphicalEditPart ep = (IGraphicalEditPart) iter.next();
-			if (ep instanceof TextCompartmentEditPart) {
-				IFigure fig = ep.getFigure();
-				if (fig instanceof WrapLabel) {
-					accessibleString += ((WrapLabel)fig).getText() + " "; //$NON-NLS-1$
-				}
-			}
-		}
+            IGraphicalEditPart ep = (IGraphicalEditPart) iter.next();
+            ILabelDelegate label = (ILabelDelegate) ep
+                .getAdapter(ILabelDelegate.class);
+            if (label != null) {
+                accessibleString += label.getText() + " "; //$NON-NLS-1$
+            }
+        }
 		return accessibleString;
 	}
 

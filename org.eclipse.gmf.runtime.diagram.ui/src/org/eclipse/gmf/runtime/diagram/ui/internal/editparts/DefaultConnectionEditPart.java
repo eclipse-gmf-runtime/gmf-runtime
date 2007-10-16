@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,8 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.LabelEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.OnConnectionLocator;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -54,7 +54,7 @@ public class DefaultConnectionEditPart
 
 		};
 
-		conn.add(new WrapLabel(DiagramUIMessages.InvalidView), new OnConnectionLocator(conn, 50));
+		conn.add(new LabelEx(DiagramUIMessages.InvalidView), new OnConnectionLocator(conn, 50));
 		return conn;
 	}
 }

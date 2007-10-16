@@ -72,6 +72,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.SanpToHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.editpolicy.EditPolicyService;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
@@ -81,7 +82,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
@@ -1139,9 +1139,9 @@ public abstract class GraphicalEditPart
                     childEP = getChildBySemanticHint(CommonParserHint.DESCRIPTION);
                 }
                 if (childEP != null) {
-                    IFigure fig = childEP.getFigure();
-                    if (fig instanceof WrapLabel) {
-                        e.result = ((WrapLabel) fig).getText();
+                    ILabelDelegate label = (ILabelDelegate) childEP.getAdapter(ILabelDelegate.class);
+                    if (label != null) {
+                        e.result = label.getText();
                     }
                 } else {
                     e.result = getSemanticName();

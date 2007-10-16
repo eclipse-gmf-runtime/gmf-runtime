@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.editparts;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RunnableWithResult;
@@ -25,7 +24,7 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DescriptionDirectEditPolicy;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.notation.View;
@@ -40,18 +39,16 @@ public class DescriptionCompartmentEditPart extends TextCompartmentEditPart {
 		super(view);
 	}
 
-	/**
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-	 */
-	protected IFigure createFigure() {
-		WrapLabel label = new WrapLabel();
-		label.setTextAlignment(PositionConstants.TOP);
-		label.setLabelAlignment(PositionConstants.TOP);
-		label.setTextWrap(true);
-		return label;
-	}
+	protected ILabelDelegate createLabelDelegate() {
+        ILabelDelegate labelDelegate = super.createLabelDelegate();
+        labelDelegate.setTextJustification(PositionConstants.LEFT);
+        labelDelegate.setAlignment(PositionConstants.TOP);
+        labelDelegate.setTextAlignment(PositionConstants.TOP);
+        labelDelegate.setTextWrapOn(true);        
+        return labelDelegate;
+    }
 
-	/**
+    /**
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart#isEditable()
 	 */
 	protected boolean isEditable() {

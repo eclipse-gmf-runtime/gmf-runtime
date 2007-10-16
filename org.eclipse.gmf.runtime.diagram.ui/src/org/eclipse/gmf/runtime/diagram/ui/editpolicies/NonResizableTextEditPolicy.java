@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,8 @@ import java.util.List;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.handles.MoveHandle;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 
 /**
  * A non-resizable editpolicy for text compartments. It handles the selection
@@ -29,16 +28,21 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 public class NonResizableTextEditPolicy
 	extends NonResizableEditPolicyEx {
 
-	private WrapLabel getLabel() {
-		return ((TextCompartmentEditPart) getHost()).getLabel();
-
-	}
+    /**
+     * Gets the label delegate that is used to interact with the label figure
+     * inside the host editpart.
+     * 
+     * @return the label delegate
+     */
+    private ILabelDelegate getLabel() {
+        return (ILabelDelegate) getHost().getAdapter(ILabelDelegate.class);
+    }
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.NonResizableEditPolicy#hideFocus()
 	 */
 	protected void hideFocus() {
-		getLabel().setFocus(false);
+	    getLabel().setFocus(false);
 	}
 
 	/**

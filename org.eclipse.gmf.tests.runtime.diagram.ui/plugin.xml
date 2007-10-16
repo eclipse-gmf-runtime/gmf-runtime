@@ -361,8 +361,187 @@
       <diagramEventBrokerProvider class="org.eclipse.gmf.tests.runtime.diagram.ui.services.LogicDiagramEventBrokerProvider">
          <Priority name="Lowest"/>
          <editingDomain ID="org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"/>
-      </diagramEventBrokerProvider>
-      
+      </diagramEventBrokerProvider>      
    </extension>
-    
+
+	<!-- Label Tests:  Adds label testing support so that when
+	this test plugin is loaded, labels can be tested in the UI -->
+	
+	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+    	<propertyContributor
+        	typeMapper="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ModelElementTypeMapper"
+            contributorId="org.eclipse.gmf.runtime.diagram.ui.properties"
+            labelProvider="org.eclipse.gmf.runtime.common.ui.services.util.CommonLabelProvider">
+        <propertyCategory
+        	category="Label">
+        </propertyCategory>
+      </propertyContributor>
+   </extension>
+ 
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+  	<propertyTabs contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">           
+    	<propertyTab
+        	category="Label"
+            id="property.tab.TextLabelPropertySection"
+            label="Label Figure">
+        </propertyTab>                   
+    </propertyTabs>
+  </extension>
+  
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
+  	<propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">           
+		<propertySection tab="property.tab.TextLabelPropertySection" 
+	 		filter="org.eclipse.gmf.tests.runtime.diagram.ui.label.TextLabelPropertySectionFilter" 
+	 		class="org.eclipse.gmf.tests.runtime.diagram.ui.label.TextLabelPropertySection" 
+	 		id="property.section.TextLabelPropertySection">
+	 	</propertySection>     
+  	</propertySections>
+  </extension>
+  
+  	<!-- And again for modeler <START> -->
+	
+	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+    	<propertyContributor
+        	typeMapper="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ModelElementTypeMapper"
+            contributorId="com.ibm.xtools.modeler.ui.properties"
+            labelProvider="org.eclipse.gmf.runtime.common.ui.services.util.CommonLabelProvider">
+        <propertyCategory
+        	category="Label2">
+        </propertyCategory>
+      </propertyContributor>
+   </extension>
+ 
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+  	<propertyTabs contributorId="com.ibm.xtools.modeler.ui.properties">           
+    	<propertyTab
+        	category="Label2"
+            id="property.tab.TextLabelPropertySection2"
+            label="Label Figure">
+        </propertyTab>                   
+    </propertyTabs>
+  </extension>
+  
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
+  	<propertySections contributorId="com.ibm.xtools.modeler.ui.properties">           
+		<propertySection tab="property.tab.TextLabelPropertySection2" 
+	 		filter="org.eclipse.gmf.tests.runtime.diagram.ui.label.TextLabelPropertySectionFilter" 
+	 		class="org.eclipse.gmf.tests.runtime.diagram.ui.label.TextLabelPropertySection" 
+	 		id="property.section.TextLabelPropertySection2">
+	 	</propertySection>     
+  	</propertySections>
+  </extension>
+    	<!-- And again for modeler <END> -->
+   
+  <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+    <specializationType
+            id="org.eclipse.gmf.examples.runtime.diagram.label.WrappingLabelNote"     
+            name="WrappingLabel"
+            kind="org.eclipse.gmf.runtime.diagram.ui.util.INotationType">
+         <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
+         <param name="semanticHint" value="WrappingLabelNote"/> 
+    </specializationType>
+    <specializationType
+            id="org.eclipse.gmf.examples.runtime.diagram.label.GEFLabelNote"     
+            name="GEF Label"
+            kind="org.eclipse.gmf.runtime.diagram.ui.util.INotationType">
+         <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
+         <param name="semanticHint" value="GEFLabelNote"/> 
+    </specializationType>
+    <specializationType
+            id="org.eclipse.gmf.examples.runtime.diagram.label.OldWrapLabelNote"     
+            name="OldWrapLabel"
+            kind="org.eclipse.gmf.runtime.diagram.ui.util.INotationType">
+         <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
+         <param name="semanticHint" value="OldWrapLabelNote"/> 
+    </specializationType>
+    <specializationType
+            id="org.eclipse.gmf.examples.runtime.diagram.label.WrapLabelNote"     
+            name="WrapLabel"
+            kind="org.eclipse.gmf.runtime.diagram.ui.util.INotationType">
+         <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
+         <param name="semanticHint" value="WrapLabelNote"/> 
+    </specializationType>
+  </extension>
+   
+  <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority
+               name="Low">
+         </Priority>
+         <contribution
+               factoryClass="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelPaletteFactory">
+            <entry
+                  label="LabelDrawer"
+                  kind="drawer"
+                  description="LabelDrawer"
+                  path="/"
+                  id="labelDrawer">
+            </entry>
+            <entry
+                  label="New WrappingLabel"
+                  kind="tool"
+                  description="New WrappingLabel"
+                  path="/labelDrawer/"
+                  id="org.eclipse.gmf.examples.runtime.diagram.label.WrappingLabelNote">
+            </entry>
+            <entry
+                  label="GEFLabel"
+                  kind="tool"
+                  description="GEFLabel"
+                  path="/labelDrawer/"
+                  id="org.eclipse.gmf.examples.runtime.diagram.label.GEFLabelNote">
+            </entry>
+            <entry
+                  label="WrapLabel Delegating to New WrappingLabel"
+                  kind="tool"
+                  description="WrapLabel Delegating to New WrappingLabel"
+                  path="/labelDrawer/"
+                  id="org.eclipse.gmf.examples.runtime.diagram.label.WrapLabelNote">
+            </entry>
+            <entry
+                  label="Previous WrapLabel"
+                  kind="tool"
+                  description="Previous WrapLabel"
+                  path="/labelDrawer/"
+                  id="org.eclipse.gmf.examples.runtime.diagram.label.OldWrapLabelNote">
+            </entry>
+         </contribution>
+      </paletteProvider>
+   </extension>
+	
+   <extension 
+   		id="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelViewProvider" 
+   		name="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelViewProvider" 
+   		point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
+      <viewProvider class="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelViewProvider">
+         <Priority name="Low">
+         </Priority>                
+         <context 
+         	viewClass="org.eclipse.gmf.runtime.notation.Node" 
+         	semanticHints="GEFLabelNote, WrappingLabelNote, OldWrapLabelNote, WrapLabelNote, GEFLabel, WrappingLabel, OldWrapLabel, WrapLabel">
+         </context>                     
+      </viewProvider>
+   </extension> 
+   
+   <extension 
+   		id="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelEditPartProvider" 
+   		name="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelEditPartProvider" 
+   		point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
+      <editpartProvider class="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelEditPartProvider">
+         <Priority name="Low">
+         </Priority>
+         <object class="org.eclipse.gmf.runtime.notation.View" id="ShapesByType">
+            <method 
+            	name="getType()" 
+            	value="GEFLabelNote, WrappingLabelNote, OldWrapLabelNote, WrapLabelNote, GEFLabel, WrappingLabel, OldWrapLabel, WrapLabel">
+            </method>
+         </object>
+         <context views="ShapesByType">
+         </context>
+      </editpartProvider>
+   </extension> 
+   
+	<!-- End Label Tests -->    
 </plugin>
