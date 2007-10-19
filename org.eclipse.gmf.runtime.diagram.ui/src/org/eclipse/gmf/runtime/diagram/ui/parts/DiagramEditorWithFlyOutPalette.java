@@ -129,6 +129,15 @@ public abstract class DiagramEditorWithFlyOutPalette
 			super.initializeGraphicalViewer();
 		}
 	}
+	
+	protected boolean toolSupportsAccessibility(Tool t) {
+		return (t instanceof CreationTool) || 
+				(t instanceof ConnectionCreationTool);
+	}
+	
+	protected PaletteViewer constructPaletteViewer() {
+		return new PaletteViewer();
+	}
 
 	/**
 	 * Creates a PaletteViewerProvider.
@@ -139,6 +148,14 @@ public abstract class DiagramEditorWithFlyOutPalette
 		getEditDomain().setPaletteRoot(createPaletteRoot(null));
 		return new PaletteViewerProvider(getEditDomain()){
 
+			public PaletteViewer createPaletteViewer(Composite parent) {
+				PaletteViewer pViewer = constructPaletteViewer();
+				pViewer.createControl(parent);
+				configurePaletteViewer(pViewer);
+				hookPaletteViewer(pViewer);
+				return pViewer;
+			}
+			
 			/**
 			 * Override to provide the additional behavior for the tools.
 			 * Will intialize with a PaletteEditPartFactory that has a TrackDragger that
@@ -193,8 +210,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 										.getActiveTool()
 										.createTool();
 
-								if (tool instanceof CreationTool
-									|| tool instanceof ConnectionCreationTool) {
+								if (toolSupportsAccessibility(tool)) {
 
 									tool.keyUp(event, getDiagramGraphicalViewer());
 
@@ -240,8 +256,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 							Tool tool = getPaletteViewer().getActiveTool()
 								.createTool();
 
-							if (tool instanceof CreationTool
-								|| tool instanceof ConnectionCreationTool) {
+							if (toolSupportsAccessibility(tool)) {
 
 								tool.setViewer(getDiagramGraphicalViewer());
 								tool.setEditDomain(getDiagramGraphicalViewer()
