@@ -88,7 +88,7 @@ public class BorderItemRectilinearRouter
         List originalbendpoints = (ArrayList) conn.getConnectionRouter()
             .getConstraint(conn);
         // protection code to prevent NPE while creating the connection
-        if (originalbendpoints == null) {
+        if (originalbendpoints == null || originalbendpoints.size() == 0) {
             // reorient
             return super.calculateBendPoints(conn);
         }
