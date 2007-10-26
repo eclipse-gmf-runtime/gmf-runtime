@@ -15,10 +15,15 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
+import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.tests.runtime.diagram.ui.AbstractTestBase;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTestFixture;
@@ -82,14 +87,16 @@ public class LabelTests
 
         assertEquals(oldWrapLabel.getIconAlignment(), wrapLabel
             .getIconAlignment());
-//        assertEquals(oldWrapLabel.getIconBounds(), wrapLabel.getIconBounds());
+        // assertEquals(oldWrapLabel.getIconBounds(),
+        // wrapLabel.getIconBounds());
         assertEquals(oldWrapLabel.getIconTextGap(), wrapLabel.getIconTextGap());
-        assertTrue(Math.abs(oldWrapLabel.getSubStringText().length() - wrapLabel
-            .getSubStringText().length()) <= 2);
+        assertTrue(Math.abs(oldWrapLabel.getSubStringText().length()
+            - wrapLabel.getSubStringText().length()) <= 2);
         assertEquals(oldWrapLabel.getText(), wrapLabel.getText());
         assertEquals(oldWrapLabel.getTextAlignment(), wrapLabel
             .getTextAlignment());
-//        assertEquals(oldWrapLabel.getTextBounds(), wrapLabel.getTextBounds());
+        // assertEquals(oldWrapLabel.getTextBounds(),
+        // wrapLabel.getTextBounds());
         assertEquals(oldWrapLabel.getTextPlacement(), wrapLabel
             .getTextPlacement());
         assertEquals(oldWrapLabel.isTextTruncated(), wrapLabel
@@ -103,6 +110,64 @@ public class LabelTests
             .getTextWrapAlignment());
         assertEquals(oldWrapLabel.isSelected(), wrapLabel.isSelected());
         assertEquals(oldWrapLabel.hasFocus(), wrapLabel.hasFocus());
+
+    }
+
+    public void testLabelAlignment()
+        throws Exception {
+        getFixture().openDiagram();
+
+        NoteEditPart noteEP = (NoteEditPart) getFixture().createShapeUsingTool(
+            DiagramNotationType.NOTE, new Point(10, 10),
+            new Dimension(300, 300), getDiagramEditPart());
+        IGraphicalEditPart labelEP = noteEP
+            .getChildBySemanticHint(CommonParserHint.DESCRIPTION);
+        ILabelDelegate label = (ILabelDelegate) labelEP
+            .getAdapter(ILabelDelegate.class);
+
+        label.setText("hi"); //$NON-NLS-1$
+
+        Point loc[][] = new Point[3][3];
+        label.setAlignment(PositionConstants.TOP | PositionConstants.LEFT);
+        flushEventQueue();
+        loc[0][0] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.TOP);
+        flushEventQueue();
+        loc[0][1] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.TOP | PositionConstants.RIGHT);
+        flushEventQueue();
+        loc[0][2] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.LEFT);
+        flushEventQueue();
+        loc[1][0] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.CENTER);
+        flushEventQueue();
+        loc[1][1] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.RIGHT);
+        flushEventQueue();
+        loc[1][2] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.BOTTOM | PositionConstants.LEFT);
+        flushEventQueue();
+        loc[2][0] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.BOTTOM);
+        flushEventQueue();
+        loc[2][1] = label.getTextBounds().getLocation();
+
+        label.setAlignment(PositionConstants.BOTTOM | PositionConstants.RIGHT);
+        flushEventQueue();
+        loc[2][2] = label.getTextBounds().getLocation();
+
+        for (int i = 0; i < 2; i++) {
+            assertTrue(loc[i][0].x < loc[i][1].x && loc[i][1].x < loc[i][2].x);
+            assertTrue(loc[i][0].y == loc[i][1].y && loc[i][1].y == loc[i][2].y);
+        }
 
     }
 }

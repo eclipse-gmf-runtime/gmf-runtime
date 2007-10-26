@@ -366,7 +366,7 @@
 
 	<!-- Label Tests:  Adds label testing support so that when
 	this test plugin is loaded, labels can be tested in the UI -->
-	
+<!--
 	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
     	<propertyContributor
         	typeMapper="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ModelElementTypeMapper"
@@ -397,9 +397,10 @@
 	 	</propertySection>     
   	</propertySections>
   </extension>
+-->
   
-  	<!-- And again for modeler <START> -->
-	
+  	<!-- And again for modeler <START> -->	
+<!--
 	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
     	<propertyContributor
         	typeMapper="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ModelElementTypeMapper"
@@ -430,7 +431,8 @@
 	 	</propertySection>     
   	</propertySections>
   </extension>
-    	<!-- And again for modeler <END> -->
+-->
+  <!-- And again for modeler <END> -->
    
   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
     <specializationType
@@ -463,7 +465,7 @@
     </specializationType>
   </extension>
    
-  <extension
+  <!--extension
          point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
       <paletteProvider
             class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
@@ -509,7 +511,7 @@
             </entry>
          </contribution>
       </paletteProvider>
-   </extension>
+   </extension-->
 	
    <extension 
    		id="org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelViewProvider" 
