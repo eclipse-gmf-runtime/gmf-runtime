@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,14 +18,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateConnectionRequest;
-import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -37,13 +39,13 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.diagram.ui.util.SelectInDiagramHelper;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -59,10 +61,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ConnectionCreationTool
 	extends org.eclipse.gef.tools.ConnectionCreationTool {
-
-	// temporarily disable the autoexpose helper since it interferes with menu
-	// selection.
-	private boolean antiScroll = false;
 
 	private IElementType elementType = null;
 
@@ -295,9 +293,7 @@ public class ConnectionCreationTool
 
 				if (command != null) {
 					setCurrentCommand(command);
-					antiScroll = true;
 					executeCurrentCommand();
-					antiScroll = false;
 					selectAddedObject(getCurrentViewer(), DiagramCommandStack
 						.getReturnValues(command));
 				}
@@ -342,9 +338,7 @@ public class ConnectionCreationTool
 		Command endCommand = getCommand();
 		setCurrentCommand(endCommand);
 
-		antiScroll = true;
 		executeCurrentCommand();
-		antiScroll = false;
 
 		selectAddedObject(viewer, DiagramCommandStack
 			.getReturnValues(endCommand));
@@ -396,54 +390,43 @@ public class ConnectionCreationTool
 	 * @see org.eclipse.gef.tools.CreationTool#handleMove()
 	 */
 	protected boolean handleMove() {
-		if (!antiScroll) {
-			boolean bool = super.handleMove();
-			boolean cont = getState() == STATE_CONNECTION_STARTED
-				&& ((getCurrentCommand() == null) || ((getCurrentCommand() != null) && (getCurrentCommand()
-					.canExecute())));
-			if (cont) {
-				if ((getTargetEditPart() != null)
-					&& (getTargetEditPart().getViewer() instanceof ScrollingGraphicalViewer)
-					&& (getTargetEditPart().getViewer().getControl() instanceof FigureCanvas)) {
-					FigureCanvas figureCanvas = (FigureCanvas) ((ScrollingGraphicalViewer) getTargetEditPart()
-						.getViewer()).getControl();
-					Point location1 = getLocation().getCopy();
-					SelectInDiagramHelper.exposeLocation(figureCanvas,
-						location1);
-
-				}
-			}
-			return bool;
+		boolean bool = super.handleMove();
+		if (isInState(STATE_CONNECTION_STARTED)) {
+            // Expose the diagram as the user scrolls in the area handled by the
+            // autoexpose helper.
+            updateAutoexposeHelper();
 		}
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.tools.TargetingTool#doAutoexpose()
-	 */
-	protected void doAutoexpose() {
-		if (!antiScroll)
-			super.doAutoexpose();
-		return;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.tools.TargetingTool#getCommand()
-	 */
-	protected Command getCommand() {
-		if (!antiScroll)
-			return super.getCommand();
-		return null;
+		return bool;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.tools.AbstractConnectionCreationTool#calculateCursor()
 	 */
 	protected Cursor calculateCursor() {
+        if (isInState(STATE_CONNECTION_STARTED)) {
+
+            // Give some feedback so the user knows the area where autoscrolling
+            // will occur.
+            if (getAutoexposeHelper() != null) {
+                return SharedCursors.HAND;
+            } else {
+
+                // Give some feedback so the user knows that they can't drag
+                // outside the viewport.
+                Control control = getCurrentViewer().getControl();
+                if (control instanceof FigureCanvas) {
+                    Viewport viewport = ((FigureCanvas) control).getViewport();
+                    Rectangle rect = Rectangle.SINGLETON;
+                    viewport.getClientArea(rect);
+                    viewport.translateToParent(rect);
+                    viewport.translateToAbsolute(rect);
+
+                    if (!rect.contains(getLocation())) {
+                        return getDisabledCursor();
+                    }
+                }
+            }
+        }
 		Command command = getCurrentCommand();
 		if (command != null && command.canExecute())
 		{
@@ -453,7 +436,5 @@ public class ConnectionCreationTool
 		}
 		return super.calculateCursor();
 	}
-	
-	
 
 }
