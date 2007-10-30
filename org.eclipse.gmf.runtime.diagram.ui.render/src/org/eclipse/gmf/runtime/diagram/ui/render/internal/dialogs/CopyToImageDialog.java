@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,6 +126,11 @@ public class CopyToImageDialog extends Dialog {
 	private boolean folderValid = true;
 
 	/**
+	 * the path argument passed into the dialog.
+	 */
+	private IPath path;
+
+	/**
 	 * the dialog window title
 	 */
 	private static final String DIALOG_TITLE = DiagramUIMessages.CopyToImageDialog_title;;
@@ -201,6 +206,11 @@ public class CopyToImageDialog extends Dialog {
 	private static final String DOT_STRING = "."; //$NON-NLS-1$
 
 	/**
+	 * The string with a html file extension.
+	 */
+	private static final String HTML_STRING = "html"; //$NON-NLS-1$
+
+	/**
 	 * The id for the persistent settings for this dialog.
 	 */
 	private static final String DIALOG_SETTINGS_ID = "CopyToImageDialog"; //$NON-NLS-1$
@@ -234,7 +244,10 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	public CopyToImageDialog(Shell shell, IPath path, String fileName) {
 		super(shell);
-		initDialogSettings(path);
+		
+		this.path = path;
+		
+		initDialogSettings();
 		
 		if (fileName != null) {
 			this.fileName = fileName;
@@ -356,7 +369,7 @@ public class CopyToImageDialog extends Dialog {
 	}
 	
 	private void updateFileNameText(boolean validate) {
-		String extension = exportToHTML ? "html" : imageFormat.getName().toLowerCase();
+		String extension = exportToHTML ? HTML_STRING : imageFormat.getName().toLowerCase();
 		fileNameText.setText(fileName + DOT_STRING + extension);
 		if (validate)
 			validateFileNameText();
@@ -477,7 +490,7 @@ public class CopyToImageDialog extends Dialog {
 		if (!exportToHTML) {
 			extension.append(imageFormat.getName().toLowerCase());
 		} else {
-			extension.append("html");
+			extension.append(HTML_STRING);
 		}
 		StringBuffer f = new StringBuffer(fileName);
 		if (!f.toString().endsWith(extension.toString())) {
@@ -517,8 +530,8 @@ public class CopyToImageDialog extends Dialog {
 
 		String dirName = folderText.getText();
 		if (!dirName.equals(EMPTY_STRING)) {
-			File path = new File(dirName);
-			if (path.exists())
+			File aPath = new File(dirName);
+			if (aPath.exists())
 				dialog.setFilterPath(new Path(dirName).toOSString());
 		}
 
@@ -539,8 +552,8 @@ public class CopyToImageDialog extends Dialog {
 			return;
 		}
 
-		IPath path = new Path(EMPTY_STRING);
-		if (!path.isValidPath(folderText.getText())) {
+		IPath aPath = new Path(EMPTY_STRING);
+		if (!aPath.isValidPath(folderText.getText())) {
 			setDialogErrorState(FOLDER_INVALID_MESSAGE);
 			folderValid = false;
 			return;
@@ -630,25 +643,22 @@ public class CopyToImageDialog extends Dialog {
 
 	/**
 	 * Initialize the settings for this dialog.
-	 * 
-	 * @param path
-	 *            the default path to use for the diagram file or null if the
-	 *            dialog should use some default path.
 	 */
-	private void initDialogSettings(IPath path) {
+	private void initDialogSettings() {
 		IDialogSettings dialogSettings = getDialogSettings();
 
-		// By defualt, the folder will be the root of the filesystem, where ever
-		//  that may be on a system.
-		folder = "/"; //$NON-NLS-1$
-		
-		if (path == null) {
-			String persistentFolder = dialogSettings.get(DIALOG_SETTINGS_FOLDER);
-			if (persistentFolder != null) {
-				folder = persistentFolder;
-			}
+		String persistentFolder = dialogSettings.get(DIALOG_SETTINGS_FOLDER);
+		if (persistentFolder != null) {
+			folder = persistentFolder;
 		} else {
-			folder = path.toOSString();
+
+			if (path == null) {
+				// By default, the folder will be the root of the filesystem,
+				// where ever that may be on a system.
+				folder = "/"; //$NON-NLS-1$
+			} else {
+				folder = path.toOSString();
+			}
 		}
 
 		String persistentImageFormat =
@@ -671,7 +681,14 @@ public class CopyToImageDialog extends Dialog {
 	 */
 	private void saveDialogSettings() {
 		IDialogSettings dialogSettings = getDialogSettings();
-		dialogSettings.put(DIALOG_SETTINGS_FOLDER, folder);
+		if (! path.toOSString().equals(folder)) {
+			// only persist the folder if the user changed the value.
+			// We like to save diagrams in a folder different to the 
+			// <workspace>/project_name folder and have the Save As 
+			// Image File dialog remember this setting and display 
+			// it as the new default. 
+			dialogSettings.put(DIALOG_SETTINGS_FOLDER, folder);
+		}
 		dialogSettings.put(
 			DIALOG_SETTINGS_IMAGE_FORMAT,
 			imageFormat.getName().toLowerCase());
