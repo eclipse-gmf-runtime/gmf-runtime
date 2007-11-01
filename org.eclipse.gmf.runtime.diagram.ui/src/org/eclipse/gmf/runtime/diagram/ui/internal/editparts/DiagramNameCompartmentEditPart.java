@@ -71,6 +71,14 @@ public class DiagramNameCompartmentEditPart extends TextCompartmentEditPart {
         labelDelegate.setTextJustification(PositionConstants.CENTER);
         return labelDelegate;
     }
+        
+    public void activate() {
+        super.activate();
+        EObject semanticProxy = getElement();
+        if (semanticProxy != null && !semanticProxy.eIsProxy()) {
+            addSemanticListeners();
+        }
+    }
 
     /** Return the semantic element associated to this editpart. */
     public EObject resolveSemanticElement() {
