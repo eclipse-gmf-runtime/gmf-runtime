@@ -110,7 +110,8 @@ abstract public class ConnectionNodeEditPart
 					Anchor a = connection.getEdge().getSourceAnchor();
 					if (a instanceof IdentityAnchor)
 						setResult(((IdentityAnchor) a).getId());
-					setResult(""); //$NON-NLS-1$
+					else 
+					    setResult(""); //$NON-NLS-1$
 				}
 			});
 		} catch (InterruptedException e) {
@@ -160,7 +161,8 @@ abstract public class ConnectionNodeEditPart
 					Anchor a = connection.getEdge().getTargetAnchor();
 					if (a instanceof IdentityAnchor)
 						setResult(((IdentityAnchor) a).getId());
-					setResult(""); //$NON-NLS-1$
+					else 
+					    setResult(""); //$NON-NLS-1$
 				}
 			});
 		} catch (InterruptedException e) {
@@ -339,22 +341,27 @@ abstract public class ConnectionNodeEditPart
      */
     public EditPart getTargetEditPart(Request request) {
         EditPart ep = super.getTargetEditPart(request);
-        //TODO: this is a workaround for a GEf issue; the actual fix should be in GEF's ConnectionEndPointTracker
-        //      the work around should be removed after the gef problem is fixed
         
-        /* see bugzilla# 155243
-         * 
-         * we do not want to target a connection that is already connected to us 
-         * so that we do not introduce a cyclic connection.
-         */
         if (ep != null && ep instanceof org.eclipse.gef.ConnectionEditPart) {
             if (request instanceof ReconnectRequest) {
                 ReconnectRequest rRequest = (ReconnectRequest)request; 
                 
-                // If source anchor is moved, the connection's source edit part should not
-                // be taken into account for a cyclic dependency check so as to avoid
-                // false checks. Same goes for the target anchor.
+                // If this is just moving an anchor point on the same target or
+                // source, then it is fine.  See bugzilla# 208408. 
+                if (rRequest.isMovingStartAnchor()) {
+                    if (rRequest.getConnectionEditPart().getSource() == ep) {
+                        return ep;
+                    } 
+                } else if (rRequest.getConnectionEditPart().getTarget() == ep) {
+                    return ep;
+                }
                 
+                // If source anchor is moved, the connection's source edit part
+                // should not be taken into account for a cyclic dependency
+                // check so as to avoid false checks. Same goes for the target
+                // anchor. See bugzilla# 155243 -- we do not want to target a
+                // connection that is already connected to us so that we do not
+                // introduce a cyclic connection                
                 if (isCyclicConnectionRequest((org.eclipse.gef.ConnectionEditPart)ep, 
                     rRequest.getConnectionEditPart(), false, rRequest.isMovingStartAnchor()))
                     return null;
