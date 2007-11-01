@@ -48,146 +48,148 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author mmostafa
  */
 abstract public class ConnectionNodeEditPart
-	extends ConnectionEditPart
-	implements INodeEditPart {
+    extends ConnectionEditPart
+    implements INodeEditPart {
 
-	/**
-	 * constructor 
-	 * @param view owned view by this edit part 
-	 */
-	public ConnectionNodeEditPart(View view) {
-		super(view);
-	}
+    /**
+     * constructor 
+     * @param view owned view by this edit part 
+     */
+    public ConnectionNodeEditPart(View view) {
+        super(view);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#createDefaultEditPolicies()
-	 */
-	protected void createDefaultEditPolicies() {
-		// node edit policy needs to be installed before connection editpolicy from the super
-		// since connections of a node need to be deleted before the node
-		//installEditPolicy(EditPolicy.NODE_ROLE, new NodeEditPolicy());
-		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new GraphicalNodeEditPolicy());
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#createDefaultEditPolicies()
+     */
+    protected void createDefaultEditPolicies() {
+        // node edit policy needs to be installed before connection editpolicy from the super
+        // since connections of a node need to be deleted before the node
+        //installEditPolicy(EditPolicy.NODE_ROLE, new NodeEditPolicy());
+        super.createDefaultEditPolicies();
+        installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new GraphicalNodeEditPolicy());
 
         // Disable note attachment reorient between two shapes where neither is a note.
         installEditPolicy("NoteAttachmentReorient", //$NON-NLS-1$
             new NoteAttachmentReorientEditPolicy());
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
-	 */
-	protected List getModelSourceConnections(){
-		return ViewUtil.getSourceConnections(getEdge());
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
+     */
+    protected List getModelSourceConnections(){
+        return ViewUtil.getSourceConnections(getEdge());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
-	 */
-	protected List getModelTargetConnections(){
-		return ViewUtil.getTargetConnections(getEdge());
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
+     */
+    protected List getModelTargetConnections(){
+        return ViewUtil.getTargetConnections(getEdge());
+    }
 
-	protected ConnectionAnchor getSourceConnectionAnchor() {
-		if (getSource() != null && getSource() instanceof NodeEditPart) {
-			NodeEditPart editPart = (NodeEditPart) getSource();
-			return editPart.getSourceConnectionAnchor(this);
-		}
-		return super.getSourceConnectionAnchor();
-	}
+    protected ConnectionAnchor getSourceConnectionAnchor() {
+        if (getSource() != null && getSource() instanceof NodeEditPart) {
+            NodeEditPart editPart = (NodeEditPart) getSource();
+            return editPart.getSourceConnectionAnchor(this);
+        }
+        return super.getSourceConnectionAnchor();
+    }
 
-	/*
-	 * @see NodeEditPart#getSourceConnectionAnchor(ConnectionEditPart)
-	 */
-	public ConnectionAnchor getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-		String t = ""; //$NON-NLS-1$
-		try {
-			t = (String) getEditingDomain().runExclusive(
-				new RunnableWithResult.Impl() {
+    /*
+     * @see NodeEditPart#getSourceConnectionAnchor(ConnectionEditPart)
+     */
+    public ConnectionAnchor getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
+        final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
+        String t = ""; //$NON-NLS-1$
+        try {
+            t = (String) getEditingDomain().runExclusive(
+                new RunnableWithResult.Impl() {
 
-				public void run() {
-					Anchor a = connection.getEdge().getSourceAnchor();
-					if (a instanceof IdentityAnchor)
-						setResult(((IdentityAnchor) a).getId());
-					setResult(""); //$NON-NLS-1$
-				}
-			});
-		} catch (InterruptedException e) {
-			Trace.catching(DiagramUIPlugin.getInstance(),
-				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-				"getSourceConnectionAnchor", e); //$NON-NLS-1$
-			Log.error(DiagramUIPlugin.getInstance(),
-				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-				"getSourceConnectionAnchor", e); //$NON-NLS-1$
-		}
-		return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
-	}
+                public void run() {
+                    Anchor a = connection.getEdge().getSourceAnchor();
+                    if (a instanceof IdentityAnchor)
+                        setResult(((IdentityAnchor) a).getId());
+                    else 
+                        setResult(""); //$NON-NLS-1$
+                }
+            });
+        } catch (InterruptedException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "getSourceConnectionAnchor", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+                "getSourceConnectionAnchor", e); //$NON-NLS-1$
+        }
+        return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
+    }
 
-	/*
-	 * @see NodeEditPart#getSourceConnectionAnchor(Request)
-	 */
-	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		Point center = getFigure().getBounds().getCenter();
-		getFigure().translateToAbsolute(center);
-		Point pt = ((DropRequest)request).getLocation()==null ? 
-			center : new Point(((DropRequest)request).getLocation()); 
-		if (request instanceof CreateRequest) {
-			getFigure().translateToRelative(pt);
-		}
-		return ((IAnchorableFigure)getFigure()).getSourceConnectionAnchorAt(pt);
-	}
+    /*
+     * @see NodeEditPart#getSourceConnectionAnchor(Request)
+     */
+    public ConnectionAnchor getSourceConnectionAnchor(Request request) {
+        Point center = getFigure().getBounds().getCenter();
+        getFigure().translateToAbsolute(center);
+        Point pt = ((DropRequest)request).getLocation()==null ? 
+            center : new Point(((DropRequest)request).getLocation()); 
+        if (request instanceof CreateRequest) {
+            getFigure().translateToRelative(pt);
+        }
+        return ((IAnchorableFigure)getFigure()).getSourceConnectionAnchorAt(pt);
+    }
 
-	protected ConnectionAnchor getTargetConnectionAnchor() {
-		if (getTarget() instanceof NodeEditPart) {
-			NodeEditPart editPart = (NodeEditPart) getTarget();
-			return editPart.getTargetConnectionAnchor(this);
-		}
-		return super.getTargetConnectionAnchor();
-	}
+    protected ConnectionAnchor getTargetConnectionAnchor() {
+        if (getTarget() instanceof NodeEditPart) {
+            NodeEditPart editPart = (NodeEditPart) getTarget();
+            return editPart.getTargetConnectionAnchor(this);
+        }
+        return super.getTargetConnectionAnchor();
+    }
 
-	/*
-	 * @see NodeEditPart#getTargetConnectionAnchor(ConnectionEditPart)
-	 */
-	public ConnectionAnchor getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
-		final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
-		String t = ""; //$NON-NLS-1$
-		try {
-			t = (String) getEditingDomain().runExclusive(
-				new RunnableWithResult.Impl() {
+    /*
+     * @see NodeEditPart#getTargetConnectionAnchor(ConnectionEditPart)
+     */
+    public ConnectionAnchor getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart connEditPart) {
+        final ConnectionNodeEditPart connection = (ConnectionNodeEditPart) connEditPart;
+        String t = ""; //$NON-NLS-1$
+        try {
+            t = (String) getEditingDomain().runExclusive(
+                new RunnableWithResult.Impl() {
 
-				public void run() {
-					Anchor a = connection.getEdge().getTargetAnchor();
-					if (a instanceof IdentityAnchor)
-						setResult(((IdentityAnchor) a).getId());
-					setResult(""); //$NON-NLS-1$
-				}
-			});
-		} catch (InterruptedException e) {
-			Trace.catching(DiagramUIPlugin.getInstance(),
-				DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-				"getTargetConnectionAnchor", e); //$NON-NLS-1$
-			Log.error(DiagramUIPlugin.getInstance(),
-				DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-				"getTargetConnectionAnchor", e); //$NON-NLS-1$
-		}
-		return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
-	}
-	
-	/*
-	 * @see NodeEditPart#getTargetConnectionAnchor(Request)
-	 */
-	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		Point center = getFigure().getBounds().getCenter();
-		getFigure().translateToAbsolute(center);
-		Point pt = ((DropRequest)request).getLocation()==null ? 
-			center : new Point(((DropRequest)request).getLocation()); 
-		if (request instanceof CreateRequest) {
-			getFigure().translateToRelative(pt);
-		}
-		return ((IAnchorableFigure)getFigure()).getTargetConnectionAnchorAt(pt);
-	}
-	
+                public void run() {
+                    Anchor a = connection.getEdge().getTargetAnchor();
+                    if (a instanceof IdentityAnchor)
+                        setResult(((IdentityAnchor) a).getId());
+                    else 
+                        setResult(""); //$NON-NLS-1$
+                }
+            });
+        } catch (InterruptedException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                "getTargetConnectionAnchor", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+                "getTargetConnectionAnchor", e); //$NON-NLS-1$
+        }
+        return ((IAnchorableFigure)getFigure()).getConnectionAnchor(t);
+    }
+    
+    /*
+     * @see NodeEditPart#getTargetConnectionAnchor(Request)
+     */
+    public ConnectionAnchor getTargetConnectionAnchor(Request request) {
+        Point center = getFigure().getBounds().getCenter();
+        getFigure().translateToAbsolute(center);
+        Point pt = ((DropRequest)request).getLocation()==null ? 
+            center : new Point(((DropRequest)request).getLocation()); 
+        if (request instanceof CreateRequest) {
+            getFigure().translateToRelative(pt);
+        }
+        return ((IAnchorableFigure)getFigure()).getTargetConnectionAnchorAt(pt);
+    }
+    
     /* (non-Javadoc)
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart#mapConnectionAnchorToTerminal(org.eclipse.draw2d.ConnectionAnchor)
      */
@@ -195,47 +197,47 @@ abstract public class ConnectionNodeEditPart
         return ((IAnchorableFigure) getFigure()).getConnectionAnchorTerminal(c);
     }
 
-	/**
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart#mapTerminalToConnectionAnchor(String)
-	 */
-	final public ConnectionAnchor mapTerminalToConnectionAnchor(String terminal) {
-		return ((IAnchorableFigure) getFigure()).getConnectionAnchor(terminal);
-	}
+    /**
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart#mapTerminalToConnectionAnchor(String)
+     */
+    final public ConnectionAnchor mapTerminalToConnectionAnchor(String terminal) {
+        return ((IAnchorableFigure) getFigure()).getConnectionAnchor(terminal);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.INoteableEditPart#canAttachNote()
-	 */
-	public boolean canAttachNote() {		
-		return true;
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.internal.editparts.INoteableEditPart#canAttachNote()
+     */
+    public boolean canAttachNote() {        
+        return true;
+    }
 
-	/*
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#handleNotificationEvent(org.eclipse.gmf.runtime.diagram.ui.internal.listener.NotificationEvent)
-	 */
-	protected void handleNotificationEvent(Notification notification) {
-		Object feature = notification.getFeature();
-		if (NotationPackage.eINSTANCE.getView_SourceEdges().equals(feature))
-			refreshSourceConnections();
-		else
-		if (NotationPackage.eINSTANCE.getView_TargetEdges().equals(feature))
-			refreshTargetConnections();
-		else
-			super.handleNotificationEvent(notification);
+    /*
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#handleNotificationEvent(org.eclipse.gmf.runtime.diagram.ui.internal.listener.NotificationEvent)
+     */
+    protected void handleNotificationEvent(Notification notification) {
+        Object feature = notification.getFeature();
+        if (NotationPackage.eINSTANCE.getView_SourceEdges().equals(feature))
+            refreshSourceConnections();
+        else
+        if (NotationPackage.eINSTANCE.getView_TargetEdges().equals(feature))
+            refreshTargetConnections();
+        else
+            super.handleNotificationEvent(notification);
 
         if (  NotationPackage.eINSTANCE.getIdentityAnchor_Id().equals(feature) ||
-        	  notification.getNewValue() instanceof IdentityAnchor ||
-        	  notification.getOldValue() instanceof IdentityAnchor) {
-        	anchorChange();
+              notification.getNewValue() instanceof IdentityAnchor ||
+              notification.getOldValue() instanceof IdentityAnchor) {
+            anchorChange();
         }
-	}
+    }
 
     /**
      * updates identity connection anchors
      */
-	public void anchorChange() {
-		refreshSourceAnchor();
-		refreshTargetAnchor();
-	}
+    public void anchorChange() {
+        refreshSourceAnchor();
+        refreshTargetAnchor();
+    }
     
     /**
      * Retrieve the list of all source and target connections for the connection.
@@ -289,7 +291,7 @@ abstract public class ConnectionNodeEditPart
             return false;
         
         if (sourceCEP == targetCEP)
-        	return true;
+            return true;
         
         // first, do a cyclic check on source and target connections 
         // of the source connection itself.
@@ -339,22 +341,27 @@ abstract public class ConnectionNodeEditPart
      */
     public EditPart getTargetEditPart(Request request) {
         EditPart ep = super.getTargetEditPart(request);
-        //TODO: this is a workaround for a GEf issue; the actual fix should be in GEF's ConnectionEndPointTracker
-        //      the work around should be removed after the gef problem is fixed
         
-        /* see bugzilla# 155243
-         * 
-         * we do not want to target a connection that is already connected to us 
-         * so that we do not introduce a cyclic connection.
-         */
         if (ep != null && ep instanceof org.eclipse.gef.ConnectionEditPart) {
             if (request instanceof ReconnectRequest) {
                 ReconnectRequest rRequest = (ReconnectRequest)request; 
                 
-                // If source anchor is moved, the connection's source edit part should not
-                // be taken into account for a cyclic dependency check so as to avoid
-                // false checks. Same goes for the target anchor.
+                // If this is just moving an anchor point on the same target or
+                // source, then it is fine.  See bugzilla# 208408. 
+                if (rRequest.isMovingStartAnchor()) {
+                    if (rRequest.getConnectionEditPart().getSource() == ep) {
+                        return ep;
+                    } 
+                } else if (rRequest.getConnectionEditPart().getTarget() == ep) {
+                    return ep;
+                }
                 
+                // If source anchor is moved, the connection's source edit part
+                // should not be taken into account for a cyclic dependency
+                // check so as to avoid false checks. Same goes for the target
+                // anchor. See bugzilla# 155243 -- we do not want to target a
+                // connection that is already connected to us so that we do not
+                // introduce a cyclic connection                
                 if (isCyclicConnectionRequest((org.eclipse.gef.ConnectionEditPart)ep, 
                     rRequest.getConnectionEditPart(), false, rRequest.isMovingStartAnchor()))
                     return null;
