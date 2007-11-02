@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringForwardComman
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.BringToFrontCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendBackwardCommand;
 import org.eclipse.gmf.runtime.diagram.core.internal.commands.SendToBackCommand;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredLayoutCommand;
@@ -68,6 +69,7 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -363,19 +365,34 @@ public class ContainerEditPolicy
 		
 		TransactionalEditingDomain editingDomain = ((IGraphicalEditPart)getHost()).getEditingDomain();
 		
-		for (Iterator iter = notationViewsToDuplicate.iterator(); iter.hasNext();) {
+		for (Iterator iter = notationViewsToDuplicate.iterator(); iter
+				.hasNext();) {
 			View view = (View) iter.next();
 			EObject element = view.getElement();
-			
+
 			if (element != null) {
-				EObject resolvedElement = EMFCoreUtil
-					.resolve(editingDomain, element);
+				EObject resolvedElement = EMFCoreUtil.resolve(editingDomain,
+						element);
 				if (resolvedElement != null) {
 					elementsToDuplicate.add(resolvedElement);
 				}
 			}
 		}
 
+		/*
+		 * We must append all inner edges of a node being duplicated. Edges are non-containment
+		 * references, hence they won't be duplicated for free. Therefore, we add them here to
+		 * the list views to duplicate.
+		 * We don't add semantic elements of the edges to the list of semantic elements to duplicate
+		 * since we assume that their semantic elements are owned by source or target or their semantic
+		 * containers. 
+		 */
+		HashSet<Edge> allInnerEdges = new HashSet<Edge>();
+		for (Iterator itr = notationViewsToDuplicate.iterator(); itr.hasNext();) {
+			ViewUtil.getAllRelatedEdgesFromViews(((View)itr.next()).getChildren(), allInnerEdges);
+		}
+		notationViewsToDuplicate.addAll(allInnerEdges);
+		
 		if (!notationViewsToDuplicate.isEmpty()) {
 			if (!elementsToDuplicate.isEmpty()) {
 				org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest duplicateElementsRequest = new DuplicateElementsRequest(

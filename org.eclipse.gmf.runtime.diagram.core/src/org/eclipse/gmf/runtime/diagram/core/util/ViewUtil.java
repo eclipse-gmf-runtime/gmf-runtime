@@ -14,8 +14,10 @@ package org.eclipse.gmf.runtime.diagram.core.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -763,4 +765,39 @@ public class ViewUtil {
 		}
 		return null;
 	}
+
+	/**
+	 * Constructs a set of all source and target edges from a view and all its
+	 * children down to the leaves of a view hierarchy
+	 * 
+	 * @param view
+	 * @param allEdges
+	 */
+	static public void  getAllRelatedEdgesForView(View view, Set<Edge> allEdges) {
+		allEdges.addAll(ViewUtil.getSourceConnections(view));
+		allEdges.addAll(ViewUtil.getTargetConnections(view));
+		for (Iterator itr = view.getChildren().iterator(); itr.hasNext();) {
+			Object obj = itr.next();
+			if (obj instanceof View) {
+				getAllRelatedEdgesForView((View)obj, allEdges);
+			}
+		}
+	}
+	
+	/**
+	 * Constructs a set of all source and target edges from a list of view and all their
+	 * children down to the leaves of a view hierarchy
+	 * 
+	 * @param views
+	 * @param allEdges
+	 */
+	static public void getAllRelatedEdgesFromViews(List views, HashSet<Edge> allEdges) {
+		for (Iterator itr = views.iterator(); itr.hasNext();) {
+			Object obj = itr.next();
+			if (obj instanceof View) {
+				getAllRelatedEdgesForView((View)obj, allEdges);
+			}
+		}
+	}
+	
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,14 +134,7 @@ public class DuplicateViewsCommand
 				originalView);
 
             // Update the duplicated views to reference the duplicated elements.
-			EObject originalElement = duplicateView.getElement();
-            if (duplicatedElements != null) {
-                Object duplicateElement = duplicatedElements
-                    .get(originalElement);
-                if (duplicateElement != null) {
-                    duplicateView.setElement((EObject) duplicateElement);
-                }
-            }
+			assignSementicElementsDownViewTree(duplicateView);
             
 			// Remove source and target edges that were not duplicated.
 			List sourceRefs = new ArrayList(duplicateView.getSourceEdges());
@@ -196,6 +189,22 @@ public class DuplicateViewsCommand
 
 		return CommandResult.newOKCommandResult(duplicatedViewsToBeReturned);
 
-	}  
+	}
+	
+	/**
+	 * Assign semantic elements to all children of a view down the view tree hierarchy
+	 * 
+	 * @param view the view tree hierarchy root
+	 */
+	private void assignSementicElementsDownViewTree(View view) {
+		EObject originalElement = view.getElement();
+		Object duplicateElement = duplicatedElements.get(originalElement);
+		if (duplicateElement != null) {
+			view.setElement((EObject) duplicateElement);
+		}
+		for (Iterator itr = view.getChildren().iterator(); itr.hasNext();) {
+			assignSementicElementsDownViewTree((View) itr.next());
+		}
+	}
     
 }

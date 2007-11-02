@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
@@ -25,11 +27,12 @@ import org.eclipse.gmf.runtime.common.ui.action.actions.global.ClipboardManager;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.common.ui.util.CustomDataTransfer;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.util.Assert;
 
 /**
  * Abstract parent for all concrete clipboard commands used for IViews
@@ -134,6 +137,17 @@ public abstract class ClipboardCommand extends AbstractTransactionalCommand {
 				selection.add(viewElement);
 			}
 		}
+		
+		/*
+		 * We must append all inner edges of a node being copied. Edges are non-containment
+		 * references, hence they won't be copied for free. Therefore, we add them here to
+		 * the list views to copy.
+		 */
+		HashSet<Edge> allInnerEdges = new HashSet<Edge>();
+		for (Iterator itr = views.iterator(); itr.hasNext();) {
+			ViewUtil.getAllRelatedEdgesFromViews(((View)itr.next()).getChildren(), allInnerEdges);
+		}
+		selection.addAll(allInnerEdges);
 
 		// add the measurement unit in an annotation.  Put it in the last position
 		//   to work around a limitation in the copy/paste infrastructure, that
