@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,21 +14,24 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.parts;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 /**
- * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
- * 
  * Drop target listener to support dropping of image files onto the diagram
  * surface.
+ * 
+ * @author sshaw
  */
 public class ImageFileDropTargetListener
 	extends DiagramDropTargetListener {
@@ -65,10 +68,32 @@ public class ImageFileDropTargetListener
 							fileList.add(fileStrings[j]);
 					}				
 				} catch (SWTException e) {
-					return null;
+					continue;
 				}
-
 			}
+		}
+		
+		if (fileList.size() == 0) {
+			ISelection selection = null;
+	        
+	        if (LocalSelectionTransfer.getTransfer().getSelection() != null) {
+	        	selection = LocalSelectionTransfer.getTransfer().getSelection();
+	        }
+			
+			if (selection instanceof IStructuredSelection
+	            && !selection.isEmpty()) {
+            
+				/* Get the array of objects in the selection */
+				Object[] array = ((IStructuredSelection)selection).toArray();
+				for (int j = 0; j < array.length; j++) {
+					if (array[j] instanceof IFile) {
+						IFile dropFile = (IFile)array[j];
+						fileList.add(dropFile.getLocation().toOSString());
+					}
+				}
+			}
+			
+            return fileList;
 		}
 		
 		if (fileList.size() > 0)
