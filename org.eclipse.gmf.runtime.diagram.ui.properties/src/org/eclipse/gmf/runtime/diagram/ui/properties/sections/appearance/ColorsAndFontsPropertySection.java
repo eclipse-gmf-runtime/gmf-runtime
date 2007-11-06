@@ -100,11 +100,22 @@ public class ColorsAndFontsPropertySection
 	private Button fontBoldButton;
 
 	private Button fontItalicButton;
+	
+	/** the default preference color */
+	protected static final RGB DEFAULT_PREF_COLOR = new RGB(0, 0, 0);
 
-	/**
-	 * An image descriptor that overlays two images: a basic icon and a thin
-	 * color bar underneath it
-	 */
+	protected Button fontColorButton;
+
+    protected Button lineColorButton;
+
+	protected RGB fontColor;
+
+	protected RGB lineColor;
+
+	protected Group colorsAndFontsGroup;
+
+	protected int previousColor;
+
 	protected static class ColorOverlayImageDescriptor
 		extends CompositeImageDescriptor {
 
@@ -154,23 +165,8 @@ public class ColorsAndFontsPropertySection
 		protected Point getSize() {
 			return ICON_SIZE;
 		}
-	}
-
-	/** the default preference color */
-	protected static final RGB DEFAULT_PREF_COLOR = new RGB(0, 0, 0);
-
-	protected Button fontColorButton;
-
-    protected Button lineColorButton;
-
-	protected RGB fontColor;
-
-	protected RGB lineColor;
-
-	protected Group colorsAndFontsGroup;
-
-
-
+	}   	
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractNotationPropertiesSection#initializeControls(org.eclipse.swt.widgets.Composite)
 	 */
@@ -293,7 +289,7 @@ public class ColorsAndFontsPropertySection
         });
 		lineColorButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
+			public void widgetSelected(SelectionEvent event) {				
 				changeLineColor(event);
 			}
 		});
@@ -325,6 +321,9 @@ public class ColorsAndFontsPropertySection
 	 *            line color button selection event
 	 */
 	protected void changeLineColor(SelectionEvent event) {
+		if (lineColor != null){
+			previousColor = FigureUtilities.RGBToInteger(lineColor);	
+		}	
 		lineColor = changeColor(event, lineColorButton,
 			IPreferenceConstants.PREF_LINE_COLOR, Properties.ID_LINECOLOR,
 			LINE_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_LINE_COLOR);
@@ -337,6 +336,9 @@ public class ColorsAndFontsPropertySection
 	 *            font button selection event
 	 */
 	protected void changeFontColor(SelectionEvent event) {
+		if (fontColor != null){
+			previousColor = FigureUtilities.RGBToInteger(fontColor);
+		}
 		fontColor = changeColor(event, fontColorButton,
 			IPreferenceConstants.PREF_FONT_COLOR, Properties.ID_FONTCOLOR,
 			FONT_COLOR_COMMAND_NAME, DiagramUIPropertiesImages.DESC_FONT_COLOR);
@@ -389,16 +391,14 @@ public class ColorsAndFontsPropertySection
             ImageDescriptor imageDescriptor) {
 
         ColorPalettePopup popup = new ColorPalettePopup(button.getParent()
-            .getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);
-
+            .getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);        
+        popup.setPreviousColor(previousColor);
         Rectangle r = button.getBounds();
         Point location = button.getParent().toDisplay(r.x, r.y);
-        popup.open(new Point(location.x, location.y + r.height));
-
+        popup.open(new Point(location.x, location.y + r.height));        
         if (popup.getSelectedColor() == null && !popup.useDefaultColor()) {
             return null;
-        }
-
+        }        
         // selectedColor should be null if we are to use the default color
         final RGB selectedColor = popup.getSelectedColor();
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,11 @@ package org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -37,6 +39,11 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ColorPalettePopup {
 
+	/** variable to store previous color */
+	private int previousColor;
+	private Button customColorButton;
+	private HashMap buttonMap = new HashMap();
+	
 	/**
 	 * A descirptor for an inventory color
 	 */
@@ -240,8 +247,8 @@ public class ColorPalettePopup {
 					shell.dispose();
 				}
 			});
-		}
-
+			buttonMap.put(rgb , button);
+		}	
 		Button defaultButton = new Button(shell, SWT.PUSH);
 		defaultButton.setText(DEAFULT_COLOR_STRING);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -269,7 +276,8 @@ public class ColorPalettePopup {
 			public void widgetSelected(SelectionEvent event) {
 
 				ColorDialog dialog = new ColorDialog(Display.getCurrent()
-					.getActiveShell());
+					.getActiveShell());	
+				dialog.setRGB(FigureUtilities.integerToRGB(getPreviousColor()));
 				WindowUtil.centerDialog(dialog.getParent(), Display
 					.getCurrent().getActiveShell());
 				dialog.open();
@@ -277,15 +285,15 @@ public class ColorPalettePopup {
 				shell.dispose();
 
 			}
-		});
-
+		});		
 		// close dialog if user selects outside of the shell
 		shell.addListener(SWT.Deactivate, new Listener() {
-
+		
 			public void handleEvent(Event e) {
 				shell.setVisible(false);
 			}
 		});
+		customColorButton = moreColors;
 
 	}
 
@@ -315,13 +323,19 @@ public class ColorPalettePopup {
 		shell.setBounds(location.x, location.y, listSize.x, listSize.y);
 
 		shell.open();
-		shell.setFocus();
-
+		shell.setFocus();		
 		Display display = shell.getDisplay();
+		Button prevButton = (Button)buttonMap.get(FigureUtilities.integerToRGB(getPreviousColor()));
+		if (prevButton != null){
+			shell.setDefaultButton(prevButton);
+		}	
+		else{
+			shell.setDefaultButton(customColorButton);
+		}
 		while (!shell.isDisposed() && shell.isVisible()) {
 			if (!display.readAndDispatch())
 				display.sleep();
-		}
+		}		
 		return getSelectedColor();
 	}
 
@@ -344,4 +358,12 @@ public class ColorPalettePopup {
     public boolean useDefaultColor() {
         return useDefaultColor;
     }
+    
+	public int getPreviousColor() {
+		return previousColor;
+	}
+
+	public void setPreviousColor(int previousColor) {
+		this.previousColor = previousColor;
+	}
 }
