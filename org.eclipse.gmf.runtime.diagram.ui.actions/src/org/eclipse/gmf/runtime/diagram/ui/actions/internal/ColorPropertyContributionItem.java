@@ -546,7 +546,10 @@ public class ColorPropertyContributionItem
 		WindowUtil.centerDialog(
 			dialog.getParent(),
 			Display.getCurrent().getActiveShell());
-		dialog.open();
+		if (lastColor != null){			
+			dialog.setRGB(FigureUtilities.integerToRGB(lastColor));
+		}			
+		dialog.open();		
 		return dialog.getRGB();
 	}
 
