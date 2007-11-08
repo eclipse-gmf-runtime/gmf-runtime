@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -38,9 +39,15 @@ public class ConnectionHandleLocator
 
 	/** the MARGIN to leave by the edge of the parent figure */
 	private static int MARGIN = 2;
+	
+	/**
+     * the margin outside the shape in which the handles will appear to
+     * determine if the handles will be outside the viewport
+     */
+    private static Dimension HANDLE_MARGIN = new Dimension(25, 25);
 
 	/** list of connection handles for the shape */
-	private List handles = new ArrayList();
+	private List<ConnectionHandle> handles = new ArrayList<ConnectionHandle>();
 
 	/** a point in the shape used when locating the handles */
 	private Point cursorPosition = null;
@@ -84,100 +91,97 @@ public class ConnectionHandleLocator
 		handles.add(handle);
 	}
 
-	/**
-	 * Sets the point on the West, East, North or South edge of the reference
-	 * figure nearest to the cursor position passed in to the constructor. Sets
-	 * the side variable for which side the handles will be on.
-	 */
-	private void resetBorderPointAndSideAllDirections() {
+    /**
+     * Return the client area of the viewport. If a viewport is not found, a
+     * default rectangle is returned.
+     * 
+     * @return the client area of the viewport
+     */
+    private Rectangle getViewportArea() {
+        IFigure fig = getReference();
+        while (fig != null) {
+            if (fig instanceof Viewport) {
+                return fig.getClientArea();
+            }
+            fig = fig.getParent();
+        }
+        return new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
 
-		Rectangle bounds = getReferenceFigureBounds();
-		int westDiff = cursorPosition.x - bounds.getLeft().x;
-		int eastDiff = bounds.getRight().x - cursorPosition.x;
-		int southDiff = bounds.getBottom().y - cursorPosition.y;
-		int northDiff = cursorPosition.y - bounds.getTop().y;
-
-		double minLR = Math.min(eastDiff, westDiff);
-		double minUD = Math.min(southDiff, northDiff);
-		// which directions is closest North/South or East/West?
-		boolean bUp = (minUD < minLR);
-
-		if (bUp) {
-			if (northDiff < southDiff) {
-				// re-evaluate if the north is closer than the east since the
-				// handles will be placed in the north-west corner because of
-				// the action bar.
-				if (eastDiff < westDiff
-					&& eastDiff < cursorPosition.getDistance(bounds
-						.getTopLeft())) {
-					borderPoint.setLocation(bounds.x + bounds.width,
-						cursorPosition.y);
-					side = PositionConstants.EAST;
-				} else {
-					borderPoint.setLocation(bounds.x, bounds.y);
-					side = PositionConstants.NORTH;
-				}
-			} else {
-				borderPoint.setLocation(cursorPosition.x, bounds.y
-					+ bounds.height);
-				side = PositionConstants.SOUTH;
-			}
-		} else {
-			if (westDiff < eastDiff) {
-				borderPoint.setLocation(bounds.x, cursorPosition.y);
-				side = PositionConstants.WEST;
-			} else {
-				//
-				borderPoint.setLocation(bounds.x + bounds.width,
-					cursorPosition.y);
-				side = PositionConstants.EAST;
-			}
-		}
-	}
-
-	/**
-	 * Sets the point on the West, East, South edge of the reference figure
-	 * nearest to the cursor position passed in to the constructor. Sets the
-	 * side variable for which side the handles will be on.
-	 */
-	private void resetBorderPointAndSideEastWestSouth() {
-		Rectangle bounds = getReferenceFigureBounds();
-
-		// Get the point on the West, East, or South edge of the reference
-		// figure
-		// nearest to the cursor position.
-		int westDiff = cursorPosition.x - bounds.x;
-		int eastDiff = bounds.x + bounds.width - cursorPosition.x;
-		int southDiff = bounds.y + bounds.height - cursorPosition.y;
-
-		int min = Math.min(westDiff, eastDiff);
-		if (westDiff > 30 && eastDiff > 30) { // favour East and West
-			min = Math.min(min, southDiff);
-		}
-
-		if (min == westDiff) {
-			borderPoint.setLocation(bounds.x, cursorPosition.y);
-			side = PositionConstants.WEST;
-		} else if (min == eastDiff) {
-			borderPoint.setLocation(bounds.x + bounds.width, cursorPosition.y);
-			side = PositionConstants.EAST;
-		} else {
-			borderPoint.setLocation(cursorPosition.x, bounds.y + bounds.height);
-			side = PositionConstants.SOUTH;
-		}
-
-	}
-
-	/**
+    /**
 	 * Resets the border point and side variables where the connection handles
 	 * will appear, based on the cursor location.
 	 */
 	private void resetBorderPointAndSide() {
-		if (isEastWestSouth())
-			resetBorderPointAndSideEastWestSouth();
-		else
-			resetBorderPointAndSideAllDirections();
-	}
+        Rectangle bounds = getReferenceFigureBounds();
+
+        // Get the point on the edge of the reference figure nearest to the
+        // cursor position.
+        int westDiff = cursorPosition.x - bounds.x;
+        int eastDiff = bounds.getRight().x - cursorPosition.x;
+        int southDiff = bounds.getBottom().y - cursorPosition.y;
+        int northDiff = isEastWestSouth() ? Integer.MAX_VALUE
+            : cursorPosition.y - bounds.y;
+
+        // avoid having the handles appear outside the viewport
+        Rectangle viewportRect = getViewportArea();
+        Rectangle absBounds = bounds.getCopy();
+        getReference().translateToAbsolute(absBounds);
+        absBounds.translate(viewportRect.getLocation());
+        
+        Dimension handleMargin = getHandleMargin();
+        if (absBounds.right() + handleMargin.width > viewportRect.right()) {
+            // don't use east side
+            eastDiff = Integer.MAX_VALUE;
+        } else if (absBounds.x - handleMargin.width < viewportRect.x) {
+            // don't use west side
+            westDiff = Integer.MAX_VALUE;
+        }
+        if (absBounds.bottom() + handleMargin.height > viewportRect.bottom()) {
+            // don't use south side
+            southDiff = Integer.MAX_VALUE;
+        } else if (absBounds.y - handleMargin.height < viewportRect.y) {
+            // don't use north side
+            northDiff = Integer.MAX_VALUE;
+        }
+
+        double minLR = Math.min(eastDiff, westDiff);
+        double minUD = Math.min(southDiff, northDiff);
+        // which directions is closest North/South or East/West?
+        boolean bUp = (minUD < minLR);
+
+        if (bUp) {
+            if (northDiff < southDiff) {
+                // re-evaluate if the north is closer than the east since the
+                // handles will be placed in the north-west corner because of
+                // the action bar.
+                if (eastDiff < westDiff
+                    && eastDiff < cursorPosition.getDistance(bounds
+                        .getTopLeft())) {
+                    borderPoint.setLocation(bounds.x + bounds.width,
+                        cursorPosition.y);
+                    side = PositionConstants.EAST;
+                } else {
+                    borderPoint.setLocation(bounds.x, bounds.y);
+                    side = PositionConstants.NORTH;
+                }
+            } else {
+                borderPoint.setLocation(cursorPosition.x, bounds.y
+                    + bounds.height);
+                side = PositionConstants.SOUTH;
+            }
+        } else {
+            if (westDiff < eastDiff) {
+                borderPoint.setLocation(bounds.x, cursorPosition.y);
+                side = PositionConstants.WEST;
+            } else {
+                //
+                borderPoint.setLocation(bounds.x + bounds.width,
+                    cursorPosition.y);
+                side = PositionConstants.EAST;
+            }
+        }
+    }
 
 	/**
 	 * Gets the side (West, South, or East) on which the handles will appear,
@@ -316,4 +320,14 @@ public class ConnectionHandleLocator
 	public void setEastWestSouth(boolean eastWestSouth) {
 		bEastWestSouth = eastWestSouth;
 	}
+	
+	/**
+     * Returns the margin outside the shape in which the handles will appear to
+     * determine if the handles will be outside the viewport.
+     * 
+     * @return the margin
+     */
+    protected Dimension getHandleMargin() {
+        return HANDLE_MARGIN;
+    }
 }

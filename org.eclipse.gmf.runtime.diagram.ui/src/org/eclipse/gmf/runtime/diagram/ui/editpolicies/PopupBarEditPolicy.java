@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.RoundedRectangle;
-import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -911,16 +910,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 
 			// shift the ballon so it is above the cursor.
 			thePoint.y -= ACTION_WIDTH_HGT;
-
-			if (willBalloonBeClipped(thePoint)) {
-				Rectangle rcBounds = getHostFigure().getBounds().getCopy();
-				getHostFigure().translateToAbsolute(rcBounds);
-				getBalloon().translateToRelative(rcBounds);
-				Dimension dim = getBalloon().getSize();
-				int offsetX = dim.width + ACTION_WIDTH_HGT;
-				thePoint.x = rcBounds.right() - offsetX;
-			}
-
+			adjustToFitInViewport(thePoint);
 		}
 		else
 		{
@@ -935,29 +925,40 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 
 			thePoint.x = rcBounds.x + theoffset.width;
 			thePoint.y = rcBounds.y + theoffset.height;
-			if (isRightDisplay() && willBalloonBeClipped(thePoint)) {
-				this.setLeftHandDisplay();
-				theoffset.width = (int) (rcBounds.width * myBallonOffsetPercent);
-				thePoint.x = rcBounds.x + theoffset.width;
-
-			}
+			adjustToFitInViewport(thePoint);
 		}
 		return thePoint;
 	}
 
-	private boolean willBalloonBeClipped(Point pnt) {
-		Control ctrl1 = getHost().getViewer().getControl();
-		if (ctrl1 instanceof FigureCanvas) {
-			FigureCanvas figureCanvas = (FigureCanvas) ctrl1;
-			Viewport vp = figureCanvas.getViewport();
-			Rectangle vpRect = vp.getClientArea();
-			Dimension dim = getBalloon().getSize();
-			if ((pnt.x + dim.width) >= (vpRect.x + vpRect.width)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	/**
+     * Uses the balloon location passed in and its size to determine if the
+     * balloon will appear outside the viewport. If so, the balloon location
+     * will be modified accordingly.
+     * 
+     * @param balloonLocation
+     *            the suggested balloon location passed in and potentially
+     *            modified when this method completes
+     */
+    private void adjustToFitInViewport(Point balloonLocation) {
+        Control control = getHost().getViewer().getControl();
+        if (control instanceof FigureCanvas) {
+            Rectangle viewportRect = ((FigureCanvas) control).getViewport()
+                .getClientArea();
+            Rectangle balloonRect = new Rectangle(balloonLocation, getBalloon()
+                .getSize());
+
+            int yDiff = viewportRect.y - balloonRect.y;
+            if (yDiff > 0) {
+                // balloon is above the viewport, shift down
+                balloonLocation.translate(0, yDiff);
+            }
+            int xDiff = balloonRect.right() - viewportRect.right();
+            if (xDiff > 0) {
+                // balloon is to the right of the viewport, shift left
+                balloonLocation.translate(-xDiff, 0);
+            }
+        }
+    }
 
 	private void teardownPopupBar() {
 		getBalloon().removeMouseMotionListener(this);
@@ -970,7 +971,6 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 		myBalloon = null;
 
 		this.myPopupBarDescriptors.clear();
-		setRightHandDisplay(); // set back to default
 
 		for (Iterator iter = imagesToBeDisposed.iterator(); iter.hasNext();) {
 			((Image) iter.next()).dispose();
@@ -1022,6 +1022,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 	 * This is the default which places the popup bar to favor the right side
 	 * of the shape
 	 * 
+     * @deprecated this is not being used anymore
 	 */
 	protected void setRightHandDisplay() {
 		this.myBallonOffsetPercent = BALLOON_X_OFFSET_RHS;
@@ -1029,7 +1030,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 
 	/**
 	 * Place the popup bar to favor the left had side of the shape
-	 * 
+	 * @deprecated this is not being used anymore
 	 */
 	protected void setLeftHandDisplay() {
 		this.myBallonOffsetPercent = BALLOON_X_OFFSET_LHS;
@@ -1038,6 +1039,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 	/**
 	 * check thee right display status
 	 * @return true or false
+     * @deprecated this is not being used anymore
 	 */
 	protected boolean isRightDisplay() {
 		return (BALLOON_X_OFFSET_RHS == myBallonOffsetPercent);
