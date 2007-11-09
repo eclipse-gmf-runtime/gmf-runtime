@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,7 +65,7 @@ public class ConnectionHandleLocatorTest
 		throws Exception {
 
 		rectangle = new RectangleFigure();
-		rectangle.setLocation(new Point(0, 0));
+		rectangle.setLocation(new Point(100, 100));
 		rectangle.setSize(100, 200);
 	}
 
@@ -87,10 +87,10 @@ public class ConnectionHandleLocatorTest
 		throws Exception {
 
 		Object data[][] = {
-			{new Point(30, 0), new Integer(PositionConstants.NORTH)},
-			{new Point(30, 100), new Integer(PositionConstants.WEST)},
-			{new Point(80, 70), new Integer(PositionConstants.EAST)},
-			{new Point(40, 190), new Integer(PositionConstants.SOUTH)}};
+			{new Point(130, 100), new Integer(PositionConstants.NORTH)},
+			{new Point(130, 200), new Integer(PositionConstants.WEST)},
+			{new Point(180, 170), new Integer(PositionConstants.EAST)},
+			{new Point(140, 290), new Integer(PositionConstants.SOUTH)}};
 
 		for (int i = 0; i < data.length; i++) {
 			ConnectionHandleLocator locator = new ConnectionHandleLocator(
@@ -139,11 +139,11 @@ public class ConnectionHandleLocatorTest
 		}
 
 		Object data2[][] = {
-			{new Point(30, 0), new Integer(PositionConstants.WEST)},
-			{new Point(80, 10), new Integer(PositionConstants.EAST)},
-			{new Point(30, 100), new Integer(PositionConstants.WEST)},
-			{new Point(80, 70), new Integer(PositionConstants.EAST)},
-			{new Point(40, 190), new Integer(PositionConstants.SOUTH)}};
+			{new Point(130, 100), new Integer(PositionConstants.WEST)},
+			{new Point(180, 110), new Integer(PositionConstants.EAST)},
+			{new Point(130, 200), new Integer(PositionConstants.WEST)},
+			{new Point(180, 170), new Integer(PositionConstants.EAST)},
+			{new Point(140, 290), new Integer(PositionConstants.SOUTH)}};
 
 		for (int i = 0; i < data.length; i++) {
 			ConnectionHandleLocator locator = new ConnectionHandleLocator(
