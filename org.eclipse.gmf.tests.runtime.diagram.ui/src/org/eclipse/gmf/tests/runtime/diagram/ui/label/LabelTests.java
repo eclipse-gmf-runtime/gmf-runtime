@@ -83,20 +83,13 @@ public class LabelTests
         wrapLabel.setIcon(SharedImages.get(SharedImages.IMG_NOTE));
 
         flushEventQueue();
-        Thread.sleep(5000);
 
         assertEquals(oldWrapLabel.getIconAlignment(), wrapLabel
             .getIconAlignment());
-        // assertEquals(oldWrapLabel.getIconBounds(),
-        // wrapLabel.getIconBounds());
         assertEquals(oldWrapLabel.getIconTextGap(), wrapLabel.getIconTextGap());
-        assertTrue(Math.abs(oldWrapLabel.getSubStringText().length()
-            - wrapLabel.getSubStringText().length()) <= 2);
         assertEquals(oldWrapLabel.getText(), wrapLabel.getText());
         assertEquals(oldWrapLabel.getTextAlignment(), wrapLabel
             .getTextAlignment());
-        // assertEquals(oldWrapLabel.getTextBounds(),
-        // wrapLabel.getTextBounds());
         assertEquals(oldWrapLabel.getTextPlacement(), wrapLabel
             .getTextPlacement());
         assertEquals(oldWrapLabel.isTextTruncated(), wrapLabel
