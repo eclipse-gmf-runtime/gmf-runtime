@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.preferences;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
+import java.util.Locale;
 
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.common.ui.preferences.AbstractPreferencePage;
@@ -387,7 +388,16 @@ public class RulerGridPreferencePage
 	 */
 	public static void initDefaults(IPreferenceStore preferenceStore) {
 		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_RULERS, false);
-		preferenceStore.setDefault(IPreferenceConstants.PREF_RULER_UNITS, RulerProvider.UNIT_INCHES);
+		String defaultCountry = Locale.getDefault().getCountry();
+		if (defaultCountry == null
+				|| defaultCountry.equals(Locale.US.getCountry())
+				|| defaultCountry.equals(Locale.CANADA.getCountry())) {
+			preferenceStore.setDefault(IPreferenceConstants.PREF_RULER_UNITS,
+					RulerProvider.UNIT_INCHES);
+		} else {
+			preferenceStore.setDefault(IPreferenceConstants.PREF_RULER_UNITS,
+					RulerProvider.UNIT_CENTIMETERS);
+		}
 		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_GRID, false);
 		preferenceStore.setDefault(IPreferenceConstants.PREF_SNAP_TO_GRID, true);
 		preferenceStore.setDefault(IPreferenceConstants.PREF_GRID_SPACING, 0.125);
