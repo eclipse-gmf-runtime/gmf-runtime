@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,11 @@ public class CircuitCompartmentCanonicalEditPolicy extends CanonicalConnectionEd
 			if (obj instanceof Wire) {
 				Wire wire = (Wire)obj;
                 if (isWirePartOfContainer(circuitElement, wire))
-                    wires.add(wire);
+                	//checks if the wire maps to the same circuit
+                	if (! (wire.getSource().eContainer().equals(circuitElement)
+                		&& (wire.getTarget().eContainer().equals(circuitElement)))){               	
+                		wires.add(wire);                		
+                	}
 			}
 		}
 		
