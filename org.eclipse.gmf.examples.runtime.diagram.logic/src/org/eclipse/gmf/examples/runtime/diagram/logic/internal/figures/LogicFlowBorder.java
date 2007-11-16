@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ public class LogicFlowBorder
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
 		Rectangle bounds = figure.getBounds();
 		tempRect.setBounds(new Rectangle(bounds.x, bounds.y, grabBarWidth, bounds.height));
+		graphics.setBackgroundColor(LogicColorConstants.logicGreen);
 		graphics.fillRectangle(tempRect);
 		super.paint(figure, graphics, insets);
 	}
