@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -232,6 +232,7 @@ public final class DiagramUIMessages extends NLS {
 	public static String Command_ChangeViewProperty_ChangePropertyPattern;
 	public static String Commands_CreateCommand_Connection_Label;
 	public static String Command_Deferred_Layout;
+	public static String SnapCommand_Label;
 	public static String Commands_SetConnectionEndsCommand_Target;
 	public static String Commands_SetConnectionEndsCommand_Source;
 	public static String Commands_DestroyElement;

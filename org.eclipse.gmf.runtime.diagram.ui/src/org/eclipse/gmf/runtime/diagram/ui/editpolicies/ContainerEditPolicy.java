@@ -30,6 +30,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -52,11 +53,15 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.DuplicateViewsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.PasteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.RefreshEditPartCommand;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SnapCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.ISurfaceEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.requests.PasteViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.IInternalLayoutRunnable;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.layout.LayoutNode;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
@@ -72,6 +77,9 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * the container edit policy
@@ -275,7 +283,8 @@ public class ContainerEditPolicy
 		
 		if ( (ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())) || 
 			 (ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType()))) {
-			editparts = ((IGraphicalEditPart)getHost()).getChildren();
+			editparts = ((IGraphicalEditPart)getHost()).getChildren();			
+			request.setPartsToArrange(editparts);
 		}
 		if ( (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())) ||
 			 (ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType()))) {
@@ -305,23 +314,42 @@ public class ContainerEditPolicy
 		hints.add(getHost());
 		IAdaptable layoutHint = new ObjectAdapter(hints);
 		final Runnable layoutRun = layoutNodes(nodes, offsetFromBoundingBox, layoutHint);
+
+		boolean isSnap = true;
 		
+		IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		if (activePart != null){
+		     IDiagramWorkbenchPart editor = (IDiagramWorkbenchPart) activePart;
+		     if (editor != null){
+		    	   DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
+		           IPreferenceStore preferenceStore = viewer.getWorkspaceViewerPreferenceStore();	
+		           isSnap = preferenceStore.getBoolean(WorkspaceViewerProperties.SNAPTOGRID);
+		     }
+		}        
+     
+        //the snapCommand still invokes proper calculations if snap to grid is turned off, this additional check
+        //is intended to make the code more appear more logical		
+				
+		CompoundCommand cmd = new CompoundCommand();		
 		if (layoutRun instanceof IInternalLayoutRunnable) {
-			return ((IInternalLayoutRunnable)layoutRun).getCommand();
+			cmd.add(((IInternalLayoutRunnable) layoutRun).getCommand());		
 		}
 		else {
             TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
-                .getEditingDomain();
-            
-			return new ICommandProxy(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
+                .getEditingDomain(); 
+            cmd.add(new ICommandProxy(new AbstractTransactionalCommand(editingDomain, "", null) {//$NON-NLS-1$
 				protected CommandResult doExecuteWithResult(
                             IProgressMonitor progressMonitor, IAdaptable info)
                         throws ExecutionException {
 					layoutRun.run();
 					return CommandResult.newOKCommandResult();
 				}
-			});
+			}));     
+		}		
+		if (isSnap) {
+			cmd.add(getSnapCommand(request));
 		}
+		return cmd;
 	}
 	
 	/**
@@ -433,6 +461,24 @@ public class ContainerEditPolicy
         return new Point(offset, offset);
     }
 	
+	private Command getSnapCommand(Request request){
+			
+		List editparts = null;
+		if (request instanceof GroupRequest){			
+			editparts =  ((GroupRequest)request).getEditParts();
+		}	
+		else if (request instanceof ArrangeRequest){
+			editparts = ((ArrangeRequest)request).getPartsToArrange();
+		}
+		
+		TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+				.getEditingDomain();
+		if (editparts != null){
+			return new ICommandProxy(new SnapCommand(editingDomain, editparts));
+		}		
+		return null;
+	}
+	
 	/**
 	 * @see org.eclipse.gef.EditPolicy#getCommand(Request)
 	 */
@@ -440,8 +486,12 @@ public class ContainerEditPolicy
 		
 		if (request instanceof ArrangeRequest) {
 			return getArrangeCommand((ArrangeRequest)request);
+		}		
+		
+		if (RequestConstants.REQ_SNAP_TO_GRID.equals(request.getType())){
+			return getSnapCommand(request);
 		}
-
+		
 		if (RequestConstants.REQ_REFRESH.equals(request.getType())) {
 			IGraphicalEditPart containerEP = (IGraphicalEditPart) getHost();
 
@@ -503,12 +553,13 @@ public class ContainerEditPolicy
 			ActionIds.ACTION_ARRANGE_ALL.equals(request.getType())
 				|| ActionIds.ACTION_TOOLBAR_ARRANGE_ALL.equals(request.getType())
 				|| ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
-				|| ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType())
+				|| ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType())				
 				|| RequestConstants.REQ_ARRANGE_RADIAL.equals(request.getType())
 				|| RequestConstants.REQ_ARRANGE_DEFERRED.equals(request.getType())
 				|| RequestConstants.REQ_REFRESH.equals(request.getType())
 				|| RequestConstants.REQ_PASTE.equals(request.getType())
 				|| RequestConstants.REQ_DUPLICATE.equals(request.getType())
+				|| RequestConstants.REQ_SNAP_TO_GRID.equals(request.getType())
 				|| ZOrderRequest.REQ_BRING_TO_FRONT.equals(request.getType())
 				|| ZOrderRequest.REQ_BRING_FORWARD.equals(request.getType())
 				|| ZOrderRequest.REQ_SEND_TO_BACK.equals(request.getType())
