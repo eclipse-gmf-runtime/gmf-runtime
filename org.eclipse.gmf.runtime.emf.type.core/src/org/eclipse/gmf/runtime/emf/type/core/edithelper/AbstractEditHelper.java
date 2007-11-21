@@ -135,7 +135,11 @@ public abstract class AbstractEditHelper
             return null;
         }
         
-        return getEditCommand(req, advice);
+        ICommand result = getEditCommand(req, advice);
+        if (result != null) {
+            return result.reduce();
+        }
+        return result;
 	}
     
     /**
@@ -732,8 +736,6 @@ public abstract class AbstractEditHelper
 	 */
 	protected ICommand getDestroyElementCommand(DestroyElementRequest req) {
 		ICommand result = null;	
-
-		ICommand destroyParent = getDestroyElementWithDependentsCommand(req);	
 		
 		EObject parent = req.getElementToDestroy();		
 		
@@ -747,8 +749,13 @@ public abstract class AbstractEditHelper
 			.get(RequestCacheEntries.Checked_Elements);
 			checkedElement.add(parent);
 			Map parentMap = (Map) cacheMaps.get(parent);
-			parentType = (IElementType) parentMap
-				.get(RequestCacheEntries.Element_Type);			
+			if (parentMap != null) {
+    			parentType = (IElementType) parentMap
+    				.get(RequestCacheEntries.Element_Type);
+			} else {
+			    parentType = ElementTypeRegistry.getInstance().getElementType(
+		                parent); 
+			}
 		} else {
 			parentType = ElementTypeRegistry.getInstance().getElementType(
 				parent);
@@ -776,24 +783,29 @@ public abstract class AbstractEditHelper
 							result = result.compose(command);
 						}
 						
-						if (!command.canExecute()) {
-							// no point in continuing if we're abandoning the works
-							break;
-						}
+// Under normal circumstances the command is executable.
+// Checking canExecute here slows down large scenarios and it is therefore
+// better to skip this check.
+//						if (!command.canExecute()) {
+//							// no point in continuing if we're abandoning the works
+//							break;
+//						}
 					}
 				}
 			}
 		}
 
+		// restore the elementToDestroy in the original request
+        req.setElementToDestroy(parent);
+        
+		ICommand destroyParent = getDestroyElementWithDependentsCommand(req);
+		
 		//bottom-up destruction:  destroy children before parent
 		if (result == null) {
 			result = destroyParent;
 		} else {
 			result = result.compose(destroyParent);
 		}
-		
-		// restore the elementToDestroy in the original request
-		req.setElementToDestroy(parent);
 		
 		return result;
 	}
