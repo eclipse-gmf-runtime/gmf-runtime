@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
@@ -59,7 +60,11 @@ public class ShapeCompartmentDropEditPolicy
 					IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
 					if (gep.getTopGraphicEditPart().equals(requestEP)) {
 						return null;
-					}
+					} else if (requestEP.getParent() instanceof GroupEditPart) {
+                        // Dragging shapes outside the group will cause the
+                        // group to grow and thus should not reparent.
+                        return null;
+                    }
 				}
 			}
 		}

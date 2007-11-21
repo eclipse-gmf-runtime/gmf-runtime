@@ -661,5 +661,10 @@ public class ColorPropertyContributionItem
 			disabledBasicImageData);
 	}
 
+    @Override
+    protected boolean digIntoGroups() {
+        return true;
+    }
+
 
 }

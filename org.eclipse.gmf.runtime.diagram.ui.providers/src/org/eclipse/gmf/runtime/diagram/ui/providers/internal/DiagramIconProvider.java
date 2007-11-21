@@ -19,6 +19,8 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconOperation;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IIconProvider;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -53,11 +55,12 @@ implements IIconProvider {
         if (view != null) {
             if (DiagramViewProvider.isTextView(view)) {
                 return SharedImages.get(SharedImages.IMG_TEXT);
-            }
-
-            else if (DiagramViewProvider.isNoteView(view)) {
+            } else if (DiagramViewProvider.isNoteView(view)) {
 
                 return SharedImages.get(SharedImages.IMG_NOTE);
+            } else if (ViewType.GROUP.equals(view.getType())) {
+                 return DiagramUIPluginImages
+                    .get(DiagramUIPluginImages.IMG_GROUP);
             }
         } else if (hint.getAdapter(IElementType.class) != null) {
             String fileName = (String) typeIconMap.get(hint);
@@ -80,11 +83,12 @@ implements IIconProvider {
 		}
 				
         View view = (View) adapter.getAdapter(View.class);
-        if (view != null && 
-		   (DiagramViewProvider.isNoteView(view)
-		   	|| DiagramViewProvider.isTextView(view))) {
-			return true;
-		}
+        if (view != null
+            && (DiagramViewProvider.isNoteView(view)
+                || DiagramViewProvider.isTextView(view) || ViewType.GROUP
+                .equals(view.getType()))) {
+            return true;
+        }
 		
 		if (oper.getHint().getAdapter(IElementType.class) != null) {
 			String fileName = (String) typeIconMap.get(oper.getHint());

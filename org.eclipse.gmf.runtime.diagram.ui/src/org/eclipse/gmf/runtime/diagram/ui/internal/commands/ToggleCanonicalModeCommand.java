@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -139,9 +140,18 @@ public class ToggleCanonicalModeCommand extends Command {
 	 * @param editPart edit part to use
 	 * @return the canoncial edit policy if there is any
 	 */
-	protected static CanonicalEditPolicy getCanonicalEditPolicy( EditPart editPart ) {
-		return (CanonicalEditPolicy)editPart.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
-	}
+	protected static CanonicalEditPolicy getCanonicalEditPolicy(
+            EditPart editPart) {
+
+        // If the editpart is a group, then we want to get the first parent
+        // that isn't a group and get the canonical editpolicy there.
+        while (editPart instanceof GroupEditPart) {
+            editPart = editPart.getParent();
+        }
+
+        return (CanonicalEditPolicy) editPart
+            .getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
+    }
 	
 	/** Removes the canonical editpolict from the target editpart. */ 
 	public void execute() {

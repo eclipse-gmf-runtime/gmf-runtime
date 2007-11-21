@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,9 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.diagram.core.commands.UngroupCommand;
+import org.eclipse.gmf.runtime.diagram.core.commands.UpdateGroupLocationCommand;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
@@ -82,6 +85,28 @@ public class NotationViewDependentsAdvice extends AbstractEditHelperAdvice {
 				}
 			}			
 		}
+		
+		// handle deletion of groups
+        if (destructee instanceof Node) {
+            EObject parent = ((Node) destructee).eContainer();
+            if (parent instanceof Node
+                && ViewType.GROUP.equals(((Node) parent).getType())) {
+                if (((Node) parent).getChildren().size() == 2) {
+                    // There will only be one child of the group left after this
+                    // child is destroyed, so remove the group as well.
+                    result = CompositeCommand.compose(result,
+                        new UngroupCommand(request.getEditingDomain(),
+                            (Node) parent));
+                } else {
+                    // The remaining group's location may require changing after
+                    // the deletion.
+                    result = CompositeCommand.compose(result,
+                        new UpdateGroupLocationCommand(request
+                            .getEditingDomain(), (Node) parent));
+                }
+            }
+        }
+        
 		return result;
 	}
 	

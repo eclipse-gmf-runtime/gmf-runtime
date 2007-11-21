@@ -416,9 +416,7 @@
              <popupCustom path="/formatMenu/fontFillLineGroup" id="fillColorContributionItem">
             </popupCustom>
             <popupCustom path="/formatMenu/fontFillLineGroup" id="lineColorContributionItem">
-            </popupCustom>           
-            <popupAction path="/addGroup" id="addNoteLinkAction">
-            </popupAction>                         
+            </popupCustom>                               
             <popupMenu path="/formatMenu/miscellaneousGroup" id="arrangeMenu">
             </popupMenu>    
             <popupMenuGroup path="/formatMenu/arrangeMenu/" id="arrangeGroup">
@@ -428,6 +426,12 @@
              <popupAction path="/formatMenu/arrangeMenu/arrangeGroup" id="arrangeSelectionAction">
             </popupAction>              
          </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.INotableEditPart">
+            </popupStructuredContributionCriteria>           
+            <popupAction path="/addGroup" id="addNoteLinkAction">   
+            </popupAction>    
+         </popupContribution>  
          
 <!-- format and filter menu actions -->         
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
@@ -702,7 +706,7 @@
          <Priority name="Lowest">
          </Priority>
          <object class="org.eclipse.gmf.runtime.notation.View" id="ShapesByType">
-            <method name="getType()" value="Note, Text, NoteAttachment, DiagramName, Description">
+            <method name="getType()" value="Note, Text, NoteAttachment, DiagramName, Description, Group">
             </method>
          </object>
          <context views="ShapesByType">

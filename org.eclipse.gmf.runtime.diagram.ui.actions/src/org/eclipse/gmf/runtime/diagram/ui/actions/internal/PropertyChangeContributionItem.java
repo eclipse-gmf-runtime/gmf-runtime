@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,18 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.actions.internal;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.CustomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
@@ -168,11 +172,7 @@ public abstract class PropertyChangeContributionItem
 				new RunnableWithResult.Impl() {
 
 					public void run() {
-						ENamedElement element = PackageUtil
-							.getElement(thePropertyId);
-						if (element instanceof EStructuralFeature)
-							setResult(editPart
-								.getStructuralFeatureValue((EStructuralFeature) element));
+						setResult(getStructuralFeatureValue(editPart, thePropertyId));
 					}
 				});
 		} catch (InterruptedException e) {
@@ -201,12 +201,8 @@ public abstract class PropertyChangeContributionItem
             return getPropertyValue(editPart,thePropertyId);
         }
         else {
-             ENamedElement element = PackageUtil.getElement(thePropertyId);
-             if (element instanceof EStructuralFeature){
-                 return editPart.getStructuralFeatureValue((EStructuralFeature) element);
-             }
+             return getStructuralFeatureValue(editPart, thePropertyId);
         }
-        return null;
     }
 
 	/**
@@ -222,5 +218,53 @@ public abstract class PropertyChangeContributionItem
 	protected boolean isSelectionListener() {
 		return true;
 	}
+	
+    /**
+     * Override to return true to have this property action work on the shapes
+     * in a <code>GroupEditPart</code> as if the shapes were multi-selected.
+     * 
+     * @return true if this property action is to dig into the shapes of groups
+     */
+    protected boolean digIntoGroups() {
+        return false;
+    }
+    
+    /**
+     * Gets the structural feature value of the property id on the editpart
+     * passed in or one of the children if the editpart is a group and
+     * {@link #digIntoGroups()} returns true.
+     * 
+     * @param editpart
+     *            the editpart
+     * @param thePropertyId
+     *            the property id
+     */
+    private Object getStructuralFeatureValue(IGraphicalEditPart editpart,
+            final String thePropertyId) {
+        ENamedElement element = PackageUtil.getElement(thePropertyId);
+        if (element instanceof EStructuralFeature) {
+            if (digIntoGroups() && editpart instanceof GroupEditPart) {
+                editpart = (IGraphicalEditPart) editpart.getChildren().get(0);
+            }
+            return editpart
+                .getStructuralFeatureValue((EStructuralFeature) element);
+        }
+        return null;
+    }
+
+    protected List getTargetEditParts(EditPart editpart) {
+        if (digIntoGroups() && editpart instanceof GroupEditPart) {
+            List targetEPs = new ArrayList();
+            for (Iterator iterator = ((GroupEditPart) editpart)
+                .getShapeChildren().iterator(); iterator.hasNext();) {
+                EditPart childEP = (EditPart) iterator.next();
+                targetEPs.addAll(super.getTargetEditParts(childEP));
+            }
+            return targetEPs;
+        }
+        return super.getTargetEditParts(editpart);
+    }
+    
+    
 
 }

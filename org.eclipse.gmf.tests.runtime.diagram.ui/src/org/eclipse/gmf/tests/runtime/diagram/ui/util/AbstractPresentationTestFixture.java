@@ -446,10 +446,11 @@ public abstract class AbstractPresentationTestFixture
 			List children = containerEP.getChildren();
 			ListIterator li = children.listIterator();
 			while (li.hasNext()) {
-				IGraphicalEditPart gep = (IGraphicalEditPart)li.next();
-				if (gep.getNotationView().getElement().equals(element)) {
-					newShape = gep;
-				}
+				IGraphicalEditPart gep = (IGraphicalEditPart) li.next();
+                if (gep.getNotationView() != null
+                    && element.equals(gep.getNotationView().getElement())) {
+                    newShape = gep;
+                }
 			}
 		}
 		else {
@@ -508,6 +509,23 @@ public abstract class AbstractPresentationTestFixture
 		return createShapeUsingTool(elementType, location, getDiagramEditPart());
 
 	}
+	
+	   /**
+     * Creates a new shape using the request created by the
+     * <code>CreationTool</code>.
+     * 
+     * @param elementType
+     *            the type of the shape/element to be created
+     * @param location
+     *            the location for the new shape
+     * @return the new shape's editpart
+     */
+    public ShapeEditPart createShapeUsingTool(IElementType elementType,
+            Point location, Dimension size) {
+
+        return createShapeUsingTool(elementType, location, size, getDiagramEditPart());
+
+    }
 	
 	/**
 	 * Creates a new connector using the request created by the

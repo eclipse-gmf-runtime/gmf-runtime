@@ -26,6 +26,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.tools.ToolUtilities;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
@@ -197,6 +198,44 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         }
         return super.calculateCursor();
     }
+    
+    protected boolean handleButtonDown(int button) {
 
+        // If the group is selected, and the user clicks on a shape, defer the
+        // selection of the shape until the mouse button is released instead of
+        // selecting on mouse down because if the user does a drag they will
+        // move the entire group and not the shape.
+        if (button == 1
+            && getSourceEditPart().getParent() instanceof GroupEditPart
+            && getSourceEditPart().getParent().getSelected() != EditPart.SELECTED_NONE) {
+
+            stateTransition(STATE_INITIAL, STATE_DRAG);
+            return true;
+        }
+
+        return super.handleButtonDown(button);
+    }
+
+    protected boolean handleDoubleClick(int button) {
+        // If the user double-clicks a shape in a group and the shape is not
+        // selected, select the shape.
+        if (getSourceEditPart().getParent() instanceof GroupEditPart
+            && getSourceEditPart().getSelected() == EditPart.SELECTED_NONE) {
+            performSelection();
+            return true;
+        } else {
+            return super.handleDoubleClick(button);
+        }
+    }
+
+    protected void performSelection() {
+        super.performSelection();
+
+        // If the new selection is a child of a group, we want to deselect the group.
+        if (getSourceEditPart().getParent() instanceof GroupEditPart
+            && getSourceEditPart().getParent().getSelected() != EditPart.SELECTED_NONE) {
+            getCurrentViewer().deselect(getSourceEditPart().getParent());
+        }
+    }
     
 }

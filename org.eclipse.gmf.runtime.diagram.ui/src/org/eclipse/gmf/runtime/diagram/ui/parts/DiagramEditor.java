@@ -77,11 +77,13 @@ import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.common.ui.util.IPartSelector;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeContainerEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeDiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions;
@@ -1534,6 +1536,9 @@ public abstract class DiagramEditor
 			public EditPart createEditPart(EditPart context, Object model) {
 				if (model instanceof Diagram) {
 					return new TreeDiagramEditPart(model);
+                } else if (model instanceof View
+                    && ViewType.GROUP.equals(((View) model).getType())) {
+                    return new TreeContainerEditPart(model);
 				} else {
 					return new TreeEditPart(model);
 				}

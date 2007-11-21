@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsPluginImages;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -134,7 +135,12 @@ public class SelectAllAction extends DiagramAction {
 			else {
 				if (editpart.isSelectable())
 					retval.add(editpart);
-				getSelectableChildrenNodes(editpart, retval);
+
+                // Do not dig into groups -- just select the group, but not the
+                // shapes inside.
+                if (!(editpart instanceof GroupEditPart)) {
+                    getSelectableChildrenNodes(editpart, retval);
+                }
 			}
 		}
 	}
@@ -179,7 +185,11 @@ public class SelectAllAction extends DiagramAction {
 		Set connnectableEditParts = new HashSet(editparts);
 		ListIterator li = editparts.listIterator();
 		while (li.hasNext()) {
-			getBorderItemEditParts((EditPart)li.next(), connnectableEditParts);
+            EditPart ep = (EditPart)li.next();
+			getBorderItemEditParts(ep, connnectableEditParts);
+            if (ep instanceof GroupEditPart) {
+                connnectableEditParts.addAll(((GroupEditPart)ep).getShapeChildren());
+            }
 		}
 		
 		if (diagramEditPart != null) {

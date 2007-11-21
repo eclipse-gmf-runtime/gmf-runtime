@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,19 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.util.Iterator;
+
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -28,12 +34,9 @@ import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
  * the base controler for shapes
- * @author mmostafa
+ * @author mmostafa, crevells
  *
  */
 public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrimaryEditPart {
@@ -144,4 +147,54 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
 	public EditPolicy getPrimaryDragEditPolicy() {
 		return new ResizableShapeEditPolicy();
 	}
+
+    public EditPart getTargetEditPart(Request request) {
+
+        if (RequestConstants.REQ_SELECTION == request.getType()
+            && getParent() instanceof GroupEditPart) {
+            
+            // If the shape is already selected then do not give up selection to
+            // the group.
+            if (getSelected() != SELECTED_NONE) {
+                return super.getTargetEditPart(request);
+            }
+
+            GroupEditPart groupEP = (GroupEditPart) getParent();
+
+            // Normally when a shape is not selected, the right-mouse button
+            // will cause the shape to be selected and the context menu to show.
+            // If the shape is in a group, we do not want this behavior as we
+            // want the context menu of the group to show.
+            if (getSelected() == SELECTED_NONE
+                && (request instanceof SelectionRequest)
+                && ((SelectionRequest) request).getLastButtonPressed() == 3) {
+                return groupEP.getTargetEditPart(request);
+            }
+          
+            // If the group is currently selected, then this is the second click
+            // then the shape should be selected.
+            if (groupEP.getSelected() != SELECTED_NONE) {
+                return super.getTargetEditPart(request);
+            }
+
+            // If any of the group's children are currently selected then the
+            // selection of another child of the group will result in the child
+            // being selected and not the group.
+            for (Iterator iter = groupEP.getChildren().iterator(); iter
+                .hasNext();) {
+                EditPart childEP = (EditPart) iter.next();
+                if (childEP.getSelected() != SELECTED_NONE) {
+                    return super.getTargetEditPart(request);
+                }
+
+            }
+
+            // otherwise we want the group to get selected
+            return groupEP.getTargetEditPart(request);
+        }
+
+        return super.getTargetEditPart(request);
+    }
+
+     
 }

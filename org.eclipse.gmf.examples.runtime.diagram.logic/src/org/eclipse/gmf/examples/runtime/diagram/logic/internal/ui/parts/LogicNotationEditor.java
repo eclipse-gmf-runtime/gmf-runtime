@@ -27,6 +27,8 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.OrGate;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.XORGate;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.util.LogicSemanticType;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeContainerEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeDiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramDropTargetListener;
@@ -108,6 +110,9 @@ public class LogicNotationEditor
             public EditPart createEditPart(EditPart context, Object model) {
                 if (model instanceof Diagram) {
                     return new TreeDiagramEditPart(model);
+                } else if (model instanceof View
+                        && ViewType.GROUP.equals(((View) model).getType())) {
+                        return new TreeContainerEditPart(model);
                 } else {
                     return new TreeEditPart(model) {
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005  IBM Corporation and others.                       -->
+<!-- Copyright (c) 2005, 2007  IBM Corporation and others.                       -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -500,4 +500,31 @@
             factory="org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory"
             id="org.eclipse.gmf.examples.runtime.diagram.logicEditingDomain"/>
    </extension>
+   
+   <extension id="LogicExampleGroupContributionItemProvider" name="LogicExampleGroupContributionItemProvider" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContributionItemProvider">
+         <Priority name="Low">
+         </Priority>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart"
+                  objectCount="2+">
+               <method
+                     name="getDiagramEditDomain().getEditorPart().getEditorSite().getId()"
+                     value="LogicEditor"/>     
+            </popupStructuredContributionCriteria>     
+            <popupAction path="/formatMenu/miscellaneousGroup" id="groupAction">
+            </popupAction>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart">
+            	<method
+                     name="getDiagramEditDomain().getEditorPart().getEditorSite().getId()"
+                     value="LogicEditor"/>     
+            </popupStructuredContributionCriteria>                    
+            <popupAction path="/formatMenu/miscellaneousGroup" id="ungroupAction">
+            </popupAction>   
+         </popupContribution>                                 
+      </contributionItemProvider>
+   </extension> 
 </plugin>

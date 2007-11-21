@@ -47,6 +47,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateOrSelectElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SemanticCreateCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -151,7 +152,9 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 			if ( ep instanceof LabelEditPart ) {
 				continue;
 			}
-			
+			if (ep instanceof GroupEditPart) {
+                cc.compose(getReparentGroupCommand((GroupEditPart) ep));
+            }		
 			View view = (View)ep.getAdapter(View.class);
 			if ( view == null ) {
 				continue;
@@ -167,6 +170,47 @@ public class CreationEditPolicy extends AbstractEditPolicy {
 		}
 		return cc.isEmpty() ? null : new ICommandProxy(cc.reduce());
 	}
+	
+    /**
+     * Return the command to reparent the supplied group editpart's semantic and
+     * notation elements.
+     * 
+     * @param gep
+     *            the groupEP editpart being reparented
+     * @return A composite command that will reparent both the semantic and
+     *         notation elements of the group.
+     */
+    protected ICommand getReparentGroupCommand(GroupEditPart groupEP) {
+        CompositeCommand cc = new CompositeCommand(
+            DiagramUIMessages.AddCommand_Label);
+        View container = (View) getHost().getModel();
+        EObject context = ViewUtil.resolveSemanticElement(container);
+
+        // semantic
+        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())
+            .getEditingDomain();
+        for (Iterator iter = groupEP.getShapeChildren().iterator(); iter
+            .hasNext();) {
+            IGraphicalEditPart childEP = (IGraphicalEditPart) iter.next();
+            EObject element = ViewUtil.resolveSemanticElement((View) childEP
+                .getModel());
+            if (element != null) {
+                Command moveSemanticCmd = getHost().getCommand(
+                    new EditCommandRequestWrapper(new MoveRequest(
+                        editingDomain, context, element)));
+
+                if (moveSemanticCmd == null) {
+                    return org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand.INSTANCE;
+                }
+
+                cc.compose(new CommandProxy(moveSemanticCmd));
+            }
+        }
+
+        // notation
+        cc.compose(getReparentViewCommand(groupEP));
+        return cc;
+    }
 	
 	/** 
 	 * Return the command to reparent the supplied editpart's semantic and notation

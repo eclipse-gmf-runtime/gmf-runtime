@@ -37,6 +37,7 @@ public final class DiagramCoreMessages extends NLS {
     
     public static String GroupCommand_Label;
     public static String UngroupCommand_Label;
+    public static String UpdateLocation_Label;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramCoreMessages.class);

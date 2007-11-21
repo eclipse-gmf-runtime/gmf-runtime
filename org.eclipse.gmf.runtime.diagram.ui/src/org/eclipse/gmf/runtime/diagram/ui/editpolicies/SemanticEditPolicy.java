@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITreeBranchEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -454,6 +455,11 @@ public class SemanticEditPolicy
         } else {
             parent = editpart.getParent();
         }
+        
+        while (parent instanceof GroupEditPart) {
+            parent = parent.getParent();
+        }
+        
         return ((parent instanceof GraphicalEditPart) && ((GraphicalEditPart) parent)
             .isCanonical());
     }

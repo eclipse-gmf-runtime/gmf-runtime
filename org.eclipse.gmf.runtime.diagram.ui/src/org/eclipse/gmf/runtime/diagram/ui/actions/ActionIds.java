@@ -102,7 +102,9 @@ public interface ActionIds {
 	public final String ACTION_SHOW_CONNECTION_LABELS = "showConnectorLabels"; //$NON-NLS-1$
 	public final String ACTION_HIDE_CONNECTION_LABELS = "hideConnectorLabels"; //$NON-NLS-1$	
 	public final String ACTION_SHOW_COMPARTMENT_TITLE = "showCompartmentTitle"; //$NON-NLS-1$	
-	
+    public final String ACTION_GROUP = "groupAction"; //$NON-NLS-1$
+    public final String ACTION_UNGROUP = "ungroupAction"; //$NON-NLS-1$
+    
 	/* The menu ID for the diagram editor popup menu */
 	public final String DIAGRAM_EDITOR_CONTEXT_MENU = "org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu"; //$NON-NLS-1$
 	public final String DIAGRAM_OUTLINE_CONTEXT_MENU = "org.eclipse.gmf.runtime.diagram.ui.DiagramOutlineContextMenu"; //$NON-NLS-1$

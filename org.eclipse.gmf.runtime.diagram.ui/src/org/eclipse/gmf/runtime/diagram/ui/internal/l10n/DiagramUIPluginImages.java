@@ -63,6 +63,8 @@ public class DiagramUIPluginImages {
 	public static final String IMG_POPUPBAR = PREFIX_ROOT + "popupbar.gif"; //$NON-NLS-1$
 	public static final String IMG_POPUPBAR_PLUS = PREFIX_ROOT + "popupbar_plus.gif"; //$NON-NLS-1$
 
+    public static final String IMG_GROUP = PREFIX_ROOT + "group.gif"; //$NON-NLS-1$
+
 	// Image descriptors.
 
 	public static final ImageDescriptor DESC_HANDLE_COLLAPSE = createAndCache(IMG_HANDLE_COLLAPSE);
@@ -187,7 +189,9 @@ public class DiagramUIPluginImages {
 	public static final ImageDescriptor DESC_DOWN_PATH = create(PREFIX_ROOT + "CollectionDown.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_SORT_ARROW_UP = create(PREFIX_ROOT + "sm_arrow_up.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_SORT_ARROW_DN = create(PREFIX_ROOT + "sm_arrow_dn.gif"); //$NON-NLS-1$
-	
+    
+    public static final ImageDescriptor DESC_GROUP = createAndCache(IMG_GROUP); 
+
 	/**
 	 * Creates the image descriptor from the filename given.
 	 * 

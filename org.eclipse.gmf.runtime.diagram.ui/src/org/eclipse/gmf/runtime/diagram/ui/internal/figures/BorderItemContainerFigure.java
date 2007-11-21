@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,8 +67,13 @@ public class BorderItemContainerFigure
 	protected void paintClientArea(Graphics graphics) {
 		if (getChildren().isEmpty() || !isVisible())
 			return;
-		Rectangle clip = getParentRectangle();
+		Rectangle clip = getVisibleExtendedBounds();
 		graphics.setClip(clip);
+
+        if (useLocalCoordinates()) {
+            graphics.translate(getBounds().x + getInsets().left, getBounds().y
+                + getInsets().top);
+		}
 		graphics.pushState();
 		paintChildren(graphics);
 		graphics.popState();
@@ -105,6 +110,11 @@ public class BorderItemContainerFigure
 	 * We need to override this for smooth painting of border item items.
 	 */
 	public boolean containsPoint(int x, int y) {
+		if (useLocalCoordinates()) {
+            x = x - getBounds().x - getInsets().left;
+            y = y - getBounds().y - getInsets().top;
+        }
+
 		for (int i = getChildren().size(); i > 0;) {
 			i--;
 			IFigure fig = (IFigure) getChildren().get(i);
@@ -215,35 +225,56 @@ public class BorderItemContainerFigure
 	 * @see org.eclipse.draw2d.IFigure#intersects(Rectangle)
 	 */
 	public boolean intersects(Rectangle rect) {		
-		Rectangle rectangle = getParentRectangle();
+		Rectangle rectangle = getExtendedBounds();
 		return rectangle.intersects(rect);
 	}
-    
-    private Rectangle getParentRectangle() {
-        return _getParentRectangle();
+	
+    /**
+     * Gets the area of the extended bounds which is visible, that is, that is
+     * contained within the viewport bounds. This is needed so that when this
+     * shape is within a scrollable compartment, the border items are not
+     * visible when they are outside the visible area.
+     * 
+     * @return the area of the extended bounds which is visible
+     */
+    private Rectangle getVisibleExtendedBounds() {
+        Rectangle extendedRect = getExtendedBounds().getCopy();
+        translateToAbsolute(extendedRect);
+        Rectangle parentRect = getViewportBounds().getIntersection(
+            extendedRect);
+        translateToRelative(parentRect);
+        return parentRect;
     }
     
     /**
      * Return the area of the parent viewport if there is one, otherwise, return
-     * the client area of the parent.
+     * the client area of the parent. The viewport area is required so that
+     * border items outside the viewport are not shown (i.e. when they are
+     * scrolled out of view).
+     * 
+     * @return returns the viewport client area in absolute coordinates
      */
-    private Rectangle _getParentRectangle() {
+    private Rectangle getViewportBounds() {
         Rectangle rect = getParent().getParent().getClientArea().getCopy();
+        getParent().getParent().translateToParent(rect);
+        getParent().getParent().translateToAbsolute(rect);
 
         IFigure port = getViewport();
         if (port != null) {
             Rectangle portRect = port.getClientArea().getCopy();
+            port.translateToParent(portRect);
+            port.translateToAbsolute(portRect);
+
             if (portRect.height != 0 && portRect.width != 0) {
                 rect = portRect;
             }
         }
         return rect;
     }
-
-	private IFigure getMainFigure(BorderItemContainerFigure gf) {
-		BorderedNodeFigure gpf = (BorderedNodeFigure) gf.getParent();
-		return gpf.getMainFigure();
-	}
+    
+	public IFigure getMainFigure() {
+        return ((BorderedNodeFigure) getParent()).getMainFigure();
+    }
 
 	/**
 	 * Helper to retrieve the viewport that this item sits on.
@@ -254,14 +285,14 @@ public class BorderItemContainerFigure
 		//
 		// Start searching for viewport to clip on from the main figure.
 		//
-		IFigure fig = getMainFigure(this);
+		IFigure fig = getMainFigure();
 		while (fig != null) {
 			if (fig instanceof Viewport
-				|| fig instanceof ScalableFreeformLayeredPane)
+	                || fig instanceof ScalableFreeformLayeredPane)
 				return fig;
 			fig = fig.getParent();
 			if (fig instanceof BorderItemContainerFigure) {
-				fig = getMainFigure((BorderItemContainerFigure) fig);
+				fig = ((BorderItemContainerFigure) fig).getMainFigure();
 			}
 		}
 		return null;
@@ -286,7 +317,7 @@ public class BorderItemContainerFigure
 		} else {
 			if (getParent() == null || !isVisible())
 				return;
-			Rectangle rectBounds = getParentRectangle();
+			Rectangle rectBounds = getExtendedBounds();
 			getParent().getParent().repaint(rectBounds);
 			if (getViewport() != null) {
 				getViewport().repaint(rectBounds);
@@ -300,42 +331,34 @@ public class BorderItemContainerFigure
         updateLayerExtents();
     }
     
-    
-
-    public Rectangle getExtendedBounds(){
-        if (extendedBounds == null)
-            extendedBounds = getExtendedBounds(getParent()).getCopy();
-        return extendedBounds;
+    public void validate() {
+        extendedBounds = null;
+        super.validate();
     }
     
-       
-    private Rectangle getExtendedBounds(IFigure figure) {
-        if (figure == null)
-            return getBounds().getCopy();
-        else {
-            Rectangle _bounds = figure.getBounds().getCopy();
-            if (figure instanceof BorderedNodeFigure){
-                BorderedNodeFigure borderedFigure = (BorderedNodeFigure)figure;
-                BorderItemContainerFigure borderedItemContainer = (BorderItemContainerFigure)borderedFigure.getBorderItemContainer();
-                if (borderedItemContainer!=null){
-                    Iterator iterator = borderedItemContainer.getChildren().iterator();
-                    while (iterator.hasNext()) {
-                        Figure element = (Figure) iterator.next();
-                        if (element instanceof BorderedNodeFigure){
-                            BorderedNodeFigure childbFigure = (BorderedNodeFigure)element;
-                            BorderItemContainerFigure childBorderedItemContainer = (BorderItemContainerFigure)childbFigure.getBorderItemContainer();
-                            if (childBorderedItemContainer!=null)
-                                _bounds.union(childBorderedItemContainer.getExtendedBounds());
-                            else
-                                _bounds.union(childbFigure.getBounds());
-                        }
-                        else
-                            _bounds.union(element.getBounds());
-                     }
+    /**
+     * Gets the extended bounds of the figure which includes the bounds of all
+     * the border item figures.
+     * 
+     * @return the extended bounds
+     */
+    public Rectangle getExtendedBounds() {
+        if (extendedBounds == null) {
+            extendedBounds = getBounds().getCopy();
+            Iterator iterator = getChildren().iterator();
+            while (iterator.hasNext()) {
+                Figure childFigure = (Figure) iterator.next();
+                Rectangle childBounds = (childFigure instanceof IExpandableFigure) ? ((IExpandableFigure) childFigure)
+                    .getExtendedBounds()
+                    : childFigure.getBounds(); 
+                if (useLocalCoordinates()) {
+                    childBounds = childBounds.getCopy();
+                    childBounds.translate(getLocation());
                 }
+                extendedBounds.union(childBounds);
             }
-            return _bounds;
         }
+        return extendedBounds;
     }
     
     protected void fireFigureMoved() {

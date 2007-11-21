@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,12 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Implementation for the regular tree edit part
@@ -40,9 +41,9 @@ public class TreeContainerEditPart extends TreeEditPart {
 	 * @return  List of children.
 	 */
 	protected List getModelChildren() {
-		if (getModel() instanceof Diagram)
-			return ((Diagram) getModel()).getChildren();
-		return null;
+		if (getModel() instanceof View)
+			return ((View) getModel()).getChildren();
+		return Collections.EMPTY_LIST;
 	}
 
 	/**

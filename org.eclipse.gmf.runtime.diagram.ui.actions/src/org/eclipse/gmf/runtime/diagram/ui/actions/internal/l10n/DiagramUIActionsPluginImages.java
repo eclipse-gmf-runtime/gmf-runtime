@@ -173,6 +173,11 @@ public class DiagramUIActionsPluginImages {
 	public static final ImageDescriptor DESC_COPY_APPEARANCE_DISABLED = create(PREFIX_DISABLED
 		+ "copy_appearance_properties.gif"); //$NON-NLS-1$	
 
+    public static final ImageDescriptor DESC_GROUP = create(PREFIX_ENABLED + "group.gif"); //$NON-NLS-1$
+    public static final ImageDescriptor DESC_GROUP_DISABLED = create(PREFIX_DISABLED + "group.gif"); //$NON-NLS-1$
+    public static final ImageDescriptor DESC_UNGROUP = create(PREFIX_ENABLED + "ungroup.gif"); //$NON-NLS-1$
+    public static final ImageDescriptor DESC_UNGROUP_DISABLED = create(PREFIX_DISABLED + "ungroup.gif"); //$NON-NLS-1$
+
 	/**
 	 * Creates the image descriptor from the filename given.
 	 * 
