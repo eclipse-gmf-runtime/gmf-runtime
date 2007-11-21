@@ -224,19 +224,41 @@ public class CompositeTransactionalCommand
      */
     public ICommand reduce() {
         switch (size()) {
-            case 1:
-                IUndoableOperation child = (IUndoableOperation) iterator()
+        case 0:
+            return this;
+        case 1:
+            IUndoableOperation child = (IUndoableOperation) iterator()
                     .next();
 
-                if (child instanceof ICommand
-                    && (child instanceof CompositeEMFOperation || child instanceof AbstractEMFOperation)) {
-                    // return the single command if is a kind of EMF operation;
-                    // otherwise this composite will be returned to preserve the
-                    // EMF transaction behaviour.
-                    return ((ICommand) child).reduce();
+            if (child instanceof ICommand &&
+                    child instanceof AbstractEMFOperation) {
+                // return the single command if is a kind of EMF operation;
+                // otherwise this composite will be returned to preserve the
+                // EMF transaction behaviour.
+                return ((ICommand) child).reduce();
+            }
+        default:
+            if (!isTransactionNestingEnabled()) {
+                List children = getChildren();
+                IUndoableOperation[] opChildren = (IUndoableOperation[]) children
+                        .toArray(new IUndoableOperation[children.size()]);
+                children.clear();
+                for (int i = 0; i < opChildren.length; ++i) {
+                    doReduce(opChildren[i], children);
                 }
+            }
         }
         return this;
+    }
+
+    private void doReduce(IUndoableOperation operation, List children) {
+        if (operation instanceof CompositeEMFOperation) {
+            for (Iterator i = ((CompositeEMFOperation) operation).iterator(); i.hasNext();) {
+                doReduce((IUndoableOperation) i.next(), children);
+            }
+        } else {
+            children.add(operation);
+        }
     }
 
     /**
