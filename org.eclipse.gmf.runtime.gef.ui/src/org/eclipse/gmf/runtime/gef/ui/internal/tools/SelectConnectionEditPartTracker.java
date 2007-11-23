@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,19 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 
 /**
@@ -44,17 +49,30 @@ import org.eclipse.swt.graphics.Cursor;
 public class SelectConnectionEditPartTracker extends SelectEditPartTracker {
 
 	/**
+	 * Key modifier for ignoring snap while dragging.  It's CTRL on Mac, and ALT on all
+	 * other platforms.
+	 */
+	private final int MODIFIER_NO_SNAPPING;
+	private Request sourceRequest;
+	private int index = -1;
+	private String type;
+	private boolean bSourceFeedback = false;
+	
+	private PrecisionRectangle sourceRectangle;	
+	private Point originalLocation = null;	
+	
+	
+	/**
 	 * Method SelectConnectionEditPartTracker.
 	 * @param owner ConnectionNodeEditPart that creates and owns the tracker object
 	 */
 	public SelectConnectionEditPartTracker(ConnectionEditPart owner) {
 		super(owner);
+		if (SWT.getPlatform().equals("carbon"))//$NON-NLS-1$
+			MODIFIER_NO_SNAPPING = SWT.CTRL;
+		else
+			MODIFIER_NO_SNAPPING = SWT.ALT;
 	}
-
-	private Request sourceRequest;
-	private int index = -1;
-	private String type;
-	private boolean bSourceFeedback = false;
 
 	/* 
 	 * (non-Javadoc)
@@ -135,6 +153,8 @@ public class SelectConnectionEditPartTracker extends SelectEditPartTracker {
 	 * @see org.eclipse.gef.tools.AbstractTool#handleDragStarted()
 	 */
 	protected boolean handleDragStarted() {
+		originalLocation = null;
+		sourceRectangle = null;		
 		return stateTransition(STATE_DRAG, STATE_DRAG_IN_PROGRESS);
 	}
 
@@ -204,7 +224,7 @@ public class SelectConnectionEditPartTracker extends SelectEditPartTracker {
 	 * Show the source drag feedback for the drag occurring
 	 * within the viewer.
 	 */
-	private void eraseSourceFeedback() {
+	private void eraseSourceFeedback() {	
 		if (!isShowingFeedback())
 			return;
 		setShowingFeedback(false);
@@ -316,13 +336,64 @@ public class SelectConnectionEditPartTracker extends SelectEditPartTracker {
 	public void setIndex(int i) {
 		index = i;
 	}
-
+	
 	/**
-	 * Updates the source request to reflect the current location.
+	 * @see org.eclipse.gef.tools.SimpleDragTracker#updateSourceRequest()
 	 */
 	protected void updateSourceRequest() {
-		BendpointRequest request = (BendpointRequest) getSourceRequest();
-		request.setLocation(getLocation());
-	}
+		BendpointRequest request = (BendpointRequest) getSourceRequest();	
+			
+		if (originalLocation == null){						
+			originalLocation = getStartLocation().getCopy();
+		}
+			
+		Dimension delta = getDragMoveDelta();
+		
+		if (getCurrentInput().isShiftKeyDown()) {			
+			float ratio = 0;			
+			if (delta.width != 0)
+				ratio = (float)delta.height / (float)delta.width;
+			
+			ratio = Math.abs(ratio);
+			if (ratio > 0.5 && ratio < 1.5) {
+				if (Math.abs(delta.height) > Math.abs(delta.width)) {
+					if (delta.height > 0)
+						delta.height = Math.abs(delta.width);
+					else
+						delta.height = -Math.abs(delta.width);
+				} else {
+					if (delta.width > 0)
+						delta.width = Math.abs(delta.height); 
+					else
+						delta.width = -Math.abs(delta.height);
+				}
+			} else {
+				if (Math.abs(delta.width) > Math.abs(delta.height))
+					delta.height = 0;
+				else
+					delta.width = 0;
+			}
+		}
+		Point moveDelta = new Point(delta.width, delta.height);
+		SnapToHelper snapToHelper = (SnapToHelper)getConnectionEditPart().getAdapter(SnapToHelper.class);
 
+		Rectangle rect = new Rectangle(originalLocation.x, originalLocation.y, 1, 1);		
+		if (sourceRectangle == null) {
+			sourceRectangle = new PrecisionRectangle(rect);	
+		}
+		
+		if (snapToHelper != null && !getCurrentInput().isModKeyDown(MODIFIER_NO_SNAPPING)){
+			PrecisionRectangle baseRect = sourceRectangle.getPreciseCopy();
+			baseRect.translate(moveDelta);	
+			PrecisionPoint preciseDelta = new PrecisionPoint(moveDelta);
+			snapToHelper.snapPoint(request,
+					PositionConstants.HORIZONTAL | PositionConstants.VERTICAL, 
+					new PrecisionRectangle[] {baseRect}, preciseDelta);		
+			Point newLocation = originalLocation.getCopy().translate(preciseDelta);								
+			request.setLocation(newLocation);
+		}
+		else{			
+			request.setLocation(getLocation());
+		}	
+	}	
 }

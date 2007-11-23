@@ -526,9 +526,10 @@ abstract public class ConnectionEditPart
             return adapter;
         }
 
-        if (key == SnapToHelper.class) {
-            return SanpToHelperUtil.getSnapHelper(this);
-        }
+        if (key == SnapToHelper.class) {   
+            return SanpToHelperUtil.getSnapHelper(
+            		(GraphicalEditPart)this.getSource());
+        }        
 
         Object model = getModel();
 

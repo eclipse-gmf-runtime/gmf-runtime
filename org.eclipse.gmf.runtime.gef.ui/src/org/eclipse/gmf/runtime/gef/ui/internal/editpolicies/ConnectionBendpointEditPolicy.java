@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.FeedbackConnection;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouterUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.handles.BendpointCreationInvisibleHandle;
+import org.eclipse.gmf.runtime.gef.ui.internal.handles.BendpointMoveHandleEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.handles.LineSegMoveInvisibleHandle;
 import org.eclipse.jface.util.Assert;
 
@@ -149,11 +150,11 @@ abstract public class ConnectionBendpointEditPolicy
 		for (int i = 1; i < points.size() - 1; i++) {
 			addInvisibleCreationHandle(list, connEP, i - 1);
 			list.add(
-				new BendpointMoveHandle(
+				new BendpointMoveHandleEx(
 					connEP,
 					i,
 					new BendpointLocator(getConnection(), i)));
-		}
+		}		
 		addInvisibleCreationHandle(list, connEP, points.size() - 2);
 		return list;
 	}
@@ -452,7 +453,7 @@ abstract public class ConnectionBendpointEditPolicy
 	 * if needed.  The original figure is used for feedback and the original constraint is 
 	 * saved, so that it can be restored when feedback is erased.
 	 */
-	protected void showMoveBendpointFeedback(BendpointRequest request) {
+	protected void showMoveBendpointFeedback(BendpointRequest request) {		
 		Point p = new Point(request.getLocation());
 		if (!getFeedbackState().isDeleting) {
 			setReferencePoints(request);

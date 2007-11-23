@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.ConnectionBendpointTracker;
 
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
+import org.eclipse.gmf.runtime.gef.ui.internal.tools.ConnectionBendpointTrackerEx;
 
 /**
  * @author sshaw
@@ -46,9 +47,9 @@ public class LineSegMoveInvisibleHandle extends BendpointCreationInvisibleHandle
 	 * Creates and returns a new {@link ConnectionBendpointTracker}.
 	 * @return the new ConnectionBendpointTracker
 	 */
-	protected DragTracker createDragTracker() {
-		ConnectionBendpointTracker tracker;
-		tracker = new ConnectionBendpointTracker(
+	protected DragTracker createDragTracker() {		
+		ConnectionBendpointTrackerEx tracker;
+		tracker = new ConnectionBendpointTrackerEx(
 			(ConnectionEditPart)getOwner(),
 			getIndex()) {
 			
