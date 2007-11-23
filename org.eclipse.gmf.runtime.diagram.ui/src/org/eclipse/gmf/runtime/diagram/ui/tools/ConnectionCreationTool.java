@@ -413,16 +413,19 @@ public class ConnectionCreationTool
 
                 // Give some feedback so the user knows that they can't drag
                 // outside the viewport.
+                if (getCurrentViewer() != null) {
                 Control control = getCurrentViewer().getControl();
                 if (control instanceof FigureCanvas) {
-                    Viewport viewport = ((FigureCanvas) control).getViewport();
-                    Rectangle rect = Rectangle.SINGLETON;
-                    viewport.getClientArea(rect);
-                    viewport.translateToParent(rect);
-                    viewport.translateToAbsolute(rect);
+                        Viewport viewport = ((FigureCanvas) control)
+                            .getViewport();
+                        Rectangle rect = Rectangle.SINGLETON;
+                        viewport.getClientArea(rect);
+                        viewport.translateToParent(rect);
+                        viewport.translateToAbsolute(rect);
 
-                    if (!rect.contains(getLocation())) {
-                        return getDisabledCursor();
+                        if (!rect.contains(getLocation())) {
+                            return getDisabledCursor();
+                        }
                     }
                 }
             }
