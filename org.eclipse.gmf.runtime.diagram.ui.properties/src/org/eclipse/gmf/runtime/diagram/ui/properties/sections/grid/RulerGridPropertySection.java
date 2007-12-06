@@ -53,6 +53,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -75,7 +77,7 @@ public class RulerGridPropertySection
 
 	private Button rulerVisibilityButton;
 
-	private Button lineColorButton;
+	private ToolItem lineColorButton;
 
 	// Labels
 	private static final String GRID_ON_LABEL = DiagramUIPropertiesMessages.Grid_On_Label_Text;
@@ -286,16 +288,11 @@ public class RulerGridPropertySection
 
 	private void createLineColorControl(Composite composite) {
 		getWidgetFactory().createLabel(composite, LINE_COLOR_LABEL);
-
-		lineColorButton = new Button(composite, SWT.PUSH);
+		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+			toolBar.setLayout(new GridLayout(1, false));
+			toolBar.setBackground(composite.getBackground());
+		lineColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
         lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
-
-        lineColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
-					public void getName(AccessibleEvent e) {
-						e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
-					}
-				});
-
 		lineColorButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -316,6 +313,15 @@ public class RulerGridPropertySection
 			}
 		});
 		lineColorButton.setEnabled(true);
+
+		//the accessibility listener is applied to the whole tool bar because there is only one item in it, in the event
+		//that additional tool items are added, this should be changed to search for the tool bar's children and their
+		//their respective tool tips. Refer to ColorsAndFontsPropertySection.java.
+        toolBar.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getName(AccessibleEvent e) {
+				e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
+			}
+		});		
 	}
 
 	private void createLineStyleControl(Composite composite) {
@@ -341,30 +347,30 @@ public class RulerGridPropertySection
 	/**
 	 * @param event -
 	 *            selection event
-	 * @param button -
+	 * @param toolItem -
 	 *            event source
 	 * @param imageDescriptor -
      *            the image to draw overlay on the button after the new
      *            color is set
 	 * @return - new RGB color, or null if none selected
 	 */
-	private RGB changeColor(SelectionEvent event, Button button,
+	private RGB changeColor(SelectionEvent event, ToolItem toolItem,
 			ImageDescriptor imageDescriptor, int previousColor) {
 
-		ColorPalettePopup popup = new ColorPalettePopup(button.getParent()
+		ColorPalettePopup popup = new ColorPalettePopup(toolItem.getParent()
 				.getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);
 
 		popup.setPreviousColor(previousColor);
-		Rectangle r = button.getBounds();
-		Point location = button.getParent().toDisplay(r.x, r.y);
+		Rectangle r = toolItem.getBounds();
+		Point location = toolItem.getParent().toDisplay(r.x, r.y);
 		popup.open(new Point(location.x, location.y + r.height));
 
 		if (popup.useDefaultColor()) {
 			Image overlyedImage = new ColorOverlayImageDescriptor(
 					imageDescriptor.getImageData(), FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB)))
 					.createImage();
-			disposeImage(button.getImage());
-			button.setImage(overlyedImage);
+			disposeImage(toolItem.getImage());
+			toolItem.setImage(overlyedImage);
 			return FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB));
 		}
 
@@ -372,8 +378,8 @@ public class RulerGridPropertySection
 			Image overlyedImage = new ColorOverlayImageDescriptor(
 					imageDescriptor.getImageData(), popup.getSelectedColor())
 					.createImage();
-			disposeImage(button.getImage());
-			button.setImage(overlyedImage);
+			disposeImage(toolItem.getImage());
+			toolItem.setImage(overlyedImage);
 		}
 
 		return popup.getSelectedColor();
