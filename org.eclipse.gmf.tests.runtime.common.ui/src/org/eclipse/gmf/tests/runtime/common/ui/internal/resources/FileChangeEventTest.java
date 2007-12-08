@@ -52,6 +52,16 @@ public class FileChangeEventTest extends TestCase {
 
 	protected class File implements IFile {
 
+		public boolean isHidden() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void setHidden(boolean isHidden) throws CoreException {
+			// TODO Auto-generated method stub
+			
+		}
+
 		private IPath path;
 
 		public File(IPath path) {

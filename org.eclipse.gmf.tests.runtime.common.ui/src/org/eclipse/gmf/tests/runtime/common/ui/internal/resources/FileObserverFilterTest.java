@@ -54,6 +54,16 @@ public class FileObserverFilterTest
 	protected class File
 		implements IFile {
 
+		public boolean isHidden() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void setHidden(boolean isHidden) throws CoreException {
+			// TODO Auto-generated method stub
+			
+		}
+
 		private IPath path;
 
 		public File(IPath path) {
@@ -469,6 +479,16 @@ public class FileObserverFilterTest
 
 	protected class Folder
 		implements IFolder {
+
+		public boolean isHidden() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void setHidden(boolean isHidden) throws CoreException {
+			// TODO Auto-generated method stub
+			
+		}
 
 		private IPath path;
 
