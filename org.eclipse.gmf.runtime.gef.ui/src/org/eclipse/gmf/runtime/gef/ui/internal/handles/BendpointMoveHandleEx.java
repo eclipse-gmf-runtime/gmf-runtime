@@ -22,61 +22,71 @@ import org.eclipse.gmf.runtime.gef.ui.internal.tools.ConnectionBendpointTrackerE
 
 /**
  * A BendpointHandle that is used to move an existing bendpoint.
+ * 
+ * @author carson_li
  */
 public class BendpointMoveHandleEx extends BendpointMoveHandle {
 
-/**
- * Creates a new BendpointMoveHandle.
- */
-public BendpointMoveHandleEx() { }
+	/**
+	 * Creates a new BendpointMoveHandle, sets its owner to <code>owner</code>
+	 * and its index to <code>index</code>, and sets its locator to a new
+	 * {@link BendpointLocator}.
+	 * 
+	 * @param owner
+	 *            the ConnectionEditPart owner
+	 * @param index
+	 *            the index
+	 */
+	public BendpointMoveHandleEx(ConnectionEditPart owner, int index) {
+		super(owner, index);
+	}
 
-/**
- * Creates a new BendpointMoveHandle, sets its owner to <code>owner</code>
- * and its index to <code>index</code>, and sets its locator to a new
- * {@link BendpointLocator}.
- * @param owner the ConnectionEditPart owner
- * @param index the index
- */
-public BendpointMoveHandleEx(ConnectionEditPart owner, int index) {
-	super (owner, index);
-}
+	/**
+	 * Creates a new BendpointMoveHandle, sets its owner to <code>owner</code>
+	 * and its index to <code>index</code>, and sets its locator to a new
+	 * {@link BendpointLocator} with the given <code>locatorIndex</code>.
+	 * 
+	 * @param owner
+	 *            the ConnectionEditPart owner
+	 * @param index
+	 *            the index
+	 * @param locatorIndex
+	 *            the index to use for the locator
+	 */
+	public BendpointMoveHandleEx(ConnectionEditPart owner, int index,
+			int locatorIndex) {
+		super(owner, index, locatorIndex);
+	}
 
-/**
- * Creates a new BendpointMoveHandle, sets its owner to <code>owner</code>
- * and its index to <code>index</code>, and sets its locator to a new
- * {@link BendpointLocator} with the given <code>locatorIndex</code>.
- * @param owner the ConnectionEditPart owner
- * @param index the index
- * @param locatorIndex the index to use for the locator
- */
-public BendpointMoveHandleEx(ConnectionEditPart owner, int index, int locatorIndex) {
-	super (owner, index, locatorIndex);
-}
+	/**
+	 * Creates a new BendpointMoveHandle and sets its owner to
+	 * <code>owner</code>, sets its index to <code>index</code>, and sets
+	 * its locator to <code>locator</code>.
+	 * 
+	 * @param owner
+	 *            the ConnectionEditPart owner
+	 * @param index
+	 *            the index
+	 * @param locator
+	 *            the Locator
+	 */
+	public BendpointMoveHandleEx(ConnectionEditPart owner, int index,
+			Locator locator) {
+		super(owner, index, locator);
+	}
 
-/**
- * Creates a new BendpointMoveHandle and sets its owner to <code>owner</code>,
- * sets its index to <code>index</code>, and sets its locator to 
- * <code>locator</code>.
- * @param owner the ConnectionEditPart owner
- * @param index the index
- * @param locator the Locator
- */
-public BendpointMoveHandleEx(ConnectionEditPart owner, int index, Locator locator) {
-	super (owner, index, locator);
-}
-
-/**
- * Creates and returns a new {@link ConnectionBendpointTrackerEx}.
- * @return the new ConnectionBendpointTrackerEx
- */
-protected DragTracker createDragTracker() {
-	ConnectionBendpointTrackerEx tracker;
-	tracker = new ConnectionBendpointTrackerEx(
-		(ConnectionEditPart)getOwner(),
-		getIndex());
-	tracker.setType(RequestConstants.REQ_MOVE_BENDPOINT);
-	tracker.setDefaultCursor(getCursor());	
-	return tracker;
-}
+	/**
+	 * Creates and returns a new {@link ConnectionBendpointTrackerEx}.
+	 * 
+	 * @return the new ConnectionBendpointTrackerEx
+	 */
+	protected DragTracker createDragTracker() {
+		ConnectionBendpointTrackerEx tracker;
+		tracker = new ConnectionBendpointTrackerEx(
+				(ConnectionEditPart) getOwner(), getIndex());
+		tracker.setType(RequestConstants.REQ_MOVE_BENDPOINT);
+		tracker.setDefaultCursor(getCursor());
+		return tracker;
+	}
 
 }

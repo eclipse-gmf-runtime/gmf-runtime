@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * This command is used to snap edit parts on a diagram, where the edit parts are
  * passed in as the parameter.
  * 
- * @author cli
+ * @author carson_li
  */
 public class SnapCommand extends AbstractTransactionalCommand {
 
@@ -67,6 +67,9 @@ public class SnapCommand extends AbstractTransactionalCommand {
 
 	}
 
+	/*
+	 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#getAffectedFiles()
+	 */
 	public List getAffectedFiles() {
 		if (editparts != null) {
 			// we only need the first child since all the edit parts being

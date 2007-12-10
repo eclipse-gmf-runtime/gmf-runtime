@@ -21,12 +21,6 @@ import org.eclipse.gmf.runtime.gef.ui.internal.tools.ConnectionBendpointTrackerE
 
 /**
  * @author sshaw
- * @canBeSeenBy org.eclipse.gmf.runtime.gef.ui.*
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class LineSegMoveInvisibleHandle extends BendpointCreationInvisibleHandle {
 
