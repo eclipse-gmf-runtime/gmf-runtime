@@ -43,24 +43,13 @@ import org.eclipse.gmf.runtime.common.ui.internal.resources.FileChangeEvent;
 import org.eclipse.gmf.runtime.common.ui.internal.resources.FileChangeEventType;
 
 /**
- * 
+ * Tests for FileChangeEvent.
  * 
  * @author Anthony Hunter 
- * <a href="mailto:ahunter@rational.com">ahunter@rational.com</a>
  */
 public class FileChangeEventTest extends TestCase {
 
 	protected class File implements IFile {
-
-		public boolean isHidden() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void setHidden(boolean isHidden) throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
 
 		private IPath path;
 
@@ -511,6 +500,20 @@ public class FileChangeEventTest extends TestCase {
             throws CoreException {
             return 0;
         }
+
+        /*
+         * @see org.eclipse.core.resources.IResource#isHidden()
+         */
+        public boolean isHidden() {
+			return false;
+		}
+
+        /*
+         * @see org.eclipse.core.resources.IResource#setHidden(boolean)
+         */
+		public void setHidden(boolean isHidden) throws CoreException {
+			/* not implemented */
+		}
 	}
 	
 	public static void main(String[] args) {

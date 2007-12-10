@@ -45,24 +45,15 @@ import org.eclipse.gmf.runtime.common.ui.internal.resources.FileObserverFilter;
 import org.eclipse.gmf.runtime.common.ui.internal.resources.FileObserverFilterType;
 
 /**
- * @author Anthony Hunter <a
- *         href="mailto:ahunter@rational.com">ahunter@rational.com </a>
+ * Tests for FileObserverFilter.
+ * 
+ * @author Anthony Hunter
  */
 public class FileObserverFilterTest
 	extends TestCase {
 
 	protected class File
 		implements IFile {
-
-		public boolean isHidden() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void setHidden(boolean isHidden) throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
 
 		private IPath path;
 
@@ -475,6 +466,20 @@ public class FileObserverFilterTest
             throws CoreException {
             return 0;
         }
+        
+        /*
+         * @see org.eclipse.core.resources.IResource#isHidden()
+         */
+        public boolean isHidden() {
+			return false;
+		}
+
+        /*
+         * @see org.eclipse.core.resources.IResource#setHidden(boolean)
+         */
+		public void setHidden(boolean isHidden) throws CoreException {
+			/* not implemented */
+		}
 	}
 
 	protected class Folder
