@@ -879,13 +879,9 @@ public class SortFilterPage extends PropertyPage {
 					// Add any new children to the end of the list
 					// so they will appear at the botton of the
 					// list compartment
-					if (_sortedObjects.size() < updatedSortFilterElements.size()) {
-						for (int i = _sortedObjects.size();
-							i < updatedSortFilterElements.size();
-							i++)
-							elementCollection.add(
-								updatedSortFilterElements.get(i));
-					}
+                    List missingElements = new ArrayList(updatedSortFilterElements);
+                    missingElements.removeAll(elementCollection);
+                    elementCollection.addAll(missingElements);
 				}
 			}
 
