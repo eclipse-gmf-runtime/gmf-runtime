@@ -22,19 +22,20 @@ import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGeometryEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToGuidesEx;
 
 /**
  * @author mmostafa
  * 
- * Utility class used by the EditPart to allow them to adapt a SnapeHelper.class
+ * Utility class used by the EditPart to allow them to adapt a SnapToHelper.class
  * 
  */
 public class SanpToHelperUtil {
 
     /**
-     * returns the the appropiate snap helper(s), this method will always reach
-     * for the first reachable DiagramEditPart using the poassed edit part, then
+     * returns the the appropriate snap helper(s), this method will always reach
+     * for the first reachable DiagramEditPart using the passed edit part, then
      * use this Diagram edit part to get the snap helper
      * 
      * @param editPart ,
@@ -47,12 +48,22 @@ public class SanpToHelperUtil {
         while (diagramEditPart != null
             && !(diagramEditPart instanceof DiagramEditPart)) {
             diagramEditPart = (GraphicalEditPart) diagramEditPart.getParent();
-        }
+        }        
 
         if (diagramEditPart == null)
             return null;
 
-        List snapStrategies = new ArrayList();
+        //for snap to geometry, attempt to locate a compartment as a parent
+        GraphicalEditPart parent = (GraphicalEditPart)editPart;
+        while (parent != null
+        	&& !(parent instanceof ISurfaceEditPart)){
+        	parent = (GraphicalEditPart) parent.getParent();	        	
+        }
+
+        if (parent == null)
+        	parent = diagramEditPart;            
+
+        List<SnapToHelper> snapStrategies = new ArrayList<SnapToHelper>();
         EditPartViewer viewer = diagramEditPart.getViewer();
 
         Boolean val = (Boolean) editPart.getViewer().getProperty(
@@ -62,10 +73,16 @@ public class SanpToHelperUtil {
             snapStrategies.add(new SnapToGuidesEx(diagramEditPart));
 
         val = (Boolean) viewer
-            .getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
-        if (val != null && val.booleanValue())
+        .getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED); 
+        if (val != null && val.booleanValue())       	
+        	snapStrategies.add(new SnapToGeometryEx(parent));        
+        
+        val = (Boolean) viewer
+            .getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);      	
+     
+        if (val != null && val.booleanValue())        	
             snapStrategies.add(new SnapToGrid(diagramEditPart));
-
+        
         if (snapStrategies.size() == 0)
             return null;
 

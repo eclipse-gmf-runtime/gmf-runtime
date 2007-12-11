@@ -120,14 +120,26 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
 
 	/**
 	 * If the source is not in the operation set, it is not a move
-	 * @see org.eclipse.gef.tools.DragEditPartsTracker#isMove()
+	 * @see org.eclipse.gef.tool s.DragEditPartsTracker#isMove()
 	 */
-	protected boolean isMove() {
-		if (!getOperationSet().contains(getSourceEditPart()))
-			return false;
-		return super.isMove();
+	protected boolean isMove() {		
+		for (int i = 0 ; i < getOperationSet().size(); i++){
+			if (getOperationSet().get(i).equals(getSourceEditPart())){
+				return super.isMove();
+			}
+			//additional case for GroupEditPart, check the children
+			//this is for snap to geometry			
+			if (getOperationSet().get(i) instanceof GroupEditPart){
+				GroupEditPart currPart = (GroupEditPart)getOperationSet().get(i);
+				for (int j = 0 ; j < currPart.getChildren().size() ; j++){
+					if (currPart.getChildren().get(j).equals(getSourceEditPart())){
+						return super.isMove();
+					}
+				}
+			}
+		}
+		return false;
 	}
-	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.tools.AbstractTool#executeCurrentCommand()

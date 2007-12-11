@@ -510,6 +510,9 @@ public class DiagramRootEditPart
 			getViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, event.getNewValue());
 		} else if (WorkspaceViewerProperties.SNAPTOGRID.equals(event.getProperty())) {			
 			// Set the state of the Snap to Grid Property
+			getViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, event.getNewValue());
+		} else if (WorkspaceViewerProperties.SNAPTOGEOMETRY.equals(event.getProperty())) {			
+			// Set the state of the Snap to Geometry Property
 			getViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, event.getNewValue());
 		} else if (WorkspaceViewerProperties.GRIDORDER.equals(event.getProperty())) {
 			// Set the grid level

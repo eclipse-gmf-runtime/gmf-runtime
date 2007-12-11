@@ -149,6 +149,7 @@ public class RulerGridPreferencePage
 	private String GRID_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_gridGroup_label;
 	private String SHOW_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_showGrid_label;
 	private String SNAP_TO_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_snapToGrid_label;
+	private String SNAP_TO_GEOMETRY_LABEL = DiagramUIMessages.GridRulerPreferencePage_snapToGeometry_label;
 	private String GRID_SPACING_LABEL_INCHES = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_inches;
     private String GRID_SPACING_LABEL_CM = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_cm;
     private String GRID_SPACING_LABEL_PIXELS = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_pixels;
@@ -161,6 +162,7 @@ public class RulerGridPreferencePage
     // Grid Field Editors
     private BooleanFieldEditor showGrid = null;
 	private BooleanFieldEditor snapToGrid = null;
+	private BooleanFieldEditor snapToGeometry = null;
 	private DoubleFieldEditor gridSpacing = null;
     private Composite dblGroup = null;
 
@@ -338,6 +340,11 @@ public class RulerGridPreferencePage
 			SNAP_TO_GRID_LABEL, group);
 		addField(snapToGrid);
 		
+		snapToGeometry = new BooleanFieldEditor(
+				IPreferenceConstants.PREF_SNAP_TO_GEOMETRY,
+				SNAP_TO_GEOMETRY_LABEL, group);
+			addField(snapToGeometry);			
+		
 		addGridSpacing( group );
 
 		group.setLayoutData(gridData);
@@ -400,6 +407,7 @@ public class RulerGridPreferencePage
 		}
 		preferenceStore.setDefault(IPreferenceConstants.PREF_SHOW_GRID, false);
 		preferenceStore.setDefault(IPreferenceConstants.PREF_SNAP_TO_GRID, true);
+		preferenceStore.setDefault(IPreferenceConstants.PREF_SNAP_TO_GEOMETRY, false);
 		preferenceStore.setDefault(IPreferenceConstants.PREF_GRID_SPACING, 0.125);
 	}
 	

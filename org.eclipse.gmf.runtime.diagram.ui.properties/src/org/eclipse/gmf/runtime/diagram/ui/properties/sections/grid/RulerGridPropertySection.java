@@ -62,814 +62,836 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import com.ibm.icu.text.NumberFormat;
 
 public class RulerGridPropertySection
-	extends AbstractPropertySection {
+    extends AbstractPropertySection {
 
-	// Groups
-	private Group displayGroup;
-	private Group measurementGroup;
-	private Group gridlineGroup;
+    // Groups
+    private Group displayGroup;
+    private Group measurementGroup;
+    private Group gridlineGroup;
 
-	// Buttons
-	private Button gridVisibilityButton;
-	private Button gridOrderButton;
-	private Button snapToGridButton;
-	private Button restoreButton;
+    // Buttons
+    private Button gridVisibilityButton;
+    private Button gridOrderButton;
+    private Button snapToGridButton;
+    private Button snapToGeometryButton;
+    private Button restoreButton;
 
-	private Button rulerVisibilityButton;
+    private Button rulerVisibilityButton;
 
-	private ToolItem lineColorButton;
+    private ToolItem lineColorButton;
 
-	// Labels
-	private static final String GRID_ON_LABEL = DiagramUIPropertiesMessages.Grid_On_Label_Text;
-	private static final String GRID_LEVEL_LABEL = DiagramUIPropertiesMessages.Grid_Level_Label_Text;
-	private static final String SNAP_TO_GRID_LABEL = DiagramUIPropertiesMessages.Snap_To_Grid_Label_Text;
-	private static final String RULER_ON_LABEL = DiagramUIPropertiesMessages.Ruler_On_Label_Text;
-	private static final String RULER_UNITS_LABEL = DiagramUIPropertiesMessages.Ruler_Units_Label_Text;
-	private static final String GRID_SPACING_LABEL = DiagramUIPropertiesMessages.Grid_Spacing_Label_Text;
-	private static final String VISIBILITY_LABEL = DiagramUIPropertiesMessages.Display_Group_Label_Text;
-	private static final String MEASUREMENT_LABEL = DiagramUIPropertiesMessages.Measurement_Group_Label_Text;
-	private static final String GRIDLINE_LABEL = DiagramUIPropertiesMessages.Gridline_Group_Label_Text;
-	private static final String LINE_COLOR_LABEL = DiagramUIPropertiesMessages.Line_Color_Label_Text;
-	private static final String LINE_STYLE_LABEL = DiagramUIPropertiesMessages.Line_Style_Label_Text;
-	private static final String RESTORE_LABEL = DiagramUIPropertiesMessages.Restore_Defaults_Label_Text;
+    // Labels
+    private static final String GRID_ON_LABEL = DiagramUIPropertiesMessages.Grid_On_Label_Text;
+    private static final String GRID_LEVEL_LABEL = DiagramUIPropertiesMessages.Grid_Level_Label_Text;
+    private static final String SNAP_TO_GRID_LABEL = DiagramUIPropertiesMessages.Snap_To_Grid_Label_Text;
+    private static final String SNAP_TO_GEOMETRY_LABEL = DiagramUIPropertiesMessages.Snap_To_Geometry_Label_Text;
+    private static final String RULER_ON_LABEL = DiagramUIPropertiesMessages.Ruler_On_Label_Text;
+    private static final String RULER_UNITS_LABEL = DiagramUIPropertiesMessages.Ruler_Units_Label_Text;
+    private static final String GRID_SPACING_LABEL = DiagramUIPropertiesMessages.Grid_Spacing_Label_Text;
+    private static final String VISIBILITY_LABEL = DiagramUIPropertiesMessages.Display_Group_Label_Text;
+    private static final String MEASUREMENT_LABEL = DiagramUIPropertiesMessages.Measurement_Group_Label_Text;
+    private static final String GRIDLINE_LABEL = DiagramUIPropertiesMessages.Gridline_Group_Label_Text;
+    private static final String LINE_COLOR_LABEL = DiagramUIPropertiesMessages.Line_Color_Label_Text;
+    private static final String LINE_STYLE_LABEL = DiagramUIPropertiesMessages.Line_Style_Label_Text;
+    private static final String RESTORE_LABEL = DiagramUIPropertiesMessages.Restore_Defaults_Label_Text;
 
-	// Unit labels
-	private static final String INCHES_LABEL = DiagramUIPropertiesMessages.Inches_Label_Text;
-	private static final String CENTIMETERS_LABEL = DiagramUIPropertiesMessages.Centimeters_Label_Text;
-	private static final String PIXEL_LABEL = DiagramUIPropertiesMessages.Pixel_Label_Text;
+    // Unit labels
+    private static final String INCHES_LABEL = DiagramUIPropertiesMessages.Inches_Label_Text;
+    private static final String CENTIMETERS_LABEL = DiagramUIPropertiesMessages.Centimeters_Label_Text;
+    private static final String PIXEL_LABEL = DiagramUIPropertiesMessages.Pixel_Label_Text;
 
-	// Line Style labels
-	private static final String SOLID_LABEL = DiagramUIPropertiesMessages.Solid_Label_Text;
-	private static final String DASH_LABEL = DiagramUIPropertiesMessages.Dash_Label_Text;
-	private static final String DOT_LABEL = DiagramUIPropertiesMessages.Dot_Label_Text;
-	private static final String DASH_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Label_Text;
-	private static final String DASH_DOT_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Dot_Label_Text;
-	private static final String SPACED_DOT_LABEL = DiagramUIPropertiesMessages.Spaced_Dot_Label_Text;
+    // Line Style labels
+    private static final String SOLID_LABEL = DiagramUIPropertiesMessages.Solid_Label_Text;
+    private static final String DASH_LABEL = DiagramUIPropertiesMessages.Dash_Label_Text;
+    private static final String DOT_LABEL = DiagramUIPropertiesMessages.Dot_Label_Text;
+    private static final String DASH_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Label_Text;
+    private static final String DASH_DOT_DOT_LABEL = DiagramUIPropertiesMessages.Dash_Dot_Dot_Label_Text;
+    private static final String SPACED_DOT_LABEL = DiagramUIPropertiesMessages.Spaced_Dot_Label_Text;
 
-	// Default color for the grid.
-	private static final int LIGHT_GRAY_RGB = 12632256;
+    // Default color for the grid.
+    private static final int LIGHT_GRAY_RGB = 12632256;
 
-	// Ruler unit drop down
-	private CCombo rulerUnitCombo;
+    // Ruler unit drop down
+    private CCombo rulerUnitCombo;
 
-	// Line style drop down
-	private CCombo lineStyleCombo;
+    // Line style drop down
+    private CCombo lineStyleCombo;
 
-	// Text widget to display and set value of the property
-	private Text textWidget;
+    // Text widget to display and set value of the property
+    private Text textWidget;
 
-	private RGB lineColor = null;
+    private RGB lineColor = null;
 
-	// For changing ruler units
-	private static final int INCHES = 0;
-	private static final int CENTIMETERS = 1;
-	private static final int PIXELS = 2;
+    // For changing ruler units
+    private static final int INCHES = 0;
+    private static final int CENTIMETERS = 1;
+    private static final int PIXELS = 2;
 
-	// Conversion from inch to centimeter
-	private static final double INCH2CM = 2.54;
+    // Conversion from inch to centimeter
+    private static final double INCH2CM = 2.54;
 
-	// Valid grid spacing range
-	private double minValidValue = 00.009;
-	private double maxValidValue = 99.999;
+    // Valid grid spacing range
+    private double minValidValue = 00.009;
+    private double maxValidValue = 99.999;
 
-	// Listener for workspace property changes
-	private PropertyStoreListener propertyListener = new PropertyStoreListener();
+    // Listener for workspace property changes
+    private PropertyStoreListener propertyListener = new PropertyStoreListener();
 
-	private IPreferenceStore workspaceViewerProperties = null;
+    private IPreferenceStore workspaceViewerProperties = null;
 
     private static class ColorOverlayImageDescriptor
-	extends CompositeImageDescriptor {
+    extends CompositeImageDescriptor {
 
-	/** default color icon width */
-	private static final Point ICON_SIZE = new Point(16, 16);
+    /** default color icon width */
+    private static final Point ICON_SIZE = new Point(16, 16);
 
-	/** the basic icon */
-	private ImageData basicImgData;
+    /** the basic icon */
+    private ImageData basicImgData;
 
-	/** the color of the thin color bar */
-	private RGB rgb;
+    /** the color of the thin color bar */
+    private RGB rgb;
 
-	/**
-	 * Creates a new color menu image descriptor
-	 * 
-	 * @param basicIcon
-	 *            The basic Image data
-	 * @param rgb
-	 *            The color bar RGB value
-	 */
-	public ColorOverlayImageDescriptor(ImageData basicImgData, RGB rgb) {
-		this.basicImgData = basicImgData;
-		this.rgb = rgb;
-	}
+    /**
+     * Creates a new color menu image descriptor
+     * 
+     * @param basicIcon
+     *            The basic Image data
+     * @param rgb
+     *            The color bar RGB value
+     */
+    public ColorOverlayImageDescriptor(ImageData basicImgData, RGB rgb) {
+        this.basicImgData = basicImgData;
+        this.rgb = rgb;
+    }
 
-	/**
-	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#drawCompositeImage(int,
-	 *      int)
-	 */
-	protected void drawCompositeImage(int width, int height) {
+    /**
+     * @see org.eclipse.jface.resource.CompositeImageDescriptor#drawCompositeImage(int,
+     *      int)
+     */
+    protected void drawCompositeImage(int width, int height) {
 
-		// draw the thin color bar underneath
-		if (rgb != null) {
-			ImageData colorBar = new ImageData(width, height / 5, 1,
-			
-				new PaletteData(new RGB[] {rgb}));
-			drawImage(colorBar, 0, height - height / 5);
-			
-		}
-		// draw the base image
-		drawImage(basicImgData, 0, 0);
-	}
+        // draw the thin color bar underneath
+        if (rgb != null) {
+            ImageData colorBar = new ImageData(width, height / 5, 1,
+            
+                new PaletteData(new RGB[] {rgb}));
+            drawImage(colorBar, 0, height - height / 5);
+            
+        }
+        // draw the base image
+        drawImage(basicImgData, 0, 0);
+    }
 
-	/**
-	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize()
-	 */
-	protected Point getSize() {
-		return ICON_SIZE;
-	}
+    /**
+     * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize()
+     */
+    protected Point getSize() {
+        return ICON_SIZE;
+    }
 }  
-		
+        
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
-	 */
+     */
     public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		super.createControls(parent, aTabbedPropertySheetPage);
-		initializeControls(parent);
-	}
+        super.createControls(parent, aTabbedPropertySheetPage);
+        initializeControls(parent);
+    }
 
-	/**
-	 * 
-	 * Sets up controls with proper layouts and groups	 
-	 * @param parent
-	 */
-	private void initializeControls(Composite parent) {
-		parent.setLayout(new GridLayout(1, false));
+    /**
+     * 
+     * Sets up controls with proper layouts and groups   
+     * @param parent
+     */
+    private void initializeControls(Composite parent) {
+        parent.setLayout(new GridLayout(1, false));
 
-		// Top row composite
-		Composite topComposite = getWidgetFactory().createComposite(parent);
-		topComposite.setLayout(new GridLayout(2, false));
+        // Top row composite
+        Composite topComposite = getWidgetFactory().createComposite(parent);
+        topComposite.setLayout(new GridLayout(2, false));
 
-		// Create the groups for this section
-		createDisplayGroup(topComposite);
-		createMeasurementGroup(topComposite);
+        // Create the groups for this section
+        createDisplayGroup(topComposite);
+        createMeasurementGroup(topComposite);
 
-		// Bottom row composite
-		Composite bottomComposite = getWidgetFactory().createComposite(parent);
-		bottomComposite.setLayout(new GridLayout(2, false));
+        // Bottom row composite
+        Composite bottomComposite = getWidgetFactory().createComposite(parent);
+        bottomComposite.setLayout(new GridLayout(2, false));
 
-		// Create grid line settings
-		createGridlineGroup(bottomComposite);
+        // Create grid line settings
+        createGridlineGroup(bottomComposite);
 
         Composite extraComposite = getWidgetFactory().createComposite(bottomComposite);
-		extraComposite.setLayout(new GridLayout(1, false));
+        extraComposite.setLayout(new GridLayout(1, false));
 
-		// Create snap to grid checkbox
+        // Create snap to grid checkbox
         snapToGridButton = getWidgetFactory().createButton(
             extraComposite, SNAP_TO_GRID_LABEL, SWT.CHECK);
-		snapToGridButton.addSelectionListener(new SelectionAdapter() {
+        snapToGridButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				// Set the snap to grid workspace property
+            public void widgetSelected(SelectionEvent event) {
+                // Set the snap to grid workspace property
                 setWorkspaceProperty(WorkspaceViewerProperties.SNAPTOGRID, snapToGridButton.getSelection());
-			}
-		});
+            }
+        });
+        
+        // Create snap to geometry checkbox
+        snapToGeometryButton = getWidgetFactory().createButton(
+            extraComposite, SNAP_TO_GEOMETRY_LABEL, SWT.CHECK);
+        snapToGeometryButton.addSelectionListener(new SelectionAdapter() {
 
-		// Create restore to preferences defaults
+            public void widgetSelected(SelectionEvent event) {
+                // Set the snap to geometry workspace property
+                setWorkspaceProperty(WorkspaceViewerProperties.SNAPTOGEOMETRY, snapToGeometryButton.getSelection());
+            }
+        });
+        
+        // Create restore to preferences defaults
         restoreButton = getWidgetFactory().createButton(
             extraComposite, RESTORE_LABEL, SWT.PUSH);
-		restoreButton.addSelectionListener(new SelectionAdapter() {
+        restoreButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				restorePreferenceValues();
-			}
+            public void widgetSelected(SelectionEvent event) {
+                restorePreferenceValues();
+            }
 
-			private void restorePreferenceValues() {
-				IPreferenceStore preferenceStore = getPreferenceStore();
+            private void restorePreferenceValues() {
+                IPreferenceStore preferenceStore = getPreferenceStore();
 
-				// The workspace properties will always exist because it is set
-				// 
-				IPreferenceStore wsPrefStore = getWorkspaceViewerProperties();
+                // The workspace properties will always exist because it is set
+                
+                IPreferenceStore wsPrefStore = getWorkspaceViewerProperties();
 
-				if (wsPrefStore.getBoolean(WorkspaceViewerProperties.GRIDORDER) == false) {
+                if (wsPrefStore.getBoolean(WorkspaceViewerProperties.GRIDORDER) == false) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.GRIDORDER, true);            
-				}
-				if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR) != LIGHT_GRAY_RGB) {
+                }
+                if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINECOLOR) != LIGHT_GRAY_RGB) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINECOLOR, LIGHT_GRAY_RGB);          
-				}
-				if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE) != SWT.LINE_CUSTOM) {
+                }
+                if (wsPrefStore.getInt(WorkspaceViewerProperties.GRIDLINESTYLE) != SWT.LINE_CUSTOM) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.GRIDLINESTYLE, SWT.LINE_CUSTOM);         
-				}
+                }
                 if (wsPrefStore.getBoolean(WorkspaceViewerProperties.VIEWRULERS) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_RULERS)) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.VIEWRULERS, preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_RULERS));
-				}
+                }
                 if (wsPrefStore.getBoolean(WorkspaceViewerProperties.VIEWGRID) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_GRID)) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.VIEWGRID, preferenceStore.getBoolean(IPreferenceConstants.PREF_SHOW_GRID));
-				}
+                }
                 if (wsPrefStore.getBoolean(WorkspaceViewerProperties.SNAPTOGRID) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SNAP_TO_GRID)) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.SNAPTOGRID, preferenceStore.getBoolean(IPreferenceConstants.PREF_SNAP_TO_GRID));         
-				}
-
+                }
+                if (wsPrefStore.getBoolean(WorkspaceViewerProperties.SNAPTOGEOMETRY) != preferenceStore.getBoolean(IPreferenceConstants.PREF_SNAP_TO_GEOMETRY)) {
+                    wsPrefStore.setValue(WorkspaceViewerProperties.SNAPTOGEOMETRY, preferenceStore.getBoolean(IPreferenceConstants.PREF_SNAP_TO_GEOMETRY));         
+                }
                 if ((wsPrefStore.getInt(WorkspaceViewerProperties.RULERUNIT) != preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS)) || 
                         (wsPrefStore.getDouble(WorkspaceViewerProperties.GRIDSPACING) != preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING))) {
                     wsPrefStore.setValue(WorkspaceViewerProperties.RULERUNIT, preferenceStore.getInt(IPreferenceConstants.PREF_RULER_UNITS));                       
                     wsPrefStore.setValue(WorkspaceViewerProperties.GRIDSPACING, preferenceStore.getDouble(IPreferenceConstants.PREF_GRID_SPACING));         
-				}
+                }
 
-				// reset the input values
-				setInput(getPart(), null);
-			}
-		});
-	}
+                // reset the input values
+                setInput(getPart(), null);
+            }
+        });
+    }
 
-	private IPreferenceStore getPreferenceStore() {
+    private IPreferenceStore getPreferenceStore() {
         IPreferenceStore preferenceStore =
             (IPreferenceStore) ((DiagramEditor) getPart()).getDiagramEditPart().getDiagramPreferencesHint().getPreferenceStore();
-		return preferenceStore;
-	}
+        return preferenceStore;
+    }
 
-	private void createLineColorControl(Composite composite) {
-		getWidgetFactory().createLabel(composite, LINE_COLOR_LABEL);
-		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
-			toolBar.setLayout(new GridLayout(1, false));
-			toolBar.setBackground(composite.getBackground());
-		lineColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
+    private void createLineColorControl(Composite composite) {
+        getWidgetFactory().createLabel(composite, LINE_COLOR_LABEL);
+        ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+            toolBar.setLayout(new GridLayout(1, false));
+            toolBar.setBackground(composite.getBackground());
+        lineColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
         lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
-		lineColorButton.addSelectionListener(new SelectionAdapter() {
+        lineColorButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				changeLineColor(event);
-			}
+            public void widgetSelected(SelectionEvent event) {
+                changeLineColor(event);
+            }
 
-			/**
-			 * Change line color property value
-			 */
-			private void changeLineColor(SelectionEvent event) {
-				lineColor = changeColor(
-						event,
-						lineColorButton,
-						DiagramUIPropertiesImages.DESC_LINE_COLOR,
-						getWorkspacePropertyInt(WorkspaceViewerProperties.GRIDLINECOLOR));
-				if (lineColor != null)
+            /**
+             * Change line color property value
+             */
+            private void changeLineColor(SelectionEvent event) {
+                lineColor = changeColor(
+                        event,
+                        lineColorButton,
+                        DiagramUIPropertiesImages.DESC_LINE_COLOR,
+                        getWorkspacePropertyInt(WorkspaceViewerProperties.GRIDLINECOLOR));
+                if (lineColor != null)
                     setWorkspaceProperty(WorkspaceViewerProperties.GRIDLINECOLOR, FigureUtilities.RGBToInteger(lineColor).intValue());
-			}
-		});
-		lineColorButton.setEnabled(true);
+            }
+        });
+        lineColorButton.setEnabled(true);
 
-		//the accessibility listener is applied to the whole tool bar because there is only one item in it, in the event
-		//that additional tool items are added, this should be changed to search for the tool bar's children and their
-		//their respective tool tips. Refer to ColorsAndFontsPropertySection.java.
+        //the accessibility listener is applied to the whole tool bar because there is only one item in it, in the event
+        //that additional tool items are added, this should be changed to search for the tool bar's children and their
+        //their respective tool tips. Refer to ColorsAndFontsPropertySection.java.
         toolBar.getAccessible().addAccessibleListener(new AccessibleAdapter() {
-			public void getName(AccessibleEvent e) {
-				e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
-			}
-		});		
-	}
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
+            }
+        });     
+    }
 
-	private void createLineStyleControl(Composite composite) {
-		getWidgetFactory().createLabel(composite, LINE_STYLE_LABEL);
+    private void createLineStyleControl(Composite composite) {
+        getWidgetFactory().createLabel(composite, LINE_STYLE_LABEL);
 
-		lineStyleCombo = getWidgetFactory().createCCombo(composite,
-				SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
-		lineStyleCombo.setItems(getStyles());
-		lineStyleCombo.addSelectionListener(new SelectionAdapter() {
+        lineStyleCombo = getWidgetFactory().createCCombo(composite,
+                SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
+        lineStyleCombo.setItems(getStyles());
+        lineStyleCombo.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				updateLineStyle();
-			}
+            public void widgetSelected(SelectionEvent event) {
+                updateLineStyle();
+            }
 
-			private void updateLineStyle() {
-				int style = lineStyleCombo.getSelectionIndex();
+            private void updateLineStyle() {
+                int style = lineStyleCombo.getSelectionIndex();
                 setWorkspaceProperty(WorkspaceViewerProperties.GRIDLINESTYLE, style + SWT.LINE_SOLID);
-			}
-		});
+            }
+        });
 
-	}
+    }
 
-	/**
-	 * @param event -
-	 *            selection event
-	 * @param toolItem -
-	 *            event source
-	 * @param imageDescriptor -
+    /**
+     * @param event -
+     *            selection event
+     * @param toolItem -
+     *            event source
+     * @param imageDescriptor -
      *            the image to draw overlay on the button after the new
      *            color is set
-	 * @return - new RGB color, or null if none selected
-	 */
-	private RGB changeColor(SelectionEvent event, ToolItem toolItem,
-			ImageDescriptor imageDescriptor, int previousColor) {
+     * @return - new RGB color, or null if none selected
+     */
+    private RGB changeColor(SelectionEvent event, ToolItem toolItem,
+            ImageDescriptor imageDescriptor, int previousColor) {
 
-		ColorPalettePopup popup = new ColorPalettePopup(toolItem.getParent()
-				.getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);
+        ColorPalettePopup popup = new ColorPalettePopup(toolItem.getParent()
+                .getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);
 
-		popup.setPreviousColor(previousColor);
-		Rectangle r = toolItem.getBounds();
-		Point location = toolItem.getParent().toDisplay(r.x, r.y);
-		popup.open(new Point(location.x, location.y + r.height));
+        popup.setPreviousColor(previousColor);
+        Rectangle r = toolItem.getBounds();
+        Point location = toolItem.getParent().toDisplay(r.x, r.y);
+        popup.open(new Point(location.x, location.y + r.height));
 
-		if (popup.useDefaultColor()) {
-			Image overlyedImage = new ColorOverlayImageDescriptor(
-					imageDescriptor.getImageData(), FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB)))
-					.createImage();
-			disposeImage(toolItem.getImage());
-			toolItem.setImage(overlyedImage);
-			return FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB));
-		}
+        if (popup.useDefaultColor()) {
+            Image overlyedImage = new ColorOverlayImageDescriptor(
+                    imageDescriptor.getImageData(), FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB)))
+                    .createImage();
+            disposeImage(toolItem.getImage());
+            toolItem.setImage(overlyedImage);
+            return FigureUtilities.integerToRGB(new Integer(LIGHT_GRAY_RGB));
+        }
 
-		if (popup.getSelectedColor() != null) {
-			Image overlyedImage = new ColorOverlayImageDescriptor(
-					imageDescriptor.getImageData(), popup.getSelectedColor())
-					.createImage();
-			disposeImage(toolItem.getImage());
-			toolItem.setImage(overlyedImage);
-		}
+        if (popup.getSelectedColor() != null) {
+            Image overlyedImage = new ColorOverlayImageDescriptor(
+                    imageDescriptor.getImageData(), popup.getSelectedColor())
+                    .createImage();
+            disposeImage(toolItem.getImage());
+            toolItem.setImage(overlyedImage);
+        }
 
-		return popup.getSelectedColor();
+        return popup.getSelectedColor();
 
-	}
+    }
 
-	private void disposeImage(Image image) {
-		if (image == null) {
-			return;
-		}
+    private void disposeImage(Image image) {
+        if (image == null) {
+            return;
+        }
 
-		if (image.equals(DiagramUIPropertiesImages
-				.get(DiagramUIPropertiesImages.IMG_LINE_COLOR))) {
-			return;
-		}
+        if (image.equals(DiagramUIPropertiesImages
+                .get(DiagramUIPropertiesImages.IMG_LINE_COLOR))) {
+            return;
+        }
 
-		if (!image.isDisposed()) {
-			image.dispose();
-		}
-	}
+        if (!image.isDisposed()) {
+            image.dispose();
+        }
+    }
 
-	private Double convertStringToDouble(String strValue) {
-		NumberFormat numberFormatter = NumberFormat.getInstance();
-		Double value;
-		try {
-			value = forceDouble(numberFormatter.parse(strValue));
-		} catch (ParseException e) {
-			// default value
+    private Double convertStringToDouble(String strValue) {
+        NumberFormat numberFormatter = NumberFormat.getInstance();
+        Double value;
+        try {
+            value = forceDouble(numberFormatter.parse(strValue));
+        } catch (ParseException e) {
+            // default value
             value = new Double(getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING));
-			setGridSpacing(value.doubleValue());
-		}
-		return value;
-	}
+            setGridSpacing(value.doubleValue());
+        }
+        return value;
+    }
 
-	private void setGridSpacing(double value) {
-		// Set grid spacing back to the input value
-		NumberFormat numberFormater = NumberFormat.getInstance();
-		textWidget.setText(numberFormater.format(value));
-		textWidget.selectAll();
-	}
+    private void setGridSpacing(double value) {
+        // Set grid spacing back to the input value
+        NumberFormat numberFormater = NumberFormat.getInstance();
+        textWidget.setText(numberFormater.format(value));
+        textWidget.selectAll();
+    }
 
-	/**
-	 * Creates group with ruler units and grid spacing controls	 
-	 * @param composite
-	 */
-	private void createMeasurementGroup(Composite composite) {
+    /**
+     * Creates group with ruler units and grid spacing controls  
+     * @param composite
+     */
+    private void createMeasurementGroup(Composite composite) {
 
         measurementGroup = getWidgetFactory().createGroup(composite, MEASUREMENT_LABEL);        
-		measurementGroup.setLayout(new GridLayout(2, false));
+        measurementGroup.setLayout(new GridLayout(2, false));
 
-		// Create ruler unit combo
-		getWidgetFactory().createLabel(measurementGroup, RULER_UNITS_LABEL);
+        // Create ruler unit combo
+        getWidgetFactory().createLabel(measurementGroup, RULER_UNITS_LABEL);
 
-		rulerUnitCombo = getWidgetFactory().createCCombo(measurementGroup,
-				SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
-		rulerUnitCombo.setItems(getUnits());
-		rulerUnitCombo.addSelectionListener(new SelectionAdapter() {
+        rulerUnitCombo = getWidgetFactory().createCCombo(measurementGroup,
+                SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
+        rulerUnitCombo.setItems(getUnits());
+        rulerUnitCombo.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				int oldUnits = getWorkspacePropertyInt(WorkspaceViewerProperties.RULERUNIT);
-				int newUnits = rulerUnitCombo.getSelectionIndex();
+            public void widgetSelected(SelectionEvent event) {
+                int oldUnits = getWorkspacePropertyInt(WorkspaceViewerProperties.RULERUNIT);
+                int newUnits = rulerUnitCombo.getSelectionIndex();
 
-				// Order of the changes is important so that there is no
-				// interim point with a 1 pixel grid spacing
-				if (oldUnits < newUnits) {
-					updateSpacing(oldUnits, newUnits);
-					updateRulerUnits();
-				} else {
-					updateRulerUnits();
-					updateSpacing(oldUnits, newUnits);
-				}
-			}
+                // Order of the changes is important so that there is no
+                // interim point with a 1 pixel grid spacing
+                if (oldUnits < newUnits) {
+                    updateSpacing(oldUnits, newUnits);
+                    updateRulerUnits();
+                } else {
+                    updateRulerUnits();
+                    updateSpacing(oldUnits, newUnits);
+                }
+            }
 
-			private void updateSpacing(int fromUnits, int toUnits) {
-				String currentUnits = convertUnits(fromUnits, toUnits);
+            private void updateSpacing(int fromUnits, int toUnits) {
+                String currentUnits = convertUnits(fromUnits, toUnits);
+                
                 setWorkspaceProperty(WorkspaceViewerProperties.GRIDSPACING, convertStringToDouble(currentUnits).doubleValue());
-			}
+            }
 
-			private void updateRulerUnits() {
-				int units = getCurrentRulerUnit();
-				setWorkspaceProperty(WorkspaceViewerProperties.RULERUNIT, units);
-			}
-		});
+            private void updateRulerUnits() {
+                int units = getCurrentRulerUnit();
+                setWorkspaceProperty(WorkspaceViewerProperties.RULERUNIT, units);
+            }
+        });
 
-		// Create grid spacing text field
-		getWidgetFactory().createLabel(measurementGroup, GRID_SPACING_LABEL);
+        // Create grid spacing text field
+        getWidgetFactory().createLabel(measurementGroup, GRID_SPACING_LABEL);
         textWidget = getWidgetFactory().createText(measurementGroup, StringStatics.BLANK, SWT.BORDER);
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
-		textWidget.setLayoutData(data);
-		startTextWidgetEventListener();
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
+        textWidget.setLayoutData(data);
+        startTextWidgetEventListener();
 
-	}
+    }
 
-	/**
-	 * 
-	 * converts fromUnits to toUnits (e.g. inches to pixels)
-	 * 
-	 * @param fromUnits
-	 * @param toUnits
-	 * @return equivalent number of toUnits for the given fromUnits
-	 */
-	private String convertUnits(int fromUnits, int toUnits) {
-		String valueStr = textWidget.getText();
-		if (fromUnits == toUnits) {
-			return valueStr;
-		}
-		Double value = convertStringToDouble(valueStr);
-		double pixelValue = 0;
-		switch (fromUnits) {
-		case INCHES:
-			pixelValue = value.doubleValue() * Display.getDefault().getDPI().x;
-			break;
-		case CENTIMETERS:
+    /**
+     * 
+     * converts fromUnits to toUnits (e.g. inches to pixels)
+     * 
+     * @param fromUnits
+     * @param toUnits
+     * @return equivalent number of toUnits for the given fromUnits
+     */
+    private String convertUnits(int fromUnits, int toUnits) {
+        String valueStr = textWidget.getText();
+        if (fromUnits == toUnits) {
+            return valueStr;
+        }
+        Double value = convertStringToDouble(valueStr);
+        double pixelValue = 0;
+        switch (fromUnits) {
+        case INCHES:
+            pixelValue = value.doubleValue() * Display.getDefault().getDPI().x;
+            break;
+        case CENTIMETERS:
                 pixelValue = value.doubleValue() * Display.getDefault().getDPI().x / INCH2CM;
-			break;
-		case PIXELS:
-			pixelValue = value.intValue();
-		}
+            break;
+        case PIXELS:
+            pixelValue = value.intValue();
+        }
 
-		double returnValue = 0;
+        double returnValue = 0;
 
-		switch (toUnits) {
-		case INCHES:
-			returnValue = pixelValue / Display.getDefault().getDPI().x;
-			break;
-		case CENTIMETERS:
+        switch (toUnits) {
+        case INCHES:
+            returnValue = pixelValue / Display.getDefault().getDPI().x;
+            break;
+        case CENTIMETERS:
                 returnValue = pixelValue * INCH2CM / Display.getDefault().getDPI().x;
-			break;
-		case PIXELS:
-			returnValue = Math.round(pixelValue);
-		}
-		NumberFormat numberFormatter = NumberFormat.getInstance();
-		return numberFormatter.format(returnValue);
+            break;
+        case PIXELS:
+            returnValue = Math.round(pixelValue);
+        }
+        NumberFormat numberFormatter = NumberFormat.getInstance();
+        return numberFormatter.format(returnValue);
 
-	}
+    }
 
-	/**
-	 * A helper to listen for events that indicate that a text field has been
-	 * changed.
-	 */
-	private TextChangeHelper textListener = new TextChangeHelper() {
-		boolean textModified = false;
+    /**
+     * A helper to listen for events that indicate that a text field has been
+     * changed.
+     */
+    private TextChangeHelper textListener = new TextChangeHelper() {
+        boolean textModified = false;
 
-		/**
-		 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-		 */
-		public void handleEvent(Event event) {
-			switch (event.type) {
-			case SWT.KeyDown:
-				textModified = true;
-				if (event.character == SWT.CR)
-					textChanged((Control) event.widget);
-				break;
-			case SWT.FocusOut:
-				textChanged((Control) event.widget);
-				break;
-			}
-		}
+        /**
+         * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+         */
+        public void handleEvent(Event event) {
+            switch (event.type) {
+            case SWT.KeyDown:
+                textModified = true;
+                if (event.character == SWT.CR)
+                    textChanged((Control) event.widget);
+                break;
+            case SWT.FocusOut:
+                textChanged((Control) event.widget);
+                break;
+            }
+        }
 
-		public void textChanged(Control control) {
-			if (textModified) {
-				String currentText = ((Text) control).getText();
-				try {
+        public void textChanged(Control control) {
+            if (textModified) {
+                String currentText = ((Text) control).getText();
+                try {
 
                     double value = convertStringToDouble(currentText).doubleValue();
-					double pixels = convertToBase(value);
-					if (pixels >= minValidValue && pixels <= maxValidValue) {
+                    double pixels = convertToBase(value);
+                    if (pixels >= minValidValue && pixels <= maxValidValue) {
                         setWorkspaceProperty(WorkspaceViewerProperties.GRIDSPACING, value);                       
-						setGridSpacing(value);
-					} else {
-						resetGridSpacing();
-					}
+                        setGridSpacing(value);                      
+                        
+                    } else {
+                        resetGridSpacing();
+                    }
 
-				} catch (NumberFormatException e) {
-					resetGridSpacing();
-				}
-				textModified = false;
-			}
-		}
+                } catch (NumberFormatException e) {
+                    resetGridSpacing();
+                }
+                textModified = false;
+            }
+        }
 
-		private void resetGridSpacing() {
-			// Set grid spacing back to original value
-			double value = getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING);
-			setGridSpacing(value);
-		}
+        private void resetGridSpacing() {
+            // Set grid spacing back to original value
+            double value = getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING);
+            setGridSpacing(value);
+        }
 
-	};
+    };
 
-	/**
-	 * 
+    /**
+     * 
      * converts the current units used to a base unit value to be used (e.g. in validation)
-	 * 
+     * 
      * @param number Units to be converted to the base unit
-	 * @return
-	 */
-	private double convertToBase(double number) {
+     * @return
+     */
+    private double convertToBase(double number) {
 
-		double returnValue = 0;
-		switch (getCurrentRulerUnit()) {
-		case INCHES:
-			returnValue = number;
-			break;
-		case CENTIMETERS:
-			returnValue = number / INCH2CM;
-			break;
-		case PIXELS:
-			returnValue = number / Display.getDefault().getDPI().x;
-		}
-		return returnValue;
-	}
+        double returnValue = 0;
+        switch (getCurrentRulerUnit()) {
+        case INCHES:
+            returnValue = number;
+            break;
+        case CENTIMETERS:
+            returnValue = number / INCH2CM;
+            break;
+        case PIXELS:
+            returnValue = number / Display.getDefault().getDPI().x;
+        }
+        return returnValue;
+    }
 
-	private int getCurrentRulerUnit() {
-		return rulerUnitCombo.getSelectionIndex();
-	}
+    private int getCurrentRulerUnit() {
+        return rulerUnitCombo.getSelectionIndex();
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
-	 */
-	public void setInput(IWorkbenchPart part, ISelection selection) {
-		super.setInput(part, selection);
+     */
+    public void setInput(IWorkbenchPart part, ISelection selection) {
+        super.setInput(part, selection);
 
-		// Set up workspace property listener
-		initWorkspacePropertyListener();
-		double value = getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING);
-		NumberFormat numberFormatter = NumberFormat.getNumberInstance();
-		textWidget.setText(numberFormatter.format(value));
+        // Set up workspace property listener
+        initWorkspacePropertyListener();
+        double value = getWorkspacePropertyDouble(WorkspaceViewerProperties.GRIDSPACING);
+        NumberFormat numberFormatter = NumberFormat.getNumberInstance();
+        textWidget.setText(numberFormatter.format(value));
         rulerVisibilityButton.setSelection(getBooleanWorkspaceProperty(WorkspaceViewerProperties.VIEWRULERS));
         gridVisibilityButton.setSelection(getBooleanWorkspaceProperty(WorkspaceViewerProperties.VIEWGRID));
         gridOrderButton.setSelection(getBooleanWorkspaceProperty(WorkspaceViewerProperties.GRIDORDER));
         snapToGridButton.setSelection(getBooleanWorkspaceProperty(WorkspaceViewerProperties.SNAPTOGRID));
+        snapToGeometryButton.setSelection(getBooleanWorkspaceProperty(WorkspaceViewerProperties.SNAPTOGEOMETRY));
 
-		int rulerValue = getValue(WorkspaceViewerProperties.RULERUNIT);
-		int styleValue = getValue(WorkspaceViewerProperties.GRIDLINESTYLE) - 1;
-		rulerUnitCombo.setText(getUnits()[rulerValue]);
-		lineStyleCombo.setText(getStyles()[styleValue]);
-		Image overlyedImage = new ColorOverlayImageDescriptor(
-				(DiagramUIPropertiesImages.DESC_LINE_COLOR).getImageData(),
-				FigureUtilities
-						.integerToRGB(getWorkspacePropertyInt(WorkspaceViewerProperties.GRIDLINECOLOR)))
-				.createImage();
-		disposeImage(lineColorButton.getImage());
-		lineColorButton.setImage(overlyedImage);
+        int rulerValue = getValue(WorkspaceViewerProperties.RULERUNIT);
+        int styleValue = getValue(WorkspaceViewerProperties.GRIDLINESTYLE) - 1;
+        rulerUnitCombo.setText(getUnits()[rulerValue]);
+        lineStyleCombo.setText(getStyles()[styleValue]);
+        Image overlyedImage = new ColorOverlayImageDescriptor(
+                (DiagramUIPropertiesImages.DESC_LINE_COLOR).getImageData(),
+                FigureUtilities
+                        .integerToRGB(getWorkspacePropertyInt(WorkspaceViewerProperties.GRIDLINECOLOR)))
+                .createImage();
+        disposeImage(lineColorButton.getImage());
+        lineColorButton.setImage(overlyedImage);
 
-	}
+    }
 
-	/**
-	 * @param property
-	 * @return the integer value of the string property
-	 */
-	private int getValue(String property) {
-		int value;
-		String valueString = getWorkspaceProperty(property);
+    /**
+     * @param property
+     * @return the integer value of the string property
+     */
+    private int getValue(String property) {
+        int value;
+        String valueString = getWorkspaceProperty(property);
 
-		if (valueString.equals(StringStatics.BLANK)) {
-			value = 0;
-		} else {
-			value = new Integer(getWorkspaceProperty(property)).intValue();
-		}
-		return value;
-	}
+        if (valueString.equals(StringStatics.BLANK)) {
+            value = 0;
+        } else {
+            value = new Integer(getWorkspaceProperty(property)).intValue();
+        }
+        return value;
+    }
 
-	private String[] getUnits() {
-		return new String[] { INCHES_LABEL, CENTIMETERS_LABEL, PIXEL_LABEL };
-	}
+    private String[] getUnits() {
+        return new String[] { INCHES_LABEL, CENTIMETERS_LABEL, PIXEL_LABEL };
+    }
 
-	private String[] getStyles() {
+    private String[] getStyles() {
         return new String[]{SOLID_LABEL,DASH_LABEL,DOT_LABEL,DASH_DOT_LABEL,DASH_DOT_DOT_LABEL,SPACED_DOT_LABEL};
-	}
+    }
 
     /* (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
-	 */
-	public void dispose() {
-		stopTextWidgetEventListener();
-		removeWorkspacePropertyListener();
-		super.dispose();
-	}
+     * @see org.eclipse.ui.views.properties.tabbed.ISection#dispose()
+     */
+    public void dispose() {
+        stopTextWidgetEventListener();
+        removeWorkspacePropertyListener();
+        super.dispose();
+    }
 
-	/**
-	 * Start listening to the text widget events
-	 */
-	private void startTextWidgetEventListener() {
-		getListener().startListeningTo(getTextWidget());
-		getListener().startListeningForEnter(getTextWidget());
-	}
+    /**
+     * Start listening to the text widget events
+     */
+    private void startTextWidgetEventListener() {
+        getListener().startListeningTo(getTextWidget());
+        getListener().startListeningForEnter(getTextWidget());
+    }
 
-	/**
-	 * Stop listening to text widget events
-	 */
-	private void stopTextWidgetEventListener() {
-		getListener().stopListeningTo(getTextWidget());
-	}
+    /**
+     * Stop listening to text widget events
+     */
+    private void stopTextWidgetEventListener() {
+        getListener().stopListeningTo(getTextWidget());
+    }
 
-	/**
-	 * @return Returns the textWidget.
-	 */
-	private Text getTextWidget() {
-		return textWidget;
-	}
+    /**
+     * @return Returns the textWidget.
+     */
+    private Text getTextWidget() {
+        return textWidget;
+    }
 
-	/**
-	 * @return Returns the listener.
-	 */
-	private TextChangeHelper getListener() {
-		return textListener;
-	}
+    /**
+     * @return Returns the listener.
+     */
+    private TextChangeHelper getListener() {
+        return textListener;
+    }
 
-	/**
-	 * Creates group with ruler and grid visibility and grid order controls
-	 * @param composite
-	 */
-	private void createDisplayGroup(Composite composite) {
+    /**
+     * Creates group with ruler and grid visibility and grid order controls
+     * @param composite
+     */
+    private void createDisplayGroup(Composite composite) {
 
         displayGroup = getWidgetFactory().createGroup(composite, VISIBILITY_LABEL);     
-		displayGroup.setLayout(new GridLayout(1, true));
+        displayGroup.setLayout(new GridLayout(1, true));
 
         rulerVisibilityButton = getWidgetFactory().createButton(
             displayGroup, RULER_ON_LABEL, SWT.CHECK);
-		rulerVisibilityButton.addSelectionListener(new SelectionAdapter() {
+        rulerVisibilityButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				// Set ruler visibility workspace property
+            public void widgetSelected(SelectionEvent event) {
+                // Set ruler visibility workspace property
                 setWorkspaceProperty(WorkspaceViewerProperties.VIEWRULERS, rulerVisibilityButton.getSelection());
-			}
-		});
+            }
+        });
 
         
         gridVisibilityButton = getWidgetFactory().createButton(
             displayGroup, GRID_ON_LABEL, SWT.CHECK);
-		gridVisibilityButton.addSelectionListener(new SelectionAdapter() {
+        gridVisibilityButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				// Set grid visibility workspace property
+            public void widgetSelected(SelectionEvent event) {
+                // Set grid visibility workspace property
                 setWorkspaceProperty(WorkspaceViewerProperties.VIEWGRID, gridVisibilityButton.getSelection());
-			}
-		});
+            }
+        });
 
         gridOrderButton = getWidgetFactory().createButton(
             displayGroup, GRID_LEVEL_LABEL, SWT.CHECK);
-		gridOrderButton.addSelectionListener(new SelectionAdapter() {
+        gridOrderButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent event) {
-				// Set grid level workspace property
+            public void widgetSelected(SelectionEvent event) {
+                // Set grid level workspace property
                 setWorkspaceProperty(WorkspaceViewerProperties.GRIDORDER, gridOrderButton.getSelection());
-			}
-		});
+            }
+        });
 
-	}
+    }
 
-	/**
-	 * Creates group with line color and style controls
-	 * @param composite
-	 */
-	private void createGridlineGroup(Composite composite) {
+    /**
+     * Creates group with line color and style controls
+     * @param composite
+     */
+    private void createGridlineGroup(Composite composite) {
 
         gridlineGroup = getWidgetFactory().createGroup(composite, GRIDLINE_LABEL);  
-		GridLayout gridLayout = new GridLayout(2, false);
-		gridlineGroup.setLayout(gridLayout);
-		createLineColorControl(gridlineGroup);
-		createLineStyleControl(gridlineGroup);
+        GridLayout gridLayout = new GridLayout(2, false);
+        gridlineGroup.setLayout(gridLayout);
+        createLineColorControl(gridlineGroup);
+        createLineStyleControl(gridlineGroup);
 
-	}
+    }
 
-	private void setWorkspaceProperty(String property, boolean setting) {
-		getWorkspaceViewerProperties().setValue(property, setting);
-	}
+    private void setWorkspaceProperty(String property, boolean setting) {
+        getWorkspaceViewerProperties().setValue(property, setting);
+    }
 
-	private void setWorkspaceProperty(String property, int setting) {
-		getWorkspaceViewerProperties().setValue(property, setting);
-	}
+    private void setWorkspaceProperty(String property, int setting) {
+        getWorkspaceViewerProperties().setValue(property, setting);
+    }
 
-	private void setWorkspaceProperty(String property, double setting) {
-		getWorkspaceViewerProperties().setValue(property, setting);
-	}
+    private void setWorkspaceProperty(String property, double setting) {
+        getWorkspaceViewerProperties().setValue(property, setting);
+    }
 
-	private String getWorkspaceProperty(String property) {
-		return getWorkspaceViewerProperties().getString(property);
-	}
+    private String getWorkspaceProperty(String property) {
+        return getWorkspaceViewerProperties().getString(property);
+    }
 
-	private int getWorkspacePropertyInt(String property) {
-		return getWorkspaceViewerProperties().getInt(property);
-	}
+    private int getWorkspacePropertyInt(String property) {
+        return getWorkspaceViewerProperties().getInt(property);
+    }
 
-	private double getWorkspacePropertyDouble(String property) {
-		return getWorkspaceViewerProperties().getDouble(property);
-	}
+    private double getWorkspacePropertyDouble(String property) {
+        return getWorkspaceViewerProperties().getDouble(property);
+    }
 
-	private boolean getBooleanWorkspaceProperty(String property) {
-		return getWorkspaceViewerProperties().getBoolean(property);
-	}
+    private boolean getBooleanWorkspaceProperty(String property) {
+        return getWorkspaceViewerProperties().getBoolean(property);
+    }
 
-	private IPreferenceStore getWorkspaceViewerProperties() {
-		return workspaceViewerProperties;
-	}
+    private IPreferenceStore getWorkspaceViewerProperties() {
+        return workspaceViewerProperties;
+    }
 
-	/**
-	 * Listener for the workspace preference store.
-	 */
-	private class PropertyStoreListener implements IPropertyChangeListener {
+    /**
+     * Listener for the workspace preference store.
+     */
+    private class PropertyStoreListener implements IPropertyChangeListener {
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-		 */
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+         */
         public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			handleWorkspacePropertyChanged(event);
-		}
-	}
+            handleWorkspacePropertyChanged(event);
+        }
+    }
 
-	/**
-	 * Handles workspace property changes	  
-	 * @param event
-	 */
-	private void handleWorkspacePropertyChanged(PropertyChangeEvent event) {
-		if (WorkspaceViewerProperties.VIEWGRID.equals(event.getProperty())) {
-			if (!gridVisibilityButton.isDisposed()) {
-				gridVisibilityButton.setSelection(getEventBoolean(event));
-			}
+    /**
+     * Handles workspace property changes     
+     * @param event
+     */
+    private void handleWorkspacePropertyChanged(PropertyChangeEvent event) {
+        if (WorkspaceViewerProperties.VIEWGRID.equals(event.getProperty())) {
+            if (!gridVisibilityButton.isDisposed()) {
+                gridVisibilityButton.setSelection(getEventBoolean(event));
+            }
         } else if (WorkspaceViewerProperties.VIEWRULERS.equals(event.getProperty())) {          
-			if (!rulerVisibilityButton.isDisposed()) {
-				rulerVisibilityButton.setSelection(getEventBoolean(event));
-			}
+            if (!rulerVisibilityButton.isDisposed()) {
+                rulerVisibilityButton.setSelection(getEventBoolean(event));
+            }
         } else if (WorkspaceViewerProperties.SNAPTOGRID.equals(event.getProperty())) {          
-			if (!snapToGridButton.isDisposed()) {
-				snapToGridButton.setSelection(getEventBoolean(event));
-			}
+            if (!snapToGridButton.isDisposed()) {
+                snapToGridButton.setSelection(getEventBoolean(event));
+            }
+        } else if (WorkspaceViewerProperties.SNAPTOGEOMETRY.equals(event.getProperty())) {          
+            if (!snapToGeometryButton.isDisposed()) {
+                snapToGeometryButton.setSelection(getEventBoolean(event));
+            }
         } else if (WorkspaceViewerProperties.GRIDORDER.equals(event.getProperty())) {
-			if (!gridOrderButton.isDisposed()) {
-				gridOrderButton.setSelection(getEventBoolean(event));
-			}
+            if (!gridOrderButton.isDisposed()) {
+                gridOrderButton.setSelection(getEventBoolean(event));
+            }
         } else if (WorkspaceViewerProperties.GRIDSPACING.equals(event.getProperty())) {
-			if (!textWidget.isDisposed()) {
-				Double value = new Double(getEventString(event));
-				textWidget.setText(NumberFormat.getInstance().format(value));
-			}
+            if (!textWidget.isDisposed()) {
+                Double value = new Double(getEventString(event));
+                textWidget.setText(NumberFormat.getInstance().format(value));
+            }
         } else if (WorkspaceViewerProperties.RULERUNIT.equals(event.getProperty())) {           
-			if (!rulerUnitCombo.isDisposed()) {
-				rulerUnitCombo.select(Integer.parseInt(getEventString(event)));
-			}
+            if (!rulerUnitCombo.isDisposed()) {
+                rulerUnitCombo.select(Integer.parseInt(getEventString(event)));
+            }
         } else if (WorkspaceViewerProperties.GRIDLINESTYLE.equals(event.getProperty())) {
-			if (!lineStyleCombo.isDisposed()) {
+            if (!lineStyleCombo.isDisposed()) {
                 lineStyleCombo.select(Integer.parseInt(getEventString(event))-1);
-			}
-		}
-	}
+            }
+        }
+    }
 
-	private boolean getEventBoolean(PropertyChangeEvent event) {
-		Boolean newValue = (Boolean) event.getNewValue();
-		return newValue.booleanValue();
-	}
+    private boolean getEventBoolean(PropertyChangeEvent event) {
+        Boolean newValue = (Boolean) event.getNewValue();
+        return newValue.booleanValue();
+    }
 
-	private String getEventString(PropertyChangeEvent event) {
-		return event.getNewValue().toString();
-	}
+    private String getEventString(PropertyChangeEvent event) {
+        return event.getNewValue().toString();
+    }
 
-	/**
+    /**
      * Initializes the preferenceStore property change
      * listener.
-	 */
-	private void initWorkspacePropertyListener() {
-		IDiagramWorkbenchPart editor = (IDiagramWorkbenchPart) getPart();
+     */
+    private void initWorkspacePropertyListener() {
+        IDiagramWorkbenchPart editor = (IDiagramWorkbenchPart) getPart();
         if (editor == null) return;
         DiagramGraphicalViewer viewer = (DiagramGraphicalViewer) editor.getDiagramGraphicalViewer();
-		workspaceViewerProperties = viewer.getWorkspaceViewerPreferenceStore();
-		workspaceViewerProperties.addPropertyChangeListener(propertyListener);
-	}
+        workspaceViewerProperties = viewer.getWorkspaceViewerPreferenceStore();
+        workspaceViewerProperties.addPropertyChangeListener(propertyListener);
+    }
 
-	/**
+    /**
      * This method removes all listeners to the notational world (views, figures, editpart...etc)
      * Override this method to remove notational listeners down the hierarchy
-	 */
-	private void removeWorkspacePropertyListener() {
-		if (getWorkspaceViewerProperties() != null) {
+     */
+    private void removeWorkspacePropertyListener() {
+        if (getWorkspaceViewerProperties() != null) {
             getWorkspaceViewerProperties().removePropertyChangeListener(propertyListener);
-			workspaceViewerProperties = null;
-		}
-		propertyListener = null;
-	}
+            workspaceViewerProperties = null;
+        }
+        propertyListener = null;
+    }
 
-	/**
+    /**
      * The NumberFormatter.parse() could return a Long or Double
      * We are storing all values related to the page setup as doubles
      * so we call this function when ever we are getting values from
      * the dialog.
-	 * @param number
-	 * @return
-	 */
-	private Double forceDouble(Number number) {
-		if (!(number instanceof Double))
-			return new Double(number.doubleValue());
-		return (Double) number;
-	}
+     * @param number
+     * @return
+     */
+    private Double forceDouble(Number number) {
+        if (!(number instanceof Double))
+            return new Double(number.doubleValue());
+        return (Double) number;
+    }
 }

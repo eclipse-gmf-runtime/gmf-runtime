@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ public interface WorkspaceViewerProperties {
 	public final String VIEWGRID = "rulergrid.viewgrid"; //$NON-NLS-1$
 	public final String GRIDLINESTYLE = "rulergrid.gridlinestyle"; //$NON-NLS-1$
 	public final String GRIDLINECOLOR = "rulergrid.gridlinecolor"; //$NON-NLS-1$
+	public final String SNAPTOGEOMETRY = "rulergrid.snaptogeometry"; //$NON-NLS-1$
 	public final String SNAPTOGRID = "rulergrid.snaptogrid"; //$NON-NLS-1$
 	public final String GRIDORDER = "rulergrid.gridlevel"; //$NON-NLS-1$
 	public final String GRIDSPACING = "rulergrid.gridspacing"; //$NON-NLS-1$

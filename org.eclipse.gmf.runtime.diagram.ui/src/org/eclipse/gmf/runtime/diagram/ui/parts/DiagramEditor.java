@@ -760,6 +760,7 @@ public abstract class DiagramEditor
                 getActionRegistry().getAction(ActionFactory.DELETE.getId()));
             keyHandler.put(KeyStroke.getPressed(SWT.BS, 8, 0),
                 getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+            
             keyHandler.put(/* CTRL + D */
                     KeyStroke.getPressed((char) 0x4, 100, SWT.CTRL),
                         getActionRegistry().getAction(
@@ -828,9 +829,9 @@ public abstract class DiagramEditor
             ((DiagramGraphicalViewer) getDiagramGraphicalViewer())
                 .hookWorkspacePreferenceStore(getWorkspaceViewerPreferenceStore());
         }
-
+   
         viewer.setRootEditPart(rootEP);
-
+  
         viewer.setEditPartFactory(EditPartService.getInstance());
         ContextMenuProvider provider = new DiagramContextMenuProvider(this,
             viewer);
@@ -1176,13 +1177,17 @@ public abstract class DiagramEditor
 
         boolean snapToGrid = globalPreferenceStore
             .getBoolean(IPreferenceConstants.PREF_SNAP_TO_GRID);
+        
+        boolean snapToGeometry = globalPreferenceStore
+        .getBoolean(IPreferenceConstants.PREF_SNAP_TO_GEOMETRY);
 
         boolean viewRulers = globalPreferenceStore
             .getBoolean(IPreferenceConstants.PREF_SHOW_RULERS);
 
         // Set defaults for Grid
         store.setValue(WorkspaceViewerProperties.VIEWGRID, viewGrid);
-        store.setValue(WorkspaceViewerProperties.SNAPTOGRID, snapToGrid);
+        store.setValue(WorkspaceViewerProperties.SNAPTOGRID, snapToGrid);        
+        store.setValue(WorkspaceViewerProperties.SNAPTOGEOMETRY, snapToGeometry);
 
         // Set defaults for Rulers
         store.setValue(WorkspaceViewerProperties.VIEWRULERS, viewRulers);
@@ -1401,17 +1406,17 @@ public abstract class DiagramEditor
 
         }
 
-        // Snap to Grid
+        // Snap to Geometry        
         getDiagramGraphicalViewer().setProperty(
             SnapToGeometry.PROPERTY_SNAP_ENABLED,
             Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
-                WorkspaceViewerProperties.SNAPTOGRID)));
-
-        // Hide/Show Grid
+                    WorkspaceViewerProperties.SNAPTOGEOMETRY))); 
+        // Snap to Grid
         getDiagramGraphicalViewer().setProperty(
             SnapToGrid.PROPERTY_GRID_ENABLED,
             Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
-                WorkspaceViewerProperties.VIEWGRID)));
+                WorkspaceViewerProperties.SNAPTOGRID)));
+        // Hide/Show Grid
         getDiagramGraphicalViewer().setProperty(
             SnapToGrid.PROPERTY_GRID_VISIBLE,
             Boolean.valueOf(getWorkspaceViewerPreferenceStore().getBoolean(
@@ -1420,7 +1425,7 @@ public abstract class DiagramEditor
         // Grid Origin (always 0, 0)
         Point origin = new Point();
         getDiagramGraphicalViewer().setProperty(
-            SnapToGrid.PROPERTY_GRID_ORIGIN, origin);
+        		SnapToGrid.PROPERTY_GRID_ORIGIN, origin);
 
         // Grid Spacing
         double dSpacing = ((DiagramRootEditPart) getDiagramEditPart().getRoot())

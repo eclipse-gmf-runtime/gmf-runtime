@@ -191,8 +191,7 @@ public final class DiagramUIMessages extends NLS {
 	public static String RecalcPageBreaks_toolTip;
 	public static String ViewGrid_textLabel;
 	public static String ViewGrid_toolTip;
-	public static String SnapToGrid_textLabel;
-	public static String SnapToGrid_toolTip;
+	public static String SnapToGrid_textLabel;	
 	public static String ViewRuler_textLabel;
 	public static String ViewRuler_toolTip;
 	public static String CopyAction_Copy;
@@ -302,6 +301,7 @@ public final class DiagramUIMessages extends NLS {
 	public static String GridRulerPreferencePage_gridGroup_label;
 	public static String GridRulerPreferencePage_showGrid_label;
 	public static String GridRulerPreferencePage_snapToGrid_label;
+	public static String GridRulerPreferencePage_snapToGeometry_label;
 	public static String GridRulerPreferencePage_gridSpacing_label_inches;
     public static String GridRulerPreferencePage_gridSpacing_label_cm;
     public static String GridRulerPreferencePage_gridSpacing_label_pixels;
