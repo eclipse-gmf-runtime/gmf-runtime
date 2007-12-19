@@ -113,9 +113,11 @@ public class FileChangeEventTest extends TestCase {
 			return null;
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IFile#getEncoding()
+		 * @deprecated
+		 */
 		public int getEncoding() throws CoreException {
-			// Can't get rid of warning as depricated abstract method
-			// must be implemented
 			return 0;
 		}
 
@@ -325,6 +327,10 @@ public class FileChangeEventTest extends TestCase {
 			return false;
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IResource#isLocal(int)
+		 * @deprecated
+		 */
 		public boolean isLocal(int depth) {
 			return false;
 		}
@@ -377,6 +383,10 @@ public class FileChangeEventTest extends TestCase {
 		public void setDerived(boolean isDerived) throws CoreException {/*Empty block*/
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IResource#setLocal(boolean, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @deprecated
+		 */
 		public void setLocal(boolean flag, int depth, IProgressMonitor monitor)
 			throws CoreException {/*Empty block*/
 		}
@@ -385,6 +395,10 @@ public class FileChangeEventTest extends TestCase {
 			throws CoreException {/*Empty block*/
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IResource#setReadOnly(boolean)
+		 * @deprecated
+		 */
 		public void setReadOnly(boolean readOnly) {/*Empty block*/
 		}
 
@@ -399,6 +413,7 @@ public class FileChangeEventTest extends TestCase {
 		public void touch(IProgressMonitor monitor) throws CoreException {/*Empty block*/
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
@@ -438,6 +453,7 @@ public class FileChangeEventTest extends TestCase {
 
 		/**
 		 * @see org.eclipse.core.resources.IFile#setCharset(java.lang.String)
+		 * @deprecated
 		 */
 		public void setCharset(String newCharset)
 			throws CoreException {/*Empty block*/
@@ -513,6 +529,13 @@ public class FileChangeEventTest extends TestCase {
          */
 		public void setHidden(boolean isHidden) throws CoreException {
 			/* not implemented */
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isDerived(int)
+		 */
+		public boolean isDerived(int arg0) {
+			return false;
 		}
 	}
 	

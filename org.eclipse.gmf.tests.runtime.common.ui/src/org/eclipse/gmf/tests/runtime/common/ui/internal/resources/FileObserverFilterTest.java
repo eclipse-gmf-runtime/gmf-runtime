@@ -285,6 +285,10 @@ public class FileObserverFilterTest
 			return false;
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IResource#isLocal(int)
+		 * @deprecated
+		 */
 		public boolean isLocal(int depth) {
 			return false;
 		}
@@ -330,6 +334,10 @@ public class FileObserverFilterTest
 			/* Empty block */
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IResource#setLocal(boolean, int, org.eclipse.core.runtime.IProgressMonitor)
+		 * @deprecated
+		 */
 		public void setLocal(boolean flag, int depth, IProgressMonitor monitor)
 			throws CoreException {/* Empty block */
 		}
@@ -338,6 +346,10 @@ public class FileObserverFilterTest
 			throws CoreException {/* Empty block */
 		}
 
+		/**
+		 * @see org.eclipse.core.resources.IResource#setReadOnly(boolean)
+		 * @deprecated
+		 */
 		public void setReadOnly(boolean readOnly) {/* Empty block */
 		}
 
@@ -354,6 +366,7 @@ public class FileObserverFilterTest
 			/* Empty block */
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
@@ -394,6 +407,7 @@ public class FileObserverFilterTest
 
 		/**
 		 * @see org.eclipse.core.resources.IFile#setCharset(java.lang.String)
+		 * @deprecated
 		 */
 		public void setCharset(String newCharset)
 			throws CoreException {
@@ -401,6 +415,7 @@ public class FileObserverFilterTest
 
 		/**
 		 * @see org.eclipse.core.resources.IFile#getEncoding()
+		 * @deprecated
 		 */
 		public int getEncoding()
 			throws CoreException {
@@ -480,20 +495,17 @@ public class FileObserverFilterTest
 		public void setHidden(boolean isHidden) throws CoreException {
 			/* not implemented */
 		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isDerived(int)
+		 */
+		public boolean isDerived(int arg0) {
+			return false;
+		}
 	}
 
 	protected class Folder
 		implements IFolder {
-
-		public boolean isHidden() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void setHidden(boolean isHidden) throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
 
 		private IPath path;
 
@@ -655,6 +667,7 @@ public class FileObserverFilterTest
 		/**
 		 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 		 */
+		@SuppressWarnings("unchecked")
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
@@ -935,9 +948,9 @@ public class FileObserverFilterTest
 
 		/**
 		 * @see org.eclipse.core.resources.IResource#isLocal(int)
+		 * @deprecated
 		 */
 		public boolean isLocal(int depth) {
-
 			return false;
 		}
 
@@ -951,6 +964,7 @@ public class FileObserverFilterTest
 
 		/**
 		 * @see org.eclipse.core.resources.IResource#isReadOnly()
+		 * @deprecated
 		 */
 		public boolean isReadOnly() {
 
@@ -1033,6 +1047,7 @@ public class FileObserverFilterTest
 		/**
 		 * @see org.eclipse.core.resources.IResource#setLocal(boolean, int,
 		 *      org.eclipse.core.runtime.IProgressMonitor)
+		 * @deprecated
 		 */
 		public void setLocal(boolean flag, int depth, IProgressMonitor monitor)
 			throws CoreException {
@@ -1049,6 +1064,7 @@ public class FileObserverFilterTest
 
 		/**
 		 * @see org.eclipse.core.resources.IResource#setReadOnly(boolean)
+		 * @deprecated
 		 */
 		public void setReadOnly(boolean readOnly) {
 			/* Empty block */
@@ -1125,10 +1141,9 @@ public class FileObserverFilterTest
 			return null;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
+		/**
 		 * @see org.eclipse.core.resources.IContainer#setDefaultCharset(java.lang.String)
+		 * @deprecated
 		 */
 		public void setDefaultCharset(String charset)
 			throws CoreException {
@@ -1180,6 +1195,27 @@ public class FileObserverFilterTest
             throws CoreException {
             return 0;
         }
+        
+        /*
+         * @see org.eclipse.core.resources.IResource#isHidden()
+         */
+        public boolean isHidden() {
+			return false;
+		}
+
+        /*
+         * @see org.eclipse.core.resources.IResource#setHidden(boolean)
+         */
+		public void setHidden(boolean isHidden) throws CoreException {
+			/* not implemented */
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isDerived(int)
+		 */
+		public boolean isDerived(int arg0) {
+			return false;
+		}
 	}
 
 	public static void main(String[] args) {
