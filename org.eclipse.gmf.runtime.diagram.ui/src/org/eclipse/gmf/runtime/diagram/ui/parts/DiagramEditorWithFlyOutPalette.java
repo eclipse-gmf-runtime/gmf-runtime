@@ -30,6 +30,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDrop
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteService;
 import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
+import org.eclipse.gmf.runtime.gef.ui.palette.customize.PaletteCustomizerEx;
+import org.eclipse.gmf.runtime.gef.ui.palette.customize.PaletteViewerEx;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -136,7 +138,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 	}
 	
 	protected PaletteViewer constructPaletteViewer() {
-		return new PaletteViewer();
+		return new PaletteViewerEx();
 	}
 
 	/**
@@ -176,7 +178,7 @@ public abstract class DiagramEditorWithFlyOutPalette
 				viewer
 					.addDragSourceListener(new PaletteToolTransferDragSourceListener(
 						viewer));
-
+                viewer.setCustomizer(createPaletteCustomizer());
 			}
 
 
@@ -384,14 +386,17 @@ public abstract class DiagramEditorWithFlyOutPalette
 	 * @return the new palette root or the updated palette root
 	 */
 	protected PaletteRoot createPaletteRoot(PaletteRoot existingPaletteRoot) {
+	    PaletteRoot paletteRoot;
 		if (existingPaletteRoot == null) {
-			return PaletteService.getInstance().createPalette(this,
+			paletteRoot = PaletteService.getInstance().createPalette(this,
 				getDefaultPaletteContent());
 		} else {
 			PaletteService.getInstance().updatePalette(existingPaletteRoot,
 				this, getDefaultPaletteContent());
-			return existingPaletteRoot;
+			paletteRoot = existingPaletteRoot;
 		}
+        applyCustomizationsToPalette(paletteRoot);
+        return paletteRoot;
 	}
 
 	/**
@@ -453,15 +458,6 @@ public abstract class DiagramEditorWithFlyOutPalette
 
 		ContextMenuProvider paletteContextProvider = new PaletteContextMenuProvider(viewer);
 		getPaletteViewer().setContextMenu(paletteContextProvider);
-		viewer.setCustomizer(new PaletteCustomizer() {
-			public void revertToSaved() {
-			    //
-			}
-
-			public void save() {
-			    //
-			}
-		});
 	}
 
 	/**
@@ -605,5 +601,28 @@ public abstract class DiagramEditorWithFlyOutPalette
     protected IActivityManagerListener createActivityManagerListener() {
         return new ActivityManagerListener();
     }
-	
+
+    /**
+     * Applies any current customizations to the palette root. If the palette
+     * viewer is not set or it does not have its palette root set, this method
+     * will do nothing.
+     */
+    protected void applyCustomizationsToPalette(PaletteRoot paletteRoot) {
+        PaletteCustomizer customizer = (getPaletteViewer() != null) ? getPaletteViewer()
+            .getCustomizer()
+            : createPaletteCustomizer();
+        if (customizer instanceof PaletteCustomizerEx) {
+            ((PaletteCustomizerEx) customizer)
+                .applyCustomizationsToPalette(paletteRoot);
+        }
+    }
+
+    /**
+     * Creation factory method for the palette customizer.
+     * @return a new palette customizer
+     */
+    protected PaletteCustomizer createPaletteCustomizer() {
+        return new PaletteCustomizerEx();
+    }
+
 }

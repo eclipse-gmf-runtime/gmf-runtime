@@ -17,7 +17,8 @@ Export-Package: org.eclipse.gmf.runtime.gef.ui.figures,
  org.eclipse.gmf.runtime.gef.ui.internal.palette;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.tests.runtime.gef.ui,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.providers",
  org.eclipse.gmf.runtime.gef.ui.internal.parts;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.tests.runtime.gef.ui,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.providers",
  org.eclipse.gmf.runtime.gef.ui.internal.requests;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.tests.runtime.gef.ui,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.providers",
- org.eclipse.gmf.runtime.gef.ui.internal.tools;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.tests.runtime.gef.ui,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.providers"
+ org.eclipse.gmf.runtime.gef.ui.internal.tools;x-friends:="org.eclipse.gmf.tests.runtime.diagram.ui,org.eclipse.gmf.tests.runtime.gef.ui,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.providers",
+ org.eclipse.gmf.runtime.gef.ui.palette.customize
 Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.draw2d;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.gef;bundle-version="[3.2.0,4.0.0)",

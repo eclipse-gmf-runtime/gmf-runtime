@@ -41,4 +41,10 @@ public final class GefStatusCodes {
      * SVG document file
      */
     public static final int SVG_GENERATION_FAILURE = 2;
+    
+    /**
+     * Status code warning that an exception was ignored.
+     * Set to 9 to be consistent with CommonUIStatusCodes.
+     */
+    public static final int IGNORED_EXCEPTION_WARNING = 9;
 }
