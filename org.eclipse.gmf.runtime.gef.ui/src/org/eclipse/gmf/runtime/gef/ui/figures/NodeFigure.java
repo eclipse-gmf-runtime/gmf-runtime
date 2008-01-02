@@ -19,11 +19,13 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IAnchorableFigure;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
 
 /**
@@ -33,7 +35,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.TransparentBorder;
  */
 public class NodeFigure 
 	extends Figure
-		implements HandleBounds, IAnchorableFigure {
+		implements HandleBounds, IAnchorableFigure, IPolygonAnchorableFigure {
 
 	private Hashtable connectionAnchors;
 	
@@ -226,4 +228,22 @@ public class NodeFigure
 	public static String getDefaultAnchorID() {
 		return szAnchor;
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure#getPolygonPoints()
+	 */
+	public PointList getPolygonPoints() {
+		PointList points = new PointList(5);
+		Rectangle anchorableRectangle = getHandleBounds();
+		points.addPoint(anchorableRectangle.x, anchorableRectangle.y);
+		points.addPoint(anchorableRectangle.x + anchorableRectangle.width,
+				anchorableRectangle.y);
+		points.addPoint(anchorableRectangle.x + anchorableRectangle.width,
+				anchorableRectangle.y + anchorableRectangle.height);
+		points.addPoint(anchorableRectangle.x, anchorableRectangle.y
+				+ anchorableRectangle.height);
+		points.addPoint(anchorableRectangle.x, anchorableRectangle.y);
+		return points;
+	}	
+	
 }

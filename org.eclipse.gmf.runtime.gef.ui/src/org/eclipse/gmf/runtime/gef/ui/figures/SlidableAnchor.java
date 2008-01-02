@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.gef.ui.figures;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
@@ -58,16 +59,14 @@ public class SlidableAnchor
 	 * Gets the anchors associated figure's bounding box in absolute coordinates.
 	 * 
 	 * @return a <code>Rectangle</code> that is the bounding box of the owner figure 
-	 * in absolute coordinates
+	 * in relative coordinates
 	 */
 	protected Rectangle getBox() {
-		Rectangle rBox = getOwner().getBounds().getCopy();
-		if (getOwner() instanceof HandleBounds)
-			rBox = ((HandleBounds)getOwner()).getHandleBounds().getCopy();
-		
+		Rectangle rBox = getOwner() instanceof HandleBounds ? new PrecisionRectangle(
+				((HandleBounds) getOwner()).getHandleBounds())
+				: new PrecisionRectangle(getOwner().getBounds());
 		getOwner().translateToAbsolute(rBox);
 		return rBox;
 	}
-	
-	
+
 }

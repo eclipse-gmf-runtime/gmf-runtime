@@ -528,7 +528,7 @@ abstract public class ConnectionEditPart
 
         if (key == SnapToHelper.class) {   
             return SanpToHelperUtil.getSnapHelper(
-            		(GraphicalEditPart)this.getSource());
+            		(org.eclipse.gef.GraphicalEditPart)this.getSource());
         }        
 
         Object model = getModel();

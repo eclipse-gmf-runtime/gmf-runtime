@@ -13,6 +13,8 @@ package org.eclipse.gmf.runtime.draw2d.ui.geometry;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
@@ -95,8 +97,8 @@ public class LineSeg
 	 * @param ptEnd Point indicating the end of the line segment
 	 */
 	public LineSeg(Point ptStart, Point ptEnd) {
-		origin = new Point(ptStart);
-		terminus = new Point(ptEnd);
+		origin = ptStart.getCopy();
+		terminus = ptEnd.getCopy();
 	}
 
 	/**
@@ -190,7 +192,7 @@ public class LineSeg
 	 * @return <code>Point</code> the origin of the line segment.
 	 */
 	public Point getOrigin() {
-		return new Point(origin);
+		return origin.getCopy();
 	}
 
 	/**
@@ -199,7 +201,7 @@ public class LineSeg
 	 * @return <code>Point</code> the terminating point of the line segment
 	 */
 	public Point getTerminus() {
-		return new Point(terminus);
+		return terminus.getCopy();
 	}
 
 	/**
@@ -208,7 +210,7 @@ public class LineSeg
 	 * @param origin Point to set as origin
 	 */
 	public void setOrigin(Point origin) {
-		this.origin = new Point(origin);
+		this.origin = origin.getCopy();
 	}
 
 	/**
@@ -217,7 +219,7 @@ public class LineSeg
 	 * @param terminus Point to set as terminus
 	 */
 	public void setTerminus(Point terminus) {
-		this.terminus = new Point(terminus);
+		this.terminus = terminus.getCopy();
 	}
 
 	/**
@@ -349,12 +351,15 @@ public class LineSeg
 	 * segment, <code>false</code> otherwise.
 	 */
 	public final boolean containsPoint(final Point aPoint, final int tolerance) {
-		Point theOrigin = getOrigin();
-		Point theTerminus = getTerminus();
-
-		return (
-			theOrigin.getDistance(aPoint) + aPoint.getDistance(theTerminus)
-				<= length() + tolerance);
+		/*
+		 * We need perform the calculations in double numbers to avoid possible integer
+		 * overflows in Point#getDistance2() method
+		 */
+		double lengthOfSegment = Math.sqrt((origin.x - terminus.x)*(origin.x - terminus.x) + (origin.y - terminus.y)*(origin.y - terminus.y));
+		double lengthFromOriginToPoint = Math.sqrt((origin.x - aPoint.x)*(origin.x - aPoint.x) + (origin.y - aPoint.y)*(origin.y - aPoint.y));
+		double lengthFromTerminusToPoint = Math.sqrt((terminus.x - aPoint.x)*(terminus.x - aPoint.x) + (terminus.y - aPoint.y)*(terminus.y - aPoint.y));
+		
+		return lengthFromTerminusToPoint + lengthFromOriginToPoint - lengthOfSegment < tolerance;
 	}
 
 	/**
@@ -794,7 +799,10 @@ public class LineSeg
 	 * generalized line equation
 	 */
 	public double [] getEquation() {
-		return getLineEquation(origin.x, origin.y, terminus.x, terminus.y);
+		PrecisionPoint preciseOrigin = new PrecisionPoint(origin);
+		PrecisionPoint preciseTerminus = new PrecisionPoint(terminus);
+		return getLineEquation(preciseOrigin.preciseX, preciseOrigin.preciseY,
+				preciseTerminus.preciseX, preciseTerminus.preciseY);
 	}
 	
 	/**
@@ -809,7 +817,7 @@ public class LineSeg
 	 * the argumet line segment.
 	 */
 	public PointList getLinesIntersections (LineSeg line) {
-		PointList intersections = new PointList();
+		PrecisionPointList intersections = new PrecisionPointList();
 		double temp[] = getEquation();
 		double a1 = temp[0];
 		double b1 = temp[1];
@@ -825,12 +833,12 @@ public class LineSeg
 			if (a1==a2 && b1==b2 && c1==c2) {
 				// if lines are the same, then instead of infinite number of intersections
 				// we will put the end points of the line segment passed as an argument
-				intersections.addPoint(new Point(line.getOrigin().getCopy()));
-				intersections.addPoint(new Point(line.getTerminus().getCopy()));
+				intersections.addPoint(line.getOrigin().getCopy());
+				intersections.addPoint(line.getTerminus().getCopy());
 			}
 		}
 		else {
-			intersections.addPoint(new Point(Math.round((c1*b2-b1*c2)/det), Math.round((a1*c2-c1*a2)/det)));
+			intersections.addPoint(new PrecisionPoint((c1*b2-b1*c2)/det, (a1*c2-c1*a2)/det));
 		}
 		return intersections;
 	}
@@ -842,25 +850,30 @@ public class LineSeg
 	 * @return - <Code>PointList</Code> containing all intersection points
 	 */
 	public PointList getLineIntersectionsWithEllipse(Rectangle ellipseBounds) {
-		PointList intersections = new PointList();
-		if (ellipseBounds.width == 0 || ellipseBounds.height == 0)
+		PointList intersections = new PrecisionPointList();
+		PrecisionPoint preciseOrigin = new PrecisionPoint(origin);
+		PrecisionPoint preciseTerminus = new PrecisionPoint(terminus);
+		PrecisionRectangle preciseEllipseBounds = new PrecisionRectangle(ellipseBounds);
+		if (preciseEllipseBounds.preciseWidth == 0 || preciseEllipseBounds.preciseHeight == 0)
 			return intersections;
-		double xl1 = getOrigin().x - ellipseBounds.getCenter().x;
-		double xl2 = getTerminus().x - ellipseBounds.getCenter().x;
-		double yl1 = getOrigin().y - ellipseBounds.getCenter().y;
-		double yl2 = getTerminus().y - ellipseBounds.getCenter().y;
-		double [] equation = getLineEquation(xl1, yl1, xl2, yl2);
+		PrecisionPoint ellipsePreciseCenter = new PrecisionPoint(
+				preciseEllipseBounds.getCenter());
+		double xl1 = preciseOrigin.preciseX - ellipsePreciseCenter.preciseX;
+		double xl2 = preciseTerminus.preciseX - ellipsePreciseCenter.preciseX;
+		double yl1 = preciseOrigin.preciseY - ellipsePreciseCenter.preciseY;
+		double yl2 = preciseTerminus.preciseY - ellipsePreciseCenter.preciseY;
+		double [] equation = LineSeg.getLineEquation(xl1, yl1, xl2, yl2);
 		
-		if (equation.length<3 || (equation[0]==0 && equation[1]==0))
+		if (equation.length<3 || (equation[0] == 0 && equation[1] == 0))
 			return intersections;
 		
 		double a = equation[0];
 		double b = equation[1];
 		double c = equation[2];
-		double w = ellipseBounds.width;
-		double h = ellipseBounds.height;
+		double w = preciseEllipseBounds.preciseWidth;
+		double h = preciseEllipseBounds.preciseHeight;
 		
-		// Ellipse with a cneter at the origin has an equation:
+		// Ellipse with a center at the origin has an equation:
 		// (h*x)^2+(w*y)^2=(h*w/2)^2
 		// Line equation: a*x+b*y=c
 		
@@ -874,8 +887,8 @@ public class LineSeg
 			double y = Math.pow(h/2,2)-Math.pow((h*c)/(a*w),2);
 			if (y<0)
 				return intersections;
-			intersections.addPoint(new Point(Math.round(x+ellipseBounds.getCenter().x), Math.round(Math.sqrt(y)+ellipseBounds.getCenter().y)));
-			intersections.addPoint(new Point(Math.round(x+ellipseBounds.getCenter().x), Math.round(-Math.sqrt(y)+ellipseBounds.getCenter().y)));
+			intersections.addPoint(new PrecisionPoint(x+ellipsePreciseCenter.preciseX, Math.sqrt(y)+ellipsePreciseCenter.preciseY));
+			intersections.addPoint(new PrecisionPoint(x+ellipsePreciseCenter.preciseX, -Math.sqrt(y)+ellipsePreciseCenter.preciseY));
 		}
 		else {
 			// y = (c-a*x)/b => we get quadratic equation for x
@@ -891,8 +904,8 @@ public class LineSeg
 			
 			double x1 = (-xB+Math.sqrt(xD))/(2*xA);
 			double x2 = (-xB-Math.sqrt(xD))/(2*xA);
-			intersections.addPoint(new Point(Math.round(x1+ellipseBounds.getCenter().x), Math.round((c-a*x1)/b+ellipseBounds.getCenter().y)));
-			intersections.addPoint(new Point(Math.round(x2+ellipseBounds.getCenter().x), Math.round((c-a*x2)/b+ellipseBounds.getCenter().y)));
+			intersections.addPoint(new PrecisionPoint(x1+ellipsePreciseCenter.preciseX, (c-a*x1)/b+ellipsePreciseCenter.preciseY));
+			intersections.addPoint(new PrecisionPoint(x2+ellipsePreciseCenter.preciseX, (c-a*x2)/b+ellipsePreciseCenter.preciseY));
 		}
 		
 		return intersections;
@@ -909,26 +922,21 @@ public class LineSeg
 	 * a list of other line segments.
 	 */
 	public PointList getLineIntersectionsWithLineSegs(final PointList points) {
-		double temp[] = getEquation();
-		double a = temp[0];
-		double b = temp[1];
-		double c = temp[2];
-		PointList intersections = new PointList();
-
+		PointList intersections = new PrecisionPointList();
 		if (points.size()<2) {
-			if (a*points.getPoint(0).x+b*points.getPoint(0).y==c) {
-				intersections.addPoint(points.getPoint(0).getCopy());
+			if (containsPoint(points.getFirstPoint(), DEFAULT_INTERSECTION_TOLERANCE)) {
+				intersections.addPoint(points.getFirstPoint());
 			}
-			return intersections;
-		}
-		
-		for (int i=0; i<points.size()-1; i++) {
-			LineSeg line = new LineSeg(points.getPoint(i).getCopy(), points.getPoint(i+1).getCopy());
-			PointList currentIntersections = getLinesIntersections(line);
-			for (int j=0; j<currentIntersections.size(); j++) {
-				Point intersection = currentIntersections.getPoint(j);
-				if (line.containsPoint(intersection,DEFAULT_INTERSECTION_TOLERANCE))
-					intersections.addPoint(currentIntersections.getPoint(j));
+		} else {	
+			for (int i=0; i<points.size()-1; i++) {
+				LineSeg seg = new LineSeg(points.getPoint(i), points.getPoint(i+1));
+				PointList currentIntersections = getLinesIntersections(seg);
+				for (int j=0; j<currentIntersections.size(); j++) {
+					Point intersection = currentIntersections.getPoint(j);
+					if (seg.containsPoint(intersection, DEFAULT_INTERSECTION_TOLERANCE)) {
+						intersections.addPoint(currentIntersections.getPoint(j));
+					}
+				}
 			}
 		}
 		return intersections;
@@ -951,4 +959,5 @@ public class LineSeg
 		setOrigin(getOrigin().translate(dx, dy));
 		setTerminus(getTerminus().translate(dx, dy));
 	}
+	
 }

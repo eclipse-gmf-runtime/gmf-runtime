@@ -134,7 +134,7 @@ public abstract class CreateViewOperation implements IOperation {
 	}
 	
 	private String cachingKey;
-	private static final String dummyHiny = "dummy";  //$NON-NLS-1$
+	private static final String dummyHint = "dummy";  //$NON-NLS-1$
 
 	public String getCachingKey() {
 		if (cachingKey == null)
@@ -151,7 +151,7 @@ public abstract class CreateViewOperation implements IOperation {
 		if (classId != null)
 			return classId;
 		
-		return dummyHiny;
+		return dummyHint;
 	}
 
 	/** Return the supplied view's underlying notation element's eClass */

@@ -16,10 +16,10 @@ import java.util.ListIterator;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transform;
-
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dDebugOptions;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.Draw2dPlugin;
@@ -55,16 +55,17 @@ public class PointListUtilities {
 	
 			// We conservatively avoid changing the endpoint of the line, since it may then
 			// fail to attach to the terminal view.  This implies ptNext must be non-NIL.
-			if (points.size() <= 2 || ptTerm == null || ptNext == null)
+			if (points.size() <= 2 || ptTerm == null || ptNext == null) {
 				return changed;
+			}
 	
 			if (sameOrientation(ptStart, ptTerm, ptNext, straightLineTolerance)) {
 				removePoint(points, i + 1);
 				
 				Ray seg = new Ray(ptStart, ptTerm);
-				if (seg.y < straightLineTolerance) {
+				if (Math.abs(seg.y) < straightLineTolerance) {
 					points.setPoint(new Point(ptNext.x, ptStart.y), i + 1);
-				} else if (seg.x < straightLineTolerance){
+				} else if (Math.abs(seg.x) < straightLineTolerance){
 					points.setPoint(new Point(ptStart.x, ptNext.y), i + 1);
 				}
 				
@@ -72,8 +73,9 @@ public class PointListUtilities {
 			}
 		}
 		
-		return changed;
+		return changed;					
 	}
+		
 	
 	static private Point removePoint(PointList points, int index) {
 		Point removedPt = points.getPoint(index);
@@ -118,7 +120,7 @@ public class PointListUtilities {
 			int nextLength = (int) nextVector.length();
 
 			if (nextLength <= straightLineTolerance) {
-				points.removePoint(i);
+				points.removePoint(i--);
 				hasChanged = true;
 			}
 		}
@@ -1801,13 +1803,16 @@ public class PointListUtilities {
 	 * @return the <Code>Point</Code> from the <Code>PointList</Code> closest to @param p
 	 */
 	public static Point pickClosestPoint(PointList points, Point p) {
-		Point result = points.getFirstPoint();
-		for (int i=1; i<points.size(); i++) {
-			Point temp = points.getPoint(i);
-			if (Math.abs(temp.x - p.x) < Math.abs(result.x - p.x))
-				result = temp;
-			else if (Math.abs(temp.y - p.y) < Math.abs(result.y - p.y))
-				result = temp;
+		Point result = null;
+		if (points.size() != 0) {
+			result = points.getFirstPoint();
+			for (int i=1; i<points.size(); i++) {
+				Point temp = points.getPoint(i);
+				if (Math.abs(temp.x - p.x) < Math.abs(result.x - p.x))
+					result = temp;
+				else if (Math.abs(temp.y - p.y) < Math.abs(result.y - p.y))
+					result = temp;
+			}
 		}
 		return result;
 	}
@@ -1821,13 +1826,16 @@ public class PointListUtilities {
 	 * @return the <Code>Point</Code> from the <Code>PointList</Code> closest to @param p
 	 */
 	public static Point pickFarestPoint(PointList points, Point p) {
-		Point result = points.getFirstPoint();
-		for (int i=1; i<points.size(); i++) {
-			Point temp = points.getPoint(i);
-			if (Math.abs(temp.x - p.x) > Math.abs(result.x - p.x))
-				result = temp;
-			else if (Math.abs(temp.y - p.y) > Math.abs(result.y - p.y))
-				result = temp;
+		Point result = null;
+		if (points.size() != 0) {
+			result = points.getFirstPoint();
+			for (int i=1; i<points.size(); i++) {
+				Point temp = points.getPoint(i);
+				if (Math.abs(temp.x - p.x) > Math.abs(result.x - p.x))
+					result = temp;
+				else if (Math.abs(temp.y - p.y) > Math.abs(result.y - p.y))
+					result = temp;
+			}
 		}
 		return result;
 	}
@@ -1881,5 +1889,5 @@ public class PointListUtilities {
     static private int crossProduct(int ax, int ay, int bx, int by, int cx, int cy) {
         return (ax - cx) * (by - cy) - (ay - cy) * (bx - cx);
     }
-
+    
 }

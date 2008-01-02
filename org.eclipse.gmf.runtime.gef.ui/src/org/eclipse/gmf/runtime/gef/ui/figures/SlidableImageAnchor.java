@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,23 +23,23 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
-import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-
 /**
- * @author oboyko
+ * Implements sliding connection anchor functionality for Image figures
+ * 
+ * @author aboyko
  *
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class SlidableImageAnchor
 	extends SlidableAnchor {
 
 	static private class ImageAnchorLocation {
 
-		static private Map imageAnchorLocationMap = new WeakHashMap();
+		static private Map<Image, ImageAnchorLocation> imageAnchorLocationMap = new WeakHashMap<Image, ImageAnchorLocation>();
 
 		/**
 		 * getInstance Static method for returning an instance of the
@@ -51,7 +51,7 @@ public class SlidableImageAnchor
 		 *         anchor
 		 */
 		static ImageAnchorLocation getInstance(Image image) {
-			ImageAnchorLocation imgAnchorLoc = (ImageAnchorLocation) imageAnchorLocationMap
+			ImageAnchorLocation imgAnchorLoc = imageAnchorLocationMap
 				.get(image);
 			if (imgAnchorLoc == null) {
 				imgAnchorLoc = new ImageAnchorLocation(image);
@@ -61,7 +61,7 @@ public class SlidableImageAnchor
 			return imgAnchorLoc;
 		}
 
-		private Map locationMap = new HashMap();
+		private Map<Integer, Point> locationMap = new HashMap<Integer, Point>();
 
 		private ImageData imgData = null;
 
@@ -160,7 +160,7 @@ public class SlidableImageAnchor
 			// Default anchors are cached
 			if (isDefaultAnchor) {
 				// determine if a cached value exists
-				ptIntersect = (Point) locationMap.get(new Integer(angle));
+				ptIntersect = locationMap.get(new Integer(angle));
 			}
 			if (ptIntersect == null) {
 				// if no cached value exists return the calculated value and add to
@@ -297,24 +297,31 @@ public class SlidableImageAnchor
 		return getOwner();
 	}
 	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.gef.ui.figures.SlidableAnchor#getLocation(org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Point)
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor#getLocation(org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Point)
 	 */
 	protected Point getLocation(Point ownReference, Point foreignReference) {
 		Image image = getImage();
-		if (image==null)
-			return super.getLocation(ownReference,foreignReference);
-		Rectangle ownerRect = new Rectangle(getBox());
-		PointList intersections = getIntersectionPoints(ownReference, foreignReference);
-		if (intersections!=null && intersections.size()!=0) {
-			Point ptRef = PointListUtilities.pickFarestPoint(intersections, foreignReference);
-			Point ptEdge = PointListUtilities.pickClosestPoint(intersections,foreignReference);
-			Point loc = ImageAnchorLocation.getInstance(getImage()).getLocation(ptRef, ptEdge, ownerRect, isDefaultAnchor());
-			if (loc != null)
-				loc = normalizeToStraightlineTolerance(foreignReference, loc, 3);
-			return loc;
+		if (image == null)
+			return super.getLocation(ownReference, foreignReference);
+		Rectangle ownerRect = getBox();
+		PointList intersections = getIntersectionPoints(ownReference,
+				foreignReference);
+		if (intersections != null && intersections.size() != 0) {
+			Point ptRef = PointListUtilities.pickFarestPoint(intersections,
+					foreignReference);
+			Point ptEdge = PointListUtilities.pickClosestPoint(intersections,
+					foreignReference);
+			Point location = ImageAnchorLocation.getInstance(getImage())
+					.getLocation(ptRef, ptEdge, ownerRect,
+							getReferencePoint().equals(ownReference) && isDefaultAnchor());
+			if (location != null) {
+				location = normalizeToStraightlineTolerance(foreignReference,
+						location, 3);
+			}
+			return location;
 		}
 		return null;
 	}
+
 }
