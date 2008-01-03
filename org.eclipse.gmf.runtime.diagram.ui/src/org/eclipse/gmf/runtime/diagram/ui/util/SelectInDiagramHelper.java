@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,19 +14,18 @@ package org.eclipse.gmf.runtime.diagram.ui.util;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Helper for selecting an element on a diagram.  Works for closed diagrams
@@ -135,11 +134,11 @@ public class SelectInDiagramHelper {
 			location.y -= padding;
 		}
 		
-		int viewPortXLocation = canvas.getBounds().x;//getViewport().getHorizontalRangeModel().getValue();
-		int viewPortXExtent = canvas.getBounds().x+canvas.getBounds().width;//getViewport().getHorizontalRangeModel().getExtent();
+		int viewPortXLocation = canvas.getBounds().x;
+		int viewPortXExtent = canvas.getBounds().x+canvas.getBounds().width;
 		
-		int viewPortYLocation = canvas.getBounds().y;//getViewport().getVerticalRangeModel().getValue();
-		int viewPortYExtent = canvas.getBounds().y+canvas.getBounds().height;//Viewport().getVerticalRangeModel().getExtent();
+		int viewPortYLocation = canvas.getBounds().y;
+		int viewPortYExtent = canvas.getBounds().y+canvas.getBounds().height;
 		
 		int deltaX = 0;
 		int deltaY = 0;
@@ -152,22 +151,16 @@ public class SelectInDiagramHelper {
 		
 		if (location.y < viewPortYLocation){
 			deltaY = location.y - viewPortYLocation;
-		}else if (location.y > viewPortYExtent){
+		} else if (location.y > viewPortYExtent){
 			deltaY = location.y - viewPortYExtent;
 		}
 		
 		RangeModel hRange = canvas.getViewport().getHorizontalRangeModel();
 		RangeModel vRange = canvas.getViewport().getVerticalRangeModel();
-		if ((deltaX != 0)|| (deltaY != 0)){
+		if ((deltaX != 0) || (deltaY != 0)){
 			canvas.getViewport().setIgnoreScroll(true);
 			int x = hRange.getValue() + deltaX;
 			int y = vRange.getValue() + deltaY;
-			if (x < 0) {
-				x = 0;
-			}
-			if (y < 0) {
-				y = 0;
-			}
 			canvas.scrollSmoothTo(x,y);
 			canvas.getViewport().setIgnoreScroll(false);
 		}
