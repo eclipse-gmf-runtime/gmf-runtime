@@ -23,7 +23,6 @@ import java.util.WeakHashMap;
 
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.Connection;
-import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
@@ -121,7 +120,7 @@ class RouterHelper {
         List bendpoints = (List)conn.getConnectionRouter().getConstraint(conn);
         if (bendpoints == null)
             bendpoints = Collections.EMPTY_LIST;
-        
+
         PointList points = new PointList(bendpoints.size());
 
         for (int i = 0; i < bendpoints.size(); i++) {
@@ -133,7 +132,7 @@ class RouterHelper {
             Point r1 = conn.getSourceAnchor().getReferencePoint().getCopy();
             conn.translateToRelative(r1);
             points.addPoint(r1);
-            
+
             Point r2 = conn.getTargetAnchor().getReferencePoint().getCopy();
             conn.translateToRelative(r2);
             points.addPoint(r2);
@@ -353,38 +352,36 @@ class RouterHelper {
      *            on the edge of the connection source and target nodes.
      */
     public void resetEndPointsToEdge(Connection conn, PointList newLine) {
-        if (newLine.size() < 2)
+        if (newLine.size() <= 1)
             return;
+
+        PrecisionPoint ptS2 = new PrecisionPoint(newLine.getPoint(1));
+        PrecisionPoint ptAbsS2 = new PrecisionPoint(ptS2);
+        conn.translateToAbsolute(ptAbsS2);
+        if (newLine.size() == 2)
+            ptAbsS2 = new PrecisionPoint(conn.getTargetAnchor().getReferencePoint());
+        PrecisionPoint ptAbsS1 = new PrecisionPoint(conn.getSourceAnchor().getLocation(ptAbsS2));
+        PrecisionPoint ptS1 = new PrecisionPoint(ptAbsS1);
+        conn.translateToRelative(ptS1);
+        PrecisionPoint ptE2 = new PrecisionPoint(newLine.getPoint(newLine.size() - 2));
+        PrecisionPoint ptAbsE2 = new PrecisionPoint(ptE2);
+        conn.translateToAbsolute(ptAbsE2);
+        if (newLine.size() == 2)
+            ptAbsE2 = ptAbsS1;
+        PrecisionPoint ptE1 = new PrecisionPoint(conn.getTargetAnchor().getLocation(ptAbsE2));
+        conn.translateToRelative(ptE1);
+        newLine.setPoint(new PrecisionPoint(Math.round(ptS1.preciseX), Math.round(ptS1.preciseY)), 0);
         
-        PrecisionPoint sourceAnchorPoint, targetAnchorPoint;
-        if (newLine.size() > 2) {
-        	/*
-        	 * First bend point is the outside reference point for the source anchor.
-        	 * Last bend point is the outside reference point for the target anchor.
-        	 */
-	        PrecisionPoint sourceReference = new PrecisionPoint(newLine.getPoint(1));
-	        PrecisionPoint targetReference = new PrecisionPoint(newLine.getPoint(newLine.size() - 2));
-	        conn.translateToAbsolute(sourceReference);
-	        conn.translateToAbsolute(targetReference);
-	        sourceAnchorPoint = getAnchorLocation(conn.getSourceAnchor(), sourceReference);
-	        targetAnchorPoint = getAnchorLocation(conn.getTargetAnchor(), targetReference);
-        } else {
-        	/*
-        	 * We need to take target anchor reference point as an outside reference point
-        	 * for the source anchor location. The outside reference point for the target
-        	 * anchor would the source anchor location. 
-        	 */
-        	PrecisionPoint sourceReference = getAnchorReference(conn.getTargetAnchor());
-	        sourceAnchorPoint = getAnchorLocation(conn.getSourceAnchor(), sourceReference);
-	        targetAnchorPoint = getAnchorLocation(conn.getTargetAnchor(), sourceAnchorPoint);
+        // convert reference points back to relative to avoid rounding issues.
+        newLine.setPoint(new PrecisionPoint(Math.round(ptE1.preciseX), Math.round(ptE1.preciseY)), newLine.size() - 1);
+        if (newLine.size() != 2) {
+            ptS2 = ptAbsS2;
+            conn.translateToRelative(ptS2);
+            newLine.setPoint(new PrecisionPoint(Math.round(ptS2.preciseX), Math.round(ptS2.preciseY)), 1);
+            ptE2 = ptAbsE2;
+            conn.translateToRelative(ptE2);
+            newLine.setPoint(new PrecisionPoint(Math.round(ptE2.preciseX), Math.round(ptE2.preciseY)), newLine.size() - 2);
         }
-        
-        
-        conn.translateToRelative(sourceAnchorPoint);
-        conn.translateToRelative(targetAnchorPoint);
-        
-        newLine.setPoint(new Point(Math.round(sourceAnchorPoint.preciseX), Math.round(sourceAnchorPoint.preciseY)), 0);
-        newLine.setPoint(new Point(Math.round(targetAnchorPoint.preciseX), Math.round(targetAnchorPoint.preciseY)), newLine.size() - 1);
     }
 
     private final static int ROUTER_OBSTRUCTION_BUFFER = 12;
@@ -579,26 +576,5 @@ class RouterHelper {
         }
 
         return shortestPathRouter;
-    }
-    
-    /**
-     * Returns anchor location as <code>PrecisionPoint</code>
-     * 
-     * @param anchor connection anchor object
-     * @param reference outside reference point
-     * @return <code>PrecisionPoint</code> for anchor location
-     */
-    private PrecisionPoint getAnchorLocation(ConnectionAnchor anchor, Point reference) {
-    	return new PrecisionPoint(anchor.getLocation(reference));
-    }
-    
-    /**
-     * Returns anchor reference point as <code>PrecisionPoint</code>
-     * 
-     * @param anchor connection anchor object
-     * @return <code>PrecisionPoint</code> for anchor reference
-     */
-    private PrecisionPoint getAnchorReference(ConnectionAnchor anchor) {
-   		return new PrecisionPoint(anchor.getReferencePoint());
     }
 }

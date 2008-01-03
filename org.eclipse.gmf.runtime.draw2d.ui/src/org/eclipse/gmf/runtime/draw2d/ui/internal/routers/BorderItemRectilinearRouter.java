@@ -54,8 +54,7 @@ public class BorderItemRectilinearRouter
     protected PointList calculateBendPoints(Connection conn) {
         IFigure source = conn.getSourceAnchor().getOwner();
         IFigure target = conn.getTargetAnchor().getOwner();
-        if (source == null || target == null || isAvoidingObstructions(conn) || isClosestDistance(conn)
-        		|| super.calculateBendPoints(conn).size() > 2) {
+        if (source == null || target == null || isAvoidingObstructions(conn) || isClosestDistance(conn)) {
             // reorient
             return super.calculateBendPoints(conn);
         }

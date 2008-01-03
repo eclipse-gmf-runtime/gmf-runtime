@@ -11,13 +11,9 @@
 
 package org.eclipse.gmf.runtime.gef.ui.internal.handles;
 
-import org.eclipse.draw2d.Connection;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.RequestConstants;
-import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.tools.ConnectionBendpointTracker;
 
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
@@ -38,14 +34,7 @@ public class LineSegMoveInvisibleHandle extends BendpointCreationInvisibleHandle
 		int index) {
 		super(owner, index);
 		
-		PointList points = ((Connection)owner.getFigure()).getPoints();
-		Point pt1 = points.getPoint(index);
-		Point pt2 = points.getPoint(index + 1);
-		if (Math.abs(pt1.x - pt2.x) < Math.abs(pt1.y - pt2.y)) {
-			setCursor(SharedCursors.SIZEWE);
-		} else {
-			setCursor(SharedCursors.SIZENS);
-		}
+		setCursor(Cursors.CURSOR_SEG_MOVE);
 	}
 
 	/**

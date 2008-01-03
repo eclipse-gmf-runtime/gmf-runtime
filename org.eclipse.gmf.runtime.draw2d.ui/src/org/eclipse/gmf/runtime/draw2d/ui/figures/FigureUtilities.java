@@ -231,25 +231,7 @@ public class FigureUtilities extends org.eclipse.draw2d.FigureUtilities {
 		}
 	}
 
-	/**
-	 * Calculates the anchorable figure bounds. There could be cases that a figure
-	 * implements both <code>IOvalAnchorableFigure</code> and <code>IPolygonAnchorableFigure</code>
-	 * interfaces. The latter interface is more popular because any figure can be approximated
-	 * with line segments including ellipse. Therefore, we need to check first if it's an
-	 * ellipse like figure and then if it's some kind of a polygon.
-	 * 
-	 * @param figure the figure
-	 * @return the bounding <code>Rectangle</code> of the anchorable part of the figure
-	 */
-	public static Rectangle getAnchorableFigureBounds(IFigure figure) {
-		if (figure instanceof IOvalAnchorableFigure) {
-			return ((IOvalAnchorableFigure)figure).getOvalBounds().getCopy();
-		} else if (figure instanceof IPolygonAnchorableFigure) {
-			return ((IPolygonAnchorableFigure)figure).getPolygonPoints().getBounds();
-		} else if (figure instanceof IFigure) {
-			return figure.getBounds().getCopy();
-		}
-		return null;
-	}
+	
+	
 	
 }

@@ -189,7 +189,7 @@ public class ConnectorTests
 			getCommandStack().execute(new ICommandProxy(bendpointsChanged));
 			flushEventQueue();
 
-			assertEquals("Wrong number of points.", 5, line.getConnectionFigure().getPoints().size());
+			assertTrue(line.getConnectionFigure().getPoints().size() == 4);
 			
 			class MyConnectorEndpointTracker
 				extends ConnectionEndpointTracker {
