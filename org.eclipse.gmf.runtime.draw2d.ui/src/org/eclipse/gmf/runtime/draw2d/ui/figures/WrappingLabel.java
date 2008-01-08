@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -743,7 +743,7 @@ public class WrappingLabel
 
         Dimension minimumSize = getMinimumSize(area.width, area.height);
 
-        Dimension shrinkAmount = preferredSize.getDifference(area.getSize()
+        Dimension shrinkAmount = preferredSize.getDifference(getBounds().getSize()
             .getUnioned(minimumSize));
 
         Dimension textSize = preferredTextSize.getCopy();
@@ -936,10 +936,6 @@ public class WrappingLabel
             if (hHint < 0)
                 minHHint = -1;
 
-            Insets insets = getInsets();
-            wHint = Math.max(minWHint, wHint - insets.getWidth());
-            hHint = Math.max(minHHint, hHint - insets.getHeight());
-
             if (hasIcons()) {
                 // start with the icon size and then add the text size
                 prefSize = getTotalIconSize().getCopy();
@@ -975,6 +971,7 @@ public class WrappingLabel
                 prefSize = preferredTextSize.getCopy();
             }
 
+            Insets insets = getInsets();
             prefSize.expand(insets.getWidth(), insets.getHeight());
 
         }
