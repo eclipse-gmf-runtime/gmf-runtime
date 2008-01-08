@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
+import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.ImageFileDropTargetListener;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDragSourceListener;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
@@ -32,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.ConnectionCreationTool;
 import org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool;
 import org.eclipse.gmf.runtime.gef.ui.palette.customize.PaletteCustomizerEx;
 import org.eclipse.gmf.runtime.gef.ui.palette.customize.PaletteViewerEx;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -319,9 +321,8 @@ public abstract class DiagramEditorWithFlyOutPalette
 	public void createPartControl(Composite parent) {
 
 		if(fHasFlyoutPalette) {
-			FlyoutPaletteComposite.FlyoutPreferences flyoutPrefs = new FlyoutPreferencesImpl();
-			flyoutPrefs.setPaletteState(getInitialPaletteState());
-			flyoutPrefs.setPaletteWidth(getInitialPaletteSize());
+			FlyoutPaletteComposite.FlyoutPreferences flyoutPrefs = new FlyoutPreferencesImpl(
+                getPreferenceStore());
 
 			splitter = new FlyoutPaletteComposite(parent, SWT.NONE, getSite().getPage(), getPaletteViewerProvider(), flyoutPrefs);
 			super.createPartControl(splitter);
@@ -348,7 +349,20 @@ public abstract class DiagramEditorWithFlyOutPalette
 		}
 
 	}
-
+	
+	/**
+     * Returns a preference store where GMF global workspace preferences can be
+     * saved. For example, the palette customizations are saved in this
+     * preference store. These settings are workspace-wide and not specific to
+     * any particular diagram.  Override to customize.
+     * 
+     * @return the preference store
+     * @since 2.1
+     */
+    protected IPreferenceStore getPreferenceStore() {
+        return DiagramUIPlugin.getInstance().getPreferenceStore();
+    }
+	
 	/**
 	 * Adapts to
 	 * <LI> PalettePage.class
@@ -441,6 +455,17 @@ public abstract class DiagramEditorWithFlyOutPalette
 		//   which is private.
 		return UNCOLLAPSED_PINNED;
 	}
+	
+    /**
+     * Returns the initial docking location of the palette either
+     * {@link PositionConstants#EAST} or {@link PositionConstants#WEST}. The
+     * 
+     * @return the initial dock location either {@link PositionConstants#EAST}
+     *         or {@link PositionConstants#WEST}
+     */
+    protected int getInitialDockLocation() {
+        return PositionConstants.EAST;
+    }
 
 	protected void setEditDomain(DefaultEditDomain ed) {
 		super.setEditDomain(ed);
@@ -521,63 +546,57 @@ public abstract class DiagramEditorWithFlyOutPalette
 	}
 
 	/**
-	 * An implementation of the fly-out palette preferences.
-	 */
-	private static final class FlyoutPreferencesImpl
+     * An implementation of the fly-out palette preferences that stores the
+     * flyout palette settings in the given Preferences.
+     */
+	private final class FlyoutPreferencesImpl
 			implements FlyoutPaletteComposite.FlyoutPreferences {
 
-		// 'EAST' is the default dock location
-		private int dockLocation = PositionConstants.EAST;
+        private static final String PALETTE_DOCK_LOCATION = "org.eclipse.gmf.pdock"; //$NON-NLS-1$
+        private static final String PALETTE_SIZE = "org.eclipse.gmf.psize"; //$NON-NLS-1$
+        private static final String PALETTE_STATE = "org.eclipse.gmf.pstate"; //$NON-NLS-1$
 
-		// '4' is the value of the FlyoutPaletteComposite.STATE_UNCOLLAPSED constant
-		//   which is private.
-		private int paletteState = UNCOLLAPSED_PINNED;
+        private IPreferenceStore preferences;
 
-		// '125' is the value of the FlyoutPaletteComposite.DEFAULT_PALETTE_SIZE constant
-		//   which was formerly public but is now private
-		private int paletteWidth = 125;
+        private FlyoutPreferencesImpl(IPreferenceStore preferenceStore) {
+            preferences = preferenceStore;
+        }
+        
+        public int getDockLocation() {
+            if (preferences.contains(PALETTE_DOCK_LOCATION)) {
+                return preferences.getInt(PALETTE_DOCK_LOCATION);
+            } else {
+                return getInitialDockLocation();
+            }
+        }
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences#getDockLocation()
-		 */
-		public int getDockLocation() {
-			return dockLocation;
-		}
+        public int getPaletteState() {
+            if (preferences.contains(PALETTE_STATE)) {
+                return preferences.getInt(PALETTE_STATE);
+            } else {
+                return getInitialPaletteState();
+            }
+        }
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences#getPaletteState()
-		 */
-		public int getPaletteState() {
-			return paletteState;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences#getPaletteWidth()
-		 */
-		public int getPaletteWidth() {
-			return paletteWidth;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences#setDockLocation(int)
-		 */
-		public void setDockLocation(int location) {
-			dockLocation = location;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences#setPaletteState(int)
-		 */
-		public void setPaletteState(int state) {
-			paletteState = state;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences#setPaletteWidth(int)
-		 */
-		public void setPaletteWidth(int width) {
-			paletteWidth = width;
-		}
+        public int getPaletteWidth() {
+            if (preferences.contains(PALETTE_SIZE)) {
+                return preferences.getInt(PALETTE_SIZE);
+            } else {
+                return getInitialPaletteSize();
+            }
+        }
+        
+        public void setDockLocation(int location) {
+            preferences.setValue(PALETTE_DOCK_LOCATION, location);
+        }
+        
+        public void setPaletteState(int state) {
+            preferences.setValue(PALETTE_STATE, state);
+        }
+        
+        public void setPaletteWidth(int width) {
+            preferences.setValue(PALETTE_SIZE, width);
+        }   
 	}
 
 	protected void startListening() {
@@ -622,7 +641,7 @@ public abstract class DiagramEditorWithFlyOutPalette
      * @return a new palette customizer
      */
     protected PaletteCustomizer createPaletteCustomizer() {
-        return new PaletteCustomizerEx();
+        return new PaletteCustomizerEx(getPreferenceStore());
     }
 
 }

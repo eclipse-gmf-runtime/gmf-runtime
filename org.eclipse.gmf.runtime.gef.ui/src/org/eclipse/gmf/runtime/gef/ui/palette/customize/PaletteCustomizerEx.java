@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ import org.eclipse.ui.XMLMemento;
 
 /**
  * Extends GEF's <code>PaletteCustomizer</code> to support:
- * <li>Saving the customizations to the workspace preference store.</li>
+ * <li>Saving the customizations to the a preference store.</li>
  * <li>Rolling back the changes made to the palette model if the cancel button
  * is pressed. See bugzilla#211065.</li>
  * 
@@ -123,10 +123,20 @@ public class PaletteCustomizerEx
     private HashMap<PaletteEntry, IPaletteState> paletteStates = new HashMap<PaletteEntry, IPaletteState>();
 
     /**
-     * Creates a new instance.
+     * the preference store in which the palette customizations are to be saved and retrieved from
      */
-    public PaletteCustomizerEx() {
+    private IPreferenceStore preferences;
+    
+    /**
+     * Creates a new instance.
+     * 
+     * @param preferenceStore
+     *            the preference store in which the palette customizations are
+     *            to be saved and retrieved from
+     */
+    public PaletteCustomizerEx(IPreferenceStore preferenceStore) {
         super();
+        this.preferences = preferenceStore;
     }
 
     public EntryPage getPropertiesPage(PaletteEntry entry) {
@@ -206,7 +216,6 @@ public class PaletteCustomizerEx
         try {
             rootMemento.save(writer);
 
-            IPreferenceStore preferences = getPreferences();
             if (preferences != null) {
                 preferences.setValue(PALETTE_CUSTOMIZATIONS_ID, writer
                     .toString());
@@ -342,7 +351,6 @@ public class PaletteCustomizerEx
      *         otherwise
      */
     private XMLMemento getExistingCustomizations() {
-        IPreferenceStore preferences = getPreferences();
         if (preferences != null) {
             String sValue = preferences.getString(PALETTE_CUSTOMIZATIONS_ID);
             if (sValue != null && !sValue.equals("")) { //$NON-NLS-1$
@@ -368,19 +376,6 @@ public class PaletteCustomizerEx
             }
         }
         return null;
-    }
-
-    /**
-     * Gets the preferences in which the palette customizations are saved.
-     * 
-     * @return the preference store or null if it could not be retrieved for
-     *         whatever reason
-     */
-    private IPreferenceStore getPreferences() {
-        // Save the preferences in the GefPlugin so they are shared
-        // amoungst all GMF editors in case palette entries are repeated on
-        // multiple editors.
-        return GefPlugin.getInstance().getPreferenceStore();
     }
 
 }
