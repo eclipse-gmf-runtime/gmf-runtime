@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -315,19 +315,24 @@ abstract public class DiagramGenerator {
 						Decoration decoration = (Decoration) next;
 						IFigure owner = decoration.getOwnerFigure();
 
-						if (figureMap.containsKey(owner)) {
-							Object existing = result.get(owner);
-
-							if (existing == null) {
-								result.put(owner, decoration);
-							} else if (existing instanceof Collection) {
-								((Collection) existing).add(decoration);
-							} else {
-								Collection c = new java.util.ArrayList(2);
-								c.add(existing);
-								c.add(decoration);
-								result.put(owner, c);
-							}
+						while (owner != null) {
+    						if (figureMap.containsKey(owner)) {
+    							Object existing = result.get(owner);
+    
+    							if (existing == null) {
+    								result.put(owner, decoration);
+    							} else if (existing instanceof Collection) {
+    								((Collection) existing).add(decoration);
+    							} else {
+    								Collection c = new java.util.ArrayList(2);
+    								c.add(existing);
+    								c.add(decoration);
+    								result.put(owner, c);
+    							}
+    							break;
+    						} else {
+    						    owner = owner.getParent();
+    						}
 						}
 					}
 				}
