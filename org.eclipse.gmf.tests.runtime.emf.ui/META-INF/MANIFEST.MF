@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
-Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.emf.ui
+Bundle-SymbolicName: org.eclipse.gmf.tests.runtime.emf.ui;singleton:=true
 Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.gmf.tests.runtime.emf.ui.Activator
 Bundle-Vendor: %Plugin.providerName

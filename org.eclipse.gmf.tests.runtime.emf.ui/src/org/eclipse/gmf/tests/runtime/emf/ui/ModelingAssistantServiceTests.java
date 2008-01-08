@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,7 +100,7 @@ public class ModelingAssistantServiceTests
 	/**
 	 * A concrete element type class.
 	 */
-	class MyElementType
+	public static class MyElementType
 		extends ElementType {
 
 		public MyElementType(String id) {
@@ -131,7 +131,25 @@ public class ModelingAssistantServiceTests
 			return types;
 		}
 	}
+	
+	private static boolean shouldBeContributed = false;
 
+	public static boolean myStaticMethod() {
+        return shouldBeContributed;
+    }
+
+    public static class MyModelingAssistantProviderViaXML
+        extends ModelingAssistantProvider {
+
+        public List getTypesForPopupBar(IAdaptable host) {
+            if (host.getAdapter(MyElementType.class) != null) {
+                return Collections.singletonList(new MyElementType("TYPE1"));
+            } else {
+                return Collections.EMPTY_LIST;
+            }
+        }
+    }
+		
 	private MyModelingAssistantService modelingAssistantService = null;
 
 	public ModelingAssistantServiceTests(String name) {
@@ -198,5 +216,26 @@ public class ModelingAssistantServiceTests
 		assertEquals(2, allTypesAgain.size());
 		assertTrue(Arrays.equals(allTypes.toArray(), allTypesAgain.toArray()));
 	}
+	
+	  
+    /**
+     * Tests the ability of a client to use a static method to assist in
+     * identifying the editor in the extension point XML.This test uses the
+     * modeling assistant extension point defined in the XML for this plugin.
+     * 
+     * @throws Exception
+     */
+    public void testStaticMethodInExtension()
+        throws Exception {
+
+        shouldBeContributed = true;
+        assertTrue(!ModelingAssistantService.getInstance().getTypesForPopupBar(
+            new MyElementType("TYPE1")).isEmpty());
+
+        shouldBeContributed = false;
+        assertTrue(ModelingAssistantService.getInstance().getTypesForPopupBar(
+            new MyElementType("TYPE1")).isEmpty());
+
+    }   
 
 }
