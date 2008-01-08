@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -92,7 +91,7 @@ public class SnapCommand extends AbstractTransactionalCommand {
 		CompoundCommand snapCommand = new CompoundCommand();
 
 		for (Iterator iter = editparts.iterator(); iter.hasNext();) {
-			IGraphicalEditPart newEditPart = (GraphicalEditPart) iter.next();
+			IGraphicalEditPart newEditPart = (IGraphicalEditPart) iter.next();
 			IMapMode mapMode = ((DiagramRootEditPart) newEditPart.getRoot()).getMapMode();
 
 			if (newEditPart.getModel() instanceof Node) {
