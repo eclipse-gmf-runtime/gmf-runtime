@@ -399,13 +399,13 @@ public abstract class ShapeCompartmentEditPart
 		protected boolean isFigureVisible(final IFigure figure,
 				final Point loc, final IFigure stopFigure) {
 			if (!(figure.isShowing())) {
+				return false;
 			} else {
 				Rectangle bounds = figure.getBounds().getCopy();
 				figure.translateToAbsolute(bounds);
 				if (!(bounds.contains(loc))) {
 					return false;
 				}
-				return false;
 			}
 
 			IFigure parent = figure.getParent();
