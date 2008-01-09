@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.emf.ecore.xmi.UnresolvedReferenceException;
 import org.eclipse.emf.ecore.xmi.XMIException;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -143,10 +144,17 @@ public class GMFHandler
 	public void error(XMIException e) {
 		super.error(e);
 		if (abortOnError) {
-			if (e.getCause() != null) {
-				throw new AbortResourceLoadException(e.getCause());
+			/*
+			 * Ignore UnresolvedReferenceException, since unresolved references
+			 * are not a fatal error. We will continue to attempt to load the
+			 * model and log UnresolvedReferenceException.
+			 */
+			if (!(e instanceof UnresolvedReferenceException)) {
+				if (e.getCause() != null) {
+					throw new AbortResourceLoadException(e.getCause());
+				}
+				throw new AbortResourceLoadException(e);
 			}
-			throw new AbortResourceLoadException(e);
 		}
 	}
 }
