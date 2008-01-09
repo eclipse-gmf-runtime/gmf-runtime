@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.Connection;
-import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayout;
@@ -32,7 +30,7 @@ import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.ConnectionEditPart;
@@ -132,6 +130,12 @@ public abstract class ShapeCompartmentEditPart
 				Connection connection = (Connection) cep.getFigure();
 				IGraphicalEditPart source = (IGraphicalEditPart) getSourceEditPart(cep);
 				IGraphicalEditPart target = (IGraphicalEditPart) getTargetEditPart(cep);
+				
+				if (!source.getFigure().isShowing() || !target.getFigure().isShowing()) {
+					connection.setVisible(false);
+					continue;
+				}
+				
 				ShapeCompartmentEditPart sContainer = getOwningShapeCompartment(source);
 				ShapeCompartmentEditPart tContainer = getOwningShapeCompartment(target);
 				// only deal with items contained within a shape compartment
@@ -141,25 +145,15 @@ public abstract class ShapeCompartmentEditPart
 				boolean sfVisible = source != null;
 				boolean tfVisible = target != null;
                 
-                ConnectionAnchor sc = cep.getSourceConnectionAnchor();
-                ConnectionAnchor tc = cep.getTargetConnectionAnchor();
-                Point sRefPoint;
-                Point tRefPoint;
-                List bendpoints = (List) connection.getConnectionRouter()
-                    .getConstraint(connection);
-                if (bendpoints.size() >= 2) {
-                    sRefPoint = ((Bendpoint) bendpoints.get(0)).getLocation()
-                        .getCopy();
-                    connection.translateToAbsolute(sRefPoint);
-                    tRefPoint = ((Bendpoint) bendpoints
-                        .get(bendpoints.size() - 1)).getLocation().getCopy();
-                    connection.translateToAbsolute(tRefPoint);
-                } else {
-                    sRefPoint = tc.getReferencePoint();
-                    tRefPoint = sc.getReferencePoint();
-                }
-                Point sLoc = sc.getLocation(sRefPoint);
-                Point tLoc = tc.getLocation(tRefPoint);
+				if (!connection.isVisible()) {
+					connection.setVisible(true);
+					connection.getConnectionRouter().route(connection);
+					connection.setVisible(false);
+				}
+				Point sLoc = new PrecisionPoint(connection.getPoints().getFirstPoint());
+				Point tLoc = new PrecisionPoint(connection.getPoints().getLastPoint());
+				connection.translateToAbsolute(sLoc);
+				connection.translateToAbsolute(tLoc);
                
 				Diagram diagram = ((View) scep.getModel()).getDiagram();
 				Map registry = scep.getViewer().getEditPartRegistry();
@@ -391,7 +385,7 @@ public abstract class ShapeCompartmentEditPart
 		}
 
 		/**
-		 * Walks up the hierarchy to make sure that supplied figure is visible
+		 * Walks up the hierarchy to make sure that the point <code>loc</code> is visible
 		 * inside its figure hierarchy. <BR>
 		 * 
 		 * @param figure
@@ -404,7 +398,7 @@ public abstract class ShapeCompartmentEditPart
 		 */
 		protected boolean isFigureVisible(final IFigure figure,
 				final Point loc, final IFigure stopFigure) {
-			if (!(figure.isVisible())) {
+			if (!(figure.isShowing())) {
 				return false;
 			} else {
 				Rectangle bounds = figure.getBounds().getCopy();
@@ -770,5 +764,13 @@ public abstract class ShapeCompartmentEditPart
         removeEditPartListener(editpartListener);
         super.removeNotify();
     }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ResizableCompartmentEditPart#setCollapsed(boolean, boolean)
+	 */
+	protected void setCollapsed(boolean collapsed, boolean animate) {
+		super.setCollapsed(collapsed, animate);
+		refreshConnections();
+	}
 
 }
