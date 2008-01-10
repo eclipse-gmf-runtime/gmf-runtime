@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ package org.eclipse.gmf.runtime.gef.ui.figures;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IOvalAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 
@@ -60,7 +60,7 @@ public class SlidableOvalAnchor
 	 * @see org.eclipse.gmf.runtime.gef.ui.figures.SlidableAnchor#getBox()
 	 */
 	protected Rectangle getBox() {
-		Rectangle rBox = (((IOvalAnchorableFigure) getOwner()).getOvalBounds()).getCopy();
+		PrecisionRectangle rBox = new PrecisionRectangle(((IOvalAnchorableFigure) getOwner()).getOvalBounds());
 		getOwner().translateToAbsolute(rBox);
 		return rBox;
 	}
