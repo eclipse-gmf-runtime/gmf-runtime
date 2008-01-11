@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -28,9 +30,11 @@ import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.SnapToHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DuplicateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Control;
 
@@ -250,4 +254,51 @@ public class DragEditPartsTrackerEx extends DragEditPartsTracker {
         }
     }
     
+    /**
+     * Overridden to add extended data to the request to restrict snapping to
+     * specific directions based on the move delta.
+     */
+    protected void snapPoint(ChangeBoundsRequest request) {
+        Point moveDelta = request.getMoveDelta();
+        if (getState() == STATE_ACCESSIBLE_DRAG_IN_PROGRESS) {
+            int restrictedDirection = 0;
+
+            if (moveDelta.x > 0) {
+                restrictedDirection = restrictedDirection
+                    | PositionConstants.EAST;
+            } else if (moveDelta.x < 0) {
+                restrictedDirection = restrictedDirection
+                    | PositionConstants.WEST;
+            }
+
+            if (moveDelta.y > 0) {
+                restrictedDirection = restrictedDirection
+                    | PositionConstants.SOUTH;
+            } else if (moveDelta.y < 0) {
+                restrictedDirection = restrictedDirection
+                    | PositionConstants.NORTH;
+            }
+
+            request.getExtendedData().put(SnapToHelperUtil.RESTRICTED_DIRECTIONS,
+                restrictedDirection);
+        }
+
+        super.snapPoint(request);
+    }
+    
+    protected boolean handleKeyDown(KeyEvent e) {
+        if (acceptArrowKey(e)) {
+            if (isInState(STATE_INITIAL)) {
+                IGraphicalEditPart ep = (IGraphicalEditPart) getSourceEditPart();
+                if (ep != null) {
+                    Point location = ep.getFigure().getBounds().getCenter();
+                    ep.getFigure().translateToAbsolute(location);
+                    placeMouseInViewer(location);       
+                    getCurrentInput().setMouseLocation(location.x, location.y);
+                }
+            }
+        }
+        return super.handleKeyDown(e);
+    }
+
 }

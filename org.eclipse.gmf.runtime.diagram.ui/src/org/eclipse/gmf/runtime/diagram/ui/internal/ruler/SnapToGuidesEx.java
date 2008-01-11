@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,53 +9,110 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-
 package org.eclipse.gmf.runtime.diagram.ui.internal.ruler;
 
 import java.util.Map;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SnapToGuides;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
-
 /**
- * Override to support HiMetrics
- *
- * @author jschofie
+ * Overridden to:
+ * <li> support various mapmode units</li>
+ * <li> support snapping to geometry in a restricted direction. See
+ * {@link SnapToHelperUtil#RESTRICTED_DIRECTIONS}.</li>
+ * 
+ * @author jschofie, crevells
  */
 public class SnapToGuidesEx
-	extends SnapToGuides {
+    extends SnapToGuides {
 
-	public SnapToGuidesEx(GraphicalEditPart container) {
-		super(container);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.SnapToGuides#getCorrectionFor(int[], double, java.util.Map, boolean, int)
-	 */
-	protected double getCorrectionFor(int[] guides, double value,
-			Map extendedData, boolean vert, int side) {
+    /**
+     * The vertical guides in logical mapmode units.
+     */
+    private int[] verticalGuidesMM;
 
-		IMapMode mm = MapModeUtil.getMapMode(container.getFigure());
-		double resultMag = mm.DPtoLP((int)THRESHOLD);
-		double result = THRESHOLD;
+    /**
+     * The horizontal guides in logical mapmode units.
+     */
+    private int[] horizontalGuidesMM;
 
-		for (int i = 0; i < guides.length; i++) {
-			int offset = mm.DPtoLP(guides[i]);
-			double magnitude;
+    public SnapToGuidesEx(GraphicalEditPart container) {
+        super(container);
+    }
 
-			magnitude = Math.abs(value - offset);
-			if (magnitude < resultMag) {
-				extendedData.put(vert ? KEY_VERTICAL_GUIDE
-					: KEY_HORIZONTAL_GUIDE, new Integer(mm.DPtoLP(guides[i])));
-				extendedData.put(vert ? KEY_VERTICAL_ANCHOR
-					: KEY_HORIZONTAL_ANCHOR, new Integer(side));
-				resultMag = magnitude;
-				result = offset - value;
-			}
-		}
-		return result;
-	}	
+    protected double getThreshold() {
+        IMapMode mm = MapModeUtil.getMapMode(container.getFigure());
+        return mm.DPtoLP((int) super.getThreshold());
+    }
+
+    protected int[] getHorizontalGuides() {
+        if (horizontalGuidesMM == null) {
+            int guides[] = super.getHorizontalGuides();
+            IMapMode mm = MapModeUtil.getMapMode(container.getFigure());
+            horizontalGuidesMM = new int[guides.length];
+            for (int i = 0; i < guides.length; i++) {
+                int guide = guides[i];
+                horizontalGuidesMM[i] = mm.DPtoLP(guide);
+            }
+        }
+        return horizontalGuidesMM;
+    }
+
+    protected int[] getVerticalGuides() {
+        if (verticalGuidesMM == null) {
+            int guides[] = super.getVerticalGuides();
+            IMapMode mm = MapModeUtil.getMapMode(container.getFigure());
+            verticalGuidesMM = new int[guides.length];
+            for (int i = 0; i < guides.length; i++) {
+                int guide = guides[i];
+                verticalGuidesMM[i] = mm.DPtoLP(guide);
+            }
+        }
+        return verticalGuidesMM;
+    }
+
+    protected double getCorrectionFor(int[] guides, double value,
+            Map extendedData, boolean vert, int side) {
+
+        Integer restrictedDirections = (Integer) extendedData
+            .get(SnapToHelperUtil.RESTRICTED_DIRECTIONS);
+        if (restrictedDirections == null
+            || restrictedDirections == PositionConstants.NONE) {
+            return super.getCorrectionFor(guides, value, extendedData, vert,
+                side);
+        }
+
+        if (restrictedDirections == NONE) {
+            return super.getCorrectionFor(guides, value, extendedData, vert,
+                side);
+        }
+
+        boolean increaseOK = vert ? (restrictedDirections & EAST) != 0
+            : (restrictedDirections & SOUTH) != 0;
+        boolean decreaseOK = vert ? (restrictedDirections & WEST) != 0
+            : (restrictedDirections & NORTH) != 0;
+
+        int filteredGuides[] = new int[guides.length];
+        int count = 0;
+        for (int i = 0; i < guides.length; i++) {
+            if ((increaseOK && guides[i] > value)
+                || (decreaseOK && guides[i] < value)) {
+                filteredGuides[count++] = guides[i];
+            }
+        }
+
+        // remove empty entries
+        int[] filteredGuides2 = new int[count];
+        for (int i = 0; i < count; i++) {
+            filteredGuides2[i] = filteredGuides[i];
+        }
+
+        return super.getCorrectionFor(filteredGuides2, value, extendedData,
+            vert, side);
+    }
+
 }

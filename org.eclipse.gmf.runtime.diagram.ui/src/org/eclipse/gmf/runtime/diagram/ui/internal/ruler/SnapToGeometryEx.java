@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,21 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.ruler;
 
+import java.util.Map;
+
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
 /**
- * Override to support HiMetrics *
+ * Overridden to:
+ * <li> support various mapmode units</li>
+ * <li> support snapping to geometry in a restricted direction. See
+ * {@link SnapToHelperUtil#RESTRICTED_DIRECTIONS}.</li>
  * 
- * @author cli
+ * @author cli, crevells
  */
 public class SnapToGeometryEx
     extends SnapToGeometry {
@@ -69,15 +75,44 @@ public class SnapToGeometryEx
     // }
     // }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.SnapToGeometry#getThreshold()
-     */
-
     protected double getThreshold() {
         IMapMode mm = MapModeUtil.getMapMode(container.getFigure());
         return mm.DPtoLP((int) super.getThreshold());
+    }
+
+    protected double getCorrectionFor(Entry entries[], Map extendedData,
+            boolean vert, double value, int side) {
+
+        Integer restrictedDirections = (Integer) extendedData
+            .get(SnapToHelperUtil.RESTRICTED_DIRECTIONS);
+        if (restrictedDirections == null
+            || restrictedDirections == PositionConstants.NONE) {
+            return super.getCorrectionFor(entries, extendedData, vert, value,
+                side);
+        }
+
+        boolean increaseOK = vert ? (restrictedDirections & EAST) != 0
+            : (restrictedDirections & SOUTH) != 0;
+        boolean decreaseOK = vert ? (restrictedDirections & WEST) != 0
+            : (restrictedDirections & NORTH) != 0;
+
+        Entry filteredEntries[] = new Entry[entries.length];
+        int count = 0;
+        for (int i = 0; i < entries.length; i++) {
+            if ((increaseOK && entries[i].getLocation() > value)
+                || (decreaseOK && entries[i].getLocation() < value)) {
+                filteredEntries[count++] = entries[i];
+            }
+        }
+
+        // remove empty entries
+        Entry[] filteredEntries2 = new Entry[count];
+        for (int i = 0; i < count; i++) {
+            filteredEntries2[i] = filteredEntries[i];
+        }
+
+        return super.getCorrectionFor(filteredEntries2, extendedData, vert,
+            value, side);
     }
 
 }

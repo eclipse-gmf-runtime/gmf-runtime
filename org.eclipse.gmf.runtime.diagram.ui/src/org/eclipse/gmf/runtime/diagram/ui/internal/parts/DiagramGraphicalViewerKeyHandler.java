@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2003, 2006  IBM Corporation and others.
+ * Copyright (c) 2000, 2008  IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 
@@ -89,6 +90,19 @@ public class DiagramGraphicalViewerKeyHandler
 					if (navigatePageSibling(event, PositionConstants.SOUTH))
 						return true;
 				}
+	        case SWT.TAB:
+	            if ((event.stateMask & SWT.SHIFT) != 0) {
+                    if (navigateNextHorizontalSibling(isViewerMirrored() ? PositionConstants.EAST
+                        : PositionConstants.WEST)) {
+                        return true;
+                    }
+                } else {
+                    if (navigateNextHorizontalSibling(isViewerMirrored() ? PositionConstants.WEST
+                        : PositionConstants.EAST)) {
+                        return true;
+                    }
+                }
+                break;
 		}
 		return super.keyPressed(event);
 	}
@@ -349,4 +363,107 @@ public class DiagramGraphicalViewerKeyHandler
         else
             return child.getParent(); //any other EditPart    
     }
+
+    /**
+     * Traverses to the closest EditPart in the given list that is also in the
+     * given direction (EAST or WEST). The x-location alone is used to determine
+     * the closest sibling. If the direction is EAST and there are no EditParts
+     * to the EAST then the farthest WEST EditPart is returned (and vice versa).
+     * This allows the user to cycle through all the EditParts using the TAB
+     * key.
+     * 
+     * @param direction
+     *            the direction in which to navigate (either
+     *            PositionConstants.WEST or PositionConstants.EAST)
+     * @return true if a sibling was found to navigate to; false otherwise.
+     */
+    private boolean navigateNextHorizontalSibling(int direction) {
+        GraphicalEditPart epStart = getFocusEditPart();
+        EditPart next = null;
+        if (epStart instanceof DiagramEditPart) {
+            next = findClosestHorizontalSibling(epStart.getChildren(),
+                new Point(0, 0), PositionConstants.EAST, null);
+        } else {
+            IFigure figure = epStart.getFigure();
+            Point pStart = figure.getBounds().getCenter();
+            figure.translateToAbsolute(pStart);
+            next = findClosestHorizontalSibling(getNavigationSiblings(),
+                pStart, direction, epStart);
+        }
+        if (next == null)
+            return false;
+
+        getViewer().select(next);
+        getViewer().reveal(next);
+        return true;
+    }
+
+    /**
+     * Given an absolute point (pStart) and a list of EditParts, this method
+     * finds the closest EditPart (except for the one to be excluded) in the
+     * given direction (EAST or WEST). The x-location alone is used to determine
+     * the closest sibling. If the direction is EAST and there are no EditParts
+     * to the EAST then the farthest WEST EditPart is returned (and vice versa).
+     * This allows the user to cycle through all the EditParts using the TAB
+     * key.
+     * 
+     * @param siblings
+     *            List of sibling EditParts
+     * @param pStart
+     *            The starting point (must be in absolute coordinates) from
+     *            which the next sibling is to be found.
+     * @param direction
+     *            PositionConstants.EAST or PositionConstants.WEST
+     * @param exclude
+     *            The EditPart to be excluded from the search
+     */
+    private GraphicalEditPart findClosestHorizontalSibling(List siblings,
+            Point pStart, int direction, EditPart exclude) {
+        GraphicalEditPart epCurrent;
+        GraphicalEditPart epFinal = null;
+        GraphicalEditPart epCycle = null; // in case there are no more shapes
+                                            // in this direction
+        IFigure figure;
+        Point pCurrent;
+        int distance = Integer.MAX_VALUE;
+        int xCycle = direction == PositionConstants.EAST ? Integer.MAX_VALUE
+            : 0;
+
+        Iterator iter = siblings.iterator();
+        while (iter.hasNext()) {
+            epCurrent = (GraphicalEditPart) iter.next();
+            if (epCurrent == exclude || !epCurrent.isSelectable())
+                continue;
+            figure = epCurrent.getFigure();
+            pCurrent = figure.getBounds().getCenter();
+            figure.translateToAbsolute(pCurrent);
+
+            int dx = pCurrent.x - pStart.x;
+
+            if ((direction == PositionConstants.EAST && dx > 0)
+                || (direction == PositionConstants.WEST && dx < 0)) {
+                int abs_dx = Math.abs(dx);
+                if (abs_dx < distance) {
+                    distance = abs_dx;
+                    epFinal = epCurrent;
+                }
+            }
+
+            if (epFinal == null) {
+                if (direction == PositionConstants.EAST && pCurrent.x < xCycle) {
+                    xCycle = pCurrent.x;
+                    epCycle = epCurrent;
+                } else if (direction == PositionConstants.WEST
+                    && pCurrent.x > xCycle) {
+                    xCycle = pCurrent.x;
+                    epCycle = epCurrent;
+                }
+            }
+        }
+        if (epFinal == null) {
+            return epCycle;
+        }
+        return epFinal;
+    }
+    
 }
