@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayout;
@@ -30,7 +32,6 @@ import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.RangeModel;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.ConnectionEditPart;
@@ -145,15 +146,25 @@ public abstract class ShapeCompartmentEditPart
 				boolean sfVisible = source != null;
 				boolean tfVisible = target != null;
                 
-				if (!connection.isVisible()) {
-					connection.setVisible(true);
-					connection.getConnectionRouter().route(connection);
-					connection.setVisible(false);
-				}
-				Point sLoc = new PrecisionPoint(connection.getPoints().getFirstPoint());
-				Point tLoc = new PrecisionPoint(connection.getPoints().getLastPoint());
-				connection.translateToAbsolute(sLoc);
-				connection.translateToAbsolute(tLoc);
+                ConnectionAnchor sc = cep.getSourceConnectionAnchor();
+                ConnectionAnchor tc = cep.getTargetConnectionAnchor();
+                Point sRefPoint;
+                Point tRefPoint;
+                List bendpoints = (List) connection.getConnectionRouter()
+                    .getConstraint(connection);
+                if (bendpoints.size() >= 2) {
+                    sRefPoint = ((Bendpoint) bendpoints.get(0)).getLocation()
+                        .getCopy();
+                    connection.translateToAbsolute(sRefPoint);
+                    tRefPoint = ((Bendpoint) bendpoints
+                        .get(bendpoints.size() - 1)).getLocation().getCopy();
+                    connection.translateToAbsolute(tRefPoint);
+                } else {
+                    sRefPoint = tc.getReferencePoint();
+                    tRefPoint = sc.getReferencePoint();
+                }
+                Point sLoc = sc.getLocation(sRefPoint);
+                Point tLoc = tc.getLocation(tRefPoint);
                
 				Diagram diagram = ((View) scep.getModel()).getDiagram();
 				Map registry = scep.getViewer().getEditPartRegistry();
