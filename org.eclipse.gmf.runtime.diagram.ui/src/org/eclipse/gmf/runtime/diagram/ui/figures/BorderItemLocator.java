@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -263,13 +263,15 @@ public class BorderItemLocator
 		Rectangle recommendedRect = new Rectangle(recommendedLocation,
 			targetBorderItem.getSize());
 		List borderItems = targetBorderItem.getParent().getChildren();
-		ListIterator iterator = borderItems.listIterator();
-		while (iterator.hasNext()) {
-			IFigure borderItem = (IFigure) iterator.next();
+        
+        // Only check those border items that would have already been
+        // relocated. See Bugzilla#214799.
+        int currentIndex = borderItems.indexOf(targetBorderItem);
+        for (int i = 0; i < currentIndex; i++) {
+            IFigure borderItem = (IFigure) borderItems.get(i);
 			if (borderItem.isVisible()) {
 				Rectangle rect = borderItem.getBounds().getCopy();
-				if (borderItem != targetBorderItem
-					&& rect.intersects(recommendedRect)) {
+				if (rect.intersects(recommendedRect)) {
 					return true;
 				}
 			}
