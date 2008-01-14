@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,10 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandUtilitiesTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.SemanticCreateCommandTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.label.LabelTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramAssistantTests;
-import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramEventBrokerTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.DiagramGraphicalViewerTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.GroupTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.GroupsInCompartmentTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LayoutTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCanonicalTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicCreationTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicDiagramTests;
@@ -85,6 +85,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         suite.addTest(LabelTests.suite());        
         suite.addTest(GroupTests.suite());
         suite.addTest(GroupsInCompartmentTests.suite());
+        suite.addTest(LayoutTests.suite());
 
 		
 		return suite;

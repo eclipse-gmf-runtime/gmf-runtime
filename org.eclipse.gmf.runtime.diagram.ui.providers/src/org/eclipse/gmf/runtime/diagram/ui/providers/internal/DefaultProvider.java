@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionDimension;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraphLayout;
@@ -703,7 +705,6 @@ public abstract class DefaultProvider
         CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
 
         Point diff = getLayoutPositionDelta(g, isLayoutForSelected);
-        layoutDefaultMargin = MapModeUtil.getMapMode(diagramEP.getFigure()).DPtoLP(25);
         Command cmd = createNodeChangeBoundCommands(g, diff);
         if (cmd != null)
             cc.add(cmd);
@@ -804,14 +805,16 @@ public abstract class DefaultProvider
                 Point ptLocation = new Point(nodeExt.x + diff.x, nodeExt.y
                     + diff.y);
 
-                Point ptOldLocation = gep.getFigure().getBounds().getLocation();
+                PrecisionPoint ptOldLocation = new PrecisionPoint(gep.getFigure().getBounds().getLocation());
                 gep.getFigure().translateToAbsolute(ptOldLocation);
                 
                 gep.getFigure().translateToAbsolute(ptLocation);
-                Dimension delta = ptLocation.getDifference(ptOldLocation);
+                PrecisionPoint delta = new PrecisionPoint(ptLocation.x
+                    - ptOldLocation.preciseX, ptLocation.y
+                    - ptOldLocation.preciseY);
 
                 request.setEditParts(gep);
-                request.setMoveDelta(new Point(delta.width, delta.height));
+                request.setMoveDelta(delta);
                 request.setLocation(ptLocation);
 
                 Command cmd = gep.getCommand(request);

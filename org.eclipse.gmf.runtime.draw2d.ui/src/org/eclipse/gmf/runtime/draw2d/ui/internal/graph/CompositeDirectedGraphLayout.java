@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,21 +74,16 @@ public class CompositeDirectedGraphLayout
                 adjustVirtualNodesWidthAndHeight(vituralNodes);
             }
         }
-        int nodesSize = nodes.size();
         Map nodeToOutGoing = new HashMap();
         Map nodeToIncomingGoing = new HashMap();
         removeDisconnectedEdges(nodes, nodeToOutGoing, nodeToIncomingGoing);
-        if (nodesSize >= 2){
+        if (nodes.size() > 0){
             Node parent  = getParent(nodes.getNode(0));
             DirectedGraph g = new DirectedGraph();
             g.nodes = nodes;
             g.edges = edges;
             DirectedGraphLayout layout = new DirectedGraphLayout();
             layout.visit(g);
-            if (parent instanceof AdvancedSubGraph)
-                adjustAutoSizeNodeWidthAndHeight((AdvancedSubGraph)parent);
-        }else if (nodesSize==1){
-            Node parent  = getParent(nodes.getNode(0));
             if (parent instanceof AdvancedSubGraph)
                 adjustAutoSizeNodeWidthAndHeight((AdvancedSubGraph)parent);
         }
@@ -243,8 +238,18 @@ public class CompositeDirectedGraphLayout
        subGraph.height = bottom - top;
      }
     
+    /**
+     * If the node passed in is in autosize mode, then this method will set the
+     * width and height of this node based on how its children/members were
+     * arranged.
+     * 
+     * @param subGraph
+     *            the node whose size will be adjusted
+     */
     private void adjustAutoSizeNodeWidthAndHeight(AdvancedSubGraph subGraph) {
-    	
+    	if (!subGraph.isAutoSize()) {
+    	    return;
+    	}
         NodeList nodes = subGraph.members;
         if (nodes.isEmpty())
             return;
@@ -275,7 +280,7 @@ public class CompositeDirectedGraphLayout
              yDiff = topNode.y ;
         }
         subGraph.width = right - left + xDiff;
-        subGraph.width = right - left + yDiff;
+        subGraph.height = bottom - top + yDiff;
         
     }
 

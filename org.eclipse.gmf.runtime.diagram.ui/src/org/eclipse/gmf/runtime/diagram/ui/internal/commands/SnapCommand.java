@@ -106,10 +106,10 @@ public class SnapCommand extends AbstractTransactionalCommand {
 					// translate all coordinates to device units as a standard if necessary
 					// this is done since moveDelta uses device units
 					
-					int xDiff = mapMode.LPtoDP(bounds.getX())
-							- mapMode.LPtoDP(newEditPart.getFigure().getBounds().x);
-					int yDiff = mapMode.LPtoDP(bounds.getY())
-							- mapMode.LPtoDP(newEditPart.getFigure().getBounds().y);
+					PrecisionPoint moveDelta = new PrecisionPoint(bounds.getX()
+                        - newEditPart.getFigure().getBounds().x, bounds.getY()
+                        - newEditPart.getFigure().getBounds().y);
+					mapMode.LPtoDP(moveDelta);
 
 					// In the case that the figure bounds and model's layout constant are the same,
 					// xDiff and yDiff will evaluate to zero, but snapToHelper will still locate the closest
@@ -118,7 +118,6 @@ public class SnapCommand extends AbstractTransactionalCommand {
 					// In both situations we base the resulting snap location off the figure's bounds
 
 					// snapToGrid logic taken from DragEditPartsTracker.java
-					Point moveDelta = new Point(xDiff, yDiff);
 					request.getExtendedData().clear();
 					request.setMoveDelta(moveDelta);
 
@@ -137,12 +136,11 @@ public class SnapCommand extends AbstractTransactionalCommand {
 					PrecisionRectangle baseRect = new PrecisionRectangle(figureBounds);
 					baseRect.translate(moveDelta);
 
-					PrecisionPoint preciseDelta = new PrecisionPoint(moveDelta);
 					if (snapToHelper != null) {
 						snapToHelper.snapPoint(request,
 								PositionConstants.HORIZONTAL | PositionConstants.VERTICAL,
-								new PrecisionRectangle[] { baseRect },	preciseDelta);
-						request.setMoveDelta(preciseDelta);
+								new PrecisionRectangle[] { baseRect },	moveDelta);
+						request.setMoveDelta(moveDelta);
 					}
 
 					snapCommand.add(newEditPart.getCommand(request));

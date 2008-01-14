@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1236,13 +1236,28 @@ public class GroupTests
         testAction(arrangeAction, new ITestActionCallback() {
 
             public void onRunExecution() {
-                assertEquals(origInnerGroupBounds.getSize(), getAbsoluteBounds(
+                assertAlmostEquals(origInnerGroupBounds.getSize(), getAbsoluteBounds(
                     getInnerGroupEP()).getSize());
                 assertNotEquals(swShapeBounds.getLocation(), getAbsoluteBounds(
                     getSWShape()).getLocation());
             }
         });
 
+    }
+    
+    /**
+     * It is possible that two himetric values may be off slightly just because
+     * we are mixing doubles and integers in GMF/GEF and there could be slight
+     * rounding differences. This method will treat a difference of less than 1
+     * as being equal.
+     * 
+     * @param d1
+     * @param d2
+     * @return
+     */
+    private void assertAlmostEquals(Dimension d1, Dimension d2) {
+        assertTrue((Math.abs(d1.height - d2.height) <= 1)
+            && (Math.abs(d1.width - d2.width) <= 1));
     }
 
 }
