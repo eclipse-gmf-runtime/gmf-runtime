@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,14 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class AutoSizeAction extends DiagramAction {
 
-    /**
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#getCommandLabel()
+	 */
+	protected String getCommandLabel() {
+		return DiagramUIActionsMessages.AutoSizeAction_ActionLabelText;
+	}
+
+	/**
      * @param workbenchPage
      */
     public AutoSizeAction(IWorkbenchPage workbenchPage) {

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -330,12 +330,9 @@ public class CompositeCommand
 			if (child instanceof ICommand) {
 				ICommand cmd = ((ICommand) child).reduce();
 				/*
-				 * If label is missing on the resultant reduced command
-				 * and it is present on this command, then just copy the label
-				 * from this command to the resultant.
+				 * Propagate the label of the original command to the reduced.
 				 */
-				if ((cmd.getLabel() == null || cmd.getLabel().length() == 0)
-						&& getLabel() != null && getLabel().length() > 0) {
+				if (getLabel() != null && getLabel().length() > 0) {
 					cmd.setLabel(getLabel());
 				}
 				return cmd;
