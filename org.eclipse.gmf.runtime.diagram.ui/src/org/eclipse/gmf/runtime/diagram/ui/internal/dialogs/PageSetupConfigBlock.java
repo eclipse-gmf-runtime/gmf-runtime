@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -276,6 +276,8 @@ public class PageSetupConfigBlock implements ILabels {
 				if (fTextWidth.isFocusControl()) {
 					fComboSize.select(PageSetupPageType.USER_DEFINED.getIndex());
 					setOkButtonEnableStatus();
+				} else if (fComboSize.isFocusControl()) {
+					setOkButtonEnableStatus();
 				}
 			}
 		});
@@ -284,6 +286,8 @@ public class PageSetupConfigBlock implements ILabels {
 			public void modifyText(ModifyEvent e) {
 				if (fTextHeight.isFocusControl()) {
 					fComboSize.select(PageSetupPageType.USER_DEFINED.getIndex());
+					setOkButtonEnableStatus();
+				} else if (fComboSize.isFocusControl()) {
 					setOkButtonEnableStatus();
 				}
 			}
