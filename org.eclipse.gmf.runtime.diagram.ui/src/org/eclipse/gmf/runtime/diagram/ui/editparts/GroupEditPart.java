@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,9 @@ import java.util.List;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -26,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GroupComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GroupXYLayoutEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.internal.figures.GroupFigure;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -39,6 +42,38 @@ import org.eclipse.gmf.runtime.notation.View;
 public class GroupEditPart
     extends ShapeNodeEditPart {
 
+    /**
+     * A <code>ContainerEditPolicy</code> for a <code>GroupEditPart</code>.
+     * 
+     * @since 2.1
+     */
+    protected static class GroupContainerEditPolicy
+        extends ContainerEditPolicy {
+
+        protected Command getArrangeCommand(ArrangeRequest request) {
+            if (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
+                || ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request
+                    .getType())) {
+                List parts = request.getPartsToArrange();
+                if (parts.size() == 1 && parts.contains(getHost())) {
+                    ArrangeRequest newRequest = createRequest(request,
+                        getHost().getChildren());
+                    return super.getArrangeCommand(newRequest);
+                }
+            }
+            return super.getArrangeCommand(request);
+        }
+
+        private ArrangeRequest createRequest(ArrangeRequest request,
+                List partsToArrange) {
+            ArrangeRequest newRequest = new ArrangeRequest((String) request
+                .getType(), request.getLayoutType());
+            newRequest.setExtendedData(request.getExtendedData());
+            newRequest.setPartsToArrange(partsToArrange);
+            return newRequest;
+        }
+    }
+    
     /**
      * Creates a new <code>GroupEditPart</code>.
      * 
@@ -73,7 +108,7 @@ public class GroupEditPart
         installEditPolicy(EditPolicy.LAYOUT_ROLE, new GroupXYLayoutEditPolicy());
         installEditPolicy(EditPolicy.COMPONENT_ROLE,
             new GroupComponentEditPolicy());
-        installEditPolicy(EditPolicy.CONTAINER_ROLE, new ContainerEditPolicy());
+        installEditPolicy(EditPolicy.CONTAINER_ROLE, new GroupContainerEditPolicy());
         installEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE,
             new SnapFeedbackPolicy());
     }

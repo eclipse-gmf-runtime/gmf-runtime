@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,13 @@ import java.util.Set;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -292,6 +294,11 @@ public class ContainerEditPolicy
         if ( (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())) ||
              (ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request.getType()))) {
             editparts = request.getPartsToArrange();
+            if (editparts.size() < 2
+                || !(((GraphicalEditPart) ((EditPart) editparts.get(0))
+                    .getParent()).getContentPane().getLayoutManager() instanceof XYLayout)) {
+                return null;
+            }
             offsetFromBoundingBox = true;
         } 
         if (RequestConstants.REQ_ARRANGE_RADIAL.equals(request.getType())) {
@@ -310,6 +317,9 @@ public class ContainerEditPolicy
                 Rectangle bounds = ep.getFigure().getBounds();
                 nodes.add(new LayoutNode((Node)view, bounds.width, bounds.height));
             }
+        }
+        if (nodes.isEmpty()) {
+            return null;
         }
         
         List hints = new ArrayList(2);

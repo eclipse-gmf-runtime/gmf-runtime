@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,11 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -23,16 +26,22 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.SelectionRequest;
+import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.PopupBarEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.internal.resolver.ComputeNodeOrder;
 
 /**
  * the base controler for shapes
@@ -41,6 +50,49 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrimaryEditPart {
 
+    /**
+     * A <code>ContainerEditPolicy</code> for a <code>ShapeEditPart</code>.
+     * 
+     * @since 2.1
+     */
+    protected static class ShapeContainerEditPolicy
+        extends ContainerEditPolicy {
+
+        protected Command getArrangeCommand(ArrangeRequest request) {
+            if (ActionIds.ACTION_ARRANGE_SELECTION.equals(request.getType())
+                || ActionIds.ACTION_TOOLBAR_ARRANGE_SELECTION.equals(request
+                    .getType())) {
+                List parts = request.getPartsToArrange();
+                if (parts.size() == 1 && parts.contains(getHost())) {
+                    // Create arrange commands for the compartments within this shape.
+                    CompoundCommand cc = new CompoundCommand();
+                    for (Iterator iterator = getHost().getChildren().iterator(); iterator
+                        .hasNext();) {
+                        Object childEP = iterator.next();
+                        if (childEP instanceof CompartmentEditPart
+                            && ((CompartmentEditPart) childEP).getContentPane()
+                                .getLayoutManager() instanceof XYLayout) {
+                            ArrangeRequest newRequest = createRequest(request,
+                                ((CompartmentEditPart) childEP).getChildren());
+                            cc.add(super.getArrangeCommand(newRequest));
+                        }
+                    }
+                    return cc;
+                }
+            }
+            return super.getArrangeCommand(request);
+        }
+
+        private ArrangeRequest createRequest(ArrangeRequest request,
+                List partsToArrange) {
+            ArrangeRequest newRequest = new ArrangeRequest((String) request
+                .getType(), request.getLayoutType());
+            newRequest.setExtendedData(request.getExtendedData());
+            newRequest.setPartsToArrange(partsToArrange);
+            return newRequest;
+        }
+    }
+    
 	/**
 	 * copnstructor
 	 * @param view the view controlled by this edit part
@@ -52,7 +104,7 @@ public abstract class ShapeEditPart extends TopGraphicEditPart implements IPrima
     
     protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
-		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ContainerEditPolicy());
+		installEditPolicy(EditPolicy.CONTAINER_ROLE, new ShapeContainerEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
 		installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE, new PopupBarEditPolicy());
 	}
