@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,10 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.editpolicies;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Point;
@@ -23,11 +27,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * Encapsulates behavior common to editpolicies that popup diagram assistants.
@@ -37,16 +41,24 @@ import org.eclipse.ui.PlatformUI;
 public abstract class DiagramAssistantEditPolicy
 	extends GraphicalEditPolicy
 	implements MouseMotionListener {
-
+    
 	/**
-	 * The <code>Runnable</code> used when a timer is started to show the
-	 * diagram assistant after a certain amount of time has passed.
+	 * The <code>Job</code> used to show the diagram assistant after a certain
+	 * amount of time has passed.
 	 */
-	private class ShowDiagramAssistantRunnable
-		implements Runnable {
+	private class ShowDiagramAssistantJob
+		extends UIJob {
 
-		/** the mouse location when the timer was started */
+		/** the mouse location when the job was created */
 		private Point originalMouseLocation;
+
+		/**
+         * Creates a new instance.
+         */
+        protected ShowDiagramAssistantJob() {
+            super("Show Diagram Assistant"); //$NON-NLS-1$
+            setSystem(true);
+        }
 
 		/**
 		 * Sets mouse location
@@ -63,36 +75,60 @@ public abstract class DiagramAssistantEditPolicy
 		 * still at the same spot where it was when the timer was started (i.e.
 		 * only add the diagram assistant when the user stops moving the mouse).
 		 */
-		public void run() {
-			if (originalMouseLocation != null && originalMouseLocation.equals(getMouseLocation())) {
+		public IStatus runInUIThread(IProgressMonitor monitor) {
+			if (originalMouseLocation != null
+				&& originalMouseLocation.equals(getMouseLocation())) {
 				if (isDiagramAssistantShowing()
 					&& !shouldAvoidHidingDiagramAssistant()) {
 					hideDiagramAssistant();
 				}
 				if (shouldShowDiagramAssistant()) {
+
+                    // Cancel the hide diagram assistant job for this host if it
+                    // is waiting to run.
+                    hideDiagramAssistantJob.cancel();
+
+                    // Schedule any hide diagram assistant jobs on other
+                    // editparts to run immediately to avoid duplicate diagram
+                    // assistants showing.
+                    if (getDiagramAssistantID() != null) {
+                        Job.getJobManager().wakeUp(getDiagramAssistantID());
+                    }
+
 					showDiagramAssistant(originalMouseLocation);
 				}
 			}
+			return Status.OK_STATUS;
 		}
 	}
 
 	/**
-	 * The <code>Runnable</code> used when a timer is started to hide the
-	 * diagram assistant after a certain amount of time has passed.
+	 * The <code>Job</code> used to hide the diagram assistant after a certain
+	 * amount of time has passed.
 	 */
-	private class HideDiagramAssistantRunnable implements Runnable
-	{
+	private class HideDiagramAssistantJob
+        extends UIJob {
+
+        protected HideDiagramAssistantJob() {
+            super("Hide Diagram Assistant"); //$NON-NLS-1$
+            setSystem(true);
+        }
 
 		/**
 		 * The diagram assistant is removed when this task is run if the mouse
 		 * is still outside the shape.
 		 */
-		public void run() {
+		public IStatus runInUIThread(IProgressMonitor monitor) {
 			if (getMouseLocation() == null
 				|| !shouldAvoidHidingDiagramAssistant()) {
 				hideDiagramAssistant();
 			}
+			return Status.OK_STATUS;
 		}
+
+        public boolean belongsTo(Object family) {
+            return family == getDiagramAssistantID();
+        }
 	}
 	
 	/**
@@ -147,9 +183,10 @@ public abstract class DiagramAssistantEditPolicy
 
 	/** Flag to indicate that the diagram assistant should not be hidden. */
 	private boolean avoidHidingDiagramAssistant = true;
-	
-	private ShowDiagramAssistantRunnable showDiagramAssistantRunnable = new ShowDiagramAssistantRunnable();
-	private HideDiagramAssistantRunnable hideDiagramAssistantRunnable = new HideDiagramAssistantRunnable();
+
+	private ShowDiagramAssistantJob showDiagramAssistantJob = new ShowDiagramAssistantJob();
+
+	private HideDiagramAssistantJob hideDiagramAssistantJob = new HideDiagramAssistantJob();
 
 	/**
 	 * Creates a new instance.
@@ -290,8 +327,11 @@ public abstract class DiagramAssistantEditPolicy
 	 *            the delay in milliseconds
 	 */
 	protected void showDiagramAssistantAfterDelay(int delay) {
-		showDiagramAssistantRunnable.setOriginalMouseLocation(getMouseLocation());
-		Display.getCurrent().timerExec(delay,showDiagramAssistantRunnable);
+		if (delay >= 0) {
+            showDiagramAssistantJob.setOriginalMouseLocation(getMouseLocation());
+            showDiagramAssistantJob.cancel();
+            showDiagramAssistantJob.schedule(delay);
+		}
 	}
 
 	/**
@@ -301,8 +341,9 @@ public abstract class DiagramAssistantEditPolicy
 	 *            the delay in milliseconds
 	 */
 	protected void hideDiagramAssistantAfterDelay(int delay) {
-		if (isDiagramAssistantShowing()) {
-			Display.getCurrent().timerExec(delay, hideDiagramAssistantRunnable);
+		if (isDiagramAssistantShowing() && delay >= 0) {
+            hideDiagramAssistantJob.cancel();
+            hideDiagramAssistantJob.schedule(delay);
 		}
 	}
 
@@ -456,5 +497,19 @@ public abstract class DiagramAssistantEditPolicy
 	protected boolean shouldAvoidHidingDiagramAssistant() {
 		return avoidHidingDiagramAssistant;
 	}
+
+	/**
+     * Gets an ID string used to identify the diagram assistant classification.
+     * This ID should be the same string for all instances of a particular type
+     * of diagram assistant. One use of this ID is to avoid having multiple
+     * diagram assistants of the same type showing at the same time on different
+     * editparts. A good ID string would be the class's name (e.g.
+     * ConnectionHandleEditPolicy.class.getName()).
+     * 
+     * @return a unique string for a diagram assistant type or null
+     */
+    protected String getDiagramAssistantID() {
+        return null;
+    }
 
 }
