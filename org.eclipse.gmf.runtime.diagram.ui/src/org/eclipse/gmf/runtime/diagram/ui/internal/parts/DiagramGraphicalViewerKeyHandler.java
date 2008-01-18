@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.parts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -90,6 +91,7 @@ public class DiagramGraphicalViewerKeyHandler
 					if (navigatePageSibling(event, PositionConstants.SOUTH))
 						return true;
 				}
+				break;
 	        case SWT.TAB:
 	            if ((event.stateMask & SWT.SHIFT) != 0) {
                     if (navigateNextHorizontalSibling(isViewerMirrored() ? PositionConstants.EAST
@@ -191,7 +193,6 @@ public class DiagramGraphicalViewerKeyHandler
 			(viewport != null)
 				? new Rectangle(viewport.getBounds())
 				: epParent.getFigure().getClientArea();
-		figure.translateToAbsolute(bounds);
 		int pageDistance = 0;
 		switch (direction) {
 			case PositionConstants.NORTH :
@@ -203,8 +204,27 @@ public class DiagramGraphicalViewerKeyHandler
 				pageDistance = bounds.width;
 				break;
 		}
+		
+	    if (epStart instanceof DiagramEditPart) {
+	        Point location = viewport.getViewLocation().getCopy();
+	        switch (direction) {
+	            case PositionConstants.NORTH :
+	                location.translate(0, -pageDistance);
+	                break;              
+	            case PositionConstants.SOUTH :
+	                location.translate(0, pageDistance);
+	                break;
+	            case PositionConstants.EAST :
+	                location.translate(pageDistance, 0);
+	                break;
+	            case PositionConstants.WEST :
+                    location.translate(-pageDistance, 0);
+	                break;
+	        }
+	        viewport.setViewLocation(location);
+        }
 
-		List editParts =
+		List<GraphicalEditPart> editParts =
 			findPageSibling(
 				getPartNavigationSiblings(),
 				pStart,
@@ -214,11 +234,11 @@ public class DiagramGraphicalViewerKeyHandler
 		if (editParts.isEmpty())
 			return false;
 		if ((event.stateMask & SWT.SHIFT) != 0) {
-			Iterator parts = editParts.iterator();
+			Iterator<GraphicalEditPart> parts = editParts.iterator();
 			while (parts.hasNext())
-				navigateToPart((EditPart) parts.next(), event);
+				navigateToPart(parts.next(), event);
 		} else {
-			EditPart part = (EditPart) editParts.get(editParts.size() - 1);
+			EditPart part = editParts.get(editParts.size() - 1);
 			navigateToPart(part, event);
 		}
 		return true;
@@ -232,10 +252,30 @@ public class DiagramGraphicalViewerKeyHandler
 	 */
 	protected boolean navigateEndSibling(KeyEvent event, int direction) {
 		GraphicalEditPart epStart = getFocusPart();
+		
+		// go to top-left or bottom-right corner if nothing is selected
+		if (epStart instanceof DiagramEditPart) {
+            Viewport viewport = findViewport(epStart);
+            switch (direction) {
+                case PositionConstants.NORTH:
+                case PositionConstants.WEST:
+                    viewport.setViewLocation(viewport.getHorizontalRangeModel()
+                        .getMinimum(), viewport.getVerticalRangeModel()
+                        .getMinimum());
+                    break;
+                case PositionConstants.SOUTH:
+                case PositionConstants.EAST:
+                    viewport.setViewLocation(viewport.getHorizontalRangeModel()
+                        .getMaximum(), viewport.getVerticalRangeModel()
+                        .getMaximum());
+                    break;
+            }
+        }
+		
 		IFigure figure = epStart.getFigure();
 		Point pStart = getFigureInterestingPoint(figure);
 		figure.translateToAbsolute(pStart);
-		List editParts =
+		List<GraphicalEditPart> editParts =
 			findEndSibling(
 				getPartNavigationSiblings(),
 				pStart,
@@ -244,11 +284,11 @@ public class DiagramGraphicalViewerKeyHandler
 		if (editParts.isEmpty())
 			return false;
 		if ((event.stateMask & SWT.SHIFT) != 0) {
-			Iterator parts = editParts.iterator();
+			Iterator<GraphicalEditPart> parts = editParts.iterator();
 			while (parts.hasNext())
-				navigateToPart((EditPart) parts.next(), event);
+				navigateToPart(parts.next(), event);
 		} else {
-			EditPart part = (EditPart) editParts.get(editParts.size() - 1);
+			EditPart part = editParts.get(editParts.size() - 1);
 			navigateToPart(part, event);
 		}
 		return true;
@@ -262,18 +302,21 @@ public class DiagramGraphicalViewerKeyHandler
 	 * @param exclude
 	 * @return
 	 */
-	private List findPageSibling(
+	private List<GraphicalEditPart> findPageSibling(
 		List siblings,
 		Point pStart,
 		int pageDistance,
 		int direction,
 		EditPart exclude) {
+	    
 		GraphicalEditPart epCurrent;
 		GraphicalEditPart epFinal = null;
-		List selection = new ArrayList();
+		GraphicalEditPart epFurthest = null;  // in case there is not a full pageDistance left to scroll
+		List<GraphicalEditPart> selection = new ArrayList<GraphicalEditPart>();
 		IFigure figure;
 		Point pCurrent;
-		int distance = 0;
+		int distance = Integer.MAX_VALUE;
+		int furthestDistance = 0;
 
 		Iterator iter = siblings.iterator();
 		while (iter.hasNext()) {
@@ -285,21 +328,27 @@ public class DiagramGraphicalViewerKeyHandler
 			figure = epCurrent.getFigure();
 			pCurrent = getFigureInterestingPoint(figure);
 			figure.translateToAbsolute(pCurrent);
-			if (pStart.getPosition(pCurrent) != direction)
+			if (!isInDirection(direction, pStart, pCurrent))
 				continue;
 
 			int d = pCurrent.getDistanceOrthogonal(pStart);
-			if (d <= pageDistance) {
+			if (d >= pageDistance) {
 				selection.add(epCurrent);
-				if (d > distance) {
+				if (d < distance) {
 					distance = d;
 					epFinal = epCurrent;
 				}
+			}
+			if (d > furthestDistance) {
+			    epFurthest = epCurrent;
 			}
 			if (epFinal != null) {
 				selection.remove(epFinal);
 				selection.add(epFinal);
 			}
+		}
+		if (selection.isEmpty() && epFurthest != null) {
+		    return Collections.singletonList(epFurthest);
 		}
 		return selection;
 	}
@@ -311,14 +360,14 @@ public class DiagramGraphicalViewerKeyHandler
 	 * @param exclude
 	 * @return
 	 */
-	private List findEndSibling(
+	private List<GraphicalEditPart> findEndSibling(
 		List siblings,
 		Point pStart,
 		int direction,
 		EditPart exclude) {
 		GraphicalEditPart epCurrent;
 		GraphicalEditPart epFinal = null;
-		List selection = new ArrayList();
+		List<GraphicalEditPart> selection = new ArrayList<GraphicalEditPart>();
 		IFigure figure;
 		Point pCurrent;
 		int distance = 0;
@@ -333,7 +382,7 @@ public class DiagramGraphicalViewerKeyHandler
 			figure = epCurrent.getFigure();
 			pCurrent = getFigureInterestingPoint(figure);
 			figure.translateToAbsolute(pCurrent);
-			if (pStart.getPosition(pCurrent) != direction)
+			if (!isInDirection(direction, pStart, pCurrent))
 				continue;
 
 			selection.add(epCurrent);
@@ -464,6 +513,33 @@ public class DiagramGraphicalViewerKeyHandler
             return epCycle;
         }
         return epFinal;
+    }
+
+    /**
+     * Returns true if the point in question is in the given direction from the
+     * starting point.
+     * 
+     * @param direction
+     *            the direction
+     * @param start
+     *            the starting point
+     * @param point
+     *            the point in question
+     * @return true if the point in question is in the given direction from the
+     *         starting point; false otherwise
+     */
+    private boolean isInDirection(int direction, Point start, Point point) {
+        switch (direction) {
+            case PositionConstants.WEST:
+                return start.x > point.x;
+            case PositionConstants.EAST:
+                return start.x < point.x;
+            case PositionConstants.NORTH:
+                return start.y > point.y;
+            case PositionConstants.SOUTH:
+                return start.y < point.y;
+        }
+        return false;
     }
     
 }
