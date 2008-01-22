@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ public class CompositeTopDownProvider
      * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateToGraph(org.eclipse.draw2d.geometry.Rectangle)
      */
     protected Rectangle translateToGraph(Rectangle r) {
-        Rectangle rDP = new Rectangle(r);
+        Rectangle rDP = r.getCopy();
         getMapMode().LPtoDP(rDP);
         return rDP;
     }
@@ -36,7 +36,7 @@ public class CompositeTopDownProvider
      * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateFromGraph(org.eclipse.draw2d.geometry.Rectangle)
      */
     protected Rectangle translateFromGraph(Rectangle rect) {
-        Rectangle rLP = new Rectangle(rect);
+        Rectangle rLP = rect.getCopy();
         getMapMode().DPtoLP(rLP);
         return rLP;
     }

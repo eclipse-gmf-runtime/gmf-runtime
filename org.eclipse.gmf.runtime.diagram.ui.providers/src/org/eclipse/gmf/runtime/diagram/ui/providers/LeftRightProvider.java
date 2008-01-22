@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.providers;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider;
 
 /**
@@ -20,12 +22,12 @@ import org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider;
  * Custom provider that lays out the directed graph in a left to right fashion.
  */
 public class LeftRightProvider extends DefaultProvider {
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateToGraph(org.eclipse.draw2d.geometry.Rectangle)
 	 */
 	protected Rectangle translateToGraph(Rectangle r) {
-		Rectangle rDP = new Rectangle(r.y, r.x, r.height, r.width);
+		Rectangle rDP = r.getCopy();
 		getMapMode().LPtoDP(rDP);
 		return rDP;
 	}
@@ -34,9 +36,19 @@ public class LeftRightProvider extends DefaultProvider {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateFromGraph(org.eclipse.draw2d.geometry.Rectangle)
 	 */
 	protected Rectangle translateFromGraph(Rectangle rect) {
-		Rectangle rLP = new Rectangle(rect.y, rect.x, rect.height, rect.width);
+		Rectangle rLP = rect.getCopy();
 		getMapMode().DPtoLP(rLP);
 		return rLP;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#createGraph()
+	 */
+	protected DirectedGraph createGraph() {
+		DirectedGraph g = super.createGraph();
+		g.setDirection(PositionConstants.WEST);
+		return g;
 	}
+
 }
 

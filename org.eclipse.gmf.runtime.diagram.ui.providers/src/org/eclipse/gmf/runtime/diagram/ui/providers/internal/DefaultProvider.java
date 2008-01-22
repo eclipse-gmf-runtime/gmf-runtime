@@ -22,13 +22,15 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.draw2d.geometry.PrecisionDimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraphLayout;
@@ -44,6 +46,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
@@ -57,11 +60,12 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.util.Assert;
 
 /**
  * Provider that creates a command for the DirectedGraph layout in GEF.
@@ -265,7 +269,8 @@ public abstract class DefaultProvider
         }
         else
             rect = new Rectangle(n.x, n.y, n.width, n.height);
-        return translateFromGraph(rect);
+        PrecisionRectangle preciseRect = new PrecisionRectangle(rect);
+        return translateFromGraph(preciseRect);
     }
 
     /**
@@ -626,38 +631,33 @@ public abstract class DefaultProvider
             target = tmpNode;
         }
         
-        int totalEdgeDiffX = diffX ;
-        int totalEdgeDiffY = diffY ;
+        double totalEdgeDiffX = diffX ;
+        double totalEdgeDiffY = diffY ;
         Node parent=  null;
         parent = source.getParent();
         if (parent==null)
             parent = target.getParent();
         if (parent!=null){
             Rectangle targetExt = getNodeMetrics(parent);
-            totalEdgeDiffX += targetExt.x;
-            totalEdgeDiffY += targetExt.y;
+            totalEdgeDiffX += targetExt.preciseX();
+            totalEdgeDiffY += targetExt.preciseY();
         }
         
-        
-        PointList allPoints = new PointList(routePoints.size());
+        PrecisionPointList allPoints = new PrecisionPointList(routePoints.size());
         for (int i = 0; i < routePoints.size(); i++) {
-            allPoints.addPoint(routePoints.getPoint(i).x + totalEdgeDiffX, routePoints
-                .getPoint(i).y
+            allPoints.addPrecisionPoint(routePoints.getPoint(i).preciseX() + totalEdgeDiffX, routePoints
+                .getPoint(i).preciseY()
                 + totalEdgeDiffY);
         }
 
-        Rectangle sourceExt = getNodeMetrics(source);
-        Point ptSourceReference = sourceExt.getCenter().getTranslated(diffX,
-            diffY);
-        Rectangle targetExt = getNodeMetrics(target);
-        Point ptTargetReference = targetExt.getCenter().getTranslated(diffX,
-            diffY);
-        
-        SetAllBendpointRequest request = new SetAllBendpointRequest(
-            RequestConstants.REQ_SET_ALL_BENDPOINT, allPoints,
-            ptSourceReference, ptTargetReference);
-
         CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
+        
+        LineSeg anchorReferencePoints = addAnchorsCommands(cc, allPoints.getFirstPoint(), allPoints.getLastPoint(), source, target, connectEP, diffX, diffY);
+        		
+        SetAllBendpointRequest request = new SetAllBendpointRequest(
+                RequestConstants.REQ_SET_ALL_BENDPOINT, allPoints,
+                anchorReferencePoints.getOrigin(), anchorReferencePoints.getTerminus());
+
         Command cmd = connectEP.getCommand(request);
         if (cmd != null)
             cc.add(cmd);
@@ -678,6 +678,114 @@ public abstract class DefaultProvider
         return cc;
     }
     
+    /**
+	 * Creates source and target anchor commands and appends them to the
+	 * compound command passed in. Returns a line segment ends of which are the
+	 * new source and target anchor reference points for further use in the
+	 * command setting the bend points.
+	 * 
+	 * @param cc
+	 *            command to add anchors commands to
+	 * @param sourceAnchorLocation
+	 *            the source anchor location coordinates
+	 * @param targetAnchorLocation
+	 *            the target anchor location coordinates
+	 * @param source
+	 *            source node
+	 * @param target
+	 *            target node
+	 * @param cep
+	 *            connection editpart
+	 * @param diffX
+	 *            x axis offset
+	 * @param diffY
+	 *            y axis offset
+	 * @return <code>LineSeg</code> origin is the new source anchor reference
+	 *         point and origin is the new target anchor reference point
+	 */
+	protected LineSeg addAnchorsCommands(CompoundCommand cc,
+			Point sourceAnchorLocation, Point targetAnchorLocation,
+			Node source, Node target, ConnectionEditPart cep, int diffX,
+			int diffY) {
+		Rectangle sourceExt = getNodeMetrics(source);
+		Rectangle targetExt = getNodeMetrics(target);
+		sourceExt.performTranslate(diffX, diffY);
+		targetExt.performTranslate(diffX, diffY);
+
+		/*
+		 * If source or target anchor command won't be created or will be non-executable,
+		 * source or target reference point is assumed to be the geometric centre of a shape.
+		 */
+		Point resultantSourceAnchorReference = sourceExt.getCenter();
+		Point resultantTargetAnchorReference = targetExt.getCenter();
+
+		PrecisionPoint sourceRatio = new PrecisionPoint((sourceAnchorLocation
+				.preciseX() - sourceExt.preciseX())
+				/ sourceExt.preciseWidth(),
+				(sourceAnchorLocation.preciseY() - sourceExt.preciseY())
+						/ sourceExt.preciseHeight());
+		PrecisionPoint targetRatio = new PrecisionPoint((targetAnchorLocation
+				.preciseX() - targetExt.preciseX())
+				/ targetExt.preciseWidth(),
+				(targetAnchorLocation.preciseY() - targetExt.preciseY())
+						/ targetExt.preciseHeight());
+
+		/*
+		 * Need to fake reconnection of the ends of the connection. Currently
+		 * existing figure coordinates (old coordinates) needs to be used for
+		 * this, since the reconnection location is passed in absolute
+		 * coordinates.
+		 */
+		ReconnectRequest reconnectRequest = new ReconnectRequest(
+				org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
+		reconnectRequest.setConnectionEditPart(cep);
+		reconnectRequest.setTargetEditPart((EditPart) source.data);
+		IFigure sourceFig = ((GraphicalEditPart) source.data).getFigure();
+		Point sourceAnchorReference = new PrecisionPoint(
+				sourceFig.getBounds().preciseX() + sourceRatio.preciseX()
+						* sourceFig.getBounds().preciseWidth(), sourceFig
+						.getBounds().preciseY()
+						+ sourceRatio.preciseY()
+						* sourceFig.getBounds().preciseHeight());
+		sourceFig.translateToAbsolute(sourceAnchorReference);
+		reconnectRequest.setLocation(sourceAnchorReference);
+		Command sourceAnchorCommand = ((EditPart) source.data)
+				.getCommand(reconnectRequest);
+		if (sourceAnchorCommand != null && sourceAnchorCommand.canExecute()) {
+			cc.add(sourceAnchorCommand);
+			resultantSourceAnchorReference = new PrecisionPoint(sourceExt
+					.preciseWidth()
+					* sourceRatio.preciseX() + sourceExt.preciseX(), targetExt
+					.preciseHeight()
+					* sourceRatio.preciseY() + sourceExt.preciseY());
+		}
+
+		reconnectRequest
+				.setType(org.eclipse.gef.RequestConstants.REQ_RECONNECT_TARGET);
+		reconnectRequest.setTargetEditPart((EditPart) target.data);
+		IFigure targetFig = ((GraphicalEditPart) target.data).getFigure();
+		Point targetAnchorReference = new PrecisionPoint(
+				targetFig.getBounds().preciseX() + targetRatio.preciseX()
+						* targetFig.getBounds().preciseWidth(), targetFig
+						.getBounds().preciseY()
+						+ targetRatio.preciseY()
+						* targetFig.getBounds().preciseHeight());
+		targetFig.translateToAbsolute(targetAnchorReference);
+		reconnectRequest.setLocation(targetAnchorReference);
+		Command targetAnchorCommand = ((EditPart) target.data)
+				.getCommand(reconnectRequest);
+		if (targetAnchorCommand != null && targetAnchorCommand.canExecute()) {
+			cc.add(targetAnchorCommand);
+			resultantTargetAnchorReference = new PrecisionPoint(targetExt
+					.preciseWidth()
+					* targetRatio.preciseX + targetExt.preciseX(), targetExt
+					.preciseHeight()
+					* targetRatio.preciseY() + targetExt.preciseY());
+		}
+		return new LineSeg(resultantSourceAnchorReference,
+				resultantTargetAnchorReference);
+	}
+
     /**
      * Method update_diagram. Once the layout has been calculated with the GEF
      * graph structure, the new layout values need to be propogated into the
@@ -726,7 +834,7 @@ public abstract class DefaultProvider
     protected Command createEdgesChangeBoundsCommands(DirectedGraph g, Point diff) {
         
         CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
-        PointList points = new PointList(10);
+        PointList points = new PrecisionPointList(10);
         
         ListIterator vi = g.edges.listIterator();
         while (vi.hasNext()) {
@@ -765,21 +873,18 @@ public abstract class DefaultProvider
         Rectangle start = translateFromGraph(
             new Rectangle(pointList.getFirstPoint().x,
                           pointList.getFirstPoint().y, 0, 0));
-        points.addPoint(start.getTopLeft());
+        points.addPoint(start.getLocation());
         NodeList vnodes = edge.vNodes;
         if (vnodes != null) {
             for (int i = 0; i < vnodes.size(); i++) {
                 Node vn = vnodes.getNode(i);
                 Rectangle nodeExt = getNodeMetrics(vn);
-                int x = nodeExt.x;
-                int y = nodeExt.y;
-
-                points.addPoint(x + nodeExt.width / 2, y + nodeExt.height / 2);
+                points.addPoint(nodeExt.getCenter());
             }
         }
         Rectangle end = translateFromGraph(new Rectangle(pointList.getLastPoint().x,
             pointList.getLastPoint().y, 0, 0));
-        points.addPoint(end.getTopLeft());
+        points.addPoint(end.getLocation());
     }
 
     protected Command createNodeChangeBoundCommands(DirectedGraph g, Point diff) {
@@ -802,16 +907,16 @@ public abstract class DefaultProvider
                 ChangeBoundsRequest request = new ChangeBoundsRequest(
                     RequestConstants.REQ_MOVE);
                 Rectangle nodeExt = getNodeMetrics(node);
-                Point ptLocation = new Point(nodeExt.x + diff.x, nodeExt.y
-                    + diff.y);
+                Point ptLocation = new PrecisionPoint(nodeExt.preciseX() + diff.preciseX(), nodeExt.preciseY()
+                    + diff.preciseY());
 
                 PrecisionPoint ptOldLocation = new PrecisionPoint(gep.getFigure().getBounds().getLocation());
                 gep.getFigure().translateToAbsolute(ptOldLocation);
                 
                 gep.getFigure().translateToAbsolute(ptLocation);
-                PrecisionPoint delta = new PrecisionPoint(ptLocation.x
-                    - ptOldLocation.preciseX, ptLocation.y
-                    - ptOldLocation.preciseY);
+                PrecisionPoint delta = new PrecisionPoint(ptLocation.preciseX()
+                    - ptOldLocation.preciseX(), ptLocation.preciseY()
+                    - ptOldLocation.preciseY());
 
                 request.setEditParts(gep);
                 request.setMoveDelta(delta);
