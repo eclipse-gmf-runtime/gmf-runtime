@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,12 +110,12 @@ public class ComponentEditPolicy
             }
         }
         
-        
-        if (parent instanceof IGraphicalEditPart) {
+        EObject eObject = (EObject)getHost().getAdapter(EObject.class);
+        if (eObject != null && parent != null ) { //sanity checks
 			CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
-			if ( cep != null ) {
-				return cep.isEnabled();						
-			} 					
+			return cep != null 
+				&& cep.isEnabled()
+				&& cep.canCreate(eObject); 					
 		} 	
 		return false;
 	}

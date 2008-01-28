@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,6 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.l10n.DiagramUIActionsMessages;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GroupEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -157,88 +156,56 @@ public class DeleteFromDiagramAction extends DiagramAction{
 	 * @return
 	 */
 	private boolean isCanonical(List selectedItems){
-		
-		if (selectedItems.isEmpty()) {
- 			return false;
- 		}
- 		for (Iterator i = selectedItems.iterator(); i.hasNext();) {
- 			Object selectedObject = i.next(); 	
- 			
- 			if (!(selectedObject instanceof IGraphicalEditPart)){
- 				continue;
- 			}
- 				
- 			//If the selectedObject does not have a semanticElement,
- 			//the canonical check is irrelevant.  The delete from
- 			//diagram should apply.
- 			IGraphicalEditPart gep = (IGraphicalEditPart)selectedObject;
- 			Object model = gep.getModel();
-			if (!(model instanceof View)){
- 				continue;
-			}
+    
+	    boolean isCanonical = false;
+        if ( !selectedItems.isEmpty()) {
 
-            EObject element = ((View)model).getElement();
- 			if (element == null || element instanceof View){
- 				
- 				if (selectedObject instanceof ConnectionEditPart) {
- 					if (!((ConnectionEditPart) selectedObject).isSemanticConnection()) {
- 						// not a reference connection (which has no element, but whose canonical-ness should be checked)
- 						continue;
- 					}
- 				} else {
- 	                // If there is no element or the element is a view (e.g. diagram
- 	                // link) than we want to support delete from diagram. See
- 	                // bugzilla#148453.
- 	                continue;
- 				}
- 			} 				
- 			//Check if container of connection is canonical. 
- 			//A connection's container is not necessarily the connection editPart's parent.
- 			if (selectedObject instanceof ConnectionEditPart){
- 				ConnectionEditPart ePart = (ConnectionEditPart)selectedObject;
- 				EditPart sEditPart = ePart.getSource();
-                EditPart tEditPart = ePart.getTarget();
- 				if (isCanonical(sEditPart) && isCanonical(tEditPart))
- 					return true;
- 			}
- 			//Check if container of shape is canonical.
- 			else { 				
- 				if (isCanonical(gep))
-					return true;
- 			} 			
- 		} 
- 		return false;		
+            for  (Iterator si = selectedItems.iterator(); si.hasNext() && !isCanonical;) {
+                Object selected = si.next();   
+                if ( selected instanceof EditPart ) {
+                    EditPart child = (EditPart)selected;
+                    View view = (View)child.getAdapter(View.class);
+
+                    if (  view == null 
+                            || view.getElement() == null
+                            || view.getElement() instanceof View ) {
+                        // If there is no element or the element is a view (e.g. diagram
+                        // link) than we want to support delete from diagram. See
+                        // bugzilla#148453.
+                        isCanonical = false;
+                        continue;
+                    }
+                    if (child instanceof ConnectionEditPart) {
+                        ConnectionEditPart connection = (ConnectionEditPart)child;
+                        isCanonical = ( !connection.isSemanticConnection()
+                                || (isCanonical(connection.getSource())
+                                        && isCanonical(connection.getTarget())) );
+                    } 
+                    else {
+                        isCanonical = isCanonical(child);
+                    }
+                }
+            }
+        }
+        return isCanonical;
+
+	    
 	}
 	
 	/**
 	 * @param gep
 	 * @return
 	 */
-	private boolean isCanonical(EditPart gep) {
-		if (gep instanceof IGraphicalEditPart){
-			return isCanonical((IGraphicalEditPart)gep);
-		}
-		return false;
-	}
-
-
-	/**
-	 * @param gep
-	 * @return
-	 */
-	private boolean isCanonical(IGraphicalEditPart gep) {
-		EditPart parent = gep.getParent();
-        while (parent instanceof GroupEditPart) {
-            parent = parent.getParent();
+	private boolean isCanonical(EditPart ep) {
+	    EObject eObject = (EObject)ep.getAdapter(EObject.class);
+        EditPart parent = ep.getParent();
+        if ( eObject != null && parent != null ) { //sanity checks
+            CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
+            return cep != null
+                && cep.isEnabled()
+                && cep.canCreate(eObject);
         }
-		if (parent instanceof IGraphicalEditPart) {
-			CanonicalEditPolicy cep = (CanonicalEditPolicy)parent.getEditPolicy(EditPolicyRoles.CANONICAL_ROLE);
-			if ( cep != null ) {
-				if (cep.isEnabled())
-					return true;
-			}
-		}
-		return false;
+        return false;
 	}
 
 }

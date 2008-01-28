@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -766,5 +766,17 @@ public abstract class CanonicalConnectionEditPolicy
 			.equals(req.getType())) ? true
 			: super.understandsRequest(req);
 	}
+
+    /**
+     * Determines if this editpolicy would create a view for the supplied 
+     * semantic element.  The default implementation will return <tt>true</tt>
+     * if the supplied <tt>eObject</tt> is contained in {@link #getSemanticConnectionsList()}.
+     * @param eObject a semantic element
+     * @return <tt>true</tt> if this policy would create a view; 
+     * <tt>false</tt> otherwise.
+     */
+    public boolean canCreate( EObject eObject ) {
+        return super.canCreate(eObject) || getSemanticConnectionsList().contains(eObject);
+    }
 
 }
