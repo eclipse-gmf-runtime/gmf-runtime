@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -208,12 +208,12 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
             InternalTransaction transaction = internalEditingDomain.getActiveTransaction();
             if (transaction!=null && !transaction.isReadOnly()) {
                 Object unprotectedMode = transaction.getOptions().get(Transaction.OPTION_UNPROTECTED); 
-                if (unprotectedMode != null && unprotectedMode == Boolean.TRUE) {
+                if (Boolean.TRUE.equals(unprotectedMode)) {
                     // check for silent
                     Object noNotificationMode = transaction.getOptions().get(Transaction.OPTION_NO_NOTIFICATIONS);
                     Object noTriggersMode = transaction.getOptions().get(Transaction.OPTION_NO_TRIGGERS);
-                    if (unprotectedMode != null && noNotificationMode == Boolean.TRUE &&
-                        noTriggersMode !=null &&  noTriggersMode == Boolean.TRUE           ) {
+                    if (Boolean.TRUE.equals(noNotificationMode) &&
+                    	Boolean.TRUE.equals(noTriggersMode)) {
                         return true;
                     }
                 }
