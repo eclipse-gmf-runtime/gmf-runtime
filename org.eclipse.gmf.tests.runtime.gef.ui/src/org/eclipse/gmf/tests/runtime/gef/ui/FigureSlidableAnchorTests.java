@@ -23,7 +23,6 @@ import org.eclipse.gmf.runtime.gef.ui.internal.figures.DiamondFigure;
 /**
  * @author oboyko
  *
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class FigureSlidableAnchorTests
 	extends TestCase {
@@ -51,14 +50,14 @@ public class FigureSlidableAnchorTests
 		Point p2 = new Point(148,300); 
 		ConnectionAnchor anchor = fig.getSourceConnectionAnchorAt(p1);
 		Point reference = anchor.getLocation(p2);
-		assertTrue(reference.x==p2.x);
+		assertEquals(p2.preciseX(), reference.preciseX(), 0);
 
-		// Slidable anchor test inside figure's bounds
+		// Sliding anchor test inside figure's bounds
 		p1 = new Point(110,200); 
 		p2 = new Point(112,300); 
 		anchor = fig.getSourceConnectionAnchorAt(p1);
 		reference = anchor.getLocation(p2);
-		assertTrue(reference.x==p2.x);
+		assertEquals(p2.preciseX(), reference.preciseX(), 0);
 	}
 	
 	public void testGetLocationFromReferenceOnBorder() {
@@ -72,7 +71,7 @@ public class FigureSlidableAnchorTests
 		// is the same point.
 		Point p2 = new Point(200, 175); 
 		Point reference = anchor.getLocation(new Point(200, 175));
-		assertTrue(reference.y == p2.y);
+		assertEquals(p2.preciseY(), reference.preciseY(), 0);
 	}
 	
 	public void testAnchorPosition() {
@@ -83,24 +82,28 @@ public class FigureSlidableAnchorTests
 		Point p = new Point(3,3); 
 		ConnectionAnchor anchor = fig.getSourceConnectionAnchorAt(p);
 		Point reference = anchor.getReferencePoint();
-		assertTrue(reference.x==0 && reference.y==0);
+		assertEquals(0, reference.preciseX(), 0);
+		assertEquals(0, reference.preciseY(), 0);
 
-		// Slidable anchor test inside figure's bounds
+		// Sliding anchor test inside figure's bounds
 		p = new Point(8,8); 
 		anchor = fig.getSourceConnectionAnchorAt(p);
 		reference = anchor.getReferencePoint();
-		assertTrue(reference.x==p.x && reference.y==p.y);
+		assertEquals(p.preciseX(), reference.preciseX(), 0);
+		assertEquals(p.preciseY(), reference.preciseY(), 0);
 
-		// Slidable anchor test outside figure's bounds
+		// Sliding anchor test outside figure's bounds
 		p = new Point(12,12); 
 		anchor = fig.getSourceConnectionAnchorAt(p);
 		reference = anchor.getReferencePoint();
-		assertTrue(reference.x==10 && reference.y==10);
+		assertEquals(10, reference.preciseX(), 0);
+		assertEquals(10, reference.preciseY(), 0);
 		
 		p = new Point(15,0); 
 		anchor = fig.getSourceConnectionAnchorAt(p);
 		reference = anchor.getReferencePoint();
-		assertTrue(reference.x==10 && reference.y==0);
+		assertEquals(10, reference.preciseX(), 0);
+		assertEquals(0, reference.preciseY(), 0);
 	}
 	
 	public void testAnchorLocationOnPolygonFigure() {
@@ -114,35 +117,48 @@ public class FigureSlidableAnchorTests
 		Point position = new Point(2,2);
 		ConnectionAnchor anchor = fig.getSourceConnectionAnchorAt(position);
 		Point location = anchor.getLocation(reference);
-		assertTrue(location.x==10 && location.y==0);
+		assertEquals(10, location.preciseX(), 0);
+		assertEquals(0, location.preciseY(), 0);
 		
-		// Slidable anchor location inside the figure
+		// Sliding anchor location inside the figure
 		position = new Point(-8,0);
 		anchor = fig.getSourceConnectionAnchorAt(position);
 		location = anchor.getLocation(reference);
-		assertTrue(location.x==10 && location.y==0);
+		assertEquals(10, location.preciseX(), 0);
+		assertEquals(0, location.preciseY(), 0);
 		
-		// Slidable anchor location outside the figure
+		// Sliding anchor location outside the figure
+		position = new Point(10,10);
+		anchor = fig.getSourceConnectionAnchorAt(position);
+		location = anchor.getLocation(reference);
+		assertEquals(10, location.preciseX(), 0);
+		assertEquals(0, location.preciseY(), 0);
+		
+		// Sliding anchor location on the diamond shape vertex
 		position = new Point(10,5);
 		anchor = fig.getSourceConnectionAnchorAt(position);
 		location = anchor.getLocation(reference);
-		assertTrue(location.x==10 && location.y==0);
+		assertEquals(0, location.preciseX(), 0);
+		assertEquals(10, location.preciseY(), 0);
 
 		// Reference inside the figure
 		reference = new Point(-2,5);
 		location = anchor.getLocation(reference);
-		assertTrue(location.x==-5 && location.y==5);
+		assertEquals(-5, location.preciseX(), 0);
+		assertEquals(5, location.preciseY(), 0);
 		
 		// Reference and anchor's position are equal
 		reference = new Point(10,5);
 		location = anchor.getLocation(reference);
-		assertTrue(location.x==7 && location.y==3);
+		assertEquals(20d/3d, location.preciseX(), 0);
+		assertEquals(10d/3d, location.preciseY(), 0);
 		
-		// Rference point is at the center of the figure as well as the anchors position
+		// Reference point is at the center of the figure as well as the anchors position
 		reference = new Point(0,0);
 		position = new Point (0,0);
 		anchor = fig.getSourceConnectionAnchorAt(position);
 		location = anchor.getLocation(reference);
-		assertTrue(location.x==0 && location.y==0);
+		assertEquals(0, location.preciseX(), 0);
+		assertEquals(0, location.preciseY(), 0);
 	}
 }

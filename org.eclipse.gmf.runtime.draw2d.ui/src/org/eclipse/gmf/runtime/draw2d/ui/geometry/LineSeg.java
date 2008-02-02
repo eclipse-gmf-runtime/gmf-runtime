@@ -11,6 +11,11 @@
 
 package org.eclipse.gmf.runtime.draw2d.ui.geometry;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
@@ -831,10 +836,28 @@ public class LineSeg
 		double det = a1*b2 - b1*a2;
 		if (det == 0) {
 			if (a1==a2 && b1==b2 && c1==c2) {
+				List<Point> points = new ArrayList<Point>(4);
+				points.add(getOrigin());
+				points.add(getTerminus());
+				points.add(line.getOrigin());
+				points.add(line.getTerminus());
+				Collections.sort(points, new Comparator<Point>() {
+					public int compare(Point arg0, Point arg1) {
+						if (arg0.equals(arg1)) {
+							return 0;
+						} else if (arg0.preciseX() < arg1.preciseX()
+								|| (arg0.preciseX() == arg1.preciseX() && arg0
+										.preciseY() < arg1.preciseY())) {
+							return -1;
+						} else {
+							return 1;
+						}
+					}					
+				});
 				// if lines are the same, then instead of infinite number of intersections
-				// we will put the end points of the line segment passed as an argument
-				intersections.addPoint(line.getOrigin().getCopy());
-				intersections.addPoint(line.getTerminus().getCopy());
+				// we will put the 2 points out of 4 points - ends of 2 segments. Look above.
+				intersections.addPoint(points.get(1));
+				intersections.addPoint(points.get(2));
 			}
 		}
 		else {
