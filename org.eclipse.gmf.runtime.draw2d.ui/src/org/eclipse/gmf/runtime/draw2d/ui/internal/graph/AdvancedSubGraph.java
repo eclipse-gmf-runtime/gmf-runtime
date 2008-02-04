@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  ****************************************************************************/
 package org.eclipse.gmf.runtime.draw2d.ui.internal.graph;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.graph.Subgraph;
 
 /**
@@ -22,6 +23,7 @@ public class AdvancedSubGraph
     
     private boolean autoSize = false;
     private boolean hadBufferZone = false;
+    private int direction = PositionConstants.NONE;
     
     public AdvancedSubGraph(Object data) {
         super(data, null);
@@ -62,5 +64,23 @@ public class AdvancedSubGraph
     public boolean isHasBufferedZone(){
         return hadBufferZone;
     }
+
+	/**
+	 * Gets the subgraph layout direction
+	 * 
+	 * @return layout direction
+	 */
+	public int getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Sets the direction for the subgraph's layout
+	 * 
+	 * @param direction
+	 */
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
 
 }

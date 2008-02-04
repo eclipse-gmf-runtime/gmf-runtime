@@ -260,15 +260,7 @@ public abstract class DefaultProvider
      * @return Rectangle that represents the location and extend of the Node.
      */
      protected Rectangle getNodeMetrics(Node n) {
-        Rectangle rect = null;
-        Node parent = n.getParent();
-        while (parent!=null &&!(parent.data instanceof IGraphicalEditPart))
-            parent = parent.getParent();
-        if (parent!=null){
-            rect = new Rectangle(n.x - parent.x, n.y - parent.y, n.width, n.height);
-        }
-        else
-            rect = new Rectangle(n.x, n.y, n.width, n.height);
+        Rectangle rect = new Rectangle(n.x, n.y, n.width, n.height);
         PrecisionRectangle preciseRect = new PrecisionRectangle(rect);
         return translateFromGraph(preciseRect);
     }
@@ -617,7 +609,7 @@ public abstract class DefaultProvider
     /**
      * Computes the command that will route the given connection editpart with the given points.
      */
-    Command routeThrough(Edge edge, ConnectionEditPart connectEP, Node source, Node target, PointList points, int diffX, int diffY) {
+    protected Command routeThrough(Edge edge, ConnectionEditPart connectEP, Node source, Node target, PointList points, int diffX, int diffY) {
 
         if (connectEP == null)
             return null;
@@ -633,15 +625,6 @@ public abstract class DefaultProvider
         
         double totalEdgeDiffX = diffX ;
         double totalEdgeDiffY = diffY ;
-        Node parent=  null;
-        parent = source.getParent();
-        if (parent==null)
-            parent = target.getParent();
-        if (parent!=null){
-            Rectangle targetExt = getNodeMetrics(parent);
-            totalEdgeDiffX += targetExt.preciseX();
-            totalEdgeDiffY += targetExt.preciseY();
-        }
         
         PrecisionPointList allPoints = new PrecisionPointList(routePoints.size());
         for (int i = 0; i < routePoints.size(); i++) {
@@ -711,7 +694,7 @@ public abstract class DefaultProvider
 		Rectangle targetExt = getNodeMetrics(target);
 		sourceExt.performTranslate(diffX, diffY);
 		targetExt.performTranslate(diffX, diffY);
-
+		
 		/*
 		 * If source or target anchor command won't be created or will be non-executable,
 		 * source or target reference point is assumed to be the geometric centre of a shape.
@@ -729,7 +712,7 @@ public abstract class DefaultProvider
 				/ targetExt.preciseWidth(),
 				(targetAnchorLocation.preciseY() - targetExt.preciseY())
 						/ targetExt.preciseHeight());
-
+		
 		/*
 		 * Need to fake reconnection of the ends of the connection. Currently
 		 * existing figure coordinates (old coordinates) needs to be used for
@@ -755,7 +738,7 @@ public abstract class DefaultProvider
 			cc.add(sourceAnchorCommand);
 			resultantSourceAnchorReference = new PrecisionPoint(sourceExt
 					.preciseWidth()
-					* sourceRatio.preciseX() + sourceExt.preciseX(), targetExt
+					* sourceRatio.preciseX() + sourceExt.preciseX(), sourceExt
 					.preciseHeight()
 					* sourceRatio.preciseY() + sourceExt.preciseY());
 		}
@@ -870,21 +853,10 @@ public abstract class DefaultProvider
 
     private void collectPoints(PointList points, Edge edge) {
         PointList pointList = edge.getPoints();
-        Rectangle start = translateFromGraph(
-            new Rectangle(pointList.getFirstPoint().x,
-                          pointList.getFirstPoint().y, 0, 0));
-        points.addPoint(start.getLocation());
-        NodeList vnodes = edge.vNodes;
-        if (vnodes != null) {
-            for (int i = 0; i < vnodes.size(); i++) {
-                Node vn = vnodes.getNode(i);
-                Rectangle nodeExt = getNodeMetrics(vn);
-                points.addPoint(nodeExt.getCenter());
-            }
+        for (int i = 0; i < pointList.size(); i++) {
+        	Rectangle pt = translateFromGraph(new Rectangle(pointList.getPoint(i), new Dimension()));
+        	points.addPoint(pt.getLocation());
         }
-        Rectangle end = translateFromGraph(new Rectangle(pointList.getLastPoint().x,
-            pointList.getLastPoint().y, 0, 0));
-        points.addPoint(end.getLocation());
     }
 
     protected Command createNodeChangeBoundCommands(DirectedGraph g, Point diff) {
@@ -921,13 +893,13 @@ public abstract class DefaultProvider
                 request.setEditParts(gep);
                 request.setMoveDelta(delta);
                 request.setLocation(ptLocation);
-
+                
                 Command cmd = gep.getCommand(request);
                 if (cmd != null && cmd.canExecute())
                     cc.add(cmd);
+                }
             }
         }
-    }
 
     private Point getLayoutPositionDelta(DirectedGraph g, boolean isLayoutForSelected) {
         // If laying out selected objects, use diff variables to

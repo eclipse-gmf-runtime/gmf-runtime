@@ -22,13 +22,16 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.CompoundDirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraphLayout;
+import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
 import org.eclipse.draw2d.graph.Subgraph;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
@@ -253,5 +256,18 @@ public abstract class CompositeLayoutProvider
         return true;
     }
 
-   
+	protected Command routeThrough(Edge edge, ConnectionEditPart connectEP,
+			Node source, Node target, PointList points, int diffX, int diffY) {
+		Node parent = source.getParent();
+		if (parent == null) {
+			parent = target.getParent();
+		}
+		if (parent != null) {
+			Point parentLocation = getNodeMetrics(parent).getLocation();
+			points.translate(parentLocation.x, parentLocation.y);
+		}
+		return super
+				.routeThrough(edge, connectEP, source, target, points, diffX, diffY);
+	}
+
 }

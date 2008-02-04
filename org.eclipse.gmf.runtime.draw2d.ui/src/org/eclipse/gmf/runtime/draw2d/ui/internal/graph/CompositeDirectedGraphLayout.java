@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.DirectedGraphLayout;
@@ -38,13 +39,16 @@ import org.eclipse.draw2d.graph.Subgraph;
  */
 public class CompositeDirectedGraphLayout
     extends DirectedGraphLayout {
+	
+	private int graphDirection = PositionConstants.SOUTH;
 
     /* (non-Javadoc)
      * @see org.eclipse.draw2d.graph.DirectedGraphLayout#visit(org.eclipse.draw2d.graph.DirectedGraph)
      */
     public void visit(DirectedGraph graph) {
-            layoutNodes(graph.nodes, false);
-    }
+		graphDirection = graph.getDirection();
+		layoutNodes(graph.nodes, false);
+	}
     
     private void layoutNodes(NodeList nodes, boolean virtualPass) {
         EdgeList edges = new EdgeList();
@@ -82,10 +86,17 @@ public class CompositeDirectedGraphLayout
             DirectedGraph g = new DirectedGraph();
             g.nodes = nodes;
             g.edges = edges;
+            AdvancedSubGraph advancedSubgraphParent = parent instanceof AdvancedSubGraph ? (AdvancedSubGraph)parent : null;
+            if (advancedSubgraphParent != null && advancedSubgraphParent.getDirection() != PositionConstants.NONE) {
+           		g.setDirection(advancedSubgraphParent.getDirection());
+            } else {
+            	g.setDirection(graphDirection);            	
+            }
             DirectedGraphLayout layout = new DirectedGraphLayout();
             layout.visit(g);
-            if (parent instanceof AdvancedSubGraph)
-                adjustAutoSizeNodeWidthAndHeight((AdvancedSubGraph)parent);
+            if (advancedSubgraphParent != null) {
+                adjustAutoSizeNodeWidthAndHeight(advancedSubgraphParent);
+            }
         }
         
         restoreDisconnectedEdges(nodeToOutGoing, nodeToIncomingGoing);
