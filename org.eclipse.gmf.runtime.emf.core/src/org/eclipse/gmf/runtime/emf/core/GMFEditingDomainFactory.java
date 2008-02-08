@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,24 @@
 
 package org.eclipse.gmf.runtime.emf.core;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
+import org.eclipse.emf.workspace.util.WorkspaceValidateEditSupport;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.ISyncExecHelper;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.SyncExecHelper;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 
@@ -28,9 +42,13 @@ import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
  *
  * @author Christian W. Damus (cdamus)
  */
-public class GMFEditingDomainFactory
-	extends WorkspaceEditingDomainFactory {
+public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 
+	static public TransactionalSyncExecHelper transactionalSyncExecHelper = new TransactionalSyncExecHelper();
+	static {
+		SyncExecHelper.setInstance(transactionalSyncExecHelper);
+	}
+			
     /**
      * The single shared instance of the GMF editing domain factory.
      */
@@ -75,17 +93,116 @@ public class GMFEditingDomainFactory
 	 * 
 	 * @param domain the new editing domain
 	 */
-	protected void configure(TransactionalEditingDomain domain) {
+	protected void configure(final TransactionalEditingDomain domain) {
 		ResourceSet rset = domain.getResourceSet();
-		
+
 		// ensure that the cross-referencing adapter is installed
 		if (CrossReferenceAdapter.getExistingCrossReferenceAdapter(rset) == null) {
 			rset.eAdapters().add(new CrossReferenceAdapter());
 		}
-		
+
 		// ensure that the path map manager is installed
 		if (PathmapManager.getExistingPathmapManager(rset) == null) {
 			rset.eAdapters().add(new PathmapManager());
 		}
+			
+		TransactionalEditingDomain.DefaultOptions options = (TransactionalEditingDomain.DefaultOptions) (TransactionUtil
+				.getAdapter(domain,
+						TransactionalEditingDomain.DefaultOptions.class));
+
+		Map<Object, Object> aMap = new HashMap<Object, Object>();
+		aMap.put(Transaction.OPTION_VALIDATE_EDIT,
+				new WorkspaceValidateEditSupport() {
+
+					@SuppressWarnings("unchecked")
+					protected IStatus doValidateEdit(Transaction transaction,
+							Collection resources, Object context) {
+						return GMFEditingDomainFactory.transactionalSyncExecHelper
+								.approveFileModification(getFiles(resources),
+										domain);
+					}
+				});
+
+		options.setDefaultTransactionOptions(aMap);
 	}
+		
+	
+	/**
+	 * A helper that knows about the specific editing domain.
+	 * During the approval process, calls to validateEdit() will require the
+	 * domain in order to execute in a thread safe manner.
+	 * 
+	 * @author James Bruck (jbruck)
+	 *
+	 */
+	public static class TransactionalSyncExecHelper implements ISyncExecHelper {
+
+		private final ThreadLocal<TransactionalEditingDomain> domain = new ThreadLocal<TransactionalEditingDomain>();
+
+		private void setDomain(TransactionalEditingDomain domain) {
+			this.domain.set(domain);
+		}
+
+		/**
+		 * Sets the thread specific transactional domain before the approval
+		 * process since subsequent calls to validateEdit() requires it and
+		 * clears it afterward.
+		 * 
+		 * @param files
+		 *            The files to be validated.
+		 * 
+		 * @param transactionalDomain
+		 *            The current editing domain.
+		 * 
+		 * @return The resulting status.
+		 */
+		public IStatus approveFileModification(IFile[] files,
+				TransactionalEditingDomain transactionalDomain) {
+
+			setDomain(transactionalDomain);
+			IStatus status = Status.OK_STATUS;
+			try {
+				status = FileModificationValidator
+						.approveFileModification(files);
+			} finally {
+				setDomain(null);
+			}
+			return status;
+		}
+		
+		/**
+		 * Delegates to the specified domain to obtain a thread safe wrapper
+		 * for the specified <code>runnable</code> 
+		 * 
+		 * @param runnable a runnable to execute in the context of the active
+		 *     transaction, on any thread
+		 *     
+		 *  @return the privileged runnable if the transaction is on the current
+		 *  	thread, otherwise just return itself.
+		 */
+		public Runnable safeRunnable(Runnable runnable) {
+			if( isTransactionOnCurrentThread()) {
+				return domain.get().createPrivilegedRunnable(runnable);
+			}
+			return null;
+		}
+
+		/**
+		 * Checks if the active transaction is on the current thread.
+		 * 
+		 * @return true if the active transaction is on the current thread.
+		 */
+		private boolean isTransactionOnCurrentThread() {
+			if (domain.get() != null) {
+				
+				Transaction tx = ((InternalTransactionalEditingDomain) domain
+						.get()).getActiveTransaction();
+				
+				return ((tx != null) && (tx.getOwner() == Thread
+						.currentThread()));
+			}
+			return false;
+		}
+	}
+		
 }

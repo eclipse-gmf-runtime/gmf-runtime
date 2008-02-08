@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.core.command.IModificationValidator;
+import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.ISyncExecHelper;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.internal.l10n.CommonUIMessages;
 import org.eclipse.gmf.runtime.common.ui.resources.FileModificationValidator;
+import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWindowListener;
@@ -117,22 +119,83 @@ public class UIModificationValidator
             }
         });
     }
-    
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.common.core.command.IModificationValidator#validateEdit(org.eclipse.core.resources.IFile[])
-	 */
-	public IStatus validateEdit(IFile[] files) {
-        Shell shell = listener == null ? null : listener.getShell(); 
-		boolean ok = FileModificationValidator.getInstance().okToEdit(files,
-			CommonUIMessages.UIModificationValidator_ModificationMessage, shell);
+            
+   /**
+    *  Helper class that allows us to return status information 
+    *  in addition to providing the option of clearing the 
+    *  shell variable before running doValidate().
+    *  
+    * @author James Bruck (jbruck)
+    */
+    class RunnableWithStatus implements Runnable {
 
-		return ok ? Status.OK_STATUS
-			: ERROR_STATUS;
+		private final IFile[] files;
+		private IStatus status;
+		private Shell shell;
+		
+		RunnableWithStatus(IFile[] files, Shell shell) {
+			this.files = files;
+			this.shell = shell;
+		}
+
+		public void run() {
+			status = doValidateEdit(files, shell);
+		}
+		public IStatus getResult() {
+			return status;
+		}
+		
+		public void setShell(Shell shell) {
+			this.shell = shell;
+		}
+	}
+        
+    /**
+     * This is the where the real call to validate the files takes place.
+     * 
+     * @param files list of files to validate.
+     * @param shell the shell to use when displaying error messages.
+     * @return the status indicating whether the validate succeeded or not.
+     */
+    protected IStatus doValidateEdit(IFile[] files, Shell shell) {
+
+		boolean ok = FileModificationValidator.getInstance().okToEdit(files,
+				CommonUIMessages.UIModificationValidator_ModificationMessage,
+				shell);
+		return ok ? Status.OK_STATUS : ERROR_STATUS;
+	}
+	    
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.common.core.command.IModificationValidator#validateEdit(org.eclipse.core.resources.IFile[])
+     */
+    public IStatus validateEdit(IFile[] files) {
+
+		Shell shell = listener == null ? null : listener.getShell();
+		RunnableWithStatus r = new RunnableWithStatus(files, shell);
+
+		ISyncExecHelper syncExecHelper = org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.SyncExecHelper
+				.getInstance();
+
+		if (ModalContext.isModalContextThread(Thread.currentThread())) {
+			Runnable safeRunnable = syncExecHelper.safeRunnable(r);
+			if( safeRunnable != null){
+				Display.getDefault().syncExec(safeRunnable);
+			} else {
+				r.run();
+			}
+		} else {
+			if (Display.getCurrent() == null) {
+				r.setShell(null);
+			}
+			r.run();
+		}
+		return r.getResult();
 	}
     
     /**
-     * Disposes this UI modification validator.
-     */
+	 * Disposes this UI modification validator.
+	 */
     public void dispose() {
         if (listener != null) {
             Display.getDefault().asyncExec(new Runnable() {
@@ -142,5 +205,4 @@ public class UIModificationValidator
             });
         }
     }
-
 }
