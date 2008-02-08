@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryFactory;
@@ -280,6 +281,34 @@ public class RegressionTest	extends BaseClipboardTest {
 			assertSame(level1, level1a.getParentBranch());
 			assertSame(level1, level1b.getParentBranch());
 			assertSame(level1, level1c.getParentBranch());
+		}
+	}
+	
+	/**
+	 * Tests that characters like '&amp;' are escaped in the copy resource.
+	 */
+	public void test_escapeURI_218307() {
+		if (writing()) {
+			List objects = new ArrayList();
+	
+			String name = "/" + PROJECT_NAME + "/test&escapes.extlibrary";
+			testResource.setURI(URI.createPlatformResourceURI(name, true));
+			
+			// level12 has no branches
+			assertTrue(level12.getBranches().size() == 0);
+	
+			// copy root3
+			objects.add(root3);
+			String copyStr = copy(objects, Collections.EMPTY_MAP);
+			assertNotNull(copyStr);
+			assertFalse(copyStr.length() == 0);
+			
+			// paste into level1
+			Collection eObjects = paste(copyStr, level12, Collections.EMPTY_MAP);
+			assertEquals(eObjects.size(), objects.size());
+	
+			// check that the library was copied into the branches containment list
+			assertTrue(level12.getBranches().size() == 1);
 		}
 	}
 }
