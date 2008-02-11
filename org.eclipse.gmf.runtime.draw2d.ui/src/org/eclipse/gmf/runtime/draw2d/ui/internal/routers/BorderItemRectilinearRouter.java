@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,13 +54,19 @@ public class BorderItemRectilinearRouter
     protected PointList calculateBendPoints(Connection conn) {
         IFigure source = conn.getSourceAnchor().getOwner();
         IFigure target = conn.getTargetAnchor().getOwner();
-        if (source == null || target == null || isAvoidingObstructions(conn) || isClosestDistance(conn)) {
+        if (source == null || target == null || isAvoidingObstructions(conn) || isClosestDistance(conn)
+        		|| super.calculateBendPoints(conn).size() > 2) {
             // reorient
             return super.calculateBendPoints(conn);
         }
 
         int sourcePosition = getBorderFigurePosition(source);
         int targetPosition = getBorderFigurePosition(target);
+        
+        if (sourcePosition == PositionConstants.NONE && targetPosition == PositionConstants.NONE) {
+        	return super.calculateBendPoints(conn);
+        }
+        
         PolylineConnectionEx fakeConnection = new PolylineConnectionEx() {
 
             public void validate() {
@@ -88,7 +94,7 @@ public class BorderItemRectilinearRouter
         List originalbendpoints = (ArrayList) conn.getConnectionRouter()
             .getConstraint(conn);
         // protection code to prevent NPE while creating the connection
-        if (originalbendpoints == null) {
+        if (originalbendpoints == null || originalbendpoints.size() == 0) {
             // reorient
             return super.calculateBendPoints(conn);
         }
