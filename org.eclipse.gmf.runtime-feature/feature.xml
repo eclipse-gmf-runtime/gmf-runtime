@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.gmf"
       label="%featureName"
-      version="1.0.100.qualifier"
+      version="1.1.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -28,6 +28,10 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <includes
          id="org.eclipse.gmf.runtime.thirdparty"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.gmf.runtime.notation"
          version="0.0.0"/>
 
    <requires>
@@ -251,20 +255,6 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.eclipse.gmf.runtime.gef.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.notation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.notation.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
