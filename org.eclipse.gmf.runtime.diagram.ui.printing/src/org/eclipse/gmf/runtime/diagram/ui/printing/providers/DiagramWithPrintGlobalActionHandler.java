@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.SWTDiagramPrinter;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandler;
 import org.eclipse.ui.IEditorPart;
 
@@ -57,10 +57,11 @@ public class DiagramWithPrintGlobalActionHandler
 	 * @param cntxt
 	 */
 	protected void doPrint(IGlobalActionContext cntxt) {
+	
 		DefaultPrintActionHelper.doRun((IEditorPart) cntxt.getActivePart(),
-			new DiagramPrinter(getPreferencesHint((IEditorPart) cntxt
+			new SWTDiagramPrinter(getPreferencesHint((IEditorPart) cntxt
 				.getActivePart()), getMapMode(cntxt)));
-	}
+		}
 
 	/**
 	 * Checks if we will allow a print

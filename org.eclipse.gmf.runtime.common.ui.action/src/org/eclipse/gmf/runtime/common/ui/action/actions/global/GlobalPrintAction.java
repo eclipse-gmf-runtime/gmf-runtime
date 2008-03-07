@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,17 +10,16 @@
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.common.ui.action.actions.global;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.action.internal.CommonUIActionPlugin;
 import org.eclipse.gmf.runtime.common.ui.action.internal.IHelpContextIds;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionMessages;
 import org.eclipse.gmf.runtime.common.ui.action.internal.l10n.CommonUIActionPluginImages;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Global action for printing
@@ -88,12 +87,13 @@ public final class GlobalPrintAction extends GlobalAction {
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
 	 */
 	public void refresh() {
-		//also only allows printing for windows, don't test for windows in the
-		//global action handler's canHandle, because that's for selection
-		//changes
+		//
+		// In phase 2 of printing enhancements we will remove the OS restriction.
+		//
 		setEnabled(!getGlobalActionHandlerData().isEmpty() && System.getProperty("os.name").toUpperCase().startsWith("WIN")); //$NON-NLS-1$ //$NON-NLS-2$
+		
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler#isSelectionListener()
 	 */

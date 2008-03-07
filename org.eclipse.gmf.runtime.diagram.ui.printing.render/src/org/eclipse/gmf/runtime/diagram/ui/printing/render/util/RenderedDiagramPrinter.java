@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.util;
 
 import org.eclipse.draw2d.Graphics;
-
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.SWTDiagramPrinter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.PrinterGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -28,7 +27,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedPrinte
  * @author cmahoney
  */
 public class RenderedDiagramPrinter
-	extends DiagramPrinter {
+	extends SWTDiagramPrinter {
 
 	/**
 	 * Creates a new instance.

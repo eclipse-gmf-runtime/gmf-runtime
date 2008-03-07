@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -28,13 +29,15 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
-import org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.DiagramUIPrintingRenderDebugOptions;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.DiagramUIPrintingRenderPlugin;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.JPSDiagramPrinter;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.JPSDiagramPrinterHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.util.RenderedDiagramPrinter;
 import org.eclipse.gmf.runtime.diagram.ui.printing.util.DiagramPrinterUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -58,6 +61,7 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 	 * 
 	 * @param IWorkbenchPart the workbenchPart containing the diagram to print
 	 */
+	
 	public void doPrint(IWorkbenchPart workbenchPart) {
 		DiagramEditor diagramEditor = null;
 
@@ -83,18 +87,22 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 		
 		//get actual map mode, default is MapModeUtil.getMapMode()
 		IMapMode mapMode = (rootEP instanceof DiagramRootEditPart) ? ((DiagramRootEditPart) rootEP)
-			.getMapMode()
-			: MapModeUtil.getMapMode();
-		
-		if (!System.getProperty("os.name").toUpperCase().startsWith("WIN")) { //$NON-NLS-1$ //$NON-NLS-2$
-			//do default action when not Windows and this action is enabled
-			DefaultPrintActionHelper.doRun(diagramEditor,
-				new RenderedDiagramPrinter(preferencesHint, mapMode));
-			return;
+				.getMapMode()
+				: MapModeUtil.getMapMode();
+		//
+		// Eventually the windows based printing will be replaced with the
+		// JPSDiagramPrinter.
+		//
+		if (Platform.getOS().startsWith(Platform.OS_WIN32)) {
+			DiagramPrinterUtil.printWithSettings(diagramEditor,
+					createDiagramMap(), new RenderedDiagramPrinter(
+							preferencesHint, mapMode));
 		}
-		
-		DiagramPrinterUtil.printWithSettings(diagramEditor, createDiagramMap(),
-			new RenderedDiagramPrinter(preferencesHint, mapMode));
+		else {
+			JPSDiagramPrinterHelper.getDiagramPrinterHelper()
+					.printWithSettings(diagramEditor, createDiagramMap(),
+							new JPSDiagramPrinter(preferencesHint, mapMode));
+		}
 	}
 
 	/**
@@ -105,9 +113,9 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 	 * All entries in the map correspond to open editors with the
 	 * diagramEditor's id. 
 	 */
-	private Map createDiagramMap() {
+	protected Map<String, Diagram> createDiagramMap() {
 		
-		Map diagramMap = new HashMap();
+		Map<String, Diagram> diagramMap = new HashMap<String, Diagram>();
 		
 		//get all diagram editors with the matching id 
 		List diagramEditors = EditorService.getInstance().getRegisteredEditorParts();
@@ -122,8 +130,7 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 				String diagramName = null;
 				
 				IEditorInput editorInput = dEditor.getEditorInput();
-				
-                
+				          
                 
 				//try to be more descriptive and get the IFile path which includes the project
 				IFile file = (IFile)(editorInput.getAdapter(IFile.class));

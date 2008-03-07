@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,9 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
@@ -40,7 +43,7 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatu
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.HeaderAndFooterHelper;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelperUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
@@ -61,7 +64,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -161,6 +163,11 @@ public class PrintPreviewHelper {
 	 * Print item on toolbar
 	 */
 	protected ToolItem printTool;
+	
+	/**
+	 * Enable or disable the print option
+	 */
+	protected boolean enablePrinting = true;
 
 	/**
 	 * Pages item on toolbar
@@ -304,6 +311,15 @@ public class PrintPreviewHelper {
 	}
 
 	/**
+	 * Enable or disable printing depending on where the print preview is invoked from.
+	 * 
+	 * @param enablePrinting
+	 */
+	public void enablePrinting(boolean enablePrinting){
+		this.enablePrinting = enablePrinting;
+	}
+	
+	/**
 	 * Do the print preview.
 	 * 
 	 * @param printActionHelper,
@@ -408,7 +424,7 @@ public class PrintPreviewHelper {
 			}
 		});
 
-		if (printActionHelper == null) {
+		if (printActionHelper == null || !enablePrinting) {
 			printTool.setEnabled(false);
 		}
 
@@ -778,7 +794,7 @@ public class PrintPreviewHelper {
 	 */
 	protected Rectangle getPageBreakBounds() {
 		if (pageBreakBounds == null) {
-			pageBreakBounds = PrintHelper.getPageBreakBounds(getDiagramEditPart(), true);
+			pageBreakBounds = PrintHelperUtil.getPageBreakBounds(getDiagramEditPart(), true);
 		}
 		return pageBreakBounds;
 	}
@@ -810,8 +826,8 @@ public class PrintPreviewHelper {
 		if (diagramEditPart == null) {
 			Diagram diagram = getDiagramEditorPart().getDiagram(); //do not getDiagramEditPart
 			PreferencesHint preferencesHint = getPreferencesHint(getDiagramEditorPart());
-			diagramEditPart = PrintHelper.createDiagramEditPart(diagram, preferencesHint, getTempShell());
-			PrintHelper.initializePreferences(diagramEditPart, preferencesHint);
+			diagramEditPart = PrintHelperUtil.createDiagramEditPart(diagram, preferencesHint, getTempShell());
+			PrintHelperUtil.initializePreferences(diagramEditPart, preferencesHint);
 		}
 		return diagramEditPart;
 	}
@@ -859,12 +875,11 @@ public class PrintPreviewHelper {
 	 * Call this immediately with the rest of the initialization.
 	 */
 	protected boolean isPrinterInstalled() {
-		Printer printer = null;
 		try {
-			printer = new Printer();
+			PrintService[] printServices = PrintServiceLookup.lookupPrintServices(
+					null, null);
+			return printServices.length > 0;
 		} catch (SWTError e) {
-			//I cannot printer.dispose(); because it may not have been
-			//initialized
 			Trace.catching(DiagramPrintingPlugin.getInstance(),
 				DiagramPrintingDebugOptions.EXCEPTIONS_CATCHING,
 				PrintPreviewHelper.class, "isPrinterInstalled", //$NON-NLS-1$
@@ -887,11 +902,7 @@ public class PrintPreviewHelper {
 				PrintPreviewHelper.class, "isPrinterInstalled", //$NON-NLS-1$
 				e);
 			throw e;
-		}
-
-		printer.dispose();
-
-		return true;
+		}	
 	}
 
 	/**

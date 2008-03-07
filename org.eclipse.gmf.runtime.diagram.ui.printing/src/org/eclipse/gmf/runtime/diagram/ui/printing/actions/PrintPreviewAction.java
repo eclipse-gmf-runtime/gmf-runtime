@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,23 +117,6 @@ public class PrintPreviewAction
 	 */
 	protected void setPrintPreviewHelper(PrintPreviewHelper printPreviewHelper) {
 		this.printPreviewHelper = printPreviewHelper;
-	}
+	}    
     
-    
-    //TODO: remove the following two methods when printing on
-    //other platforms is supported.
-
-    /**
-     * Enable the menu item if Platform is running on Windows.
-     */
-    public boolean isEnabled() {
-        return isWindows();
-    }
-    
-    private boolean isWindows() {
-        if (Platform.getOS() != null) 
-            if (Platform.getOS().startsWith(Platform.OS_WIN32))
-                return true;
-        return false;
-    }
 }

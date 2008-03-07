@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import java.util.Collections;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
-import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.SWTDiagramPrinter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.printing.PrintDialog;
@@ -42,7 +42,7 @@ public class DefaultPrintActionHelper {
 	 *            the diagram printer that does the work of actually printing
 	 *            the diagrams
 	 */
-	public static void doRun(IEditorPart editorPart, DiagramPrinter diagramPrinter) {
+	public static void doRun(IEditorPart editorPart, SWTDiagramPrinter diagramPrinter) {
 		// print the editor contents.
 		final PrintDialog dialog =
 			new PrintDialog(editorPart.getSite().getShell(), SWT.NULL);

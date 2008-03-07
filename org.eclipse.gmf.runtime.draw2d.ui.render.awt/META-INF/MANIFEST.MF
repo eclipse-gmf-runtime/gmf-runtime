@@ -7,7 +7,7 @@ Bundle-Activator: org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRe
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
- org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
+ org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render,org.eclipse.gmf.runtime.diagram.ui.printing.render",
  org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
  org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",
  org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.export;x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui.render,org.eclipse.gmf.runtime.diagram.ui,org.eclipse.gmf.runtime.diagram.ui.render",

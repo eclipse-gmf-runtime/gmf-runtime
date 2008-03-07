@@ -46,7 +46,28 @@ public final class DiagramUIPrintingMessages extends NLS {
 	public static String DiagramPrinterUtil_DLLErrorMessage_part2;
 	public static String DiagramPrinterUtil_DLLErrorMessage_part3;
 	public static String DiagramPrinterUtil_DLLErrorMessage_part4;
-
+	public static String JPSPrintDialog_Title;
+	public static String JPSPrintDialog_Button_PrintPreview;
+	public static String JPSPrintDialog_Copies;
+	public static String JPSPrintDialog_NumberOfCopies;
+	public static String JPSPrintDialog_Collate;
+	public static String JPSPrintDialog_Printer;
+	public static String JPSPrintDialog_Name;
+	public static String JPSPrintDialog_Properties;
+	public static String JPSPrintDialog_PrintToFile;
+	public static String JPSPrintDialog_PrintRange;
+	public static String JPSPrintDialog_All;
+	public static String JPSPrintDialog_Pages;
+	public static String JPSPrintDialog_From;
+	public static String JPSPrintDialog_To;
+	public static String JPSPrintDialog_Scaling;
+	public static String JPSPrintDialog_Adjust;
+	public static String JPSPrintDialog_FitTo;
+	public static String JPSPrintDialog_PagesWide;
+	public static String JPSPrintDialog_PagesTall;
+	public static String JPSDiagramPrinterUtil_ErrorTitle;
+	public static String JPSDiagramPrinterUtil_ErrorMessage;
+				
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIPrintingMessages.class);
 	}

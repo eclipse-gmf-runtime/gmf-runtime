@@ -12,11 +12,23 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.dialogs;
 
 
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.PrinterJob;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType;
+import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupWidgetFactory;
+import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,13 +44,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.ILabels;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupPageType;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageSetupWidgetFactory;
-import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
-import org.eclipse.gmf.runtime.diagram.ui.preferences.PrintingPreferencePage;
 
 import com.ibm.icu.text.NumberFormat;
 
@@ -388,7 +393,16 @@ public class PageSetupConfigBlock implements ILabels {
 		}
 		
 	}
-		
+	
+	/**
+	 * Determine if the current set of units are in inches.
+	 *  	
+	 * @return true if the current units are in inches.
+	 */
+	private boolean isUnitsInInch() {
+		return (fCurrentUnit.startsWith("inc")); //$NON-NLS-1$
+	}
+	
 	/** 
 	 * Create part of PSDialog allowing the user to specify page margin values. 
 	 */
@@ -409,14 +423,53 @@ public class PageSetupConfigBlock implements ILabels {
 		fLabelMarginRight = PageSetupWidgetFactory.createLabel(group, LABEL_MARGIN_RIGHT_INCHES);
 		fTextMarginRight = PageSetupWidgetFactory.createTextMargin(group);
         
+		
+		fTextMarginTop.addFocusListener(new FocusListener() {
+
+			public void focusGained(FocusEvent e) {
+				// do nothing.
+			}
+
+			public void focusLost(FocusEvent e) {
+				double marginTop = getDblFromString(fTextMarginTop.getText());
+				double minimumTop = DefaultValues.MINIMUM_MARGIN_TOP;
+				if (!isUnitsInInch()) {
+					marginTop = fConvertor.convertMilimToInches(marginTop);
+					minimumTop = fConvertor.convertInchesToMilim(minimumTop);
+				}
+				if (marginTop < DefaultValues.MINIMUM_MARGIN_TOP) {
+					fTextMarginTop.setText(fNumberFormat.format(minimumTop));
+				}
+			}
+		});
 		fTextMarginTop.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (fTextMarginTop.isFocusControl()) {
 					setOkButtonEnableStatus();
 				}
 			}
+			
 		});
-		
+				
+		fTextMarginBottom.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				// do nothing.
+			}
+			/**
+			 * Ensure we have minimum margins set.
+			 */
+			public void focusLost(FocusEvent e) {
+				double marginBottom = getDblFromString(fTextMarginBottom.getText());
+				double minimumBottom = DefaultValues.MINIMUM_MARGIN_BOTTOM;
+				if (!isUnitsInInch()) {
+					marginBottom = fConvertor.convertMilimToInches(marginBottom);
+					minimumBottom = fConvertor.convertInchesToMilim(minimumBottom);
+				}
+				if (marginBottom < DefaultValues.MINIMUM_MARGIN_BOTTOM) {
+					fTextMarginBottom.setText(fNumberFormat.format(minimumBottom));
+				}
+			}
+		});
 		fTextMarginBottom.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (fTextMarginBottom.isFocusControl()) {
@@ -425,6 +478,26 @@ public class PageSetupConfigBlock implements ILabels {
 			}
 		});
 		
+
+		fTextMarginLeft.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				// do nothing.
+			}
+			/**
+			 * Ensure we have minimum margins set.
+			 */
+			public void focusLost(FocusEvent e) {
+				double marginLeft = getDblFromString(fTextMarginLeft.getText());
+				double minimumLeft = DefaultValues.MINIMUM_MARGIN_LEFT;
+				if (!isUnitsInInch()) {
+					marginLeft = fConvertor.convertMilimToInches(marginLeft);
+					minimumLeft = fConvertor.convertInchesToMilim(minimumLeft);
+				}
+				if (marginLeft < DefaultValues.MINIMUM_MARGIN_LEFT) {
+					fTextMarginLeft.setText(fNumberFormat.format(minimumLeft));
+				}
+			}
+		});
 		fTextMarginLeft.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (fTextMarginLeft.isFocusControl()) {
@@ -433,6 +506,25 @@ public class PageSetupConfigBlock implements ILabels {
 			}
 		});
 		
+		fTextMarginRight.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				// do nothing.
+			}
+			/**
+			 * Ensure we have minimum margins set.
+			 */
+			public void focusLost(FocusEvent e) {
+				double marginRight = getDblFromString(fTextMarginRight.getText());
+				double minimumRight = DefaultValues.MINIMUM_MARGIN_RIGHT;
+				if (!isUnitsInInch()) {
+					marginRight = fConvertor.convertMilimToInches(marginRight);
+					minimumRight = fConvertor.convertInchesToMilim(minimumRight);
+				}
+				if (marginRight < DefaultValues.MINIMUM_MARGIN_RIGHT) {
+					fTextMarginRight.setText(fNumberFormat.format(minimumRight));
+				}
+			}
+		});
 		fTextMarginRight.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (fTextMarginRight.isFocusControl()) {
@@ -828,7 +920,7 @@ public class PageSetupConfigBlock implements ILabels {
 			Button b = (Button) e.getSource();
 			if (b.getSelection()) { 
 				super.widgetSelected(e);
-				if (fCurrentUnit.startsWith("inc")) { //$NON-NLS-1$
+				if (isUnitsInInch()) { 
 					convertValuesToMillimetres();
 					fCurrentUnit = "mil"; //$NON-NLS-1$
 				}
