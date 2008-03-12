@@ -12,9 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.internal;
 
 import java.awt.print.PageFormat;
-import java.awt.print.Paper;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -93,12 +91,11 @@ import org.eclipse.swt.widgets.Shell;
 public class JPSDiagramPrinter extends DiagramPrinter implements
 		java.awt.print.Printable {
 
-	private static double AWT_DPI_CONST = 72.0;
+
 	private PrintService printService;
 	private PageData[] pages;
 	private IPrintHelper printHelper;
-	private int printerMinimumX = 0;
-	private int printerMinimumY = 0;
+	
 
 	public JPSDiagramPrinter(PreferencesHint preferencesHint, IMapMode mm) {
 		super(preferencesHint, mm);
@@ -361,7 +358,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			// Take into account screen display DPI and the graphic DPI
 			// 72.0 DPI is an AWT constant @see java.awt.Graphics2D
 			//
-			graphics.scale(AWT_DPI_CONST / display_dpi.x);
+			graphics.scale(72.0 / display_dpi.x);
 
 			drawPage(pages[pageIndex]);
 		} catch (Exception e) {
@@ -439,38 +436,6 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 				(float) 0.0, (mediaSize.getX(MediaSize.INCH)), (mediaSize
 						.getY(MediaSize.INCH)), MediaPrintableArea.INCH));
 		
-		try {
-			//
-			// Calculate the minimum printable area.
-			//
-			PrinterJob printerJob = PrinterJob.getPrinterJob();
-			printerJob.setPrintService(printService);
-
-			PageFormat pageFormat = PrinterJob.getPrinterJob().defaultPage();
-			pageFormat.setOrientation(PageFormat.PORTRAIT);
-
-			Paper paper = new Paper();
-			paper.setSize((mediaSize.getX(MediaSize.INCH) * 72), (mediaSize
-					.getY(MediaSize.INCH) * 72));
-			paper.setImageableArea(0, 0, mediaSize.getX(MediaSize.INCH) * 72, mediaSize
-					.getY(MediaSize.INCH) * 72);
-			pageFormat.setPaper(paper);
-		
-			pageFormat = PrinterJob.getPrinterJob().validatePage(pageFormat);
-
-			printerMinimumX = getMapMode().DPtoLP(
-					(int) Math.round(pageFormat.getImageableX()));
-			printerMinimumY = getMapMode().DPtoLP(
-					(int) Math.round(pageFormat.getImageableY()));
-
-		} catch (PrinterException e) {
-			//
-			// Assume a default minimum printable area.
-			//
-			printerMinimumX = getMapMode().DPtoLP(18);
-			printerMinimumY = getMapMode().DPtoLP(18);
-		}
-
 		printRequestAttributeSet.add(new Copies(printHelper
 				.getDlgNumberOfCopies()));
 
@@ -609,37 +574,6 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		margins.top /= userScale;
 		margins.bottom /= userScale;
 		margins.right /= userScale;
-
-		//
-		// The following calculations are being made in the SWTDiagramPrinter but
-		// do not appear necessary.
-		//
-		
-		// margins.left -= printerMinimumX / userScale;
-		// margins.top -= printerMinimumY / userScale;
-		// margins.bottom += printerMinimumY / userScale;
-		// margins.right += printerMinimumX / userScale;
-
-		// if (margins.left < 0)
-		// margins.left = 0;
-		// if (margins.right < 0)
-		// margins.right = 0;
-		// if (margins.top < 0)
-		// margins.top = 0;
-		// if (margins.bottom < 0)
-		// margins.bottom = 0;
-
-		//
-		// Take into account screen display DPI and the graphic DPI
-		// 72.0 DPI is an AWT constant @see java.awt.Graphics2D
-		//
-		// margins.left = (int) ((margins.left * display_dpi.x) /
-		// AWT_DPI_CONST);
-		// margins.top = (int) ((margins.top * display_dpi.y) / AWT_DPI_CONST);
-		// margins.bottom = (int) ((margins.bottom * display_dpi.y) /
-		// AWT_DPI_CONST);
-		// margins.right = (int) ((margins.right * display_dpi.x) /
-		// AWT_DPI_CONST);
 
 		return margins;
 	}
