@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,12 +43,20 @@ public class ZoomTool
 
 	static final Cursor zoom_pan_cursor = Cursors.HAND;
 
+    /**
+     * true if this is a zoom in tool; false if this is a zoom out tool
+     */
+    private boolean zoomIn = true;
+    
 	private int zoommode = 1;
 	
 	/**
-	 * Creates a new MarqueeSelectionTool.
+	 * Creates a new ZoomTool.
+	 * @param zoomIn true if this is a zoom in tool; false if this is a zoom out tool
 	 */
-	public ZoomTool() {
+	public ZoomTool(boolean zoomIn) {
+	    this.zoomIn = zoomIn;
+	    zoommode = getInitialZoomMode();
 		setUnloadWhenFinished(false);
 	}
 
@@ -109,8 +117,8 @@ public class ZoomTool
 			&& getCurrentViewer().getKeyHandler().keyPressed(e))
 			return true;
 		if (e.keyCode == SWT.SHIFT)
-			setZoomMode(ZOOM_OUT_MODE);
-		if (e.keyCode == SWT.ALT)
+			setZoomMode(zoomIn ? ZOOM_OUT_MODE : ZOOM_IN_MODE);
+		if (e.keyCode == SWT.ALT && zoomIn)
 			setZoomMode(ZOOM_PAN_MODE);
 		return false;
 	}
@@ -127,7 +135,7 @@ public class ZoomTool
 			return true;
 		if (e.keyCode == SWT.SHIFT ||
 			e.keyCode == SWT.ALT)
-			setZoomMode(ZOOM_IN_MODE);
+			setZoomMode(getInitialZoomMode());
 		return false;
 	}
 
@@ -165,5 +173,9 @@ public class ZoomTool
 	private void setZoomMode(int zoommode) {
 		this.zoommode = zoommode;
 		setCursor(getDefaultCursor());
+	}
+	
+	private int getInitialZoomMode() {
+	    return zoomIn ? ZOOM_IN_MODE : ZOOM_OUT_MODE;
 	}
 }

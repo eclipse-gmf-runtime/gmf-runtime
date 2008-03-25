@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,8 @@ import org.eclipse.gmf.runtime.diagram.ui.type.DiagramNotationType;
  */
 public class DiagramPaletteFactory extends PaletteFactory.Adapter {
 
-	private static final String TOOL_ZOOM = "zoomTool"; //$NON-NLS-1$
+	private static final String TOOL_ZOOM_IN = "zoomInTool"; //$NON-NLS-1$
+    private static final String TOOL_ZOOM_OUT = "zoomOutTool"; //$NON-NLS-1$
 	private static final String TOOL_NOTE = "noteTool"; //$NON-NLS-1$
 	private static final String TOOL_TEXT = "textTool"; //$NON-NLS-1$
 	private static final String TOOL_NOTEATTACHMENT = "noteattachmentTool"; //$NON-NLS-1$
@@ -35,9 +36,12 @@ public class DiagramPaletteFactory extends PaletteFactory.Adapter {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.services.palette.PaletteFactory#createTool(java.lang.String)
 	 */
 	public Tool createTool(String toolId) {
-		if (toolId.equals(TOOL_ZOOM)) {
-  			return new ZoomTool(); 
+		if (toolId.equals(TOOL_ZOOM_IN)) {
+  			return new ZoomTool(true); 
 		}
+	    if (toolId.equals(TOOL_ZOOM_OUT)) {
+	        return new ZoomTool(false);
+	    }
 		if (toolId.equals(TOOL_NOTE)) {
   			return new CreationTool(DiagramNotationType.NOTE);
 		}

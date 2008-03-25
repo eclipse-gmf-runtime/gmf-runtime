@@ -37,8 +37,8 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.ContributeToPaletteOperation;
 import org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteProviderConfiguration;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteGroup;
 import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteSeparator;
+import org.eclipse.gmf.runtime.gef.ui.internal.palette.PaletteToolbar;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -175,7 +175,7 @@ public class PaletteService extends Service implements IPaletteProvider {
 		Object content,
 		PaletteRoot root, Map predefinedEntries) {
 
-		PaletteGroup standardGroup = new PaletteGroup(GROUP_STANDARD, DiagramUIMessages.StandardGroup_Label);
+	    PaletteToolbar standardGroup = new PaletteToolbar(GROUP_STANDARD, DiagramUIMessages.StandardGroup_Label);
 		standardGroup.setDescription(DiagramUIMessages.StandardGroup_Description);
 		root.add(standardGroup);
 

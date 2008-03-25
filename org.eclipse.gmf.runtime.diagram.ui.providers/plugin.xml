@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<!-- Copyright (c) 2005, 2007  IBM Corporation and others.                       -->
+<!-- Copyright (c) 2005, 2008  IBM Corporation and others.                       -->
 <!-- All rights reserved. This program and the accompanying materials      -->
 <!-- are made available under the terms of the Eclipse Public License v1.0 -->
 <!-- which accompanies this distribution, and is available at              -->
@@ -762,7 +762,9 @@
          <editor class="org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor">
          </editor>
          <contribution factoryClass="org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.DiagramPaletteFactory">
-             <entry label="%ZoomTool.Label" kind="tool" description="%ZoomTool.Description" large_icon="icons/zoomplus_24x24.gif" small_icon="icons/zoomplus.gif" path="/standardGroup/selectionTool" id="zoomTool">
+            <entry label="%ZoomOutTool.Label" kind="tool" description="%ZoomOutTool.Description" large_icon="icons/zoomminus_24x24.gif" small_icon="icons/zoomminus.gif" path="/standardGroup/selectionTool" id="zoomOutTool">
+         	</entry>
+            <entry label="%ZoomInTool.Label" kind="tool" description="%ZoomInTool.Description" large_icon="icons/zoomplus_24x24.gif" small_icon="icons/zoomplus.gif" path="/standardGroup/selectionTool" id="zoomInTool">
          	</entry>
             <entry label="%NoteStack.Label" kind="stack" description="%NoteStack.Description" small_icon="icons/note.gif" path="/standardGroup/" id="noteStack">
             </entry>
