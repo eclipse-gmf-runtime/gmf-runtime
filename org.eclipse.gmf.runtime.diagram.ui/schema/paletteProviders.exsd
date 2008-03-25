@@ -243,7 +243,7 @@ A path is required unless this palette entry is being defined only so that it ca
          <attribute name="small_icon" type="string">
             <annotation>
                <documentation>
-                  The palette entry small icon
+                  The palette entry small icon file name and path.  A value of &quot;None&quot; on a palette drawer entry indicates that the default icon should not show up on a palette drawer.
                </documentation>
             </annotation>
          </attribute>

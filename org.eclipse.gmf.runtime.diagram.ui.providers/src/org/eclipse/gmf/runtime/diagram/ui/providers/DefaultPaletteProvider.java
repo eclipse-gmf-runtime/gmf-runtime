@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -199,6 +199,7 @@ public class DefaultPaletteProvider
         private Integer permission;
         private ImageDescriptor small_icon;
         private ImageDescriptor large_icon;
+        private boolean noIcon = false;
         private DrawerExpandHelper expandHelper;
         private boolean defineOnly;
 
@@ -251,7 +252,11 @@ public class DefaultPaletteProvider
                     new Integer(PaletteEntry.PERMISSION_FULL_MODIFICATION);
 
             String smallIconPath = configElement.getAttribute(SMALL_ICON);
-            small_icon = findIconImageDescriptor(configElement, smallIconPath);
+            if (NONE.equals(smallIconPath)) {
+                noIcon = true;
+            } else {
+                small_icon = findIconImageDescriptor(configElement, smallIconPath);
+            }
             
             String largeIconPath = configElement.getAttribute(LARGE_ICON);
             large_icon = findIconImageDescriptor(configElement, largeIconPath);
@@ -309,9 +314,13 @@ public class DefaultPaletteProvider
             switch (kind.intValue()) {
                 case ENUM_DRAWER :
                     PaletteDrawer drawer = new PaletteDrawer(id, label);
-                    if (expandHelper.expand(content))
+                    if (expandHelper.expand(content)) {
                         drawer.setInitialState(
                             PaletteDrawer.INITIAL_STATE_OPEN);
+                    }
+                    if (noIcon) {
+                        drawer.setShowDefaultIcon(false);
+                    }
                     paletteEntry = drawer;
                     break;
                 case ENUM_STACK:
