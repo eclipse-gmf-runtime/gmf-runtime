@@ -278,7 +278,10 @@ public class ScalableImageFigure
 	public void setBounds(Rectangle rect) {
 		Dimension devDim = new Dimension(rect.getSize());
 		MapModeUtil.getMapMode(this).LPtoDP(devDim);
-		setRenderedImage(getRenderedImage(devDim));
+		
+		if (getRenderedImage() != null) {
+			setRenderedImage(getRenderedImage(devDim));
+		}
 
 		super.setBounds(rect);
 	}
