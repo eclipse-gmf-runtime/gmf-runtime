@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.ui.view.factories;
+
+import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EAnnotation;
@@ -22,6 +24,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -91,5 +94,14 @@ public class NoteViewFactory
 					.intValue());
 			}
 		}
+	}
+
+	/*
+	 * @see org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractShapeViewFactory#createStyles(org.eclipse.gmf.runtime.notation.View)
+	 */
+	protected List createStyles(View view) {
+		List styles = super.createStyles(view);
+		styles.add(NotationFactory.eINSTANCE.createTextStyle());
+		return styles;
 	}
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,6 +177,19 @@ public class DiagramUIActionsPluginImages {
     public static final ImageDescriptor DESC_GROUP_DISABLED = create(PREFIX_DISABLED + "group.gif"); //$NON-NLS-1$
     public static final ImageDescriptor DESC_UNGROUP = create(PREFIX_ENABLED + "ungroup.gif"); //$NON-NLS-1$
     public static final ImageDescriptor DESC_UNGROUP_DISABLED = create(PREFIX_DISABLED + "ungroup.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_LEFT = create(PREFIX_ENABLED
+			+ "alignleft.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_LEFT_DISABLED = create(PREFIX_DISABLED
+			+ "alignleft.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_CENTER = create(PREFIX_ENABLED
+			+ "aligncenter.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_CENTER_DISABLED = create(PREFIX_DISABLED
+			+ "aligncenter.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_RIGHT = create(PREFIX_ENABLED
+			+ "alignright.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_RIGHT_DISABLED = create(PREFIX_DISABLED
+			+ "alignright.gif"); //$NON-NLS-1$
 
 	/**
 	 * Creates the image descriptor from the filename given.

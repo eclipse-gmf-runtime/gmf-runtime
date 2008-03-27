@@ -34,6 +34,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicDiagramTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicShapeTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.LogicTransientViewsTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.logic.PaletteTests;
+import org.eclipse.gmf.tests.runtime.diagram.ui.logic.TextAlignmentTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleLocatorTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.ConnectionHandleTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.parts.DiagramCommandStackTest;
@@ -86,6 +87,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         suite.addTest(GroupTests.suite());
         suite.addTest(GroupsInCompartmentTests.suite());
         suite.addTest(LayoutTests.suite());
+        suite.addTest(TextAlignmentTests.suite());
 
 		
 		return suite;

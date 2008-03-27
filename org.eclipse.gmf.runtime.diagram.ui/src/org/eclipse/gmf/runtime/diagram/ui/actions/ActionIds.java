@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,5 +127,11 @@ public interface ActionIds {
 	
 	// Navigate Action Ids
 	public final String OPEN = "OpenAction"; //$NON-NLS-1$
-	
+
+	//actions for text alignment in non toolbar menus
+    public final String MENU_TEXT_ALIGNMENT = "textAlignmentMenu"; //$NON-NLS-1$
+	public final String ACTION_TEXT_ALIGNMENT_LEFT = "textAlignmentLeftAction"; //$NON-NLS-1$	
+	public final String ACTION_TEXT_ALIGNMENT_CENTER = "textAlignmentCenterAction"; //$NON-NLS-1$
+	public final String ACTION_TEXT_ALIGNMENT_RIGHT = "textAlignmentRightAction"; //$NON-NLS-1$
+
 }

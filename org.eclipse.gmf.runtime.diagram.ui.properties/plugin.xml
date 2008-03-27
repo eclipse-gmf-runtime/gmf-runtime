@@ -68,6 +68,13 @@
 	 	id="property.section.DiagramColorsAndFontsPropertySection">
 	 </propertySection>     
 	 <propertySection
+        afterSection="property.section.ShapeColorAndFontPropertySection"
+        class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.TextAlignmentPropertySection"
+        filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.TextAlignmentPropertySectionFilter"
+        id="property.section.TextAlignmentPropertySection"
+        tab="property.tab.AppearancePropertySection">
+	 </propertySection>     
+	 <propertySection
         class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.AdvancedPropertySection"
         filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
         id="property.section.AdvancedPropertySection"

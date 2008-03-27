@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,6 +77,10 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String Restore_Defaults_Label_Text;	
 	public static String Positive_Number_Error;
     public static String AbstractPropertySection_UndoIntervalPropertyString;
+    public static String TextAlignmentPropertySection_AlignLeft;
+    public static String TextAlignmentPropertySection_AlignCenter;
+    public static String TextAlignmentPropertySection_AlignRight;
+    public static String TextAlignmentPropertySection_TextAlignment;
 	
 	
 	static {

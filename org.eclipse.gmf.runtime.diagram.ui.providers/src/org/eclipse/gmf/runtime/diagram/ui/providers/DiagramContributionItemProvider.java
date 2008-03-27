@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,8 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SizeWidthAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SnapBackAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SnapToGridAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.SortFilterAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.TextAlignmentAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.TextAlignmentMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.UngroupAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ViewGridAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ViewMenuManager;
@@ -81,12 +83,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.ActionFactory;
 
 /**
- * @author melaasar
- * @canBeSeenBy %level1
- * 
  * The core diagram contribution item provider.
  * It provides contributions generic to all diagram editors
- * 
+
+ * @author melaasar
  */
 public class DiagramContributionItemProvider
 	extends AbstractContributionItemProvider {
@@ -167,6 +167,8 @@ public class DiagramContributionItemProvider
 			return new ZOrderMenuManager();
 		if (menuId.equals(ActionIds.MENU_MAKE_SAME_SIZE))
 			return new MakeSameSizeMenuManager();
+		if (menuId.equals(ActionIds.MENU_TEXT_ALIGNMENT))
+			return new TextAlignmentMenuManager();
 
 		return super.createMenuManager(menuId, partDescriptor);
 	}
@@ -357,8 +359,15 @@ public class DiagramContributionItemProvider
             return new GroupAction(workbenchPage);
         if (actionId.equals(ActionIds.ACTION_UNGROUP))
             return new UngroupAction(workbenchPage);
-
-		return super.createAction(actionId, partDescriptor);
+        
+        if (actionId.equals(ActionIds.ACTION_TEXT_ALIGNMENT_LEFT))
+            return TextAlignmentAction.createTextAlignmentLeftAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_TEXT_ALIGNMENT_CENTER))
+            return TextAlignmentAction.createTextAlignmentCenterAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_TEXT_ALIGNMENT_RIGHT))
+            return TextAlignmentAction.createTextAlignmentRightAction(workbenchPage);
+        
+        return super.createAction(actionId, partDescriptor);
 	}
 		
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,8 @@ import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.TextAlignment;
+import org.eclipse.gmf.runtime.notation.TextStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -69,13 +71,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 
-/*
- * @canBeSeenBy %partners
- */
 /**
- * yhe conroller for hte text compartment
+ * The controller for the text compartment.
+ * 
  * @author mmostafa
- *
  */
 public class TextCompartmentEditPart extends CompartmentEditPart implements ITextAwareEditPart {
 	
@@ -513,6 +512,8 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 				NotationPackage.eINSTANCE.getFontStyle_Italic().equals(feature)) {
 			refreshFont();
 		} 
+		else if (NotationPackage.eINSTANCE.getTextStyle_TextAlignment().equals(feature))
+			refreshTextAlignment();
 		else if (isAffectingParserOptions(event)) {
 			refreshParserOptions();
 			refreshLabel();
@@ -550,6 +551,7 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 		refreshUnderline();
 		refreshStrikeThrough();
 		refreshFontColor();
+		refreshTextAlignment();
 	}
 
     /* (non-Javadoc)
@@ -743,5 +745,22 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
 			return ViewUtil.getChildBySemanticHint(view,CommonParserHint.DESCRIPTION);
 		}
 		return null;
+	}
+
+	/**
+	 * Refreshes the text alignment property
+	 */
+	protected void refreshTextAlignment() {
+		TextStyle style = (TextStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getTextStyle());
+		if (style != null) {
+			if (style.getTextAlignment() == TextAlignment.RIGHT_LITERAL) {
+				getLabelDelegate().setTextJustification(PositionConstants.RIGHT);
+			} else if (style.getTextAlignment() == TextAlignment.CENTER_LITERAL) {
+				getLabelDelegate().setTextJustification(PositionConstants.CENTER);
+			} else {
+				// default to TextAlignment.LEFT_LITERAL
+				getLabelDelegate().setTextJustification(PositionConstants.LEFT);
+			}
+		}
 	}
 }

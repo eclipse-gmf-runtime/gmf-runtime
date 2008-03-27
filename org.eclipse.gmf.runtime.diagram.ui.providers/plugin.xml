@@ -236,6 +236,16 @@
             </partAction>
             <partAction menubarPath="/diagramMenu/alignMenu/alignVerticalGroup" toolbarPath="/alignMenu/alignVerticalGroup" id="org.eclipse.gef.align_bottom">
             </partAction>
+            <partMenu menubarPath="/diagramMenu/formatGroup" id="textAlignmentMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/textAlignmentMenu/" id="textAlignmentGroup">
+            </partMenuGroup>
+            <partAction menubarPath="/diagramMenu/textAlignmentMenu/textAlignmentGroup" id="textAlignmentLeftAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/textAlignmentMenu/textAlignmentGroup" id="textAlignmentCenterAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/textAlignmentMenu/textAlignmentGroup" id="textAlignmentRightAction">
+            </partAction>
             <partMenu menubarPath="/diagramMenu/formatGroup" id="zorderMenu">
             </partMenu>
             <partMenuGroup menubarPath="/diagramMenu/zorderMenu/" id="zorderGroup">
@@ -459,6 +469,16 @@
             </popupAction>
             <popupAction path="/formatMenu/alignMenu/alignVerticalGroup" id="alignBottomAction">
             </popupAction>  
+            <popupMenu path="/formatMenu/miscellaneousGroup" id="textAlignmentMenu">
+            </popupMenu>
+            <popupMenuGroup path="/formatMenu/textAlignmentMenu/" id="textAlignmentGroup">
+            </popupMenuGroup>
+            <popupAction path="/formatMenu/textAlignmentMenu/textAlignmentGroup" id="textAlignmentLeftAction">
+            </popupAction>
+            <popupAction path="/formatMenu/textAlignmentMenu/textAlignmentGroup" id="textAlignmentCenterAction">
+            </popupAction>
+            <popupAction path="/formatMenu/textAlignmentMenu/textAlignmentGroup" id="textAlignmentRightAction">
+            </popupAction>
             <popupMenu path="/formatMenu/miscellaneousGroup" id="zorderMenu">
             </popupMenu>
             <popupMenuGroup path="/formatMenu/zorderMenu/" id="zorderGroup">
