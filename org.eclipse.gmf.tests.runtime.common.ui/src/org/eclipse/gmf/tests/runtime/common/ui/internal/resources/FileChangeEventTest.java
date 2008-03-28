@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.tests.runtime.common.ui.internal.resources;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
+import java.util.Map;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -537,6 +538,22 @@ public class FileChangeEventTest extends TestCase {
 		public boolean isDerived(int arg0) {
 			return false;
 		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#getPersistentProperties()
+		 */
+        public Map getPersistentProperties()
+            throws CoreException {
+            return null;
+        }
+
+        /*
+         * @see org.eclipse.core.resources.IResource#getSessionProperties()
+         */
+        public Map getSessionProperties()
+            throws CoreException {
+            return null;
+        }
 	}
 	
 	public static void main(String[] args) {
