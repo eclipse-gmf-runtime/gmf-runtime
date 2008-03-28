@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.gmf.runtime.thirdparty"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="1.1.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -145,6 +145,13 @@
 
    <plugin
          id="org.apache.xml.serializer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.batik.pdf"
          download-size="0"
          install-size="0"
          version="0.0.0"
