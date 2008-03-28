@@ -129,7 +129,7 @@ public class ComponentEditPolicy
 	 * @return Command
 	 */
 	protected Command createDeleteViewCommand(GroupRequest deleteRequest) {
-		CompositeCommand cc = new CompositeCommand(null);
+		CompositeCommand cc = new CompositeCommand("");
 
         TransactionalEditingDomain editingDomain = getEditingDomain();
 		if (editingDomain == null) {
