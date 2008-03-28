@@ -45,16 +45,16 @@ public class JPSPrintDialog
     private CopiesBlock copiesBlock;
     private ActionsBlock actionsBlock;
     
-    private final DialogBlock.IDialogUnitConverter dluConverter =
-        new DialogBlock.IDialogUnitConverter() {
-        
-        public int convertHorizontalDLUsToPixels(int dlus) {
-            return JPSPrintDialog.this.convertHorizontalDLUsToPixels(dlus);
-        }
-        
-        public Shell getShell() {
-            return JPSPrintDialog.this.getShell();
-        }};
+    private final DialogBlock.IDialogUnitConverter dluConverter = new DialogBlock.IDialogUnitConverter() {
+
+		public int convertHorizontalDLUsToPixels(int dlus) {
+			return JPSPrintDialog.this.convertHorizontalDLUsToPixels(dlus);
+		}
+
+		public Shell getShell() {
+			return JPSPrintDialog.this.getShell();
+		}
+	};
     
     public JPSPrintDialog(IShellProvider parentShell, PrintOptions options) {
         super(parentShell);
@@ -66,6 +66,10 @@ public class JPSPrintDialog
         this.options = options;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     */
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         
@@ -119,7 +123,7 @@ public class JPSPrintDialog
 	}
     
     protected void createExtensibleBlockArea(Composite result) {
-    	  // meant to be overiden by subclasses to add additional blocks.
+    	  // meant to be overridden by subclasses to add additional blocks.
   	}
     
         

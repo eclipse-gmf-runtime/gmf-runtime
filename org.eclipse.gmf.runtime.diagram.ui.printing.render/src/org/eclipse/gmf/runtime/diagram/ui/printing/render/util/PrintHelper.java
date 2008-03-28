@@ -49,6 +49,11 @@ public class PrintHelper implements IPrintHelper {
 
 		options.setCopies(1);
 		options.setCollate(false);
+		
+		options.setQualityHigh(true);
+		options.setSideOneSided(true);
+		options.setChromaticityColor(true);
+				
 	}
 
 	/*
@@ -133,6 +138,10 @@ public class PrintHelper implements IPrintHelper {
 	public boolean getDlgDiagramPrintRangeAll() {
 		// TODO Not supported by the JPS dialog
 		return false;
+	}
+	
+	public PrintOptions getPrintOptions(){
+		return options;
 	}
 
 }

@@ -33,6 +33,18 @@ public class PrintOptions extends PrintModelElement {
     
     public static String PROPERTY_COPIES = "copies"; //$NON-NLS-1$
     public static String PROPERTY_COLLATE = "collate"; //$NON-NLS-1$
+        
+    public static String PROPERTY_QUALITY_HIGH = "qualityHigh"; //$NON-NLS-1$
+    public static String PROPERTY_QUALITY_LOW = "qualityLow"; //$NON-NLS-1$
+    public static String PROPERTY_QUALITY_MED = "qualityMed"; //$NON-NLS-1$
+    public static String PROPERTY_CHROMATICITY_MONO = "chromaticityMono"; //$NON-NLS-1$
+    public static String PROPERTY_CHROMATICITY_COLOR = "chromaticityColor"; //$NON-NLS-1$
+    public static String PROPERTY_SIDES_ONESIDED = "sideOneSided"; //$NON-NLS-1$
+    public static String PROPERTY_SIDES_TUMBLE = "sideTumble"; //$NON-NLS-1$
+    public static String PROPERTY_SIDES_DUPLEX = "sideDuplex"; //$NON-NLS-1$
+ 
+    public static String PROPERTY_JOB_NAME = "jobName"; //$NON-NLS-1$
+    public static String PROPERTY_USER_NAME = "userName"; //$NON-NLS-1$
 
     private PrintDestination destination;
     
@@ -47,6 +59,20 @@ public class PrintOptions extends PrintModelElement {
     
     private int copies;
     private boolean collate;
+    
+    private boolean qualityHigh;
+    private boolean qualityLow;
+    private boolean qualityMed;
+        
+    private boolean chromaticityColor;
+    private boolean chromaticityMono;
+    
+    private boolean sideOneSided;
+    private boolean sideTumble;
+    private boolean sideDuplex;
+   
+    private String jobName;
+    private String userName;
     
     public PrintOptions() {
         super();
@@ -71,6 +97,56 @@ public class PrintOptions extends PrintModelElement {
         this.percentScaling = percentScaling;
         firePropertyChange(PROPERTY_PERCENT_SCALING, oldScaling, percentScaling);
     }
+    public String getJobName() {
+        return jobName;
+    }
+    
+    public void setJobName(String name) {
+        String oldName = this.jobName;
+        this.jobName = name;
+        firePropertyChange(PROPERTY_JOB_NAME, oldName, name);
+    }
+    
+    public String getUserName() {
+        return userName;
+    }
+    
+    public void setUserName(String name) {
+        String oldName = this.userName;
+        this.userName = name;
+        firePropertyChange(PROPERTY_USER_NAME, oldName, name);
+    }
+    
+    public boolean isQualityHigh() {
+        return this.qualityHigh;
+    }
+    
+    public void setQualityHigh(boolean qualityHigh) {
+        boolean oldQualityHigh = this.qualityHigh;
+        this.qualityHigh = qualityHigh;
+        firePropertyChange(PROPERTY_QUALITY_HIGH, oldQualityHigh, qualityHigh);
+    }
+    
+    public boolean isQualityLow() {
+        return this.qualityLow;
+    }
+    
+    public void setQualityLow(boolean qualityLow) {
+        boolean oldQualityLow = this.qualityLow;
+        this.qualityLow = qualityLow;
+        firePropertyChange(PROPERTY_QUALITY_LOW, oldQualityLow, this.qualityLow);
+    }
+    
+    public boolean isQualityMed() {
+        return this.qualityMed;
+    }
+    
+    public void setQualityMed(boolean qualityMed) {
+        boolean oldQualityMed = this.qualityMed;
+        this.qualityMed = qualityMed;
+        firePropertyChange(PROPERTY_QUALITY_MED, oldQualityMed, this.qualityMed);
+    }
+    
     
     public int getScaleFactor() {
         return scaleFactor;
@@ -150,5 +226,56 @@ public class PrintOptions extends PrintModelElement {
         boolean oldCollate = this.collate;
         this.collate = collate;
         firePropertyChange(PROPERTY_COLLATE, oldCollate, collate);
+    }
+    
+    
+    public boolean isChromaticityColor() {
+        return this.chromaticityColor;
+    }
+    
+    public void setChromaticityColor(boolean chromaticityColor) {
+        boolean oldChromaticityColor = this.chromaticityColor;
+        this.chromaticityColor = chromaticityColor;
+        firePropertyChange(PROPERTY_CHROMATICITY_COLOR, oldChromaticityColor, this.chromaticityColor);
+    }
+    
+    public boolean isChromaticityMono() {
+        return this.chromaticityMono;
+    }
+    
+    public void setChromaticityMono(boolean chromaticityMono) {
+        boolean oldChromaticityMono = this.chromaticityMono;
+        this.chromaticityMono = chromaticityMono;
+        firePropertyChange(PROPERTY_CHROMATICITY_MONO, oldChromaticityMono, this.chromaticityMono);
+    }
+    
+    public boolean isSideOneSided() {
+        return this.sideOneSided;
+    }
+    
+    public void setSideOneSided(boolean sideOneSided) {
+        boolean oldSideOneSided = this.sideOneSided;
+        this.sideOneSided = sideOneSided;
+        firePropertyChange(PROPERTY_SIDES_ONESIDED, oldSideOneSided, this.sideOneSided);
+    }
+    
+    public boolean isSideTumble() {
+        return this.sideTumble;
+    }
+    
+    public void setSideTumble(boolean sideTumble) {
+        boolean oldSideTumble = this.sideTumble;
+        this.sideTumble = sideTumble;
+        firePropertyChange(PROPERTY_SIDES_TUMBLE, oldSideTumble, this.sideTumble);
+    }
+    
+    public boolean isSideDuplex() {
+        return this.sideDuplex;
+    }
+    
+    public void setSideDuplex(boolean sideDuplex) {
+        boolean oldSideDuplex = this.sideDuplex;
+        this.sideDuplex = sideDuplex;
+        firePropertyChange(PROPERTY_SIDES_DUPLEX, oldSideDuplex, this.sideDuplex);
     }
 }

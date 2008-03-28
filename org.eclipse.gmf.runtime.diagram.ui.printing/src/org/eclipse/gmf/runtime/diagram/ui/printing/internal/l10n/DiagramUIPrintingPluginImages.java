@@ -77,6 +77,13 @@ public class DiagramUIPrintingPluginImages {
 
 	public static final ImageDescriptor DESC_CLOSE = create(PREFIX_ENABLED
 		+ "print_preview_close.gif"); //$NON-NLS-1$
+	
+	public static final ImageDescriptor COLLATE_ON = create(PREFIX_ENABLED
+			+ "collate.gif"); //$NON-NLS-1$
+	
+	public static final ImageDescriptor COLLATE_OFF = create(PREFIX_ENABLED
+			+ "no_collate.gif"); //$NON-NLS-1$
+
 
 	/**
 	 * Creates the image descriptor from the filename given.

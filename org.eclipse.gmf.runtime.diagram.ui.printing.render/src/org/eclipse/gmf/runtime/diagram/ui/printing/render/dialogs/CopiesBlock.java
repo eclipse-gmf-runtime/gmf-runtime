@@ -15,58 +15,88 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingPluginImages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
-
 /**
- * A section of the JPS print dialog that handles the number of copies of
- * a diagram to print.
+ * A section of the JPS print dialog that handles the number of copies of a
+ * diagram to print.
  * 
  * @author Christian Damus (cdamus)
  * @author James Bruck (jbruck)
  */
 class CopiesBlock extends DialogBlock {
-	
-    private final DataBindingContext bindings;
-    private final PrintOptions options;
-    
-    CopiesBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings,
-            PrintOptions options) {
-        super(dluConverter);
-        
-        this.bindings = bindings;
-        this.options = options;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
-     */
-    public Control createContents(Composite parent) {
-        final Realm realm = bindings.getValidationRealm();
-        
-        Composite result = group(parent, DiagramUIPrintingMessages.JPSPrintDialog_Copies);
-        layout(result, 2);
-        
-        label(result, DiagramUIPrintingMessages.JPSPrintDialog_NumberOfCopies);
-        Spinner copiesSpinner = spinner(result, 1, 999);
-        
-        bindings.bindValue(SWTObservables.observeSelection(copiesSpinner),
-            BeansObservables.observeValue(realm, options, PrintOptions.PROPERTY_COPIES),
-            null, null);
-        
-        blank(result);
-        Button collateCheck = check(result, DiagramUIPrintingMessages.JPSPrintDialog_Collate);
-        
-        bindings.bindValue(SWTObservables.observeSelection(collateCheck),
-            BeansObservables.observeValue(realm, options, PrintOptions.PROPERTY_COLLATE),
-            null, null);
-        
-        return result;
-    }
+
+	private final DataBindingContext bindings;
+	private final PrintOptions options;
+
+	CopiesBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings,
+			PrintOptions options) {
+		super(dluConverter);
+
+		this.bindings = bindings;
+		this.options = options;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.common.ui.printing.internal.dialogs.DialogBlock#createContents(org.eclipse.swt.widgets.Composite)
+	 */
+	public Control createContents(Composite parent) {
+		final Realm realm = bindings.getValidationRealm();
+
+		Composite result = group(parent,
+				DiagramUIPrintingMessages.JPSPrintDialog_Copies);
+		layout(result, 2);
+
+		label(result, DiagramUIPrintingMessages.JPSPrintDialog_NumberOfCopies);
+		Spinner copiesSpinner = spinner(result, 1, 999);
+
+		bindings.bindValue(SWTObservables.observeSelection(copiesSpinner),
+				BeansObservables.observeValue(realm, options,
+						PrintOptions.PROPERTY_COPIES), null, null);
+
+		final Image collateOnImage = DiagramUIPrintingPluginImages.COLLATE_ON
+				.createImage();
+		final Image collateOffImage = DiagramUIPrintingPluginImages.COLLATE_OFF
+				.createImage();
+		final Label collateImageButton = new Label(result,  SWT.CENTER | SWT.SHADOW_NONE);
+
+		layoutAlignRight(collateImageButton);
+		collateImageButton.setImage(collateOffImage);
+
+		Button collateCheck = check(result,
+				DiagramUIPrintingMessages.JPSPrintDialog_Collate);
+
+		bindings.bindValue(SWTObservables.observeSelection(collateCheck),
+				BeansObservables.observeValue(realm, options,
+						PrintOptions.PROPERTY_COLLATE), null, null);
+
+		collateCheck.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// do nothing
+			}
+			public void widgetSelected(SelectionEvent arg0) {
+				if (options.isCollate()) {
+					collateImageButton.setImage(collateOnImage);
+				} else {
+					collateImageButton.setImage(collateOffImage);
+				}
+			}
+		});
+
+		return result;
+	}
 }

@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.internal;
 
+import java.awt.BasicStroke;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import javax.print.attribute.HashDocAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.HashPrintServiceAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Chromaticity;
 import javax.print.attribute.standard.Copies;
 import javax.print.attribute.standard.JobName;
 import javax.print.attribute.standard.Media;
@@ -36,8 +38,10 @@ import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
+import javax.print.attribute.standard.PrintQuality;
 import javax.print.attribute.standard.PrinterName;
 import javax.print.attribute.standard.SheetCollate;
+import javax.print.attribute.standard.Sides;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -62,14 +66,16 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.internal.DiagramPrintingStatu
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.DiagramPrinter;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelperUtil;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
+import org.eclipse.gmf.runtime.diagram.ui.printing.render.util.PrintHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.util.DiagramPrinterUtil;
 import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.MapModeGraphics;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
-import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedScaledGraphics;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -90,13 +96,20 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class JPSDiagramPrinter extends DiagramPrinter implements
 		java.awt.print.Printable {
-
-
+	
+	// A constant that takes into account screen display DPI and the graphic DPI
+	// 72.0 DPI is an AWT constant @see java.awt.Graphics2D
+	private static double AWT_DPI_CONST = 72.0;
+	
+	// The print service used during printing.
 	private PrintService printService;
+	
+	// Page information that is collected up front and used during the async printing calls.
 	private PageData[] pages;
+	
+	// The print helper contains page information.
 	private IPrintHelper printHelper;
 	
-
 	public JPSDiagramPrinter(PreferencesHint preferencesHint, IMapMode mm) {
 		super(preferencesHint, mm);
 		this.preferencesHint = preferencesHint;
@@ -351,19 +364,35 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			swtGraphics = new GraphicsToGraphics2DAdaptor(
 					(java.awt.Graphics2D) printGraphics, new Rectangle(0, 0,
 							(int) pageFormat.getWidth(), (int) pageFormat
-									.getHeight()));
+									.getHeight())) {
+				/*
+				 * (non-Javadoc)
+				 * @see org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor#setLineWidth(int)
+				 */
+				public void setLineWidth(int width) {
+					super.setLineWidth(width);
 
+					BasicStroke scaledStroke = getStroke();
+					//
+					// Make a special case for line thickness to take the printer
+					// resolution into account.
+					//
+					scaledStroke = new BasicStroke(
+							(float) (width * AWT_DPI_CONST / 100), 
+							scaledStroke.getEndCap(),
+							scaledStroke.getLineJoin(), 
+							scaledStroke.getMiterLimit(), 
+							scaledStroke.getDashArray(), 0);
+
+					getGraphics2D().setStroke(scaledStroke);
+				}
+			};
+			
 			graphics = createMapModeGraphics(createPrinterGraphics(swtGraphics));
-			//
-			// Take into account screen display DPI and the graphic DPI
-			// 72.0 DPI is an AWT constant @see java.awt.Graphics2D
-			//
-			graphics.scale(72.0 / display_dpi.x);
-
+			graphics.scale(AWT_DPI_CONST / display_dpi.x);
 			drawPage(pages[pageIndex]);
-		} catch (Exception e) {
-			System.out.println(e);
-		} finally {
+			
+		}  finally {
 			dispose();
 		}
 
@@ -378,12 +407,10 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		return new RenderedMapModeGraphics(theGraphics, getMapMode());
 	}
 
-	
-	protected RenderedScaledGraphics createPrinterGraphics(Graphics theGraphics) {
-		return new RenderedScaledGraphics(theGraphics);
+	protected ScaledGraphics createPrinterGraphics(Graphics theGraphics) {
+		return new ScaledGraphics(theGraphics);
 	}
-	
-	
+		
 	/**
 	 * Set printing options in a format that is suitable for the Java print
 	 * service
@@ -397,6 +424,8 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	protected PrintRequestAttributeSet initializePrintOptions(DocPrintJob printJob,
 			String jobName,
 			IPreferenceStore fPreferences) {
+
+		PrintOptions advancedOptions = ((PrintHelper) (printHelper)).getPrintOptions();
 
 		PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
 
@@ -428,14 +457,35 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			printRequestAttributeSet.add(MediaSizeName.ISO_B5);
 		}
 
+		if (advancedOptions.isQualityLow()) {
+			printRequestAttributeSet.add(PrintQuality.DRAFT);
+		} else if (advancedOptions.isQualityMed()) {
+			printRequestAttributeSet.add(PrintQuality.NORMAL);
+		} else if (advancedOptions.isQualityHigh()) {
+			printRequestAttributeSet.add(PrintQuality.HIGH);
+		}
+		if (advancedOptions.isSideDuplex()) {
+			printRequestAttributeSet.add(Sides.DUPLEX);
+		} else if (advancedOptions.isSideOneSided()) {
+			printRequestAttributeSet.add(Sides.ONE_SIDED);
+		} else if (advancedOptions.isSideTumble()) {
+			printRequestAttributeSet.add(Sides.TUMBLE);
+		}
+
+		if (advancedOptions.isChromaticityColor()) {
+			printRequestAttributeSet.add(Chromaticity.COLOR);
+		} else {
+			printRequestAttributeSet.add(Chromaticity.MONOCHROME);
+		}
+
 		MediaSizeName media = (MediaSizeName) printRequestAttributeSet
 				.get(Media.class);
 		MediaSize mediaSize = MediaSize.getMediaSizeForName(media);
-		
+
 		printRequestAttributeSet.add(new MediaPrintableArea((float) 0.0,
 				(float) 0.0, (mediaSize.getX(MediaSize.INCH)), (mediaSize
 						.getY(MediaSize.INCH)), MediaPrintableArea.INCH));
-		
+
 		printRequestAttributeSet.add(new Copies(printHelper
 				.getDlgNumberOfCopies()));
 
@@ -445,6 +495,10 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			printRequestAttributeSet.add(SheetCollate.UNCOLLATED);
 		}
 
+		String userJobName = advancedOptions.getJobName();
+		if (userJobName != null && userJobName.length() > 0) {
+			jobName = userJobName;
+		}
 		printRequestAttributeSet.add(new JobName(jobName, Locale.getDefault()));
 
 		return printRequestAttributeSet;

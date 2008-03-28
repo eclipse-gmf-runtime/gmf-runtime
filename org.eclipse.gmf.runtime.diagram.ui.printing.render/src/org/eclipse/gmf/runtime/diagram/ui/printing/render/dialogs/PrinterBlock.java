@@ -35,7 +35,6 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintDestination
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -47,6 +46,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A section of the JPS print dialog that adds printer options.
@@ -96,24 +96,24 @@ class PrinterBlock extends DialogBlock {
 		// until a workaround can be discovered.
 		//
 		
-		// combo.addSelectionChangedListener(new ISelectionChangedListener() {
-		//
-		// public void selectionChanged(SelectionChangedEvent event) {
-		// if (event != null) {
-		// handlePrinterSelectionChanged(event);
-		// }
-		// }
+		//		 combo.addSelectionChangedListener(new ISelectionChangedListener() {
+		//		
+		//		 public void selectionChanged(SelectionChangedEvent event) {
+		//				if (event != null) {
+		//					handlePrinterSelectionChanged(event);
+		//				}
+		//			}
 		//		});
 
 		layoutFillHorizontal(combo.getControl());
 
 		Button propertiesButton = button(result,
 				DiagramUIPrintingMessages.JPSPrintDialog_Properties);
-		propertiesButton.setEnabled(false);
+		propertiesButton.setEnabled(true);
 
 		propertiesButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				// TODO: Introduce new dialog in phase 2
+				 openPrintOptionsDialog();
 			}
 		});
 
@@ -188,7 +188,7 @@ class PrinterBlock extends DialogBlock {
 
 				PrintServiceAttributeSet printServiceAttributes = printService
 						.getAttributes();
-
+				
 				PrinterState printerState = (PrinterState) printServiceAttributes
 						.get(PrinterState.class);
 
@@ -289,5 +289,13 @@ class PrinterBlock extends DialogBlock {
 		public String getText(Object element) {
 			return ((PrintDestination) element).getName();
 		}
+	}
+		
+	private void openPrintOptionsDialog() {
+
+		JPSOptionsDialog dlg = new JPSOptionsDialog(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getShell(), bindings, options);
+		dlg.open();
+
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,20 @@ public final class DiagramUIPrintingMessages extends NLS {
 	public static String JPSPrintDialog_PagesTall;
 	public static String JPSDiagramPrinterUtil_ErrorTitle;
 	public static String JPSDiagramPrinterUtil_ErrorMessage;
+	public static String JPSOptionsDialog_Quality;
+	public static String JPSOptionsDialog_QualityHigh;
+	public static String JPSOptionsDialog_QualityMedium;
+	public static String JPSOptionsDialog_QualityLow;
+	public static String JPSOptionsDialog_Color;
+	public static String JPSOptionsDialog_ChromaticityColor;
+	public static String JPSOptionsDialog_ChromaticityMonochrome;
+	public static String JPSOptionsDialog_JobAttributes;
+	public static String JPSOptionsDialog_JobName;
+	public static String JPSOptionsDialog_Sides;
+	public static String JPSOptionsDialog_SidesOneSided;
+	public static String JPSOptionsDialog_SidesTumble;
+	public static String JPSOptionsDialog_SidesDuplex;
+	public static String JPSOptionsDialog_AdvancedOptions;
 				
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIPrintingMessages.class);

@@ -24,12 +24,14 @@
    </extension>
    
     <extension id="printingExperimentalContributionItemProvider" name="Printing_Experimental" point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
-      <contributionItemProvider class="org.eclipse.gmf.runtime.diagram.ui.render.internal.providers.PrintingExperimentalContributionItemProvider">
+      <contributionItemProvider
+            checkPluginLoaded="false"
+            class="org.eclipse.gmf.runtime.diagram.ui.render.internal.providers.PrintingExperimentalContributionItemProvider">
          <Priority name="Medium">
          </Priority>
          <partContribution class="org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart">
             <partAction
-                  global="false"
+                  global="true"
                   id="printExperimentalAction"
                   menubarPath="/file/print">
             </partAction>

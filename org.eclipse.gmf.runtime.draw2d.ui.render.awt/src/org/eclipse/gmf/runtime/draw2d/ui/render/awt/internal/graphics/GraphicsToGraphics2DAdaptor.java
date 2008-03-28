@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -461,7 +461,12 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		int w2,
 		int h2) {
 
-		drawImage(srcImage, x2, y2);
+		x2 += transX;
+		y2 += transY;
+
+		BufferedImage toDraw = ImageConverter.convert(srcImage);
+		checkState();
+		getGraphics2D().drawImage(toDraw, x2, y2, w2, h2, null);
 	}
 
 	/*
@@ -1227,5 +1232,15 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
             getGraphics2D().setComposite(newComposite);
         }
     }
-
+    
+    protected BasicStroke getStroke(){
+    	return stroke;
+    }
+    
+    protected void setStroke(BasicStroke stroke){
+    	this.stroke = stroke;
+    	getGraphics2D().setStroke(stroke);
+    }
+    
+   
 }
