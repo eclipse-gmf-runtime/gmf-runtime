@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ public class ImageFileFormat extends EnumeratedType {
 
 	
 	private static final int IMAGE_SVG = 100;
+	private static final int IMAGE_PDF = IMAGE_SVG + 1;
 	static final long serialVersionUID = 1;
 	
 	/**
@@ -58,6 +59,12 @@ public class ImageFileFormat extends EnumeratedType {
 	 * supported format Scalable Vector Graphics (SVG).
 	 */
 	public static final ImageFileFormat SVG = new ImageFileFormat("SVG", IMAGE_SVG); //$NON-NLS-1$
+	
+	
+	/**
+	 * supported format Scalable Vector Graphics (PDF).
+	 */
+	public static final ImageFileFormat PDF = new ImageFileFormat("PDF", IMAGE_PDF); //$NON-NLS-1$
 
     /**
      * supported format PNG.
@@ -67,7 +74,7 @@ public class ImageFileFormat extends EnumeratedType {
 	/**
 	 * The list of values for this enumerated type.
 	 */
-	public static final ImageFileFormat[] VALUES = { GIF, BMP, JPEG, JPG, SVG, PNG };
+	public static final ImageFileFormat[] VALUES = { GIF, BMP, JPEG, JPG, SVG, PNG, PDF };
 
 	/**
 	 * Constructs a new type with the specified

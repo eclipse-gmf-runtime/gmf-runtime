@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,6 +99,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		imageFormatToTileSizeMap.put(ImageFileFormat.PNG, new Dimension(3000,
 				3000));
 		imageFormatToTileSizeMap.put(ImageFileFormat.SVG, new Dimension(0, 0));
+		imageFormatToTileSizeMap.put(ImageFileFormat.PDF, new Dimension(0, 0));
 	}
 
 	/*

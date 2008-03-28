@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.draw2d.ui.render.awt;singleton:=true
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -26,5 +26,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.apache.batik.dom.svg,
  org.apache.batik.svggen,
  org.apache.batik.util,
- org.w3c.dom.svg;bundle-version="1.1.0"
+ org.w3c.dom.svg;bundle-version="1.1.0",
+ org.apache.batik.pdf
 Eclipse-LazyStart: true

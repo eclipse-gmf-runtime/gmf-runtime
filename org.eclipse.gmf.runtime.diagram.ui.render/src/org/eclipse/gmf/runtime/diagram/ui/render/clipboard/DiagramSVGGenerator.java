@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
 public class DiagramSVGGenerator
 	extends DiagramGenerator {
 
-	private RenderedImage svgImage = null;
+	private RenderedImage renderedImage = null;
 
 	private Element svgRoot = null;
 
@@ -88,10 +88,10 @@ public class DiagramSVGGenerator
 			stream(os);
 			os.close();
 
-			setSVGImage(RenderedImageFactory.getInstance(os.toByteArray()));
+			setRenderedImage(RenderedImageFactory.getInstance(os.toByteArray()));
 
 			return RenderedImageDescriptor
-				.createFromRenderedImage(getSVGImage());
+				.createFromRenderedImage(getRenderedImage());
 		} catch (IOException ex) {
 			Log.error(DiagramUIRenderPlugin.getInstance(), IStatus.ERROR, ex
 				.getMessage(), ex);
@@ -139,11 +139,11 @@ public class DiagramSVGGenerator
 	 */
 	public Image createAWTImageForParts(List editparts, org.eclipse.swt.graphics.Rectangle sourceRect) {
 		createSWTImageDescriptorForParts(editparts, sourceRect);
-		if (getSVGImage() != null) {
+		if (getRenderedImage() != null) {
 			try {
-				BufferedImage bufImg = (BufferedImage)getSVGImage().getAdapter(BufferedImage.class);
+				BufferedImage bufImg = (BufferedImage)getRenderedImage().getAdapter(BufferedImage.class);
 				if (bufImg == null)
-					bufImg = ImageConverter.convert(getSVGImage().getSWTImage());
+					bufImg = ImageConverter.convert(getRenderedImage().getSWTImage());
 				return bufImg;
 			} catch (Error e) {
 				// log the Error but allow execution to continue
@@ -169,17 +169,18 @@ public class DiagramSVGGenerator
 	}
 
 	/**
-	 * @return Returns the svgImage.
+	 * @return Returns the rendered image created by previous 
+	 * call to createSWTImageDescriptorForParts
 	 */
-	private RenderedImage getSVGImage() {
-		return svgImage;
+	public RenderedImage getRenderedImage() {
+		return renderedImage;
 	}
 
 	/**
 	 * @param svgImage
 	 *            The svgImage to set.
 	 */
-	private void setSVGImage(RenderedImage svgImage) {
-		this.svgImage = svgImage;
+	private void setRenderedImage(RenderedImage renderedImage) {
+		this.renderedImage = renderedImage;
 	}
 }

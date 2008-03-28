@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,8 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImage;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImageConverter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -196,7 +198,7 @@ public class CopyToImageUtil {
      * @return appropriate diagram generator
      */
     protected DiagramGenerator getDiagramGenerator(DiagramEditPart diagramEP, ImageFileFormat format) {
-        if (format.equals(ImageFileFormat.SVG)) {
+        if (format.equals(ImageFileFormat.SVG) || format.equals(ImageFileFormat.PDF)) {
             return new DiagramSVGGenerator(diagramEP);
         } else {
         	return new DiagramImageGenerator(diagramEP);
@@ -227,10 +229,11 @@ public class CopyToImageUtil {
 			ImageFileFormat format, IProgressMonitor monitor)
 			throws CoreException {
 		boolean found = false;
-		if (format.equals(ImageFileFormat.SVG)) {
+		if (format.equals(ImageFileFormat.SVG)
+				|| format.equals(ImageFileFormat.PDF)) {
 			gen.createSWTImageDescriptorForParts(editParts, imageRect);
 			monitor.worked(1);
-			saveSVGToFile(destination, (DiagramSVGGenerator) gen, monitor);
+			saveToFile(destination, (DiagramSVGGenerator) gen, format, monitor);
 			found = true;
 		} else if (format.equals(ImageFileFormat.JPEG)
 				|| format.equals(ImageFileFormat.PNG)) {
@@ -304,6 +307,7 @@ public class CopyToImageUtil {
         refreshLocal(destination);
     }
 
+    
     /**
      * Saves an SVG DOM to a file.
      * 
@@ -317,37 +321,66 @@ public class CopyToImageUtil {
      *                if this method fails
      */
     protected void saveSVGToFile(IPath destination,
-            DiagramSVGGenerator generator, IProgressMonitor monitor)
+			DiagramSVGGenerator generator, IProgressMonitor monitor)
+			throws CoreException {
+		saveToFile(destination, generator, ImageFileFormat.SVG, monitor);
+	}
+        
+    
+    /**
+	 * Saves an SVG or PDF files.
+	 * 
+	 * @param destination
+	 *            the destination file, including path and file name
+	 * @param generator
+	 *            the svg generator for a diagram, used to write
+	 * @param format
+	 *            currently supports SVG or PDF
+	 * @param monitor
+	 *            the progress monitor
+	 * @exception CoreException
+	 *                if this method fails
+	 */
+    protected void saveToFile(IPath destination,
+            DiagramSVGGenerator generator, ImageFileFormat format, IProgressMonitor monitor)
         throws CoreException {
 
-        IStatus fileModificationStatus = createFile(destination);
-        if (!fileModificationStatus.isOK()) {
-        	// can't write to the file
-        	return;
-        }
+		IStatus fileModificationStatus = createFile(destination);
+		if (!fileModificationStatus.isOK()) {
+			// can't write to the file
+			return;
+		}
+		monitor.worked(1);
+
+		try {
+			FileOutputStream os = new FileOutputStream(destination.toOSString());
+			monitor.worked(1);
+
+			if (format == ImageFileFormat.PDF) {
+				SVGImageConverter.exportToPDF((SVGImage) generator.getRenderedImage(), os);
+			} else if (format == ImageFileFormat.SVG) {
+				generator.stream(os);
+			} else {
+				throw new IllegalArgumentException(
+						"Unexpected format: " + format.getName()); //$NON-NLS-1$
+			}
+			monitor.worked(1);
+
+			os.close();
+			monitor.worked(1);
+			refreshLocal(destination);
+		} catch (IOException ex) {
+			Log.error(DiagramUIRenderPlugin.getInstance(), IStatus.ERROR, ex
+					.getMessage(), ex);
+			IStatus status = new Status(IStatus.ERROR,
+					"exportToFile", IStatus.OK, //$NON-NLS-1$
+					ex.getMessage(), null);
+			throw new CoreException(status);
+		}
+	}
         
-        monitor.worked(1);
-
-        try {
-
-            FileOutputStream os = new FileOutputStream(destination.toOSString());
-            monitor.worked(1);
-
-            generator.stream(os);
-            monitor.worked(1);
-
-            os.close();
-            monitor.worked(1);
-            refreshLocal(destination);
-        } catch (IOException ex) {
-            Log.error(DiagramUIRenderPlugin.getInstance(), IStatus.ERROR, ex
-                .getMessage(), ex);
-            IStatus status =
-                new Status(IStatus.ERROR, "exportToFile", IStatus.OK, //$NON-NLS-1$
-                    ex.getMessage(), null);
-            throw new CoreException(status);
-        }
-    }
+  
+    
 
     /**
      * create a file in the workspace if the destination is in a project in the
