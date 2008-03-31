@@ -40,6 +40,11 @@ class CopiesBlock extends DialogBlock {
 	private final DataBindingContext bindings;
 	private final PrintOptions options;
 
+	private final Image collateOnImage = DiagramUIPrintingPluginImages.COLLATE_ON
+			.createImage();
+	private final Image collateOffImage = DiagramUIPrintingPluginImages.COLLATE_OFF
+			.createImage();
+	
 	CopiesBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings,
 			PrintOptions options) {
 		super(dluConverter);
@@ -67,11 +72,8 @@ class CopiesBlock extends DialogBlock {
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_COPIES), null, null);
 
-		final Image collateOnImage = DiagramUIPrintingPluginImages.COLLATE_ON
-				.createImage();
-		final Image collateOffImage = DiagramUIPrintingPluginImages.COLLATE_OFF
-				.createImage();
-		final Label collateImageButton = new Label(result,  SWT.CENTER | SWT.SHADOW_NONE);
+		final Label collateImageButton = new Label(result, SWT.CENTER
+				| SWT.SHADOW_NONE);
 
 		layoutAlignRight(collateImageButton);
 		collateImageButton.setImage(collateOffImage);
@@ -99,4 +101,13 @@ class CopiesBlock extends DialogBlock {
 
 		return result;
 	}
+		
+	/**
+	 * Dispose of images.
+	 */
+	public void dispose() {
+		collateOnImage.dispose();
+		collateOffImage.dispose();
+	}
+
 }

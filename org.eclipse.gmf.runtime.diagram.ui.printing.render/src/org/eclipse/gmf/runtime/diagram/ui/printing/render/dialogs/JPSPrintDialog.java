@@ -143,6 +143,7 @@ public class JPSPrintDialog
     
     public boolean close() {
         bindings.dispose();
+        copiesBlock.dispose();
         return super.close();
     }
     

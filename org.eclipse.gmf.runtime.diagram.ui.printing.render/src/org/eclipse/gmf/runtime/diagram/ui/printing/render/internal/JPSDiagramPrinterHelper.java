@@ -29,7 +29,6 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.render.util.PrintHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.util.DiagramPrinterUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -62,6 +61,7 @@ public class JPSDiagramPrinterHelper extends DiagramPrinterHelper {
 	 * Prevent instantiation.
 	 */
 	private JPSDiagramPrinterHelper() {
+		super();
 	}
 
 	/**
@@ -91,9 +91,7 @@ public class JPSDiagramPrinterHelper extends DiagramPrinterHelper {
 					diagramMap);
 
 			if (printerData != null) {
-
-				//final Printer printer = new Printer(printerData);
-				
+		
 				jpsDiagramPrinter.setPrinter(printerData.name);
 				jpsDiagramPrinter.setDisplayDPI(Display.getDefault().getDPI());
 				jpsDiagramPrinter.setPrintHelper(helper);

@@ -478,6 +478,27 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 			printRequestAttributeSet.add(Chromaticity.MONOCHROME);
 		}
 
+		if (advancedOptions.isQualityLow()) {
+			printRequestAttributeSet.add(PrintQuality.DRAFT);
+		} else if (advancedOptions.isQualityMed()) {
+			printRequestAttributeSet.add(PrintQuality.NORMAL);
+		} else if (advancedOptions.isQualityHigh()) {
+			printRequestAttributeSet.add(PrintQuality.HIGH);
+		}
+		if (advancedOptions.isSideDuplex()) {
+			printRequestAttributeSet.add(Sides.DUPLEX);
+		} else if (advancedOptions.isSideOneSided()) {
+			printRequestAttributeSet.add(Sides.ONE_SIDED);
+		} else if (advancedOptions.isSideTumble()) {
+			printRequestAttributeSet.add(Sides.TUMBLE);
+		}
+
+		if (advancedOptions.isChromaticityColor()) {
+			printRequestAttributeSet.add(Chromaticity.COLOR);
+		} else {
+			printRequestAttributeSet.add(Chromaticity.MONOCHROME);
+		}
+
 		MediaSizeName media = (MediaSizeName) printRequestAttributeSet
 				.get(Media.class);
 		MediaSize mediaSize = MediaSize.getMediaSizeForName(media);
