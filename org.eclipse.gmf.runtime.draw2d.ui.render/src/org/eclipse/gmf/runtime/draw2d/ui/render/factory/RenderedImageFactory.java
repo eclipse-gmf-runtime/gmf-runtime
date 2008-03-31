@@ -267,6 +267,14 @@ public class RenderedImageFactory {
         else
             image = autodetectImage(buffer, key);
 
+		// Bugzilla 208374
+		if (image == null) {
+			// Remove entry holding null reference.
+			instanceMap.remove(key);
+			// Recreate entry using buffer.
+			image = getInstance(buffer);
+		}
+
         return image;
     }
 
