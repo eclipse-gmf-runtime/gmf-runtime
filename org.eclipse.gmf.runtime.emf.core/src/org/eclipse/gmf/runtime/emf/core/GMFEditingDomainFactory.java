@@ -19,7 +19,10 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.Resource.Factory;
+import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
@@ -30,6 +33,7 @@ import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.ISyncExecHelper;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.SyncExecHelper;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
+import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 
 
@@ -94,7 +98,7 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 	 * @param domain the new editing domain
 	 */
 	protected void configure(final TransactionalEditingDomain domain) {
-		ResourceSet rset = domain.getResourceSet();
+		final ResourceSet rset = domain.getResourceSet();
 
 		// ensure that the cross-referencing adapter is installed
 		if (CrossReferenceAdapter.getExistingCrossReferenceAdapter(rset) == null) {
@@ -103,6 +107,40 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 
 		// ensure that the path map manager is installed
 		if (PathmapManager.getExistingPathmapManager(rset) == null) {
+			// Set up a delegating resource factory registry that ensures that
+			//  the pathmap URI is normalized before finding a resource factory.
+			final Registry existingRegistry = rset.getResourceFactoryRegistry();
+			
+			rset.setResourceFactoryRegistry(new Registry() {
+				private Registry delegateRegistry = existingRegistry;
+
+				public Map<String, Object> getContentTypeToFactoryMap() {
+					return delegateRegistry.getContentTypeToFactoryMap();
+				}
+
+				public Map<String, Object> getExtensionToFactoryMap() {
+					return delegateRegistry.getExtensionToFactoryMap();
+				}
+
+				public Factory getFactory(URI uri, String contentType) {
+					if (uri != null && uri.scheme().equals(EMFCoreConstants.PATH_MAP_SCHEME)) {
+						uri = rset.getURIConverter().normalize(uri);
+					}
+					return delegateRegistry.getFactory(uri, contentType);
+				}
+
+				public Factory getFactory(URI uri) {
+					if (uri != null && uri.scheme().equals(EMFCoreConstants.PATH_MAP_SCHEME)) {
+						uri = rset.getURIConverter().normalize(uri);
+					}
+					return delegateRegistry.getFactory(uri);
+				}
+
+				public Map<String, Object> getProtocolToFactoryMap() {
+					return delegateRegistry.getProtocolToFactoryMap();
+				}
+			});
+			
 			rset.eAdapters().add(new PathmapManager());
 		}
 			

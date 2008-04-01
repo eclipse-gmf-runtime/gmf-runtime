@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,7 @@ import org.eclipse.gmf.runtime.emf.core.internal.plugin.EMFCorePlugin;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.emf.core.resources.IPathmapManager;
+import org.eclipse.gmf.runtime.emf.core.resources.IPathmapManager2;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.service.prefs.BackingStoreException;
@@ -63,7 +64,7 @@ import org.osgi.service.prefs.BackingStoreException;
  * 
  * @author rafikj
  */
-public class PathmapManager extends AdapterImpl implements IPathmapManager {
+public class PathmapManager extends AdapterImpl implements IPathmapManager, IPathmapManager2 {
 	// path maps can be defined using an extension point: Pathmaps
 	//  or by referencing an eclipse path variable
 	//  or by adding a pathmap manually
@@ -83,6 +84,7 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	// The path map as defined by the extensions and the referenced path variables and the manually
 	//  added pathmaps.
 	private static final Map PATH_MAP = Collections.synchronizedMap(configure());
+	private static final Set FILE_VARIABLES = Collections.synchronizedSet(new HashSet());
 	
 	private static final Map instances = Collections.synchronizedMap(new WeakHashMap());
 	
@@ -312,12 +314,35 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 	}
 	
 	/**
-	 * Set the value of a pathmap variable.
+	 * Set the value of a pathmap variable. Dirties any resources
+	 *  that have HREF's that need to be changed.
 	 * 
 	 * @param var the path map variable name
 	 * @param val the path map variable value (must be an encoded URI)
 	 */
 	public static void setPathVariable(String var, String val) {
+		setPathVariable(var, val, true);
+	}
+	
+	/**
+	 * Sets the value of a pathmap variable (a folder). The provided flag
+	 *  determines if resources should be dirtied if they have HREF's that
+	 *  should be changed.
+	 *  
+	 * @param var the path map variable name
+	 * @param val the path map variable value (must be an encoded URI)
+	 * @param dirtyResources true, if resources should be dirtied so that
+	 *  their modified HREF's are saved. false, otherwise.
+	 */
+	public static void setPathVariable(String var, String val, boolean dirtyResources) {
+		internalSetPathVariable(var, val);
+
+		for (Iterator i = allInstances().iterator(); i.hasNext();) {
+			((PathmapManager) i.next()).resyncEntries(true, dirtyResources);
+		}
+	}
+
+	private static void internalSetPathVariable(String var, String val) {
 		// We must try to determine if this pathmap resides in the workspace as some container
 		//  so that we store into the pathmap a substitution that is a platform:/resource 
 		//  type of substitution. This is required because otherwise, pathmap URIs normalize
@@ -337,9 +362,65 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		}
 		
 		PATH_MAP.put(var, val);
-
+	}
+	
+	/**
+	 * Set the value of a pathmap variable to point to a specific file (not a folder). The
+	 *  provided flag determines whether resource should be dirtied if their HREF's need to
+	 *  be changed.
+	 * 
+	 * @param var the path map variable name
+	 * @param val the path map variable value (must be an encoded URI pointing to a file, not a folder)
+	 * @param dirtyResources true, if resources should be dirtied so that their HREF's can be
+	 * changed. false, otherwise.
+	 */
+	public static void setFilePathVariable(String var, String val, boolean dirtyResources) {
+		FILE_VARIABLES.add(var);
+		internalSetPathVariable(var, val);
 		for (Iterator i = allInstances().iterator(); i.hasNext();) {
-			((PathmapManager) i.next()).resyncEntries(true);
+			((PathmapManager) i.next()).resyncEntries(true, dirtyResources);
+		}
+	}
+	
+	/**
+	 * Sets the value of a map of pathmap variables to point to specific files (not folders)
+	 * The provided flag determines whether resource should be dirtied if their HREF's need to
+	 * be changed.
+	 *
+	 * @param settings A map of new variables(Strings) to their values(Strings).
+	 * @param dirtyResource true, if resources should be dirtied so that their HREF's can
+	 *  be changed. false, otherwise.
+	 */
+	public static void setFilePathVariables(Map settings, boolean dirtyResources) {
+		FILE_VARIABLES.addAll(settings.keySet());
+		
+		for (Iterator i = settings.entrySet().iterator(); i.hasNext();) {
+			Map.Entry entry = (Map.Entry)i.next();
+			internalSetPathVariable((String)entry.getKey(), (String)entry.getValue());
+		}
+		
+		for (Iterator i = allInstances().iterator(); i.hasNext();) {
+			((PathmapManager) i.next()).resyncEntries(true, dirtyResources);
+		}
+	}
+	
+	/**
+	 * Sets the value of a map of pathmap variables to point specific folders (not files).
+	 * The provided flag determines whether resource should be dirtied if their HREF's need
+	 * to be changed.
+	 * 
+	 * @param settings A map of new variables(Strings) to their values(Strings).
+	 * @param dirtyResource ture, if resources should be dirtied so that their HREF's can
+	 *  be changed. false, otherwise.
+	 */
+	public static void setPathVariables(Map settings, boolean dirtyResources) {
+		for (Iterator i = settings.entrySet().iterator(); i.hasNext();) {
+			Map.Entry entry = (Map.Entry)i.next();
+			internalSetPathVariable((String)entry.getKey(), (String)entry.getValue());
+		}
+		
+		for (Iterator i = allInstances().iterator(); i.hasNext();) {
+			((PathmapManager) i.next()).resyncEntries(true, dirtyResources);
 		}
 	}
 
@@ -349,6 +430,30 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		return Status.OK_STATUS; // TODO: report accurate status
 	}
 	
+	public IStatus addFilePathVariable(String name, String value, boolean dirtyResources) {
+		setFilePathVariable(name, value, dirtyResources);
+		
+		return Status.OK_STATUS; // TODO: report accurate status
+	}
+	
+	public IStatus addFilePathVariables(Map settings, boolean dirtyResources) {
+		setFilePathVariables(settings, dirtyResources);
+		
+		return Status.OK_STATUS; // TODO: report accurate status
+	}
+	
+	public IStatus addFolderPathVariable(String name, String value, boolean dirtyResources) {
+		setPathVariable(name, value, dirtyResources);
+		
+		return Status.OK_STATUS;
+	}
+	
+	public IStatus addFolderPathVariables(Map settings, boolean dirtyResources) {
+		setPathVariables(settings, dirtyResources);
+		
+		return Status.OK_STATUS;
+	}
+	
 	/**
 	 * Remove a pathmap variable.
 	 */
@@ -356,7 +461,7 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		PATH_MAP.remove(var);
 
 		for (Iterator i = allInstances().iterator(); i.hasNext();) {
-			((PathmapManager) i.next()).resyncEntries(true);
+			((PathmapManager) i.next()).resyncEntries(true, true);
 		}
 	}
 	
@@ -508,7 +613,7 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		
 		if (rset != null) {
 			// remove all path mappings from existing resources
-			resyncEntries(false);
+			resyncEntries(false, true);
 		}
 		
 		super.setTarget(newTarget);
@@ -518,14 +623,14 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		
 		if (rset != null) {
 			// denormalize all resources using the path mappings
-			resyncEntries(true);
+			resyncEntries(true, true);
 		}
 	}
 	
 	/**
 	 * Add all entries.
 	 */
-	private void resyncEntries(boolean resync) {
+	private void resyncEntries(boolean resync, boolean dirtyResources) {
 
 		// save URIs of all resources.
 		Map savedURIs = new HashMap();
@@ -593,26 +698,28 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		
 		// if some resources have changed their URI, ensure their exports are
 		// dirtied.
-		for (Iterator i = rset.getResources().iterator(); i.hasNext();) {
-
-			Resource resource = (Resource) i.next();
-
-			URI uri = resource.getURI();
-
-			URI savedURI = (URI) savedURIs.get(resource);
-
-			if (uri != savedURI) {
-
-				if ((uri != null) && (!uri.equals(savedURI))) {
-
-					Collection exports = EMFCoreUtil.getExports(resource);
-
-					for (Iterator j = exports.iterator(); j.hasNext();) {
-
-						Resource export = (Resource) j.next();
-
-						if (!export.isModified())
-							export.setModified(true);
+		if (dirtyResources) {
+			for (Iterator i = rset.getResources().iterator(); i.hasNext();) {
+	
+				Resource resource = (Resource) i.next();
+	
+				URI uri = resource.getURI();
+	
+				URI savedURI = (URI) savedURIs.get(resource);
+	
+				if (uri != savedURI) {
+	
+					if ((uri != null) && (!uri.equals(savedURI))) {
+	
+						Collection exports = EMFCoreUtil.getExports(resource);
+	
+						for (Iterator j = exports.iterator(); j.hasNext();) {
+	
+							Resource export = (Resource) j.next();
+	
+							if (!export.isModified())
+								export.setModified(true);
+						}
 					}
 				}
 			}
@@ -637,7 +744,8 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 
 			uri.append(val);
 
-			if (val.charAt(len - 1) != EMFCoreConstants.PATH_SEPARATOR)
+			// TODO
+			if (!FILE_VARIABLES.contains(var) && val.charAt(len - 1) != EMFCoreConstants.PATH_SEPARATOR)
 				uri.append(EMFCoreConstants.PATH_SEPARATOR);
 
 			URI valURI = URI.createURI(uri.toString());
@@ -728,7 +836,8 @@ public class PathmapManager extends AdapterImpl implements IPathmapManager {
 		uri.append(EMFCoreConstants.PATH_SEPARATOR);
 		uri.append(var);
 
-		if (var.charAt(len - 1) != EMFCoreConstants.PATH_SEPARATOR)
+		//TODO
+		if (!FILE_VARIABLES.contains(var) && var.charAt(len - 1) != EMFCoreConstants.PATH_SEPARATOR)
 			uri.append(EMFCoreConstants.PATH_SEPARATOR);
 
 		return URI.createURI(uri.toString());
