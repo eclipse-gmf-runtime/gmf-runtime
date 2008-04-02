@@ -125,7 +125,7 @@ public abstract class AbstractTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label
+     *            my user-readable label, should never be <code>null</code>.
      * @param affectedFiles
      *            the list of affected {@link IFile}s; may be <code>null</code>
      */
@@ -142,7 +142,7 @@ public abstract class AbstractTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label
+     *            my user-readable label, should never be <code>null</code>.
      * @param options
      *            for the transaction in which I execute myself, or
      *            <code>null</code> for the default options
@@ -151,7 +151,7 @@ public abstract class AbstractTransactionalCommand
      */
     public AbstractTransactionalCommand(TransactionalEditingDomain domain,
             String label, Map options, List affectedFiles) {
-        super(domain, label, options);
+        super(domain, (label == null) ? "" : label, options);
 
         if (affectedFiles == null) {
             this.affectedFiles = new ArrayList();

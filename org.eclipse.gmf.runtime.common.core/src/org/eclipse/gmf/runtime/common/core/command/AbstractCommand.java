@@ -56,7 +56,7 @@ public abstract class AbstractCommand extends AbstractOperation
      * Initializes me with a label.
      * 
      * @param label
-     *            the operation label
+     *            the operation label, should never be <code>null</code>.
      */
     public AbstractCommand(String label) {
         this(label, null);
@@ -67,12 +67,12 @@ public abstract class AbstractCommand extends AbstractOperation
 	 * when I am executed, undone or redone.
 	 * 
 	 * @param label
-	 *            the operation label
+	 *            the operation label, should never be <code>null</code>.
 	 * @param affectedFiles
 	 *            the list of affected {@link IFile}s; may be <code>null</code>
 	 */
 	public AbstractCommand(String label, List affectedFiles) {
-		super(label);
+		super((label == null) ? "" : label);
 
 		if (affectedFiles == null) {
 			this.affectedFiles = new ArrayList(2);
