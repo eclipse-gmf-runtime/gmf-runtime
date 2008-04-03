@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,11 +58,11 @@ public class CompositeTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label
+     *            my user-readable label, should never be <code>null</code>.
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label) {
-        super(domain, label);
+        super(domain, (label == null) ? "" : label);
     }
 
     /**
@@ -71,14 +71,14 @@ public class CompositeTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label
+     *            my user-readable label, should never be <code>null</code>.
      * @param options
      *            for the transaction in which I execute myself, or
      *            <code>null</code> for the default options
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label, Map options) {
-        super(domain, label, options);
+        super(domain, (label == null) ? "" : label, options);
     }
 
     /**
@@ -87,13 +87,13 @@ public class CompositeTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label
+     *            my user-readable label, , should never be <code>null</code>.
      * @param children
      *            a list of operations to compose
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label, List children) {
-        super(domain, label, children);
+        super(domain, (label == null) ? "" : label, children);
     }
 
     /**
