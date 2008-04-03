@@ -28,7 +28,6 @@ public class LeftRightProvider extends DefaultProvider {
 	 */
 	protected Rectangle translateToGraph(Rectangle r) {
 		Rectangle rDP = r.getCopy();
-		getMapMode().LPtoDP(rDP);
 		return rDP;
 	}
 
@@ -37,7 +36,6 @@ public class LeftRightProvider extends DefaultProvider {
 	 */
 	protected Rectangle translateFromGraph(Rectangle rect) {
 		Rectangle rLP = rect.getCopy();
-		getMapMode().DPtoLP(rLP);
 		return rLP;
 	}	
 	
@@ -49,6 +47,6 @@ public class LeftRightProvider extends DefaultProvider {
 		g.setDirection(PositionConstants.WEST);
 		return g;
 	}
-
+	
 }
 

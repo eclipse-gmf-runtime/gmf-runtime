@@ -33,7 +33,6 @@ public class TopDownProvider extends DefaultProvider {
 	 */
 	protected Rectangle translateToGraph(Rectangle r) {
 		Rectangle rDP = r.getCopy();
-		getMapMode().LPtoDP(rDP);
 		return rDP;
 	}
 
@@ -42,7 +41,6 @@ public class TopDownProvider extends DefaultProvider {
 	 */
 	protected Rectangle translateFromGraph(Rectangle rect) {
 		Rectangle rLP = rect.getCopy();
-		getMapMode().DPtoLP(rLP);
 		return rLP;
 	}
 	

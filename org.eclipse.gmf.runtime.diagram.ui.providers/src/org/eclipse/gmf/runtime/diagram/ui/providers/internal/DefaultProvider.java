@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
@@ -60,9 +61,15 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.SetAllBendpointRequest;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.AbstractLayoutEditPartProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.layout.LayoutType;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
+import org.eclipse.gmf.runtime.draw2d.ui.graph.BorderNode;
+import org.eclipse.gmf.runtime.draw2d.ui.graph.ConstantSizeNode;
+import org.eclipse.gmf.runtime.draw2d.ui.graph.ConstrainedEdge;
+import org.eclipse.gmf.runtime.draw2d.ui.graph.GMFDirectedGraphLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.View;
@@ -84,8 +91,9 @@ public abstract class DefaultProvider
     protected IMapMode mm;
     
     protected static final int NODE_PADDING = 30;
-    protected static final int MIN_EDGE_PADDING = 5;
+    protected static final int MIN_EDGE_PADDING = 15;
     protected static final int MAX_EDGE_PADDING = NODE_PADDING * 3;
+    protected static final int MIN_EDGE_END_POINTS_PADDING = 5;
     
 
     
@@ -214,9 +222,12 @@ public abstract class DefaultProvider
                     minX = Math.min(minX, position.x);
                     minY = Math.min(minY, position.y);
                 }
+                
 
-                Node n = new Node(shapeEP);
-                n.setPadding(new Insets(NODE_PADDING));
+                ConstantSizeNode n = new ConstantSizeNode(shapeEP);
+                n.setPadding(new Insets(getMapMode().DPtoLP(NODE_PADDING)));
+                n.setMinIncomingPadding(getMapMode().DPtoLP(MIN_EDGE_END_POINTS_PADDING));
+                n.setMinOutgoingPadding(getMapMode().DPtoLP(MIN_EDGE_END_POINTS_PADDING));
                 Dimension size = shapeEP.getSize();
 
                 setNodeMetrics(n, new Rectangle(position.x, position.y,
@@ -224,10 +235,34 @@ public abstract class DefaultProvider
 
                 editPartToNodeDict.put(shapeEP, n);
                 nodes.add(n);
+                
+                build_borderNodes(shapeEP, n, editPartToNodeDict);
+                
             }
         }
 
         return nodes;
+    }
+    
+    /**
+	 * Since an editpart may contain border items that may need be laid out,
+	 * this is the place where border nodes can be created and added to the map
+	 * of editparts to nodes. If border items locations don't have much
+	 * semantical meaning and their locations are valubale notationally it's
+	 * best that border nodes are created here in this method. The
+	 * infrastructure for creating commands to move border items around is all
+	 * in place already. Creates border nodes for an editpart.
+	 * 
+	 * @param parentEP
+	 *            the editopart
+	 * @param parentNode
+	 *            the node for the editpart
+	 * @param editPartToNodeDict
+	 *            the map of editparts to nodes
+	 * @since 2.1
+	 */
+    protected void build_borderNodes(GraphicalEditPart parentEP, ConstantSizeNode parentNode, Map editPartToNodeDict) {
+    	// Clients are responsible for creating border nodes
     }
 
     /**
@@ -331,17 +366,17 @@ public abstract class DefaultProvider
                 if (layoutTopDown(poly)) {
                     EditPart from = poly.getSource();
                     EditPart to = poly.getTarget();
-                    if (from instanceof IBorderItemEditPart)
+                    if (from instanceof IBorderItemEditPart && !editPartToNodeDict.containsKey(from))
                         from = from.getParent();
                     else if (shouldHandleListItems && from instanceof ListItemEditPart)
                         from = getFirstAnscestorinNodesMap(from, editPartToNodeDict);
-                    if (to instanceof IBorderItemEditPart)
+                    if (to instanceof IBorderItemEditPart && !editPartToNodeDict.containsKey(to))
                         to = to.getParent();
                     else if (shouldHandleListItems && to instanceof ListItemEditPart)
                         to = getFirstAnscestorinNodesMap(to, editPartToNodeDict);
                     Node fromNode = (Node) editPartToNodeDict.get(from);
                     Node toNode = (Node) editPartToNodeDict.get(to);
-
+                    
                     if (fromNode != null && toNode != null
                         && !fromNode.equals(toNode)) {
                         addEdge(edges, poly, toNode, fromNode);
@@ -358,11 +393,11 @@ public abstract class DefaultProvider
             ConnectionEditPart poly = (ConnectionEditPart) li.next();
             EditPart from = poly.getSource();
             EditPart to = poly.getTarget();
-            if (from instanceof IBorderItemEditPart)
+            if (from instanceof IBorderItemEditPart && !editPartToNodeDict.containsKey(from))
                 from = from.getParent();
             else if (shouldHandleListItems && from instanceof ListItemEditPart)
                 from = getFirstAnscestorinNodesMap(from, editPartToNodeDict);
-            if (to instanceof IBorderItemEditPart)
+            if (to instanceof IBorderItemEditPart && !editPartToNodeDict.containsKey(to))
                 to = to.getParent();
             else if (shouldHandleListItems && to instanceof ListItemEditPart)
                 to = getFirstAnscestorinNodesMap(to, editPartToNodeDict);
@@ -376,7 +411,7 @@ public abstract class DefaultProvider
         }
         return edges;
     }
-
+    
     /**
      * @param edges
      * @param gep
@@ -385,7 +420,7 @@ public abstract class DefaultProvider
      */
     private void addEdge(EdgeList edges, ConnectionEditPart connectionEP,
             Node fromNode, Node toNode) {
-        Edge edge = new Edge(connectionEP, fromNode, toNode);
+    	ConstrainedEdge edge = new ConstrainedEdge(connectionEP, fromNode, toNode);
         initializeEdge(connectionEP, edge);
         
         edges.add(edge);
@@ -407,6 +442,9 @@ public abstract class DefaultProvider
         // set the padding based on the extent of the children.
         edge.setPadding(Math.max(edge.getPadding(), calculateEdgePadding(connectionEP, affectingChildren)));
         edge.setDelta(Math.max(edge.getDelta(), affectingChildren.size() / 2));
+        if (edge instanceof ConstrainedEdge && ((Connection)connectionEP.getFigure()).getConnectionRouter() instanceof OrthogonalRouter) {
+        	((ConstrainedEdge)edge).setStyle(ConstrainedEdge.ORTHOGONAL_ROUTING_STYLE);
+        }
     }
         
     /**
@@ -429,7 +467,7 @@ public abstract class DefaultProvider
         Rectangle.SINGLETON.y = 0;
         Rectangle.SINGLETON.width = padding;
         Rectangle.SINGLETON.height = padding;
-        return Math.min(Math.max(Math.round(translateToGraph(Rectangle.SINGLETON).width * 1.5f), MIN_EDGE_PADDING), MAX_EDGE_PADDING);
+        return Math.min(Math.max(Math.round(translateToGraph(Rectangle.SINGLETON).width * 1.5f), getMapMode().DPtoLP(MIN_EDGE_PADDING)), getMapMode().DPtoLP(MAX_EDGE_PADDING));
     }
     
     /**
@@ -478,7 +516,7 @@ public abstract class DefaultProvider
             GraphicalEditPart shapeEP = (GraphicalEditPart) e;
             Set sourceConnections = new HashSet(shapeEP.getSourceConnections());
             if (shapeEP instanceof IBorderedShapeEditPart){
-                List borderItems = getBorderItemEditParts(shapeEP);
+                List borderItems = getBorderItemEditParts(shapeEP, editPartToNodeDict);
                 for (Iterator iter = borderItems.iterator(); iter.hasNext();) {
                     GraphicalEditPart element = (GraphicalEditPart) iter.next();
                     sourceConnections.addAll(element.getSourceConnections());
@@ -546,12 +584,12 @@ public abstract class DefaultProvider
      * @param parent part needed to search
      * @param set to be modified of border item edit parts that are direct children of the parent
      */
-    private List getBorderItemEditParts(EditPart parent) {
+    private List getBorderItemEditParts(EditPart parent, Hashtable editPartToNodeDict ) {
         Iterator iter = parent.getChildren().iterator();
         List list = new ArrayList();
         while(iter.hasNext()) {
             EditPart child = (EditPart)iter.next();
-            if( child instanceof IBorderItemEditPart ) {
+            if (!editPartToNodeDict.containsKey(child) && child instanceof IBorderItemEditPart) {
                 list.add(child);
             }
         }
@@ -609,7 +647,7 @@ public abstract class DefaultProvider
     /**
      * Computes the command that will route the given connection editpart with the given points.
      */
-    protected Command routeThrough(Edge edge, ConnectionEditPart connectEP, Node source, Node target, PointList points, int diffX, int diffY) {
+    protected Command routeThrough(Edge edge, ConnectionEditPart connectEP, Node source, Node target, PointList points, Point diff) {
 
         if (connectEP == null)
             return null;
@@ -623,8 +661,8 @@ public abstract class DefaultProvider
             target = tmpNode;
         }
         
-        double totalEdgeDiffX = diffX ;
-        double totalEdgeDiffY = diffY ;
+        double totalEdgeDiffX = diff.preciseX() ;
+        double totalEdgeDiffY = diff.preciseY() ;
         
         PrecisionPointList allPoints = new PrecisionPointList(routePoints.size());
         for (int i = 0; i < routePoints.size(); i++) {
@@ -635,7 +673,7 @@ public abstract class DefaultProvider
 
         CompoundCommand cc = new CompoundCommand(""); //$NON-NLS-1$
         
-        LineSeg anchorReferencePoints = addAnchorsCommands(cc, allPoints.getFirstPoint(), allPoints.getLastPoint(), source, target, connectEP, diffX, diffY);
+        LineSeg anchorReferencePoints = addAnchorsCommands(cc, allPoints.getFirstPoint(), allPoints.getLastPoint(), source, target, connectEP, diff);
         		
         SetAllBendpointRequest request = new SetAllBendpointRequest(
                 RequestConstants.REQ_SET_ALL_BENDPOINT, allPoints,
@@ -688,12 +726,11 @@ public abstract class DefaultProvider
 	 */
 	protected LineSeg addAnchorsCommands(CompoundCommand cc,
 			Point sourceAnchorLocation, Point targetAnchorLocation,
-			Node source, Node target, ConnectionEditPart cep, int diffX,
-			int diffY) {
+			Node source, Node target, ConnectionEditPart cep, Point diff) {
 		Rectangle sourceExt = getNodeMetrics(source);
 		Rectangle targetExt = getNodeMetrics(target);
-		sourceExt.performTranslate(diffX, diffY);
-		targetExt.performTranslate(diffX, diffY);
+		sourceExt.translate(diff);
+		targetExt.translate(diff);
 		
 		/*
 		 * If source or target anchor command won't be created or will be non-executable,
@@ -722,8 +759,8 @@ public abstract class DefaultProvider
 		ReconnectRequest reconnectRequest = new ReconnectRequest(
 				org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
 		reconnectRequest.setConnectionEditPart(cep);
-		reconnectRequest.setTargetEditPart((EditPart) source.data);
-		IFigure sourceFig = ((GraphicalEditPart) source.data).getFigure();
+		reconnectRequest.setTargetEditPart(cep.getSource());
+		IFigure sourceFig = ((GraphicalEditPart)cep.getSource()).getFigure();
 		Point sourceAnchorReference = new PrecisionPoint(
 				sourceFig.getBounds().preciseX() + sourceRatio.preciseX()
 						* sourceFig.getBounds().preciseWidth(), sourceFig
@@ -732,21 +769,23 @@ public abstract class DefaultProvider
 						* sourceFig.getBounds().preciseHeight());
 		sourceFig.translateToAbsolute(sourceAnchorReference);
 		reconnectRequest.setLocation(sourceAnchorReference);
-		Command sourceAnchorCommand = ((EditPart) source.data)
+		Command sourceAnchorCommand = cep.getSource()
 				.getCommand(reconnectRequest);
 		if (sourceAnchorCommand != null && sourceAnchorCommand.canExecute()) {
 			cc.add(sourceAnchorCommand);
-			resultantSourceAnchorReference = new PrecisionPoint(sourceExt
-					.preciseWidth()
-					* sourceRatio.preciseX() + sourceExt.preciseX(), sourceExt
-					.preciseHeight()
-					* sourceRatio.preciseY() + sourceExt.preciseY());
+			if (((Connection)cep.getFigure()).getSourceAnchor() instanceof BaseSlidableAnchor) {
+				resultantSourceAnchorReference = new PrecisionPoint(sourceExt
+						.preciseWidth()
+						* sourceRatio.preciseX() + sourceExt.preciseX(), sourceExt
+						.preciseHeight()
+						* sourceRatio.preciseY() + sourceExt.preciseY());
+			}
 		}
 
 		reconnectRequest
 				.setType(org.eclipse.gef.RequestConstants.REQ_RECONNECT_TARGET);
-		reconnectRequest.setTargetEditPart((EditPart) target.data);
-		IFigure targetFig = ((GraphicalEditPart) target.data).getFigure();
+		reconnectRequest.setTargetEditPart(cep.getTarget());
+		IFigure targetFig = ((GraphicalEditPart) cep.getTarget()).getFigure();
 		Point targetAnchorReference = new PrecisionPoint(
 				targetFig.getBounds().preciseX() + targetRatio.preciseX()
 						* targetFig.getBounds().preciseWidth(), targetFig
@@ -755,15 +794,17 @@ public abstract class DefaultProvider
 						* targetFig.getBounds().preciseHeight());
 		targetFig.translateToAbsolute(targetAnchorReference);
 		reconnectRequest.setLocation(targetAnchorReference);
-		Command targetAnchorCommand = ((EditPart) target.data)
+		Command targetAnchorCommand = cep.getTarget()
 				.getCommand(reconnectRequest);
 		if (targetAnchorCommand != null && targetAnchorCommand.canExecute()) {
 			cc.add(targetAnchorCommand);
-			resultantTargetAnchorReference = new PrecisionPoint(targetExt
-					.preciseWidth()
-					* targetRatio.preciseX + targetExt.preciseX(), targetExt
-					.preciseHeight()
-					* targetRatio.preciseY() + targetExt.preciseY());
+			if (((Connection)cep.getFigure()).getTargetAnchor() instanceof BaseSlidableAnchor) {
+				resultantTargetAnchorReference = new PrecisionPoint(targetExt
+						.preciseWidth()
+						* targetRatio.preciseX() + targetExt.preciseX(), targetExt
+						.preciseHeight()
+						* targetRatio.preciseY() + targetExt.preciseY());
+			}
 		}
 		return new LineSeg(resultantSourceAnchorReference,
 				resultantTargetAnchorReference);
@@ -840,7 +881,7 @@ public abstract class DefaultProvider
                 PointListUtilities.normalizeSegments(points, MapModeUtil.getMapMode(cep.getFigure()).DPtoLP(3));
                     
                 // Reset the points list
-                Command cmd = routeThrough(edge, cep, source, target, points, diff.x, diff.y);
+                Command cmd = routeThrough(edge, cep, source, target, points, diff);
                 if (cmd != null)
                     cc.add(cmd);
             }
@@ -850,7 +891,7 @@ public abstract class DefaultProvider
             return null;
         return cc;
     }
-
+        
     private void collectPoints(PointList points, Edge edge) {
         PointList pointList = edge.getPoints();
         for (int i = 0; i < pointList.size(); i++) {
@@ -895,11 +936,47 @@ public abstract class DefaultProvider
                 request.setLocation(ptLocation);
                 
                 Command cmd = gep.getCommand(request);
-                if (cmd != null && cmd.canExecute())
+                if (cmd != null && cmd.canExecute()) {
                     cc.add(cmd);
                 }
             }
+        	if (node instanceof ConstantSizeNode) {
+        		ConstantSizeNode cn = (ConstantSizeNode) node;
+        		for (Iterator<BorderNode> itr = cn.borderNodes.iterator(); itr.hasNext();) {
+        			createBorderItemChangeBoundsCommand(itr.next(), cn, cc);
+        		}
+        	}
         }
+    }
+    
+    private void createBorderItemChangeBoundsCommand(BorderNode bn, ConstantSizeNode parentNode, CompoundCommand cc) {
+        ChangeBoundsRequest request = new ChangeBoundsRequest(
+                RequestConstants.REQ_MOVE);
+        Rectangle parentRect = getNodeMetrics(parentNode);
+        Rectangle borderItemRect = getNodeMetrics(bn);
+        Dimension offset = borderItemRect.getLocation().getDifference(parentRect.getLocation());
+        
+        IFigure parentFigure = ((GraphicalEditPart)parentNode.data).getFigure();
+        IFigure borderItemFigure = ((GraphicalEditPart)bn.data).getFigure();
+        
+        PrecisionPoint oldParentLocation = new PrecisionPoint(parentFigure.getBounds().getLocation());
+        PrecisionPoint oldBorderItemLocation = new PrecisionPoint(borderItemFigure.getBounds().getLocation());        
+        PrecisionPoint newBorderItemLocation = new PrecisionPoint(oldParentLocation.preciseX() + offset.preciseWidth(), oldParentLocation.preciseY() + offset.preciseHeight());
+        parentFigure.translateToAbsolute(oldParentLocation);
+        parentFigure.translateToAbsolute(newBorderItemLocation);
+        borderItemFigure.translateToAbsolute(oldBorderItemLocation);
+        
+        PrecisionPoint delta = new PrecisionPoint(newBorderItemLocation.preciseX() - oldBorderItemLocation.preciseX(), newBorderItemLocation.preciseY() - oldBorderItemLocation.preciseY());
+        GraphicalEditPart gep = (GraphicalEditPart) bn.data;
+        request.setEditParts(gep);
+        request.setMoveDelta(delta);
+        request.setLocation(newBorderItemLocation);
+        
+        Command cmd = gep.getCommand(request);
+        if (cmd != null && cmd.canExecute()) {
+            cc.add(cmd);
+        }
+    }
 
     private Point getLayoutPositionDelta(DirectedGraph g, boolean isLayoutForSelected) {
         // If laying out selected objects, use diff variables to
@@ -947,7 +1024,7 @@ public abstract class DefaultProvider
      * @return the graph layout 
      */
     protected DirectedGraphLayout createGraphLayout() {
-        return new DirectedGraphLayout();
+        return new GMFDirectedGraphLayout();
     }
     
     /**

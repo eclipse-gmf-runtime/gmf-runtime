@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
@@ -41,6 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
+import org.eclipse.gmf.runtime.draw2d.ui.graph.ConstantSizeNode;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graph.AdvancedSubGraph;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graph.CompositeDirectedGraphLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graph.VirtualNode;
@@ -91,12 +93,13 @@ public abstract class CompositeLayoutProvider
                     if (gep instanceof CompartmentEditPart){
                         subGraph.setHasBufferedZone(true);
                     }
+                    subGraph.setDirection(getLayoutDirection(ep));
                     n = subGraph;
                 } else {
                     if (rootGraph != null)
-                        n = new Node(ep, rootGraph);
+                        n = new ConstantSizeNode(ep, rootGraph);
                     else
-                        n = new Node(ep);
+                        n = new ConstantSizeNode(ep);
                 }
                 adjustNodePadding(n, editPartToNodeDict);
                 Dimension size = ep.getFigure().getBounds().getSize();
@@ -108,9 +111,23 @@ public abstract class CompositeLayoutProvider
                     build_nodes(gep.getChildren(), editPartToNodeDict,
                         (Subgraph) n);
                 }
+                if (n instanceof ConstantSizeNode) {
+                    build_borderNodes(gep, (ConstantSizeNode)n, editPartToNodeDict);                	
+                }
             }
         }
         return nodes;
+    }
+    
+    /**
+     * Gets the layout direction for an editpart. Every editpart mapped to 
+     * <code>AdvancedSubGraph</code> will be asked for its desired layout direction
+     * such that children of the subgraph are laid out accordingly to that direction.
+     * 
+     * @param ep the editpart
+     */
+    protected int getLayoutDirection(GraphicalEditPart ep) {
+    	return PositionConstants.SOUTH;
     }
 
     private boolean isAutoSizeOn(AdvancedSubGraph subGraph, IGraphicalEditPart gEP) {
@@ -218,7 +235,7 @@ public abstract class CompositeLayoutProvider
      * @param node the node to adust the padding for
      */
     protected void adjustNodePadding(Node node,Map editPartToNodeDict) {
-        Insets padding  = new Insets(NODE_PADDING);
+        Insets padding  = new Insets(getMapMode().DPtoLP(NODE_PADDING));
         GraphicalEditPart ep = (GraphicalEditPart)node.data;
         // check if the direct parent is added already to the graph
         GraphicalEditPart parent = (GraphicalEditPart)ep.getParent();
@@ -239,6 +256,11 @@ public abstract class CompositeLayoutProvider
             padding.left += rect.x;
         }
         node.setPadding(padding);
+        if (node instanceof ConstantSizeNode) {
+        	ConstantSizeNode cn = (ConstantSizeNode) node;
+            cn.setMinIncomingPadding(getMapMode().DPtoLP(MIN_EDGE_END_POINTS_PADDING));
+            cn.setMinOutgoingPadding(getMapMode().DPtoLP(MIN_EDGE_END_POINTS_PADDING));
+        }
     }
 
     
@@ -256,8 +278,11 @@ public abstract class CompositeLayoutProvider
         return true;
     }
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#routeThrough(org.eclipse.draw2d.graph.Edge, org.eclipse.gef.ConnectionEditPart, org.eclipse.draw2d.graph.Node, org.eclipse.draw2d.graph.Node, org.eclipse.draw2d.geometry.PointList, org.eclipse.draw2d.geometry.Point)
+	 */
 	protected Command routeThrough(Edge edge, ConnectionEditPart connectEP,
-			Node source, Node target, PointList points, int diffX, int diffY) {
+			Node source, Node target, PointList points, Point diff) {
 		Node parent = source.getParent();
 		if (parent == null) {
 			parent = target.getParent();
@@ -267,7 +292,7 @@ public abstract class CompositeLayoutProvider
 			points.translate(parentLocation.x, parentLocation.y);
 		}
 		return super
-				.routeThrough(edge, connectEP, source, target, points, diffX, diffY);
+				.routeThrough(edge, connectEP, source, target, points, diff);
 	}
-
+	
 }

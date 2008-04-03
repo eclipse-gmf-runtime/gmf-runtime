@@ -15,6 +15,7 @@ package org.eclipse.gmf.runtime.diagram.ui.providers;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.DirectedGraph;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.CompositeLayoutProvider;
 
 /**
@@ -31,7 +32,6 @@ public class CompositeLeftRightProvider
      */
     protected Rectangle translateToGraph(Rectangle r) {
         Rectangle rDP = r.getCopy();
-        getMapMode().LPtoDP(rDP);
         return rDP;
     }
 
@@ -40,7 +40,6 @@ public class CompositeLeftRightProvider
      */
     protected Rectangle translateFromGraph(Rectangle rect) {
         Rectangle rLP = rect.getCopy();
-        getMapMode().DPtoLP(rLP);
         return rLP;
     }
 
@@ -49,8 +48,12 @@ public class CompositeLeftRightProvider
 	 */
 	protected DirectedGraph createGraph() {
 		DirectedGraph g = super.createGraph();
-		g.setDirection(PositionConstants.WEST);
+		g.setDirection(PositionConstants.EAST);
 		return g;
+	}
+
+	protected int getLayoutDirection(GraphicalEditPart ep) {
+		return PositionConstants.EAST;
 	}
 
 }

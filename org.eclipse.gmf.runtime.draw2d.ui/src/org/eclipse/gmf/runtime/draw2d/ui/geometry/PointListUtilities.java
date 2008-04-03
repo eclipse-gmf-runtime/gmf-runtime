@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.ListIterator;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transform;
@@ -115,9 +114,11 @@ public class PointListUtilities {
 
 		// first pass to remove points with-in the length tolerance
 		for (int i = 1; i < points.size() - 1; i++) {
-			Ray nextVector =
-				new Ray(points.getPoint(i), points.getPoint(i - 1));
-			int nextLength = (int) nextVector.length();
+			Point pt1 = points.getPoint(i);
+			Point pt2 = points.getPoint(i - 1);
+			double diffX = pt1.preciseX() - pt2.preciseX();
+			double diffY = pt1.preciseY() - pt2.preciseY();
+			double nextLength = Math.sqrt(diffX * diffX + diffY * diffY);
 
 			if (nextLength <= straightLineTolerance) {
 				points.removePoint(i--);

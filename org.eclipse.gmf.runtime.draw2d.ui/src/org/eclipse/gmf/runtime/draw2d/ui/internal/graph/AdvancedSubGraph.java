@@ -23,7 +23,7 @@ public class AdvancedSubGraph
     
     private boolean autoSize = false;
     private boolean hadBufferZone = false;
-    private int direction = PositionConstants.NONE;
+    private int direction = PositionConstants.SOUTH;
     
     public AdvancedSubGraph(Object data) {
         super(data, null);

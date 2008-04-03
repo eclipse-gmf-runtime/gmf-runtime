@@ -23,12 +23,11 @@ import org.eclipse.gmf.runtime.diagram.ui.providers.internal.CompositeLayoutProv
 public class CompositeTopDownProvider
     extends CompositeLayoutProvider {
     
-    /* (non-Javadoc)
+	/* (non-Javadoc)
      * @see org.eclipse.gmf.runtime.diagram.ui.providers.internal.DefaultProvider#translateToGraph(org.eclipse.draw2d.geometry.Rectangle)
      */
     protected Rectangle translateToGraph(Rectangle r) {
         Rectangle rDP = r.getCopy();
-        getMapMode().LPtoDP(rDP);
         return rDP;
     }
 
@@ -37,7 +36,6 @@ public class CompositeTopDownProvider
      */
     protected Rectangle translateFromGraph(Rectangle rect) {
         Rectangle rLP = rect.getCopy();
-        getMapMode().DPtoLP(rLP);
         return rLP;
     }
 

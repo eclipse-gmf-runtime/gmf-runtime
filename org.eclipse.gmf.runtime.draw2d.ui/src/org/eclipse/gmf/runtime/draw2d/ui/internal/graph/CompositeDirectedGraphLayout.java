@@ -28,6 +28,7 @@ import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
 import org.eclipse.draw2d.graph.Subgraph;
+import org.eclipse.gmf.runtime.draw2d.ui.graph.GMFDirectedGraphLayout;
 
 
 
@@ -87,15 +88,16 @@ public class CompositeDirectedGraphLayout
             g.nodes = nodes;
             g.edges = edges;
             AdvancedSubGraph advancedSubgraphParent = parent instanceof AdvancedSubGraph ? (AdvancedSubGraph)parent : null;
-            if (advancedSubgraphParent != null && advancedSubgraphParent.getDirection() != PositionConstants.NONE) {
+            if (advancedSubgraphParent != null) {
            		g.setDirection(advancedSubgraphParent.getDirection());
             } else {
             	g.setDirection(graphDirection);            	
             }
-            DirectedGraphLayout layout = new DirectedGraphLayout();
+            DirectedGraphLayout layout = new GMFDirectedGraphLayout();
             layout.visit(g);
-            if (advancedSubgraphParent != null) {
-                adjustAutoSizeNodeWidthAndHeight(advancedSubgraphParent);
+            if (advancedSubgraphParent != null && advancedSubgraphParent.isAutoSize()) {
+                advancedSubgraphParent.width = g.getLayoutSize().width;
+                advancedSubgraphParent.height = g.getLayoutSize().height;
             }
         }
         
@@ -257,43 +259,43 @@ public class CompositeDirectedGraphLayout
      * @param subGraph
      *            the node whose size will be adjusted
      */
-    private void adjustAutoSizeNodeWidthAndHeight(AdvancedSubGraph subGraph) {
-    	if (!subGraph.isAutoSize()) {
-    	    return;
-    	}
-        NodeList nodes = subGraph.members;
-        if (nodes.isEmpty())
-            return;
-        int size = nodes.size();
-        Node node = nodes.getNode(0);
-        int top=node.y,left=node.x,bottom = top + node.height ,right = left+node.width;
-        Node topNode, leftNode;
-        topNode = leftNode = node;
-        for (int index = 1 ; index<size; index++) {
-            node = (Node)nodes.get(index);
-            if (top>node.y){
-                top = node.y;
-                topNode = node;
-            }
-            if (bottom < (node.y+node.height))
-                bottom = node.y+node.height;
-            if (left>node.x){
-                left = node.x;
-                leftNode = node;
-            }
-            if (right<(node.x+node.width))
-                right = node.x+node.width;
-        }
-        int xDiff = 0 ;
-        int yDiff = 0 ;
-        if (subGraph.isHasBufferedZone()){
-             xDiff = leftNode.x;
-             yDiff = topNode.y ;
-        }
-        subGraph.width = right - left + xDiff;
-        subGraph.height = bottom - top + yDiff;
-        
-    }
+//    private void adjustAutoSizeNodeWidthAndHeight(AdvancedSubGraph subGraph) {
+//    	if (!subGraph.isAutoSize()) {
+//    	    return;
+//    	}
+//        NodeList nodes = subGraph.members;
+//        if (nodes.isEmpty())
+//            return;
+//        int size = nodes.size();
+//        Node node = nodes.getNode(0);
+//        int top=node.y,left=node.x,bottom = top + node.height ,right = left+node.width;
+//        Node topNode, leftNode;
+//        topNode = leftNode = node;
+//        for (int index = 1 ; index<size; index++) {
+//            node = (Node)nodes.get(index);
+//            if (top>node.y){
+//                top = node.y;
+//                topNode = node;
+//            }
+//            if (bottom < (node.y+node.height))
+//                bottom = node.y+node.height;
+//            if (left>node.x){
+//                left = node.x;
+//                leftNode = node;
+//            }
+//            if (right<(node.x+node.width))
+//                right = node.x+node.width;
+//        }
+//        int xDiff = 0 ;
+//        int yDiff = 0 ;
+//        if (subGraph.isHasBufferedZone()){
+//             xDiff = leftNode.x;
+//             yDiff = topNode.y ;
+//        }
+//        subGraph.width = right - left + xDiff;
+//        subGraph.height = bottom - top + yDiff;
+//        
+//    }
 
     private void addNode(Subgraph parent, Node node, NodeList nodes) {
         if (node.getParent()!=null)
