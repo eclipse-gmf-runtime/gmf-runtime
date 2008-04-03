@@ -87,7 +87,7 @@ public class CompositeTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label, , should never be <code>null</code>.
+     *            my user-readable label, should never be <code>null</code>.
      * @param children
      *            a list of operations to compose
      */
@@ -103,7 +103,7 @@ public class CompositeTransactionalCommand
      * @param domain
      *            my editing domain
      * @param label
-     *            my user-readable label
+     *            my user-readable label, should never be <code>null</code>.
      * @param children
      *            a list of operations to compose
      * @param options
@@ -112,7 +112,7 @@ public class CompositeTransactionalCommand
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label, List children, Map options) {
-        super(domain, label, children, options);
+        super(domain, (label == null) ? "" : label, children, options);
     }
 
     /**
