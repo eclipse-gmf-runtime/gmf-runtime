@@ -81,7 +81,10 @@ public final class DiagramUIPrintingMessages extends NLS {
 	public static String JPSOptionsDialog_SidesTumble;
 	public static String JPSOptionsDialog_SidesDuplex;
 	public static String JPSOptionsDialog_AdvancedOptions;
-				
+	public static String JPSOptionsDialog_DiagramPrintRange;
+	public static String JPSOptionsDialog_DiagramPrintCurrent;
+	public static String JPSOptionsDialog_DiagramPrintSelected;
+	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIPrintingMessages.class);
 	}

@@ -298,4 +298,9 @@ class PrinterBlock extends DialogBlock {
 		dlg.open();
 
 	}
+
+	@Override
+	public void dispose() {
+		// nothing special to dispose currently	
+	}
 }

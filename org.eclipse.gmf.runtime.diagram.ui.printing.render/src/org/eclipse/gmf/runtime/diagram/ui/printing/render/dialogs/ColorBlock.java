@@ -22,6 +22,7 @@ import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.ColorSupported;
 import javax.print.attribute.standard.PrinterName;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
@@ -44,6 +45,9 @@ public class ColorBlock extends DialogBlock {
 
 	private Button colorRadio;
 	private Button monoRadio;
+	
+	private Binding colorBinding;
+	private Binding monoBinding;
 
 	ColorBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings,
 			PrintOptions options) {
@@ -74,11 +78,11 @@ public class ColorBlock extends DialogBlock {
 				DiagramUIPrintingMessages.JPSOptionsDialog_ChromaticityMonochrome);
 		layoutSpanHorizontal(monoRadio, 4);
 
-		bindings.bindValue(SWTObservables.observeSelection(colorRadio),
+		colorBinding = bindings.bindValue(SWTObservables.observeSelection(colorRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_CHROMATICITY_COLOR), null, null);
 
-		bindings.bindValue(SWTObservables.observeSelection(monoRadio),
+		monoBinding = bindings.bindValue(SWTObservables.observeSelection(monoRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_CHROMATICITY_MONO), null, null);
 
@@ -118,6 +122,14 @@ public class ColorBlock extends DialogBlock {
 			options.setChromaticityMono(true);
 			colorRadio.setEnabled(false);
 		}
+	}
+	
+	@Override
+	public void dispose() {
+		bindings.removeBinding(colorBinding);
+		colorBinding.dispose();
+		bindings.removeBinding(monoBinding);
+		monoBinding.dispose();
 	}
 
 }

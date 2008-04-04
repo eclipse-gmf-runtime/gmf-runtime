@@ -111,4 +111,16 @@ public class JPSOptionsDialog extends TrayDialog {
 				options);
 		jobAttributesBlock.createContents(result);
 	}
+		
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.TrayDialog#close()
+	 */
+	public boolean close() {
+		qualityBlock.dispose();
+		colorBlock.dispose();
+		sidesBlock.dispose();
+		jobAttributesBlock.dispose();
+		return super.close();
+	}
 }

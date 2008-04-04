@@ -98,4 +98,9 @@ class RangeBlock extends DialogBlock {
 
 		return result;
 	}
+	
+	@Override
+	public void dispose() {
+		// nothing special to dispose currently		
+	}
 }

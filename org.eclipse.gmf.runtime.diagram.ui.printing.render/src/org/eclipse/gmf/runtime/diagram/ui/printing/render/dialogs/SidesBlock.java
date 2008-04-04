@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
@@ -30,6 +31,9 @@ public class SidesBlock extends DialogBlock {
 
 	private final DataBindingContext bindings;
 	private final PrintOptions options;
+	private Binding oneSidedBinding;
+	private Binding tumbleBinding;
+	private Binding duplexBinding;
 
 	SidesBlock(IDialogUnitConverter dluConverter, DataBindingContext bindings,
 			PrintOptions options) {
@@ -62,19 +66,29 @@ public class SidesBlock extends DialogBlock {
 				DiagramUIPrintingMessages.JPSOptionsDialog_SidesDuplex);
 		layoutSpanHorizontal(duplexRadio, 4);
 
-		bindings.bindValue(SWTObservables.observeSelection(oneSideRadio),
+		oneSidedBinding = bindings.bindValue(SWTObservables.observeSelection(oneSideRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_SIDES_ONESIDED), null, null);
 
-		bindings.bindValue(SWTObservables.observeSelection(tumbleRadio),
+		tumbleBinding = bindings.bindValue(SWTObservables.observeSelection(tumbleRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_SIDES_TUMBLE), null, null);
 
-		bindings.bindValue(SWTObservables.observeSelection(duplexRadio),
+		duplexBinding = bindings.bindValue(SWTObservables.observeSelection(duplexRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_SIDES_DUPLEX), null, null);
 
 		return result;
+	}
+
+	@Override
+	public void dispose() {
+		bindings.removeBinding(oneSidedBinding);
+		oneSidedBinding.dispose();
+		bindings.removeBinding(tumbleBinding);
+		tumbleBinding.dispose();	
+		bindings.removeBinding(duplexBinding);
+		duplexBinding.dispose();
 	}
 
 }

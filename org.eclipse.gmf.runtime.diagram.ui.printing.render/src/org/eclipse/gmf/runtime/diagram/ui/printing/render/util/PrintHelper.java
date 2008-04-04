@@ -9,8 +9,6 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-
-
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.util;
 
 import java.util.List;
@@ -26,9 +24,12 @@ import org.eclipse.ui.PlatformUI;
  * Default implementation of a print-helper.
  * 
  * @author Christian W. Damus (cdamus)
+ * @author James Bruck (jbruck)
  */
 public class PrintHelper implements IPrintHelper {
 	private final PrintOptions options = new PrintOptions();
+
+	List<String> diagramList;
 
 	public PrintHelper() {
 		initPrintOptions();
@@ -49,21 +50,25 @@ public class PrintHelper implements IPrintHelper {
 
 		options.setCopies(1);
 		options.setCollate(false);
-		
+
 		options.setQualityHigh(true);
 		options.setSideOneSided(true);
 		options.setChromaticityColor(true);
-				
+
+		options.setDiagramCurrent(true);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper#openPrintDlg(java.util.List)
 	 */
-	public PrinterData openPrintDlg(List diagramList) {
+	@SuppressWarnings("unchecked")
+	public PrinterData openPrintDlg(List availableDiagramList) {
 		PrinterData result = null;
+		this.diagramList = availableDiagramList;
+
 		JPSPrintDialog dlg = new JPSPrintDialog(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow(), options);
+				.getActiveWorkbenchWindow(), options, this.diagramList);
 
 		if (dlg.open() == IDialogConstants.OK_ID) {
 			if (options.getDestination() != null) {
@@ -121,17 +126,18 @@ public class PrintHelper implements IPrintHelper {
 	}
 
 	public boolean getDlgDiagramPrintRangeCurrent() {
-		// TODO Not supported by the JPS dialog
-		return true;
+		return options.isDiagramCurrent();
 	}
 
 	public boolean getDlgDiagramPrintRangeSelection() {
-		// TODO Not supported by the JPS dialog
-		return false;
+		return options.isDiagramSelection();
 	}
 
 	public boolean isDlgDiagramSelected(int index) {
-		// TODO Not supported by the JPS dialog
+		String diagramToPrint = diagramList.get(index);
+		if (options.getDiagramsToPrint() != null) {
+			return options.getDiagramsToPrint().contains(diagramToPrint);
+		}
 		return false;
 	}
 
@@ -139,8 +145,8 @@ public class PrintHelper implements IPrintHelper {
 		// TODO Not supported by the JPS dialog
 		return false;
 	}
-	
-	public PrintOptions getPrintOptions(){
+
+	public PrintOptions getPrintOptions() {
 		return options;
 	}
 

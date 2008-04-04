@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -194,6 +195,11 @@ abstract class DialogBlock {
 		ComboViewer result = new ComboViewer(parent);
 		return result;
 	}
+	
+	ListViewer list(Composite parent){
+		ListViewer result = new ListViewer(parent);
+		return result;
+	}
 
 	Button button(Composite parent, String text) {
 		Button result = new Button(parent, SWT.PUSH);
@@ -227,6 +233,8 @@ abstract class DialogBlock {
 	}
 
 	public abstract Control createContents(Composite parent);
+	
+	public abstract void dispose();
 
 	public static interface IDialogUnitConverter {
 		int convertHorizontalDLUsToPixels(int dlus);

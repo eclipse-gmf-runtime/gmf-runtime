@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 public class JobAttributesBlock extends DialogBlock {
 	private final DataBindingContext bindings;
 	private final PrintOptions options;
+	private Binding jobNameBinding;
 
 	JobAttributesBlock(IDialogUnitConverter dluConverter,
 			DataBindingContext bindings, PrintOptions options) {
@@ -55,10 +57,16 @@ public class JobAttributesBlock extends DialogBlock {
 				DiagramUIPrintingMessages.JPSOptionsDialog_JobName)));
 		Text jobName = text(result, 80);
 
-		bindings.bindValue(SWTObservables.observeText(jobName, SWT.Modify),
+		jobNameBinding = bindings.bindValue(SWTObservables.observeText(jobName, SWT.Modify),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_JOB_NAME), null, null);
 
 		return result;
+	}
+	
+	@Override
+	public void dispose() {
+		bindings.removeBinding(jobNameBinding);
+		jobNameBinding.dispose();	
 	}
 }

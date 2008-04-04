@@ -99,5 +99,10 @@ class ActionsBlock extends DialogBlock {
 		}
 		return printActionHelper;
 	}
+	
+	@Override
+	public void dispose() {
+		// nothing special to dispose		
+	}
 
 }

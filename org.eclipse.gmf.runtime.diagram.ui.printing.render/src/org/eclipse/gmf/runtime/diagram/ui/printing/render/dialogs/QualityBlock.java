@@ -11,6 +11,7 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
@@ -30,6 +31,10 @@ public class QualityBlock extends DialogBlock {
 
 	private final DataBindingContext bindings;
 	private final PrintOptions options;
+	
+	private Binding qualityHighBinding;
+	private Binding qualityMedBinding;
+	private Binding qualityLowBinding;
 
 	QualityBlock(IDialogUnitConverter dluConverter,
 			DataBindingContext bindings, PrintOptions options) {
@@ -63,18 +68,28 @@ public class QualityBlock extends DialogBlock {
 				DiagramUIPrintingMessages.JPSOptionsDialog_QualityLow);
 		layoutSpanHorizontal(lowRadio, 4);
 
-		bindings.bindValue(SWTObservables.observeSelection(highRadio),
+		qualityHighBinding = bindings.bindValue(SWTObservables.observeSelection(highRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_QUALITY_HIGH), null, null);
 
-		bindings.bindValue(SWTObservables.observeSelection(mediumRadio),
+		qualityMedBinding = bindings.bindValue(SWTObservables.observeSelection(mediumRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_QUALITY_MED), null, null);
 
-		bindings.bindValue(SWTObservables.observeSelection(lowRadio),
+		qualityLowBinding = bindings.bindValue(SWTObservables.observeSelection(lowRadio),
 				BeansObservables.observeValue(realm, options,
 						PrintOptions.PROPERTY_QUALITY_LOW), null, null);
 
 		return result;
+	}
+	
+	@Override
+	public void dispose() {
+		bindings.removeBinding(qualityHighBinding);
+		qualityHighBinding.dispose();
+		bindings.removeBinding(qualityLowBinding);
+		qualityLowBinding.dispose();
+		bindings.removeBinding(qualityMedBinding);
+		qualityMedBinding.dispose();
 	}
 }

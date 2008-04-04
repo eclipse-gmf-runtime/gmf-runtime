@@ -13,6 +13,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 
+import java.util.List;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
@@ -40,10 +42,13 @@ public class JPSPrintDialog
     private final PrintOptions options;
     
     protected PrinterBlock printerBlock;
+    protected DiagramPrintRangeBlock diagramPrintRangeBlock;
     protected ScalingBlock scalingBlock;
     private RangeBlock rangeBlock;
     private CopiesBlock copiesBlock;
     private ActionsBlock actionsBlock;
+    
+    private List<String> allDiagrams;
     
     private final DialogBlock.IDialogUnitConverter dluConverter = new DialogBlock.IDialogUnitConverter() {
 
@@ -56,14 +61,16 @@ public class JPSPrintDialog
 		}
 	};
     
-    public JPSPrintDialog(IShellProvider parentShell, PrintOptions options) {
+    public JPSPrintDialog(IShellProvider parentShell, PrintOptions options, List<String> allDiagrams) {
         super(parentShell);
         this.options = options;
+        this.allDiagrams = allDiagrams;
     }
 
-    public JPSPrintDialog(Shell shell, PrintOptions options) {
+    public JPSPrintDialog(Shell shell, PrintOptions options, List<String> allDiagrams) {
         super(shell);
         this.options = options;
+        this.allDiagrams = allDiagrams;
     }
 
     /*
@@ -81,20 +88,22 @@ public class JPSPrintDialog
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     protected Control createDialogArea(Composite parent) {
-        bindings = new DataBindingContext(SWTObservables.getRealm(parent.getDisplay()));
-     
-        Composite result = new Composite(parent,SWT.NONE);
-        DialogBlock.layout(result, 2);
-                      
-        createPrinterBlockArea(result);
-        createScalingBlockArea(result);
-        createExtensibleBlockArea(result);
-        createRangeBlockArea(result);
-        createCopiesBlockArea(result);
-        createActionsBlockArea(result);
-                     
-        return result;
-    }
+		bindings = new DataBindingContext(SWTObservables.getRealm(parent
+				.getDisplay()));
+
+		Composite result = new Composite(parent, SWT.NONE);
+		DialogBlock.layout(result, 2);
+
+		createPrinterBlockArea(result);
+		createDiagramPrintRangeBlockArea(result);
+		createScalingBlockArea(result);
+		createRangeBlockArea(result);
+		createCopiesBlockArea(result);
+		createActionsBlockArea(result);
+		createExtensibleBlockArea(result);
+
+		return result;
+	}
     
     protected void createPrinterBlockArea(Composite result) {
 		printerBlock = new PrinterBlock(dluConverter, bindings, options);
@@ -122,6 +131,12 @@ public class JPSPrintDialog
          actionsBlock.layoutSpanHorizontal(actionsBlock.createContents(result), 2);
 	}
     
+    protected void createDiagramPrintRangeBlockArea(Composite result){
+    	diagramPrintRangeBlock = new DiagramPrintRangeBlock(dluConverter,bindings,options, allDiagrams);
+    	diagramPrintRangeBlock.layoutSpanHorizontal(diagramPrintRangeBlock.createContents(result),
+				2);
+    }
+    
     protected void createExtensibleBlockArea(Composite result) {
     	  // meant to be overridden by subclasses to add additional blocks.
   	}
@@ -133,30 +148,35 @@ public class JPSPrintDialog
     }
     
     protected void buttonPressed(int buttonId) {
-        switch (buttonId) {
-            case -1:
-                break;
-            default:
-                super.buttonPressed(buttonId);
-        }
-    }
-    
-    public boolean close() {
-        bindings.dispose();
-        copiesBlock.dispose();
-        return super.close();
-    }
-    
-    protected void cancelPressed() {
-        super.cancelPressed();
-    }
+		switch (buttonId) {
+		case -1:
+			break;
+		default:
+			super.buttonPressed(buttonId);
+		}
+	}
+
+	public boolean close() {
+		bindings.dispose();
+		copiesBlock.dispose();
+		printerBlock.dispose();
+		diagramPrintRangeBlock.dispose();
+		scalingBlock.dispose();
+		rangeBlock.dispose();
+		actionsBlock.dispose();
+		return super.close();
+	}
+
+	protected void cancelPressed() {
+		super.cancelPressed();
+	}
     
     /**
-     * Obtains the user's selected printing options, or <code>null</code> if
-     * the user canceled the print operation.
-     * 
-     * @return the printing  options, or <code>null</code> if canceled
-     */
+	 * Obtains the user's selected printing options, or <code>null</code> if
+	 * the user canceled the print operation.
+	 * 
+	 * @return the printing options, or <code>null</code> if canceled
+	 */
     public PrintOptions getPrintOptions() {
         return options;
     }
