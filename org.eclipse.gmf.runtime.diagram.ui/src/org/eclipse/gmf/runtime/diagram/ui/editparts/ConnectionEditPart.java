@@ -1210,7 +1210,8 @@ abstract public class ConnectionEditPart
             rbp.setRelativeDimensions(new Dimension(wbp.getSourceX(), wbp
                 .getSourceY()), new Dimension(wbp.getTargetX(), wbp
                 .getTargetY()));
-            rbp.setWeight((i + 1) / ((float) modelConstraint.size() + 1));
+//          	rbp.setWeight((i + 1) / ((float) modelConstraint.size() + 1));
+            rbp.setWeight(i / ((float) modelConstraint.size() - 1));
             figureConstraint.add(rbp);
         }
         getConnectionFigure().setRoutingConstraint(figureConstraint);

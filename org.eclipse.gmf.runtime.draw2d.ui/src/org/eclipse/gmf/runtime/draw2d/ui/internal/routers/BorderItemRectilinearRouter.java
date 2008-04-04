@@ -24,8 +24,10 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Geometry;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.Path;
 import org.eclipse.draw2d.graph.ShortestPathRouter;
@@ -54,17 +56,18 @@ public class BorderItemRectilinearRouter
     protected PointList calculateBendPoints(Connection conn) {
         IFigure source = conn.getSourceAnchor().getOwner();
         IFigure target = conn.getTargetAnchor().getOwner();
+        PointList bends = super.calculateBendPoints(conn);
         if (source == null || target == null || isAvoidingObstructions(conn) || isClosestDistance(conn)
-        		|| super.calculateBendPoints(conn).size() > 2) {
+        		|| bends.size() > 2) {
             // reorient
-            return super.calculateBendPoints(conn);
+            return bends;
         }
 
         int sourcePosition = getBorderFigurePosition(source);
         int targetPosition = getBorderFigurePosition(target);
         
         if (sourcePosition == PositionConstants.NONE && targetPosition == PositionConstants.NONE) {
-        	return super.calculateBendPoints(conn);
+        	return bends;
         }
         
         PolylineConnectionEx fakeConnection = new PolylineConnectionEx() {
@@ -79,6 +82,10 @@ public class BorderItemRectilinearRouter
         };
         Rectangle sourceParentRect = getObstacle(source, conn, (sourcePosition != PositionConstants.NONE));
         Rectangle targetParentRect = getObstacle(target, conn, (targetPosition != PositionConstants.NONE));
+        if (bends.size() == 2 && !lineIntersectRectangle(bends.getFirstPoint(), bends.getLastPoint(), sourceParentRect)
+        		&& !lineIntersectRectangle(bends.getFirstPoint(), bends.getLastPoint(), targetParentRect)) {
+        	return bends;
+        }
         if (sourceParentRect.contains(targetParentRect)) {
             sourcePosition = reversePosition(sourcePosition);
         } else if (targetParentRect.contains(sourceParentRect)) {
@@ -96,7 +103,7 @@ public class BorderItemRectilinearRouter
         // protection code to prevent NPE while creating the connection
         if (originalbendpoints == null || originalbendpoints.size() == 0) {
             // reorient
-            return super.calculateBendPoints(conn);
+            return bends;
         }
 
         fakeConnection.setParent(conn.getParent());
@@ -373,7 +380,7 @@ public class BorderItemRectilinearRouter
             parent = getBorderItemParent(figure);
         else
             parent = figure;
-        Rectangle rect = parent.getBounds().getCopy();
+        Rectangle rect = new PrecisionRectangle(parent.getBounds());
         parent.translateToAbsolute(rect);
         conn.translateToRelative(rect);
         return rect;
@@ -387,5 +394,12 @@ public class BorderItemRectilinearRouter
      */
     protected IFigure getBorderItemParent(IFigure figure) {
         return figure.getParent().getParent();
+    }
+    
+    private boolean lineIntersectRectangle(Point start, Point end, Rectangle rect) {
+    	return Geometry.linesIntersect(start.x, start.y, end.x, end.y, rect.x, rect.y, rect.x + rect.width, rect.y)
+    		|| Geometry.linesIntersect(start.x, start.y, end.x, end.y, rect.x + rect.width, rect.y, rect.x + rect.width, rect.y + rect.height)
+    		|| Geometry.linesIntersect(start.x, start.y, end.x, end.y, rect.x + rect.width, rect.y + rect.height, rect.x, rect.y + rect.height)
+    		|| Geometry.linesIntersect(start.x, start.y, end.x, end.y, rect.x, rect.y + rect.height, rect.x, rect.y);
     }
 }
