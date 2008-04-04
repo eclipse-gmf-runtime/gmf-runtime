@@ -82,9 +82,13 @@ public class BorderItemRectilinearRouter
         };
         Rectangle sourceParentRect = getObstacle(source, conn, (sourcePosition != PositionConstants.NONE));
         Rectangle targetParentRect = getObstacle(target, conn, (targetPosition != PositionConstants.NONE));
-        if (bends.size() == 2 && !lineIntersectRectangle(bends.getFirstPoint(), bends.getLastPoint(), sourceParentRect)
-        		&& !lineIntersectRectangle(bends.getFirstPoint(), bends.getLastPoint(), targetParentRect)) {
-        	return bends;
+        if (bends.size() == 2) {
+        	if (sourcePosition != PositionConstants.NONE && !lineIntersectRectangle(bends.getFirstPoint(), bends.getLastPoint(), sourceParentRect)) {
+        		return bends;
+        	}
+        	if (targetPosition != PositionConstants.NONE && !lineIntersectRectangle(bends.getFirstPoint(), bends.getLastPoint(), targetParentRect)) {
+            	return bends;
+        	}
         }
         if (sourceParentRect.contains(targetParentRect)) {
             sourcePosition = reversePosition(sourcePosition);
