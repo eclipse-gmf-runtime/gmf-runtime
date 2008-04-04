@@ -123,14 +123,14 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 				}
 
 				public Factory getFactory(URI uri, String contentType) {
-					if (uri != null && uri.scheme().equals(EMFCoreConstants.PATH_MAP_SCHEME)) {
+					if (uri != null && uri.scheme() != null && uri.scheme().equals(EMFCoreConstants.PATH_MAP_SCHEME)) {
 						uri = rset.getURIConverter().normalize(uri);
 					}
 					return delegateRegistry.getFactory(uri, contentType);
 				}
 
 				public Factory getFactory(URI uri) {
-					if (uri != null && uri.scheme().equals(EMFCoreConstants.PATH_MAP_SCHEME)) {
+					if (uri != null && uri.scheme() != null && uri.scheme().equals(EMFCoreConstants.PATH_MAP_SCHEME)) {
 						uri = rset.getURIConverter().normalize(uri);
 					}
 					return delegateRegistry.getFactory(uri);
