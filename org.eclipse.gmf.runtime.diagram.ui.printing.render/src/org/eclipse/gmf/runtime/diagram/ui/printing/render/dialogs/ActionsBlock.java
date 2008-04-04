@@ -38,7 +38,6 @@ class ActionsBlock extends DialogBlock {
 	private PrintPreviewHelper printPreviewHelper;
 	private IPrintActionHelper printActionHelper;
 
-	
 	ActionsBlock(IDialogUnitConverter dluConverter, PrintOptions options) {
 		super(dluConverter);
 		this.options = options;
@@ -75,8 +74,10 @@ class ActionsBlock extends DialogBlock {
 		case -1:
 			break;
 		default:
-			getPrintPreviewHelper().enablePrinting(false);
-		    getPrintPreviewHelper().doPrintPreview(getPrintActionHelper());
+			PrintPreviewHelper previewHelper = getPrintPreviewHelper();
+			previewHelper.setUserScale(options.getScaleFactor() / 100f);
+			previewHelper.enablePrinting(false);
+			previewHelper.doPrintPreview(getPrintActionHelper());
 		}
 	}
 
@@ -89,7 +90,7 @@ class ActionsBlock extends DialogBlock {
 	private PrintPreviewHelper getPrintPreviewHelper() {
 		if (printPreviewHelper == null) {
 			printPreviewHelper = new RenderedPrintPreviewHelper();
-		}		
+		}
 		return printPreviewHelper;
 	}
 
@@ -99,10 +100,10 @@ class ActionsBlock extends DialogBlock {
 		}
 		return printActionHelper;
 	}
-	
+
 	@Override
 	public void dispose() {
-		// nothing special to dispose		
+		// nothing special to dispose
 	}
 
 }

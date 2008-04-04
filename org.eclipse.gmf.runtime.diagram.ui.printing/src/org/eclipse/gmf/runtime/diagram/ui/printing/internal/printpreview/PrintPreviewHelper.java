@@ -276,6 +276,11 @@ public class PrintPreviewHelper {
 	 * Close image, unlikely to ever be disabled
 	 */
 	protected Image closeImage;
+	
+	/**
+	 * The print preview helper is capable of showing zoom input.
+	 */
+	protected double userScale = 1;
 
 	/**
 	 * Initialize all toolbar images
@@ -745,9 +750,10 @@ public class PrintPreviewHelper {
 	 * @return int total number of rows used by the diagram
 	 */
 	private int getTotalNumberOfRows() {
-		float numRows = ((float) getBounds().height)
+		float numRows = ((float) (getBounds().height * userScale))
 			/ PageInfoHelper
 				.getPageSize(getPreferenceStore(), true, getMapMode()).y;
+		
 		return Math.max(1, (int) Math.ceil(numRows));
 	}
 
@@ -794,8 +800,9 @@ public class PrintPreviewHelper {
 	 */
 	protected Rectangle getPageBreakBounds() {
 		if (pageBreakBounds == null) {
-			pageBreakBounds = PrintHelperUtil.getPageBreakBounds(getDiagramEditPart(), true);
+			pageBreakBounds = PrintHelperUtil.getPageBreakBounds(getDiagramEditPart(), true).getCopy();
 		}
+		
 		return pageBreakBounds;
 	}
 
@@ -862,9 +869,10 @@ public class PrintPreviewHelper {
 	 * @return int total number of columns used by the diagram
 	 */
 	private int getTotalNumberOfColumns() {
-		float numCols = ((float) getBounds().width)
+		float numCols = ((float) (getBounds().width * userScale))
 			/ PageInfoHelper
 				.getPageSize(getPreferenceStore(), true, getMapMode()).x;
+				
 		return Math.max(1, (int) Math.ceil(numCols));
 	}
 
@@ -975,14 +983,21 @@ public class PrintPreviewHelper {
 		}
 		
 		PageMargins margins = PageInfoHelper.getPageMargins(getPreferenceStore(), getMapMode());
+		
+		margins.left /= userScale;
+		margins.right /= userScale;
+		margins.bottom /= userScale;
+		margins.top /= userScale;
 
 		//make sure height and width are not 0, if too small <4, don't bother
 		if (!(imageHeight <= 4 || imageWidth <= 4)) {
 
 			//or imageWidth / pageSize.x
-			float scale = ((float) imageHeight / (float) pageSize.y)
+			float scale = ( imageHeight / (float) pageSize.y)
 				/ (float) DiagramMapModeUtil.getScale(getMapMode());
-
+		
+			scale *= userScale;
+			
 			for (int i = 0; i < numberOfRows; i++) {
 				for (int j = 0; j < numberOfColumns; j++) {
 					Label label = new Label(composite, SWT.NULL);
@@ -1128,28 +1143,13 @@ public class PrintPreviewHelper {
 		g.pushState();
 
 		Rectangle bounds = getBounds();
-
-		int translateX = (int) (0f
-				- bounds.x
-				* scale
-				+ ((float) getTotalNumberOfColumns()
-					* pageSize.x - bounds.width)
-				* scale / 2f
-				- (((float) pageSize.x)
-				* ((float) (col + userX)) * scale)),
-		translateY = (int) (0f
-				- bounds.y
-				* scale
-				+ ((float) getTotalNumberOfRows()
-					* pageSize.y - bounds.height)
-				* scale / 2f
-				- (((float) pageSize.y)
-				* ((float) (row + userY)) * scale));
-		
-		
+				
+		int scaledPageSizeWidth = (int)(pageSize.x/userScale) ;
+		int scaledPageSizeHeight = (int)(pageSize.y/userScale) ;
+						
 		//offset by page break figure bounds, then offset by the row or column we're at, and then take margins into account
-		translateX = - bounds.x - (pageSize.x * (col + userX)) + (margins.left * (col + userX + 1)) + (margins.right * (col + userX));
-		translateY = - bounds.y - (pageSize.y * (row + userY)) + (margins.top * (row + userY + 1)) + (margins.bottom * (row + userY));
+		int translateX = - bounds.x - (scaledPageSizeWidth * (col + userX)) + (margins.left * (col + userX + 1)) + (margins.right * (col + userX));
+		int translateY = - bounds.y - (scaledPageSizeHeight * (row + userY)) + (margins.top * (row + userY + 1)) + (margins.bottom * (row + userY));
 		
 		//To set a specific font, we could do this
 		//For a completely accurate print preview, the font is printer specific
@@ -1193,10 +1193,11 @@ public class PrintPreviewHelper {
 
 		g.translate(translateX, translateY);
 		
-        Rectangle clip = new Rectangle((pageSize.x - margins.left - margins.right)
-    			* (col + userX) + bounds.x, (pageSize.y - margins.top - margins.bottom)
-    			* (row + userY) + bounds.y, pageSize.x - margins.left - margins.right,
-    			pageSize.y - margins.top - margins.bottom);
+        Rectangle clip = new Rectangle(
+        		(scaledPageSizeWidth - margins.left - margins.right) * (col + userX) + bounds.x, 
+    			(scaledPageSizeHeight - margins.top - margins.bottom)* (row + userY) + bounds.y, 
+    			scaledPageSizeWidth - margins.left - margins.right,
+    			scaledPageSizeHeight - margins.top - margins.bottom);
 		g.clipRect(clip);		
 		
 		//should be from printer and screen ratio and image size
@@ -1270,13 +1271,9 @@ public class PrintPreviewHelper {
 			ScaledGraphics scaledGraphics) {
 		return new MapModeGraphics(scaledGraphics, getMapMode());
 	}
-	
-	
-	
-
-	
-	
-	
-	
+			
+	public void setUserScale(double userScale){
+		this.userScale = userScale;
+	}
 	
 }
