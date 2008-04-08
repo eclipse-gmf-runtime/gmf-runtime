@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,18 +15,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.gef.dnd.DelegatingDropAdapter;
-import org.eclipse.jface.util.Assert;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.DelegatingDropTargetAdapter;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.DropTargetContext;
+import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetContext;
+import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.DelegatingDropTargetAdapter;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.DropTargetContext;
-import org.eclipse.gmf.runtime.common.ui.services.dnd.drop.IDropTargetContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 
 /**
  * This class extends the GEF drop target adapter. It delgates all the drop

@@ -12,8 +12,8 @@
 package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 import java.util.List;
-import java.util.ListIterator;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -21,7 +21,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-import org.eclipse.jface.util.Assert;
 
 /**
  * BorderItemLocator works closely with border items in determining position.
