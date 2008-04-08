@@ -225,17 +225,17 @@ public class ModelingAssistantServiceTests
      * 
      * @throws Exception
      */
-    public void testStaticMethodInExtension()
-        throws Exception {
+    //public void testStaticMethodInExtension()
+    //    throws Exception {
 
-        shouldBeContributed = true;
-        assertTrue(!ModelingAssistantService.getInstance().getTypesForPopupBar(
-            new MyElementType("TYPE1")).isEmpty());
+    //    shouldBeContributed = true;
+    //    assertTrue(!ModelingAssistantService.getInstance().getTypesForPopupBar(
+    //        new MyElementType("TYPE1")).isEmpty());
 
-        shouldBeContributed = false;
-        assertTrue(ModelingAssistantService.getInstance().getTypesForPopupBar(
-            new MyElementType("TYPE1")).isEmpty());
+    //    shouldBeContributed = false;
+    //    assertTrue(ModelingAssistantService.getInstance().getTypesForPopupBar(
+    //        new MyElementType("TYPE1")).isEmpty());
 
-    }   
+    //}   
 
 }
