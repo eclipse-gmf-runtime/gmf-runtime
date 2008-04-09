@@ -222,6 +222,32 @@ public final class DiagramUIActionsMessages extends NLS {
     public static String TextAlignmentAction_left;
     public static String TextAlignmentAction_center;
     public static String TextAlignmentAction_right;
+    public static String LineWidthActionMenu_lineWidthText;
+    public static String LineWidthActionMenu_lineWidthToolTip;
+    public static String LineWidthAction_ChangePropertyValueRequest_label;
+    public static String LineWidthAction_one;
+    public static String LineWidthAction_two;
+    public static String LineWidthAction_three;
+    public static String LineWidthAction_four;
+    public static String LineWidthAction_five;
+    public static String LineTypeActionMenu_lineTypeText;
+    public static String LineTypeActionMenu_lineTypeToolTip;
+    public static String LineTypeAction_ChangePropertyValueRequest_label;
+    public static String LineTypeAction_solid;
+    public static String LineTypeAction_dash;
+    public static String LineTypeAction_dot;
+    public static String LineTypeAction_dashdot;
+    public static String LineTypeAction_dashdotdot;
+    public static String ArrowTypeActionMenu_arrowTypeText;
+    public static String ArrowTypeActionMenu_arrowTypeToolTip;
+    public static String ArrowTypeActionMenu_arrowTypeSourceText;
+    public static String ArrowTypeActionMenu_arrowTypeSourceToolTip;
+    public static String ArrowTypeActionMenu_arrowTypeTargetText;
+    public static String ArrowTypeActionMenu_arrowTypeTargetToolTip;
+    public static String ArrowTypeAction_ChangePropertyValueRequest_label;
+    public static String ArrowTypeAction_none;
+    public static String ArrowTypeAction_solid;
+    public static String ArrowTypeAction_open;
     
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIActionsMessages.class);

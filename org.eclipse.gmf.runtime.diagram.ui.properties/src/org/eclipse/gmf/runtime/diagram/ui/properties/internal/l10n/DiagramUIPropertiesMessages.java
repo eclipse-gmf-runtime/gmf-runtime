@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * An accessor class for externalized strings.
- *
+ * 
  * @author cmahoney
  */
 public final class DiagramUIPropertiesMessages extends NLS {
@@ -74,15 +74,20 @@ public final class DiagramUIPropertiesMessages extends NLS {
 	public static String Dash_Dot_Label_Text;
 	public static String Dash_Dot_Dot_Label_Text;
 	public static String Spaced_Dot_Label_Text;
-	public static String Restore_Defaults_Label_Text;	
+	public static String Restore_Defaults_Label_Text;
 	public static String Positive_Number_Error;
-    public static String AbstractPropertySection_UndoIntervalPropertyString;
-    public static String TextAlignmentPropertySection_AlignLeft;
-    public static String TextAlignmentPropertySection_AlignCenter;
-    public static String TextAlignmentPropertySection_AlignRight;
-    public static String TextAlignmentPropertySection_TextAlignment;
-	
-	
+	public static String AbstractPropertySection_UndoIntervalPropertyString;
+	public static String TextAlignmentPropertySection_AlignLeft;
+	public static String TextAlignmentPropertySection_AlignCenter;
+	public static String TextAlignmentPropertySection_AlignRight;
+	public static String TextAlignmentPropertySection_TextAlignment;
+	public static String LineStylesPropertySection_LineStyles;
+	public static String LineStylesPropertySection_LineWidth;
+	public static String LineStylesPropertySection_LineType;
+	public static String LineStylesPropertySection_ArrowType;
+	public static String LineStylesPropertySection_SourceArrow_Type;
+	public static String LineStylesPropertySection_TargetArrow_Type;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, DiagramUIPropertiesMessages.class);
 	}
