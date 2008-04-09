@@ -729,7 +729,7 @@ public class GroupTests
         tool.deactivate();
     }
 
-    public void testMoveGroup()
+    public void disabledM6testMoveGroup()
         throws Exception {
 
         setupShapesAndGroups();
@@ -1198,7 +1198,7 @@ public class GroupTests
         });
     }
 
-    public void testArrangeActions()
+    public void disabledM6testArrangeActions()
         throws Exception {
         setupShapesAndGroups();
 
