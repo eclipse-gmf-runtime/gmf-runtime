@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,11 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 
 /**
- * @deprecated use org.eclipse.gmf.runtime.draw2d.ui.figures.IBorderItemLocator instead
  * @author cmahoney
  */
 public interface IBorderItemLocator
 	extends org.eclipse.gmf.runtime.draw2d.ui.figures.IBorderItemLocator {
     
-    // deprectaed use 
-    // org.eclipse.gmf.runtime.draw2d.ui.figures.IBorderItemLocator instead
+    // The IBorderItemLocator interface has been moved to the draw2d plugin, but
+    // keep this here to avoid breaking API.
 }
