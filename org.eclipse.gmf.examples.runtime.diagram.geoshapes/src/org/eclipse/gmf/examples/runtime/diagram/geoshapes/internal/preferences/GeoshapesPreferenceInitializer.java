@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,11 @@ public class GeoshapesPreferenceInitializer
     public void initializeDefaultPreferences() {
         super.initializeDefaultPreferences();
         // Resetting AntiAliase settings in the geo shapes preference store 
-        IPreferenceStore store = getPreferenceStore();  
-        store.setDefault(IPreferenceConstants.PREF_ENABLE_ANTIALIAS, false);
+        IPreferenceStore store = getPreferenceStore(); 
+        // Anti Aliasing was turned off in fix Bugzilla 137155 
+        // Since Bugzilla 204012 is resolved, we can turn on again.
+        // This class should be removed, but leaving in case we need it again.
+        store.setDefault(IPreferenceConstants.PREF_ENABLE_ANTIALIAS, true);
     }
 
     /*
