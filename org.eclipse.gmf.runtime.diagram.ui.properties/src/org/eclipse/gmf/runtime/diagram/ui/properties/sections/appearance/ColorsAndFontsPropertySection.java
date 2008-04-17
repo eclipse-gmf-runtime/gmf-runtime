@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,6 @@ import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.CCombo;
@@ -54,8 +53,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -89,7 +87,7 @@ public class ColorsAndFontsPropertySection
 	protected static final String FONTS_AND_COLORS_LABEL = DiagramUIPropertiesMessages.
 		FontAndColor_nameLabel;
 
-	protected ToolItem fillColorButton;
+	protected Button fillColorButton;
 
 	protected RGB fillColor = null;
 
@@ -99,18 +97,16 @@ public class ColorsAndFontsPropertySection
 	// font size drop down
 	private CCombo fontSizeCombo;
 
-	private ToolBar toolBar;
-	
-	private ToolItem fontBoldButton;
+	private Button fontBoldButton;
 
-	private ToolItem fontItalicButton;
+	private Button fontItalicButton;
 	
 	/** the default preference color */
 	protected static final RGB DEFAULT_PREF_COLOR = new RGB(0, 0, 0);
 
-	protected ToolItem fontColorButton;
+	protected Button fontColorButton;
 
-    protected ToolItem lineColorButton;
+    protected Button lineColorButton;
 
 	protected RGB fontColor;
 
@@ -231,65 +227,82 @@ public class ColorsAndFontsPropertySection
 			}
 		});
 
-	    toolBar = new ToolBar(parent, SWT.FLAT);
+		Composite toolBar = new Composite(parent, SWT.SHADOW_NONE);
 		toolBar.setLayout(new GridLayout(7, false));
 		toolBar.setBackground(parent.getBackground());
 
-		fontBoldButton = new ToolItem(toolBar, SWT.CHECK);
-
+		fontBoldButton = new Button(toolBar, SWT.TOGGLE);
 		fontBoldButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_BOLD));
+        fontBoldButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FontStyle_Bold;
+            }
+        });
+	
+		
+		fontItalicButton = new Button(toolBar, SWT.TOGGLE );
+		fontItalicButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_ITALIC));
+        fontItalicButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FontStyle_Italic;
+            }
+        });
+
 		fontBoldButton.addSelectionListener(new SelectionAdapter() {
+
 			public void widgetSelected(SelectionEvent event) {
 				updateFontBold();
 			}
-		});		
-		fontBoldButton.setToolTipText(DiagramUIMessages.FontStyleAction_bold_tooltip);		
+		});
 
-		fontItalicButton = new ToolItem(toolBar, SWT.CHECK );
-		fontItalicButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_ITALIC));
-		fontItalicButton.setToolTipText(DiagramUIMessages.PropertyDescriptorFactory_FontStyle_Italic);
 		fontItalicButton.addSelectionListener(new SelectionAdapter() {
+
 			public void widgetSelected(SelectionEvent event) {
 				updateFontItalic();
 			}
 		});
 
-		fontColorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
+		new Label(toolBar, SWT.LEFT);
+
+		fontColorButton = new Button(toolBar, SWT.PUSH);
 		fontColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FONT_COLOR));
-		fontColorButton.setToolTipText(DiagramUIMessages.PropertyDescriptorFactory_FontColor);
+        fontColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FontColor;
+            }
+        });
 		fontColorButton.addSelectionListener(new SelectionAdapter() {
+
 			public void widgetSelected(SelectionEvent event) {
 				changeFontColor(event);
 			}
 		});
 
-		lineColorButton = new ToolItem(toolBar,  SWT.DROP_DOWN);
+		new Label(toolBar, SWT.LEFT);
+
+		lineColorButton = new Button(toolBar, SWT.PUSH);
 		lineColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_LINE_COLOR));
-		lineColorButton.setToolTipText(DiagramUIMessages.PropertyDescriptorFactory_LineColor);
+        lineColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_LineColor;
+            }
+        });
 		lineColorButton.addSelectionListener(new SelectionAdapter() {
+
 			public void widgetSelected(SelectionEvent event) {				
 				changeLineColor(event);
 			}
 		});
 
-		fillColorButton = new ToolItem(toolBar,  SWT.DROP_DOWN);
+		fillColorButton = new Button(toolBar, SWT.PUSH);
 		fillColorButton.setImage(DiagramUIPropertiesImages.get(DiagramUIPropertiesImages.IMG_FILL_COLOR));
-		fillColorButton.setToolTipText(DiagramUIMessages.PropertyDescriptorFactory_FillColor);
+		fillColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+            public void getName(AccessibleEvent e) {
+                e.result = DiagramUIMessages.PropertyDescriptorFactory_FillColor;
+            }
+        });
 		fillColorButton.setEnabled(false);
-		
-		toolBar.getAccessible().addAccessibleListener(new AccessibleAdapter() {	
-			public void getName(AccessibleEvent e) {
-				if (e.childID != ACC.CHILDID_SELF) {
-					ToolItem item = toolBar.getItem(e.childID);
-					if (item != null) {
-						String toolTip = item.getToolTipText();
-						if (toolTip != null) {
-							e.result = toolTip;
-						}
-					}
-				}
-			}
-		});		
+
 		return toolBar;
 	}
 
@@ -356,34 +369,6 @@ public class ColorsAndFontsPropertySection
             ImageDescriptor imageDescriptor) {
 
         return changeColor(event, button, propertyId, commandName,
-            imageDescriptor);
-    }
-    
-	/**
-     * @param event -
-     *            selection event
-     * @param toolItem -
-     *            event source
-     * @param preferenceId -
-     *            id of the preference of the default color value for that
-     *            property
-     * @param propertyId -
-     *            id of the property
-     * @param commandName -
-     *            name of the command
-     * @param imageDescriptor -
-     *            the image to draw overlay on the button after the new color is
-     *            set
-     * @return - new RGB color, or null if none selected
-     * @deprecated The preference is not being retrieved from the correct
-     *             preference store so it is not needed, use the other
-     *             <code>changeColor</code> method.
-     */
-    protected RGB changeColor(SelectionEvent event, ToolItem toolItem,
-            String preferenceId, final String propertyId, String commandName,
-            ImageDescriptor imageDescriptor) {
-
-        return  changeColor(event, toolItem, propertyId, commandName,
             imageDescriptor);
     }
     
@@ -465,88 +450,6 @@ public class ColorsAndFontsPropertySection
             imageDescriptor.getImageData(), color).createImage();
         	disposeImage(button.getImage());
 	        button.setImage(overlyedImage);
-	    }
-        return colorToReturn;
-    }
-    
-    /**
-     * @param event -
-     *            selection event
-     * @param toolItem -
-     *            event source
-     * @param propertyId -
-     *            id of the property
-     * @param commandName -
-     *            name of the command
-     * @param imageDescriptor -
-     *            the image to draw overlay on the button after the new color is
-     *            set
-     * @return - new RGB color, or null if none selected
-     */
-    protected RGB changeColor(SelectionEvent event, ToolItem toolItem,
-            final String propertyId, String commandName,
-            ImageDescriptor imageDescriptor) {
-
-        ColorPalettePopup popup = new ColorPalettePopup(toolItem.getParent()
-            .getShell(), IDialogConstants.BUTTON_BAR_HEIGHT);        
-        popup.setPreviousColor(previousColor);
-        Rectangle r = toolItem.getBounds();
-        Point location = toolItem.getParent().toDisplay(r.x, r.y);
-        popup.open(new Point(location.x, location.y + r.height));        
-        if (popup.getSelectedColor() == null && !popup.useDefaultColor()) {
-            return null;
-        }        
-        // selectedColor should be null if we are to use the default color
-        final RGB selectedColor = popup.getSelectedColor();
-
-        final EStructuralFeature feature = (EStructuralFeature) PackageUtil
-            .getElement(propertyId);
-
-        // Update model in response to user
-
-        List commands = new ArrayList();
-        Iterator it = getInputIterator();
-
-        RGB colorToReturn = selectedColor;
-        RGB color = selectedColor;
-        while (it.hasNext()) {
-            final IGraphicalEditPart ep = (IGraphicalEditPart) it.next();
-
-            color = selectedColor;
-            if (popup.useDefaultColor()) {
-                Object preferredValue = ep.getPreferredValue(feature);
-                if (preferredValue instanceof Integer) {
-                    color = FigureUtilities
-                        .integerToRGB((Integer) preferredValue);
-                }
-            }
-                
-            // If we are using default colors, we want to return the color of the first selected element to be consistent
-            if (colorToReturn == null) {
-                colorToReturn = color;
-            }
-
-            if (color != null) {
-                final RGB finalColor = color; // need a final variable
-               commands.add(createCommand(commandName, ((View) ep.getModel())
-                    .eResource(), new Runnable() {
-
-                    public void run() {
-                        ENamedElement element = PackageUtil
-                            .getElement(propertyId);
-                        if (element instanceof EStructuralFeature)
-                            ep.setStructuralFeatureValue(feature,
-                                FigureUtilities.RGBToInteger(finalColor));
-                    }
-                }));
-            }
-        }
-        if (!commands.isEmpty()){
-	        executeAsCompositeCommand(commandName, commands);
-    	    Image overlyedImage = new ColorOverlayImageDescriptor(
-            imageDescriptor.getImageData(), color).createImage();
-        	disposeImage(toolItem.getImage());
-        	toolItem.setImage(overlyedImage);
 	    }
         return colorToReturn;
     }
