@@ -9,20 +9,21 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.requests;
+package org.eclipse.gmf.runtime.diagram.ui.requests;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 
 /**
- * A request to paste the clipboard data on to the view
+ * A request to paste the clipboard data on to the view.
  * 
  * @author vramaswa
- * @canBeSeenBy %level1
+ * @since 2.1
  */
-public class PasteViewRequest extends Request {
+public class PasteViewRequest
+    extends Request {
+
     /**
      * The clipboard data used for the paste
      */
@@ -30,7 +31,9 @@ public class PasteViewRequest extends Request {
 
     /**
      * Constructor for PasteViewRequest.
-     * @param data The clipboard data
+     * 
+     * @param data
+     *            The clipboard data
      */
     public PasteViewRequest(ICustomData[] data) {
         super(RequestConstants.REQ_PASTE);
@@ -41,6 +44,7 @@ public class PasteViewRequest extends Request {
 
     /**
      * Returns the data.
+     * 
      * @return ICustomData[]
      */
     public ICustomData[] getData() {
