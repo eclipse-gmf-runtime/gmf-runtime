@@ -82,6 +82,9 @@ public class ConstrainedEdge extends Edge {
 			this.target.incoming.add(this);
 			targetConstraint.addIncomingEdge(this);
 		}
+		if (this.source.equals(this.target)) {
+			throw new RuntimeException("Edges between border nodes on the same parent or border node and its parent are disallowed.");
+		}
 	}
 
 	/**

@@ -30,6 +30,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionDimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -48,8 +49,12 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
+import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionAnchorsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IBorderedShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -378,7 +383,7 @@ public abstract class DefaultProvider
                     Node toNode = (Node) editPartToNodeDict.get(to);
                     
                     if (fromNode != null && toNode != null
-                        && !fromNode.equals(toNode)) {
+                        && !checkSelfEdge(from, to, editPartToNodeDict)) {
                         addEdge(edges, poly, toNode, fromNode);
                     }
                 }else{
@@ -405,11 +410,17 @@ public abstract class DefaultProvider
             Node toNode = (Node) editPartToNodeDict.get(to);
             
             if (fromNode != null && toNode != null
-                && !fromNode.equals(toNode)) {
+                && !checkSelfEdge(from, to, editPartToNodeDict)) {
                 addEdge(edges, poly, fromNode, toNode);
             }
         }
         return edges;
+    }
+    
+    private boolean checkSelfEdge(EditPart from, EditPart to, Map dictionary) {
+   		Node graphSource = from instanceof IBorderItemEditPart ? (Node) dictionary.get(from.getParent()) : (Node) dictionary.get(from); 
+   		Node graphTarget = to instanceof IBorderItemEditPart ? (Node) dictionary.get(to.getParent()) : (Node) dictionary.get(to);
+    	return graphSource != null && graphTarget != null && graphSource.equals(graphTarget);
     }
     
     /**
@@ -756,58 +767,117 @@ public abstract class DefaultProvider
 		 * this, since the reconnection location is passed in absolute
 		 * coordinates.
 		 */
-		ReconnectRequest reconnectRequest = new ReconnectRequest(
-				org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
-		reconnectRequest.setConnectionEditPart(cep);
-		reconnectRequest.setTargetEditPart(cep.getSource());
-		IFigure sourceFig = ((GraphicalEditPart)cep.getSource()).getFigure();
-		Point sourceAnchorReference = new PrecisionPoint(
-				sourceFig.getBounds().preciseX() + sourceRatio.preciseX()
-						* sourceFig.getBounds().preciseWidth(), sourceFig
-						.getBounds().preciseY()
-						+ sourceRatio.preciseY()
-						* sourceFig.getBounds().preciseHeight());
-		sourceFig.translateToAbsolute(sourceAnchorReference);
-		reconnectRequest.setLocation(sourceAnchorReference);
-		Command sourceAnchorCommand = cep.getSource()
-				.getCommand(reconnectRequest);
-		if (sourceAnchorCommand != null && sourceAnchorCommand.canExecute()) {
-			cc.add(sourceAnchorCommand);
-			if (((Connection)cep.getFigure()).getSourceAnchor() instanceof BaseSlidableAnchor) {
-				resultantSourceAnchorReference = new PrecisionPoint(sourceExt
-						.preciseWidth()
-						* sourceRatio.preciseX() + sourceExt.preciseX(), sourceExt
-						.preciseHeight()
-						* sourceRatio.preciseY() + sourceExt.preciseY());
+		if (cep.getSource().equals(source.data)) {
+			ReconnectRequest reconnectRequest = new ReconnectRequest(
+					org.eclipse.gef.RequestConstants.REQ_RECONNECT_SOURCE);
+			reconnectRequest.setConnectionEditPart(cep);
+			reconnectRequest.setTargetEditPart(cep.getSource());
+			IFigure sourceFig = ((GraphicalEditPart)cep.getSource()).getFigure();
+			Point sourceAnchorReference = new PrecisionPoint(
+					sourceFig.getBounds().preciseX() + sourceRatio.preciseX()
+							* sourceFig.getBounds().preciseWidth(), sourceFig
+							.getBounds().preciseY()
+							+ sourceRatio.preciseY()
+							* sourceFig.getBounds().preciseHeight());
+			sourceFig.translateToAbsolute(sourceAnchorReference);
+			reconnectRequest.setLocation(sourceAnchorReference);
+			Command sourceAnchorCommand = cep.getSource()
+					.getCommand(reconnectRequest);
+			if (sourceAnchorCommand != null && sourceAnchorCommand.canExecute()) {
+				cc.add(sourceAnchorCommand);
+				if (((Connection)cep.getFigure()).getSourceAnchor() instanceof BaseSlidableAnchor) {
+					if (sourceAnchorCommand instanceof ICommandProxy) {
+						updateNewSlidingAnchorReferenceRatio((ICommandProxy) sourceAnchorCommand, true, sourceRatio);
+					}
+					resultantSourceAnchorReference = new PrecisionPoint(sourceExt
+							.preciseWidth()
+							* sourceRatio.preciseX() + sourceExt.preciseX(), sourceExt
+							.preciseHeight()
+							* sourceRatio.preciseY() + sourceExt.preciseY());
+				}
 			}
+		} else {
+			resultantSourceAnchorReference = getNewAnchorReferencePoint(source, ((Connection)cep.getFigure()).getSourceAnchor().getReferencePoint());
 		}
 
-		reconnectRequest
-				.setType(org.eclipse.gef.RequestConstants.REQ_RECONNECT_TARGET);
-		reconnectRequest.setTargetEditPart(cep.getTarget());
-		IFigure targetFig = ((GraphicalEditPart) cep.getTarget()).getFigure();
-		Point targetAnchorReference = new PrecisionPoint(
-				targetFig.getBounds().preciseX() + targetRatio.preciseX()
-						* targetFig.getBounds().preciseWidth(), targetFig
-						.getBounds().preciseY()
-						+ targetRatio.preciseY()
-						* targetFig.getBounds().preciseHeight());
-		targetFig.translateToAbsolute(targetAnchorReference);
-		reconnectRequest.setLocation(targetAnchorReference);
-		Command targetAnchorCommand = cep.getTarget()
-				.getCommand(reconnectRequest);
-		if (targetAnchorCommand != null && targetAnchorCommand.canExecute()) {
-			cc.add(targetAnchorCommand);
-			if (((Connection)cep.getFigure()).getTargetAnchor() instanceof BaseSlidableAnchor) {
-				resultantTargetAnchorReference = new PrecisionPoint(targetExt
-						.preciseWidth()
-						* targetRatio.preciseX() + targetExt.preciseX(), targetExt
-						.preciseHeight()
-						* targetRatio.preciseY() + targetExt.preciseY());
+		if (cep.getTarget().equals(target.data)) {
+			ReconnectRequest reconnectRequest = new ReconnectRequest(
+					org.eclipse.gef.RequestConstants.REQ_RECONNECT_TARGET);
+			reconnectRequest.setConnectionEditPart(cep);
+			reconnectRequest.setTargetEditPart(cep.getTarget());
+			IFigure targetFig = ((GraphicalEditPart) cep.getTarget()).getFigure();
+			Point targetAnchorReference = new PrecisionPoint(
+					targetFig.getBounds().preciseX() + targetRatio.preciseX()
+							* targetFig.getBounds().preciseWidth(), targetFig
+							.getBounds().preciseY()
+							+ targetRatio.preciseY()
+							* targetFig.getBounds().preciseHeight());
+			targetFig.translateToAbsolute(targetAnchorReference);
+			reconnectRequest.setLocation(targetAnchorReference);
+			Command targetAnchorCommand = cep.getTarget()
+					.getCommand(reconnectRequest);
+			if (targetAnchorCommand != null && targetAnchorCommand.canExecute()) {
+				cc.add(targetAnchorCommand);
+				if (((Connection)cep.getFigure()).getTargetAnchor() instanceof BaseSlidableAnchor) {
+					if (targetAnchorCommand instanceof ICommandProxy) {
+						updateNewSlidingAnchorReferenceRatio((ICommandProxy) targetAnchorCommand, false, targetRatio);
+					}
+					resultantTargetAnchorReference = new PrecisionPoint(targetExt
+							.preciseWidth()
+							* targetRatio.preciseX() + targetExt.preciseX(), targetExt
+							.preciseHeight()
+							* targetRatio.preciseY() + targetExt.preciseY());
+				}
 			}
+		} else {
+			resultantTargetAnchorReference = getNewAnchorReferencePoint(target, ((Connection)cep.getFigure()).getTargetAnchor().getReferencePoint());
 		}
 		return new LineSeg(resultantSourceAnchorReference,
 				resultantTargetAnchorReference);
+	}
+	
+	private void updateNewSlidingAnchorReferenceRatio(ICommandProxy setAnchorCommand, boolean source, PrecisionPoint ratio) {
+		/*
+		 * Find the SetConnectionAnchorsCommand
+		 */
+		SetConnectionAnchorsCommand cmd = findSetConnectionAnchorsCommand(setAnchorCommand.getICommand());
+		if (cmd != null) {
+			PrecisionPoint newRatio = null;
+			if (source) {
+				newRatio = cmd.getNewSourceTerminal() == null ? new PrecisionPoint(0.5, 0.5) : BaseSlidableAnchor.parseTerminalString(cmd.getNewSourceTerminal());
+			} else {
+				newRatio = cmd.getNewTargetTerminal() == null ? new PrecisionPoint(0.5, 0.5) : BaseSlidableAnchor.parseTerminalString(cmd.getNewTargetTerminal());
+			}
+			if (newRatio != null) {
+				ratio.preciseX = newRatio.preciseX;
+				ratio.preciseY = newRatio.preciseY;
+				ratio.updateInts();
+			}
+		}
+	}
+	
+	private SetConnectionAnchorsCommand findSetConnectionAnchorsCommand(ICommand cmd) {
+		if (cmd instanceof SetConnectionAnchorsCommand) {
+			return (SetConnectionAnchorsCommand) cmd;
+		} else if (cmd instanceof CompositeCommand) {
+			for (Iterator itr = ((CompositeCommand)cmd).listIterator(); itr.hasNext();) {
+				ICommand childCmd = (ICommand) itr.next();
+				SetConnectionAnchorsCommand setAnchorsCmd = findSetConnectionAnchorsCommand(childCmd);
+				if (setAnchorsCmd != null) {
+					return setAnchorsCmd;
+				}
+			}
+		}
+		return null;
+	}
+	
+	private Point getNewAnchorReferencePoint(Node node, Point oldAbsReference) {
+		GraphicalEditPart gep = (GraphicalEditPart)node.data;
+		PrecisionPoint parentLocation = new PrecisionPoint(gep.getFigure().getBounds().getLocation());
+		gep.getFigure().translateToAbsolute(parentLocation);
+		PrecisionDimension diff = new PrecisionDimension(oldAbsReference.preciseX() - parentLocation.preciseX(), oldAbsReference.preciseY() - parentLocation.preciseY());
+		getMapMode().DPtoLP(diff);
+		return new Point(node.x, node.y).translate(diff);
 	}
 
     /**
