@@ -108,7 +108,6 @@ public class BorderItemLocator
 			|| theConstraint.getTopLeft().y == 0) {
 			setCurrentSideOfParent(getPreferredSideOfParent());
 		}
-		getParentFigure().revalidate();
 	}
 
 	/**
@@ -260,7 +259,7 @@ public class BorderItemLocator
 	private boolean conflicts(Point recommendedLocation,
 			IFigure targetBorderItem) {
 		Rectangle recommendedRect = new Rectangle(recommendedLocation,
-			targetBorderItem.getSize());
+			getSize(targetBorderItem));
 		List borderItems = targetBorderItem.getParent().getChildren();
         
         // Only check those border items that would have already been
@@ -435,8 +434,7 @@ public class BorderItemLocator
 
 		Point ptNewLocation = locateOnBorder(getPreferredLocation(borderItem),
 			getPreferredSideOfParent(), 0, borderItem);
-		borderItem.setLocation(ptNewLocation);
-        borderItem.setSize(size);
+        borderItem.setBounds(new Rectangle(ptNewLocation, size));
 
 		setCurrentSideOfParent(findClosestSideOfParent(new Rectangle(ptNewLocation, size), getParentBorder()));
 	}
@@ -515,7 +513,7 @@ public class BorderItemLocator
 	 */
 	protected final Dimension getSize(IFigure borderItem) {
         Dimension size = getConstraint().getSize();
-        if (LayoutHelper.UNDEFINED.getSize().equals(size)) {
+        if (size.isEmpty()) {
         	size = borderItem.getPreferredSize();
         }
         return size;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,9 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
@@ -46,7 +48,9 @@ public class BorderItemContainerFigure
     // rectangle indicating the extended bounds of the figure
     // extended bounds include the border items in the calculations 
     private Rectangle extendedBounds = new Rectangle();
-
+    
+    private BorderItemContainerHelper helper = new BorderItemContainerHelper();
+    
 	/**
 	 * Constructor
 	 */
@@ -344,7 +348,7 @@ public class BorderItemContainerFigure
      */
     public Rectangle getExtendedBounds() {
         if (extendedBounds == null) {
-            extendedBounds = getBounds().getCopy();
+            extendedBounds = getParent().getBounds().getCopy();
             Iterator iterator = getChildren().iterator();
             while (iterator.hasNext()) {
                 Figure childFigure = (Figure) iterator.next();
@@ -373,4 +377,43 @@ public class BorderItemContainerFigure
             layer.borderFigureMoved();
         }
     }
+    
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Figure#add(org.eclipse.draw2d.IFigure, java.lang.Object, int)
+	 */
+	public void add(IFigure figure, Object constraint, int index) {
+		super.add(figure, constraint, index);
+		helper.hookChild(figure);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Figure#remove(org.eclipse.draw2d.IFigure)
+	 */
+	public void remove(IFigure figure) {
+		helper.unhookChild(figure);
+		super.remove(figure);
+	}
+    
+    private class BorderItemContainerHelper {
+    	
+    	class ChildTracker implements FigureListener {
+    		public void figureMoved(IFigure source) {
+    		    revalidate();
+    		}
+    	}
+    	
+    	private FigureListener figureListener = new ChildTracker();
+    	
+    	public void hookChild(IFigure child) {
+    	    revalidate();
+    		child.addFigureListener(figureListener);
+    	}
+    	
+    	public void unhookChild(IFigure child) {
+    	    revalidate();
+    		child.removeFigureListener(figureListener);
+    	}
+    	
+    }
+    
 }
