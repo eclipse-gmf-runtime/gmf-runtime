@@ -185,6 +185,12 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		org.eclipse.swt.graphics.Rectangle diagramArea = gen
 				.calculateImageRectangle(editParts);
 		int rows = 1, columns = 1;
+		if (logTileWidth <= 0) {
+			logTileWidth = diagramArea.width;
+		}
+		if (logTileHeight <= 0) {
+			logTileHeight = diagramArea.height;
+		}
 		columns = (int) Math.ceil(diagramArea.width / ((double) logTileWidth));
 		rows = (int) Math.ceil(diagramArea.height / ((double) logTileHeight));
 		int jobsToDo = 6 * columns * rows + 1;
