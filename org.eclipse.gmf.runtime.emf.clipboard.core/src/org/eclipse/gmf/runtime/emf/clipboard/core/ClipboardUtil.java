@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.emf.clipboard.core;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,7 +150,7 @@ public class ClipboardUtil {
 			
 			if (eObjects.isEmpty() == false) {
 				if (hints == null) {
-					hints = Collections.EMPTY_MAP;
+					hints = new HashMap();
 				}
 				CopyOperation copyOperation = new CopyOperation(
 					monitor,

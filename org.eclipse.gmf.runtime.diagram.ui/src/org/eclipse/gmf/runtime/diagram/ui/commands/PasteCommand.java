@@ -9,7 +9,7 @@
  *    IBM Corporation - initial API and implementation 
  ****************************************************************************/
 
-package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
+package org.eclipse.gmf.runtime.diagram.ui.commands;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +30,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.util.ICustomData;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ClipboardCommand;
 import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardUtil;
@@ -49,15 +50,13 @@ import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
  * Paste Command for the views
  * 
  * @author Vishy Ramaswamy
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
  */
-public final class PasteCommand extends ClipboardCommand {
+public class PasteCommand extends ClipboardCommand {
     /**
      * The clipboard data
      */
     private final ICustomData[] data; 
     
-    private int offset = 0;
     private IMapMode mm;
 
     /**
@@ -79,7 +78,6 @@ public final class PasteCommand extends ClipboardCommand {
 
         Assert.isNotNull(data);
         this.data = data;
-        this.offset = mm.DPtoLP(10);
         this.mm = mm;
     }
 
@@ -108,7 +106,7 @@ public final class PasteCommand extends ClipboardCommand {
      * @param clipboard The clipboard contents - serialization used during copy
      * @return List The list of IView resulting from the paste
      */
-	 private List pasteFromString(View view, String clipboard) {
+	 protected List pasteFromString(View view, String clipboard) {
 	    ArrayList retval = new ArrayList();
 	    Iterator pastedElements = ClipboardUtil.pasteElementsFromString(clipboard, view, null, null).iterator();
 	    
@@ -129,8 +127,7 @@ public final class PasteCommand extends ClipboardCommand {
         }
 	    
         /* Set the new bounds for the pasted IShapeView views */
-	    Set edges = convertNodesConstraint(retval, mu, new Point(offset, offset));
-        
+	    Set edges = convertNodesConstraint(retval, mu, true);
         // now go through all associated edges and adjust the bendpoints
         convertEdgeBendpoints(mu, edges);
         
@@ -182,7 +179,7 @@ public final class PasteCommand extends ClipboardCommand {
 	 * @param mu the <code>MeasurementUnit</code> for the notation diagram.
 	 * @return the <code>Set</code> of <code>Edge</code> views that are attached to the list of nodes 
 	 */
-	private Set convertNodesConstraint(List retval, MeasurementUnit mu, Point ptOffset) {
+	private Set convertNodesConstraint(List retval, MeasurementUnit mu, boolean isProcessOffset) {
 		Set edges = new HashSet();
         for (Iterator i = retval.iterator(); i.hasNext();) {
             View nextView = (View) i.next();
@@ -219,8 +216,10 @@ public final class PasteCommand extends ClipboardCommand {
         		}
         		
         		Rectangle constraintRect = new Rectangle(loc, size);
-        		constraintRect = constraintRect.getTranslated(ptOffset.x, ptOffset.y);
-    			ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_X(), new Integer(constraintRect.x));
+        		if ( isProcessOffset ) {
+        			constraintRect = processNodeOffset(node, constraintRect);
+        		}
+        		ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_X(), new Integer(constraintRect.x));
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getLocation_Y(), new Integer(constraintRect.y));
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Width(), new Integer(constraintRect.width));
                 ViewUtil.setStructuralFeatureValue(nextView,NotationPackage.eINSTANCE.getSize_Height(), new Integer(constraintRect.height));
@@ -229,10 +228,30 @@ public final class PasteCommand extends ClipboardCommand {
                 edges.addAll(((Node)nextView).getSourceEdges());
                 
                 // recursively perform the same operation on children of the node
-                edges.addAll(convertNodesConstraint(node.getPersistedChildren(), mu, new Point(0, 0)));
+                edges.addAll(convertNodesConstraint(node.getPersistedChildren(), mu, false));
             }
         }
 		return edges;
 	}
+
+	/**
+	 * Add offset node position. 
+	 * @param node
+	 * @param constraintRect
+	 * @return
+	 */
+	protected Rectangle processNodeOffset(Node node, Rectangle constraintRect) {
+		return constraintRect.getTranslated(10, 10);
+	}
+
+
+	/**
+	 * Get map mode associated with this Paste command. 
+	 * @return
+	 */
+	public IMapMode getMapMode() {
+		return mm;
+	}
+	
 
 }

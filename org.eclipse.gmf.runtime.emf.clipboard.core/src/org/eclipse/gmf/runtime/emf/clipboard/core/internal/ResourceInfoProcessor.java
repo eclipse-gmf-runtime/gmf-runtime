@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ package org.eclipse.gmf.runtime.emf.clipboard.core.internal;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -293,7 +293,7 @@ public class ResourceInfoProcessor {
 		processResource(stringBuffer, encoding);
 
 		//(3)generate ObjectInfo entries
-		Set objectInfoSet = new HashSet(copyObjects.totalCopyObjects);
+		Set objectInfoSet = new LinkedHashSet(copyObjects.totalCopyObjects);
 		objectInfoSet.addAll(copyObjects.originalObjects);
 		Iterator it = objectInfoSet.iterator();
 		while (it.hasNext()) {
