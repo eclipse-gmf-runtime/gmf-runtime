@@ -43,10 +43,12 @@ import org.eclipse.draw2d.graph.NodeList;
 import org.eclipse.draw2d.graph.Subgraph;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
@@ -267,7 +269,57 @@ public abstract class DefaultProvider
 	 * @since 2.1
 	 */
     protected void build_borderNodes(GraphicalEditPart parentEP, ConstantSizeNode parentNode, Map editPartToNodeDict) {
-    	// Clients are responsible for creating border nodes
+    	if (!supportsBorderNodes()) {
+    		return;
+    	}
+    	boolean borderNodesAdded = false;
+    	Rectangle parentRect = new Rectangle(parentNode.x, parentNode.y, parentNode.width, parentNode.height);
+    	Rectangle extendedRect = parentRect.getCopy();
+    	for (Iterator itr = parentEP.getChildren().iterator(); itr.hasNext();) {
+    		EditPart ep = (EditPart) itr.next();
+    		if (ep instanceof IBorderItemEditPart && canCreateBorderNode((IBorderItemEditPart)ep)) {
+    			IBorderItemEditPart bep = (IBorderItemEditPart) ep; 
+    			BorderNode bn = new BorderNode(bep, parentNode);
+    			setNodeMetrics(bn, bep.getFigure().getBounds());
+    			/*
+    			 * Border item bounding rectangle = b
+    			 * Border item parent rectangle = p
+    			 * outsideRatio = ( 1.0 - Area(Intersection(b, p))) / Area(p)
+    			 */
+    			bn.setOutsideRatio(1f - ((float) bep.getFigure().getBounds().getCopy().intersect(parentEP.getFigure().getBounds()).getSize().getArea()) / bep.getFigure().getSize().getArea());
+    			editPartToNodeDict.put(bep, bn);
+    			borderNodesAdded = true;
+    			extendedRect.union(new Rectangle(bn.x, bn.y, bn.width, bn.height));
+    			bn.setMinIncomingPadding(getMapMode().DPtoLP(MIN_EDGE_END_POINTS_PADDING));
+    			bn.setMinOutgoingPadding(getMapMode().DPtoLP(MIN_EDGE_END_POINTS_PADDING));
+    		}
+    	}
+    	if (borderNodesAdded) {
+    		parentNode.getPadding().add(new Insets(Math.max(extendedRect.width - parentRect.width, extendedRect.height - parentRect.height)));
+    	}
+    }
+    
+    /**
+     * Returns <code>true</code> if a border node for the given border item editpart needs to be created.
+     * By default we just need to know if the border item is movable (can change its x,y coordinate), which
+     * means that a non resizable edit policy have to be installed on the editpart. 
+     * 
+     * @param ep the border item editpart
+     * @return <code>true</code> if border node needs to be created for the editpart
+     */
+    protected boolean canCreateBorderNode(IBorderItemEditPart ep) {
+    	return ep.getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE) instanceof NonResizableEditPolicy;
+    }
+    
+    /**
+     * Returns <code>true</code> if the layout provider supports creation of border nodes.
+     * The default behavior for the layout provider is not to support arranging border items.
+     * Clients must override if this support is needed.
+     * 
+     * @return <code>true</code> if border items layout is supported by the layout provider
+     */
+    protected boolean supportsBorderNodes() {
+    	return false;
     }
 
     /**
