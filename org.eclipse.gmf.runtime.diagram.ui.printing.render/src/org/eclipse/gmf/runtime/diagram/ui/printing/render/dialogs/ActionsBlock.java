@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs;
 import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview.PrintPreviewHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.EnhancedPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.internal.printpreview.RenderedPrintPreviewHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
@@ -75,9 +76,24 @@ class ActionsBlock extends DialogBlock {
 			break;
 		default:
 			PrintPreviewHelper previewHelper = getPrintPreviewHelper();
-			previewHelper.setUserScale(options.getScaleFactor() / 100f);
+						
+			PrintHelperUtil.setScale(options.getScaleFactor());
+			PrintHelperUtil.setScaleToWidth(options.getFitToPagesWidth());
+			PrintHelperUtil.setScaleToHeight(options.getFitToPagesHeight());
 			previewHelper.enablePrinting(false);
+			
+			if (options.isPercentScaling()) {
+				previewHelper.setPercentScaling(options.getScaleFactor());
+			} else {
+				previewHelper.setFitToPage(options.getFitToPagesWidth(),
+						options.getFitToPagesHeight());
+			}
+			
 			previewHelper.doPrintPreview(getPrintActionHelper());
+			
+			options.setScaleFactor(PrintHelperUtil.getScale());
+			options.setFitToPagesWidth(PrintHelperUtil.getScaleToWidth());
+			options.setFitToPagesHeight(PrintHelperUtil.getScaleToHeight());
 		}
 	}
 

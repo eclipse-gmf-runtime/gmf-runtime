@@ -26,7 +26,6 @@ import org.eclipse.ui.IEditorPart;
  * This class now delegates its functionality to helpers that isolate out the 
  * printing via SWT printing. 
  * 
- * This class is subject to change/deprecation in phase 2 of the printing enhancements.
  * 
  * @author wdiu, Wayne Diu
  */

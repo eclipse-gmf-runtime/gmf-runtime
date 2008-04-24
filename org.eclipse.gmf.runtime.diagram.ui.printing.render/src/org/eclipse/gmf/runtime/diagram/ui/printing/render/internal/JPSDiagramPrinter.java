@@ -82,12 +82,14 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * This class supports printing using the Java Print Service API. The logic of
@@ -374,11 +376,12 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		try {
 			printGraphics.setClip(0, 0, (int) pageFormat.getWidth(),
 					(int) pageFormat.getHeight());
+			
 			swtGraphics = new PrinterGraphicsToGraphics2DAdapter(
 					(java.awt.Graphics2D) printGraphics, new Rectangle(0, 0,
 							(int) pageFormat.getWidth(), (int) pageFormat
 									.getHeight()));
-
+						
 			graphics = createMapModeGraphics(createPrinterGraphics(swtGraphics));
 			graphics.scale(AWT_DPI_CONST / display_dpi.x);
 			drawPage(pages[pageIndex]);
@@ -547,12 +550,45 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 	 *            indicates which page to print.
 	 */
 	protected void drawPage(PageData page) {
+		
 		this.graphics.pushState();
 
-		internalDrawPage(page.diagram, page.bounds, page.preferences,
-				page.margins, graphics, page.row, page.column, false);
+		int shellStyle = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell().getStyle();
+		boolean rtlEnabled = (shellStyle & SWT.MIRRORED) != 0;
+				
+		if (rtlEnabled) {
+			
+			org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
+					.getPageSize(page.preferences, false, getMapMode());
 
-		// TODO: Re-enable printing of header and footer in phase 2
+			Image image = new Image(Display.getDefault(), getMapMode().LPtoDP(
+					pageSize.x), getMapMode().LPtoDP(pageSize.y));
+
+			GC imgGC = new GC(image,  SWT.RIGHT_TO_LEFT);
+			SWTGraphics tempSWTGraphic = new SWTGraphics(imgGC);
+			ScaledGraphics tempScaledGraphic = new ScaledGraphics(tempSWTGraphic);
+			MapModeGraphics tempMapModeGraphic = createMapModeGraphics(tempScaledGraphic);
+			
+			imgGC.setFont(tempMapModeGraphic.getFont());
+
+			internalDrawPage(page.diagram, page.bounds, page.preferences,
+					page.margins, tempMapModeGraphic, page.row, page.column, true);
+
+			this.graphics.drawImage(image, 0, 0);
+
+			tempMapModeGraphic.dispose();
+			tempScaledGraphic.dispose();
+			tempSWTGraphic.dispose();
+			imgGC.dispose();
+			image.dispose();
+			
+		} else {
+			
+			internalDrawPage(page.diagram, page.bounds, page.preferences,
+					page.margins, graphics, page.row, page.column, false);
+		}
+
 		this.graphics.popState();
 	}
 
@@ -584,8 +620,7 @@ public class JPSDiagramPrinter extends DiagramPrinter implements
 		int scaledHeight = (int) (height / userScale);
 
 		if (RTL_ENABLED) {
-			scaledTranslateX += (margins.left * (colIndex - 1))
-					+ (margins.right * (colIndex));
+			scaledTranslateX += (margins.left * (colIndex - 1))	+ (margins.right * (colIndex));
 			scaledTranslateY += ((margins.top * rowIndex) + (margins.bottom * (rowIndex - 1)));
 		} else {
 			scaledTranslateX += ((margins.left * colIndex) + (margins.right * (colIndex - 1)));

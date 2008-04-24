@@ -31,7 +31,7 @@ import org.eclipse.swt.graphics.Point;
  * Basic page calculation operations have been factored out into this class.
  * This class was derived from the previous DiagramPrinter.
  * 
- * @author James Bruck (jbruck)
+ * @author Wayne Diu, wdiu
  */
 public abstract class DiagramPrinter implements Runnable {
 

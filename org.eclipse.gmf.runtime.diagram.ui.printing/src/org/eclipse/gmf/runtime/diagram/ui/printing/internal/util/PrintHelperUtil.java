@@ -37,12 +37,45 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Helper to assist in making an offscreen diagram suitable for printing or
+ * Helper to assist in making an off screen diagram suitable for printing or
  * previewing.
  * 
  * @author James Bruck (jbruck)
  */
 public class PrintHelperUtil {
+	
+	// 
+	// The following printing attributes are saved across
+	// the preview and print dialogs.
+	//
+	private static int scaleFactor = 100;
+	private static int scaleWidth = 1;
+	private static int scaleHeight = 1;
+
+	public static int getScale() {
+		return scaleFactor;
+	}
+	
+	public static void setScale(int scale) {
+		scaleFactor = scale;
+	}
+	
+	public static int getScaleToWidth() {
+		return scaleWidth;
+	}
+
+	public static void setScaleToWidth(int width) {
+		scaleWidth = width;
+	}
+
+	public static int getScaleToHeight() {
+		return scaleHeight;
+	}
+
+	public static void setScaleToHeight(int height) {
+		scaleHeight = height;
+	}
+	
 	/**
      * Creates a <code>DiagramEditPart</code> given the <code>Diagram</code>
      * without opening an editor.
@@ -293,4 +326,5 @@ public class PrintHelperUtil {
 
 		return pageBreakBounds;
 	}	
+		
 }

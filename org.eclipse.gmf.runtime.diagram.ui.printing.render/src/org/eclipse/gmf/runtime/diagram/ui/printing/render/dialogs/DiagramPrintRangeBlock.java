@@ -80,7 +80,8 @@ public class DiagramPrintRangeBlock extends DialogBlock {
 		layoutSpanHorizontal(selectedDiagramsRadio, 4);
 
 		diagramList = list(result);
-		layoutFillHorizontal(diagramList.getControl());
+				
+		layoutFillHorizontal(layoutHeight(diagramList.getControl(),48));
 		diagramList.getControl().setEnabled(options.isDiagramSelection());
 
 		currentDiagramRadio.addSelectionListener(new SelectionListener() {

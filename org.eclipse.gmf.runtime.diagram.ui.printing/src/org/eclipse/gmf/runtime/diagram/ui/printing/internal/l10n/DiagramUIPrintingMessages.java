@@ -39,6 +39,8 @@ public final class DiagramUIPrintingMessages extends NLS {
 	public static String PrintPreview_4Up;
 	public static String PrintPreview_ActionLabel;
 	public static String PrintPreview_NoPrinterInstalled;
+	public static String PrintPreview_FitToPage_DialogTitle;
+	public static String PrintPreview_FitToPage_ButtonText;
 	public static String Print_MessageDialogTitle;
 	public static String Print_MessageDialogMessage;
 	public static String DiagramPrinterUtil_DLLErrorTitle;

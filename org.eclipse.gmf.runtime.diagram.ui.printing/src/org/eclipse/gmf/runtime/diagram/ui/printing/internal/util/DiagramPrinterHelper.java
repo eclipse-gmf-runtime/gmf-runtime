@@ -37,10 +37,8 @@ import org.eclipse.ui.IEditorPart;
  * 
  * Basic functionality was factored into this class from the DiagramPrinterUtil.
  * This class and its specializing classes:
- * JPSDiagramPrinterHelper and SWTDiagramPrinterHelper will be subject to change
- * during phase 2 of printing enhancement changes.
  * 
- * @author jbruck
+ * @author James Bruck (jbruck)
  */
 public class DiagramPrinterHelper {
 
@@ -160,10 +158,24 @@ public class DiagramPrinterHelper {
 			} else {
 				helper.setDlgPaperSize(storedPageType.getIndex(), 0, 0);
 			}
-		}
+		}		
+		helper.setScaleFactor(PrintHelperUtil.getScale());
+		helper.setScaleToWidthHeight(PrintHelperUtil.getScaleToWidth(), PrintHelperUtil.getScaleToHeight());
 
 		printerData = helper.openPrintDlg(diagramNames);
 
+		if (printerData != null) {
+			if (helper.getDlgScalePercent() != -1) {
+				PrintHelperUtil.setScale(helper.getDlgScalePercent());
+			}					
+			if (helper.getDlgScaleFitToM() != -1) {
+				PrintHelperUtil.setScaleToWidth(helper.getDlgScaleFitToM());
+			}
+			if (helper.getDlgScaleFitToN() != -1) {
+				PrintHelperUtil.setScaleToHeight(helper.getDlgScaleFitToN());
+			}
+		}
+		
 		return printerData;
 	}
 

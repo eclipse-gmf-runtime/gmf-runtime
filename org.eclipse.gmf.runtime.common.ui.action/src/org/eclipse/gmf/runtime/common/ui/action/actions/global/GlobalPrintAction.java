@@ -87,11 +87,7 @@ public final class GlobalPrintAction extends GlobalAction {
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
 	 */
 	public void refresh() {
-		//
-		// In phase 2 of printing enhancements we will remove the OS restriction.
-		//
-		setEnabled(!getGlobalActionHandlerData().isEmpty() && System.getProperty("os.name").toUpperCase().startsWith("WIN")); //$NON-NLS-1$ //$NON-NLS-2$
-		
+		setEnabled(!getGlobalActionHandlerData().isEmpty()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/* (non-Javadoc)

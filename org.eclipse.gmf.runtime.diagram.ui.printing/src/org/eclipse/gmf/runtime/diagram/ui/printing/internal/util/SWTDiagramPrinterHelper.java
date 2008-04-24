@@ -40,13 +40,9 @@ import org.eclipse.ui.IEditorPart;
  * and respect the settings chosen by the user in the print dialog.
  * 
  * This class uses the SWT printing to accomplish its task. This class was
- * derived from
- * 
+ * derived from 
  * @see org.eclipse.gmf.runtime.diagram.ui.printing.util.DiagramPrinterUtil
- * 
- * This class is subject to change/removal during phase 2 of printing
- * enhancements
- * 
+ *  
  * @author James Bruck (jbruck)
  */
 public class SWTDiagramPrinterHelper extends DiagramPrinterHelper {

@@ -89,16 +89,12 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 		IMapMode mapMode = (rootEP instanceof DiagramRootEditPart) ? ((DiagramRootEditPart) rootEP)
 				.getMapMode()
 				: MapModeUtil.getMapMode();
-		//
-		// Eventually the windows based printing will be replaced with the
-		// JPSDiagramPrinter.
-		//
+		
 		if (Platform.getOS().startsWith(Platform.OS_WIN32)) {
 			DiagramPrinterUtil.printWithSettings(diagramEditor,
 					createDiagramMap(), new RenderedDiagramPrinter(
 							preferencesHint, mapMode));
-		}
-		else {
+		} else {
 			JPSDiagramPrinterHelper.getDiagramPrinterHelper()
 					.printWithSettings(diagramEditor, createDiagramMap(),
 							new JPSDiagramPrinter(preferencesHint, mapMode));
@@ -106,12 +102,12 @@ public class EnhancedPrintActionHelper implements IPrintActionHelper {
 	}
 
 	/**
-	 * Return a Map with diagram name String as key and Diagram as value
-	 * All entries in the map correspond to open editors.
+	 * Return a Map with diagram name String as key and Diagram as value All
+	 * entries in the map correspond to open editors.
 	 * 
-	 * @return Map with diagram name String as key and Diagram as value
-	 * All entries in the map correspond to open editors with the
-	 * diagramEditor's id. 
+	 * @return Map with diagram name String as key and Diagram as value All
+	 *         entries in the map correspond to open editors with the
+	 *         diagramEditor's id.
 	 */
 	protected Map<String, Diagram> createDiagramMap() {
 		

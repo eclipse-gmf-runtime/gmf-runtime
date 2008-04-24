@@ -169,6 +169,15 @@ abstract class DialogBlock {
 
 		return control;
 	}
+	
+	Control layoutHeight(Control control, int dlus) {
+		if (dlus > 0) {
+			GridData data = getLayoutData(control);
+			data.heightHint = dluConverter.convertHorizontalDLUsToPixels(dlus);
+		}
+
+		return control;
+	}
 
 	Group group(Composite parent, String text) {
 		Group result = new Group(parent, SWT.NONE);

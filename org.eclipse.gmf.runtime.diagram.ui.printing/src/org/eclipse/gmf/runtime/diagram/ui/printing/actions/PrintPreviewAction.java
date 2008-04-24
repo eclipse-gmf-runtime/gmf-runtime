@@ -11,7 +11,6 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.actions;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.common.ui.action.actions.IPrintActionHelper;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.l10n.DiagramUIPrintingMessages;
 import org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview.PrintPreviewHelper;

@@ -16,15 +16,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.swt.printing.PrinterData;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.printing.internal.CommonPrintingDebugOptions;
 import org.eclipse.gmf.runtime.common.ui.printing.internal.CommonPrintingStatusCodes;
 import org.eclipse.gmf.runtime.common.ui.printing.internal.PrintingPlugin;
+import org.eclipse.swt.printing.PrinterData;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The PrintHelper implements the IPrintHelper interface for the platform
@@ -323,9 +322,7 @@ public class PrintHelper
 
         // initialize dialog
         resetDialog();
-        initScaleFitTo(1, 1);
-        initScalePercent(100);
-
+              
         if (diagramList != null) {
             for (int c = 0; c < diagramList.size(); c++) {
                 assert (diagramList.get(c) instanceof String);
@@ -521,5 +518,19 @@ public class PrintHelper
     public void setDlgPaperSize(int index, double width, double height) {
         setPaperSize(index, width, height);
     }
+    
+    /**
+     * Initialize the scaling factor in the print dialog.
+     */
+	public void setScaleFactor(int scaleFactor) {
+		initScalePercent(scaleFactor);
+	}
+	
+	/**
+	 * Initialize the scale width and height in the print dialog.
+	 */
+	public void setScaleToWidthHeight(int width, int height) {
+		initScaleFitTo(width, height);
+	}
 
 }

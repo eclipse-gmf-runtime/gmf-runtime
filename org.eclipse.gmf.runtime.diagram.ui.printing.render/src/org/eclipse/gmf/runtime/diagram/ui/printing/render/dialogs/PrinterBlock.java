@@ -142,12 +142,12 @@ class PrinterBlock extends DialogBlock {
 		// resultCommentLabel = label(result, "");
 		// layoutFillHorizontal(resultCommentLabel);
 
-		Button printToFile = check(result,
-				DiagramUIPrintingMessages.JPSPrintDialog_PrintToFile);
-		layoutSpanHorizontal(printToFile, 3);
-
-		// TODO: implement in phase 2
-		printToFile.setEnabled(false);
+		// The Destination attribute is not IPP compatible. 
+		
+		// Button printToFile = check(result,
+		// DiagramUIPrintingMessages.JPSPrintDialog_PrintToFile);
+		// layoutSpanHorizontal(printToFile, 3);
+		// printToFile.setEnabled(false);
 
 		init();
 

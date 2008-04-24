@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.printing.render.util;
 import java.util.List;
 
 import org.eclipse.gmf.runtime.common.ui.printing.IPrintHelper;
+import org.eclipse.gmf.runtime.diagram.ui.printing.internal.util.PrintHelperUtil;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.dialogs.JPSPrintDialog;
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.model.PrintOptions;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -40,9 +41,10 @@ public class PrintHelper implements IPrintHelper {
 	 */
 	private void initPrintOptions() {
 		options.setPercentScaling(true);
-		options.setScaleFactor(100);
-		options.setFitToPagesWidth(1);
-		options.setFitToPagesHeight(1);
+				
+		options.setScaleFactor(PrintHelperUtil.getScale());
+		options.setFitToPagesWidth(PrintHelperUtil.getScaleToWidth());
+		options.setFitToPagesHeight(PrintHelperUtil.getScaleToHeight());
 
 		options.setAllPages(true);
 		options.setRangeFrom(1);
@@ -148,6 +150,15 @@ public class PrintHelper implements IPrintHelper {
 
 	public PrintOptions getPrintOptions() {
 		return options;
+	}
+	
+	public void setScaleFactor(int scaleFactor) {
+	 	options.setScaleFactor(scaleFactor)	;
+	}
+
+	public void setScaleToWidthHeight(int width, int height) {
+		options.setFitToPagesWidth(width);
+		options.setFitToPagesHeight(height);
 	}
 
 }

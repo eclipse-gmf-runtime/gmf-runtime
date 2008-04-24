@@ -11,6 +11,8 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.printing.internal.printpreview;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,8 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IDiagramPreferenceSupport;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.PageBreakEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.PageBreaksFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper.PageMargins;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
@@ -51,6 +55,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.mapmode.DiagramMapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -64,12 +69,16 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorPart;
@@ -80,10 +89,12 @@ import org.eclipse.ui.PlatformUI;
  * methods, so you must create an instance of this class.
  * 
  * Call doPrintPreview() after you've made an instance.
+ *  
+ * This class should be combined with the DiagramPrinter to reuse functionality.
  * 
  * @author Wayne Diu, wdiu
  */
-public class PrintPreviewHelper {
+public class PrintPreviewHelper{
 
 	/**
 	 * Action helper for print. This must be passed in to have something happen
@@ -279,8 +290,14 @@ public class PrintPreviewHelper {
 	
 	/**
 	 * The print preview helper is capable of showing zoom input.
+	 * userScale is a value between 0 and 1.
 	 */
 	protected double userScale = 1;
+	
+	/**
+	 * Determine if we should consider fit to page options or not.
+	 */
+	private boolean fitToPage = false;
 
 	/**
 	 * Initialize all toolbar images
@@ -337,6 +354,8 @@ public class PrintPreviewHelper {
 	public void doPrintPreview(IPrintActionHelper prActionHelper) {
 		this.printActionHelper = prActionHelper;
 
+		setUserScale(PrintHelperUtil.getScale());
+		
 		if (getDiagramEditorPart() == null) {
 			MessageDialog
 				.openInformation(PlatformUI.getWorkbench()
@@ -380,7 +399,7 @@ public class PrintPreviewHelper {
 
 		Display display = Display.getDefault();
 		
-        //check for rtl orientation...
+        //check for rtl Torientation...
         int style = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getStyle();
         if ((style & SWT.MIRRORED) != 0) {
             shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.TITLE
@@ -413,6 +432,7 @@ public class PrintPreviewHelper {
 			public void widgetSelected(SelectionEvent e) {
 				//should not be enabled
 				Assert.isNotNull(printActionHelper);
+				
 				printActionHelper
 					.doPrint(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage()
@@ -470,11 +490,8 @@ public class PrintPreviewHelper {
 					if (userY < 0)
 						userY = 0;
 				}
-
-				updateLeftRightUpDownButtonsForToolbar();
-
-				updateCompositeForNumberOfColumns(numberOfRowsToDisplay,
-					numberOfColumnsToDisplay);
+				
+				refreshComposite();
 
 			}
 
@@ -553,9 +570,7 @@ public class PrintPreviewHelper {
 			public void widgetSelected(SelectionEvent e) {
 				if (userX > 0) {
 					userX--;
-					updateCompositeForNumberOfColumns(numberOfRowsToDisplay,
-						numberOfColumnsToDisplay);
-					updateLeftRightUpDownButtonsForToolbar();
+					refreshComposite();
 				}
 			}
 
@@ -589,9 +604,7 @@ public class PrintPreviewHelper {
 				//check for max pages to be safe
 				if (!(userX + numberOfColumnsToDisplay + 1 > getTotalNumberOfColumns())) {
 					userX++;
-					updateCompositeForNumberOfColumns(numberOfRowsToDisplay,
-						numberOfColumnsToDisplay);
-					updateLeftRightUpDownButtonsForToolbar();
+					refreshComposite();
 				}
 			}
 
@@ -615,9 +628,7 @@ public class PrintPreviewHelper {
 			public void widgetSelected(SelectionEvent e) {
 				if (userY > 0) {
 					userY--;
-					updateCompositeForNumberOfColumns(numberOfRowsToDisplay,
-						numberOfColumnsToDisplay);
-					updateLeftRightUpDownButtonsForToolbar();
+					refreshComposite();
 				}
 			}
 
@@ -641,9 +652,7 @@ public class PrintPreviewHelper {
 			public void widgetSelected(SelectionEvent e) {
 				if (!(userY + numberOfRowsToDisplay + 1 > getTotalNumberOfRows())) {
 					userY++;
-					updateCompositeForNumberOfColumns(numberOfRowsToDisplay,
-						numberOfColumnsToDisplay);
-					updateLeftRightUpDownButtonsForToolbar();
+					refreshComposite();
 				}
 			}
 
@@ -654,7 +663,75 @@ public class PrintPreviewHelper {
 				widgetSelected(e);
 			}
 		});
+				
+		new ToolItem(bar, SWT.SEPARATOR);
+							
+		ToolItem separator = new ToolItem(bar, SWT.SEPARATOR);
+		final Text textField = new Text(bar, SWT.SINGLE | SWT.BORDER);
+		textField.setText("XXXXX");//$NON-NLS-1$
+		textField.setEnabled(true);
+		textField.pack();
+		textField.setText(getDisplayScale(PrintHelperUtil.getScale()));
+		
+		separator.setWidth(textField.getBounds().width);
+		separator.setControl(textField);
+		
+		textField.addSelectionListener(new SelectionListener() {
 
+			public void widgetSelected(SelectionEvent e) {
+				// do nothing.
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				String scaleFactor = ((Text) e.getSource()).getText();
+
+				int percentageIndex = scaleFactor.indexOf("%"); //$NON-NLS-1$
+				if (percentageIndex > 0) {
+					scaleFactor = scaleFactor.substring(0, percentageIndex);
+				}
+				int scalePercentage = Integer.parseInt(scaleFactor);
+				setPercentScaling(scalePercentage);
+				refreshComposite();
+				((Text) e.getSource()).setText(getDisplayScale(scalePercentage));
+			}
+		});
+		
+		new ToolItem(bar, SWT.SEPARATOR);
+		
+		ToolItem fitToPageSeparator = new ToolItem(bar, SWT.SEPARATOR);
+		Button buttonFitToPage = new Button(bar, SWT.PUSH);
+		buttonFitToPage.setText(DiagramUIPrintingMessages.PrintPreview_FitToPage_ButtonText);
+		buttonFitToPage.setEnabled(true);
+		buttonFitToPage.pack();
+			
+		fitToPageSeparator.setWidth(buttonFitToPage.getBounds().width);
+		fitToPageSeparator.setControl(buttonFitToPage);
+		
+		buttonFitToPage.addSelectionListener(new SelectionListener() {
+
+			public void widgetSelected(SelectionEvent e) {
+
+				FitToPagesDialog fitToPages = new FitToPagesDialog(shell);
+				if (fitToPages.open() == Dialog.OK) {
+					int pagesWide = fitToPages.getPagesWide();
+					int pagesTall = fitToPages.getPagesTall();
+					PrintHelperUtil.setScaleToWidth(pagesWide);
+					PrintHelperUtil.setScaleToHeight(pagesTall);
+
+					setFitToPage(pagesWide, pagesTall);
+					refreshComposite();
+					textField.setText(getDisplayScale(PrintHelperUtil
+							.getScale()));
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// do nothing
+			}
+		});
+								
+		
+								
 		new ToolItem(bar, SWT.SEPARATOR);
 		closeTool = new ToolItem(bar, SWT.NULL);
 		closeTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_CloseToolItem);
@@ -690,17 +767,16 @@ public class PrintPreviewHelper {
 
 		composite = new Composite(body, SWT.NULL);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
-
-		updateCompositeForNumberOfColumns(numberOfRowsToDisplay, numberOfColumnsToDisplay);
-
-		updateLeftRightUpDownButtonsForToolbar();
+		
+		refreshComposite();
 
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-
+		
+		dispose();
 		shell.dispose();
 
 	}
@@ -926,6 +1002,17 @@ public class PrintPreviewHelper {
 	}
 
 	/**
+	* A convenience method for refreshing the displayed image in the preview.
+    */
+	private void refreshComposite(){
+		
+		updateCompositeForNumberOfColumns(numberOfRowsToDisplay,
+				numberOfColumnsToDisplay);
+		
+		updateLeftRightUpDownButtonsForToolbar();
+	}	
+	
+	/**
 	 * Draw the composite centered on the body based on the number of columns.
 	 * Also calls the method to make the images and insert them into the
 	 * composite.
@@ -984,10 +1071,6 @@ public class PrintPreviewHelper {
 		
 		PageMargins margins = PageInfoHelper.getPageMargins(getPreferenceStore(), getMapMode());
 		
-		margins.left /= userScale;
-		margins.right /= userScale;
-		margins.bottom /= userScale;
-		margins.top /= userScale;
 
 		//make sure height and width are not 0, if too small <4, don't bother
 		if (!(imageHeight <= 4 || imageWidth <= 4)) {
@@ -998,6 +1081,11 @@ public class PrintPreviewHelper {
 		
 			scale *= userScale;
 			
+			margins.left /= userScale;   
+			margins.right /= userScale;
+			margins.bottom /= userScale;
+			margins.top /= userScale;
+									
 			for (int i = 0; i < numberOfRows; i++) {
 				for (int j = 0; j < numberOfColumns; j++) {
 					Label label = new Label(composite, SWT.NULL);
@@ -1007,7 +1095,6 @@ public class PrintPreviewHelper {
 					imageList.add(pageImg);
 				}
 			}
-
 		}
 
 		composite.pack();
@@ -1091,28 +1178,12 @@ public class PrintPreviewHelper {
 		
 		//if mmg's font is null, gc.setFont will use a default font
 		gc.setFont(mmg.getFont());
+	
 		drawPage(mmg, gc, scale, row, col, margins);
-
+		
 		gc.dispose();
 
 		return image;
-
-	}
-	
-	/**
-	 * Convenience method to determine if a page at row y and
-	 * column x exists.
-	 * Pages start at 1.
-	 * 
-	 * For example, the first page is 1-1.
-	 * 
-	 * @param x, column number of the page to check
-	 * @param y, row number of the page to check
-	 * 
-	 * @return boolean true if the page exists, false if it doesn't
-	 */
-	private boolean doesPageExist(int x, int y) {
-		return x > 0 && y > 0 && x <= getTotalNumberOfColumns() && y <= getTotalNumberOfRows();
 	}
 	
 	/**
@@ -1137,13 +1208,18 @@ public class PrintPreviewHelper {
 	 *            displaying in the print preview.
 	 */
 	protected void drawPage(Graphics g, GC gc, float scale, int row, int col, PageMargins margins) {
+		
 		org.eclipse.draw2d.geometry.Point pageSize = PageInfoHelper
-		.getPageSize(getPreferenceStore(), false, getMapMode());
+				.getPageSize(getPreferenceStore(), false, getMapMode());
 		
 		g.pushState();
-
+		
 		Rectangle bounds = getBounds();
-				
+
+		if (PrintHelperUtil.getScaleToWidth() == 1	&& PrintHelperUtil.getScaleToHeight() == 1 && fitToPage) {
+			bounds = getDiagramEditPart().getChildrenBounds();
+		}		
+							
 		int scaledPageSizeWidth = (int)(pageSize.x/userScale) ;
 		int scaledPageSizeHeight = (int)(pageSize.y/userScale) ;
 						
@@ -1205,6 +1281,24 @@ public class PrintPreviewHelper {
 		
 		g.popState();
 	}
+			
+	
+	/**
+	 * Convenience method to determine if a page at row y and
+	 * column x exists.
+	 * Pages start at 1.
+	 * 
+	 * For example, the first page is 1-1.
+	 * 
+	 * @param x, column number of the page to check
+	 * @param y, row number of the page to check
+	 * 
+	 * @return boolean true if the page exists, false if it doesn't
+	 */
+	private boolean doesPageExist(int x, int y) {
+		return x > 0 && y > 0 && x <= getTotalNumberOfColumns() && y <= getTotalNumberOfRows();
+	}
+	
 
 	/**
 	 * Safely dispose an image
@@ -1271,9 +1365,372 @@ public class PrintPreviewHelper {
 			ScaledGraphics scaledGraphics) {
 		return new MapModeGraphics(scaledGraphics, getMapMode());
 	}
-			
-	public void setUserScale(double userScale){
-		this.userScale = userScale;
+				
+	/**
+	 * Sets the scale factor.
+	 * 
+	 * @param scale : valid input is an integer larger than 0 representing a scale percentage 
+	 */
+	private void setUserScale(int scale){
+		userScale = scale/100f;
+		PrintHelperUtil.setScale(scale);
+	}
+				
+	/**
+	 * Prepare a string appropriate to show the scale factor to the user.
+	 * 
+	 * @param scale the scale factor, an integer greater than 0.
+	 * @return A string of the scale factor to be displayed to the user.
+	 */
+	private String getDisplayScale(int scale) {
+		return String.valueOf(scale) + "%"; //$NON-NLS-1$
+	}
+
+	
+	/**
+	 * Determine the page count when fit to page is used.
+	 * 
+	 * @param dgrmEP - The diagram edit part
+	 * @param figureBounds - The bounds of the figure
+	 * @param pageSize - Page size  
+	 * @param applyUserScale - The user scale
+	 * @return Point.x contains the total number of pages that span in a column
+	 *         Point.y contains the total number of pages that span in a row
+	 */
+	protected org.eclipse.draw2d.geometry.Point getPageCount(
+			DiagramEditPart dgrmEP, Rectangle figureBounds,
+			org.eclipse.draw2d.geometry.Point pageSize, boolean applyUserScale) {
+		RootEditPart rootEditPart = dgrmEP.getRoot();
+
+		if (rootEditPart instanceof DiagramRootEditPart) {
+
+			DiagramRootEditPart diagramRootEditPart = (DiagramRootEditPart) rootEditPart;
+			PageBreakEditPart pageBreakEditPart = diagramRootEditPart
+					.getPageBreakEditPart();
+
+			double fNumCols = ((PageBreaksFigure) pageBreakEditPart.getFigure())
+					.getPageCount().y
+					* (applyUserScale ? userScale : 1);
+
+			double fNumRows = ((PageBreaksFigure) pageBreakEditPart.getFigure())
+					.getPageCount().x
+					* (applyUserScale ? userScale : 1);
+
+			int numCols = (int) Math.ceil(fNumCols);
+			int numRows = (int) Math.ceil(fNumRows);
+
+			return new org.eclipse.draw2d.geometry.Point(numCols, numRows);
+
+		} else {
+			double fNumRows = (figureBounds.height * (applyUserScale ? userScale : 1))
+					/ pageSize.y;
+			int numRows = (int) Math.ceil(fNumRows);
+
+			double fNumCols = (figureBounds.width * (applyUserScale ? userScale	: 1))
+					/ pageSize.x;
+			int numCols = (int) Math.ceil(fNumCols);
+
+			return new org.eclipse.draw2d.geometry.Point(numCols, numRows);
+		}
+	}
+
+	/**
+	 * Reset the fit to page flag and set the user scale when the
+	 * preview is triggered from the print dialog.
+	 * 
+	 * @param userScale a whole number greater than zero
+	 */
+	public void setPercentScaling(int userScale){
+		fitToPage = false;
+		setUserScale(userScale);
 	}
 	
+	/**
+	 * Recalculates a zoom ratio that can be used when displaying fit to page.
+	 * 
+	 * @param rows  The number of rows to fit the display to.
+	 * @param columns The number of columns to fit the display to.
+	 */
+	public void setFitToPage(int width, int height) {
+
+		fitToPage = true;
+
+		initializeMapMode();
+		
+		Rectangle figureBounds = PrintHelperUtil.getPageBreakBounds(
+				getDiagramEditPart(), true);
+
+		org.eclipse.draw2d.geometry.Point pageBounds = PageInfoHelper
+				.getPageSize(getPreferenceStore(), getMapMode());
+		org.eclipse.draw2d.geometry.Point pageCount = getPageCount(
+				getDiagramEditPart(), figureBounds, pageBounds, false);
+		int numCols = pageCount.x;
+		int numRows = pageCount.y;
+
+		float actualWidth = 0;
+		float actualHeight = 0;
+
+		if (height == 1 && width == 1) {
+			figureBounds = getDiagramEditPart().getChildrenBounds();
+			actualWidth = figureBounds.width;
+			actualHeight = figureBounds.height;
+		} else {
+			actualWidth = numCols * pageBounds.x;
+			actualHeight = numRows * pageBounds.y;
+		}
+
+		int totalHeight = (height * pageBounds.y);
+		int totalWidth = (width * pageBounds.x);
+
+		int vScale = (int) ((totalHeight * 100) / actualHeight);
+		int hScale = (int) ((totalWidth * 100) / actualWidth);
+
+		setUserScale(Math.min(hScale, vScale));
+	}
+	
+	
+	/**
+	 * A dialog that prompts the user for scaling the print settings
+	 * to the number of pages wide and tall.
+	 * Scale to Pages will affect zoom and offsets.  It will maximize the 
+	 * scaling factor and modify offsets to fit the entire image within 
+	 * the pages specified.
+	 * 
+	 * @author James Bruck (jbruck)
+	 *
+	 */
+	private class FitToPagesDialog extends Dialog {
+
+		/**
+		 *  The text field that holds the pages width
+		 */
+		private Text textWide;
+		/**
+		 *  The text field that holds the pages height
+		 */
+		private Text textTall;
+		/**
+		 *  The number of pages wide
+		 */
+		private int pagesWide = 0;
+		/**
+		 *  The number of pages tall
+		 */
+		private int pagesTall = 0;
+		
+		public FitToPagesDialog(Shell parent) {
+			super(parent);
+		}
+		
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+		 */
+		protected void configureShell(Shell newShell) {
+			super.configureShell(newShell);
+
+			newShell.setText(DiagramUIPrintingMessages.PrintPreview_FitToPage_DialogTitle);
+		}
+
+		/**
+		 * A helper that creates a label.
+		 * 
+		 * @param parent
+		 * @param text
+		 * @return a newly created label.
+		 */
+		Label label(Composite parent, String text) {
+			Label result = new Label(parent, SWT.NONE);
+			result.setText(text);
+			return result;
+		}
+
+		/**
+		 * A helper that gets layout data or creates 
+		 * it as necessary.
+		 * 
+		 * @param control
+		 * @return GridData for the layout
+		 */
+		GridData getLayoutData(Control control) {
+			GridData result = (GridData) control.getLayoutData();
+
+			if (result == null) {
+				result = new GridData();
+				control.setLayoutData(result);
+			}
+			return result;
+		}
+
+		/**
+		 * A helper to layout items horizontally.
+		 * 
+		 * @param control
+		 * @param inset
+		 * @return The layed out control
+		 */
+		Control layoutHorizontalIndent(Control control, int inset) {
+			GridData data = getLayoutData(control);
+			data.horizontalIndent = inset;
+
+			return control;
+		}
+
+		/**
+		 * A helper to right justify a control.
+		 * 
+		 * @param control
+		 * @return The layed out control
+		 */
+		Control layoutAlignRight(Control control) {
+			GridData data = getLayoutData(control);
+
+			data.horizontalAlignment = SWT.END;
+			data.grabExcessHorizontalSpace = false;
+
+			return control;
+		}
+
+		/**
+		 * A helper to layout a certain number of dialog units wide.
+		 * @param control
+		 * @param dlus
+		 * @return the aligned out control
+		 */
+		Control layoutWidth(Control control, int dlus) {
+			if (dlus > 0) {
+				GridData data = getLayoutData(control);
+				data.widthHint = convertHorizontalDLUsToPixels(dlus);
+			}
+			return control;
+		}
+
+		/**
+		 * A helper that lays out the given control horizontally.
+		 * 
+		 * @param control
+		 * @param grab
+		 * @return The aligned control
+		 */
+		Control layoutFillHorizontal(Control control, boolean grab) {
+			GridData data = getLayoutData(control);
+
+			data.horizontalAlignment = SWT.FILL;
+			data.grabExcessHorizontalSpace = grab;
+
+			return control;
+		}
+
+		/**
+		 * A helper that creates a new text field.
+		 * 
+		 * @param parent
+		 * @param width
+		 * @return a newly created text field
+		 */
+		Text text(Composite parent, int width) {
+			Text result = new Text(parent, SWT.SINGLE | SWT.BORDER);
+			layoutFillHorizontal(result, false);
+			layoutWidth(result, width);
+
+			return result;
+		}
+
+		/**
+		 * A helper that lays out a control grabbing both horizontal and
+		 * vertical extra spacing.
+		 * 
+		 * @param control
+		 * @return 
+		 */
+		Control layoutFillBoth(Control control) {
+			GridData data = getLayoutData(control);
+
+			data.horizontalAlignment = SWT.FILL;
+			data.grabExcessHorizontalSpace = true;
+			data.verticalAlignment = SWT.FILL;
+			data.grabExcessVerticalSpace = true;
+
+			return control;
+		}
+
+		/**
+		 * A helper that creates a new group.
+		 * 
+		 * @param parent
+		 * @param text
+		 * @return A newly created group.
+		 */
+		Group group(Composite parent, String text) {
+			Group result = new Group(parent, SWT.NONE);
+			result.setText(text);
+			layoutFillBoth(result);
+			return result;
+		}
+
+		/**
+		 * Layout the given control with the number of columns specified.
+		 * 
+		 * @param composite
+		 * @param columns
+		 * @return The aligned out control
+		 */
+		Composite layout(Composite composite, int columns) {
+			GridLayout g = new GridLayout(columns, false);
+			g.marginLeft = 6;
+			g.marginRight = 6;
+			g.marginTop = 6;
+			g.marginBottom = 3;
+			composite.setLayout(g);
+
+			return composite;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+		 */
+		protected Control createDialogArea(Composite parent) {
+
+			Composite composite = new Composite(parent, SWT.NONE);
+			layout(composite, 1);
+			Composite scaleGroup = group(composite,
+					DiagramUIPrintingMessages.JPSPrintDialog_Scaling);
+			layout(scaleGroup, 5);
+
+			layoutHorizontalIndent(layoutAlignRight(label(scaleGroup,
+					DiagramUIPrintingMessages.JPSPrintDialog_PagesWide)), 15);
+
+			textWide = text(scaleGroup, 20);
+			textWide.setText(String.valueOf(PrintHelperUtil.getScaleToWidth()));
+
+			layoutHorizontalIndent(layoutAlignRight(label(scaleGroup,
+					DiagramUIPrintingMessages.JPSPrintDialog_PagesTall)), 15);
+			textTall = text(scaleGroup, 20);
+			textTall
+					.setText(String.valueOf(PrintHelperUtil.getScaleToHeight()));
+
+			return composite;
+		}
+
+		public int getPagesWide() {
+			return pagesWide;
+		}
+
+		public int getPagesTall() {
+			return pagesTall;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+		 */
+		@Override
+		protected void okPressed() {
+			pagesWide = Integer.parseInt(textWide.getText());
+			pagesTall = Integer.parseInt(textTall.getText());
+			super.okPressed();
+		}
+	}
+		
 }

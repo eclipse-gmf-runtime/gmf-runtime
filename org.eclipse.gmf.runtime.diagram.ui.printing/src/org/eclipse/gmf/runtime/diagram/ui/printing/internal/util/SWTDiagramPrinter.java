@@ -52,7 +52,7 @@ import org.eclipse.ui.PlatformUI;
  * This class supports printing using the SWT printing constructs.
  * Much of the paging code was derived from the previous <code> DiagramPrinter </code>.
  *
- * @author James Bruck (jbruck)
+ * @author Wayne Diu, wdiu
  */
 public class SWTDiagramPrinter extends DiagramPrinter
     implements Runnable {

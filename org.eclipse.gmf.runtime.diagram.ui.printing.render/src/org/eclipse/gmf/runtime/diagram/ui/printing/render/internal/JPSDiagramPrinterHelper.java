@@ -42,7 +42,6 @@ import org.eclipse.ui.IEditorPart;
  * This class uses the java print service API to accomplish its task.
  * This class was derived from @see org.eclipse.gmf.runtime.diagram.ui.printing.util.DiagramPrinterUtil
  * 
- * This class is subject to change/removal during phase 2 of printing enhancements
  * 
  * @author James Bruck (jbruck)
  */

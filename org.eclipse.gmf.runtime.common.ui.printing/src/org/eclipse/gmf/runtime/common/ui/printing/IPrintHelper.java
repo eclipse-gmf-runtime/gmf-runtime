@@ -152,4 +152,21 @@ public interface IPrintHelper {
      */
     void setDlgPaperSize(int index, double width, double length);
     
+    /**
+     * Preserve the scale factor that the user enters in the preview or print
+     * dialogs.
+     * 
+     * @param scaleFactor a zoom factor integer value greater than 0.
+     */
+    void setScaleFactor(int scaleFactor);
+    
+    /**
+     * Preserve the width and height scale factors
+     * 
+     * @param width scale to number of pages wide
+     * @param height scale to number of pages high
+     */
+   	void setScaleToWidthHeight(int width, int height);
+   
+    
 }
