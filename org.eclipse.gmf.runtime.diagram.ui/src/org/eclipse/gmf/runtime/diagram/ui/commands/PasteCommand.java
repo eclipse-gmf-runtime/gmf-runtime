@@ -241,7 +241,7 @@ public class PasteCommand extends ClipboardCommand {
 	 * @return
 	 */
 	protected Rectangle processNodeOffset(Node node, Rectangle constraintRect) {
-		return constraintRect.getTranslated(10, 10);
+		return constraintRect.getTranslated(mm.DPtoLP(10), mm.DPtoLP(10));
 	}
 
 
