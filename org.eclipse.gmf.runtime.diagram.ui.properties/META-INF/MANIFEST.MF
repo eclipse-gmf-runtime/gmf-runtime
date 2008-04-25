@@ -27,3 +27,4 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)";visibility:=reexpo
  org.eclipse.gmf.runtime.common.ui.services.properties;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
  com.ibm.icu;bundle-version="[3.4.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

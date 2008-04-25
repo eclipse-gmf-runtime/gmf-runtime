@@ -16,3 +16,4 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.ui.services;x-internal:=tru
  org.eclipse.gmf.tests.runtime.common.ui.services.dialogs;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.ui.services.elementselection;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.ui.services.elementselection.testproviders;x-internal:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
