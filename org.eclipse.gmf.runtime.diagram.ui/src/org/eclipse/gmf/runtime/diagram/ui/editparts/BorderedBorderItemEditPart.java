@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.gmf.runtime.diagram.ui.editparts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ConnectionLabelsEditPolicy;
@@ -101,9 +102,26 @@ public abstract class BorderedBorderItemEditPart
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#removeChildVisual(org.eclipse.gef.EditPart)
-	 */
+	protected void reorderChild(EditPart child, int index) {
+        if (child instanceof IBorderItemEditPart) {
+            // Save the border item locator so that it does not get lost during
+            // the remove and re-add. This is overridden from the parent class
+            // so that the correct content pane is used.
+            IFigure childFigure = ((GraphicalEditPart) child).getFigure();
+            LayoutManager layout = getContentPaneFor((IGraphicalEditPart) child)
+                .getLayoutManager();
+            Object constraint = null;
+            if (layout != null)
+                constraint = layout.getConstraint(childFigure);
+
+            super.reorderChild(child, index);
+
+            setLayoutConstraint(child, childFigure, constraint);
+        } else {
+            super.reorderChild(child, index);
+        }
+    }
+	   
 	protected void removeChildVisual(EditPart child) {
 		IFigure childFigure = ((GraphicalEditPart) child).getFigure();
 		IFigure fig = getContentPaneFor((IGraphicalEditPart) child);
