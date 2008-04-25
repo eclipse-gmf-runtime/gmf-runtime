@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide; singleton:=true
-Bundle-Version: 1.0.3.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.EditorIDEPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -12,15 +12,15 @@ Export-Package: org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n;x-internal:=true,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.wizards
-Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.emf.ecore;bundle-version="[2.2.0,3.0.0)",
- org.eclipse.gmf.runtime.notation;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.gmf.runtime.emf.core;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.gmf.runtime.diagram.ui;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
- org.eclipse.ui.editors;bundle-version="[3.2.0,4.0.0)";visibility:=reexport
+Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.ui.ide;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.emf.ecore;bundle-version="[2.4.0,3.0.0)",
+ org.eclipse.gmf.runtime.notation;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.gmf.runtime.emf.core;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.gmf.runtime.diagram.ui;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="[1.1.0,2.0.0)";visibility:=reexport,
+ org.eclipse.ui.editors;bundle-version="[3.4.0,4.0.0)";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

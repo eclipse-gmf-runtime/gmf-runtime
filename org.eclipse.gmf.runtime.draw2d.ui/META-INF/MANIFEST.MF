@@ -76,11 +76,11 @@ Export-Package: org.eclipse.gmf.runtime.draw2d.ui.figures,
    org.eclipse.gmf.runtime.diagram.ui.printing",
  org.eclipse.gmf.runtime.draw2d.ui.mapmode,
  org.eclipse.gmf.runtime.draw2d.ui.text
-Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
+Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.draw2d;bundle-version="[3.4.0,4.0.0)",
- org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.gmf.runtime.common.core;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.gmf.runtime.common.ui;bundle-version="[1.1.0,2.0.0)",
  com.ibm.icu;bundle-version="[3.4.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

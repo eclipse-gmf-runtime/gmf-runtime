@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.examples.runtime.common.service; singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.100.qualifier
 Bundle-Activator: org.eclipse.gmf.examples.runtime.common.service.ServicePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -10,8 +10,8 @@ Export-Package: org.eclipse.gmf.examples.runtime.common.service,
  org.eclipse.gmf.examples.runtime.common.service.application,
  org.eclipse.gmf.examples.runtime.common.service.client,
  org.eclipse.gmf.examples.runtime.common.service.providers
-Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)"
+Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.gmf.runtime.common.core;bundle-version="[1.1.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

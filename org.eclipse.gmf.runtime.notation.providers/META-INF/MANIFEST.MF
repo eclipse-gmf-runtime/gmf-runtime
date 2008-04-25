@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.notation.providers; singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.notation.providers.internal.util.NotationMSLPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.notation.providers.internal.copypaste;x-internal:=true,
  org.eclipse.gmf.runtime.notation.providers.internal.l10n;x-internal:=true,
  org.eclipse.gmf.runtime.notation.providers.internal.util;x-internal:=true
-Require-Bundle: org.eclipse.emf.ecore.xmi;bundle-version="[2.2.0,3.0.0)",
- org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.gmf.runtime.emf.type.core;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.emf.edit;bundle-version="[2.2.0,3.0.0)",
- org.eclipse.gmf.runtime.notation;bundle-version="[1.0.0,2.0.0)"
+Require-Bundle: org.eclipse.emf.ecore.xmi;bundle-version="[2.4.0,3.0.0)",
+ org.eclipse.gmf.runtime.common.core;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.gmf.runtime.emf.type.core;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.emf.edit;bundle-version="[2.4.0,3.0.0)",
+ org.eclipse.gmf.runtime.notation;bundle-version="[1.1.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
