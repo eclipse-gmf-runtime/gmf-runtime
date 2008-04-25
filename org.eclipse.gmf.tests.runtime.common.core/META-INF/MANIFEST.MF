@@ -12,4 +12,4 @@ Export-Package: org.eclipse.gmf.tests.runtime.common.core;x-internal:=true,
  org.eclipse.gmf.tests.runtime.common.core.internal.util;x-friends:="org.eclipse.gmf.tests.runtime.emf.ui,org.eclipse.gmf.tests.runtime.diagram.ui"
 Require-Bundle: org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)",
  org.junit;bundle-version="[3.8.0,4.0.0)"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

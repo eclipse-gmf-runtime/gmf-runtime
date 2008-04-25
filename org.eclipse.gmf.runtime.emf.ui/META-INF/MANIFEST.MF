@@ -18,4 +18,4 @@ Export-Package: org.eclipse.gmf.runtime.emf.ui.action,
 Require-Bundle: org.eclipse.gmf.runtime.common.ui.action;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui.services;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.emf.type.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

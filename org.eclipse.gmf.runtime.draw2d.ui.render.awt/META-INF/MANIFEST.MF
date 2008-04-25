@@ -28,4 +28,4 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.apache.batik.util,
  org.w3c.dom.svg;bundle-version="1.1.0",
  org.apache.batik.pdf
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

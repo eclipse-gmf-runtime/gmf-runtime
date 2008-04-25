@@ -21,4 +21,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)";visibi
  org.eclipse.ui;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

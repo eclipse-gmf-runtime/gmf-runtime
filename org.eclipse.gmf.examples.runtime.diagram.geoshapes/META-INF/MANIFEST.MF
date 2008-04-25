@@ -30,4 +30,4 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.providers.ide;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.render;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.gmf.runtime.diagram.ui.geoshapes;bundle-version="[1.0.0,2.0.0)"
-Eclipse-LazyStart: true; exceptions="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.nonactivating"
+Bundle-ActivationPolicy: lazy; exceptions="org.eclipse.gmf.examples.runtime.diagram.geoshapes.internal.nonactivating"

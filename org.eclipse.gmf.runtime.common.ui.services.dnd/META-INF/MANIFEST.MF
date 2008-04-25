@@ -14,4 +14,4 @@ Export-Package: org.eclipse.gmf.runtime.common.ui.services.dnd.core,
  org.eclipse.gmf.runtime.common.ui.services.dnd.internal.l10n;x-internal:=true
 Require-Bundle: org.eclipse.gmf.runtime.common.core;bundle-version="[1.0.0,2.0.0)";visibility:=reexport,
  org.eclipse.gmf.runtime.common.ui;bundle-version="[1.0.0,2.0.0)";visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
