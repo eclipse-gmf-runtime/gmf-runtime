@@ -168,7 +168,7 @@ public abstract class AbstractGMFGraphDemo {
 		composite.setLayout(new GridLayout());	
 		final org.eclipse.swt.widgets.Label nodesLabel 
 				= new org.eclipse.swt.widgets.Label(composite, SWT.NONE);
-		nodesLabel.setText("Graph");
+		nodesLabel.setText("Graph"); //$NON-NLS-1$
 		final Combo graphList = new Combo(composite, SWT.DROP_DOWN);
 		
 		String[] graphMethods = getGraphMethods();

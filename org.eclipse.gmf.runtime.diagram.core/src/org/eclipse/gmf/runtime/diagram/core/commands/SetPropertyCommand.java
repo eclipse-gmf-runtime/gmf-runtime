@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.internal.l10n.DiagramCoreMessages;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
@@ -67,7 +68,7 @@ public class SetPropertyCommand extends AbstractTransactionalCommand {
 	 * @param newValue		the new value of the property
 	 */
 	public SetPropertyCommand(TransactionalEditingDomain editingDomain, IAdaptable viewAdapter, String propertyId, String propertyName, Object newValue) {
-		this(editingDomain, "", viewAdapter, propertyId, newValue);
+		this(editingDomain, StringStatics.BLANK, viewAdapter, propertyId, newValue);
 		this.propertyName = propertyName;
 	}
 

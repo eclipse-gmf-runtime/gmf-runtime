@@ -24,6 +24,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 
@@ -50,7 +51,7 @@ public class SemanticCreateCommand extends AbstractCommand {
 		CreateElementRequestAdapter requestAdapter,
 		Command realSemanticCommand) {
 
-		super((realSemanticCommand.getLabel() == null) ? "" : realSemanticCommand.getLabel(), null);
+		super((realSemanticCommand.getLabel() == null) ? StringStatics.BLANK : realSemanticCommand.getLabel(), null);
 
 		Assert.isNotNull(requestAdapter);
 		Assert.isNotNull(realSemanticCommand);

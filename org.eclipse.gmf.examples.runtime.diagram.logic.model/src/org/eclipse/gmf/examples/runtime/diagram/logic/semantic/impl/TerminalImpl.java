@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id$
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -37,7 +41,7 @@ public abstract class TerminalImpl extends ElementImpl implements Terminal {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String ID_EDEFAULT = "";
+	protected static final String ID_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
@@ -151,7 +155,7 @@ public abstract class TerminalImpl extends ElementImpl implements Terminal {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (id: ");
+		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
 		result.append(')');
 		return result.toString();

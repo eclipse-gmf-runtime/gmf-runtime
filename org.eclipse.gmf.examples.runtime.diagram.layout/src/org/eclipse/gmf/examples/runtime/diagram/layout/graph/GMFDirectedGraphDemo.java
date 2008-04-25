@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.layout.graph;
 
 import java.lang.reflect.Method;
@@ -9,12 +19,10 @@ import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.Node;
@@ -45,7 +53,7 @@ public class GMFDirectedGraphDemo extends AbstractGMFGraphDemo {
 					.getMethod(graphMethod, null)
 					.invoke(null, null));
 		} catch (Exception e) {
-			System.out.println("Could not build graph");
+			System.out.println("Could not build graph"); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		Figure contents = buildGraph(graph);

@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id$
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.impl;
 
 import org.eclipse.emf.ecore.EClass;
@@ -31,7 +35,7 @@ public class SemanticFactoryImpl extends EFactoryImpl implements SemanticFactory
 	 */
 	public static SemanticFactory init() {
 		try {
-			SemanticFactory theSemanticFactory = (SemanticFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"); 
+			SemanticFactory theSemanticFactory = (SemanticFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"); //$NON-NLS-1$ 
 			if (theSemanticFactory != null) {
 				return theSemanticFactory;
 			}
@@ -71,7 +75,7 @@ public class SemanticFactoryImpl extends EFactoryImpl implements SemanticFactory
 			case SemanticPackage.INPUT_TERMINAL: return createInputTerminal();
 			case SemanticPackage.INPUT_OUTPUT_TERMINAL: return createInputOutputTerminal();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

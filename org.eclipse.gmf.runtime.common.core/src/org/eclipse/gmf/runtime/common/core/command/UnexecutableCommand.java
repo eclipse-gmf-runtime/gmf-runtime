@@ -13,6 +13,7 @@ package org.eclipse.gmf.runtime.common.core.command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
  * A command that cannot be executed. This is an implementation of the Null
@@ -36,7 +37,7 @@ public class UnexecutableCommand extends AbstractCommand {
 	 * Creates an instance of an unexecutable command.
 	 */
 	protected UnexecutableCommand() {
-		super("", null);
+		super(StringStatics.BLANK, null);
 	}
 
 	/**

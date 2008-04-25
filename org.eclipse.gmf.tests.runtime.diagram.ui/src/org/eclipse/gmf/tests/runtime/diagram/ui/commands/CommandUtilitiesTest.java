@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,7 @@ public class CommandUtilitiesTest extends TestCase {
 	 * returns the correct affected files when the input implements ICommand.
 	 */
 	public void test_getAffectedFiles_ICommand_161668() {
-		List files = getFiles("CommandUtilitiesTest/test_getAffectedFiles_ICommand_161668");
+		List files = getFiles("CommandUtilitiesTest/test_getAffectedFiles_ICommand_161668"); //$NON-NLS-1$
 		CommandImplementingICommand command = new CommandImplementingICommand(
 				files);
 		Collection affectedFiles = CommandUtilities.getAffectedFiles(command);
@@ -151,7 +151,7 @@ public class CommandUtilitiesTest extends TestCase {
 
 		// put them both in a CompoundCommand
 		CompoundCommand command = new CompoundCommand(
-				"getAffectedFiles_CompoundCommand_161668"); // $NOn-NLS-1$
+				"getAffectedFiles_CompoundCommand_161668"); //$NON-NLS-1$
 		command.add(iCommand);
 		command.add(iCommandProxy);
 

@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id$
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.provider;
 
 
@@ -77,8 +81,8 @@ public class WireItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Wire_source_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Wire_source_feature", "_UI_Wire_type"),
+				 getString("_UI_Wire_source_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Wire_source_feature", "_UI_Wire_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 SemanticPackage.Literals.WIRE__SOURCE,
 				 true,
 				 null,
@@ -97,8 +101,8 @@ public class WireItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Wire_target_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Wire_target_feature", "_UI_Wire_type"),
+				 getString("_UI_Wire_target_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_Wire_target_feature", "_UI_Wire_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 SemanticPackage.Literals.WIRE__TARGET,
 				 true,
 				 null,
@@ -142,7 +146,7 @@ public class WireItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Wire"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Wire")); //$NON-NLS-1$
 	}
 
 	/**
@@ -152,7 +156,7 @@ public class WireItemProvider
 	 * @generated
 	 */
 	public String getText(Object object) {
-		return getString("_UI_Wire_type");
+		return getString("_UI_Wire_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -221,7 +225,7 @@ public class WireItemProvider
 
 		if (qualify) {
 			return getString
-				("_UI_CreateChild_text2",
+				("_UI_CreateChild_text2", //$NON-NLS-1$
 				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
 		}
 		return super.getCreateChildText(owner, feature, child, selection);

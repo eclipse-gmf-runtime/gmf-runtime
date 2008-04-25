@@ -21,6 +21,7 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
@@ -45,7 +46,7 @@ public class RefreshEditPartCommand
 	 * @param revalidate revalidate flag
 	 */
 	public RefreshEditPartCommand(IGraphicalEditPart editPart, boolean revalidate) {
-		super("", null);
+		super(StringStatics.BLANK, null);
 		this.revalidate = revalidate;
 		notation = (View)editPart.getModel();
 		viewer = editPart.getRoot().getViewer();

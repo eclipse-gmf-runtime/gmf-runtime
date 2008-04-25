@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import junit.textui.TestRunner;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.NoteEditPart;
@@ -76,10 +77,10 @@ public class LabelTests
             .getFigure();
 
         oldWrapLabel
-            .setText("Let's put a bit of text in here that would cause the label to wrap.");
+            .setText("Let's put a bit of text in here that would cause the label to wrap."); //$NON-NLS-1$
         oldWrapLabel.setIcon(SharedImages.get(SharedImages.IMG_NOTE));
         wrapLabel
-            .setText("Let's put a bit of text in here that would cause the label to wrap.");
+            .setText("Let's put a bit of text in here that would cause the label to wrap."); //$NON-NLS-1$
         wrapLabel.setIcon(SharedImages.get(SharedImages.IMG_NOTE));
 
         flushEventQueue();

@@ -17,6 +17,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -40,7 +41,7 @@ public class VisibilityComponentEditPolicy
 	 * @param deleteRequest the original delete request.
 	 */
 	protected Command createDeleteViewCommand(GroupRequest deleteRequest) {
-		CompositeCommand cc = new CompositeCommand("");
+		CompositeCommand cc = new CompositeCommand(StringStatics.BLANK);
 		List toDel = deleteRequest.getEditParts();
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
 		if (toDel == null || toDel.isEmpty()) {

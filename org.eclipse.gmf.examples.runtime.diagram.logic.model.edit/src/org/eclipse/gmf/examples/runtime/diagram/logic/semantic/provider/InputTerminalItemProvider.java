@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id$
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.provider;
 
 
@@ -66,7 +70,7 @@ public class InputTerminalItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/InputTerminal"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/InputTerminal")); //$NON-NLS-1$
 	}
 
 	/**
@@ -78,8 +82,8 @@ public class InputTerminalItemProvider
 	public String getText(Object object) {
 		String label = ((InputTerminal)object).getId();
 		return label == null || label.length() == 0 ?
-			getString("_UI_InputTerminal_type") :
-			getString("_UI_InputTerminal_type") + " " + label;
+			getString("_UI_InputTerminal_type") : //$NON-NLS-1$
+			getString("_UI_InputTerminal_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

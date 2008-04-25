@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id$
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -33,7 +37,7 @@ public interface SemanticPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNAME = "semantic";
+	String eNAME = "semantic"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
@@ -41,7 +45,7 @@ public interface SemanticPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic";
+	String eNS_URI = "http://www.eclipse.org/gmf/examples/runtime/1.0.0/logicsemantic"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
@@ -49,7 +53,7 @@ public interface SemanticPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "semantic";
+	String eNS_PREFIX = "semantic"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.

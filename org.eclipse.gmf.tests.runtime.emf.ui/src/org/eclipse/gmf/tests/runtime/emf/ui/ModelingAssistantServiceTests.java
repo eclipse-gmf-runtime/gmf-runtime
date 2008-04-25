@@ -143,7 +143,7 @@ public class ModelingAssistantServiceTests
 
         public List getTypesForPopupBar(IAdaptable host) {
             if (host.getAdapter(MyElementType.class) != null) {
-                return Collections.singletonList(new MyElementType("TYPE1"));
+                return Collections.singletonList(new MyElementType("TYPE1")); //$NON-NLS-1$
             } else {
                 return Collections.EMPTY_LIST;
             }

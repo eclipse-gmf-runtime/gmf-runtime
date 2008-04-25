@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.internal.command.ICommandWithSettableResult;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
  * An abstract superclass for GMF {@link IUndoableOperation}s that modify EMF
@@ -151,7 +152,7 @@ public abstract class AbstractTransactionalCommand
      */
     public AbstractTransactionalCommand(TransactionalEditingDomain domain,
             String label, Map options, List affectedFiles) {
-        super(domain, (label == null) ? "" : label, options);
+        super(domain, (label == null) ? StringStatics.BLANK : label, options);
 
         if (affectedFiles == null) {
             this.affectedFiles = new ArrayList();

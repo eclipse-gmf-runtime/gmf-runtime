@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.util.Log;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.util.CustomData;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -74,7 +75,7 @@ public class CopyImageCommand
 	 */
 	public CopyImageCommand(View viewContext, List source,
 			DiagramEditPart diagramEP) {
-		this("", viewContext, source, diagramEP);
+		this(StringStatics.BLANK, viewContext, source, diagramEP);
 	}
 
 	/**

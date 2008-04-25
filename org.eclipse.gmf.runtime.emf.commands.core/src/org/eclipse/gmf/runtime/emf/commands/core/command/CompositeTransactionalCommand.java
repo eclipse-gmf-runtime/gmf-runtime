@@ -30,6 +30,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.core.command.ICompositeCommand;
 import org.eclipse.gmf.runtime.common.core.internal.command.ICommandWithSettableResult;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
  * An undoable operation that is composed of child {@link IUndoableOperation}s
@@ -62,7 +63,7 @@ public class CompositeTransactionalCommand
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label) {
-        super(domain, (label == null) ? "" : label);
+        super(domain, (label == null) ? StringStatics.BLANK : label);
     }
 
     /**
@@ -78,7 +79,7 @@ public class CompositeTransactionalCommand
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label, Map options) {
-        super(domain, (label == null) ? "" : label, options);
+        super(domain, (label == null) ? StringStatics.BLANK : label, options);
     }
 
     /**
@@ -93,7 +94,7 @@ public class CompositeTransactionalCommand
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label, List children) {
-        super(domain, (label == null) ? "" : label, children);
+        super(domain, (label == null) ? StringStatics.BLANK : label, children);
     }
 
     /**
@@ -112,7 +113,7 @@ public class CompositeTransactionalCommand
      */
     public CompositeTransactionalCommand(TransactionalEditingDomain domain,
             String label, List children, Map options) {
-        super(domain, (label == null) ? "" : label, children, options);
+        super(domain, (label == null) ? StringStatics.BLANK : label, children, options);
     }
 
     /**

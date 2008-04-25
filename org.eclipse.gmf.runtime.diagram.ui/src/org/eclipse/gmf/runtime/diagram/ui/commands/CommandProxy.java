@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.common.core.command.AbstractCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
  * {@link ICommand} that delegates to a GEF {@link Command}.
@@ -37,7 +38,7 @@ public class CommandProxy
      * @param command
      */
     public CommandProxy(Command command) {
-        super((command.getLabel() == null) ? "" : command.getLabel(), null);
+        super((command.getLabel() == null) ? StringStatics.BLANK : command.getLabel(), null);
         Assert.isNotNull(command);
         this.command = command;
     }

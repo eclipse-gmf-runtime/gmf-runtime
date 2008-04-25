@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.layout.graph;
 
 import org.eclipse.draw2d.PositionConstants;
@@ -20,20 +30,20 @@ public class GMFGraphTests {
 		NodeList nodes = new NodeList();
 		EdgeList edges = new EdgeList();
 		
-		Node extra = new ConstantSizeNode("Extra");
+		Node extra = new ConstantSizeNode("Extra"); //$NON-NLS-1$
 		nodes.add(extra);
 		
-		nodes.add(hub = new ConstantSizeNode("Hub"));
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(n5 = new ConstantSizeNode("n5"));
-		nodes.add(n6 = new ConstantSizeNode("n6"));
-		nodes.add(n7 = new ConstantSizeNode("n7"));
-		nodes.add(n8 = new ConstantSizeNode("n8"));
-		nodes.add(n9 = new ConstantSizeNode("n9"));
-		nodes.add(n10 = new ConstantSizeNode("n10"));
+		nodes.add(hub = new ConstantSizeNode("Hub")); //$NON-NLS-1$
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(n5 = new ConstantSizeNode("n5")); //$NON-NLS-1$
+		nodes.add(n6 = new ConstantSizeNode("n6")); //$NON-NLS-1$
+		nodes.add(n7 = new ConstantSizeNode("n7")); //$NON-NLS-1$
+		nodes.add(n8 = new ConstantSizeNode("n8")); //$NON-NLS-1$
+		nodes.add(n9 = new ConstantSizeNode("n9")); //$NON-NLS-1$
+		nodes.add(n10 = new ConstantSizeNode("n10")); //$NON-NLS-1$
 		
 		hub.width = 400;
 		hub.setMinIncomingPadding(20);
@@ -80,17 +90,17 @@ public class GMFGraphTests {
 		NodeList nodes = new NodeList();
 		EdgeList edges = new EdgeList();
 		
-		nodes.add(head = new ConstantSizeNode("head"));
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(n5 = new ConstantSizeNode("n5"));
-		nodes.add(d1 = new ConstantSizeNode("d1"));
-		nodes.add(d2 = new ConstantSizeNode("d2"));
-		nodes.add(n6 = new ConstantSizeNode("n6"));
-		nodes.add(n7 = new ConstantSizeNode("n7"));
-		nodes.add(tail = new ConstantSizeNode("tail"));
+		nodes.add(head = new ConstantSizeNode("head")); //$NON-NLS-1$
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(n5 = new ConstantSizeNode("n5")); //$NON-NLS-1$
+		nodes.add(d1 = new ConstantSizeNode("d1")); //$NON-NLS-1$
+		nodes.add(d2 = new ConstantSizeNode("d2")); //$NON-NLS-1$
+		nodes.add(n6 = new ConstantSizeNode("n6")); //$NON-NLS-1$
+		nodes.add(n7 = new ConstantSizeNode("n7")); //$NON-NLS-1$
+		nodes.add(tail = new ConstantSizeNode("tail")); //$NON-NLS-1$
 		
 		head.width = tail.width = 20;
 		head.height = tail.height = 250;
@@ -139,17 +149,17 @@ public class GMFGraphTests {
 		ConstantSizeNode hub, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10;
 		ConstrainedEdge e1, e2, e3, e4, e5, e6, e7, e8, e9, e10;
 		
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(n5 = new ConstantSizeNode("n5"));
-		nodes.add(n6 = new ConstantSizeNode("n6"));
-		nodes.add(n7 = new ConstantSizeNode("n7"));
-		nodes.add(n8 = new ConstantSizeNode("n8"));
-		nodes.add(n9 = new ConstantSizeNode("n9"));
-		nodes.add(n10 = new ConstantSizeNode("n10"));
-		nodes.add(hub = new ConstantSizeNode("hub"));
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(n5 = new ConstantSizeNode("n5")); //$NON-NLS-1$
+		nodes.add(n6 = new ConstantSizeNode("n6")); //$NON-NLS-1$
+		nodes.add(n7 = new ConstantSizeNode("n7")); //$NON-NLS-1$
+		nodes.add(n8 = new ConstantSizeNode("n8")); //$NON-NLS-1$
+		nodes.add(n9 = new ConstantSizeNode("n9")); //$NON-NLS-1$
+		nodes.add(n10 = new ConstantSizeNode("n10")); //$NON-NLS-1$
+		nodes.add(hub = new ConstantSizeNode("hub")); //$NON-NLS-1$
 		
 		hub.setMinIncomingPadding(10);
 		hub.setMinOutgoingPadding(10);
@@ -160,13 +170,13 @@ public class GMFGraphTests {
 		//n1.width = n2.width = n3.width = n4.width = n5.width = n6.width = n7.width = n8.width = n9.width = n10.width = 300;
 		
 		
-		BorderNode bn1 = new BorderNode("BN1", hub);
-		BorderNode bn2 = new BorderNode("BN2", hub);
-		BorderNode bn3 = new BorderNode("BN3", hub);
-		BorderNode bn4 = new BorderNode("BN4", hub);
-		BorderNode bn5 = new BorderNode("BN5", hub);
-		BorderNode bn6 = new BorderNode("BN6", hub);
-		BorderNode bn7 = new BorderNode("BN7", hub);
+		BorderNode bn1 = new BorderNode("BN1", hub); //$NON-NLS-1$
+		BorderNode bn2 = new BorderNode("BN2", hub); //$NON-NLS-1$
+		BorderNode bn3 = new BorderNode("BN3", hub); //$NON-NLS-1$
+		BorderNode bn4 = new BorderNode("BN4", hub); //$NON-NLS-1$
+		BorderNode bn5 = new BorderNode("BN5", hub); //$NON-NLS-1$
+		BorderNode bn6 = new BorderNode("BN6", hub); //$NON-NLS-1$
+		BorderNode bn7 = new BorderNode("BN7", hub); //$NON-NLS-1$
 		bn1.width = bn1.height = bn2.width = bn2.height = bn3.width = bn3.height = bn4.width = bn4.height = bn5.width = bn5.height = bn6.width = bn6.height = bn7.width = bn7.height = 50;
 		
 		bn7.setMinOutgoingPadding(5);
@@ -197,17 +207,17 @@ public class GMFGraphTests {
 		NodeList nodes = new NodeList();
 		EdgeList edges = new EdgeList();
 		
-		nodes.add(head = new ConstantSizeNode("head"));
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(n5 = new ConstantSizeNode("n5"));
-		nodes.add(d1 = new ConstantSizeNode("d1"));
-		nodes.add(d2 = new ConstantSizeNode("d2"));
-		nodes.add(n6 = new ConstantSizeNode("n6"));
-		nodes.add(n7 = new ConstantSizeNode("n7"));
-		nodes.add(tail = new ConstantSizeNode("tail"));
+		nodes.add(head = new ConstantSizeNode("head")); //$NON-NLS-1$
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(n5 = new ConstantSizeNode("n5")); //$NON-NLS-1$
+		nodes.add(d1 = new ConstantSizeNode("d1")); //$NON-NLS-1$
+		nodes.add(d2 = new ConstantSizeNode("d2")); //$NON-NLS-1$
+		nodes.add(n6 = new ConstantSizeNode("n6")); //$NON-NLS-1$
+		nodes.add(n7 = new ConstantSizeNode("n7")); //$NON-NLS-1$
+		nodes.add(tail = new ConstantSizeNode("tail")); //$NON-NLS-1$
 		
 		head.width = tail.width = 20;
 		head.height = tail.height = 250;
@@ -262,11 +272,11 @@ public class GMFGraphTests {
 		ConstantSizeNode n1, n2, n3, n4, hub;
 		BorderNode bn1, bn2;
 		
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(hub = new ConstantSizeNode("hub"));
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(hub = new ConstantSizeNode("hub")); //$NON-NLS-1$
 		
 		n1.width = n1.height = n2.width = n2.height = n3.width = n3.height = n4.width = n4.height = 100;
 		hub.width = 150;
@@ -274,9 +284,9 @@ public class GMFGraphTests {
 		
 		hub.setPadding(new Insets(20, 50, 20, 50)); 
 		
-		bn1 = new BorderNode("bn1", hub);
+		bn1 = new BorderNode("bn1", hub); //$NON-NLS-1$
 		bn1.width = bn1.height = 20;
-		bn2 = new BorderNode("bn2", hub);
+		bn2 = new BorderNode("bn2", hub); //$NON-NLS-1$
 		bn2.width = bn2.height = 35;
 		bn2.setOutsideRatio(0.2f);
 		
@@ -303,14 +313,14 @@ public class GMFGraphTests {
 		ConstantSizeNode n1, n2;
 		BorderNode bn1, bn2;
 		
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
 		
 		n1.width = n2.width = 100;
 		n1.height = n2.height = 30; 
 		
-		bn1 = new BorderNode("bn1", n1);
-		bn2 = new BorderNode("bn2", n2);
+		bn1 = new BorderNode("bn1", n1); //$NON-NLS-1$
+		bn2 = new BorderNode("bn2", n2); //$NON-NLS-1$
 		bn1.width = bn2.width = bn1.height = bn2.height = 10;
 		bn2.setOutsideRatio(1f);
 		bn1.setOutsideRatio(1f);
@@ -334,12 +344,12 @@ public class GMFGraphTests {
 		
 		ConstantSizeNode n1, n2, n3, n4, n5, n6;
 		
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(n5 = new ConstantSizeNode("n5"));
-		nodes.add(n6 = new ConstantSizeNode("n6"));
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(n5 = new ConstantSizeNode("n5")); //$NON-NLS-1$
+		nodes.add(n6 = new ConstantSizeNode("n6")); //$NON-NLS-1$
 		
 		n2.height = 200;
 		n1.height = n3.height = 30;
@@ -368,12 +378,12 @@ public class GMFGraphTests {
 		
 		ConstantSizeNode n1, n2, n3, n4, n5, n6;
 		
-		nodes.add(n1 = new ConstantSizeNode("n1"));
-		nodes.add(n2 = new ConstantSizeNode("n2"));
-		nodes.add(n3 = new ConstantSizeNode("n3"));
-		nodes.add(n4 = new ConstantSizeNode("n4"));
-		nodes.add(n5 = new ConstantSizeNode("n5"));
-		nodes.add(n6 = new ConstantSizeNode("n6"));
+		nodes.add(n1 = new ConstantSizeNode("n1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("n2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("n3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("n4")); //$NON-NLS-1$
+		nodes.add(n5 = new ConstantSizeNode("n5")); //$NON-NLS-1$
+		nodes.add(n6 = new ConstantSizeNode("n6")); //$NON-NLS-1$
 		
 		n1.setMinOutgoingPadding(5);
 		n2.setMinOutgoingPadding(5);
@@ -412,15 +422,15 @@ public class GMFGraphTests {
 		BorderNode bn1, bn2, bn3, bn4;
 		Edge e1, e2, e3, e4;
 		
-		nodes.add(n1 = new ConstantSizeNode("Node1"));
-		nodes.add(n2 = new ConstantSizeNode("Node2"));
-		nodes.add(n3 = new ConstantSizeNode("Node3"));
-		nodes.add(n4 = new ConstantSizeNode("Node4"));
+		nodes.add(n1 = new ConstantSizeNode("Node1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("Node2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("Node3")); //$NON-NLS-1$
+		nodes.add(n4 = new ConstantSizeNode("Node4")); //$NON-NLS-1$
 		
-		bn1 = new BorderNode("bn1", n1);
-		bn2 = new BorderNode("bn2", n2);
-		bn3 = new BorderNode("bn3", n3);
-		bn4 = new BorderNode("bn4", n4);
+		bn1 = new BorderNode("bn1", n1); //$NON-NLS-1$
+		bn2 = new BorderNode("bn2", n2); //$NON-NLS-1$
+		bn3 = new BorderNode("bn3", n3); //$NON-NLS-1$
+		bn4 = new BorderNode("bn4", n4); //$NON-NLS-1$
 		
 		bn1.width = bn2.width = bn3.width = bn4.width = bn1.height = bn2.height = bn3.height = bn4.height = 10;
 		
@@ -479,9 +489,9 @@ public class GMFGraphTests {
 		ConstantSizeNode n1, n2, n3;
 		Edge e1, e2, e3;
 		
-		nodes.add(n1 = new ConstantSizeNode("Node1"));
-		nodes.add(n2 = new ConstantSizeNode("Node2"));
-		nodes.add(n3 = new ConstantSizeNode("Node3"));
+		nodes.add(n1 = new ConstantSizeNode("Node1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("Node2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("Node3")); //$NON-NLS-1$
 		
 		n1.setMinIncomingPadding(5);
 		n2.setMinIncomingPadding(5);
@@ -517,15 +527,15 @@ public class GMFGraphTests {
 		BorderNode bn1, bn2, bn3, bn4, bn5, bn6;
 		Edge e1, e2, e3;
 		
-		nodes.add(n1 = new ConstantSizeNode("Node1"));
-		nodes.add(n2 = new ConstantSizeNode("Node2"));
-		nodes.add(n3 = new ConstantSizeNode("Node3"));
-		bn1 = new BorderNode("bn1", n1);
-		bn2 = new BorderNode("bn2", n1);
-		bn3 = new BorderNode("bn3", n2);
-		bn4 = new BorderNode("bn4", n2);
-		bn5 = new BorderNode("bn5", n3);
-		bn6 = new BorderNode("bn6", n3);
+		nodes.add(n1 = new ConstantSizeNode("Node1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("Node2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("Node3")); //$NON-NLS-1$
+		bn1 = new BorderNode("bn1", n1); //$NON-NLS-1$
+		bn2 = new BorderNode("bn2", n1); //$NON-NLS-1$
+		bn3 = new BorderNode("bn3", n2); //$NON-NLS-1$
+		bn4 = new BorderNode("bn4", n2); //$NON-NLS-1$
+		bn5 = new BorderNode("bn5", n3); //$NON-NLS-1$
+		bn6 = new BorderNode("bn6", n3); //$NON-NLS-1$
 		
 		n1.setMinIncomingPadding(5);
 		n2.setMinIncomingPadding(5);
@@ -560,12 +570,12 @@ public class GMFGraphTests {
 		BorderNode bn1, bn2, bn3;
 		Edge e1, e2, e3;
 		
-		nodes.add(n1 = new ConstantSizeNode("Node1"));
-		nodes.add(n2 = new ConstantSizeNode("Node2"));
-		nodes.add(n3 = new ConstantSizeNode("Node3"));
-		bn1 = new BorderNode("bn1", n1);
-		bn2 = new BorderNode("bn2", n2);
-		bn3 = new BorderNode("bn3", n3);
+		nodes.add(n1 = new ConstantSizeNode("Node1")); //$NON-NLS-1$
+		nodes.add(n2 = new ConstantSizeNode("Node2")); //$NON-NLS-1$
+		nodes.add(n3 = new ConstantSizeNode("Node3")); //$NON-NLS-1$
+		bn1 = new BorderNode("bn1", n1); //$NON-NLS-1$
+		bn2 = new BorderNode("bn2", n2); //$NON-NLS-1$
+		bn3 = new BorderNode("bn3", n3); //$NON-NLS-1$
 		
 		n1.setMinIncomingPadding(5);
 		n2.setMinIncomingPadding(5);

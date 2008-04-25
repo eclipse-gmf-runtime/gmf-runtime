@@ -87,7 +87,7 @@ public final class GlobalPrintAction extends GlobalAction {
 	 * @see org.eclipse.gmf.runtime.common.ui.action.IRepeatableAction#refresh()
 	 */
 	public void refresh() {
-		setEnabled(!getGlobalActionHandlerData().isEmpty()); //$NON-NLS-1$ //$NON-NLS-2$
+		setEnabled(!getGlobalActionHandlerData().isEmpty()); 
 	}
 	
 	/* (non-Javadoc)

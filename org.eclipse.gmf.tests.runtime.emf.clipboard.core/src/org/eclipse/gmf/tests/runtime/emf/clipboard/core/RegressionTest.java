@@ -291,7 +291,7 @@ public class RegressionTest	extends BaseClipboardTest {
 		if (writing()) {
 			List objects = new ArrayList();
 	
-			String name = "/" + PROJECT_NAME + "/test&escapes.extlibrary";
+			String name = "/" + PROJECT_NAME + "/test&escapes.extlibrary"; //$NON-NLS-1$ //$NON-NLS-2$
 			testResource.setURI(URI.createPlatformResourceURI(name, true));
 			
 			// level12 has no branches

@@ -72,7 +72,7 @@ class PreRouteEdges {
 		int nodePadding = position == PositionConstants.WEST ? g.getPadding(parentNode).left : g.getPadding(parentNode).right;
 		
 		if (nodePadding <= maxBorderItemOutsideWidth) {
-			throw new RuntimeException("Node padding must be greater than the the width of the widest border node");
+			throw new RuntimeException("Node padding must be greater than the the width of the widest border node"); //$NON-NLS-1$
 		}
 		
 		if (incomingEdges.isEmpty() || outgoingEdges.isEmpty()) {

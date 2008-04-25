@@ -23,6 +23,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
@@ -129,7 +130,7 @@ public class ComponentEditPolicy
 	 * @return Command
 	 */
 	protected Command createDeleteViewCommand(GroupRequest deleteRequest) {
-		CompositeCommand cc = new CompositeCommand("");
+		CompositeCommand cc = new CompositeCommand(StringStatics.BLANK);
 
         TransactionalEditingDomain editingDomain = getEditingDomain();
 		if (editingDomain == null) {

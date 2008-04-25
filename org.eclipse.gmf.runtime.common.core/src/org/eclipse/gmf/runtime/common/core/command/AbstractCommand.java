@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gmf.runtime.common.core.internal.command.ICommandWithSettableResult;
+import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 
 /**
  * An abstract superclass for GMF {@link IUndoableOperation}s that do not
@@ -72,7 +73,7 @@ public abstract class AbstractCommand extends AbstractOperation
 	 *            the list of affected {@link IFile}s; may be <code>null</code>
 	 */
 	public AbstractCommand(String label, List affectedFiles) {
-		super((label == null) ? "" : label);
+		super((label == null) ? StringStatics.BLANK : label);
 
 		if (affectedFiles == null) {
 			this.affectedFiles = new ArrayList(2);

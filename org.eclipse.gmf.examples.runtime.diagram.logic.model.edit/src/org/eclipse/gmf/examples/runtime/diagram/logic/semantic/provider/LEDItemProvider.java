@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
+/******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id$
- */
+ * Contributors:
+ *    IBM Corporation - initial API and implementation 
+ ****************************************************************************/
 package org.eclipse.gmf.examples.runtime.diagram.logic.semantic.provider;
 
 
@@ -75,8 +79,8 @@ public class LEDItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_LED_value_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_LED_value_feature", "_UI_LED_type"),
+				 getString("_UI_LED_value_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_LED_value_feature", "_UI_LED_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 SemanticPackage.Literals.LED__VALUE,
 				 true,
 				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
@@ -91,7 +95,7 @@ public class LEDItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/LED"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/LED")); //$NON-NLS-1$
 	}
 
 	/**
@@ -102,7 +106,7 @@ public class LEDItemProvider
 	 */
 	public String getText(Object object) {
 		LED led = (LED)object;
-		return getString("_UI_LED_type") + " " + led.getValue();
+		return getString("_UI_LED_type") + " " + led.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

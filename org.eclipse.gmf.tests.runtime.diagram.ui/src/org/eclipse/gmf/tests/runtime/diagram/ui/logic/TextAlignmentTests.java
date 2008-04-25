@@ -77,7 +77,7 @@ public class TextAlignmentTests extends AbstractTestBase {
 									.getSite();
 							if (workbenchPartSite != null) {
 								if (workbenchPartSite.getId().equals(
-										"org.eclipse.ui.internal.introview")) {
+										"org.eclipse.ui.internal.introview")) { //$NON-NLS-1$
 									IViewPart welcomeView = (IViewPart) workbenchPart;
 									workbenchPage.hideView(welcomeView);
 
@@ -125,7 +125,7 @@ public class TextAlignmentTests extends AbstractTestBase {
 	 */
 	protected void setupShapes() {
 
-		final String description = "Text align this text\nThe quick brown fox\njumps over\nthe lazy\ndog";
+		final String description = "Text align this text\nThe quick brown fox\njumps over\nthe lazy\ndog"; //$NON-NLS-1$
 
 		/* create a square geoshape */
 		squareEditPart = getFixture().createShapeUsingTool(

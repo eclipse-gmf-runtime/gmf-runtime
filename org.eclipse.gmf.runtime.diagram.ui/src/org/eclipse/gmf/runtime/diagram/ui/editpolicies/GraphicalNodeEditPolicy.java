@@ -410,11 +410,11 @@ public class GraphicalNodeEditPolicy
 		if (targetEP == null) {
 			return null;
 		}
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, "");
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, StringStatics.BLANK);
 		sceCommand.setEdgeAdaptor(new EObjectAdapter((EObject)request
 				.getConnectionEditPart().getModel()));
 		sceCommand.setNewTargetAdaptor(targetEP);
-		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, "");
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, StringStatics.BLANK);
 		scaCommand.setEdgeAdaptor(new EObjectAdapter((EObject) request
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewTargetTerminal(targetEP
@@ -468,12 +468,12 @@ public class GraphicalNodeEditPolicy
         TransactionalEditingDomain editingDomain = getEditingDomain();
         
 		ConnectionAnchor sourceAnchor = node.getSourceConnectionAnchor(request);
-		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, "");
+		SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, StringStatics.BLANK);
 		sceCommand.setEdgeAdaptor(new EObjectAdapter((View) request
 				.getConnectionEditPart().getModel()));
 		sceCommand.setNewSourceAdaptor(new EObjectAdapter((View)node
 				.getModel()));
-		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, "");
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, StringStatics.BLANK);
 		scaCommand.setEdgeAdaptor(new EObjectAdapter((View) request
 			.getConnectionEditPart().getModel()));
 		scaCommand.setNewSourceTerminal(node.mapConnectionAnchorToTerminal(sourceAnchor));
@@ -567,12 +567,12 @@ public class GraphicalNodeEditPolicy
 				.getReturnValue());
         
         
-        SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, "");
+        SetConnectionEndsCommand sceCommand = new SetConnectionEndsCommand(editingDomain, StringStatics.BLANK);
 		sceCommand.setEdgeAdaptor(getViewAdapter());
 		sceCommand.setNewSourceAdaptor(new EObjectAdapter(getView()));
 		ConnectionAnchor sourceAnchor = getConnectableEditPart()
 				.getSourceConnectionAnchor(request);
-		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, "");
+		SetConnectionAnchorsCommand scaCommand = new SetConnectionAnchorsCommand(editingDomain, StringStatics.BLANK);
 		scaCommand.setEdgeAdaptor(getViewAdapter());
 		scaCommand.setNewSourceTerminal(getConnectableEditPart()
 				.mapConnectionAnchorToTerminal(sourceAnchor));
