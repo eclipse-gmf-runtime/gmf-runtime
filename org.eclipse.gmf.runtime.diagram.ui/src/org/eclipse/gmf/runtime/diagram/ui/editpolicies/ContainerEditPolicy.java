@@ -313,7 +313,7 @@ public class ContainerEditPolicy
         while (li.hasNext()) {
             IGraphicalEditPart ep = (IGraphicalEditPart)li.next();      
             View view = ep.getNotationView();
-            if (view != null && view instanceof Node) {
+            if (ep.isActive() && view != null && view instanceof Node) {
                 Rectangle bounds = ep.getFigure().getBounds();
                 nodes.add(new LayoutNode((Node)view, bounds.width, bounds.height));
             }
