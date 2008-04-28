@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,10 +25,13 @@ import org.eclipse.gef.editparts.ViewportExposeHelper;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableCompartmentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
-import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure; 
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.NestedResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
+import org.eclipse.gmf.runtime.diagram.ui.label.ILabelDelegate;
+import org.eclipse.gmf.runtime.diagram.ui.label.WrappingLabelDelegate;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -85,13 +88,25 @@ public class NestableListItemEditPart
 			return super.getLabel();
 		}
 	}
+	
+	/**
+     * The main label figure for this editpart (that is, the only label figure
+     * if this is a regular list item or the header label of the nested list
+     * items if this is a nestable list item. Clients may override to create
+     * other label types.
+     * 
+     * @return the main label figure
+     */
+    protected IFigure getMainLabel() {
+        return getLabel();
+    }
 
 	/* 
 	 * (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPart#getCompartmentName()
 	 */
 	public String getCompartmentName() {
-		return getLabel().getText();
+		return getLabelDelegate().getText();
 	}
 	
 	/**
@@ -109,7 +124,7 @@ public class NestableListItemEditPart
 			layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
 			compartmentFigure.getContentPane().setLayoutManager(layout);
 
-			compartmentFigure.getTextPane().add(getLabel());
+			compartmentFigure.getTextPane().add(getMainLabel());
 
 			// if the compartment is resizeable then we need to put a border
 			// around the text compartment so that we have enough room for the
@@ -125,16 +140,14 @@ public class NestableListItemEditPart
 			compartmentFigure.getContentPane().setBorder(
 				new MarginBorder(one, mm.DPtoLP(15), one, half_15));
 
-			WrapLabel label = getLabel();
-			label.setLabelAlignment(PositionConstants.LEFT);
-			label.setVisible(true);
+			getMainLabel().setVisible(true);
 			return compartmentFigure;
 		} else {
 			return super.createFigure();
 		}
 
 	}
-
+    
 	/**
 	 * Adds additional edit policy EditPolicy.PRIMARY_DRAG_ROLE to provide
 	 * collapsiblity for list compartments

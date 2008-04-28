@@ -144,6 +144,10 @@ public class TextCompartmentEditPart extends CompartmentEditPart implements ITex
     /**
      * Creates the label delegate that will be used to interact with the label
      * figure.
+     * <p>
+     * Note: If you have overridden {@link #createFigure()} to create a
+     * different type of figure, you need to also override this method to return
+     * the appropriate type of <code>LabelDelegate</code>.
      * 
      * @return the new label delegate
      * @since 2.1
