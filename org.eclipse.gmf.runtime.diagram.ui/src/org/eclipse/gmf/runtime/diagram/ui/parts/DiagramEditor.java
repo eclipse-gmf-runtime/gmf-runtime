@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -114,6 +114,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
@@ -225,16 +226,10 @@ public abstract class DiagramEditor
             getViewer().setEditDomain(getEditDomain());
             getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
             
-            // No support for a context menu on the outline view for
-            // release 6.0. See RATLC00529151, RATLC00529144
-            // The selected item is a TreeEditPart which is not an
-            // IGraphicalEditPart and many actions/commands don't support it
-            // ContextMenuProvider provider = new DiagramContextMenuProvider(
-            // DiagramEditor.this, getViewer());
-            // getViewer().setContextMenu(provider);
-            // this.getSite().registerContextMenu(
-            // ActionIds.DIAGRAM_OUTLINE_CONTEXT_MENU, provider,
-            // this.getSite().getSelectionProvider());
+            MenuManager outlineContextMenuProvider = getOutlineContextMenuProvider(getViewer());
+            if (outlineContextMenuProvider != null) {
+            	getViewer().setContextMenu(outlineContextMenuProvider);
+            }
 
             getViewer().setKeyHandler(getKeyHandler());
             // getViewer().addDropTargetListener(
@@ -447,6 +442,20 @@ public abstract class DiagramEditor
     }
 
     /**
+     * Returns the context menu provider for the outline view.
+     * 
+     * @param viewer The outline viewer for which this context menu provider
+     *  will be added.
+     *  
+     * @return A menu manager that can be used in the provided outline viewer
+     *  or null if no context menu should be shown.
+     *  
+     */
+    protected MenuManager getOutlineContextMenuProvider(EditPartViewer viewer) {
+		return null;
+	}
+
+	/**
      * @return Returns the rulerComp.
      */
     protected RulerComposite getRulerComposite() {
