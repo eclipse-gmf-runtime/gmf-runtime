@@ -80,10 +80,6 @@ public class CopyToImageUtilTests
         copyToImageTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$ 
     }
     
-    //public void testCopyToImageUtilTest_PDF() throws Exception {
-	//	copyToImageTestForFormat(".pdf", ImageFileFormat.PDF);//$NON-NLS-1$ 
-	//}
-
     public void testCopyToImageOffscreenUtilTest_BMP()
         throws Exception {
         copyToImageOffscreenTestForFormat(".bmp", ImageFileFormat.BMP);//$NON-NLS-1$ 
@@ -109,10 +105,6 @@ public class CopyToImageUtilTests
         copyToImageOffscreenTestForFormat(".png", ImageFileFormat.PNG);//$NON-NLS-1$ 
     }
     
-    //public void testCopyToImageOffscreenUtilTest_PDF() throws Exception {
-	//	copyToImageOffscreenTestForFormat(".pdf", ImageFileFormat.PDF);//$NON-NLS-1$ 
-	//}
-
     public void testCopyToImageUtilTest_SVG() throws Exception {
        copyToImageTestForFormat(".svg", ImageFileFormat.SVG);//$NON-NLS-1$
     }
