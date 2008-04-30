@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,32 +110,15 @@ public class FilterWarningDialog
 		data.horizontalAlignment = GridData.FILL;
 		data.verticalAlignment = GridData.BEGINNING;
 		data.grabExcessHorizontalSpace = true;
-		data.horizontalSpan = 3;
-		data.verticalSpan = 2;
+		data.horizontalSpan = 4;
+		data.verticalSpan = 1;
 		data.widthHint = convertWidthInCharsToPixels(60);
 		data.heightHint = convertHeightInCharsToPixels(4);
 		text.setText(CommonUIMessages.FilterWarningDialog_filteredOut);
 		text.setLayoutData(data);
 		text.setCursor(null);
 		text.setBackground(outer.getBackground());
-
-		ok_button = new Button(outer, SWT.PUSH);
-		ok_button.setText(IDialogConstants.OK_LABEL);
-		GridData ok_button_data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-			| GridData.GRAB_HORIZONTAL);
-		ok_button_data.heightHint = convertVerticalDLUsToPixels(14);
-		ok_button_data.widthHint = Math.max(
-			convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH),
-			ok_button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
-
-		ok_button.setLayoutData(ok_button_data);
-		ok_button.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent event) {
-				okPressed();
-			}
-		});
-		ok_button.setFont(parent.getFont());
+		
 
 		modify_checkbox = new Button(outer, SWT.CHECK);
 		modify_checkbox.setText(CommonUIMessages.FilterWarningDialog_modifyOptions);
@@ -143,7 +126,7 @@ public class FilterWarningDialog
 		modify_checkbox_data.horizontalAlignment = GridData.FILL;
 		modify_checkbox_data.verticalAlignment = GridData.BEGINNING;
 		modify_checkbox_data.grabExcessHorizontalSpace = true;
-		modify_checkbox_data.horizontalSpan = 3;
+		modify_checkbox_data.horizontalSpan = 4;
 		modify_checkbox_data.verticalSpan = 1;
 		modify_checkbox.setLayoutData(modify_checkbox_data);
 		modify_checkbox.setSelection(true);
@@ -155,10 +138,32 @@ public class FilterWarningDialog
 		dontshow_checkbox_data.horizontalAlignment = GridData.FILL;
 		dontshow_checkbox_data.verticalAlignment = GridData.BEGINNING;
 		dontshow_checkbox_data.grabExcessHorizontalSpace = true;
-		dontshow_checkbox_data.horizontalSpan = 3;
+		dontshow_checkbox_data.horizontalSpan = 4;
 		dontshow_checkbox_data.verticalSpan = 1;
 		dontshow_checkbox.setLayoutData(dontshow_checkbox_data);
 		dontshow_checkbox.setFont(parent.getFont());
+		
+		ok_button = new Button(outer, SWT.PUSH);
+		ok_button.setText(IDialogConstants.OK_LABEL);
+		GridData ok_button_data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+			| GridData.GRAB_HORIZONTAL);
+		ok_button_data.horizontalAlignment = GridData.CENTER;
+		ok_button_data.verticalAlignment = GridData.CENTER;
+		ok_button_data.horizontalSpan = 4;
+		ok_button_data.verticalSpan = 1;
+		ok_button_data.widthHint = Math.max(
+				convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH),
+				ok_button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
+		
+
+		ok_button.setLayoutData(ok_button_data);
+		ok_button.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent event) {
+				okPressed();
+			}
+		});
+		ok_button.setFont(parent.getFont());
 
 		return outer;
 	}
