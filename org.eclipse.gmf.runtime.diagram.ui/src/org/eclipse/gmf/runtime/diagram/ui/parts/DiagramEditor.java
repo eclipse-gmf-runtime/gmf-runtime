@@ -95,7 +95,6 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromMo
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ToggleRouterAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages;
-import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.DefaultValues;
 import org.eclipse.gmf.runtime.diagram.ui.internal.pagesetup.PageInfoHelper;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DirectEditKeyHandler;
@@ -1200,84 +1199,68 @@ public abstract class DiagramEditor
 
         // Set defaults for Rulers
         store.setValue(WorkspaceViewerProperties.VIEWRULERS, viewRulers);
-
-        // Set defaults for Page Setup Dialog
-        // PSDialog.initDefaultPreferences(store);
-
-        // PSDefault.initDefaultPSPreferencePagePreferences(globalPreferenceStore);
-
-        // String pageType = PageInfoHelper.getPrinterPageType();
-        // String pageSize = PageInfoHelper.getLocaleSpecificPageType();
-        // Point2D.Double point = (Point2D.Double)
-        // nnn.getPaperSizesInInchesMap().get(pageSize);
-
-        // double[] marginSizes = nnn.getDefaultMarginSizes();
-
-        // store.setValue(WorkspaceViewerProperties.USE_WORKSPACE_PRINT_SETTINGS,
-        // true);
-        // store.setValue(WorkspaceViewerProperties.USE_DIAGRAM_PRINT_SETTINGS,
-        // false);
-
-        // store.setValue(WorkspaceViewerProperties.USE_INCHES, true);
-        // store.setValue(WorkspaceViewerProperties.USE_MILLIMETRES, false);
-
-        // store.setValue(WorkspaceViewerProperties.PAGE_ORIENTATION_LANDSCAPE,
-        // false);
-        // store.setValue(WorkspaceViewerProperties.PAGE_ORIENTATION_PORTRAIT,
-        // true);
-
-        // store.setValue(WorkspaceViewerProperties.PAGE_TYPE, pageSize);
-
-        // store.setValue(WorkspaceViewerProperties.PAGE_WIDTH, point.x);
-        // store.setValue(WorkspaceViewerProperties.PAGE_HEIGHT, point.y);
-
-        // store.setValue(WorkspaceViewerProperties.MARGIN_LEFT,
-        // marginSizes[0]);
-        // store.setValue(WorkspaceViewerProperties.MARGIN_TOP, marginSizes[1]);
-        // store.setValue(WorkspaceViewerProperties.MARGIN_RIGHT,
-        // marginSizes[2]);
-        // store.setValue(WorkspaceViewerProperties.MARGIN_BOTTOM,
-        // marginSizes[3]);
-
-        // Initialize printing defaults
+        
+        // Initialize printing defaults from the workspace preferences 
+        IPreferenceStore workspacePreferences = (IPreferenceStore)preferencesHint.getPreferenceStore();
+     
         store.setValue(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS,
-            DefaultValues.DEFAULT_USE_WORKSPACE_SETTINGS);
-        store.setValue(WorkspaceViewerProperties.PREF_USE_DIAGRAM_SETTINGS,
-            DefaultValues.DEFAULT_USE_DIAGRAM_SETTINGS);
+						workspacePreferences
+								.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS));
 
-        store.setValue(WorkspaceViewerProperties.PREF_USE_INCHES,
-            DefaultValues.DEFAULT_INCHES);
-        store.setValue(WorkspaceViewerProperties.PREF_USE_MILLIM,
-            DefaultValues.DEFAULT_MILLIM);
+		store.setValue(WorkspaceViewerProperties.PREF_USE_DIAGRAM_SETTINGS,
+						workspacePreferences
+								.getBoolean(WorkspaceViewerProperties.PREF_USE_WORKSPACE_SETTINGS));
 
-        store.setValue(WorkspaceViewerProperties.PREF_USE_PORTRAIT,
-            DefaultValues.DEFAULT_PORTRAIT);
-        store.setValue(WorkspaceViewerProperties.PREF_USE_LANDSCAPE,
-            DefaultValues.DEFAULT_LANDSCAPE);
+		store.setValue(WorkspaceViewerProperties.PREF_USE_INCHES,
+				workspacePreferences
+						.getBoolean(WorkspaceViewerProperties.PREF_USE_INCHES));
 
-        store.setValue(WorkspaceViewerProperties.PREF_PAGE_SIZE, DefaultValues
-            .getLocaleSpecificPageType().getName());
-        store.setValue(WorkspaceViewerProperties.PREF_PAGE_WIDTH, DefaultValues
-            .getLocaleSpecificPageType().getWidth());
-        store.setValue(WorkspaceViewerProperties.PREF_PAGE_HEIGHT,
-            DefaultValues.getLocaleSpecificPageType().getHeight());
+		store.setValue(WorkspaceViewerProperties.PREF_USE_MILLIM,
+				workspacePreferences
+						.getBoolean(WorkspaceViewerProperties.PREF_USE_MILLIM));
 
-        store.setValue(WorkspaceViewerProperties.PREF_MARGIN_TOP,
-            DefaultValues.DEFAULT_MARGIN_TOP);
-        store.setValue(WorkspaceViewerProperties.PREF_MARGIN_BOTTOM,
-            DefaultValues.DEFAULT_MARGIN_BOTTOM);
-        store.setValue(WorkspaceViewerProperties.PREF_MARGIN_LEFT,
-            DefaultValues.DEFAULT_MARGIN_LEFT);
-        store.setValue(WorkspaceViewerProperties.PREF_MARGIN_RIGHT,
-            DefaultValues.DEFAULT_MARGIN_RIGHT);
+		store.setValue(WorkspaceViewerProperties.PREF_USE_PORTRAIT,
+						workspacePreferences
+								.getBoolean(WorkspaceViewerProperties.PREF_USE_PORTRAIT));
+		
+		store.setValue(WorkspaceViewerProperties.PREF_USE_LANDSCAPE,
+						workspacePreferences
+								.getBoolean(WorkspaceViewerProperties.PREF_USE_LANDSCAPE));
 
+		store.setValue(WorkspaceViewerProperties.PREF_PAGE_SIZE,
+				workspacePreferences
+						.getString(WorkspaceViewerProperties.PREF_PAGE_SIZE));
+
+		store.setValue(WorkspaceViewerProperties.PREF_PAGE_WIDTH,
+				workspacePreferences
+						.getDouble(WorkspaceViewerProperties.PREF_PAGE_WIDTH));
+		
+		store.setValue(WorkspaceViewerProperties.PREF_PAGE_HEIGHT,
+				workspacePreferences
+						.getDouble(WorkspaceViewerProperties.PREF_PAGE_HEIGHT));
+
+		store.setValue(WorkspaceViewerProperties.PREF_MARGIN_TOP,
+				workspacePreferences
+						.getDouble(WorkspaceViewerProperties.PREF_MARGIN_TOP));
+
+		store.setValue(WorkspaceViewerProperties.PREF_MARGIN_BOTTOM,
+						workspacePreferences
+								.getDouble(WorkspaceViewerProperties.PREF_MARGIN_BOTTOM));
+
+		store.setValue(WorkspaceViewerProperties.PREF_MARGIN_LEFT,
+				workspacePreferences
+						.getDouble(WorkspaceViewerProperties.PREF_MARGIN_LEFT));
+		
+		store.setValue(WorkspaceViewerProperties.PREF_MARGIN_RIGHT,
+						workspacePreferences
+								.getDouble(WorkspaceViewerProperties.PREF_MARGIN_RIGHT));
     }
 
     /**
-     * Returns the workspace viewer <code>PreferenceStore</code>
-     * 
-     * @return the workspace viewer <code>PreferenceStore</code>
-     */
+	 * Returns the workspace viewer <code>PreferenceStore</code>
+	 * 
+	 * @return the workspace viewer <code>PreferenceStore</code>
+	 */
     public PreferenceStore getWorkspaceViewerPreferenceStore() {
         if (workspaceViewerPreferenceStore != null) {
             return workspaceViewerPreferenceStore;
