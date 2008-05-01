@@ -69,7 +69,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -298,7 +298,17 @@ public class PrintPreviewHelper{
 	 * Determine if we should consider fit to page options or not.
 	 */
 	private boolean fitToPage = false;
-
+	
+	/**
+	 *  Initial zoom levels.
+	 */
+	private int[] zoomLevels = { 25, 50, 75, 100, 150, 200, 250, 300, 400 };
+	
+	/**
+	 * A constant used in the combo box for scaling.
+	 */
+	private static final String FIT_TO_PAGES = DiagramUIPrintingMessages.PrintPreview_FitToPage_ButtonText;
+		
 	/**
 	 * Initialize all toolbar images
 	 */
@@ -354,7 +364,9 @@ public class PrintPreviewHelper{
 	public void doPrintPreview(IPrintActionHelper prActionHelper) {
 		this.printActionHelper = prActionHelper;
 
-		setUserScale(PrintHelperUtil.getScale());
+		if (!fitToPage) {
+			setUserScale(PrintHelperUtil.getScale());
+		}
 		
 		if (getDiagramEditorPart() == null) {
 			MessageDialog
@@ -667,24 +679,29 @@ public class PrintPreviewHelper{
 		new ToolItem(bar, SWT.SEPARATOR);
 							
 		ToolItem separator = new ToolItem(bar, SWT.SEPARATOR);
-		final Text textField = new Text(bar, SWT.SINGLE | SWT.BORDER);
-		textField.setText("XXXXX");//$NON-NLS-1$
-		textField.setEnabled(true);
-		textField.pack();
-		textField.setText(getDisplayScale(PrintHelperUtil.getScale()));
+		final Combo zoomCombo = new Combo(bar, SWT.DROP_DOWN);
+			
+		zoomCombo.add(FIT_TO_PAGES);
+		for (int i = 0; i < zoomLevels.length; i++) {
+			zoomCombo.add(getDisplayScale(zoomLevels[i]));
+		}
 		
-		separator.setWidth(textField.getBounds().width);
-		separator.setControl(textField);
-		
-		textField.addSelectionListener(new SelectionListener() {
+		if (this.fitToPage) {
+			zoomCombo.setText(FIT_TO_PAGES);
+			zoomCombo.select(0);
+		} else {
+			zoomCombo.setText(getDisplayScale(PrintHelperUtil.getScale()));
+		}
+						
+		zoomCombo.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent e) {
-				// do nothing.
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				String scaleFactor = ((Text) e.getSource()).getText();
-
+			/**
+			 * Apply the zoom scale as indicated by the text in the combo-box selection.
+			 * 
+			 * @param combo Obtain zoom information from the combo-box.
+			 */
+			private void doZoom(Combo combo) {
+				String scaleFactor = combo.getText();
 				int percentageIndex = scaleFactor.indexOf("%"); //$NON-NLS-1$
 				if (percentageIndex > 0) {
 					scaleFactor = scaleFactor.substring(0, percentageIndex);
@@ -692,46 +709,47 @@ public class PrintPreviewHelper{
 				int scalePercentage = Integer.parseInt(scaleFactor);
 				setPercentScaling(scalePercentage);
 				refreshComposite();
-				((Text) e.getSource()).setText(getDisplayScale(scalePercentage));
-			}
-		});
-		
-		new ToolItem(bar, SWT.SEPARATOR);
-		
-		ToolItem fitToPageSeparator = new ToolItem(bar, SWT.SEPARATOR);
-		Button buttonFitToPage = new Button(bar, SWT.PUSH);
-		buttonFitToPage.setText(DiagramUIPrintingMessages.PrintPreview_FitToPage_ButtonText);
-		buttonFitToPage.setEnabled(true);
-		buttonFitToPage.pack();
-			
-		fitToPageSeparator.setWidth(buttonFitToPage.getBounds().width);
-		fitToPageSeparator.setControl(buttonFitToPage);
-		
-		buttonFitToPage.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-
-				FitToPagesDialog fitToPages = new FitToPagesDialog(shell);
-				if (fitToPages.open() == Dialog.OK) {
-					int pagesWide = fitToPages.getPagesWide();
-					int pagesTall = fitToPages.getPagesTall();
-					PrintHelperUtil.setScaleToWidth(pagesWide);
-					PrintHelperUtil.setScaleToHeight(pagesTall);
-
-					setFitToPage(pagesWide, pagesTall);
-					refreshComposite();
-					textField.setText(getDisplayScale(PrintHelperUtil
-							.getScale()));
-				}
+				combo.setText(getDisplayScale(scalePercentage));
 			}
 
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
 			public void widgetDefaultSelected(SelectionEvent e) {
-				// do nothing
+				doZoom((Combo) e.getSource());
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			public void widgetSelected(SelectionEvent e) {
+				String selectedString = ((Combo) e.getSource()).getText();
+				if (FIT_TO_PAGES.compareToIgnoreCase(selectedString) == 0) {
+					FitToPagesDialog fitToPages = new FitToPagesDialog(shell);
+					if (fitToPages.open() == Dialog.OK) {
+						int pagesWide = fitToPages.getPagesWide();
+						int pagesTall = fitToPages.getPagesTall();
+						PrintHelperUtil.setScaleToWidth(pagesWide);
+						PrintHelperUtil.setScaleToHeight(pagesTall);
+
+						setFitToPage(pagesWide, pagesTall);
+						refreshComposite();
+					}
+				} else {
+					doZoom((Combo) e.getSource());
+				}
+
 			}
 		});
-								
-		
-								
+						
+		zoomCombo.pack();
+		separator.setWidth(zoomCombo.getSize().x);
+		separator.setControl(zoomCombo);
+										
 		new ToolItem(bar, SWT.SEPARATOR);
 		closeTool = new ToolItem(bar, SWT.NULL);
 		closeTool.setToolTipText(DiagramUIPrintingMessages.PrintPreview_CloseToolItem);
@@ -1485,7 +1503,7 @@ public class PrintPreviewHelper{
 		int vScale = (int) ((totalHeight * 100) / actualHeight);
 		int hScale = (int) ((totalWidth * 100) / actualWidth);
 
-		setUserScale(Math.min(hScale, vScale));
+		userScale = Math.min(hScale, vScale)/100f;
 	}
 	
 	
