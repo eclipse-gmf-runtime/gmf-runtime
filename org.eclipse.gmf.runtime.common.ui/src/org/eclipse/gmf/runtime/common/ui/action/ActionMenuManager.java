@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,22 +134,34 @@ public class ActionMenuManager extends MenuManager {
          */
         protected Menu createMenu(Menu mnu) {
             IContributionItem[] items = getRealItems();
+            IContributionItem lastGroupMarker = null;
             for (int i = 0; i < items.length; i++) {
                 IContributionItem item = items[i];
                 if (item instanceof AbstractGroupMarker) {
                     if (i == 0
                         || i == items.length - 1
                         || items[i + 1] instanceof AbstractGroupMarker
-                        || mnu.getItemCount() < 1)
+                        || mnu.getItemCount() < 1 
+                        || !item.isVisible()) {
                         continue;
-                }
-                if (!item.isVisible()) {
-                    continue;
-                }
-                try {
-                    item.fill(menu, -1);
-                } catch (Exception e) {
-                    Log.info(CommonUIPlugin.getDefault(), CommonUIStatusCodes.GENERAL_UI_FAILURE, "The contribution item (" + item.getId() + ") failed to fill within the menu"); //$NON-NLS-1$ //$NON-NLS-2$
+                    } else {
+                        // Do not add last group marker until we know that there
+                        // will be items following it.
+                        lastGroupMarker = item;
+                    }
+                } else {
+                    if (!item.isVisible()) {
+                        continue;
+                    }
+                    try {
+                        if (lastGroupMarker != null) {
+                            lastGroupMarker.fill(menu, -1);
+                            lastGroupMarker = null;
+                        }
+                        item.fill(menu, -1);
+                    } catch (Exception e) {
+                        Log.info(CommonUIPlugin.getDefault(), CommonUIStatusCodes.GENERAL_UI_FAILURE, "The contribution item (" + item.getId() + ") failed to fill within the menu"); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
                 }
             }
             MenuItem menuItems[] = mnu.getItems();
