@@ -35,8 +35,6 @@ import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.parts.ScrollableThumbnail;
-import org.eclipse.draw2d.parts.Thumbnail;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -105,6 +103,8 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.parts.ScrollableThumbnailEx;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.parts.ThumbnailEx;
 import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.GuideStyle;
@@ -186,7 +186,7 @@ public abstract class DiagramEditor
 
         private boolean overviewInitialized;
 
-        private Thumbnail thumbnail;
+        private ThumbnailEx thumbnail;
 
         private DisposeListener disposeListener;
 
@@ -323,7 +323,7 @@ public abstract class DiagramEditor
             LightweightSystem lws = new LightweightSystem(overview);
             RootEditPart rep = getGraphicalViewer().getRootEditPart();
             DiagramRootEditPart root = (DiagramRootEditPart) rep;
-            thumbnail = new ScrollableThumbnail((Viewport) root.getFigure());
+            thumbnail = new ScrollableThumbnailEx((Viewport) root.getFigure());
             // thumbnail.setSource(root.getLayer(LayerConstants.PRINTABLE_LAYERS));
             thumbnail.setSource(root.getLayer(LayerConstants.SCALABLE_LAYERS));
 

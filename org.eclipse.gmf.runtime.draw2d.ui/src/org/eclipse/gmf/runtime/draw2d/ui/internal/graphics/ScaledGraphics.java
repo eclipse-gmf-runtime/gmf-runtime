@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,8 @@ import org.eclipse.swt.widgets.Display;
  * <p>
  * Code taken from Eclipse reference bugzilla #77403
  * See also bugzilla #111454
- * 
+ * See also bugzilla #230056 setLineWidth in ScaledGraphics does not support the 
+ * zoom factor.
  */
 /**
  * A Graphics object able to scale all operations based on the current scale factor.
@@ -740,7 +741,21 @@ int zoomFontHeight(int height) {
 }
 
 int zoomLineWidth(int w) {
-	return w;
+	/*
+	 * We introduced line width zoom in GMF 2.1.
+	 * Unfortunately GMF 2.0 clients used HiMetric map mode and called
+	 * setLineWidth(1) rather than setLineWidth(getMapMode().LPtoDP(1)).
+	 * This small piece of code detects this case and simply returns the
+	 * line width.
+	 */
+	if (zoom < 0.04 && w < 25) {
+		return w;
+	}
+	/*
+	 * We interestingly add 0.1 to eliminate rounding errors with HiMetric
+	 * map mode. This has no effect with identity/pixel map mode.
+	 */
+	return (int) ((zoom * w) + 0.1);
 }
 
 private int[] zoomPointList(int[] points) {

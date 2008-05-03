@@ -65,6 +65,7 @@ Export-Package: org.eclipse.gmf.runtime.draw2d.ui.figures,
    org.eclipse.gmf.runtime.diagram.ui.providers,
    org.eclipse.gmf.runtime.diagram.ui.printing.render,
    org.eclipse.gmf.runtime.diagram.ui.printing",
+ org.eclipse.gmf.runtime.draw2d.ui.internal.parts;x-friends:="org.eclipse.gmf.runtime.diagram.ui",
  org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
   x-friends:="org.eclipse.gmf.tests.runtime.draw2d.ui,
    org.eclipse.gmf.runtime.draw2d.ui.render,
