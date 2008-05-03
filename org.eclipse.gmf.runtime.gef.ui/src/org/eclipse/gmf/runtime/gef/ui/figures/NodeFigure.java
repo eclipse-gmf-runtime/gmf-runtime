@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,18 @@ public class NodeFigure
 		implements HandleBounds, IAnchorableFigure, IPolygonAnchorableFigure {
 
 	private Hashtable connectionAnchors;
+	
+	/** 
+	 * The width of this shape's outline. (a field from GEF Shape).
+	 * TODO: NodeFigure should have extended org.eclipse.draw2d.Shape
+	 */
+	private int lineWidth = 1;
+	
+	/**
+	 * The line style to be used for this shape's outline. 
+	 * TODO: NodeFigure should have extended org.eclipse.draw2d.Shape
+	 */
+	private int lineStyle = Graphics.LINE_SOLID;
 	
 	/**
 	 * <code>String</code> that is the identifier for the default anchor
@@ -244,6 +256,50 @@ public class NodeFigure
 				+ anchorableRectangle.height);
 		points.addPoint(anchorableRectangle.x, anchorableRectangle.y);
 		return points;
-	}	
-	
+	}
+
+	/**
+	 * Returns the line style used to outline this shape.
+	 * @return the line style
+	 * @since 2.1
+	 */
+	public int getLineStyle() {
+		return lineStyle;
+	}
+
+	/**
+	 * Returns the line width of this shape's outline.
+	 * @return the line width
+	 * @since 2.1
+	 */
+	public int getLineWidth() {
+		return lineWidth;
+	}
+
+	/**
+	 * Sets the line width to be used to outline the shape.
+	 *
+	 * @param w the new width
+	 * @since 2.1
+	 */
+	public void setLineWidth(int w) {
+		if (lineWidth == w) 
+			return;
+		lineWidth = w;
+		repaint();
+	}
+
+	/**
+	 * Sets the style of line to be used by this shape.
+	 *
+	 * @param s the new line style
+	 * @since 2.1
+	 */
+	public void setLineStyle(int s) {
+		if (lineStyle == s) 
+			return;
+		lineStyle = s;
+		repaint();
+	}
+
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,11 @@ public abstract class GeoShapePolygonFigure
 	protected void paintFigure(Graphics g) {
 		PointList points = calculatePoints(getBounds().getCopy());
 		g.fillPolygon(points);
+		
+		// set the line type and line width
+		g.setLineStyle(getLineStyle());
+		g.setLineWidth(getLineWidth());
+		
 		g.drawPolygon(points);
 	}
 

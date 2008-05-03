@@ -29,8 +29,12 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PolygonDecoration;
+import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.draw2d.RelativeBendpoint;
+import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -106,12 +110,16 @@ import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.gef.ui.internal.editpolicies.GraphicalEditPolicyEx;
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
 import org.eclipse.gmf.runtime.gef.ui.internal.tools.SelectConnectionEditPartTracker;
+import org.eclipse.gmf.runtime.notation.ArrowStyle;
+import org.eclipse.gmf.runtime.notation.ArrowType;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.JumpLinkStatus;
 import org.eclipse.gmf.runtime.notation.JumpLinkType;
 import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.LineType;
+import org.eclipse.gmf.runtime.notation.LineTypeStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Routing;
@@ -1210,7 +1218,6 @@ abstract public class ConnectionEditPart
             rbp.setRelativeDimensions(new Dimension(wbp.getSourceX(), wbp
                 .getSourceY()), new Dimension(wbp.getTargetX(), wbp
                 .getTargetY()));
-//          	rbp.setWeight((i + 1) / ((float) modelConstraint.size() + 1));
             rbp.setWeight(i / ((float) modelConstraint.size() - 1));
             figureConstraint.add(rbp);
         }
@@ -1859,5 +1866,162 @@ abstract public class ConnectionEditPart
 		super.setModel(model);
 		semanticConnection = null;
 	}
-  
+
+	/**
+	 * Set the line width of the connection. Clients need to override if they
+	 * support line width.
+	 * 
+	 * @param width
+	 *            the line width.
+	 */
+	protected void setLineWidth(int width) {
+		/* not implemented */
+	}
+	
+	/**
+	 * Get the line width of the connection.
+	 * 
+	 * @return width
+	 *            the line width.
+	 */
+	protected int getLineWidth() {
+		/* a default of -1 means the diagram does not implement line width */
+		int lineWidth = -1;
+		
+		LineStyle style = (LineStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getLineStyle());
+		if (style != null) {
+			lineWidth = style.getLineWidth();
+		}
+
+		return lineWidth;
+	}
+	
+	/**
+	 * Set the line type of the connection. Clients need to override if they
+	 * support line type.
+	 * 
+	 * @param lineType
+	 *            the line type.
+	 */
+	protected void setLineType(int lineType) {
+		/* not implemented */
+	}
+	
+	/**
+	 * Get the line type of the connection.
+	 * 
+	 * @return the line type.
+	 */
+	protected int getLineType() {
+		// default to Graphics.LINE_SOLID.
+		int lineType = Graphics.LINE_SOLID;
+
+		LineTypeStyle style = (LineTypeStyle) getPrimaryView().getStyle(
+				NotationPackage.eINSTANCE.getLineTypeStyle());
+		if (style != null) {
+			if (style.getLineType() == LineType.SOLID_LITERAL) {
+				lineType = Graphics.LINE_SOLID;
+			} else if (style.getLineType() == LineType.DASH_LITERAL) {
+				lineType = Graphics.LINE_DASH;
+			} else if (style.getLineType() == LineType.DOT_LITERAL) {
+				lineType = Graphics.LINE_DOT;
+			} else if (style.getLineType() == LineType.DASH_DOT_LITERAL) {
+				lineType = Graphics.LINE_DASHDOT;
+			} else if (style.getLineType() == LineType.DASH_DOT_DOT_LITERAL) {
+				lineType = Graphics.LINE_DASHDOTDOT;
+			}
+		}
+		
+		return lineType;
+	}
+
+	/**
+	 * Set the arrow decoration on the connection source end. Clients need to override if they
+	 * support arrow decorations.
+	 * 
+	 * @param arrowDecoration
+	 *            the arrow decoration.
+	 */
+	protected void setArrowSource(RotatableDecoration arrowDecoration) {
+		/* not implemented */
+	}
+	
+	/**
+	 * Set the arrow decoration on the connection target end. Clients need to override if they
+	 * support arrow decorations.
+	 * 
+	 * @param arrowDecoration
+	 *            the arrow type.
+	 */
+	protected void setArrowTarget(RotatableDecoration arrowDecoration) {
+		/* not implemented */
+	}
+	
+	/**
+	 * Get the arrow decoration for the arrow type.
+	 * 
+	 * @param arrowType
+	 *            the arrow type.
+	 */
+	protected RotatableDecoration getArrowDecoration(int arrowType) {
+		
+		RotatableDecoration decoration = null;
+		if (arrowType == ArrowType.OPEN_ARROW) {
+			decoration = new PolylineDecoration();
+			((PolylineDecoration)decoration).setScale(11 + getLineWidth(), 6 + getLineWidth());
+			((PolylineDecoration)decoration).setTemplate(PolylineDecoration.TRIANGLE_TIP);
+			((PolylineDecoration)decoration).setLineWidth(getLineWidth());
+		} else if (arrowType == ArrowType.SOLID_ARROW) {
+			decoration = new PolygonDecoration();
+			((PolygonDecoration)decoration).setScale(11 + getLineWidth(), 6 + getLineWidth());
+			((PolygonDecoration)decoration).setTemplate(PolygonDecoration.TRIANGLE_TIP);
+			((PolygonDecoration)decoration).setLineWidth(getLineWidth());
+			((PolygonDecoration)decoration).setFill(true);
+		}
+		return decoration;
+	}
+	
+	/**
+	 * Refreshes the line type property.
+	 */
+	protected void refreshLineWidth() {
+		setLineWidth(getLineWidth());
+	}
+
+	/**
+	 * Refreshes the line type property.
+	 */
+	protected void refreshLineType() {
+		setLineType(getLineType());
+	}
+
+	/**
+	 * Refreshes the arrow decoration on the source end property.
+	 */
+	protected void refreshArrowSource() {
+		// default to no decoration.
+		int arrowType = ArrowType.NONE;
+		
+		ArrowStyle style = (ArrowStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getArrowStyle());
+		if (style != null) {
+			arrowType = style.getArrowSource().getValue();
+		}
+		
+		setArrowSource(getArrowDecoration(arrowType));
+	}
+
+	/**
+	 * Refreshes the arrow decoration on the target end property.
+	 */
+	protected void refreshArrowTarget() {
+		// default to no decoration.
+		int arrowType = ArrowType.NONE;
+		
+		ArrowStyle style = (ArrowStyle) getPrimaryView().getStyle(NotationPackage.eINSTANCE.getArrowStyle());
+		if (style != null) {
+			arrowType = style.getArrowTarget().getValue();
+		}
+		
+		setArrowTarget(getArrowDecoration(arrowType));
+	}
 }

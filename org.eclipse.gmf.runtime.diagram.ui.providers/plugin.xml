@@ -144,6 +144,58 @@
             </partCustom>
             <partCustom menubarPath="/diagramMenu/fontColorLineGroup" toolbarPath="/toolbarColorLineGroup" id="lineColorContributionItem">
             </partCustom>
+            <partMenu menubarPath="/diagramMenu/fontColorLineGroup" id="lineTypeMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/lineTypeMenu/" id="lineTypeGroup">
+            </partMenuGroup>
+            <partAction menubarPath="/diagramMenu/lineTypeMenu/lineTypeGroup" id="lineTypeSolidAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDashAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDotAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDashDotAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDashDotDotAction">
+            </partAction>
+            <partMenu menubarPath="/diagramMenu/fontColorLineGroup" id="lineWidthMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/lineWidthMenu/" id="lineWidthGroup">
+            </partMenuGroup>
+            <partAction menubarPath="/diagramMenu/lineWidthMenu/lineWidthGroup" id="lineWidthOneAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineWidthMenu/lineWidthGroup" id="lineWidthTwoAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineWidthMenu/lineWidthGroup" id="lineWidthThreeAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineWidthMenu/lineWidthGroup" id="lineWidthFourAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/lineWidthMenu/lineWidthGroup" id="lineWidthFiveAction">
+            </partAction>
+            <partMenu menubarPath="/diagramMenu/fontColorLineGroup" id="arrowTypeMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/arrowTypeMenu/" id="arrowTypeGroup">
+            </partMenuGroup>
+            <partMenu menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeGroup" id="arrowTypeSourceMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeSourceMenu/" id="arrowTypeSourceGroup">
+            </partMenuGroup>
+            <partAction menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeSourceMenu/arrowTypeSourceGroup" id="arrowTypeSourceNoneAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeSourceMenu/arrowTypeSourceGroup" id="arrowTypeSourceSolidAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeSourceMenu/arrowTypeSourceGroup" id="arrowTypeSourceOpenAction">
+            </partAction>
+            <partMenu menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeGroup" id="arrowTypeTargetMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeTargetMenu/" id="arrowTypeTargetGroup">
+            </partMenuGroup>
+            <partAction menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeTargetMenu/arrowTypeTargetGroup" id="arrowTypeTargetNoneAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeTargetMenu/arrowTypeTargetGroup" id="arrowTypeTargetSolidAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/arrowTypeMenu/arrowTypeTargetMenu/arrowTypeTargetGroup" id="arrowTypeTargetOpenAction">
+            </partAction>
             <partMenu menubarPath="/diagramMenu/fontColorLineGroup" toolbarPath="/toolbarColorLineGroup" id="routerMenu">
             </partMenu>
             <partMenuGroup menubarPath="/diagramMenu/routerMenu/" toolbarPath="/routerMenu/" id="routerGroup">
@@ -431,6 +483,58 @@
             </popupCustom>
             <popupCustom path="/formatMenu/fontFillLineGroup" id="lineColorContributionItem">
             </popupCustom>                               
+            <popupMenu path="/formatMenu/fontFillLineGroup" id="lineWidthMenu">
+            </popupMenu>
+            <popupMenuGroup path="/formatMenu/lineWidthMenu/" id="lineWidthGroup">
+            </popupMenuGroup>
+            <popupAction path="/formatMenu/lineWidthMenu/lineWidthGroup" id="lineWidthOneAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineWidthMenu/lineWidthGroup" id="lineWidthTwoAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineWidthMenu/lineWidthGroup" id="lineWidthThreeAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineWidthMenu/lineWidthGroup" id="lineWidthFourAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineWidthMenu/lineWidthGroup" id="lineWidthFiveAction">
+            </popupAction>
+            <popupMenu path="/formatMenu/fontFillLineGroup" id="lineTypeMenu">
+            </popupMenu>
+            <popupMenuGroup path="/formatMenu/lineTypeMenu/" id="lineTypeGroup">
+            </popupMenuGroup>
+            <popupAction path="/formatMenu/lineTypeMenu/lineTypeGroup" id="lineTypeSolidAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDashAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDotAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDashDotAction">
+            </popupAction>
+            <popupAction path="/formatMenu/lineTypeMenu/lineTypeGroup" id="lineTypeDashDotDotAction">
+            </popupAction>
+            <popupMenu path="/formatMenu/fontFillLineGroup" id="arrowTypeMenu">
+            </popupMenu>
+            <popupMenuGroup path="/formatMenu/arrowTypeMenu/" id="arrowTypeGroup">
+            </popupMenuGroup>
+            <popupMenu path="/formatMenu/arrowTypeMenu/arrowTypeGroup" id="arrowTypeSourceMenu">
+            </popupMenu>
+            <popupMenuGroup path="/formatMenu/arrowTypeMenu/arrowTypeSourceMenu/" id="arrowTypeSourceGroup">
+            </popupMenuGroup>
+            <popupAction path="/formatMenu/arrowTypeMenu/arrowTypeSourceMenu/arrowTypeSourceGroup" id="arrowTypeSourceNoneAction">
+            </popupAction>
+            <popupAction path="/formatMenu/arrowTypeMenu/arrowTypeSourceMenu/arrowTypeSourceGroup" id="arrowTypeSourceSolidAction">
+            </popupAction>
+            <popupAction path="/formatMenu/arrowTypeMenu/arrowTypeSourceMenu/arrowTypeSourceGroup" id="arrowTypeSourceOpenAction">
+            </popupAction>
+            <popupMenu path="/formatMenu/arrowTypeMenu/arrowTypeGroup" id="arrowTypeTargetMenu">
+            </popupMenu>
+            <popupMenuGroup path="/formatMenu/arrowTypeMenu/arrowTypeTargetMenu/" id="arrowTypeTargetGroup">
+            </popupMenuGroup>
+            <popupAction path="/formatMenu/arrowTypeMenu/arrowTypeTargetMenu/arrowTypeTargetGroup" id="arrowTypeTargetNoneAction">
+            </popupAction>
+            <popupAction path="/formatMenu/arrowTypeMenu/arrowTypeTargetMenu/arrowTypeTargetGroup" id="arrowTypeTargetSolidAction">
+            </popupAction>
+            <popupAction path="/formatMenu/arrowTypeMenu/arrowTypeTargetMenu/arrowTypeTargetGroup" id="arrowTypeTargetOpenAction">
+            </popupAction>
             <popupMenu path="/formatMenu/miscellaneousGroup" id="arrangeMenu">
             </popupMenu>    
             <popupMenuGroup path="/formatMenu/arrangeMenu/" id="arrangeGroup">

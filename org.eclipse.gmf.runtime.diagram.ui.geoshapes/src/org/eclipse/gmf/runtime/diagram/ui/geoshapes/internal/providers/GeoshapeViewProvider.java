@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,15 +16,14 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories.GeoShapeConnectionViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.views.factories.GeoShapeViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * @author jschofie
- * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.geoshapes.*
- * 
  * Notation Provider that registers all the specific Geometric Shapes
+ * 
+ * @author jschofie
  */
 public class GeoshapeViewProvider
 	extends AbstractViewProvider {
@@ -50,7 +49,7 @@ public class GeoshapeViewProvider
 	//	 Map to hold the Line/Connection Views
 	private Map connectionMap = new HashMap();
 	{
-		connectionMap.put(GeoshapeConstants.TOOL_LINE, ConnectionViewFactory.class);
+		connectionMap.put(GeoshapeConstants.TOOL_LINE, GeoShapeConnectionViewFactory.class);
 	}
 	/**
 	 * Returns the shape view class to instantiate based on the passed params

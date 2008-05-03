@@ -191,6 +191,73 @@ public class DiagramUIActionsPluginImages {
 	public static final ImageDescriptor DESC_TEXT_ALIGNMENT_RIGHT_DISABLED = create(PREFIX_DISABLED
 			+ "alignright.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor DESC_LINE_WIDTH = create(PREFIX_ENABLED
+			+ "line_width.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_DISABLED = create(PREFIX_DISABLED
+			+ "line_width.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_ONE = create(PREFIX_ENABLED
+			+ "line_width_one.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_ONE_DISABLED = create(PREFIX_DISABLED
+			+ "line_width_one.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_TWO = create(PREFIX_ENABLED
+			+ "line_width_two.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_TWO_DISABLED = create(PREFIX_DISABLED
+			+ "line_width_two.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_THREE = create(PREFIX_ENABLED
+			+ "line_width_three.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_THREE_DISABLED = create(PREFIX_DISABLED
+			+ "line_width_three.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_FOUR = create(PREFIX_ENABLED
+			+ "line_width_four.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_FOUR_DISABLED = create(PREFIX_DISABLED
+			+ "line_width_four.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_FIVE = create(PREFIX_ENABLED
+			+ "line_width_five.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_WIDTH_FIVE_DISABLED = create(PREFIX_DISABLED
+			+ "line_width_five.gif"); //$NON-NLS-1$
+	
+	public static final ImageDescriptor DESC_ARROW_TYPE = create(PREFIX_ENABLED
+			+ "arrow_type.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_DISABLED = create(PREFIX_DISABLED
+			+ "arrow_type.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_NONE = create(PREFIX_ENABLED
+			+ "arrow_type_none.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_NONE_DISABLED = create(PREFIX_DISABLED
+			+ "arrow_type_none.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_OPEN = create(PREFIX_ENABLED
+			+ "arrow_type_open.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_OPEN_DISABLED = create(PREFIX_DISABLED
+			+ "arrow_type_open.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_SOLID = create(PREFIX_ENABLED
+			+ "arrow_type_solid.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ARROW_TYPE_SOLID_DISABLED = create(PREFIX_DISABLED
+			+ "arrow_type_solid.gif"); //$NON-NLS-1$
+	
+	public static final ImageDescriptor DESC_LINE_TYPE = create(PREFIX_ENABLED
+			+ "line_type.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DISABLED = create(PREFIX_DISABLED
+			+ "line_type.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_SOLID = create(PREFIX_ENABLED
+			+ "line_type_solid.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_SOLID_DISABLED = create(PREFIX_DISABLED
+			+ "line_type_solid.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DASH = create(PREFIX_ENABLED
+			+ "line_type_dash.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DASH_DISABLED = create(PREFIX_DISABLED
+			+ "line_type_dash.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DOT = create(PREFIX_ENABLED
+			+ "line_type_dot.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DOT_DISABLED = create(PREFIX_DISABLED
+			+ "line_type_dot.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DASH_DOT = create(PREFIX_ENABLED
+			+ "line_type_dash_dot.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DASH_DOT_DISABLED = create(PREFIX_DISABLED
+			+ "line_type_dash_dot.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DASH_DOT_DOT = create(PREFIX_ENABLED
+			+ "line_type_dash_dot_dot.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_LINE_TYPE_DASH_DOT_DOT_DISABLED = create(PREFIX_DISABLED
+			+ "line_type_dash_dot_dot.gif"); //$NON-NLS-1$
+
 	/**
 	 * Creates the image descriptor from the filename given.
 	 * 

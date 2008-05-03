@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -227,7 +227,37 @@ public class NoteEditPart extends ShapeNodeEditPart {
             // skipping the resolve event whenever the editpart is already resolved.
             return;
         }
-        
-        super.handleNotificationEvent(notification);
+   		if (NotationPackage.eINSTANCE.getLineStyle_LineWidth().equals(feature)) {
+    			refreshLineWidth();
+   		} else if (NotationPackage.eINSTANCE.getLineTypeStyle_LineType().equals(
+    				feature)) {
+   			refreshLineType();
+   		} else {
+            super.handleNotificationEvent(notification);
+   		}
     }
+
+    /*
+     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setLineWidth(int)
+     */
+	protected void setLineWidth(int width) {
+		((NoteFigure) getFigure()).setLineWidth(getMapMode().DPtoLP(width));
+	}
+
+	/*
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#setLineType(int)
+	 */
+	protected void setLineType(int lineType) {
+		((NoteFigure)getFigure()).setLineStyle(lineType);
+	}
+
+	/*
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshVisuals()
+	 */
+	protected void refreshVisuals() {
+		super.refreshVisuals();
+		refreshLineType();
+		refreshLineWidth();
+	}
+	
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.common.util.AbstractEnumerator;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -37,6 +38,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,7 +52,7 @@ import org.eclipse.swt.widgets.Group;
  * Appearance properties
  */
 public class ConnectionAppearancePropertySection
-	extends ColorsAndFontsPropertySection {
+	extends ColoursAndFontsAndLineStylesPropertySection {
 
 	protected static final String REVERSE_JUMP_LINKS_NAME_LABEL = DiagramUIPropertiesMessages.
 	ConnectionAppearanceDetails_ReverseJumpLinksLabel_Text;
@@ -151,12 +153,24 @@ public class ConnectionAppearancePropertySection
 		routing.setLayout(new GridLayout(1, false));
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		routing.setLayoutData(data);
+
+		// left composite for line styles and smoothness
+		Composite left = getWidgetFactory().createComposite(groups);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginWidth = 0;
+		left.setLayout(layout);
+		data = new GridData(GridData.FILL_BOTH);
+		left.setLayoutData(data);
+		
+		// line styles
+		createLineStylesGroup(left);
+		lineStylesGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		// smoothness
-		createRadioGroup(groups, Smoothness.VALUES.iterator(),
+		createRadioGroup(left, Smoothness.VALUES.iterator(),
 			Properties.ID_SMOOTHNESS, DiagramUIPropertiesMessages.
 				AppearanceDetails_SmoothnessCommand_Text,
-			SMOOTHNESS_NAME_LABEL, 1);
+			SMOOTHNESS_NAME_LABEL, 2);
 
 		// line router
 		createRadioGroup(routing, Routing.VALUES.iterator(),

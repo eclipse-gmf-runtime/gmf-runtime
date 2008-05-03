@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -28,12 +29,14 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
@@ -127,7 +130,8 @@ public class ColorPalettePopup {
 	}
 
 	/** default color icon width */
-	public static final Point ICON_SIZE = new Point(20, 20);
+	public static final Point ICON_SIZE = new Point(IDialogConstants.BUTTON_BAR_HEIGHT, 
+			IDialogConstants.BUTTON_BAR_HEIGHT);
 
 	/** inventory colors */
 	private static final InventoryColorDescriptor WHITE = new InventoryColorDescriptor(
@@ -223,15 +227,12 @@ public class ColorPalettePopup {
 	 */
 	public ColorPalettePopup(Shell parent, int rowHeight) {
 		shell = new Shell(parent, checkStyle(SWT.NONE));
+		shell.setLayout(new FillLayout());
 		GridLayout layout = new GridLayout(4, true);
-		layout.horizontalSpacing = 0;
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.verticalSpacing = 0;
 		shell.setLayout(layout);
 
 		for (Iterator e = imageColorMap.keySet().iterator(); e.hasNext();) {
-			Button button = new Button(shell, SWT.PUSH);
+			Button button = new Button(shell, SWT.PUSH | SWT.FLAT);
 			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			data.heightHint = rowHeight;
 			data.widthHint = rowHeight;
@@ -249,7 +250,7 @@ public class ColorPalettePopup {
 			});
 			buttonMap.put(rgb , button);
 		}	
-		Button defaultButton = new Button(shell, SWT.PUSH);
+		Button defaultButton = new Button(shell, SWT.PUSH | SWT.FLAT);
 		defaultButton.setText(DEAFULT_COLOR_STRING);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
@@ -264,7 +265,7 @@ public class ColorPalettePopup {
             }
         });
 
-		Button moreColors = new Button(shell, SWT.PUSH);
+		Button moreColors = new Button(shell, SWT.PUSH | SWT.FLAT);
 		moreColors.setText(CUSTOM_COLOR_STRING);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;

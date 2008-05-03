@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,13 +12,15 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts;
 
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.LineBorder;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeFigure;
 import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeRectangleFigure;
+import org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures.GeoShapeLineStyleBorder;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
-
+	
 /**
  * @author jschofie
  *
@@ -39,11 +41,33 @@ public class RectangleEditPart extends GeoShapeEditPart {
 			
 	protected NodeFigure createNodeFigure() {
 		NodeFigure nodeFigure = new GeoShapeRectangleFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
-		nodeFigure.setBorder(new LineBorder(1));
+		GeoShapeLineStyleBorder lineBorder = new GeoShapeLineStyleBorder();
+		lineBorder.setWidth(getMapMode().DPtoLP(getLineWidth()));
+		lineBorder.setStyle(getLineType());
+		nodeFigure.setBorder(lineBorder);
         return nodeFigure;
     }
 
 	public IFigure getContentPane() {
 		return ((GeoShapeFigure) getFigure()).getContentPane();
 	}
+	/*
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#setLineWidth(int)
+	 */
+	protected void setLineWidth(int width) {
+		super.setLineWidth(width);
+		GeoShapeLineStyleBorder lineBorder = (GeoShapeLineStyleBorder)((NodeFigure)getFigure()).getBorder();
+		lineBorder.setWidth(getMapMode().DPtoLP(width));
+		getFigure().revalidate();
+	}
+
+	/*
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart#setLineType(int)
+	 */
+	protected void setLineType(int lineType) {
+		super.setLineType(lineType);
+		GeoShapeLineStyleBorder lineBorder = (GeoShapeLineStyleBorder)((NodeFigure)getFigure()).getBorder();
+		lineBorder.setStyle(lineType);
+	}
+
 }

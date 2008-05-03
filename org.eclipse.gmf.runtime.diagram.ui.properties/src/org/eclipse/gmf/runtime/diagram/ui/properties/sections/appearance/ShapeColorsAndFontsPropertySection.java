@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 public class ShapeColorsAndFontsPropertySection
-	extends ColorsAndFontsPropertySection {
+	extends ColoursAndFontsAndLineStylesPropertySection {
 
 
 	protected Composite createFontsGroup(Composite contents) {

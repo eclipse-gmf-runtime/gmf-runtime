@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,6 +60,10 @@ public class GeoShape3DRectangleFigure extends GeoShapeFigure
 
 		// Draw the shape with the fill color
 		g.fillPolygon( outline );
+		
+		// set the line type and line width
+		g.setLineStyle(getLineStyle());
+		g.setLineWidth(getLineWidth());
 		
 		// Draw the shapes outline
 		g.drawPolygon( outline );

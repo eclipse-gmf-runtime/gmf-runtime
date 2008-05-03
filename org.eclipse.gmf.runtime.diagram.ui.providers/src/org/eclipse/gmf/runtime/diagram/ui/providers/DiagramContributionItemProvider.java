@@ -28,6 +28,10 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.AlignMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.AllCompartmentsAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ArrangeAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ArrangeMenuManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ArrowTypeAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ArrowTypeMenuManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ArrowTypeSourceMenuManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ArrowTypeTargetMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.AutoSizeAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ColorPropertyContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CompartmentMenuManager;
@@ -45,6 +49,10 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FontSizeContributionI
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FontStyleAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.GroupAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.HideConnectionLabelsAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.LineTypeAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.LineTypeMenuManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.LineWidthAction;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.LineWidthMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.MakeSameSizeMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.OpenWithMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RecalculatePageBreaksAction;
@@ -169,6 +177,16 @@ public class DiagramContributionItemProvider
 			return new MakeSameSizeMenuManager();
 		if (menuId.equals(ActionIds.MENU_TEXT_ALIGNMENT))
 			return new TextAlignmentMenuManager();
+		if (menuId.equals(ActionIds.MENU_LINE_TYPE))
+			return new LineTypeMenuManager();
+		if (menuId.equals(ActionIds.MENU_LINE_WIDTH))
+			return new LineWidthMenuManager();
+		if (menuId.equals(ActionIds.MENU_ARROW_TYPE))
+			return new ArrowTypeMenuManager();
+		if (menuId.equals(ActionIds.MENU_ARROW_TYPE_SOURCE))
+			return new ArrowTypeSourceMenuManager();
+		if (menuId.equals(ActionIds.MENU_ARROW_TYPE_TARGET))
+			return new ArrowTypeTargetMenuManager();
 
 		return super.createMenuManager(menuId, partDescriptor);
 	}
@@ -367,6 +385,41 @@ public class DiagramContributionItemProvider
         if (actionId.equals(ActionIds.ACTION_TEXT_ALIGNMENT_RIGHT))
             return TextAlignmentAction.createTextAlignmentRightAction(workbenchPage);
         
+        if (actionId.equals(ActionIds.ACTION_LINE_WIDTH_ONE))
+            return LineWidthAction.createLineWidthOneAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_WIDTH_TWO))
+            return LineWidthAction.createLineWidthTwoAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_WIDTH_THREE))
+            return LineWidthAction.createLineWidthThreeAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_WIDTH_FOUR))
+            return LineWidthAction.createLineWidthFourAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_WIDTH_FIVE))
+            return LineWidthAction.createLineWidthFiveAction(workbenchPage);
+        
+        if (actionId.equals(ActionIds.ACTION_LINE_TYPE_SOLID))
+            return LineTypeAction.createLineTypeSolidAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_TYPE_DASH))
+            return LineTypeAction.createLineTypeDashAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_TYPE_DOT))
+            return LineTypeAction.createLineTypeDotAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_TYPE_DASH_DOT))
+            return LineTypeAction.createLineTypeDashDotAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_LINE_TYPE_DASH_DOT_DOT))
+            return LineTypeAction.createLineTypeDashDotDotAction(workbenchPage);
+        
+        if (actionId.equals(ActionIds.ACTION_ARROW_TYPE_SOURCE_NONE))
+            return ArrowTypeAction.createArrowTypeSourceNoneAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_ARROW_TYPE_SOURCE_OPEN))
+            return ArrowTypeAction.createArrowTypeSourceOpenAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_ARROW_TYPE_SOURCE_SOLID))
+            return ArrowTypeAction.createArrowTypeSourceSolidAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_ARROW_TYPE_TARGET_NONE))
+            return ArrowTypeAction.createArrowTypeTargetNoneAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_ARROW_TYPE_TARGET_OPEN))
+            return ArrowTypeAction.createArrowTypeTargetOpenAction(workbenchPage);
+        if (actionId.equals(ActionIds.ACTION_ARROW_TYPE_TARGET_SOLID))
+            return ArrowTypeAction.createArrowTypeTargetSolidAction(workbenchPage);
+
         return super.createAction(actionId, partDescriptor);
 	}
 		

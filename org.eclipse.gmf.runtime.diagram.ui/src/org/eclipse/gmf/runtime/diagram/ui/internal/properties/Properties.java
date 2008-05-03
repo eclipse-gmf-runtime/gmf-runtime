@@ -220,4 +220,23 @@ public interface Properties {
 	 */
 	public static String ID_TEXT_ALIGNMENT = PackageUtil.getID(NotationPackage.eINSTANCE.getTextStyle_TextAlignment());
 	
+	/**
+	 * the line width property id
+	 */
+	public static String ID_LINE_WIDTH = PackageUtil.getID(NotationPackage.eINSTANCE.getLineStyle_LineWidth());
+	
+	/**
+	 * the line type property id
+	 */
+	public static String ID_LINE_TYPE = PackageUtil.getID(NotationPackage.eINSTANCE.getLineTypeStyle_LineType());
+	
+	/**
+	 * the arrow source decoration property id
+	 */
+	public static String ID_ARROW_SOURCE = PackageUtil.getID(NotationPackage.eINSTANCE.getArrowStyle_ArrowSource());
+	
+	/**
+	 * the arrow target decoration property id
+	 */
+	public static String ID_ARROW_TARGET = PackageUtil.getID(NotationPackage.eINSTANCE.getArrowStyle_ArrowTarget());
 }

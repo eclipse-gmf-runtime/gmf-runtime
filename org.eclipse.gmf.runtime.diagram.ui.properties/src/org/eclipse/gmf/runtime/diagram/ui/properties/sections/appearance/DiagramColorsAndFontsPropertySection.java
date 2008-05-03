@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,20 +26,21 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 
-
-public class DiagramColorsAndFontsPropertySection
-	extends ShapeColorsAndFontsPropertySection {
+public class DiagramColorsAndFontsPropertySection extends
+		ShapeColorsAndFontsPropertySection {
 	/**
-	 * @return - an itertor object to iterate over the selected/input edit parts
+	 * @return - an iterator object to iterate over the selected/input edit
+	 *         parts
 	 */
 	protected Iterator getInputIterator() {
 		DiagramEditPart diagram = (DiagramEditPart) super.getSingleInput();
 		return diagram != null ? diagram.getPrimaryEditParts().iterator()
-			: Collections.EMPTY_LIST.iterator();
+				: Collections.EMPTY_LIST.iterator();
 
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -57,32 +58,35 @@ public class DiagramColorsAndFontsPropertySection
 	 * Change fill color property value
 	 */
 	protected void changeFillColor() {
-	
+
 		// Update model in response to user
-	
+
 		if (fillColor != null) {
-	
+
 			List commands = new ArrayList();
 			Iterator it = getInputIterator();
-	
+
 			while (it.hasNext()) {
 				final IGraphicalEditPart ep = (IGraphicalEditPart) it.next();
 				if (!(ep instanceof ConnectionNodeEditPart))
 					commands.add(createCommand(FILL_COLOR_COMMAND_NAME,
-						((View) ep.getModel()).eResource(), new Runnable() {
-	
-							public void run() {
-								ep.setStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor(),
-									FigureUtilities.RGBToInteger(fillColor));
-							}
-						}));
+							((View) ep.getModel()).eResource(), new Runnable() {
+
+								public void run() {
+									ep.setStructuralFeatureValue(
+											NotationPackage.eINSTANCE
+													.getFillStyle_FillColor(),
+											FigureUtilities
+													.RGBToInteger(fillColor));
+								}
+							}));
 			}
-	
+
 			executeAsCompositeCommand(FILL_COLOR_COMMAND_NAME, commands);
 			Image overlyedImage = new ColorOverlayImageDescriptor(
-				DiagramUIPropertiesImages.DESC_FILL_COLOR
-					.getImageData(), fillColor).createImage();
-            disposeImage(fillColorButton.getImage());
+					DiagramUIPropertiesImages.DESC_FILL_COLOR.getImageData(),
+					fillColor).createImage();
+			disposeImage(fillColorButton.getImage());
 			fillColorButton.setImage(overlyedImage);
 		}
 	}
@@ -101,7 +105,16 @@ public class DiagramColorsAndFontsPropertySection
 			// ME case
 			return (EObject) ((IAdaptable) object).getAdapter(EObject.class);
 		}
-	
+
 		return null;
-	}	
+	}
+
+	protected void createLineStylesGroup(Composite parent) {
+		/*
+		 * Do not show the line styles section when the diagram root is
+		 * selected. Clients can override.
+		 */
+		super.createLineStylesGroup(parent);
+		lineStylesGroup.setVisible(false);
+	}
 }

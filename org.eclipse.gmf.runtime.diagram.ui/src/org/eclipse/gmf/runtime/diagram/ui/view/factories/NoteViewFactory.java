@@ -26,6 +26,7 @@ import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -101,7 +102,14 @@ public class NoteViewFactory
 	 */
 	protected List createStyles(View view) {
 		List styles = super.createStyles(view);
+		
+		ShapeStyle style = (ShapeStyle) styles.get(0);
+		if (style != null) {
+			style.setLineWidth(1);
+		}
+		
 		styles.add(NotationFactory.eINSTANCE.createTextStyle());
+		styles.add(NotationFactory.eINSTANCE.createLineTypeStyle());
 		return styles;
 	}
 }

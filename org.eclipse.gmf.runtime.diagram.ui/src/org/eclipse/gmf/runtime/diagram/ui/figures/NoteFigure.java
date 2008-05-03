@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,11 +36,10 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
  */
 public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure {
 
-	private boolean diagrsamLinkMode = false;;
+	private boolean diagrsamLinkMode = false;
 
 
 	private boolean withDanglingCorner = true;
-	private int lineWidth = 1;  
 
 	/**
 	 * the clip height constant in device coordinates
@@ -111,7 +110,8 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 			Rectangle r = getBounds();
 			
 			PointList p = getPointList(r);
-			g.setLineWidth(lineWidth);  
+			g.setLineWidth(getLineWidth());  
+			g.setLineStyle(getLineStyle());  
 			g.drawPolyline(p);
 	
 			if (withDanglingCorner) {

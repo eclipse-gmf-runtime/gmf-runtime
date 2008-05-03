@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.BasicNodeViewFactory;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.NoteAttachmentViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.NoteViewFactory;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.TextShapeViewFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -47,7 +47,7 @@ public class DiagramViewProvider extends AbstractViewProvider {
     static {
 		connectionMap.put(
 			ViewType.NOTEATTACHMENT,
-			ConnectionViewFactory.class);
+			NoteAttachmentViewFactory.class);
 	}
 
 	/**

@@ -134,4 +134,31 @@ public interface ActionIds {
 	public final String ACTION_TEXT_ALIGNMENT_CENTER = "textAlignmentCenterAction"; //$NON-NLS-1$
 	public final String ACTION_TEXT_ALIGNMENT_RIGHT = "textAlignmentRightAction"; //$NON-NLS-1$
 
+	//actions for line width in non toolbar menus
+    public final String MENU_LINE_WIDTH = "lineWidthMenu"; //$NON-NLS-1$
+	public final String ACTION_LINE_WIDTH_ONE = "lineWidthOneAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_WIDTH_TWO = "lineWidthTwoAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_WIDTH_THREE = "lineWidthThreeAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_WIDTH_FOUR = "lineWidthFourAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_WIDTH_FIVE = "lineWidthFiveAction"; //$NON-NLS-1$	
+
+	//actions for line type in non toolbar menus
+    public final String MENU_LINE_TYPE = "lineTypeMenu"; //$NON-NLS-1$
+	public final String ACTION_LINE_TYPE_SOLID = "lineTypeSolidAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_TYPE_DASH = "lineTypeDashAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_TYPE_DOT = "lineTypeDotAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_TYPE_DASH_DOT = "lineTypeDashDotAction"; //$NON-NLS-1$	
+	public final String ACTION_LINE_TYPE_DASH_DOT_DOT = "lineTypeDashDotDotAction"; //$NON-NLS-1$	
+
+	//actions for line type in non toolbar menus
+    public final String MENU_ARROW_TYPE = "arrowTypeMenu"; //$NON-NLS-1$
+	public final String MENU_ARROW_TYPE_SOURCE = "arrowTypeSourceMenu"; //$NON-NLS-1$	
+	public final String MENU_ARROW_TYPE_TARGET = "arrowTypeTargetMenu"; //$NON-NLS-1$	
+	public final String ACTION_ARROW_TYPE_SOURCE_NONE = "arrowTypeSourceNoneAction"; //$NON-NLS-1$	
+	public final String ACTION_ARROW_TYPE_SOURCE_SOLID = "arrowTypeSourceSolidAction"; //$NON-NLS-1$	
+	public final String ACTION_ARROW_TYPE_SOURCE_OPEN = "arrowTypeSourceOpenAction"; //$NON-NLS-1$	
+	public final String ACTION_ARROW_TYPE_TARGET_NONE = "arrowTypeTargetNoneAction"; //$NON-NLS-1$	
+	public final String ACTION_ARROW_TYPE_TARGET_SOLID = "arrowTypeTargetSolidAction"; //$NON-NLS-1$	
+	public final String ACTION_ARROW_TYPE_TARGET_OPEN = "arrowTypeTargetOpenAction"; //$NON-NLS-1$	
+	
 }

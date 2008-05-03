@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -91,6 +92,8 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.LineType;
+import org.eclipse.gmf.runtime.notation.LineTypeStyle;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -1583,4 +1586,86 @@ public abstract class GraphicalEditPart
         return JFaceResources.getResources();
     }    
     
+	/**
+	 * Set the line width of the shape. Clients need to override if they support
+	 * line width.
+	 * 
+	 * @param width
+	 *            the line width.
+	 */
+	protected void setLineWidth(int width) {
+		/* not implemented */
+	}
+
+	/**
+	 * Get the line width of the shape.
+	 * 
+	 * @return width the line width.
+	 */
+	protected int getLineWidth() {
+		/* a default of -1 means the diagram does not implement line width */
+		int lineWidth = -1;
+
+		LineStyle style = (LineStyle) getPrimaryView().getStyle(
+				NotationPackage.eINSTANCE.getLineStyle());
+		if (style != null) {
+			lineWidth = style.getLineWidth();
+		}
+
+		return lineWidth;
+	}
+
+	/**
+	 * Refresh the line width of the shape.
+	 */
+	protected void refreshLineWidth() {
+		setLineWidth(getLineWidth());
+	}
+
+	/**
+	 * Set the line type of the shape. Clients need to override if they support
+	 * line type.
+	 * 
+	 * @param lineType
+	 *            the line type.
+	 */
+	protected void setLineType(int lineType) {
+		/* not implemented */
+	}
+
+	/**
+	 * Get the line type of the shape.
+	 * 
+	 * @return the line type.
+	 */
+	protected int getLineType() {
+		// default to a solid line.
+		int lineType = Graphics.LINE_SOLID;
+
+		LineTypeStyle style = (LineTypeStyle) getPrimaryView().getStyle(
+				NotationPackage.eINSTANCE.getLineTypeStyle());
+		if (style != null) {
+			if (style.getLineType() == LineType.SOLID_LITERAL) {
+				lineType = Graphics.LINE_SOLID;
+			} else if (style.getLineType() == LineType.DASH_LITERAL) {
+				lineType = Graphics.LINE_DASH;
+			} else if (style.getLineType() == LineType.DOT_LITERAL) {
+				lineType = Graphics.LINE_DOT;
+			} else if (style.getLineType() == LineType.DASH_DOT_LITERAL) {
+				lineType = Graphics.LINE_DASHDOT;
+			} else if (style.getLineType() == LineType.DASH_DOT_DOT_LITERAL) {
+				lineType = Graphics.LINE_DASHDOTDOT;
+			}
+		}
+
+		return lineType;
+	}
+
+	/**
+	 * Refresh the line type of the shape.
+	 */
+	protected void refreshLineType() {
+		setLineType(getLineType());
+	}
+
 }
