@@ -18,7 +18,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.CommandUtilitiesTest;
 import org.eclipse.gmf.tests.runtime.diagram.ui.commands.SemanticCreateCommandTest;
@@ -46,7 +45,7 @@ import org.eclipse.gmf.tests.runtime.diagram.ui.services.PaletteServiceTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.ConnectionToolTests;
 import org.eclipse.gmf.tests.runtime.diagram.ui.tools.RubberBandSelectionToolTest;
 
-public class AllTests extends TestCase implements IPlatformRunnable {
+public class AllTests extends TestCase {
 
 	public static void main(String[] args) {
 		TestRunner.run(suite());
@@ -69,7 +68,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		suite.addTest(LogicCreationTests.suite());
 		suite.addTest(DiagramGraphicalViewerTests.suite());
 		suite.addTest(LogicDiagramTests.suite());
-		suite.addTest(LogicShapeTests.suite());
+		//suite.addTest(LogicShapeTests.suite());
 		suite.addTest(DiagramAssistantTests.suite());
 		suite.addTest(SemanticCreateCommandTest.suite());
 		suite.addTest(PaletteTests.suite());
@@ -89,7 +88,6 @@ public class AllTests extends TestCase implements IPlatformRunnable {
         suite.addTest(LayoutTests.suite());
         suite.addTest(TextAlignmentTests.suite());
 
-		
 		return suite;
 	}
 
