@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,9 +101,10 @@ public abstract class AbstractTranscoder
 	 * Translate an input stream containing a metafile to an output stream containing SVG.
 	 * @param input - Contains Metafile Data
 	 * @param output - After successful transcoding, contains generated SVG output.
+	 * @param url - document namespace url
 	 * @throws TranscoderException
 	 */
-	public void transcode( InputStream input, OutputStream output ) throws TranscoderException
+	public void transcode( InputStream input, OutputStream output, String url ) throws TranscoderException
 	{
 		if( input == null )
 		{
@@ -120,7 +121,7 @@ public abstract class AbstractTranscoder
 			
 			// Create the DOM
 			DOMImplementation	impl 	= SVGDOMImplementation.getDOMImplementation();
-			String 				svgNS 	= SVGDOMImplementation.SVG_NAMESPACE_URI;
+			String 				svgNS 	= url;
 			SVGDocument 		doc 	= (SVGDocument)impl.createDocument( svgNS, "svg", null );	//$NON-NLS-1$
 
 			// Create the SVG converter.

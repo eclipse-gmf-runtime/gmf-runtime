@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,7 +127,7 @@ public class Metafile2SvgTest
                             tc = new WMFTranscoder();
                         }
 
-                        tc.transcode(metafileInputStream, svgOutputStream);
+                        tc.transcode(metafileInputStream, svgOutputStream, svgFile.getAbsolutePath());
 
                         // Close the output stream.
                         svgOutputStream.flush();
@@ -148,13 +148,13 @@ public class Metafile2SvgTest
                             tc = new WMFTranscoder();
                         }
 
-                        tc.transcode(metafileInputStream, svgOutputStream);
+                        URL svgUrl = FileLocator.find(bundle, new Path(
+                                svgFilename), null);
+                        tc.transcode(metafileInputStream, svgOutputStream, svgUrl.toString());
 
                         // Compare the generated SVG data to the file
 
                         // read the svg file on the disk.
-                        URL svgUrl = FileLocator.find(bundle, new Path(
-                            svgFilename), null);
                         InputStream svgInputStream = svgUrl.openStream();
                         byte[] fileBytes = new byte[svgInputStream.available()];
 

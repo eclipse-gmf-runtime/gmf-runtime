@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -121,7 +121,7 @@ public class RenderedImageFactory {
             is.read(buffer);
             is.close();
 
-            return getInstance(buffer, info);
+            return getInstance(buffer, info, theURL.toString());
 
         } catch (Exception e) {
             Trace.throwing(Draw2dRenderPlugin.getInstance(),
@@ -131,6 +131,44 @@ public class RenderedImageFactory {
         }
 
         return null;
+    }
+    
+    /**
+     * getInstance static constructor method for retrieving the appropriate
+     * instance of the immutable class <code>RenderedImage</code>.
+     * 
+     * @param buffer
+     *            byte[] array containing an cached SVG image file.
+     * @param info
+     *            object containing information about the size and general data
+     *            regarding how the image will be rendered.
+     * @param url the url of the image (filename url - should be there for SVG, since it may have external references)
+     * @return <code>RenderedImage</code> instance with the size dimensions
+     *         requested.
+     * @since 2.1
+     */
+    public static RenderedImage getInstance(byte [] buffer, RenderInfo info, String url) {
+        Adler32 checksum = new Adler32();
+        checksum.update(buffer);
+        final RenderedImageKey key = new RenderedImageKey(info, checksum.getValue(), null, url);
+        WeakReference ref = (WeakReference) instanceMap.get(key);
+        RenderedImage image = null;
+        if (ref != null)
+            image = (RenderedImage) (((WeakReference) instanceMap.get(key))
+                .get());
+        else
+            image = autodetectImage(buffer, key);
+
+		// Bugzilla 208374
+		if (image == null) {
+			// Remove entry holding null reference.
+			instanceMap.remove(key);
+			// Recreate entry using buffer.
+			image = getInstance(buffer);
+		}
+
+        return image;
+    	
     }
 
     /**
@@ -168,7 +206,7 @@ public class RenderedImageFactory {
             fis.read(buffer);
             fis.close();
 
-            return getInstance(buffer, info);
+            return getInstance(buffer, info, szFilePath);
 
         } catch (Exception e) {
             Trace.throwing(Draw2dRenderPlugin.getInstance(),

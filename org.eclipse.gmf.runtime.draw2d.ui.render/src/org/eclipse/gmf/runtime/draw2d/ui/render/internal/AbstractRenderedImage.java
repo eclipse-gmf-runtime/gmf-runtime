@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ abstract public class AbstractRenderedImage implements RenderedImage {
 	 * @return Returns the key.
 	 */
 	public RenderedImageKey getKey() {
-		return new RenderedImageKey(key, key.getChecksum(), key.getExtraData());
+		return new RenderedImageKey(key, key.getChecksum(), key.getExtraData(), key.getURLString());
 	}
 	
 	/**

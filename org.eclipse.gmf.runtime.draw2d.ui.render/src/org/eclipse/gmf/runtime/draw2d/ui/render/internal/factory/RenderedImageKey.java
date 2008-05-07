@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,15 +35,31 @@ public final class RenderedImageKey extends RenderInfoImpl {
         this.checksum = checksum;
         this.extraData = extraData;
     }
+    
+    public RenderedImageKey(RenderInfo info, long checksum, Object extraData, String url) {
+    	this(info, checksum, extraData);
+    	this.url = url;
+    }
 
     private long checksum = 0;
     private Object extraData = null;
+    private String url;
 
     /**
      * @return Long value that is the checksum
      */
     public long getChecksum() {
         return checksum;
+    }
+    
+    /**
+     * Returns a String representation of the URL of the image (a path to the image file) 
+     * 
+     * @return the URL string
+     * @since 2.1
+     */
+    public String getURLString() {
+    	return url;
     }
 
     /**
