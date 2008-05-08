@@ -101,6 +101,17 @@ public abstract class AbstractTranscoder
 	 * Translate an input stream containing a metafile to an output stream containing SVG.
 	 * @param input - Contains Metafile Data
 	 * @param output - After successful transcoding, contains generated SVG output.
+	 * @throws TranscoderException
+	 */
+	public void transcode( InputStream input, OutputStream output) throws TranscoderException
+	{
+		transcode(input, output, SVGDOMImplementation.SVG_NAMESPACE_URI);
+	}
+	
+	/**
+	 * Translate an input stream containing a metafile to an output stream containing SVG.
+	 * @param input - Contains Metafile Data
+	 * @param output - After successful transcoding, contains generated SVG output.
 	 * @param url - document namespace url
 	 * @throws TranscoderException
 	 */
