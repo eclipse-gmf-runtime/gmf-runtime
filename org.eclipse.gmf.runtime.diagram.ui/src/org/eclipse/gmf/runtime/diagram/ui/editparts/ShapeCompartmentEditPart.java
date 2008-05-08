@@ -129,6 +129,15 @@ public abstract class ShapeCompartmentEditPart
 				ConnectionNodeEditPart cep = (ConnectionNodeEditPart) connectionNodes
 					.next();
 				Connection connection = (Connection) cep.getFigure();
+				View connectionView = cep.getNotationView();
+				if (connectionView != null && !connectionView.isVisible()) {
+					/*
+					 * Compartment is not responsible for refreshing a
+					 * connection, the view of which is not visible
+					 */
+					continue;
+				}
+				
 				IGraphicalEditPart source = (IGraphicalEditPart) getSourceEditPart(cep);
 				IGraphicalEditPart target = (IGraphicalEditPart) getTargetEditPart(cep);
 				
