@@ -14,10 +14,13 @@ package org.eclipse.gmf.runtime.diagram.ui.render.clipboard;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -27,13 +30,11 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
-import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -49,7 +50,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.Sign;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
-import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
@@ -199,26 +199,18 @@ abstract public class DiagramGenerator {
 		graphics.translate((-translateOffset.x), (-translateOffset.y));
 		graphics.pushState();
 
-		ArrayList connectionsToPaint = new ArrayList();
+		List<GraphicalEditPart> connectionsToPaint = new LinkedList<GraphicalEditPart>();
 
 		Map decorations = findDecorations(editparts);
 
-		for (int i = 0; i < editparts.size(); i++) {
-			IGraphicalEditPart editPart = (IGraphicalEditPart) sortedEditparts
-					.get(i);
+		for (Iterator editPartsItr = editparts.listIterator(); editPartsItr.hasNext();) {
+			IGraphicalEditPart editPart = (IGraphicalEditPart) editPartsItr.next();
 
 			// do not paint selected connection part
-			if (editPart instanceof ConnectionNodeEditPart) {
+			if (editPart instanceof ConnectionEditPart) {
 				connectionsToPaint.add(editPart);
-			} else {
-				List editParts = new ArrayList();
-
-				// Get the list of edit parts
-				getNestedEditParts(editPart, editParts);
-
-				// Find the connections to be painted
-				findConnectionsToPaint(editParts, connectionsToPaint);
-
+			} else {				
+				connectionsToPaint.addAll(findConnectionsToPaint(editPart));
 				// paint shape figure
 				IFigure figure = editPart.getFigure();
 				paintFigure(graphics, figure);
@@ -226,18 +218,114 @@ abstract public class DiagramGenerator {
 				paintDecorations(graphics, figure, decorations);
 			}
 		}
-
+		
 		// paint the connection parts after shape parts paint
 		decorations = findDecorations(connectionsToPaint);
 
-		for (int i = 0; i < connectionsToPaint.size(); i++) {
-			IGraphicalEditPart editPart = (IGraphicalEditPart) connectionsToPaint
-					.get(i);
-			IFigure figure = editPart.getFigure();
+		for (Iterator<GraphicalEditPart> connItr = connectionsToPaint.iterator(); connItr.hasNext();) {
+			IFigure figure = connItr.next().getFigure();
 			paintFigure(graphics, figure);
-
 			paintDecorations(graphics, figure, decorations);
 		}
+	}
+	
+	/**
+	 * Collects all connections contained within the given edit part
+	 * 
+	 * @param editPart the container editpart
+	 * @return connections within it
+	 */
+	private Collection<ConnectionEditPart> findConnectionsToPaint(IGraphicalEditPart editPart) {
+		/*
+		 * Set of node editparts contained within the given editpart
+		 */
+		HashSet<GraphicalEditPart> editParts = new HashSet<GraphicalEditPart>();
+		
+		/*
+		 * All connection editparts that have a source contained within the given editpart
+		 */
+		HashSet<ConnectionEditPart> connectionEPs = new HashSet<ConnectionEditPart>();
+		
+		/*
+		 * Connections contained within the given editpart (or just the connections to paint
+		 */
+		HashSet<ConnectionEditPart> connectionsToPaint = new HashSet<ConnectionEditPart>();
+		
+		/*
+		 * Populate the set of node editparts
+		 */
+		getNestedEditParts(editPart, editParts);
+		
+		/*
+		 * Populate the set of connections whose source is within the given editpart
+		 */
+		for (Iterator<GraphicalEditPart> editPartsItr = editParts.iterator(); editPartsItr.hasNext();) {
+			connectionEPs.addAll(getAllConnectionsFrom(editPartsItr.next()));
+		}
+		
+		/*
+		 * Create a set of connections constained within the given editpart
+		 */
+		while (!connectionEPs.isEmpty()) {
+			/*
+			 * Take the first connection and check whethe there is a path
+			 * through that connection that leads to the target contained within
+			 * the given editpart
+			 */
+			Stack<ConnectionEditPart> connectionsPath = new Stack<ConnectionEditPart>();
+			ConnectionEditPart conn = connectionEPs.iterator().next();
+			connectionEPs.remove(conn);
+			connectionsPath.add(conn);
+			
+			/*
+			 * Initialize the target for the current path
+			 */
+			EditPart target = conn.getTarget();
+			while(connectionEPs.contains(target)) {
+				/*
+				 * If the target end is a connection, check if it's one of the
+				 * connection's whose target is a connection and within the
+				 * given editpart. Append it to the path if it is. Otherwise
+				 * check if the target is within the actual connections or nodes
+				 * contained within the given editpart
+				 */
+				ConnectionEditPart targetConn = (ConnectionEditPart) target;
+				connectionEPs.remove(targetConn);
+				connectionsPath.add(targetConn);
+				
+				/*
+				 * Update the target for the new path
+				 */
+				target = targetConn.getTarget();
+			}
+			
+			/*
+			 * The path is built, check if it's target is a node or a connection
+			 * contained within the given editpart
+			 */
+			if (editParts.contains(target) || connectionsToPaint.contains(target)) {
+				connectionsToPaint.addAll(connectionsPath);
+			}
+		}
+		return connectionsToPaint;
+	}
+	
+	/**
+	 * Returns all connections orginating from a given editpart. All means that
+	 * connections originating from connections that have a source given
+	 * editpart will be included
+	 * 
+	 * @param ep the editpart 
+	 * @return all source connections
+	 */
+	private List<ConnectionEditPart> getAllConnectionsFrom(GraphicalEditPart ep) {
+		LinkedList<ConnectionEditPart> connections = new LinkedList<ConnectionEditPart>();
+		for (Iterator itr = ep.getSourceConnections().iterator(); itr.hasNext();) {
+			ConnectionEditPart sourceConn = (ConnectionEditPart) itr.next();
+			connections.add(sourceConn);
+			connections.addAll(getAllConnectionsFrom(sourceConn));
+		}
+		return connections;
 	}
 
 	/**
@@ -286,7 +374,7 @@ abstract public class DiagramGenerator {
 	 * @return a mapping of {@link IFigure}to ({@link Decoration}or
 	 *         {@link Collection}of decorations})
 	 */
-	private Map findDecorations(List editparts) {
+	private Map findDecorations(Collection editparts) {
 		// create inverse mapping of figures to edit parts (need this to map
 		// decorations to edit parts)
 		Map figureMap = mapFiguresToEditParts(editparts);
@@ -294,7 +382,7 @@ abstract public class DiagramGenerator {
 		Map result = new java.util.HashMap();
 
 		if (!editparts.isEmpty()) {
-			IGraphicalEditPart first = (IGraphicalEditPart) editparts.get(0);
+			IGraphicalEditPart first = (IGraphicalEditPart) editparts.iterator().next();
 
 			IFigure decorationLayer = LayerManager.Helper.find(first).getLayer(
 					DiagramRootEditPart.DECORATION_PRINTABLE_LAYER);
@@ -444,7 +532,7 @@ abstract public class DiagramGenerator {
 	 *            list of nested shape edit parts
 	 */
 	private void getNestedEditParts(IGraphicalEditPart childEditPart,
-			List editParts) {
+			Collection editParts) {
 
 		for (Iterator iter = childEditPart.getChildren().iterator(); iter
 				.hasNext();) {
@@ -452,52 +540,6 @@ abstract public class DiagramGenerator {
 			IGraphicalEditPart child = (IGraphicalEditPart) iter.next();
 			editParts.add(child);
 			getNestedEditParts(child, editParts);
-		}
-	}
-
-	/**
-	 * Given a selection of editParts determine which source connections have
-	 * both the source and target selected.
-	 * 
-	 * @param editParts
-	 * @param connectionsToPaint
-	 *            the edit parts for connections will be appended to this list
-	 */
-	private void findConnectionsToPaint(List editParts, List connectionsToPaint) {
-
-		EditPartViewer viewer = getDiagramEditPart().getRoot().getViewer();
-
-		// For each edit part
-		for (Iterator iter = editParts.iterator(); iter.hasNext();) {
-			IGraphicalEditPart element = (IGraphicalEditPart) iter.next();
-
-			// Get its view
-			View view = (View) element.getModel();
-
-			// If the view is a shape view...
-			if (element instanceof ShapeEditPart) {
-				// Get its connections source
-				List sourceConnections = view.getSourceEdges();
-
-				// For each source connection...
-				for (int i = 0; i < sourceConnections.size(); i++) {
-					Edge edge = (Edge) sourceConnections.get(i);
-
-					// Get the connections target
-					View toView = (edge).getTarget();
-
-					AbstractEditPart toEditPart = (AbstractEditPart) viewer
-							.getEditPartRegistry().get(toView);
-
-					if (editParts.contains(toEditPart)) {
-
-						ConnectionNodeEditPart connectionEditPart = (ConnectionNodeEditPart) viewer
-								.getEditPartRegistry().get(edge);
-
-						connectionsToPaint.add(connectionEditPart);
-					}
-				}
-			}
 		}
 	}
 
@@ -813,5 +855,4 @@ abstract public class DiagramGenerator {
 
 		return imageDesc;
 	}
-
 }
