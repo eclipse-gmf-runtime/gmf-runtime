@@ -52,6 +52,8 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.MouseWheelHandler;
+import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -1424,6 +1426,9 @@ public abstract class DiagramEditor
             .getGridSpacing();
         ((DiagramRootEditPart) getDiagramEditPart().getRoot())
             .setGridSpacing(dSpacing);
+
+        // Scroll-wheel Zoom
+        getGraphicalViewer().setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL), MouseWheelZoomHandler.SINGLETON);
     }
 
     /**
