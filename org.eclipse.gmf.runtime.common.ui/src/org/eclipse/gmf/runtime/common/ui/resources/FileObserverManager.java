@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,7 +68,7 @@ public class FileObserverManager {
 	protected void add(IFileObserver fileObserver, IFile fileFilter) {
 		trace("...FileObserverManager: addFileObserver " //$NON-NLS-1$
 			+ fileObserver.toString()
-			+ " filter " + fileFilter.getLocation().toOSString()); //$NON-NLS-1$
+			+ " filter " + fileFilter.getLocationURI().toString()); //$NON-NLS-1$
 		FileObserverFilter filter = new FileObserverFilter(
 			FileObserverFilterType.FILE, fileFilter);
 		fileObserverList.put(fileObserver, filter);
@@ -104,7 +104,7 @@ public class FileObserverManager {
 	protected void add(IFileObserver fileObserver, IFolder folderFilter) {
 		trace("...FileObserverManager: addFileObserver " //$NON-NLS-1$
 			+ fileObserver.toString()
-			+ " filter folder" + folderFilter.getLocation().toOSString()); //$NON-NLS-1$
+			+ " filter folder" + folderFilter.getLocationURI().toString()); //$NON-NLS-1$
 		FileObserverFilter filter = new FileObserverFilter(
 			FileObserverFilterType.FOLDER, folderFilter);
 		fileObserverList.put(fileObserver, filter);
@@ -121,7 +121,7 @@ public class FileObserverManager {
 	 */
 	protected void add(IFileObserver fileObserver, String[] extensionFilter) {
 		trace("...FileObserverManager: addFileObserver " //$NON-NLS-1$
-			+ fileObserver.toString() + " filter " + extensionFilter); //$NON-NLS-1$
+			+ fileObserver.toString() + " filter " + extensionFilter[0]); //$NON-NLS-1$
 		FileObserverFilter filter = new FileObserverFilter(
 			FileObserverFilterType.EXTENSION, extensionFilter);
 		fileObserverList.put(fileObserver, filter);

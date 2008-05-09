@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.common.ui.internal.resources;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.content.IContentType;
 
@@ -143,8 +142,8 @@ public class FileObserverFilter {
 			}
 		if (getFilterType() == FileObserverFilterType.EXTENSION
 			&& resource instanceof IFile) {
-			String FileExtension = resource.getFullPath().getFileExtension();
-			if (matchesExtension(FileExtension)) {
+			String fileExtension = resource.getFullPath().getFileExtension();
+			if (matchesExtension(fileExtension)) {
 				return true;
 			}
 		}
@@ -164,15 +163,15 @@ public class FileObserverFilter {
 			return true;
 		}
 		if (getFilterType() == FileObserverFilterType.FILE
-			&& getAbsolutePath(getFileFilter()).equals(path.toOSString())) {
+			&& getFileFilter().getFullPath().equals(path.toString())) {
 			return true;
 		}
 		if (getFilterType() == FileObserverFilterType.FOLDER
-				&& getAbsolutePath(getFolderFilter()).startsWith(path.toOSString())) {
+				&& path.isPrefixOf(getFolderFilter().getFullPath())) {
 				return true;
 			}
 		if (getFilterType() == FileObserverFilterType.CONTENT_TYPE
-				&& matchesContentType(path.toFile().getName())) {
+				&& matchesContentType(path.segment(path.segmentCount()-1))) {
 				return true;
 			}
 		if (getFilterType() == FileObserverFilterType.EXTENSION
@@ -294,12 +293,10 @@ public class FileObserverFilter {
 	 * @return the path for a resource.
 	 */
 	private String getAbsolutePath(IResource resource) {
-		if (resource.getLocation() == null) {
-			IPath root = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-			IPath path = root.append(resource.getFullPath());
-			return path.toOSString();
+		if (resource.getLocationURI() == null) {
+			return resource.getFullPath().toString();
 		} else {
-			return resource.getLocation().toOSString();
+			return resource.getLocationURI().toString();
 		}
 	}
 }
