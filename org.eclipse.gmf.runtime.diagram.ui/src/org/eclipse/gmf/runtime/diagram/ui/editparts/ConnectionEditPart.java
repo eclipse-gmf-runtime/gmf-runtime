@@ -1218,7 +1218,11 @@ abstract public class ConnectionEditPart
             rbp.setRelativeDimensions(new Dimension(wbp.getSourceX(), wbp
                 .getSourceY()), new Dimension(wbp.getTargetX(), wbp
                 .getTargetY()));
-            rbp.setWeight(i / ((float) modelConstraint.size() - 1));
+            if (modelConstraint.size() == 1) {
+            	rbp.setWeight(0.5f);
+            } else {
+            	rbp.setWeight(i / ((float) modelConstraint.size() - 1));
+            }
             figureConstraint.add(rbp);
         }
         getConnectionFigure().setRoutingConstraint(figureConstraint);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -353,9 +353,19 @@ class RouterHelper {
      *            on the edge of the connection source and target nodes.
      */
     public void resetEndPointsToEdge(Connection conn, PointList newLine) {
-        if (newLine.size() < 2)
-            return;
-        
+    	if (newLine.size() < 2) {
+    		/*
+			 * Connection must have at least 2 points in the list: the source
+			 * and target anchor points. Otherwise it's invalid connection.
+			 * Invalid connection case: add a dumb point at the start of the
+			 * list and at the end of the list. The first and the last point in
+			 * the list are replaced by the new source and target anchor points
+			 * in this method
+			 */
+    		newLine.addPoint(0, 0);
+    		newLine.insertPoint(new Point(), 0);
+    	}
+    	
         PrecisionPoint sourceAnchorPoint, targetAnchorPoint;
         if (newLine.size() > 2) {
         	/*
