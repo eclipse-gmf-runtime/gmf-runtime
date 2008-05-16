@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
@@ -232,6 +233,13 @@ public class SortFilterPage extends PropertyPage {
 			
 			tableViewer.getTable().setFocus();
 			handleSelection();
+		}
+		if (ROOT_PAGE.equals(pageType)) {
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor,
+					"org.eclipse.gmf.runtime.diagram.ui.egmf0400"); //$NON-NLS-1$
+		} else {
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor,
+					"org.eclipse.gmf.runtime.diagram.ui.egmf0500"); //$NON-NLS-1$			
 		}
 		return parent;
 	}
