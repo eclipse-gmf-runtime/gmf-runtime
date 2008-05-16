@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,6 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -89,8 +88,8 @@ public class PathmapsPreferencePage
     private IPathVariableManager pathVariableManager = ResourcesPlugin
         .getWorkspace().getPathVariableManager();
 
-    private ScrolledComposite pathVariablesScroll;
-
+    private Composite pathVariablesComposite;
+    
     private CheckboxTableViewer pathVariables;
 
     private PathVariableContentProvider pathVariablesContent;
@@ -145,25 +144,35 @@ public class PathmapsPreferencePage
         pathVariablesLabel
             .setText(EMFUIMessages.PathmapsPreferencePage_availablePathVariables);
 
-        pathVariablesScroll = new ScrolledComposite(composite, SWT.BORDER
-            | SWT.H_SCROLL | SWT.V_SCROLL);
-        pathVariablesScroll.setExpandHorizontal(true);
-        pathVariablesScroll.setExpandVertical(true);
+        pathVariablesComposite = new Composite(composite, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL
             | GridData.FILL_VERTICAL);
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
         gridData.horizontalSpan = 1;
-        pathVariablesScroll.setLayoutData(gridData);
+        pathVariablesComposite.setLayoutData(gridData);
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        gridLayout.horizontalSpacing = 0;
+        gridLayout.verticalSpacing = 0;
+        pathVariablesComposite.setLayout(gridLayout);
 
-        pathVariables = CheckboxTableViewer.newCheckList(pathVariablesScroll,
+        pathVariables = CheckboxTableViewer.newCheckList(pathVariablesComposite,
             SWT.MULTI);
-        pathVariablesScroll.setContent(pathVariables.getTable());
 
         pathVariablesContent = new PathVariableContentProvider();
         pathVariables.setContentProvider(pathVariablesContent);
         pathVariables.setLabelProvider(new PathVariableLabelProvider());
         pathVariables.setComparator(new PathVariableViewerComparator());
+        gridData = new GridData(GridData.FILL_BOTH);
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        // These two hard coded values were borrowed from similar code in
+        // org.eclipse.ui.internal.ide.dialogs.PathVariablesGroup
+        gridData.heightHint = pathVariables.getTable().getItemHeight() * 7;
+        gridData.widthHint = 332;
+        pathVariables.getTable().setLayoutData(gridData);
 
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(1, false));
