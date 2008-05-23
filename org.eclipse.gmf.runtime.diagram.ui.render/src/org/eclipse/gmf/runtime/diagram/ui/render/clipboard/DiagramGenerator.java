@@ -22,11 +22,14 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gef.ConnectionEditPart;
@@ -47,6 +50,7 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg.Sign;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
@@ -602,6 +606,20 @@ abstract public class DiagramGenerator {
 				minX, minY, width, height);
 		return imageRect;
 	}
+	
+	/**
+	 * Get the positional data and the semantic elements for each
+	 * <code>ShapeEditPart</code>, <code>ShapeCompartmentEditPart</code>,
+	 * and <code>ConnectionEditPart</code> on the diagram.
+	 * 
+	 * @return A list of {@link PartPositionInfo}objects with positional data
+	 *         and the semantic element for the relevant editparts on the
+	 *         diagram.
+	 */
+	public List getDiagramPartInfo() {
+		Assert.isNotNull(_dgrmEP);
+		return getDiagramPartInfo(_dgrmEP);
+	}
 
 	/**
 	 * Get the positional data and the semantic elements for each
@@ -855,4 +873,96 @@ abstract public class DiagramGenerator {
 
 		return imageDesc;
 	}
+	
+	/**
+	 * Creates an SWT image descriptor for editparts. Editparts are scaled to fit in maxDeviceWidth and maxDeviceHeight
+	 * frame
+	 * 
+	 * @param editParts editparts
+	 * @param maxDeviceWidth max width for the image
+	 * @param maxDeviceHeight max height for the image
+	 * @param useMargins true if 10 pisels margins are required to bound the editparts image
+	 * @return the image descriptor
+	 */
+	final public ImageDescriptor createConstrainedSWTImageDecriptorForParts(List editParts, int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+		ImageDescriptor imageDesc = new ImageDescriptor() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.jface.resource.ImageDescriptor#getImageData()
+			 */
+			public ImageData getImageData() {
+				return SharedImages.get(SharedImages.IMG_ERROR).getImageData();
+			}
+		};
+		
+		Graphics graphics = null;
+		try {
+			IMapMode mm = getMapMode();
+
+			Rectangle originalBounds = new PrecisionRectangle(new Rectangle(calculateImageRectangle(editParts)));
+			getMapMode().LPtoDP(originalBounds);
+			
+			int deviceMargins = mm.LPtoDP(getImageMargin());
+			int threshold = useMargins ? deviceMargins : 0; 
+			double xScalingFactor = 1.0, yScalingFactor = xScalingFactor;
+			
+			originalBounds.shrink(deviceMargins, deviceMargins);
+			
+			if (maxDeviceWidth > threshold) {
+				xScalingFactor = (maxDeviceWidth  - threshold - threshold)/ (originalBounds.preciseWidth());
+			}
+			if (maxDeviceHeight > threshold) {
+				yScalingFactor = (maxDeviceHeight - threshold - threshold) / (originalBounds.preciseHeight());
+			}
+			
+			double scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor), 1);
+			
+			int imageWidth = originalBounds.width + threshold + threshold;
+			int imageHeight = originalBounds.height + threshold + threshold;
+			
+			if (scalingFactor < 1) {
+				imageWidth = (int) Math.round(originalBounds.preciseWidth() * scalingFactor) + threshold + threshold;
+				imageHeight = (int) Math.round(originalBounds.preciseHeight() * scalingFactor) + threshold + threshold;
+			}
+			
+
+			// Create the graphics and wrap it with the HiMetric graphics object
+			graphics = setUpGraphics(imageWidth, imageHeight);
+
+			ScaledGraphics scaledGraphics = new ScaledGraphics(graphics);
+			
+			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
+					scaledGraphics, getMapMode());
+			
+			graphics.translate(threshold, threshold);
+			mapModeGraphics.scale(scalingFactor);
+
+			Point location = new PrecisionPoint(originalBounds.preciseX(), originalBounds.preciseY());
+			mm.DPtoLP(location);
+			renderToGraphics(mapModeGraphics, location, editParts);
+			imageDesc = getImageDescriptor(graphics);
+		} finally {
+			if (graphics != null)
+				disposeGraphics(graphics);
+		}
+
+		return imageDesc;
+	}
+	
+	/**
+	 * Creates an AWT image for editparts. Editparts are scaled to fit in maxDeviceWidth and maxDeviceHeight
+	 * frame
+	 * 
+	 * @param editParts editparts
+	 * @param maxDeviceWidth max width for the image
+	 * @param maxDeviceHeight max height for the image
+	 * @param useMargins true if 10 pisels margins are required to bound the editparts image
+	 * @return the image
+	 */
+	public Image createConstrainedAWTImageForParts(List editParts, int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+		return null;
+	}
+
 }

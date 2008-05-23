@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,7 @@ public class SVGImageType
 				WMFTranscoder imageTransformer = new WMFTranscoder();
 				ByteArrayInputStream input = new ByteArrayInputStream(buffer);
 				ByteArrayOutputStream output = new ByteArrayOutputStream();
-				imageTransformer.transcode(input, output);
+				imageTransformer.transcode(input, output, key.getURLString());
 				image = new SVGImage(output.toByteArray(), key);
 			} catch (Exception e2) {
 				try {
@@ -45,7 +45,7 @@ public class SVGImageType
 					ByteArrayInputStream input = new ByteArrayInputStream(
 						buffer);
 					ByteArrayOutputStream output = new ByteArrayOutputStream();
-					imageTransformer.transcode(input, output);
+					imageTransformer.transcode(input, output, key.getURLString());
 					image = new SVGImage(output.toByteArray(), key);
 				} catch (Exception e3) {
 					return null;

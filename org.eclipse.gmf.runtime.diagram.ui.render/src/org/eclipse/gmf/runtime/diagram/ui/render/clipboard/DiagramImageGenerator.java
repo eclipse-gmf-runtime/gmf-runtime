@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,12 @@ import java.util.List;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.graphics.GraphicsToGraphics2DAdaptor;
 import org.eclipse.gmf.runtime.draw2d.ui.render.internal.graphics.RenderedMapModeGraphics;
@@ -30,7 +34,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -64,7 +67,7 @@ public class DiagramImageGenerator
 	protected Graphics setUpGraphics(int width, int height) {
 		Display display = Display.getDefault();
 
-		image = new Image(display, new Rectangle(0, 0, width, height));
+		image = new Image(display, new org.eclipse.swt.graphics.Rectangle(0, 0, width, height));
 		gc = new GC(image);
 		SWTGraphics swtG = new SWTGraphics(gc);
 		
@@ -158,6 +161,83 @@ public class DiagramImageGenerator
 
 		renderToGraphics(mapModeGraphics,
 				new Point(sourceRect.x, sourceRect.y), selectedObjects);
+
+		graphics.dispose();
+		g2d.dispose();
+		return awtImage;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramGenerator#createConstrainedAWTImageForParts(java.util.List, int, int, boolean)
+	 */
+	public java.awt.Image createConstrainedAWTImageForParts(List editParts,
+			int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+		BufferedImage awtImage = null;
+		IMapMode mm = getMapMode();
+		Rectangle originalBounds = new PrecisionRectangle(new Rectangle(calculateImageRectangle(editParts)));
+		mm.LPtoDP(originalBounds);
+		
+		int deviceMargins = mm.LPtoDP(getImageMargin());
+		int threshold = useMargins ? deviceMargins : 0; 
+		double xScalingFactor = 1.0, yScalingFactor = xScalingFactor;
+		
+		originalBounds.shrink(deviceMargins, deviceMargins);
+		
+		if (maxDeviceWidth > threshold) {
+			xScalingFactor = (maxDeviceWidth  - threshold - threshold)/ (originalBounds.preciseWidth());
+		}
+		if (maxDeviceHeight > threshold) {
+			yScalingFactor = (maxDeviceHeight - threshold - threshold) / (originalBounds.preciseHeight());
+		}
+		
+		double scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor), 1);
+		
+		int imageWidth = originalBounds.width + threshold + threshold;
+		int imageHeight = originalBounds.height + threshold + threshold;
+		
+		if (scalingFactor < 1) {
+			imageWidth = (int) Math.round(originalBounds.preciseWidth() * scalingFactor) + threshold + threshold;
+			imageHeight = (int) Math.round(originalBounds.preciseHeight() * scalingFactor) + threshold + threshold;
+		}
+		
+		awtImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+
+		Graphics2D g2d = awtImage.createGraphics();
+		g2d.setColor(Color.white);
+		g2d.fillRect(0, 0, awtImage.getWidth(), awtImage.getHeight());
+
+		// Check anti-aliasing preference
+		IPreferenceStore preferenceStore = (IPreferenceStore) getDiagramEditPart()
+				.getDiagramPreferencesHint().getPreferenceStore();
+
+		if (preferenceStore
+				.getBoolean(IPreferenceConstants.PREF_ENABLE_ANTIALIAS)) {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+		} else {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_OFF);
+		}
+
+		g2d.clip(new java.awt.Rectangle(0, 0, awtImage.getWidth(), awtImage
+				.getHeight()));
+
+		
+		Graphics graphics = new GraphicsToGraphics2DAdaptor(g2d,
+				new org.eclipse.swt.graphics.Rectangle(0, 0, imageWidth, imageHeight));
+		
+		ScaledGraphics scaledGraphics = new ScaledGraphics(graphics);
+
+		RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
+				scaledGraphics, mm);
+
+		g2d.translate(threshold, threshold);
+		mapModeGraphics.scale(scalingFactor);
+		
+		Point location = new PrecisionPoint(originalBounds.preciseX(), originalBounds.preciseY());
+		mm.DPtoLP(location);
+		renderToGraphics(mapModeGraphics,
+				location, editParts);
 
 		graphics.dispose();
 		g2d.dispose();

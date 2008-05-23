@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -66,49 +67,9 @@ public class ImageExporter {
         	return;
         }
         
-        monitor.worked(1);
-
         try {
             FileOutputStream os = new FileOutputStream(destination.toOSString());
-            monitor.worked(1);
-
-            ImageTranscoder imageTranscoder = null;
-            BufferedImage newImg = image;
-            
-            if (imageFormat == JPEG_FILE) {
-                imageTranscoder = new JPEGTranscoder();
-                if (image.getType() != BufferedImage.TYPE_INT_RGB) {
-                    newImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
-                    Graphics g = newImg.getGraphics();
-                    g.drawImage(image, 0, 0, null);
-                    g.dispose();
-                }
-                imageTranscoder.addTranscodingHint(
-                    JPEGTranscoder.KEY_QUALITY,
-                    new Float(0.65));
-            }
-            else if (imageFormat == PNG_FILE) {
-                imageTranscoder = new PNGTranscoder();
-            }
-            else {
-                throw new IllegalArgumentException();
-            }
-            
-            TranscoderOutput to = new TranscoderOutput(os);
-                
-            try {
-                imageTranscoder.writeImage(newImg, to);
-            } catch (TranscoderException e) {
-                Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e
-                    .getMessage(), e);
-                IStatus status =
-                    new Status(IStatus.ERROR, "exportToFile", IStatus.OK, //$NON-NLS-1$
-                        e.getMessage(), null);
-                throw new CoreException(status);
-            }
-            
-            monitor.worked(1);
-
+            exportToOutputStream(os, image, imageFormat, monitor);
             os.close();
             monitor.worked(1);
             refreshLocal(destination);
@@ -123,14 +84,62 @@ public class ImageExporter {
     }
     
     /**
-     * create a file in the workspace if the destination is in a project in the
-     * workspace.
-     * 
-     * @param destination
-     *            the destination file.
-     * @return the status from validating the file for editing
-     * @exception CoreException if this method fails
+     * Allows export of an image to specific supported image file formats.
+	 *
+     * @param stream stream to write the data to
+     * @param image the image
+     * @param imageFormat image format
+     * @param monitor progress monitor
+     * @throws CoreException
      */
+    public static void exportToOutputStream(OutputStream stream, BufferedImage image,
+			String imageFormat, IProgressMonitor monitor) throws CoreException {
+		monitor.worked(1);
+		ImageTranscoder imageTranscoder = null;
+		BufferedImage newImg = image;
+
+		if (imageFormat == JPEG_FILE) {
+			imageTranscoder = new JPEGTranscoder();
+			if (image.getType() != BufferedImage.TYPE_INT_RGB) {
+				newImg = new BufferedImage(image.getWidth(), image.getHeight(),
+						BufferedImage.TYPE_INT_RGB);
+				Graphics g = newImg.getGraphics();
+				g.drawImage(image, 0, 0, null);
+				g.dispose();
+			}
+			imageTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,
+					new Float(0.65));
+		} else if (imageFormat == PNG_FILE) {
+			imageTranscoder = new PNGTranscoder();
+		} else {
+			throw new IllegalArgumentException();
+		}
+
+		TranscoderOutput to = new TranscoderOutput(stream);
+
+		try {
+			imageTranscoder.writeImage(newImg, to);
+		} catch (TranscoderException e) {
+			Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e
+					.getMessage(), e);
+			IStatus status = new Status(IStatus.ERROR,
+					"exportToStream", IStatus.OK, //$NON-NLS-1$
+					e.getMessage(), null);
+			throw new CoreException(status);
+		}
+		monitor.worked(1);
+	}
+    
+    /**
+	 * create a file in the workspace if the destination is in a project in the
+	 * workspace.
+	 * 
+	 * @param destination
+	 *            the destination file.
+	 * @return the status from validating the file for editing
+	 * @exception CoreException
+	 *                if this method fails
+	 */
     private static IStatus createFile(IPath destination)
         throws CoreException {
         IFile file = ResourcesPlugin.getWorkspace().getRoot()

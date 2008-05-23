@@ -13,10 +13,12 @@ package org.eclipse.gmf.runtime.diagram.ui.render.util;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +46,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramImageGenerator
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
+import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.Draw2dRenderPlugin;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImage;
 import org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImageConverter;
@@ -137,6 +140,74 @@ public class CopyToImageUtil {
 
         return partInfo;
     }
+    
+    /**
+     * Creates an image of the diagram in the specified image file format. The diagram image is scaled to fit in
+     * the maxWidth, maxHeight window. The image is returned as a byte array
+     * 
+     * @param diagram diagram model
+     * @param maxWidth the max width of the image
+     * @param maxHeight the max height of the image
+     * @param format image format
+     * @param monitor progress monitor
+     * @param preferencesHint preference hint for the diagram
+     * @param useMargins true if a 10 pixel margin is required around the diagram
+     * @return the image as array of bytes
+     * @throws CoreException
+     */
+    public byte [] copyToImageByteArray(Diagram diagram, int maxWidth, int maxHeight, ImageFileFormat format, IProgressMonitor monitor, PreferencesHint preferencesHint, boolean useMargins) throws CoreException {
+        DiagramEditor openedDiagramEditor = DiagramEditorUtil.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+        if (openedDiagramEditor != null) {
+            return copyToImageByteArray(openedDiagramEditor.getDiagramEditPart(), null, maxWidth, maxHeight, format, monitor, useMargins);
+        } else {
+	        Shell shell = new Shell();
+	        try {
+	            DiagramEditPart diagramEditPart = createDiagramEditPart(diagram,
+	                shell, preferencesHint);
+	            Assert.isNotNull(diagramEditPart);
+	            return copyToImageByteArray(diagramEditPart, null, maxWidth, maxHeight, format, monitor, useMargins);
+	        } finally {
+	            shell.dispose();
+	        }
+        }
+    }
+    
+    /**
+     * Creates an image of the editparts in the specified image file format. The editparts image is scaled to fit in
+     * the maxWidth, maxHeight window. The image is returned as a byte array
+     * 
+     * @param diagramEP diagram editpart
+     * @param editParts editparts to draw on the image
+     * @param maxHeight the max height of the image
+     * @param format image format
+     * @param monitor progress monitor
+     * @param preferencesHint preference hint for the diagram
+     * @param useMargins true if a 10 pixel margin is required around the diagram
+     * @return the image as array of bytes
+     * @throws CoreException
+     */
+    public byte [] copyToImageByteArray(DiagramEditPart diagramEP, List editParts, int maxWidth, int maxHeight, ImageFileFormat format, IProgressMonitor monitor, boolean useMargins) throws CoreException {
+        Assert.isNotNull(diagramEP);
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DiagramGenerator gen = getDiagramGenerator(diagramEP, format);
+        if (editParts == null || editParts.isEmpty()) {
+        	editParts = diagramEP.getPrimaryEditParts() ;
+        }
+		if (format.equals(ImageFileFormat.SVG)
+				|| format.equals(ImageFileFormat.PDF)) {
+			gen.createConstrainedSWTImageDecriptorForParts(editParts, maxWidth, maxHeight, useMargins);
+			monitor.worked(1);
+			saveToOutputStream(stream, (DiagramSVGGenerator)gen, format, monitor);
+		} else {
+			Image image = gen.createConstrainedSWTImageDecriptorForParts(editParts, maxWidth, maxHeight, useMargins).createImage();
+			monitor.worked(1);
+			saveToOutputStream(stream, image, format, monitor);;
+			image.dispose();
+		}
+		monitor.worked(1);
+    	return stream.toByteArray();
+    }
+    
     
     /**
      * Copies the diagram to an image file in the specified format.
@@ -259,7 +330,6 @@ public class CopyToImageUtil {
 			saveToFile(destination, image, format, monitor);
 			image.dispose();
 		}
-		monitor.worked(1);
 	}
 
     /**
@@ -280,6 +350,29 @@ public class CopyToImageUtil {
             ImageFileFormat imageFormat, IProgressMonitor monitor)
         throws CoreException {
 
+        IStatus fileModificationStatus = createFile(destination);
+        if (!fileModificationStatus.isOK()) {
+        	// can't write to the file
+        	return;
+        }
+        
+        try {
+        	FileOutputStream stream = new FileOutputStream(destination.toOSString());
+            saveToOutputStream(stream, image, imageFormat, monitor);
+            stream.close();
+        } catch (Exception e) {
+            Log.error(Draw2dRenderPlugin.getInstance(), IStatus.ERROR, e
+                    .getMessage(), e);
+                IStatus status =
+                    new Status(IStatus.ERROR, "exportToFile", IStatus.OK, //$NON-NLS-1$
+                        e.getMessage(), null);
+                throw new CoreException(status);
+        }
+        
+        refreshLocal(destination);
+    }
+    
+    private void saveToOutputStream(OutputStream stream, Image image, ImageFileFormat imageFormat, IProgressMonitor monitor) {
         monitor.worked(1);
         
         ImageData imageData = image.getImageData();
@@ -289,22 +382,13 @@ public class CopyToImageUtil {
             imageData = createImageData(image); 
 
         monitor.worked(1);
-        
-        IStatus fileModificationStatus = createFile(destination);
-        if (!fileModificationStatus.isOK()) {
-        	// can't write to the file
-        	return;
-        }
-        
-        monitor.worked(1);
         ImageLoader imageLoader = new ImageLoader();
         imageLoader.data = new ImageData[] {imageData};
         imageLoader.logicalScreenHeight = image.getBounds().width;
         imageLoader.logicalScreenHeight = image.getBounds().height;
-        imageLoader.save(destination.toOSString(), imageFormat.getOrdinal());
-
+        imageLoader.save(stream, imageFormat.getOrdinal());
+        
         monitor.worked(1);
-        refreshLocal(destination);
     }
 
     
@@ -355,17 +439,7 @@ public class CopyToImageUtil {
 		try {
 			FileOutputStream os = new FileOutputStream(destination.toOSString());
 			monitor.worked(1);
-
-			if (format == ImageFileFormat.PDF) {
-				SVGImageConverter.exportToPDF((SVGImage) generator.getRenderedImage(), os);
-			} else if (format == ImageFileFormat.SVG) {
-				generator.stream(os);
-			} else {
-				throw new IllegalArgumentException(
-						"Unexpected format: " + format.getName()); //$NON-NLS-1$
-			}
-			monitor.worked(1);
-
+			saveToOutputStream(os, generator, format, monitor);
 			os.close();
 			monitor.worked(1);
 			refreshLocal(destination);
@@ -379,7 +453,17 @@ public class CopyToImageUtil {
 		}
 	}
         
-  
+    private void saveToOutputStream(OutputStream stream, DiagramSVGGenerator generator, ImageFileFormat format, IProgressMonitor monitor) throws CoreException {
+		if (format == ImageFileFormat.PDF) {
+			SVGImageConverter.exportToPDF((SVGImage) generator.getRenderedImage(), stream);
+		} else if (format == ImageFileFormat.SVG) {
+			generator.stream(stream);
+		} else {
+			throw new IllegalArgumentException(
+					"Unexpected format: " + format.getName()); //$NON-NLS-1$
+		}
+		monitor.worked(1);
+    }
     
 
     /**
@@ -546,7 +630,7 @@ public class CopyToImageUtil {
 
                     RGB colour = palette.getRGB(pixel);
                     RGB webSafeColour = getWebSafeColour(colour);
-                    for (newPixel = 0; newPixel < 216; ++newPixel) {
+                    for (newPixel = 0; newPixel < 256; ++newPixel) {
                         if (webSafePallette[newPixel].equals(webSafeColour))
                             break;
                     }

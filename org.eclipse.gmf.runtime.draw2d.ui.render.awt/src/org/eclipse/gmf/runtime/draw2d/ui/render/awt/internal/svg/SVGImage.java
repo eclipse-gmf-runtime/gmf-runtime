@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
@@ -112,7 +111,7 @@ public final class SVGImage extends AbstractRenderedImage {
 
 		try {
 			document =
-				f.createDocument(SVGDOMImplementation.SVG_NAMESPACE_URI, in);
+				f.createDocument(getKey().getURLString(), in);
 
 		} catch (IOException e) {
 			// Log the exception to the Error Log

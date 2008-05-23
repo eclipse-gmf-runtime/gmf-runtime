@@ -15,8 +15,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
@@ -269,7 +269,7 @@ public class SVGImageConverter {
 	 * @throws CoreException
 	 */
     public static void exportToPDF(SVGImage svgImage,
-			FileOutputStream fileOutputStream)
+			OutputStream fileOutputStream)
 			throws CoreException {
     	
 		try {

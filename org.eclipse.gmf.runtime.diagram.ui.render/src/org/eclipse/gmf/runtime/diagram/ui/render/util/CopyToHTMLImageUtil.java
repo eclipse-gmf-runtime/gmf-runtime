@@ -50,6 +50,7 @@ import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.LineSeg;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Shell;
@@ -120,9 +121,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		/*
 		 * Create the HTML file
 		 */
-		createHTMLFileForTiledImage(destination, exportInfo.commonTileFileName,
-				format.getName().toLowerCase(), exportInfo.tiles.y,
-				exportInfo.tiles.x);
+		createHTMLFileForTiledImage(destination, exportInfo);
 
 		return exportInfo.diagramGenerator;
 	}
@@ -145,9 +144,43 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		/*
 		 * Create the HTML file
 		 */
-		createHTMLFileForTiledImage(destination, exportInfo.commonTileFileName,
-				format.getName().toLowerCase(), exportInfo.tiles.y,
-				exportInfo.tiles.x);
+		createHTMLFileForTiledImage(destination, exportInfo);
+	}
+	
+	/**
+	 * Generates image files and returns the HTML content as a String
+	 * 
+	 * @param diagram diagram model
+	 * @param destination a path to image files with common image file name
+	 * @param format image format
+	 * @param monitor progress monitor
+	 * @return HTML content as a string
+	 * @throws CoreException
+	 */
+	public String generateHTMLImage(Diagram diagram, IPath destination, ImageFileFormat format, IProgressMonitor monitor) throws CoreException {
+		ExportInfo exportInfo = null;
+		DiagramEditor openedDiagramEditor = DiagramEditorUtil
+				.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+		if (openedDiagramEditor != null) {
+			DiagramEditPart diagramEditPart = openedDiagramEditor
+					.getDiagramEditPart();
+			exportInfo = copyToImageAndReturnInfo(diagramEditPart,
+					diagramEditPart.getPrimaryEditParts(), destination, format,
+					monitor);
+		} else {
+			Shell shell = new Shell();
+			try {
+				DiagramEditPart diagramEditPart = createDiagramEditPart(
+						diagram, shell, null);
+				Assert.isNotNull(diagramEditPart);
+				exportInfo = copyToImageAndReturnInfo(diagramEditPart,
+						diagramEditPart.getPrimaryEditParts(), destination,
+						format, monitor);
+			} finally {
+				shell.dispose();
+			}
+		}
+		return createHTMLString(exportInfo);
 	}
 
 	/**
@@ -178,13 +211,15 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @throws Error
 	 * @throws CoreException
 	 */
-	private Point exportImage(DiagramGenerator gen, List editParts,
+	private ExportInfo exportImage(DiagramGenerator gen, List editParts,
 			IPath destinationFolder, String fileName,
-			ImageFileFormat imageFormat, int logTileWidth, int logTileHeight,
+			ImageFileFormat imageFormat, Dimension logTileSize,
 			IProgressMonitor monitor) throws Error, CoreException {
 		org.eclipse.swt.graphics.Rectangle diagramArea = gen
 				.calculateImageRectangle(editParts);
 		int rows = 1, columns = 1;
+		int logTileWidth = logTileSize.width;
+		int logTileHeight = logTileSize.height;
 		if (logTileWidth <= 0) {
 			logTileWidth = diagramArea.width;
 		}
@@ -222,7 +257,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 						imageFormat, monitor);
 			}
 		}
-		return new Point(columns, rows);
+		return new ExportInfo(gen, new Point(columns, rows), fileName, destinationFolder, imageFormat, new Dimension(logTileWidth, logTileHeight));
 	}
 
 	/**
@@ -241,24 +276,12 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @return <code>Status.OK_STATUS</code> if everything went without errors
 	 */
 	private IStatus createHTMLFileForTiledImage(IPath htmlFileLocation,
-			String fileName, String fileExtension, int numRows, int numColumns) {
+			ExportInfo info) {
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(
 					htmlFileLocation.toOSString()));
 			out
-					.write("<html>\n<body>\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"RIGHT\">\n");//$NON-NLS-1$
-			for (int i = 0; i < numRows; i++) {
-				out.write("<tr>\n");//$NON-NLS-1$
-				for (int j = 0; j < numColumns; j++) {
-					out.write("\t<td><img src=\"");//$NON-NLS-1$
-					out.write(fileName + getTileImageFileNameIndexDelimiter()
-							+ i + getTileImageFileNameIndexDelimiter() + j
-							+ StringStatics.PERIOD + fileExtension);
-					out.write("\"></td>\n");//$NON-NLS-1$
-				}
-				out.write("</tr>\n");//$NON-NLS-1$
-			}
-			out.write("</table>\n</body>\n</html>");//$NON-NLS-1$
+					.write(createHTMLString(info));
 			out.close();
 			IFile file = ResourcesPlugin.getWorkspace().getRoot()
 					.getFileForLocation(htmlFileLocation);
@@ -273,6 +296,46 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 			return Status.CANCEL_STATUS;
 		}
 		return Status.OK_STATUS;
+	}
+	
+	private String createHTMLString(ExportInfo info) {
+		Assert.isNotNull(info);
+		StringBuffer buffer = new StringBuffer(
+				"<html>\n<body>\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"CENTER\">\n");//$NON-NLS-1$
+		String commonFileNamePath = new Path("file://", info.directory.toString()).append(info.commonTileFileName).makeAbsolute().toString(); 
+		for (int i = 0; i < info.tiles.y; i++) {
+			buffer.append("<tr>\n");//$NON-NLS-1$
+			for (int j = 0; j < info.tiles.x; j++) {
+				String fileName = commonFileNamePath
+						+ getTileImageFileNameIndexDelimiter() + i
+						+ getTileImageFileNameIndexDelimiter() + j
+						+ StringStatics.PERIOD
+						+ info.imageFormat.getName().toLowerCase();
+				if (ImageFileFormat.SVG.equals(info.imageFormat)) {
+					buffer.append("\t<td>\n\t\t<object data=\"");//$NON-NLS-1$
+					buffer.append(fileName);
+					buffer.append("\" type=\"image/svg+xml\" width=\"");//$NON-NLS-1$
+					buffer.append(info.tileSize.width);//$NON-NLS-1$
+					buffer.append("\" height=\"");
+					buffer.append(info.tileSize.height);
+					buffer.append("\">\n");//$NON-NLS-1$
+					buffer.append("\t\t<embed src=\"");//$NON-NLS-1$
+					buffer.append(fileName);
+					buffer.append("\" type=\"image/svg+xml\" width=\"");//$NON-NLS-1$
+					buffer.append(info.tileSize.width);
+					buffer.append("\" height=\"");//$NON-NLS-1$
+					buffer.append(info.tileSize.height);
+					buffer.append("\"/></td>\n");
+				} else {
+					buffer.append("\t<td><img src=\"");//$NON-NLS-1$
+					buffer.append(fileName);
+					buffer.append("\"/></td>\n");//$NON-NLS-1$
+				}
+			}
+			buffer.append("</tr>\n");//$NON-NLS-1$
+		}
+		buffer.append("</table>\n</body>\n</html>");//$NON-NLS-1$
+		return buffer.toString();
 	}
 
 	/**
@@ -314,16 +377,22 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @author Alex Boyko
 	 * 
 	 */
-	private class ExportInfo {
-		DiagramGenerator diagramGenerator;
-		Point tiles;
-		String commonTileFileName;
+	public class ExportInfo {
+		final public DiagramGenerator diagramGenerator;
+		final public Point tiles;
+		final public String commonTileFileName;
+		final public IPath directory;
+		final public ImageFileFormat imageFormat;
+		final public Dimension tileSize;
 
 		ExportInfo(DiagramGenerator diagramGenerator, Point tiles,
-				String commonTileFileName) {
+				String commonTileFileName, IPath directory, ImageFileFormat imageFormat, Dimension tileSize) {
 			this.diagramGenerator = diagramGenerator;
 			this.tiles = tiles;
 			this.commonTileFileName = commonTileFileName;
+			this.directory = directory;
+			this.imageFormat = imageFormat;
+			this.tileSize = tileSize;
 		}
 	}
 
@@ -345,13 +414,15 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @return <code>ExportInfo</code> of images
 	 * @throws CoreException
 	 */
-	private ExportInfo copyToImageAndReturnInfo(DiagramEditPart diagramEP,
+	public ExportInfo copyToImageAndReturnInfo(DiagramEditPart diagramEP,
 			List selection, IPath destination, ImageFileFormat format,
 			IProgressMonitor monitor) throws CoreException {
 		DiagramGenerator gen = getDiagramGenerator(diagramEP, format);
+		
+		IMapMode mm = MapModeUtil.getMapMode(
+				diagramEP.getFigure()); 
 
-		Dimension dimension = (Dimension) MapModeUtil.getMapMode(
-				diagramEP.getFigure()).DPtoLP(
+		Dimension dimension = (Dimension) mm.DPtoLP(
 				imageFormatToTileSizeMap.get(format).getCopy());
 
 		/*
@@ -365,10 +436,17 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		 * Create image tile files and get the number of tiles, i.e. number of
 		 * rows and columns
 		 */
-		Point tiles = exportImage(gen, selection, destinationFolder, fileName,
-				format, dimension.width, dimension.height, monitor);
+		ExportInfo info  = exportImage(gen, selection, destinationFolder, fileName,
+				format, dimension, monitor);
+		
+		/*
+		 * The tile dimension returned with the ExportInfo object is in logical units. We need to translate it
+		 * to the device units - pixels. We can't simply use the pixel tile size from the imageFormatToTilesSizeMap
+		 * since tile size (x,y), where x<=0 and y<=0 will use the diagram width and/or height 
+		 */
+		mm.LPtoDP(info.tileSize);
 
-		return new ExportInfo(gen, tiles, fileName);
+		return info;
 	}
 
 	/*
@@ -420,7 +498,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 		 * image into a matrix of partsInfo lists, the rows of columns of which
 		 * correspond to rows and columns of tiled images
 		 */
-		return createTilesPartsInfoList(exportInfo, partsInfo, format);
+		return createTilesPartsInfoList(exportInfo);
 	}
 
 	/**
@@ -438,8 +516,9 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @return A matrix of partsInfo lists, where each cell contains partsInfo
 	 *         list for a tiled image of the same index
 	 */
-	private List<List<List<PartPositionInfo>>> createTilesPartsInfoList(
-			ExportInfo exportInfo, List partsInfo, ImageFileFormat format) {
+	public static List<List<List<PartPositionInfo>>> createTilesPartsInfoList(
+			ExportInfo exportInfo) {
+		List partsInfo = exportInfo.diagramGenerator.getDiagramPartInfo();
 		List<List<List<PartPositionInfo>>> tilesPartsInfoList = Collections.EMPTY_LIST;
 		if (exportInfo.diagramGenerator != null && exportInfo.tiles.x > 0
 				&& exportInfo.tiles.y > 0 && partsInfo != null) {
@@ -455,7 +534,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 			if (exportInfo.tiles.x == 1 && exportInfo.tiles.y == 1) {
 				tilesPartsInfoList.get(0).set(0, partsInfo);
 			} else {
-				Dimension tileSize = imageFormatToTileSizeMap.get(format);
+				Dimension tileSize = exportInfo.tileSize;
 				Rectangle defaultTile = new Rectangle(new Point(), tileSize);
 				/*
 				 * Iterate through each part and split it in different tiles if
@@ -604,7 +683,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *            columns
 	 * @return the matrix
 	 */
-	private List<List<List<PartPositionInfo>>> initializeTilesPartsInfoList(
+	private static List<List<List<PartPositionInfo>>> initializeTilesPartsInfoList(
 			int rows, int columns) {
 		List<List<List<PartPositionInfo>>> tilesPartsInfoList = new ArrayList<List<List<PartPositionInfo>>>(
 				rows);
@@ -626,7 +705,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @author aboyko
 	 * 
 	 */
-	private class LineSegmentPointsComparator implements Comparator<Point> {
+	private static class LineSegmentPointsComparator implements Comparator<Point> {
 
 		private Point segmentOrigin;
 
@@ -664,7 +743,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 * @return the map of cell indices to line segments contained within
 	 *         corresponding cells
 	 */
-	private HashMap<Point, LineSeg> getMapOfLineSegments(Point startPoint,
+	private static HashMap<Point, LineSeg> getMapOfLineSegments(Point startPoint,
 			Point endPoint, Dimension tileSize, HashSet<Point> cells) {
 		HashMap<Point, LineSeg> map = new HashMap<Point, LineSeg>();
 		Point startCell = new Point();
@@ -718,7 +797,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 			 * of the original line segment are located at the start of the
 			 * list.
 			 */
-			Collections.sort(linePoints, new LineSegmentPointsComparator(
+			Collections.sort(linePoints, new CopyToHTMLImageUtil.LineSegmentPointsComparator(
 					startPoint));
 			/*
 			 * Add the ends of the original line segments to the start and end
@@ -777,7 +856,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *            list of line segments
 	 * @return a list of polygon points.
 	 */
-	private List<Point> createCellPolyline(Dimension cellSize,
+	private static List<Point> createCellPolyline(Dimension cellSize,
 			List<LineSeg> segments) {
 		List<Point> result = new LinkedList<Point>();
 		if (segments.size() > 0) {
@@ -814,7 +893,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *            2nd line segment
 	 * @return the list of connecting points
 	 */
-	private List<Point> connectLineSegmentsEndsViaCellEdges(Dimension cellSize,
+	private static List<Point> connectLineSegmentsEndsViaCellEdges(Dimension cellSize,
 			LineSeg lineSeg1, LineSeg lineSeg2) {
 		Point current = lineSeg1.getTerminus();
 		Point next = lineSeg2.getOrigin();
@@ -836,7 +915,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *            cell's dimension
 	 * @return a list of vertices in the clock wise order
 	 */
-	private List<Point> createClockwiseListOfCellVertices(Dimension cellSize) {
+	private static List<Point> createClockwiseListOfCellVertices(Dimension cellSize) {
 		List<Point> cellVertices = new ArrayList<Point>(4);
 		cellVertices.add(new Point());
 		cellVertices.add(new Point(cellSize.width, 0));
@@ -855,7 +934,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *            point
 	 * @return index of the in the list of clock wise vertices
 	 */
-	private int indexOfCellEdgePointClockwise(Dimension cellSize, Point pt) {
+	private static int indexOfCellEdgePointClockwise(Dimension cellSize, Point pt) {
 		if (pt.x == 0) {
 			return 0;
 		} else if (pt.y == 0) {
