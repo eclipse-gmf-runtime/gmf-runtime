@@ -207,9 +207,8 @@ public class ToggleCanonicalModeCommand extends Command {
 			} catch (ExecutionException e) {
 				// Give up...
 			}
-		} else {
-			DoEnable(_enable);
 		}
+		DoEnable(_enable);
 	}
 	
     /* (non-Javadoc)
