@@ -1651,4 +1651,16 @@ public class WrappingLabel
         return getText();
     }
 
+	/**
+	 * Returns <code>true</code> if the label's text is currently truncated and
+	 * is displaying an ellipsis, <code>false</code> otherwise. <br>
+	 * Note that this code only reports horizontal truncation by delegating to
+	 * the GEF TextFlow and ignores that fact that GMF TextFlowEx may be
+	 * vertically truncated.
+	 * 
+	 * @return <code>true</code> if the label's text is truncated
+	 */
+	public boolean isTextTruncated() {
+		return getTextFlow().isTextTruncated();
+	}
 }
