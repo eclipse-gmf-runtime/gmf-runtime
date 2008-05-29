@@ -748,7 +748,7 @@ int zoomLineWidth(int w) {
 	 * This small piece of code detects this case and simply returns the
 	 * line width.
 	 */
-	if (zoom < 0.04 && w < 25) {
+	if (zoom < 0.04 && w <= 5) {
 		return w;
 	}
 	/*
