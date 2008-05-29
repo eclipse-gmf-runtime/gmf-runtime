@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -181,17 +181,19 @@ public class TextDirectEditManager
                     }
 
                     if (label.isTextWrapOn()) {
-                        // When zoomed in, the height of this rectangle is not
-                        // sufficient because the text is shifted downwards a
-                        // little bit. Add some to the height to compensate for
-                        // this. I'm not sure why this is happening, but I can
-                        // see the text shifting down even in a label on a GEF
-                        // logic diagram when zoomed into 400%.
-                        int charHeight = FigureUtilities.getFontMetrics(
-                            text.getFont()).getHeight();
-                        rect.resize(0, charHeight / 2);
+                    	if (!text.getFont().isDisposed()) {
+                    		// When zoomed in, the height of this rectangle is not
+                    		// sufficient because the text is shifted downwards a
+                    		// little bit. Add some to the height to compensate for
+                    		// this. I'm not sure why this is happening, but I can
+                    		// see the text shifting down even in a label on a GEF
+                    		// logic diagram when zoomed into 400%.
+                    		int charHeight = FigureUtilities.getFontMetrics(
+                    				text.getFont()).getHeight();
+                    		rect.resize(0, charHeight / 2);
+                    	}
                         
-                    } else {
+                    } else { 
                         
                       rect.setSize(new Dimension(text.computeSize(
                             SWT.DEFAULT, SWT.DEFAULT)));
