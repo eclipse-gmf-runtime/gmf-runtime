@@ -1144,9 +1144,9 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 		
 		RenderedImage img = srcImage.getNewRenderedImage(info);
 		
-		BufferedImage bufImg = (BufferedImage)srcImage.getAdapter(BufferedImage.class);
+		BufferedImage bufImg = (BufferedImage)img.getAdapter(BufferedImage.class);
 		if (bufImg == null) {
-			bufImg = ImageConverter.convert(srcImage.getSWTImage());
+			bufImg = ImageConverter.convert(img.getSWTImage());
 		}
 		
 		// Translate the Coordinates
