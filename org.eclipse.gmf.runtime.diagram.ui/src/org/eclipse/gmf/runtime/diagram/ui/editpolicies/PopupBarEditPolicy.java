@@ -157,6 +157,9 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 				return null;
 
 			myDisabledImage = new Image(Display.getCurrent(), theImage, SWT.IMAGE_DISABLE);
+			if (imagesToBeDisposed == null) {
+				imagesToBeDisposed = new ArrayList();
+			}
 			imagesToBeDisposed.add(myDisabledImage);
 			return myDisabledImage;
 		}
@@ -541,7 +544,7 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 	private List myPopupBarDescriptors = new ArrayList();
 
 	/** Images created that must be deleted when popup bar is removed */
-	protected List imagesToBeDisposed = new ArrayList();
+	protected List imagesToBeDisposed = null;
 
 	/** mouse keys listener for the owner shape */
 	private PopupBarMouseListener myMouseKeyListener = new PopupBarMouseListener();
@@ -972,10 +975,12 @@ public class PopupBarEditPolicy extends DiagramAssistantEditPolicy {
 
 		this.myPopupBarDescriptors.clear();
 
-		for (Iterator iter = imagesToBeDisposed.iterator(); iter.hasNext();) {
-			((Image) iter.next()).dispose();
+		if (imagesToBeDisposed != null) {
+			for (Iterator iter = imagesToBeDisposed.iterator(); iter.hasNext();) {
+				((Image) iter.next()).dispose();
+			}
+			imagesToBeDisposed.clear();
 		}
-		imagesToBeDisposed.clear();
 
 	}
 
