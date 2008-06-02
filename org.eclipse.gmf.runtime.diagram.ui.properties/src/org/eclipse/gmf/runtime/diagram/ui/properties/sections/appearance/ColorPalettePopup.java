@@ -254,7 +254,6 @@ public class ColorPalettePopup {
 		defaultButton.setText(DEAFULT_COLOR_STRING);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
-		data.heightHint = rowHeight;
 		defaultButton.setLayoutData(data);
 
 		defaultButton.addSelectionListener(new SelectionAdapter() {
@@ -269,7 +268,6 @@ public class ColorPalettePopup {
 		moreColors.setText(CUSTOM_COLOR_STRING);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
-		data.heightHint = rowHeight;
 		moreColors.setLayoutData(data);
 
 		moreColors.addSelectionListener(new SelectionAdapter() {
