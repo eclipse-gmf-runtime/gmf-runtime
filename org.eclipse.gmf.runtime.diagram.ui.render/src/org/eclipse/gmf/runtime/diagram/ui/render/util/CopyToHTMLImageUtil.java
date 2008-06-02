@@ -301,7 +301,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	private String createHTMLString(ExportInfo info) {
 		Assert.isNotNull(info);
 		StringBuffer buffer = new StringBuffer(
-				"<html>\n<body>\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"CENTER\">\n");//$NON-NLS-1$
+				"<html>\n<body>\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"LEFT\">\n");//$NON-NLS-1$
 		String commonFileNamePath = new Path("file://", info.directory.toString()).append(info.commonTileFileName).makeAbsolute().toString(); 
 		for (int i = 0; i < info.tiles.y; i++) {
 			buffer.append("<tr>\n");//$NON-NLS-1$
