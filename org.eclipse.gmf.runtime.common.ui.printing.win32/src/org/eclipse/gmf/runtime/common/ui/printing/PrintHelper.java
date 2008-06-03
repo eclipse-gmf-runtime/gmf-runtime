@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2005 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,7 +57,7 @@ public class PrintHelper
      * Supported languages strings. Default locale is SUPPORTED[0].
      */
     private static final String SUPPORTED[] = {
-        "en", "de", "es", "fr", "it", "ja", "ko", "pt_BR", "zh_CN", "zh_TW"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
+        "en", "ar", "cs", "da", "de", "el", "es", "fi", "hu", "fr", "it", "iw", "ja", "ko", "nl", "no", "nb", "nn", "pl", "pt", "pt_BR", "ru", "sv", "tr", "zh", "zh_CN", "zh_TW", "zh_HK"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
     /**
      * Default locale, English language
@@ -78,7 +78,7 @@ public class PrintHelper
         // with one line of code
         // System.loadLibrary("DiagramPrint");
 
-        String localizedVersion = DEFAULT_LOCALE;
+    	String localizedVersion = DEFAULT_LOCALE;
 
         List supported = new ArrayList();
         supported.addAll(Arrays.asList(SUPPORTED));

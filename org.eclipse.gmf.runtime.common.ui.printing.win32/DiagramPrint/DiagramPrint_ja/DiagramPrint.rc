@@ -81,18 +81,18 @@ BEGIN
     BLOCK "StringFileInfo"
     BEGIN
         BLOCK "040904b0"
-        BEGIN
+         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "IBM Corporation\0"
             VALUE "FileDescription", "DiagramPrint DLL\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "DiagramPrint\0"
-            VALUE "LegalCopyright", "ライセンス資料 -- IBM の所有権 - (C) Copyright IBM Corporation, 2003,2003 - US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.\0"
-            VALUE "LegalTrademarks", "(c) IBM は IBM Corporation  の登録商標です。Windows(TM) は Microsoft Corporation の商標です。\0"
+            VALUE "LegalCopyright", "Licensed Materials -- Property of IBM - (C) Copyright IBM Corporation, 2003,2008 - US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.\0"
+            VALUE "LegalTrademarks", "(R) IBM is a registered trademark of International Business Machines Corporation.  Windows(TM) is a trademark of Microsoft Corporation.\0"
             VALUE "OriginalFilename", "DiagramPrint.DLL\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "DiagramPrint Dynamic Link Library\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "ProductVersion", "2, 1, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -110,70 +110,70 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 290, 312
+1538 DIALOG DISCARDABLE  32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "印刷"
 FONT 9, "MS UI Gothic"
 BEGIN
-    LTEXT           "名前 (&N):",1093,16,20,34,8
-    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "プリンター",1075,8,4,272,84,WS_GROUP
+    LTEXT           "名前(&N):",1093,16,21,36,8
+    COMBOBOX        1139,60,18,139,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "プロパティー (&P)",1025,208,17,67,14,WS_GROUP
-    LTEXT           "ステータス:",1095,16,36,44,10,SS_NOPREFIX
+    PUSHBUTTON      "プロパティー(&P)...",1025,200,17,75,14,WS_GROUP
+    LTEXT           "状況:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,36,214,10
-    LTEXT           "タイプ:",1094,16,48,44,10,SS_NOPREFIX
+                    WS_GROUP,60,36,211,10
+    LTEXT           "タイプ:        ",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,48,214,10
-    LTEXT           "場所:",1097,16,60,44,10,SS_NOPREFIX
+                    WS_GROUP,60,48,211,10
+    LTEXT           "場所:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,60,214,10
-    LTEXT           "コメント:",1096,16,72,44,10,SS_NOPREFIX
-    CONTROL         "ファイルに出力 (&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,209,71,67,12
-    GROUPBOX        "ダイアグラム印刷範囲",1072,8,95,144,109,WS_GROUP
-    CONTROL         "すべてのダイアグラム (&L)",IDC_ALL_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,110,117,12
-    CONTROL         "現在のダイアグラム (&C)",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON,16,124,117,12
-    CONTROL         "選択したダイアグラム (&D)",IDC_SELECTED_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON,16,139,117,12
-    LISTBOX         IDC_DIAGRAMS,25,153,118,43,LBS_MULTIPLESEL | 
+                    WS_GROUP,60,60,211,10
+    LTEXT           "コメント:",1096,16,72,40,10,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,60,72,211,10
+    CONTROL         "ファイルへ出力(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,261,71,15,12
+    GROUPBOX        "ダイアグラム印刷範囲",1072,8,93,272,106,WS_GROUP
+    CONTROL         "現在のダイアグラム(&U)",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
+    CONTROL         "開いているモデルからのダイアグラムすべて(&D)",
+                    IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
+                    12
+    CONTROL         "選択されたダイアグラム(&E):",IDC_SELECTED_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,16,135,253,12
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "スケーリング",IDC_STATIC,160,95,119,109
-    LTEXT           "指定したパーセントで印刷",1104,168,111,102,8
-    CONTROL         "パーセント",IDC_SCALE_PERCENT,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,172,126,38,9
-    CONTROL         "フィッティングする",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON,171,169,100,9
-    EDITTEXT        IDC_PERCENT,212,125,32,12,ES_NUMBER | WS_GROUP
-    EDITTEXT        IDC_PAGESM,195,179,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "x",IDC_STATIC,217,180,6,8
-    EDITTEXT        IDC_PAGESN,226,179,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "ページ",1102,249,180,27,8
-    GROUPBOX        "印刷範囲",1074,8,211,144,64,WS_GROUP
-    CONTROL         "すべて (&A)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,229,64,12
-    CONTROL         "ページ (&G)",1058,"Button",BS_AUTORADIOBUTTON,16,245,64,
+    GROUPBOX        "拡大縮小",IDC_STATIC,8,202,272,51
+    CONTROL         "通常サイズに対する倍率(&J):",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,98,12
+    CONTROL         "適用するサイズ(&I):",IDC_SCALE_FIT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,68,12
+    EDITTEXT        IDC_PERCENT,140,217,32,12,ES_NUMBER
+    LTEXT           "ページ幅(&W):",1105,87,235,47,8
+    EDITTEXT        IDC_PAGESM,140,233,32,12,ES_NUMBER
+    RTEXT           "ページ高さ(&T):",IDC_STATIC,178,235,50,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
+    GROUPBOX        "印刷範囲",1074,8,257,132,64,WS_GROUP
+    CONTROL         "すべて(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,47,12
+    CONTROL         "ページ(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,
                     12
-    RTEXT           "開始:",1089,38,259,21,8
-    EDITTEXT        1152,61,258,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "終了:",1090,90,259,22,8
-    EDITTEXT        1153,114,258,26,12,ES_NUMBER | WS_GROUP
-    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,72,142,10
-    GROUPBOX        "プリンター",1075,8,4,272,84,WS_GROUP
-    GROUPBOX        "印刷部数",1073,159,211,120,64,WS_GROUP
-    LTEXT           "部数 (&C):",1092,167,227,62,8
-    EDITTEXT        1154,239,225,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,161,244,70,25,WS_GROUP
+    RTEXT           "開始(&F):",1089,17,302,25,8
+    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "終了(&T):",1090,79,302,27,8
+    EDITTEXT        1153,109,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "印刷",1073,147,257,132,64,WS_GROUP
+    LTEXT           "印刷部数(&C):",1092,163,273,68,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "部単位(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,233,249,45,14
-    DEFPUSHBUTTON   "OK",IDOK,180,286,48,14,WS_GROUP
-    PUSHBUTTON      "キャンセル",IDCANCEL,232,286,48,14
-    LTEXT           "ページに合わせて印刷",1105,168,154,104,8
+                    WS_TABSTOP,235,295,41,12
+    DEFPUSHBUTTON   "OK",IDOK,174,328,50,14,WS_GROUP
+    PUSHBUTTON      "キャンセル",IDCANCEL,229,328,50,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
 1539 DIALOG DISCARDABLE  32, 32, 288, 178
@@ -183,34 +183,35 @@ CAPTION "印刷設定"
 FONT 9, "MS UI Gothic"
 BEGIN
     GROUPBOX        "プリンター",1075,8,4,272,84,WS_GROUP
-    LTEXT           "名前 (&N):",1093,16,20,36,8
+    LTEXT           "名前(&N):",1093,16,20,36,8
     COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "プロパティー (&P)",1025,207,17,68,14,WS_GROUP
-    LTEXT           "ステータス:",1095,16,36,44,10,SS_NOPREFIX
+    PUSHBUTTON      "プロパティー(&P)",1025,212,17,60,14,WS_GROUP
+    LTEXT           "状況:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,36,213,10
-    LTEXT           "タイプ:",1094,16,48,44,10,SS_NOPREFIX
+                    WS_GROUP,52,36,224,10
+    LTEXT           "タイプ:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,48,213,10
-    LTEXT           "場所:",1097,16,60,44,10,SS_NOPREFIX
+                    WS_GROUP,52,48,224,10
+    LTEXT           "場所:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,60,213,10
-    LTEXT           "コメント:",1096,16,72,44,10,SS_NOPREFIX
+                    WS_GROUP,52,60,224,10
+    LTEXT           "コメント:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,72,213,10
+                    WS_GROUP,52,72,224,10
     GROUPBOX        "用紙",1073,8,92,164,56,WS_GROUP
-    LTEXT           "サイズ (&Z):",1089,10,108,40,8
+    LTEXT           "サイズ(&Z):",1089,16,108,36,8
     COMBOBOX        1137,52,106,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "ソース (&S):",1090,10,128,41,8
+    LTEXT           "ソ\\ース(&S):",1090,16,128,36,8
     COMBOBOX        1138,52,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     GROUPBOX        "方向",1072,180,92,100,56,WS_GROUP
     ICON            "",1084,195,112,18,20,WS_GROUP
-    CONTROL         "縦 (&O)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    CONTROL         "横方向(&O)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,224,106,52,12
-    CONTROL         "横 (&A)",1057,"Button",BS_AUTORADIOBUTTON,224,126,52,12
+    CONTROL         "縦方向(&A)",1057,"Button",BS_AUTORADIOBUTTON,224,126,52,
+                    12
     DEFPUSHBUTTON   "OK",IDOK,180,156,48,14,WS_GROUP
     PUSHBUTTON      "キャンセル",IDCANCEL,232,156,48,14
 END
@@ -225,144 +226,142 @@ BEGIN
     CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,160,12,4,80
     CONTROL         "",1082,"Static",SS_GRAYRECT | WS_GROUP,84,88,80,4
     GROUPBOX        "用紙",1073,8,96,224,56,WS_GROUP
-    LTEXT           "サイズ (&Z):",1089,16,112,45,8
+    LTEXT           "サイズ(&Z):",1089,16,112,36,8
     COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "ソース (&S):",1090,16,132,45,8
+    LTEXT           "ソ\\ース(&S):",1090,16,132,36,8
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     GROUPBOX        "方向",1072,8,156,64,56,WS_GROUP
-    CONTROL         "縦 (&O)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    CONTROL         "横方向(&O)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
-    CONTROL         "横 (&A)",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,12
+    CONTROL         "縦方向(&A)",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
+                    12
     GROUPBOX        "余白",1075,80,156,152,56,WS_GROUP
-    LTEXT           "左 (&L):",1102,88,172,32,8
+    LTEXT           "左(&L):",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
-    LTEXT           "右 (&R):",1103,164,172,32,8
+    LTEXT           "右(&R):",1103,164,172,32,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
-    LTEXT           "上 (&T):",1104,88,192,32,8
+    LTEXT           "上(&T):",1104,88,192,32,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
-    LTEXT           "下 (&B):",1105,164,192,32,8
+    LTEXT           "下(&B):",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
-    DEFPUSHBUTTON   "OK",IDOK,65,220,48,14,WS_GROUP
-    PUSHBUTTON      "キャンセル",IDCANCEL,117,220,48,14
-    PUSHBUTTON      "プリンター (&P)...",1026,169,220,66,14
+    DEFPUSHBUTTON   "OK",IDOK,80,220,48,14,WS_GROUP
+    PUSHBUTTON      "キャンセル",IDCANCEL,132,220,48,14
+    PUSHBUTTON      "プリンター(&P)...",1026,184,220,48,14
 END
 
-1234 DIALOG DISCARDABLE  32, 32, 288, 186
+1234 DIALOG DISCARDABLE  32, 32, 329, 186
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "印刷"
 FONT 9, "MS UI Gothic"
 BEGIN
-    GROUPBOX        "プリンター",1075,8,4,272,84,WS_GROUP
-    LTEXT           "名前 (&N):",1093,16,20,36,8
-    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "プリンター",1075,8,4,313,84,WS_GROUP
+    LTEXT           "名前(&N):",1093,16,20,36,8
+    COMBOBOX        1139,56,18,183,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "プロパティー (&P)",1025,209,17,65,14,WS_GROUP
-    LTEXT           "ステータス:",1095,16,36,43,10,SS_NOPREFIX
+    PUSHBUTTON      "プロパティー(&P)",1025,250,17,60,14,WS_GROUP
+    LTEXT           "状況:",1095,16,36,36,8,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,36,214,10
-    LTEXT           "タイプ:",1094,16,48,43,10,SS_NOPREFIX
+                    WS_GROUP,52,36,249,10
+    LTEXT           "タイプ:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,48,214,10
-    LTEXT           "場所:",1097,16,60,43,10,SS_NOPREFIX
+                    WS_GROUP,53,48,248,10
+    LTEXT           "場所:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,60,214,10
-    LTEXT           "コメント:",1096,16,72,43,10,SS_NOPREFIX
+                    WS_GROUP,53,60,248,10
+    LTEXT           "コメント:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,72,144,10
-    CONTROL         "ファイルに出力 (&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,209,70,67,12
-    GROUPBOX        "印刷範囲",1072,8,92,144,64,WS_GROUP
-    CONTROL         "すべて (&A)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,103,64,10
-    CONTROL         "ページ (&G)",1058,"Button",BS_AUTORADIOBUTTON,16,115,64,
-                    10
-    CONTROL         "選択 (&S)",1057,"Button",BS_AUTORADIOBUTTON,16,142,64,
-                    11
-    RTEXT           "開始:",1089,49,130,20,8
-    EDITTEXT        1152,71,127,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "終了:",1090,99,130,19,8
-    EDITTEXT        1153,120,127,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "印刷部数",1073,160,92,120,64,WS_GROUP
-    LTEXT           "部数 (&C):",1092,168,108,68,8
-    EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,162,123,76,24,SS_CENTERIMAGE | WS_GROUP
-    CONTROL         "部単位",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,241,130,34,12
+                    WS_GROUP,52,72,185,10
+    CONTROL         "ファイルへ出力(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,245,70,64,12
+    GROUPBOX        "印刷範囲",1072,8,93,171,64,WS_GROUP
+    CONTROL         "すべて(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,106,64,12
+    CONTROL         "ページ(&G)",1058,"Button",BS_AUTORADIOBUTTON,17,121,38,
+                    12
+    CONTROL         "選択(&S)",1057,"Button",BS_AUTORADIOBUTTON,16,138,64,12
+    RTEXT           "開始(&F):",1089,59,123,26,8
+    EDITTEXT        1152,91,120,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "終了(&T):",1090,121,123,25,8
+    EDITTEXT        1153,149,120,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "印刷",1073,191,92,131,64,WS_GROUP
+    LTEXT           "印刷部数(&C):",1092,196,108,68,8
+    EDITTEXT        1154,268,106,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,194,124,76,24,SS_CENTERIMAGE | WS_GROUP
+    CONTROL         "部単位(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,275,129,43,12
     DEFPUSHBUTTON   "OK",IDOK,180,164,48,14,WS_GROUP
     PUSHBUTTON      "キャンセル",IDCANCEL,232,164,48,14
 END
 
-#define WS_EX_LAYOUTRTL			0x00400000
-
-
-1547 DIALOGEX 32, 32, 290, 312
+1547 DIALOGEX 32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_RTLREADING | WS_EX_LAYOUTRTL
 CAPTION "印刷"
-FONT 9, "MS UI Gothic"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
 BEGIN
-    LTEXT           "名前 (&N):",1093,16,20,34,8
+    GROUPBOX        "プリンター",1075,8,4,272,84,WS_GROUP
+    LTEXT           "名前(&N):",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "プロパティー (&P)",1025,208,17,67,14,WS_GROUP
-    LTEXT           "ステータス:",1095,16,36,44,10,SS_NOPREFIX
+    PUSHBUTTON      "プロパティー(&P)...",1025,212,17,60,14,WS_GROUP
+    LTEXT           "状況:",1095,16,36,36,8,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,36,214,10
-    LTEXT           "タイプ:",1094,16,48,44,10,SS_NOPREFIX
+                    WS_GROUP,52,36,224,10
+    LTEXT           "タイプ:        ",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,48,214,10
-    LTEXT           "場所:",1097,16,60,44,10,SS_NOPREFIX
+                    WS_GROUP,52,48,224,10
+    LTEXT           "場所:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,60,214,10
-    LTEXT           "コメント:",1096,16,72,44,10,SS_NOPREFIX
-    CONTROL         "ファイルに出力 (&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,209,71,67,12
-    GROUPBOX        "ダイアグラム印刷範囲",1072,8,95,144,109,WS_GROUP
-    CONTROL         "すべてのダイアグラム (&L)",IDC_ALL_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,110,117,12
-    CONTROL         "現在のダイアグラム (&C)",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON,16,124,117,12
-    CONTROL         "選択したダイアグラム (&D)",IDC_SELECTED_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON,16,139,117,12
-    LISTBOX         IDC_DIAGRAMS,25,153,118,43,LBS_MULTIPLESEL | 
+                    WS_GROUP,52,60,224,10
+    LTEXT           "コメント:",1096,16,72,36,10,SS_NOPREFIX
+    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
+                    WS_GROUP,52,72,152,10
+    CONTROL         "ファイルへ出力(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "ダイアグラム印刷範囲",1072,8,93,272,106,WS_GROUP
+    CONTROL         "現在のダイアグラム(&U)",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
+    CONTROL         "開いているモデルからのダイアグラムすべて(&D)",
+                    IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
+                    12
+    CONTROL         "選択されたダイアグラム(&E):",IDC_SELECTED_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,16,135,253,12
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "スケーリング",IDC_STATIC,160,95,119,109
-    LTEXT           "指定したパーセントで印刷",1104,168,111,102,8
-    CONTROL         "パーセント",IDC_SCALE_PERCENT,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,172,126,38,9
-    CONTROL         "フィッティングする",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON,171,169,100,9
-    EDITTEXT        IDC_PERCENT,212,125,32,12,ES_NUMBER | WS_GROUP
-    EDITTEXT        IDC_PAGESM,195,179,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "x",IDC_STATIC,217,180,6,8
-    EDITTEXT        IDC_PAGESN,226,179,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "ページ",1102,249,180,27,8
-    GROUPBOX        "印刷範囲",1074,8,211,144,64,WS_GROUP
-    CONTROL         "すべて (&A)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,229,64,12
-    CONTROL         "ページ (&G)",1058,"Button",BS_AUTORADIOBUTTON,16,245,64,
+    GROUPBOX        "拡大縮小",IDC_STATIC,7,205,272,51
+    CONTROL         "通常サイズに対する倍率(&J):",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
+    CONTROL         "適用するサイズ(&I):",IDC_SCALE_FIT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,17,233,61,12
+    LTEXT           "通常サイズに対する倍率(&J):",1102,140,219,78,8,NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,222,217,32,12,ES_NUMBER
+    LTEXT           "ページ幅(&W):",1105,84,235,36,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
+    RTEXT           "ページ高さ(&T):",IDC_STATIC,177,235,54,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
+    GROUPBOX        "印刷範囲",1074,8,257,132,64,WS_GROUP
+    CONTROL         "すべて(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,47,12
+    CONTROL         "ページ(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,
                     12
-    RTEXT           "開始:",1089,38,259,21,8
-    EDITTEXT        1152,61,258,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "終了:",1090,90,259,22,8
-    EDITTEXT        1153,114,258,26,12,ES_NUMBER | WS_GROUP
-    CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,62,72,142,10
-    GROUPBOX        "プリンター",1075,8,4,272,84,WS_GROUP
-    GROUPBOX        "印刷部数",1073,159,211,120,64,WS_GROUP
-    LTEXT           "部数 (&C):",1092,167,227,62,8
-    EDITTEXT        1154,239,225,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,161,244,70,25,WS_GROUP
+    RTEXT           "開始(&F):",1089,20,302,24,8
+    EDITTEXT        1152,47,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "終了(&T):",1090,82,302,25,8
+    EDITTEXT        1153,109,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "印刷",1073,147,257,132,64,WS_GROUP
+    LTEXT           "印刷部数(&C):",1092,163,273,68,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "部単位(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,233,249,45,14
-    DEFPUSHBUTTON   "OK",IDOK,180,286,48,14,WS_GROUP
-    PUSHBUTTON      "キャンセル",IDCANCEL,232,286,48,14
-    LTEXT           "ページに合わせて印刷",1105,168,154,104,8
+                    WS_TABSTOP,235,295,42,12
+    DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
+    PUSHBUTTON      "キャンセル",IDCANCEL,232,328,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
 
@@ -376,14 +375,14 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 287
-        BOTTOMMARGIN, 300
+        RIGHTMARGIN, 286
+        BOTTOMMARGIN, 342
     END
 
     1547, DIALOG
     BEGIN
-        RIGHTMARGIN, 287
-        BOTTOMMARGIN, 300
+        RIGHTMARGIN, 286
+        BOTTOMMARGIN, 342
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -87,12 +87,12 @@ BEGIN
             VALUE "FileDescription", "DiagramPrint DLL\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "DiagramPrint\0"
-            VALUE "LegalCopyright", "Licensed Materials -- Property of IBM - (C) Copyright IBM Corporation, 2003,2003 - US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.\0"
-            VALUE "LegalTrademarks", "(c) IBM 是 International Business Machines Corporation 的註冊商標，Windows(TM) 是 Microsoft Corporation 的商標。\0"
+            VALUE "LegalCopyright", "Licensed Materials -- Property of IBM - (C) Copyright IBM Corporation, 2003,2008 - US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.\0"
+            VALUE "LegalTrademarks", "(R) IBM is a registered trademark of International Business Machines Corporation.  Windows(TM) is a trademark of Microsoft Corporation.\0"
             VALUE "OriginalFilename", "DiagramPrint.DLL\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "DiagramPrint 動態鏈結程式庫\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "ProductName", "DiagramPrint Dynamic Link Library\0"
+            VALUE "ProductVersion", "2, 1, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -110,85 +110,86 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 290, 312
+1538 DIALOG DISCARDABLE  32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "列印"
 FONT 9, "新細明體"
 BEGIN
     GROUPBOX        "印表機",1075,8,4,272,84,WS_GROUP
-    LTEXT           "名稱(&N)：",1093,16,20,36,8
+    LTEXT           "名稱(&N)：",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "內容(&P)",1025,212,17,60,14,WS_GROUP
-    LTEXT           "狀態：",1095,16,36,36,10,SS_NOPREFIX
+    PUSHBUTTON      "內容(&P)...",1025,212,17,60,14,WS_GROUP
+    LTEXT           "狀態：",1095,16,36,26,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,36,224,10
-    LTEXT           "類型：",1094,16,48,36,10,SS_NOPREFIX
+                    WS_GROUP,54,36,217,10
+    LTEXT           "類型：",1094,16,48,31,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,48,224,10
-    LTEXT           "位置：",1097,16,60,36,10,SS_NOPREFIX
+                    WS_GROUP,54,48,218,10
+    LTEXT           "位置：",1097,16,60,28,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,60,224,10
-    LTEXT           "註解：",1096,16,72,36,10,SS_NOPREFIX
+                    WS_GROUP,54,60,217,10
+    LTEXT           "註解：",1096,16,72,29,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,72,152,10
-    CONTROL         "列印至檔案(&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "圖型列印範圍",1072,8,95,144,109,WS_GROUP
-    CONTROL         "所有圖型(&L)",IDC_ALL_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,110,64,12
-    CONTROL         "現行圖型(&C)",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON,16,124,76,12
-    CONTROL         "所選的圖型(&D)",IDC_SELECTED_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON,16,139,87,12
-    LISTBOX         IDC_DIAGRAMS,25,153,118,43,LBS_MULTIPLESEL | 
+                    WS_GROUP,54,72,152,10
+    CONTROL         "列印到檔案(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,229,70,41,12
+    GROUPBOX        "圖型列印範圍",1072,8,93,272,106,WS_GROUP
+    CONTROL         "現行圖型(&U)",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
+    CONTROL         "開啟模型中的所有圖型(&D)",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,121,253,12
+    CONTROL         "選取的圖型(&E)：",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,135,253,12
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "調整",IDC_STATIC,160,95,119,109
-    LTEXT           "依百分比",1104,168,111,35,8
-    CONTROL         "百分比",IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,172,126,33,9
-    CONTROL         "符合",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON,171,169,
-                    30,9
-    EDITTEXT        IDC_PERCENT,208,125,32,12,ES_NUMBER | WS_GROUP
-    EDITTEXT        IDC_PAGESM,204,168,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "x",IDC_STATIC,226,170,8,8
-    EDITTEXT        IDC_PAGESN,234,168,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "頁數",1102,255,169,21,8
-    GROUPBOX        "列印範圍",1074,8,211,144,64,WS_GROUP
+    GROUPBOX        "調整大小",IDC_STATIC,8,202,272,51
+    CONTROL         "調整為正常大小的 %(&J)：",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
+    CONTROL         "調整為(&I)：",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,16,233,56,12
+    LTEXT           "調整為正常大小的 %(&J)：",1102,28,219,91,10,NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
+    LTEXT           "頁寬(&W)：",1105,75,235,43,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
+    RTEXT           "頁高(&T)：",IDC_STATIC,177,235,54,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
+    GROUPBOX        "列印範圍",1074,8,257,132,64,WS_GROUP
     CONTROL         "全部(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,229,64,12
-    CONTROL         "頁數(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,245,36,12
-    RTEXT           "從(&F)：",1089,48,247,20,8
-    EDITTEXT        1152,70,245,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "到(&T)：",1090,96,247,16,8
-    EDITTEXT        1153,114,245,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "份數",1073,159,211,120,64,WS_GROUP
-    LTEXT           "份數(&C)：",1092,167,227,68,8
-    EDITTEXT        1154,239,225,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,160,244,70,25,WS_GROUP
+                    WS_TABSTOP,16,272,47,12
+    CONTROL         "頁數(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
+    RTEXT           "從(&F):",1089,13,302,32,8
+    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "到(&T)：",1090,76,302,27,8
+    EDITTEXT        1153,107,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "份數",1073,147,257,132,64,WS_GROUP
+    LTEXT           "份數(&C)：",1092,163,273,68,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "分頁(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,239,249,36,12
-    DEFPUSHBUTTON   "確定",IDOK,180,286,48,14,WS_GROUP
-    PUSHBUTTON      "取消",IDCANCEL,232,286,48,14
-    LTEXT           "依頁數",1105,168,154,30,8
+                    WS_TABSTOP,227,300,48,12
+    DEFPUSHBUTTON   "確定",IDOK,180,328,48,14,WS_GROUP
+    PUSHBUTTON      "取消",IDCANCEL,232,328,48,14
+    ICON            "",1086,156,295,70,25,WS_GROUP
 END
 
-1539 DIALOG DISCARDABLE  32, 32, 288, 178
+1539 DIALOG DISCARDABLE  32, 32, 288, 183
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "列印設定"
 FONT 9, "新細明體"
 BEGIN
     GROUPBOX        "印表機",1075,8,4,272,84,WS_GROUP
-    LTEXT           "名稱(&N)：",1093,16,20,36,8
+    LTEXT           "名稱(&N)：",1093,16,20,35,8
     COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "內容(&P)",1025,212,17,60,14,WS_GROUP
-    LTEXT           "狀態：",1095,16,36,36,10,SS_NOPREFIX
+    LTEXT           "狀態：",1095,16,34,33,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,36,224,10
+                    WS_GROUP,52,33,224,10
     LTEXT           "類型：",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
@@ -198,12 +199,12 @@ BEGIN
     LTEXT           "註解：",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,224,10
-    GROUPBOX        "紙張",1073,8,92,164,56,WS_GROUP
-    LTEXT           "大小(&Z)：",1089,16,108,36,8
-    COMBOBOX        1137,52,106,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "紙張",1073,7,93,167,56,WS_GROUP
+    LTEXT           "大小(&Z)：",1089,9,109,36,8
+    COMBOBOX        1137,57,105,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "來源(&S)：",1090,16,128,36,8
-    COMBOBOX        1138,52,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
+    LTEXT           "原始檔(&S)：",1090,10,129,45,8
+    COMBOBOX        1138,57,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     GROUPBOX        "方向",1072,180,92,100,56,WS_GROUP
     ICON            "",1084,195,112,18,20,WS_GROUP
@@ -228,7 +229,7 @@ BEGIN
     LTEXT           "大小(&Z)：",1089,16,112,36,8
     COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "來源(&S)：",1090,16,132,36,8
+    LTEXT           "原始檔(&S)：",1090,16,132,45,8
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     GROUPBOX        "方向",1072,8,156,64,56,WS_GROUP
@@ -249,66 +250,61 @@ BEGIN
     PUSHBUTTON      "印表機(&P)...",1026,184,220,48,14
 END
 
-1234 DIALOG DISCARDABLE  32, 32, 288, 186
+1234 DIALOG DISCARDABLE  32, 32, 307, 203
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "列印"
 FONT 9, "新細明體"
 BEGIN
-    GROUPBOX        "印表機",1075,8,4,272,84,WS_GROUP
+    GROUPBOX        "印表機",1075,8,4,291,84,WS_GROUP
     LTEXT           "名稱(&N)：",1093,16,20,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "內容(&P)",1025,212,17,60,14,WS_GROUP
     LTEXT           "狀態：",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,36,224,10
+                    WS_GROUP,52,36,235,10
     LTEXT           "類型：",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,48,224,10
+                    WS_GROUP,52,48,235,10
     LTEXT           "位置：",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,60,224,10
+                    WS_GROUP,52,60,235,10
     LTEXT           "註解：",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
-    CONTROL         "列印至檔案(&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "列印範圍",1072,8,92,144,64,WS_GROUP
-    CONTROL         "全部(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    CONTROL         "列印到檔案(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,75,12
+    GROUPBOX        "列印範圍",1072,8,93,155,77,WS_GROUP
+    CONTROL         "所有(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,106,64,12
-    CONTROL         "頁數(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,122,36,12
-    CONTROL         "選取範圍(&S)",1057,"Button",BS_AUTORADIOBUTTON,16,138,
-                    64,12
-    RTEXT           "從(&F)：",1089,52,124,20,8
-    EDITTEXT        1152,74,122,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "到(&T)：",1090,100,124,16,8
-    EDITTEXT        1153,118,122,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "份數",1073,160,92,120,64,WS_GROUP
-    LTEXT           "份數(&C)：",1092,168,108,68,8
-    EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
+    CONTROL         "頁(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,122,36,12
+    CONTROL         "選項(&S)",1057,"Button",BS_AUTORADIOBUTTON,16,150,64,12
+    RTEXT           "從(&F)：",1089,29,137,31,8
+    EDITTEXT        1152,65,134,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "到(&T)：",1090,93,137,35,8
+    EDITTEXT        1153,131,135,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "份數",1073,168,92,131,78,WS_GROUP
+    LTEXT           "份數(&C)：",1092,180,108,68,8
+    EDITTEXT        1154,252,106,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,173,124,76,24,SS_CENTERIMAGE | WS_GROUP
     CONTROL         "分頁(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,240,130,36,12
-    DEFPUSHBUTTON   "確定",IDOK,180,164,48,14,WS_GROUP
-    PUSHBUTTON      "取消",IDCANCEL,232,164,48,14
+                    WS_TABSTOP,252,130,43,12
+    DEFPUSHBUTTON   "確定",IDOK,197,179,48,14,WS_GROUP
+    PUSHBUTTON      "取消",IDCANCEL,249,179,48,14
 END
 
-#define WS_EX_LAYOUTRTL			0x00400000
-
-
-1547 DIALOGEX 32, 32, 290, 312
+1547 DIALOGEX 32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_RTLREADING | WS_EX_LAYOUTRTL
 CAPTION "列印"
-FONT 9, "新細明體"
+FONT 9, "新細明體", 0, 0, 0x1
 BEGIN
     GROUPBOX        "印表機",1075,8,4,272,84,WS_GROUP
-    LTEXT           "名稱(&N)：",1093,16,20,36,8
+    LTEXT           "名稱(&N)：",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "內容(&P)",1025,212,17,60,14,WS_GROUP
+    PUSHBUTTON      "內容(&P)...",1025,212,17,60,14,WS_GROUP
     LTEXT           "狀態：",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
@@ -321,46 +317,47 @@ BEGIN
     LTEXT           "註解：",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
-    CONTROL         "列印至檔案(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "列印到檔案(&L)",1040,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "圖型列印範圍",1072,8,95,144,109,WS_GROUP
-    CONTROL         "所有圖型(&L)",IDC_ALL_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,110,64,12
-    CONTROL         "現行圖型(&C)",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON,16,124,76,12
-    CONTROL         "所選的圖型(&D)",IDC_SELECTED_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON,16,139,87,12
-    LISTBOX         IDC_DIAGRAMS,25,153,118,43,LBS_MULTIPLESEL | 
+    GROUPBOX        "圖型列印範圍",1072,8,93,272,106,WS_GROUP
+    CONTROL         "現行圖型(&U)",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
+    CONTROL         "開啟模型中的所有圖型(&D)",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,121,253,12
+    CONTROL         "選取的圖型(&E)：",IDC_SELECTED_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,135,253,12
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "調整",IDC_STATIC,160,95,119,109
-    LTEXT           "依百分比",1104,168,111,35,8
-    CONTROL         "百分比",IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,172,126,33,9
-    CONTROL         "符合",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON,171,169,
-                    30,9
-    EDITTEXT        IDC_PERCENT,208,125,32,12,ES_NUMBER | WS_GROUP
-    EDITTEXT        IDC_PAGESM,204,168,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "x",IDC_STATIC,226,170,8,8
-    EDITTEXT        IDC_PAGESN,234,168,20,12,ES_NUMBER | WS_GROUP
-    LTEXT           "頁數",1102,255,169,21,8
-    GROUPBOX        "列印範圍",1074,8,211,144,64,WS_GROUP
+    GROUPBOX        "調整大小",IDC_STATIC,8,202,272,51
+    CONTROL         "調整為正常大小的 %(&J)：",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
+    CONTROL         "符合(&I)：",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,16,233,53,12
+    LTEXT           "調整為正常大小的 %(&J)：",1102,30,219,88,8,NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
+    LTEXT           "頁寬(&W)：",1105,71,235,43,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
+    RTEXT           "頁高(&T)：",IDC_STATIC,177,235,54,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
+    GROUPBOX        "列印範圍",1074,8,257,132,64,WS_GROUP
     CONTROL         "全部(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,229,64,12
-    CONTROL         "頁數(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,245,36,12
-    RTEXT           "從(&F)：",1089,48,247,20,8
-    EDITTEXT        1152,70,245,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "到(&T)：",1090,96,247,16,8
-    EDITTEXT        1153,114,245,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "份數",1073,159,211,120,64,WS_GROUP
-    LTEXT           "份數(&C)：",1092,167,227,68,8
-    EDITTEXT        1154,239,225,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,160,244,70,25,WS_GROUP
+                    WS_TABSTOP,16,272,47,12
+    CONTROL         "頁數(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
+    RTEXT           "從(&F)：",1089,16,302,29,8
+    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "到(&T)：",1090,76,302,29,8
+    EDITTEXT        1153,107,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "份數",1073,147,257,132,64,WS_GROUP
+    LTEXT           "份數(&C)：",1092,163,273,68,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "分頁(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,239,249,36,12
-    DEFPUSHBUTTON   "確定",IDOK,180,286,48,14,WS_GROUP
-    PUSHBUTTON      "取消",IDCANCEL,232,286,48,14
-    LTEXT           "依頁數",1105,168,154,30,8
+                    WS_TABSTOP,229,295,46,12
+    DEFPUSHBUTTON   "確定",IDOK,180,328,48,14,WS_GROUP
+    PUSHBUTTON      "取消",IDCANCEL,232,328,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
 
@@ -375,7 +372,7 @@ BEGIN
     1538, DIALOG
     BEGIN
         RIGHTMARGIN, 287
-        BOTTOMMARGIN, 300
+        BOTTOMMARGIN, 345
     END
 
     1547, DIALOG
