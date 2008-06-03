@@ -11,9 +11,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.services.palette;
 
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.tools.SelectionTool;
+import org.eclipse.gmf.runtime.diagram.ui.internal.figures.BorderItemContainerFigure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -49,49 +54,67 @@ public class SelectionToolEx
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.tools.SelectionTool#handleKeyDown(org.eclipse.swt.events.KeyEvent)
+     */
     protected boolean handleKeyDown(KeyEvent e) {
-        resetHover();
+		resetHover();
 
-        if (acceptTabKey(e)) {
-            if (getCurrentViewer().getKeyHandler() != null) {
-                return getCurrentViewer().getKeyHandler().keyPressed(e);
-            }
-        }
+		if (acceptTabKey(e)) {
+			if (getCurrentViewer().getKeyHandler() != null) {
+				return getCurrentViewer().getKeyHandler().keyPressed(e);
+			}
+		}
 
-        if (acceptArrowKeyOnly(e) && getState() == STATE_INITIAL) {
-            if (!stateTransition(STATE_INITIAL,
-                STATE_ACCESSIBLE_DRAG_IN_PROGRESS)) {
-                resetHover();
-                return true;
-            }
-            resetHover();
+		if (acceptArrowKeyOnly(e) && getState() == STATE_INITIAL
+				&& !getCurrentViewer().getSelectedEditParts().isEmpty()) {
 
-            if (getDragTracker() != null)
-                getDragTracker().deactivate();
+			EditPart selectedEP = (EditPart) getCurrentViewer()
+					.getSelectedEditParts().get(0);
+			
+			if (selectedEP instanceof GraphicalEditPart) {
+			
+				GraphicalEditPart gep = (GraphicalEditPart) selectedEP; 
+	
+				/*
+				 * The shape we'll be moved in the direction of the arrow key iff:
+				 * 1) It has the appropriate edit policy that supports shape moving installed on the editpart
+				 * 2) The editparts figure's parent layout manager is some sort of XYLayout
+				 * In all other cases we just change the selection based on arrow key (implemented in GEF).  
+				 */
+				if (gep.getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE) instanceof NonResizableEditPolicy
+						&& gep.getFigure().getParent() != null
+						&& (gep.getFigure().getParent().getLayoutManager() instanceof XYLayout
+								|| gep.getFigure().getParent() instanceof BorderItemContainerFigure)) {
+	
+					resetHover();
+		
+					if (getDragTracker() != null)
+						getDragTracker().deactivate();
+		
+					setState(STATE_ACCESSIBLE_DRAG_IN_PROGRESS);
+		
+					setTargetEditPart(gep);
+		
+					updateTargetRequest();
+					DragTracker dragTracker = gep
+							.getDragTracker(getTargetRequest());
+					if (dragTracker != null) {
+						setDragTracker(dragTracker);
+						dragTracker.keyDown(e, getCurrentViewer());
+						lockTargetEditPart(gep);
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+		return super.handleKeyDown(e);
+	}
 
-            if (!getCurrentViewer().getSelectedEditParts().isEmpty()) {
-                EditPart selectedEP = (EditPart) getCurrentViewer()
-                    .getSelectedEditParts().get(0);
-                setTargetEditPart(selectedEP);
-
-                if (selectedEP != null) {
-                    updateTargetRequest();
-                    DragTracker dragTracker = selectedEP
-                        .getDragTracker(getTargetRequest());
-                    if (dragTracker != null) {
-                        setDragTracker(dragTracker);
-                        dragTracker.keyDown(e, getCurrentViewer());
-                        lockTargetEditPart(selectedEP);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-        return super.handleKeyDown(e);
-    }
-
-    @Override
+    /* (non-Javadoc)
+     * @see org.eclipse.gef.tools.SelectionTool#handleKeyUp(org.eclipse.swt.events.KeyEvent)
+     */
     protected boolean handleKeyUp(KeyEvent e) {
         boolean returnVal = super.handleKeyUp(e);
         if (acceptArrowKeyOnly(e) && !isUsingTraverseHandles) {
