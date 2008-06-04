@@ -78,24 +78,20 @@ public class PrintHelper
         // with one line of code
         // System.loadLibrary("DiagramPrint");
 
+    	List<String> supported = new ArrayList<String>(Arrays.asList(SUPPORTED));
     	String localizedVersion = DEFAULT_LOCALE;
+    	
+        Locale defaultLocale = Locale.getDefault();
+		String language = defaultLocale.getLanguage().toLowerCase();
+		String country = defaultLocale.getCountry().toUpperCase();
+		String countrySpecificLocale = language + SEPARATOR + country;
 
-        List supported = new ArrayList();
-        supported.addAll(Arrays.asList(SUPPORTED));
-
-        String language = Locale.getDefault().getLanguage().toLowerCase();
-        if (supported.contains(language)) {
-            localizedVersion = language;
-        } else {
-            String country = Locale.getDefault().getCountry().toUpperCase();
-            if (country != null) {
-                String locale = language + SEPARATOR + country;
-                if (supported.contains(locale)) {
-                    localizedVersion = locale;
-                }
-            }
-        }
-
+		if (supported.contains(countrySpecificLocale)) {
+			localizedVersion = countrySpecificLocale;
+		} else if (supported.contains(language)) {
+			localizedVersion = language;
+		} 
+         
         try {
             System.loadLibrary(DLL_NAME + SEPARATOR + localizedVersion);
         } catch (UnsatisfiedLinkError ule) {
