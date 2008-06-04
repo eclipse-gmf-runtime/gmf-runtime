@@ -30,10 +30,10 @@ public class DefaultValues {
 	public static boolean DEFAULT_USE_DIAGRAM_SETTINGS = false;
 	
 	/** Represents default value for WorkspaceViewerProperties.PREF_USE_INCHES. */
-	public static boolean DEFAULT_INCHES = true;
+	public static boolean DEFAULT_INCHES = !useDefaultMetricMeasures();
 	
 	/** Represents default value for WorkspaceViewerProperties.PREF_USE_MILLIM. */
-	public static boolean DEFAULT_MILLIM = false;
+	public static boolean DEFAULT_MILLIM = useDefaultMetricMeasures();
 	
 	/** Represents default value for WorkspaceViewerProperties.PREF_USE_PORTRAIT. */
 	public static boolean DEFAULT_PORTRAIT = true;
@@ -80,13 +80,28 @@ public class DefaultValues {
 	 * @return PSPageType PSPageType.LETTER on US/Canada locale, PSPageType.A4 otherwise.
 	 */
 	static public PageSetupPageType getLocaleSpecificPageType() {
-    	String defaultCountry = Locale.getDefault().getCountry(); 
-        if (defaultCountry != null && 
-            (defaultCountry.equals(Locale.US.getCountry()) || 
-             defaultCountry.equals(Locale.CANADA.getCountry()))) { 
-            return PageSetupPageType.LETTER;
-        } else { 
-            return PageSetupPageType.A4;
-        } 
-    }
+		if (!useDefaultMetricMeasures()) {
+			return PageSetupPageType.LETTER;
+		}
+		return PageSetupPageType.A4;
+	}
+	
+	/**
+	 * Inspects the locale to determine if we are in a location that does 
+	 * use the metric system by default.
+	 * 
+	 * @return boolean true if we are in a location that uses metric.
+	 */
+	static public boolean useDefaultMetricMeasures() {
+		Locale defaultLocale = Locale.getDefault();
+		String defaultCountry = defaultLocale.getCountry();
+		
+		if (defaultCountry != null
+				&& (defaultCountry.equals(Locale.US.getCountry()) || 
+					defaultCountry.equals(Locale.CANADA.getCountry()) || 
+				    (defaultCountry.length() == 0 && defaultLocale.getLanguage().equals(Locale.ENGLISH.getLanguage())))) {
+			return false;
+		}
+		return true;
+	}
 }
