@@ -238,6 +238,13 @@ public class BaseSlidableAnchor
 	 * <Code>SlidableAnchor</Code>
 	 */
 	static public PrecisionPoint getAnchorRelativeLocation(Point p, Rectangle bounds) {
+		if (bounds.width == 0 || bounds.height == 0) {
+			/*
+			 * If figure hasn't been laid out yet, we don't want to fail the slidable anchor creation.
+			 * Hence, we'll just return the (0.5, 0.5) meaning that the anchor reference point is the center of the figure.
+			 */
+			return new PrecisionPoint(0.5, 0.5);
+		}
 		PrecisionPoint relLocation;
 		Point temp = new Point(p);
 		if (p.x < bounds.x || p.x > bounds.x + bounds.width
