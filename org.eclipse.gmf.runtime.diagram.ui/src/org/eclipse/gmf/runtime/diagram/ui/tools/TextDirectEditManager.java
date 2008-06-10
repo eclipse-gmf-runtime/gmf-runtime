@@ -588,20 +588,19 @@ public class TextDirectEditManager
     private void sendMouseClick(final Point location) {     
         
         final Display currDisplay = Display.getCurrent();
-        
-        new Thread() {
-            Event event;
-            public void run() {
-                    event = new Event();
-                    event.type = SWT.MouseDown;
-                    event.button = 1;
-                    event.x = location.x;
-                    event.y = location.y;
-                    currDisplay.post(event);
-                    event.type = SWT.MouseUp;
-                    currDisplay.post(event);
-            }
-        }.start();
+        currDisplay.asyncExec(new Runnable() {
+	        public void run() {
+	         Event event;
+                event = new Event();
+                event.type = SWT.MouseDown;
+                event.button = 1;
+                event.x = location.x;
+                event.y = location.y;
+                currDisplay.post(event);
+                event.type = SWT.MouseUp;
+                currDisplay.post(event);
+	        }
+	    });
     }
 
     protected void hookListeners() {
