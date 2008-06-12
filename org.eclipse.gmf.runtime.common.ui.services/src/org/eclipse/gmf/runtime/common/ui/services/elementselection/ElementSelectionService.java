@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gmf.runtime.common.core.service.ExecutionStrategy;
@@ -67,10 +66,12 @@ public class ElementSelectionService
 
         public IElementSelectionListener elementSelectionListener;
 
-        public HashMap jobs = new HashMap();
+        public HashMap<IElementSelectionProvider, ElementSelectionServiceJob> jobs = 
+            new HashMap<IElementSelectionProvider, ElementSelectionServiceJob>();
     }
     
-    private Map jobs2Data = new HashMap();
+    private Map<ElementSelectionServiceJob, JobData> jobs2Data = 
+        new HashMap<ElementSelectionServiceJob, JobData>();
     
     public JobData getJobData() {
         Job currentJob = jobManager.currentJob();
@@ -82,7 +83,7 @@ public class ElementSelectionService
         
         JobData data = null;
         synchronized(jobs2Data) {
-            data = (JobData)jobs2Data.get(currentJob);
+            data = jobs2Data.get(currentJob);
         }
         
         return data;
@@ -160,7 +161,7 @@ public class ElementSelectionService
         return job;
     }
     
-    public static final IJobManager jobManager = Platform.getJobManager();
+    public static final IJobManager jobManager = Job.getJobManager();
 
     /**
      * {@inheritDoc}
@@ -170,7 +171,7 @@ public class ElementSelectionService
         if(data == null)
             return;
         
-        List results = new ArrayList();
+        List<IElementSelectionProvider> results = new ArrayList<IElementSelectionProvider>();
         IOperation operation = new MatchingObjectsOperation(
             data.elementSelectionInput);
 
@@ -186,9 +187,8 @@ public class ElementSelectionService
         /**
          * Create the jobs for each provider.
          */
-        for (Iterator i = results.iterator(); i.hasNext();) {
-            IElementSelectionProvider provider = (IElementSelectionProvider) i
-                .next();
+        for (Iterator<IElementSelectionProvider> i = results.iterator(); i.hasNext();) {
+            IElementSelectionProvider provider = i.next();
 
             addJob(data, provider);
         }
@@ -234,6 +234,7 @@ public class ElementSelectionService
             }
         }
         monitor.done();
+        jobs2Data.clear();
     }
     
     /**
@@ -332,7 +333,7 @@ public class ElementSelectionService
         
         JobData data = null;
         synchronized(jobs2Data) {
-            data = (JobData)jobs2Data.get(currentJob);
+            data = jobs2Data.get(currentJob);
         }
         
         if(data == null)
@@ -342,11 +343,9 @@ public class ElementSelectionService
         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
             public void run() {
-                synchronized(finalData) { 
-                    if(finalData.elementSelectionListener != null) {
-                        finalData.elementSelectionListener
-                            .matchingObjectEvent(matchingObjectEvent);
-                    }
+                if (finalData.elementSelectionListener != null) {
+                    finalData.elementSelectionListener
+                        .matchingObjectEvent(matchingObjectEvent);
                 }
             }
         });
@@ -414,7 +413,7 @@ public class ElementSelectionService
     public void cancelJob(ElementSelectionServiceJob job) {
         JobData data = null;
         synchronized(jobs2Data) {
-            data = (JobData)jobs2Data.get(job);
+            data = jobs2Data.get(job);
         }
         
         synchronized(data) {
