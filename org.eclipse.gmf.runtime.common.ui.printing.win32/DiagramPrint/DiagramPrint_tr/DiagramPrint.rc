@@ -122,85 +122,83 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 323, 354
+1538 DIALOG DISCARDABLE  32, 32, 318, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Yazd√Ωr"
+CAPTION "Yazd˝r"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Yaz√Ωc√Ω",1075,8,4,302,84,WS_GROUP
+    GROUPBOX        "Yaz˝c˝",1075,8,4,302,84,WS_GROUP
     LTEXT           "&Ad:",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "√ñ&zellikler...",1025,212,17,60,14,WS_GROUP
+    PUSHBUTTON      "÷&zellikler...",1025,212,17,60,14,WS_GROUP
     LTEXT           "Durum:",1095,16,36,26,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
-    LTEXT           "Tip:",1094,16,48,19,10,SS_NOPREFIX
+    LTEXT           "Tip:",1094,16,48,16,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
-    LTEXT           "Yer:",1097,16,60,17,10,SS_NOPREFIX
+    LTEXT           "Yer:",1097,16,60,21,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "A√ß√Ωklama:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "AÁ˝klama:",1096,16,72,35,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,72,152,10
-    CONTROL         "&Dosyaya yazd√Ωr",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,212,70,65,12
-    GROUPBOX        "√áizge yazd√Ωrma aral√Ωƒë√Ω",1072,8,93,301,106,WS_GROUP
-    CONTROL         "&Y√ºr√ºrl√ºkteki √ßizge",IDC_CURRENT_DIAGRAM,"Button",
+                    WS_GROUP,61,72,152,10
+    CONTROL         "&Dosyaya yazd˝r",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "«izge yazd˝rma aral˝˝",1072,8,93,302,106,WS_GROUP
+    CONTROL         "&Y¸r¸rl¸kteki Áizge",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "A√ß√Ωk &modellerdeki t√ºm √ßizgeler",IDC_ALL_DIAGRAMS,
+    CONTROL         "AÁ˝k &modellerdeki t¸m Áizgeler",IDC_ALL_DIAGRAMS,
                     "Button",BS_AUTORADIOBUTTON,16,121,253,12
-    CONTROL         "S&e√ßilen √ßizgeler:",IDC_SELECTED_DIAGRAMS,"Button",
+    CONTROL         "S&eÁilen Áizgeler:",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
     LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "√ñl√ßekleme",IDC_STATIC,8,202,300,51
-    CONTROL         "O&laƒëan b√ºy√ºkl√ºƒë√ºn bu y√ºzdesine ayarla:",
+    GROUPBOX        "÷lÁekleme",IDC_STATIC,8,202,301,51
+    CONTROL         "O&laan b¸y¸kl¸¸n bu y¸zdesine ayarla:",
                     IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,11,218,188,12
-    CONTROL         "&Boyutland√Ωrma temeli:",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,12,233,93,12
-    LTEXT           "&Olaƒëan b√ºy√ºkl√ºƒë√ºn bu y√ºzdesine ayarla:",1102,30,
-                    219,138,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,205,217,32,12,ES_NUMBER
-    LTEXT           "gn≈£lk syf sys:",1105,117,237,50,9
-    EDITTEXT        IDC_PAGESM,172,236,32,12,ES_NUMBER
-    RTEXT           "yksklk syf sys:",IDC_STATIC,206,236,49,8
-    EDITTEXT        IDC_PAGESN,265,234,32,12,ES_NUMBER
-    LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
-    GROUPBOX        "Yazd√Ωrma aral√Ωƒë√Ω",1074,8,257,132,64,WS_GROUP
-    CONTROL         "&T√ºm√º",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,272,85,12
-    CONTROL         "Bu say&fa aral√Ωƒë√Ω",1058,"Button",BS_AUTORADIOBUTTON,
-                    16,286,92,12
-    RTEXT           "ilk:",1089,15,305,25,8
+                    WS_TABSTOP,11,215,146,12
+    CONTROL         "&Boyutland˝rma temeli:",IDC_SCALE_FIT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,11,233,93,12
+    EDITTEXT        IDC_PERCENT,172,216,32,12,ES_NUMBER
+    RTEXT           "gn˛lk syf sys:",1105,109,235,55,8
+    EDITTEXT        IDC_PAGESM,170,233,32,12,ES_NUMBER
+    RTEXT           "yksklk syf sys:",IDC_STATIC,215,235,45,10
+    EDITTEXT        IDC_PAGESN,265,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
+    GROUPBOX        "Yazd˝rma aral˝˝",1074,8,257,132,68,WS_GROUP
+    CONTROL         "&T¸m¸",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,79,12
+    CONTROL         "Bu say&fa aral˝˝",1058,"Button",BS_AUTORADIOBUTTON,16,
+                    286,101,12
+    RTEXT           "ilk:",1089,22,307,20,8
     EDITTEXT        1152,46,305,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "son:",1090,75,306,20,8
-    EDITTEXT        1153,98,304,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "Kopyalar",1073,147,257,161,64,WS_GROUP
-    LTEXT           "&Kopya say√Ωs√Ω:",1092,163,273,68,8
+    RTEXT           "son:",1090,80,307,20,8
+    EDITTEXT        1153,104,305,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Kopyalar",1073,147,257,161,68,WS_GROUP
+    LTEXT           "&Kopya say˝s˝:",1092,163,273,59,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "&Harmanla",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,242,302,45,12
-    DEFPUSHBUTTON   "Tamam",IDOK,199,327,48,14,WS_GROUP
-    PUSHBUTTON      "√ùptal",IDCANCEL,261,328,48,14
-    ICON            "",1086,158,292,70,25,WS_GROUP
+                    WS_TABSTOP,234,295,63,12
+    DEFPUSHBUTTON   "Tamam",IDOK,210,331,48,14,WS_GROUP
+    PUSHBUTTON      "›ptal",IDCANCEL,262,331,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
 1539 DIALOG DISCARDABLE  32, 32, 288, 178
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Yazd√Ωrma Ayar√Ω"
+CAPTION "Yazd˝rma Ayar˝"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Yaz√Ωc√Ω",1075,8,4,272,84,WS_GROUP
+    GROUPBOX        "Yaz˝c˝",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Ad:",1093,16,20,36,8
     COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "√ñ&zellikler",1025,212,17,60,14,WS_GROUP
+    PUSHBUTTON      "÷&zellikler",1025,212,17,60,14,WS_GROUP
     LTEXT           "Durum:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
@@ -210,70 +208,70 @@ BEGIN
     LTEXT           "Yer:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "A√ß√Ωklama:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "AÁ˝klama:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,224,10
-    GROUPBOX        "Kaƒë√Ωt",1073,8,92,164,56,WS_GROUP
+    GROUPBOX        "Ka˝t",1073,8,92,164,56,WS_GROUP
     LTEXT           "&Boyut:",1089,16,108,36,8
     COMBOBOX        1137,52,106,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     LTEXT           "&Kaynak:",1090,16,128,36,8
     COMBOBOX        1138,52,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "Y√∂n",1072,180,92,100,56,WS_GROUP
+    GROUPBOX        "Yˆn",1072,180,92,100,56,WS_GROUP
     ICON            "",1084,195,112,18,20,WS_GROUP
-    CONTROL         "&D√º≈£ey",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    CONTROL         "&D¸˛ey",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,224,106,52,12
     CONTROL         "&Yatay",1057,"Button",BS_AUTORADIOBUTTON,224,126,52,12
     DEFPUSHBUTTON   "Tamam",IDOK,180,156,48,14,WS_GROUP
-    PUSHBUTTON      "√ùptal",IDCANCEL,232,156,48,14
+    PUSHBUTTON      "›ptal",IDCANCEL,232,156,48,14
 END
 
 1546 DIALOG DISCARDABLE  32, 32, 240, 240
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Sayfa Ayar√Ω"
+CAPTION "Sayfa Ayar˝"
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "",1080,"Static",SS_WHITERECT | WS_GROUP,80,8,80,80
     CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,160,12,4,80
     CONTROL         "",1082,"Static",SS_GRAYRECT | WS_GROUP,84,88,80,4
-    GROUPBOX        "Kaƒë√Ωt",1073,8,96,224,56,WS_GROUP
+    GROUPBOX        "Ka˝t",1073,8,96,224,56,WS_GROUP
     LTEXT           "&Boyut:",1089,16,112,36,8
     COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     LTEXT           "&Kaynak:",1090,16,132,36,8
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "Y√∂n",1072,8,156,64,56,WS_GROUP
-    CONTROL         "&D√º≈£ey",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    GROUPBOX        "Yˆn",1072,8,156,64,56,WS_GROUP
+    CONTROL         "&D¸˛ey",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
     CONTROL         "&Yatay",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,12
-    GROUPBOX        "Kenar Bo≈£luklar√Ω",1075,80,156,152,56,WS_GROUP
+    GROUPBOX        "Kenar Bo˛luklar˝",1075,80,156,152,56,WS_GROUP
     LTEXT           "&Sol:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
-    LTEXT           "S&aƒë:",1103,164,172,32,8
+    LTEXT           "S&a:",1103,164,172,32,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
-    LTEXT           "√ús&t:",1104,88,192,32,8
+    LTEXT           "‹s&t:",1104,88,192,32,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
     LTEXT           "A&lt:",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
     DEFPUSHBUTTON   "Tamam",IDOK,80,220,48,14,WS_GROUP
-    PUSHBUTTON      "√ùptal",IDCANCEL,132,220,48,14
-    PUSHBUTTON      "Yaz√Ω&c√Ω...",1026,184,220,48,14
+    PUSHBUTTON      "›ptal",IDCANCEL,132,220,48,14
+    PUSHBUTTON      "Yaz˝&c˝...",1026,184,220,48,14
 END
 
 1234 DIALOG DISCARDABLE  32, 32, 288, 186
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Yazd√Ωr"
+CAPTION "Yazd˝r"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Yaz√Ωc√Ω",1075,8,4,272,84,WS_GROUP
+    GROUPBOX        "Yaz˝c˝",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Ad:",1093,16,20,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "√ñ&zellikler",1025,212,17,60,14,WS_GROUP
+    PUSHBUTTON      "÷&zellikler",1025,212,17,60,14,WS_GROUP
     LTEXT           "Durum:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
@@ -283,41 +281,42 @@ BEGIN
     LTEXT           "Yer:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "A√ß√Ωklama:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "AÁ˝klama:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
-    CONTROL         "&Dosyaya yazd√Ωr",1040,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Dosyaya yazd˝r",1040,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "Yazd√Ωrma aral√Ωƒë√Ω",1072,8,92,144,64,WS_GROUP
-    CONTROL         "&T√ºm√º",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    GROUPBOX        "Yazd˝rma aral˝˝",1072,8,92,144,64,WS_GROUP
+    CONTROL         "&T¸m¸",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,106,64,12
-    CONTROL         "Syf:",1058,"Button",BS_AUTORADIOBUTTON,16,122,25,12
-    CONTROL         "&Se√ßim",1057,"Button",BS_AUTORADIOBUTTON,16,138,64,12
-    RTEXT           "ilk:",1089,52,124,14,8
+    CONTROL         "Say&falar:",1058,"Button",BS_AUTORADIOBUTTON,16,122,41,
+                    12
+    CONTROL         "&SeÁim",1057,"Button",BS_AUTORADIOBUTTON,16,138,64,12
+    RTEXT           "ilk:",1089,60,124,11,8
     EDITTEXT        1152,74,122,26,12,ES_NUMBER | WS_GROUP
     RTEXT           "son:",1090,100,124,16,8
     EDITTEXT        1153,118,122,26,12,ES_NUMBER | WS_GROUP
     GROUPBOX        "Kopyalar",1073,160,92,120,64,WS_GROUP
-    LTEXT           "&Kopya say√Ωs√Ω:",1092,168,108,68,8
+    LTEXT           "&Kopya say˝s˝:",1092,168,108,68,8
     EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
     ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
     CONTROL         "&Harmanla",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,240,130,46,12
+                    WS_TABSTOP,240,130,44,12
     DEFPUSHBUTTON   "Tamam",IDOK,180,164,48,14,WS_GROUP
-    PUSHBUTTON      "√ùptal",IDCANCEL,232,164,48,14
+    PUSHBUTTON      "›ptal",IDCANCEL,232,164,48,14
 END
 
 1547 DIALOGEX 32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Yazd√Ωr"
+CAPTION "Yazd˝r"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Yaz√Ωc√Ω",1075,8,4,272,84,WS_GROUP
+    GROUPBOX        "Yaz˝c˝",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Ad:",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "√ñ&zellikler...",1025,212,17,60,14,WS_GROUP
+    PUSHBUTTON      "÷&zellikler...",1025,212,17,60,14,WS_GROUP
     LTEXT           "Durum:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
@@ -327,51 +326,51 @@ BEGIN
     LTEXT           "Yer:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "A√ß√Ωklama:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "AÁ˝klama:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
-    CONTROL         "&Dosyaya yazd√Ωr",1040,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&Dosyaya yazd˝r",1040,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "√áizge yazd√Ωrma aral√Ωƒë√Ω",1072,8,93,272,106,WS_GROUP
-    CONTROL         "&Y√ºr√ºrl√ºkteki √ßizge",IDC_CURRENT_DIAGRAM,"Button",
+    GROUPBOX        "«izge yazd˝rma aral˝˝",1072,8,93,272,106,WS_GROUP
+    CONTROL         "&Y¸r¸rl¸kteki Áizge",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "A√ß√Ωk modellerdeki t√ºm √ßiz&geler",IDC_ALL_DIAGRAMS,
-                    "Button",BS_AUTORADIOBUTTON,16,121,108,12
-    CONTROL         "S&e√ßilen √ßizgeler:",IDC_SELECTED_DIAGRAMS,"Button",
+    CONTROL         "AÁ˝k &modellerdeki t¸m Áizgeler",IDC_ALL_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,16,121,253,12
+    CONTROL         "S&eÁilen Áizgeler:",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
     LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "√ñl√ßekleme",IDC_STATIC,8,202,272,51
-    CONTROL         "&Olaƒëan b√ºy√ºkl√ºƒë√ºn bu y√ºzdesine ayarla:",
+    GROUPBOX        "÷lÁekleme",IDC_STATIC,8,202,272,51
+    CONTROL         "&Olaan b¸y¸kl¸¸n bu y¸zdesine ayarla:",
                     IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,218,144,12
-    CONTROL         "&Boyutland√Ωrma temeli:",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,79,12
-    LTEXT           "O&laƒëan b√ºy√ºkl√ºƒë√ºn bu y√ºzdesine ayarla:",1102,30,
-                    219,134,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,172,217,32,12,ES_NUMBER
-    LTEXT           "gn≈£lk syf sys:",1105,102,235,41,8
-    EDITTEXT        IDC_PAGESM,149,233,32,12,ES_NUMBER
-    RTEXT           "yksklk syf sys:",IDC_STATIC,192,235,47,8
-    EDITTEXT        IDC_PAGESN,245,233,32,12,ES_NUMBER
+                    WS_TABSTOP,16,218,154,12
+    CONTROL         "&Boyutland˝rma temeli:",IDC_SCALE_FIT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,10,233,79,12
+    LTEXT           "O&laan b¸y¸kl¸¸n bu y¸zdesine ayarla:",1102,29,219,
+                    138,8,NOT WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,199,217,32,12,ES_NUMBER
+    LTEXT           "gn˛lk syf sys:",1105,94,235,43,8
+    EDITTEXT        IDC_PAGESM,141,233,32,12,ES_NUMBER
+    RTEXT           "yksklk syf sys:",IDC_STATIC,177,235,54,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
-    GROUPBOX        "Yazd√Ωrma aral√Ωƒë√Ω",1074,8,257,132,64,WS_GROUP
-    CONTROL         "T√º&m√º",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    GROUPBOX        "Yazd˝rma aral˝˝",1074,8,257,132,64,WS_GROUP
+    CONTROL         "&T¸m¸",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,272,47,12
-    CONTROL         "Bu say&fa aral√Ωƒë√Ω",1058,"Button",BS_AUTORADIOBUTTON,
-                    16,286,76,12
-    RTEXT           "ilk:",1089,24,302,9,8
+    CONTROL         "Bu say&fa aral˝˝",1058,"Button",BS_AUTORADIOBUTTON,16,
+                    286,76,12
+    RTEXT           "ilk:",1089,24,302,20,8
     EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
     RTEXT           "son:",1090,76,302,20,8
     EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
     GROUPBOX        "Kopyalar",1073,147,257,132,64,WS_GROUP
-    LTEXT           "&Kopya say√Ωs√Ω:",1092,163,273,68,8
+    LTEXT           "&Kopya say˝s˝:",1092,163,273,68,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "&Harmanla",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,231,295,45,12
+                    WS_TABSTOP,235,295,47,12
     DEFPUSHBUTTON   "Tamam",IDOK,180,328,48,14,WS_GROUP
-    PUSHBUTTON      "√ùptal",IDCANCEL,232,328,48,14
+    PUSHBUTTON      "›ptal",IDCANCEL,232,328,48,14
     ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
@@ -386,7 +385,7 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 320
+        RIGHTMARGIN, 289
         BOTTOMMARGIN, 342
     END
 

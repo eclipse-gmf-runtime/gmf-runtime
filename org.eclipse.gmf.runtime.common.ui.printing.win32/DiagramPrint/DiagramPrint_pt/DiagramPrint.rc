@@ -122,99 +122,96 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 309, 361
+1538 DIALOG DISCARDABLE  32, 32, 315, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Imprimir"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Impressora",1075,8,4,290,86,WS_GROUP
+    GROUPBOX        "Impressora",1075,8,4,300,84,WS_GROUP
     LTEXT           "&Nome:",1093,16,21,36,8
-    COMBOBOX        1139,55,18,149,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "&Propriedades...",1025,219,17,60,14,WS_GROUP
-    LTEXT           "Estado:",1095,16,36,30,10,SS_NOPREFIX
+    PUSHBUTTON      "&Propriedades...",1025,212,17,60,14,WS_GROUP
+    LTEXT           "Estado:",1095,16,36,28,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,36,232,10
-    LTEXT           "Tipo:",1094,17,48,21,10,SS_NOPREFIX
+                    WS_GROUP,52,36,224,10
+    LTEXT           "Tipo:",1094,16,48,21,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,48,232,10
-    LTEXT           "Onde:",1097,16,60,22,10,SS_NOPREFIX
+                    WS_GROUP,52,48,224,10
+    LTEXT           "Onde:",1097,16,60,24,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,60,232,10
-    LTEXT           "Coment√°rio:",1096,16,72,41,10,SS_NOPREFIX
+                    WS_GROUP,52,60,224,10
+    LTEXT           "Coment·rio:",1096,16,72,40,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,61,72,153,10
-    CONTROL         "Impri&mir para ficheiro",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,246,70,44,12
-    GROUPBOX        "√Çmbito de impress√£o do diagrama",1072,8,93,290,106,
+                    WS_GROUP,70,72,152,10
+    CONTROL         "Imprimir para fi&cheiro",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "¬mbito de impress„o do diagrama",1072,8,93,300,106,
                     WS_GROUP
-    CONTROL         "D&iagrama actual",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,65,12
+    CONTROL         "Diagrama act&ual",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
     CONTROL         "Todos os &diagramas de modelos abertos",
                     IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
                     12
     CONTROL         "Diagramas s&eleccionados:",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
-    LISTBOX         IDC_DIAGRAMS,28,149,241,43,LBS_MULTIPLESEL | 
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Escalar",IDC_STATIC,8,202,289,53
+    GROUPBOX        "Escalar",IDC_STATIC,8,202,299,51
     CONTROL         "A&justar a % do tamanho normal:",IDC_SCALE_PERCENT,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
-                    218,115,12
+                    216,122,12
     CONTROL         "Ajust&ar a:",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
-                    WS_TABSTOP,16,233,45,12
-    LTEXT           "Ajustar a % do taman&ho normal:",1102,26,219,99,8,NOT 
-                    WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,136,217,32,12,ES_NUMBER
-    LTEXT           "lar&gura de p√°gina:",1105,71,235,59,8
-    EDITTEXT        IDC_PAGESM,136,233,34,12,ES_NUMBER
-    RTEXT           "al&tura de p√°gina:",IDC_STATIC,177,235,60,10
-    EDITTEXT        IDC_PAGESN,245,233,45,12,ES_NUMBER
+                    WS_TABSTOP,16,233,48,12
+    EDITTEXT        IDC_PERCENT,146,217,32,12,ES_NUMBER
+    RTEXT           "lar&gura de p·gina:",1105,76,235,63,8
+    EDITTEXT        IDC_PAGESM,146,233,32,12,ES_NUMBER
+    RTEXT           "al&tura de p·gina:",IDC_STATIC,192,235,62,10
+    EDITTEXT        IDC_PAGESN,258,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
-    GROUPBOX        "Intervalo de impress√£o",1074,8,257,143,64,WS_GROUP
+    GROUPBOX        "Intervalo de impress„o",1074,8,257,132,70,WS_GROUP
     CONTROL         "T&udo",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,272,47,12
-    CONTROL         "P√°gina&s",1058,"Button",BS_AUTORADIOBUTTON,16,286,39,
-                    12
-    RTEXT           "de:",1089,24,302,10,8
-    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "a:",1090,84,302,9,8
-    EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "C√≥pias",1073,157,258,141,63,WS_GROUP
-    LTEXT           "N√∫mero de &c√≥pias:",1092,163,273,66,8
+                    WS_TABSTOP,16,272,65,12
+    CONTROL         "P·&ginas",1058,"Button",BS_AUTORADIOBUTTON,16,286,74,12
+    RTEXT           "&de:",1089,21,304,20,8
+    EDITTEXT        1152,45,302,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "&a:",1090,85,304,15,8
+    EDITTEXT        1153,104,302,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "CÛpias",1073,147,257,160,70,WS_GROUP
+    LTEXT           "N˙mero de &cÛpias:",1092,159,273,72,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "Agrupa&r",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,233,303,43,12
-    DEFPUSHBUTTON   "OK",IDOK,180,332,48,14,WS_GROUP
-    PUSHBUTTON      "Cancelar",IDCANCEL,232,332,48,14
-    ICON            "",1086,163,289,70,25,WS_GROUP
+                    WS_TABSTOP,235,295,52,12
+    DEFPUSHBUTTON   "OK",IDOK,208,335,48,14,WS_GROUP
+    PUSHBUTTON      "Cancelar",IDCANCEL,260,335,48,14
+    ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
-1539 DIALOG DISCARDABLE  32, 32, 303, 182
+1539 DIALOG DISCARDABLE  32, 32, 288, 178
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Configura√ß√£o da impress√£o"
+CAPTION "ConfiguraÁ„o da impress„o"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Impressora",1075,8,4,283,83,WS_GROUP
-    LTEXT           "&Nome:",1093,16,20,32,8
-    COMBOBOX        1136,59,18,157,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "Impressora",1075,8,4,272,84,WS_GROUP
+    LTEXT           "&Nome:",1093,16,20,36,8
+    COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "&Propriedades",1025,223,17,60,14,WS_GROUP
+    PUSHBUTTON      "&Propriedades",1025,212,17,60,14,WS_GROUP
     LTEXT           "Estado:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,59,36,225,10
+                    WS_GROUP,52,36,224,10
     LTEXT           "Tipo:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,59,48,224,10
+                    WS_GROUP,52,48,224,10
     LTEXT           "Onde:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,59,60,224,10
-    LTEXT           "Coment√°rio:",1096,16,72,36,10,SS_NOPREFIX
+                    WS_GROUP,52,60,224,10
+    LTEXT           "Coment·rio:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,59,72,224,10
+                    WS_GROUP,52,72,224,10
     GROUPBOX        "Papel",1073,8,92,164,56,WS_GROUP
     LTEXT           "Taman&ho:",1089,16,108,36,8
     COMBOBOX        1137,52,106,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
@@ -222,162 +219,160 @@ BEGIN
     LTEXT           "&Origem:",1090,16,128,36,8
     COMBOBOX        1138,52,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "Orienta√ß√£o",1072,191,92,100,56,WS_GROUP
+    GROUPBOX        "OrientaÁ„o",1072,180,92,100,56,WS_GROUP
     ICON            "",1084,195,112,18,20,WS_GROUP
     CONTROL         "Vertica&l",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,224,106,52,12
     CONTROL         "Hori&zontal",1057,"Button",BS_AUTORADIOBUTTON,224,126,
                     52,12
-    DEFPUSHBUTTON   "OK",IDOK,183,156,48,14,WS_GROUP
-    PUSHBUTTON      "Cancelar",IDCANCEL,244,156,48,14
+    DEFPUSHBUTTON   "OK",IDOK,180,156,48,14,WS_GROUP
+    PUSHBUTTON      "Cancelar",IDCANCEL,232,156,48,14
 END
 
-1546 DIALOG DISCARDABLE  32, 32, 247, 245
+1546 DIALOG DISCARDABLE  32, 32, 240, 240
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Configura√ß√£o de p√°gina"
+CAPTION "ConfiguraÁ„o de p·gina"
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "",1080,"Static",SS_WHITERECT | WS_GROUP,80,8,80,80
     CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,160,12,4,80
     CONTROL         "",1082,"Static",SS_GRAYRECT | WS_GROUP,84,88,80,4
-    GROUPBOX        "Papel",1073,9,96,231,56,WS_GROUP
+    GROUPBOX        "Papel",1073,8,96,224,56,WS_GROUP
     LTEXT           "Taman&ho:",1089,16,112,36,8
     COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     LTEXT           "&Origem:",1090,16,132,36,8
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "Orienta√ß√£o",1072,8,156,64,56,WS_GROUP
+    GROUPBOX        "OrientaÁ„o",1072,8,156,64,56,WS_GROUP
     CONTROL         "Vertica&l",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
     CONTROL         "Hori&zontal",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
                     12
-    GROUPBOX        "Margens",1075,80,156,159,56,WS_GROUP
+    GROUPBOX        "Margens",1075,80,156,152,56,WS_GROUP
     LTEXT           "Es&querda:",1102,88,172,32,8
-    EDITTEXT        1155,122,170,28,12,WS_GROUP
-    LTEXT           "Di&reita:",1103,166,172,32,8
-    EDITTEXT        1157,198,170,28,12,WS_GROUP
+    EDITTEXT        1155,120,170,28,12,WS_GROUP
+    LTEXT           "Di&reita:",1103,164,172,32,8
+    EDITTEXT        1157,196,170,28,12,WS_GROUP
     LTEXT           "&Superior:",1104,88,192,32,8
-    EDITTEXT        1156,122,190,28,12,WS_GROUP
-    LTEXT           "&Inferior:",1105,166,192,32,8
-    EDITTEXT        1158,198,190,28,12,WS_GROUP
+    EDITTEXT        1156,120,190,28,12,WS_GROUP
+    LTEXT           "&Inferior:",1105,164,192,32,8
+    EDITTEXT        1158,196,190,28,12,WS_GROUP
     DEFPUSHBUTTON   "OK",IDOK,80,220,48,14,WS_GROUP
     PUSHBUTTON      "Cancelar",IDCANCEL,132,220,48,14
-    PUSHBUTTON      "Im&pressora...",1026,191,220,48,14
+    PUSHBUTTON      "Im&pressora...",1026,184,220,48,14
 END
 
-1234 DIALOG DISCARDABLE  32, 32, 339, 191
+1234 DIALOG DISCARDABLE  32, 32, 288, 186
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Imprimir"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Impressora",1075,8,4,302,84,WS_GROUP
+    GROUPBOX        "Impressora",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Nome:",1093,16,20,36,8
-    COMBOBOX        1139,57,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "&Propriedades",1025,221,17,60,14,WS_GROUP
+    PUSHBUTTON      "&Propriedades",1025,212,17,60,14,WS_GROUP
     LTEXT           "Estado:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,57,36,224,10
+                    WS_GROUP,52,36,224,10
     LTEXT           "Tipo:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,57,48,224,10
+                    WS_GROUP,52,48,224,10
     LTEXT           "Onde:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,57,60,224,10
-    LTEXT           "Coment√°rio:",1096,16,72,36,10,SS_NOPREFIX
+                    WS_GROUP,52,60,224,10
+    LTEXT           "Coment·rio:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,57,72,152,10
+                    WS_GROUP,52,72,152,10
     CONTROL         "Imprimir para fi&cheiro",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,219,70,80,12
-    GROUPBOX        "Intervalo de impress√£o",1072,8,92,148,64,WS_GROUP
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "Intervalo de impress„o",1072,8,92,144,64,WS_GROUP
     CONTROL         "T&udo",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,106,64,12
-    CONTROL         "P√°&ginas",1058,"Button",BS_AUTORADIOBUTTON,16,122,40,
+    CONTROL         "P·&ginas",1058,"Button",BS_AUTORADIOBUTTON,16,122,36,12
+    CONTROL         "&SelecÁ„o",1057,"Button",BS_AUTORADIOBUTTON,16,138,64,
                     12
-    CONTROL         "&Selec√ß√£o",1057,"Button",BS_AUTORADIOBUTTON,16,138,64,
-                    12
-    RTEXT           "&de:",1089,58,124,15,8
-    EDITTEXT        1152,77,122,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "&a:",1090,105,124,12,8
-    EDITTEXT        1153,122,122,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "C√≥pias",1073,173,92,136,64,WS_GROUP
-    LTEXT           "N√∫&mero de c√≥pias:",1092,187,108,59,8
-    EDITTEXT        1154,270,106,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,179,124,76,24,SS_CENTERIMAGE | WS_GROUP
+    RTEXT           "&de:",1089,52,124,20,8
+    EDITTEXT        1152,74,122,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "&a:",1090,100,124,16,8
+    EDITTEXT        1153,118,122,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "CÛpias",1073,160,92,120,64,WS_GROUP
+    LTEXT           "N˙mero de &cÛpias:",1092,168,108,68,8
+    EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
     CONTROL         "Agrupa&r",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,260,130,41,12
+                    WS_TABSTOP,240,130,36,12
     DEFPUSHBUTTON   "OK",IDOK,180,164,48,14,WS_GROUP
     PUSHBUTTON      "Cancelar",IDCANCEL,232,164,48,14
 END
 
-1547 DIALOGEX 32, 32, 310, 356
+1547 DIALOGEX 32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Imprimir"
+CAPTION "Imprimir \n"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Impressora",1075,8,4,291,84,WS_GROUP
+    GROUPBOX        "Impressora",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Nome:",1093,16,21,36,8
-    COMBOBOX        1139,56,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "&Propriedades...",1025,215,17,64,14,WS_GROUP
+    PUSHBUTTON      "&Propriedades...",1025,212,17,60,14,WS_GROUP
     LTEXT           "Estado:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,56,36,224,10
+                    WS_GROUP,52,36,224,10
     LTEXT           "Tipo:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,56,48,224,10
+                    WS_GROUP,52,48,224,10
     LTEXT           "Onde:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,56,60,224,10
-    LTEXT           "Coment√°rio:",1096,16,72,36,10,SS_NOPREFIX
+                    WS_GROUP,52,60,224,10
+    LTEXT           "Coment·rio:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,56,72,152,10
+                    WS_GROUP,52,72,152,10
     CONTROL         "Imprimir para fi&cheiro",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,215,70,79,12
-    GROUPBOX        "√Çmbito de impress√£o do diagrama",1072,8,93,291,106,
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "¬mbito de impress„o do diagrama",1072,8,93,272,106,
                     WS_GROUP
-    CONTROL         "D&iagrama actual",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,65,12
+    CONTROL         "Diagrama act&ual",IDC_CURRENT_DIAGRAM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
     CONTROL         "Todos os &diagramas de modelos abertos",
                     IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,253,
                     12
     CONTROL         "Diagramas s&eleccionados:",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
-    LISTBOX         IDC_DIAGRAMS,28,149,242,43,LBS_MULTIPLESEL | 
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Escalar",IDC_STATIC,8,202,291,51
+    GROUPBOX        "Escalar",IDC_STATIC,8,202,272,51
     CONTROL         "A&justar a % do tamanho normal:",IDC_SCALE_PERCENT,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
-                    218,113,12
+                    218,104,12
     CONTROL         "Ajust&ar a:",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
-                    WS_TABSTOP,16,233,44,12
-    LTEXT           "Ajustar a % do taman&ho normal:",1102,28,220,99,8,NOT 
+                    WS_TABSTOP,16,233,34,12
+    LTEXT           "A&justar a % do tamanho normal:",1102,30,219,88,8,NOT 
                     WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,132,217,32,12,ES_NUMBER
-    LTEXT           "&largura de p√°gina:",1105,64,235,57,8
-    EDITTEXT        IDC_PAGESM,132,233,32,12,ES_NUMBER
-    RTEXT           "al&tura de p√°gina:",IDC_STATIC,187,235,54,10
-    EDITTEXT        IDC_PAGESN,245,233,32,12,ES_NUMBER
+    EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
+    LTEXT           "lar&gura de p·gina:",1105,71,235,43,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
+    RTEXT           "al&tura de p·gina:",IDC_STATIC,177,235,54,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
-    GROUPBOX        "Intervalo de impress√£o",1074,8,257,132,64,WS_GROUP
+    GROUPBOX        "Intervalo de impress„o",1074,8,257,132,64,WS_GROUP
     CONTROL         "T&udo",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,272,47,12
-    CONTROL         "P√°&ginas",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,
-                    12
-    RTEXT           "de:",1089,24,302,10,8
+    CONTROL         "P·&ginas",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
+    RTEXT           "&de:",1089,24,302,20,8
     EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "a:",1090,76,302,6,8
+    RTEXT           "&a:",1090,76,302,20,8
     EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "C√≥pias",1073,151,257,147,64,WS_GROUP
-    LTEXT           "N√∫&mero de c√≥pias:",1092,163,273,59,8
+    GROUPBOX        "CÛpias",1073,147,257,132,64,WS_GROUP
+    LTEXT           "N˙mero de &cÛpias:",1092,163,273,68,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "Agrupa&r",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,235,295,40,12
+                    WS_TABSTOP,235,295,36,12
     DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
     PUSHBUTTON      "Cancelar",IDCANCEL,232,328,48,14
     ICON            "",1086,156,290,70,25,WS_GROUP
@@ -394,7 +389,7 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 303
+        RIGHTMARGIN, 289
         BOTTOMMARGIN, 349
     END
 

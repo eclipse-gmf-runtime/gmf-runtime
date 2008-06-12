@@ -72,71 +72,69 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 310, 355
+1538 DIALOG DISCARDABLE  32, 32, 317, 355
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "인쇄"
 FONT 9, "굴림"
 BEGIN
-    GROUPBOX        "프린터",1075,8,4,298,84,WS_GROUP
+    GROUPBOX        "프린터",1075,8,4,302,84,WS_GROUP
     LTEXT           "이름(&N):",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "특성(&P)...",1025,212,17,60,14,WS_GROUP
-    LTEXT           "상태:",1095,16,36,22,10,SS_NOPREFIX
+    LTEXT           "상태:",1095,16,36,24,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,55,36,224,10
-    LTEXT           "유형:",1094,16,48,24,10,SS_NOPREFIX
+                    WS_GROUP,52,36,224,10
+    LTEXT           "유형:",1094,16,48,26,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,55,48,224,10
-    LTEXT           "위치:",1097,16,60,22,10,SS_NOPREFIX
+                    WS_GROUP,52,48,224,10
+    LTEXT           "위치:",1097,16,60,23,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,55,60,224,10
-    LTEXT           "주석:",1096,16,72,27,10,SS_NOPREFIX
+                    WS_GROUP,52,60,224,10
+    LTEXT           "주석:",1096,16,72,26,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
     CONTROL         "파일로 인쇄(&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,230,71,64,12
-    GROUPBOX        "다이어그램 인쇄 범위",1072,8,93,296,106,WS_GROUP
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "다이어그램 인쇄 범위",1072,8,93,301,106,WS_GROUP
     CONTROL         "현재 다이어그램(&U)",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
     CONTROL         "열린 모델의 모든 다이어그램(&D)",IDC_ALL_DIAGRAMS,
                     "Button",BS_AUTORADIOBUTTON,16,121,253,12
     CONTROL         "선택된 다이어그램(&E):",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
-    LISTBOX         IDC_DIAGRAMS,28,149,261,43,LBS_MULTIPLESEL | 
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "배율",IDC_STATIC,8,202,295,51
+    GROUPBOX        "배율",IDC_STATIC,8,202,302,51
     CONTROL         "정상 크기의 %로 조정(&J):",IDC_SCALE_PERCENT,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,217,104,12
     CONTROL         "다음으로 조정(&I):",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,64,12
-    LTEXT           "정상 크기의 %로 조정(&J):",1102,30,219,88,8,NOT 
-                    WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,128,217,32,12,ES_NUMBER
-    LTEXT           "페이지 너비(&W):",1105,84,235,56,8
-    EDITTEXT        IDC_PAGESM,144,233,32,12,ES_NUMBER
-    RTEXT           "페이지 높이(&T):",IDC_STATIC,182,235,54,10
-    EDITTEXT        IDC_PAGESN,240,233,32,12,ES_NUMBER
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,234,68,12
+    EDITTEXT        IDC_PERCENT,124,217,32,12,ES_NUMBER
+    RTEXT           "페이지 너비(&W):",1105,86,236,59,8
+    EDITTEXT        IDC_PAGESM,150,234,32,12,ES_NUMBER
+    RTEXT           "페이지 길이(&T):",IDC_STATIC,193,235,60,10
+    EDITTEXT        IDC_PAGESN,257,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
-    GROUPBOX        "인쇄 범위",1074,8,257,132,64,WS_GROUP
+    GROUPBOX        "인쇄 범위",1074,8,257,142,66,WS_GROUP
     CONTROL         "모두(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,272,79,12
-    CONTROL         "페이지(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,
+                    WS_TABSTOP,16,272,58,12
+    CONTROL         "페이지(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,64,
                     12
-    RTEXT           "시작(&F):",1089,13,305,35,8
-    EDITTEXT        1152,52,303,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "끝(&T):",1090,83,304,18,8
-    EDITTEXT        1153,105,303,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "복사",1073,147,257,156,64,WS_GROUP
-    LTEXT           "복사 수(&C):",1092,154,270,40,8
-    EDITTEXT        1154,209,269,32,12,ES_NUMBER | WS_GROUP
+    RTEXT           "시작(&F):",1089,15,302,41,8
+    EDITTEXT        1152,61,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "끝(&T):",1090,93,302,20,8
+    EDITTEXT        1153,117,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "인쇄",1073,157,257,153,66,WS_GROUP
+    RTEXT           "인쇄 매수(&C):",1092,183,272,61,8
+    EDITTEXT        1154,255,270,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "한 부씩 인쇄(&O)",1041,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,233,302,64,12
-    DEFPUSHBUTTON   "확인",IDOK,180,328,48,14,WS_GROUP
-    PUSHBUTTON      "취소",IDCANCEL,232,328,48,14
-    ICON            "",1086,154,294,70,25,WS_GROUP
+                    WS_GROUP | WS_TABSTOP,240,295,65,12
+    DEFPUSHBUTTON   "확인",IDOK,196,334,48,14,WS_GROUP
+    PUSHBUTTON      "취소",IDCANCEL,248,334,48,14
+    ICON            "",1086,165,285,70,25,WS_GROUP
 END
 
 1539 DIALOG DISCARDABLE  32, 32, 288, 178
@@ -248,8 +246,8 @@ BEGIN
     EDITTEXT        1152,74,122,26,12,ES_NUMBER | WS_GROUP
     RTEXT           "끝(&T):",1090,100,124,16,8
     EDITTEXT        1153,118,122,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "복사",1073,160,92,120,64,WS_GROUP
-    LTEXT           "복사 수(&C):",1092,168,108,68,8
+    GROUPBOX        "인쇄",1073,160,92,120,64,WS_GROUP
+    LTEXT           "인쇄 매수(&C):",1092,168,108,68,8
     EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
     ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
     CONTROL         "한 부씩 인쇄(&O)",1041,"Button",BS_AUTOCHECKBOX | 
@@ -303,7 +301,7 @@ BEGIN
     EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
     LTEXT           "페이지 너비(&W):",1105,71,235,43,8
     EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
-    RTEXT           "페이지 높이(&T):",IDC_STATIC,177,235,54,10
+    RTEXT           "페이지 길이(&T):",IDC_STATIC,177,235,54,10
     EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
     GROUPBOX        "인쇄 범위",1074,8,257,132,64,WS_GROUP
@@ -315,8 +313,8 @@ BEGIN
     EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
     RTEXT           "끝(&T):",1090,76,302,20,8
     EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "복사",1073,147,257,132,64,WS_GROUP
-    LTEXT           "복사 수(&C):",1092,163,273,68,8
+    GROUPBOX        "인쇄",1073,147,257,132,64,WS_GROUP
+    LTEXT           "인쇄 매수(&C):",1092,163,273,68,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "한 부씩 인쇄(&O)",1041,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,235,295,36,12
@@ -337,7 +335,7 @@ BEGIN
     1538, DIALOG
     BEGIN
         RIGHTMARGIN, 289
-        BOTTOMMARGIN, 343
+        BOTTOMMARGIN, 345
     END
 
     1547, DIALOG

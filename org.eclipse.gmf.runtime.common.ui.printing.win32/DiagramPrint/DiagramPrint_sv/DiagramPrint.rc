@@ -122,32 +122,32 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 289, 354
+1538 DIALOG DISCARDABLE  32, 32, 315, 359
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Skriv ut"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Skrivare",1075,8,4,272,84,WS_GROUP
-    LTEXT           "&Namn:",1093,12,21,36,8
+    GROUPBOX        "Skrivare",1075,8,4,300,84,WS_GROUP
+    LTEXT           "&Namn:",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "Egenska&per...",1025,212,17,60,14,WS_GROUP
-    LTEXT           "Status:",1095,12,36,26,10,SS_NOPREFIX
+    LTEXT           "Status:",1095,16,36,28,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
-    LTEXT           "Typ:",1094,12,48,20,10,SS_NOPREFIX
+    LTEXT           "Typ:",1094,16,48,20,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
-    LTEXT           "Var:",1097,12,60,20,10,SS_NOPREFIX
+    LTEXT           "Var:",1097,16,60,19,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "Kommentar: ",1096,11,74,39,8,SS_NOPREFIX
+    LTEXT           "Kommentar:",1096,16,72,41,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,72,152,10
+                    WS_GROUP,67,72,152,10
     CONTROL         "Skriv ut till fi&l",1040,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "Diagramutskriftsintervall",1072,8,93,272,106,WS_GROUP
+    GROUPBOX        "Diagramutskriftsintervall",1072,8,93,298,106,WS_GROUP
     CONTROL         "Akt&uellt diagram",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
     CONTROL         "Alla &diagram i öppna modeller",IDC_ALL_DIAGRAMS,"Button",
@@ -157,36 +157,34 @@ BEGIN
     LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Skala",IDC_STATIC,8,202,272,51
+    GROUPBOX        "Skala",IDC_STATIC,8,202,298,51
     CONTROL         "&Justera till % av normal storlek:",IDC_SCALE_PERCENT,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
-                    218,109,12
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,15,
+                    216,113,12
     CONTROL         "Anpassa t&ill:",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,51,12
-    LTEXT           "&Justera till % av normal storlek:",1102,30,219,95,8,
-                    NOT WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,132,217,32,12,ES_NUMBER
-    LTEXT           "sidor &bred:",1105,77,237,43,8
-    EDITTEXT        IDC_PAGESM,132,233,32,12,ES_NUMBER
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,15,233,56,12
+    EDITTEXT        IDC_PERCENT,135,217,32,12,ES_NUMBER
+    RTEXT           "sidor &bred:",1105,71,235,43,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
     RTEXT           "sidor &hög:",IDC_STATIC,177,235,54,10
-    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
-    LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
-    GROUPBOX        "Utskriftsintervall",1074,8,257,132,64,WS_GROUP
+    EDITTEXT        IDC_PAGESN,237,233,32,12,ES_NUMBER
+    LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
+    GROUPBOX        "Utskriftsintervall",1074,8,257,140,68,WS_GROUP
     CONTROL         "&Alla",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,272,47,12
-    CONTROL         "&Sidor",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
-    RTEXT           "&från:",1089,24,302,20,8
-    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "&till:",1090,76,302,20,8
-    EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "Kopior",1073,147,257,132,64,WS_GROUP
-    LTEXT           "Antal &kopior:",1092,163,273,68,8
-    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
+                    WS_TABSTOP,16,272,75,12
+    CONTROL         "&Sidor",1058,"Button",BS_AUTORADIOBUTTON,16,286,71,12
+    RTEXT           "&från:",1089,23,303,22,8
+    EDITTEXT        1152,53,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "&till:",1090,90,302,17,8
+    EDITTEXT        1153,111,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Kopior",1073,154,257,152,69,WS_GROUP
+    RTEXT           "Antal &kopior:",1092,168,273,51,8
+    EDITTEXT        1154,242,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "S&ortera",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,223,300,42,12
-    DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
-    PUSHBUTTON      "Avbryt",IDCANCEL,232,328,48,14
-    ICON            "",1086,157,292,70,25,WS_GROUP
+                    WS_TABSTOP,242,295,57,12
+    DEFPUSHBUTTON   "OK",IDOK,206,335,48,14,WS_GROUP
+    PUSHBUTTON      "Avbryt",IDCANCEL,258,335,48,14
+    ICON            "",1086,163,290,70,25,WS_GROUP
 END
 
 1539 DIALOG DISCARDABLE  32, 32, 288, 178
@@ -196,20 +194,20 @@ CAPTION "Utskriftsinställningar"
 FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "Skrivare",1075,8,4,272,84,WS_GROUP
-    LTEXT           "&Namn:",1093,13,20,36,8
+    LTEXT           "&Namn:",1093,16,20,36,8
     COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "Egenska&per:",1025,212,17,60,14,WS_GROUP
-    LTEXT           "Status:",1095,13,36,36,10,SS_NOPREFIX
+    LTEXT           "Status:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
-    LTEXT           "Typ:",1094,13,48,36,10,SS_NOPREFIX
+    LTEXT           "Typ:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
-    LTEXT           "Var:",1097,13,60,36,10,SS_NOPREFIX
+    LTEXT           "Var:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "Kommentar:",1096,13,72,37,8,SS_NOPREFIX
+    LTEXT           "Kommentar:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,224,10
     GROUPBOX        "Papper",1073,8,92,164,56,WS_GROUP
@@ -253,11 +251,11 @@ BEGIN
     GROUPBOX        "Marginaler",1075,80,156,152,56,WS_GROUP
     LTEXT           "&Vänster:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
-    LTEXT           "&Höger:",1103,157,172,32,8
+    LTEXT           "&Höger:",1103,164,172,32,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
     LTEXT           "&Överkant:",1104,88,192,32,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
-    LTEXT           "&Underkant:",1105,157,192,35,8
+    LTEXT           "&Underkant:",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
     DEFPUSHBUTTON   "OK",IDOK,80,220,48,14,WS_GROUP
     PUSHBUTTON      "Avbryt",IDCANCEL,132,220,48,14
@@ -271,20 +269,20 @@ CAPTION "Skriv ut"
 FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "Skrivare",1075,8,4,272,84,WS_GROUP
-    LTEXT           "&Namn:",1093,13,20,36,8
+    LTEXT           "&Namn:",1093,16,20,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "Egenska&per:",1025,212,17,60,14,WS_GROUP
-    LTEXT           "Status:",1095,13,36,36,10,SS_NOPREFIX
+    LTEXT           "Status:",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
-    LTEXT           "Typ:",1094,13,47,36,10,SS_NOPREFIX
+    LTEXT           "Typ:",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
-    LTEXT           "Var:",1097,13,60,36,10,SS_NOPREFIX
+    LTEXT           "Var:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "Kommentar:",1096,13,73,37,8,SS_NOPREFIX
+    LTEXT           "Kommentar:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
     CONTROL         "Skriv ut till fi&l",1040,"Button",BS_AUTOCHECKBOX | 
@@ -348,12 +346,12 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
                     218,109,12
     CONTROL         "Anpassa t&ill:",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,51,12
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,34,12
     LTEXT           "&Justera till % av normal storlek:",1102,30,219,95,8,
                     NOT WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,132,217,32,12,ES_NUMBER
+    EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
     LTEXT           "sidor &bred:",1105,71,235,43,8
-    EDITTEXT        IDC_PAGESM,132,233,32,12,ES_NUMBER
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
     RTEXT           "sidor &hög:",IDC_STATIC,177,235,54,10
     EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
@@ -386,8 +384,8 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 286
-        BOTTOMMARGIN, 342
+        RIGHTMARGIN, 312
+        BOTTOMMARGIN, 347
     END
 
     1547, DIALOG

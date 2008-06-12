@@ -110,71 +110,70 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 289, 354
+1538 DIALOG DISCARDABLE  32, 32, 315, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Tisk"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Tiskárna",1075,8,4,272,84,WS_GROUP
+    GROUPBOX        "Tiskárna",1075,8,4,301,84,WS_GROUP
     LTEXT           "&Název:",1093,16,21,23,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "&Vlastnosti...",1025,212,17,60,14,WS_GROUP
-    LTEXT           "Stav:",1095,16,36,25,10,SS_NOPREFIX
+    LTEXT           "Stav:",1095,16,36,22,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,36,224,10
-    LTEXT           "Typ:",1094,16,48,22,10,SS_NOPREFIX
+                    WS_GROUP,58,36,224,10
+    LTEXT           "Typ:",1094,16,49,20,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,48,224,10
-    LTEXT           "Kde:",1097,16,60,22,10,SS_NOPREFIX
+                    WS_GROUP,58,48,224,10
+    LTEXT           "Kde:",1097,16,62,19,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,51,60,224,10
-    LTEXT           "Komentár:",1096,16,72,36,10,SS_NOPREFIX
+                    WS_GROUP,58,60,224,10
+    LTEXT           "Komentáø:",1096,16,75,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,72,152,10
+                    WS_GROUP,58,74,152,10
     CONTROL         "&Tisk do souboru",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,231,70,45,12
-    GROUPBOX        "Rozsah tisku diagramu",1072,8,93,272,106,WS_GROUP
+                    WS_GROUP | WS_TABSTOP,212,70,64,12
+    GROUPBOX        "Rozsah tisku diagramu",1072,8,93,301,106,WS_GROUP
     CONTROL         "&Aktuální diagram",IDC_CURRENT_DIAGRAM,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "Všec&hny diagramy z otevrených modelu",IDC_ALL_DIAGRAMS,
-                    "Button",BS_AUTORADIOBUTTON,16,121,139,12
+                    BS_AUTORADIOBUTTON | BS_MULTILINE | WS_GROUP | 
+                    WS_TABSTOP,16,107,253,12
+    CONTROL         "Všec&hny diagramy z otevøených modelù",IDC_ALL_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,16,121,270,12
     CONTROL         "Vy&brané diagramy:",IDC_SELECTED_DIAGRAMS,"Button",
-                    BS_AUTORADIOBUTTON,16,135,71,12
+                    BS_AUTORADIOBUTTON,16,135,179,12
     LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Škálování",IDC_STATIC,8,202,272,51
+    GROUPBOX        "Škálování",IDC_STATIC,8,202,302,51
     CONTROL         "&Upravit na % normální velikosti:",IDC_SCALE_PERCENT,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
-                    218,119,12
-    CONTROL         "Pri&zpusobit:",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,60,12
-    LTEXT           "&Upravit na % normální velikosti:",1102,30,219,98,8,NOT 
-                    WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,139,217,32,12,ES_NUMBER
-    LTEXT           "šírce stráne&k:",1105,77,235,61,8
-    EDITTEXT        IDC_PAGESM,139,233,32,12,ES_NUMBER
-    RTEXT           "výšce st&ránek:",IDC_STATIC,176,236,59,8
-    EDITTEXT        IDC_PAGESN,240,233,32,12,ES_NUMBER
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,
+                    216,139,12
+    CONTROL         "Pøi&zpùsobit:",IDC_SCALE_FIT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,17,233,74,12
+    EDITTEXT        IDC_PERCENT,166,216,32,12,ES_NUMBER
+    RTEXT           "šíøce stráne&k:",1105,102,235,55,8
+    EDITTEXT        IDC_PAGESM,166,233,32,12,ES_NUMBER
+    RTEXT           "výšce st&ránek:",IDC_STATIC,211,236,54,8
+    EDITTEXT        IDC_PAGESN,269,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
-    GROUPBOX        "Rozsah tisku",1074,8,257,132,64,WS_GROUP
+    GROUPBOX        "Rozsah tisku",1074,8,257,132,70,WS_GROUP
     CONTROL         "Vš&e",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,272,49,12
-    CONTROL         "&Stránky",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
-    RTEXT           "&od:",1089,24,302,20,8
-    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "&do:",1090,76,302,20,8
-    EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "Kopie",1073,147,257,132,64,WS_GROUP
-    LTEXT           "&Pocet kopií:",1092,180,273,49,8
+                    WS_TABSTOP,16,272,87,12
+    CONTROL         "&Stránky",1058,"Button",BS_AUTORADIOBUTTON,16,286,82,12
+    RTEXT           "&od:",1089,19,305,20,8
+    EDITTEXT        1152,43,303,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "&do:",1090,80,305,16,8
+    EDITTEXT        1153,100,303,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Kopie",1073,147,257,162,70,WS_GROUP
+    RTEXT           "&Poèet kopií:",1092,159,273,51,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "Ko&mplet.",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,229,301,41,12
-    DEFPUSHBUTTON   "OK",IDOK,180,328,48,14,WS_GROUP
-    PUSHBUTTON      "Storno",IDCANCEL,232,328,48,14
-    ICON            "",1086,154,290,70,25,WS_GROUP
+                    WS_TABSTOP,235,295,60,12
+    DEFPUSHBUTTON   "OK",IDOK,204,335,48,14,WS_GROUP
+    PUSHBUTTON      "Storno",IDCANCEL,260,335,48,14
+    ICON            "",1086,157,291,70,25,WS_GROUP
 END
 
 1539 DIALOG DISCARDABLE  32, 32, 288, 178
@@ -197,7 +196,7 @@ BEGIN
     LTEXT           "Kde:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "Komentár:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "Komentáø:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,224,10
     GROUPBOX        "Papír",1073,8,92,164,56,WS_GROUP
@@ -211,7 +210,7 @@ BEGIN
     ICON            "",1084,195,112,18,20,WS_GROUP
     CONTROL         "Na výš&ku",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,224,106,43,12
-    CONTROL         "Na šírk&u",1057,"Button",BS_AUTORADIOBUTTON,224,126,41,
+    CONTROL         "Na šíøk&u",1057,"Button",BS_AUTORADIOBUTTON,224,126,41,
                     12
     DEFPUSHBUTTON   "OK",IDOK,180,156,48,14,WS_GROUP
     PUSHBUTTON      "Storno",IDCANCEL,232,156,48,14
@@ -236,14 +235,14 @@ BEGIN
     GROUPBOX        "Orientace",1072,8,156,64,56,WS_GROUP
     CONTROL         "&Na výšku",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
-    CONTROL         "Na šírk&u",1057,"Button",BS_AUTORADIOBUTTON,16,190,41,
+    CONTROL         "Na šíøk&u",1057,"Button",BS_AUTORADIOBUTTON,16,190,41,
                     12
     GROUPBOX        "Okraje",1075,80,156,152,56,WS_GROUP
     LTEXT           "&Vlevo:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
     LTEXT           "V&pravo:",1103,164,172,25,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
-    LTEXT           "Nah&ore:",1104,88,192,26,8
+    LTEXT           "Nah&oøe:",1104,88,192,26,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
     LTEXT           "&Dole:",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
@@ -272,7 +271,7 @@ BEGIN
     LTEXT           "Kde:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "Komentár:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "Komentáø:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
     CONTROL         "&Tisk do souboru",1040,"Button",BS_AUTOCHECKBOX | 
@@ -281,13 +280,13 @@ BEGIN
     CONTROL         "Vš&e",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,106,25,12
     CONTROL         "&Stránky",1058,"Button",BS_AUTORADIOBUTTON,16,122,37,12
-    CONTROL         "Vý&ber",1057,"Button",BS_AUTORADIOBUTTON,16,138,31,12
+    CONTROL         "Vý&bìr",1057,"Button",BS_AUTORADIOBUTTON,16,138,31,12
     RTEXT           "&od:",1089,61,124,10,8
     EDITTEXT        1152,74,122,26,12,ES_NUMBER | WS_GROUP
     RTEXT           "&do:",1090,100,124,16,8
     EDITTEXT        1153,118,122,26,12,ES_NUMBER | WS_GROUP
     GROUPBOX        "Kopie",1073,160,92,123,64,WS_GROUP
-    LTEXT           "Pocet &kopií:",1092,168,108,68,8
+    LTEXT           "Poèet &kopií:",1092,168,108,68,8
     EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
     ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
     CONTROL         "Ko&mplet.",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
@@ -316,7 +315,7 @@ BEGIN
     LTEXT           "Kde:",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "Komentár:",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "Komentáø:",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
     CONTROL         "&Tisk do souboru",1040,"Button",BS_AUTOCHECKBOX | 
@@ -324,8 +323,8 @@ BEGIN
     GROUPBOX        "Rozsah tisku diagramu",1072,8,93,272,106,WS_GROUP
     CONTROL         "&Aktuální diagram",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "Všec&hny diagramy z otevrených modelu",IDC_ALL_DIAGRAMS,
-                    "Button",BS_AUTORADIOBUTTON,16,121,139,12
+    CONTROL         "Všec&hny diagramy z otevøených modelù",IDC_ALL_DIAGRAMS,
+                    "Button",BS_AUTORADIOBUTTON,16,121,143,12
     CONTROL         "Vy&brané diagramy:",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,71,12
     LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
@@ -335,14 +334,14 @@ BEGIN
     CONTROL         "&Upravit na % normální velikosti:",IDC_SCALE_PERCENT,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,
                     218,111,12
-    CONTROL         "Pri&zpusobit:",IDC_SCALE_FIT,"Button",
+    CONTROL         "Pøi&zpùsobit:",IDC_SCALE_FIT,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,50,12
     LTEXT           "&Upravit na % normální velikosti:",1102,30,219,98,8,NOT 
                     WS_VISIBLE
     EDITTEXT        IDC_PERCENT,132,217,32,12,ES_NUMBER
-    LTEXT           "šír&ka stránek:",1105,84,235,43,8
+    LTEXT           "st&ránek na šíøku:",1105,75,235,53,8
     EDITTEXT        IDC_PAGESM,132,233,32,12,ES_NUMBER
-    RTEXT           "výška st&ránek:",IDC_STATIC,177,235,54,8
+    RTEXT           "stránek na vý&šku:",IDC_STATIC,172,235,56,8
     EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
     GROUPBOX        "Rozsah tisku",1074,8,257,132,64,WS_GROUP
@@ -354,7 +353,7 @@ BEGIN
     RTEXT           "&do:",1090,76,302,20,8
     EDITTEXT        1153,100,300,27,12,ES_NUMBER | WS_GROUP
     GROUPBOX        "Kopie",1073,147,257,132,64,WS_GROUP
-    LTEXT           "&Pocet kopií:",1092,192,273,38,8
+    LTEXT           "Poèet &kopií:",1092,192,273,38,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
     CONTROL         "Ko&mplet.",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,235,295,41,12
@@ -374,7 +373,7 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 286
+        RIGHTMARGIN, 289
         BOTTOMMARGIN, 342
     END
 

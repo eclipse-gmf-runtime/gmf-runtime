@@ -13,12 +13,12 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// Chinese (Taiwan) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 #ifdef _WIN32
-LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
-#pragma code_page(936)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
+#pragma code_page(950)
 #endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
@@ -48,10 +48,10 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)\r\n"
     "#ifdef _WIN32\r\n"
     "LANGUAGE 4, 1\r\n"
-    "#pragma code_page(936)\r\n"
+    "#pragma code_page(950)\r\n"
     "#endif //_WIN32\r\n"
     "#include ""res\\DiagramPrint.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
-    "#include ""l.cht\\afxres.rc""         // Standard components\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
     "#endif\r\n"
     "\0"
 END
@@ -80,7 +80,7 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040404B0"
+        BLOCK "040904b0"
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "IBM Corporation\0"
@@ -98,7 +98,7 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x40c, 1200
+        VALUE "Translation", 0x409, 1200
     END
 END
 
@@ -110,260 +110,253 @@ END
 // Dialog
 //
 
-1538 DIALOG DISCARDABLE  32, 32, 354, 355
+1538 DIALOG DISCARDABLE  32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "´ňÓˇ"
-FONT 9, "ËÎĚĺ"
+CAPTION "�C�L"
+FONT 9, "�s�ө���"
 BEGIN
-    GROUPBOX        "´ňÓˇ»ú",1075,8,4,335,84,WS_GROUP
-    LTEXT           "ĂűłĆ(&N)Łş",1093,16,21,54,8
-    COMBOBOX        1139,74,19,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "�L����",1075,8,4,272,84,WS_GROUP
+    LTEXT           "�W��(&N)�G",1093,16,21,36,8
+    COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "ĘôĐÔ(&P)...",1025,229,17,60,14,WS_GROUP
-    LTEXT           "×´Ě¬Łş",1095,16,36,46,10,SS_NOPREFIX
+    PUSHBUTTON      "���e(&P)...",1025,212,17,60,14,WS_GROUP
+    LTEXT           "���A�G",1095,16,36,26,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,65,36,211,10
-    LTEXT           "ŔŕĐÍŁş",1094,16,48,46,10,SS_NOPREFIX
+                    WS_GROUP,54,36,217,10
+    LTEXT           "�����G",1094,16,48,31,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,71,48,205,10
-    LTEXT           "Î»ÖĂŁş",1097,16,60,42,10,SS_NOPREFIX
+                    WS_GROUP,54,48,218,10
+    LTEXT           "��m�G",1097,16,60,28,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,68,60,208,10
-    LTEXT           "±¸×˘Łş",1096,16,72,43,10,SS_NOPREFIX
+                    WS_GROUP,54,60,217,10
+    LTEXT           "���ѡG",1096,16,72,29,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,71,72,168,10
-    CONTROL         "´ňÓˇÖÁÎÄĽţ(&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,249,73,24,12
-    GROUPBOX        "ÍĽ´ňÓˇ·¶Î§",1072,7,93,341,106,WS_GROUP
-    CONTROL         "µ±Ç°ÍĽ(&U)",IDC_CURRENT_DIAGRAM,"Button",
+                    WS_GROUP,54,72,152,10
+    CONTROL         "�C�L���ɮ�(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,229,70,41,12
+    GROUPBOX        "�ϫ��C�L�d��",1072,8,93,272,106,WS_GROUP
+    CONTROL         "�{��ϫ�(&U)",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "ŇŃ´ňżŞÄŁĐÍÖĐµÄËůÓĐÍĽ(&D)",
-                    IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,218,
-                    12
-    CONTROL         "ËůŃˇÍĽ(&E)Łş",IDC_SELECTED_DIAGRAMS,"Button",
+    CONTROL         "�}�Ҽҫ������Ҧ��ϫ�(&D)",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,121,253,12
+    CONTROL         "������ϫ�(&E)�G",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
-    LISTBOX         IDC_DIAGRAMS,30,147,243,43,LBS_MULTIPLESEL | 
+    LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Ëő·Ĺ",IDC_STATIC,8,202,339,51
-    CONTROL         "µ÷ŐűÎŞŐýłŁ´óĐˇµÄÄł¸ö°Ů·Ö±Č(&J)Łş",
-                    IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,14,218,215,12
-    CONTROL         "ĘĘşĎŇłĂć(&I)Łş",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,81,12
-    EDITTEXT        IDC_PERCENT,239,218,32,12,ES_NUMBER
-    LTEXT           "ŇłĂćżí¶Č(&W)Łş",1105,108,234,81,8
-    EDITTEXT        IDC_PAGESM,191,234,32,12,ES_NUMBER
-    RTEXT           "ŇłĂć¸ß¶Č(&T)Łş",IDC_STATIC,228,235,75,10
-    EDITTEXT        IDC_PAGESN,307,234,32,12,ES_NUMBER
+    GROUPBOX        "�վ�j�p",IDC_STATIC,8,202,272,51
+    CONTROL         "�վ㬰���`�j�p�� %(&J)�G",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
+    CONTROL         "�վ㬰(&I)�G",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,16,233,56,12
+    LTEXT           "�վ㬰���`�j�p�� %(&J)�G",1102,28,219,91,10,NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
+    LTEXT           "���e(&W)�G",1105,75,235,43,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
+    RTEXT           "����(&T)�G",IDC_STATIC,177,235,54,10
+    EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,8,8,NOT WS_VISIBLE
-    GROUPBOX        "´ňÓˇ·¶Î§",1074,8,257,164,64,WS_GROUP
-    CONTROL         "Č«˛ż(&A)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,272,47,12
-    CONTROL         "ŇłÂë·¶Î§(&G)",1058,"Button",BS_AUTORADIOBUTTON,
-                    16,286,62,12
-    RTEXT           "´Ó(&F)Łş",1089,14,305,51,8
-    EDITTEXT        1152,69,303,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "µ˝(&T)Łş",1090,103,304,30,8
-    EDITTEXT        1153,139,302,26,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "¸±±ľ",1073,180,257,166,64,WS_GROUP
-    LTEXT           "·ÝĘý(&C)Łş",1092,196,273,68,8
-    EDITTEXT        1154,278,271,32,12,ES_NUMBER | WS_GROUP
-    CONTROL         "ŐűŔí(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,270,302,50,12
-    DEFPUSHBUTTON   "Č·¶¨",IDOK,237,328,48,14,WS_GROUP
-    PUSHBUTTON      "ČˇĎű",IDCANCEL,294,329,51,14
-    ICON            "",1086,189,299,70,25,WS_GROUP
+    GROUPBOX        "�C�L�d��",1074,8,257,132,64,WS_GROUP
+    CONTROL         "����(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,47,12
+    CONTROL         "����(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
+    RTEXT           "�q(&F):",1089,13,302,32,8
+    EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "��(&T)�G",1090,76,302,27,8
+    EDITTEXT        1153,107,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "����",1073,147,257,132,64,WS_GROUP
+    LTEXT           "����(&C)�G",1092,163,273,68,8
+    EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
+    CONTROL         "����(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,227,300,48,12
+    DEFPUSHBUTTON   "�T�w",IDOK,180,328,48,14,WS_GROUP
+    PUSHBUTTON      "����",IDCANCEL,232,328,48,14
+    ICON            "",1086,156,295,70,25,WS_GROUP
 END
 
-1539 DIALOG DISCARDABLE  32, 32, 288, 178
+1539 DIALOG DISCARDABLE  32, 32, 288, 183
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "´ňÓˇÉčÖĂ"
-FONT 9, "ËÎĚĺ"
+CAPTION "�C�L�]�w"
+FONT 9, "�s�ө���"
 BEGIN
-    GROUPBOX        "´ňÓˇ»ú",1075,8,4,272,84,WS_GROUP
-    LTEXT           "ĂűłĆ(&N)Łş",1093,16,20,36,8
+    GROUPBOX        "�L����",1075,8,4,272,84,WS_GROUP
+    LTEXT           "�W��(&N)�G",1093,16,20,35,8
     COMBOBOX        1136,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "ĘôĐÔ(&P)",1025,212,17,60,14,WS_GROUP
-    LTEXT           "×´Ě¬Łş",1095,16,36,36,10,SS_NOPREFIX
+    PUSHBUTTON      "���e(&P)",1025,212,17,60,14,WS_GROUP
+    LTEXT           "���A�G",1095,16,34,33,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,36,224,10
-    LTEXT           "ŔŕĐÍŁş",1094,16,48,36,10,SS_NOPREFIX
+                    WS_GROUP,52,33,224,10
+    LTEXT           "�����G",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
-    LTEXT           "Î»ÖĂŁş",1097,16,60,36,10,SS_NOPREFIX
+    LTEXT           "��m�G",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "±¸×˘Łş",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "���ѡG",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,224,10
-    GROUPBOX        "Ö˝ŐĹ",1073,8,92,164,56,WS_GROUP
-    LTEXT           "łß´ç(&Z)Łş",1089,16,108,36,8
-    COMBOBOX        1137,52,106,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "�ȱi",1073,7,93,167,56,WS_GROUP
+    LTEXT           "�j�p(&Z)�G",1089,9,109,36,8
+    COMBOBOX        1137,57,105,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "Ŕ´Ô´(&S)Łş",1090,16,128,36,8
-    COMBOBOX        1138,52,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
+    LTEXT           "��l��(&S)�G",1090,10,129,45,8
+    COMBOBOX        1138,57,126,112,112,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "·˝Ďň",1072,180,92,100,56,WS_GROUP
+    GROUPBOX        "��V",1072,180,92,100,56,WS_GROUP
     ICON            "",1084,195,112,18,20,WS_GROUP
-    CONTROL         "×ÝĎň(&O)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,224,106,52,12
-    CONTROL         "şáĎň(&A)",1057,"Button",BS_AUTORADIOBUTTON,224,126,
-                    52,12
-    DEFPUSHBUTTON   "Č·¶¨",IDOK,180,156,48,14,WS_GROUP
-    PUSHBUTTON      "ČˇĎű",IDCANCEL,232,156,48,14
+    CONTROL         "���L(&O)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,224,106,52,12
+    CONTROL         "��L(&A)",1057,"Button",BS_AUTORADIOBUTTON,224,126,52,
+                    12
+    DEFPUSHBUTTON   "�T�w",IDOK,180,156,48,14,WS_GROUP
+    PUSHBUTTON      "����",IDCANCEL,232,156,48,14
 END
 
 1546 DIALOG DISCARDABLE  32, 32, 240, 240
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "ŇłĂćÉčÖĂ"
-FONT 9, "ËÎĚĺ"
+CAPTION "�����]�w"
+FONT 9, "�s�ө���"
 BEGIN
     CONTROL         "",1080,"Static",SS_WHITERECT | WS_GROUP,80,8,80,80
     CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,160,12,4,80
     CONTROL         "",1082,"Static",SS_GRAYRECT | WS_GROUP,84,88,80,4
-    GROUPBOX        "Ö˝ŐĹ",1073,8,96,224,56,WS_GROUP
-    LTEXT           "łß´ç(&Z)Łş",1089,16,112,36,8
+    GROUPBOX        "�ȱi",1073,8,96,224,56,WS_GROUP
+    LTEXT           "�j�p(&Z)�G",1089,16,112,36,8
     COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "Ŕ´Ô´(&S)Łş",1090,16,132,36,8
+    LTEXT           "��l��(&S)�G",1090,16,132,45,8
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "·˝Ďň",1072,8,156,64,56,WS_GROUP
-    CONTROL         "×ÝĎň(&O)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,170,52,12
-    CONTROL         "şáĎň(&A)",1057,"Button",BS_AUTORADIOBUTTON,16,190,
-                    52,12
-    GROUPBOX        "Ňł±ßľŕ",1075,80,156,152,56,WS_GROUP
-    LTEXT           "×ó(&L)Łş",1102,88,172,32,8
+    GROUPBOX        "��V",1072,8,156,64,56,WS_GROUP
+    CONTROL         "���L(&O)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,170,52,12
+    CONTROL         "��L(&A)",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,12
+    GROUPBOX        "��Z",1075,80,156,152,56,WS_GROUP
+    LTEXT           "��(&L)�G",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
-    LTEXT           "ÓŇ(&R)Łş",1103,164,172,32,8
+    LTEXT           "�k(&R)�G",1103,164,172,32,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
-    LTEXT           "ÉĎ(&T)Łş",1104,88,192,32,8
+    LTEXT           "�W(&T)�G",1104,88,192,32,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
-    LTEXT           "ĎÂ(&B)Łş",1105,164,192,32,8
+    LTEXT           "�U(&B)�G",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
-    DEFPUSHBUTTON   "Č·¶¨",IDOK,80,220,48,14,WS_GROUP
-    PUSHBUTTON      "ČˇĎű",IDCANCEL,132,220,48,14
-    PUSHBUTTON      "´ňÓˇ»ú(&P)...",1026,184,220,52,14
+    DEFPUSHBUTTON   "�T�w",IDOK,80,220,48,14,WS_GROUP
+    PUSHBUTTON      "����",IDCANCEL,132,220,48,14
+    PUSHBUTTON      "�L����(&P)...",1026,184,220,48,14
 END
 
-1234 DIALOG DISCARDABLE  32, 32, 298, 188
+1234 DIALOG DISCARDABLE  32, 32, 307, 203
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "´ňÓˇ"
-FONT 9, "ËÎĚĺ"
+CAPTION "�C�L"
+FONT 9, "�s�ө���"
 BEGIN
-    GROUPBOX        "´ňÓˇ»ú",1075,8,4,279,84,WS_GROUP
-    LTEXT           "ĂűłĆ(&N)Łş",1093,16,20,36,8
+    GROUPBOX        "�L����",1075,8,4,291,84,WS_GROUP
+    LTEXT           "�W��(&N)�G",1093,16,20,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "ĘôĐÔ(&P)",1025,212,17,60,14,WS_GROUP
-    LTEXT           "×´Ě¬Łş",1095,16,36,36,10,SS_NOPREFIX
+    PUSHBUTTON      "���e(&P)",1025,212,17,60,14,WS_GROUP
+    LTEXT           "���A�G",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,36,224,10
-    LTEXT           "ŔŕĐÍŁş",1094,16,48,36,10,SS_NOPREFIX
+                    WS_GROUP,52,36,235,10
+    LTEXT           "�����G",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,48,224,10
-    LTEXT           "Î»ÖĂŁş",1097,16,60,36,10,SS_NOPREFIX
+                    WS_GROUP,52,48,235,10
+    LTEXT           "��m�G",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
-                    WS_GROUP,52,60,224,10
-    LTEXT           "±¸×˘Łş",1096,16,72,36,10,SS_NOPREFIX
+                    WS_GROUP,52,60,235,10
+    LTEXT           "���ѡG",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
-    CONTROL         "´ňÓˇÖÁÎÄĽţ(&L)",1040,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,211,72,67,13
-    GROUPBOX        "´ňÓˇ·¶Î§",1072,8,91,153,63,WS_GROUP
-    CONTROL         "Č«˛ż(&A)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,106,64,12
-    CONTROL         "ŇłÂë·¶Î§(&G)",1058,"Button",BS_AUTORADIOBUTTON,
-                    16,122,56,12
-    CONTROL         "ŃˇÔń(&S)",1057,"Button",BS_AUTORADIOBUTTON,16,138,
-                    64,12
-    RTEXT           "´Ó(&F)Łş",1089,75,123,29,8
-    EDITTEXT        1152,104,121,12,13,ES_NUMBER | WS_GROUP
-    RTEXT           "µ˝(&T)Łş",1090,118,124,28,8
-    EDITTEXT        1153,147,121,12,13,ES_NUMBER | WS_GROUP
-    GROUPBOX        "¸±±ľ",1073,164,92,129,64,WS_GROUP
-    LTEXT           "·ÝĘý(&C)Łş",1092,168,108,68,8
-    EDITTEXT        1154,240,106,32,12,ES_NUMBER | WS_GROUP
-    ICON            "",1086,162,124,76,24,SS_CENTERIMAGE | WS_GROUP
-    CONTROL         "ŐűŔí(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,240,130,41,12
-    DEFPUSHBUTTON   "Č·¶¨",IDOK,180,164,48,14,WS_GROUP
-    PUSHBUTTON      "ČˇĎű",IDCANCEL,232,164,48,14
+    CONTROL         "�C�L���ɮ�(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,212,70,75,12
+    GROUPBOX        "�C�L�d��",1072,8,93,155,77,WS_GROUP
+    CONTROL         "�Ҧ�(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,106,64,12
+    CONTROL         "��(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,122,36,12
+    CONTROL         "�ﶵ(&S)",1057,"Button",BS_AUTORADIOBUTTON,16,150,64,12
+    RTEXT           "�q(&F)�G",1089,29,137,31,8
+    EDITTEXT        1152,65,134,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "��(&T)�G",1090,93,137,35,8
+    EDITTEXT        1153,131,135,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "����",1073,168,92,131,78,WS_GROUP
+    LTEXT           "����(&C)�G",1092,180,108,68,8
+    EDITTEXT        1154,252,106,32,12,ES_NUMBER | WS_GROUP
+    ICON            "",1086,173,124,76,24,SS_CENTERIMAGE | WS_GROUP
+    CONTROL         "����(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,252,130,43,12
+    DEFPUSHBUTTON   "�T�w",IDOK,197,179,48,14,WS_GROUP
+    PUSHBUTTON      "����",IDCANCEL,249,179,48,14
 END
 
 1547 DIALOGEX 32, 32, 289, 354
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "´ňÓˇ"
-FONT 9, "ËÎĚĺ", 0, 0, 0x1
+CAPTION "�C�L"
+FONT 9, "�s�ө���", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "´ňÓˇ»ú",1075,8,4,272,84,WS_GROUP
-    LTEXT           "ĂűłĆ(&N)Łş",1093,16,21,36,8
+    GROUPBOX        "�L����",1075,8,4,272,84,WS_GROUP
+    LTEXT           "�W��(&N)�G",1093,16,21,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    PUSHBUTTON      "ĘôĐÔ(&P)...",1025,212,17,60,14,WS_GROUP
-    LTEXT           "×´Ě¬Łş",1095,16,36,36,10,SS_NOPREFIX
+    PUSHBUTTON      "���e(&P)...",1025,212,17,60,14,WS_GROUP
+    LTEXT           "���A�G",1095,16,36,36,10,SS_NOPREFIX
     CONTROL         "",1099,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,36,224,10
-    LTEXT           "ŔŕĐÍŁş",1094,16,48,36,10,SS_NOPREFIX
+    LTEXT           "�����G",1094,16,48,36,10,SS_NOPREFIX
     CONTROL         "",1098,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,48,224,10
-    LTEXT           "Î»ÖĂŁş",1097,16,60,36,10,SS_NOPREFIX
+    LTEXT           "��m�G",1097,16,60,36,10,SS_NOPREFIX
     CONTROL         "",1101,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,60,224,10
-    LTEXT           "±¸×˘Łş",1096,16,72,36,10,SS_NOPREFIX
+    LTEXT           "���ѡG",1096,16,72,36,10,SS_NOPREFIX
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | 
                     WS_GROUP,52,72,152,10
-    CONTROL         "´ňÓˇÖÁÎÄĽţ(&L)",1040,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "�C�L���ɮ�(&L)",1040,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,212,70,64,12
-    GROUPBOX        "ÍĽ´ňÓˇ·¶Î§",1072,8,93,272,106,WS_GROUP
-    CONTROL         "µ±Ç°ÍĽ(&U)",IDC_CURRENT_DIAGRAM,"Button",
+    GROUPBOX        "�ϫ��C�L�d��",1072,8,93,272,106,WS_GROUP
+    CONTROL         "�{��ϫ�(&U)",IDC_CURRENT_DIAGRAM,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,107,253,12
-    CONTROL         "ŇŃ´ňżŞÄŁĐÍÖĐµÄËůÓĐÍĽ(&D)",
-                    IDC_ALL_DIAGRAMS,"Button",BS_AUTORADIOBUTTON,16,121,108,
-                    12
-    CONTROL         "ËůŃˇÍĽ(&E)Łş",IDC_SELECTED_DIAGRAMS,"Button",
+    CONTROL         "�}�Ҽҫ������Ҧ��ϫ�(&D)",IDC_ALL_DIAGRAMS,"Button",
+                    BS_AUTORADIOBUTTON,16,121,253,12
+    CONTROL         "������ϫ�(&E)�G",IDC_SELECTED_DIAGRAMS,"Button",
                     BS_AUTORADIOBUTTON,16,135,253,12
     LISTBOX         IDC_DIAGRAMS,28,149,243,43,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Ëő·Ĺ",IDC_STATIC,7,201,272,51
-    CONTROL         "µ÷ŐűÎŞŐýłŁ´óĐˇµÄÄł¸ö°Ů·Ö±Č(&J)Łş",
-                    IDC_SCALE_PERCENT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,218,131,12
-    CONTROL         "ĘĘşĎŇłĂć(&I)Łş",IDC_SCALE_FIT,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,16,233,61,12
-    LTEXT           "µ÷ŐűÎŞŐýłŁ´óĐˇµÄÄł¸ö°Ů·Ö±Č(&J)Łş",
-                    1102,30,219,125,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_PERCENT,163,217,32,12,ES_NUMBER
-    LTEXT           "ŇłĂćżí¶Č(&W)Łş",1105,78,235,52,8
-    EDITTEXT        IDC_PAGESM,130,233,32,12,ES_NUMBER
-    RTEXT           "ŇłĂć¸ß¶Č(&T)Łş",IDC_STATIC,177,235,54,10
+    GROUPBOX        "�վ�j�p",IDC_STATIC,8,202,272,51
+    CONTROL         "�վ㬰���`�j�p�� %(&J)�G",IDC_SCALE_PERCENT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,218,104,12
+    CONTROL         "�ŦX(&I)�G",IDC_SCALE_FIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,16,233,53,12
+    LTEXT           "�վ㬰���`�j�p�� %(&J)�G",1102,30,219,88,8,NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_PERCENT,122,217,32,12,ES_NUMBER
+    LTEXT           "���e(&W)�G",1105,71,235,43,8
+    EDITTEXT        IDC_PAGESM,122,233,32,12,ES_NUMBER
+    RTEXT           "����(&T)�G",IDC_STATIC,177,235,54,10
     EDITTEXT        IDC_PAGESN,235,233,32,12,ES_NUMBER
     LTEXT           "",IDC_STATIC,260,235,7,8,NOT WS_VISIBLE
-    GROUPBOX        "´ňÓˇ·¶Î§",1074,8,257,132,64,WS_GROUP
-    CONTROL         "Č«˛ż(&A)",1056,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,16,272,47,12
-    CONTROL         "ŇłÂë·¶Î§(&G)",1058,"Button",BS_AUTORADIOBUTTON,
-                    16,286,77,12
-    RTEXT           "´Ó(&F)Łş",1089,17,302,29,8
+    GROUPBOX        "�C�L�d��",1074,8,257,132,64,WS_GROUP
+    CONTROL         "����(&A)",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,16,272,47,12
+    CONTROL         "����(&G)",1058,"Button",BS_AUTORADIOBUTTON,16,286,46,12
+    RTEXT           "�q(&F)�G",1089,16,302,29,8
     EDITTEXT        1152,48,300,26,12,ES_NUMBER | WS_GROUP
-    RTEXT           "µ˝(&T)Łş",1090,76,302,29,8
-    EDITTEXT        1153,106,300,27,12,ES_NUMBER | WS_GROUP
-    GROUPBOX        "¸±±ľ",1073,147,257,132,64,WS_GROUP
-    LTEXT           "·ÝĘý(&C)Łş",1092,163,273,68,8
+    RTEXT           "��(&T)�G",1090,76,302,29,8
+    EDITTEXT        1153,107,300,27,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "����",1073,147,257,132,64,WS_GROUP
+    LTEXT           "����(&C)�G",1092,163,273,68,8
     EDITTEXT        1154,235,271,32,12,ES_NUMBER | WS_GROUP
-    CONTROL         "ŐűŔí(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,235,295,40,12
-    DEFPUSHBUTTON   "Č·¶¨",IDOK,180,328,48,14,WS_GROUP
-    PUSHBUTTON      "ČˇĎű",IDCANCEL,232,328,48,14
+    CONTROL         "����(&O)",1041,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+                    WS_TABSTOP,229,295,46,12
+    DEFPUSHBUTTON   "�T�w",IDOK,180,328,48,14,WS_GROUP
+    PUSHBUTTON      "����",IDCANCEL,232,328,48,14
     ICON            "",1086,156,290,70,25,WS_GROUP
 END
 
@@ -378,19 +371,19 @@ GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     1538, DIALOG
     BEGIN
-        RIGHTMARGIN, 351
-        BOTTOMMARGIN, 343
+        RIGHTMARGIN, 287
+        BOTTOMMARGIN, 345
     END
 
     1547, DIALOG
     BEGIN
-        RIGHTMARGIN, 286
-        BOTTOMMARGIN, 342
+        RIGHTMARGIN, 287
+        BOTTOMMARGIN, 300
     END
 END
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Chinese (P.R.C.) resources
+#endif    // Chinese (Taiwan) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -408,10 +401,10 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 #ifdef _WIN32
 LANGUAGE 4, 1
-#pragma code_page(936)
+#pragma code_page(950)
 #endif //_WIN32
 #include "res\DiagramPrint.rc2"  // non-Microsoft Visual C++ edited resources
-#include "l.cht\afxres.rc"         // Standard components
+#include "afxres.rc"         // Standard components
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
