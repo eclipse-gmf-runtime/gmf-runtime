@@ -181,13 +181,13 @@ public class BorderItemLocator
 	}
 	/**
 	 * Ensure the suggested location actually lies on the parent boundary. The
-	 * side takes precendence.
+	 * side takes precedence.
 	 * 
 	 * @param suggestedLocation
 	 * @param suggestedSide
 	 * @return point
 	 */
-	private Point locateOnParent(Point suggestedLocation,
+	protected Point locateOnParent(Point suggestedLocation,
 			int suggestedSide, IFigure borderItem) {
 		Rectangle bounds = getParentBorder();
 		int parentFigureWidth = bounds.width;
@@ -251,12 +251,12 @@ public class BorderItemLocator
 
 	/**
 	 * Determine if the the given point conflicts with the position of an
-	 * existing borderItemFigure.
+	 * existing borderItemFigure and returns the conflicting border item figure
 	 * 
 	 * @param recommendedLocation
-	 * @return <code>ture</code> or <code>false</code>
+	 * @return the conflicting border item figure
 	 */
-	private boolean conflicts(Point recommendedLocation,
+	protected IFigure getConflictingBorderItemFigure(Point recommendedLocation,
 			IFigure targetBorderItem) {
 		Rectangle recommendedRect = new Rectangle(recommendedLocation,
 			getSize(targetBorderItem));
@@ -270,15 +270,15 @@ public class BorderItemLocator
 			if (borderItem.isVisible()) {
 				Rectangle rect = borderItem.getBounds().getCopy();
 				if (rect.intersects(recommendedRect)) {
-					return true;
+					return borderItem;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
-	 * The preferred side takes precendence.
+	 * The preferred side takes precedence.
 	 * 
 	 * @param suggestedLocation
 	 * @param suggestedSide
@@ -286,7 +286,7 @@ public class BorderItemLocator
 	 *            recursion count to avoid an infinite loop
 	 * @return point
 	 */
-	private Point locateOnBorder(Point suggestedLocation,
+	protected Point locateOnBorder(Point suggestedLocation,
 			int suggestedSide, int circuitCount, IFigure borderItem) {
 		Point recommendedLocation = locateOnParent(suggestedLocation,
 			suggestedSide, borderItem);
@@ -295,52 +295,102 @@ public class BorderItemLocator
 		int horizontal_gap = MapModeUtil.getMapMode(getParentFigure())
 			.DPtoLP(8);
 		Dimension borderItemSize = getSize(borderItem);
+		
+		IFigure conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
 
-		if (circuitCount < 4 && conflicts(recommendedLocation, borderItem)) {
+		if (circuitCount < 4 && conflictingBorderItem != null) {
 			if (suggestedSide == PositionConstants.WEST) {
 				do {
-					recommendedLocation.y += borderItemSize.height
-						+ vertical_gap;
-				} while (conflicts(recommendedLocation, borderItem));
+					recommendedLocation.y = calculateNextNonConflictingPosition(
+							conflictingBorderItem.getBounds().getBottomLeft().y,
+							vertical_gap, suggestedSide, borderItem);
+					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
+				} while (conflictingBorderItem != null);
 				if (recommendedLocation.y > getParentBorder().getBottomLeft().y
 					- borderItemSize.height) { // off the bottom,
 					// wrap south
 					return locateOnBorder(recommendedLocation,
 						PositionConstants.SOUTH, circuitCount + 1, borderItem);
-				}
+				} else if (recommendedLocation.y < getParentBorder().getTopLeft().y
+					- borderItemSize.height) { // off the top, wrap north
+					return locateOnBorder(recommendedLocation,
+						PositionConstants.NORTH, circuitCount + 1, borderItem);
+				}  
 			} else if (suggestedSide == PositionConstants.SOUTH) {
 				do {
-					recommendedLocation.x += borderItemSize.width
-						+ horizontal_gap;
-				} while (conflicts(recommendedLocation, borderItem));
+					recommendedLocation.x = calculateNextNonConflictingPosition(
+							conflictingBorderItem.getBounds().getTopRight().x,
+							horizontal_gap, suggestedSide, borderItem);
+					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
+				} while (conflictingBorderItem != null);
 				if (recommendedLocation.x > getParentBorder().getBottomRight().x
 					- borderItemSize.width) {
 					return locateOnBorder(recommendedLocation,
 						PositionConstants.EAST, circuitCount + 1, borderItem);
+				} else if (recommendedLocation.x < getParentBorder().getBottomLeft().x
+					- borderItemSize.width) {
+					return locateOnBorder(recommendedLocation,
+						PositionConstants.WEST, circuitCount + 1, borderItem);
 				}
 			} else if (suggestedSide == PositionConstants.EAST) {
 				// move up the east side
 				do {
-					recommendedLocation.y -= (borderItemSize.height + vertical_gap);
-				} while (conflicts(recommendedLocation, borderItem));
+					recommendedLocation.y = calculateNextNonConflictingPosition(
+							conflictingBorderItem.getBounds().getLocation().y,
+							vertical_gap, suggestedSide, borderItem);
+					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
+				} while (conflictingBorderItem != null);
 				if (recommendedLocation.y < getParentBorder().getTopRight().y) {
 					// east is full, try north.
 					return locateOnBorder(recommendedLocation,
 						PositionConstants.NORTH, circuitCount + 1, borderItem);
+				} else if (recommendedLocation.y > getParentBorder().getBottomRight().y) {
+					// east is full, try south.
+					return locateOnBorder(recommendedLocation,
+						PositionConstants.SOUTH, circuitCount + 1, borderItem);
 				}
 			} else { // NORTH
 				do {
-					recommendedLocation.x -= (borderItemSize.width + horizontal_gap);
-				} while (conflicts(recommendedLocation, borderItem));
+					recommendedLocation.x = calculateNextNonConflictingPosition(
+							conflictingBorderItem.getBounds().getLocation().x,
+							horizontal_gap, suggestedSide, borderItem);
+					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
+				} while (conflictingBorderItem != null);
 				if (recommendedLocation.x < getParentBorder().getTopLeft().x) {
 					return locateOnBorder(recommendedLocation,
 						PositionConstants.WEST, circuitCount + 1, borderItem);
+				} else if (recommendedLocation.x > getParentBorder().getTopRight().x) {
+					return locateOnBorder(recommendedLocation,
+							PositionConstants.EAST, circuitCount + 1, borderItem);
 				}
 			}
 		}
 		return recommendedLocation;
 	}
 
+	/**
+	 * Default behavior is to simply check in a counter clockwise direction.
+	 * Note:  if the currentSide is EAST or WEST, the y co-oridinate is passed as the current position.  Otherwise,
+	 * if NORTH or SOUTH is the currentSide, then the x co-oridinate of the borderitem is passed.
+	 * 
+	 * @param currentPosition	The current x or y co-ordinate of the border item
+	 * @param interval			The suggested spacing to try to find the next non-conflicting position
+	 * @param currentSide		The current side of the border item 
+	 * @param borderItem 		The borderItem being relocated (here to be used by subclasses if needed)
+	 * @return the next possible non-conflicting position
+	 */
+	protected int calculateNextNonConflictingPosition(int currentPosition, int interval, int currentSide, IFigure borderItem) {
+		switch (currentSide) {
+			case PositionConstants.WEST:  // Fall through  -- Move down the west side
+			case PositionConstants.SOUTH: // Move towards the east side
+				return currentPosition + interval;
+			case PositionConstants.EAST:  // Fall through - Move towards the north side
+			case PositionConstants.NORTH: // Fall through - Move towards the west side
+			default: /* Should never get here, but if we do, we'll default to subtraction */
+				return currentPosition - interval;
+		}
+	}
+	
 	/**
 	 * Convert the relative coords in the model to ones that are Relative to the
 	 * container (absolute in respect to the main figure)
