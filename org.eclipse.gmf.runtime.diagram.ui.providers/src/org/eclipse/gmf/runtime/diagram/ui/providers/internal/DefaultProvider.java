@@ -849,7 +849,7 @@ public abstract class DefaultProvider
 				}
 			}
 		} else {
-			resultantSourceAnchorReference = getNewAnchorReferencePoint(source, ((Connection)cep.getFigure()).getSourceAnchor().getReferencePoint());
+			resultantSourceAnchorReference = getNewAnchorReferencePoint(source, sourceExt, ((Connection)cep.getFigure()).getSourceAnchor().getReferencePoint());
 		}
 
 		if (cep.getTarget().equals(target.data)) {
@@ -882,7 +882,7 @@ public abstract class DefaultProvider
 				}
 			}
 		} else {
-			resultantTargetAnchorReference = getNewAnchorReferencePoint(target, ((Connection)cep.getFigure()).getTargetAnchor().getReferencePoint());
+			resultantTargetAnchorReference = getNewAnchorReferencePoint(target, targetExt, ((Connection)cep.getFigure()).getTargetAnchor().getReferencePoint());
 		}
 		return new LineSeg(resultantSourceAnchorReference,
 				resultantTargetAnchorReference);
@@ -923,13 +923,13 @@ public abstract class DefaultProvider
 		return null;
 	}
 	
-	private Point getNewAnchorReferencePoint(Node node, Point oldAbsReference) {
+	private Point getNewAnchorReferencePoint(Node node, Rectangle nodeBoundsOnDiagram, Point oldAbsReference) {
 		GraphicalEditPart gep = (GraphicalEditPart)node.data;
 		PrecisionPoint parentLocation = new PrecisionPoint(gep.getFigure().getBounds().getLocation());
 		gep.getFigure().translateToAbsolute(parentLocation);
 		PrecisionDimension diff = new PrecisionDimension(oldAbsReference.preciseX() - parentLocation.preciseX(), oldAbsReference.preciseY() - parentLocation.preciseY());
 		getMapMode().DPtoLP(diff);
-		return new Point(node.x, node.y).translate(diff);
+		return nodeBoundsOnDiagram.getLocation().translate(diff);
 	}
 
     /**
