@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,6 +90,29 @@ public abstract class DuplicateEObjectsCommand
 	public DuplicateEObjectsCommand(TransactionalEditingDomain editingDomain, String label, List eObjectsToBeDuplicated, Map allDuplicatedObjectsMap) {
         super(editingDomain, label,
             getWorkspaceFiles(eObjectsToBeDuplicated));
+		this.objectsToBeDuplicated = eObjectsToBeDuplicated;
+		this.allDuplicatedObjects = allDuplicatedObjectsMap;
+	}
+	
+	/**
+	 * Constructs a new duplicate EObjects command with the specified label and
+	 * list of EObjects. Also sets the list of affected files to be the files,
+	 * where the targetContainer is stored. Target container specifies the
+	 * eObject into which the duplicated eObjects will be added.
+	 * 
+	 * @param editingDomain
+	 * 		the editing domain through which model changes are made
+	 * @param label
+	 * 		The label for the new command.
+	 * @param eObjectsToBeDuplicated
+	 * 		The list of <code>EObjects</code> to be duplicated.
+	 * @param allDuplicatedObjectsMap
+	 * 		An empty map to be populated with the duplicated objects.
+	 */
+	public DuplicateEObjectsCommand(TransactionalEditingDomain editingDomain,
+			String label, List eObjectsToBeDuplicated,
+			Map allDuplicatedObjectsMap, EObject targetContainer) {
+		super(editingDomain, label, getWorkspaceFiles(targetContainer));
 		this.objectsToBeDuplicated = eObjectsToBeDuplicated;
 		this.allDuplicatedObjects = allDuplicatedObjectsMap;
 	}
