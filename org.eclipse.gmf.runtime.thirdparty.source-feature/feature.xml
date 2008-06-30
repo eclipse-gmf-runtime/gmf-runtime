@@ -21,7 +21,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmf/update-site/releases/site.xml"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmf/updates/releases/"/>
    </url>
 
    <plugin
