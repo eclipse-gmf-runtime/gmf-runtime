@@ -59,6 +59,13 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
         options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
     }
 
+    private static final Map setElementOptions = new HashMap();   
+    static {
+        options.put(Transaction.OPTION_UNPROTECTED, Boolean.FALSE);
+        options.put(Transaction.OPTION_NO_NOTIFICATIONS, Boolean.TRUE);
+        options.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
+    }
+    
 	/**
 	 * factory method, that will be called by the view service to creat
 	 * the view
@@ -94,12 +101,41 @@ public class BasicNodeViewFactory extends AbstractViewFactory {
 		// we had to call insert child before calling decorate view
 		ViewUtil.insertChildView(containerView, node, index, persisted);	
         
-        EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
+        final EObject semanticEl = semanticAdapter==null ? null : (EObject)semanticAdapter.getAdapter(EObject.class);
         if (semanticEl==null)
             // enforce a set to NULL
             node.setElement(null);
         else if (requiresElement(semanticAdapter,containerView)){
-            node.setElement(semanticEl);
+            TransactionalEditingDomain domain = getEditingDomain(semanticEl,
+                containerView);
+            if (domain != null) {
+                AbstractEMFOperation operation = new AbstractEMFOperation(
+                    domain, StringStatics.BLANK, setElementOptions) {
+        
+                    protected IStatus doExecute(IProgressMonitor monitor,
+                            IAdaptable info)
+                        throws ExecutionException {
+                        // setElement must create a record in the ChangeRecorder,
+                        // otherwise setting the element will never be undone on Undo
+                        // and cross reference adapters will always report this new node as having reference to semanticEl
+                        // even when the node is itself dead.
+                        // This will cause all kind of problems, semanticEl becoming "undeletable" being one.
+                        node.setElement(semanticEl);
+                        return Status.OK_STATUS;
+                    }
+                };
+                try {
+                    operation.execute(new NullProgressMonitor(), null);
+                } catch (ExecutionException e) {
+                    Trace.catching(DiagramUIPlugin.getInstance(),
+                        DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                        "createView", e); //$NON-NLS-1$
+                    Log
+                        .warning(DiagramUIPlugin.getInstance(),
+                            DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+                            "createView", e); //$NON-NLS-1$
+                }
+            }
         }
 		
         TransactionalEditingDomain domain = getEditingDomain(semanticEl,
