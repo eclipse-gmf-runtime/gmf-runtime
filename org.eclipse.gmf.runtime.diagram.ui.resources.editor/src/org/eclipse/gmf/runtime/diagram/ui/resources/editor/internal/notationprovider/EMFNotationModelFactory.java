@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,11 +42,11 @@ public class EMFNotationModelFactory {
 	static public Diagram load(final IFile file, TransactionalEditingDomain editingDomain) throws EmfNotationException {
 		Resource notationModel = null;
 		try {
-			file.refreshLocal(IResource.DEPTH_ZERO, null); //RATLC00514368
+			file.refreshLocal(IResource.DEPTH_ZERO, null); 
 			String fileName = file.getLocation().toOSString();
 			
 	        // File exists with contents..
-	        notationModel = editingDomain.loadResource(fileName);//TODO which MEditingDomain to use?
+	        notationModel = editingDomain.loadResource(fileName);
 		     
 		} catch (Exception e) {
             Trace.catching(
@@ -65,11 +65,13 @@ public class EMFNotationModelFactory {
             throw t;
 		}
 
-		EList contents = notationModel.getContents();
-		if (!contents.isEmpty()) {
-			Object element = contents.get(0);
-			return (element instanceof Diagram) ? (Diagram) element
-				: null;
+		if (notationModel != null) {
+		    EList contents = notationModel.getContents();
+		    if (!contents.isEmpty()) {
+		        Object element = contents.get(0);
+		        return (element instanceof Diagram) ? (Diagram) element
+		                : null;
+		    }
 		}
 		return null;
 	}
@@ -80,7 +82,6 @@ public class EMFNotationModelFactory {
         
         if (clone) {
 			// save as option..
-//            URI uri = URI.createPlatformResourceURI(fFile.getFullPath().toString(), true);
 			notationModel.setURI(URI.createURI((fileName)));
 			notationModel.save(null);
 		} else {
