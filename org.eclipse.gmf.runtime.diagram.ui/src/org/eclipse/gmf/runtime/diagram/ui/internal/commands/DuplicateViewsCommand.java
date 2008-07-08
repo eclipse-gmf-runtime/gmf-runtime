@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -192,15 +192,18 @@ public class DuplicateViewsCommand
 	}
 	
 	/**
-	 * Assign semantic elements to all children of a view down the view tree hierarchy
+	 * Assign semantic elements (if there are any to add) 
+	 * to all children of a view down the view tree hierarchy
 	 * 
 	 * @param view the view tree hierarchy root
 	 */
 	private void assignSementicElementsDownViewTree(View view) {
 		EObject originalElement = view.getElement();
-		Object duplicateElement = duplicatedElements.get(originalElement);
-		if (duplicateElement != null) {
-			view.setElement((EObject) duplicateElement);
+		if (originalElement != null) {
+			Object duplicateElement = duplicatedElements.get(originalElement);
+			if (duplicateElement != null) {
+				view.setElement((EObject) duplicateElement);
+			}
 		}
 		for (Iterator itr = view.getChildren().iterator(); itr.hasNext();) {
 			assignSementicElementsDownViewTree((View) itr.next());
