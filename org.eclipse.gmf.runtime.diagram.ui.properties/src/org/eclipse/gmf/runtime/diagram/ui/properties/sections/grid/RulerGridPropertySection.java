@@ -16,7 +16,6 @@ import java.text.ParseException;
 import org.eclipse.gmf.runtime.common.core.util.StringStatics;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -295,7 +294,7 @@ public class RulerGridPropertySection
 
 	private IPreferenceStore getPreferenceStore() {
         IPreferenceStore preferenceStore =
-            (IPreferenceStore) ((DiagramEditor) getPart()).getDiagramEditPart().getDiagramPreferencesHint().getPreferenceStore();
+            (IPreferenceStore) ((IDiagramWorkbenchPart) getPart()).getDiagramEditPart().getDiagramPreferencesHint().getPreferenceStore();
 		return preferenceStore;
 	}
 
