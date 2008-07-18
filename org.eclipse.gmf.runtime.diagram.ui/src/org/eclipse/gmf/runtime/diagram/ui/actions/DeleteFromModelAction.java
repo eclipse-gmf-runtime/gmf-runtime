@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.gmf.runtime.diagram.ui.actions;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -27,6 +28,8 @@ import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -158,4 +161,23 @@ public class DeleteFromModelAction
     protected String getCommandLabel() {
         return DiagramUIMessages.DiagramEditor_Delete_from_Model;
     };
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#doRun(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    protected void doRun(IProgressMonitor progressMonitor) {
+    	Command command = getCommand();
+    	//For performance improvement, sometimes, calculateEnable method
+    	//won't disable the action for all valid unexecutable cases. At
+    	//that time, we need this error check here to report delete 
+    	//error to the users.
+    	if (command == null || !command.canExecute()) {
+    		MessageDialog
+			.openError(
+				Display.getCurrent().getActiveShell(),
+				DiagramUIMessages.DeleteFromModelAction_ErrorDialog_Title,
+				DiagramUIMessages.DeleteFromModelAction_ErrorDialog_Text);
+    	}
+		execute(getCommand(), progressMonitor);
+	}
 }

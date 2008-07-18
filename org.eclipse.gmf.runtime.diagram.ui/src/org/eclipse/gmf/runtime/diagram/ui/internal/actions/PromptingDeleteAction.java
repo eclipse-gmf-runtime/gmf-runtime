@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,6 +108,9 @@ public class PromptingDeleteAction
 				if (command2 != null && editingDomain != null) {
 					if (command == null)
 						command = new CompositeTransactionalCommand(editingDomain, command2.getLabel());
+					if ( containsSemanticElement ) {
+						deleteReq.setShowInformationDialog(false);
+					}
 					command.compose(new CommandProxy(command2));
 				}
 			}
