@@ -416,9 +416,12 @@ public class ElementSelectionService
             data = jobs2Data.get(job);
         }
         
-        synchronized(data) {
-            data.elementSelectionListener = null;
+        if (data != null) {
+            synchronized(data) {
+                data.elementSelectionListener = null;
+            }
         }
+        
         job.cancel();
     }
 }
