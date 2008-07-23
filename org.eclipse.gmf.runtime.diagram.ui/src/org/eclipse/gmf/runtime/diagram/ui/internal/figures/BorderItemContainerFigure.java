@@ -14,7 +14,6 @@ package org.eclipse.gmf.runtime.diagram.ui.internal.figures;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
@@ -108,6 +107,17 @@ public class BorderItemContainerFigure
 			}
 		}
 		return handleRect;
+	}
+
+	protected void primTranslate(int dx, int dy) {
+		/*
+		 * If the border item container is being moved, the children must move by the same amount too
+		 * (as opposed to free form figure).
+		 * We must ignore children moves in this case in the helper, since border item container shouldn't be invalidated.
+		 */
+		helper.ignoreChildFigureMovesHandling = true;
+		super.primTranslate(dx, dy);
+		helper.ignoreChildFigureMovesHandling = false;
 	}
 
 	/**
@@ -396,9 +406,13 @@ public class BorderItemContainerFigure
     
     private class BorderItemContainerHelper {
     	
+    	boolean ignoreChildFigureMovesHandling;
+    	
     	class ChildTracker implements FigureListener {
     		public void figureMoved(IFigure source) {
-    		    revalidate();
+    			if (!ignoreChildFigureMovesHandling) {
+    				revalidate();
+    			}
     		}
     	}
     	
