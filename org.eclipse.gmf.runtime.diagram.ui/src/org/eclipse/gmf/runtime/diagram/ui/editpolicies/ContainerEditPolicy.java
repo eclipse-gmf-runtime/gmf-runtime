@@ -433,11 +433,15 @@ public class ContainerEditPolicy
          * since we assume that their semantic elements are owned by source or target or their semantic
          * containers. 
          */
-        HashSet<Edge> allInnerEdges = new HashSet<Edge>();
-        for (Iterator itr = notationViewsToDuplicate.iterator(); itr.hasNext();) {
-            ViewUtil.getAllRelatedEdgesFromViews(((View)itr.next()).getChildren(), allInnerEdges);
-        }
-        notationViewsToDuplicate.addAll(allInnerEdges);
+        /**
+         * Until duplicate views action enablement is driven by the created duplicate views command,
+         * we can't look for edges to duplicate. It's a performance hit.
+         */
+//        List<Edge> allInnerEdges = new LinkedList<Edge>();
+//        for (Iterator itr = notationViewsToDuplicate.iterator(); itr.hasNext();) {
+//        	allInnerEdges.addAll(ViewUtil.getAllInnerEdges((View) itr.next()));
+//        }
+//        notationViewsToDuplicate.addAll(allInnerEdges);
         
         if (!notationViewsToDuplicate.isEmpty()) {
             if (!elementsToDuplicate.isEmpty()) {

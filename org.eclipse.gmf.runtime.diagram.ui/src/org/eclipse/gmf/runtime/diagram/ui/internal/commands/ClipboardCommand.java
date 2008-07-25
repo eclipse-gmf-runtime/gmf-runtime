@@ -12,10 +12,9 @@
 package org.eclipse.gmf.runtime.diagram.ui.internal.commands;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -142,13 +141,16 @@ public abstract class ClipboardCommand extends AbstractTransactionalCommand {
 		/*
 		 * We must append all inner edges of a node being copied. Edges are non-containment
 		 * references, hence they won't be copied for free. Therefore, we add them here to
-		 * the list views to copy.
+		 * the list of views to copy.
 		 */
-		HashSet<Edge> allInnerEdges = new HashSet<Edge>();
+		List<Edge> innerEdges = new LinkedList<Edge>();
 		for (Iterator itr = views.iterator(); itr.hasNext();) {
-			ViewUtil.getAllRelatedEdgesFromViews(((View)itr.next()).getChildren(), allInnerEdges);
+			View view = (View) itr.next();
+			if (!(view instanceof Diagram)) {
+				innerEdges.addAll(ViewUtil.getAllInnerEdges(view));
+			}
 		}
-		selection.addAll(allInnerEdges);
+		selection.addAll(innerEdges);
 
 		// add the measurement unit in an annotation.  Put it in the last position
 		//   to work around a limitation in the copy/paste infrastructure, that
