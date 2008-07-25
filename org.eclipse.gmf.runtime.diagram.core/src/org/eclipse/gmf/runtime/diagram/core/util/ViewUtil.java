@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -797,6 +798,76 @@ public class ViewUtil {
 			if (obj instanceof View) {
 				getAllRelatedEdgesForView((View)obj, allEdges);
 			}
+		}
+	}
+	
+	static public Set<Edge> getAllInnerEdges(View view) {
+		Set<View> allViews = new HashSet<View>();
+		Set<Edge> edges = new HashSet<Edge>();
+		Set<Edge> edgesConnectingViews = new HashSet<Edge>();
+		getAllNestedViews(view, allViews);
+		for (View v : allViews) {
+			getAllEdgesFromView(v, edges);
+		}
+		Stack<Edge> connectionsPath = new Stack<Edge>();
+		/*
+		 * Create a set of connections constained within the given editpart
+		 */
+		while (!edges.isEmpty()) {
+			/*
+			 * Take the first connection and check whethe there is a path
+			 * through that connection that leads to the target contained within
+			 * the given editpart
+			 */
+			Edge edge = edges.iterator().next();
+			edges.remove(edge);
+			connectionsPath.add(edge);
+			
+			/*
+			 * Initialize the target for the current path
+			 */
+			View target = edge.getTarget();
+			while(edges.contains(target)) {
+				/*
+				 * If the target end is a connection, check if it's one of the
+				 * connection's whose target is a connection and within the
+				 * given editpart. Append it to the path if it is. Otherwise
+				 * check if the target is within the actual connections or nodes
+				 * contained within the given editpart
+				 */
+				Edge targetEdge = (Edge) target;
+				edges.remove(targetEdge);
+				connectionsPath.add(targetEdge);
+				
+				/*
+				 * Update the target for the new path
+				 */
+				target = targetEdge.getTarget();
+			}
+			
+			/*
+			 * The path is built, check if it's target is a node or a connection
+			 * contained within the given editpart
+			 */
+			if (allViews.contains(target) || edgesConnectingViews.contains(target)) {
+				edgesConnectingViews.addAll(connectionsPath);
+			}
+			connectionsPath.clear();
+		}
+		return edgesConnectingViews;
+	}
+	
+	static private void getAllNestedViews(View view, Set<View> allViews) {
+		for (View childView : (List<View>) view.getChildren() ) {
+			getAllNestedViews(childView, allViews);
+			allViews.add(childView);
+		}
+	}
+	
+	static private void getAllEdgesFromView(View view, Set<Edge> edges) {
+		for (Edge e : (List<Edge>) view.getSourceEdges()) {
+			getAllEdgesFromView(e, edges);
+			edges.add(e);
 		}
 	}
 	
