@@ -51,7 +51,9 @@ public class BorderItemLocator
 	private int preferredSide = PositionConstants.WEST;
 
 	private int currentSide = PositionConstants.WEST;
-
+	
+	private int interval;
+	
 	/**
 	 * Accessor to return the constraint location of the border item.
 	 * 
@@ -60,6 +62,19 @@ public class BorderItemLocator
 	protected Rectangle getConstraint() {
 		return constraint;
 	}
+	
+	/**
+	 * The preferred side determines placement of figure.
+	 * 
+	 * @param interval interval between border items used in collision resolving (must be > 0)
+	 * @param parentFigure
+	 */
+	public BorderItemLocator(int interval, IFigure parentFigure) {
+		Assert.isTrue(interval > 0);
+		Assert.isNotNull(parentFigure);
+		this.parentFigure = parentFigure;
+		this.interval = interval;
+	}
 
 	/**
 	 * The preferred side determines placement of figure.
@@ -67,8 +82,7 @@ public class BorderItemLocator
 	 * @param parentFigure
 	 */
 	public BorderItemLocator(IFigure parentFigure) {
-		Assert.isNotNull(parentFigure);
-		this.parentFigure = parentFigure;
+		this(MapModeUtil.getMapMode(parentFigure).DPtoLP(8), parentFigure);
 	}
 
 	/**
@@ -85,6 +99,20 @@ public class BorderItemLocator
 	}
 	
 	/**
+	 * The preferred side determines placement of figure.
+	 * 
+	 * @param parentFigure
+	 * @param preferredSide
+	 *            the preferred side of the parent figure on which to place this
+	 *            border item as defined in {@link PositionConstants}
+	 * @param interval interval between border items used in collision resolving (must be > 0)
+	 */
+	public BorderItemLocator(IFigure parentFigure, int preferredSide, int interval) {
+		this(interval, parentFigure);
+		this.preferredSide = preferredSide;
+	}
+	
+	/**
 	 * The preferred location overrides the preferred side.
 	 * 
 	 * @param parentFigure
@@ -93,6 +121,19 @@ public class BorderItemLocator
 	public BorderItemLocator(IFigure borderItem, IFigure parentFigure,
 			Rectangle constraint) {
 		this(parentFigure);
+		setConstraint(constraint);
+	}
+
+	/**
+	 * The preferred location overrides the preferred side.
+	 * 
+	 * @param parentFigure
+	 * @param constraint
+	 * @param interval interval between border items used in collision resolving (must be > 0)
+	 */
+	public BorderItemLocator(IFigure borderItem, IFigure parentFigure,
+			Rectangle constraint, int interval) {
+		this(interval, parentFigure);
 		setConstraint(constraint);
 	}
 
@@ -141,7 +182,7 @@ public class BorderItemLocator
 		}
 		return bounds;
 	}
-
+	
 	/**
 	 * Get an initial location based on the side. ( choose middle of the side )
 	 * 
@@ -291,9 +332,6 @@ public class BorderItemLocator
 		Point recommendedLocation = locateOnParent(suggestedLocation,
 			suggestedSide, borderItem);
 
-		int vertical_gap = MapModeUtil.getMapMode(getParentFigure()).DPtoLP(8);
-		int horizontal_gap = MapModeUtil.getMapMode(getParentFigure())
-			.DPtoLP(8);
 		Dimension borderItemSize = getSize(borderItem);
 		
 		IFigure conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
@@ -301,9 +339,8 @@ public class BorderItemLocator
 		if (circuitCount < 4 && conflictingBorderItem != null) {
 			if (suggestedSide == PositionConstants.WEST) {
 				do {
-					recommendedLocation.y = calculateNextNonConflictingPosition(
-							conflictingBorderItem.getBounds().getBottomLeft().y,
-							vertical_gap, suggestedSide, borderItem);
+					calculateNextNonConflictingPosition(recommendedLocation,
+							interval, suggestedSide, borderItem, conflictingBorderItem.getBounds());
 					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
 				} while (conflictingBorderItem != null);
 				if (recommendedLocation.y > getParentBorder().getBottomLeft().y
@@ -318,9 +355,8 @@ public class BorderItemLocator
 				}  
 			} else if (suggestedSide == PositionConstants.SOUTH) {
 				do {
-					recommendedLocation.x = calculateNextNonConflictingPosition(
-							conflictingBorderItem.getBounds().getTopRight().x,
-							horizontal_gap, suggestedSide, borderItem);
+					calculateNextNonConflictingPosition(recommendedLocation,
+							interval, suggestedSide, borderItem, conflictingBorderItem.getBounds());
 					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
 				} while (conflictingBorderItem != null);
 				if (recommendedLocation.x > getParentBorder().getBottomRight().x
@@ -335,9 +371,8 @@ public class BorderItemLocator
 			} else if (suggestedSide == PositionConstants.EAST) {
 				// move up the east side
 				do {
-					recommendedLocation.y = calculateNextNonConflictingPosition(
-							conflictingBorderItem.getBounds().getLocation().y,
-							vertical_gap, suggestedSide, borderItem);
+					calculateNextNonConflictingPosition(recommendedLocation,
+							interval, suggestedSide, borderItem, conflictingBorderItem.getBounds());
 					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
 				} while (conflictingBorderItem != null);
 				if (recommendedLocation.y < getParentBorder().getTopRight().y) {
@@ -351,9 +386,8 @@ public class BorderItemLocator
 				}
 			} else { // NORTH
 				do {
-					recommendedLocation.x = calculateNextNonConflictingPosition(
-							conflictingBorderItem.getBounds().getLocation().x,
-							horizontal_gap, suggestedSide, borderItem);
+					calculateNextNonConflictingPosition(recommendedLocation,
+							interval, suggestedSide, borderItem, conflictingBorderItem.getBounds());
 					conflictingBorderItem = getConflictingBorderItemFigure(recommendedLocation, borderItem);
 				} while (conflictingBorderItem != null);
 				if (recommendedLocation.x < getParentBorder().getTopLeft().x) {
@@ -369,25 +403,46 @@ public class BorderItemLocator
 	}
 
 	/**
-	 * Default behavior is to simply check in a counter clockwise direction.
-	 * Note:  if the currentSide is EAST or WEST, the y co-oridinate is passed as the current position.  Otherwise,
-	 * if NORTH or SOUTH is the currentSide, then the x co-oridinate of the borderitem is passed.
+	 * Modifies the location of the border item (currentLocation) to avoid
+	 * overlapping with the obstacle rectangle (another border item bounds)
 	 * 
-	 * @param currentPosition	The current x or y co-ordinate of the border item
-	 * @param interval			The suggested spacing to try to find the next non-conflicting position
-	 * @param currentSide		The current side of the border item 
-	 * @param borderItem 		The borderItem being relocated (here to be used by subclasses if needed)
-	 * @return the next possible non-conflicting position
+	 * @param currentLocation
+	 *            The current location of the border item
+	 * @param interval
+	 *            The suggested spacing to try to find the next non-conflicting
+	 *            position
+	 * @param currentSide
+	 *            The current side of the border item
+	 * @param borderItem
+	 *            The borderItem being relocated (here to be used by subclasses
+	 *            if needed)
+	 * @param obstacle
+	 *            The bounds of the border item conflicting with the border item
+	 *            currently being relocated
 	 */
-	protected int calculateNextNonConflictingPosition(int currentPosition, int interval, int currentSide, IFigure borderItem) {
+	protected void calculateNextNonConflictingPosition(Point currentLocation,
+			int interval, int currentSide, IFigure borderItem,
+			Rectangle obstacle) {
 		switch (currentSide) {
-			case PositionConstants.WEST:  // Fall through  -- Move down the west side
-			case PositionConstants.SOUTH: // Move towards the east side
-				return currentPosition + interval;
-			case PositionConstants.EAST:  // Fall through - Move towards the north side
-			case PositionConstants.NORTH: // Fall through - Move towards the west side
-			default: /* Should never get here, but if we do, we'll default to subtraction */
-				return currentPosition - interval;
+		case PositionConstants.WEST:
+			currentLocation.y = obstacle.getBottomLeft().y + interval;
+			break;
+		case PositionConstants.SOUTH: // Move towards the east side
+			currentLocation.x = obstacle.getBottomRight().x + interval;
+			break;
+		case PositionConstants.EAST:
+			currentLocation.y = obstacle.getTopRight().y - interval
+					- borderItem.getBounds().height;
+			break;
+		case PositionConstants.NORTH: // Move towards the west side
+			currentLocation.x = obstacle.getTopLeft().x - interval
+					- borderItem.getBounds().width;
+			break;
+		default:
+			throw new IllegalArgumentException(
+					"Invalid side argument: " //$NON-NLS-1$
+							+ currentSide
+							+ ". Should be the value from PositionConstants: WEST, EAST, NORTH or SOUTH"); //$NON-NLS-1$
 		}
 	}
 	
