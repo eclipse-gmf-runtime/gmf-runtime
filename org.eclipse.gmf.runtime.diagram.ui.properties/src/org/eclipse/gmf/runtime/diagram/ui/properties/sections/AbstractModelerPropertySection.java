@@ -36,6 +36,7 @@ import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.common.core.command.UnexecutableCommand;
 import org.eclipse.gmf.runtime.common.core.util.Log;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.common.ui.services.properties.PropertiesServiceAdapterFactory;
@@ -554,6 +555,10 @@ public abstract class AbstractModelerPropertySection
 	 */
 	private ICommand createCommandInternal(String name, Resource res,
 			final Runnable runnable) {
+		
+		if (res == null) {
+			return UnexecutableCommand.INSTANCE;
+		}
 
         ICommand command = new AbstractTransactionalCommand(getEditingDomain(), name,
             Collections.singletonList(WorkspaceSynchronizer.getFile(res))) {
