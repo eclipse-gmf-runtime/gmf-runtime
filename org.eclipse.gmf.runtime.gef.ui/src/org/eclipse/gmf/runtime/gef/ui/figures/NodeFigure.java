@@ -40,7 +40,8 @@ public class NodeFigure
 	private Hashtable connectionAnchors;
 	
 	/** 
-	 * The width of this shape's outline. (a field from GEF Shape).
+	 * The width of this shape's outline. (a field from GEF Shape). Must be
+	 * greater than zero. 
 	 * TODO: NodeFigure should have extended org.eclipse.draw2d.Shape
 	 */
 	private int lineWidth = 1;
@@ -283,7 +284,7 @@ public class NodeFigure
 	 * @since 2.1
 	 */
 	public void setLineWidth(int w) {
-		if (lineWidth == w) 
+		if ((lineWidth == w) || (w < 0))
 			return;
 		lineWidth = w;
 		repaint();
