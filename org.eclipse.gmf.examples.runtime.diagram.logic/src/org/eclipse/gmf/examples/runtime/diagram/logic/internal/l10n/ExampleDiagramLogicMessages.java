@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,9 @@ public final class ExampleDiagramLogicMessages extends NLS {
 	public static String LogicWizardPage_StoreSemanticsSeparately;
 	public static String LogicWizardPage_BrowseSemanticResource;
 	public static String LogicWizardPage_BrowseSemanticDialogTitle;
+	public static String LogicWizardPage_ModelOptions_GroupName;
+	public static String LogicWizardPage_ModelOptions_EmptyModelName;
+	public static String LogicWizardPage_ModelOptions_FourBitAdderModelName;
 	public static String LogicPortsColor_Action_Label;
 	public static String LogicPortsColor_Action_Tooltip;
 	

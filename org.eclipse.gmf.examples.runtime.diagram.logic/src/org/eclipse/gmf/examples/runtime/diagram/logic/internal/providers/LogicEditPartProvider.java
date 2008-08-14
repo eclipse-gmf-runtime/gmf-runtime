@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.CircuitEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LEDEditPart;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editparts.LogicFlowCompartmentEditPart;
@@ -38,7 +39,7 @@ import org.eclipse.gmf.runtime.notation.View;
 public class LogicEditPartProvider extends AbstractEditPartProvider {	
 	
 	/** list of supported shape editparts. */
-	private Map shapeMap = new HashMap();
+	private Map<EClass, Class> shapeMap = new HashMap<EClass, Class>();
 	{
 		shapeMap.put( SemanticPackage.eINSTANCE.getLED(), LEDEditPart.class );
 		shapeMap.put( SemanticPackage.eINSTANCE.getFlowContainer(), LogicFlowContainerEditPart.class );
@@ -52,19 +53,19 @@ public class LogicEditPartProvider extends AbstractEditPartProvider {
 	}
 	
 	/** list of supported connector editparts. */
-	private Map connectorMap = new HashMap();
+	private Map<EClass, Class> connectorMap = new HashMap<EClass, Class>();
 	{
 		connectorMap.put(SemanticPackage.eINSTANCE.getWire(), WireEditPart.class );
 	}
 	
 	/** list of supported shape compartment editparts */
-	private Map shapeCompartmentMap = new HashMap();
+	private Map<String, Class> shapeCompartmentMap = new HashMap<String, Class>();
 	{
 		shapeCompartmentMap.put(LogicConstants.LOGIC_SHAPE_COMPARTMENT, LogicShapeCompartmentEditPart.class); 
 	}
 	
 	/** list of supported list compartment editparts */
-	private Map listCompartmentMap = new HashMap();
+	private Map<String, Class> listCompartmentMap = new HashMap<String, Class>();
 	{
 		listCompartmentMap.put(LogicConstants.LOGIC_FLOW_COMPARTMENT, LogicFlowCompartmentEditPart.class); 
 	}
@@ -86,7 +87,7 @@ public class LogicEditPartProvider extends AbstractEditPartProvider {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpart.AbstractEditPartProvider#setConnectorEditPartClass(org.eclipse.gmf.runtime.diagram.ui.internal.view.IConnectorView)
 	 */
 	protected Class getEdgeEditPartClass(View view) {
-		return(Class) connectorMap.get(getReferencedElementEClass(view));
+		return connectorMap.get(getReferencedElementEClass(view));
 	}
 
 	/**
@@ -94,17 +95,19 @@ public class LogicEditPartProvider extends AbstractEditPartProvider {
 	 * This method should be overridden by a provider if it wants to provide this service. 
 	 * @param view the view to be <i>controlled</code> by the created editpart
 	 */
-	protected Class getNodeEditPartClass(View view ) {
+	protected Class getNodeEditPartClass(View view) {
 		Class clazz = null;
 		String semanticHint = view.getType();
 		EClass eClass = getReferencedElementEClass(view);
-		clazz = (Class) listCompartmentMap.get(semanticHint);
-		if(clazz!=null)
+		clazz = listCompartmentMap.get(semanticHint);
+		if(clazz != null) {
 			return clazz;
-		clazz = (Class) shapeCompartmentMap.get(semanticHint);
-		if(clazz!=null)
+		}
+		clazz = shapeCompartmentMap.get(semanticHint);
+		if(clazz != null) {
 			return clazz;
-		clazz =  ((Class)shapeMap.get(eClass));
+		}
+		clazz = shapeMap.get(eClass);
 		return clazz;
 	}
 }

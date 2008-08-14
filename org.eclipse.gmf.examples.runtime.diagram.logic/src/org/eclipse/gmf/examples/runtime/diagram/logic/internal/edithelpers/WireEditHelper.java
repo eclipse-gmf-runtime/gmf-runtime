@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.commands.Reorient
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.OutputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.SemanticPackage;
+import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand;
@@ -48,20 +49,19 @@ public class WireEditHelper
 			if (hasValidSourceAndTarget(createRelationshipRequest)) {
 
 				// Get the nearest common container element to own the new wire.
-				List terminals = new ArrayList();
+				List<Terminal> terminals = new ArrayList<Terminal>();
 				
 				EObject source = createRelationshipRequest.getSource();
 				if (source != null) {
-					terminals.add(source);
+					terminals.add((Terminal)source);
 				}
 				EObject target = createRelationshipRequest.getTarget();
 				if (target != null) {
-					terminals.add(target);
+					terminals.add((Terminal)target);
 				}
 				
 				EObject container = EMFCoreUtil.getLeastCommonContainer(
-						terminals, SemanticPackage.eINSTANCE
-								.getContainerElement());
+						terminals, SemanticPackage.eINSTANCE.getContainerElement());
 
 				GetEditContextCommand result = new GetEditContextCommand(req);
 				result.setEditContext(container);

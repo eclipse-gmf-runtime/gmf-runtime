@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,7 +115,6 @@ public class LogicEditorUtil extends IDEEditorUtil {
 		final IFile newDiagramFile = diagramFileCreator.createNewFile(
 			containerFullPath, fileName, initialContents, shell,
 			new IRunnableContext() {
-
 				public void run(boolean fork, boolean cancelable,
 						IRunnableWithProgress runnable)
 					throws InvocationTargetException, InterruptedException {
@@ -135,7 +134,11 @@ public class LogicEditorUtil extends IDEEditorUtil {
 				IFile semanticFile = null;
 				boolean semanticFileIsNew = false;
 				if (semanticResourcePath != null && semanticResourcePath.length() > 0) {
-					semanticFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(semanticResourcePath));
+					try {
+						semanticFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(semanticResourcePath));
+					} catch (Exception e){
+						
+					}
 					if (!semanticFile.exists()) {
 						semanticFileIsNew = true;
 						try {
@@ -147,71 +150,60 @@ public class LogicEditorUtil extends IDEEditorUtil {
 					}
 				}
 				
-				// Fill the contents of the file dynamically
-				Resource notationModel = null;
-				Model semanticModel = null;
-
 				try {
-					newDiagramFile.refreshLocal(IResource.DEPTH_ZERO, null); //RATLC00514368
+					newDiagramFile.refreshLocal(IResource.DEPTH_ZERO, null); 
 					if (semanticFile != null) {
 						semanticFile.refreshLocal(IResource.DEPTH_ZERO, null);
 					}
-					
-					InputStream stream = newDiagramFile.getContents();
-					final String completeFileName = newDiagramFile.getLocation().toOSString();
-
-					try {
-						//Empty file....
-		                notationModel = resourceSet.createResource(URI
-		                    .createFileURI(completeFileName));
-		                
-		                if (semanticFileIsNew) {
-		                	semanticModel = SemanticFactory.eINSTANCE.createModel();
-		                	Resource semanticResource = resourceSet.createResource(URI.createPlatformResourceURI(semanticResourcePath,true));
-		                	
-							semanticResource.getContents().add(semanticModel);
-		                } else if (semanticFile != null){
-		                	semanticModel = (Model) resourceSet.getResource(URI.createPlatformResourceURI(semanticResourcePath,true),true).getContents().get(0);
-		                }
-
-					} finally {
-						stream.close();
-					}
-
-				} catch (Exception e) {
+				} catch (CoreException e) {
 					Trace.catching(LogicDiagramPlugin.getInstance(),
-						LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
-						LogicEditorUtil.class, "createNewDiagramFile", //$NON-NLS-1$
-						e);
+							LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
+							LogicEditorUtil.class, "createNewDiagramFile", //$NON-NLS-1$
+							e);
+				}
+				
+				Model semanticModel = null;
+                if (semanticFileIsNew) {
+                	// create blank semantic model
+                	semanticModel = SemanticFactory.eINSTANCE.createModel();
+                	Resource semanticResource = resourceSet.createResource(
+                			URI.createPlatformResourceURI(semanticResourcePath,true));
+					semanticResource.getContents().add(semanticModel);
+                } else if (semanticFile != null){
+                	// load provided semantic model
+                	semanticModel = (Model) resourceSet.getResource(
+                			URI.createPlatformResourceURI(semanticResourcePath,true),true)
+                			.getContents().get(0);
+                }
+
+				// create blank notation model file
+				final String completeFileName = newDiagramFile.getLocation().toOSString();
+				Resource notationModel = resourceSet.createResource(URI.createFileURI(completeFileName));
+
+				if (semanticModel == null) {
+					semanticModel = SemanticFactory.eINSTANCE.createModel();
+					notationModel.getContents().add(semanticModel);
 				}
 
+	            Diagram view = ViewService.createDiagram(semanticModel, kind,
+	                new PreferencesHint(LogicDiagramPlugin.EDITOR_ID));
+	            
+	            if (view != null) {
+	                notationModel.getContents().add(0, view);
+	                view.getDiagram().setName(newDiagramFile.getName());
+	            }
 
-				if (notationModel != null) {
-					if (semanticModel == null) {
-						semanticModel = SemanticFactory.eINSTANCE.createModel();
-						notationModel.getContents().add(semanticModel);
-					}
-
-		            Diagram view = ViewService.createDiagram(semanticModel, kind,
-		                new PreferencesHint(LogicDiagramPlugin.EDITOR_ID));
-		            
-		            if (view != null) {
-		                notationModel.getContents().add(0,view);
-		                view.getDiagram().setName(newDiagramFile.getName());
-		            }
-
-		            try {
-		                notationModel.save(Collections.EMPTY_MAP);
-		                semanticModel.eResource().save(Collections.EMPTY_MAP);
-		            } catch (IOException e) {
-		                Trace.catching(LogicDiagramPlugin.getInstance(),
-		                    LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
-		                    LogicEditorUtil.class, "createNewDiagramFile", e); //$NON-NLS-1$
-		                Log.error(LogicDiagramPlugin.getInstance(),
-		                    LogicDiagramStatusCodes.IGNORED_EXCEPTION_WARNING, e
-		                        .getLocalizedMessage());
-		            }
-				}
+	            try {
+	                notationModel.save(Collections.EMPTY_MAP);
+	                semanticModel.eResource().save(Collections.EMPTY_MAP);
+	            } catch (IOException e) {
+	                Trace.catching(LogicDiagramPlugin.getInstance(),
+	                    LogicDiagramDebugOptions.EXCEPTIONS_CATCHING,
+	                    LogicEditorUtil.class, "createNewDiagramFile", e); //$NON-NLS-1$
+	                Log.error(LogicDiagramPlugin.getInstance(),
+	                    LogicDiagramStatusCodes.IGNORED_EXCEPTION_WARNING, e
+	                        .getLocalizedMessage());
+	            }
 				
 				return Status.OK_STATUS;
 			}
