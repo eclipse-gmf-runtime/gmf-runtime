@@ -149,7 +149,7 @@ class PrinterBlock extends DialogBlock {
 		// layoutSpanHorizontal(printToFile, 3);
 		// printToFile.setEnabled(false);
 
-		init();
+		initializePrinters();
 
 		return result;
 	}
@@ -220,39 +220,45 @@ class PrinterBlock extends DialogBlock {
 	/**
 	 * At initialization time, we lookup all the print services and select the default one.
 	 */
-	private void init() {
+	private void initializePrinters() {
 		PrintService[] printServices = PrintServiceLookup.lookupPrintServices(
 				null, null);
-		PrintService defaultPrintService = PrintServiceLookup
-				.lookupDefaultPrintService();
-
+		
 		for (PrintService printService : printServices) {
 			destinations.add(new PrintDestination(printService.getName()));
 		}
-		
-		PrintDestination defaultPrintDestination = getPrinterByName(defaultPrintService.getName());
-
 		combo.setContentProvider(new PrinterContentProvider());
 		combo.setLabelProvider(new PrinterLabelProvider());
-
-		initializePrinterCombo(defaultPrintDestination);
-	}
-
-	/**
-	 * Initialize the list of printers.
-     *
-	 * @param selection
-	 */
-	private void initializePrinterCombo(PrintDestination selection) {
+		
+		// Locate a default printer if one is explicitly marked as such.
+		PrintDestination defaultPrintDestination = null;
+		PrintService defaultPrintService = PrintServiceLookup
+			.lookupDefaultPrintService();
+		
+		if (defaultPrintService != null) {
+			defaultPrintDestination = getPrinterByName(defaultPrintService
+				.getName());
+		} else {
+			if( destinations.size() > 0 ){
+				defaultPrintDestination = destinations.get(0);
+			}
+		}
+		
 		combo.setInput(destinations);
-		combo.setSelection(new StructuredSelection(selection));
+		if(defaultPrintDestination != null){
+			combo.setSelection(new StructuredSelection(defaultPrintDestination));
+		}
 	}
 
+	
 	/**
+	 * Obtain the proper print destination based on the name of the printer.
 	 * 
-	 * @param name
+	 * @param name 
+	 * 		The printer Name.
 	 * @return
-	 */
+	 * 		 The print destination corresponding to the specified print name.
+	 */	
 	private PrintDestination getPrinterByName(String name) {
 
 		PrintDestination result = null;
