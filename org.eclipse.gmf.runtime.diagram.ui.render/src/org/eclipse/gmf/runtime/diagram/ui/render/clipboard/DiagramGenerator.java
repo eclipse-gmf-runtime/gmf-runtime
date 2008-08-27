@@ -633,10 +633,10 @@ abstract public class DiagramGenerator {
 	 *         diagram.
 	 */
 	public List getDiagramPartInfo(DiagramEditPart diagramEditPart) {
-		List result = new ArrayList();
-		List editParts = new ArrayList();
+		List<PartPositionInfo> result = new ArrayList<PartPositionInfo>();
+		List<IGraphicalEditPart> editParts = new ArrayList<IGraphicalEditPart>();
 
-		List children = diagramEditPart.getPrimaryEditParts();
+		List<IGraphicalEditPart> children = (List<IGraphicalEditPart>) diagramEditPart.getPrimaryEditParts();
 		IMapMode mm = getMapMode();
 
 		// We will use the diagram generate that was used to generate the image
@@ -645,16 +645,12 @@ abstract public class DiagramGenerator {
 		// image positions using the same box as was used to create the image.
 		org.eclipse.swt.graphics.Rectangle imageRect = calculateImageRectangle(children);
 
-		Iterator li = children.iterator();
-		while (li.hasNext()) {
-			IGraphicalEditPart part = (IGraphicalEditPart) li.next();
+		for (IGraphicalEditPart part : children) {
 			editParts.add(part);
 			getNestedEditParts(part, editParts);
 		}
 
-		Iterator iter = editParts.iterator();
-		while (iter.hasNext()) {
-			IGraphicalEditPart part = (IGraphicalEditPart) iter.next();
+		for (IGraphicalEditPart part : editParts) {
 			IFigure figure = part.getFigure();
 
 			// RATLC00139941: Need to support any kind of shape edit part
@@ -691,9 +687,91 @@ abstract public class DiagramGenerator {
 					PointList mainPts = mainPoly.getPoints();
 
 					translateToPrintableLayer(figure, mainPts);
-					List envelopingPts = calculateEnvelopingPolyline(mainPts,
+					List<Point> envelopingPts = calculateEnvelopingPolyline(mainPts,
 							new Point(imageRect.x, imageRect.y));
-					List transformedPts = convertPolylineUnits(envelopingPts);
+					List<Point> transformedPts = convertPolylineUnits(envelopingPts);
+
+					position.setPolyline(transformedPts);
+					result.add(0, position);
+				}
+			}
+		}
+		return result;
+	}
+	
+	public List<PartPositionInfo> getConstrainedDiagramPartInfo(int maxWidth, int maxHeight, boolean useMargins) {
+		return getConstrainedDiagramPartInfo(_dgrmEP, maxWidth, maxHeight, useMargins);
+	}
+	
+	public List<PartPositionInfo> getConstrainedDiagramPartInfo(DiagramEditPart diagramEditPart, int maxWidth, int maxHeight, boolean useMargins) {
+		List<PartPositionInfo> result = new ArrayList<PartPositionInfo>();
+		List<IGraphicalEditPart> editParts = new ArrayList<IGraphicalEditPart>();
+
+		List<IGraphicalEditPart> children = (List<IGraphicalEditPart>) diagramEditPart.getPrimaryEditParts();
+		IMapMode mm = getMapMode();
+
+		// We will use the diagram generate that was used to generate the image
+		// to figure out the outer-bound rectangle so that we are calculating
+		// the
+		// image positions using the same box as was used to create the image.
+		ConstrainedImageRenderingData data = getConstrainedImageRenderingData(children, maxWidth, maxHeight, useMargins);
+		Rectangle imageRect = data.imageOriginalBounds.getCopy();
+		mm.DPtoLP(imageRect);
+		if (useMargins) {
+			imageRect.shrink(getImageMargin(), getImageMargin());
+		}
+		imageRect.performScale(data.scalingFactor);
+		if (useMargins) {
+			imageRect.expand(getImageMargin(), getImageMargin());
+		}
+
+		for (IGraphicalEditPart part : children) {
+			editParts.add(part);
+			getNestedEditParts(part, editParts);
+		}
+
+		for (IGraphicalEditPart part : editParts) {
+			IFigure figure = part.getFigure();
+
+			// RATLC00139941: Need to support any kind of shape edit part
+			// and shape compartments, too, because these sometimes
+			// correspond to distinct semantic elements
+			if (part instanceof ShapeEditPart
+					|| part instanceof ShapeCompartmentEditPart) {
+
+				PartPositionInfo position = new PartPositionInfo();
+
+				position.setSemanticElement(ViewUtil
+						.resolveSemanticElement((View) part.getModel()));
+
+				Rectangle bounds = figure.getBounds().getCopy();
+				translateToPrintableLayer(figure, bounds);
+				bounds.performScale(data.scalingFactor);
+				bounds.translate(-imageRect.x, -imageRect.y);
+
+				position.setPartHeight(mm.LPtoDP(bounds.height));
+				position.setPartWidth(mm.LPtoDP(bounds.width));
+				position.setPartX(mm.LPtoDP(bounds.x));
+				position.setPartY(mm.LPtoDP(bounds.y));
+				result.add(0, position);
+			} else if (part instanceof ConnectionEditPart) {
+				// find a way to get (P1, P2, ... PN) for connection edit part
+				// add MARGIN and calculate "stripe" for the polyline instead of
+				// bounding box.
+				PartPositionInfo position = new PartPositionInfo();
+
+				position.setSemanticElement(ViewUtil
+						.resolveSemanticElement((View) part.getModel()));
+
+				if (figure instanceof PolylineConnection) {
+					PolylineConnection mainPoly = (PolylineConnection) figure;
+					PointList mainPts = mainPoly.getPoints();
+					mainPts.performScale(data.scalingFactor);
+
+					translateToPrintableLayer(figure, mainPts);
+					List<Point> envelopingPts = calculateEnvelopingPolyline(mainPts,
+							new Point(imageRect.x, imageRect.y));
+					List<Point> transformedPts = convertPolylineUnits(envelopingPts);
 
 					position.setPolyline(transformedPts);
 					result.add(0, position);
@@ -750,9 +828,9 @@ abstract public class DiagramGenerator {
 	 *         representing the polyline
 	 * @author Barys Dubauski
 	 */
-	private List calculateEnvelopingPolyline(PointList polyPts, Point origin) {
-		ArrayList result = new ArrayList();
-		List mainSegs = PointListUtilities.getLineSegments(polyPts);
+	private List<Point> calculateEnvelopingPolyline(PointList polyPts, Point origin) {
+		List<Point> result = new ArrayList<Point>();
+		List<LineSeg> mainSegs = (List<LineSeg>) PointListUtilities.getLineSegments(polyPts);
 
 		int mainSegsLength = mainSegs.size();
 
@@ -787,8 +865,7 @@ abstract public class DiagramGenerator {
 
 		// add first point to close the polyline per "poly" area type HTML
 		// requirements
-		Object first = result.get(0);
-		result.add(first);
+		result.add(result.get(0));
 
 		return result;
 	}
@@ -801,18 +878,13 @@ abstract public class DiagramGenerator {
 	 *         representing the polyline
 	 * @author Barys Dubauski
 	 */
-	private List convertPolylineUnits(List polyPts) {
-		ArrayList result = new ArrayList();
-		Iterator iter = polyPts.iterator();
-
+	private List<Point> convertPolylineUnits(List<Point> polyPts) {
+		List<Point> result = new ArrayList<Point>();
 		IMapMode mm = getMapMode();
-
-		while (iter.hasNext()) {
-			Point point = (Point) iter.next();
+		for (Point point : polyPts) {
 			Point newPoint = new Point(mm.LPtoDP(point.x), mm.LPtoDP(point.y));
 			result.add(newPoint);
 		}
-
 		return result;
 	}
 
@@ -901,45 +973,20 @@ abstract public class DiagramGenerator {
 		try {
 			IMapMode mm = getMapMode();
 
-			Rectangle originalBounds = new PrecisionRectangle(new Rectangle(calculateImageRectangle(editParts)));
-			getMapMode().LPtoDP(originalBounds);
-			
-			int deviceMargins = mm.LPtoDP(getImageMargin());
-			int threshold = useMargins ? deviceMargins : 0; 
-			double xScalingFactor = 1.0, yScalingFactor = xScalingFactor;
-			
-			originalBounds.shrink(deviceMargins, deviceMargins);
-			
-			if (maxDeviceWidth > threshold) {
-				xScalingFactor = (maxDeviceWidth  - threshold - threshold)/ (originalBounds.preciseWidth());
-			}
-			if (maxDeviceHeight > threshold) {
-				yScalingFactor = (maxDeviceHeight - threshold - threshold) / (originalBounds.preciseHeight());
-			}
-			
-			double scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor), 1);
-			
-			int imageWidth = originalBounds.width + threshold + threshold;
-			int imageHeight = originalBounds.height + threshold + threshold;
-			
-			if (scalingFactor < 1) {
-				imageWidth = (int) Math.round(originalBounds.preciseWidth() * scalingFactor) + threshold + threshold;
-				imageHeight = (int) Math.round(originalBounds.preciseHeight() * scalingFactor) + threshold + threshold;
-			}
-			
+			ConstrainedImageRenderingData data = getConstrainedImageRenderingData(editParts, maxDeviceWidth, maxDeviceHeight, useMargins);
 
 			// Create the graphics and wrap it with the HiMetric graphics object
-			graphics = setUpGraphics(imageWidth, imageHeight);
+			graphics = setUpGraphics(data.imageWidth, data.imageHeight);
 
 			ScaledGraphics scaledGraphics = new ScaledGraphics(graphics);
 			
 			RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 					scaledGraphics, getMapMode());
 			
-			graphics.translate(threshold, threshold);
-			mapModeGraphics.scale(scalingFactor);
+			graphics.translate(data.margin, data.margin);
+			mapModeGraphics.scale(data.scalingFactor);
 
-			Point location = new PrecisionPoint(originalBounds.preciseX(), originalBounds.preciseY());
+			Point location = new PrecisionPoint(data.imageOriginalBounds.preciseX(), data.imageOriginalBounds.preciseY());
 			mm.DPtoLP(location);
 			renderToGraphics(mapModeGraphics, location, editParts);
 			imageDesc = getImageDescriptor(graphics);
@@ -949,6 +996,48 @@ abstract public class DiagramGenerator {
 		}
 
 		return imageDesc;
+	}
+	
+	class ConstrainedImageRenderingData {
+		double scalingFactor;
+		int imageWidth; // in pixels
+		int imageHeight; // in pixels
+		Rectangle imageOriginalBounds; // in pixels
+		int margin; // margins size in pixels
+	}
+	
+	ConstrainedImageRenderingData getConstrainedImageRenderingData(List editParts, int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
+		ConstrainedImageRenderingData data = new ConstrainedImageRenderingData();
+		IMapMode mm = getMapMode();
+		
+		data.imageOriginalBounds = new PrecisionRectangle(new Rectangle(calculateImageRectangle(editParts)));
+		mm.LPtoDP(data.imageOriginalBounds);
+		
+		int deviceMargins = mm.LPtoDP(getImageMargin());
+		data.margin = useMargins ? deviceMargins : 0; 
+		double xScalingFactor = 1.0, yScalingFactor = xScalingFactor;
+		
+		data.imageOriginalBounds.shrink(deviceMargins, deviceMargins);
+		
+		if (maxDeviceWidth > data.margin) {
+			xScalingFactor = (maxDeviceWidth  - data.margin - data.margin)/ (data.imageOriginalBounds.preciseWidth());
+		}
+		if (maxDeviceHeight > data.margin) {
+			yScalingFactor = (maxDeviceHeight - data.margin - data.margin) / (data.imageOriginalBounds.preciseHeight());
+		}
+		
+		data.scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor), 1);
+		
+		data.imageWidth = data.imageOriginalBounds.width + data.margin + data.margin;
+		data.imageHeight = data.imageOriginalBounds.height + data.margin + data.margin;
+				
+		if (data.scalingFactor < 1) {
+			data.imageWidth = (int) Math.round(data.imageOriginalBounds.preciseWidth() * data.scalingFactor) + data.margin + data.margin;
+			data.imageHeight = (int) Math.round(data.imageOriginalBounds.preciseHeight() * data.scalingFactor) + data.margin + data.margin;
+		} else {
+			data.scalingFactor = 1;
+		}
+		return data;
 	}
 	
 	/**

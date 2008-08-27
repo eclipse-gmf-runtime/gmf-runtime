@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -129,6 +130,14 @@ public class OffscreenEditPartFactory {
         customViewer.flush();
         
         Assert.isTrue(customViewer.getContents() instanceof DiagramEditPart);
+        
+    	/*
+    	 * We need to flush all the deferred updates. 
+    	 */
+    	Display display = Display.getCurrent();
+    	if (display != null) {
+    		while (!display.readAndDispatch());
+    	}
         
         return (DiagramEditPart) customViewer.getContents();
 

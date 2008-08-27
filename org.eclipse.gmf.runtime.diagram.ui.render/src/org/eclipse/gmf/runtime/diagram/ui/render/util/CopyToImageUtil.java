@@ -56,6 +56,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -83,8 +84,8 @@ public class CopyToImageUtil {
      */
     public DiagramEditPart createDiagramEditPart(Diagram diagram, Shell shell,
             PreferencesHint preferencesHint) {
-        return OffscreenEditPartFactory.getInstance().createDiagramEditPart(
-            diagram, shell, preferencesHint);
+    	return OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+                diagram, shell, preferencesHint);
     }
 
     /**
@@ -208,6 +209,79 @@ public class CopyToImageUtil {
     	return stream.toByteArray();
     }
     
+    public List copyToConstrainedImage(Diagram diagram, IPath destination,
+            ImageFileFormat format, int maxWidth, int maxHeight, IProgressMonitor monitor,
+            PreferencesHint preferencesHint, boolean useMargins)
+        throws CoreException {
+    	
+        List partInfo = Collections.EMPTY_LIST;
+        
+        DiagramEditor openedDiagramEditor = DiagramEditorUtil.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+        if (openedDiagramEditor != null) {
+        	DiagramEditPart diagramEP = openedDiagramEditor.getDiagramEditPart();
+            DiagramGenerator generator = copyToConstrainedImage(diagramEP,
+                    destination, diagramEP.getPrimaryEditParts(), format, maxWidth, maxHeight, monitor, useMargins);
+            partInfo = generator.getConstrainedDiagramPartInfo(openedDiagramEditor.getDiagramEditPart(), maxWidth, maxHeight, useMargins);
+        } else {
+	
+	        Shell shell = new Shell();
+	        try {
+	            DiagramEditPart diagramEP = createDiagramEditPart(diagram,
+	                shell, preferencesHint);
+	            Assert.isNotNull(diagramEP);
+	            DiagramGenerator generator = copyToConstrainedImage(diagramEP,
+	                destination, diagramEP.getPrimaryEditParts(), format, maxWidth, maxHeight, monitor, useMargins);
+	            partInfo = generator.getConstrainedDiagramPartInfo(diagramEP, maxWidth, maxHeight, useMargins);
+	        } finally {
+	            shell.dispose();
+	        }
+        }
+
+        return partInfo;
+    }
+    
+    public DiagramGenerator copyToConstrainedImage(DiagramEditPart diagramEP, IPath destination, List editParts, ImageFileFormat format, int maxWidth, int maxHeight, IProgressMonitor monitor, boolean useMargins) throws CoreException {
+    	DiagramGenerator gen = getDiagramGenerator(diagramEP, format);
+    	copyToConstrainedImage(gen, editParts, destination, format, maxWidth, maxHeight, monitor, useMargins);
+        monitor.worked(1);
+        return gen;
+    }
+    
+    private void copyToConstrainedImage(DiagramGenerator gen, List editParts,
+			IPath destination, 
+			ImageFileFormat format, int maxWidth, int maxHeight, IProgressMonitor monitor, boolean useMargins)
+			throws CoreException {
+		boolean found = false;
+		if (format.equals(ImageFileFormat.SVG)
+				|| format.equals(ImageFileFormat.PDF)) {
+			gen.createConstrainedSWTImageDecriptorForParts(editParts, maxWidth, maxHeight, useMargins);
+			monitor.worked(1);
+			saveToFile(destination, (DiagramSVGGenerator) gen, format, monitor);
+			found = true;
+		} else if (format.equals(ImageFileFormat.JPEG)
+				|| format.equals(ImageFileFormat.PNG)) {
+
+			String exportFormat = ImageExporter.JPEG_FILE;
+			if (format.equals(ImageFileFormat.PNG))
+				exportFormat = ImageExporter.PNG_FILE;
+
+			java.awt.Image image = gen.createConstrainedAWTImageForParts(editParts, maxWidth, maxHeight, useMargins);
+			monitor.worked(1);
+			if (image instanceof BufferedImage) {
+				ImageExporter.exportToFile(destination, (BufferedImage) image,
+						exportFormat, monitor);
+				found = true;
+			}
+		}
+
+		if (!found) {
+			Image image = gen.createConstrainedSWTImageDecriptorForParts(editParts,
+					maxWidth, maxHeight, useMargins).createImage();
+			monitor.worked(1);
+			saveToFile(destination, image, format, monitor);
+			image.dispose();
+		}
+	}
     
     /**
      * Copies the diagram to an image file in the specified format.
@@ -227,7 +301,6 @@ public class CopyToImageUtil {
     public DiagramGenerator copyToImage(DiagramEditPart diagramEP,
             IPath destination, ImageFileFormat format, IProgressMonitor monitor)
         throws CoreException {
-
         DiagramGenerator gen = getDiagramGenerator(diagramEP, format);
         List editParts = diagramEP.getPrimaryEditParts();
         copyToImage(gen, editParts, gen.calculateImageRectangle(editParts), destination, format, monitor);
@@ -253,8 +326,7 @@ public class CopyToImageUtil {
      */
     public void copyToImage(DiagramEditPart diagramEP, List selection,
             IPath destination, ImageFileFormat format, IProgressMonitor monitor)
-        throws CoreException {
-    	
+        throws CoreException {    	
     	DiagramGenerator gen = getDiagramGenerator(diagramEP, format);
     	copyToImage(gen, selection, gen.calculateImageRectangle(selection), destination, format, monitor);
         monitor.worked(1);
