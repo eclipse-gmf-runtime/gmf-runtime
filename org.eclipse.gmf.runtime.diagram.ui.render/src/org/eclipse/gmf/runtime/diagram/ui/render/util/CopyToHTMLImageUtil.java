@@ -458,14 +458,13 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 *      org.eclipse.core.runtime.IProgressMonitor,
 	 *      org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint)
 	 */
-	public List copyToImage(Diagram diagram, IPath destination,
+	public List<List<List<PartPositionInfo>>> copyToImage(Diagram diagram, IPath destination,
 			ImageFileFormat format, IProgressMonitor monitor,
 			PreferencesHint preferencesHint) throws CoreException {
 		Trace.trace(DiagramUIRenderPlugin.getInstance(),
 				"Copy diagram to Image " + destination + " as " + format); //$NON-NLS-1$ //$NON-NLS-2$
 
 		ExportInfo exportInfo = null;
-		List partsInfo = Collections.EMPTY_LIST;
 
 		DiagramEditor openedDiagramEditor = DiagramEditorUtil
 				.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
@@ -475,8 +474,6 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 			exportInfo = copyToImageAndReturnInfo(diagramEditPart,
 					diagramEditPart.getPrimaryEditParts(), destination, format,
 					monitor);
-			partsInfo = exportInfo.diagramGenerator
-					.getDiagramPartInfo(diagramEditPart);
 		} else {
 			Shell shell = new Shell();
 			try {
@@ -486,8 +483,6 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 				exportInfo = copyToImageAndReturnInfo(diagramEditPart,
 						diagramEditPart.getPrimaryEditParts(), destination,
 						format, monitor);
-				partsInfo = exportInfo.diagramGenerator
-						.getDiagramPartInfo(diagramEditPart);
 			} finally {
 				shell.dispose();
 			}
@@ -518,8 +513,8 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 	 */
 	public static List<List<List<PartPositionInfo>>> createTilesPartsInfoList(
 			ExportInfo exportInfo) {
-		List partsInfo = exportInfo.diagramGenerator.getDiagramPartInfo();
-		List<List<List<PartPositionInfo>>> tilesPartsInfoList = Collections.EMPTY_LIST;
+		List<PartPositionInfo> partsInfo = (List<PartPositionInfo>) exportInfo.diagramGenerator.getDiagramPartInfo();
+		List<List<List<PartPositionInfo>>> tilesPartsInfoList = Collections.emptyList();
 		if (exportInfo.diagramGenerator != null && exportInfo.tiles.x > 0
 				&& exportInfo.tiles.y > 0 && partsInfo != null) {
 			/*
@@ -540,8 +535,7 @@ public class CopyToHTMLImageUtil extends CopyToImageUtil {
 				 * Iterate through each part and split it in different tiles if
 				 * necessary
 				 */
-				for (Iterator itr = partsInfo.iterator(); itr.hasNext();) {
-					PartPositionInfo info = (PartPositionInfo) itr.next();
+				for (PartPositionInfo info : partsInfo) {
 					if (info.getPolyline() == null) {
 						/*
 						 * It's a shape

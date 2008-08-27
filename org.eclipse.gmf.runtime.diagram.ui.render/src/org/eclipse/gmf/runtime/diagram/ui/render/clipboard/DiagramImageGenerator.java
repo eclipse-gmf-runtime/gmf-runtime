@@ -21,7 +21,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
-import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
@@ -174,33 +173,10 @@ public class DiagramImageGenerator
 			int maxDeviceWidth, int maxDeviceHeight, boolean useMargins) {
 		BufferedImage awtImage = null;
 		IMapMode mm = getMapMode();
-		Rectangle originalBounds = new PrecisionRectangle(new Rectangle(calculateImageRectangle(editParts)));
-		mm.LPtoDP(originalBounds);
 		
-		int deviceMargins = mm.LPtoDP(getImageMargin());
-		int threshold = useMargins ? deviceMargins : 0; 
-		double xScalingFactor = 1.0, yScalingFactor = xScalingFactor;
+		ConstrainedImageRenderingData data = getConstrainedImageRenderingData(editParts, maxDeviceWidth, maxDeviceHeight, useMargins);
 		
-		originalBounds.shrink(deviceMargins, deviceMargins);
-		
-		if (maxDeviceWidth > threshold) {
-			xScalingFactor = (maxDeviceWidth  - threshold - threshold)/ (originalBounds.preciseWidth());
-		}
-		if (maxDeviceHeight > threshold) {
-			yScalingFactor = (maxDeviceHeight - threshold - threshold) / (originalBounds.preciseHeight());
-		}
-		
-		double scalingFactor = Math.min(Math.min(xScalingFactor, yScalingFactor), 1);
-		
-		int imageWidth = originalBounds.width + threshold + threshold;
-		int imageHeight = originalBounds.height + threshold + threshold;
-		
-		if (scalingFactor < 1) {
-			imageWidth = (int) Math.round(originalBounds.preciseWidth() * scalingFactor) + threshold + threshold;
-			imageHeight = (int) Math.round(originalBounds.preciseHeight() * scalingFactor) + threshold + threshold;
-		}
-		
-		awtImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+		awtImage = new BufferedImage(data.imageWidth, data.imageHeight, BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
 		Graphics2D g2d = awtImage.createGraphics();
 		g2d.setColor(Color.white);
@@ -224,17 +200,17 @@ public class DiagramImageGenerator
 
 		
 		Graphics graphics = new GraphicsToGraphics2DAdaptor(g2d,
-				new org.eclipse.swt.graphics.Rectangle(0, 0, imageWidth, imageHeight));
+				new org.eclipse.swt.graphics.Rectangle(0, 0, data.imageWidth, data.imageHeight));
 		
 		ScaledGraphics scaledGraphics = new ScaledGraphics(graphics);
 
 		RenderedMapModeGraphics mapModeGraphics = new RenderedMapModeGraphics(
 				scaledGraphics, mm);
 
-		g2d.translate(threshold, threshold);
-		mapModeGraphics.scale(scalingFactor);
+		g2d.translate(data.margin, data.margin);
+		mapModeGraphics.scale(data.scalingFactor);
 		
-		Point location = new PrecisionPoint(originalBounds.preciseX(), originalBounds.preciseY());
+		Point location = new PrecisionPoint(data.imageOriginalBounds.preciseX(), data.imageOriginalBounds.preciseY());
 		mm.DPtoLP(location);
 		renderToGraphics(mapModeGraphics,
 				location, editParts);
