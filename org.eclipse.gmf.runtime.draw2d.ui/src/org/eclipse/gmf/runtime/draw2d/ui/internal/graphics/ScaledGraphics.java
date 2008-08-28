@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - patch 244297
  ****************************************************************************/
 
 
@@ -34,6 +35,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
@@ -593,6 +595,13 @@ public void setBackgroundColor(Color rgb) {
 	graphics.setBackgroundColor(rgb);
 }
 
+/**
+ * @see Graphics#setBackgroundPattern(Pattern)
+ */
+public void setBackgroundPattern(Pattern pattern) {
+	graphics.setBackgroundPattern(pattern);  
+}
+
 /** @see Graphics#setClip(Rectangle) */
 public void setClip(Rectangle r) {
 	graphics.setClip(zoomClipRect(r));
@@ -613,6 +622,13 @@ public void setFont(Font f) {
 /** @see Graphics#setForegroundColor(Color) */
 public void setForegroundColor(Color rgb) {
 	graphics.setForegroundColor(rgb);
+}
+
+/**
+ * @see Graphics#setForegroundPattern(Pattern)
+ */
+public void setForegroundPattern(Pattern pattern) {
+	graphics.setForegroundPattern(pattern);
 }
 
 /**
