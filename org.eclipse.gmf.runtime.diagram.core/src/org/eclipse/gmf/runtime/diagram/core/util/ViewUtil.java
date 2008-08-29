@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
+ *    IBM Corporation - initial API and implementation
+ *    Mariot Chauvin <mariot.chauvin@obeo.fr> - patch 242283
  ****************************************************************************/
 
 package org.eclipse.gmf.runtime.diagram.core.util;
@@ -586,7 +587,7 @@ public class ViewUtil {
     
 
      private static boolean isVisible(View target) {
-        if (target.isVisible()){
+        if (target != null && target.isVisible()){
             EObject parent = target.eContainer();
             if (parent instanceof View){
                 return isVisible((View)parent);
