@@ -1052,7 +1052,7 @@ implements NotificationListener {
 		ListIterator liContainers = list.listIterator();
 		while (liContainers.hasNext()) {
 			View containerView = (View)liContainers.next();
-			addListenerFilter("NotationListener_Container" + containerView.toString(), //$NON-NLS-1$
+			addListenerFilter("NotationListener_Container_" + containerView.getClass().getName() + '@' + Integer.toHexString(containerView.hashCode()), //$NON-NLS-1$
 				  this,
 				  containerView,
 				  NotationPackage.eINSTANCE.getView_PersistedChildren()); 
