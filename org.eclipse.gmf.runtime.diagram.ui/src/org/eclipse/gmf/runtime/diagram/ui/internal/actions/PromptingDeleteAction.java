@@ -12,13 +12,14 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.internal.actions;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gef.EditPart;
@@ -136,36 +137,42 @@ public class PromptingDeleteAction
 	
 	public void run() {
         TransactionalEditingDomain editingDomain = null;
-        for (Iterator iterator = getSelectedObjects().iterator(); iterator
-            .hasNext();) {
-            EditPart editPart = (EditPart) iterator.next();
-            if (editPart instanceof IGraphicalEditPart) {
-                editingDomain = ((IGraphicalEditPart) editPart)
-                    .getEditingDomain();
-                break;
-            }
+        // try adapting the workbench part
+        IWorkbenchPart part = getWorkbenchPart();
+        if (part != null) {
+        	IEditingDomainProvider edProvider = (IEditingDomainProvider) part
+        	.getAdapter(IEditingDomainProvider.class);
+
+        	if (edProvider != null) {
+        		EditingDomain domain = edProvider.getEditingDomain();
+
+        		if (domain instanceof TransactionalEditingDomain) {
+        			editingDomain = (TransactionalEditingDomain) domain;
+        		}
+        	}
+        }        
+        if (editingDomain != null) {
+        	final Command command[] = new Command[1];
+        	AbstractEMFOperation operation = new AbstractEMFOperation(
+        			editingDomain, DiagramUIMessages.DeleteCommand_Label) {
+
+        		protected IStatus doExecute(IProgressMonitor monitor,
+        				IAdaptable info)
+        		throws ExecutionException {
+        			command[0] = createCommand(getSelectedObjects());
+        			return CommandResult.newOKCommandResult().getStatus();
+
+        		}
+        	};
+        	try {
+        		operation.execute(null, null);
+        	} catch (ExecutionException e) {
+        		// do nothing
+        	}
+
+        	if (command[0] != null)
+        		execute(command[0]);
         }
-        final Command command[] = new Command[1];
-        AbstractEMFOperation operation = new AbstractEMFOperation(
-            editingDomain, DiagramUIMessages.DeleteCommand_Label) {
-
-            protected IStatus doExecute(IProgressMonitor monitor,
-                    IAdaptable info)
-                throws ExecutionException {
-                command[0] = createCommand(getSelectedObjects());
-                return CommandResult.newOKCommandResult().getStatus();
-
-            }
-
-        };
-        try {
-            operation.execute(null, null);
-        } catch (ExecutionException e) {
-            // do nothing
-        }
-
-        if (command[0] != null)
-            execute(command[0]);
     }
 
 
