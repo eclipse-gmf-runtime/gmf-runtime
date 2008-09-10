@@ -13,7 +13,6 @@ package org.eclipse.gmf.runtime.diagram.ui.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -132,14 +131,6 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 		g.fillPolygon(p);			
 	}
 
-	/**
-	 * @see org.eclipse.draw2d.IFigure#getPreferredSize(int, int)
-	 */
-	public Dimension getPreferredSize(int wHint, int hHint) {
-		return super.getPreferredSize(wHint, hHint).getUnioned(new Dimension(
-								MapModeUtil.getMapMode(this).DPtoLP(100), 
-								MapModeUtil.getMapMode(this).DPtoLP(50)));
-	}
 	
 	/**
 	 * sets or resets the diagram link mode, in diagram link mode the note

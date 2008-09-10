@@ -913,6 +913,9 @@ public class WrappingLabel
         Dimension ellipsisSize = getTruncationStringSize();
         Dimension textSize = new TextUtilitiesEx(getFigureMapMode())
             .getTextExtents(getText(), currentFont);
+        if (textSize.width == 0) {
+			textSize.height = 0;
+		}       
         textSize.intersect(ellipsisSize);
 
         Dimension labelSize = calculateLabelSize(textSize);
@@ -968,6 +971,9 @@ public class WrappingLabel
             } else {
                 preferredTextSize = getTextFigure().getPreferredSize(wHint,
                     hHint).getCopy();
+                if(preferredTextSize.width == 0){
+                	preferredTextSize.height = 0;
+                }
                 prefSize = preferredTextSize.getCopy();
             }
 
