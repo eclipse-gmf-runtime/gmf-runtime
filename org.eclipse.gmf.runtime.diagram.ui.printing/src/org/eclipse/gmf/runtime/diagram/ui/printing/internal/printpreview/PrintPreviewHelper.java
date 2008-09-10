@@ -310,6 +310,11 @@ public class PrintPreviewHelper{
 	private static final String FIT_TO_PAGES = DiagramUIPrintingMessages.PrintPreview_FitToPage_ButtonText;
 		
 	/**
+	 * A minimum scale percentage.
+	 */
+	private static int MINIMUM_SCALE_FACTOR = 5;
+	
+	/**
 	 * Initialize all toolbar images
 	 */
 	protected void initializeToolbarImages() {
@@ -706,7 +711,17 @@ public class PrintPreviewHelper{
 				if (percentageIndex > 0) {
 					scaleFactor = scaleFactor.substring(0, percentageIndex);
 				}
-				int scalePercentage = Integer.parseInt(scaleFactor);
+				
+				int scalePercentage = PrintHelperUtil.getScale();
+				try {
+					scalePercentage = Integer.parseInt(scaleFactor);
+				} catch (NumberFormatException e) {
+					// Ignore invalid entry; default is last known acceptable value
+				}
+							
+				if(scalePercentage < MINIMUM_SCALE_FACTOR){
+					scalePercentage = MINIMUM_SCALE_FACTOR;
+				}
 				setPercentScaling(scalePercentage);
 				refreshComposite();
 				combo.setText(getDisplayScale(scalePercentage));
@@ -1530,11 +1545,11 @@ public class PrintPreviewHelper{
 		/**
 		 *  The number of pages wide
 		 */
-		private int pagesWide = 0;
+		private int pagesWide = PrintHelperUtil.getScaleToWidth();
 		/**
 		 *  The number of pages tall
 		 */
-		private int pagesTall = 0;
+		private int pagesTall = PrintHelperUtil.getScaleToHeight();
 		
 		public FitToPagesDialog(Shell parent) {
 			super(parent);
@@ -1745,8 +1760,25 @@ public class PrintPreviewHelper{
 		 */
 		@Override
 		protected void okPressed() {
-			pagesWide = Integer.parseInt(textWide.getText());
-			pagesTall = Integer.parseInt(textTall.getText());
+
+			try {
+				pagesWide = Integer.parseInt(textWide.getText());
+			} catch (NumberFormatException e) {
+				// Ignore invalid entry; default is last known acceptable value
+			} 
+			if(pagesWide < 1) {
+				pagesWide = 1;
+			}
+			
+			try {
+				pagesTall = Integer.parseInt(textTall.getText());
+			} catch (NumberFormatException e) {
+				// Ignore invalid entry; default is last known acceptable value
+			}
+			if(pagesTall < 1){
+				pagesTall = 1;
+			}
+			
 			super.okPressed();
 		}
 	}
