@@ -70,7 +70,8 @@ public class NoteEditPart extends ShapeNodeEditPart {
 	 */
 	protected NodeFigure createNodeFigure() {
 		IMapMode mm = getMapMode();
-		Insets insets = new Insets(mm.DPtoLP(5), mm.DPtoLP(5), mm.DPtoLP(5), mm.DPtoLP(14));
+		int insetSize = mm.DPtoLP(5);
+		Insets insets = new Insets(insetSize, insetSize, insetSize, insetSize);
 		NoteFigure noteFigure = new NoteFigure(mm.DPtoLP(100), mm.DPtoLP(56), insets);
 		Object model = getModel();
 		if (model!=null && model instanceof View){
@@ -79,8 +80,11 @@ public class NoteEditPart extends ShapeNodeEditPart {
 				 (notationView.getEAnnotation(Properties.DIAGRAMLINK_ANNOTATION)!=null ||
 				  notationView.getType() == null ||
 				  notationView.getType().length() == 0)){
-                diagramLinkMode = true;
+				diagramLinkMode = true;
 				noteFigure.setDiagramLinkMode(true);
+				
+				// The default size is the minimum.
+				noteFigure.setDefaultSize(insetSize, insetSize);
             }
 		}
 		return noteFigure;
