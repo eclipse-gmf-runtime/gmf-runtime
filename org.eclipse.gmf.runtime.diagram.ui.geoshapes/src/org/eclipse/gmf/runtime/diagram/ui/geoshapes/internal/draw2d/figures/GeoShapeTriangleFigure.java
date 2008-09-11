@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,10 +14,13 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 
 /**
  * @author jschofie
+ * @author aboyko
  *
  * This Figure represents a Triangle Figure
  */
@@ -26,11 +29,11 @@ public class GeoShapeTriangleFigure extends GeoShapePolygonFigure {
 	/**
 	 * Constructor - Creates a Triangle with a given Default size
 	 * 
-	 * @param base inital length of the squares base
+	 * @param height inital height of the bounding square
 	 * @param spacing <code>int</code> that is the margin between children in logical units
 	 */
-	public GeoShapeTriangleFigure( int base, int spacing ) {
-		super(base, base, spacing);
+	public GeoShapeTriangleFigure(int height, int spacing) {
+		super((int)Math.round(2 * height / Math.sqrt(3)), height, spacing);
 	}
 	
 	/**
@@ -41,11 +44,11 @@ public class GeoShapeTriangleFigure extends GeoShapePolygonFigure {
 	 */
 	protected PointList calculatePoints(Rectangle rect) {
 
-		PointList points = new PointList();
+		PointList points = new PrecisionPointList();
 		
-		Point p1 = new Point( rect.x + ( rect.width / 2 ), rect.y );
-		Point p2 = new Point( rect.x, rect.y + rect.height - 1 );
-		Point p3 = new Point( rect.x + rect.width - 1, rect.y + rect.height - 1 );
+		Point p1 = new PrecisionPoint( rect.preciseX() + rect.preciseWidth() / 2, rect.y );
+		Point p2 = new PrecisionPoint( rect.preciseX(), rect.preciseY() + rect.preciseHeight() - 1 );
+		Point p3 = new PrecisionPoint( rect.preciseX() + rect.preciseWidth() - 1, rect.preciseY() + rect.preciseHeight() - 1 );
 
 		points.addPoint( p1 );
 		points.addPoint( p2 );

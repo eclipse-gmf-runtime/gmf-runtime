@@ -91,7 +91,7 @@ public class PrecisionPointList extends PointList {
 			PrecisionPoint precisionPt = (PrecisionPoint)p;
 			addPrecisionPoint(precisionPt.preciseX, precisionPt.preciseY);
 		} else {
-			addPrecisionPoint(p.x, p.y);
+			addPrecisionPoint(p.preciseX(), p.preciseY());
 		}
 	}
 	
@@ -344,6 +344,20 @@ public class PrecisionPointList extends PointList {
 		return points;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.geometry.PointList#toIntArray()
+	 */
+	public int[] toIntArray() {
+		int [] intArray = new int[size * 2];
+		for (int i = 0; i < size(); i++) {
+			Point p = getPoint(i);
+			int idx = 2*i;
+			intArray[idx] = p.x;
+			intArray[idx + 1] = p.y;
+		}
+		return intArray;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.draw2d.geometry.PointList#translate(int, int)
 	 */
