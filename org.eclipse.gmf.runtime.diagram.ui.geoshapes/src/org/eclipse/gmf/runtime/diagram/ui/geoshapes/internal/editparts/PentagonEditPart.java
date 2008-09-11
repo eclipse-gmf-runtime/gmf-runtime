@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class PentagonEditPart extends GeoShapeEditPart {
 	}
 					
 	protected NodeFigure createNodeFigure() {
-		return new GeoShapePentagonFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
+		return new GeoShapePentagonFigure( getMapMode().DPtoLP(50), getMapMode().DPtoLP(5) );
 	}
 
 	public IFigure getContentPane() {

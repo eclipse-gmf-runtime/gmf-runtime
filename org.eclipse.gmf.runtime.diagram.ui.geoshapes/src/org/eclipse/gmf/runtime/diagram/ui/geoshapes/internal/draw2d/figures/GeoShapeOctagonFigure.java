@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,14 +14,19 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 
 /**
  * @author jschofie
+ * @author aboyko
  *
  * This Figure represents a Octagon Figure
  */
 public class GeoShapeOctagonFigure extends GeoShapePolygonFigure {
+	
+	private static double factor = 1.0 / (2.0 + Math.sqrt(2.0));
 
 	/**
 	 * Constructor - Creates a octagon with a given Default size
@@ -33,6 +38,16 @@ public class GeoShapeOctagonFigure extends GeoShapePolygonFigure {
 	public GeoShapeOctagonFigure( int width, int height, int spacing ) {
 		super(width, height, spacing);
 	}
+	
+	/**
+	 * Constructor - Creates a proper octagon with a given Default height
+	 * 
+	 * @param height initial height of the figure
+	 * @param spacing <code>int</code> that is the margin between children in logical units
+	 */
+	public GeoShapeOctagonFigure(int size, int spacing) {
+		super(size, size, spacing);
+	}
 		
 
 	/**
@@ -43,19 +58,19 @@ public class GeoShapeOctagonFigure extends GeoShapePolygonFigure {
 	 */
 	protected PointList calculatePoints(Rectangle rect) {
 
-		int xOffset = (int) (rect.width * 0.275);
-		int yOffset = (int) (rect.height * 0.275);
+		double xOffset = rect.preciseWidth() * factor;
+		double yOffset = rect.preciseHeight() * factor;
 		
-		PointList points = new PointList();
+		PointList points = new PrecisionPointList();
 
-		Point p1 = new Point( rect.x, rect.y + yOffset );
-		Point p2 = new Point( rect.x + xOffset, rect.y );
-		Point p3 = new Point( rect.x + rect.width - xOffset, rect.y );
-		Point p4 = new Point( rect.x + rect.width - 1, rect.y + yOffset );
-		Point p5 = new Point( rect.x + rect.width - 1, rect.y + rect.height - yOffset );
-		Point p6 = new Point( rect.x + rect.width - xOffset, rect.y + rect.height - 1 );
-		Point p7 = new Point( rect.x + xOffset, rect.y + rect.height -1 );
-		Point p8 = new Point( rect.x, rect.y + rect.height - yOffset );
+		Point p1 = new PrecisionPoint(rect.preciseX(), rect.preciseY() + yOffset);
+		Point p2 = new PrecisionPoint(rect.preciseX() + xOffset, rect.preciseY());
+		Point p3 = new PrecisionPoint(rect.preciseX() + rect.preciseWidth() - xOffset, rect.preciseY());
+		Point p4 = new PrecisionPoint(rect.preciseX() + rect.preciseWidth() - 1, rect.preciseY() + yOffset);
+		Point p5 = new PrecisionPoint(p4.preciseX(), rect.preciseY() + rect.preciseHeight() - yOffset);
+		Point p6 = new PrecisionPoint(p3.preciseX(), rect.preciseY() + rect.preciseHeight() - 1);
+		Point p7 = new PrecisionPoint(p2.preciseX(), p6.preciseY());
+		Point p8 = new PrecisionPoint(rect.preciseX(), p5.preciseY());
 	
 		points.addPoint( p1 );
 		points.addPoint( p2 );
@@ -66,7 +81,7 @@ public class GeoShapeOctagonFigure extends GeoShapePolygonFigure {
 		points.addPoint( p7 );
 		points.addPoint( p8 );
 		points.addPoint( p1 );
-			
+		
 		return points;
 	}
 }

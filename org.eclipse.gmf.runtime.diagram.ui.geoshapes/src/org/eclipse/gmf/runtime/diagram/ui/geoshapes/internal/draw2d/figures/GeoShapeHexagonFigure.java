@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,15 +14,18 @@ package org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.draw2d.figures;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.geometry.PrecisionPointList;
 
 /**
  * @author jschofie
+ * @author aboyko
  *
  * This Figure represents a Hexagon Figure
  */
 public class GeoShapeHexagonFigure extends GeoShapePolygonFigure {
-
+	
 	/**
 	 * Constructor - Creates a hexagon with a given Default size
 	 * @param width initial width of the figure
@@ -34,6 +37,15 @@ public class GeoShapeHexagonFigure extends GeoShapePolygonFigure {
 	}
 	
 	/**
+	 * Constructor - Creates a proper hexagon with a given default height
+	 * @param height initial height of the figure
+	 * @param spacing <code>int</code> that is the margin between children in logical units
+	 */
+	public GeoShapeHexagonFigure(int height, int spacing) {
+		super((int) Math.round(2 * height / Math.sqrt(3)), height, spacing);
+	}
+	
+	/**
 	 * This method is used to compute the shapes polygon points.
 	 * This is currently based on the shapes bounding box.
 	 * 
@@ -41,14 +53,14 @@ public class GeoShapeHexagonFigure extends GeoShapePolygonFigure {
 	 */
 	protected PointList calculatePoints(Rectangle rect) {
 
-		PointList points = new PointList();
+		PointList points = new PrecisionPointList();
 		
-		Point p1 = new Point( rect.x + rect.width - 1, rect.y + ( rect.height / 2 ) );
-		Point p2 = new Point( rect.x + rect.width - (rect.width * 0.225 ), rect.y );
-		Point p3 = new Point( rect.x + (rect.width * 0.225 ), rect.y );
-		Point p4 = new Point( rect.x, rect.y + (rect.height / 2 ) );
-		Point p5 = new Point( p3.x, rect.y + rect.height - 1 );
-		Point p6 = new Point( p2.x, p5.y );
+		Point p1 = new PrecisionPoint( rect.preciseX() + rect.preciseWidth() - 1, rect.preciseY() + rect.preciseHeight() / 2 );
+		Point p2 = new PrecisionPoint( rect.preciseX() + 0.75 * rect.preciseWidth() , rect.preciseY() );
+		Point p3 = new PrecisionPoint( rect.preciseX() + rect.preciseWidth() / 4, rect.preciseY() );
+		Point p4 = new PrecisionPoint( rect.preciseX(), rect.preciseY() + rect.preciseHeight() / 2 );
+		Point p5 = new PrecisionPoint( p3.preciseX(), rect.preciseY() + rect.preciseHeight() - 1 );
+		Point p6 = new PrecisionPoint( p2.preciseX(), p5.preciseY() );
 
 		points.addPoint( p1 );
 		points.addPoint( p2 );
