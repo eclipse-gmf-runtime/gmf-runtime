@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -133,7 +133,8 @@ public class NotationClipboardOperationHelper
 		EObject eObject = overriddenChildPasteOperation.getEObject();
 		EObject parentEObject = overriddenChildPasteOperation
 			.getParentEObject();
-		if ((parentEObject instanceof Diagram) && (eObject instanceof View)) {
+		// RATLC01137919 removed the condition that parentEObject is a diagram to allow paste into diagram elements
+		if ((parentEObject instanceof View) && (eObject instanceof View)) {
 			EObject semanticChildElement = ((View) eObject).getElement();
 			if (semanticChildElement == null) {
 				return true;
@@ -150,25 +151,25 @@ public class NotationClipboardOperationHelper
 
 			EPackage semanticChildEpackage = semanticChildElement.eClass()
 				.getEPackage();
-			EPackage diagramRootContainerEpackage = EcoreUtil.getRootContainer(
+			EPackage parentRootContainerEpackage = EcoreUtil.getRootContainer(
 				parentEObject).eClass().getEPackage();
-			EPackage sematicDiagramRootContainerEpackage = null;
-			EObject sematicDiagramElement = ((View) parentEObject).getElement();
-			if (sematicDiagramElement != null) {
-				sematicDiagramRootContainerEpackage = EcoreUtil
-					.getRootContainer(sematicDiagramElement).eClass()
+			EPackage sematicParentRootContainerEpackage = null;
+			EObject sematicParentElement = ((View) parentEObject).getElement();
+			if (sematicParentElement != null) {
+				sematicParentRootContainerEpackage = EcoreUtil
+					.getRootContainer(sematicParentElement).eClass()
 					.getEPackage();
 			}
 
-			if (diagramRootContainerEpackage != NotationPackage.eINSTANCE) {
-				if (semanticChildEpackage != diagramRootContainerEpackage) {
+			if (parentRootContainerEpackage != NotationPackage.eINSTANCE) {
+				if (semanticChildEpackage != parentRootContainerEpackage) {
 					return false;
 				}
 			}
 
-			if ((sematicDiagramRootContainerEpackage != null)
-				&& (sematicDiagramRootContainerEpackage != NotationPackage.eINSTANCE)) {
-				if (semanticChildEpackage != sematicDiagramRootContainerEpackage) {
+			if ((sematicParentRootContainerEpackage != null)
+				&& (sematicParentRootContainerEpackage != NotationPackage.eINSTANCE)) {
+				if (semanticChildEpackage != sematicParentRootContainerEpackage) {
 					return false;
 				}
 			}

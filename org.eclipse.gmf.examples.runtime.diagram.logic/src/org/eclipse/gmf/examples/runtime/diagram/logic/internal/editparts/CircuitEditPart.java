@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,9 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.ContainerHighlightEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.editpolicies.PortsColorEditPolicy;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.BottomTerminalFigure;
@@ -29,10 +31,13 @@ import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.CircuitFi
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.LogicColorConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TerminalFigure;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.figures.TopTerminalFigure;
+import org.eclipse.gmf.examples.runtime.diagram.logic.internal.providers.LogicConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.internal.util.StringConstants;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.InputTerminal;
 import org.eclipse.gmf.examples.runtime.diagram.logic.semantic.Terminal;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -49,6 +54,29 @@ import org.eclipse.gmf.runtime.notation.View;
  * @canBeSeenBy org.eclipse.gmf.examples.runtime.diagram.logic.*
  */
 public class CircuitEditPart extends TerminalOwnerShapeEditPart {
+	
+	protected class CircuitContainerEditPolicy extends ShapeContainerEditPolicy {
+		
+		/**
+		 * Returns the child CompartmentEditPart as a target for pasting 
+		 * (the circuit is not a container, but ShapeCompartmentEditPart is)
+		 * 
+		 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.ContainerEditPolicy#getTargetEditPart(org.eclipse.gef.Request)
+		 */
+		public EditPart getTargetEditPart(Request request) {
+			if (RequestConstants.REQ_PASTE.equals(request.getType())) {
+				IGraphicalEditPart editPart = (IGraphicalEditPart) getHost();
+				if (editPart instanceof CircuitEditPart) {
+					IGraphicalEditPart targetEP = 
+						((CircuitEditPart)editPart).getChildBySemanticHint(LogicConstants.LOGIC_SHAPE_COMPARTMENT);
+					if (targetEP != null) {
+						return targetEP;
+					}
+				} 
+			}
+			return super.getTargetEditPart(request);
+		}
+	}	
 	/**
 	 * @param view
 	 */
@@ -63,6 +91,9 @@ public class CircuitEditPart extends TerminalOwnerShapeEditPart {
 				new ContainerHighlightEditPolicy());
 		installEditPolicy(StringConstants.PORTS_COLOR_EDITPOLICY_ROLE,
 				new PortsColorEditPolicy());
+		// ensure that the paste command will execute on its child LogicShapeCompartmentEditPart
+		installEditPolicy(EditPolicy.CONTAINER_ROLE, 
+				new CircuitContainerEditPolicy());
 	}
 
 	/**

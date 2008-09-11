@@ -127,8 +127,9 @@ public class DiagramGlobalActionHandler
 				.toArray();
 
 			if (objects.length == 1) {
-				/* Send the request to the currently selected part */
-				Command paste = ((EditPart) objects[0]).getCommand(pasteReq);
+				/* Send the request to the target edit part of the paste command for the currently selected part */
+				EditPart targetEP = ((EditPart) objects[0]).getTargetEditPart(pasteReq);
+				Command paste = targetEP.getCommand(pasteReq);
 				if (paste != null) {
 					/* Set the command */
 					CommandStack cs = diagramPart.getDiagramEditDomain()
