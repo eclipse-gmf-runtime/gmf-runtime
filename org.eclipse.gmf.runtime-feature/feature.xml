@@ -37,7 +37,12 @@ http://www.eclipse.org/legal/epl-v10.html
    <requires>
       <import feature="org.eclipse.platform" version="3.3.0"/>
       <import feature="org.eclipse.gef" version="3.2.0"/>
-      <import feature="org.eclipse.emf" version="2.2.0"/>
+      <import feature="org.eclipse.emf.common" version="2.4.0"/>
+      <import feature="org.eclipse.emf.common.ui" version="2.4.0"/>
+      <import feature="org.eclipse.emf.ecore" version="2.4.0"/>
+      <import feature="org.eclipse.emf.ecore.edit" version="2.4.0"/>
+      <import feature="org.eclipse.emf.edit" version="2.4.0"/>
+      <import feature="org.eclipse.emf.edit.ui" version="2.4.0"/>
       <import feature="org.eclipse.emf.transaction" version="1.0.0"/>
       <import feature="org.eclipse.emf.validation" version="1.0.0"/>
       <import feature="org.eclipse.emf.workspace" version="1.0.0"/>
