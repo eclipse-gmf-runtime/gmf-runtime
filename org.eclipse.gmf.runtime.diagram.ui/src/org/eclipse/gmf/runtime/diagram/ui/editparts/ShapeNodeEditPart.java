@@ -140,6 +140,9 @@ public abstract class ShapeNodeEditPart
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		if (request instanceof ReconnectRequest) {
+			if (((DropRequest) request).getLocation() == null) {
+				return getNodeFigure().getSourceConnectionAnchorAt(null);
+			}
 			Point pt = ((DropRequest) request).getLocation().getCopy();
 			return getNodeFigure().getSourceConnectionAnchorAt(pt);
 		}
@@ -188,6 +191,9 @@ public abstract class ShapeNodeEditPart
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		if (request instanceof ReconnectRequest) {
+			if (((DropRequest) request).getLocation() == null) {
+				return getNodeFigure().getTargetConnectionAnchorAt(null);
+			}
 			Point pt = ((DropRequest) request).getLocation().getCopy();
 			return getNodeFigure().getTargetConnectionAnchorAt(pt);
 		}
