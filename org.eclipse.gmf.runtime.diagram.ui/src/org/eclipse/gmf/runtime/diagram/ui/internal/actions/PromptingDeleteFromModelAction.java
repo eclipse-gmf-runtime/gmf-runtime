@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DeleteFromModelAction;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
@@ -33,6 +33,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * Delete Action originating via keyboard using the 'Ctrl+d' hot/shortcut key
+ * as well as using context menu "Delete from model"
  * 
  * @author bagrodia
  * @canBeSeenBy org.eclipse.gmf.runtime.diagram.ui.*
@@ -41,6 +42,10 @@ import org.eclipse.ui.IWorkbenchPart;
 public class PromptingDeleteFromModelAction
 	extends DeleteFromModelAction {	
 	
+	/**
+	 * used to distinguish context menu calls from keyboard calls (the only difference is in calculating enablement) 
+	 */
+	private boolean calledFromContextMenu;
 
 	/**
 	 * Creates a <code>PromptingDeleteFromModelAction</code> with a default label.
@@ -48,7 +53,8 @@ public class PromptingDeleteFromModelAction
 	 * @param part The part this action will be associated with.
 	 */
 	public PromptingDeleteFromModelAction(IWorkbenchPart part) {
-		super(part);		
+		super(part);
+		calledFromContextMenu = false;
 	}
 
 	/**
@@ -56,43 +62,50 @@ public class PromptingDeleteFromModelAction
 	 * @param workbenchPage The page this action will be associated with.
 	 */
 	public PromptingDeleteFromModelAction(IWorkbenchPage workbenchPage) {
-		super(workbenchPage);		
+		super(workbenchPage);
+		calledFromContextMenu = false;
 	}
-	
 	
 	/**
-	 *  Return the semantic request to destroy the element
-	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
+	 * Creates a <code>PromptingDeleteFromModelAction</code> with a default label.
+	 * @param workbenchPage The page this action will be associated with.
 	 */
-	protected Request createTargetRequest() {
-		
-		boolean shouldPrompt = ((IPreferenceStore) getPreferencesHint()
-			.getPreferenceStore())
-			.getBoolean(IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_MODEL);
-        
-		TransactionalEditingDomain editingDomain = getEditingDomain();
-        if (editingDomain != null) {
-            DestroyElementRequest destroyRequest = new DestroyElementRequest(
-                editingDomain, shouldPrompt);
-            return new EditCommandRequestWrapper(destroyRequest);
-        }
-        return null;
-	}
-
+	public PromptingDeleteFromModelAction(IWorkbenchPage workbenchPage, boolean fromContextMenu) {
+		super(workbenchPage);
+		calledFromContextMenu = fromContextMenu;
+	}	
 	
-	/* (non-Javadoc)
+	/**
+	 * Calculates enablement of this action. 
+	 * 
+	 * @return <code>true</code> if call is made via keyboard, or from context menu and action should be enabled,
+	 *         <code>false</code> otherwise
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
-		return true;
+		if (calledFromContextMenu) {
+			// Need to calculate enablement.
+			return super.calculateEnabled();
+		} else {
+			// for calls from keyboard, always return true for performance reasons
+			return true; 
+		}
 	}
 	
 	
-	/* (non-Javadoc)
+	/** First gets the delete command, where target request is modified to include the information about
+	 * whether confirmation prompt should be issued. Then it runs the obtained command.
+	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#doRun(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected void doRun(IProgressMonitor progressMonitor) {
-		setTargetRequest(null);
+	protected void doRun(IProgressMonitor progressMonitor) {		
+		Request req = getTargetRequest();
+		boolean showInformationDialog = ((IPreferenceStore) getPreferencesHint()
+					.getPreferenceStore())
+					.getBoolean(IPreferenceConstants.PREF_PROMPT_ON_DEL_FROM_MODEL);
+		DestroyElementRequest targetRequest = (DestroyElementRequest)((EditCommandRequestWrapper)req).getEditCommandRequest();		
+		targetRequest.setConfirm(showInformationDialog);
+
 		Command command = getCommand();
 		if ((command instanceof CompoundCommand)&&(((CompoundCommand)command).getChildren().length > 0)){
 			CompositeTransactionalCommand compositeModelActionCommand = new CompositeTransactionalCommand(getEditingDomain(),
@@ -108,6 +121,19 @@ public class PromptingDeleteFromModelAction
 			execute(command, progressMonitor);
 	}
 	
+	/**
+	 *  Return the semantic request to destroy the element
+	 * @see org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction#createTargetRequest()
+	 */
+	protected Request createTargetRequest() {		
+		TransactionalEditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            DestroyElementRequest destroyRequest = new DestroyElementRequest(
+                editingDomain, false);
+            return new EditCommandRequestWrapper(destroyRequest);
+        }
+        return null;
+	}
 
 
 }
