@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AddNoteAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.AlignAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.DeleteFromModelAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.ShowPropertiesViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.AddMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.AlignMenuManager;
@@ -39,7 +38,6 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ConnectionLabelMenuMa
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CopyAppearancePropertiesAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateShapeViewAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.CreateViewAction;
-import org.eclipse.gmf.runtime.diagram.ui.actions.internal.DeleteFromDiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.EditMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FileMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.FiltersMenuManager;
@@ -55,6 +53,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.LineWidthAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.LineWidthMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.MakeSameSizeMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.OpenWithMenuManager;
+import org.eclipse.gmf.runtime.diagram.ui.actions.internal.PromptingDeleteFromDiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RecalculatePageBreaksAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RouterAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.RouterMenuManager;
@@ -80,6 +79,7 @@ import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ViewRulersAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ZOrderAction;
 import org.eclipse.gmf.runtime.diagram.ui.actions.internal.ZOrderMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.OpenAction;
+import org.eclipse.gmf.runtime.diagram.ui.internal.actions.PromptingDeleteFromModelAction;
 import org.eclipse.gmf.runtime.diagram.ui.internal.actions.ZoomContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.SharedImages;
 import org.eclipse.gmf.runtime.diagram.ui.providers.internal.l10n.DiagramUIProvidersMessages;
@@ -307,10 +307,10 @@ public class DiagramContributionItemProvider
 		if (actionId.equals(ActionIds.ACTION_FONT_DIALOG))
 			return new FontDialogAction(workbenchPage);
 		if (actionId.equals(ActionIds.ACTION_DELETE_FROM_MODEL)){
-			return new DeleteFromModelAction(workbenchPage);
+			return new PromptingDeleteFromModelAction(workbenchPage, true);
 		}	
 		if (actionId.equals(ActionIds.ACTION_DELETE_FROM_DIAGRAM)){	
-			return new DeleteFromDiagramAction(workbenchPage);
+			return new PromptingDeleteFromDiagramAction(workbenchPage);
 		}	
 		if (actionId.equals(ActionIds.ACTION_RECALC_PAGEBREAKS))
 			return new RecalculatePageBreaksAction(workbenchPage);
