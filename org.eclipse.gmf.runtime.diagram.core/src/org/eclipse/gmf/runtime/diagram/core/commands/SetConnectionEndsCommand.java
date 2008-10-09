@@ -36,6 +36,8 @@ public class SetConnectionEndsCommand
 	private IAdaptable newSourceAdaptor;
 
 	private IAdaptable newTargetAdaptor;
+	
+	private List affectedFiles;
 
 	/**
 	 * constructor
@@ -50,12 +52,17 @@ public class SetConnectionEndsCommand
 	}
 
 	public List getAffectedFiles() {
-		View view = (View) edgeAdaptor.getAdapter(View.class);
-		if (view != null)
-			return getWorkspaceFiles(view);
-		return super.getAffectedFiles();
+		if (affectedFiles == null) {
+			View view = (View) edgeAdaptor.getAdapter(View.class);
+			if (view != null) {
+				affectedFiles = getWorkspaceFiles(view);
+			} else {
+				affectedFiles = super.getAffectedFiles();
+			}			
+		}
+		return affectedFiles;
 	}
-
+	
 	/**
 	 * gets the edge adaptor.
 	 * 
