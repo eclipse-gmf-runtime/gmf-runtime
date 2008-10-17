@@ -1,73 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component id="org.eclipse.gmf.runtime.diagram.core" version="2">
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/DeleteCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/GroupCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.GroupCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.GroupCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/SetPropertyCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/SetConnectionAnchorsCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionAnchorsCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionAnchorsCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/AddCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.AddCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.AddCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/RemoveBookmarkCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.RemoveBookmarkCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.RemoveBookmarkCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/SetConnectionEndsCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/UpdateGroupLocationCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.UpdateGroupLocationCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.UpdateGroupLocationCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/UngroupCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.UngroupCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.UngroupCommand"/>
-</message_arguments>
-</filter>
-</resource>
-<resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/CreateDiagramCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand">
-<filter id="337682486">
-<message_arguments>
-<message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand"/>
-</message_arguments>
-</filter>
-</resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/SetConnectionAnchorsCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionAnchorsCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionAnchorsCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/UpdateGroupLocationCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.UpdateGroupLocationCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.UpdateGroupLocationCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/DeleteCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/DiagramEditingDomainFactory.java" type="org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory$DiagramEditingDomain">
+        <filter id="337678389">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory.DiagramEditingDomain"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/RemoveBookmarkCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.RemoveBookmarkCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.RemoveBookmarkCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/CreateDiagramCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/GroupCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.GroupCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.GroupCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/SetPropertyCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.SetPropertyCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/UngroupCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.UngroupCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.UngroupCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/SetConnectionEndsCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.SetConnectionEndsCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/gmf/runtime/diagram/core/commands/AddCommand.java" type="org.eclipse.gmf.runtime.diagram.core.commands.AddCommand">
+        <filter id="337682486">
+            <message_arguments>
+                <message_argument value="org.eclipse.gmf.runtime.diagram.core.commands.AddCommand"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>
