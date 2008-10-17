@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component id="org.eclipse.gmf.runtime.emf.type.core" version="2">
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/ConfigureElementCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureElementCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureElementCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/EditElementCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.EditElementCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.EditElementCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/ConfigureRelationshipCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureRelationshipCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.ConfigureRelationshipCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/MoveElementsCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.MoveElementsCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/SetValueCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/CreateElementCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.CreateElementCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.CreateElementCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/DeferredSetValueCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.DeferredSetValueCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.DeferredSetValueCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/DestroyElementCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/GetEditContextCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.GetEditContextCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/DestroyReferenceCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.DestroyReferenceCommand"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/emf/type/core/commands/CreateRelationshipCommand.java" type="org.eclipse.gmf.runtime.emf.type.core.commands.CreateRelationshipCommand">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.emf.type.core.commands.CreateRelationshipCommand"/>
+</message_arguments>
+</filter>
+</resource>
+</component>

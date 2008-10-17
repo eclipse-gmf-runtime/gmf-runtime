@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component id="org.eclipse.gmf.runtime.common.ui.services.action" version="2">
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/filter/AbstractActionFilterProvider.java" type="org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider">
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.common.ui.services.action.filter.AbstractActionFilterProvider"/>
+</message_arguments>
+</filter>
+<filter id="576725006">
+<message_arguments>
+<message_argument value="IActionFilterProvider"/>
+<message_argument value="AbstractActionFilterProvider"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/contributionitem/ContributionItemService.java" type="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService">
+<filter id="576725006">
+<message_arguments>
+<message_argument value="IContributionItemProvider"/>
+<message_argument value="ContributionItemService"/>
+</message_arguments>
+</filter>
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.ContributionItemService"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/contributionitem/AbstractContributionItemProvider.java" type="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider">
+<filter id="576725006">
+<message_arguments>
+<message_argument value="IContributionDescriptorReader"/>
+<message_argument value="AbstractContributionItemProvider"/>
+</message_arguments>
+</filter>
+<filter id="576725006">
+<message_arguments>
+<message_argument value="IContributionItemProvider"/>
+<message_argument value="AbstractContributionItemProvider"/>
+</message_arguments>
+</filter>
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider"/>
+</message_arguments>
+</filter>
+<filter id="643846161">
+<message_arguments>
+<message_argument value="ProviderContributionDescriptor"/>
+<message_argument value="AbstractContributionItemProvider"/>
+<message_argument value="setContributionDescriptor(ProviderContributionDescriptor)"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/contributionitem/AbstractContributionItemProvider.java" type="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider$PluginSeparator">
+<filter id="571473929">
+<message_arguments>
+<message_argument value="Separator"/>
+<message_argument value="PluginSeparator"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/contributionitem/AbstractContributionItemProvider.java" type="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider$PluginGroupMarker">
+<filter id="571473929">
+<message_arguments>
+<message_argument value="GroupMarker"/>
+<message_argument value="PluginGroupMarker"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/contributionitem/AbstractContributionItemProvider.java" type="org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider$PluginActionContributionItem">
+<filter id="571473929">
+<message_arguments>
+<message_argument value="ActionContributionItem"/>
+<message_argument value="PluginActionContributionItem"/>
+</message_arguments>
+</filter>
+</resource>
+<resource path="src/org/eclipse/gmf/runtime/common/ui/services/action/filter/ActionFilterService.java" type="org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService">
+<filter id="576725006">
+<message_arguments>
+<message_argument value="IActionFilterProvider"/>
+<message_argument value="ActionFilterService"/>
+</message_arguments>
+</filter>
+<filter id="337682486">
+<message_arguments>
+<message_argument value="org.eclipse.gmf.runtime.common.ui.services.action.filter.ActionFilterService"/>
+</message_arguments>
+</filter>
+</resource>
+</component>

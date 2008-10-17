@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component id="org.eclipse.gmf.runtime.diagram.ui.printing" version="2">
+<resource path="src/org/eclipse/gmf/runtime/diagram/ui/printing/actions/DefaultPrintActionHelper.java" type="org.eclipse.gmf.runtime.diagram.ui.printing.actions.DefaultPrintActionHelper">
+<filter id="643846161">
+<message_arguments>
+<message_argument value="SWTDiagramPrinter"/>
+<message_argument value="DefaultPrintActionHelper"/>
+<message_argument value="doRun(IEditorPart, SWTDiagramPrinter)"/>
+</message_arguments>
+</filter>
+</resource>
+</component>
