@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -178,13 +178,13 @@ public class PolylineConnectionEx extends PolylineConnection implements IPolygon
      * @param isFeedbackLayer  see the isFeedbackLayer() method
      */
     private int calculateTolerance(boolean isFeedbackLayer) {
-		Dimension absTol = new Dimension(TOLERANCE + lineWidth / 2, 0);
+		Dimension absTol = new Dimension(TOLERANCE, 0);
 		
     	if (!isFeedbackLayer) {
     		MapModeUtil.getMapMode(this).DPtoLP(absTol);
     	}
 
-    	return absTol.width;
+    	return absTol.width + lineWidth / 2;
     }
     
     /**
