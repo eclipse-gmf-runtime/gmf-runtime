@@ -112,6 +112,14 @@ public class BorderedNodeFigure
 		if (!this.getBounds().equals(getMainFigure().getBounds())) {
 			getMainFigure().setBounds(this.getBounds().getCopy());
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Figure#invalidate()
+	 */
+	public void invalidate() {
+		super.invalidate();
+		
 		// When parent resizes, cause the border items to be relocated.
 		getBorderItemContainer().invalidateTree();
 		erase();
