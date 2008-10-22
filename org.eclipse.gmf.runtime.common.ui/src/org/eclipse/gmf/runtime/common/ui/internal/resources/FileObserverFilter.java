@@ -163,7 +163,7 @@ public class FileObserverFilter {
 			return true;
 		}
 		if (getFilterType() == FileObserverFilterType.FILE
-			&& getFileFilter().getFullPath().equals(path.toString())) {
+			&& getFileFilter().getFullPath().equals(path)) {
 			return true;
 		}
 		if (getFilterType() == FileObserverFilterType.FOLDER
