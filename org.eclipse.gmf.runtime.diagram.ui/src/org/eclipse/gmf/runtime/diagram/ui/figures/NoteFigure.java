@@ -106,7 +106,8 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 
 	protected void paintBorder(Graphics g) {
 		if (!isDiagramLinkMode()) {
-			Rectangle r = getBounds();
+			Rectangle r = getBounds().getCopy();
+			r.shrink(getLineWidth() / 2, getLineWidth() / 2);
 			
 			PointList p = getPointList(r);
 			g.setLineWidth(getLineWidth());  
