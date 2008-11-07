@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -146,52 +146,66 @@ public class GMFResource
 	protected Adapter createModificationTrackingAdapter() {
 		return new ModificationTrackingAdapter() {
 			public void notifyChanged(Notification notification) {
-				if (!isModified() && !isTransient(
-						notification.getNotifier(), notification.getFeature())) {
-					
+				if (!isModified() && isModifyingChange(notification)) {
 					super.notifyChanged(notification);
 				}
 			}
-
-			/**
-			 * Check if the feature or one of the notifier's containers is
-			 * transient.
-			 * 
-			 * @param notifier a notifier
-			 * @param feature the feature that changed
-			 * 
-			 * @return <code>true</code> if the feature is transient or if the
-			 *    notifier or any of its ancestors is contained by a transient
-			 *    reference; <code>false</code>, otherwise
-			 */
-			private boolean isTransient(Object notifier, Object feature) {
-				if (feature instanceof EStructuralFeature) {
-					if (((EStructuralFeature) feature).isTransient())
-						return true;
-					else
-						// calling isTransient could be a lengthy operation.
-						//   It is safe to cast because the adapter is only
-						//   attached to EObjects, not to the resource
-						return isTransient((EObject) notifier);
-				}
-				return false;
-			}
-			
-			/**
-			 * Is object transient?
-			 */
-			private boolean isTransient(EObject eObject) {
-				EStructuralFeature containmentFeature = eObject.eContainmentFeature();
-				while (containmentFeature != null) {
-					if (containmentFeature.isTransient())
-						return true;
-					eObject = eObject.eContainer();
-					if (eObject != null)
-						containmentFeature =  eObject.eContainmentFeature();
-					else
-						break;
-				}
-				return false;
-			}};
+		};
 	}
+
+	/**
+	 * Determines whether or not <code>notification</code> indicates a modifying change to a GMF resource
+	 * 
+	 * @param notification
+	 *            a notification of some concrete change in the resource set
+	 * @return whether this change is an abstract change to some resource, for
+	 *         the purpose of tracking undo context
+	 */
+	public static boolean isModifyingChange(Notification notification) {
+		return !notification.isTouch() && !isTransient(notification.getNotifier(), notification
+						.getFeature());
+	}
+
+	/**
+	 * Check if the feature or one of the notifier's containers is transient.
+	 * 
+	 * @param notifier
+	 *            a notifier
+	 * @param feature
+	 *            the feature that changed
+	 * 
+	 * @return <code>true</code> if the feature is transient or if the notifier
+	 *         or any of its ancestors is contained by a transient reference;
+	 *         <code>false</code>, otherwise
+	 */
+	private static boolean isTransient(Object notifier, Object feature) {
+		if (feature instanceof EStructuralFeature) {
+			if (((EStructuralFeature) feature).isTransient())
+				return true;
+			else
+				// calling isTransient could be a lengthy operation.
+				// It is safe to cast because the adapter is only
+				// attached to EObjects, not to the resource
+				return isTransient((EObject) notifier);
+		}
+		return false;
+	}
+
+	/**
+	 * Is object transient?
+	 */
+	private static boolean isTransient(EObject eObject) {
+		EStructuralFeature containmentFeature = eObject.eContainmentFeature();
+		while (containmentFeature != null) {
+			if (containmentFeature.isTransient())
+				return true;
+			eObject = eObject.eContainer();
+			if (eObject != null)
+				containmentFeature = eObject.eContainmentFeature();
+			else
+				break;
+		}
+		return false;
+	};
+	
 }

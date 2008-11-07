@@ -14,12 +14,15 @@ package org.eclipse.gmf.runtime.emf.core;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.Resource.Factory;
 import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
@@ -27,6 +30,8 @@ import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractResourceUndoContextPolicy;
+import org.eclipse.emf.workspace.IResourceUndoContextPolicy;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.eclipse.emf.workspace.util.WorkspaceValidateEditSupport;
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator;
@@ -34,6 +39,8 @@ import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.ISy
 import org.eclipse.gmf.runtime.common.core.command.FileModificationValidator.SyncExecHelper;
 import org.eclipse.gmf.runtime.emf.core.internal.resources.PathmapManager;
 import org.eclipse.gmf.runtime.emf.core.internal.util.EMFCoreConstants;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceModificationManager;
 import org.eclipse.gmf.runtime.emf.core.util.CrossReferenceAdapter;
 
 
@@ -162,8 +169,48 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 				});
 
 		options.setDefaultTransactionOptions(aMap);
-	}
 		
+		configureResourceModificationManagement(domain);
+
+	}
+	
+	/**
+	 * Configures <code>domain</code> so that the modified state
+	 * of resources in the <code>domain</code> is managed as operations are
+	 * executed, undone and redone on the operation history.
+	 * 
+	 * @param domain
+	 *            the editing domain to be configured
+	 */
+	protected void configureResourceModificationManagement(
+			TransactionalEditingDomain domain) {
+
+		GMFResourceModificationManager.manage(domain);
+	}
+	
+	@Override
+	protected IResourceUndoContextPolicy getResourceUndoContextPolicy() {
+		return new AbstractResourceUndoContextPolicy() {
+			@Override
+			protected boolean isAbstractChange(Notification notification) {
+				return super.isAbstractChange(notification)
+						&& GMFResource.isModifyingChange(notification);
+			}
+			
+			@Override
+			protected void resourceChange(Set<Resource> resources, Resource resource,
+					Notification notification) {
+
+				if ((notification.getFeatureID(Resource.class) == Resource.RESOURCE__IS_MODIFIED)) {
+					// consider changes to isModified as affecting the resource
+					resources.add(resource);
+					
+				} else {
+					super.resourceChange(resources, resource, notification);
+				}
+			}
+		};
+	}
 	
 	/**
 	 * A helper that knows about the specific editing domain.

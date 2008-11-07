@@ -29,6 +29,7 @@ public class EMFCoreMessages extends NLS {
 	public static String operation_ok;
 	public static String operation_failed;
 	public static String logError_badListener;
+	public static String saveContextLabel;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EMFCoreMessages.class);
