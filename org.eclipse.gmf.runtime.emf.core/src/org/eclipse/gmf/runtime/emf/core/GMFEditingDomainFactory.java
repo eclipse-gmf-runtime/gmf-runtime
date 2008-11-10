@@ -181,6 +181,7 @@ public class GMFEditingDomainFactory extends WorkspaceEditingDomainFactory {
 	 * 
 	 * @param domain
 	 *            the editing domain to be configured
+	 * @since 1.2
 	 */
 	protected void configureResourceModificationManagement(
 			TransactionalEditingDomain domain) {

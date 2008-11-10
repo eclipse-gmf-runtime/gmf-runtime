@@ -50,6 +50,7 @@ import org.eclipse.osgi.util.NLS;
  * determine whether or not the resource is dirty and can be saved.
  * 
  * @author ldamus
+ * @since 1.2
  */
 public class GMFResourceModificationManager {
 

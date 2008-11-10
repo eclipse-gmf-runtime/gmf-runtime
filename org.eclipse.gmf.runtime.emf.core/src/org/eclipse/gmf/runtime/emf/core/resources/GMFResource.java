@@ -160,6 +160,7 @@ public class GMFResource
 	 *            a notification of some concrete change in the resource set
 	 * @return whether this change is an abstract change to some resource, for
 	 *         the purpose of tracking undo context
+	 * @since 1.2
 	 */
 	public static boolean isModifyingChange(Notification notification) {
 		return !notification.isTouch() && !isTransient(notification.getNotifier(), notification
