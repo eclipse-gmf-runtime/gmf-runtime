@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.ui.printing
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.common.ui.printing.internal.PrintingPlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.gmf.runtime.common.ui.printing,
  org.eclipse.gmf.runtime.common.ui.printing.internal;x-internal:=true
-Require-Bundle: org.eclipse.swt;bundle-version="[3.4.0,4.0.0)",
- org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)"
+Require-Bundle: org.eclipse.swt;bundle-version="[3.5.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.5.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

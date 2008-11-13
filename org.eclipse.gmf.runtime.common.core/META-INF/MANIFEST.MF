@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.gmf.runtime.common.core; singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.eclipse.gmf.runtime.common.core.internal.CommonCorePlugin
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
@@ -13,8 +13,8 @@ Export-Package: org.eclipse.gmf.runtime.common.core.command,
  org.eclipse.gmf.runtime.common.core.resources,
  org.eclipse.gmf.runtime.common.core.service,
  org.eclipse.gmf.runtime.common.core.util
-Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)";visibility:=reexport,
- org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)";visibility:=reexport,
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.resources;bundle-version="[3.5.0,4.0.0)";visibility:=reexport,
  org.eclipse.core.commands;bundle-version="[3.4.0,4.0.0)";visibility:=reexport,
  com.ibm.icu;bundle-version="[3.4.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
