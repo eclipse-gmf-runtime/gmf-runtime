@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +26,8 @@ import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.internal.EMFTypePlugin;
+import org.eclipse.gmf.runtime.emf.type.core.internal.l10n.EMFTypeCoreMessages;
 import org.eclipse.gmf.runtime.emf.type.core.requests.ConfigureRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 
@@ -49,6 +52,11 @@ public class CreateElementCommand extends EditElementCommand {
 	 * The containment feature in which the new element will be created.
 	 */
 	private EReference containmentFeature;
+	
+	/**
+	 * Status of the default element creation.
+	 */
+	private IStatus defaultElementCreationStatus;
 
 	/**
 	 * Constructs a new element creation command for the <code>request</code>.
@@ -71,6 +79,10 @@ public class CreateElementCommand extends EditElementCommand {
 
         // Do the default element creation
         newElement = doDefaultElementCreation();
+        
+        if (!getDefaultElementCreationStatus().isOK()) {
+        	return new CommandResult(getDefaultElementCreationStatus());
+        }
 
         // Configure the new element
         ConfigureRequest configureRequest = createConfigureRequest();
@@ -117,17 +129,54 @@ public class CreateElementCommand extends EditElementCommand {
 	 * @return the new model element that has been created
 	 */
 	protected EObject doDefaultElementCreation() {
+		EObject result = null;
 		EReference containment = getContainmentFeature();
 		EClass eClass = getElementType().getEClass();
 
 		if (containment != null) {
 			EObject element = getElementToEdit();
 
-			if (element != null)
-				return EMFCoreUtil.create(element, containment, eClass);
+			if (element != null) {
+				result = EMFCoreUtil.create(element, containment, eClass);
+			}
 		}
 
-		return null;
+		IStatus status = (result != null) ? Status.OK_STATUS
+				: new Status(
+						Status.ERROR,
+						EMFTypePlugin.getPluginId(),
+						EMFTypeCoreMessages
+								.bind(
+										EMFTypeCoreMessages.createElementCommand_noElementCreated,
+										getElementType().getDisplayName()));
+		
+		setDefaultElementCreationStatus(status);
+		
+		return result;
+	}
+	
+	/**
+	 * Gets the status of the default element creation.
+	 * 
+	 * @return the status
+	 * @since 1.2
+	 */
+	protected IStatus getDefaultElementCreationStatus() {
+		if (defaultElementCreationStatus == null) {
+			return Status.OK_STATUS;
+		}
+		return defaultElementCreationStatus;
+	}
+	
+	/**
+	 * Sets the status of the default element creation.
+	 * 
+	 * @param status
+	 *            the new status
+	 * @since 1.2
+	 */
+	protected void setDefaultElementCreationStatus(IStatus status) {
+		this.defaultElementCreationStatus = status;
 	}
 
 	/**
