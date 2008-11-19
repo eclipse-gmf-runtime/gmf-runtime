@@ -519,6 +519,20 @@ public class FileObserverFilterTest
             throws CoreException {
             return null;
         }
+
+        /*
+         * @see org.eclipse.core.resources.IResource#isHidden(int)
+         */
+		public boolean isHidden(int arg0) {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isTeamPrivateMember(int)
+		 */
+		public boolean isTeamPrivateMember(int arg0) {
+			return false;
+		}
 	}
 
 	protected class Folder
@@ -1249,6 +1263,20 @@ public class FileObserverFilterTest
             throws CoreException {
             return null;
         }
+
+        /*
+         * @see org.eclipse.core.resources.IResource#isHidden(int)
+         */
+		public boolean isHidden(int arg0) {
+			return false;
+		}
+
+		/*
+		 * @see org.eclipse.core.resources.IResource#isTeamPrivateMember(int)
+		 */
+		public boolean isTeamPrivateMember(int arg0) {
+			return false;
+		}
 	}
 
 	public static void main(String[] args) {
