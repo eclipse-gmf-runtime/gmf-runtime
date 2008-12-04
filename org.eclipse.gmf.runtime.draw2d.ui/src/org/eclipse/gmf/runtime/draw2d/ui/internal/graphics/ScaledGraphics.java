@@ -35,6 +35,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
@@ -96,7 +97,7 @@ protected static class State {
 	private double appliedX;
 	private double appliedY;
 	private Font font;
-	private int lineWidth;
+	private float lineWidth;
 	private double zoom; 
 
 	/**
@@ -115,6 +116,10 @@ protected static class State {
 	 * @param lineWidth the line width
 	 */
 	protected State(double zoom, double x, double y, Font font, int lineWidth) {
+		this(zoom, x, y, font, (float)lineWidth);
+	}
+
+	protected State(double zoom, double x, double y, Font font, float lineWidth) {
 		this.zoom = zoom;
 		this.appliedX = x;
 		this.appliedY = y;
@@ -131,7 +136,12 @@ protected static class State {
 	 * @param lineWidth the line width
 	 */
 	protected void setValues(double zoom, double x, double y, 
-								Font font, int lineWidth) {
+			Font font, int lineWidth) {
+		setValues(zoom, x, y, font, (float)lineWidth);
+	}
+
+	protected void setValues(double zoom, double x, double y, 
+			Font font, float lineWidth) {
 		this.zoom = zoom;
 		this.appliedX = x;
 		this.appliedY = y;
@@ -153,15 +163,15 @@ static {
 private boolean allowText = true;
 //private static final Point PT = new Point();
 //private Map fontCache = new HashMap();
-private Map fontDataCache = new HashMap();
+private Map<Font, FontData> fontDataCache = new HashMap<Font, FontData>();
 private FontKey fontKey = new FontKey();
 private double fractionalX;
 private double fractionalY;
 private Graphics graphics;
 private FontHeightCache localCache = new FontHeightCache();
 private Font localFont;
-private int localLineWidth;
-private List stack = new ArrayList();
+private float localLineWidth;
+private List<State> stack = new ArrayList<State>();
 private int stackPointer = 0;
 private FontHeightCache targetCache = new FontHeightCache();
 
@@ -174,7 +184,7 @@ double zoom = 1.0;
 public ScaledGraphics(Graphics g) {
 	graphics = g;
 	localFont = g.getFont();
-	localLineWidth = g.getLineWidth();
+	localLineWidth = g.getLineWidthFloat();
 }
 
 /** @see Graphics#clipRect(Rectangle) */
@@ -420,7 +430,7 @@ static public void resetFontCache() {
 }
 
 FontData getCachedFontData(Font f) {
-	FontData data = (FontData)fontDataCache.get(f);
+	FontData data = fontDataCache.get(f);
 	if (data != null)
 		return data;
 	data = getLocalFont().getFontData()[0];
@@ -496,14 +506,14 @@ public int getLineStyle() {
 
 /** @see Graphics#getLineWidth() */
 public int getLineWidth() {
-	return getLocalLineWidth();
+	return (int)getLocalLineWidth();
 }
 
 private Font getLocalFont() {
 	return localFont;
 }
 
-private int getLocalLineWidth() {
+private float getLocalLineWidth() {
 	return localLineWidth;
 }
 
@@ -523,14 +533,14 @@ public boolean getXORMode() {
 public void popState() {
 	graphics.popState();
 	stackPointer--;
-	restoreLocalState((State)stack.get(stackPointer));
+	restoreLocalState(stack.get(stackPointer));
 }
 
 /** @see Graphics#pushState() */
 public void pushState() {
 	State s;
 	if (stack.size() > stackPointer) {
-		s = (State)stack.get(stackPointer);
+		s = stack.get(stackPointer);
 		s.setValues(zoom, fractionalX, fractionalY, getLocalFont(), localLineWidth);
 	} else {
 		stack.add(new State(zoom, fractionalX, fractionalY, getLocalFont(), 
@@ -552,7 +562,7 @@ private void restoreLocalState(State state) {
 /** @see Graphics#restoreState() */
 public void restoreState() {
 	graphics.restoreState();
-	restoreLocalState((State)stack.get(stackPointer - 1));
+	restoreLocalState(stack.get(stackPointer - 1));
 }
 
 /** @see Graphics#scale(double) */
@@ -682,9 +692,9 @@ private void setLocalFont(Font f) {
 	graphics.setFont(zoomFont(f));
 }
 
-private void setLocalLineWidth(int width) {
+private void setLocalLineWidth(float width) {
 	localLineWidth = width;
-	graphics.setLineWidth(zoomLineWidth(width));
+	graphics.setLineWidthFloat(zoomLineWidth(width));
 }
 
 void setScale(double value) {
@@ -692,7 +702,7 @@ void setScale(double value) {
 		return;
 	this.zoom = value;
 	graphics.setFont(zoomFont(getLocalFont()));
-	graphics.setLineWidth(zoomLineWidth(localLineWidth));
+	graphics.setLineWidthFloat(zoomLineWidth(localLineWidth));
 }
 
 /**
@@ -756,7 +766,7 @@ int zoomFontHeight(int height) {
 	return (int)(zoom * height);
 }
 
-int zoomLineWidth(int w) {
+float zoomLineWidth(float w) {
 	/*
 	 * We introduced line width zoom in GMF 2.1.
 	 * Unfortunately GMF 2.0 clients used HiMetric map mode and called
@@ -771,7 +781,7 @@ int zoomLineWidth(int w) {
 	 * We interestingly add 0.1 to eliminate rounding errors with HiMetric
 	 * map mode. This has no effect with identity/pixel map mode.
 	 */
-	return (int) ((zoom * w) + 0.1);
+	return (float)((zoom * w) + 0.1);
 }
 
 private int[] zoomPointList(int[] points) {
@@ -904,4 +914,43 @@ private void logAdvancedGraphicsWarning() {
         advancedGraphicsWarningLogged = true;
     }
 }
+
+@Override
+public float getLineWidthFloat() {
+	return graphics.getLineWidthFloat();
+}
+
+@Override
+public void setLineWidthFloat(float width) {
+	graphics.setLineWidthFloat(width);
+}
+
+@Override
+public void setLineMiterLimit(float miterLimit) {
+	graphics.setLineMiterLimit(miterLimit);
+}
+
+@Override
+public float getLineMiterLimit() {
+	return graphics.getLineMiterLimit();
+}
+
+@Override
+public void setLineAttributes(LineAttributes attributes) {
+	graphics.setLineAttributes(attributes);
+}
+@Override
+public LineAttributes getLineAttributes() {
+	return graphics.getLineAttributes();
+}
+@Override
+public void setAdvanced(boolean advanced) {
+	graphics.setAdvanced(advanced);
+}
+
+@Override
+public boolean getAdvanced() {
+	return graphics.getAdvanced();
+}
+
 }

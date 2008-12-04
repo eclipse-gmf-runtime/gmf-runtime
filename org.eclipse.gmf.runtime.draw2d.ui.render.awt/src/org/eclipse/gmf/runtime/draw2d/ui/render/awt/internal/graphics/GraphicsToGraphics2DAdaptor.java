@@ -152,7 +152,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	private SWTGraphics swtGraphics;
 	private Graphics2D graphics2D;
 	private BasicStroke stroke;
-	private Stack states = new Stack();
+	private Stack<State> states = new Stack<State>();
 	private final State currentState = new State();
 	private final State appliedState = new State();
 
@@ -807,7 +807,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public void popState() {
 		swtGraphics.popState();
 
-		restoreState((State) states.pop());
+		restoreState(states.pop());
 	}
 
 	/*
@@ -832,7 +832,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
 	public void restoreState() {
 		swtGraphics.restoreState();
 
-		restoreState((State) states.peek());
+		restoreState(states.peek());
 	}
 
 	private void restoreState(State state) {
@@ -1241,6 +1241,27 @@ public class GraphicsToGraphics2DAdaptor extends Graphics implements DrawableRen
     	this.stroke = stroke;
     	getGraphics2D().setStroke(stroke);
     }
+
+    /*
+     * TODO: following methods need to be upgraded, and this class's
+     * functionality retested in light of the lineAttributes related
+     * changes on Graphics  
+     */
+    
+	@Override
+	public float getLineWidthFloat() {
+		return getLineWidth();
+	}
+
+	@Override
+	public void setLineMiterLimit(float miterLimit) {
+		// do nothing
+	}
+
+	@Override
+	public void setLineWidthFloat(float width) {
+		setLineWidth((int)width);
+	}
     
    
 }
