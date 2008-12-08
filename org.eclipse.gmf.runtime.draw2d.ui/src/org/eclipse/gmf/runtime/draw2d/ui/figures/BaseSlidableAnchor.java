@@ -107,6 +107,38 @@ public class BaseSlidableAnchor
 		return s.toString();				// 24 chars max (+1 for safety, i.e. for string termination)
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (obj instanceof BaseSlidableAnchor) {
+			BaseSlidableAnchor anchor = (BaseSlidableAnchor) obj;
+			/*
+			 * Owning figures must be identical to satisfy equality of anchors
+			 */
+			if (getOwner() == anchor.getOwner()) {
+				if (isDefaultAnchor()) {
+					return anchor.isDefaultAnchor();
+				}
+				return relativeReference.equals(anchor.relativeReference);
+			}
+		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int figureHashCode = getOwner() != null ? getOwner().hashCode() : 0; 
+		if (isDefaultAnchor()) {
+			return figureHashCode;
+		}
+		return new Double(relativeReference.preciseX()).hashCode()
+				^ new Double(relativeReference.preciseY()).hashCode()
+				^ figureHashCode;
+	}
+
 	/**
 	 * From relative reference returns the relative coordinates of the anchor
 	 * Method's visibility can be changed as needed
