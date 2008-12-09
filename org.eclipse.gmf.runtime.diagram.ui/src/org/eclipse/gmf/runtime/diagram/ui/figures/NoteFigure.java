@@ -11,8 +11,9 @@
 
 package org.eclipse.gmf.runtime.diagram.ui.figures;
 
+import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -54,6 +55,51 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 * the clip margin constant in device coordinates
 	 */
 	static public final int CLIP_MARGIN_DP = 14;
+	
+	/**
+	 * Border for notes. Defines paint method and insets that depend on line width and
+	 * given margin.
+	 */
+	private class NoteFigureBorder extends AbstractBorder {
+		private Insets margin;
+		NoteFigureBorder(Insets insets) {
+			margin = insets;
+		}
+		
+		/*
+		 * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
+		 */
+		public Insets getInsets(IFigure figure) {
+			NoteFigure noteFigure = (NoteFigure)figure;
+			int width = noteFigure.getLineWidth();
+			return new Insets(width + margin.top, width + margin.left, 
+					width + margin.bottom, width + margin.right);
+		}
+
+
+		/* 
+		 * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure, org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
+		 */
+		public void paint(IFigure figure, Graphics g, Insets insets) {
+			NoteFigure noteFigure = (NoteFigure)figure;
+			Rectangle r = noteFigure.getBounds().getCopy();
+			r.shrink(noteFigure.getLineWidth() / 2, noteFigure.getLineWidth() / 2);
+			
+			PointList p = noteFigure.getPointList(r);
+			p.addPoint(r.x, r.y - noteFigure.getLineWidth() / 2);
+			g.setLineWidth(noteFigure.getLineWidth());  
+			g.setLineStyle(noteFigure.getLineStyle());  
+			g.drawPolyline(p);
+	
+			if (withDanglingCorner) {
+				PointList corner = new PointList();
+				corner.addPoint(r.x + r.width - getClipWidth(), r.y);
+				corner.addPoint(r.x + r.width - getClipWidth(), r.y + getClipHeight());
+				corner.addPoint(r.x + r.width, r.y + getClipHeight());
+				g.drawPolyline(corner);			
+			}			
+		}
+	}
 		
 	/**
 	 * Constructor
@@ -64,8 +110,9 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 	 */
 	public NoteFigure(int width, int height, Insets insets) {
 		super(width, height);
-		setBorder(
-			new MarginBorder(insets.top, insets.left, insets.bottom, insets.right));
+		// NoteFigureBorder defines insets which ensure that content within the note will be indented 
+		// appropriately as the line width changes
+		setBorder(new NoteFigureBorder(insets)); 
 
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
@@ -104,23 +151,14 @@ public class NoteFigure extends DefaultSizeNodeFigure implements IPolygonAnchora
 		return p;
 	}
 
+	/**
+	 * Paints border unless this Note is in DiagramLinkMode  
+	 * 
+	 * @see org.eclipse.draw2d.Figure#paintBorder(org.eclipse.draw2d.Graphics)
+	 */
 	protected void paintBorder(Graphics g) {
 		if (!isDiagramLinkMode()) {
-			Rectangle r = getBounds().getCopy();
-			r.shrink(getLineWidth() / 2, getLineWidth() / 2);
-			
-			PointList p = getPointList(r);
-			g.setLineWidth(getLineWidth());  
-			g.setLineStyle(getLineStyle());  
-			g.drawPolyline(p);
-	
-			if (withDanglingCorner) {
-				PointList corner = new PointList();
-				corner.addPoint(r.x + r.width - getClipWidth(), r.y);
-				corner.addPoint(r.x + r.width - getClipWidth(), r.y + getClipHeight());
-				corner.addPoint(r.x + r.width, r.y + getClipHeight());
-				g.drawPolyline(corner);			
-			}
+			getBorder().paint(this, g, NO_INSETS);
 		}		 
 	}
 

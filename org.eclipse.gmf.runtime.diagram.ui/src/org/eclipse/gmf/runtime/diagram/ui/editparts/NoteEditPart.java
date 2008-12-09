@@ -246,6 +246,7 @@ public class NoteEditPart extends ShapeNodeEditPart {
      */
 	protected void setLineWidth(int width) {
 		((NoteFigure) getFigure()).setLineWidth(getMapMode().DPtoLP(width));
+		getFigure().revalidate();
 	}
 
 	/*
