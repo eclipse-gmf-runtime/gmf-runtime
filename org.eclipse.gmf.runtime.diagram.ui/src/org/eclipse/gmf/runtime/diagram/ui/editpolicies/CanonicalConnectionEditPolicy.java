@@ -47,6 +47,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewRequest.ConnectionViewDescriptor;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.core.util.PackageUtil;
@@ -72,7 +73,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return EObject list
 	 * 
 	 */
-	abstract protected List getSemanticConnectionsList();
+	abstract protected List<EObject> getSemanticConnectionsList();
 
 	/**
 	 * Return the supplied relationship's source element
@@ -90,8 +91,8 @@ public abstract class CanonicalConnectionEditPolicy
 	abstract protected EObject getTargetElement(EObject relationship);
 
 	/** Return an empty list. */
-	protected List getSemanticChildrenList() {
-		return Collections.EMPTY_LIST;
+	protected List<EObject> getSemanticChildrenList() {
+		return Collections.emptyList();
 	}
 
 	/* 
@@ -100,10 +101,10 @@ public abstract class CanonicalConnectionEditPolicy
 	 */
 	protected void refreshOnActivate() {
 		// need to activate editpart children before invoking the canonical refresh
-		List c = getHost().getChildren();
-		for (int i = 0; i < c.size(); i++)
-			((EditPart)c.get(i)).activate();
-
+		List<EditPart> c = getHost().getChildren();
+		for (int i = 0; i < c.size(); i++) {
+			c.get(i).activate();
+		}
 		refresh();
 	}
 	
@@ -160,7 +161,7 @@ public abstract class CanonicalConnectionEditPolicy
 		if (element != null && !(element instanceof View)) {
 			EditPartViewer viewer = getHost().getViewer();
 			if (viewer instanceof IDiagramGraphicalViewer) {
-				List parts = ((IDiagramGraphicalViewer) viewer)
+				List<EditPart> parts = ((IDiagramGraphicalViewer) viewer)
 					.findEditPartsForElement(EMFCoreUtil.getProxyID(element),
 						INodeEditPart.class);
 
@@ -203,7 +204,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * 			  in the host context.
 	 * @return an editpart; <tt>null</tt> if non could be found.
 	 */
-	protected EditPart findEditPartForElement(EObject element, EObject context, List parts) {
+	protected EditPart findEditPartForElement(EObject element, EObject context, List<EditPart> parts) {
 		EditPart ancestor = getHost();
 		while (ancestor != null) {
 			EditPart ep = reachForEditPartWithAncestor(parts, ancestor);
@@ -227,9 +228,10 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return <code>EditPart</code> that contains the <code>ancestor</code>
 	 *         in it's containment hierarchy
 	 */
-	private EditPart reachForEditPartWithAncestor(List results,
+	private EditPart reachForEditPartWithAncestor(List<EditPart> results,
 			EditPart ancestor) {
-		ListIterator li = results.listIterator();
+		
+		ListIterator<EditPart> li = results.listIterator();
 		while (li.hasNext()) {
 			EditPart ep = (EditPart) li.next();
 
@@ -289,7 +291,7 @@ public abstract class CanonicalConnectionEditPolicy
 		ccr.setType(RequestConstants.REQ_CONNECTION_END);
 		Command cmd = getCreateViewCommand(ccr); // tep.getCommand(ccr);
 		if (cmd != null && cmd.canExecute()) {
-			List viewAdapters = new ArrayList();
+			List<EObjectAdapter> viewAdapters = new ArrayList<EObjectAdapter>();
 			viewAdapters.add(new EObjectAdapter(((View) host().getModel())
 				.getDiagram()));
 			viewAdapters.add(new EObjectAdapter(sView));
@@ -392,7 +394,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 *            a {@link CreateViewRequest.ViewDescriptor} list.
 	 * @return a create request
 	 */
-	protected CreateViewRequest getCreateViewRequest(List descriptors) {
+	protected CreateViewRequest getCreateViewRequest(List<ViewDescriptor> descriptors) {
 		CreateViewRequest cvr = super.getCreateViewRequest(descriptors);
 		Point loc = ICanonicalShapeCompartmentLayout.UNDEFINED.getLocation();
 		cvr.setLocation(loc);
@@ -440,7 +442,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * semantic connections. This method is called in response to notification
 	 * from the model.
 	 * <P>
-	 * The update is performed by comparing the exising connection views with the
+	 * The update is performed by comparing the existing connection views with the
 	 * set of semantic connections returned from {@link #getSemanticConnections()}.
 	 * Views whose semantic connection no longer exists or whose semantic
 	 * connection ends are <tt>null</tt> are
@@ -451,7 +453,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * <P>
 	 * This refresh routine will not reorder the view list to ensure both it and
 	 * the semantic children are in the same order since it is possible that
-	 * this editpolicy will only handle a specifc subset of the host's views.
+	 * this editpolicy will only handle a specific subset of the host's views.
 	 * 
 	 * This method should <em>not</em> be overridden.
 	 * 
@@ -459,27 +461,24 @@ public abstract class CanonicalConnectionEditPolicy
 	 *         adapt to <code>View</code> objects that were created as a
 	 *         result of the synchronization
 	 */
-	protected List refreshSemanticConnections() {
+	protected List<IAdaptable> refreshSemanticConnections() {
 		Edge viewChild;
-		EObject semanticChild;
-		//
+
 		// current connection views
-		Collection viewChildren = getConnectionViews();
-		Collection semanticChildren = new HashSet();
+		Collection<Edge> viewChildren = getConnectionViews();
+		Collection<EObject> semanticChildren = new HashSet<EObject>();
 		semanticChildren.addAll(getSemanticConnectionsList());
 
-		List orphaned = cleanCanonicalSemanticChildren(viewChildren,
+		List<View> orphaned = cleanCanonicalSemanticChildren(viewChildren,
 			semanticChildren);
-		//
+
 		// delete all the remaining views
 		deleteViews(orphaned.iterator());
 
-		//
 		// create a view for each remaining semantic element.
-		List viewDescriptors = new ArrayList();
-		Iterator semanticChildrenIT = semanticChildren.iterator();
-		while (semanticChildrenIT.hasNext()) {
-			semanticChild = (EObject) semanticChildrenIT.next();
+		List<IAdaptable> viewDescriptors = new ArrayList<IAdaptable>();
+		
+		for(EObject semanticChild : semanticChildren) {
 			viewChild = createConnectionView(semanticChild, ViewUtil.APPEND);
 			if (viewChild != null) {
 				viewDescriptors.add(new EObjectAdapter(viewChild)); 
@@ -489,11 +488,12 @@ public abstract class CanonicalConnectionEditPolicy
 		makeViewsMutable(viewDescriptors);
 
 		// now refresh all the connection containers to update the editparts
-		HashSet ends = new HashSet();
-		ListIterator li = viewDescriptors.listIterator();
+		HashSet<EditPart> ends = new HashSet<EditPart>();
+		
+		ListIterator<IAdaptable> li = viewDescriptors.listIterator();
 		while (li.hasNext()) {
-			IAdaptable adaptable = (IAdaptable) li.next();
-			Edge edge = (Edge) adaptable.getAdapter(Edge.class);
+			IAdaptable adaptable = li.next();
+			Edge edge = (Edge)adaptable.getAdapter(Edge.class);
 			EditPart sourceEP = getEditPartFor(edge.getSource(), edge);
 			if (sourceEP != null) {
 				ends.add(sourceEP);
@@ -504,15 +504,15 @@ public abstract class CanonicalConnectionEditPolicy
 			}
 		}
 
-		for (Iterator iter = ends.iterator(); iter.hasNext();) {
-			EditPart end = (EditPart) iter.next();
+		for(EditPart end : ends) {
 			end.refresh();
 		}
 
 		return viewDescriptors;
 	}
     
-    protected boolean isOrphaned(Collection semanticChildren, View view) {
+	@Override
+    protected boolean isOrphaned(Collection<EObject> semanticChildren, View view) {
         EObject element = view.getElement();
         if (semanticChildren.contains(element)) {
             if (view instanceof Edge) {
@@ -521,8 +521,9 @@ public abstract class CanonicalConnectionEditPolicy
                     || edge.getTarget().getElement() != getTargetElement(element))
                     return true;
             }
-        } else
+        } else {
             return true;
+        }
         return false;
     }
     
@@ -533,8 +534,8 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#refreshSemantic()
 	 */
 	protected void refreshSemantic() {
-		List createdViews = super.refreshSemanticChildren();
-		List createdConnectionViews = refreshSemanticConnections();
+		List<IAdaptable> createdViews = super.refreshSemanticChildren();
+		List<IAdaptable> createdConnectionViews = refreshSemanticConnections();
 
 		if (createdViews.size() > 1) {
 			// perform a layout of the container
@@ -543,8 +544,8 @@ public abstract class CanonicalConnectionEditPolicy
 			executeCommand(new ICommandProxy(layoutCmd));
 		}
 
-		List allViews = new ArrayList(createdConnectionViews.size()
-			+ createdViews.size());
+		List<IAdaptable> allViews = new ArrayList<IAdaptable>(
+				createdConnectionViews.size() + createdViews.size());
 		allViews.addAll(createdViews);
 		allViews.addAll(createdConnectionViews);
 		makeViewsImmutable(allViews);
@@ -567,7 +568,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * 
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy#postProcessRefreshSemantic(java.util.List)
 	 */
-	protected void postProcessRefreshSemantic(List viewDescriptors) {
+	protected void postProcessRefreshSemantic(List<IAdaptable> viewDescriptors) {
 		makeViewsMutable(viewDescriptors);
 
 		super.postProcessRefreshSemantic(viewDescriptors);
@@ -579,9 +580,9 @@ public abstract class CanonicalConnectionEditPolicy
 	 * 
 	 * @return list of <code>Edge</code>s.
 	 */
-	protected Collection getConnectionViews() {
-		Collection children = getViewChildren();
-		Set connections = new HashSet();
+	protected Collection<Edge> getConnectionViews() {
+		Collection<View> children = getViewChildren();
+		Set<Edge> connections = new HashSet<Edge>();
 		if (getHost() instanceof IGraphicalEditPart) {
 			IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
 			getConnectionViews(connections, gep.getNotationView(), children);
@@ -597,32 +598,34 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @param connections
 	 * @param node
 	 */
-	private void getConnectionViews(Set connections, View view, Collection viewChildren ) {
+	private void getConnectionViews(Set<Edge> connections, View view, Collection<View> viewChildren ) {
 		IGraphicalEditPart gep = (IGraphicalEditPart)getHost();
 		View hostView = gep.getNotationView();
 		if (hostView != view) {
-			if (!shouldCheckForConnections(view, viewChildren))
+			if (!shouldCheckForConnections(view, viewChildren)) {
 				return;
+			}
 		}
 		
-		Iterator sourceIter = view.getSourceEdges().listIterator();
+		Iterator<Edge> sourceIter = view.getSourceEdges().listIterator();
 		while (sourceIter.hasNext()) {
-			Edge sourceEdge = (Edge)sourceIter.next();
-			if (shouldIncludeConnection(sourceEdge, viewChildren))
+			Edge sourceEdge = sourceIter.next();
+			
+			if (shouldIncludeConnection(sourceEdge, viewChildren)) {
 				connections.add(sourceEdge);
+			}
 		}
 		
-		Iterator targetIter = view.getTargetEdges().listIterator();
+		Iterator<Edge> targetIter = view.getTargetEdges().listIterator();
 		while (targetIter.hasNext()) {
-			Edge targetEdge = (Edge)targetIter.next();
-			if (shouldIncludeConnection(targetEdge, viewChildren))
+			Edge targetEdge = targetIter.next();
+			
+			if (shouldIncludeConnection(targetEdge, viewChildren)) {
 				connections.add(targetEdge);
+			}
 		}
 		
-		List children = view.getChildren();
-		Iterator iter = children.listIterator();
-		while (iter.hasNext()) {
-			View viewChild = (View)iter.next();
+		for(View viewChild : (List<View>)view.getChildren()){
 			if (viewChild instanceof Node) {
 				getConnectionViews(connections, viewChild, viewChildren );
 			}
@@ -641,7 +644,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return a <code>boolean</code> <code>true</code> if connections on the view are used as part of the 
 	 * canonical synchronization.  <code>false</code> if the view's attached connections are to be ignored.
 	 */
-	protected boolean shouldCheckForConnections(View view, Collection viewChildren) {
+	protected boolean shouldCheckForConnections(View view, Collection<View> viewChildren) {
 		return (view != null && 
 			(viewChildren.contains(view) || viewChildren.contains(view.eContainer())));
 	}
@@ -649,7 +652,7 @@ public abstract class CanonicalConnectionEditPolicy
 	/**
 	 * Called by {@link #getConnectionViews()} to determine if the underlying
 	 * shape compartment is responsible for the supplied connection. By default,
-	 * the following conditition must be met for the connection to be accepted:
+	 * the following condition must be met for the connection to be accepted:
 	 * <UL>
 	 * <LI> its source must not be null.
 	 * <LI> its target must not be null.
@@ -665,7 +668,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @return <tt>false</tt> if supplied connection should be ignored;
 	 *         otherwise <tt>true</tt>.
 	 */
-	protected boolean shouldIncludeConnection(Edge connection, Collection children) {
+	protected boolean shouldIncludeConnection(Edge connection, Collection<View> children) {
 		return shouldCheckForConnections(connection.getSource(), children) ||
 				shouldCheckForConnections(connection.getTarget(), children);
 	}
@@ -697,14 +700,15 @@ public abstract class CanonicalConnectionEditPolicy
 	protected Command getDropCommand(DropObjectsRequest request) {
 		boolean enabled = isEnabled();
 		List children = getSemanticChildrenList();
-		Iterator dropElements = request.getObjects().iterator();
-		while (dropElements.hasNext()) {
-			Object dropElement = dropElements.next();
+		
+		for(Object dropElement : request.getObjects()) {
+
 			// Allow diagram links on Canonical shapes compartments
-			if (allowDropElement(dropElement))
+			if (allowDropElement(dropElement)) {
 				continue;
+			}
 			if (dropElement instanceof EObject
-				&& preventDropElement(dropElement)) {
+					&& preventDropElement(dropElement)) {
 				return UnexecutableCommand.INSTANCE;
 			}
 			boolean containsElement = children.contains(dropElement);
@@ -726,7 +730,7 @@ public abstract class CanonicalConnectionEditPolicy
 	 * @param dropElement
 	 *            object being dropped.
 	 * @return <code>PackageUtil.canContain(getSemanticHost().eClass(), ((EObject)dropElement).eClass(), false)</code>
-	 *         if the supplied elemnt is an <code>EObject</code>; otherwise
+	 *         if the supplied element is an <code>EObject</code>; otherwise
 	 *         <tt>false</tt>
 	 */
 	protected boolean preventDropElement(Object dropElement) {

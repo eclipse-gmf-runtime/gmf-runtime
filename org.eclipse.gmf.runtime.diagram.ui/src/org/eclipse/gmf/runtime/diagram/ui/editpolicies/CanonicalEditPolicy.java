@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -67,6 +68,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.util.EditPartUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -179,8 +181,8 @@ implements NotificationListener {
 		}
 	}
 	
-	/** [semantic element, canonical editpolicy] regisrty map. */
-	static Map _registry = new WeakHashMap();
+	/** [semantic element, canonical editpolicy] registry map. */
+	static Map<EObject, Set<CanonicalEditPolicy>> _registry = new WeakHashMap<EObject, Set<CanonicalEditPolicy>>();
 	
 	/** ModelServer Listener Identifiers. */	
 	private static final String SEMANTIC_FILTER_ID = "SemanticFilterID";//$NON-NLS-1$
@@ -188,11 +190,11 @@ implements NotificationListener {
 	/** enable refresh flag. */
 	private boolean _enabled = true;
 	
-	/** flag signalling a refresh request made while the editpolicy was disabled. */
+	/** flag signaling a refresh request made while the editpolicy was disabled. */
 	private boolean _deferredRefresh = false;
 	
 	/** semantic listener. */
-	private Map _listenerFilters;
+	private Map<String, Object[]> _listenerFilters;
 		
 	/** Adds <code>String.class</tt> adaptablity to return a factory hint. */
 	protected static final class CanonicalElementAdapter extends EObjectAdapter {
@@ -217,12 +219,12 @@ implements NotificationListener {
 		}
 	}
 	
-	/** Registier this editpolicy against its semantic host. */
+	/** Register this editpolicy against its semantic host. */
 	private void RegisterEditPolicy() {
 		EObject semanticHost = getSemanticHost();
-		Set set = (Set)_registry.get(semanticHost);
+		Set<CanonicalEditPolicy> set = _registry.get(semanticHost);
 		if ( set == null ) {
-			set = new HashSet();
+			set = new HashSet<CanonicalEditPolicy>();
 			_registry.put( semanticHost, set );
 		}
 		set.add(this);
@@ -232,9 +234,8 @@ implements NotificationListener {
 	private void UnregisterEditPolicy() {
 		EObject semanticHost = null; 
 
-		//
 		// 1st - delete unspecified refs
-		Set set = (Set)_registry.get(null);
+		Set<CanonicalEditPolicy> set = _registry.get(null);
 		if ( set != null ) {
 			set.remove(this);
 			if ( set.isEmpty() ) {
@@ -242,19 +243,16 @@ implements NotificationListener {
 			}
 		}
 		
-		//
 		// reverse key lookup since the unregistering an editpolicy
 		// typically means that the semantic element has been deleted.
-		Iterator keys = _registry.keySet().iterator();
-		while ( keys.hasNext() ) {
-			EObject key = (EObject)keys.next();
-			if ( ((Set)_registry.get(key)).contains(this)) {
+		for(EObject key : _registry.keySet()) {
+			if(_registry.get(key).contains(this)) {
 				semanticHost = key;
 				break;
 			}
 		}
 		
-		set = (Set)_registry.get(semanticHost);
+		set = _registry.get(semanticHost);
 		if ( set != null ) {
 			set.remove(this);
 			if ( set.isEmpty() ) {
@@ -270,13 +268,13 @@ implements NotificationListener {
 	 * @param element a semantic element
 	 * @return a unmodifiable list of semantic editpolicies listening to the supplied element
 	 */
-	public static List getRegisteredEditPolicies( EObject element ) {
-		List policies = new ArrayList();
-		Collection policiesWithSemanticElements = (Collection) _registry.get(element);
+	public static List<CanonicalEditPolicy> getRegisteredEditPolicies( EObject element ) {
+		List<CanonicalEditPolicy> policies = new ArrayList<CanonicalEditPolicy>();
+		Collection<CanonicalEditPolicy> policiesWithSemanticElements = _registry.get(element);
 		if (policiesWithSemanticElements != null) {
 			policies.addAll(policiesWithSemanticElements);
 		}
-		Collection policiesWithNullSemanticElements = (Collection) _registry.get(null);
+		Collection<CanonicalEditPolicy> policiesWithNullSemanticElements = _registry.get(null);
 		if (policiesWithNullSemanticElements != null) {
 			policies.addAll(policiesWithNullSemanticElements);
 		}
@@ -297,11 +295,10 @@ implements NotificationListener {
 	 * @return an unmodifiable list of semantic editpolicies listening to the
 	 *         supplied element
 	 */
-	public static List getRegisteredEditPolicies( EObject element, Class clazz ) {
-		List registeredPolicies = new ArrayList();
-		Iterator ceps = getRegisteredEditPolicies(element).iterator();
-		while( ceps.hasNext() ) {
-			CanonicalEditPolicy cep = (CanonicalEditPolicy)ceps.next();
+	public static List<CanonicalEditPolicy> getRegisteredEditPolicies( EObject element, Class clazz ) {
+		List<CanonicalEditPolicy> registeredPolicies = new ArrayList<CanonicalEditPolicy>();
+		
+		for(CanonicalEditPolicy cep : getRegisteredEditPolicies(element)) {
 			if ( cep.isEnabled() && clazz.isInstance(cep) ) {
 				registeredPolicies.add(cep);
 			}
@@ -328,7 +325,7 @@ implements NotificationListener {
 	 * Return the host's semantic children. <BR>
 	 * @return a list of semantic children.
 	 */
-	abstract protected List getSemanticChildrenList();
+	abstract protected List<EObject> getSemanticChildrenList();
 	
 	/** 
 	 * Returns the default factory hint. 
@@ -372,7 +369,7 @@ implements NotificationListener {
 	 * @return <tt>true</tt> if the host editpart should be refreshed; either one one of the supplied
 	 * views was deleted or has been reparented.
 	 */
-	protected final boolean deleteViews( Iterator views ) {
+	protected final boolean deleteViews( Iterator<View> views ) {
 		if ( !isEnabled() ) {
 			return false;
 		}
@@ -415,8 +412,8 @@ implements NotificationListener {
 	 * @param element to use
 	 * @return list of <code>View</code>s
 	 */
-	protected List getViewReferers(EObject element) {
-		List views = new ArrayList();
+	protected List<View> getViewReferers(EObject element) {
+		List<View> views = new ArrayList<View>();
 		if (element != null) {
 			EReference[] features = {NotationPackage.eINSTANCE
 					.getView_Element()};
@@ -446,33 +443,29 @@ implements NotificationListener {
 	 * @param eObjects list of semantic element
 	 * @return a list of {@link IAdaptable} that adapt to {@link View}.
 	 */
-	protected final List createViews(List eObjects) {
-		List descriptors = new ArrayList();
-		Iterator elements = eObjects.iterator();
-		while( elements.hasNext() ) {
-			EObject element = (EObject)elements.next();
+	protected final List<IAdaptable> createViews(List<EObject> eObjects) {
+		List<ViewDescriptor> descriptors = new ArrayList<ViewDescriptor>();
+		
+		for(EObject element : eObjects) {
 			if ( element != null ) {
-				CreateViewRequest.ViewDescriptor descriptor = getViewDescriptor(element);
-				descriptors.add(descriptor);
+				descriptors.add(getViewDescriptor(element));
 			}
 		}
 		
 		if ( !descriptors.isEmpty() ) {
-			//
 			// create the request
 			CreateViewRequest request = getCreateViewRequest(descriptors);
 			
-			//
 			// get the command and execute it.
 			Command cmd = getCreateViewCommand(request);
 			if ( cmd != null && cmd.canExecute() ) {
 				SetViewMutabilityCommand.makeMutable(new EObjectAdapter(host().getNotationView())).execute();
 				executeCommand(cmd);
-				List adapters = (List)request.getNewObject();
+				List<IAdaptable> adapters = (List<IAdaptable>)request.getNewObject();
 				return adapters;
 			}
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
     	
 	/**
@@ -480,7 +473,7 @@ implements NotificationListener {
 	 * @param cmd command that can be executed (i.e., cmd.canExecute() == true)
 	 */
 	protected void executeCommand( final Command cmd ) {
-        Map options = null;
+        Map<String, Boolean> options = null;
         EditPart ep = getHost();
         boolean isActivating = true;
         // use the viewer to determine if we are still initializing the diagram
@@ -530,24 +523,21 @@ implements NotificationListener {
 	 * @return command create view command(s)
 	 */
 	protected Command getCreateViewCommand(CreateRequest request) {
+        assert request instanceof CreateViewRequest;
+
         CompositeCommand cc = new CompositeCommand(DiagramUIMessages.AddCommand_Label); 
         Command cmd = host().getCommand(request);
+
         if (cmd == null) {
-            assert request instanceof CreateViewRequest;
-            Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
-            while (descriptors.hasNext()) {
-                CreateViewRequest.ViewDescriptor descriptor =
-                    (CreateViewRequest.ViewDescriptor)descriptors.next();
+            for(ViewDescriptor descriptor : ((CreateViewRequest)request).getViewDescriptors()) {
                 ICommand createCommand = getCreateViewCommand(descriptor);
                 cc.compose(createCommand);
             }
-        }else {
+        } else {
             cc.compose(new CommandProxy(cmd));
-            Iterator descriptors = ((CreateViewRequest)request).getViewDescriptors().iterator();
-            while (descriptors.hasNext()) {
-                CreateViewRequest.ViewDescriptor descriptor =
-                    (CreateViewRequest.ViewDescriptor)descriptors.next();
-                cc.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
+            
+            for(ViewDescriptor descriptor : ((CreateViewRequest)request).getViewDescriptors()) {
+            	cc.compose(new CommandProxy(SetViewMutabilityCommand.makeMutable(descriptor)));
             }
         }
         return new ICommandProxy(cc.reduce());
@@ -574,7 +564,7 @@ implements NotificationListener {
 	 * @param descriptors a {@link CreateViewRequest.ViewDescriptor} list.
 	 * @return a create request
 	 */
-	protected CreateViewRequest getCreateViewRequest( List descriptors ) {
+	protected CreateViewRequest getCreateViewRequest( List<ViewDescriptor> descriptors ) {
 		return new CreateViewRequest( descriptors );
 	}
 	
@@ -609,7 +599,7 @@ implements NotificationListener {
 	 */
 	protected CreateViewRequest.ViewDescriptor getViewDescriptor( EObject element ) {
 		//
-		// create the view descritor
+		// create the view descriptor
 		String factoryHint = getDefaultFactoryHint();
 		IAdaptable elementAdapter =
 			new CanonicalElementAdapter(element, factoryHint);
@@ -708,7 +698,7 @@ implements NotificationListener {
 	 */
 	public void setEnable( boolean enable ) {
 		EObject sHost = getSemanticHost();
-		List registeredPolicies = getRegisteredEditPolicies(sHost);
+		List<CanonicalEditPolicy> registeredPolicies = getRegisteredEditPolicies(sHost);
 
 		CanonicalEditPolicy[] policies = new CanonicalEditPolicy[registeredPolicies.size()];
 		registeredPolicies.toArray(policies);
@@ -743,10 +733,9 @@ implements NotificationListener {
 	 */
     public void deactivate() {
     	if (_listenerFilters != null) {
-    		Map listeners = new HashMap(_listenerFilters);
-    		Iterator keys = listeners.keySet().iterator();
-    		while (keys.hasNext()) {
-    			String id = (String) keys.next();
+    		Map<String, Object[]> listeners = new HashMap<String, Object[]>(_listenerFilters);
+    		
+    		for(String id: listeners.keySet()) {
     			removeListenerFilter(id);
     		}
     	}
@@ -776,7 +765,7 @@ implements NotificationListener {
 
 		if (element != null) {
 			if (_listenerFilters == null)
-				_listenerFilters = new HashMap();
+				_listenerFilters = new HashMap<String, Object[]>();
 			
 			if ( !_listenerFilters.containsKey(filterId)) {
 				getDiagramEventBroker().addNotificationListener(element,listener);
@@ -809,7 +798,7 @@ implements NotificationListener {
 
 		if (element != null) {
 			if (_listenerFilters == null)
-				_listenerFilters = new HashMap();
+				_listenerFilters = new HashMap<String, Object[]>();
 			
 			if ( !_listenerFilters.containsKey(filterId)) {
 				getDiagramEventBroker().addNotificationListener(element,feature,listener);
@@ -825,11 +814,13 @@ implements NotificationListener {
 	 * @param filterId the filter id
 	 */
 	protected void removeListenerFilter(String filterId) {
-		if (_listenerFilters == null)
+		if (_listenerFilters == null) {
 			return;
+		}
 		Object[] objects = (Object[]) _listenerFilters.remove(filterId);
-		if (objects == null)
+		if (objects == null) {
 			return;
+		}
 		if (objects.length > 2) {
 			getDiagramEventBroker().removeNotificationListener(
 				(EObject) objects[0], (EStructuralFeature) objects[1],
@@ -924,7 +915,7 @@ implements NotificationListener {
               }
               return false;
           }
-          Set features = getFeaturesToSynchronize();
+          Set<EStructuralFeature> features = getFeaturesToSynchronize();
           if (features!=null && !features.isEmpty()){
               if (features.contains(event.getFeature())&&
                   (addOrDelete||NotificationUtil.isSlotModified(event))){
@@ -946,7 +937,7 @@ implements NotificationListener {
      * Return the host's model children.
      * @return list of <code>View</Code>s
      */
-    protected List getViewChildren() {
+    protected List<View> getViewChildren() {
         return getViewChildren((View) host().getModel());
     }
 
@@ -958,18 +949,18 @@ implements NotificationListener {
      *            the view to find the children for
      * @return list of children views with groups removed.
      */
-    private List getViewChildren(View view) {
-        ArrayList list = new ArrayList();
-        for (Iterator iter = view.getChildren().iterator(); iter.hasNext();) {
-
-            Object child = iter.next();
+    private List<View> getViewChildren(View view) {
+        ArrayList<View> list = new ArrayList<View>();
+        
+        for(View child : (EList<View>)view.getChildren()) {
             if (child instanceof Node
-                && ViewType.GROUP.equals(((Node) child).getType())) {
-                list.addAll(getViewChildren((View) child));
+                    && ViewType.GROUP.equals(((Node) child).getType())) {
+                list.addAll(getViewChildren(child));
             } else {
                 list.add(child);
-            }
+            }        	
         }
+        
         return list;
     }
 
@@ -1000,7 +991,7 @@ implements NotificationListener {
 	 * Redirects the call to {@link #refreshSemanticChildren()}.
 	 */
 	protected void refreshSemantic() {
-		List createdViews = refreshSemanticChildren();
+		List<IAdaptable> createdViews = refreshSemanticChildren();
 		makeViewsImmutable(createdViews);
 	}
 
@@ -1011,9 +1002,9 @@ implements NotificationListener {
 	 * @param createdViews <code<>List</code> of view adapters that were created during the 
 	 * {@link CanonicalEditPolicy#refreshSemantic()} operation
 	 */
-	final protected void makeViewsMutable(List createdViews) {
+	final protected void makeViewsMutable(List<IAdaptable> createdViews) {
 		if (createdViews != null && !createdViews.isEmpty()) {
-			List viewAdapters = prepareAdapterList(createdViews);
+			List<IAdaptable> viewAdapters = prepareAdapterList(createdViews);
 			executeCommand(SetViewMutabilityCommand.makeMutable(viewAdapters));
 		}
 	}
@@ -1026,50 +1017,48 @@ implements NotificationListener {
 	 * @param createdViews <code<>List</code> of view adapters that were created during the 
 	 * {@link CanonicalEditPolicy#refreshSemantic()} operation
 	 */
-	final protected void makeViewsImmutable(List createdViews) {
+	final protected void makeViewsImmutable(List<IAdaptable> createdViews) {
 		if (createdViews != null && !createdViews.isEmpty()) {
 			addListenersToContainers(createdViews);
 			
-			List viewAdapters = prepareAdapterList(createdViews);
+			List<IAdaptable> viewAdapters = prepareAdapterList(createdViews);
 			Command immutable = SetViewMutabilityCommand.makeImmutable(viewAdapters);
 			AsyncCommand ac = new AsyncCommand(immutable);
 			ac.execute();
 		}
 	}
 
-	private void addListenersToContainers(List createdViews) {
-		UniqueEList list = new UniqueEList();
-		ListIterator li = createdViews.listIterator();
-		while (li.hasNext()) {
-			Object obj = li.next();
-			if (obj instanceof IAdaptable) {
-				View view = (View)((IAdaptable)obj).getAdapter(View.class);
-				if (view != null)
-					list.add(view.eContainer());
+	private void addListenersToContainers(List<IAdaptable> createdViews) {
+		UniqueEList<View> list = new UniqueEList<View>();
+		for(IAdaptable obj : createdViews) {
+			View view = (View)obj.getAdapter(View.class);
+			if (view != null) {
+				list.add((View)view.eContainer());
 			}
 		}
 		
-		ListIterator liContainers = list.listIterator();
-		while (liContainers.hasNext()) {
-			View containerView = (View)liContainers.next();
+		for(View containerView : list) {
 			addListenerFilter("NotationListener_Container_" + containerView.getClass().getName() + '@' + Integer.toHexString(containerView.hashCode()), //$NON-NLS-1$
 				  this,
 				  containerView,
-				  NotationPackage.eINSTANCE.getView_PersistedChildren()); 
+				  NotationPackage.eINSTANCE.getView_PersistedChildren());
 		}
 	}
 	
-	private List prepareAdapterList(List createdViews) {
-		List viewAdapters = new ArrayList();
+	private List<IAdaptable> prepareAdapterList(List<IAdaptable> createdViews) {
+		List<IAdaptable> viewAdapters = new ArrayList<IAdaptable>();
 		viewAdapters.add( host() );
-		ListIterator li = createdViews.listIterator();
+		
+		ListIterator<IAdaptable> li = createdViews.listIterator();
 		while (li.hasNext()) {
-			Object obj = li.next();
-			if (obj != null) {
-				if (!(obj instanceof IAdaptable) && obj instanceof EObject)
-					viewAdapters.add(new EObjectAdapter((EObject)obj));
-				else
-					viewAdapters.add(obj);
+			IAdaptable adapter = li.next();
+			
+			if (adapter != null) {
+				if (!(adapter instanceof IAdaptable) && adapter instanceof EObject) {
+					viewAdapters.add(new EObjectAdapter((EObject)adapter));
+				} else {
+					viewAdapters.add(adapter);
+				}
 			}
 		}
 		return viewAdapters;
@@ -1097,30 +1086,29 @@ implements NotificationListener {
 	 * @return <code>List</code> of new <code>View</code> objects that were created as a result of 
 	 * the synchronization
 	 */
-	protected final List refreshSemanticChildren() {
+	protected final List<IAdaptable> refreshSemanticChildren() {
 		
 		// Don't try to refresh children if the semantic element
 		// cannot be resolved.
 		if (resolveSemanticElement() == null) {
-			return Collections.EMPTY_LIST;		
+			return Collections.emptyList();		
 		}
 		
-		//
 		// current views
-		List viewChildren = getViewChildren();
-		List semanticChildren = new ArrayList(getSemanticChildrenList());
+		List<View> viewChildren = getViewChildren();
+		List<EObject> semanticChildren = new ArrayList<EObject>(getSemanticChildrenList());
 
-		List orphaned = cleanCanonicalSemanticChildren(viewChildren, semanticChildren);
+		List<View> orphaned = cleanCanonicalSemanticChildren(viewChildren, semanticChildren);
 		boolean changed = false;
 		//
-		// delete all the remaining oprphaned views
+		// delete all the remaining orphaned views
 		if ( !orphaned.isEmpty() ) {
 			changed = deleteViews(orphaned.iterator());
 		}
 		
 		//
 		// create a view for each remaining semantic element.
-		List createdViews = Collections.EMPTY_LIST;
+		List<IAdaptable> createdViews = Collections.emptyList();
 		if ( !semanticChildren.isEmpty() ) {
 			createdViews = createViews( semanticChildren );
 			
@@ -1144,8 +1132,9 @@ implements NotificationListener {
 			}
 		}
 		
-		if (changed || createdViews.size() > 0)
+		if (changed || createdViews.size() > 0) {
 			postProcessRefreshSemantic(createdViews);
+		}
 		
 
 		return createdViews;
@@ -1160,14 +1149,14 @@ implements NotificationListener {
 	 * @param semanticChildren <code>List</code> of semantic elements that are candidates for synchronization
 	 * @return <code>List</code> of orphans views that should be deleted from the container.
 	 */
-	final protected List cleanCanonicalSemanticChildren(Collection viewChildren, Collection semanticChildren) {
-		View viewChild;
+	final protected List<View> cleanCanonicalSemanticChildren(Collection<? extends View> viewChildren, Collection<EObject> semanticChildren) {
 		EObject semanticChild;
-		Iterator viewChildrenIT = viewChildren.iterator();
-		List orphaned = new ArrayList();
-		Map viewToSemanticMap = new HashMap();
-		while( viewChildrenIT.hasNext() ) {
-			viewChild = (View)viewChildrenIT.next();
+		
+		List<View> orphaned = new ArrayList<View>();
+		Map<EObject, View> viewToSemanticMap = new HashMap<EObject, View>();
+		
+		for(View viewChild : viewChildren) {
+			
 			semanticChild = viewChild.getElement();
 			if (!isOrphaned(semanticChildren, viewChild)) {
 				semanticChildren.remove(semanticChild);
@@ -1177,7 +1166,7 @@ implements NotificationListener {
 				orphaned.add(viewChild);
 			}
 			
-			View viewInMap = (View)viewToSemanticMap.get(semanticChild);
+			View viewInMap = viewToSemanticMap.get(semanticChild);
 			if (viewInMap != null && !viewChild.equals(viewInMap)) { 
 				if (viewInMap.isMutable()) {
 					orphaned.remove(viewChild);
@@ -1190,15 +1179,15 @@ implements NotificationListener {
 	}
 
     /**
-     * Decide if the passed view is orphened or not
+     * Decide if the passed view is orphaned or not
      * 
      * @param semanticChildren
-     *            semantic children to check againest
+     *            semantic children to check against
      * @param view
-     *            the view that shoudlbe checked
+     *            the view that should be checked
      * @return true if orphaned other wise false
      */
-    protected boolean isOrphaned(Collection semanticChildren, View view) {
+    protected boolean isOrphaned(Collection<EObject> semanticChildren, View view) {
         return !semanticChildren.contains(view.getElement());
     }
 	
@@ -1208,7 +1197,7 @@ implements NotificationListener {
 	 * 
 	 * @param viewDescriptors <code>List</code> of IAdaptable that adapt to <code>View</code>
 	 */
-	protected void postProcessRefreshSemantic(List viewDescriptors) {
+	protected void postProcessRefreshSemantic(List<IAdaptable> viewDescriptors) {
 		// need to refresh host to create editparts so that dependent canonical editpolicies can synchronize as well.
 		getHost().refresh(); 
 	}
@@ -1259,8 +1248,8 @@ implements NotificationListener {
      * @return Set of EStructuralFeature features
      */
 
-    protected Set getFeaturesToSynchronize(){
-        return Collections.EMPTY_SET;
+    protected Set<EStructuralFeature> getFeaturesToSynchronize(){
+        return Collections.emptySet();
     }
     
     /**

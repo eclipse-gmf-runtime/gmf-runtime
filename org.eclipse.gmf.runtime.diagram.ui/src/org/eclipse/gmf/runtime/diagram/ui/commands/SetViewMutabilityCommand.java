@@ -44,13 +44,13 @@ import org.eclipse.gmf.runtime.notation.View;
  * by the Diagram Listener to decide if a view can move from the transient childern 
  * list of its container to the persisted list. so a mutable view will never be persisted
  * keep in mind that the mutability state of the view is a transient state so as soon as the 
- * model is closed and oppened again all views will be immutable.
+ * model is closed and opened again all views will be immutable.
  * @author mhanner
  */
 public class SetViewMutabilityCommand extends Command {
 	
 	/** cached non-persisted views. */
-	private List _viewAdapters = Collections.EMPTY_LIST;
+	private List _viewAdapters = Collections.emptyList();
 	
 	/** immutable flag. */
 	private boolean _immutable = true;
