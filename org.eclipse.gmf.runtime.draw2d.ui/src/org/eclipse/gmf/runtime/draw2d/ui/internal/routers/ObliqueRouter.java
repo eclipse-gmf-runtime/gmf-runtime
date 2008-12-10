@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,18 +13,22 @@ package org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.graph.Path;
 import org.eclipse.gmf.runtime.common.core.util.Trace;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
@@ -41,20 +45,20 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 public class ObliqueRouter extends BendpointConnectionRouter {
 
 	static public class ArrayListMap {
-		private HashMap map = new HashMap();
+		private HashMap<Object, Object> map = new HashMap<Object, Object>();
 
 		public ArrayListMap() {
 			super();
 		}
 
-		public ArrayList get(Object key) {
+		public ArrayList<Object> get(Object key) {
 			Object value = map.get(key);
 			if (value == null)
 				return null;
 
 			if (value instanceof ArrayList)
-				return (ArrayList) value;
-			ArrayList v = new ArrayList(1);
+				return (ArrayList<Object>) value;
+			ArrayList<Object> v = new ArrayList<Object>(1);
 			v.add(value);
 			return v;
 		}
@@ -66,13 +70,13 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 				return;
 			}
 			if (arrayListObject instanceof ArrayList) {
-				ArrayList arrayList = (ArrayList) arrayListObject;
+				ArrayList<Object> arrayList = (ArrayList<Object>) arrayListObject;
 				if (!arrayList.contains(value))
 					arrayList.add(value);
 				return;
 			}
 			if (arrayListObject != value) {
-				ArrayList arrayList = new ArrayList(2);
+				ArrayList<Object> arrayList = new ArrayList<Object>(2);
 				arrayList.add(arrayListObject);
 				arrayList.add(value);
 				map.put(key, arrayList);
@@ -203,31 +207,179 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 
         PointList points = calculateBendPoints(conn);
              
-        routeLine(conn, 0, points);
-		conn.setPoints(points);
+   		// points could be null if routing is already finished in calculateBendPoints
+    	if (points != null) {
+    		routeLine(conn, 0, points);
+    		conn.setPoints(points);
+    	}
 	}
 	
 	/**
-     * Return a point list that contains the bend points on the connections
-     * clients can override this method to introduce calculated bend points 
+     * Return a point list that contains the bend points on the connections.
+     * Clients can override this method to introduce calculated bend points 
      * on the connection 
 	 * @param conn the connection to get the bend points for
 	 * @return bend points as a Point List
 	 */
 	protected PointList calculateBendPoints(Connection conn) {
-        PointList points = new PointList();        
-		if (isAvoidingObstructions(conn)) {
-            points = RouterHelper.getInstance().routeAroundObstructions(conn);	
-		} 
-        else if (isClosestDistance(conn)) {
-            points = RouterHelper.getInstance().routeClosestDistance(conn);
-        }
-        else {
-            points = RouterHelper.getInstance().routeFromConstraint(conn);
-        }
+		RouterHelper helper = RouterHelper.getInstance();
+        PointList points = null;    
+    	boolean routed = false;    
+    	if (isAvoidingObstructions(conn) && helper.getUseGEFRouter()) {
+    		routed = routeAroundObstructions_GEF(conn);
+    	}
+    	if (!routed) {       
+    		points = new PointList();
+    		if (isAvoidingObstructions(conn)) {
+    			points = helper.routeAroundObstructions(conn);
+    		} else if (isClosestDistance(conn)) {
+    			points = helper.routeClosestDistance(conn);
+    		} else {
+    			points = helper.routeFromConstraint(conn);
+    		}
+    	}
 		return points;
 	}
+	
+	/**
+	 * Incorporating use of GEF’s ShortestPathConnectionRouter into GMF’s
+	 * ObliqueRouter in order to enable instant re-routing when an obstacle is
+	 * placed on or removed from a connection which has Avoid Obstacles property
+	 * set. The rules for routing: 
+	 * 
+	 * <li>If the connection is completely within
+	 * one container (doesn’t matter if the container is nested), then GEF’s
+	 * router is used, meaning that the connection will be appropriately
+	 * re-routed in case when an obstacle is being placed on the way. 
+	 * 
+	 * <li>If the connection spans between two containers, then this method returns null
+	 * and the old GMF algorithm for avoiding obstructions is used (meaning that
+	 * re-routing will not happen right away when an object is placed on the
+	 * connection).
+	 * 
+	 * <p>
+	 * Note that connection container may change by either attaching a
+	 * connection anchor to a shape from a different container, or by moving
+	 * source or target shape to a different container.
+	 * 
+	 * <p>
+	 * Self connections and connections whose source and target intersect are dealt
+	 * with in <code>routeLine</code> and avoid obstructions is irrelevant
+	 * (just like when non-GEF avoid obstructions router is used). 
+	 * 
+	 * <p>
+	 * Known issue: if an obstacle contains a connection start or
+	 * end point, that obstacle is ignored, meaning that the connection can be
+	 * routed through it.
+	 * 
+	 * @param conn
+	 * @return true if routing was done by GEF algorithm, false otherwise
+	 */
+    public boolean routeAroundObstructions_GEF(Connection conn) {
+    	RouterHelper helper = RouterHelper.getInstance();
+		boolean routed = false;
+		if (helper.getUseGEFRouter()) {
+			ShortestPathConnectionRouter spcr = helper.getConnRouter(conn, true);
+			if (spcr != null) {
+				// Do routing only if spcr says there is something to route, or if
+				// this is the first time conn is routed by spcr
+				if (spcr.isDirty() || !spcr.containsConnection(conn)) {
+					// add conn to spcr if needed
+					// (in our case, spcr takes into account only end points, manual bendpoints
+					// in constraint will be ignored)
+					if (!spcr.containsConnection(conn)) {
+						helper.setConstraint(spcr, conn, null);
+					}									
+					// spcr has to ignore invalidation of connections that are rooted as a
+					// result of this call (otherwise, invalidation of those connections would dirty spcr
+					// therefore causing routing to be done again)
+					spcr.setIgnoreInvalidate(true);
+					
+					List<Path> allPaths = spcr.getPathsAfterRouting();
+					if (allPaths != null && allPaths.size() > 0) {
+						routed = true;
+						IFigure container = helper.getSourceContainer(conn);
+						// Source and target containers are the same (we know since GEF router is used)
+						// Exception: user is moving a connection anchor and it is currently not inside any figure.						
+						if (container == null) {
+							container = helper.getTargetContainer(conn);
+						}						
+						if (container != null) { // should never be null at this point
+							PointList points;
+							for (int i = 0; i < allPaths.size(); i++) {
+								Path path = allPaths.get(i);								
+								Connection currentConn = (Connection) path.data;
+								points = new PointList();
+								// spcr needed path coordinates to be relative to the container.
+								// Now translate them back to be relative to the connection.  
+								for (int j = 0; j < path.getPoints().size(); j++) {
+									PrecisionPoint pt = new PrecisionPoint(path.getPoints().getPoint(j));
+									container.translateToAbsolute(pt);
+									currentConn.translateToRelative(pt);
+									points.addPoint(pt);
+								}
+								// Adjust start and end points, check for self connection, and source and target intersecting
+								// Problem: framework is designed for connections to be routed one at the time, but GEF's 
+								// algorithm routes several connections at once. Now we have to check if currentConn is routed 
+								// by the same router as conn, it could be routed by child (e.g. rectilinear router), or conn could be 
+								// routed by child and currentConn by this router. 
+								ConnectionRouter currentConnRouter = currentConn.getConnectionRouter();
+								if (!currentConnRouter.equals(conn.getConnectionRouter())) {
+									if (currentConnRouter instanceof ObliqueRouter) { 
+										((ObliqueRouter)currentConnRouter).routeLine(currentConn, 0, points);
+									} else if ((currentConnRouter instanceof FanRouter) && 
+											(((FanRouter)currentConnRouter).getRouter() instanceof ObliqueRouter)) {
+										 // this handles the case when ObliqueRouter is delegate of FanRouter
+										((ObliqueRouter)((FanRouter)currentConnRouter).getRouter()).routeLine(currentConn, 0, points);
+									} else {		
+										routeLine(currentConn, 0, points);
+									}
 
+									// (another way would be to revalidate currentConn so it would be routed by its own router
+									// through the process of validation, but would have to prevent endless loop)									
+								} else {		
+									routeLine(currentConn, 0, points);
+								}
+								
+								// Check if this path really changed or not. This check will reduce the number of 
+								// revalidation calls, but it is not necessary (even if revalidation is called on a 
+								// connection that didn't change, spcr.getIsDirty() will return false and routing will not happen)
+								PointList oldPoints = currentConn.getPoints();
+								boolean route = false;
+								if (oldPoints == null || oldPoints.size() != points.size()
+										|| (currentConn == conn )) {
+									route = true;
+								} else {
+									for (int j = 0; j <= oldPoints.size() - 1; j++) {
+										if (oldPoints.getPoint(j).x != points.getPoint(j).x
+												|| oldPoints.getPoint(j).y != points.getPoint(j).y) {
+											route = true;
+											break;
+										}
+									}
+								}
+								if (route) {
+									currentConn.setPoints(points);
+									// don't revalidate conn since it already went through the whole process of layout
+									if (conn != currentConn) {
+										// Revalidate to ensure that currentConn goes through the complete layout.
+										currentConn.revalidate();
+									}
+								}
+							}
+						}
+					}
+					spcr.setIgnoreInvalidate(false);
+				} else {
+					// There is nothing to route
+					// Still, call setPoints since it ensures calculating bounds that may be needed later on
+					conn.setPoints(conn.getPoints());
+					routed = true;
+				}
+			}
+		}
+		return routed;
+    }	
 
 	/**
 	 * Method removePointsInViews.
@@ -554,7 +706,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		 * the same 2 intersecting shapes. If yes, determine what's the index.
 		 * (i.e the n>1)
 		 */
-		ArrayList connectionList = intersectingShapesConnections.get(key);
+		ArrayList<Object> connectionList = intersectingShapesConnections.get(key);
 		if (connectionList != null) {
 			if (!connectionList.contains(conn)) {
 				intersectingShapesConnections.put(key, conn);
@@ -864,7 +1016,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 			return;
 
 		ArrayListKey connectionKey = new ArrayListKey(conn);
-		ArrayList connectionList = selfRelConnections.get(connectionKey);
+		ArrayList<Object> connectionList = selfRelConnections.get(connectionKey);
 		if (connectionList != null) {
 			int index = connectionList.indexOf(conn);
 			if (index == -1)
@@ -884,7 +1036,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 				|| conn.getTargetAnchor().getOwner() == null)
 				return;
 		Object key = getIntersectingShapesConnectionKey(conn);
-		ArrayList connectionList = intersectingShapesConnections.get(key);
+		ArrayList<Object> connectionList = intersectingShapesConnections.get(key);
 		if (connectionList != null) {
 			int index = connectionList.indexOf(conn);
 			if (index == -1)
@@ -921,7 +1073,7 @@ public class ObliqueRouter extends BendpointConnectionRouter {
 		ArrayListKey connectionKey = new ArrayListKey(conn);
 		int nSelfIncr = 0;
 		int nIndex = 0;
-		ArrayList connectionList = selfRelConnections.get(connectionKey);
+		ArrayList<Object> connectionList = selfRelConnections.get(connectionKey);
 		if (connectionList != null) {
 			if (!connectionList.contains(conn)) {
 				selfRelConnections.put(connectionKey, conn);
@@ -1159,4 +1311,5 @@ public class ObliqueRouter extends BendpointConnectionRouter {
         super.setConstraint(connection, constraint);
         RouterHelper.getInstance().setConstraint(connection, constraint);
     }
+    
 }

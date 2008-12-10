@@ -395,6 +395,7 @@ abstract public class ConnectionEditPart
                 }
             }
         }
+        getConnectionFigure().getConnectionRouter().remove(getConnectionFigure());
     }
 
     public void removeNotify() {

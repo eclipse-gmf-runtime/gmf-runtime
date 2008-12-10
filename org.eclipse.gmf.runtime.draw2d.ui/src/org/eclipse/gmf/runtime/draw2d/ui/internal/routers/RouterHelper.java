@@ -34,6 +34,7 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Ray;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 
@@ -44,9 +45,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
  * @author sshaw
  * 
  */
-class RouterHelper {
 
-    static private RouterHelper sprm = new RouterHelper(false);
+class RouterHelper {	
+	 
+    static private RouterHelper sprm = new RouterHelper(true);
 
     /**
      * @return the <code>RouterHelper</code> singleton instance
@@ -55,50 +57,178 @@ class RouterHelper {
         return sprm;
     }
     
-    private Map routers = new WeakHashMap();
-
-    private Map lastUsedRouter = new WeakHashMap();
-
-    private boolean useGEFRouter = false;
-
+   private boolean useGEFRouter = true;
+    
     private RouterHelper(boolean useGEFRouter) {
         super();
         this.useGEFRouter = useGEFRouter;
     }
+    
+    protected boolean getUseGEFRouter() {
+    	return useGEFRouter;
+    }
+    /***************************************************************************
+     * Following section is supporting useGEFRouter = true option
+     ***************************************************************************/
+    
+    // if useGEFRouter = true, holds one router for each container that has at least
+    // one connection with avoid obstacles on
+    private Map<IFigure, ShortestPathConnectionRouter> routers = new WeakHashMap<IFigure, ShortestPathConnectionRouter>();
+
+    // if useGEFRouter = true, keeps track of the last GEF router used
+    // for routing each connection with avoid obstacles on
+    private Map<Connection, ShortestPathConnectionRouter> lastUsedRouter = new WeakHashMap<Connection, ShortestPathConnectionRouter>();
 
     /**
-     * @param conn
-     * @param constraint
+     * Added to support GEF's router.
      */
     public void setConstraint(Connection conn, Object constraint) {
-        if (useGEFRouter) {
-            ShortestPathConnectionRouter spcr = getRouter(conn);
-            if (spcr != null)
-                spcr.setConstraint(conn, constraint);
+        if (useGEFRouter && isAvoidingObstructions(conn)) {
+            ShortestPathConnectionRouter spcr = getConnRouter(conn, false);
+            if (spcr != null) {
+                setConstraint(spcr, conn, constraint);
+            }
         }
     }
+    
+	/**
+	 * Sets constraint for GEF router.
+	 * 
+	 * @param spcr
+	 *            GEF router
+	 * @param conn
+	 *            <code>Connection</code> whose constraint is being set
+	 * @param constraint
+	 *            New constraint
+	 */
+	public void setConstraint(ShortestPathConnectionRouter spcr,
+			Connection conn, Object constraint) {
+		spcr.setConstraint(conn, null);
+	}
+
+	/**
+	 * Added to support GEF's router.
+	 * 
+	 * @param conn
+	 *            the <code>Connection</code> to be removed from GEF's router,
+	 *            if applicable.
+	 */
+	public void remove(Connection conn) {
+		if (useGEFRouter && isAvoidingObstructions(conn)) {
+			ShortestPathConnectionRouter spcr = getConnRouter(conn, false);
+			if (spcr != null) {
+				cleanUpAvoidObstaclesRouter(spcr, conn);
+			}
+		}
+	}
+	
+    /**
+     * Removes conn from router and cleans up routers and lastUSedRouter appropriately
+     */
+    private void cleanUpAvoidObstaclesRouter(ShortestPathConnectionRouter router, Connection conn) {    	 
+		if (router != null) {
+			router.remove(conn);
+			if (!router.hasMoreConnections()) {
+				routers.remove(router.getContainer());
+			}
+			lastUsedRouter.remove(conn);
+		}
+    } 	
 
     /**
-     * @param conn
-     */
-    public void remove(Connection conn) {
-        if (useGEFRouter) {
-            ShortestPathConnectionRouter spcr = getRouter(conn);
-            if (spcr != null)
-                spcr.remove(conn);
-        }
-    }
-
-    /**
-     * @param conn
-     */
+	 * Added to support GEF's router.
+	 * 
+	 * @param conn
+	 *            the <code>Connection</code> to be potentially invalidated. 
+	 */
     public void invalidate(Connection conn) {
-        if (useGEFRouter) {
-            ShortestPathConnectionRouter spcr = getRouter(getSourceContainer(conn));
-            if (spcr != null)
+        if (useGEFRouter && isAvoidingObstructions(conn)) {
+            ShortestPathConnectionRouter spcr = getConnRouter(conn, false);
+            if (spcr != null) {
                 spcr.invalidate(conn);
+            }
         }
     }
+    
+    /**
+     * Retrieves GEF's router for given figContainer
+     * @param figContainer
+     * @param createNew If true, new router will be created if one doesn't already exist
+     * @return
+     */
+    private ShortestPathConnectionRouter getRouter(IFigure figContainer, boolean createNew) {
+        ShortestPathConnectionRouter shortestPathRouter = (ShortestPathConnectionRouter) routers
+            .get(figContainer);
+        if (shortestPathRouter == null && createNew) {
+            shortestPathRouter = new ShortestPathConnectionRouter(figContainer);
+            shortestPathRouter.setSpacing(MapModeUtil.getMapMode(figContainer)
+                .DPtoLP(10));
+            routers.put(figContainer, shortestPathRouter);
+        }
+
+        return shortestPathRouter;
+    }    
+    
+    /**
+     * Retrieves GEF's router for routing conn, if both source and target of the connection
+     * belong to the same container.
+     * @param conn the <code>Connection</code> whose router is to be retrieved.
+     * @param forRouting Indicates if this call is made in order to route the connection.
+     * is no router for conn. If yes, and there is no apporpriate router for this connection, then new 
+     * router will be created. 
+     * @return the router to use for routing conn
+     */
+    protected ShortestPathConnectionRouter getConnRouter(Connection conn, boolean forRouting) {
+        ShortestPathConnectionRouter lur = (ShortestPathConnectionRouter) lastUsedRouter.get(conn);    	
+    	// First, get the container for this connection
+    	// Rule: both source and target figures have to belong to the same container. 
+    	IFigure container = null;
+        IFigure sourcefigContainer = getSourceContainer(conn);
+        IFigure targetfigContainer = getTargetContainer(conn);        
+        if (sourcefigContainer == null || targetfigContainer == null ) {
+        	// this may happen when source or target anchors are being moved outside of all figures,
+        	// or if source or target of conn is another connection        	        	
+        	if (lur != null) {
+        		// Route using the last router, if any, otherwise don't route using GEF
+        		return lur;
+        	} else {
+        		container = null;
+        	}
+        } else if (sourcefigContainer != targetfigContainer) {
+        	container = null;
+        } else {
+        	container = sourcefigContainer;
+        }
+        
+        if (container == null) {
+        	// conn spans between two different containers in which case we don't support
+        	// avoid obstacles. If there was a router for this connection (conn used to belong
+        	// to one container), remove it from previous router.
+        	if (lur != null) {
+        		cleanUpAvoidObstaclesRouter(lur, conn);
+        	}
+            return null;
+        }
+        ShortestPathConnectionRouter spcr = getRouter(container, forRouting);
+ 
+        if (spcr != null && forRouting) {
+			if (lur != spcr) {
+				if (lur != null) {
+					// conn changed container. Remove it from previous router.
+					cleanUpAvoidObstaclesRouter(lur, conn);
+				}
+				lastUsedRouter.put(conn, spcr);				
+			}			
+		}
+        return spcr;
+    }   
+    
+    
+    /***************************************************************************
+     * end of section supporting useGEFRouter = true option
+     ***************************************************************************/
+    
+    
     
     /**
      * @param conn the <code>Connection</code> that is to be check if it is a feedback
@@ -118,6 +248,10 @@ class RouterHelper {
      * a direct mapping of the constraint points.
      */
     public PointList routeFromConstraint(Connection conn) {
+    	if (useGEFRouter && lastUsedRouter.get(conn) != null) {
+    		// User just unselected Avoid obstacles options for this connection, clean up.
+    		cleanUpAvoidObstaclesRouter((ShortestPathConnectionRouter)lastUsedRouter.get(conn), conn);
+    	}
         List bendpoints = (List)conn.getConnectionRouter().getConstraint(conn);
         if (bendpoints == null)
             bendpoints = Collections.EMPTY_LIST;
@@ -148,6 +282,10 @@ class RouterHelper {
      * the closest distance possible to route the line.
      */
     public PointList routeClosestDistance(Connection conn) {
+    	if (useGEFRouter && lastUsedRouter.get(conn) != null) {
+    		// User just unselected Avoid obstacles options for this connection, clean up.
+    		cleanUpAvoidObstaclesRouter((ShortestPathConnectionRouter)lastUsedRouter.get(conn), conn);
+    	}
         PointList newLine = routeFromConstraint(conn);
         
         Point ptOrig = new Point(newLine.getFirstPoint());
@@ -158,123 +296,109 @@ class RouterHelper {
         newLine.addPoint(ptTerm);
         
         return newLine;
-    }
+    }       
     
     /**
-     * @param conn the <code>Connection</code> that is to be routed.
-     * @return the <code>PointList</code> that is the list of points that are
-     * avoiding all the possible obstructions in the container for the connection.
-     */
-    public PointList routeAroundObstructions(Connection conn) {
-        PointList newLine = null;
-        
-        if (useGEFRouter) {
-            newLine = new PointList();
-            
-            ShortestPathConnectionRouter spcr = RouterHelper.getInstance().getRouter(conn);
-            if (spcr == null)
-                newLine = routeFromConstraint(conn);
-            else {
-                spcr.route(conn);
-                newLine.removeAllPoints();
-                newLine.addAll(conn.getPoints());
-            }
-        } else {
-        newLine = routeClosestDistance(conn);
-        
-        Point infimumPoint = PointListUtilities.getPointsInfimum(newLine);
-        Point supremumPoint = PointListUtilities.getPointsSupremum(newLine);
+	 * @param conn
+	 *            the <code>Connection</code> that is to be routed.
+	 * @return the <code>PointList</code> that is the list of points that are
+	 *         avoiding all the possible obstructions in the container for the
+	 *         connection.
+	 */
+	public PointList routeAroundObstructions(Connection conn) {
+		PointList newLine = null;
+		newLine = routeClosestDistance(conn);
 
-        Ray diameter = new Ray(infimumPoint, supremumPoint);
-        Rectangle rPoly = new Rectangle(infimumPoint.x, infimumPoint.y,
-            diameter.x, diameter.y);
+		Point infimumPoint = PointListUtilities.getPointsInfimum(newLine);
+		Point supremumPoint = PointListUtilities.getPointsSupremum(newLine);
 
-        List collectObstructs = new LinkedList();
+		Ray diameter = new Ray(infimumPoint, supremumPoint);
+		Rectangle rPoly = new Rectangle(infimumPoint.x, infimumPoint.y,
+				diameter.x, diameter.y);
 
-        IFigure parent = getRouterContainerFigure(conn);     
+		List collectObstructs = new LinkedList();
 
-        // don't bother routing if there is no attachments
-        if (parent == null)
-            return routeFromConstraint(conn);
+		IFigure parent = getRouterContainerFigure(conn);
 
-        // set the end points back to the reference points - this will avoid
-        // errors, where
-        // an edge point is erroneously aligned with a specific edge, even
-        // though the avoid
-        // obstructions would suggest attachment to another edge is more
-        // appropriate
-        Point ptRef = conn.getSourceAnchor().getReferencePoint();
-        conn.translateToRelative(ptRef);
-        newLine.setPoint(ptRef, 0);
-        ptRef = conn.getTargetAnchor().getReferencePoint();
-        conn.translateToRelative(ptRef);
-        newLine.setPoint(ptRef, newLine.size() - 1);
+		// don't bother routing if there is no attachments
+		if (parent == null)
+			return routeFromConstraint(conn);
 
-        // TBD - optimize this
-        // increase connect view rect by width or height of diagram
-        // to maximize views included in the obstruction calculation
-        // without including all views in the diagram
-        Rectangle rBoundingRect = new Rectangle(parent.getBounds());
-        parent.translateToAbsolute(rBoundingRect);
-        conn.translateToRelative(rBoundingRect);
+		// set the end points back to the reference points - this will avoid
+		// errors, where
+		// an edge point is erroneously aligned with a specific edge, even
+		// though the avoid
+		// obstructions would suggest attachment to another edge is more
+		// appropriate
+		Point ptRef = conn.getSourceAnchor().getReferencePoint();
+		conn.translateToRelative(ptRef);
+		newLine.setPoint(ptRef, 0);
+		ptRef = conn.getTargetAnchor().getReferencePoint();
+		conn.translateToRelative(ptRef);
+		newLine.setPoint(ptRef, newLine.size() - 1);
 
-        if (rPoly.width > rPoly.height) {
-            rPoly.y = rBoundingRect.y;
-            rPoly.setSize(rPoly.width, rBoundingRect.height);
-        } else {
-            rPoly.x = rBoundingRect.x;
-            rPoly.setSize(rBoundingRect.width, rPoly.height);
-        }
-        
-        collectObstructions(conn, rPoly, collectObstructs);
+		// TBD - optimize this
+		// increase connect view rect by width or height of diagram
+		// to maximize views included in the obstruction calculation
+		// without including all views in the diagram
+		Rectangle rBoundingRect = new Rectangle(parent.getBounds());
+		parent.translateToAbsolute(rBoundingRect);
+		conn.translateToRelative(rBoundingRect);
 
-        // parse through obstruction collect and combine rectangle that
-        // intersect with each other
-        if (collectObstructs.size() > 0) {
-            Dimension buffer = new Dimension(ROUTER_OBSTRUCTION_BUFFER + 1,
-                0);
-            if (!isFeedback(conn))
-                buffer = (Dimension) MapModeUtil.getMapMode(conn).DPtoLP(
-                    buffer);
-            final int inflate = buffer.width;
+		if (rPoly.width > rPoly.height) {
+			rPoly.y = rBoundingRect.y;
+			rPoly.setSize(rPoly.width, rBoundingRect.height);
+		} else {
+			rPoly.x = rBoundingRect.x;
+			rPoly.setSize(rBoundingRect.width, rPoly.height);
+		}
 
-            List collapsedRects = collapseRects(collectObstructs, inflate);
-            collectObstructs.clear();
+		collectObstructions(conn, rPoly, collectObstructs);
 
-            // Loop through the collapsedRects list until there are no more
-            // intersections
-            boolean bRouted = true;
-            while (bRouted && !collapsedRects.isEmpty()) {
-                ListIterator listIter = collapsedRects.listIterator();
-                bRouted = false;
+		// parse through obstruction collect and combine rectangle that
+		// intersect with each other
+		if (collectObstructs.size() > 0) {
+			Dimension buffer = new Dimension(ROUTER_OBSTRUCTION_BUFFER + 1, 0);
+			if (!isFeedback(conn))
+				buffer = (Dimension) MapModeUtil.getMapMode(conn)
+						.DPtoLP(buffer);
+			final int inflate = buffer.width;
 
-                while (listIter.hasNext()) {
-                    Rectangle rObstruct = (Rectangle) listIter.next();
-                    PointList routedPoly = PointListUtilities
-                        .routeAroundRect(newLine, rObstruct, 0, false,
-                            inflate);
+			List collapsedRects = collapseRects(collectObstructs, inflate);
+			collectObstructs.clear();
 
-                    if (routedPoly != null) {
-                        bRouted = true;
-                        newLine.removeAllPoints();
-                        newLine.addAll(routedPoly);
-                    } else
-                        collectObstructs.add(rObstruct);
-                }
+			// Loop through the collapsedRects list until there are no more
+			// intersections
+			boolean bRouted = true;
+			while (bRouted && !collapsedRects.isEmpty()) {
+				ListIterator listIter = collapsedRects.listIterator();
+				bRouted = false;
 
-                List tempList = collapsedRects;
-                collapsedRects = collectObstructs;
-                tempList.clear();
-                collectObstructs = tempList;
+				while (listIter.hasNext()) {
+					Rectangle rObstruct = (Rectangle) listIter.next();
+					PointList routedPoly = PointListUtilities.routeAroundRect(
+							newLine, rObstruct, 0, false, inflate);
 
-                if (bRouted && !collapsedRects.isEmpty())
-                    resetEndPointsToEdge(conn, newLine);
-            }
-        }
-        }
-        
-        return newLine;
-        }
+					if (routedPoly != null) {
+						bRouted = true;
+						newLine.removeAllPoints();
+						newLine.addAll(routedPoly);
+					} else
+						collectObstructs.add(rObstruct);
+				}
+
+				List tempList = collapsedRects;
+				collapsedRects = collectObstructs;
+				tempList.clear();
+				collectObstructs = tempList;
+
+				if (bRouted && !collapsedRects.isEmpty())
+					resetEndPointsToEdge(conn, newLine);
+			}
+		}
+
+		return newLine;
+    }
     
     /**
      * Finds all the children shapes of the parent figure passed in that are in
@@ -460,7 +584,8 @@ class RouterHelper {
         } else {
             return newCollect;
         }
-    }
+    }     
+    
 
     /**
      * @param conn
@@ -476,7 +601,7 @@ class RouterHelper {
 
         if (sourcefigContainer == null || targetfigContainer == null)
             return null;
-
+        
         if (sourcefigContainer == targetfigContainer) {
             routerContainer = sourcefigContainer;
         } else if (commonFig != sourcefigContainer
@@ -513,36 +638,15 @@ class RouterHelper {
         return routerContainer;
     }
 
-    /**
-     * @param conn
-     * @return
-     */
-    private ShortestPathConnectionRouter getRouter(Connection conn) {
-        IFigure container = getRouterContainerFigure(conn);
-        if (container == null)
-            return null;
 
-        ShortestPathConnectionRouter spcr = getRouter(container);
-        ShortestPathConnectionRouter lur = (ShortestPathConnectionRouter) lastUsedRouter
-            .get(conn);
-        if (lur != spcr) {
-            if (lur != null)
-                lur.remove(conn);
-            spcr.setConstraint(conn, conn.getRoutingConstraint());
-        }
-        lastUsedRouter.put(conn, spcr);
-
-        return spcr;
-    }
-
-    private IFigure getSourceContainer(Connection conn) {
+    protected IFigure getSourceContainer(Connection conn) {
         if (conn.getSourceAnchor() != null)
             return findContainerFigure(conn.getSourceAnchor().getOwner());
         
         return null;
     }
 
-    private IFigure getTargetContainer(Connection conn) {
+    protected IFigure getTargetContainer(Connection conn) {
         if (conn.getTargetAnchor() != null)
             return findContainerFigure(conn.getTargetAnchor().getOwner());
         
@@ -578,18 +682,7 @@ class RouterHelper {
             : 0;
         return sourceDistance;
 }
-    private ShortestPathConnectionRouter getRouter(IFigure figContainer) {
-        ShortestPathConnectionRouter shortestPathRouter = (ShortestPathConnectionRouter) routers
-            .get(figContainer);
-        if (shortestPathRouter == null) {
-            shortestPathRouter = new ShortestPathConnectionRouter(figContainer);
-            shortestPathRouter.setSpacing(MapModeUtil.getMapMode(figContainer)
-                .DPtoLP(10));
-            routers.put(figContainer, shortestPathRouter);
-        }
-
-        return shortestPathRouter;
-    }
+   
     
     /**
      * Returns anchor location as <code>PrecisionPoint</code>
@@ -601,7 +694,7 @@ class RouterHelper {
     private PrecisionPoint getAnchorLocation(ConnectionAnchor anchor, Point reference) {
     	return new PrecisionPoint(anchor.getLocation(reference));
     }
-    
+       
     /**
      * Returns anchor reference point as <code>PrecisionPoint</code>
      * 
@@ -611,4 +704,18 @@ class RouterHelper {
     private PrecisionPoint getAnchorReference(ConnectionAnchor anchor) {
    		return new PrecisionPoint(anchor.getReferencePoint());
     }
+    
+	/**
+	 * Determines whether the router is going to avoid obstructions during the
+	 * routing algorithm.
+	 */
+	public boolean isAvoidingObstructions(Connection conn) {
+		if (conn instanceof PolylineConnectionEx) {
+			return ((PolylineConnectionEx) conn).isAvoidObstacleRouting();
+		}
+
+		return false;
+	}
+
+	
 }

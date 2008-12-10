@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 package org.eclipse.gmf.runtime.draw2d.ui.internal.routers;
 
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -112,4 +113,11 @@ public class FanRouter extends org.eclipse.draw2d.FanRouter {
 			points.insertPoint(bendPoint, 1);
 	}
 
+
+	/**
+	 * @return Returns the connection router to which the routing is delegated. 
+	 */
+	public ConnectionRouter getRouter() {
+		return next();
+	}
 }
