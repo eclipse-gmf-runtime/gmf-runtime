@@ -620,16 +620,18 @@ public abstract class AbstractModelerPropertySection
 	 * @return <code>true</code> if the contributor is read only.
 	 */
 	protected boolean isReadOnly() {
+		ITabbedPropertySheetPageContributor contributor = null;
 		if (tabbedPropertySheetPage instanceof PropertiesBrowserPage) {
-			PropertiesBrowserPage propertiesBrowserPage = (PropertiesBrowserPage) tabbedPropertySheetPage;
-			ITabbedPropertySheetPageContributor contributor = propertiesBrowserPage
-				.getContributor();
-            if (contributor instanceof IReadOnlyDiagramPropertySheetPageContributor
-                    || (contributor instanceof DiagramEditor && !((DiagramEditor) contributor)
-                        .isWritable())) {
-                return true;
-            }
+			contributor = ((PropertiesBrowserPage) tabbedPropertySheetPage).getContributor();
+		} else if (tabbedPropertySheetPage instanceof IAdaptable) {
+			contributor = (ITabbedPropertySheetPageContributor) 
+								((IAdaptable)tabbedPropertySheetPage).getAdapter(ITabbedPropertySheetPageContributor.class);
 		}
+        if (contributor != null && 
+        		(contributor instanceof IReadOnlyDiagramPropertySheetPageContributor
+        				|| (contributor instanceof DiagramEditor && !((DiagramEditor) contributor).isWritable()))) {
+            return true;
+        }		
 		return false;
 	}
 

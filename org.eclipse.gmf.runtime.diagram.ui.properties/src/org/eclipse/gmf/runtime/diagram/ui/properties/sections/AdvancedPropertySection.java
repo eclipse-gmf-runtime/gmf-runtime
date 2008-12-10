@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,15 +99,16 @@ public class AdvancedPropertySection extends AbstractModelerPropertySection {
      * @see org.eclipse.gmf.runtime.common.ui.properties.TabbedPropertySheetPage#setActionBars(org.eclipse.ui.IActionBars)
      */   
     public void setActionBars(IActionBars actionBars) {
-        
-        actionBars.getMenuManager().removeAll();
-        actionBars.getToolBarManager().removeAll();
-        actionBars.getStatusLineManager().removeAll();
+        if (actionBars != null) {
+        	actionBars.getMenuManager().removeAll();
+        	actionBars.getToolBarManager().removeAll();
+        	actionBars.getStatusLineManager().removeAll();
 
-        page.makeContributions(actionBars.getMenuManager(), actionBars
-                .getToolBarManager(), actionBars.getStatusLineManager());
+        	page.makeContributions(actionBars.getMenuManager(), actionBars
+        			.getToolBarManager(), actionBars.getStatusLineManager());
         
-        actionBars.getToolBarManager().update(true);
+        	actionBars.getToolBarManager().update(true);
+        }
 
     }
 
