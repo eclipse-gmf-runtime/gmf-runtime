@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,10 +21,10 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * @author jschofie
- *
  * Controls the interactions between the figure and
- * its underlying view 
+ * its underlying view. 
+ *
+ * @author jschofie
  */
 public class ShadowRectangleEditPart extends GeoShapeEditPart {
 
@@ -46,6 +46,16 @@ public class ShadowRectangleEditPart extends GeoShapeEditPart {
 
 	public IFigure getContentPane() {
 		return ((GeoShapeFigure) getFigure()).getContentPane();
+	}
+	
+	/**
+	 * Sets the line width to the border as well.
+	 * @see org.eclipse.gmf.runtime.diagram.ui.geoshapes.internal.editparts.GeoShapeEditPart#setLineWidth(int)
+	 */
+	protected void setLineWidth(int width) {
+		super.setLineWidth(width);
+		((RectangularDropShadowLineBorder)getFigure().getBorder()).setWidth(getMapMode().DPtoLP(width));
+		getFigure().revalidate();
 	}
 
 }

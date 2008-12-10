@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2002, 2004 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ public class RectangularDropShadowLineBorder
 	 * Constructs a LineBorder 
 	 * of the specified width.
 	 *
-	 * @param w  Width of inset for border
+	 * @param w  Width of inset for border in logic points
 	 * 
 	 */
 	public RectangularDropShadowLineBorder(int w) {
@@ -90,11 +90,11 @@ public class RectangularDropShadowLineBorder
 	 * @return Insets the Insets for the border on the given figure.
 	 */
 	public Insets getInsets(IFigure figure) {
-		Insets insetsNew = super.getInsets(figure);
-		insetsNew.top = 0;
-		insetsNew.left = 0;
-		insetsNew.bottom = MapModeUtil.getMapMode(figure).DPtoLP(insetsNew.bottom + getShadowHeight());
-		insetsNew.right = MapModeUtil.getMapMode(figure).DPtoLP(insetsNew.right + getShadowWidth());
+		// take into account line width
+		Insets insetsNew = new Insets(getWidth());		
+		IMapMode mm = MapModeUtil.getMapMode(figure);
+		insetsNew.bottom += mm.DPtoLP(getShadowHeight());
+		insetsNew.right += mm.DPtoLP(getShadowWidth());
 
 		return insetsNew;
 	}
@@ -153,12 +153,12 @@ public class RectangularDropShadowLineBorder
 	 * @param insets Insets value that contrains how the border will be painted.
 	 */
 	public void paintLineBorder(IFigure figure, Graphics g, Insets insets) {
-
 		// will not paint line border if width is 0
 		if (getWidth() > 0) { 
 			tempRect.setBounds(getPaintRectangle(figure, insets));
+			tempRect.shrink(getWidth()/2, getWidth()/2);
 			g.setLineWidth(getWidth());
-			g.drawRectangle(tempRect);
+			g.drawRectangle(tempRect);			
 		}
 	}
 	
@@ -182,12 +182,8 @@ public class RectangularDropShadowLineBorder
 			tempRect.setBounds(getPaintRectangle(figure, insets));
 			tempRect.width -= mm.DPtoLP(getShadowWidth());
 			tempRect.height -= mm.DPtoLP(getShadowHeight());
-			if (getWidth() % 2 == 1) {
-				tempRect.width -= mm.DPtoLP(1);
-				tempRect.height -= mm.DPtoLP(1);
-			}
-			tempRect.shrink(mm.DPtoLP(getWidth() / 2), mm.DPtoLP(getWidth() / 2));
-			g.setLineWidth(getWidth());
+			tempRect.shrink(getWidth() / 2, getWidth() / 2);
+			g.setLineWidth(getWidth());			
 
 			if (getColor() != null) {
 				g.setForegroundColor(getColor());
@@ -202,7 +198,7 @@ public class RectangularDropShadowLineBorder
 	 * Overridden method for painting the border on the shape.
 	 * @param figure Figure that the border will be painted on
 	 * @param g Graphics context 
-	 * @param insets Insets value that contrains how the border will be painted.
+	 * @param insets Insets value that constrains how the border will be painted.
 	 */
 	public void paint(IFigure figure, Graphics g, Insets insets) {
 
@@ -233,7 +229,7 @@ public class RectangularDropShadowLineBorder
 	}
 
 	/**
-	 * @return Returns the drip shadow iamge.
+	 * @return Returns the drop shadow image.
 	 */
 	protected RectangularDropShadow getDropShadow() {
 		return dropShadow;
