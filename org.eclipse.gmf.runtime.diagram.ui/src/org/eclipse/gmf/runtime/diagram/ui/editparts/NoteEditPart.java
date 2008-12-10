@@ -30,6 +30,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.OpenDiagramEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ViewComponentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.NoteFigure.NoteFigureBorder;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.DiagramLinkDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NonSemanticEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
@@ -71,7 +72,7 @@ public class NoteEditPart extends ShapeNodeEditPart {
 	protected NodeFigure createNodeFigure() {
 		IMapMode mm = getMapMode();
 		int insetSize = mm.DPtoLP(5);
-		Insets insets = new Insets(insetSize, insetSize, insetSize, insetSize);
+		Insets insets = new Insets(insetSize, insetSize, insetSize, mm.DPtoLP(NoteFigure.CLIP_MARGIN_DP));
 		NoteFigure noteFigure = new NoteFigure(mm.DPtoLP(100), mm.DPtoLP(56), insets);
 		Object model = getModel();
 		if (model!=null && model instanceof View){
@@ -82,6 +83,7 @@ public class NoteEditPart extends ShapeNodeEditPart {
 				  notationView.getType().length() == 0)){
 				diagramLinkMode = true;
 				noteFigure.setDiagramLinkMode(true);
+				insets.right = insetSize; // there is no dangling corner in diagram link, set right margin to be the same as left
 				
 				// The default size is the minimum.
 				noteFigure.setDefaultSize(insetSize, insetSize);
