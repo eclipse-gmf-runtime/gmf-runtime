@@ -18,7 +18,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
+
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.Graphics;
@@ -26,6 +29,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
@@ -107,26 +111,36 @@ private List calculateNewSelection() {
 
 	List newSelections = new ArrayList();
 	Iterator children = getAllChildren().iterator();
-
+	Rectangle marqueeBounds = getMarqueeBounds();
+	
 	// Calculate new selections based on which children fall
 	// inside the marquee selection rectangle.  Do not select
 	// children who are not visible
 	while (children.hasNext()){	
 		EditPart child = (EditPart) children.next();
-		if (!child.isSelectable())
-			continue;
 		IFigure figure = ((GraphicalEditPart)child).getFigure();
-		Rectangle r = figure.getBounds().getCopy();
-		figure.translateToAbsolute(r);
-
-		Rectangle marqueeBounds = getMarqueeBounds();	
+		if (!child.isSelectable() 
+			|| child.getTargetEditPart(MARQUEE_REQUEST) != child
+			|| !isFigureVisible(figure)) 
+		{
+			continue;
+		}	
+		Rectangle r;
+		if (child instanceof ConnectionEditPart) {
+			// RATLC00569348 For connection, get the bounds of connection points rather than connection figure since the 
+			// figure's bounds contain the bounds of all connection children and would require selection rectangle 
+			// to be larger than expected in some cases
+			r = ((Connection)figure).getPoints().getBounds().getCopy();
+		} else {
+			r = figure.getBounds().getCopy();
+		}
+		figure.translateToAbsolute(r);			
 		getMarqueeFeedbackFigure().translateToRelative(r);
 		if (marqueeBounds.contains(r.getTopLeft())
-		  && marqueeBounds.contains(r.getBottomRight())		  
-		  && child.getTargetEditPart(MARQUEE_REQUEST) == child
-		  && isFigureVisible(figure)){
+			&& marqueeBounds.contains(r.getBottomRight()))
+		{
 			newSelections.add(child);
-		}
+		}		
 	}
 	return newSelections;
 }
